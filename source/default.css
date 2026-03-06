@@ -268,6 +268,17 @@ div#contents .code-div{margin:8px 0}
 div.book-info { display: flex }
 div.book-info>div:first-child { min-width: 20ch }
 
+/* 하이라이트 애니메이션 */
+@keyframes highlight{from{background:#ff0}to{background:#fff}}
+
+/* Snackbar from https://www.w3schools.com/howto/howto_js_snackbar.asp */
+#snackbar{visibility:hidden;min-width:250px;margin-left:-125px;background-color:#333;color:#fff;text-align:center;border-radius:2px;padding:16px;position:fixed;z-index:1000000;left:50%;bottom:30px;font-size:17px}
+#snackbar.show{visibility:visible;-webkit-animation:sf-fadein 0.5s,sf-fadeout 0.5s 2.5s;animation:sf-fadein 0.5s,sf-fadeout 0.5s 2.5s}
+@-webkit-keyframes sf-fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
+@keyframes sf-fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
+@-webkit-keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
+@keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
+
 /* 기본 레이아웃 */
 :root {
     --sidebar-width: 333px;

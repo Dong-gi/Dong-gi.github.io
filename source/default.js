@@ -50,38 +50,36 @@ function asNodes(str) {
     }
 }
 
+/** @type {Map<Element, Function>} */
+const intersectionCallbackMap = new Map();
+const globalIntersectionObserver = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+        if (entry.isIntersecting !== true) {
+            continue
+        }
+        globalIntersectionObserver.unobserve(entry.target);
+        const callback = intersectionCallbackMap.get(entry.target);
+        intersectionCallbackMap.delete(entry.target);
+        if (callback != null) {
+            callback(entry.target);
+        }
+    }
+});
+
 /**
  * @template T
  * @param {Iterable<T>} iter
  * @param {(element: T) =>} callback
  */
 function observeIntersectionOnce(iter, callback) {
-    Array.from(iter).forEach(element => {
-        if ((element instanceof Element) === false) {
-            console.log("observeIntersectionOnce > ", element, ' ignored.')
+    for (const element of iter) {
+        if (element instanceof Element) {
+            intersectionCallbackMap.set(element, callback);
+            globalIntersectionObserver.observe(element);
+        } else {
+            console.log("observeIntersectionOnce > ignore", element);
         }
-        let isCalled = false;
-        const o = new IntersectionObserver((entries, observer) => {
-            if (entries[0].isIntersecting !== true) {
-                return;
-            }
-            o.disconnect();
-            if (isCalled === false) {
-                isCalled = true;
-                callback(element);
-            }
-        });
-        o.observe(element);
-    });
-}
-
-function openLink(url, target) {
-    const a = document.createElement('a');
-    a.href = url;
-    a.target = target ?? '_blank';
-    document.body.append(a);
-    a.click();
-    a.remove();
+    }
 }
 
 /**
@@ -104,10 +102,6 @@ function calcOffset(element) {
  * @param {HTMLElement} element
  */
 function highlight(element) {
-    if (document.getElementById('highlight-css') == null) {
-        const style = asNodes(`<style id="highlight-css">@keyframes highlight{from{background:#ff0;}to{background:#fff;}}</style>`);
-        document.querySelector('head').append(style);
-    }
     if (element.style.animation?.length > 0) {
         return
     }
@@ -124,15 +118,6 @@ function highlight(element) {
  * @param {number} [durationMs] default 2000
  */
 function showSnackbar(text, parent, durationMs) {
-    if (document.getElementById('snackbar-css') == null) {
-        const style = asNodes(`<style id="snackbar-css">#snackbar{visibility:hidden;min-width:250px;margin-left:-125px;background-color:#333;color:#fff;text-align:center;border-radius:2px;padding:16px;position:fixed;z-index:1000000;left:50%;bottom:30px;font-size:17px}
-#snackbar.show{visibility:visible;-webkit-animation:sf-fadein 0.5s,sf-fadeout 0.5s 2.5s;animation:sf-fadein 0.5s,sf-fadeout 0.5s 2.5s}
-@-webkit-keyframes sf-fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
-@keyframes sf-fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
-@-webkit-keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
-@keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}</style>`);
-        document.getElementsByTagName('head')[0].append(style);
-    }
     const snackbar = asNodes(`<div id="snackbar" class="show">${text}</div>`);
     (parent ?? document.body).append(snackbar);
     setTimeout(() => snackbar.remove(), (durationMs ?? 2000));
@@ -181,19 +166,6 @@ function addHoverContent(target, content) {
     content.addEventListener('mouseenter', onMouseenter);
     target.addEventListener('mouseleave', onMouseleave);
     content.addEventListener('mouseleave', onMouseleave);
-}
-
-/**
- * @param {string} text 
- * @param {HTMLElement} [parent] default document.body
- */
-function copyTextToCilpboard(text, parent) {
-    const textarea = document.createElement('textarea');
-    textarea.textContent = text;
-    (parent ?? document.body).append(textarea);
-    textarea.select();
-    navigator.clipboard.writeText(textarea.textContent);
-    textarea.remove();
 }
 
 /**
@@ -275,7 +247,7 @@ function initNav() {
     document.getElementById('query').onkeydown = function (e) {
         /* https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values */
         if (e.key === 'Enter') {
-            openLink(`https://github.com/search?q=repo:Dong-gi/Dong-gi.github.io+${encodeURIComponent(e.target.value)}&type=code`, '_blank');
+            window.open(`https://github.com/search?q=repo:Dong-gi/Dong-gi.github.io+${encodeURIComponent(e.target.value)}&type=code`, '_blank');
             e.stopPropagation();
             return false;
         }
@@ -492,9 +464,14 @@ async function updateMarkerList() {
     const skipLevelCheckTagSet = new Set(['THEAD', 'TBODY', 'TR', 'SPAN']);
     const headingLevels = [0, 0, 0, 0, 0, 0, 0, 0];
     const headingTagSet = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
-    for (const markerTarget of document.querySelectorAll('h1:not(.no-marker), h2:not(.no-marker), h3:not(.no-marker), h4:not(.no-marker), h5:not(.no-marker), h6:not(.no-marker), .marker:not(.no-marker)')) {
+    const markerNameCounter = new Map()
+    for (const markerTarget of document.querySelectorAll(':is(h1,h2,h3,h4,h5,h6,.marker):not(.no-marker)')) {
         const markerName = makeMarkerName(markerTarget);
-        const posId = `pos${stringHashCode(markerName)}`
+        let posId = `pos${stringHashCode(markerName)}`
+        if (markerNameCounter.has(markerName)) {
+            posId += `-${markerNameCounter.get(markerName)}`
+        }
+        markerNameCounter.set(markerName, (markerNameCounter.get(markerName) ?? 0) + 1)
         markerTarget.before(asNodes(`<span class="pos-span" id="${posId}"></span>`));
 
         /** @type {HTMLLIElement} */
@@ -660,7 +637,7 @@ function showModal(codeId) {
     body.style.height = window.innerHeight - parseFloat(window.getComputedStyle(header).height);
 
     footer.querySelector('button.copy').onclick = function () {
-        copyTextToCilpboard(posts.codes[codeId], modal);
+        navigator.clipboard.writeText(posts.codes[codeId]);
         showSnackbar('복사 완료', modal);
         modal.focus();
     }

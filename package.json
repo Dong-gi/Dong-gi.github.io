@@ -6,8 +6,7 @@
     "build-all": "npm run build-site && npm run build-js",
     "build-new": "npm run build-site new && npm run build-js",
     "build-site": "node source/build.js",
-    "build-js": "npx terser --compress --mangle -o source/default.min.js -- source/default.js",
-    "local": "npx http-server -p 9080 -c-1"
+    "build-js": "npx terser --compress --mangle -o source/default.min.js -- source/default.js"
   },
   "repository": {
     "type": "git",
@@ -19,13 +18,10 @@
     "url": "https://github.com/Dong-gi/Dong-gi.github.io/issues"
   },
   "homepage": "https://dong-gi.github.io",
-  "dependencies": {
+  "devDependencies": {
     "pug": "^3.0.3",
     "sharp": "^0.34.5",
-    "svgo": "^4.0.0"
-  },
-  "devDependencies": {
-    "http-server": "^14.1.1",
-    "terser": "^5.44.1"
+    "svgo": "^4.0.1",
+    "terser": "^5.46.0"
   }
 }

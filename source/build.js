@@ -131,7 +131,14 @@ async function renderPug(from, to) {
         await exec(`d2 "${d2Path}" "${svgPath}"`)
         console.log(`Rendered d2 : ${d2Path}`)
         const svg = await readFile(svgPath)
-        let svgTxt = svgo.optimize(svg.toString().replace(/data-d2-version="[^"]+"/, '').replace(/\{[^}]*font-family[^}]*\}/g, '{}')).data
+        let svgTxt = svgo.optimize(
+            svg.toString()
+                .replace(/data-d2-version="[^"]+"/, '')
+                .replace(/\{[^}]*font-family[^}]*\}/g, '{}')
+                .replace(/stroke-width: *0;?/g, '')
+                .replace(/ rx="0"/g, '')
+                .replace(/ stroke-width="0"/g, '')
+        ).data
         const styleTxt = svgTxt.match(/<style>.+<\/style>/)[0]
         for (const classMatch of svgTxt.matchAll(/class="([^ ]+?)"/g)) {
             if (styleTxt.includes(classMatch[1])) {
@@ -141,6 +148,58 @@ async function renderPug(from, to) {
         }
         svgTxt = svgTxt.replace(/\s+/g, ' ')
         svgTxt = svgTxt.replace(/class="text /g, 'class="')
+        // 외부 중복 <svg> 래퍼 제거, xmlns를 내부 svg로 이동
+        svgTxt = svgTxt.replace(/<svg (xmlns="[^"]*")[^>]*?><svg /, '<svg $1 ')
+        svgTxt = svgTxt.replace(/<\/svg><\/svg>/, '</svg>')
+        // CSS 클래스와 중복되는 인라인 fill/stroke 속성 제거
+        svgTxt = svgTxt.replace(/<[^>]+>/g, tag => {
+            const cls = tag.match(/class="([^"]*)"/)
+            if (cls == null) return tag
+            if (/\bfill-/.test(cls[1])) tag = tag.replace(/ fill="[^"]*"/, '')
+            if (/\bstroke-/.test(cls[1])) tag = tag.replace(/ stroke="[^"]*"/, '')
+            return tag
+        })
+        // 속성 없는 빈 <g> 래퍼 제거 (안쪽부터 반복)
+        while (true) {
+            const beforeLength = svgTxt.length
+            svgTxt = svgTxt.replace(/<g *>((?:(?!<g[ >]).)*?)<\/g *>/g, '$1')
+            if (svgTxt.length === beforeLength) {
+                break
+            }
+        }
+        // 반복되는 inline style을 CSS class로 압축
+        const styleCounts = new Map()
+        for (const m of svgTxt.matchAll(/ style="([^"]+)"/g)) {
+            styleCounts.set(m[1], (styleCounts.get(m[1]) ?? 0) + 1)
+        }
+        if (styleCounts.size !== 0 && /<style>(.+?)<\/style>/.test(svgTxt)) {
+            let classIdx = 0
+            let cssInsert = ''
+            const styleToClass = new Map()
+            for (const [style, count] of styleCounts) {
+                if (count < 2) continue
+                const cls = `s${classIdx++}`
+                cssInsert += `.${cls}{${style}}`
+                styleToClass.set(style, cls)
+            }
+            if (cssInsert) {
+                svgTxt = svgTxt.replace('</style>', cssInsert + '</style>')
+                // 태그 단위로 style을 class에 병합
+                svgTxt = svgTxt.replace(/<[^>]+ style="[^"]*"[^>]*>/g, tag => {
+                    const styleMatch = tag.match(/ style="([^"]*)"/)
+                    if (!styleToClass.has(styleMatch[1])) return tag
+                    const cls = styleToClass.get(styleMatch[1])
+                    tag = tag.replace(styleMatch[0], '')
+                    const classMatch = tag.match(/class="([^"]*)"/)
+                    if (classMatch) {
+                        tag = tag.replace(classMatch[0], `class="${classMatch[1]} ${cls}"`)
+                    } else {
+                        tag = tag.replace(/>$/, ` class="${cls}">`)
+                    }
+                    return tag
+                })
+            }
+        }
         await writeFile(svgPath, svgTxt)
     }))
 

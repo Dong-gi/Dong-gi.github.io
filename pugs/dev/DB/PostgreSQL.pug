@@ -428,9 +428,9 @@ include ../../../source/skeleton.pug
                     li (inner) join : 조인 조건을 만족하는 T1, T2의 행 조합
                         +asCode('sql').
                             # with
-                            # a (a) as ( values ('a1'), ('a2'), ('a4') ),
-                            # b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
-                            # select * from a join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+                            a (a) as ( values ('a1'), ('a2'), ('a4') ),
+                            b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+                            select * from a join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
                              a  | b  
                             ----+----
                              a1 | b1
@@ -441,10 +441,10 @@ include ../../../source/skeleton.pug
                     li left (outer) join : 조건을 만족하지 않는 T1 행도 포함
                         +asCode('sql').
                             # \pset null '(null)'
-                            # with
-                            # a (a) as ( values ('a1'), ('a2'), ('a4') ),
-                            # b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
-                            # select * from a left join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+                            with
+                            a (a) as ( values ('a1'), ('a2'), ('a4') ),
+                            b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+                            select * from a left join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
                              a  |  b  
                             ----+-----
                              a1 | b1
@@ -457,9 +457,9 @@ include ../../../source/skeleton.pug
                         +asCode('sql').
                             # \pset null '(null)'
                             # with
-                            # a (a) as ( values ('a1'), ('a2'), ('a4') ),
-                            # b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
-                            # select * from a right join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+                            a (a) as ( values ('a1'), ('a2'), ('a4') ),
+                            b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+                            select * from a right join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
                                a    |  b  
                             --------+-----
                              a1     | b1
@@ -472,9 +472,9 @@ include ../../../source/skeleton.pug
                         +asCode('sql').
                             # \pset null '(null)'
                             # with
-                            # a (a) as ( values ('a1'), ('a2'), ('a4') ),
-                            # b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
-                            # select * from a full join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
+                            a (a) as ( values ('a1'), ('a2'), ('a4') ),
+                            b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
+                            select * from a full join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
                                a    |   b    
                             --------+--------
                              a1     | b1
@@ -519,9 +519,9 @@ include ../../../source/skeleton.pug
                             (3 rows)
 
                             # select * from rows from(
-                            #     unnest('{1, 2, 3}'::int[]),
-                            #     unnest('{a, b}'::text[])
-                            # ) with ordinality as x (a, b, c);
+                                unnest('{1, 2, 3}'::int[]),
+                                unnest('{a, b}'::text[])
+                            ) with ordinality as x (a, b, c);
                              a |   b    | c 
                             ---+--------+---
                              1 | a      | 1
@@ -540,11 +540,11 @@ include ../../../source/skeleton.pug
                         +asCode('sql').
                             # \pset null '(null)'
                             # select *
-                            # from rows from (
-                            #     json_to_recordset('[{"a":40,"b":"foo"},{"a":"100","b":"bar"}]') as (a int, b text),
-                            #     generate_series(1, 3)
-                            # ) as x(x, y, z)
-                            # order by 3;
+                            from rows from (
+                                json_to_recordset('[{"a":40,"b":"foo"},{"a":"100","b":"bar"}]') as (a int, b text),
+                                generate_series(1, 3)
+                            ) as x(x, y, z)
+                            order by 3;
                                x    |   y    | z 
                             --------+--------+---
                                  40 | foo    | 1
@@ -570,9 +570,9 @@ include ../../../source/skeleton.pug
                         +asCode('sql').
                             # \pset null '(null)'
                             # with tmp (a, b) as ( values ('a', 'b') )
-                            # select a, b
-                            # from tmp
-                            # group by grouping sets (a, b);
+                            select a, b
+                            from tmp
+                            group by grouping sets (a, b);
                                a    |   b    
                             --------+--------
                              a      | (null)
@@ -583,9 +583,9 @@ include ../../../source/skeleton.pug
                             -- cube(a, b) = grouping sets((), (a), (b), (a, b))
                             # \pset null '(null)'
                             # with tmp (a, b) as ( values ('a', 'b') )
-                            # select a, b
-                            # from tmp
-                            # group by cube (a, b);
+                            select a, b
+                            from tmp
+                            group by cube (a, b);
                                a    |   b    
                             --------+--------
                              (null) | (null)
@@ -598,9 +598,9 @@ include ../../../source/skeleton.pug
                             -- rollup(a, b) = grouping sets((), (a), (a, b))
                             # \pset null '(null)'
                             # with tmp (a, b) as ( values ('a', 'b') )
-                            # select a, b
-                            # from tmp
-                            # group by rollup (a, b);
+                            select a, b
+                            from tmp
+                            group by rollup (a, b);
                                a    |   b    
                             --------+--------
                              (null) | (null)
@@ -612,9 +612,9 @@ include ../../../source/skeleton.pug
                             -- rollup(a, (b, c)) == grouping sets((), (a), (a, b, c))
                             # \pset null '(null)'
                             # with tmp (a, b, c) as ( values ('a', 'b', 'c') )
-                            # select a, b, c
-                            # from tmp
-                            # group by rollup (a, (b, c));
+                            select a, b, c
+                            from tmp
+                            group by rollup (a, (b, c));
                                a    |   b    |   c    
                             --------+--------+--------
                              (null) | (null) | (null)
@@ -626,10 +626,10 @@ include ../../../source/skeleton.pug
                         +asCode('sql').
                             # \pset null '(null)'
                             # with tmp (a, b, c) as ( values ('a', 'b', 'c') )
-                            # select a, b, c
-                            # from tmp
-                            # group by distinct grouping sets (cube(a, b), rollup(b, c))
-                            # order by 1, 2, 3;
+                            select a, b, c
+                            from tmp
+                            group by distinct grouping sets (cube(a, b), rollup(b, c))
+                            order by 1, 2, 3;
                                a    |   b    |   c    
                             --------+--------+--------
                              a      | b      | (null)
@@ -642,10 +642,10 @@ include ../../../source/skeleton.pug
                         +asCode('sql').
                             # \pset null '(null)'
                             # with tmp (a, b, c, d) as ( values ('a', 'b', 'c', 'd') )
-                            # select a, b, c, d
-                            # from tmp
-                            # group by cube (a, b), cube (c, d)
-                            # order by 1, 2, 3, 4;
+                            select a, b, c, d
+                            from tmp
+                            group by cube (a, b), cube (c, d)
+                            order by 1, 2, 3, 4;
                                a    |   b    |   c    |   d    
                             --------+--------+--------+--------
                              a      | b      | c      | d
@@ -720,8 +720,8 @@ include ../../../source/skeleton.pug
                         (3 rows)
 
                         # with tmp(num) as (values (1), (2), (3))
-                        # (select * from tmp) union
-                        # (values (1), (4));
+                        (select * from tmp) union
+                        (values (1), (4));
                          num 
                         -----
                            1
@@ -1024,10 +1024,10 @@ include ../../../source/skeleton.pug
                         li 필터는 조건을 만족하는 항목들을 반환하며, 일반 표현식으로 연결될 수 있다
                             +asCode('sql').
                                 # select jsonb_path_query('[
-                                #   { "ISBN": "ISBN1", "title": "title1", "authors": ["author1", "author2"], "publishAt": "2000-01-01T00:00:00Z"},
-                                #   { "ISBN": "ISBN2", "title": "title2", "authors": ["author3"], "publishAt": "2010-01-01T00:00:00Z"},
-                                #   { "ISBN": "ISBN3", "title": "title1", "authors": ["author2"], "publishAt": "2020-01-01T00:00:00Z"}
-                                # ]', '$[*] ? (@.publishAt.timestamp_tz() > "2009-12-31 18:00:00+09".timestamp_tz()) ? (exists(@.authors[*] ? (@ == "author3"))).ISBN');
+                                  { "ISBN": "ISBN1", "title": "title1", "authors": ["author1", "author2"], "publishAt": "2000-01-01T00:00:00Z"},
+                                  { "ISBN": "ISBN2", "title": "title2", "authors": ["author3"], "publishAt": "2010-01-01T00:00:00Z"},
+                                  { "ISBN": "ISBN3", "title": "title1", "authors": ["author2"], "publishAt": "2020-01-01T00:00:00Z"}
+                                ]', '$[*] ? (@.publishAt.timestamp_tz() > "2009-12-31 18:00:00+09".timestamp_tz()) ? (exists(@.authors[*] ? (@ == "author3"))).ISBN');
                                  jsonb_path_query 
                                 ------------------
                                  "ISBN2"
@@ -1154,13 +1154,13 @@ include ../../../source/skeleton.pug
                         INSERT 0 1
 
                         # create or replace function func(t test) returns test as $$
-                        # begin
-                        #     raise notice using message = 'func called';
-                        #     t.a = t.a + 1;
-                        #     t.b = not(t.b);
-                        #     return t;
-                        # end;
-                        # $$ language plpgsql;
+                        begin
+                            raise notice using message = 'func called';
+                            t.a = t.a + 1;
+                            t.b = not(t.b);
+                            return t;
+                        end;
+                        $$ language plpgsql;
                         CREATE FUNCTION
 
                         # select (func(test)).* from test;
@@ -1230,9 +1230,9 @@ include ../../../source/skeleton.pug
             h3 논리 연산자
             +asCode('sql').
                 # with tmp1 (x) as ( values (true), (false), (null) ),
-                # tmp2 as ( select t1.x, t2.x y from tmp1 t1, tmp1 t2 )
-                # select x, y, x and y as "x and y", x or y as "x or y", not x as "not x"
-                # from tmp2 order by x desc nulls last, y desc nulls last;
+                tmp2 as ( select t1.x, t2.x y from tmp1 t1, tmp1 t2 )
+                select x, y, x and y as "x and y", x or y as "x or y", not x as "not x"
+                from tmp2 order by x desc nulls last, y desc nulls last;
                    x    |   y    | x and y | x or y | not x  
                 --------+--------+---------+--------+--------
                  t      | t      | t       | t      | f
@@ -1590,14 +1590,14 @@ include ../../../source/skeleton.pug
                 li percentile_cont(percent or percent_agg) within group (order by x) : 지정 백분율의 자료 검색 -- 없으면 보간
                     +asCode('sql').
                         # select percentile_disc('{0.3,0.6,0.9}'::float[]) within group (order by n)
-                        # from (values (1), (3), (10), (100)) as x(n);
+                        from (values (1), (3), (10), (100)) as x(n);
                          percentile_disc 
                         -----------------
                          {3,10,100}
                         (1 row)
 
                         # select percentile_cont('{0.3,0.6,0.9}'::float[]) within group (order by n)
-                        # from (values (1), (3), (10), (100)) as x(n);
+                        from (values (1), (3), (10), (100)) as x(n);
                          percentile_cont 
                         -----------------
                          {2.8,8.6,73}
@@ -1608,15 +1608,15 @@ include ../../../source/skeleton.pug
                 li cume_dist(y) within group (order by x) : (y이하 행 개수) / (전체 행 개수)
                     +asCode('sql').
                         # select
-                        #   n1,
-                        #   rank(n1) within group (order by n2),
-                        #   dense_rank(n1) within group (order by n2),
-                        #   percent_rank(n1) within group (order by n2),
-                        #   cume_dist(n1) within group (order by n2)
-                        # from
-                        #   (values (0), (10), (20), (30)) as x1(n1),
-                        #   (values (10), (20), (10)) as x2(n2)
-                        # group by n1;
+                          n1,
+                          rank(n1) within group (order by n2),
+                          dense_rank(n1) within group (order by n2),
+                          percent_rank(n1) within group (order by n2),
+                          cume_dist(n1) within group (order by n2)
+                        from
+                          (values (0), (10), (20), (30)) as x1(n1),
+                          (values (10), (20), (10)) as x2(n2)
+                        group by n1;
                          n1 | rank | dense_rank |    percent_rank    | cume_dist 
                         ----+------+------------+--------------------+-----------
                           0 |    1 |          1 |                  0 |      0.25
@@ -1647,9 +1647,9 @@ include ../../../source/skeleton.pug
                 li grouping (group_by_expression) : 복잡한 grouping sets을 이용하는 경우, 어떤 그룹에 대한 집계인지 쉽게 식별 가능하도록 전용 컬럼 추가
                     +asCode('sql').
                         # select grouping(a, b, c), a, b, c
-                        # from (values ('a', 'b', 'c')) as x(a, b, c)
-                        # group by cube (a, b, c)
-                        # order by 1;
+                        from (values ('a', 'b', 'c')) as x(a, b, c)
+                        group by cube (a, b, c)
+                        order by 1;
                          grouping | a | b | c 
                         ----------+---+---+---
                                 0 | a | b | c
@@ -1675,8 +1675,8 @@ include ../../../source/skeleton.pug
                 li lead(value[, offset[, default]]) : offset 후의 행 참조
                     +asCode('sql').
                         # select n, lag(n, 1, 0) over win, lead(n, 1, 0) over win
-                        # from (values (1),(3),(2)) as t(n)
-                        # window win as (order by n);
+                        from (values (1),(3),(2)) as t(n)
+                        window win as (order by n);
                          n | lag | lead 
                         ---+-----+------
                          1 |   0 |    2
@@ -1712,11 +1712,11 @@ include ../../../source/skeleton.pug
                 li with ordinality : 행 번호 부여
                     +asCode('sql').
                         # select * from generate_series(
-                        #   '2025-11-01 00:00:00 America/Los_Angeles',
-                        #   '2025-11-04 00:00:00 America/Los_Angeles',
-                        #   '1 day'::interval,
-                        #   'America/Los_Angeles'
-                        # ) with ordinality as tmp(t, n);
+                          '2025-11-01 00:00:00 America/Los_Angeles',
+                          '2025-11-04 00:00:00 America/Los_Angeles',
+                          '1 day'::interval,
+                          'America/Los_Angeles'
+                        ) with ordinality as tmp(t, n);
                                    t            | n 
                         ------------------------+---
                          2025-11-01 16:00:00+09 | 1
@@ -2591,7 +2591,7 @@ include ../../../source/skeleton.pug
                         (6 rows)
 
             h3 절차적 언어 함수
-            p 절차적 언어는 PostgreSQL 서버에 내장되지 않고, 모듈을 통해 제공되는 언어의 통칭이다
+            p 절차적 언어(PL, Procedural Language)는 PostgreSQL 서버에 내장되지 않고, 모듈을 통해 제공되는 언어의 통칭이다
 
             h3 내부 함수
             p PostgreSQL 서버에 정적으로 링크된 C 언어 함수. 사용자는 이러한 내부 함수에 대한 별칭을 만들 수 있다
@@ -2650,8 +2650,131 @@ include ../../../source/skeleton.pug
             li SQL 함수로는 작성할 수 없다
             li 대기 서버에서도 발생하는 이벤트(예. 로그인)의 경우, 쓰기 작업을 하지 않아야 함에 유의해야 한다
 
+        h2 규칙 시스템
+        ul
+            li 규칙 시스템은 쿼리를 실행 전에 수정하여 쿼리 플래너에 전달한다
+            li 뷰는 기본적으로 on select do instead 규칙을 가진 빈 테이블(실제 저장소 없음)이다
+            li Automatically updatable view : 뷰가 단일 테이블에 대해 충분히 단순한 선택을 하는 경우, 자동으로 뷰에 대한 DML이 기본 릴레이션에 적용되도록 할 수 있다
+                p 뷰가 이보다 복잡하거나 다른 작업이 실행되길 원하는 경우, instead of 트리거나 instead 규칙을 이용할 수 있다
+            li select 외의 명령에 대한 규칙 대신 트리거 사용이 권장된다 -- 규칙은 쿼리에 대해 한 번만 실행된다는 장점이 있긴 하다
+            li 릴레이션의 주인이 규칙에 대한 주인이 되고, 규칙으로 접근하는 릴레이션은 규칙을 호출한 사용자가 아닌 규칙 소유자의 권한으로 검사된다 -- security invoker view에 대한 select 제외
+                ul
+                    li 따라서 사용자가 기본 릴레이션에 대해선 select할 수 없지만, 제한된 컬럼들만 가진 view에 대해선 select하도록 허가할 수 있다
+                    li 이것이 행 수준 보안을 제공하지는 못한다. 행 수준 보안이 필요하다면 뷰에 security_barrier 속성을 적용하여, 뷰 정의에 부합하는 행집합이 선정된 뒤에 사용자가 지정한 연산자, 함수가 실행되도록 해야 한다
+                    li 행 수준 보안을 설정한 경우, 데이터 침해 가능성으로 인해 인덱스 스캔이 사용되지 않을 수 있다
+                        p 사용자에게 결코 값이 보이지 않는 = 연산자, 보안 배리어와 무관한 인자만 이용한 함수 호출은 leakproof하다
+                    li psql의 \dAo+ 명령으로 어떤 연산자가 leakproof인지 확인할 수 있다
+
         h2 PL/pgSQL
-    
+        div
+            h3 PL/pgSQL 구조
+            ul
+                li 블록을 선언하는 begin/end는 트랜잭션 제어와 무관하다
+                li 서브블록을 이용해 변수를 지역화할 수 있다
+                li 모든 함수는 본문을 감싸는 숨겨진 외부 블록(레이블로 함수 이름 사용)이 존재하고, 함수 매개변수와 found 같은 특수 변수를 제공한다
+            +asCode('sql').
+                # create or replace function func(num1 integer) returns integer as $$
+                &lt;&lt; label1 &gt;&gt;
+                declare
+                    num2 integer = 2;
+                begin
+                    declare
+                        num1 integer = 10;
+                        num2 integer = 20;
+                    begin
+                        raise notice 'local num1 = %', num1;
+                        raise notice 'outer num1 = %', func.num1;
+                        raise notice 'local num2 = %', num2;
+                        raise notice 'outer num2 = %', label1.num2;
+                    end;
+                    return num1 + num2;
+                end;
+                $$ language plpgsql;
+                
+                CREATE FUNCTION
+
+                # select func(1);
+                NOTICE:  local num1 = 10
+                NOTICE:  outer num1 = 1
+                NOTICE:  local num2 = 20
+                NOTICE:  outer num2 = 2
+                 func 
+                ------
+                    3
+                (1 row)
+
+            h3 선언
+            ul
+                li for 루프 변수 외의 모든 변수는 블록의 선언 섹션에서 미리 정의해야 한다
+                    +asCode('sql', '변수 선언 일반 구문').
+                        name [ CONSTANT ] type [ COLLATE collation_name ] [ NOT NULL ] [ { DEFAULT | := | = } expression ];
+
+                        -- 타입 지정 시, 이미 존재하는 것으로부터 복사해올 수 있다
+                        table%ROWTYPE -- 테이블은 동명의 복합 타입을 가지므로 %ROWTYPE은 선택사항
+                        table.column%TYPE
+                        variable%TYPE
+
+                        -- 배열도 가능하다
+                        table.column%TYPE[]
+                li 함수 매개변수는 in/out 여부와 무관하게 순서대로 $1, $2, .. 이름이 부여된다
+                li out 매개변수 없는 함수의 반환 타입이 다형인 경우, 특수 매개변수 $0이 실제 반환 타입으로 생성된다
+
+            h3 구문
+            ul
+                li 할당
+                    +asCode('sql') variable { := | = } expression;
+                li 쿼리 매개변수를 제공하는 수준을 넘어 명령 자체를 동적으로 구성해야 하는 경우, execute를 사용한다
+                li 행을 반환하지 않는 모든 SQL 명령은 그대로 작성하여 실행 가능
+                    ul
+                        li select 실행하되 결과를 버리려면? select 대신 perform을 이용한다. with 쿼리의 경우, perform 뒤 괄호 안에 작성한다
+                        li 그 외의 경우는 반환값을 사용 -- 적어도 할당해야 한다
+                            ul
+                                li 단일 행을 이용하는 경우
+                                    +asCode('sql').
+                                        -- target : 레코드 변수 | 행 변수 | ,로 구분된 변수/필드 목록
+                                        -- strict : 정확히 1개 행을 반환하지 않으면 오류 발생
+                                        SELECT select_expressions INTO [STRICT] target FROM ...;
+
+                                        -- select 외의 명령은 strict 없더라도 2개 이상의 행을 반환하면 오류 발생
+                                        INSERT ... RETURNING expressions INTO [STRICT] target;
+                                        UPDATE ... RETURNING expressions INTO [STRICT] target;
+                                        DELETE ... RETURNING expressions INTO [STRICT] target;
+                                        MERGE ... RETURNING expressions INTO [STRICT] target;
+                                    details
+                                        summary print_strict_params : strict 위반 오류 메시지를 풍부하게
+                                        +asCode('sql').
+                                            # create or replace function func(name text) returns text as $$
+                                            #print_strict_params on
+                                            declare
+                                                owner text;
+                                            begin
+                                                select tableowner into strict owner
+                                                from pg_tables
+                                                where tablename = name;
+
+                                                return owner;
+                                            end;
+                                            $$ language plpgsql;
+
+                                            CREATE FUNCTION
+
+                                            # select func('abc');
+                                            ERROR:  query returned no rows
+                                            DETAIL:  parameters: name = 'abc'
+                                            CONTEXT:  PL/pgSQL function func(text) line 6 at SQL statement
+
+                                li 여러 행을 이용하는 경우
+                        li 특수 변수 found를 명령 실행 이후 검사하여 행이 반환됐는지 판단할 수 있다
+
+            h3 제어 구조
+            h3 커서
+            h3 트랜잭션 관리
+            h3 오류와 메시지
+            h3 트리거 함수
+            h3 내부 동작
+            h3 개발 팁
+            h3 Oracle PL/SQL에서 포팅
+
     h1 참고자료
     div
         h2 SQL 명령
