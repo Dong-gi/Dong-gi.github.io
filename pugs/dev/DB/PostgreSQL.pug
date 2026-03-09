@@ -2232,16 +2232,16 @@ include ../../../source/skeleton.pug
 
         h2 누적 통계 시스템
         ul
-            li pg_stat_activity :  서버 프로세스 당 한 줄
-            li pg_stat_subscription :  구독 당 한 줄
-            li pg_stat_subscription_stats :  구독 당 한 줄
-            li pg_stat_replication_slots :  복제 슬롯 당 한 줄
-            li pg_stat_progress_analyze :  analyze 실행하는 백엔드 당 한 줄
-            li pg_stat_progress_vacuum :  vacuum 실행하는 백엔드 당 한 줄
-            li pg_stat_progress_create_index :  인덱스 (재)생성하는 백엔드 당 한 줄
-            li pg_stat_database :  데이터베이스 당 한 줄
-            li pg_stat_all_tables :  테이블 당 한 줄
-            li pg_stat_all_indexes :  인덱스 당 한 줄
+            li pg_stat_activity : 서버 프로세스 당 한 줄
+            li pg_stat_subscription : 구독 당 한 줄
+            li pg_stat_subscription_stats : 구독 당 한 줄
+            li pg_stat_replication_slots : 복제 슬롯 당 한 줄
+            li pg_stat_progress_analyze : analyze 실행하는 백엔드 당 한 줄
+            li pg_stat_progress_vacuum : vacuum 실행하는 백엔드 당 한 줄
+            li pg_stat_progress_create_index : 인덱스 (재)생성하는 백엔드 당 한 줄
+            li pg_stat_database : 데이터베이스 당 한 줄
+            li pg_stat_all_tables : 테이블 당 한 줄
+            li pg_stat_all_indexes : 인덱스 당 한 줄
 
         h2 WAL (Write-Ahead Logging)
         ul
@@ -2723,8 +2723,7 @@ include ../../../source/skeleton.pug
             ul
                 li 할당
                     +asCode('sql') variable { := | = } expression;
-                li 쿼리 매개변수를 제공하는 수준을 넘어 명령 자체를 동적으로 구성해야 하는 경우, execute를 사용한다
-                li 행을 반환하지 않는 모든 SQL 명령은 그대로 작성하여 실행 가능
+                li 행을 반환하지 않는 모든 SQL 명령은 있는 그대로 작성하여 실행 가능
                     ul
                         li select 실행하되 결과를 버리려면? select 대신 perform을 이용한다. with 쿼리의 경우, perform 뒤 괄호 안에 작성한다
                         li 그 외의 경우는 반환값을 사용 -- 적어도 할당해야 한다
@@ -2763,27 +2762,235 @@ include ../../../source/skeleton.pug
                                             DETAIL:  parameters: name = 'abc'
                                             CONTEXT:  PL/pgSQL function func(text) line 6 at SQL statement
 
-                                li 여러 행을 이용하는 경우
-                        li 특수 변수 found를 명령 실행 이후 검사하여 행이 반환됐는지 판단할 수 있다
+                                li 여러 행을 이용하는 경우 : #[+goto('for - 쿼리 결과 순회')]
+                li 쿼리 매개변수를 제공하는 수준을 넘어 명령 자체를 동적으로 구성해야 하는 경우, execute를 사용한다
+                    p 이 경우, 쿼리 계획이 캐시되는 최적화가 적용되지 않는다 -- 최적의 실행 계획이 매개변수에 크게 의존하는 경우 execute 사용이 도움이 될 수 있다
+                    +asCode('sql').
+                        EXECUTE command-string [ INTO [STRICT] target ] [ USING expression [, ... ] ];
+
+                        -- 매개변수 사용 예
+                            -- %I == quote_ident
+                        EXECUTE format('SELECT count(*) FROM %I WHERE inserted_by = $1 AND inserted <= $2', tabname)
+                            INTO c USING checked_user, checked_date;
+
+                        -- quote 직접 호출하는 예
+                        EXECUTE 'UPDATE tbl SET '
+                            || quote_ident(colname)
+                            || ' = '
+                            || quote_literal(newvalue)
+                            || ' WHERE key = '
+                            || quote_literal(keyvalue);
+                li 명령 실행 후 상태 확인
+                    ul
+                        li 마지막 SQL 명령이 처리한 행 수 획득
+                            +asCode('sql') GET DIAGNOSTICS integer_var = ROW_COUNT;
+                        li FOUND 특수 변수 검사
+                            ul
+                                li 최초 false로 시작한 뒤 각 명령이 실행되면서 갱신된다
+                                li select into : 행이 할당됐는지 여부로 업데이트
+                                li perform : 행이 확인됐는지 여부로 업데이트
+                                li update, insert, delete, merge : 영향 받은 행이 있는지 여부로 업데이트
+                                li fetch : 행을 반환했는지 여부로 업데이트
+                                li move : 커서 위치를 변경했는지 여부로 업데이트
+                                li for, foreach : 루프가 종료될 때, 문이 한 번 이상 반복했는지 여부로 업데이트
+                                li return query, return query execute : 쿼리가 행을 반환했는지 여부로 업데이트
+                        li execute는 get diagnostics 출력엔 영향을 미치지만, found는 변경하지 않는다
+                li 아무것도 하지 않기
+                    +asCode('sql') null;
 
             h3 제어 구조
-            h3 커서
-            h3 트랜잭션 관리
-            h3 오류와 메시지
-            h3 트리거 함수
-            h3 내부 동작
-            h3 개발 팁
-            h3 Oracle PL/SQL에서 포팅
+            div
+                h4 함수에서 반환
+                ul
+                    li void 반환 함수 또는 프로시저 : #[+asInlineCode('return;')]을 이용해 도중에 조기 종료할 수 있다. 함수 블록 끝에는 return이 불필요하다
+                    li 비-집합 반환 함수 : #[+asInlineCode('return expression;')]을 이용해 값을 반환한다. out 매개변수가 있는 경우엔 #[+asInlineCode('return;')]으로 종료한다
+                    li 집합 반환 함수
+                        +asCode('sql').
+                            -- 0개 이상의 항목을 필요할 때마다 결과 집합에 추가하고
+                            RETURN NEXT expression;
+                            RETURN QUERY query;
+                            RETURN QUERY EXECUTE command-string [ USING expression [, ... ] ];
+                            -- 필요한 경우 return;으로 조기 종료한다
 
-    h1 참고자료
+                h4 조건문
+                ul
+                    li if
+                        +asCode('sql').
+                            if ... then
+                                ...
+                            elsif ... then -- 선택적
+                                ...
+                            else -- 선택적
+                                ...
+                            end if;
+                    li case
+                        p case절 중 실행되는 것이 없으면 CASE_NOT_FOUND 예외가 발생한다
+                        +asCode('sql').
+                            -- 여타 프로그래밍 언어의 switch에 해당하는 구문
+                            case search-expression
+                                when expression [, expression [ ... ]] then
+                                    ...
+                                else -- 선택적
+                                    ...
+                            end case;
+
+                            -- if 변형에 해당하는 구문
+                            case
+                                when boolean-expression then
+                                    ...
+                                else -- 선택적
+                                    ...
+                            end case;
+                
+                h4 반복문
+                ul
+                    li exit : 루프 또는 서브블록을 종료한다
+                        +asCode('sql') exit [ label ] [ when boolean-expression ];
+                    li continue : 즉시 다음 루프 실행
+                        +asCode('sql') continue [ label ] [ when boolean-expression ];
+                    li loop : 무한 반복 루프
+                        +asCode('sql').
+                            [ &lt;&lt;label&gt;&gt; ]
+                            loop
+                                ...
+                            end loop;
+                    li while : 조건 반복 루프
+                        +asCode('sql').
+                            [ &lt;&lt;label&gt;&gt; ]
+                            while boolean-expression loop
+                                ...
+                            end loop;
+                    li for - 정수 범위 순회
+                        +asCode('sql').
+                            [ &lt;&lt;label&gt;&gt; ]
+                            for var_name in [ reverse ] expression..expression [ by expression ] loop
+                                ...
+                            end loop;
+
+                            for i in reverse 10..1 by 2 loop
+                                -- 10, 8, 6, 4, 2
+                            end loop;
+                    li
+                        +pos('for - 쿼리 결과 순회')
+                        |for - 쿼리 결과 순회
+                        +asCode('sql').
+                            [ &lt;&lt;label&gt;&gt; ]
+                            for target in query loop
+                                -- target : record 변수, 행 변수, 쉼표로 구분된 스칼라 변수 목록
+                                ...
+                            end loop;
+
+                            -- for 소스로 execute 이용 가능
+                            for target in execute ... [ using ... ] loop
+                    li foreach : 배열 순회
+                        +asCode('sql').
+                            [ &lt;&lt;label&gt;&gt; ]
+                            foreach target [ slice number ] in array expression loop
+                                -- slice로 몇 차원 요소를 순회할 지 지정하며, 생략하거나 slice 0인 경우 0차원 -- 개별 요소 단위로 순회한다
+                                ...
+                            end loop;
+                h4 예외 처리
+                ul
+                    li exception 절로 예외를 잡아도 해당 블록 내 모든 변경은 롤백된다 -- 따라서 안전하게 대체 작업을 수행할 수 있다
+                    li exception 절이 포함된 블록에 진입하는 것도 비용이 높으므로, 꼭 필요한 경우에만 이용할 것이 권장된다
+                    li: +asA('https://www.postgresql.org/docs/current/errcodes-appendix.html', 'condition 목록')
+                        ul
+                            li condition 예 - condition 이름 : division_by_zero
+                            li condition 예 - 에러 코드 : SQLSTATE '22012'
+                    li GET STACKED DIAGNOSTICS 명령을 이용하면 exception 절 내에서 예외에 대한 심층 정보를 확인할 수 있다
+                +asCode('sql').
+                    exception
+                        -- 에러가 발생한 경우에만 실행된다
+                        when condition [ or condition ... ] then
+                            ...
+                        -- 에러를 잡지 못하면 다시 전파된다                    
+                h4 스택 트레이스
+                +asCode('sql') GET DIAGNOSTICS stack = PG_CONTEXT;
+
+            h3 커서
+            p 커서를 반환하여 대용량 데이터에 대한 순회를 효율적으로 할 수 있다
+
+            h3 트랜잭션 관리
+            p do 또는 call로 호출(중첩 가능)된 프로시저에 한해 트랜잭션 처리가 가능하다
+
+            h3 오류와 메시지
+            +asCode('sql').
+                -- 메시지 보고
+                raise [ level ] 'format string' [, expression [, ...]] [ using ... ];
+
+                -- 예외 발생 : condition은 예외 처리의 것과 동일
+                raise [ level ] condition [ using ... ];
+                assert boolean-expression [ , message ];
+
+            h3 트리거 함수
+            div
+                h4 데이터 변경 트리거
+                ul
+                    li NEW record : 행 수준 트리거에서 신규 버전 행. 없으면 null
+                    li OLD record : 행 수준 트리거에서 이전 버전 행. 없으면 null
+                    li TG_NAME name : 트리거 이름
+                    li TG_WHEN text : 트리거 정의에 따라 'BEFORE' | 'AFTER' | 'INSTEAD OF'
+                    li TG_LEVEL text : 트리거 정의에 따라 'ROW' | 'STATEMENT'
+                    li TG_OP text : 트리거 발동 연산. 'INSERT' | 'UPDATE' | 'DELETE' | 'TRUNCATE'
+                    li TG_RELID oid : 트리거 발동된 테이블 oid
+                    li TG_TABLE_NAME name : 트리거 발동된 테이블 이름
+                    li TG_NARGS integer : 트리거 정의 시 함수에 주어진 인자의 수
+                    li TG_ARGV text[] : 트리거 정의 시 함수에 주어진 인자
+                h4 이벤트 트리거
+                ul
+                    li TG_EVENT text : 트리거 발동 이벤트
+                    li TG_TAG text : 트리거 발동 명령 태그
+
+            h3 개발 팁
+            ul
+                li 함수의 (매개)변수 이름은 컬럼과 다른 명명 규칙을 이용하는 것이 좋다
+                    p 대량의 레거시가 있다면 plpgsql.variable_conflict = use_column처럼 옵션을 변경할 수도 있다
+                li 개발 환경에서는 흔히 발생하는 실수를 방지하는 검사 옵션(plpgsql.extra_warnings, plpgsql.extra_errors)을 활성화하는 것이 좋다
+                    ul
+                        li shadowed_variables : 변수 선언이 이미 존재하는 변수를 가리는지?
+                        li strict_multi_assignment : select into와 같이 한 번에 여러 변수에 값을 대입하는 경우, 소스 변수의 수와 불일치하는지?
+                        li too_many_rows : into 절이 사용될 때 쿼리가 2개 이상의 행을 반환하는지?
+
+    h1 참고 - psql
     div
-        h2 SQL 명령
-    
+        +asCode('shell') psql [option...] [dbname [username]]
+        h2 Options
+        ul
+            li -a, --echo-all : 모든 비어 있지 않은 입력 행을 표준 출력에 표시. #[+asInlineCode('\\set ECHO all')]과 동일
+            li -c, -f : psql은 옵션을 순서대로 처리한 후 종료한다
+                ul
+                    li -c command, --command=command : 명령 문자열 실행
+        h2 Meta-Commands
+    ul
+        li \set ECHO queries : 서버로 전송된 SQL 명령을 표준 출력에 복사
+        li \set ECHO_HIDDEN on : \d 등의 백슬래시 명령으로 생성되는 실제 쿼리 표시
+        li \pset format csv
+
     h1 내부 구조
     div
-        h2 시스템 카탈로그
+        h2 시스템 뷰
+        p 시스템 카탈로그에 대해 흔히 사용되는 쿼리를 제공하거나, 서버 내부 상태에 대한 접근 제공
+        ul
+            li pg_available_extensions : 사용 가능한 확장
+            li pg_file_settings : 구성 파일 요약
+            li 별도 #[+goto('누적 통계 시스템')] 뷰도 존재
     
+        h2 트랜잭션 처리
+        div
+            h3 서브트랜잭션
+            ul
+                li 서브트랜잭션은 트랜잭션 내부에서 시작해 트랜잭션을 더 작은 단위로 나눌 수 있게 해준다 -- 서브트랜잭션은 부모 트랜잭션에 영향을 주지 않고 커밋/롤백 가능
+                li 트랜잭션 내에서 savepoint 명령을 사용해 명시적으로 시작할 수 있다 -- PL/pgSQL의 exception 절을 이용해 시작할 수도 있다
+            h3 2단계 트랜잭션
+            p 가용성 문제가 생기면 2단계 트랜잭션이 장기간 준비 상태에 있을 수 있다
+            ul
+                li prepare transaction : 변경사항을 디스크에 쓰고, 2단계 트랜잭션 커밋 또는 롤백을 대기 (pg_prepared_xacts에서 조회 가능)
+                li commit prepared : 2단계 트랜잭션 커밋
+                li rollback prepared : 2단계 트랜잭션 롤백
+
     h1 부록
     div
         h2 Date/Time 지원
 
+        h2 추가 모듈 및 확장 (contrib 디렉터리)
+        p 이 선택적 구성 요소들은 빌드에 자동으로 포함되지 않으므로, 이미 빌드된 서버를 이용하는 경우 일부는 설치되지 않았을 수 있다
