@@ -2956,15 +2956,136 @@ include ../../../source/skeleton.pug
         +asCode('shell') psql [option...] [dbname [username]]
         h2 Options
         ul
-            li -a, --echo-all : 모든 비어 있지 않은 입력 행을 표준 출력에 표시. #[+asInlineCode('\\set ECHO all')]과 동일
-            li -c, -f : psql은 옵션을 순서대로 처리한 후 종료한다
+            li 연결 옵션
+                ul
+                    li -h hostname, --host=hostname : 생략 시 PGHOST 환경변수 &gt; 로컬호스트
+                    li -p port, --port=port : 생략 시 PGPORT 환경변수 &gt; 5432(컴파일에 이용된 상수)
+                    li -U username, --username=username : 생략 시 PGUSER &gt; OS 사용자 이름
+                    li -d dbname, --dbname=dbname : 생략 시 PGDATABASE 환경변수 &gt; 사용자 이름과 동일
+                    li -w, --no-password : 암호 프롬프트 미사용. 다른 소스(예. ~/.pgpass)로부터 인증 수행하고, 불가능하면 연결 실패
+            li 비-대화형 모드
                 ul
                     li -c command, --command=command : 명령 문자열 실행
+                    li -f file, --file=file : 파일의 명령 실행
+                    li -q, --quiet : 환영 메시지 같은 부가 정보 출력 억제
+                    li -A, --no-align : 비정렬 출력 모드. #[+asInlineCode('\\pset format unaligned')]와 동일
+                    li -F separator, --field-separator=separator : 비정렬 출력의 필드 구분자 설정. #[+asInlineCode('\\pset fieldsep separator')]와 동일
+                    li -z, --field-separator-zero : 비정렬 출력의 필드 구분자를 제로 바이트 설정. #[+asInlineCode('\\pset fieldsep_zero')]와 동일
+                    li -0, --record-separator-zero : 비정렬 출력의 레코드 구분자를 제로 바이트 설정. #[+asInlineCode('xargs -0')]와 함께 이용하는 데 유용. #[+asInlineCode('\\pset recordsep_zero')]와 동일
+                    li -1, --single-transaction : -c, -f들을 begin, commit으로 감싸 실행
+                    li -V, --version : 버전을 출력하고 종료
+                    li -?, --help[=topic] : 도움말 표시하고 종료
+            li 출력 제어
+                ul
+                    li -a, --echo-all : 모든 비어 있지 않은 입력 행을 표준 출력에 표시. #[+asInlineCode('\\set ECHO all')]과 동일
+                    li --csv : CSV 출력 모드. #[+asInlineCode('\\pset format csv')]와 동일
+                    li -e, --echo-queries : 서버로 전송한 모든 SQL 명령을 표준 출력에 표시. #[+asInlineCode('\\set ECHO queries')]와 동일
+                    li -E, --echo-hidden : \d 등의 백슬래시 명령으로 생성되는 실제 쿼리 표시. #[+asInlineCode('\\set ECHO_HIDDEN on')]과 동일
+                    li -L file, --log-file=file : 추가적으로 모든 쿼리 결과를 파일에 기록
+                    li -o file, --output=file : 기본적으로 모든 쿼리 결과를 파일에 기록. #[+asInlineCode('\\o file')]과 동일
         h2 Meta-Commands
-    ul
-        li \set ECHO queries : 서버로 전송된 SQL 명령을 표준 출력에 복사
-        li \set ECHO_HIDDEN on : \d 등의 백슬래시 명령으로 생성되는 실제 쿼리 표시
-        li \pset format csv
+        ul
+            li 기본 구조 : \ + 동사 + 인수
+                p 인수에 변수 이용 가능
+                ul
+                    li :var_name, :'var_name', :"var_name" : psql 변수 값으로 보간
+                        +asCode('sql').
+                            # \set num1 123
+                            # \echo num1 :num1 :'num1' :"num1"
+                            num1 123 '123' "123"
+                    li :{?var_name} : psql 변수 정의 테스트 (TRUE 또는 FALSE로 치환)
+                    li `command` : 셸 명령 출력으로 치환
+                        +asCode('sql').
+                            # \echo `ls -al`
+                            total 53704
+                            drwxr-xr-x@  29 wiz  staff      928 Mar  5 17:41 .
+                            drwx------@  60 wiz  staff     1920 Mar  5 15:38 ..
+            li \bind parameter ... : 쿼리 매개변수 설정
+                +asCode('sql').
+                    # select $1::int, $2::text \bind 123 `whoami` \g
+                     int4 | text 
+                    ------+------
+                      123 | wiz
+                    (1 row)
+            li \bind_named statement_name parameter ... : 쿼리 매개변수 설정
+                +asCode('sql').
+                    # select $1::int, $2::text \parse stmt1
+
+                    # \bind_named stmt1 123 `whoami` \g
+                     int4 | text 
+                    ------+------
+                      123 | wiz
+                    (1 row)
+            li \cd directory : 작업 디렉터리 변경
+            li \close_prepared statement_name : 준비된 문장 해제
+            li \conninfo : 연결 정보
+            li \copy table [(column_list)] from { 'file' | stdin } [ where condition ]
+            li \copy { table [(column_list)] | (query) } to { 'file' | stdout }
+            li \crosstabview : 현재 쿼리 버퍼를 실행하고 결과를 cross tabulation 표시
+                +asCode('sql').
+                    # with tmp(n1, n2, n3) as (values (1, 2, 3), (4, 5, 6), (7, 5, 9))
+                    # select * from tmp \crosstabview
+                     n1 | 2 | 5 
+                    ----+---+---
+                      1 | 3 |  
+                      4 |   | 6
+                      7 |   | 9
+                    (3 rows)
+            li \d...[S+] : 정의 탐색
+                ul
+                    li S : 시스템 객체 포함
+                    li + : 추가 정보 포함
+                    li \d는 \dtvmsE와 동일 : 테이블 + 뷰 + 구체화된 뷰 + 시퀀스 + 외부 테이블
+                    li \df : 함수 목록
+                    li \di : 인덱스 목록
+                    li \du : 역할 목록
+                    li \dx : 설치된 확장
+            li \echo ... : 평가된 인수를 표준 출력
+            li \errverbose : 가장 최근 서버 오류 메시지를 최대한 상세하게 반복
+            li \g : 현재 쿼리 버퍼를 실행을 위해 전송. 현재 쿼리 버퍼가 비어 있다면 가장 최근 전송된 쿼리를 다시 실행
+            li \gdesc : 현재 쿼리 버퍼 결과에 대해 설명. 쿼리가 실제로 실행되지는 않는다
+            li \getenv psql_var env_var : 환경 변수 값이 존재하는 경우 psql 변수에 할당
+            li \gexec : 현재 쿼리 버퍼를 실행을 위해 전송. 결과의 모든 null이 아닌 열을 SQL로 취급하고 실행
+            li \gset [prefix] : 현재 쿼리 버퍼를 실행을 위해 전송. 결과를 psql 변수에 저장
+            li \h [command], \help [command] : SQL 명령 구문 도움말
+            li \i file, \include file : 지정 파일을 읽고 실행. 파일에 '-'를 지정한 경우 EOF 표시 또는 \q 메타 명령이 나타날 때까지 표준 입력을 받는다
+            li \if ... \elif ... \else ... \endif
+            li \l[+] : 데이터베이스 목록
+            li \o file, \out file : 이후 쿼리 결과를 파일에 저장
+            li \o |command, \out |command : 이후 쿼리 결과를 파이프
+            li \p, \print : 현재 쿼리 버퍼를 출력
+            li \parse statement_name : 현재 쿼리 버퍼로 준비된 문장 생성
+            li \password [username] : 암호 변경
+            li \prompt [text] name : 사용자 입력을 psql 변수 name 할당
+            li \pset option [value] : value를 생략하는 경우 옵션에 따라 현재값 출력 | 토글 | 옵션 해제된다
+                ul
+                    li csv_fieldsep : CSV 출력 형식의 필드 구분자 설정
+                    li expanded 또는 x : on | off | auto 중 설정
+                    li format : aligned | asciidoc | csv | html | latex | latex-longtable | troff-ms | unaligned | wrapped
+                        ul
+                            li aligned : 기본값. 사람이 읽기 좋게 공백으로 정렬
+                            li unaligned : 정렬하지 않음
+                            li wrapped : aligned + 열 너비를 초과하는 경우 줄바꿈 삽입
+                    li null : null 대신 출력할 문자열 설정
+            li \q, \quit : psql 종료. 스크립트 파일 안에서는 해당 스크립트 실행만 종료
+            li \r, \reset : 쿼리 버퍼 비우기
+            li \s [file] : psql 히스토리 출력
+            li \set [name [value [...]]]
+                ul
+                    li 인자 없는 경우 : 변수 목록 표시
+                    li 인자 있는 경우 : psql 변수 설정. value가 생략되면 빈 문자열
+                    li :'var_name' : 변수 값을 SQL 리터럴로 인용
+                    li :"var_name" : 변수 값을 SQL 식별자로 인용
+                    li :{?var_name} : 변수 존재 여부에 따라 TRUE 또는 FALSE로 치환
+                +asCode('sql').
+                    # \set table_name pg_tables
+                    # \set limit_count 10
+                    # select * from :"table_name" limit :limit_count;
+            li \setenv name [value] : 환경 변수를 value로 설정하거나, value가 없으면 해제
+            li \timing [on | off] : 쿼리 실행에 걸린 시간 표시
+            li \unset name : psql 변수 삭제
+            li \watch [ i[nterval]=seconds ] [ c[ount]=times ] [ m[in_rows]=rows ] [ seconds ] : 조건을 만족하는 동안 현재 쿼리 버퍼를 반복 실행
+            li \; : 서버에 명령을 보내지 않고 쿼리 버퍼에 세미콜론 추가
 
     h1 내부 구조
     div
@@ -2988,9 +3109,5 @@ include ../../../source/skeleton.pug
                 li commit prepared : 2단계 트랜잭션 커밋
                 li rollback prepared : 2단계 트랜잭션 롤백
 
-    h1 부록
-    div
-        h2 Date/Time 지원
-
-        h2 추가 모듈 및 확장 (contrib 디렉터리)
-        p 이 선택적 구성 요소들은 빌드에 자동으로 포함되지 않으므로, 이미 빌드된 서버를 이용하는 경우 일부는 설치되지 않았을 수 있다
+    h1 부록 &gt; 추가 모듈 및 확장 (contrib 디렉터리)
+    p 이 선택적 구성 요소들은 빌드에 자동으로 포함되지 않으므로, 이미 빌드된 서버를 이용하는 경우 일부는 설치되지 않았을 수 있다
