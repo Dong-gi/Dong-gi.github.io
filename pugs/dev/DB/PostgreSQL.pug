@@ -3023,14 +3023,13 @@ include ../../../source/skeleton.pug
             li \copy { table [(column_list)] | (query) } to { 'file' | stdout }
             li \crosstabview : 현재 쿼리 버퍼를 실행하고 결과를 cross tabulation 표시
                 +asCode('sql').
-                    # with tmp(n1, n2, n3) as (values (1, 2, 3), (4, 5, 6), (7, 5, 9))
+                    # with tmp(n1, n2, n3) as (values (1, 'f1', '1-1'), (1, 'f2', '1-2'), (2, 'f1', '2-1'))
                     # select * from tmp \crosstabview
-                     n1 | 2 | 5 
-                    ----+---+---
-                      1 | 3 |  
-                      4 |   | 6
-                      7 |   | 9
-                    (3 rows)
+                     n1 | f1  | f2  
+                    ----+-----+-----
+                      1 | 1-1 | 1-2
+                      2 | 2-1 | 
+                    (2 rows)
             li \d...[S+] : 정의 탐색
                 ul
                     li S : 시스템 객체 포함
@@ -3095,7 +3094,489 @@ include ../../../source/skeleton.pug
             li pg_available_extensions : 사용 가능한 확장
             li pg_file_settings : 구성 파일 요약
             li 별도 #[+goto('누적 통계 시스템')] 뷰도 존재
-    
+
+        h2 내장 인덱스
+        div
+            h3 B-Tree
+            div
+                h4.no-marker 개요
+                ul
+                    li 잘 정의된 선형 순서로 정렬할 수 있는 모든 데이터 타입은 B-트리 인덱싱 가능하다. 단, 개별 인덱스 항목이 페이지의 약 1/3을 초과하지 않아야 한다
+                    li B-트리 연산자 클래스는 해당 타입에 정렬 순서를 강제하므로, PostgreSQL 정렬에 대한 일반적인 표현 및 이해 수단으로 사용된다
+                h4.no-marker 연산자 클래스
+                ul
+                    li 비교 연산자 &lt;, &lt;=, =, =&gt;, &gt;를 제공한다
+                    li = 연산자는 동치 관계여야 한다
+                        ul
+                            li non-null 값들에 대해
+                            li A = A는 true여야 한다
+                            li A = B면 B = A여야 한다
+                            li A = B and B = C면 A = C여야 한다
+                    li &lt; 비교는 강한 순서 관계여야 한다
+                        ul
+                            li non-null 값들에 대해
+                            li A &lt; A는 false여야 한다
+                            li A &lt; B and B &lt; C면 A &lt; C여야 한다
+                    li 비교는 도메인 전체에 적용돼야 한다
+                        ul
+                            li non-null 값들에 대해
+                            li A, B는 A &lt; B, A = B, B &lt; A 중 정확히 하나만 true여야 한다
+
+            h3 GiST
+            div
+                h4.no-marker 개요
+                p 일반화된 검색 트리(Generalized Search Tree)는 balanced tree를 이용한 임의의 인덱싱 방식을 구현하기 위한 기본 템플릿을 제공한다
+
+                h4.no-marker 내장 연산자 클래스
+                p inet_ops 연산자 클래스는 inet과 cidr 타입의 기본 클래스가 아니므로, 인덱스 정의 시 클래스 이름을 명시해야 한다
+                +asCode('sql') CREATE INDEX ON my_table USING GIST (my_inet_column inet_ops);
+                table.w3-table.w3-bordered
+                    thead
+                        th Name
+                        th Indexable Operators
+                        th Ordering Operators
+                    tbody
+                        tr
+                            td(rowspan="12") box_ops
+                            td &lt;&lt; (box, box)
+                            td(rowspan="12") &lt;-&gt; (box, point)
+                        tr
+                            td &amp;&lt; (box, box)
+                        tr
+                            td &amp;&amp; (box, box)
+                        tr
+                            td &amp;&gt; (box, box)
+                        tr
+                            td &gt;&gt; (box, box)
+                        tr
+                            td ~= (box, box)
+                        tr
+                            td @&gt; (box, box)
+                        tr
+                            td &lt;@ (box, box)
+                        tr
+                            td &amp;&lt;| (box, box)
+                        tr
+                            td &lt;&lt;| (box, box)
+                        tr
+                            td |&gt;&gt; (box, box)
+                        tr
+                            td |&amp;&gt; (box, box)
+                        tr
+                            td(rowspan="12") circle_ops
+                            td &lt;&lt; (circle, circle)
+                            td(rowspan="12") &lt;-&gt; (circle, point)
+                        tr
+                            td &amp;&lt; (circle, circle)
+                        tr
+                            td &amp;&gt; (circle, circle)
+                        tr
+                            td &gt;&gt; (circle, circle)
+                        tr
+                            td &lt;@ (circle, circle)
+                        tr
+                            td @&gt; (circle, circle)
+                        tr
+                            td ~= (circle, circle)
+                        tr
+                            td &amp;&amp; (circle, circle)
+                        tr
+                            td |&gt;&gt; (circle, circle)
+                        tr
+                            td &lt;&lt;| (circle, circle)
+                        tr
+                            td &amp;&lt;| (circle, circle)
+                        tr
+                            td |&amp;&gt; (circle, circle)
+                        tr
+                            td(rowspan="11") inet_ops
+                            td &lt;&lt; (inet, inet)
+                            td(rowspan="11") &nbsp;
+                        tr
+                            td &lt;&lt;= (inet, inet)
+                        tr
+                            td &gt;&gt; (inet, inet)
+                        tr
+                            td &gt;&gt;= (inet, inet)
+                        tr
+                            td = (inet, inet)
+                        tr
+                            td &lt;&gt; (inet, inet)
+                        tr
+                            td &lt; (inet, inet)
+                        tr
+                            td &lt;= (inet, inet)
+                        tr
+                            td &gt; (inet, inet)
+                        tr
+                            td &gt;= (inet, inet)
+                        tr
+                            td &amp;&amp; (inet, inet)
+                        tr
+                            td(rowspan="18") multirange_ops
+                            td = (anymultirange, anymultirange)
+                            td(rowspan="18") &nbsp;
+                        tr
+                            td &amp;&amp; (anymultirange, anymultirange)
+                        tr
+                            td &amp;&amp; (anymultirange, anyrange)
+                        tr
+                            td @&gt; (anymultirange, anyelement)
+                        tr
+                            td @&gt; (anymultirange, anymultirange)
+                        tr
+                            td @&gt; (anymultirange, anyrange)
+                        tr
+                            td &lt;@ (anymultirange, anymultirange)
+                        tr
+                            td &lt;@ (anymultirange, anyrange)
+                        tr
+                            td &lt;&lt; (anymultirange, anymultirange)
+                        tr
+                            td &lt;&lt; (anymultirange, anyrange)
+                        tr
+                            td &gt;&gt; (anymultirange, anymultirange)
+                        tr
+                            td &gt;&gt; (anymultirange, anyrange)
+                        tr
+                            td &amp;&lt; (anymultirange, anymultirange)
+                        tr
+                            td &amp;&lt; (anymultirange, anyrange)
+                        tr
+                            td &amp;&gt; (anymultirange, anymultirange)
+                        tr
+                            td &amp;&gt; (anymultirange, anyrange)
+                        tr
+                            td -|- (anymultirange, anymultirange)
+                        tr
+                            td -|- (anymultirange, anyrange)
+                        tr
+                            td(rowspan="8") point_ops
+                            td |&gt;&gt; (point, point)
+                            td(rowspan="8") &lt;-&gt; (point, point)
+                        tr
+                            td &lt;&lt; (point, point)
+                        tr
+                            td &gt;&gt; (point, point)
+                        tr
+                            td &lt;&lt;| (point, point)
+                        tr
+                            td ~= (point, point)
+                        tr
+                            td &lt;@ (point, box)
+                        tr
+                            td &lt;@ (point, polygon)
+                        tr
+                            td &lt;@ (point, circle)
+                        tr
+                            td(rowspan="12") poly_ops
+                            td &lt;&lt; (polygon, polygon)
+                            td(rowspan="12") &lt;-&gt; (polygon, point)
+                        tr
+                            td &amp;&lt; (polygon, polygon)
+                        tr
+                            td &amp;&gt; (polygon, polygon)
+                        tr
+                            td &gt;&gt; (polygon, polygon)
+                        tr
+                            td &lt;@ (polygon, polygon)
+                        tr
+                            td @&gt; (polygon, polygon)
+                        tr
+                            td ~= (polygon, polygon)
+                        tr
+                            td &amp;&amp; (polygon, polygon)
+                        tr
+                            td &lt;&lt;| (polygon, polygon)
+                        tr
+                            td &amp;&lt;| (polygon, polygon)
+                        tr
+                            td |&amp;&gt; (polygon, polygon)
+                        tr
+                            td |&gt;&gt; (polygon, polygon)
+                        tr
+                            td(rowspan="18") range_ops
+                            td = (anyrange, anyrange)
+                            td(rowspan="18") &nbsp;
+                        tr
+                            td &amp;&amp; (anyrange, anyrange)
+                        tr
+                            td &amp;&amp; (anyrange, anymultirange)
+                        tr
+                            td @&gt; (anyrange, anyelement)
+                        tr
+                            td @&gt; (anyrange, anyrange)
+                        tr
+                            td @&gt; (anyrange, anymultirange)
+                        tr
+                            td &lt;@ (anyrange, anyrange)
+                        tr
+                            td &lt;@ (anyrange, anymultirange)
+                        tr
+                            td &lt;&lt; (anyrange, anyrange)
+                        tr
+                            td &lt;&lt; (anyrange, anymultirange)
+                        tr
+                            td &gt;&gt; (anyrange, anyrange)
+                        tr
+                            td &gt;&gt; (anyrange, anymultirange)
+                        tr
+                            td &amp;&lt; (anyrange, anyrange)
+                        tr
+                            td &amp;&lt; (anyrange, anymultirange)
+                        tr
+                            td &amp;&gt; (anyrange, anyrange)
+                        tr
+                            td &amp;&gt; (anyrange, anymultirange)
+                        tr
+                            td -|- (anyrange, anyrange)
+                        tr
+                            td -|- (anyrange, anymultirange)
+                        tr
+                            td(rowspan="2") tsquery_ops
+                            td &lt;@ (tsquery, tsquery)
+                            td(rowspan="2") &nbsp;
+                        tr
+                            td @&gt; (tsquery, tsquery)
+                        tr
+                            td tsvector_ops
+                            td @@ (tsvector, tsquery)
+                            td &nbsp;
+
+            h3 SP-GiST
+            div
+                h4.no-marker 개요
+                p 공간 분할 GiST(space-partitioned GiST)는 분할 검색 트리로 비-균형 데이터에 대한 효율적인 검색을 지원한다
+
+                h4.no-marker 내장 연산자 클래스
+                table.w3-table.w3-bordered
+                    thead
+                        th Name
+                        th Indexable Operators
+                        th Ordering Operators
+                    tbody
+                        tr
+                            td(rowspan="12") box_ops
+                            td &lt;&lt; (box,box)
+                            td(rowspan="12") &lt;-&gt; (box,point)
+                        tr
+                            td &amp;&lt; (box,box)
+                        tr
+                            td &amp;&gt; (box,box)
+                        tr
+                            td &gt;&gt; (box,box)
+                        tr
+                            td &lt;@ (box,box)
+                        tr
+                            td @&gt; (box,box)
+                        tr
+                            td ~= (box,box)
+                        tr
+                            td &amp;&amp; (box,box)
+                        tr
+                            td &lt;&lt;| (box,box)
+                        tr
+                            td &amp;&lt;| (box,box)
+                        tr
+                            td |&amp;&gt; (box,box)
+                        tr
+                            td |&gt;&gt; (box,box)
+                        tr
+                            td(rowspan="11") inet_ops
+                            td &lt;&lt; (inet,inet)
+                            td(rowspan="11") &nbsp;
+                        tr
+                            td &lt;&lt;= (inet,inet)
+                        tr
+                            td &gt;&gt; (inet,inet)
+                        tr
+                            td &gt;&gt;= (inet,inet)
+                        tr
+                            td = (inet,inet)
+                        tr
+                            td &lt;&gt; (inet,inet)
+                        tr
+                            td &lt; (inet,inet)
+                        tr
+                            td &lt;= (inet,inet)
+                        tr
+                            td &gt; (inet,inet)
+                        tr
+                            td &gt;= (inet,inet)
+                        tr
+                            td &amp;&amp; (inet,inet)
+                        tr
+                            td(rowspan="6") kd_point_ops
+                            td |&gt;&gt; (point,point)
+                            td(rowspan="6") &lt;-&gt; (point,point)
+                        tr
+                            td &lt;&lt; (point,point)
+                        tr
+                            td &gt;&gt; (point,point)
+                        tr
+                            td &lt;&lt;| (point,point)
+                        tr
+                            td ~= (point,point)
+                        tr
+                            td &lt;@ (point,box)
+                        tr
+                            td(rowspan="12") poly_ops
+                            td &lt;&lt; (polygon,polygon)
+                            td(rowspan="12") &lt;-&gt; (polygon,point)
+                        tr
+                            td &amp;&lt; (polygon,polygon)
+                        tr
+                            td &amp;&gt; (polygon,polygon)
+                        tr
+                            td &gt;&gt; (polygon,polygon)
+                        tr
+                            td &lt;@ (polygon,polygon)
+                        tr
+                            td @&gt; (polygon,polygon)
+                        tr
+                            td ~= (polygon,polygon)
+                        tr
+                            td &amp;&amp; (polygon,polygon)
+                        tr
+                            td &lt;&lt;| (polygon,polygon)
+                        tr
+                            td &amp;&lt;| (polygon,polygon)
+                        tr
+                            td |&gt;&gt; (polygon,polygon)
+                        tr
+                            td |&amp;&gt; (polygon,polygon)
+                        tr
+                            td(rowspan="6") quad_point_ops
+                            td |&gt;&gt; (point,point)
+                            td(rowspan="6") &lt;-&gt; (point,point)
+                        tr
+                            td &lt;&lt; (point,point)
+                        tr
+                            td &gt;&gt; (point,point)
+                        tr
+                            td &lt;&lt;| (point,point)
+                        tr
+                            td ~= (point,point)
+                        tr
+                            td &lt;@ (point,box)
+                        tr
+                            td(rowspan="10") range_ops
+                            td = (anyrange,anyrange)
+                            td(rowspan="10") &nbsp;
+                        tr
+                            td &amp;&amp; (anyrange,anyrange)
+                        tr
+                            td @&gt; (anyrange,anyelement)
+                        tr
+                            td @&gt; (anyrange,anyrange)
+                        tr
+                            td &lt;@ (anyrange,anyrange)
+                        tr
+                            td &lt;&lt; (anyrange,anyrange)
+                        tr
+                            td &gt;&gt; (anyrange,anyrange)
+                        tr
+                            td &amp;&lt; (anyrange,anyrange)
+                        tr
+                            td &amp;&gt; (anyrange,anyrange)
+                        tr
+                            td -|- (anyrange,anyrange)
+                        tr
+                            td(rowspan="10") text_ops
+                            td = (text,text)
+                            td(rowspan="10") &nbsp;
+                        tr
+                            td &lt; (text,text)
+                        tr
+                            td &lt;= (text,text)
+                        tr
+                            td &gt; (text,text)
+                        tr
+                            td &gt;= (text,text)
+                        tr
+                            td ~&lt;~ (text,text)
+                        tr
+                            td ~&lt;=~ (text,text)
+                        tr
+                            td ~&gt;=~ (text,text)
+                        tr
+                            td ~&gt;~ (text,text)
+                        tr
+                            td ^@ (text,text)
+
+            h3 GIN
+            div
+                h4.no-marker 개요
+                ul
+                    li 일반화된 역 인덱스(Generalized Inverted Index)는 인덱싱 대상이 복합 타입이고, 개별 요소를 이용해 검색하는 경우를 처리한다
+                    li 인덱스 갱신 비용이 높으므로, 테이블에 대량 삽입이 발생하는 경우 인덱스를 삭제하고 나중에 재생성하는 게 나을 수 있다
+                    li GIN 인덱스 개발의 주요 목표는 PostgreSQL에 전문 검색 지원을 만드는 것이었다 -- 매우 빈번하게 등장하는 단어를 인덱스에 포함하는 것은 매우 큰 결과 집합을 생성하므로 유용하지 않다
+                    li null은 지원하지 않는다
+
+                h4.no-marker 내장 연산자 클래스
+                table.w3-table.w3-bordered
+                    thead
+                        th Name
+                        th Indexable Operators
+                    tbody
+                        tr
+                            td(rowspan="4") array_ops
+                            td &amp;&amp; (anyarray,anyarray)
+                        tr
+                            td @&gt; (anyarray,anyarray)
+                        tr
+                            td &lt;@ (anyarray,anyarray)
+                        tr
+                            td = (anyarray,anyarray)
+                        tr
+                            td(rowspan="6") jsonb_ops
+                            td @&gt; (jsonb,jsonb)
+                        tr
+                            td @? (jsonb,jsonpath)
+                        tr
+                            td @@ (jsonb,jsonpath)
+                        tr
+                            td ? (jsonb,text)
+                        tr
+                            td ?| (jsonb,text[])
+                        tr
+                            td ?&amp; (jsonb,text[])
+                        tr
+                            td(rowspan="3") jsonb_path_ops
+                            td @&gt; (jsonb,jsonb)
+                        tr
+                            td @? (jsonb,jsonpath)
+                        tr
+                            td @@ (jsonb,jsonpath)
+                        tr
+                            td tsvector_ops
+                            td @@ (tsvector,tsquery)
+
+            h3 BRIN
+            div
+                h4.no-marker 개요
+                ul
+                    li 블록 범위 인덱스(Block Range Index)는 특정 열이 테이블 내 물리적 위치와 상관관계를 가지는 매우 큰 테이블을 처리하게 위해 설계됐다
+                    li BRIN은 블록 범위 단위(=테이블에서 물리적으로 인접한 페이지 그룹)로 작동한다: 각 블록 범위에 대한 일부 요약 정보(예. 최대/최솟값)가 인덱스에 저장된다
+                    li BRIN 검색 시, 쿼리 조건을 일관되게 만족하는 블록 범위에 대해선 페이지의 모든 튜플을 반환한다: 쿼리 실행기가 각 튜플을 나머지 조건들에 대해 재검사한다
+                        ul
+                            li 테이블이 매우 크다면 이는 조건을 만족하지 않는 대부분의 스캔을 회피하므로 유용하다
+                            li pages_per_range 매개변수로 정밀도를 조정할 수 있다: 인덱스 항목 수 = 릴레이션 페이지 크기 / pages_per_range
+                    li 마지막 요약된 범위에 속하지 않는 새 페이지가 생성되면, 해당 튜플은 요약 실행이 호출되기 전까진 요약되지 않은 상태로 남는다
+                        ul
+                            li vacuum 처리 시 모든 요약되지 않은 페이지 범위가 요약된다
+                            li autosummarize 매개변수를 활성화한 경우, 자동으로 페이지 요약이 실행된다
+                            li brin_summarize_new_values(), brin_summarize_range() 함수 호출로 요약할 수 있다
+                            li 반대로 기존 튜플이 변경되어 요약이 좋은 표현이 아니게 되었다면 brin_desummarize_range() 함수로 해제할 수 있다
+
+                h4.no-marker: +asA('https://www.postgresql.org/docs/18/brin.html#BRIN-BUILTIN-OPCLASSES')
+
+            h3 Hash
+            div
+                h4.no-marker 개요
+                
+                h4.no-marker 연산자 클래스
+
         h2 트랜잭션 처리
         div
             h3 서브트랜잭션
@@ -3110,4 +3591,31 @@ include ../../../source/skeleton.pug
                 li rollback prepared : 2단계 트랜잭션 롤백
 
     h1 부록 &gt; 추가 모듈 및 확장 (contrib 디렉터리)
-    p 이 선택적 구성 요소들은 빌드에 자동으로 포함되지 않으므로, 이미 빌드된 서버를 이용하는 경우 일부는 설치되지 않았을 수 있다
+    div
+        p 이 선택적 구성 요소들은 빌드에 자동으로 포함되지 않으므로, 이미 빌드된 서버를 이용하는 경우 일부는 설치되지 않았을 수 있다
+        h2 bloom
+        ul
+            li #[+goto('Bloom filter', '/posts/fundamental/algorithm.html')]를 이용한 인덱스 제공
+            li 인덱스 매개변수
+                ul
+                    li length : 각 인덱스 항목 비트 길이. 기본 80, 최대 4096
+                        p 인덱스를 이용해 개별 행을 참조할 수 있어야 하므로, 개별 행마다 서명을 갖는다
+                    li col1 - col32 : 각 인덱스 열의 비트 수. 기본 2, 최대 4095
+            li 컬럼이 여러 개인 테이블에서 col1 = val1 and col3 = val3 and col5 = val5를 만족하는 행을 찾는 것과 같은 문제에 대해 btree보다 뛰어난 공간 효율을 보인다
+            li 제한사항
+                ul
+                    li 모듈에는 int4, text에 대한 연산자 클래스만 포함되어 있다
+                    li 현재 = 연산자로만 검색 가능
+                    li null 검색 미지원
+
+        h2 btree_gin
+        ul
+            li 여러 타입에 대해 B-트리와 동등한 동작을 구현하는 GIN 연산자 클래스를 제공한다
+            li GIN 인덱스 컬럼과 B-트리 인덱스 컬럼을 따로 검사해 비트맵 AND로 결합하는 것보다, 다중 컬럼 GIN 인덱스를 이용하는 게 효율적일 수 있다
+
+        h2 btree_gist
+        ul
+            li 여러 타입에 대해 B-트리와 동등한 동작을 구현하는 GiST 연산자 클래스를 제공한다
+            li 일부 컬럼은 GiST로만 인덱싱 가능하지만 나머지는 단순한 데이터 타입인 다중 컬럼 GiST 인덱스가 필요한 경우 유용하다
+            li 자연스러운 거리가 존재하는 데이터 타입(크기가 고정된 숫자, 시간 및 날짜)에 대해 거리 연산자 &lt;-&gt;를 정의하고, 근접 이웃 검색을 제공
+
