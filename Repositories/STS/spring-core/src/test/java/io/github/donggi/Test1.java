@@ -17,14 +17,14 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Slf4j
 class Test1 {
-    
+
     @Autowired
     private ApplicationContext context;
     @Autowired
     private FormattingConversionService conversionService;
     @Autowired
     private Test1Bean test1Bean;
-    
+
     @Test
     void test() throws NoSuchFieldException, SecurityException {
         assertTrue(context.getEnvironment().getActiveProfiles()[0].equals("test1"));

@@ -133,7 +133,7 @@ include ../../../source/skeleton.pug
                 -XX:+UseGCLogFileRotation
                 -XX:+NumberOfGCLogFiles=10
                 -XX:+GCLogFileSize=10m
-                
+
                 # JDK 9+ GC logging
                 -Xlog:gc*,gc+age=trace,safepoint:file=/var/log/app/gc.log:utctime,pid,tags:filecount=10,filesize=10m
             p GC 로그는 

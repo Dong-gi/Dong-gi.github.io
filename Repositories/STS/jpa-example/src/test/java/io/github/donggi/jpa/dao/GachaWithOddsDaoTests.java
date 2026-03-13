@@ -19,7 +19,7 @@ import io.github.donggi.jpa.entity.GachaWithOdds;
 class GachaWithOddsDaoTests {
 
     private static Long gachaId;
-    
+
     @Autowired
     private GachaWithOddsDao gachaWithOddsDao;
     @Autowired
@@ -34,7 +34,7 @@ class GachaWithOddsDaoTests {
         gacha.setGachaName("Gacha " + gacha.getGachaId());
         gacha = gachaWithOddsDao.save(gacha);
         gachaId = gacha.getGachaId();
-        
+
         gachaOddsDao.save(new GachaOdds(new GachaOdds.ID(gachaId, 3), "memo3", 1L, 3));
         gachaOddsDao.save(new GachaOdds(new GachaOdds.ID(gachaId, 1), "memo1", 2L, 1));
         gachaOddsDao.save(new GachaOdds(new GachaOdds.ID(gachaId, 4), "memo4", 1L, 4));
@@ -51,7 +51,7 @@ class GachaWithOddsDaoTests {
         assertTrue(gacha.getObjectIdSet().size() == 2);
         assertTrue(gacha.getObjectIdMap().size() == 4);
         assertTrue(gacha.getMinimalOddList().size() == 4);
-        
+
         var minimalOdds = gachaOddsDao.findMinimalOdds(gachaId); 
         assertTrue(gacha.getMinimalOddList().stream().allMatch(x -> minimalOdds.contains(x)));
     }

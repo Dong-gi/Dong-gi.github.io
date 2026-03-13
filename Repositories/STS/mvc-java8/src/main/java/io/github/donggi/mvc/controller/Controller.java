@@ -70,7 +70,7 @@ public class Controller {
 22:03:41.475 [http-nio-8080-exec-14] DEBUG i.g.donggi.mvc.controller.Controller - param : {key1=[val1, val3], key2=[val2]}
  */
     }
-    
+
     @PostMapping("/request5")
     @ResponseStatus(HttpStatus.OK)
     public void request5(Request request) {
@@ -81,7 +81,7 @@ public class Controller {
 10:23:44.217 [http-nio-8080-exec-8] DEBUG i.g.donggi.mvc.controller.Controller - Request(text=안녕 세상!, num=123)
  */
     }
-    
+
     @PostMapping("/request6")
     @ResponseStatus(HttpStatus.OK)
     public void request6(@RequestBody Request request) {

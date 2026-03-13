@@ -44,11 +44,11 @@ class ItemDaoTests {
         item1.setPrice(new Price(100, 50));
         item2.setKoPrice(item1.getPrice());
         item1 = item1Dao.save(item1);
-        
+
         item1.setPrice(new Price(200, 100));
         item2.setJpPrice(item1.getPrice());
         item2 = item2Dao.save(item2);
-        
+
         var item3 = new Item3();
         item3.setPrice(new PricePair(item2.getKoPrice(), item2.getJpPrice()));
         item3Dao.save(item3);
@@ -59,7 +59,7 @@ class ItemDaoTests {
         var item4 = new Item4();
         item4.setItemInfo(new ItemInfo("Some Info1"));
         item4Dao.save(item4);
-        
+
         var item5 = new Item5();
         item5.setItemInfo(new ItemInfo("Some Info2"));
         item5Dao.save(item5);

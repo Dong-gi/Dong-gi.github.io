@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Hello20 {
     private long created;
-    
+
     public Hello20() {
         created = System.currentTimeMillis();
         try {

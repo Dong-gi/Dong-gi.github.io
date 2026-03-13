@@ -28,7 +28,7 @@ public class MatrixController {
 09:16:23.660 [http-nio-8080-exec-1] DEBUG i.g.d.m.controller.MatrixController - path1 : asdf, q : a,b,c,d
  */
     }
-    
+
     @GetMapping("/2/{path1}/{path2}")
     @ResponseStatus(HttpStatus.OK)
     public void mat2(HttpServletRequest request,
@@ -43,7 +43,7 @@ public class MatrixController {
 09:21:45.531 [http-nio-8080-exec-3] DEBUG i.g.d.m.controller.MatrixController - path2 : 123, q2 : 123_q
  */
     }
-    
+
     @GetMapping("/3/{path1}/{path2}")
     @ResponseStatus(HttpStatus.OK)
     public void mat3(HttpServletRequest request,

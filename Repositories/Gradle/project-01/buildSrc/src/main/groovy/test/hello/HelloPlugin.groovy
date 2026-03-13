@@ -17,7 +17,7 @@ class HelloPlugin implements Plugin<Project> {
 class HelloExtension {
     String msg
     String name
-    
+
     void message(msg, name) {
         this.msg = msg
         this.name = name

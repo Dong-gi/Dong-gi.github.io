@@ -216,7 +216,7 @@ include ../../../source/skeleton.pug
         div
             h3 Object
             p 보통 객체 리터럴 표현 {} 을 이용해 생성한다
-        
+
             h3 Array
             ul
                 li 배열 리터럴 표현 [] 또는 Array 생성자를 이용해 생성한다
@@ -232,13 +232,13 @@ include ../../../source/skeleton.pug
 
             h3 WeakMap
             p 키는 반드시 객체여야 하며, 키는 GC 대상이 된다. 따라서 객체가 살아있는 동안에 참조해야 하는 고유값들을 저장하기에 좋다
-            
+
             h3 Set
             +asCode('JavaScript').
                 new Set(iterable?: Iterable&lt;any>)
                 new Set(values?: readonly T[])
                 add(value), has(value), ...
-            
+
             h3 WeakSet
             p 값은 반드시 객체여야 하며, GC 대상이 된다
 
@@ -710,7 +710,7 @@ include ../../../source/skeleton.pug
                     1,name1,$123
                     2,name2,$234.56`
                     const regex = /^(\d+),(?&lt;name&gt;[^,]+),\$(\d+(?:\.\d*)?)$/gm
-                    
+
                     for (const r of csv.matchAll(regex)) {
                         console.log(JSON.stringify(Object.assign({}, r), undefined, 4))
                     }
@@ -1076,7 +1076,7 @@ include ../../../source/skeleton.pug
             ul
                 li ?. 연산자를 이용하여 객체의 속성을 접근하거나 메서드를 호출할 수 있다
                 li 이 연산자로 접근하려는 객체나 호출하려는 함수가 undefined나 null인 경우, 연산은 단락되고 undefined를 반환한다
-            
+
             h3 Nullish coalescing operator (??)
             p 연산자 좌변이 null 또는 undefined인 경우, 연산자 우변을 반환한다
 
@@ -1090,7 +1090,7 @@ include ../../../source/skeleton.pug
             ul
                 li 성공한 Promise의 반환값 획득
                 li 2번째 이후로 실패한 Promise의 에러 획득
-        
+
         h2 ES2021
         ul
             li String.prototype.replaceAll() : 정규표현식 모든 매칭에 대해 치환
@@ -1119,7 +1119,7 @@ include ../../../source/skeleton.pug
                 li static 프로퍼티, 메서드, 초기화 블록 정의 가능
                 li constructor() 바깥의 클래스 body에서 프로퍼티 정의 가능
                 li 프로퍼티 또는 accessor 식별자를 #으로 시작하면 private
-            
+
             h3 정규표현식 d 플래그 추가
             p 패턴 전체 및 각 캡처링 그룹에 대한 시작/끝 위치를 indices 속성에 제공
             +asCode('JavaScript').
@@ -1136,7 +1136,7 @@ include ../../../source/skeleton.pug
         div
             h3: +asA('https://developer.mozilla.org/en-US/docs/Web/API/Window/structuredClone', 'structuredClone(value[, options])')
             p 객체 깊은 복사 지원
-        
+
         h2 ES2023
         ul
             li 배열에 findLast(), findLastIndex() 추가

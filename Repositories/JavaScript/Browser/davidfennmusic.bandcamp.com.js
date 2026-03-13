@@ -6,7 +6,7 @@ let fileNames = [];
 
 for (let i = 0; i < gplaylist._playlist.length; ++i) {
     let trackInfo = gplaylist._playlist[i];
-    
+
     for (let j = 0; j < formats.length; ++j) {
         let format = formats[j];
         if (!trackInfo.file.hasOwnProperty(format))

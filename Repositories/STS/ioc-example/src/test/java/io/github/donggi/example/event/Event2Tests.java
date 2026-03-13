@@ -11,7 +11,7 @@ class Event2Tests {
 
     @Autowired
     private MyEvent2Publisher publisher;
-    
+
     @Test
     void test() {
         log.info("1");

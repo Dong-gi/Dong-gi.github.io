@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Slf4j
 class Test2 {
-    
+
     @Autowired
     private ApplicationContext context;
     @Autowired
@@ -29,7 +29,7 @@ class Test2 {
     private Test2Bean2 test2Bean2;
     @Autowired
     private Test2Bean3 test2Bean3;
-    
+
     @Test
     void test() throws NoSuchFieldException, SecurityException {
         assertTrue(context.getEnvironment().getActiveProfiles()[0].equals("test2"));

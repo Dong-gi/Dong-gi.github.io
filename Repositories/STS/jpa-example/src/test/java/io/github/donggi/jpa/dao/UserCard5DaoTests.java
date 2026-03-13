@@ -32,7 +32,7 @@ class UserCard5DaoTests {
         user.setNickname("OneToMany");
         user = userWithCard3Dao.save(user);
         userId = user.getUserId();
-        
+
         var userCard = new UserCard5();
         userCard.setUserId(userId);
         userCard = userCard5Dao.save(userCard);

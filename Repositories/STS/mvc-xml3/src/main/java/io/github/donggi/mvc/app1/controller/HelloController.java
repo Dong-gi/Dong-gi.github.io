@@ -18,7 +18,7 @@ public class HelloController {
     @Resource(name = "app1Msg")
     private String app1Msg;
 
-    
+
     @RequestMapping("/hello")
     public void hello(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=utf-8");

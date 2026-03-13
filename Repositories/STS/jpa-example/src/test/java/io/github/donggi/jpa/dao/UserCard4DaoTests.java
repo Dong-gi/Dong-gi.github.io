@@ -27,7 +27,7 @@ class UserCard4DaoTests {
     private UserCard4Dao userCard4Dao;
     @Autowired
     private UserWithCard2Dao userWithCard2Dao;
-    
+
 
     @Test
     @Order(1000)
@@ -36,7 +36,7 @@ class UserCard4DaoTests {
         user.setNickname("ManyToOne2_insert");
         user = userWithCard2Dao.save(user);
         userId1 = user.getUserId();
-        
+
         var userCard = new UserCard4();
         userCard.setOwner(user);
         userCard = userCard4Dao.save(userCard);
@@ -56,7 +56,7 @@ class UserCard4DaoTests {
         var userCard = userCard4Dao.findById(userCardId).get();
         assertTrue(userCard.getOwner().getNickname().equals("ManyToOne2_insert"));
         userCard.setOwner(user);
-        
+
         userCard = new UserCard4();
         userCard.setOwner(user);
         userCard4Dao.save(userCard);
@@ -68,10 +68,10 @@ class UserCard4DaoTests {
     void manyToOneTest2_select() {
         var userCard = userCard4Dao.findById(userCardId).get();
         assertTrue(userCard.getOwner().getNickname().equals("ManyToOne2_update"));
-        
+
         var beforeUser = userWithCard2Dao.findById(userId1).get();
         assertTrue(beforeUser.getCards().size() == 0);
-        
+
         var afterUser = userWithCard2Dao.findById(userId2).get();
         assertTrue(afterUser.getCards().size() == 2);
         assertTrue(afterUser.getCards().stream().anyMatch(x -> x.equals(userCard)));

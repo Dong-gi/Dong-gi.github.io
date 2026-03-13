@@ -27,7 +27,7 @@ class ApiLogDaoTests {
         log.setApiResult(ApiResultCode.BAD_REQUEST);
         apiLogDao.save(log);
     }
-    
+
     @Test
     @Order(1001)
     void select() {

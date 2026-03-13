@@ -29,7 +29,7 @@ jobs:
       uses: github/codeql-action/init@v2
       with:
         languages: java, javascript, python
-        
+
     - name: Build /Repositories/Android/CCTV
       run: bash ./gradlew assembleDebug -x test
       working-directory: Repositories/Android/CCTV

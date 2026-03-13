@@ -31,7 +31,7 @@ public class ApiLog {
     private ApiResultCode apiResult;
     @Temporal(TemporalType.TIMESTAMP)
     private Date addDate;
-    
+
     @PrePersist
     public void prePersist() {
         addDate = new Date();

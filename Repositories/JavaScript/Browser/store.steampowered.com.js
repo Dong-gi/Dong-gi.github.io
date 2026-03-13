@@ -86,7 +86,7 @@ async function processGame() {
     }
 
     game.optionNode.parentElement.dispatchEvent(new MouseEvent('mouseover', { view: window, bubbles: false, cancelable: true }));
-    
+
     if (isPass) {
         await sleep(369 * 3);
         let gameHovers = document.querySelector('div#global_hover_content').children;

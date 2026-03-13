@@ -37,7 +37,7 @@ class UserDaoTests {
         var user = new User1();
         assertTrue(user.getUserId() == null);
         assertTrue(user.getAddDate() == null);
-        
+
         var nickname = "At" + System.nanoTime();
         user.setNickname(nickname);
         user = user1Dao.save(user);
@@ -51,7 +51,7 @@ class UserDaoTests {
         var user = new User2();
         assertTrue(user.getUserId() == null);
         assertTrue(user.getAddDate() == null);
-        
+
         var nickname = "At" + System.nanoTime();
         user.setNickname(nickname);
         user = user2Dao.save(user);
@@ -73,5 +73,5 @@ class UserDaoTests {
          Hibernate: update jpa_user2 set add_date=?, nickname=?, upd_date=? where user_id=?
          */
     }
-    
+
 }

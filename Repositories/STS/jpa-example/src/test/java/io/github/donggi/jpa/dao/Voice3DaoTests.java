@@ -24,7 +24,7 @@ class Voice3DaoTests {
     private VoiceWithCue3Dao voiceWithCue3Dao;
     @Autowired
     private VoiceWithActor3Dao voiceWithActor3Dao;
-    
+
 
     @Test
     @Order(1000)
@@ -36,7 +36,7 @@ class Voice3DaoTests {
         voiceWithCue3Dao.save(VoiceWithCue3.builder().voiceId(voiceId++).message("Hello World 3").cueName("Voice002").build());
         voiceWithActor3Dao.save(VoiceWithActor3.builder().voiceId(voiceId++).message("Hello World 4").voiceActor("Actor001").build());
     }
-    
+
     @Test
     @Order(1001)
     void select() {
@@ -44,7 +44,7 @@ class Voice3DaoTests {
         assertTrue(voiceWithCue3Dao.count() == 2);
         assertTrue(voiceWithActor3Dao.count() == 1);
     }
-    
+
     @Test
     @Order(1002)
     void oneMoreTime() {

@@ -13,7 +13,7 @@ include ../../../source/skeleton.pug
             li 전송 단위 : 비트
             li 프로토콜 예 : 전선, 전파, 광섬유
             li 주소 : 물리적으로 연결되는 매체 그 자체이므로, 별도 주소는 없다
-        
+
         li 데이터 링크 계층
         ul
             li 같은 네트워크 상에서, 두 노드 사이의 연결을 위한 논리적 사양
@@ -60,7 +60,7 @@ include ../../../source/skeleton.pug
             ul
                 li 5레벨; 세션 계층 : 응용 계층 통신이 수행될 채널을 관리
                 li 6레벨; 표현 계층 : 응용 계층 데이터 번역 -- 인코딩, 압축, 암호화 등
-        
+
         li 게이트웨이 : 한 네트워크에서 서로 다른 네트워크와 연결하기 위해 패킷을 송/수신하는 중계자
 
         li 캡슐화; Encapsulation
@@ -484,7 +484,7 @@ include ../../../source/skeleton.pug
                 li HTTPS에서만 사용 가능한 기능으로, 로그아웃과 같은 행위 이후 이 헤더를 설정함으로써 자동 데이터 삭제를 지시할 수 있다
                     p 로그아웃 페이지에 이를 직접 포함하는 경우, 삭제할 데이터가 많을수록 페이지 탐색이 그 만큼 지연(차단)되므로 로그아웃 페이지가 로드하는 다른 리소스에서 삭제를 지시하는 것이 권장된다
                 li 단순하게 와일드카드(*)를 값으로 사용하여 지원되는 모든 데이터를 삭제하도록 지시 가능
-            
+
             h3 Referrer-Policy 응답 헤더
             ul
                 li: +asA('https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Referrer-Policy')

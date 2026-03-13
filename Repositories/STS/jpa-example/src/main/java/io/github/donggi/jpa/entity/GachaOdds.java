@@ -19,7 +19,7 @@ public class GachaOdds {
     private String memo;
     private Long objectId;
     private Integer odd;
-    
+
     @Embeddable
     @Data
     @NoArgsConstructor
@@ -29,7 +29,7 @@ public class GachaOdds {
         private Long gachaId;
         private Integer seqNo;
     }
-    
+
     @Embeddable
     @Data
     @NoArgsConstructor

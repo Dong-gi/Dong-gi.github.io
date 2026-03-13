@@ -16,7 +16,7 @@ public class HelloController {
     @Resource(name = "defaultMsg")
     private String defaultMsg;
 
-    
+
     @RequestMapping("/hello")
     public void hello(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=utf-8");

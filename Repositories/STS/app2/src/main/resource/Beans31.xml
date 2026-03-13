@@ -48,7 +48,7 @@
 			</value>
 		</property>
 	</bean>
-	
+
 	<bean id="child" parent="parent">
 		<property name="messageArr">
 			<array merge="true">

@@ -446,7 +446,7 @@ include ../../source/skeleton.pug
                     p XOR 연산은 대칭성이 있으므로, 새로운 키로 인해 밀려나야 하는 위치도 시그니처만을 이용해 계산할 수 있다
                     ul
                         li h1(x) = h2(x) ⊕ hash(fingerprint(x))
-            
+
             h3 RedisBloom 모듈에서 쿠쿠 필터 생성
             +asCode('shell') CF.RESERVE {key} {capacity} [BUCKETSIZE bucketSize] [MAXITERATIONS maxIterations] [EXPANSION expansion]
             ul

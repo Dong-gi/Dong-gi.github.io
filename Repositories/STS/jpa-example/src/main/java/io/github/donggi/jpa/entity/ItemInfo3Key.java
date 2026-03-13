@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ItemInfo3Key implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     @Column(name="item_id")
     private Long itemId;
     @Column(name="seq_no")

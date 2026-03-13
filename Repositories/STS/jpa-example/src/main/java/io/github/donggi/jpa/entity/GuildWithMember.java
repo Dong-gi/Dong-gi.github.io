@@ -23,7 +23,7 @@ public class GuildWithMember {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long guildId;
     private String guildName;
-    
+
     @OneToMany
     @JoinTable(
             name = "jpa_guild_member",

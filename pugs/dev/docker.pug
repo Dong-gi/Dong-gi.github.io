@@ -269,7 +269,7 @@ include ../../source/skeleton.pug
                 $ docker container inspect [OPTIONS] CONTAINER [CONTAINER...]
 
                 --format, -f    Go 템플릿으로 출력 조정
-                
+
                 # 예. IP 주소 획득
                 $ docker container inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps --format '{{.ID}}' -a)
 
@@ -438,7 +438,7 @@ include ../../source/skeleton.pug
                         li type=volume : 마운트할 볼륨 이름을 지정한다. 지정하지 않으면 랜덤 문자열로 볼륨이 하나 만들어진다 -- 이러한 볼륨은 컨테이너 삭제 시 같이 삭제된다
                         li type=bind : 필수 옵션. 마운트할 파일 또는 디렉터리를 절대경로로 지정한다
                         li type=tmpfs : 지원하지 않는 옵션
-                    
+
                     h5.fake dst 또는 destination 또는 target 옵션
                     p 필수 옵션으로, 마운트할 컨테이너 내부 경로를 지정한다
 

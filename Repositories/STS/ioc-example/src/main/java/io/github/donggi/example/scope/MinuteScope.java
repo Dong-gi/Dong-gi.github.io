@@ -10,7 +10,7 @@ import org.springframework.beans.factory.config.Scope;
 public class MinuteScope implements Scope {
 
     private Map<String, ImmutablePair<Long, Object>> map = new HashMap<>();
-    
+
     @Override
     public Object get(String name, ObjectFactory<?> objectFactory) {
         var r = map.get(name);

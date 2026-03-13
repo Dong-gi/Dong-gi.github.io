@@ -19,7 +19,7 @@ public class UserCard3 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userCardId;
     private Long cardId;
-    
+
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User3 owner;

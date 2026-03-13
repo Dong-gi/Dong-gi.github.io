@@ -18,7 +18,7 @@ public class HelloController {
     public void hello2() throws IOException {
         throw new IOException(new RuntimeException("Runtime Exception@/hello2"));
     }
-    
+
     @ExceptionHandler
     public ResponseEntity<String> handle(RuntimeException e) {
         return ResponseEntity.ok().<String>body(e.getMessage());

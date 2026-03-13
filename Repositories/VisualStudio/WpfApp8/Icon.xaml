@@ -6,7 +6,7 @@
     <GroupBox Header="WPF Data Tool" x:Key="TrayTip" Background="White">
         <Label Content="클릭하면 메뉴가 열립니다"/>
     </GroupBox>
-    
+
     <ContextMenu x:Shared="false" x:Key="TrayMenu">
         <MenuItem Header="윈도우 열기" Command="{Binding Commands[OPEN_MAIN_WINDOW_COMMAND]}" />
         <MenuItem Header="윈도우 닫기" Command="{Binding Commands[CLOSE_MAIN_WINDOW_COMMAND]}" />

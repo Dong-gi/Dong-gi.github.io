@@ -121,7 +121,7 @@ include ../../../source/skeleton.pug
                     path: '/offline-service-worker.js',
                     lan: 'JavaScript'
                 })
-        
+
         h2 웹 저장소
         ul
             li sessionStorage : 브라우저가 열려 있는 동안에만 유지
@@ -216,13 +216,13 @@ include ../../../source/skeleton.pug
             lan: 'JavaScript',
             title: '워커 코드'
         })
-        
+
         h2 Shared Worker
         ul
             li 동일 출처의 스크립트들에 한하여, 서로 다른 창에서 실행되는 스크립트들이 공유 가능
             li 공유 워커는 자신을 참조하는 활성 페이지가 존재하는 동안 계속 실행
             li 지원하지 않는 브라우저가 많음 (2024-11-08 기준)
-        
+
         h2 Service Worker
         ul
             li: +asA('https://developer.chrome.com/docs/workbox', 'Workbox : Chrome팀의 서비스 워커 라이브러리')

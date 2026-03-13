@@ -27,7 +27,7 @@ public class ScopeController {  // 25 고정
     @Autowired private PerApp perApp;
     @Autowired private PerRequest perRequest;
     @Autowired private PerSession perSession;
-    
+
     @RequestMapping("/scope/")
     public CommonResponse index(HttpServletRequest request) {
         var r = new CommonResponse();
@@ -53,9 +53,9 @@ public class ScopeController {  // 25 고정
 13:45:27.838 [http-nio-18888-exec-6] INFO  i.g.d.e.controller.ScopeController - session  : 4CAD55CEF2F70CEE5F84F97AD74052BC
 13:45:27.838 [http-nio-18888-exec-6] INFO  i.g.d.e.controller.ScopeController - response : CommonResponse(perApp=0, perRequest=5, perSession=1)
 */
-    
+
     @Autowired private PerMinute perMinute;
-    
+
     @RequestMapping("/scope/minute")
     public String minute() {
         log.info("PerMinute : {}", perMinute.getNum());

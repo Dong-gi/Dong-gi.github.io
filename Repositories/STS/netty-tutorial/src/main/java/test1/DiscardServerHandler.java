@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DiscardServerHandler extends ChannelInboundHandlerAdapter {
     private String name;
-    
+
     public DiscardServerHandler(String name) {
         this.name = String.valueOf(name);
     }

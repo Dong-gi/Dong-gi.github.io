@@ -27,7 +27,7 @@ class UserCard2DaoTests {
     private UserCard2Dao userCard2Dao;
     @Autowired
     private UserWithCard1Dao userWithCard1Dao;
-    
+
 
     @Test
     @Order(1000)
@@ -36,7 +36,7 @@ class UserCard2DaoTests {
         user.setNickname("OneToOne2_insert");
         user = userWithCard1Dao.save(user);
         userId1 = user.getUserId();
-        
+
         var userCard = new UserCard2();
         userCard.setOwner(user);
         userCard = userCard2Dao.save(userCard);
@@ -63,10 +63,10 @@ class UserCard2DaoTests {
     void oneToOneTest2_select() {
         var userCard = userCard2Dao.findById(userCardId).get();
         assertTrue(userCard.getOwner().getNickname().equals("OneToOne2_update"));
-        
+
         var beforeUser = userWithCard1Dao.findById(userId1).get();
         assertTrue(beforeUser.getCard() == null);
-        
+
         var afterUser = userWithCard1Dao.findById(userId2).get();
         assertTrue(afterUser.getCard().equals(userCard));
     }

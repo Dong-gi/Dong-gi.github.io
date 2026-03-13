@@ -16,9 +16,9 @@
 		location="src/main/resource/beans43-1.properties" order="1" ignore-unresolvable="true" properties-ref="props1" />
 	<context:property-placeholder
 		location="src/main/resource/beans43-2.properties" order="2" properties-ref="props2" />
-	
+
 	<context:property-override location="src/main/resource/beans44.properties" />
-	
+
 	<util:properties id="props1">
 		<prop key="hello.class">io.github.donggi.bean.Hello1</prop>
 		<prop key="hello.message">Hello World 1</prop>

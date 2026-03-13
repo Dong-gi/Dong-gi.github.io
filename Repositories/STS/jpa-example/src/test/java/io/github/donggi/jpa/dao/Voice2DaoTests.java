@@ -24,7 +24,7 @@ class Voice2DaoTests {
     private VoiceWithCue2Dao voiceWithCue2Dao;
     @Autowired
     private VoiceWithActor2Dao voiceWithActor2Dao;
-    
+
 
     @Test
     @Order(1000)
@@ -36,7 +36,7 @@ class Voice2DaoTests {
         voiceWithCue2Dao.save(VoiceWithCue2.builder().voiceId(voiceId++).message("Hello World 3").cueName("Voice002").build());
         voiceWithActor2Dao.save(VoiceWithActor2.builder().voiceId(voiceId++).message("Hello World 4").voiceActor("Actor001").build());
     }
-    
+
     @Test
     @Order(1001)
     void select() {
@@ -44,7 +44,7 @@ class Voice2DaoTests {
         assertTrue(voiceWithCue2Dao.count() == 2);
         assertTrue(voiceWithActor2Dao.count() == 1);
     }
-    
+
     @Test
     @Order(1002)
     void oneMoreTime() {

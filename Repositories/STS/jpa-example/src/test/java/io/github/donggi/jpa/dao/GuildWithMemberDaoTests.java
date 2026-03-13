@@ -20,7 +20,7 @@ import io.github.donggi.jpa.entity.User2;
 class GuildWithMemberDaoTests {
 
     private static Long guildId;
-    
+
     @Autowired
     private GuildWithMemberDao guildWithMemberDao;
     @Autowired
@@ -35,7 +35,7 @@ class GuildWithMemberDaoTests {
         var user = new User2();
         user.setNickname("Guild Member");
         user = user2Dao.save(user);
-        
+
         var guild = new GuildWithMember();
         guild.setGuildName("Guild Name");
         guild = guildWithMemberDao.save(guild);

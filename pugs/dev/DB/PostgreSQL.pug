@@ -903,7 +903,7 @@ include ../../../source/skeleton.pug
                     +asCode('sql').
                         # create temp table test (x) as ( values (null::jsonb), ('{}'::jsonb) );
                         SELECT 2
-                        
+
                         # update test set x['a'][1]['b'] = '1' returning *;
                                     x            
                         -------------------------
@@ -1127,7 +1127,7 @@ include ../../../source/skeleton.pug
                         # \pset null '(null)'
                         # create table test ( a int primary key, b boolean not null );
                         CREATE TABLE
-                        
+
                         # select (row(null, null)::test).*;
                            a    |   b    
                         --------+--------
@@ -2382,7 +2382,7 @@ include ../../../source/skeleton.pug
                             li 데이터베이스를 수정할 수 없다
                             li 동일한 인자의 호출은 영원히 동일한 결과를 반환함을 보장한다
                             li 옵티마이저는 행을 탐색하는 것보다 먼저 상수 호출을 평가할 수 있다
-            
+
                 h4 Parallel Safety Property
                 ul
                     li 병렬 쿼리에서의 함수 사용이 예상되는 경우, 병렬 안전성 속성을 설정해야 한다
@@ -2456,7 +2456,7 @@ include ../../../source/skeleton.pug
                           4
                           5
                         (4 rows)
-                        
+
                         # select * from func();
                          f1 | f2 
                         ----+----
@@ -2497,7 +2497,7 @@ include ../../../source/skeleton.pug
                         # create function func(inout int) as $$
                         select $1 * 2
                         $$ language sql;
-                        
+
                         # select func(2);
                          func 
                         ------
@@ -2507,7 +2507,7 @@ include ../../../source/skeleton.pug
                         # create function func(int, out txt1 text, out text) as $$
                         select $1, $1 * 2
                         $$ language sql;
-                        
+
                         # select * from func(2);
                          txt1 | column2 
                         ------+---------
@@ -2531,7 +2531,7 @@ include ../../../source/skeleton.pug
                         # create function func(variadic int[]) returns table (min int, max int) as $$
                         select min(num), max(num) from unnest($1) x(num)
                         $$ language sql;
-                        
+
                         # select * from func(1, 3, 2);
                          min | max 
                         -----+-----
@@ -2543,7 +2543,7 @@ include ../../../source/skeleton.pug
                         LINE 1: select * from func(array[1, 3, 2]);
                                               ^
                         HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
-                        
+
                         # select * from func(variadic array[1, 3, 2]);
                          min | max 
                         -----+-----
@@ -2690,7 +2690,7 @@ include ../../../source/skeleton.pug
                     return num1 + num2;
                 end;
                 $$ language plpgsql;
-                
+
                 CREATE FUNCTION
 
                 # select func(1);
@@ -2841,7 +2841,7 @@ include ../../../source/skeleton.pug
                                 else -- 선택적
                                     ...
                             end case;
-                
+
                 h4 반복문
                 ul
                     li exit : 루프 또는 서브블록을 종료한다
@@ -3572,10 +3572,11 @@ include ../../../source/skeleton.pug
                 h4.no-marker: +asA('https://www.postgresql.org/docs/18/brin.html#BRIN-BUILTIN-OPCLASSES')
 
             h3 Hash
-            div
-                h4.no-marker 개요
-                
-                h4.no-marker 연산자 클래스
+            ul
+                li 단일 열 인덱스만 지원
+                li unique 인덱스 미지원
+                li = 연산자만 지원
+                li 각 해시 인덱스 튜플은 4바이트 해시 값만 저장
 
         h2 트랜잭션 처리
         div
@@ -3593,7 +3594,7 @@ include ../../../source/skeleton.pug
     h1 부록 &gt; 추가 모듈 및 확장 (contrib 디렉터리)
     div
         p 이 선택적 구성 요소들은 빌드에 자동으로 포함되지 않으므로, 이미 빌드된 서버를 이용하는 경우 일부는 설치되지 않았을 수 있다
-        h2 bloom
+        h2: +asA('https://www.postgresql.org/docs/current/bloom.html')
         ul
             li #[+goto('Bloom filter', '/posts/fundamental/algorithm.html')]를 이용한 인덱스 제공
             li 인덱스 매개변수
@@ -3608,14 +3609,131 @@ include ../../../source/skeleton.pug
                     li 현재 = 연산자로만 검색 가능
                     li null 검색 미지원
 
-        h2 btree_gin
+        h2: +asA('https://www.postgresql.org/docs/current/btree_gin.html')
         ul
             li 여러 타입에 대해 B-트리와 동등한 동작을 구현하는 GIN 연산자 클래스를 제공한다
             li GIN 인덱스 컬럼과 B-트리 인덱스 컬럼을 따로 검사해 비트맵 AND로 결합하는 것보다, 다중 컬럼 GIN 인덱스를 이용하는 게 효율적일 수 있다
 
-        h2 btree_gist
+        h2: +asA('https://www.postgresql.org/docs/current/btree_gist.html')
         ul
             li 여러 타입에 대해 B-트리와 동등한 동작을 구현하는 GiST 연산자 클래스를 제공한다
             li 일부 컬럼은 GiST로만 인덱싱 가능하지만 나머지는 단순한 데이터 타입인 다중 컬럼 GiST 인덱스가 필요한 경우 유용하다
             li 자연스러운 거리가 존재하는 데이터 타입(크기가 고정된 숫자, 시간 및 날짜)에 대해 거리 연산자 &lt;-&gt;를 정의하고, 근접 이웃 검색을 제공
 
+        h2: +asA('https://www.postgresql.org/docs/current/citext.html')
+        ul
+            li 대소문자 무관한 문자열 타입 제공
+                ul
+                    li 문자열 저장 시 내부적으로 lower() 수행
+                    li 다른 연산자 또는 함수와 함께 이용 시 자동으로 다른 피연산자도 lower() 변환
+                    li 일부 연산자 또는 함수에 citext 전용 구현 이용. 예: ~와 ~*는 동일한 동작
+            li citext 컬럼이나 데이터에 COLLATE 명세를 부착할 수 있지만, 소문자 접기는 항상 LC_CTYPE 설정에 따라 수행되므로 일부 유니코드 특수 사례를 의도에 맞게 처리하지 못할 수 있다
+
+        h2: +asA('https://www.postgresql.org/docs/current/cube.html')
+        ul
+            li 다차원 cube를 표현하기 위한 데이터 타입과 관련 연산자, 함수를 제공
+            li 큐브는 2개의 꼭짓점으로 정의된다
+                ul
+                    li 두 꼭짓점이 동일하면 내부적으로 '점'이라고 플래그하고 하나만 저장한다
+                    li 내부 표현에서는 연산 편의를 위해 두 꼭짓점 각 차원의 min/max를 분리하여 저장한다
+                        +asCode('sql').
+                            # select '(1, -2, 3), (-4, 5, -6)'::cube = '(-4, -2, -6), (1, 5, 3)'::cube;
+                             ?column? 
+                            ----------
+                             t
+                            (1 row)
+
+                            # cube -> integer : 큐브의 n번째 좌표
+                            # cube ~> integer
+                            #   n = 2k - 1 : k번째 차원의 하한
+                            #   n = 2k : k번째 차원의 상한
+                            # select c -> n, c ~> n from (values ('(1, -2, 3), (-4, 5, -6)'::cube)) x(c), generate_series(1, 6) n;
+                             ?column? | ?column? 
+                            ----------+----------
+                                    1 |       -4
+                                   -2 |        1
+                                    3 |       -2
+                                   -4 |        5
+                                    5 |       -6
+                                   -6 |        3
+                            (6 rows)
+                    li 각 차원은 64비트 부동 소수로 저장된다
+                    li 이하 생략
+
+        h2: +asA('https://www.postgresql.org/docs/current/dblink.html')
+        ul
+            li 세션 내에서 재사용 가능한 추가 PostgreSQL 연결을 지원한다
+            li dblink_connect() : 연결 생성
+            li dblink_disconnect() : 연결 닫기
+            li dblink() : 쿼리 실행
+            li dblink_exec() : 명령 실행
+            li dblink_send_query() : 비동기 쿼리 전송
+            li dblink_get_result() : 비동기 쿼리 결과 획득(완료까지 대기)
+
+        h2: +asA('https://www.postgresql.org/docs/current/fuzzystrmatch.html')
+        ul
+            li 문자열 간 유사성(거리)를 결정하는 여러 함수 제공
+            li 멀티바이트 인코딩(예. UTF-8) 텍스트에는 soundex, metaphone, dmetaphone, dmetaphone_alt가 잘 작동하지 않는다
+        div
+            h3.no-marker Soundex
+            ul
+                li 영어 <strong>단어 비교</strong>에 유용. 비슷하게 들리는 이름들을 동일한 코드로 변환하여 매칭
+                li soundex(text) : 텍스트를 Soundex 코드로 변환
+                li difference(text, text) : 0(일치 없음) ~ 4(완전 일치)
+            +asCode('sql').
+                # SELECT soundex('Anne'), soundex('Ann'), difference('Anne', 'Ann');
+                 soundex | soundex | difference 
+                ---------+---------+------------
+                 A500    | A500    |          4
+                (1 row)
+
+            h3.no-marker Daitch-Mokotoff Soundex
+            ul
+                li 영어를 포함한 라틴 문자 기반 언어의 <strong>단어 비교</strong>에 유용
+                li daitch_mokotoff(text) : Daitch-Mokotoff soundex 코드 생성
+
+            h3.no-marker Levenshtein
+            ul
+                li levenshtein() 함수는 최대 255자의 non-null 문자열 비교를 지원한다
+                li levenshtein_less_equal() 함수는 max_d 이하의 거리까지만 계산하는 shortcut 버전
+                li 문자열 거리 매개변수를 지정할 수 있다
+                    ul
+                        li ins_cost : 문자 삽입 비용
+                        li del_cost : 문자 삭제 비용
+                        li sub_cost : 문자 대체 비용
+
+        h2: +asA('https://www.postgresql.org/docs/current/hstore.html')
+        ul
+            li 키/값 쌍 집합을 저장하기 위한 hstore 타입을 구현한다
+            li 키/값 모두 text고, 쌍의 저장 순서는 보존되지 않는다
+            li 중복 키의 hstore를 선언하는 경우, 어떤 게 유지될지에 대한 보장은 없다
+            li 값은 null을 허용한다
+            li 키는 배열 첨자처럼 참조 가능하다
+                +asCode('sql').
+                    SELECT h['a'] FROM mytable;
+                    UPDATE mytable SET h['c'] = 'new';
+
+        h2: +asA('https://www.postgresql.org/docs/current/isn.html')
+        ul
+            li 국제 제품 번호 표준에 대한 데이터 타입 제공. 내부적으로는 모두 64비트 정수
+            li isn.weak 매개변수를 true로 설정하면 유효하지 않은 변환도 오류 없이 허용 가능
+            li EAN13 : 유럽 상품 번호
+            li ISBN13 : EAN13 형식의 도서 번호
+            li ISMN13 : EAN13 형식의 음악 번호
+            li ISSN13 : EAN13 형식의 정기 간행물 번호
+            li ISBN : 이전 형식의 도서 번호
+            li ISMN : 이전 형식의 음악 번호
+            li ISSN : 이전 형식의 정기 간행물 번호
+            li UPC : 범용 제품 코드
+        div
+            h3.no-marker 호환성
+            ul
+                li ISBN13, ISMN13, ISSN13는 EAN13의 부분집합
+                li 일부 ISBN13는 ISBN으로도 표시 가능
+                li 일부 ISMN13는 ISMN으로도 표시 가능
+                li 일부 ISSN13는 ISSN으로도 표시 가능
+                li UPC는 EAN13의 부분집합. (기본적으로 첫 0을 생략)
+                li ISBN, ISMN, ISSN은 EAN13으로 표현 가능
+
+        h2: +asA('https://www.postgresql.org/docs/current/ltree.html')
+        p 트리 구조로 저장된 레이블의 저장과 검색을 지원한다

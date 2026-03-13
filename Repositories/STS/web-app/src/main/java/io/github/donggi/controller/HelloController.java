@@ -18,7 +18,7 @@ public class HelloController {
         sleepController.justSleep();
         return new HelloResponse("안녕 세상!");
     }
-    
+
     @Scheduled(fixedDelay = 1000)
     public void scheduledAction() {
         System.out.println(System.currentTimeMillis());

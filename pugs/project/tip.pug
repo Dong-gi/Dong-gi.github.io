@@ -23,7 +23,7 @@ include ../../source/skeleton.pug
                 fields @timestamp, isPresent(detail.hpDiff) as isHp, isPresent(detail.mpDiff) as isMp
                 | filter event = "battle-action"
                 | stats sum(isHp) as hpChangedCount, sum(isMp) as mpChangedCount
-        
+
             h3 정규식을 이용한 필드 추출
             p 아래 쿼리에서, abs()는 문자열을 숫자로 변환하기 위해 사용됨
             +asCode('sql').
@@ -44,7 +44,7 @@ include ../../source/skeleton.pug
             +asCode('shell').
                 # 삭제된 객체 목록 획득
                 $ aws s3api list-object-versions --bucket BUCKET_NAME --prefix tmp/ --query 'DeleteMarkers[?IsLatest==`true`]'
-                
+
                 # 삭제된 객체 복구
                 $ aws s3api list-object-versions --bucket BUCKET_NAME --prefix tmp/ --output json --query 'DeleteMarkers[?IsLatest==`true`].[Key, VersionId]' | jq -r '.[] | "--key '\''" + .[0] + "'\'' --version-id " + .[1]' | xargs -L1 aws s3api delete-object --bucket BUCKET_NAME
 
@@ -267,7 +267,7 @@ include ../../source/skeleton.pug
             (2 rows)
 
             UPDATE 2
-        
+
         h2 시각 차이 획득
         +asCode('sql') select abs(extract (epoch from (insert_datetime - '2019-07-04 19:39:55'::timestamp)));
 

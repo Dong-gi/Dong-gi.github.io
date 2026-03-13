@@ -1,73 +1,168 @@
 include ../../../source/skeleton.pug
 
 +post({
-    title: 'Redis',
-    description: 'Redis 정리',
+    title: 'Redis + Valkey',
+    description: 'Redis + Valkey 정리',
 })
 
     h1 참고자료
     ul
-        li: +asA('https://redis.io/documentation', '공식 문서')
-        li: +asA('http://redisgate.kr/', '레디스 엔터프라이즈 버전')
-        li: +asA('https://github.com/redis-essentials/book', 'Redis Essentials')
+        li: +asA('https://redis.io/docs/latest/commands/', 'Redis 커맨드')
+        li: +asA('https://valkey.io/commands/', 'Valkey 커맨드')
+        li: +asA('https://redis.io/docs/latest/develop/tools/cli/', 'Redis CLI')
+        li: +asA('https://valkey.io/topics/cli/', 'Valkey CLI')
 
-    h1 Redis
+    h1 Redis와 Valkey
     ul
-        li 인메모리 저장소 + 물리 장치 백업 지원
-        li 메시지 브로커 기능 보유 : Pub/Sub
-        li BSD 라이선스
-    div
-        h2 redis-server/
-            +asA('https://redis.io/topics/rediscli', 'redis-cli')
-        ol
-            li 서버 실행
-            +asCode('shell') $ redis-server --port 27017
-            li 서버 접속
-            +asCode('shell') $ redis-cli -p 27017
-            li help
-            +asCode('shell', 'redis-cli').
-                > help
-                > help @&lt;group>      # Redis 명령어들은 연관성에 따라 그룹에 묶여있다
-                > help &lt;command>
-            li 여러 키 삭제
-            +asCode('shell') $ redis-cli --scan --pattern '*' | xargs redis-cli DEL
-            li 키 공간 이벤트 구독 가능
-            p 키 공간 이벤트는 기본적으로 발행되지 않으므로, 서버 설정을 변경해야 한다.
-                +asA('https://redis.io/docs/manual/keyspace-notifications/', '참고 자료')
-
-        h2 Data type
-        ol
-            li Binary-safe string : 임의 이진 문자열(최대 512MB)
-            li List : 기본적으로 삽입 순으로 유지되는 string 연결 리스트(최대 길이 2^32 - 1)
-            p 블로킹 vs 논-블로킹 = 처리(예. 삭제) 후 반환 vs 반환 후 처리
-            li Set : 순서 없는 string 집합(최대 크기 2^32 - 1)
-            li Sorted set : 각 string 원소는 score라 불리는 실수 가중치(정렬키)를 가짐
-            p 같은 score 사이에서는 value를 기준으로 정렬된다
-            li Hash : field -&gt; value 매핑(최대 크기 2^32 - 1). 각 field, value는 모두 string
-            li Bit array : string을 비트열로 다룰 수 있다
-            li HyperLogLog : 집합 크기 추정에 이용되는 확률 자료형
-            li Stream : append만 가능한 유사 hash
+        li 고성능 인-메모리 키-값 데이터 저장소를 이용해 캐시, Pub/Sub 등의 기능을 지원한다
+        li 기본적으로 인-메모리로 동작하므로 영속성이 없다
             ul
-                li stream entry는 1개 이상의 field-value 쌍으로 구성된다
-                li stream entry의 선후 관계는 ID로 구분한다. ID가 이전보다 작으면 추가 실패. ID를 *로 지정하는 경우, 서버에서 자동으로 millisecondsTime-sequenceNumber로 할당
+                li 고가용성 구성을 통해 커밋된 데이터 손실을 최소화(~최대 수 초)하거나
+                li Amazon MemoryDB와 같이 디스크 쓰기까지 완료한 후에 쓰기 성공 ACK를 응답하여 커밋된 데이터 손실을 0으로 줄일 수 있다
+        li Valkey는 Redis 상업화를 계기로, 오픈 소스를 유지하기 위해 Redis 7.2.4 -- BSD 라이선스가 적용된 마지막 릴리스를 포크하여 시작된 프로젝트다
+
+    h1 CLI
+    ul
+        li valkey-cli [OPTIONS] [cmd [arg...]]
+            +asCode('shell').
+                # 예. 여러 키 삭제
+                $ redis-cli --scan --pattern '*' | xargs redis-cli DEL
+        li help
+            +asCode('shell').
+                > help @&lt;group> # 커맨드들은 연관성에 따라 그룹에 묶여있다
+                > help &lt;command>
+
+                127.0.0.1:6379> help @string
+
+                  APPEND key value
+                  summary: Appends a string to the value of a key. Creates the key if it doesn't exist.
+                  since: 2.0.0
+
+                  DECR key
+                  summary: Decrements the integer value of a key by one. Uses 0 as initial value if the key doesn't exist.
+                  since: 1.0.0
+
+                  ...
+
+                127.0.0.1:6379> help ECHO
+
+                  ECHO message
+                  summary: Returns the given string.
+                  since: 1.0.0
+                  group: connection
+
+    h1 Data type
+    div
+        h2 String
+        ul
+            li 임의 이진 문자열을 이용할 수 있다
+            li 단일 문자열의 최대 길이는 512MB -- 문자열이 키로 이용되든, 값으로 이용되든 동일하다
+
+        h2.no-marker Aggregate data type
+        ul
+            li 같은 작업에 대해 2가지 버전을 제공하는 경우가 있다
                 ul
-                    li 현재 시각이 이전 entry의 시각보다 작은 경우, 이전 entry의 시각을 사용하고 sequenceNumber만 증가한다
-                    li 123-* 처럼 sequenceNumber만 자동 할당할 수도 있다
-                li 3가지 방식으로 entry를 획득할 수 있다
+                    li 블로킹 : 값이 비어 있으면 요소가 추가되거나 시간 초과될 때까지 대기
+                    li 논-블로킹 : 값이 비어 있으면 처리 종료
+            li 키가 존재하지 않더라도 커맨드 성공을 보장한다
                 ul
-                    li ID 범위를 이용해 질의 :
-                        +goto('XRANGE')
-                        +goto('XREVRANGE')
-                    li 새로 도착하는 entry 질의 :
-                        +goto('XREAD')
-                        +goto('XREADGROUP')
-                    ul
-                        li 블로킹 list 연산과 달리, 새로 도착한 entry는 기본적으로 모든 대기 중인 클라이언트에 전달된다
-                        li 발송 후 즉시 삭제하는 Pub/Sub 서비스와 달리, entry는 명시적인 삭제 요청이 없는 한 영구적으로 스트림에 남는다
-                        li 소비자 그룹을 이용해 그룹 내 소비자들이 서로 다른 entry를 독립적으로 처리할 수 있다
+                    li 요소를 추가하는 경우, 요소가 0개인 값을 자동으로 생성해 사용
+                    li 그 외의 경우, 요소가 0개인 값에 대한 것과 동일한 응답 반환
+            li 요소 제거한 결과 값이 비게 되면 자동으로 키를 정리한다 (스트림 제외)
+
+        h2 List
+        ul
+            li 기본적으로 삽입 순으로 유지되는 string 연결 리스트 -- 따라서 리스트 중간에 대한 연산은 비교적 느리다
+            li 최대 크기 : 2^32 - 1
+
+        h2 Set
+        ul
+            li 순서 없는 string 집합
+            li 최대 크기 : 2^32 - 1
+
+        h2 Sorted set
+        ul
+            li 각 string 원소는 score라 불리는 실수 가중치(정렬키)를 가진다
+            li 같은 score 사이에서는 사전순으로 정렬된다
+            li 내부 구현에는 스킵 리스트와 해시 테이블 둘 다 이용한다
+
+        h2 Hash
+        ul
+            li field -&gt; value 매핑
+            li field, value는 모두 string
+            li 최대 크기 : 2^32 - 1
+            li 개별 필드 수준으로 TTL을 설정할 수 있다
+                ul
+                    li Since Redis 7.4
+                    li Since Valkey 9.0
+
+        h2 Bit array
+        ul
+            li
+
+        h2 HyperLogLog
+        ul
+            li
+
+        h2 Stream
+        ul
+            li
+
+        h2 Geospatial
+        ul
+            li Since Redis x?
+            li Since Valkey x?
+
+        h2 Bitmap
+        ul
+            li Since Redis x?
+            li Since Valkey x?
+
+        h2 Bitfield
+        ul
+            li Since Redis x?
+            li Since Valkey x?
+
+        h2 Probabilistic
+        ul
+            li Since Redis x?
+
+        h2 JSON
+        ul
+            li Since Redis x?
+
+        h2 Vector set
+        ul
+            li Since Redis x?
+
+        h2 Time series
+        ul
+            li Since Redis x?
+
+    ol
+        li Bit array : string을 비트열로 다룰 수 있다
+        li HyperLogLog : 집합 크기 추정에 이용되는 확률 자료형
+        li Stream : append만 가능한 유사 hash
+        ul
+            li stream entry는 1개 이상의 field-value 쌍으로 구성된다
+            li stream entry의 선후 관계는 ID로 구분한다. ID가 이전보다 작으면 추가 실패. ID를 *로 지정하는 경우, 서버에서 자동으로 millisecondsTime-sequenceNumber로 할당
+            ul
+                li 현재 시각이 이전 entry의 시각보다 작은 경우, 이전 entry의 시각을 사용하고 sequenceNumber만 증가한다
+                li 123-* 처럼 sequenceNumber만 자동 할당할 수도 있다
+            li 3가지 방식으로 entry를 획득할 수 있다
+            ul
+                li ID 범위를 이용해 질의 :
+                    +goto('XRANGE')
+                    +goto('XREVRANGE')
+                li 새로 도착하는 entry 질의 :
+                    +goto('XREAD')
+                    +goto('XREADGROUP')
+                ul
+                    li 블로킹 list 연산과 달리, 새로 도착한 entry는 기본적으로 모든 대기 중인 클라이언트에 전달된다
+                    li 발송 후 즉시 삭제하는 Pub/Sub 서비스와 달리, entry는 명시적인 삭제 요청이 없는 한 영구적으로 스트림에 남는다
+                    li 소비자 그룹을 이용해 그룹 내 소비자들이 서로 다른 entry를 독립적으로 처리할 수 있다
 
     h1 Commands
-    p 참고 자료 : #[+asA('https://redis.io/commands')]. Redis 명령어들은 연관성에 따라 하나의 그룹에 속해있다
     div
         h2 주의사항
         ul

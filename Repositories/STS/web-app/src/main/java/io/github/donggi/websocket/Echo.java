@@ -27,38 +27,38 @@ import lombok.Getter;
 public class Echo {
     @Autowired
     private SleepController sleepController;
-    
+
     private static final Map<String, Client> SESSION_ID_TO_CLIENT = new HashMap<>();
-    
+
     @Getter
     @AllArgsConstructor
     private static class Client {
         private final Session session;
         private final String name;
     }
-    
+
     @PostConstruct
     public void init(){
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
-    
+
     @OnOpen
     public void onOpen(Session session, @PathParam("name") String name) {
         System.out.printf("SESSION+ %s : %s\n", session.getId(), name);
         SESSION_ID_TO_CLIENT.put(session.getId(), new Client(session, name));
     }
-    
+
     @OnClose
     public void onClose(Session session) {
         System.out.printf("SESSION- %s : %s\n", session.getId(), SESSION_ID_TO_CLIENT.get(session.getId()).getName());
         SESSION_ID_TO_CLIENT.remove(session.getId());
     }
-    
+
     @OnError
     public void onError(Throwable t) {
         t.printStackTrace();
     }
-    
+
     @OnMessage
     public void onMessage(Session session, String msg) throws IOException {
         System.out.printf("MESSAGE %s : %s\n", SESSION_ID_TO_CLIENT.get(session.getId()).getName(), msg);

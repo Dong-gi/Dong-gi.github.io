@@ -16,5 +16,5 @@ public class Hello22Replacement implements MethodReplacer {
         log.infof("(%s).%s(%s)", hello22, method.getName(), Arrays.toString(args));
         return String.format("%s * %d", hello22.getMessage(), args[0]);
     }
-    
+
 }

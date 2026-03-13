@@ -19,7 +19,7 @@ public class UserCard2 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userCardId;
     private Long cardId;
-    
+
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private UserWithCard1 owner;

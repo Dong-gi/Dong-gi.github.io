@@ -18,6 +18,6 @@
 
 	<context:component-scan
 		base-package="io.github.donggi.mvc.app2.controller, io.github.donggi.mvc.app2.service" />
-	
+
 	<bean id="app2Msg" class="java.lang.String" c:original="App2 메시지" />
 </beans>
