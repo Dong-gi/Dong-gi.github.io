@@ -1,4 +1,9 @@
 /**
+ * @template {Map<any, any>} M
+ * @typedef {M extends Map<any, infer V> ? V : never} MapValue
+ */
+
+/**
  * @typedef {Object} Post
  * @property {string | string[]} category
  * @property {string} file
@@ -100,6 +105,23 @@ function calcOffset(element) {
 
 /**
  * @param {HTMLElement} element
+ * @param {MouseEvent} e
+ */
+function isMouseInRect(element, e) {
+    const offset = calcOffset(element)
+    const rect = {
+        ...offset,
+        right: offset.left + element.offsetWidth,
+        bottom: offset.top + element.offsetHeight
+    }
+    return rect.left < e.pageX &&
+        e.pageX < rect.right &&
+        rect.top < e.pageY &&
+        e.pageY < rect.bottom
+}
+
+/**
+ * @param {HTMLElement} element
  */
 function highlight(element) {
     if (element.style.animation?.length > 0) {
@@ -124,7 +146,33 @@ function showSnackbar(text, parent, durationMs) {
 }
 
 /**
- * target 요소에 마우스가 들어가면, content를 표시
+ * @type {Set<HTMLElement>} 마우스 감시 대상
+ */
+const activeHoverElements = new Set()
+/**
+ * @type {Set<HTMLElement>} 숨기기 대상
+ */
+const activeHoverContents = new Set()
+
+/**
+ * @param {MouseEvent} e
+ */
+function onHoverElementMouseleave(e) {
+    console.log('leave', e, { activeHoverElements, activeHoverContents })
+    if (
+        activeHoverElements.size === 0 ||
+        [...activeHoverElements].some(element => isMouseInRect(element, e))
+    ) {
+        return;
+    }
+    activeHoverContents.forEach(content => content.style.display = 'none')
+    activeHoverElements.clear()
+    activeHoverContents.clear()
+}
+
+/**
+ * * target 요소에 마우스가 들어가면, content를 표시
+ * * [테스트 페이지](https://4joy.is-a.dev/posts/dev/python/standard.html#pos-1165156425)
  * @param {HTMLElement} target 
  * @param {HTMLElement} content
  */
@@ -135,37 +183,20 @@ function addHoverContent(target, content) {
 
     /** @param {MouseEvent} e */
     const onMouseenter = function (e) {
-        if (content.style.display === 'block') {
-            return;
-        }
+        activeHoverElements.add(target)
+        activeHoverElements.add(content)
+        activeHoverContents.add(content)
+
         const targetOffset = calcOffset(target)
         content.style.display = 'block';
-        content.style.top = (targetOffset.top + target.offsetHeight) + 'px';
+        content.style.top = (targetOffset.top + target.offsetHeight - 1) + 'px';
         content.style.left = targetOffset.left + 'px';
         content.style.maxWidth = (window.innerWidth - e.clientX) + 'px';
         content.style.maxHeight = (window.innerHeight - e.clientY) + 'px';
     }
-    /** @param {MouseEvent} e */
-    const onMouseleave = function (e) {
-        if (content.style.display === 'none') {
-            return;
-        }
-        for (const offset of [calcOffset(target), calcOffset(content)]) {
-            if (
-                offset.left < e.pageX &&
-                e.pageX < offset.left + target.offsetWidth &&
-                offset.top < e.pageY &&
-                e.pageY < offset.top + target.offsetHeight
-            ) {
-                return;
-            }
-        }
-        content.style.display = 'none';
-    }
     target.addEventListener('mouseenter', onMouseenter);
-    content.addEventListener('mouseenter', onMouseenter);
-    target.addEventListener('mouseleave', onMouseleave);
-    content.addEventListener('mouseleave', onMouseleave);
+    target.addEventListener('mouseleave', onHoverElementMouseleave);
+    content.addEventListener('mouseleave', onHoverElementMouseleave);
 }
 
 /**
@@ -174,13 +205,15 @@ function addHoverContent(target, content) {
  */
 function downloadText(text, fileName) {
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([text], {
+    const url = URL.createObjectURL(new Blob([text], {
         type: 'text/plain;charset=utf-8;'
     }));
+    a.href = url;
     a.target = '_blank';
     a.download = fileName ?? 'text.txt';
     document.body.append(a);
     a.click();
+    URL.revokeObjectURL(url);
     a.remove();
 }
 
@@ -202,9 +235,6 @@ function printElement(element) {
 async function initGoto() {
     observeIntersectionOnce(document.querySelectorAll('a.goto'), (goto) => {
         goto.addEventListener('click', function () {
-            if (goto.id.length === 0) {
-                goto.id = `goto-${Math.random()}-${Math.random()}`;
-            }
             history.pushState({}, '', `#${goto.id}`);
         })
     });
@@ -218,7 +248,7 @@ async function initGoto() {
             return console.log('onpopstate > No target');
         }
         let gotoTarget = target;
-        while (gotoTarget.clientHeight === 0 || gotoTarget.tagName == null) {
+        while (gotoTarget.offsetHeight === 0 || gotoTarget.tagName == null) {
             if (gotoTarget.nextSibling != null) {
                 gotoTarget = gotoTarget.nextSibling;
                 continue;
@@ -346,11 +376,18 @@ window.addEventListener('load', async () => {
         }).then(async o => {
             Object.assign(posts, o);
 
-            posts.list = [
-                ...posts.list.filter(post => !Array.isArray(post.category)),
-                ...posts.list.filter(post => Array.isArray(post.category))
-                    .flatMap(post => post.category.map(category => Object.assign({}, post, { category: category })))
-            ].sort((post1, post2) => {
+            const singleCategoryPosts = [];
+            const multiCategoryPosts = [];
+            for (const post of posts.list) {
+                if (Array.isArray(post.category)) {
+                    for (const category of post.category) {
+                        multiCategoryPosts.push(Object.assign({}, post, { category }));
+                    }
+                } else {
+                    singleCategoryPosts.push(post);
+                }
+            }
+            posts.list = [...singleCategoryPosts, ...multiCategoryPosts].sort((post1, post2) => {
                 const r1 = post1.category.localeCompare(post2.category);
                 if (r1 !== 0) {
                     return r1;
@@ -398,7 +435,7 @@ function goto(target) {
             node.open = true;
         }
     }
-    const y = calcOffset(target).top - document.getElementById('nav').clientHeight;
+    const y = calcOffset(target).top - document.getElementById('nav').offsetHeight;
     setTimeout(() => {
         window.scrollTo({ top: y });
         document.body.scrollTop = y;
@@ -406,50 +443,54 @@ function goto(target) {
 }
 
 async function updatePostList() {
-    /** @type {Map<string, HTMLDetailsElement>} Post.category => <details> */
-    const detailsMap = new Map();
-    /** @type {Map<string, Post[]>} Post.category => Post[] */
-    const postMap = new Map();
+    /** @type {Map<string, {details: HTMLDetailsElement, ul: HTMLUListElement}>} */
+    const categoryToDomMap = new Map();
+    /** @type {Map<string, {posts: Post[], isCurrentPosts: boolean[]}>} */
+    const categoryToPostMap = new Map();
     /** @type {HTMLDetailsElement} */
     const rootDetails = asNodes(`<details open class="w3-small"><summary>Category</summary><ul></ul></details>`)
-
+    const rootUl = rootDetails.querySelector('ul');
     const lowHref = location.href.toLowerCase()
+
     for (const post of posts.list) {
         const categoryPartArr = post.category.split('/');
-        const isOpenDetails = lowHref.search(post.file.toLowerCase()) >= 0;
-        /** @type {HTMLDetailsElement} */
-        let parentDetails = null;
+        const isCurrentPost = lowHref.search(post.file.toLowerCase()) >= 0;
+        /** @type {MapValue<typeof categoryToDomMap> | undefined} */
+        let parentDom
 
         for (let i = 0; i < categoryPartArr.length; ++i) {
             const subCategory = categoryPartArr.slice(0, i + 1).join('/')
-            if (detailsMap.has(subCategory)) {
-                parentDetails = detailsMap.get(subCategory)
-                parentDetails.open ||= isOpenDetails;
+            if (categoryToDomMap.has(subCategory)) {
+                parentDom = categoryToDomMap.get(subCategory)
+                parentDom.details.open ||= isCurrentPost;
                 continue;
             }
             const li = asNodes(`<li><details class="w3-small" title="${subCategory}"><summary>${categoryPartArr[i]}</summary><ul></ul></details></li>`);
             const details = li.firstChild;
-            detailsMap.set(subCategory, details);
-            if (parentDetails != null) {
-                parentDetails.querySelector('ul').append(li);
+            const ul = details.querySelector('ul');
+            categoryToDomMap.set(subCategory, { details, ul });
+            if (parentDom != null) {
+                parentDom.ul.append(li);
             } else {
-                rootDetails.querySelector('ul').append(li);
+                rootUl.append(li);
             }
-            parentDetails = details;
-            parentDetails.open ||= isOpenDetails;
+            parentDom = { details, ul };
+            parentDom.details.open ||= isCurrentPost;
         }
-        if (!postMap.has(post.category)) {
-            postMap.set(post.category, []);
+        if (!categoryToPostMap.has(post.category)) {
+            categoryToPostMap.set(post.category, { posts: [], isCurrentPosts: [] });
         }
-        postMap.get(post.category).push(post);
+        const entry = categoryToPostMap.get(post.category);
+        entry.posts.push(post);
+        entry.isCurrentPosts.push(isCurrentPost);
     }
 
-    for (const category of postMap.keys()) {
-        const ul = detailsMap.get(category).querySelector('ul');
-        const postArr = postMap.get(category);
-        for (const post of postArr) {
-            const isHighlight = lowHref.search(post.file.toLowerCase()) >= 0;
-            ul.append(asNodes(`<li><a ${isHighlight ? 'class="w3-yellow"' : ''} href="/posts/${post.file}">${post.title}</a></li>`));
+    for (const category of categoryToPostMap.keys()) {
+        const ul = categoryToDomMap.get(category).ul;
+        const entry = categoryToPostMap.get(category);
+        for (let i = 0; i < entry.posts.length; ++i) {
+            const post = entry.posts[i];
+            ul.append(asNodes(`<li><a ${entry.isCurrentPosts[i] ? 'class="w3-yellow"' : ''} href="/posts/${post.file}">${post.title}</a></li>`));
         }
     }
 
@@ -530,78 +571,68 @@ function makeMarkerName(marker) {
  * @param {string} [displayRange] 예. [1, 10, 21, 30] => 1 ~ 10라인, 21 ~ 30라인 표시
  */
 function fillCodeDiv(div, lan, text, displayRange) {
-    if (lan !== 'nohighlight') {
-        const code = text.replace(/\t/gm, '    ').replace(/ /gm, '  ');
-        const lines = code.split(/\n/gm);
-        /** @type {string[][]} */
-        const displayPartArr = [];
-        displayRange = JSON.parse(displayRange || '[1, 100000000]') ?? [1, 100000000];
-        if (displayRange.length % 2 === 1) {
-            displayRange.push(100000000);
-        }
-        displayRange.reverse()
-
-        let totalLineCount = 0;
-        while (displayRange.length > 0) {
-            /** @type {string[]} */
-            let displayLineArr = [];
-            const displayStart = displayRange.pop() - 1;
-            const displayEnd = displayRange.pop();
-            let commonBlankSize = 10000;
-
-            for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx) {
-                const line = lines[idx];
-                displayLineArr.push(line);
-                for (let i = 0; i < commonBlankSize; ++i) {
-                    if (
-                        i >= line.length ||
-                        line.charCodeAt[i] !== 32
-                    ) {
-                        commonBlankSize = i;
-                        break;
-                    }
-                }
-            }
-
-            if (commonBlankSize > 0) {
-                displayLineArr = displayLineArr.map(line => line.slice(commonBlankSize));
-            }
-
-            if (lan !== 'text') {
-                displayLineArr = hljs.highlight(displayLineArr.join('\n'), { language: lan, ignoreIllegals: true })['value'].split(/\n/gm);
-            }
-
-            displayPartArr.push(displayLineArr);
-            totalLineCount += displayLineArr.length;
-        }
-
-        const ol = document.createElement('ol')
-        for (const displayLineArr of displayPartArr) {
-            for (const line of displayLineArr) {
-                if (lan === 'text') {
-                    const li = document.createElement('li');
-                    li.innerText = line.replace(/  /gm, '\u00A0');
-                    if (totalLineCount === 1) {
-                        li.style.listStyleType = 'none';
-                    }
-                    ol.append(li);
-                } else {
-                    ol.append(asNodes(`<li ${totalLineCount === 1 ? 'style="list-style-type:none;"' : ''}>${line.replace(/  /gm, '&nbsp;')}</li>`));
-                }
-            }
-            if (displayLineArr !== displayPartArr[displayPartArr.length - 1]) {
-                ol.append(document.createElement('hr'));
-            }
-        }
-        div.append(ol);
-    } else {
+    if (lan === 'nohighlight') {
         const nodes = asNodes(text);
         if (Array.isArray(nodes)) {
             div.append(...nodes);
         } else {
             div.append(nodes);
         }
+        return
     }
+
+    const code = text.replace(/\t/gm, '    ');
+    const lines = code.split(/\n/gm);
+    /** @type {string[][]} */
+    const displayPartArr = [];
+    displayRange = JSON.parse(displayRange || '[1, 100000000]') ?? [1, 100000000];
+    if (displayRange.length % 2 === 1) {
+        displayRange.push(100000000);
+    }
+    displayRange.reverse()
+
+    let totalLineCount = 0;
+    while (displayRange.length > 0) {
+        /** @type {string[]} */
+        let displayLineArr = [];
+        const displayStart = displayRange.pop() - 1;
+        const displayEnd = displayRange.pop();
+        let commonBlankSize = 10000;
+
+        for (let idx = displayStart; idx < displayEnd && idx < lines.length; ++idx) {
+            const line = lines[idx];
+            displayLineArr.push(line);
+            for (let i = 0; i < commonBlankSize; ++i) {
+                if (
+                    i >= line.length ||
+                    line.charCodeAt(i) !== 32
+                ) {
+                    commonBlankSize = i;
+                    break;
+                }
+            }
+        }
+
+        if (commonBlankSize > 0) {
+            displayLineArr = displayLineArr.map(line => line.slice(commonBlankSize));
+        }
+
+        displayLineArr = hljs.highlight(displayLineArr.join('\n'), { language: lan, ignoreIllegals: true })['value'].split(/\n/gm);
+
+        displayPartArr.push(displayLineArr);
+        totalLineCount += displayLineArr.length;
+    }
+
+    const ol = document.createElement('ol')
+    for (const displayLineArr of displayPartArr) {
+        for (const line of displayLineArr) {
+            ol.append(asNodes(`<li ${totalLineCount === 1 ? 'style="list-style-type:none"' : ''}>${line}</li>`))
+        }
+        if (displayLineArr !== displayPartArr[displayPartArr.length - 1]) {
+            ol.append(document.createElement('hr'));
+        }
+    }
+    div.append(ol);
 }
 
 function showModal(codeId) {
@@ -633,7 +664,8 @@ function showModal(codeId) {
     const body = modal.querySelector('.code-modal-body');
     const footer = modal.querySelector('footer');
 
-    body.innerHTML = document.getElementById(`code-div-${codeId}`).innerHTML;
+    const sourceDiv = document.getElementById(`code-div-${codeId}`);
+    body.append(...Array.from(sourceDiv.cloneNode(true).childNodes));
     body.style.height = window.innerHeight - parseFloat(window.getComputedStyle(header).height);
 
     footer.querySelector('button.copy').onclick = function () {
