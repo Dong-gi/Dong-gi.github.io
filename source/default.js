@@ -248,7 +248,7 @@ async function initGoto() {
             return console.log('onpopstate > No target');
         }
         let gotoTarget = target;
-        while (gotoTarget.offsetHeight === 0 || gotoTarget.tagName == null) {
+        while (gotoTarget.offsetWidth === 0 || gotoTarget.offsetHeight === 0 || gotoTarget.tagName == null) {
             if (gotoTarget.nextSibling != null) {
                 gotoTarget = gotoTarget.nextSibling;
                 continue;
