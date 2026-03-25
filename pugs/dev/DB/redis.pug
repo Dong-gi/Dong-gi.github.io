@@ -344,6 +344,42 @@ include ../../../source/skeleton.pug
             li 슬롯 동기화가 완료됐다면 타깃 노드는 슬롯 소유권을 인수하고 클러스터에 브로드캐스트
             li 마이그레이션 완료를 통지받은 소스 노드는 해시 슬롯을 정리하고, 클라이언트에 MOVED 리다이렉션 응답
 
+    h1 Client-side caching
+    ul
+        li 클라이언트가 로컬 캐시를 이용해 동일한 항목에 대해 서버 대신 캐시에서 읽기 요청을 처리한다
+            p 서버는 적절하게 무효화 메시지를 보낼 뿐, 캐싱과 무효화를 처리하는 것은 클라이언트 (라이브러리) 책임이다
+        li 기본 모드: 서버는 캐싱 활성화된 클라이언트가 읽은 키 집합을 추적하여, 업데이트가 발생하면 무효화 메시지를 보낸다
+            ul
+                li 모든 캐시 활성화한 클라이언트가 읽어간 키를 기억하는 것은 메모리를 너무 많이 점유할 수 있다
+                    p 따라서 최대 기억 개수를 초과하면 신규 항목 삽입 시 이전 항목에 대해 무효화 메시지를 발송하고 제거한다
+                li DB 번호를 무시한다. 클라이언트가 Valkey 2에서 키 foo를 캐시하고, 다른 클라이언트가 Valkey 3에서 키 foo의 값을 변경하면, 무효화 메시지가 발송된다
+                li 효율적인 로컬 캐시 운용을 위해, 클라이언트가 캐시 여부를 언제든 켜고 끌 수 있다 (#[+goto('CLIENT TRACKING')], #[+goto('CLIENT CACHING')])
+        li 브로드캐스팅 모드 : 클라이언트가 접근한 개별 키를 기억하지 않고, 단순히 접두사가 일치하면 무효화 메시지를 뿌린다
+        li 클라이언트가 추적을 활성화할 때, 다른 연결의 클라이언트 ID를 지정하여 무효화 메시지를 리다이렉션할 수 있다
+            p 무효화 메시지를 받을 클라이언트는 특수 채널을 구독
+            +asCode() SUBSCRIBE __redis__:invalidate
+        li 캐시 버전 불일치 회피
+            ul
+                li 읽기 응답과 무효화 메시지 수신 사이의 시간 차이가 발생하는 경우
+                    +asCode('text', '문제 상황').
+                        C1 -&gt; S: GET foo
+                        C2 -&gt; S: SET foo bar2
+                        C1 &lt;- S: Invalidate foo
+                        C1 &lt;- S: "bar1"
+                    +asCode('text', '회피 예시').
+                        C1 -&gt; S: GET foo
+                        # C1은 "foo"에 대한 캐시에 "설정 중"이라고 표시
+                        C2 -&gt; S: SET foo bar2
+                        C1 &lt;- S: Invalidate foo
+                        # C1은 "foo"에 대한 엔트리 삭제
+                        C1 &lt;- S: "bar1"
+                        # "foo"에 대한 엔트리가 없으므로 캐시 설정 생략
+                li 연결이 끊기는 경우
+                    ul
+                        li 연결이 끊어지면 캐시를 정리하도록 한다
+                        li 무효화 메시지 수신 채널에서 주기적으로 핑을 보내고, 일정 시간 이상 퐁을 수신하지 못하면 연결과 캐시를 정리
+                        li 로컬 캐시에도 실제 TTL 또는 적절한 최대 TTL을 설정한다
+
     h1 Commands
     div
         h2 주의사항
@@ -560,6 +596,63 @@ include ../../../source/skeleton.pug
         p 생략. 클라우드 서비스를 주로 이용하므로
 
         h2 Connection
+        div
+            h3 AUTH
+            +asCode() AUTH [username] password
+            ul
+                li 현재 연결을 인증
+                li username 생략된 경우 : default로 간주
+                li 서버의 높은 성능으로 인해 짧은 시간 안에 많은 비밀번호를 시도할 수 있으므로, 충분히 긴 비밀번호를 이용해야 한다.
+
+            h3 CLIENT CACHING
+            +asCode() CLIENT CACHING &lt;yes | no&gt;
+            p 추적을 OPTIN 또는 OPTOUT 모드에서 활성화(#[+goto('CLIENT TRACKING')])한 상태에서, 바로 다음 읽기 명령의 키 추적 제어
+            ul
+                li yes : OPTIN 모드에서 다음 명령의 키 추적 활성화
+                li no : OPTOUT 모드에서 다음 명령의 키 추적 비활성화
+
+            h3 CLIENT ID
+            +asCode() CLIENT ID
+            ul
+                li 클라이언트 ID는 단조 증가한다
+                li 클러스터 환경의 서로 다른 노드 사이에선 클라이언트 ID가 중복될 수 있다
+                    p 노드 주소(ip:port) + 클라이언트 ID 조합을 사용하거나, CLIENT SETNAME으로 이름을 할당하는 식으로 중복 회피 가능
+
+            h3 CLIENT NO-TOUCH
+            +asCode() CLIENT NO-TOUCH &lt;on | off&gt;
+            p on하면 이 클라이언트의 키 접근은 LRU/LFU 통계를 변경하지 않는다
+
+            h3 CLIENT REPLY
+            +asCode() CLIENT REPLY &lt;on | off | skip&gt;
+            ul
+                li 서버 응답이 필요없는 경우 이용할 수 있다
+                li on : 기본값. 모든 명령에 응답을 반환
+                li off : 클라이언트 명령에 응답을 반환하지 않는다
+                li skip : 바로 다음 명령만 응답하지 않는다
+
+            h3 CLIENT TRACKING
+            +asCode() CLIENT TRACKING &lt;on | off&gt; [REDIRECT client-id] [PREFIX prefix [PREFIX prefix ...]] [BCAST] [OPTIN] [OPTOUT] [NOLOOP]
+            ul
+                li 클라이언트 측 캐싱 활성화/비활성화
+                li OPTIN : 기본 모드에서, #[+goto('CLIENT CACHING')] yes 바로 뒤 읽기 명령의 키만 추적
+                li OPTOUT : 기본 모드에서, 읽기 명령의 키를 자동 추적. #[+goto('CLIENT CACHING')] no 바로 뒤 읽기 명령은 예외
+                li BCAST : 브로드캐스팅 모드로 추적. 서버는 개별 키를 기억하는 대신 지정된 접두어를 기준으로 무효화 메시지 발송
+                    ul
+                        li 등록했던 일부 접두사를 제거하려면 한 번 OFF하고 다시 ON해야 된다
+                        li 접두사는 겹치지 않아야 한다: 한 클라이언트가 "foo"와 "foob" 모두를 추적하는 것은 허용되지 않는다
+                li NOLOOP : 이 연결이 수정한 키에 대해, 이 연결에는 알림을 보내지 않는다
+
+            h3 HELLO
+            +asCode() HELLO [protover [AUTH username password] [SETNAME clientname]]
+            ul
+                li protover : 연결 프로토콜을 변경할 수 있다(기본 RESP2)
+                li #[+goto('AUTH')] : 선택적으로 사용자 전환도 가능
+
+            h3 SELECT
+            +asCode() SELECT index
+            ul
+                li 사용할 데이터베이스를 변경한다. 새 연결은 항상 0번을 이용
+                li Valkey 9.0부터 클러스터 모드에서도 다중 데이터베이스 지원
 
         h2 Generic
         div
@@ -567,94 +660,74 @@ include ../../../source/skeleton.pug
             +asCode() COPY source destination [DB destination-db-index] [REPLACE]
             ul
                 li source 키의 값을 destination 키로 복사
-                li 복사됐으면 1, 아니면 0 반환
                 li DB : 내부 논리적 DB index
                 li REPLACE : 덮어쓰기
+                li 반환값
+                    ul
+                        li 1 : 복사 완료
+                        li 0 : source가 없거나, destination이 이미 존재하지만 REPLACE 지정 없음
 
             h3 DEL
             +asCode() DEL key [key ...]
             p 키를 삭제하고, 삭제된 개수 반환
-
-            h3 DUMP
-            +asCode() DUMP key
-            ul
-                li 값을 Redis 포맷(내부 RDB 버전에 따라 인코딩 방식 결정됨)으로 직렬화하여 반환
-                p expire time은 포함되지 않음
-                li
-                    +goto('RESTORE')
-                    |로 역직렬화 가능
-                +asCode('shell').
-                    > set key1 'Hello World!'
-                    OK
-                    > dump key1
-                    "\x00\x0cHello World!\t\x00\xda\xe7D\xea/\xa2\xe6\xc7"
-                    > restore key2 0 "\x00\x0cHello World!\t\x00\xda\xe7D\xea/\xa2\xe6\xc7"
-                    OK
-                    > get key2
-                    "Hello World!"
 
             h3 EXISTS
             +asCode() EXISTS key [key ...]
             p 존재하는 키의 개수 반환. 중복된 키는 중복 카운트 됨에 유의
 
             h3 EXPIRE
-            +asCode() EXPIRE key seconds [NX|XX|GT|LT]
-            ul
-                li 지정 시간(초) 후 키 삭제
-                li 설정됐으면 1, 아니면 0반환
-                li 값을 덮어쓰지 않는 명령(INCR, LPUSH, HSET)과 RENAME은 ttl 정보에 영향을 미치지 않음에 유의
-                li NX : No expiry; 키에 ttl이 설정되지 않은 경우에만 설정
-                li XX : Exists expiry; 키에 ttl이 설정된 경우에만 설정
-                li GT : Greater than; 기존 ttl보다 큰 경우에만 설정
-                li LT : Less than; 기존 ttl보다 작은 경우에만 설정
-                li ttl이 없는 경우 GT, LT에서 무한으로 간주
-
-            h3 PEXPIRE
-            +asCode() PEXPIRE key milliseconds [NX|XX|GT|LT]
-            p 밀리초 단위 EXPIRE
-
             h3 EXPIREAT
-            +asCode() EXPIREAT key unix-timestamp-seconds [NX|XX|GT|LT]
-            ul
-                li 지정 시각 이후 키 삭제
-                li 설정됐으면 1, 아니면 0반환
-                li 값을 덮어쓰지 않는 명령(INCR, LPUSH, HSET)과 RENAME은 ttl 정보에 영향을 미치지 않음에 유의
-                li NX : No expiry; 키에 ttl이 설정되지 않은 경우에만 설정
-                li XX : Exists expiry; 키에 ttl이 설정된 경우에만 설정
-                li GT : Greater than; 기존 ttl보다 큰 경우에만 설정
-                li LT : Less than; 기존 ttl보다 작은 경우에만 설정
-                li ttl이 없는 경우 GT, LT에서 무한으로 간주
-
+            h3 PEXPIRE
             h3 PEXPIREAT
-            +asCode() PEXPIREAT key unix-time-milliseconds [NX|XX|GT|LT]
-            p 밀리초 단위 EXPIREAT
+            +asCode().
+                [P]EXPIRE key amount [NX|XX|GT|LT]
+                [P]EXPIREAT key unix-timestamp [NX|XX|GT|LT]
+            ul
+                li 상대 시간으로 설정 : [P]EXPIRE
+                li 절대 시간으로 설정 : [P]EXPIREAT
+                li 기본 명령은 초 단위, P-명령은 밀리초 단위로 설정한다
+                li TTL로 과거를 설정하면 키를 삭제한다: expired가 아닌 del 이벤트 발생
+                li 반환값
+                    ul
+                        li 1 : 지정된 값으로 TTL 설정됨
+                        li 0 : 그 외
+                li 키를 삭제하거나 값을 덮어쓰는 명령은 설정된 TTL을 삭제한다
+                    ul
+                        li INCR, LPUSH, HSET은 TTL을 건드리지 않는다
+                        li RENAME은 TTL 정보를 그대로 이전한다
+                        li PERSIST는 TTL 정보만 삭제한다
+                li NX : 키에 TTL이 설정되지 않은 경우에만 설정
+                li XX : 키에 TTL이 설정된 경우에만 설정
+                li GT : 기존 TTL(없으면 무한)보다 큰 경우에만 설정
+                li LT : 기존 TTL(없으면 무한)보다 작은 경우에만 설정
 
             h3 EXPIRETIME
-            +asCode() EXPIRETIME key
-            ul
-                li 키가 만료되는 시각 - Unix timestamp in seconds을 반환한다
-                li -1 : ttl 설정 안 된 경우
-                li -2 : 키가 존재하지 않는 경우
-
             h3 PEXPIRETIME
-            +asCode() PEXPIRETIME key
-            p 밀리초 단위 EXPIRETIME
+            +asCode() [P]EXPIRETIME key
+            ul
+                li 키가 만료되는 Unix 타임스탬프를 반환한다
+                li 기본 명령은 초 단위, P-명령은 밀리초 단위
+                li 반환값
+                    ul
+                        li -1 : TTL 설정 안 된 경우
+                        li -2 : 키가 존재하지 않는 경우
+                        li 그 외 : 만료 시각
 
             h3 KEYS
             +asCode() KEYS pattern
             ul
                 li <span class="hover-content" template-id="glob-style-pattern">GLOB style pattern</span>에 일치하는 키 배열 반환
-                li KEYS 명령은 사용중인 저장소가 클수록 큰 성능 저하를 발생하므로 각별히 주의
+                li 프로덕션 환경에선 #[+goto("SCAN")] 이용 권장
 
             h3 MIGRATE
-            +asCode() MIGRATE host port key|"" destination-db timeout-ms [COPY] [REPLACE] [AUTH password] [AUTH2 username password] [KEYS key [key ...]]
+            +asCode() MIGRATE host port &lt;key|""&gt; destination-db timeout-ms [COPY] [REPLACE] [AUTH password | AUTH2 username password] [KEYS key [key ...]]
             ul
                 li 데이터를 다른 서버로 옮긴다. DUMP + DEL + RESTORE의 조합
                 li timeout-ms : MIGRATE 명령이 제한시간 안에 수행함을 의미하는 것이 아니라, 어느 단계에서든 해당 지연 시간 이상 블록되는 일이 없음을 보장
-                p 시간초과가 발생하더라도 목적지에 복사된 상태일 수 있음에 유의. 반면 그 외의 에러 상황에서는 목적지에 복사되지 않은 상태임을 보장
+                    p 시간초과가 발생하더라도 목적지에 복사된 상태일 수 있음에 유의
                 li COPY : 원본을 지우지 않는다
+                li REPLACE : 원격 인스턴스의 기존 키 대체
                 li KEYS : 여러 개를 이동할 때, 앞부분 key를 ""로 하고 사용
-                li AUTH, AUTH2 모두 목적지 서버 연결 정보로써, 필요한 것 하나만 사용
 
             h3 MOVE
             +asCode() MOVE key db-index
@@ -674,7 +747,7 @@ include ../../../source/skeleton.pug
             h3 PERSIST
             +asCode() PERSIST key
             ul
-                li ttl 삭제
+                li TTL 설정 삭제
                 li 삭제했으면 1, 아니면 0 반환
 
             h3 RANDOMKEY
@@ -686,7 +759,7 @@ include ../../../source/skeleton.pug
             ul
                 li key가 존재하지 않는 경우 에러 반환
                 li 기존 newkey는 덮어씌어진다(암시적 DEL 수행)
-                li 기존 ttl 정보는 그대로 옮겨진다
+                li 기존 TTL 정보는 그대로 옮겨진다
                 li 클러스터 모드에서, key와 newkey는 같은 해시 슬롯에 존재해야
                 li 성공 시 "OK" 반환
 
@@ -700,8 +773,8 @@ include ../../../source/skeleton.pug
             +asCode() RESTORE key ttl-milliseconds serialized-value [REPLACE] [ABSTTL] [IDLETIME seconds] [FREQ frequency]
             ul
                 li Redis 포맷 문자열로부터 역직렬화
-                li ttl : 0이면 무기한
-                li ABSTTL : 설정한 경우, ttl을 Unix timestamp로 해석한다
+                li TTL : 0이면 무기한
+                li ABSTTL : 설정한 경우, TTL을 Unix timestamp로 해석한다
                 li IDLETIME, FREQ : OBJECT 명령과 관계된 초기값 설정
 
             h3 SCAN
@@ -794,7 +867,7 @@ include ../../../source/skeleton.pug
 
             h3 TTL
             +asCode() TTL key
-            p 남은 유효 시간(초) 반환. 삭제됐으면 -2, ttl 없으면 -1
+            p 남은 유효 시간(초) 반환. 삭제됐으면 -2, TTL 없으면 -1
 
             h3 PTTL
             +asCode() PTTL key
@@ -1630,10 +1703,10 @@ include ../../../source/skeleton.pug
             h3 GETEX
             +asCode() GETEX key [EX seconds|PX milliseconds|EXAT unix-time-seconds|PXAT unix-time-milliseconds|PERSIST]
             ul
-                li GET 실행 후 ttl 변경. GET 실행 결과 반환
-                li EX, PX : ttl(상대 시간)
-                li EXAT, PXAT : ttl(절대 시각)
-                li PERSIST : ttl 제거
+                li GET 실행 후 TTL 변경. GET 실행 결과 반환
+                li EX, PX : TTL(상대 시간)
+                li EXAT, PXAT : TTL(절대 시각)
+                li PERSIST : TTL 제거
 
             h3 GETRANGE
             +asCode() GETRANGE key start end
@@ -1728,11 +1801,11 @@ include ../../../source/skeleton.pug
             +asCode() SET key value [EX seconds|PX milliseconds|EXAT unix-time-seconds|PXAT unix-time-milliseconds|KEEPTTL] [NX|XX] [GET]
             ul
                 li 원자적으로 key에 대하여 value를 할당한다. 이전에 설정한 값, 유효 기간을 덮어쓴다
-                li EX, PX : ttl(상대 시각)
-                li EXAT, PXAT : ttl(절대 시각)
+                li EX, PX : TTL(상대 시각)
+                li EXAT, PXAT : TTL(절대 시각)
                 li NX : 신규 키일 때만 설정
                 li XX : 중복 키일 때만 설정
-                li KEEPTTL : 이전 ttl 유지
+                li KEEPTTL : 이전 TTL 유지
                 li GET : 이전 값 반환(없으면 nil)
 
             h3 SETEX
