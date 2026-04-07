@@ -406,7 +406,8 @@ include ../../../source/skeleton.pug
                 void remove(Class&lt;?> type)
                     // 다음 get 호출 시 값을 새로 계산하도록 한다
             h3 ThreadLocal&lt;T>
-            p 스레드 단위의 지역 변수를 제공한다. 호출 지점과 관계없이 한 스레드 내부에서 변수를 공유한다
+            p 스레드 단위 지역 변수를 제공한다. 호출 지점과 관계없이 한 스레드 내부에서 변수를 공유한다. 로컬 변수를 상속하는 자식 스레드를 생성하는 경우, 부모 스데으의 모든 스레드 로컬 변수에 대한 복사본을 만든다
+            p Since 25. ScopedValue는 스레드 및 자식 스레드(가상 스레드 포함) 사이에서 "불변" 데이터를 공유하는 더 효율적인 구현을 제공한다. 추가로 데이터 수명을 코드와 일치시켜 실수로 정리를 까먹는 일이 발생하지 않는다
             +asCode('java').
                 protected T initialValue()
                     // 초기값이 설정되지 않은 상태에서 최초 get() 호출에 의해 불린다. remove() 호출 후의 get() 요청으로 다시 불린다
@@ -1684,6 +1685,7 @@ include ../../../source/skeleton.pug
                 // + getIntegerInstance : 포맷에 HALF_EVEN을 이용하고, 파싱은 정수부만
 
         h2 SimpleDateFormat
+        p 스레드-안전한 DateTimeFormatter 사용이 권장된다
         +table()
             tr
                 th 문자
