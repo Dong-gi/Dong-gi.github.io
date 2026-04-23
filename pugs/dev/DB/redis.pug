@@ -928,6 +928,76 @@ include ../../../source/skeleton.pug
             h3 GEORADIUSBYMEMBER_RO
             p Deprecated(Redis). 대신 #[+goto('GEOSEARCH')], #[+goto('GEOSEARCHSTORE')] 사용
 
+            h3 GEOSEARCH
+            h3 GEOSEARCHSTORE
+            +asCode().
+                GEOSEARCH key
+                    &lt;
+                        FROMMEMBER member |
+                        FROMLONLAT longitude latitude
+                    &gt;
+                    &lt;
+                        BYRADIUS radius &lt;M | KM | FT | MI&gt; |
+                        BYBOX width height &lt;M | KM | FT | MI&gt; |
+                        BYPOLYGON num-vertices longitude latitude [ longitude latitude ... ]
+                    &gt;
+                    [ASC | DESC] [COUNT count [ANY]] [WITHCOORD] [WITHDIST] [WITHHASH]
+
+                GEOSEARCHSTORE destination source
+                    &lt;
+                        FROMMEMBER member |
+                        FROMLONLAT longitude latitude
+                    &gt;
+                    &lt;
+                        BYRADIUS radius &lt;M | KM | FT | MI&gt; |
+                        BYBOX width height &lt;M | KM | FT | MI&gt; |
+                        BYPOLYGON num-vertices longitude latitude [ longitude latitude ... ]
+                    &gt;
+                    [ASC | DESC] [COUNT count [ANY]] [STOREDIST]
+            ul
+                li 주어진 영역에 포함되는 지점들을 <strong>모두</strong> 찾아 반환한다
+                li 영역 지정
+                    ul
+                        li FROMMEMBER : 집합 내 지점을 기준점으로
+                        li FROMLONLAT : 특정 좌표를 기준점으로
+                        li BYRADIUS : 원형
+                        li BYBOX : 직사각형
+                        li BYPOLYGON : 지정 좌표(꼭짓점)들로 구성된 임의 다각형
+                li 반환값
+                    ul
+                        li WITH* 옵션이 없는 경우 : 이름 배열이 반환된다
+                        li 그 외의 경우 : [이름, 거리?, hash?, [경도, 위도]?][]가 반환된다
+                        li ASC | DESC : 반환 배열은 기본적으로 정렬되지 않는다
+                        li COUNT count : 반환 크기를 제한한다
+                        li COUNT count ANY : count개 지점을 찾으면 즉시 반환한다
+                li STORE 명령 : 원본 집합에 대한 부분 집합을 저장하고, 그 크기를 반환한다
+                    ul
+                        li STOREDIST : 좌표 대신 각 지점들의 거리를 점수로 집합을 구성한다
+            +asCode('shell').
+                # 데이터 준비
+                127.0.0.1:6379> GEOADD places 126.9780 37.5665 "Seoul"
+                (integer) 1
+                127.0.0.1:6379> GEOADD places 127.0286 37.2636 "Suwon"
+                (integer) 1
+                127.0.0.1:6379> GEOADD places 129.0756 35.1796 "Busan"
+                (integer) 1
+                127.0.0.1:6379> GEOADD places 126.7052 37.4563 "Incheon"
+                (integer) 1
+                127.0.0.1:6379> GEOADD places 128.6014 35.8714 "Daegu"
+                (integer) 1
+                127.0.0.1:6379> GEOADD places 127.3845 36.3504 "Daejeon"
+                (integer) 1
+                127.0.0.1:6379> GEOADD places 126.8526 35.1595 "Gwangju"
+                (integer) 1
+
+                # WITH* 없는 단순 조회
+                127.0.0.1:6379> GEOSEARCH places FROMMEMBER Seoul BYRADIUS 50 KM
+                1) "Incheon"
+                2) "Suwon"
+                3) "Seoul"
+
+                # WITH 포함한 조회
+
         h2 Hash
         div
             h3 HDEL

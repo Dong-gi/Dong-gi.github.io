@@ -2,11 +2,9 @@
   "name": "dong-gi.github.io",
   "description": "blog",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "build-all": "npm run build-site && npm run build-js",
-    "build-new": "npm run build-site new && npm run build-js",
-    "build-site": "node source/build.js",
-    "build-js": "npx terser --compress --mangle -o source/default.min.js -- source/default.js"
+    "build": "node source/build.ts && npx terser --compress --mangle -o source/default.min.js -- source/default.js"
   },
   "repository": {
     "type": "git",
@@ -19,9 +17,11 @@
   },
   "homepage": "https://dong-gi.github.io",
   "devDependencies": {
+    "@types/node": "^25.6.0",
     "pug": "^3.0.3",
     "sharp": "^0.34.5",
     "svgo": "^4.0.1",
-    "terser": "^5.46.0"
+    "terser": "^5.46.0",
+    "typescript": "^6.0.3"
   }
 }
