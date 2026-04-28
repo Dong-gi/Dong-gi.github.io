@@ -20,6 +20,11 @@ include ../../../source/skeleton.pug
         li 출시 노트 : #[+asA('https://www.postgresql.org/docs/release/')]
         li PostgreSQL은 캘리포니아 대학교 버클리 컴퓨터과학부에서 개발한 POSTGRES 버전 4.2를 기반으로 개발되고, 오픈소스로 관리 중인 객체-관계형 데이터베이스 관리 시스템(ORDBMS)이다. 뛰어난 성능과 확장성으로 여러 분야에서 애용하고 있다
 
+    h1 기타 토픽
+    ul
+        li PostgreSQL 19 예정 사항
+            p 현재 상태를 재생하기 위한 DDL 동적 생성 가능. pg_get_database_ddl(), pg_get_role_ddl(), pg_get_tablespace_ddl() 등
+
     h1 SQL
     div
         h2 구문
@@ -3737,3 +3742,11 @@ include ../../../source/skeleton.pug
 
         h2: +asA('https://www.postgresql.org/docs/current/ltree.html')
         p 트리 구조로 저장된 레이블의 저장과 검색을 지원한다
+
+        h2: +asA('https://www.postgresql.org/docs/current/pgprewarm.html', 'pg_prewarm')
+        ul
+            li PostgreSQL이 재시작하면 공유 버퍼 캐시는 기본적으로 비어 있기 때문에, 모든 쿼리는 디스크를 거치게 된다. 대규모 프로덕션 시스템에서는 캐시가 자연스럽게 예열되기까지 긴 시간이 소요될 수 있다
+            li pg_prewarm은 수동/자동으로 버퍼 캐시를 로드하는 수단을 제공한다
+                ul
+                    li 수동 : pg_prewarm() 함수를 호출하여 특정 테이블이나 인덱스를 명시적으로 예열
+                    li 자동 : #[+asA('https://www.postgresql.org/docs/current/runtime-config-client.html#GUC-SHARED-PRELOAD-LIBRARIES', 'shared_preload_libraries')]에 pg_prewarm을 포함시키면 공유 버퍼의 내용을 autoprewarm.blocks라는 파일에 주기적으로 기록하는 백그라운드 워커를 실행하며, 재시작 후 2개의 백그라운드 워커를 사용하여 동일한 블록을 다시 로드

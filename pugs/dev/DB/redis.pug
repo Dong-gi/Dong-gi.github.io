@@ -29,10 +29,10 @@ include ../../../source/skeleton.pug
                 $ redis-cli --scan --pattern '*' | xargs redis-cli DEL
         li help
             +asCode('shell').
-                > help @&lt;group> # 커맨드들은 연관성에 따라 그룹에 묶여있다
-                > help &lt;command>
+                &gt; help @&lt;group&gt; # 커맨드들은 연관성에 따라 그룹에 묶여있다
+                &gt; help &lt;command&gt;
 
-                > help @string
+                &gt; help @string
 
                   APPEND key value
                   summary: Appends a string to the value of a key. Creates the key if it doesn't exist.
@@ -44,7 +44,7 @@ include ../../../source/skeleton.pug
 
                   ...
 
-                > help ECHO
+                &gt; help ECHO
 
                   ECHO message
                   summary: Returns the given string.
@@ -147,8 +147,11 @@ include ../../../source/skeleton.pug
         div
             h3 HyperLogLog
             ul
-                li 집합 크기 추정에 이용되는 확률 자료형
-                li 최대 12KB를 사용하여 0.81% 표준 오차 제공
+                li 알고리즘 개발자 Philippe Flajolet를 기리는 의미로 관련 명령들은 PF-로 시작
+                li #[+goto('HyperLogLog', '/posts/fundamental/algorithm.html')] 구현을 제공한다
+                    p 단일 집합 크기 추정은 캐시되므로 #[+goto('PFCOUNT')]가 빈번하게 호출돼도 무방하다
+                li 12KB를 사용하여 0.81% 표준 오차 제공
+                    p 문자열이므로 #[+goto('GET')]으로 조회하고 #[+goto('SET')]으로 복원 가능하다
                 li 최대 2^64개 멤버를 가진 집합의 크기 추정 가능
 
             h3 Bloom filter
@@ -384,6 +387,7 @@ include ../../../source/skeleton.pug
     div
         h2 주의사항
         ul
+            li Valkey가 Redis 7.2.4로부터 시작됐으므로, 아래 문서에는 7.2.4 후의 변경 사항에만 "Since Valkey 9.0"처럼 표기
             li MGET, MSET과 같은 다중 키 작업 명령은, 모든 키가 동일한 해시 슬롯에 있지 않으면 CROSSSLOT 오류 발생
                 ul
                     li #[+goto('해시 태그')]를 이용하거나
@@ -399,7 +403,7 @@ include ../../../source/skeleton.pug
                     ul
                         li 전부 생략 시 전체 문자열을 검사한다
                         li 음수를 허용하는 두 인덱스로 표현되는 닫힌 구간 [start, end]으로 탐색 구간 지정 가능
-                        li Since Valkey 8.0.0 : end 생략 가능
+                        li Since Valkey 8.0 : end 생략 가능
                 li BIT : 탐색 구간 단위를 BIT로 지정 가능
 
             h3 BITFIELD
@@ -466,13 +470,13 @@ include ../../../source/skeleton.pug
                                 li one : 주어진 소스 중 단 하나만 1로 설정된 위치에 1 설정
 
             +asCode('shell').
-                > set key1 humble-bundle
+                &gt; set key1 humble-bundle
                 OK
-                > set key2 bundle-humble
+                &gt; set key2 bundle-humble
                 OK
-                > bitop and key3 key1 key2
+                &gt; bitop and key3 key1 key2
                 (integer) 13
-                > get key3
+                &gt; get key3
                 "`ul`le-`ul`le"
 
             h3 BITPOS
@@ -486,17 +490,17 @@ include ../../../source/skeleton.pug
                         li 찾지 못한 경우 -1 반환
                 li BIT : 탐색 구간 단위를 BIT로 지정 가능
             +asCode('shell').
-                > set key "\x00\xff"
+                &gt; set key "\x00\xff"
                 OK
-                > bitpos key 0
+                &gt; bitpos key 0
                 (integer) 0
-                > bitpos key 0 1
+                &gt; bitpos key 0 1
                 (integer) 16
-                > bitpos key 0 1 1
+                &gt; bitpos key 0 1 1
                 (integer) -1
-                > bitpos key 1
+                &gt; bitpos key 1
                 (integer) 8
-                > bitpos key 1 1
+                &gt; bitpos key 1 1
                 (integer) 8
 
             h3 GETBIT
@@ -686,7 +690,7 @@ include ../../../source/skeleton.pug
                 li 상대 시간으로 설정 : [P]EXPIRE
                 li 절대 시간으로 설정 : [P]EXPIREAT
                 li 기본 명령은 초 단위, P-명령은 밀리초 단위로 설정한다
-                li TTL로 과거를 설정하면 키를 삭제한다: expired가 아닌 del 이벤트 발생
+                li TTL &lt;= now를 설정하면 키를 삭제한다: expired가 아닌 del 이벤트 발생
                 li 반환값
                     ul
                         li 1 : 지정된 값으로 TTL 설정됨
@@ -778,18 +782,18 @@ include ../../../source/skeleton.pug
                 li COUNT : 유저가 원하는 페이지 크기에 대한 힌트로 사용된다(기본값 10) -- 반드시 count 개가 반환되는 것이 아님. 또, 연속 순회 시 count는 자유롭게 변경해도 된다
                 li cursor : 0을 지정하여 순회 시작. 응답 첫 번째 원소로 0이 아닌 cursor가 반환되고, 이를 이용해 나머지를 순회할 수 있다
                     +asCode('shell').
-                        > keys *
+                        &gt; keys *
                         1) "key2"
                         2) "key"
                         3) "hello"
-                        > scan 0 count 1
+                        &gt; scan 0 count 1
                         1) "2"
                         2) 1) "key2"
                            2) "key"
-                        > scan 2 count 1
+                        &gt; scan 2 count 1
                         1) "1"
                         2) 1) "hello"
-                        > scan 1 count 1
+                        &gt; scan 1 count 1
                         1) "0"
                         2) (empty array)
                 li MATCH : 패턴 매칭은 페이지가 구성된 후 클라이언트에 응답하기 직전에 수행되므로, 순회가 종료되지 않더라도 키 목록이 비어있을 수 있다
@@ -812,19 +816,19 @@ include ../../../source/skeleton.pug
                 li BY pattern : 외부 정렬 키 지정
                 li GET # : 원소 자체도 반환
                 li GET pattern : 외부 조회 키 지정
-                li 해시 필드에 대하여, 아래와 같이 -> 표기를 이용해 BY, GET 옵션을 사용할 수 있다
-                    +asCode('text', '예.') SORT mylist BY weight_*->fieldname GET object_*->fieldname
+                li 해시 필드에 대하여, 아래와 같이 -&gt; 표기를 이용해 BY, GET 옵션을 사용할 수 있다
+                    +asCode('text', '예.') SORT mylist BY weight_*-&gt;fieldname GET object_*-&gt;fieldname
             +asCode('shell').
                 # 학생 이름 5개 저장
-                > sadd student-name name5 name1 name2 name3 name4
+                &gt; sadd student-name name5 name1 name2 name3 name4
                 (integer) 5
 
                 # 점수 저장
-                > mset name5-score 3 name1-score 10 name2-score 0 name3-score 7
+                &gt; mset name5-score 3 name1-score 10 name2-score 0 name3-score 7
                 OK
 
                 # 각 학생의 점수 획득(이름순)
-                > sort student-name get *-score alpha
+                &gt; sort student-name get *-score alpha
                 1) "10"
                 2) "0"
                 3) "7"
@@ -832,7 +836,7 @@ include ../../../source/skeleton.pug
                 5) "3"
 
                 # 각 학생의 점수 획득(점수순)
-                > sort student-name by *-score get *-score desc
+                &gt; sort student-name by *-score get *-score desc
                 1) "10"
                 2) "7"
                 3) "3"
@@ -840,7 +844,7 @@ include ../../../source/skeleton.pug
                 5) "0"
 
                 # 원소도 같이 반환
-                > sort student-name by *-score get # get *-score desc
+                &gt; sort student-name by *-score get # get *-score desc
                 1) "name1"
                 2) "10"
                 3) "name3"
@@ -968,35 +972,75 @@ include ../../../source/skeleton.pug
                         li WITH* 옵션이 없는 경우 : 이름 배열이 반환된다
                         li 그 외의 경우 : [이름, 거리?, hash?, [경도, 위도]?][]가 반환된다
                         li ASC | DESC : 반환 배열은 기본적으로 정렬되지 않는다
-                        li COUNT count : 반환 크기를 제한한다
+                        li COUNT count : 반환 크기를 제한한다 -- 모든 대상 지점을 찾는 부분은 변함 없다
                         li COUNT count ANY : count개 지점을 찾으면 즉시 반환한다
                 li STORE 명령 : 원본 집합에 대한 부분 집합을 저장하고, 그 크기를 반환한다
                     ul
                         li STOREDIST : 좌표 대신 각 지점들의 거리를 점수로 집합을 구성한다
             +asCode('shell').
                 # 데이터 준비
-                127.0.0.1:6379> GEOADD places 126.9780 37.5665 "Seoul"
-                (integer) 1
-                127.0.0.1:6379> GEOADD places 127.0286 37.2636 "Suwon"
-                (integer) 1
-                127.0.0.1:6379> GEOADD places 129.0756 35.1796 "Busan"
-                (integer) 1
-                127.0.0.1:6379> GEOADD places 126.7052 37.4563 "Incheon"
-                (integer) 1
-                127.0.0.1:6379> GEOADD places 128.6014 35.8714 "Daegu"
-                (integer) 1
-                127.0.0.1:6379> GEOADD places 127.3845 36.3504 "Daejeon"
-                (integer) 1
-                127.0.0.1:6379> GEOADD places 126.8526 35.1595 "Gwangju"
-                (integer) 1
+                &gt; GEOADD places 126.9707 37.5547 "SeoulStation" 126.9856 37.5636 "Myeongdong" 126.9944 37.5345 "Itaewon" 126.9240 37.5571 "Hongdae" 127.0276 37.4979 "Gangnam" 127.1000 37.5133 "Jamsil"
+                (integer) 6
 
                 # WITH* 없는 단순 조회
-                127.0.0.1:6379> GEOSEARCH places FROMMEMBER Seoul BYRADIUS 50 KM
-                1) "Incheon"
-                2) "Suwon"
-                3) "Seoul"
+                &gt; GEOSEARCH places FROMMEMBER SeoulStation BYRADIUS 5 KM
+                1) "Hongdae"
+                2) "SeoulStation"
+                3) "Myeongdong"
+                4) "Itaewon"
 
                 # WITH 포함한 조회
+                &gt; GEOSEARCH places FROMMEMBER SeoulStation BYRADIUS 5 km ASC WITHCOORD WITHDIST
+                1) 1) "SeoulStation"
+                   2) "0.0000"
+                   3) 1) "126.97069734334946"
+                      2) "37.55470117929053"
+                2) 1) "Myeongdong"
+                   2) "1.6451"
+                   3) 1) "126.9855996966362"
+                      2) "37.563600585280966"
+                3) 1) "Itaewon"
+                   2) "3.0688"
+                   3) 1) "126.99439734220505"
+                      2) "37.534499451650596"
+                4) 1) "Hongdae"
+                   2) "4.1262"
+                   3) 1) "126.92400008440018"
+                      2) "37.55709902550726"
+
+                # ANY 유무에 따른 차이
+                &gt; GEOSEARCH places FROMMEMBER SeoulStation BYRADIUS 10 km ASC COUNT 3
+                1) "SeoulStation"
+                2) "Myeongdong"
+                3) "Itaewon"
+                &gt; GEOSEARCH places FROMMEMBER SeoulStation BYRADIUS 10 km ASC COUNT 3 ANY
+                1) "SeoulStation"
+                2) "Myeongdong"
+                3) "Hongdae"
+
+                # STOREDIST 유무에 따른 차이
+                &gt; GEOSEARCHSTORE result1 places FROMMEMBER SeoulStation BYRADIUS 5 km ASC
+                4
+                &gt; ZRANGE result1 0 -1 WITHSCORES
+                이태원역
+                4077553360321259
+                홍대입구역
+                4077564662320113
+                서울역
+                4077564801261287
+                명동역
+                4077564878456366
+                &gt; GEOSEARCHSTORE result2 places FROMMEMBER SeoulStation BYRADIUS 5 km ASC STOREDIST
+                4
+                &gt; ZRANGE result2 0 -1 WITHSCORES
+                서울역
+                7.454249397376189e-13
+                명동역
+                1.645086449888987
+                이태원역
+                3.0687583426788456
+                홍대입구역
+                4.126189741702152
 
         h2 Hash
         div
@@ -1008,6 +1052,44 @@ include ../../../source/skeleton.pug
             +asCode() HEXISTS key field
             p field를 포함하면 1, 그 외엔 0 반환
 
+            h3 HEXPIRE
+            h3 HPEXPIRE
+            h3 HEXPIREAT
+            h3 HPEXPIREAT
+            +asCode().
+                H[P]EXPIRE key amount [NX|XX|GT|LT] FIELDS numfields field [field ...]
+                H[P]EXPIREAT key unix-timestamp [NX|XX|GT|LT] FIELDS numfields field [field ...]
+            ul
+                li Since Valkey 9.0
+                li Since Redis 7.4
+                li 상대 시간으로 설정 : H[P]EXPIRE
+                li 절대 시간으로 설정 : H[P]EXPIREAT
+                li 기본 명령은 초 단위, P-명령은 밀리초 단위
+                li TTL &lt;= now를 설정하면 필드가 삭제된다
+                li NX : 필드에 TTL이 설정되지 않은 경우에만 설정
+                li XX : 필드에 TTL이 설정된 경우에만 설정
+                li GT : 기존 TTL(없으면 무한)보다 큰 경우에만 설정
+                li LT : 기존 TTL(없으면 무한)보다 작은 경우에만 설정
+                li 반환값 : numfields 길이의 배열
+                    ul
+                        li -2 : 필드 또는 키가 존재하지 않음
+                        li 0 : 지정한 NX|XX|GT|LT 조건을 만족하지 않음
+                        li 1 : TTL 설정됨
+                        li 2 : TTL 설정으로 인해 필드 즉시 삭제
+
+            h3 HEXPIRETIME
+            h3 HPEXPIRETIME
+            +asCode() H[P]EXPIRETIME key FIELDS numfields field [field ...]
+            ul
+                li Since Valkey 9.0
+                li Since Redis 7.4
+                li 필드가 만료되는 Unix 타임스탬프를 반환한다
+                    ul
+                        li -2 : 키 또는 필드가 존재하지 않음
+                        li -1 : TTL 없음
+                        li 그 외 : 만료 시각
+                li 기본 명령은 초 단위, P-명령은 밀리초 단위
+
             h3 HGET
             +asCode() HGET key field
             p 지정한 field의 value 반환. 없으면 nil
@@ -1016,13 +1098,33 @@ include ../../../source/skeleton.pug
             +asCode() HGETALL key
             p 전체 field-value 목록 반환
 
+            h3 HGETDEL
+            +asCode() HGETDEL key FIELDS numfields field [field ...]
+            ul
+                li Since Valkey 9.1
+                li Since Redis 8.0
+                li 각 field에 대한 값(없으면 nil)을 반환하고, 삭제한다
+
+            h3 HGETEX
+            +asCode() HGETEX key [EX seconds | PX milliseconds | EXAT unix-time-seconds | PXAT unix-time-milliseconds | PERSIST] FIELDS numfields field [field ...]
+            ul
+                li Since Valkey 9.0
+                li Since Redis 8.0
+                li 각 field에 대한 값(없으면 nil)을 반환하고, TTL을 업데이트한다(TTL &lt;= now면 필드 삭제 발생)
+
             h3 HINCRBY
             +asCode() HINCRBY key field increment
-            p value += increment, 값이 없으면 value = increment로 신규 설정. 변경된 value 반환
+            ul
+                li value(64비트 부호 있는 정수) += increment
+                li 값이 없으면 value = increment로 신규 설정
+                li 연산 후 최신 value 반환
 
             h3 HINCRBYFLOAT
             +asCode() HINCRBYFLOAT key field increment
-            p value += increment, 값이 없으면 value = increment로 신규 설정. 변경된 value 반환
+            ul
+                li value(double 부동 소수) += increment
+                li 값이 없으면 value = increment로 신규 설정
+                li 연산 후 최신 value 반환
 
             h3 HKEYS
             +asCode() HKEYS key
@@ -1030,29 +1132,75 @@ include ../../../source/skeleton.pug
 
             h3 HLEN
             +asCode() HLEN key
-            p 전체 field-value 쌍 개수 반환
+            p 전체 field 개수 반환
 
             h3 HMGET
             +asCode() HMGET key field [field ...]
-            p 지정 field들에 대해
-                +goto('HGET')
-                |실행한 결과 배열 반환
+            p 각 field에 대한 값(없으면 nil)을 반환
+
+            h3 HMSET
+            +asCode() HMSET key field value [field value ...]
+            p 여러 필드 추가
+
+            h3 HPERSIST
+            +asCode() HPERSIST key FIELDS numfields field [field ...]
+            ul
+                li Since Valkey 9.0
+                li Since Redis 7.4
+                li 필드들의 TTL을 제거하고 결과 반환
+                    ul
+                        li -2 : 키 또는 필드가 존재하지 않음
+                        li -1 : TTL 원래 없음
+                        li 1 : TTL 삭제함
 
             h3 HRANDFIELD
             +asCode() HRANDFIELD key [count [WITHVALUES]]
             ul
-                li 최대 count개의 임의 field 반환
-                li count가 음수인 경우, 중복이 허용된다
+                li 최대 count개의 임의 field 반환 -- 이 경우 필드 순서는 완전히 무작위는 아님
+                    p count가 음수인 경우, 중복을 허용하여 추출한다 -- 이 경우 필드 순서는 무작위임
                 li WITHVALUES : value를 함께 반환한다
+                li 응답 종류
+                    ul
+                        li nil : 키가 없음
+                        li field : count 지정하지 않은 경우
+                        li [field, ...] : count 지정한 경우
+                        li [field, value, ...] : withvalues 지정한 경우
 
             h3 HSCAN
-            +asCode() HSCAN key cursor [MATCH pattern] [COUNT count]
-            p hash에 대한
-                +goto('SCAN')
+            +asCode() HSCAN key cursor [MATCH pattern] [COUNT count] [NOVALUES]
+            ul
+                li hash에 대한 #[+goto('SCAN')]
+                li NOVALUES
+                    ul
+                        li Since Valkey 8.0
+                        li Since Redis 7.4
+                        li field만 반환
 
             h3 HSET
             +asCode() HSET key field value [field value ...]
-            p key에 field-value 쌍 추가. 기존 value는 덮어씌어진다. 추가된 쌍의 개수 반환
+            ul
+                li (여러) 필드 추가
+                li 새로 추가된 필드 개수 반환
+
+            h3 HSETEX
+            +asCode().
+                HSETEX key
+                    [FNX | FXX]
+                    [EX seconds | PX milliseconds | EXAT unix-time-seconds | PXAT unix-time-milliseconds | KEEPTTL]
+                    FIELDS numfields field value [field value ...]
+            ul
+                li Since Valkey 9.0
+                li Since Redis 8.0
+                li (선택적) 필드 설정
+                    ul
+                        li FNX : 모든 필드가 신규인 경우에만 설정
+                        li FXX : 모든 필드가 이미 존재하는 경우에만 설정
+                        li 지정 없음 : 모든 필드 설정
+                li TTL &lt;= now면 필드는 삭제된다
+                li 반환값
+                    ul
+                        li 1 : 모든 필드를 설정한 경우(TTL 설정으로 이후 삭제되는 것과는 무관)
+                        li 0 : 그 외(= 갱신 없음)
 
             h3 HSETNX
             +asCode() HSETNX key field value
@@ -1060,123 +1208,158 @@ include ../../../source/skeleton.pug
 
             h3 HSTRLEN
             +asCode() HSTRLEN key field
-            p value의 바이트 길이 반환
+            ul
+                li value의 바이트 길이 반환
+                li 키 또는 필드가 없는 경우 0 반환
+
+            h3 HTTL
+            h3 HPTTL
+            +asCode() H[P]TTL key FIELDS numfields field [field ...]
+            ul
+                li Since Valkey 9.0
+                li Since Redis 7.4
+                li 각 필드들의 TTL 반환
+                    ul
+                        li -2 : 키 또는 필드가 없음
+                        li -1 : TTL 없음
+                        li 양의 정수 : TTL
+                li 기본 명령은 초 단위, P-명령은 밀리초 단위
 
             h3 HVALS
             +asCode() HVALS key
             p 전체 value 목록 반환
 
         h2 HyperLogLog
+        div
+            h3 PFADD
+            +asCode() PFADD key [element ...]
+            ul
+                li 원소 추가 후 추정 cardinality가 변경되면 1, 아니면 0 반환
+                li 원소 추가 없이 데이터 구조가 처음으로 생성되는 경우에도 1 반환
 
-        h2 JSON
+            h3 PFCOUNT
+            +asCode() PFCOUNT key [key ...]
+            ul
+                li key 하나만 지정한 경우 : 해당 HyperLogLog 추정 크기 반환
+                li 여러 개 지정한 경우 : HyperLogLog 합집합의 추정 크기 반환
+                    p 여러 키를 이용하면 밀리초 단위로 소요되는데, 합집합의 계산된 추정 크기는 캐시되지 않으므로 유의해야 한다
+
+            h3 PFMERGE
+            +asCode() PFMERGE destkey [sourcekey ...]
+            ul
+                li 합집합을 생성한다
+                li 크기 추정은 진행하지 않는다
+
+        h2.no-marker JSON
+        p 생략
 
         h2 List
         div
-            h3 BLMOVE
-            +asCode() BLMOVE source destination LEFT|RIGHT LEFT|RIGHT timeout-seconds
+            h3 블로킹(B-) 명령 공통
             ul
-                li
-                    +goto('LMOVE')
-                    |의 블로킹 버전
-                li source 리스트가 비어있는 경우, 최대 timeout만큼 대기한다
-                p timeout == 0이면 무기한 대기 가능
+                li timeout은 초단위 double 값
+                li timeout = 0이면 무기한 대기 가능
+                li MULTI/EXEC 블록 안에서는 블로킹하지 않는다
+                li 동일한 키에 대해 여러 클라이언트가 대기하는 경우, 가장 오래 대기한 클라이언트가 먼저 호출된다
+
+            h3 BLMOVE
+            h3 LMOVE
+            h3 BRPOPLPUSH
+            h3 RPOPLPUSH
+            +asCode().
+                BLMOVE source destination &lt;LEFT | RIGHT&gt; &lt;LEFT | RIGHT&gt; timeout
+                LMOVE  source destination &lt;LEFT | RIGHT&gt; &lt;LEFT | RIGHT&gt;
+            ul
+                li source의 &lt;LEFT | RIGHT&gt; 원소 삭제 -&gt; destination의 &lt;LEFT | RIGHT&gt;에 추가 -&gt; 반환
+                li BRPOPLPUSH = BLMOVE RIGHT LEFT
+                li RPOPLPUSH = LMOVE RIGHT LEFT
 
             h3 BLMPOP
-            +asCode() BLMPOP timeout-seconds numkeys key [key ...] LEFT|RIGHT [COUNT count]
-            ul
-                li
-                    +goto('LMPOP')
-                    |의 블로킹 버전
-                li 모든 리스트가 비어있는 경우, 최대 timeout만큼 대기한다
-                p timeout == 0이면 무기한 대기 가능
+            h3 LMPOP
+            +asCode().
+                BLMPOP timeout numkeys key [key ...] &lt;LEFT | RIGHT&gt; [COUNT count]
+                LMPOP          numkeys key [key ...] &lt;LEFT | RIGHT&gt; [COUNT count]
+            p 비어있지 않은 첫 번째 리스트의 &lt;LEFT | RIGHT&gt;에서 최대 count개 원소를 제거하고 반환
 
             h3 BLPOP
-            +asCode() BLPOP key [key ...] timeout-seconds
-            ul
-                li
-                    +goto('LPOP')
-                    |의 블로킹 버전
-                p 지정한 리스트들을 순회하여, 최초로 비어있지 않은 리스트의 왼쪽 값 삭제 후 반환
-                li 모든 리스트가 비어있는 경우, 최대 timeout만큼 대기
-                p timeout == 0이면 무기한 대기 가능
-                li BLPOP 경합 시 처리 우선순위에 대해서는 공식 문서 참고 :
-                    +asA('https://redis.io/commands/blpop/')
-
             h3 BRPOP
-            +asCode() BRPOP key [key ...] timeout-seconds
-            ul
-                li
-                    +goto('RPOP')
-                    |의 블로킹 버전
-                li 기타 설명은
-                    +goto('BLPOP')
-                    |과 동일
-
-            h3 BRPOPLPUSH
-            p Deprecated(Redis). 대신 #[+goto('BLMOVE')] 사용
+            +asCode().
+                BLPOP key [key ...] timeout
+                BRPOP key [key ...] timeout
+            p 비어있지 않은 첫 번째 리스트의 왼쪽(오른쪽)에서 원소 1개를 제거하고 반환한다
 
             h3 LINDEX
             +asCode() LINDEX key index
-            p index(음수 가능) 번째 값 반환
+            ul
+                li index번째 요소 반환
+                li index는 0부터 시작하고, 음수 가능
 
             h3 LINSERT
-            +asCode() LINSERT key BEFORE|AFTER pivot element
+            +asCode() LINSERT key &lt;BEFORE | AFTER&gt; pivot element
             ul
-                li pivot 전|후에 element를 삽입
-                li 삽입 후 리스트 크기 반환. key가 존재하지 않는 경우 0. pivot을 찾지 못한 경우 -1
+                li pivot &lt;BEFORE | AFTER&gt;에 element 삽입
+                li 반환값
+                    ul
+                        li 0 : 키가 존재하지 않음
+                        li -1 : pivot이 리스트에 없음
+                        li 그 외 양의 정수 : 삽입 후 리스트 크기
 
             h3 LLEN
             +asCode() LLEN key
-            p 리스트 크기 반환. key가 존재하지 않는 경우 0
-
-            h3 LMOVE
-            +asCode() LMOVE source destination LEFT|RIGHT LEFT|RIGHT
-            p 원자적으로 source의 LEFT|RIGHT 원소를 반환한 다음 삭제하고, destination의 LEFT|RIGHT에 추가한다
-            +asCode('shell').
-                > lpush list1 x1 x2 x3
-                (integer) 3
-                > lpush list2 y1 y2 y3
-                (integer) 3
-                > lmove list1 list2 left right
-                "x3"
-
-            h3 LMPOP
-            +asCode() LMPOP numkeys key [key ...] LEFT|RIGHT [COUNT count]
-            p 비어있지 않은 최초 리스트의 왼쪽|오른쪽에서 최대 count개 원소를 반환하고 제거
+            p 리스트 길이 반환
 
             h3 LPOP
-            +asCode() LPOP key [count]
-            p 리스트 왼쪽 값 count(기본 1)개 삭제 후 반환
+            h3 RPOP
+            +asCode().
+                LPOP key [count]
+                RPOP key [count]
+            ul
+                li 리스트 왼쪽(오른쪽) 요소 삭제 후 반환
+                li 반환값
+                    ul
+                        li nil : 키가 없음
+                        li string : count 지정 없음
+                        li string[] : count 지정 있음
 
             h3 LPOS
             +asCode() LPOS key element [RANK rank] [COUNT num-matches] [MAXLEN len]
             ul
                 li 리스트에서 element의 위치 반환. 없으면 nil
-                li RANK : rank번째(1부터 시작)로 찾은 위치 반환
-                p rank로 음수도 가능하며, '-'는 탐색 순서가 반대(tail to head)임을 지시한다
+                li RANK : rank번째 일치 항목부터 찾은 위치 반환
+                    ul
+                        li 1부터 시작
+                        li 음수도 가능하며, 탐색 순서가 반대(tail to head)임을 지시한다
                 li COUNT : 최대 num-matches개의 위치 반환
-                ul
-                    li 탐색 순서를 반대로 하고 싶다면 rank -1 지정
-                    li num-matches가 0이면 구간 전체 탐색
-                    li 하나도 못 찾은 경우, nil이 아니라 빈 배열 반환
-                li MAXLEN : 최대 len개의 원소만 비교
+                    p num-matches = 0이면 구간 전체 탐색
+                li MAXLEN : 최대 len개의 요소만 비교
 
             h3 LPUSH
-            +asCode() LPUSH key element [element ...]
-            p 왼쪽에 값 추가. 이후 리스트 크기 반환
+            h3 RPUSH
+            +asCode().
+                LPUSH key element [element ...]
+                RPUSH key element [element ...]
+            p 왼쪽(오른쪽)에 값 추가. 이후 리스트 크기 반환
 
             h3 LPUSHX
-            +asCode() LPUSHX key element [element ...]
-            p 리스트가 존재하면 왼쪽에 값 추가. 이후 리스트 크기 반환
+            h3 RPUSHX
+            +asCode().
+                LPUSHX key element [element ...]
+                RPUSHX key element [element ...]
+            p 리스트가 존재하면 왼쪽(오른쪽)에 값 추가. 이후 리스트 크기 반환
 
             h3 LRANGE
             +asCode() LRANGE key start stop
-            p [start, stop] 구간의 값 반환(음수 인덱스 가능)
+            ul
+                li [start, stop] 구간 조회
+                li 음수 인덱스 가능
+                li 인덱스가 실제 범위를 벗어나도 안전하게 경계까지로 제한
 
             h3 LREM
             +asCode() LREM key count element
             ul
-                li element를 count개 삭제, count == 0이면 전부 삭제, count &lt; 0이면 오른쪽부터 삭제
+                li count &gt; 0 : element를 왼쪽부터 count개 삭제
+                li count = 0 : element 모두 삭제
+                li count &lt; 0 : element를 오른쪽부터 |count|개 삭제
                 li 삭제한 개수 반환
 
             h3 LSET
@@ -1186,21 +1369,6 @@ include ../../../source/skeleton.pug
             h3 LTRIM
             +asCode() LTRIM key start stop
             p [start, stop] 구간(음수 인덱스 가능)만 남기고 나머지 삭제
-
-            h3 RPOP
-            +asCode() RPOP key [count]
-            p 리스트 오른쪽 값 count개(기본 1) 삭제 후 반환
-
-            h3 RPOPLPUSH
-            p Deprecated(Redis). 대신 #[+goto('LMOVE')] 사용
-
-            h3 RPUSH
-            +asCode() RPUSH key element [element ...]
-            p 오른쪽에 값 추가. 이후 리스트 크기 반환
-
-            h3 RPUSHX
-            +asCode() RPUSHX key element [element ...]
-            p 리스트가 존재하면 오른쪽에 값 추가. 이후 리스트 크기 반환
 
         h2 Pub/Sub
         div
@@ -1489,18 +1657,18 @@ include ../../../source/skeleton.pug
                 li 지정한 구간에 포함되는 원소를 오름차순으로 반환
                 li: b 모든 원소의 score가 동일하지 않으면, BYLEX 결과가 제대로 정렬되지 않음
                 +asCode('shell').
-                    > zrange ss1 0 -1 withscores
+                    &gt; zrange ss1 0 -1 withscores
                     1) "m3"
                     2) "1"
                     3) "m6"
                     4) "123"
                     5) "m1"
                     6) "124"
-                    > zrange ss1 - + bylex
+                    &gt; zrange ss1 - + bylex
                     1) "m3"
                     2) "m6"
                     3) "m1"
-                    > zrange ss1 + - bylex rev
+                    &gt; zrange ss1 + - bylex rev
                     1) "m1"
                     2) "m6"
                     3) "m3"
@@ -1607,7 +1775,7 @@ include ../../../source/skeleton.pug
             +asCode() XDEL key id [id ...]
             ul
                 li 지정 entry 삭제. 삭제된 개수 반환
-                li 현재까지는 entry 삭제가 즉시 메모리 반환을 의미하지 않는다 -> macro-node의 모든 entry가 삭제 상태가 될 때 정리
+                li 현재까지는 entry 삭제가 즉시 메모리 반환을 의미하지 않는다 -&gt; macro-node의 모든 entry가 삭제 상태가 될 때 정리
 
             h3 XGROUP
             div
@@ -1715,8 +1883,8 @@ include ../../../source/skeleton.pug
                 li
                     +goto('XREAD')
                     |와 겹치는 옵션은 동일한 의미를 가진다
-                li NOACK : XACK가 필요없다 -> 메시지 전달 즉시 소비 완료한 걸로 간주한다
-                li entry id로 '>'를 이용하면 알아서 다음 entry를 획득한다
+                li NOACK : XACK가 필요없다 -&gt; 메시지 전달 즉시 소비 완료한 걸로 간주한다
+                li entry id로 '&gt;'를 이용하면 알아서 다음 entry를 획득한다
 
             h3 XREVRANGE
             +asCode() XREVRANGE key end start [COUNT count]
@@ -1730,7 +1898,7 @@ include ../../../source/skeleton.pug
                 li 필요한 경우 오래된 entry들을 삭제
                 li MAXLEN : 크기가 threshold를 초과하는 경우 삭제
                 li MINID : threshold보다 작은 id의 entry 삭제
-                p XTRIM mystream MINID 649085820 -> id가 649085820-0보다 작은 entry들을 삭제한다
+                p XTRIM mystream MINID 649085820 -&gt; id가 649085820-0보다 작은 entry들을 삭제한다
                 li MAXLEN ~ : 다른 입출력에 지장이 없도록 어느 정도의 오차를 허용
                 li LIMIT : 최대 count개만 제거
 
@@ -1814,20 +1982,20 @@ include ../../../source/skeleton.pug
             ul
                 li 두 문자열의 LCS(Longest common subsequence)를 구한다
                 +asCode('shell').
-                    > set key1 humble-bundle
+                    &gt; set key1 humble-bundle
                     OK
-                    > set key2 bundle-humble
+                    &gt; set key2 bundle-humble
                     OK
-                    > stralgo lcs keys key1 key2
+                    &gt; stralgo lcs keys key1 key2
                     "ble-ule"
-                    > stralgo lcs strings humble-bundle bundle-humble
+                    &gt; stralgo lcs strings humble-bundle bundle-humble
                     "ble-ule"
                 li LEN : 길이만을 원하는 경우
                 li IDX : LCS 각 부분 시퀀스의 [시작, 종료] 위치를 역순으로 반환
                 li IDX MINMATCHLEN : LCS 부분 시퀀스 중, 최소 길이를 만족하는 것만 반환
                 li IDX WITHMATCHLEN : LCS 각 부분 시퀀스의 길이도 반환
                 +asCode('shell').
-                    > stralgo lcs strings humble-bundle xbundle-humble idx minmatchlen 2
+                    &gt; stralgo lcs strings humble-bundle xbundle-humble idx minmatchlen 2
                     1) "matches"
                     2) 1) 1) 1) (integer) 11
                              2) (integer) 12
@@ -1847,7 +2015,7 @@ include ../../../source/skeleton.pug
             +asCode() MGET key [key ...]
             p 각 키에 대해 get 하여 배열로 반환
             +asCode('shell').
-                127.0.0.1:27017> mget k1 k2 not_exists_key
+                &gt; mget k1 k2 not_exists_key
                 1) "v1"
                 2) "v2"
                 3) (nil)
@@ -1887,11 +2055,11 @@ include ../../../source/skeleton.pug
                     +goto('GETRANGE')
                     |와 함께 O(1) 접근 가능한 공유 배열로 이용할 수 있다
             +asCode('shell').
-                127.0.0.1:27017> set msg hello
+                &gt; set msg hello
                 OK
-                127.0.0.1:27017> setrange msg 8 hello
+                &gt; setrange msg 8 hello
                 (integer) 13
-                127.0.0.1:27017> get msg
+                &gt; get msg
                 "hello\x00\x00\x00hello"
 
             h3 STRLEN

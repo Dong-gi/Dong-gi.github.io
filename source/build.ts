@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 import child_process from 'node:child_process';
@@ -162,6 +161,7 @@ parentPort?.on('message', async (o: WorkMessage) => {
 });
 
 // 메인 스레드 영역
+const isProcessNewFileOnly = process.argv[2] === 'new';
 let workCount = 0;
 function pushWork(o: WorkMessage): void {
     workers[workCount % workers.length].postMessage(o);
@@ -217,7 +217,9 @@ async function processPugs() {
             if (post != null && stats.birthtimeMs !== stats.mtimeMs) {
                 post.mtimeMs = Math.floor(stats.mtimeMs);
             }
-            pushWork({ api: 'render-pug', path: filePath });
+            if (isProcessNewFileOnly === false || stats.mtimeMs >= Date.now() - 600000) {
+                pushWork({ api: 'render-pug', path: filePath });
+            }
         }),
     );
 }

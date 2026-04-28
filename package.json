@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "node source/build.ts && npx terser --compress --mangle -o source/default.min.js -- source/default.js"
+    "build": "npx terser --compress --mangle -o source/default.min.js -- source/default.js && node source/build.ts"
   },
   "repository": {
     "type": "git",

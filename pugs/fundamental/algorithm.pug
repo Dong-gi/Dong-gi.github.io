@@ -330,15 +330,15 @@ include ../../source/skeleton.pug
         h2 HyperLogLog
         div
             ul
-                li HyperLogLog는 집합 원소 개수를 메모리 효율적으로 추정하는 확률적 자료구조로, 전형적으로 1.5KB 메모리로 식[10^9]식 이상의 집합 크기를 2% 표준 오차로 맞춘다고 한다. Redis 모듈에서는 최대 12KB를 이용해 0.81% 표준 오차를 구현한다
+                li HyperLogLog는 집합 원소 개수를 메모리 효율적으로 추정하는 확률적 자료구조로, 전형적으로 1.5KB 메모리로 식[10^9]식 이상의 집합 크기를 2% 표준 오차로 맞춘다고 한다. Redis/Valkey는 최대 12KB를 이용해 0.81% 표준 오차를 구현한다
                 li 자료구조 특성상 (추가한) 원소의 제거는 지원되지 않는다
                 li 페이지 방문자수, 하루 동안 검색에 사용된 고유 쿼리 개수 집계 등에 사용 가능
 
             h3 참고자료
             ul
+                li: +asA('https://chengweihu.com/hyperloglog/')
                 li: +asA('https://sunrise-min.tistory.com/entry/HyperLogLog')
-                    ul
-                        li: +asA('https://chengweihu.com/hyperloglog/')
+                li: +asA('https://web.archive.org/web/20241019222035/http://antirez.com/news/75')
                 li: +asA('https://en.wikipedia.org/wiki/Flajolet%E2%80%93Martin_algorithm')
 
             h3 발전과정
@@ -355,9 +355,20 @@ include ../../source/skeleton.pug
                         li 3 : 식[2^3]식
                 li outlier에 의한 오류 가능성 때문에 위 값을 그대로 이용할 수는 없다
                     ul
-                        li 해시 함수를 여러 개 이용하여 평균을 내거나
-                        li 해시 값 하나를 여러 개로 쪼개어 버킷들의 평균을 내는 방법이 제시되었다
+                        li 해시 함수를 여러 개 이용하여 크기를 여러 번 측정하거나
+                        li 해시 함수를 하나 이용하되, 값을 여러 버킷들로 분할하여 크기를 여러 번 측정
                 li HyperLogLog는 해시 값을 여러 개로 쪼갠 뒤, 각 버킷들에서 추정한 집합의 크기들에 대한 조화 평균을 이용함으로써 오류 발생을 최대한으로 줄인다
+                    p 예를 들어 Redis 구현의 경우, 64비트 해시 함수 하나와 16k(2^14)개 버킷을 이용한다
+                    ul
+                        li 해시 출력의 14비트는 버킷을 결정하는 데 이용하고
+                        li 나머지 50비트의 최장 leading zero 길이를 저장하기 위해 6비트를 이용한다
+                        li 전체 버킷의 길이 추정값 중 outlier 30%를 버리고, 나머지에 조화 평균을 적용해 최종 추정 크기에 대한 outlier 영향을 최소화한다
+                        li HyperLogLog의 표준 오차 = 1.04/sqrt(버킷 개수)
+                li HyperLogLog의 추정은 (버킷 개수)*2.5 미만의 카디널리티에서는 다른 구간보다 큰 오차가 발생한다
+                    ul
+                        li 따라서 Redis는 동일한 자료구조를 이용해 특정 임계값 미만에서는 크기 추정에 Linear counting 식을, 그 이후부터는 HyperLogLog 식을 이용한다
+                        li Linear counting은 비트맵 하나만 이용하고, 새 원소가 들어올 때마다 해시하여 특정 비트를 1로 켠다
+                            p HyperLogLog는 버킷별로 최대 길이를 보관하는데, Linear counting는 버킷에 값이 할당된 적이 있는지만 관심이 있다
 
         h2 Bloom filter
         div
