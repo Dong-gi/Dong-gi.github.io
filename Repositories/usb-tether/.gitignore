@@ -1,0 +1,25 @@
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+android/captures/
+android/*.iml
+android/app/*.iml
+
+# Rust
+pc/target/
+pc/Cargo.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+*.swp
+*~
+
+# WinTun binary (license terms — don't commit)
+pc/wintun.dll
