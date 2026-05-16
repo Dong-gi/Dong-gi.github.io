@@ -1,5 +1,6 @@
 from src.extractors.base import BaseExtractor
 from src.extractors.pixiv import PixivExtractor
+from src.extractors.youtube import YoutubeExtractor
 
 _registry: list[BaseExtractor] = []
 
@@ -9,6 +10,7 @@ def init_registry(config) -> None:
     global _registry
     _registry = [
         PixivExtractor(config),
+        YoutubeExtractor(config),
     ]
 
 
