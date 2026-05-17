@@ -9,18 +9,18 @@ from PySide6.QtWidgets import (
     QPushButton,
     QSpinBox,
     QVBoxLayout,
+    QWidget,
 )
 
 from src.config import Config
 from src.gui.pixiv_login_dialog import PixivLoginDialog
-from src.gui.youtube_cookies_dialog import YoutubeCookiesDialog
 
 _DANGER_BTN = "QPushButton { color: #c42b1c; font-size: 13px; } QPushButton:hover { color: #800000; }"
 _WARN_LABEL = "color: #c42b1c; font-size: 10px;"
 
 
 class SettingsDialog(QDialog):
-    credentials_updated = Signal(str)  # site: "pixiv" | "youtube"
+    credentials_updated = Signal(str)  # site: "pixiv"
 
     def __init__(self, config: Config, parent=None, highlight: set[str] | None = None):
         super().__init__(parent)
@@ -75,37 +75,6 @@ class SettingsDialog(QDialog):
         pixiv_widget = self._wrap(pixiv_col)
         form.addRow("Pixiv 인증", pixiv_widget)
 
-        # YouTube 인증 (쿠키 붙여넣기)
-        yt_col = QVBoxLayout()
-        yt_col.setSpacing(4)
-
-        yt_row = QHBoxLayout()
-        yt_row.setSpacing(8)
-
-        self._yt_status = QLabel()
-
-        self._yt_set_btn = QPushButton("쿠키 설정")
-        self._yt_set_btn.setFixedWidth(100)
-        self._yt_set_btn.clicked.connect(self._yt_set_cookies)
-
-        self._yt_clear_btn = QPushButton("해제")
-        self._yt_clear_btn.setStyleSheet(_DANGER_BTN)
-        self._yt_clear_btn.clicked.connect(self._yt_clear_cookies)
-
-        yt_row.addWidget(self._yt_status)
-        yt_row.addWidget(self._yt_set_btn)
-        yt_row.addWidget(self._yt_clear_btn)
-        yt_row.addStretch()
-        yt_col.addLayout(yt_row)
-
-        if "youtube" in self._highlight:
-            warn = QLabel("⚠ 쿠키가 만료되었을 수 있습니다 — 쿠키를 다시 설정해주세요")
-            warn.setStyleSheet(_WARN_LABEL)
-            yt_col.addWidget(warn)
-
-        yt_widget = self._wrap(yt_col)
-        form.addRow("YouTube 인증", yt_widget)
-
         # 동시 다운로드 수
         self._concurrent = QSpinBox()
         self._concurrent.setRange(1, 10)
@@ -116,11 +85,9 @@ class SettingsDialog(QDialog):
 
         # 초기 상태 반영
         self._refresh_pixiv_state()
-        self._refresh_yt_status()
 
     @staticmethod
-    def _wrap(inner_layout):
-        from PySide6.QtWidgets import QWidget
+    def _wrap(inner_layout) -> QWidget:
         w = QWidget()
         w.setLayout(inner_layout)
         return w
@@ -152,36 +119,6 @@ class SettingsDialog(QDialog):
     def _pixiv_logout(self):
         self._config.pixiv_refresh_token = ""
         self._refresh_pixiv_state()
-
-    # ── YouTube ────────────────────────────────────────────────────────────
-
-    def _refresh_yt_status(self):
-        has_cookies = bool(self._config.youtube_cookies)
-        if has_cookies:
-            self._yt_status.setText("✓ 쿠키 설정됨")
-            self._yt_status.setStyleSheet("color: #107c10; font-size: 14px;")
-        else:
-            self._yt_status.setText("쿠키 없음")
-            self._yt_status.setStyleSheet("color: #888; font-size: 14px;")
-        self._yt_clear_btn.setVisible(has_cookies)
-
-        if "youtube" in self._highlight:
-            self._yt_set_btn.setStyleSheet(
-                "QPushButton { color: #c42b1c; font-weight: bold; }"
-            )
-
-    def _yt_set_cookies(self):
-        dlg = YoutubeCookiesDialog(self._config.youtube_cookies, self)
-        if dlg.exec():
-            cookie_str = dlg.cookie_string
-            if cookie_str:
-                self._config.youtube_cookies = cookie_str
-                self._refresh_yt_status()
-                self.credentials_updated.emit("youtube")
-
-    def _yt_clear_cookies(self):
-        self._config.youtube_cookies = ""
-        self._refresh_yt_status()
 
     # ── 공통 ───────────────────────────────────────────────────────────────
 

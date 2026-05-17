@@ -2,6 +2,7 @@ import webbrowser
 from datetime import datetime
 
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
@@ -11,6 +12,18 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+
+class ClickableLabel(QLabel):
+    """좌클릭 시 `clicked` 시그널 발생. 인스턴스에 메서드를 monkey-patch하는 안티패턴 회피."""
+
+    clicked = Signal()
+
+    def mousePressEvent(self, event: QMouseEvent) -> None:
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.clicked.emit()
+        super().mousePressEvent(event)
+
+from src.extractors.base import site_id_from_task_id
 from src.models.task import Task, TaskStatus
 
 _STATUS_COLOR = {
@@ -64,21 +77,23 @@ class TaskWidget(QWidget):
             " border-radius: 3px; padding: 0 3px;"
         )
 
-        self._title = QLabel()
+        self._title = ClickableLabel()
         self._title.setStyleSheet("font-weight: 600; font-size: 15px; color: #0078d4;")
         self._title.setCursor(Qt.CursorShape.PointingHandCursor)
         self._title.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
-        self._title.mousePressEvent = lambda _: webbrowser.open(self._url)
+        self._title.setWordWrap(True)
+        self._title.clicked.connect(lambda: webbrowser.open(self._url))
 
         self._btn_folder  = self._flat_btn("폴더 열기", lambda: self.open_folder_requested.emit(self._task_id))
         self._btn_pause   = self._flat_btn("일시정지",  lambda: self.pause_requested.emit(self._task_id))
         self._btn_restart = self._flat_btn("재개",      lambda: self.restart_requested.emit(self._task_id))
         self._btn_remove  = self._flat_btn("삭제",      lambda: self.remove_requested.emit(self._task_id), danger=True)
 
-        top.addWidget(self._site_tag)
+        # 제목이 여러 줄로 늘어날 수 있으므로 사이트 태그/버튼은 상단 정렬해 첫 줄과 맞춤
+        top.addWidget(self._site_tag, 0, Qt.AlignmentFlag.AlignTop)
         top.addWidget(self._title, 1)
         for btn in (self._btn_folder, self._btn_pause, self._btn_restart, self._btn_remove):
-            top.addWidget(btn)
+            top.addWidget(btn, 0, Qt.AlignmentFlag.AlignTop)
 
         # ── 중단: 진행 바 + 상태 텍스트 ──
         mid = QHBoxLayout()
@@ -127,8 +142,7 @@ class TaskWidget(QWidget):
     def update_task(self, task: Task):
         self._url = task.url
 
-        site = (task.id.split("-")[0] or '???').capitalize()
-        self._site_tag.setVisible(bool(site))
+        site = site_id_from_task_id(task.id).capitalize() or "???"
         self._site_tag.setText(site)
 
         self._title.setText(task.title or task.url)

@@ -1,7 +1,6 @@
 import traceback
 
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QClipboard
 from PySide6.QtWidgets import (
     QApplication,
     QDialog,
@@ -9,7 +8,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QProgressBar,
     QPushButton,
-    QSizePolicy,
     QTextEdit,
     QVBoxLayout,
 )
