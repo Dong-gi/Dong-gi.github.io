@@ -1,25 +1,35 @@
 package com.example.usbtether
 
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var statusText: TextView
     private lateinit var statsText: TextView
     private lateinit var toggleButton: Button
+    private lateinit var hotspotButton: Button
+    private lateinit var ssidInput: EditText
+    private lateinit var passphraseInput: EditText
     private val handler = Handler(Looper.getMainLooper())
+    private val prefs: SharedPreferences by lazy {
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+    }
 
     private val refreshTask = object : Runnable {
         override fun run() {
@@ -41,18 +51,38 @@ class MainActivity : AppCompatActivity() {
         statusText = findViewById(R.id.statusText)
         statsText = findViewById(R.id.statsText)
         toggleButton = findViewById(R.id.toggleButton)
+        hotspotButton = findViewById(R.id.hotspotButton)
+        ssidInput = findViewById(R.id.ssidInput)
+        passphraseInput = findViewById(R.id.passphraseInput)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1)
-        }
+        ssidInput.setText(prefs.getString(KEY_SSID, DEFAULT_SSID))
+        passphraseInput.setText(prefs.getString(KEY_PASS, DEFAULT_PASS))
+
+        requestPermissionsIfNeeded()
 
         toggleButton.setOnClickListener {
-            val intent = Intent(this, TetherService::class.java)
             if (TetherService.isRunning) {
-                stopService(intent)
+                stopService(Intent(this, TetherService::class.java))
             } else {
-                ContextCompat.startForegroundService(this, intent)
+                ContextCompat.startForegroundService(this, Intent(this, TetherService::class.java))
             }
+            handler.postDelayed({ updateUi() }, 200)
+        }
+
+        hotspotButton.setOnClickListener {
+            if (!TetherService.isRunning) return@setOnClickListener
+            val intent = Intent(this, TetherService::class.java)
+            if (TetherService.hotspotActive) {
+                intent.action = TetherService.ACTION_HOTSPOT_OFF
+            } else {
+                val ssid = ssidInput.text.toString().trim()
+                val pass = passphraseInput.text.toString()
+                prefs.edit { putString(KEY_SSID, ssid).putString(KEY_PASS, pass) }
+                intent.action = TetherService.ACTION_HOTSPOT_ON
+                intent.putExtra(TetherService.EXTRA_SSID, ssid)
+                intent.putExtra(TetherService.EXTRA_PASSPHRASE, pass)
+            }
+            ContextCompat.startForegroundService(this, intent)
             handler.postDelayed({ updateUi() }, 200)
         }
 
@@ -69,21 +99,61 @@ class MainActivity : AppCompatActivity() {
         handler.removeCallbacks(refreshTask)
     }
 
+    private fun requestPermissionsIfNeeded() {
+        val needed = mutableListOf<String>()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                needed += android.Manifest.permission.POST_NOTIFICATIONS
+            }
+            if (checkSelfPermission(android.Manifest.permission.NEARBY_WIFI_DEVICES) != PackageManager.PERMISSION_GRANTED) {
+                needed += android.Manifest.permission.NEARBY_WIFI_DEVICES
+            }
+        } else {
+            if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                needed += android.Manifest.permission.ACCESS_FINE_LOCATION
+            }
+        }
+        if (needed.isNotEmpty()) requestPermissions(needed.toTypedArray(), 1)
+    }
+
     private fun updateUi() {
         val running = TetherService.isRunning
+        val hotspotOn = TetherService.hotspotActive
         statusText.text = if (running) getString(R.string.status_running) else getString(R.string.status_stopped)
         toggleButton.text = if (running) getString(R.string.stop) else getString(R.string.start)
+        hotspotButton.text = if (hotspotOn) getString(R.string.hotspot_stop) else getString(R.string.hotspot_start)
+        hotspotButton.isEnabled = running
+        ssidInput.isEnabled = !hotspotOn
+        passphraseInput.isEnabled = !hotspotOn
+
         statsText.text = buildString {
-            append("Active TCP: ").append(TetherService.tcpCount).append('\n')
-            append("Bytes in:   ").append(formatBytes(TetherService.bytesIn.get())).append('\n')
-            append("Bytes out:  ").append(formatBytes(TetherService.bytesOut.get()))
+            val hotspotLine = when {
+                hotspotOn -> "Hotspot: ${TetherService.hotspotSsid ?: "?"} @ 192.168.49.1"
+                TetherService.hotspotError != null -> "Hotspot: ${TetherService.hotspotError}"
+                else -> "Hotspot: off"
+            }
+            append(hotspotLine).append('\n')
+            append("SOCKS5 port: ").append(portLabel(TetherService.socksPort)).append('\n')
+            append("HTTP port:   ").append(portLabel(TetherService.httpPort)).append('\n')
+            append("Bytes in:    ").append(formatBytes(TetherService.bytesIn.get())).append('\n')
+            append("Bytes out:   ").append(formatBytes(TetherService.bytesOut.get()))
         }
     }
+
+    private fun portLabel(port: Int): String = if (port > 0) port.toString() else "—"
 
     private fun formatBytes(bytes: Long): String = when {
         bytes < 1_024L               -> "$bytes B"
         bytes < 1_024L * 1_024       -> "%.1f KB".format(bytes / 1_024.0)
         bytes < 1_024L * 1_024 * 1_024 -> "%.1f MB".format(bytes / (1_024.0 * 1_024))
         else                         -> "%.2f GB".format(bytes / (1_024.0 * 1_024 * 1_024))
+    }
+
+    companion object {
+        private const val PREFS_NAME = "usb_tether"
+        private const val KEY_SSID = "ssid"
+        private const val KEY_PASS = "passphrase"
+        private const val DEFAULT_SSID = "USBTether"
+        private const val DEFAULT_PASS = "12345678"
     }
 }

@@ -2,7 +2,11 @@
 <resources>
     <string name="app_name">USB Tether</string>
     <string name="status_stopped">Stopped</string>
-    <string name="status_running">Running on localhost:1080</string>
+    <string name="status_running">Running</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
+    <string name="hotspot_start">Start hotspot</string>
+    <string name="hotspot_stop">Stop hotspot</string>
+    <string name="ssid_hint">SSID</string>
+    <string name="passphrase_hint">Passphrase (8–63 chars)</string>
 </resources>

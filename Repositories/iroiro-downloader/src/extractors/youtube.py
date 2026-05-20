@@ -10,7 +10,7 @@ import imageio_ffmpeg
 import yt_dlp
 
 from src.config import Config
-from src.extractors._util import safe_filename
+from src.extractors._util import CancelDownload, safe_filename
 from src.extractors.base import AuthExpiredError, BaseExtractor, ProgressCallback
 from src.models.task import Task
 
@@ -91,10 +91,6 @@ def _write_netscape_cookies(cookie_str: str, path: Path) -> None:
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-class _CancelDownload(BaseException):
-    """progress_hook에서 stop_event 감지 시 발생. BaseException 상속으로 yt-dlp의 except Exception을 통과."""
-
-
 class YoutubeExtractor(BaseExtractor):
     site_id = "youtube"
 
@@ -168,7 +164,7 @@ class YoutubeExtractor(BaseExtractor):
 
         def progress_hook(d: dict) -> None:
             if stop_event and stop_event.is_set():
-                raise _CancelDownload()
+                raise CancelDownload()
             if d["status"] != "downloading":
                 return
 
@@ -245,7 +241,7 @@ class YoutubeExtractor(BaseExtractor):
         try:
             with yt_dlp.YoutubeDL(dl_opts) as dl:
                 dl.download([task.url])
-        except _CancelDownload:
+        except CancelDownload:
             raise InterruptedError()
         except yt_dlp.utils.DownloadError as e:
             if _is_auth_error(str(e)):

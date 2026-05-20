@@ -3,7 +3,7 @@
 ## 프로젝트 개요
 
 개인 사용 목적의 미디어 다운로더. Python 3.12+ / PySide6 GUI / httpx HTTP 클라이언트.
-Pixiv, YouTube를 지원하며, 새 사이트를 쉽게 추가할 수 있는 익스트랙터 구조로 설계되어 있다.
+Pixiv, YouTube, hitomi.la, M3U8(HLS) 스트림, MPD(MPEG-DASH) 스트림을 지원하며, 새 사이트를 쉽게 추가할 수 있는 익스트랙터 구조로 설계되어 있다.
 
 ## 실행
 
@@ -68,13 +68,14 @@ worker.pause()
 - `get_extractor(url)` — `can_handle()`이 True인 첫 번째 익스트랙터
 - `find_extractor(cls)` — 클래스 기반 조회 (URL 매칭 거치지 않음, AUTH_FAILED 처리 등에 사용)
 
-각 익스트랙터는 `site_id` 클래스 변수를 가진다 (예: `"pixiv"`, `"youtube"`). `make_task_id()`가 이 값을 task ID prefix로 사용하며, `site_id_from_task_id(task_id)` 헬퍼로 역추출 가능.
+각 익스트랙터는 `site_id` 클래스 변수를 가진다 (예: `"pixiv"`, `"youtube"`, `"hitomi"`). `make_task_id()`가 이 값을 task ID prefix로 사용하며, `site_id_from_task_id(task_id)` 헬퍼로 역추출 가능.
 
 ### URL 정규화
 
 `BaseExtractor.canonical_url(url)`가 작업 추가 시점에 호출되어 추적·정렬·플레이리스트 등 부수 쿼리 파라미터를 제거한 표준 URL을 반환한다.
 - **YouTube**: `?list=`, `&index=`, `&pp=` 등 → `?v=VIDEO_ID` 만 남김. (`noplaylist=True` 도 함께 설정해 yt-dlp 단계에서 belt-and-suspenders.)
 - **Pixiv**: 언어 prefix(`/en/`, `/ja/`) 제거, query string 제거 → `https://www.pixiv.net/artworks/{id}` 또는 `users/{id}`.
+- **hitomi**: 다양한 진입 경로(`/reader`, `/galleries`, `/manga`, `/doujinshi`, `/cg`, `/imageset`, `/anime`)와 `#page-` 프래그먼트를 ID만 보존한 `https://hitomi.la/reader/{id}.html` 로 통일.
 - 기본 구현은 무수정. 사이트별 override.
 
 이로써 같은 리소스의 다양한 URL이 동일 task로 처리되며, 작업 위젯 클릭 시 깔끔한 URL이 열린다.
@@ -89,10 +90,14 @@ src/
 │   └── pixiv_oauth.py      # PKCE 생성, 레지스트리 등록/해제, 코드 교환
 ├── extractors/
 │   ├── __init__.py         # ExtractorRegistry / init_registry() / get_extractor() / find_extractor()
-│   ├── _util.py            # safe_filename() 등 공통 유틸
+│   ├── _util.py            # safe_filename(), CancelDownload 등 공통 유틸
+│   ├── _stream.py          # StreamExtractor 베이스 (HLS/DASH 등 스트리밍 매니페스트)
 │   ├── base.py             # BaseExtractor ABC + site_id_from_task_id()
 │   ├── pixiv.py            # PixivExtractor
-│   └── youtube.py          # YoutubeExtractor (yt-dlp 기반)
+│   ├── youtube.py          # YoutubeExtractor (yt-dlp 기반)
+│   ├── hitomi.py           # HitomiExtractor (ltn.gold-usergeneratedcontent.net)
+│   ├── m3u8.py             # M3u8Extractor (HLS) — StreamExtractor 서브클래스
+│   └── mpd.py              # MpdExtractor (MPEG-DASH) — StreamExtractor 서브클래스
 ├── core/worker.py          # DownloadWorker(QThread)
 └── gui/
     ├── main_window.py              # 메인 윈도우. 큐 관리 담당.
@@ -277,9 +282,67 @@ progress_hook에서 `stop_event` 확인 시 `_CancelDownload(BaseException)`를 
 
 `can_handle()`은 `_VIDEO_RE`로 단일 영상 URL(`watch?v=`, `shorts/`, `youtu.be/`)만 매칭한다. 플레이리스트/채널 URL은 의도적으로 거부한다 — 코드는 단일 영상 메타데이터만 처리하므로.
 
+## 스트리밍 매니페스트 (HLS / DASH) 다운로드
+
+직접적인 매니페스트 URL을 yt-dlp의 generic extractor + 번들 ffmpeg로 처리한다. (다른 사이트의 비디오 페이지가 아닌 raw playlist/manifest URL만 매칭.)
+
+공통 로직은 `_stream.StreamExtractor`에 모이고, 각 포맷은 얇은 서브클래스:
+- `M3u8Extractor` — `.m3u8` URL (HLS), folder `M3U8/`
+- `MpdExtractor` — `.mpd` URL (MPEG-DASH), folder `MPD/`
+
+공통 동작:
+- **매칭 규칙**: URL에 해당 확장자(쿼리/프래그먼트 직전)가 포함되면 매칭. 대소문자 무시.
+- **task ID**: URL의 SHA-256 16자리 hex (URL이 서명 토큰 포함이라 그대로 해싱).
+- **canonical_url**: 무수정 — 쿼리 파라미터가 보통 서명 토큰이라 임의 제거 불가.
+- **저장 경로**: `{save_dir}/{FOLDER}/{URL stem}_{8자리 hash}.mp4` — 같은 URL은 같은 파일명.
+- **format**: master playlist/manifest에서 best variant 선택 (yt-dlp가 자동).
+- **downloader**: HLS는 `hls_prefer_native=False`로 ffmpeg 사용. DASH는 yt-dlp의 `dashsegments` 다운로더(기본). 둘 다 ffmpeg로 muxing.
+- **progress**: 세그먼트 단위라 전체 진행률 추정이 정확하지 않다. 현재 다운로드 중인 파일 기준 표시.
+
+## hitomi.la 다운로드
+
+httpx 기반 직접 구현 — yt-dlp의 hitomi extractor는 현행 CDN/포맷 전환을 따라가지 못해 사용하지 않는다.
+
+### 메타데이터 / CDN 엔드포인트
+
+- **갤러리 메타데이터**: `https://ltn.gold-usergeneratedcontent.net/galleries/{id}.js`
+  - 응답은 `var galleryinfo = {...};` 형태의 JS 한 줄. `var galleryinfo = ` prefix를 떼고 끝의 `;`/공백을 정리한 뒤 `json.loads`.
+  - 핵심 필드: `id`, `title`, `artists` / `groups`, `files`[{`name`, `hash`(sha256), `hasavif` / `hasjxl` / `haswebp`, `width`, `height`}].
+- **URL 생성 로직**: `https://ltn.gold-usergeneratedcontent.net/gg.js`
+  - `gg.b`(문자열, 예: `'1779015602/'`) · `gg.m(g)`(switch-case, 기본 1) · `gg.s(hash)`(정수) 정의.
+  - 다운로드 시점마다 다시 받아 캐싱하지 않는다 — 운영 측에서 수시로 바뀜.
+
+### 이미지 URL 공식
+
+```
+g = int(hash[-1] + hash[-3:-1], 16)            # s 함수: /(..)(.)$/ 마지막 1자 + 그 앞 2자
+subdomain = f"a{1 + gg.m(g)}"                  # a1 또는 a2
+url = f"https://{subdomain}.gold-usergeneratedcontent.net/{gg.b}{g}/{hash}.{ext}"
+```
+
+- 확장자 선택 우선순위: `hasavif` → `hasjxl` → `haswebp` → `name`의 원본 확장자. CDN은 원본 jpg를 그대로 서빙하지 않으며 메타데이터가 가리키는 포맷만 200 응답.
+- 모든 요청에 `Referer: https://hitomi.la/` 필수. 누락 시 CDN이 4xx 반환.
+
+### gg.js 파싱 — 변동성 대응
+
+`var o = N;` 으로 시작하는 기본값과 `case A: case B: ... o = X; break;` 형태의 case 묶음을 일반화 정규식으로 추출(`_GG_CASE_BLOCK_RE` + `_GG_CASE_N_RE`). 현재 구조는 “기본 1, 한 블록만 0으로 강등”이지만 다중 블록·다른 값으로 바뀌어도 동작하도록 작성.
+
+### 저장 경로
+
+`{save_dir}/Hitomi/{작가 또는 그룹명}/{id}_{title}/001.{ext}` 형태. 작가/그룹이 모두 없으면 `unknown`. 제목은 80자에서 자른 뒤 `safe_filename`으로 정리(절단 경계의 trailing space/dot 제거를 위해 자르기 → sanitize 순서).
+
+### 작업 ID / canonical URL
+
+- `make_task_id`: `hitomi-gallery-{id}`.
+- `canonical_url`: 진입 경로(/reader, /galleries, /manga, /doujinshi 등)와 `#page-` 프래그먼트를 무시하고 `https://hitomi.la/reader/{id}.html` 로 통일.
+
+### URL 매칭
+
+`hitomi\.la/[^?#]*?(\d+)\.html` — 경로의 마지막 `.html` 직전에 위치한 숫자 시퀀스를 ID로 간주. 쿼리·프래그먼트 안의 숫자는 무시.
+
 ## 주요 설계 결정
 
-- Pixiv는 yt-dlp 지원이 불완전(이미지/만화 미지원)하므로 httpx로 직접 구현. YouTube는 yt-dlp 사용.
+- Pixiv는 yt-dlp 지원이 불완전(이미지/만화 미지원)하므로 httpx로 직접 구현. YouTube는 yt-dlp 사용. hitomi.la 역시 yt-dlp가 현행 CDN/AVIF 전환을 따라가지 못해 httpx 직접 구현.
 - 익스트랙터 인스턴스는 레지스트리에서 앱 전체에 하나만 존재(싱글턴). 여러 워커가 공유하므로 상태를 task 객체에 저장하고 익스트랙터 자체는 무상태에 가깝게 유지할 것.
 - `task.save_path`는 익스트랙터가 dest_dir 확정 시 즉시 설정한다. 삭제 팝업의 "파일도 삭제"가 이 경로를 사용하므로 설정을 누락하면 파일이 삭제되지 않는다.
 - `task.options`는 익스트랙터별 추가 파라미터 전달에 사용. Pixiv는 사용 안 함. YouTube는 `mode`, `quality`를 담는다.

@@ -1,5 +1,8 @@
 from src.config import Config
 from src.extractors.base import BaseExtractor
+from src.extractors.hitomi import HitomiExtractor
+from src.extractors.m3u8 import M3u8Extractor
+from src.extractors.mpd import MpdExtractor
 from src.extractors.pixiv import PixivExtractor
 from src.extractors.youtube import YoutubeExtractor
 
@@ -8,10 +11,13 @@ class ExtractorRegistry:
     """익스트랙터 인스턴스 모음. URL 또는 클래스로 조회."""
 
     def __init__(self, config: Config) -> None:
-        # 새 사이트 추가 시 여기에 등록.
+        # 등록 순서가 매칭 우선순위 — 더 구체적인 사이트를 앞에 두고 generic은 뒤로.
         self._extractors: list[BaseExtractor] = [
             PixivExtractor(config),
             YoutubeExtractor(config),
+            HitomiExtractor(config),
+            M3u8Extractor(config),
+            MpdExtractor(config),
         ]
 
     def get(self, url: str) -> BaseExtractor | None:

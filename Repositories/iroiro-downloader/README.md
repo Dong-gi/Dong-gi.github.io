@@ -1,6 +1,6 @@
 # iroiro-downloader
 
-개인 사용 목적의 미디어 다운로더. Pixiv와 YouTube를 지원하며 사이트를 추가할 수 있는 구조로 설계되어 있습니다.
+개인 사용 목적의 미디어 다운로더. Pixiv, YouTube, hitomi.la, M3U8(HLS) 및 MPD(MPEG-DASH) 스트림을 지원하며 사이트를 추가할 수 있는 구조로 설계되어 있습니다.
 
 ## 요구 사항
 
@@ -58,6 +58,19 @@ https://www.pixiv.net/users/12345678           # 사용자 전체 작품
 https://www.youtube.com/watch?v=XXXXXXXXXXX
 https://youtu.be/XXXXXXXXXXX
 https://www.youtube.com/shorts/XXXXXXXXXXX
+
+# hitomi.la
+https://hitomi.la/reader/12345.html             # 리더 페이지 (#1- 같은 프래그먼트 허용)
+https://hitomi.la/galleries/12345.html          # 갤러리 페이지
+https://hitomi.la/manga/title-with-id-12345.html  # 타입별 페이지 (manga, doujinshi, cg, imageset, anime)
+
+# M3U8 (HLS 스트림)
+https://example.com/path/playlist.m3u8
+https://stream.example.com/live.m3u8?token=...    # 서명 토큰 포함도 가능
+
+# MPD (MPEG-DASH 스트림)
+https://example.com/path/manifest.mpd
+https://dash.example.com/stream.mpd?sig=...
 ```
 
 ### YouTube 인증 (연령 확인 / 멤버십 영상)
@@ -143,7 +156,11 @@ iroiro-downloader/
 │   │   ├── __init__.py         # 사이트 레지스트리
 │   │   ├── base.py             # BaseExtractor 추상 클래스
 │   │   ├── pixiv.py            # Pixiv 구현체
-│   │   └── youtube.py          # YouTube 구현체 (yt-dlp)
+│   │   ├── youtube.py          # YouTube 구현체 (yt-dlp)
+│   │   ├── hitomi.py           # hitomi.la 구현체
+│   │   ├── _stream.py          # 스트리밍 매니페스트 공통 베이스
+│   │   ├── m3u8.py             # M3U8 (HLS)
+│   │   └── mpd.py              # MPD (MPEG-DASH)
 │   ├── core/worker.py          # QThread 다운로드 워커
 │   └── gui/
 │       ├── main_window.py

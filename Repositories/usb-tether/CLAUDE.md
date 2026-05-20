@@ -4,7 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-USB Tether shares Android cellular data with a PC over USB. The Android app runs a SOCKS5 proxy server (RFC 1928) on `127.0.0.1:1080`, exposed to the PC via ADB port forwarding. The PC uses `tun2proxy` to route all traffic through that proxy. The phone's native TCP/IP stack opens every outbound connection, making traffic appear phone-originated to the carrier.
+USB Tether shares Android cellular data with another device over **USB** *or* a **Wi-Fi hotspot** the phone creates itself. The Android app runs two proxy servers on `0.0.0.0`:
+  - **SOCKS5** (RFC 1928) on port `1080` (falls back to `1081`…`1089` in order if taken)
+  - **HTTP** (CONNECT + absolute-URI forwarding) on port `8282` (falls back to `8283`…`8291` in order — e.g. when the NetShare app is already squatting on 8282)
+
+The actually-bound ports are shown in the app UI and the foreground-service notification. **Always read those instead of assuming the base ports**, since a co-installed app (NetShare, another tether app) may force the fallback.
+
+Plus an optional Wi-Fi Direct group owner (GO) with a user-chosen SSID/passphrase — clients land at `192.168.49.1` and can use either proxy.
+
+For USB, ADB port-forwarding exposes `1080` to the PC and `tun2proxy` routes all PC traffic through the SOCKS5 proxy. For Wi-Fi clients, set the system per-network proxy to `192.168.49.1:8282` (HTTP) or use a SOCKS5-aware app / VPN-based SOCKS client against port `1080`.
+
+The phone's native TCP/IP stack opens every outbound connection, making traffic appear phone-originated to the carrier in every mode.
 
 ## Build Commands
 
@@ -19,20 +29,24 @@ Requires Android SDK API 34, Java 17. Uses AGP 8.7.0 + Kotlin 2.0.20.
 
 ### Running End-to-End
 1. `output/` already contains `adb.exe`, `tun2proxy.exe`, and `wintun.dll` — no separate download needed.
-2. **Windows (Administrator):** run `output/start-windows.bat` — auto-elevates, forwards port 1080, launches tun2proxy with `--setup`.
+2. **Windows (Administrator):** run `output/windows-usb.bat` (USB) or `output/windows-wifi.bat` (Wi-Fi hotspot) — both auto-elevate, probe ports 1080–1089, and launch tun2proxy with `--setup`. The USB script uses ADB port forwarding; the Wi-Fi script connects directly to `192.168.49.1` and omits `--dns over-tcp` since UDP ASSOCIATE is supported in that mode.
 
 The `pc/` directory (legacy Rust bridge) is no longer used and can be ignored.
 
 ## Architecture
 
 ```
-[PC] → [Virtual NIC (WinTun/TUN)] → [tun2proxy binary]
-    ↓ SOCKS5 over TCP 127.0.0.1:1080
-[ADB port forward over USB]
-    ↓
-[Socks5Server.kt] (Android SOCKS5 server)
-    ↓ java.net.Socket (Android OS stack)
-[Cellular modem] → Internet
+USB path:
+[PC] → [Virtual NIC (WinTun/TUN)] → [tun2proxy] → [adb forward] → [phone 127.0.0.1:1080 (Socks5Server)]
+                                                                       ↓ java.net.Socket
+                                                                       Android OS stack → Cellular
+
+Wi-Fi path:
+[Wi-Fi client @ 192.168.49.x] → [phone GO @ 192.168.49.1]
+    ├─ HTTP system proxy   → :8282 (HttpProxyServer)
+    └─ SOCKS5-aware client → :1080 (Socks5Server)
+                                  ↓ java.net.Socket
+                                  Android OS stack → Cellular
 ```
 
 The carrier sees only normal phone-originated sockets — Android's OS TCP/IP stack handles every outbound connection.
@@ -41,9 +55,11 @@ The carrier sees only normal phone-originated sockets — Android's OS TCP/IP st
 
 | File | Role |
 |------|------|
-| `TetherService.kt` | Foreground service that owns `Socks5Server`; exposes stats to `MainActivity` |
-| `Socks5Server.kt` | RFC 1928 SOCKS5 server on `127.0.0.1:1080`; handles CONNECT (TCP relay) only — UDP ASSOCIATE rejected with `REP_CMD_UNSUPPORTED`; uses `CachedThreadPool` |
-| `MainActivity.kt` | Simple UI: start/stop service toggle, display active TCP session count and bytes in/out |
+| `TetherService.kt` | Foreground service. Proxies always run while the service is up; hotspot is toggled independently via `ACTION_HOTSPOT_ON` / `ACTION_HOTSPOT_OFF` (battery-expensive). Exposes stats to `MainActivity` |
+| `Socks5Server.kt` | RFC 1928 SOCKS5 server on `0.0.0.0:basePort` with fallback to `basePort+1`…`basePort+9` (up to 10 attempts); binds synchronously inside `start()` so callers see the chosen `actualPort` immediately. Supports CONNECT (TCP relay) and UDP ASSOCIATE (§7 relay via `DatagramSocket`); uses `CachedThreadPool` |
+| `HttpProxyServer.kt` | HTTP proxy on `0.0.0.0:basePort` with the same 10-attempt fallback (same `start()` contract); supports `CONNECT host:port` (HTTPS tunnel) and absolute-URI forwarding (`GET http://...`); strips `Proxy-Connection`/`Proxy-Authorization`; no auth |
+| `WifiHotspot.kt` | Wi-Fi Direct GO via `WifiP2pManager.createGroup(config)` with custom SSID/passphrase (API 29+); SSID auto-prefixed with `DIRECT-UT-` since P2P requires it |
+| `MainActivity.kt` | UI: SSID + passphrase fields (persisted in SharedPreferences `usb_tether`), main Start/Stop (proxies), separate Start hotspot / Stop hotspot button (only enabled when service is running), hotspot status, byte counters |
 
 ### PC Side
 
@@ -52,11 +68,14 @@ The custom Rust binary (`pc/`) is **no longer used**. The scripts delegate to [t
 ## Key Implementation Details
 
 - **SOCKS5 address types:** IPv4 (ATYP=1), domain (ATYP=3), IPv6 (ATYP=4) all supported on inbound CONNECT requests.
+- **HTTP proxy:** parses request line + headers byte-by-byte so body bytes stay in the InputStream and are forwarded verbatim by `relay()`. CONNECT replies `HTTP/1.1 200 Connection Established`. Forwarded requests rewrite absolute URI → origin-form path and inject `Host:` if absent.
+- **Port fallback:** each server walks `basePort` through `basePort+9` (10 attempts) and binds the first one available, mirroring the Windows launcher's 1080–1089 probe range. The chosen port is stored on the server (`actualPort`) and mirrored to `TetherService.socksPort` / `TetherService.httpPort`, which the notification and stats view read. Tests for port-conflict scenarios usually need NetShare or another tether app installed alongside.
 - **TCP relay:** bidirectional `pipe()` with `shutdownOutput()` half-close so peers receive clean EOF.
-- **UDP ASSOCIATE:** not supported — ADB only forwards TCP, so UDP ASSOCIATE requests are rejected. tun2proxy falls back gracefully with `--dns over-tcp`.
+- **UDP ASSOCIATE:** supported via `DatagramSocket` relay (RFC 1928 §7). The server binds an ephemeral UDP port and replies with `BND.ADDR = client.localAddress` (192.168.49.1 for hotspot, 127.0.0.1 for USB). tun2proxy sends SOCKS5-wrapped UDP datagrams; the server strips the header, forwards via `DatagramSocket`, and wraps responses back. Fragmented datagrams (FRAG ≠ 0) are silently dropped. **USB mode caveat:** ADB only forwards TCP, so the UDP relay socket on the phone is unreachable from the PC in that mode — use `--dns over-tcp` and accept that UDP apps won't work over USB.
 - **Relay buffer:** 8 192 bytes per pipe direction.
-- **Android permissions required:** `INTERNET`, `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_SPECIAL_USE`, `POST_NOTIFICATIONS`, `WAKE_LOCK`.
-- The service declares `android:foregroundServiceType="specialUse"` targeting API 34, minimum API 26.
+- **Wi-Fi P2P GO IP:** Android assigns `192.168.49.1/24` to the GO and runs DHCP for clients. Custom SSID/passphrase requires API 29+; passphrase 8–63 chars per WPA2 spec; the GO's SSID is forced to start with `DIRECT-UT-` (Wi-Fi Direct requirement).
+- **Android permissions required:** `INTERNET`, `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_SPECIAL_USE`, `POST_NOTIFICATIONS`, `WAKE_LOCK`, `ACCESS_WIFI_STATE`, `CHANGE_WIFI_STATE`, `CHANGE_NETWORK_STATE`. Plus `NEARBY_WIFI_DEVICES` (API 33+) or `ACCESS_FINE_LOCATION` (API 29–32) for `WifiP2pManager.createGroup`.
+- The service declares `android:foregroundServiceType="specialUse"` targeting API 37, minimum API 26 (Wi-Fi hotspot path requires API 29+).
 
 ## Dependencies
 
