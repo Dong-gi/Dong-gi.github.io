@@ -72,19 +72,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         hotspotButton.setOnClickListener {
-            val intent = Intent(this, TetherService::class.java)
             if (TetherService.hotspotActive) {
-                intent.action = TetherService.ACTION_HOTSPOT_OFF
+                ContextCompat.startForegroundService(
+                    this,
+                    Intent(this, TetherService::class.java).apply {
+                        action = TetherService.ACTION_HOTSPOT_OFF
+                    },
+                )
+                handler.postDelayed({ updateUi() }, 200)
             } else {
-                val ssid = ssidInput.text.toString().trim()
-                val pass = passphraseInput.text.toString()
-                prefs.edit { putString(KEY_SSID, ssid).putString(KEY_PASS, pass) }
-                intent.action = TetherService.ACTION_HOTSPOT_ON
-                intent.putExtra(TetherService.EXTRA_SSID, ssid)
-                intent.putExtra(TetherService.EXTRA_PASSPHRASE, pass)
+                startHotspotFromCurrentInputs()
             }
-            ContextCompat.startForegroundService(this, intent)
-            handler.postDelayed({ updateUi() }, 200)
         }
 
         updateUi()
