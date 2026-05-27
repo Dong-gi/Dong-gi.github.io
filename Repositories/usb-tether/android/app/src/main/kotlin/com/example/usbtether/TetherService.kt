@@ -77,6 +77,7 @@ class TetherService : Service() {
         if (hotspot != null) return
         if (ssid.isEmpty() || passphrase.isEmpty()) {
             hotspotError = "SSID/passphrase required"
+            broadcastHotspotState()
             return
         }
         hotspotError = null
@@ -86,6 +87,7 @@ class TetherService : Service() {
                 hotspotSsid = if (ok) hs.displaySsid else null
                 hotspotError = if (ok) null else hs.lastError
                 if (!ok) hotspot = null
+                broadcastHotspotState()
             }
         }
     }
@@ -96,6 +98,11 @@ class TetherService : Service() {
         hotspotActive = false
         hotspotSsid = null
         hotspotError = null
+        broadcastHotspotState()
+    }
+
+    private fun broadcastHotspotState() {
+        sendBroadcast(Intent(ACTION_HOTSPOT_STATE_CHANGED).setPackage(packageName))
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -168,6 +175,7 @@ class TetherService : Service() {
 
         const val ACTION_HOTSPOT_ON = "com.example.usbtether.HOTSPOT_ON"
         const val ACTION_HOTSPOT_OFF = "com.example.usbtether.HOTSPOT_OFF"
+        const val ACTION_HOTSPOT_STATE_CHANGED = "com.example.usbtether.HOTSPOT_STATE_CHANGED"
 
         @Volatile var isRunning = false
             private set

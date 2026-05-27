@@ -43,6 +43,17 @@
                 android:value="ip_packet_tunnel" />
         </service>
 
+        <service
+            android:name=".HotspotTileService"
+            android:label="@string/hotspot_tile_label"
+            android:icon="@drawable/ic_hotspot_tile"
+            android:exported="true"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

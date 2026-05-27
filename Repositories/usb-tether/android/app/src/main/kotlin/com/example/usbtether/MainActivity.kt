@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private var pendingHotspotStartFromTile: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -70,7 +72,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         hotspotButton.setOnClickListener {
-            if (!TetherService.isRunning) return@setOnClickListener
             val intent = Intent(this, TetherService::class.java)
             if (TetherService.hotspotActive) {
                 intent.action = TetherService.ACTION_HOTSPOT_OFF
@@ -87,11 +88,46 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateUi()
+        consumeTileIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        consumeTileIntent(intent)
     }
 
     override fun onResume() {
         super.onResume()
         handler.post(refreshTask)
+        if (pendingHotspotStartFromTile) {
+            pendingHotspotStartFromTile = false
+            startHotspotFromCurrentInputs()
+        }
+    }
+
+    private fun consumeTileIntent(intent: Intent?) {
+        if (intent?.action != ACTION_START_HOTSPOT_FROM_TILE) return
+        // Defer the actual start until onResume so the activity is fully foregrounded
+        // by the time WifiP2pManager.createGroup runs.
+        pendingHotspotStartFromTile = true
+        intent.action = null
+    }
+
+    private fun startHotspotFromCurrentInputs() {
+        if (TetherService.hotspotActive) return
+        val ssid = ssidInput.text.toString().trim()
+        val pass = passphraseInput.text.toString()
+        prefs.edit { putString(KEY_SSID, ssid).putString(KEY_PASS, pass) }
+        ContextCompat.startForegroundService(
+            this,
+            Intent(this, TetherService::class.java).apply {
+                action = TetherService.ACTION_HOTSPOT_ON
+                putExtra(TetherService.EXTRA_SSID, ssid)
+                putExtra(TetherService.EXTRA_PASSPHRASE, pass)
+            },
+        )
+        handler.postDelayed({ updateUi() }, 200)
     }
 
     override fun onPause() {
@@ -122,7 +158,6 @@ class MainActivity : AppCompatActivity() {
         statusText.text = if (running) getString(R.string.status_running) else getString(R.string.status_stopped)
         toggleButton.text = if (running) getString(R.string.stop) else getString(R.string.start)
         hotspotButton.text = if (hotspotOn) getString(R.string.hotspot_stop) else getString(R.string.hotspot_start)
-        hotspotButton.isEnabled = running
         ssidInput.isEnabled = !hotspotOn
         passphraseInput.isEnabled = !hotspotOn
 
@@ -150,6 +185,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val ACTION_START_HOTSPOT_FROM_TILE = "com.example.usbtether.START_HOTSPOT_FROM_TILE"
+
         private const val PREFS_NAME = "usb_tether"
         private const val KEY_SSID = "ssid"
         private const val KEY_PASS = "passphrase"
