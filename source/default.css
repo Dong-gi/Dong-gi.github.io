@@ -265,7 +265,6 @@ div#contents .code-div{margin:8px 0}
 .code-span{background-color:#ddd;word-wrap:normal;overflow:auto;padding:0.2ch 0.5ch;border-radius:0.6ch;}
 
 .hover-content{padding:4px 8px;background-color:#ddd}
-.hover-template{padding:8px 16px}
 
 div.book-info { display: flex }
 div.book-info>div:first-child { min-width: 20ch }

@@ -177,10 +177,6 @@ function onHoverElementMouseleave(e) {
  * @param {HTMLElement} content
  */
 function addHoverContent(target, content) {
-    content.style.position = 'absolute';
-    content.style.display = 'none';
-    content.style.overflow = 'auto';
-
     /** @param {MouseEvent} e */
     const onMouseenter = function (e) {
         activeHoverElements.add(target)

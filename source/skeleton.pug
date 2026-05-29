@@ -74,7 +74,7 @@ mixin goto(positionName, href)
     ).goto&attributes({ id: `goto-${positionName.hashCode()}-${GOTO_COUNTER[positionName]}`, target: href ? '_blank' : '_self' })
 
 mixin hoverTemplate()
-    div.w3-container.w3-leftbar.w3-border-green.w3-white.hover-template&attributes(attributes)
+    div.w3-container.w3-leftbar.w3-border-green.w3-white(style="position:absolute;display:none;overflow:auto;padding:8px 16px;")&attributes(attributes)
         if block
             block
 

@@ -51,6 +51,11 @@ include ../../../source/skeleton.pug
                   since: 1.0.0
                   group: connection
 
+    h1 ACL
+    ul
+        li Since Valkey 9.1 : DB 단위로 접근 제한 가능
+            +asCode() ACL SETUSER app-user on >secretpass +@all ~* db=0,1
+
     h1 Data type
     div
         h2 String
@@ -60,15 +65,16 @@ include ../../../source/skeleton.pug
 
         h2.no-marker Aggregate data type
         ul
-            li 같은 작업에 대해 2가지 버전을 제공하는 경우가 있다
+            li 이하에 등장하는 자료구조들은 다른 자료구조의 값을 여러 개 담을 수 있는 aggregate data type
+            li 같은 작업에 대해 2가지 커맨드 버전을 제공하는 경우가 있다
                 ul
                     li 블로킹 : 값이 비어 있으면 요소가 추가되거나 시간 초과될 때까지 대기
-                    li 논-블로킹 : 값이 비어 있으면 처리 종료
-            li 키가 존재하지 않더라도 커맨드 성공을 보장한다
+                    li 논-블로킹 : 값이 비어 있으면 즉시 처리 종료
+            li 키가 존재하지 않더라도 커맨드 성공을 보장한다. #[+asA('https://valkey.io/topics/lists/#automatic-creation-and-removal-of-keys')]
                 ul
                     li 요소를 추가하는 경우, 요소가 0개인 값을 자동으로 생성해 사용
                     li 그 외의 경우, 요소가 0개인 값에 대한 것과 동일한 응답 반환
-            li 요소 제거한 결과 값이 비게 되면 자동으로 키를 정리한다 (스트림 제외)
+            li 요소 제거한 결과 값이 비게 되면 자동으로 키를 정리한다 (스트림 같은 예외 존재함에 유의)
 
         h2 List
         ul
@@ -596,8 +602,8 @@ include ../../../source/skeleton.pug
                     iter, data = chunk
                     BF.LOADCHUNK(key, iter, data)
 
-        h2 Cluster
-        p 생략. 클라우드 서비스를 주로 이용하므로
+        h2.fake Cluster
+        p 생략. 클라우드가 관리하는 서버리스 클러스터를 주로 이용하므로
 
         h2 Connection
         div
@@ -1372,71 +1378,213 @@ include ../../../source/skeleton.pug
 
         h2 Pub/Sub
         div
+            h3 RESP2/RESP3 차이
+            ul
+                li RESP2 : 클라이언트가 구독 상태에 들어간 뒤론 SUBSCRIBE, SSUBSCRIBE, PSUBSCRIBE, UNSUBSCRIBE, SUNSUBSCRIBE, PUNSUBSCRIBE, PING, RESET, QUIT 명령만 사용해야 한다
+                li RESP3 : 제약 없이 다른 명령 사용 가능
+
+            h3 Sharded Pub/Sub
+            ul
+                li 기본(글로벌) Pub/Sub는 메시지가 클러스터 내 모든 노드에 전파되는 문제가 있다
+                li Sharded Pub/Sub는 키를 슬롯에 할당하는 것과 동일한 알고리즘으로 채널을 슬롯에 할당함으로써 클러스터 버스를 통과하는 데이터를 절약한다
+
             h3 PSUBSCRIBE
             +asCode() PSUBSCRIBE pattern [ pattern ...]
-            p <span class="hover-content" template-id="glob-style-pattern">GLOB style pattern</span>에 일치하는 채널들 구독
+            ul
+                li <span class="hover-content" template-id="glob-style-pattern">GLOB style pattern</span>에 일치하는 채널들 구독
+                li 패턴 사이에 중복이 있는 경우, 하나의 클라이언트가 동일 채널을 여러 번 구독하게 될 수 있다
 
             h3 PUBLISH
-            +asCode() PUBLISH channel message
-            p 메시지 발행
-
-            h3 PUBSUB
-            div
-                h4.fake CHANNELS
-                +asCode() PUBSUB CHANNELS [pattern]
-                p 채널 목록 반환
-
-                h4.fake HELP
-                +asCode() PUBSUB HELP
-                p 도움말 반환
-
-                h4.fake NUMPAT
-                +asCode() PUBSUB NUMPAT
-                p
-                    +goto('PSUBSCRIBE')
-                    |로 구독 중인 패턴 개수 반환
-
-                h4.fake NUMSUB
-                +asCode() PUBSUB NUMSUB [channel [channel ...]]
-                p 구독자 수 반환
-
-                h4.fake SHARDCHANNELS
-                +asCode() PUBSUB SHARDCHANNELS [pattern]
-                p 샤드 채널 목록 반환
-
-                h4.fake SHARDNUMSUB
-                +asCode() PUBSUB SHARDNUMSUB [channel [channel ...]]
-                p 샤드 채널 구독자 수 반환
+            h3 SPUBLISH
+            +asCode().
+                PUBLISH channel message
+                SPUBLISH channel message
+            ul
+                li (샤드) 채널에 메시지 발행
+                li 메시지 전달한 횟수 반환
+                    p 동일한 채널을 여러 번 구독한 클라이언트는 그와 동일한 횟수의 메시지를 수신하게 된다
 
             h3 PUNSUBSCRIBE
-            +asCode() PUNSUBSCRIBE [pattern [pattern ...]]
-            p 구독 취소
-
-            h3 SPUBLISH
-            +asCode() SPUBLISH channel message
-            p 샤드 채널에 메시지 발행
-
-            h3 SSUBSCRIBE
-            +asCode() SSUBSCRIBE channel [channel ...]
-            p 샤드 채널 구독
+            h3 SUNSUBSCRIBE
+            h3 UNSUBSCRIBE
+            +asCode().
+                PUNSUBSCRIBE [pattern [pattern ...]]
+                UNSUBSCRIBE [channel [channel ...]]
+                SUNSUBSCRIBE [channel [channel ...]]
+            p (샤드) 채널 구독 취소
 
             h3 SUBSCRIBE
-            +asCode() SUBSCRIBE channel [channel ...]
-            p 채널 구독
-
-            h3 SUNSUBSCRIBE
-            +asCode() SUNSUBSCRIBE [channel [channel ...]]
-            p 샤드 채널 구독 취소
-
-            h3 UNSUBSCRIBE
-            +asCode() UNSUBSCRIBE [channel [channel ...]]
-            p 구독 취소
+            h3 SSUBSCRIBE
+            +asCode().
+                SUBSCRIBE channel [channel ...]
+                SSUBSCRIBE channel [channel ...]
+            p 개별 (샤드) 채널 구독
 
         h2 Scripting
+        div
+            h3 사용자 정의 스크립트
+            ul
+                li Lua 스크립트를 이용해 데이터가 있는 곳에서 직접 처리할 수 있다
+                li EVAL 명령은 휘발성 스크립트를 즉석으로 실행하는 것을 지원하고, Function은 스크립트를 재사용 가능하게 해준다 -- 대신 함수 호출 전에 데이터베이스에 미리 로딩(배포)할 필요가 있다
+                    ul
+                        li 한 번 실행된 EVAL 스크립트는 전용 캐시에 저장되므로, 본문을 매번 전달하는 대신 스크립트 해시로 지칭할 수 있다(EVALSHA)
+                        li EVAL 대신 SCRIPT LOAD로 일단 스크립트 캐시만 적재 가능
+                        li 삭제된 스크립트 캐시를 다시 로드하는 책임은 클라이언트의 몫 -- FUNCTION LOAD는 영구적으로, 식별하기 좋은 이름으로 재사용 가능
+                li 스크립트는 입력 인자로 주어진 이름의 키에만 접근해야 한다 -- 스크립트 내에서 KEYS 런타임 변수로 참조 가능
+                li 스크립트는 원자적으로 실행 -- 다른 명령들 차단되므로, 느린 스크립트를 지양해야 한다
+                li 읽기 전용 스크립트는 레플리카에서 실행 가능하다 -- 사용하는 모든 커맨드가 읽기 명령으로 분류되어 있어야 한다
+                li busy-reply-threshold 5000ms 이상 스크립트가 실행되는 경우
+                    ul
+                        li 스크립트 자체는 중단되지 않는다 -- 원자성 보상에 위배되므로
+                        li 다른 동시 명령들에 BUSY 오류 응답
+                        li 스크립트가 이미 쓰기 작업을 수행했다면, SHUTDOWN NOSAVE로만 중단 가능
 
-        h2 (Full Text) Search
+            p 세부 명령 생략
 
-        h2 Server
+        h2 Search (valkey-search)
+        div
+            h3 Valkey-Search
+            ul
+                li 벡터 검색, 전문(Full-text) 검색, 비-벡터 워크로드 지원
+                li 인덱스
+                    ul
+                        li 관계형 데이터베이스의 테이블과 유사
+                        li 테이블 행은 Valkey 키를 가리키고, 테이블 열들은 키에서 추출한 데이터로 채워진다
+                        li 검색 쿼리는 열의 데이터를 이용해 키를 식별하는 필터처럼 구성된다
+                li 클러스터 모드
+                    ul
+                        li 인덱스 정의는 모든 노드에 복제되지만 각 인덱스는 노드에 상주하는 데이터만 포함한다
+                            p 따라서 쿼리 결과는 모든 샤드의 한 노드씩에서 취합해 병합된다
+                        li 단일 슬롯 인덱스는 클러스터 전체가 아니라 단일 노드만 쿼리를 처리한다
+                        li 인덱스 이름에 #[+goto('해시 태그')]가 있으면 단일 슬롯 인덱스, 없으면 클러스터 전역 인덱스로 간주된다
+                            p 단일 슬롯 인덱스의 접두사 목록은 동일한 해시 태그를 포함하는 접두사로만 구성해야 한다
+                li #[+goto('Valkey-Search Field Formats')]
+
+            h3 FT.CREATE
+            +asCode().
+                FT.CREATE index-name
+                    [ON HASH | JSON]
+                    [PREFIX count prefix [prefix ...]]
+                    [SCORE default_value]
+                    [SCORE_FIELD field_name]
+                    [LANGUAGE language]
+                    [SKIPINITIALSCAN]
+                    [MINSTEMSIZE min_stem_size]
+                    [WITHOFFSETS | NOOFFSETS]
+                    [NOSTOPWORDS | STOPWORDS count word [word ...]]
+                    [PUNCTUATION punctuation]
+                    SCHEMA
+                        field-identifier [AS field-alias]
+                            &lt; NUMERIC
+                            | TAG [SEPARATOR sep] [CASESENSITIVE]
+                            | TEXT [NOSTEM] [WITHSUFFIXTRIE | NOSUFFIXTRIE] [WEIGHT weight]
+                            | VECTOR &lt;HNSW | FLAT&gt; attr_count TYPE FLOAT32 DIM value DISTANCE_METRIC &lt;L2 | IP | COSINE&gt;
+                                [INITIAL_CAP value] [M value] [EF_CONSTRUCTION value] [EF_RUNTIME value]
+                            &gt; [SORTABLE]
+                        [field-identifier [AS field-alias] &lt;...&gt; [SORTABLE] ...]
+            ul
+                li index-name : 동일한 이름의 인덱스가 이미 존재하면 오류 발생
+                li ON HASH | JSON : 데이터가 지정된 타입과 일치하는 키만 인덱스에 포함된다. 생략하면 HASH
+                li PREFIX : 지정된 접두사 중 적어도 하나가 일치하는 키만 인덱스에 포함된다. 길이가 0인 접두사를 지정하면 모든 키가 매칭된다
+                li LANGUAGE : 서버에서 지원하는 언어만 선택 가능. 현재 ENGLISH만 가능
+                li SKIPINITIALSCAN
+                    ul
+                        li 지정한 경우 : 인덱스 생성된 후 변경된 키들만 인덱스에 삽입
+                        li 생략한 경우 : 조건을 만족하는 키들을 백그라운드에서 인덱스에 삽입(backfill)
+                li MINSTEMSIZE : <span class="hover-content" template-id="stemming">스테밍</span>을 수행할 최소 단어 길이. 기본 4
+                li WITHOFFSETS | NOOFFSETS
+                    ul
+                        li 텍스트 필드 내 단어별 offset을 유지할지 여부 결정. 생략하면 WITHOFFSETS
+                        li NOOFFSETS 지정하면 구문 매칭, 근접 매칭 쿼리 작업은 오류 발생
+                li NOSTOPWORDS | STOPWORDS
+                    ul
+                        li 인덱스에 포함하지 않을 불용어(stop words) 지정
+                        li ENGLISH 기본값 : a, an, and, ..., will, with
+                li PUNCTUATION
+                    ul
+                        li 공백 문자에 더해 단어를 분리하는 추가 문자 지정
+                        li 기본값 : ,.&lt;&gt;{}[]"':;!@#$%^&amp;\*()-+=~/\|?
+                        li 입력 문자열에서 구두점 앞에 \가 있으면 이는 단어의 일부로 취급된다
+                li SCORE : RedisSearch와의 호환을 위한 것으로 그냥 생략하면 된다
+            div
+                h4 Valkey-Search Field Formats
+                ul
+                    li field-identifier : Hash 또는 JSON의 어떤 멤버가 입력값으로 이용되는지
+                    li TAG 필드
+                        ul
+                            li 태그 필드의 입력 데이터는 단일 UTF-8 문자열. 이로부터 하나 이상의 태그 값을 추출한다
+                            li SEPARATOR : 기본값은 ,
+                            li 유효한 태그가 추출되지 않으면 해당 필드에 대해 인덱싱되지 않는다
+                                p 유효한 태그 : 입력 문자열 분할 -&gt; trim() -&gt; 빈 태그, 중복 태그 제거
+                            li CASESENSITIVE : 기본적으로 대소문자 구별 안 함
+                    li NUMERIC 필드
+                        ul
+                            li 입력 값은 double 부동소수로 파싱된다
+                            li 무한대는 허용되지만 NaN은 허용되지 않는다 -- 인덱싱되지 않는다
+                    li TEXT 필드
+                        ul
+                            li 입력 문자열은 분할 -&gt; 소문자 변환 -&gt; 불용어 제거 -&gt; <span class="hover-content" template-id="stemming">스테밍</span> 순으로 처리된다
+                            li WITHSUFFIXTRIE | NOSUFFIXTRIE : 접미사 와일드카드 쿼리를 지원할지? 기본값은 WITHSUFFIXTRIE
+                            li WEIGHT : RedisSearch와의 호환을 위한 것으로 그냥 생략하면 된다
+                    li VECTOR 필드
+                        ul
+                            li 각 벡터는 고정 길이의 부동소수 배열로 표현된다
+                            li Hash 필드에서 벡터를 추출하는 경우, 필드 값은 그 자체로 리틀 엔디안 raw binary blob이고, 크기는 FLOAT32의 경우 DIM * 4바이트여야 한다
+                                p 예. HSET doc:1 vec "\x00\x00\x80\x3f\x00\x00\x80\x3f\x00\x00\x80\x3f"
+                            li JSON 프로퍼티에서 벡터를 추출하는 경우, 속성 값은 부동 소수 배열의 문자열 표현이어야 한다
+                                p 예. JSON.SET doc:1 $ '{"vec": "[1.0, 0.0, 0.0]"}'
+                            li attr_count : 벡터를 정의하기 위해 뒤로 이어지는 속성 개수
+                            li HNSW(Hierarchical Navigable Small World)
+                                ul
+                                    li 근사값을 반환하는 대신 빠르다
+                                    li M : 각 노드에 허용되는 최대 outgoing 간선 수. 기본값 16, 최대 512
+                                    li EF_CONSTRUCTION : 인덱스 구성 중 검사되는 벡터의 수. 높을수록 인덱스 생성 시간이 길어지는 대신 재현율이 향상된다. 기본값 200, 최대 4096
+                                    li EF_RUNTIME : 쿼리 작업 중 검사될 벡터의 수. 기본값 10, 최대 4096
+                            li FLAT(brute force)
+                                ul
+                                    li 정확한 답을 반환하지만 느리다
+                            li DIM : 벡터 차원
+                            li DISTANCE_METRIC : 거리 알고리즘
+                                ul
+                                    li IP : 내적(Inner Product)
+                                    li L2 : Euclidean
+                                    li COSINE
+                            li INITIAL_CAP : 초기 인덱스 크기
+                            li SORTABLE : 호환성을 위한 부분으로, 아무 효과 없음
+
+            h3 FT.CREATE
+            +asCode().
+                FT.SEARCH &lt;index&gt; &lt;query&gt;
+                  [ALLSHARDS | SOMESHARDS]
+                  [CONSISTENT | INCONSISTENT]
+                  [DIALECT &lt;dialect&gt;]
+                  [INORDER]
+                  [LIMIT &lt;offset&gt; &lt;num&gt;]
+                  [NOCONTENT]
+                  [PARAMS &lt;count&gt; &lt;name&gt; &lt;value&gt; [&lt;name&gt; &lt;value&gt; ...]]
+                  [RETURN &lt;count&gt; &lt;field&gt; [AS &lt;name&gt;] &lt;field&gt; [AS &lt;name&gt;]...]
+                  [SLOP &lt;slop&gt;]
+                  [SORTBY &lt;field&gt; [ASC | DESC]]
+                  [TIMEOUT &lt;timeout&gt;]
+                  [VERBATIM]
+                  [WITHSORTKEYS]
+            ul
+                li TIMEOUT : 검색 제한 시간을 지정하고 싶은 경우, 밀리초 단위로 설정
+                li ALLSHARDS | SOMESHARDS : 일부 샤드에서 (시간 내에) 응답을 못 받아도 괜찮은지? 기본값 ALLSHARDS
+                li CONSISTENT | INCONSISTENT : 클러스터 내에서 (시간 내에) 인덱스가 최종 일관성을 만족해야만 하는지? 기본값 CONSISTENT
+                li DIALECT : 2만 지원됨
+                li LIMIT : 결과의 일부만 응답으로 전달
+                    p 응답 배열의 첫 번째 요소는 일치하는 키의 개수인데, LIMIT 설정의 영향을 받지 않는다
+                li
+                    ul
+                        li 기본 : 모든 필드 반환
+                        li NOCONTENT : 결과에는 키만 반환 -- 값 미포함
+                        li RETURN : 지정 필드만 반환
+                li PARAMS : 쿼리 파라미터
+                li: +asA('https://valkey.io/topics/search-query/')
+
+        h2.fake Server
+        p 생략. 클라우드가 관리하는 서버리스 클러스터를 주로 이용하므로
 
         h2 Set
         div
@@ -2104,3 +2252,8 @@ include ../../../source/skeleton.pug
             p 예. [hello (world
             li 특별히 -, +를 무한대 표현으로 이용할 수 있다
             p 예. - (world
+
+    +hoverTemplate()#stemming
+        ul
+            li 단어를 어간(stem)으로 줄이는 처리
+            li 검색 인덱스에는 원본 단어 매핑과 별도로 어간 매핑이 기록된다

@@ -753,6 +753,9 @@ include ../../../source/skeleton.pug
                 li textAlign : 'start'(default), 'end', 'left', 'right', 'center'
                 li textBaseline : 'top', 'hanging', 'middle', 'alphabetic'(default), 'ideographic', 'bottom'
                 li direction : 'inherit'(default), 'ltr'(left to right), 'rtl'
+                    ul
+                        li 앱 자체는 LTR이고, 일부 입력 필드만 RTL을 지원하면 되는 경우 : 요소 수준으로 dir="auto" 지정
+                        li 문서 전체에 RTL을 지원해야 하는 경우 : html 요소에 dir="rtl" 지정
             h3 fillStyle, strokeStyle
             ol
                 p default '#000', 값으로 가능한 타입은 아래 3가지
