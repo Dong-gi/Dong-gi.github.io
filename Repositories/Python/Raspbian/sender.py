@@ -5,8 +5,9 @@ import time
 import threading
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
+from Crypto import Random
 
-cipher = AES.new('1$23cf!V@Fo2v1*i', AES.MODE_ECB)
+AES_KEY = '1$23cf!V@Fo2v1*i'
 
 HOST = '192.168.0.10'
 PORT = 50000
@@ -52,7 +53,9 @@ class Sender:
     def sendImg(self, img, name):
         zero_pad_size = (16 - len(img) % 16) % 16
         img += bytearray(zero_pad_size)
-        img = cipher.encrypt(buffer(img))
+        iv = Random.get_random_bytes(16)
+        cipher = AES.new(AES_KEY, AES.MODE_CBC, iv)
+        img = iv + cipher.encrypt(buffer(img))
 
         hash = SHA256.new()
         hash.update(img)
