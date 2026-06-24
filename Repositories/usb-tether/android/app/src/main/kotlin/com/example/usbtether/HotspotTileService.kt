@@ -8,7 +8,6 @@ import android.content.IntentFilter
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 
 class HotspotTileService : TileService() {
@@ -17,10 +16,6 @@ class HotspotTileService : TileService() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action != TetherService.ACTION_HOTSPOT_STATE_CHANGED) return
             syncTile()
-            val error = TetherService.hotspotError
-            if (error != null) {
-                Toast.makeText(applicationContext, error, Toast.LENGTH_LONG).show()
-            }
         }
     }
 

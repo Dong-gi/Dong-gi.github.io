@@ -2,6 +2,8 @@ package com.example.usbtether
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.location.LocationManager
+import android.net.wifi.WifiManager
 import android.net.wifi.p2p.WifiP2pConfig
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.Build
@@ -23,10 +25,11 @@ class WifiHotspot(
     requestedSsid: String,
     private val passphrase: String,
 ) {
+    private val appContext: Context = context.applicationContext
     private val manager: WifiP2pManager? =
-        context.getSystemService(Context.WIFI_P2P_SERVICE) as? WifiP2pManager
+        appContext.getSystemService(Context.WIFI_P2P_SERVICE) as? WifiP2pManager
     private val channel: WifiP2pManager.Channel? =
-        manager?.initialize(context, Looper.getMainLooper(), null)
+        manager?.initialize(appContext, Looper.getMainLooper(), null)
 
     @Volatile var lastError: String? = null
         private set
@@ -52,6 +55,13 @@ class WifiHotspot(
             lastError = "Passphrase must be 8–63 chars"
             onResult(false); return
         }
+        // Surface common causes of createGroup ERROR with actionable messages
+        // before the framework returns a generic ERROR code.
+        val envError = checkEnvironment()
+        if (envError != null) {
+            lastError = envError
+            onResult(false); return
+        }
         val config = try {
             WifiP2pConfig.Builder()
                 .setNetworkName(displaySsid)
@@ -63,6 +73,54 @@ class WifiHotspot(
             lastError = "Invalid SSID/passphrase: ${e.message}"
             onResult(false); return
         }
+        verifyP2pStateThenCreate(mgr, ch, config, onResult)
+    }
+
+    /** Synchronous environment preflight. Returns an error message or null. */
+    private fun checkEnvironment(): String? {
+        val wm = appContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
+        if (wm != null && !wm.isWifiEnabled) {
+            return "Wi-Fi is off — turn Wi-Fi on to use the hotspot"
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val lm = appContext.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
+            if (lm != null && !lm.isLocationEnabled) {
+                return "Location services are off — required by Android for Wi-Fi Direct"
+            }
+        }
+        return null
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun verifyP2pStateThenCreate(
+        mgr: WifiP2pManager,
+        ch: WifiP2pManager.Channel,
+        config: WifiP2pConfig,
+        onResult: (Boolean) -> Unit,
+    ) {
+        try {
+            mgr.requestP2pState(ch) { state ->
+                if (state != WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
+                    lastError = "Wi-Fi Direct is disabled — turn off Mobile Hotspot or any app using Wi-Fi Direct, then try again"
+                    onResult(false)
+                } else {
+                    tryCreateGroup(mgr, ch, config, onResult)
+                }
+            }
+        } catch (e: Exception) {
+            // If the state probe misbehaves, fall through to createGroup.
+            Log.w(TAG, "requestP2pState threw: ${e.message}")
+            tryCreateGroup(mgr, ch, config, onResult)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun tryCreateGroup(
+        mgr: WifiP2pManager,
+        ch: WifiP2pManager.Channel,
+        config: WifiP2pConfig,
+        onResult: (Boolean) -> Unit,
+    ) {
         try {
             mgr.createGroup(ch, config, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
@@ -75,7 +133,7 @@ class WifiHotspot(
                     if (reason == WifiP2pManager.BUSY) {
                         reuseExistingGroup(mgr, ch, onResult)
                     } else {
-                        lastError = "createGroup failed (${reasonName(reason)})"
+                        lastError = friendlyFailureMessage(reason)
                         Log.w(TAG, lastError!!)
                         onResult(false)
                     }
@@ -134,12 +192,15 @@ class WifiHotspot(
             return if (cleaned.startsWith("DIRECT-")) cleaned else "DIRECT-UT-$cleaned"
         }
 
-        private fun reasonName(reason: Int): String = when (reason) {
-            WifiP2pManager.ERROR -> "ERROR"
-            WifiP2pManager.P2P_UNSUPPORTED -> "P2P_UNSUPPORTED"
-            WifiP2pManager.BUSY -> "BUSY"
-            WifiP2pManager.NO_SERVICE_REQUESTS -> "NO_SERVICE_REQUESTS"
-            else -> "code=$reason"
+        private fun friendlyFailureMessage(reason: Int): String = when (reason) {
+            WifiP2pManager.ERROR ->
+                "createGroup failed (ERROR) — Mobile Hotspot or another Wi-Fi Direct app may be active. Turn them off and retry."
+            WifiP2pManager.P2P_UNSUPPORTED ->
+                "Wi-Fi Direct is not supported on this device"
+            WifiP2pManager.NO_SERVICE_REQUESTS ->
+                "createGroup failed (NO_SERVICE_REQUESTS)"
+            else ->
+                "createGroup failed (code=$reason)"
         }
     }
 }

@@ -8,6 +8,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import java.util.concurrent.atomic.AtomicLong
 
@@ -81,14 +82,17 @@ class TetherService : Service() {
             return
         }
         hotspotError = null
-        hotspot = WifiHotspot(applicationContext, ssid, passphrase).also { hs ->
-            hs.start { ok ->
-                hotspotActive = ok
-                hotspotSsid = if (ok) hs.displaySsid else null
-                hotspotError = if (ok) null else hs.lastError
-                if (!ok) hotspot = null
-                broadcastHotspotState()
-            }
+        // Assign before calling start() — WifiHotspot's preflight failure paths
+        // invoke the result callback synchronously, and an .also { hs.start {...} }
+        // chain would clobber a synchronous `hotspot = null` set inside that callback.
+        val hs = WifiHotspot(applicationContext, ssid, passphrase)
+        hotspot = hs
+        hs.start { ok ->
+            hotspotActive = ok
+            hotspotSsid = if (ok) hs.displaySsid else null
+            hotspotError = if (ok) null else hs.lastError
+            if (!ok) hotspot = null
+            broadcastHotspotState()
         }
     }
 
@@ -102,6 +106,9 @@ class TetherService : Service() {
     }
 
     private fun broadcastHotspotState() {
+        hotspotError?.let {
+            Toast.makeText(applicationContext, it, Toast.LENGTH_LONG).show()
+        }
         sendBroadcast(Intent(ACTION_HOTSPOT_STATE_CHANGED).setPackage(packageName))
     }
 
