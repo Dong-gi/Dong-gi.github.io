@@ -10,7 +10,12 @@
 # cron 에 걸어두면 FAIL 시 종료코드 1 이므로 cron 이 메일을 보낸다:
 #   0 4 * * 1 root /opt/proxy/verify.sh
 #
-set -uo pipefail   # -e 는 쓰지 않는다: 개별 검사 실패를 집계해서 보고해야 하므로
+# -e 를 쓰지 않는 이유: 개별 검사 실패를 집계해서 보고해야 하므로 계속 진행해야 한다.
+# pipefail 도 쓰지 않는 이유: 이 스크립트의 조건절은 `cmd | grep -q 패턴` 형태가
+#   많다. grep -q 는 첫 매치에서 즉시 종료하므로 왼쪽 명령이 SIGPIPE(141)로 죽고,
+#   pipefail 이 그 141 을 파이프라인 상태로 올려 "찾았는데 못 찾았다"고 오판정한다.
+#   pipefail 없이는 파이프라인 상태가 grep 의 것이 되어 의도한 대로 동작한다.
+set -u
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly STATE_FILE="/etc/squid/.setup-state"

@@ -39,6 +39,7 @@ Windows Edge 의 모든 트래픽을 해외 클라우드 인스턴스(Oracle Lin
 ```
 Chrome Proxy Extension/
 ├── README.md
+├── .gitattributes                    # *.sh 를 LF 로 강제 (CRLF 로 저장되면 Linux 에서 깨진다)
 ├── package.json                      # type=module (Node 테스트용). 확장 동작과 무관
 ├── extension/                        # Edge/Chrome MV3 확장 (unpacked 로 로드)
 │   ├── manifest.json
@@ -300,6 +301,9 @@ PAC 라우팅 판정 25건(테더링 대역이 `DIRECT` 로 빠지는지 포함)
 
 | 증상 | 원인 / 조치 |
 |---|---|
+| 스크립트가 **메시지 없이 종료 코드 141** | `141 = 128 + SIGPIPE`. `set -o pipefail` 상태에서 파이프 오른쪽이 먼저 끝나면(`head -c`, `grep -q`, `awk '{exit}'`) 왼쪽이 SIGPIPE 로 죽고 `set -e` 가 스크립트를 조용히 죽인다. 현재 스크립트에서는 제거했고, 재발 시 ERR 트랩이 라인 번호와 원인을 출력한다 |
+| `set: pipefail: invalid option name` 또는 `syntax error near unexpected token $'{\r'` | 파일이 **CRLF** 로 저장됐다. Windows 편집기에서 저장하면 발생한다. `sed -i 's/\r$//' server/*.sh server/lib/*.sh` 로 변환. 재발 방지는 저장소의 `.gitattributes`(`*.sh text eol=lf`)가 담당한다 |
+| `/usr/bin/env: 'bash\r': No such file or directory` | 위와 같은 CRLF 문제 |
 | `ERR_PROXY_CONNECTION_FAILED` | ① `windows-wifi.bat`(tun2proxy)가 죽었는지 확인 ② OCI Security List 에 `10443/tcp` 인그레스 ③ 서버에서 `sudo ./verify.sh` |
 | 셋업 스크립트가 "인증서가 커버하지 않는다" 로 중단 | 출력된 SAN 목록을 보고 `--domain` 을 맞추거나, 안내된 `certbot certonly --cert-name ... --nginx` 로 이름을 추가 |
 | 셋업 스크립트가 "포트가 이미 사용 중" 으로 중단 | `sudo ss -tlnp \| grep 10443` 으로 점유자 확인 후 `--port` 로 변경 |

@@ -14,7 +14,9 @@
 #                                      절대 certbot delete 를 실행하지 않는다.
 #   * 기존 certbot 갱신 타이머/훅
 #
-set -uo pipefail
+# pipefail 을 쓰지 않는다: `cmd | grep -q` 조건절에서 grep 의 조기 종료가
+# 왼쪽에 SIGPIPE(141)를 유발해 판정이 뒤집히는 것을 피하기 위함이다.
+set -u
 
 readonly STATE_FILE="/etc/squid/.setup-state"
 readonly SQUID_CONF="/etc/squid/squid.conf"

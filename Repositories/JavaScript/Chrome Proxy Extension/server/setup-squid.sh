@@ -26,7 +26,8 @@
 # 주의: OCI 콘솔의 VCN Security List / NSG 인그레스 규칙은 셸에서 열 수 없다.
 #       README.md 의 1단계를 먼저 수행할 것.
 #
-set -euo pipefail
+# -E: ERR 트랩을 함수 안까지 전파시킨다 (아래 report_unexpected 용)
+set -Eeuo pipefail
 
 #=============================================================================
 # 상수
@@ -60,12 +61,43 @@ readonly C_ERR=$'\033[1;31m'
 readonly C_OFF=$'\033[0m'
 
 #=============================================================================
-# 로깅
+# 로깅 / 오류 보고
 #=============================================================================
 log()  { printf '%s[ .. ]%s %s\n' "$C_INFO" "$C_OFF" "$*"; }
 ok()   { printf '%s[ OK ]%s %s\n' "$C_OK"   "$C_OFF" "$*"; }
 warn() { printf '%s[WARN]%s %s\n' "$C_WARN" "$C_OFF" "$*" >&2; }
-die()  { printf '%s[FAIL]%s %s\n' "$C_ERR"  "$C_OFF" "$*" >&2; exit 1; }
+
+# die() 로 끝났는지 구분하기 위한 플래그. 아래 ERR 트랩이 참조한다.
+DIE_CALLED=0
+die()  { DIE_CALLED=1; printf '%s[FAIL]%s %s\n' "$C_ERR" "$C_OFF" "$*" >&2; exit 1; }
+
+# set -e 로 조용히 죽는 사고를 막는다.
+#
+# 특히 `set -o pipefail` 과 SIGPIPE 조합이 위험하다. 파이프 오른쪽이 먼저
+# 끝나면(`head -c`, `grep -q`, `awk '{exit}'` 등) 왼쪽이 SIGPIPE 로 죽고
+# 종료 코드 141 이 되며, pipefail 이 그것을 파이프라인 상태로 올려 set -e 가
+# 스크립트를 죽인다. 메시지가 전혀 없어 원인 파악이 어렵다.
+# 이 스크립트는 그런 파이프라인을 쓰지 않도록 정리했지만, 재발 시 조용히
+# 죽지 않도록 트랩을 남겨둔다.
+REPORTED=0
+report_unexpected() {
+    local code="$1" line="$2"
+    (( DIE_CALLED )) && return 0
+    # errtrace 때문에 서브셸과 대입문에서 두 번 발화할 수 있다. 한 번만 보고한다.
+    (( REPORTED )) && return 0
+    REPORTED=1
+
+    printf '%s[FAIL]%s 예기치 않은 실패: %s 라인 %s, 종료 코드 %s\n' \
+        "$C_ERR" "$C_OFF" "$(basename "${BASH_SOURCE[0]}")" "$line" "$code" >&2
+
+    if [[ "$code" == "141" ]]; then
+        printf '        141 = SIGPIPE. 파이프 오른쪽이 먼저 끝나 왼쪽이 죽은 경우다.\n' >&2
+    fi
+    printf '        재현: bash -x %s %s\n' "$0" "$ORIGINAL_ARGS" >&2
+}
+
+ORIGINAL_ARGS="$*"
+trap 'report_unexpected "$?" "$LINENO"' ERR
 
 #=============================================================================
 # 인자 파싱
@@ -118,9 +150,25 @@ parse_args() {
     esac
 
     if [[ -z "$PROXY_PASSWORD" ]]; then
-        PROXY_PASSWORD="$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 24)"
+        PROXY_PASSWORD="$(generate_password 24)"
         GENERATED_PASSWORD=1
     fi
+}
+
+# 영숫자 난수 비밀번호를 만든다.
+#
+# `tr -dc ... </dev/urandom | head -c N` 을 쓰지 않는 이유:
+#   head 가 N 바이트 후 종료하면 tr 이 SIGPIPE 로 죽어 종료 코드 141 이 되고,
+#   pipefail + set -e 조합에서 스크립트 전체가 조용히 죽는다.
+#   openssl 은 유한한 출력을 내고 스스로 끝나므로 그 문제가 없다.
+#
+# @param $1 길이
+generate_password() {
+    local length="$1" pool
+    # base64 는 +/= 를 포함하므로 제거한다. 넉넉히 뽑아 잘라 쓴다.
+    pool="$(openssl rand -base64 $(( length * 3 )) | tr -dc 'A-Za-z0-9')"
+    [[ "${#pool}" -ge "$length" ]] || die "비밀번호 생성 실패 (openssl rand 확인)"
+    printf '%s' "${pool:0:length}"
 }
 
 #=============================================================================
@@ -153,7 +201,10 @@ check_port_available() {
         warn "ss 명령이 없어 포트 점유 검사를 생략한다."
         return
     fi
-    holder="$(ss -tlnpH 2>/dev/null | awk -v p=":${PROXY_PORT}\$" '$4 ~ p {print $6; exit}')"
+    # awk 에 exit 를 두면 ss 가 SIGPIPE 로 죽어 pipefail 이 141 을 올린다.
+    # 전부 읽게 하고 첫 줄만 취한다.
+    holder="$(ss -tlnpH 2>/dev/null | awk -v p=":${PROXY_PORT}\$" '$4 ~ p {print $6}')"
+    holder="${holder%%$'\n'*}"
 
     if [[ -n "$holder" ]]; then
         # 재실행(멱등) 상황에서 squid 자신이 잡고 있는 것은 정상이다.
@@ -170,6 +221,21 @@ check_port_available() {
 #=============================================================================
 # 기존 인증서 검증 (발급하지 않는다)
 #=============================================================================
+
+# systemd 유닛/타이머 존재 여부를 SIGPIPE 없이 확인하는 헬퍼들.
+# `systemctl ... | grep -q` 는 grep 조기 종료로 판정이 뒤집힐 수 있다.
+has_certbot_timer() {
+    local timers
+    timers="$(systemctl list-timers --all --no-pager 2>/dev/null || true)"
+    [[ "$timers" == *certbot* ]]
+}
+
+has_nginx_unit() {
+    local units
+    units="$(systemctl list-unit-files --no-pager 2>/dev/null || true)"
+    [[ "$units" == *nginx.service* ]]
+}
+
 verify_existing_certificate() {
     local live_dir="${LETSENCRYPT_LIVE}/${CERT_NAME}"
     log "기존 Let's Encrypt 인증서 확인: ${live_dir}"
@@ -209,7 +275,7 @@ EOF
     ok "인증서 확인: ${DOMAIN} 커버, 만료 $(cert_not_after "${live_dir}/fullchain.pem")"
 
     # 갱신 자동화가 살아 있는지 확인만 한다 (건드리지 않는다).
-    if systemctl list-timers --all 2>/dev/null | grep -q certbot; then
+    if has_certbot_timer; then
         ok "certbot 갱신 타이머 동작 중 (기존 설정 유지)"
     else
         warn "certbot 갱신 타이머를 찾을 수 없다. cron 등 다른 방식이라면 무시해도 된다."
@@ -230,8 +296,13 @@ install_packages() {
 
 # Squid 바이너리가 OpenSSL 지원으로 빌드됐는지 판별한다.
 # OL8 의 squid 패키지 빌드 옵션은 마이너 버전에 따라 달라질 수 있으므로 런타임에 확인한다.
+#
+# `squid -v | grep -q` 형태를 쓰지 않는다 — grep -q 의 조기 종료가 squid 에
+# SIGPIPE 를 유발해 pipefail 이 141 을 올리고 판정이 뒤집힐 수 있다.
 squid_has_openssl() {
-    squid -v 2>/dev/null | grep -q -- '--with-openssl'
+    local banner
+    banner="$(squid -v 2>/dev/null || true)"
+    [[ "$banner" == *"--with-openssl"* ]]
 }
 
 resolve_tls_mode() {
@@ -322,8 +393,15 @@ write_squid_conf() {
     fi
 
     # basic_ncsa_auth 경로는 아키텍처에 따라 lib64/lib 로 갈린다.
-    local ncsa_auth
-    ncsa_auth="$(find /usr/lib64/squid /usr/lib/squid -maxdepth 1 -name basic_ncsa_auth -type f 2>/dev/null | head -n1)"
+    # `find | head -n1` 은 head 조기 종료 → find SIGPIPE → 141 위험이 있어 쓰지 않는다.
+    local ncsa_auth=""
+    local candidate
+    for candidate in /usr/lib64/squid/basic_ncsa_auth /usr/lib/squid/basic_ncsa_auth; do
+        if [[ -x "$candidate" ]]; then
+            ncsa_auth="$candidate"
+            break
+        fi
+    done
     [[ -n "$ncsa_auth" ]] || die "basic_ncsa_auth 헬퍼를 찾을 수 없다 (squid 패키지 확인)"
 
     sed -e "s|@PORT@|${listen_port}|g" \
@@ -360,18 +438,16 @@ selinux_enabled() {
     command -v getenforce >/dev/null 2>&1 && [[ "$(getenforce)" != "Disabled" ]]
 }
 
-# 포트 라벨을 지정한다. 이미 다른 타입으로 정의된 포트는 -m(수정), 미정의는 -a(추가).
+# 포트 라벨을 지정한다.
+#
+# 미정의 포트는 -a(추가), 이미 다른 타입으로 정의된 포트는 -m(수정)이 필요하다.
+# `semanage port -l` 을 파싱해 분기하는 대신 -a 를 먼저 시도하고 실패하면 -m 을
+# 쓴다. 출력 형식에 의존하지 않고, grep -q 파이프라인(SIGPIPE 위험)도 없앤다.
 selinux_label_port() {
     local port="$1" type="$2"
-    if semanage port -l 2>/dev/null | awk '{for(i=3;i<=NF;i++) print $1, $2, $i}' \
-        | grep -qE "^[a-z_]+_t tcp ${port}$"; then
-        semanage port -m -t "$type" -p tcp "$port" 2>/dev/null \
-            || semanage port -a -t "$type" -p tcp "$port" 2>/dev/null \
-            || warn "SELinux 포트 라벨 지정 실패: ${port}/tcp → ${type}"
-    else
-        semanage port -a -t "$type" -p tcp "$port" 2>/dev/null \
-            || warn "SELinux 포트 라벨 추가 실패: ${port}/tcp → ${type}"
-    fi
+    semanage port -a -t "$type" -p tcp "$port" 2>/dev/null \
+        || semanage port -m -t "$type" -p tcp "$port" 2>/dev/null \
+        || warn "SELinux 포트 라벨 지정 실패: ${port}/tcp → ${type}"
 }
 
 configure_selinux() {
@@ -390,7 +466,9 @@ configure_selinux() {
     restorecon -R "$TLS_DIR" 2>/dev/null || true
 
     if [[ "$TLS_MODE" == "native" ]]; then
-        # 10443 은 기본적으로 http_port_t 다. squid 가 bind 하려면 라벨을 바꿔야 한다.
+        # squid 가 이 포트를 bind 할 수 있게 squid_port_t 로 라벨링한다.
+        # (기본 squid_port_t 는 3128/3130/3401/4827 뿐이다. 그 밖의 포트는
+        #  미정의이거나 http_port_t 등 다른 타입이므로 -a 또는 -m 이 필요하다.)
         # nginx 는 80/443 만 쓰므로 이 변경이 nginx 에 영향을 주지 않는다.
         selinux_label_port "$PROXY_PORT" squid_port_t
     else
@@ -455,9 +533,7 @@ start_services() {
 
 # 프록시를 올리는 과정에서 nginx 를 건드리지 않았는지 확인한다.
 verify_nginx_intact() {
-    if ! systemctl list-unit-files 2>/dev/null | grep -q '^nginx\.service'; then
-        return 0
-    fi
+    has_nginx_unit || return 0
     if systemctl is-active --quiet nginx; then
         ok "nginx 정상 동작 중 (기존 서비스 영향 없음)"
     else
