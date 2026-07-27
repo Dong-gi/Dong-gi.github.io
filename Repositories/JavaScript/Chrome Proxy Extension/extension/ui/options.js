@@ -5,6 +5,7 @@
  * 추가할 때 손댈 곳이 줄어들도록 했다.
  */
 
+import { hostPatternToAscii, hostToAscii } from '../lib/idn.js';
 import { buildPacScript } from '../lib/pac.js';
 import { readHardeningState } from '../lib/privacy.js';
 import { resetSettings } from '../lib/settings.js';
@@ -122,13 +123,18 @@ function writeForm(settings) {
 
 /**
  * 폼에서 설정 patch 를 만든다.
+ *
+ * 호스트 관련 값은 여기서 ASCII(Punycode)로 정규화한다. PAC 은 ASCII 만
+ * 허용하므로 입력 경계에서 변환해 두면, 저장 후 폼에 변환 결과가 그대로
+ * 표시되어 사용자가 무엇이 적용됐는지 확인할 수 있다.
+ *
  * @returns {object}
  */
 function readForm() {
   return {
     server: {
       scheme: dom.scheme.value,
-      host: dom.host.value.trim().toLowerCase(),
+      host: hostToAscii(dom.host.value),
       port: Number(dom.port.value),
     },
     auth: {
@@ -136,7 +142,7 @@ function readForm() {
       password: dom.password.value,
     },
     bypass: {
-      hosts: linesToArray(dom.bypassHosts.value),
+      hosts: linesToArray(dom.bypassHosts.value).map(hostPatternToAscii),
       cidrs: linesToArray(dom.bypassCidrs.value),
       privateNetworks: dom.privateNetworks.checked,
       singleLabelHosts: dom.singleLabel.checked,

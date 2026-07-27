@@ -55,11 +55,19 @@ test('PAC: fail-closed — DIRECT 폴백이 없어야 한다', () => {
   );
 });
 
-test('PAC: DNS 조회 함수를 쓰지 않아야 한다', () => {
-  const source = buildPacScript(baseSettings());
+test('PAC: DNS 조회 함수를 호출하지 않아야 한다', () => {
+  // 주석에는 이름이 등장할 수 있으므로(왜 안 쓰는지 설명) 주석을 제거한 뒤 검사한다.
+  const code = buildPacScript(baseSettings())
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/[^\n]*/g, '');
+
   assert.ok(
-    !/dnsResolve|isInNet/.test(source),
-    'dnsResolve/isInNet 은 로컬 DNS 조회를 유발해 목적지를 통신사에 노출한다',
+    !/\bdnsResolve\s*\(/.test(code),
+    'dnsResolve() 는 로컬 DNS 조회를 유발해 목적지를 통신사 DNS 에 노출한다',
+  );
+  assert.ok(
+    !/\bisInNet\s*\(/.test(code),
+    'isInNet() 은 호스트명 인자에 대해 DNS 조회를 유발한다',
   );
 });
 

@@ -52,6 +52,7 @@ Chrome Proxy Extension/
 │   │   ├── privacy.js                # WebRTC · 네트워크 예측 누출 방어
 │   │   ├── auth.js                   # 프록시 407 자동 응답 (onAuthRequired)
 │   │   ├── health.js                 # 도달성 · 출구 IP/국가 확인
+│   │   ├── idn.js                    # ASCII 판정 · IDN→Punycode (PAC 은 ASCII 전용)
 │   │   └── state.js                  # 런타임 상태 (storage.session)
 │   ├── ui/
 │   │   ├── popup.html / .css / .js   # ON/OFF 토글, 출구 IP 표시
@@ -59,7 +60,8 @@ Chrome Proxy Extension/
 │   │   └── common.css
 │   └── icons/
 ├── test/
-│   └── pac.test.mjs                  # PAC 라우팅 판정 · 설정 검증 단위 테스트
+│   ├── pac.test.mjs                  # PAC 라우팅 판정 · 설정 검증 단위 테스트
+│   └── ascii.test.mjs                # PAC ASCII 전용 제약 · Punycode 회귀 방지
 └── server/                           # Oracle Linux 8 구성 도구
     ├── setup-squid.sh                # 메인 셋업 (멱등)
     ├── verify.sh                     # 자체 점검 (cron 에 걸 수 있다)
@@ -293,7 +295,9 @@ Squid 의 `https_port` 는 바이너리가 `--with-openssl` 로 빌드돼야 동
 npm test        # 또는 node --test
 ```
 
-PAC 라우팅 판정 25건(테더링 대역이 `DIRECT` 로 빠지는지 포함), fail-closed 보장, DNS 조회 함수 미사용, 스킴 토큰 매핑, 설정 검증 로직을 검사한다.
+PAC 라우팅 판정 25건(테더링 대역이 `DIRECT` 로 빠지는지 포함), fail-closed 보장, DNS 조회 함수 미호출, 스킴 토큰 매핑, 설정 검증 로직, **PAC 이 순수 ASCII 인지**, IDN→Punycode 변환을 검사한다.
+
+`extension/lib/pac.js` 의 PAC 템플릿에 한국어 주석을 쓰면 `ascii.test.mjs` 가 실패한다. 이것이 의도다 — Edge 는 비ASCII PAC 을 거부하므로 런타임까지 가기 전에 잡는다.
 
 ---
 
@@ -311,6 +315,7 @@ PAC 라우팅 판정 25건(테더링 대역이 `DIRECT` 로 빠지는지 포함)
 | 인증서 경고 | 확장에 IP 를 넣었거나 SAN 에 없는 이름을 넣었다. `sudo certbot certificates` 의 `Domains:` 와 일치시킬 것 |
 | 갱신 후 프록시만 옛 인증서 | 훅이 조용히 실패했다. `sudo RENEWED_LINEAGE=/etc/letsencrypt/live/<name> /etc/letsencrypt/renewal-hooks/deploy/90-proxy-tls.sh` 로 수동 실행 후 로그 확인 |
 | 블로그가 안 열린다 | 이 도구는 nginx 를 건드리지 않는다. `systemctl status nginx`, `nginx -t` 로 확인. `verify.sh` 의 2번 그룹도 이를 검사한다 |
+| `'pacScript.data' supports only ASCII code(encode URLs in Punycode format)` | PAC 소스에 비ASCII 문자가 있다. ① PAC 본문(`extension/lib/pac.js` 의 템플릿 문자열) 주석은 **반드시 영어**로 쓸 것 — `test/ascii.test.mjs` 가 이를 검사한다 ② 국제화 도메인은 Punycode 로 넣을 것. 옵션 페이지가 저장 시 자동 변환하지만, 변환 실패 시 `buildPacScript` 가 위치·코드포인트·문맥을 담아 알려준다 |
 | 팝업에 "다른 확장이 점유" | 프록시를 제어하는 다른 확장을 끈다. 프록시 설정은 프로필 전역이며 한 확장만 점유 가능 |
 | 출구 국가가 `KR` | 프록시를 경유하지 않고 있다. 토글 상태와 `edge://net-export` 로 확인 |
 | 특정 사이트만 차단/캡차 | 데이터센터 IP(ASN) 기반 차단. 프록시가 아니라 사이트 정책 문제다 |

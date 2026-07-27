@@ -14,6 +14,7 @@ import {
   STORAGE_KEY,
   SUPPORTED_SCHEMES,
 } from './constants.js';
+import { isAscii } from './idn.js';
 
 /**
  * 깊은 병합. 배열은 병합하지 않고 교체한다(예외 목록은 사용자가 전체를 관리).
@@ -138,6 +139,12 @@ export function validateSettings(settings) {
 
   if (!server?.host) {
     errors.push('프록시 호스트를 입력하세요.');
+  } else if (!isAscii(server.host)) {
+    // 정상 경로에서는 옵션 페이지가 저장 시 Punycode 로 변환하므로 여기 오지 않는다.
+    // chrome.proxy 가 비ASCII PAC 을 거부하기 전에 잡아내는 안전망이다.
+    errors.push(
+      `프록시 호스트에 ASCII 가 아닌 문자가 있습니다. Punycode(xn--...)로 입력하세요: ${server.host}`,
+    );
   } else if (isIpLiteral(server.host)) {
     errors.push(
       '프록시 호스트에 IP 를 쓸 수 없습니다. TLS 인증서 검증을 위해 도메인이 필요합니다.',
