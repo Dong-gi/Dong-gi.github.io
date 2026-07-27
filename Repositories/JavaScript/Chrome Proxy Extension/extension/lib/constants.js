@@ -63,7 +63,9 @@ export const DEFAULT_SETTINGS = Object.freeze({
   server: Object.freeze({
     scheme: 'https',
     host: '',
-    port: 443,
+    // 서버에서 nginx 가 443 을 점유하고 있으므로 프록시는 별도 포트를 쓴다.
+    // setup-squid.sh 의 --port 기본값과 일치시켜야 한다.
+    port: 10443,
   }),
 
   auth: Object.freeze({

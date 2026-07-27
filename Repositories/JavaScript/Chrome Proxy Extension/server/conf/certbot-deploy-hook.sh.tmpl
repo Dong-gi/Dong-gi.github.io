@@ -1,49 +1,68 @@
 #!/usr/bin/env bash
 #
-# certbot deploy hook — 갱신된 인증서를 @TLS_DIR@ 로 복사하고 서비스를 리로드한다.
+# certbot deploy hook — 갱신된 인증서를 @TLS_DIR@ 로 복사하고 프록시를 리로드한다.
 #
 # setup-squid.sh 가 @PLACEHOLDER@ 를 치환해
-#   /etc/letsencrypt/renewal-hooks/deploy/10-squid-tls.sh
+#   /etc/letsencrypt/renewal-hooks/deploy/90-proxy-tls.sh
 # 로 설치한다. certbot 이 갱신 성공 시 RENEWED_LINEAGE 를 넣어 호출한다.
+#
+# ── 중요: 이 훅은 절대 실패로 끝나지 않는다 (항상 exit 0) ──
+# 이 서버의 certbot 은 nginx(블로그)의 인증서도 함께 갱신한다. deploy 훅이
+# 0 이 아닌 코드로 끝나면 certbot 이 갱신 자체를 실패로 처리하므로, 프록시
+# 쪽 문제가 블로그의 인증서 갱신을 망가뜨릴 수 있다. 따라서 오류는 로그로만
+# 남기고 종료 코드는 항상 0 이다. 실제 상태 점검은 verify.sh 가 담당한다.
+#
+# 파일명이 90- 인 이유: 기존 훅(nginx reload 등)보다 나중에 실행되게 하려는 것.
 #
 # /etc/letsencrypt 를 서비스가 직접 읽게 하지 않는 이유
 #   1) archive/ 의 퍼미션이 root 전용이라 squid/stunnel 이 읽을 수 없다
 #   2) SELinux 라벨(cert_t)이 squid_conf_t 와 달라 접근이 거부된다
-# 따라서 전용 디렉터리로 복사하고 라벨을 맞추는 방식을 쓴다.
 #
-set -euo pipefail
+set -uo pipefail   # -e 는 쓰지 않는다 (위의 "항상 exit 0" 원칙 때문)
 
-readonly DOMAIN="@DOMAIN@"
+readonly CERT_NAME="@CERT_NAME@"
 readonly TLS_DIR="@TLS_DIR@"
 readonly TLS_MODE="@TLS_MODE@"
-readonly LINEAGE="${RENEWED_LINEAGE:-/etc/letsencrypt/live/${DOMAIN}}"
+readonly LINEAGE="${RENEWED_LINEAGE:-/etc/letsencrypt/live/${CERT_NAME}}"
 
-log() { printf '[deploy-hook] %s\n' "$*"; }
+log()   { printf '[proxy-tls-hook] %s\n' "$*"; }
+oops()  { printf '[proxy-tls-hook] ERROR: %s\n' "$*" >&2; }
 
-# 이 훅은 모든 도메인 갱신 시 호출되므로 우리 도메인이 아니면 조용히 빠진다.
-if [[ "$(basename "$LINEAGE")" != "$DOMAIN" ]]; then
+# 이 훅은 모든 lineage 갱신 시 호출되므로 우리 것이 아니면 조용히 빠진다.
+if [[ "$(basename "$LINEAGE")" != "$CERT_NAME" ]]; then
     exit 0
 fi
 
-[[ -s "${LINEAGE}/fullchain.pem" ]] || { log "fullchain.pem 없음: ${LINEAGE}"; exit 1; }
-[[ -s "${LINEAGE}/privkey.pem" ]]   || { log "privkey.pem 없음: ${LINEAGE}"; exit 1; }
+if [[ ! -s "${LINEAGE}/fullchain.pem" || ! -s "${LINEAGE}/privkey.pem" ]]; then
+    oops "인증서 파일을 찾을 수 없다: ${LINEAGE} — 프록시 인증서를 갱신하지 못했다"
+    exit 0
+fi
 
-install -d -m 0750 "$TLS_DIR"
+if ! install -d -m 0750 "$TLS_DIR"; then
+    oops "디렉터리를 만들 수 없다: ${TLS_DIR}"
+    exit 0
+fi
 
 # --- 인증서 복사 (원자적 교체) ---------------------------------------------
-install -m 0644 -T "${LINEAGE}/fullchain.pem" "${TLS_DIR}/fullchain.pem.new"
-install -m 0640 -T "${LINEAGE}/privkey.pem"   "${TLS_DIR}/privkey.pem.new"
-mv -f "${TLS_DIR}/fullchain.pem.new" "${TLS_DIR}/fullchain.pem"
-mv -f "${TLS_DIR}/privkey.pem.new"   "${TLS_DIR}/privkey.pem"
-log "인증서 복사 완료 → ${TLS_DIR}"
+# .new 로 쓴 뒤 mv 로 바꿔, 리로드 시점에 반쪽 파일을 읽는 일이 없게 한다.
+if install -m 0644 -T "${LINEAGE}/fullchain.pem" "${TLS_DIR}/fullchain.pem.new" \
+   && install -m 0640 -T "${LINEAGE}/privkey.pem" "${TLS_DIR}/privkey.pem.new"; then
+    mv -f "${TLS_DIR}/fullchain.pem.new" "${TLS_DIR}/fullchain.pem"
+    mv -f "${TLS_DIR}/privkey.pem.new"   "${TLS_DIR}/privkey.pem"
+    log "인증서 복사 완료 → ${TLS_DIR}"
+else
+    oops "인증서 복사 실패"
+    rm -f "${TLS_DIR}/fullchain.pem.new" "${TLS_DIR}/privkey.pem.new"
+    exit 0
+fi
 
 # --- 소유권 / SELinux 라벨 --------------------------------------------------
 if getent group squid >/dev/null 2>&1; then
-    chown -R root:squid "$TLS_DIR"
+    chown -R root:squid "$TLS_DIR" || oops "chown 실패"
 fi
 if [[ "$TLS_MODE" == "stunnel" ]] && getent group stunnel >/dev/null 2>&1; then
     # stunnel 은 setgid=stunnel 로 떨어지므로 그룹 읽기 권한이 필요하다.
-    chgrp -R stunnel "$TLS_DIR"
+    chgrp -R stunnel "$TLS_DIR" || oops "chgrp 실패"
 fi
 chmod 0750 "$TLS_DIR"
 chmod 0640 "${TLS_DIR}/privkey.pem"
@@ -53,16 +72,16 @@ if command -v restorecon >/dev/null 2>&1; then
     restorecon -R "$TLS_DIR" 2>/dev/null || true
 fi
 
-# --- 서비스 리로드 ----------------------------------------------------------
+# --- 프록시만 리로드 (nginx 는 건드리지 않는다) -----------------------------
 # squid -k reconfigure 는 TLS 컨텍스트를 다시 읽는다. 무중단.
 if systemctl is-active --quiet squid; then
-    squid -k reconfigure && log "squid reconfigure 완료"
+    squid -k reconfigure && log "squid reconfigure 완료" || oops "squid reconfigure 실패"
 fi
 
-# stunnel 은 SIGHUP 으로 인증서를 다시 읽는다.
 if [[ "$TLS_MODE" == "stunnel" ]] && systemctl is-active --quiet stunnel; then
-    systemctl reload stunnel 2>/dev/null || systemctl restart stunnel
-    log "stunnel 리로드 완료"
+    { systemctl reload stunnel 2>/dev/null || systemctl restart stunnel; } \
+        && log "stunnel 리로드 완료" || oops "stunnel 리로드 실패"
 fi
 
 log "done"
+exit 0

@@ -29,10 +29,10 @@ acl authenticated proxy_auth REQUIRED
 # -----------------------------------------------------------------------------
 # 접근 제어
 # -----------------------------------------------------------------------------
-acl SSL_ports port 443 8443
+acl SSL_ports port 443 10443
 acl Safe_ports port 80
 acl Safe_ports port 21
-acl Safe_ports port 443 8443
+acl Safe_ports port 443 10443
 acl Safe_ports port 70
 acl Safe_ports port 210
 acl Safe_ports port 1025-65535

@@ -2,19 +2,26 @@
 #
 # setup-squid.sh — Oracle Linux 8 에 "TLS로 감싼 HTTP 포워드 프록시"를 구성한다.
 #
-#   [Edge] --TLS--> :443 (Squid https_port | stunnel) --> Squid --> Internet
+#   [Edge] --TLS--> :10443 (Squid https_port | stunnel) --> Squid --> Internet
 #
-# 특징
-#   * Let's Encrypt 인증서 자동 발급 + 갱신 훅 설치
-#   * Basic 인증 (Chrome/Edge 는 SOCKS5 인증을 지원하지 않으므로 HTTP 계열 필수)
+# 전제
+#   * nginx 가 이미 443/80 을 점유하고 있다 → 프록시는 **별도 포트**를 쓴다.
+#   * certbot 이 이미 인증서를 자동 갱신하고 있다 → **발급하지 않고 재사용**한다.
+#     (포워드 프록시는 URL 경로가 없어 nginx location 으로 분기할 수 없다.
+#      CONNECT 는 authority-form 이라 경로 자체가 존재하지 않는다.)
+#
+# 하는 일
+#   * 기존 Let's Encrypt lineage 를 찾아 도메인 커버리지·유효기간 검증
+#   * Squid 설치 + Basic 인증 (Chrome/Edge 는 SOCKS5 인증을 지원하지 않음)
 #   * Squid 빌드에 OpenSSL 이 없으면 stunnel 로 자동 폴백
-#   * SELinux / firewalld / iptables 를 모두 처리 (OCI 이미지는 배포판마다 다름)
+#   * 갱신 시 인증서를 프록시용 디렉터리로 복사하는 deploy 훅 추가 (기존 훅에 영향 없음)
+#   * SELinux / firewalld / iptables 처리
 #   * 멱등(idempotent): 여러 번 실행해도 안전
 #
 # 사용법
-#   sudo ./setup-squid.sh --domain proxy.example.com --email me@example.com \
-#                         --user myproxyuser [--password '...'] [--port 443] \
-#                         [--tls auto|native|stunnel]
+#   sudo ./setup-squid.sh --domain 4joy.is-a.dev --user myproxyuser \
+#                         [--password '...'] [--port 10443] \
+#                         [--cert-name <lineage>] [--tls auto|native|stunnel]
 #
 # 주의: OCI 콘솔의 VCN Security List / NSG 인그레스 규칙은 셸에서 열 수 없다.
 #       README.md 의 1단계를 먼저 수행할 것.
@@ -27,16 +34,24 @@ set -euo pipefail
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly CONF_DIR="${SCRIPT_DIR}/conf"
 
+# 인증서 검사 공통 함수: cert_san_list / cert_covers_domain / cert_not_after
+# shellcheck source=lib/cert.sh
+source "${SCRIPT_DIR}/lib/cert.sh"
+
 readonly SQUID_CONF="/etc/squid/squid.conf"
 readonly SQUID_CONF_BACKUP="/etc/squid/squid.conf.orig"
 readonly SQUID_PASSWD="/etc/squid/passwd"
 readonly TLS_DIR="/etc/squid/tls"
 readonly STUNNEL_CONF="/etc/stunnel/squid-tls.conf"
-readonly DEPLOY_HOOK="/etc/letsencrypt/renewal-hooks/deploy/10-squid-tls.sh"
+readonly DEPLOY_HOOK="/etc/letsencrypt/renewal-hooks/deploy/90-proxy-tls.sh"
 readonly STATE_FILE="/etc/squid/.setup-state"
+readonly LETSENCRYPT_LIVE="/etc/letsencrypt/live"
 
 # stunnel 폴백 시 Squid 가 로컬에서만 듣는 평문 포트
 readonly SQUID_PLAIN_PORT=3128
+
+# nginx 가 쓰는 포트. 여기에 프록시를 올리려 하면 막는다.
+readonly RESERVED_PORTS=(80 443)
 
 readonly C_INFO=$'\033[1;34m'
 readonly C_OK=$'\033[1;32m'
@@ -56,37 +71,46 @@ die()  { printf '%s[FAIL]%s %s\n' "$C_ERR"  "$C_OFF" "$*" >&2; exit 1; }
 # 인자 파싱
 #=============================================================================
 DOMAIN=""
-EMAIL=""
+CERT_NAME=""
 PROXY_USER=""
 PROXY_PASSWORD=""
-PROXY_PORT="443"
+PROXY_PORT="10443"
 TLS_MODE="auto"
+GENERATED_PASSWORD=0
 
 usage() {
-    sed -n '2,30p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+    sed -n '2,33p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
     exit "${1:-0}"
 }
 
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            --domain)   DOMAIN="${2:?--domain 값 누락}";         shift 2 ;;
-            --email)    EMAIL="${2:?--email 값 누락}";           shift 2 ;;
-            --user)     PROXY_USER="${2:?--user 값 누락}";       shift 2 ;;
-            --password) PROXY_PASSWORD="${2:?--password 값 누락}"; shift 2 ;;
-            --port)     PROXY_PORT="${2:?--port 값 누락}";       shift 2 ;;
-            --tls)      TLS_MODE="${2:?--tls 값 누락}";          shift 2 ;;
-            -h|--help)  usage 0 ;;
-            *)          die "알 수 없는 옵션: $1 (--help 참고)" ;;
+            --domain)    DOMAIN="${2:?--domain 값 누락}";           shift 2 ;;
+            --cert-name) CERT_NAME="${2:?--cert-name 값 누락}";     shift 2 ;;
+            --user)      PROXY_USER="${2:?--user 값 누락}";         shift 2 ;;
+            --password)  PROXY_PASSWORD="${2:?--password 값 누락}"; shift 2 ;;
+            --port)      PROXY_PORT="${2:?--port 값 누락}";         shift 2 ;;
+            --tls)       TLS_MODE="${2:?--tls 값 누락}";            shift 2 ;;
+            -h|--help)   usage 0 ;;
+            *)           die "알 수 없는 옵션: $1 (--help 참고)" ;;
         esac
     done
 
-    [[ -n "$DOMAIN" ]]     || die "--domain 은 필수다 (인증서 발급에 필요)"
-    [[ -n "$EMAIL" ]]      || die "--email 은 필수다 (Let's Encrypt 만료 알림)"
+    [[ -n "$DOMAIN" ]]     || die "--domain 은 필수다 (Edge 가 접속할 호스트명 = 인증서의 이름)"
     [[ -n "$PROXY_USER" ]] || die "--user 는 필수다 (프록시 Basic 인증 계정)"
+
+    # lineage 이름을 따로 주지 않으면 도메인과 같다고 본다 (certbot 기본 동작).
+    [[ -n "$CERT_NAME" ]] || CERT_NAME="$DOMAIN"
 
     [[ "$PROXY_PORT" =~ ^[0-9]+$ ]] && (( PROXY_PORT >= 1 && PROXY_PORT <= 65535 )) \
         || die "--port 는 1-65535 범위의 숫자여야 한다: $PROXY_PORT"
+
+    for reserved in "${RESERVED_PORTS[@]}"; do
+        if [[ "$PROXY_PORT" == "$reserved" ]]; then
+            die "포트 ${reserved} 는 nginx 가 쓰고 있다. 프록시는 별도 포트를 써야 한다 (기본 10443)."
+        fi
+    done
 
     case "$TLS_MODE" in
         auto|native|stunnel) ;;
@@ -96,8 +120,6 @@ parse_args() {
     if [[ -z "$PROXY_PASSWORD" ]]; then
         PROXY_PASSWORD="$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 24)"
         GENERATED_PASSWORD=1
-    else
-        GENERATED_PASSWORD=0
     fi
 }
 
@@ -124,24 +146,74 @@ require_oracle_linux8() {
     fi
 }
 
-# 도메인이 이 서버를 가리키는지 확인한다. 인증서 발급 실패를 미리 잡아낸다.
-verify_dns() {
-    local resolved public
-    resolved="$(getent ahostsv4 "$DOMAIN" | awk 'NR==1{print $1}')" || true
-    public="$(curl -fsS --max-time 10 https://api.ipify.org 2>/dev/null)" || true
-
-    if [[ -z "$resolved" ]]; then
-        die "$DOMAIN 의 A 레코드를 해석할 수 없다. DNS 를 먼저 설정하라."
-    fi
-    if [[ -z "$public" ]]; then
-        warn "공인 IP 를 확인할 수 없어 DNS 일치 검사를 생략한다 (A=$resolved)."
+# 프록시로 쓸 포트가 이미 점유돼 있으면 미리 알려준다.
+check_port_available() {
+    local holder
+    if ! command -v ss >/dev/null 2>&1; then
+        warn "ss 명령이 없어 포트 점유 검사를 생략한다."
         return
     fi
-    if [[ "$resolved" != "$public" ]]; then
-        warn "DNS 불일치: $DOMAIN → $resolved, 이 서버의 공인 IP → $public"
-        warn "Let's Encrypt http-01 챌린지가 실패할 수 있다. 계속 진행한다."
+    holder="$(ss -tlnpH 2>/dev/null | awk -v p=":${PROXY_PORT}\$" '$4 ~ p {print $6; exit}')"
+
+    if [[ -n "$holder" ]]; then
+        # 재실행(멱등) 상황에서 squid 자신이 잡고 있는 것은 정상이다.
+        if [[ "$holder" == *squid* || "$holder" == *stunnel* ]]; then
+            ok "포트 ${PROXY_PORT} 는 이미 이 구성이 사용 중이다 (재구성으로 진행)"
+        else
+            die "포트 ${PROXY_PORT} 가 이미 사용 중이다: ${holder}. --port 로 다른 포트를 지정하라."
+        fi
     else
-        ok "DNS 확인: $DOMAIN → $resolved"
+        ok "포트 ${PROXY_PORT} 사용 가능"
+    fi
+}
+
+#=============================================================================
+# 기존 인증서 검증 (발급하지 않는다)
+#=============================================================================
+verify_existing_certificate() {
+    local live_dir="${LETSENCRYPT_LIVE}/${CERT_NAME}"
+    log "기존 Let's Encrypt 인증서 확인: ${live_dir}"
+
+    if [[ ! -s "${live_dir}/fullchain.pem" || ! -s "${live_dir}/privkey.pem" ]]; then
+        printf '%s[FAIL]%s %s\n' "$C_ERR" "$C_OFF" \
+            "lineage 를 찾을 수 없다: ${live_dir}" >&2
+        if [[ -d "$LETSENCRYPT_LIVE" ]]; then
+            echo "  사용 가능한 lineage:" >&2
+            find "$LETSENCRYPT_LIVE" -mindepth 1 -maxdepth 1 -type d -printf '    %f\n' >&2
+            echo "  → --cert-name 으로 지정하라." >&2
+        fi
+        exit 1
+    fi
+
+    if ! cert_covers_domain "${live_dir}/fullchain.pem" "$DOMAIN"; then
+        printf '%s[FAIL]%s %s\n' "$C_ERR" "$C_OFF" \
+            "인증서가 ${DOMAIN} 를 커버하지 않는다." >&2
+        echo "  인증서의 SAN:" >&2
+        cert_san_list "${live_dir}/fullchain.pem" | sed 's/^/    /' >&2
+        cat >&2 <<EOF
+  해결 방법 중 하나를 택하라:
+    1) 커버되는 이름을 --domain 으로 지정한다 (가장 간단).
+    2) 기존 인증서에 이름을 추가한다:
+         sudo certbot certonly --cert-name ${CERT_NAME} --nginx \\
+              -d <기존 이름들 전부> -d ${DOMAIN}
+       (--nginx 는 이미 동작 중인 인증 방식을 그대로 쓰라는 뜻이다.
+        기존 이름을 빼면 그 이름이 인증서에서 사라진다.)
+EOF
+        exit 1
+    fi
+
+    if ! openssl x509 -in "${live_dir}/fullchain.pem" -noout -checkend 0 >/dev/null 2>&1; then
+        die "인증서가 이미 만료됐다. 'sudo certbot renew' 로 먼저 갱신하라."
+    fi
+
+    ok "인증서 확인: ${DOMAIN} 커버, 만료 $(cert_not_after "${live_dir}/fullchain.pem")"
+
+    # 갱신 자동화가 살아 있는지 확인만 한다 (건드리지 않는다).
+    if systemctl list-timers --all 2>/dev/null | grep -q certbot; then
+        ok "certbot 갱신 타이머 동작 중 (기존 설정 유지)"
+    else
+        warn "certbot 갱신 타이머를 찾을 수 없다. cron 등 다른 방식이라면 무시해도 된다."
+        warn "Let's Encrypt 는 만료 알림 메일을 보내지 않는다(2025-06-04 종료). verify.sh 를 주기적으로 돌릴 것."
     fi
 }
 
@@ -149,16 +221,9 @@ verify_dns() {
 # 패키지
 #=============================================================================
 install_packages() {
-    log "저장소 및 패키지 설치"
-
-    # certbot 은 EPEL 에 있다.
-    if ! dnf -q repolist enabled 2>/dev/null | grep -q epel; then
-        dnf install -y oracle-epel-release-el8 >/dev/null 2>&1 \
-            || dnf install -y epel-release >/dev/null 2>&1 \
-            || warn "EPEL 저장소 활성화에 실패했다. certbot 설치가 실패할 수 있다."
-    fi
-
-    local pkgs=(squid httpd-tools certbot policycoreutils-python-utils)
+    log "패키지 설치"
+    # certbot 은 설치하지 않는다 — 이미 운영 중인 것을 그대로 쓴다.
+    local pkgs=(squid httpd-tools policycoreutils-python-utils)
     dnf install -y "${pkgs[@]}" >/dev/null || die "패키지 설치 실패: ${pkgs[*]}"
     ok "설치 완료: ${pkgs[*]}"
 }
@@ -194,56 +259,34 @@ resolve_tls_mode() {
 }
 
 #=============================================================================
-# 인증서
+# 인증서 배포 훅
 #=============================================================================
-# certbot standalone 은 80 번 포트를 쓴다. 발급 동안만 열고 다시 닫는다.
-issue_certificate() {
-    local live_dir="/etc/letsencrypt/live/${DOMAIN}"
-
-    if [[ -s "${live_dir}/fullchain.pem" ]]; then
-        ok "기존 인증서를 재사용한다: ${live_dir}"
-        return
-    fi
-
-    log "Let's Encrypt 인증서 발급 (http-01, 80/tcp 필요)"
-    open_port 80
-
-    certbot certonly \
-        --standalone \
-        --non-interactive \
-        --agree-tos \
-        --email "$EMAIL" \
-        --domain "$DOMAIN" \
-        --key-type ecdsa \
-        --preferred-challenges http \
-        || die "인증서 발급 실패. 80/tcp 가 OCI Security List 에서도 열려 있는지 확인하라."
-
-    ok "인증서 발급 완료"
-}
-
-# Squid/stunnel 는 /etc/letsencrypt 를 직접 읽기 어렵다(권한 + SELinux).
+# /etc/letsencrypt 를 서비스가 직접 읽게 하지 않는 이유
+#   1) archive/ 퍼미션이 root 전용이라 squid/stunnel 이 읽을 수 없다
+#   2) SELinux 라벨(cert_t)이 squid_conf_t 와 달라 접근이 거부된다
 # 갱신 훅으로 전용 디렉터리에 복사하고 라벨을 맞춘다.
+#
+# 파일명을 90- 으로 두어 기존 훅(nginx reload 등)보다 나중에 실행되게 한다.
 install_cert_deploy_hook() {
     log "인증서 배포 훅 설치: ${DEPLOY_HOOK}"
 
     install -d -m 0750 "$TLS_DIR"
     install -d -m 0755 "$(dirname "$DEPLOY_HOOK")"
 
-    sed -e "s|@DOMAIN@|${DOMAIN}|g" \
+    sed -e "s|@CERT_NAME@|${CERT_NAME}|g" \
         -e "s|@TLS_DIR@|${TLS_DIR}|g" \
         -e "s|@TLS_MODE@|${TLS_MODE}|g" \
         "${CONF_DIR}/certbot-deploy-hook.sh.tmpl" > "$DEPLOY_HOOK"
     chmod 0755 "$DEPLOY_HOOK"
 
-    # 초기 1회는 직접 실행한다 (갱신 시점까지 기다릴 수 없으므로).
-    RENEWED_LINEAGE="/etc/letsencrypt/live/${DOMAIN}" "$DEPLOY_HOOK" \
+    # 초기 1회는 직접 실행한다 (다음 갱신까지 기다릴 수 없으므로).
+    RENEWED_LINEAGE="${LETSENCRYPT_LIVE}/${CERT_NAME}" "$DEPLOY_HOOK" \
         || die "인증서 배포 훅 실행 실패"
 
-    systemctl enable --now certbot-renew.timer >/dev/null 2>&1 \
-        || systemctl enable --now certbot.timer >/dev/null 2>&1 \
-        || warn "certbot 자동 갱신 타이머를 켤 수 없다. 'systemctl list-timers | grep certbot' 로 확인하라."
+    [[ -s "${TLS_DIR}/fullchain.pem" ]] \
+        || die "인증서 복사가 되지 않았다: ${TLS_DIR}/fullchain.pem"
 
-    ok "인증서 배포 및 자동 갱신 구성 완료"
+    ok "인증서 배포 완료 (기존 갱신 자동화에 편승)"
 }
 
 #=============================================================================
@@ -269,13 +312,13 @@ write_squid_conf() {
 
     [[ -f "$SQUID_CONF_BACKUP" ]] || cp -a "$SQUID_CONF" "$SQUID_CONF_BACKUP" 2>/dev/null || true
 
-    local tmpl listen_directive
+    local tmpl listen_port
     if [[ "$TLS_MODE" == "native" ]]; then
         tmpl="${CONF_DIR}/squid-native-tls.conf.tmpl"
-        listen_directive="$PROXY_PORT"
+        listen_port="$PROXY_PORT"
     else
         tmpl="${CONF_DIR}/squid-plain.conf.tmpl"
-        listen_directive="$SQUID_PLAIN_PORT"
+        listen_port="$SQUID_PLAIN_PORT"
     fi
 
     # basic_ncsa_auth 경로는 아키텍처에 따라 lib64/lib 로 갈린다.
@@ -283,7 +326,7 @@ write_squid_conf() {
     ncsa_auth="$(find /usr/lib64/squid /usr/lib/squid -maxdepth 1 -name basic_ncsa_auth -type f 2>/dev/null | head -n1)"
     [[ -n "$ncsa_auth" ]] || die "basic_ncsa_auth 헬퍼를 찾을 수 없다 (squid 패키지 확인)"
 
-    sed -e "s|@PORT@|${listen_directive}|g" \
+    sed -e "s|@PORT@|${listen_port}|g" \
         -e "s|@TLS_DIR@|${TLS_DIR}|g" \
         -e "s|@PASSWD_FILE@|${SQUID_PASSWD}|g" \
         -e "s|@NCSA_AUTH@|${ncsa_auth}|g" \
@@ -301,7 +344,7 @@ write_stunnel_conf() {
     [[ "$TLS_MODE" == "stunnel" ]] || return 0
 
     log "stunnel 설정 생성"
-    install -d -m 0755 /etc/stunnel
+    install -d -m 0755 /etc/stunnel /var/log/stunnel
     sed -e "s|@PORT@|${PROXY_PORT}|g" \
         -e "s|@BACKEND_PORT@|${SQUID_PLAIN_PORT}|g" \
         -e "s|@TLS_DIR@|${TLS_DIR}|g" \
@@ -347,12 +390,10 @@ configure_selinux() {
     restorecon -R "$TLS_DIR" 2>/dev/null || true
 
     if [[ "$TLS_MODE" == "native" ]]; then
-        # squid 가 443 등 비표준(squid 기준) 포트를 bind 할 수 있게 한다.
-        # 주의: 443 을 squid_port_t 로 바꾸면 이 호스트의 httpd 는 443 을 bind 할 수 없다.
-        #       이 서버는 프록시 전용이라는 가정이다.
+        # 10443 은 기본적으로 http_port_t 다. squid 가 bind 하려면 라벨을 바꿔야 한다.
+        # nginx 는 80/443 만 쓰므로 이 변경이 nginx 에 영향을 주지 않는다.
         selinux_label_port "$PROXY_PORT" squid_port_t
     else
-        # stunnel 은 stunnel_t 도메인에서 동작한다. 전용 불리언이 있으면 켠다.
         setsebool -P stunnel_can_network_connect on 2>/dev/null || true
         selinux_label_port "$PROXY_PORT" http_port_t
     fi
@@ -365,32 +406,28 @@ configure_selinux() {
 #=============================================================================
 # OCI 이미지는 firewalld 를 쓰는 경우와 iptables 규칙이 직접 박힌 경우가 섞여 있다.
 # 둘 다 처리한다. (OCI 콘솔의 Security List/NSG 는 별도로 열어야 한다.)
-open_port() {
-    local port="$1"
+# 80/443 은 nginx 를 위해 이미 열려 있을 것이므로 건드리지 않는다.
+configure_firewall() {
+    log "방화벽 설정: ${PROXY_PORT}/tcp"
 
     if systemctl is-active --quiet firewalld 2>/dev/null; then
-        firewall-cmd --permanent --add-port="${port}/tcp" >/dev/null 2>&1 || true
+        firewall-cmd --permanent --add-port="${PROXY_PORT}/tcp" >/dev/null 2>&1 || true
         firewall-cmd --reload >/dev/null 2>&1 || true
-        ok "firewalld: ${port}/tcp 허용"
+        ok "firewalld: ${PROXY_PORT}/tcp 허용"
     fi
 
     if command -v iptables >/dev/null 2>&1; then
-        if ! iptables -C INPUT -p tcp --dport "$port" -j ACCEPT 2>/dev/null; then
-            iptables -I INPUT 1 -p tcp -m state --state NEW --dport "$port" -j ACCEPT 2>/dev/null || true
+        if ! iptables -C INPUT -p tcp -m state --state NEW --dport "$PROXY_PORT" -j ACCEPT 2>/dev/null; then
+            iptables -I INPUT 1 -p tcp -m state --state NEW --dport "$PROXY_PORT" -j ACCEPT 2>/dev/null || true
         fi
         # OL8 OCI 이미지는 /etc/sysconfig/iptables 에 규칙을 보존한다.
         if [[ -f /etc/sysconfig/iptables ]]; then
             iptables-save > /etc/sysconfig/iptables 2>/dev/null || true
         fi
-        ok "iptables: ${port}/tcp 허용"
+        ok "iptables: ${PROXY_PORT}/tcp 허용"
     fi
-}
 
-configure_firewall() {
-    log "방화벽 설정"
-    open_port "$PROXY_PORT"
-    open_port 80   # 인증서 갱신(http-01)용
-    warn "OCI 콘솔 → VCN → Security List / NSG 에 ${PROXY_PORT}/tcp, 80/tcp 인그레스 규칙을 직접 추가해야 한다."
+    warn "OCI 콘솔 → VCN → Security List / NSG 에 ${PROXY_PORT}/tcp 인그레스 규칙을 직접 추가해야 한다."
 }
 
 #=============================================================================
@@ -416,10 +453,23 @@ start_services() {
     fi
 }
 
+# 프록시를 올리는 과정에서 nginx 를 건드리지 않았는지 확인한다.
+verify_nginx_intact() {
+    if ! systemctl list-unit-files 2>/dev/null | grep -q '^nginx\.service'; then
+        return 0
+    fi
+    if systemctl is-active --quiet nginx; then
+        ok "nginx 정상 동작 중 (기존 서비스 영향 없음)"
+    else
+        warn "nginx 가 멈춰 있다. 이 스크립트는 nginx 를 건드리지 않았지만 확인이 필요하다."
+    fi
+}
+
 save_state() {
     cat > "$STATE_FILE" <<EOF
 # setup-squid.sh 가 생성. uninstall.sh / verify.sh 가 참조한다.
 DOMAIN=${DOMAIN}
+CERT_NAME=${CERT_NAME}
 PROXY_PORT=${PROXY_PORT}
 PROXY_USER=${PROXY_USER}
 TLS_MODE=${TLS_MODE}
@@ -437,6 +487,7 @@ ${C_OK}================ 구성 완료 ================${C_OFF}
   프록시 주소   : ${DOMAIN}:${PROXY_PORT}
   프로토콜      : HTTPS (TLS 로 감싼 HTTP 포워드 프록시)
   TLS 종단      : ${TLS_MODE}
+  인증서        : ${LETSENCRYPT_LIVE}/${CERT_NAME} (기존 것 재사용)
   계정          : ${PROXY_USER}
 EOF
     if [[ "$GENERATED_PASSWORD" -eq 1 ]]; then
@@ -452,7 +503,7 @@ EOF
   Edge 확장 옵션 페이지에 위 값을 그대로 입력한다.
   스킴은 반드시 ${C_OK}HTTPS${C_OFF} 를 선택할 것 (평문 HTTP 는 CONNECT 대상 호스트가 노출된다).
 
-  자체 점검:  sudo ${SCRIPT_DIR}/verify.sh
+  자체 점검:  sudo ${SCRIPT_DIR}/verify.sh --password '...'
   제거:       sudo ${SCRIPT_DIR}/uninstall.sh
 
 EOF
@@ -463,10 +514,10 @@ main() {
     parse_args "$@"
     require_root
     require_oracle_linux8
+    check_port_available
+    verify_existing_certificate
     install_packages
     resolve_tls_mode
-    verify_dns
-    issue_certificate
     install_cert_deploy_hook
     create_proxy_user
     write_squid_conf
@@ -474,6 +525,7 @@ main() {
     configure_selinux
     configure_firewall
     start_services
+    verify_nginx_intact
     save_state
     print_summary
 }
