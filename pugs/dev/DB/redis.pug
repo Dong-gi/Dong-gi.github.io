@@ -1930,23 +1930,31 @@ include ../../../source/skeleton.pug
 
             h3 XAUTOCLAIM
             +asCode() XAUTOCLAIM key group consumer min-idle-time start [COUNT count] [JUSTID]
-            p 개념적으로 XPENDING 후 XCLAIM을 호출한 것과 동일하다
+            p 개념적으로 #[+goto('XPENDING')] 후 #[+goto('XCLAIM')] 호출한 것과 동일하다
+
+            h3 XCFGSET
+            +asCode() XCFGSET key [IDMP-DURATION idmp-duration] [IDMP-MAXSIZE idmp-maxsize]
+            ul
+                li Since Redis 8.2
+                li 스트림의 멱등성 설정을 변경한다. #[+goto('Idempotent message processing')]
 
             h3 XCLAIM
-            +asCode() XCLAIM key group consumer min-idle-time id [id ...] [IDLE ms] [TIME unix-time-milliseconds] [RETRYCOUNT count] [FORCE] [JUSTID]
+            +asCode() XCLAIM key group consumer min-idle-time id [id ...] [IDLE ms] [TIME unix-time-milliseconds] [RETRYCOUNT count] [FORCE] [JUSTID] [LASTID lastid]
             ul
-                li 지정한 id들에 대하여, min-idle-time 밀리초 이상 소비 완료 대기 중인 entry를 획득한다
-                li IDLE : 대기 시간 재설정. 기본값은 0이며, 따라서 동일 명령으로 다른 소비자가 동일 entry를 가져가지 못하게 된다
-                li TIME : 절대값(마지막 entry 배달 시각)을 이용해 대기 시간 재설정
+                li 소비 완료 대기 중인 메시지들의 소유권을 지정한 (새) 소비자로 변경 -- 메시지 소비 실패에 대한 재시도
+                li min-idle-time : 지정 밀리초 이상 대기 중인 entry들만 획득한다
+                li IDLE : 재설정할 대기 시간. 기본값은 0이므로 동시에 여러 소비자가 claim해도 하나만 성공한다
+                li TIME : 절대값을 이용해 대기 시간 재설정
                 li RETRYCOUNT : 배달 카운터 재설정
-                li FORCE : 소비 완료 대기 중이지 않은 entry도 처리
+                li FORCE : 소비 완료 대기 중이지 않은 -- 일정 시간 이상 아무도 가져가지 않은 entry도 처리
                 li JUSTID : entry의 id만 반환. 배달 카운터를 증가하지 않는다
+                li LASTID : 소비자 그룹의 last-delivered ID 재설정
 
             h3 XDEL
             +asCode() XDEL key id [id ...]
             ul
                 li 지정 entry 삭제. 삭제된 개수 반환
-                li 현재까지는 entry 삭제가 즉시 메모리 반환을 의미하지 않는다 -&gt; macro-node의 모든 entry가 삭제 상태가 될 때 정리
+                li entry 삭제 시 즉시 메모리가 반환되지는 않는다 -&gt; entry가 포함된 macro-node의 모든 entry가 삭제 상태가 될 때 정리
 
             h3 XGROUP CREATE
             +asCode() XGROUP CREATE key groupname id|$ [MKSTREAM] [ENTRIESREAD entries_read]

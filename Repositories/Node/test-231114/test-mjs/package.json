@@ -1,0 +1,11 @@
+{
+  "name": "test-mjs",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --test --test-concurrency=8 --test-timeout=2000 test/**/*.js"
+  },
+  "dependencies": {
+    "@hi.donggi/test-231114": "file:../hi.donggi-test-231114-2.0.0.tgz"
+  }
+}
