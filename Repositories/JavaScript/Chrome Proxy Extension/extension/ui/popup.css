@@ -1,0 +1,14 @@
+/* popup.css — 툴바 팝업 전용 레이아웃 */
+
+.popup {
+  width: 320px;
+  padding: 14px;
+}
+
+.popup h1 {
+  white-space: nowrap;
+}
+
+#recheck {
+  flex: 0 0 auto;
+}

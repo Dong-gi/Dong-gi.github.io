@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>Remote Proxy Router 설정</title>
+    <link rel="stylesheet" href="common.css" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="page stack">
+      <header>
+        <h1>Remote Proxy Router 설정</h1>
+        <p class="muted">
+          Edge 트래픽을 원격 HTTPS 프록시로 라우팅합니다. 변경 후 <strong>저장</strong>을 누르면
+          라우팅이 켜져 있는 경우 즉시 재적용됩니다.
+        </p>
+      </header>
+
+      <div class="banner error" id="error-banner" hidden></div>
+      <div class="banner ok" id="ok-banner" hidden></div>
+
+      <form id="form" class="stack" novalidate>
+        <!-- ================= 서버 ================= -->
+        <fieldset class="card stack">
+          <legend><h2>프록시 서버</h2></legend>
+
+          <div class="grid-3">
+            <div>
+              <label for="scheme">스킴</label>
+              <select id="scheme" name="scheme">
+                <option value="https">HTTPS (권장 · 프록시까지 TLS)</option>
+                <option value="http">HTTP (평문 · 비권장)</option>
+                <option value="socks5">SOCKS5 (인증 불가)</option>
+              </select>
+            </div>
+            <div>
+              <label for="host">호스트</label>
+              <input
+                type="text"
+                id="host"
+                name="host"
+                placeholder="proxy.example.com"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+            <div>
+              <label for="port">포트</label>
+              <input type="number" id="port" name="port" min="1" max="65535" />
+            </div>
+          </div>
+
+          <p class="muted" id="scheme-note"></p>
+        </fieldset>
+
+        <!-- ================= 인증 ================= -->
+        <fieldset class="card stack">
+          <legend><h2>프록시 인증 (Basic)</h2></legend>
+
+          <div class="grid-2">
+            <div>
+              <label for="username">사용자명</label>
+              <input type="text" id="username" name="username" autocomplete="off" spellcheck="false" />
+            </div>
+            <div>
+              <label for="password">비밀번호</label>
+              <input type="password" id="password" name="password" autocomplete="new-password" />
+            </div>
+          </div>
+
+          <p class="muted">
+            자격증명은 이 브라우저 프로필에만 저장되며 계정 동기화되지 않습니다. 다만
+            <strong>디스크에 평문으로 저장</strong>되므로 이 프록시 전용 계정을 사용하고 다른 곳에
+            재사용하지 마세요.
+          </p>
+        </fieldset>
+
+        <!-- ================= 예외 ================= -->
+        <fieldset class="card stack">
+          <legend><h2>예외 (프록시를 거치지 않고 직접 연결)</h2></legend>
+
+          <div>
+            <label for="bypass-hosts">호스트 패턴 — 한 줄에 하나</label>
+            <textarea id="bypass-hosts" name="bypassHosts" spellcheck="false"></textarea>
+            <p class="muted"><code>example.com</code> 또는 <code>*.example.com</code> 형식</p>
+          </div>
+
+          <div>
+            <label for="bypass-cidrs">IPv4 CIDR — 한 줄에 하나</label>
+            <textarea id="bypass-cidrs" name="bypassCidrs" spellcheck="false"></textarea>
+            <p class="muted">
+              <code>192.168.49.0/24</code>(폰 핫스팟)와 <code>10.42.0.0/24</code>(tun2proxy 가상 NIC)를
+              지우면 테더링 경로 자체가 끊깁니다.
+            </p>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="private-networks" name="privateNetworks" />
+            <label for="private-networks">
+              사설 대역(RFC1918, 루프백, 링크로컬, CGNAT)을 자동으로 직접 연결
+            </label>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="single-label" name="singleLabelHosts" />
+            <label for="single-label">
+              점(.)이 없는 단일 라벨 호스트를 사내망으로 간주해 직접 연결
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- ================= 누출 방어 ================= -->
+        <fieldset class="card stack">
+          <legend><h2>누출 방어</h2></legend>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="block-webrtc" name="blockWebRtcLeak" />
+            <label for="block-webrtc">
+              WebRTC 누출 차단 (<code>disable_non_proxied_udp</code>)<br />
+              <span class="muted">
+                끄면 STUN/TURN 이 프록시를 우회한 UDP 로 나가 폰의 통신사 IP 가 노출됩니다.
+                Wi-Fi 핫스팟 모드는 UDP 릴레이를 지원하므로 실제로 새어 나갑니다.
+              </span>
+            </label>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="disable-prediction" name="disableNetworkPrediction" />
+            <label for="disable-prediction">
+              네트워크 예측(프리페치·프리커넥트) 비활성
+              <span class="muted">— 프록시 적용 전 선행 조회를 막습니다.</span>
+            </label>
+          </div>
+
+          <dl class="kv" id="hardening-state"></dl>
+        </fieldset>
+
+        <!-- ================= 헬스체크 ================= -->
+        <fieldset class="card stack">
+          <legend><h2>헬스체크</h2></legend>
+
+          <div class="grid-3">
+            <div>
+              <label for="check-url">확인 URL</label>
+              <input type="url" id="check-url" name="checkUrl" spellcheck="false" />
+            </div>
+            <div>
+              <label for="interval">주기 (분)</label>
+              <input type="number" id="interval" name="intervalMinutes" min="1" max="1440" />
+            </div>
+            <div>
+              <label for="timeout">시간 초과 (ms)</label>
+              <input type="number" id="timeout" name="timeoutMs" min="1000" max="120000" step="1000" />
+            </div>
+          </div>
+
+          <p class="muted">
+            <code>ip=</code>, <code>loc=</code> 를 평문으로 돌려주는 엔드포인트여야 출구 IP·국가를
+            표시할 수 있습니다. 기본값은 Cloudflare 의 trace 입니다.
+          </p>
+        </fieldset>
+
+        <!-- ================= 진단 ================= -->
+        <fieldset class="card stack">
+          <legend><h2>진단</h2></legend>
+          <dl class="kv" id="diagnostics"></dl>
+          <div class="row">
+            <button type="button" id="show-pac">생성된 PAC 보기</button>
+            <button type="button" id="run-check">지금 헬스체크</button>
+          </div>
+          <pre id="pac-output" hidden></pre>
+        </fieldset>
+
+        <div class="row actions">
+          <button type="submit" class="primary" id="save">저장</button>
+          <button type="button" id="reset">기본값으로 되돌리기</button>
+        </div>
+      </form>
+    </main>
+
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+/* options.css — 옵션 페이지 전용 레이아웃 */
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+
+fieldset {
+  border: 1px solid var(--border);
+  margin: 0;
+}
+
+legend {
+  padding: 0 4px;
+}
+
+legend h2 {
+  margin: 0;
+}
+
+.grid-2,
+.grid-3 {
+  display: grid;
+  gap: 10px;
+}
+
+.grid-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.grid-3 {
+  grid-template-columns: 1.2fr 2fr 0.8fr;
+}
+
+@media (max-width: 560px) {
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.actions {
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+pre#pac-output {
+  max-height: 320px;
+  overflow: auto;
+  margin: 0;
+  padding: 10px;
+  font-family: ui-monospace, "Consolas", monospace;
+  font-size: 11px;
+  line-height: 1.45;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+pre#pac-output[hidden] {
+  display: none;
+}
+
+code {
+  font-family: ui-monospace, "Consolas", monospace;
+  font-size: 12px;
+}

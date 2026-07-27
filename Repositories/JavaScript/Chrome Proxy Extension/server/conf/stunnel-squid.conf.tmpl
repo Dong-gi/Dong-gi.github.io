@@ -1,0 +1,40 @@
+; =============================================================================
+; stunnel-squid.conf — 443/tcp 의 TLS 를 종단해 로컬 Squid 로 평문 전달
+;
+; squid 바이너리에 OpenSSL 지원이 없을 때만 사용된다 (setup-squid.sh 자동 판별).
+; stunnel 은 순수 TCP 래퍼이므로 Proxy-Authorization 헤더는 그대로 통과하고
+; Squid 의 Basic 인증이 정상 동작한다.
+; =============================================================================
+
+; 데몬 모드 (systemd 유닛이 foreground 로 실행하므로 no)
+foreground = no
+pid = /run/stunnel-squid.pid
+
+; systemd journal 로 로그를 보낸다
+output = /var/log/stunnel/squid-tls.log
+debug = 4
+
+setuid = stunnel
+setgid = stunnel
+
+; TLS 1.2 이상만 허용
+sslVersionMin = TLSv1.2
+options = NO_SSLv2
+options = NO_SSLv3
+options = NO_TLSv1
+options = NO_TLSv1.1
+ciphers = ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305
+
+[squid-tls]
+accept  = 0.0.0.0:@PORT@
+connect = 127.0.0.1:@BACKEND_PORT@
+
+cert = @TLS_DIR@/fullchain.pem
+key  = @TLS_DIR@/privkey.pem
+
+; 클라이언트 인증서는 요구하지 않는다 (인증은 Squid 의 Basic 이 담당)
+verifyChain = no
+
+; 셀룰러 경유라 RTT 가 크다. 유휴 연결을 너무 빨리 끊지 않는다.
+TIMEOUTidle = 300
+TIMEOUTclose = 5

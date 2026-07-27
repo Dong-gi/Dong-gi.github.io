@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+#
+# certbot deploy hook — 갱신된 인증서를 @TLS_DIR@ 로 복사하고 서비스를 리로드한다.
+#
+# setup-squid.sh 가 @PLACEHOLDER@ 를 치환해
+#   /etc/letsencrypt/renewal-hooks/deploy/10-squid-tls.sh
+# 로 설치한다. certbot 이 갱신 성공 시 RENEWED_LINEAGE 를 넣어 호출한다.
+#
+# /etc/letsencrypt 를 서비스가 직접 읽게 하지 않는 이유
+#   1) archive/ 의 퍼미션이 root 전용이라 squid/stunnel 이 읽을 수 없다
+#   2) SELinux 라벨(cert_t)이 squid_conf_t 와 달라 접근이 거부된다
+# 따라서 전용 디렉터리로 복사하고 라벨을 맞추는 방식을 쓴다.
+#
+set -euo pipefail
+
+readonly DOMAIN="@DOMAIN@"
+readonly TLS_DIR="@TLS_DIR@"
+readonly TLS_MODE="@TLS_MODE@"
+readonly LINEAGE="${RENEWED_LINEAGE:-/etc/letsencrypt/live/${DOMAIN}}"
+
+log() { printf '[deploy-hook] %s\n' "$*"; }
+
+# 이 훅은 모든 도메인 갱신 시 호출되므로 우리 도메인이 아니면 조용히 빠진다.
+if [[ "$(basename "$LINEAGE")" != "$DOMAIN" ]]; then
+    exit 0
+fi
+
+[[ -s "${LINEAGE}/fullchain.pem" ]] || { log "fullchain.pem 없음: ${LINEAGE}"; exit 1; }
+[[ -s "${LINEAGE}/privkey.pem" ]]   || { log "privkey.pem 없음: ${LINEAGE}"; exit 1; }
+
+install -d -m 0750 "$TLS_DIR"
+
+# --- 인증서 복사 (원자적 교체) ---------------------------------------------
+install -m 0644 -T "${LINEAGE}/fullchain.pem" "${TLS_DIR}/fullchain.pem.new"
+install -m 0640 -T "${LINEAGE}/privkey.pem"   "${TLS_DIR}/privkey.pem.new"
+mv -f "${TLS_DIR}/fullchain.pem.new" "${TLS_DIR}/fullchain.pem"
+mv -f "${TLS_DIR}/privkey.pem.new"   "${TLS_DIR}/privkey.pem"
+log "인증서 복사 완료 → ${TLS_DIR}"
+
+# --- 소유권 / SELinux 라벨 --------------------------------------------------
+if getent group squid >/dev/null 2>&1; then
+    chown -R root:squid "$TLS_DIR"
+fi
+if [[ "$TLS_MODE" == "stunnel" ]] && getent group stunnel >/dev/null 2>&1; then
+    # stunnel 은 setgid=stunnel 로 떨어지므로 그룹 읽기 권한이 필요하다.
+    chgrp -R stunnel "$TLS_DIR"
+fi
+chmod 0750 "$TLS_DIR"
+chmod 0640 "${TLS_DIR}/privkey.pem"
+chmod 0644 "${TLS_DIR}/fullchain.pem"
+
+if command -v restorecon >/dev/null 2>&1; then
+    restorecon -R "$TLS_DIR" 2>/dev/null || true
+fi
+
+# --- 서비스 리로드 ----------------------------------------------------------
+# squid -k reconfigure 는 TLS 컨텍스트를 다시 읽는다. 무중단.
+if systemctl is-active --quiet squid; then
+    squid -k reconfigure && log "squid reconfigure 완료"
+fi
+
+# stunnel 은 SIGHUP 으로 인증서를 다시 읽는다.
+if [[ "$TLS_MODE" == "stunnel" ]] && systemctl is-active --quiet stunnel; then
+    systemctl reload stunnel 2>/dev/null || systemctl restart stunnel
+    log "stunnel 리로드 완료"
+fi
+
+log "done"
