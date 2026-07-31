@@ -26,17 +26,56 @@ internal class HotspotPreferences(context: Context) {
      * 사용자는 지나가는 사람이 몇 초에 접속하는 망을 띄우게 되고, 접속에 성공하면
      * 프록시(사용자 데이터 요금)와 폰이 붙어 있는 LAN 까지 노출된다. 그래서 상수
      * 기본값을 없애고 기기마다 다른 난수를 생성한다.
+     *
+     * 값은 [SecretStore] 로 암호화해 저장한다. 복호화에 실패하면(앱 재설치나 키
+     * 무효화) 새로 생성한다 — 패스프레이즈는 언제든 재생성 가능한 값이다.
      */
     fun passphraseOrCreate(): String {
-        prefs.getString(KEY_PASS, null)?.takeIf { it.isNotEmpty() }?.let { return it }
+        readPassphrase()?.let { return it }
         val generated = generatePassphrase()
-        prefs.edit { putString(KEY_PASS, generated) }
+        writePassphrase(generated)
         return generated
     }
 
-    /** 사용자가 입력한 값을 저장한다. */
+    /** 사용자가 입력한 값을 저장한다. 패스프레이즈는 암호화된다. */
     fun save(ssid: String, passphrase: String) {
-        prefs.edit { putString(KEY_SSID, ssid).putString(KEY_PASS, passphrase) }
+        prefs.edit { putString(KEY_SSID, ssid) }
+        writePassphrase(passphrase)
+    }
+
+    /**
+     * 암호화된 패스프레이즈를 읽는다.
+     *
+     * 이전 버전이 평문으로 남긴 값도 읽어 들이고(마이그레이션), 즉시 암호화해
+     * 다시 저장한 뒤 평문 키를 지운다.
+     */
+    private fun readPassphrase(): String? {
+        prefs.getString(KEY_PASS_ENCRYPTED, null)
+            ?.let { SecretStore.decrypt(it) }
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { return it }
+
+        val legacy = prefs.getString(KEY_PASS_LEGACY, null)?.takeIf { it.isNotEmpty() }
+        if (legacy != null) {
+            writePassphrase(legacy)
+            return legacy
+        }
+        return null
+    }
+
+    /**
+     * 패스프레이즈를 암호화해 저장하고 평문 잔재를 제거한다.
+     *
+     * 암호화가 실패하면 평문으로 되돌리지 않고 저장을 포기한다. 저장 실패는
+     * 다음 실행에서 새 패스프레이즈가 생성되는 것으로 끝나지만, 평문 저장은
+     * 이 커밋이 없애려는 바로 그 문제이기 때문이다.
+     */
+    private fun writePassphrase(passphrase: String) {
+        val sealed = SecretStore.encrypt(passphrase)
+        prefs.edit {
+            if (sealed != null) putString(KEY_PASS_ENCRYPTED, sealed) else remove(KEY_PASS_ENCRYPTED)
+            remove(KEY_PASS_LEGACY)
+        }
     }
 
     /**
@@ -58,7 +97,12 @@ internal class HotspotPreferences(context: Context) {
     companion object {
         private const val PREFS_NAME = "usb_tether"
         private const val KEY_SSID = "ssid"
-        private const val KEY_PASS = "passphrase"
+
+        /** 암호화된 패스프레이즈. */
+        private const val KEY_PASS_ENCRYPTED = "passphrase_enc"
+
+        /** 평문으로 저장하던 예전 키. 읽어서 옮긴 뒤 지운다. */
+        private const val KEY_PASS_LEGACY = "passphrase"
 
         private const val DEFAULT_SSID = "USBTether"
 
