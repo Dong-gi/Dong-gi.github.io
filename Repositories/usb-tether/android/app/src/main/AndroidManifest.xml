@@ -51,9 +51,15 @@
             android:exported="false"
             android:stopWithTask="false"
             android:foregroundServiceType="specialUse">
+            <!--
+                Play 심사에 제출되는 자유 서술 문자열이다. 이전 값 "ip_packet_tunnel"
+                은 부정확했다 — 이 앱은 클라이언트의 IP 패킷을 포워딩하지 않는다.
+                SOCKS5/HTTP 프록시가 페이로드만 옮기고 외부 연결은 Android 의 TCP/IP
+                스택이 새로 연다(README 의 아키텍처 절). VpnService 도 쓰지 않는다.
+            -->
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="ip_packet_tunnel" />
+                android:value="userspace_socks5_and_http_proxy_for_wifi_direct_tethering" />
         </service>
 
         <service
