@@ -62,8 +62,19 @@ class HttpProxyServer(
     @Volatile var lastError: String? = null
         private set
 
+    /**
+     * 이 인스턴스가 이미 [stop] 된 적이 있는지. 되돌아가지 않는다.
+     * 근거는 [Socks5Server] 의 같은 필드 주석 참고.
+     */
+    private val terminated = AtomicBoolean(false)
+
     /** 호출자가 채택된 포트를 즉시 볼 수 있도록 동기적으로 바인딩한 뒤 accept 를 시작한다. */
     fun start(): Int {
+        if (terminated.get()) {
+            lastError = "이미 종료된 서버 인스턴스는 다시 시작할 수 없습니다"
+            Log.e(TAG, "start() on a terminated instance")
+            return -1
+        }
         if (!running.compareAndSet(false, true)) return actualPort
         val sock = bindWithFallback() ?: run {
             running.set(false)
@@ -87,6 +98,7 @@ class HttpProxyServer(
      */
     fun stop() {
         if (!running.compareAndSet(true, false)) return
+        terminated.set(true)
         try { serverSocket?.close() } catch (_: Exception) {}
         connections.closeAll()
         executor.shutdownNow()

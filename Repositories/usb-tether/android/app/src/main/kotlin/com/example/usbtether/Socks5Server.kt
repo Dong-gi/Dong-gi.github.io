@@ -74,8 +74,25 @@ class Socks5Server(
     @Volatile var lastError: String? = null
         private set
 
+    /**
+     * 이 인스턴스가 이미 [stop] 된 적이 있는지. 되돌아가지 않는다.
+     *
+     * `running` CAS 는 재기동을 막지 못한다 — [stop] 이 false 로 되돌리므로
+     * `compareAndSet(false, true)` 가 다시 성공한다. 그런데 [stop] 은
+     * `executor.shutdownNow()` 와 `ConnectionRegistry.closeAll()` 을 이미 실행했으므로
+     * 재기동하면 **포트를 잡고 UI 에 정상으로 표시되면서 모든 연결을 거부하는**
+     * 상태가 된다. 1080 을 점유한 채 아무것도 서비스하지 않는 것은 이 앱이 애초에
+     * 막으려는 상황과 같으므로 명시적으로 실패시킨다.
+     */
+    private val terminated = AtomicBoolean(false)
+
     /** 호출자가 결과를 즉시 볼 수 있도록 동기적으로 바인딩한 뒤 accept 를 시작한다. */
     fun start(): Int {
+        if (terminated.get()) {
+            lastError = "이미 종료된 서버 인스턴스는 다시 시작할 수 없습니다"
+            Log.e(TAG, "start() on a terminated instance")
+            return -1
+        }
         if (!running.compareAndSet(false, true)) return actualPort
         val sock = bind() ?: run {
             running.set(false)
@@ -633,6 +650,7 @@ class Socks5Server(
      */
     fun stop() {
         if (!running.compareAndSet(true, false)) return
+        terminated.set(true)
         try { serverSocket?.close() } catch (_: Exception) {}
         connections.closeAll()
         executor.shutdownNow()

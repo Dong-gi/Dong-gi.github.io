@@ -36,9 +36,12 @@ internal class ConnectionRegistry {
     val size: Int get() = sockets.size
 
     /**
-     * [closeAll] 이 지나갔는지. 한 번 서면 되돌아가지 않는다 — 이 레지스트리는
-     * 서버 인스턴스와 수명을 같이하고, 두 서버 모두 `stop()` 후 재기동을 허용하지
-     * 않는다(`running` CAS).
+     * [closeAll] 이 지나갔는지. 한 번 서면 되돌아가지 않는다.
+     *
+     * 이 레지스트리는 서버 인스턴스와 수명을 같이하고, 두 서버는 `stop()` 이후
+     * 재기동을 **명시적으로 거부한다**(`terminated` 플래그). 그 거부가 없으면
+     * 재기동한 서버가 포트를 잡고 UI 에 정상으로 표시되면서 여기서 모든 연결을
+     * 거부하는 상태가 된다.
      */
     private val closed = AtomicBoolean(false)
 
