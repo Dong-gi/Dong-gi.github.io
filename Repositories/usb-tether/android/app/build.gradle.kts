@@ -34,6 +34,9 @@ configure<ApplicationExtension> {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.18.0")
+    // SAF 폴더를 트리로 다루기 위한 얇은 래퍼. DocumentsContract 를 직접 쓰면
+    // 같은 코드를 손으로 재구현해야 한다. SharedFolder 참고.
+    implementation("androidx.documentfile:documentfile:1.1.0")
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.android.material:material:1.14.0")
 }

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>USB Tether — 파일</title>
+<!--
+  폰의 공유 폴더를 다루는 단일 파일 UI. FileServer 가 `GET /` 로 그대로 내려준다.
+
+  외부 리소스를 전혀 참조하지 않는다. 이 페이지는 폰에서 서빙되고 클라이언트의
+  인터넷 경로는 프록시를 거치므로, CDN 을 참조하면 폰의 셀룰러 데이터를 쓰면서
+  로딩이 느려지고 오프라인에서 깨진다.
+
+  주의: 이 페이지는 `http://192.168.49.1:8080` 에서 열리므로 **secure context 가
+  아니다.** Service Worker, 클립보드 API, File System Access API 를 쓸 수 없다.
+  다운로드는 그래서 `<a download>` 내비게이션으로 처리한다 — fetch 로 받아 Blob 을
+  만들면 파일 전체가 메모리에 올라간다.
+-->
+<style>
+  :root {
+    --bg: #000; --fg: #fff; --dim: #aaa; --line: #333;
+    --accent: #4da3ff; --err: #ff6b6b; --ok: #51cf66;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--fg);
+    font-family: -apple-system, "Segoe UI", system-ui, "Malgun Gothic", sans-serif;
+    font-size: 15px; line-height: 1.5;
+  }
+  header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  h1 { font-size: 17px; margin: 0; font-weight: 600; }
+  #root { color: var(--dim); font-size: 13px; }
+  nav { margin-bottom: 12px; font-size: 14px; word-break: break-all; }
+  nav a { color: var(--accent); text-decoration: none; cursor: pointer; }
+  nav a:hover { text-decoration: underline; }
+  nav span.sep { color: var(--line); margin: 0 6px; }
+
+  #drop {
+    border: 1px dashed var(--line); border-radius: 8px; padding: 14px;
+    text-align: center; color: var(--dim); font-size: 14px; margin-bottom: 12px;
+    transition: border-color .15s, color .15s;
+  }
+  #drop.hot { border-color: var(--accent); color: var(--accent); }
+  #drop button {
+    background: none; border: 1px solid var(--line); color: var(--fg);
+    border-radius: 6px; padding: 5px 12px; font: inherit; font-size: 13px; cursor: pointer;
+  }
+  #drop button:hover { border-color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); }
+  th { color: var(--dim); font-weight: 500; font-size: 12px; }
+  td.size, th.size { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  td.when, th.when { white-space: nowrap; color: var(--dim); font-size: 13px; }
+  td.name { word-break: break-all; }
+  td.name a { color: var(--fg); text-decoration: none; cursor: pointer; }
+  td.name a:hover { color: var(--accent); }
+  td.name .dir { color: var(--accent); }
+
+  #jobs:not(:empty) { margin-top: 14px; }
+  .job { border-top: 1px solid var(--line); padding: 7px 0; font-size: 13px; }
+  .job .row { display: flex; justify-content: space-between; gap: 10px; }
+  .job .bar { height: 3px; background: var(--line); border-radius: 2px; margin-top: 5px; }
+  .job .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 2px; width: 0; }
+  .job.done .bar > i { background: var(--ok); }
+  .job.fail { color: var(--err); }
+
+  #message { margin: 12px 0; color: var(--err); font-size: 14px; }
+  #message:empty { display: none; }
+  #empty { color: var(--dim); padding: 16px 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>공유 폴더</h1>
+  <span id="root"></span>
+</header>
+
+<nav id="crumbs"></nav>
+
+<div id="drop">
+  <div>여기에 파일을 끌어다 놓거나 <button type="button" id="pick">파일 선택</button></div>
+  <input type="file" id="file" multiple hidden>
+</div>
+
+<div id="message"></div>
+
+<table id="table" hidden>
+  <thead>
+    <tr>
+      <th>이름</th>
+      <th class="size">크기</th>
+      <th class="when">수정</th>
+    </tr>
+  </thead>
+  <tbody id="rows"></tbody>
+</table>
+
+<div id="empty" hidden>빈 폴더입니다.</div>
+
+<div id="jobs"></div>
+
+<script>
+'use strict';
+
+// 현재 보고 있는 상대 경로. 빈 문자열이 루트다(FileServer 의 경로 규약).
+var currentPath = '';
+
+var el = {
+  root: document.getElementById('root'),
+  crumbs: document.getElementById('crumbs'),
+  rows: document.getElementById('rows'),
+  table: document.getElementById('table'),
+  empty: document.getElementById('empty'),
+  message: document.getElementById('message'),
+  jobs: document.getElementById('jobs'),
+  drop: document.getElementById('drop'),
+  pick: document.getElementById('pick'),
+  file: document.getElementById('file')
+};
+
+/** 서버 API 의 path 파라미터를 만든다. 한글·공백이 그대로 통과해야 하므로 인코딩한다. */
+function apiUrl(endpoint, path) {
+  return endpoint + '?path=' + encodeURIComponent(path);
+}
+
+/** 현재 폴더 아래의 상대 경로를 만든다. 루트면 이름만. */
+function childPath(name) {
+  return currentPath ? currentPath + '/' + name : name;
+}
+
+function showMessage(text) {
+  el.message.textContent = text || '';
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  var units = ['KB', 'MB', 'GB', 'TB'];
+  var value = bytes / 1024;
+  for (var i = 0; i < units.length; i++) {
+    if (value < 1024 || i === units.length - 1) {
+      return (value < 10 ? value.toFixed(1) : Math.round(value)) + ' ' + units[i];
+    }
+    value /= 1024;
+  }
+  return bytes + ' B';
+}
+
+function formatWhen(epochMs) {
+  if (!epochMs) return '';
+  var d = new Date(epochMs);
+  var pad = function (n) { return n < 10 ? '0' + n : String(n); };
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+    ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+
+//===========================================================================
+// 목록
+//===========================================================================
+
+function load(path) {
+  showMessage('');
+  var request = new XMLHttpRequest();
+  request.open('GET', apiUrl('/api/list', path), true);
+  request.onload = function () {
+    var data = null;
+    try { data = JSON.parse(request.responseText); } catch (e) { data = null; }
+    if (!data) { showMessage('서버 응답을 해석할 수 없습니다.'); return; }
+    if (data.error) {
+      showMessage(data.error);
+      el.table.hidden = true;
+      el.empty.hidden = true;
+      // 폴더가 지정되지 않은 상태에서는 업로드도 할 수 없다.
+      el.drop.hidden = !!data.needsFolder;
+      return;
+    }
+    el.drop.hidden = false;
+    currentPath = data.path || '';
+    el.root.textContent = data.root ? '/' + data.root : '';
+    render(data.entries || []);
+  };
+  request.onerror = function () { showMessage('서버에 연결할 수 없습니다.'); };
+  request.send();
+}
+
+function render(entries) {
+  renderCrumbs();
+  el.rows.textContent = '';
+
+  entries.forEach(function (entry) {
+    var tr = document.createElement('tr');
+
+    var nameCell = document.createElement('td');
+    nameCell.className = 'name';
+    var link = document.createElement('a');
+    link.textContent = entry.dir ? entry.name + '/' : entry.name;
+    if (entry.dir) link.className = 'dir';
+    link.href = entry.dir ? '#' : apiUrl('/api/file', childPath(entry.name));
+    if (entry.dir) {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        load(childPath(entry.name));
+      });
+    } else {
+      // download 속성을 두면 브라우저가 내비게이션으로 받아 디스크로 바로
+      // 스트리밍한다. fetch + Blob 을 쓰면 파일 전체가 메모리에 올라간다.
+      link.setAttribute('download', entry.name);
+    }
+    nameCell.appendChild(link);
+
+    var sizeCell = document.createElement('td');
+    sizeCell.className = 'size';
+    sizeCell.textContent = entry.dir ? '' : formatSize(entry.size);
+
+    var whenCell = document.createElement('td');
+    whenCell.className = 'when';
+    whenCell.textContent = formatWhen(entry.modified);
+
+    tr.appendChild(nameCell);
+    tr.appendChild(sizeCell);
+    tr.appendChild(whenCell);
+    el.rows.appendChild(tr);
+  });
+
+  el.table.hidden = entries.length === 0;
+  el.empty.hidden = entries.length !== 0;
+}
+
+function renderCrumbs() {
+  el.crumbs.textContent = '';
+  var segments = currentPath ? currentPath.split('/') : [];
+
+  var addLink = function (label, path) {
+    var a = document.createElement('a');
+    a.textContent = label;
+    a.href = '#';
+    a.addEventListener('click', function (event) {
+      event.preventDefault();
+      load(path);
+    });
+    el.crumbs.appendChild(a);
+  };
+  var addSeparator = function () {
+    var span = document.createElement('span');
+    span.className = 'sep';
+    span.textContent = '/';
+    el.crumbs.appendChild(span);
+  };
+
+  addLink('최상위', '');
+  var accumulated = '';
+  segments.forEach(function (segment) {
+    accumulated = accumulated ? accumulated + '/' + segment : segment;
+    addSeparator();
+    addLink(segment, accumulated);
+  });
+}
+
+//===========================================================================
+// 업로드
+//===========================================================================
+
+function upload(file) {
+  var job = document.createElement('div');
+  job.className = 'job';
+  var row = document.createElement('div');
+  row.className = 'row';
+  var label = document.createElement('span');
+  label.textContent = file.name;
+  var status = document.createElement('span');
+  status.textContent = '0%';
+  row.appendChild(label);
+  row.appendChild(status);
+  var bar = document.createElement('div');
+  bar.className = 'bar';
+  var fill = document.createElement('i');
+  bar.appendChild(fill);
+  job.appendChild(row);
+  job.appendChild(bar);
+  el.jobs.appendChild(job);
+
+  // fetch 에는 업로드 진행 이벤트가 없다. 진행률을 보여주려면 XHR 이어야 한다.
+  var request = new XMLHttpRequest();
+  request.open('PUT', apiUrl('/api/file', childPath(file.name)), true);
+
+  request.upload.addEventListener('progress', function (event) {
+    if (!event.lengthComputable) return;
+    var percent = Math.round((event.loaded / event.total) * 100);
+    fill.style.width = percent + '%';
+    status.textContent = percent + '%';
+  });
+
+  request.onload = function () {
+    var data = null;
+    try { data = JSON.parse(request.responseText); } catch (e) { data = null; }
+    if (request.status === 200 && data && data.ok) {
+      job.className = 'job done';
+      fill.style.width = '100%';
+      status.textContent = '완료 · ' + formatSize(data.bytes);
+      load(currentPath);
+    } else {
+      job.className = 'job fail';
+      status.textContent = (data && data.error) ? data.error : ('실패 (HTTP ' + request.status + ')');
+    }
+  };
+  request.onerror = function () {
+    job.className = 'job fail';
+    status.textContent = '전송이 끊겼습니다';
+  };
+
+  // File 을 그대로 본문에 넣는다. 브라우저가 Content-Length 를 붙이고 스트리밍한다.
+  request.send(file);
+}
+
+function uploadAll(files) {
+  for (var i = 0; i < files.length; i++) upload(files[i]);
+}
+
+//===========================================================================
+// 이벤트
+//===========================================================================
+
+el.pick.addEventListener('click', function () { el.file.click(); });
+el.file.addEventListener('change', function () {
+  uploadAll(el.file.files);
+  el.file.value = '';
+});
+
+['dragenter', 'dragover'].forEach(function (type) {
+  el.drop.addEventListener(type, function (event) {
+    event.preventDefault();
+    el.drop.classList.add('hot');
+  });
+});
+['dragleave', 'drop'].forEach(function (type) {
+  el.drop.addEventListener(type, function (event) {
+    event.preventDefault();
+    el.drop.classList.remove('hot');
+  });
+});
+el.drop.addEventListener('drop', function (event) {
+  if (event.dataTransfer && event.dataTransfer.files) uploadAll(event.dataTransfer.files);
+});
+
+// 페이지 어디에 놓아도 브라우저가 파일을 열어버리지 않게 막는다.
+['dragover', 'drop'].forEach(function (type) {
+  document.addEventListener(type, function (event) { event.preventDefault(); });
+});
+
+load('');
+</script>
+</body>
+</html>

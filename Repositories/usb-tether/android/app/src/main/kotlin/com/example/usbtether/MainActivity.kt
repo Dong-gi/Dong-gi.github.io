@@ -1,7 +1,10 @@
 package com.example.usbtether
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -22,10 +25,28 @@ class MainActivity : AppCompatActivity() {
     private lateinit var statsText: TextView
     private lateinit var toggleButton: Button
     private lateinit var hotspotButton: Button
+    private lateinit var folderButton: Button
     private lateinit var ssidInput: EditText
     private lateinit var passphraseInput: EditText
     private val handler = Handler(Looper.getMainLooper())
     private val hotspotPrefs by lazy { HotspotPreferences(this) }
+    private val sharedFolder by lazy { SharedFolder(this) }
+
+    /**
+     * 공유 폴더 선택 결과 수신자.
+     *
+     * `ACTION_OPEN_DOCUMENT_TREE` 를 쓰므로 스토리지 권한을 선언하지 않는다 —
+     * 사용자가 고른 폴더 하나에 대한 권한만 받는다(근거는 [SharedFolder]).
+     * 반환 URI 는 즉시 `takePersistableUriPermission` 으로 영속화해야 재부팅 후에도
+     * 쓸 수 있다.
+     */
+    private val folderPicker = registerForActivityResult(
+        ActivityResultContracts.OpenDocumentTree()
+    ) { uri ->
+        if (uri == null) return@registerForActivityResult
+        sharedFolder.remember(uri)
+        updateUi()
+    }
 
     private val refreshTask = object : Runnable {
         override fun run() {
@@ -48,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         statsText = findViewById(R.id.statsText)
         toggleButton = findViewById(R.id.toggleButton)
         hotspotButton = findViewById(R.id.hotspotButton)
+        folderButton = findViewById(R.id.folderButton)
         ssidInput = findViewById(R.id.ssidInput)
         passphraseInput = findViewById(R.id.passphraseInput)
 
@@ -76,6 +98,16 @@ class MainActivity : AppCompatActivity() {
                 handler.postDelayed({ updateUi() }, 200)
             } else {
                 startHotspotFromCurrentInputs()
+            }
+        }
+
+        folderButton.setOnClickListener {
+            try {
+                // null 은 "시작 위치 지정 없음". 파일 관리자가 기본 위치를 정한다.
+                folderPicker.launch(null)
+            } catch (_: ActivityNotFoundException) {
+                // SAF 를 처리할 앱이 없는 기기도 있다(일부 커스텀 ROM).
+                Toast.makeText(this, R.string.folder_picker_unavailable, Toast.LENGTH_LONG).show()
             }
         }
 
@@ -156,6 +188,8 @@ class MainActivity : AppCompatActivity() {
             append(hotspotLine).append('\n')
             TetherService.proxyError?.let { append("⚠ ").append(it).append('\n') }
             append("SOCKS5 port: ").append(portLabel(TetherService.socksPort)).append('\n')
+            append("File  port:  ").append(portLabel(TetherService.filePort)).append('\n')
+            append("Shared dir:  ").append(sharedFolder.displayName ?: "(선택 안 됨)").append('\n')
             append("HTTP port:   ").append(portLabel(TetherService.httpPort)).append('\n')
             append("Bytes in:    ").append(formatBytes(TetherService.bytesIn.get())).append('\n')
             append("Bytes out:   ").append(formatBytes(TetherService.bytesOut.get()))

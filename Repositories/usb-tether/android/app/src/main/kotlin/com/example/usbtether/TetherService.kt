@@ -13,11 +13,14 @@ import androidx.core.app.NotificationCompat
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * 포그라운드 서비스. 기동하면 항상 다음 두 서버를 띄운다.
+ * 포그라운드 서비스. 기동하면 항상 다음 세 서버를 띄운다.
  *   - SOCKS5 프록시: `0.0.0.0:`[Socks5Server.BASE_PORT] 고정. 점유돼 있으면
  *     폴백하지 않고 실패한다
  *   - HTTP 프록시:   `0.0.0.0:`[HttpProxyServer.BASE_PORT] 부터 +9 까지 폴백하고,
  *     열 개가 모두 막혀 있으면 실패한다
+ *   - 파일 서버:     `0.0.0.0:`[FileServer.BASE_PORT] 부터 +9 까지 폴백. 공유 폴더가
+ *     지정되지 않아도 기동한다 — 브라우저에서 "폴더를 고르세요" 를 보여주는 편이
+ *     서버가 아예 뜨지 않는 것보다 알기 쉽다
  *
  * 어느 쪽이 실패하든 원인이 [proxyError] 로 올라온다. 실제로 바인딩된 포트는
  * [socksPort] / [httpPort] 에 게시되어 UI 에 표시된다. 표시하거나 접속할 포트를
@@ -35,6 +38,7 @@ class TetherService : Service() {
 
     private var socks: Socks5Server? = null
     private var http: HttpProxyServer? = null
+    private var files: FileServer? = null
     private var hotspot: WifiHotspot? = null
 
     /**
@@ -45,6 +49,7 @@ class TetherService : Service() {
      */
     private var socksError: String? = null
     private var httpError: String? = null
+    private var fileError: String? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -102,7 +107,17 @@ class TetherService : Service() {
             httpError = if (httpPort > 0) null else h.lastError
             if (httpPort > 0) http = h
         }
-        proxyError = listOfNotNull(socksError, httpError)
+        if (files == null) {
+            val f = FileServer(
+                context = applicationContext,
+                onBytesIn = { bytesIn.addAndGet(it) },
+                onBytesOut = { bytesOut.addAndGet(it) },
+            )
+            filePort = f.start()
+            fileError = if (filePort > 0) null else f.lastError
+            if (filePort > 0) files = f
+        }
+        proxyError = listOfNotNull(socksError, httpError, fileError)
             .joinToString("\n")
             .ifEmpty { null }
     }
@@ -199,14 +214,18 @@ class TetherService : Service() {
         hotspotActive = false
         hotspotSsid = null
         hotspotError = null
+        files?.stop()
+        files = null
         http?.stop()
         http = null
         socks?.stop()
         socks = null
         socksPort = -1
         httpPort = -1
+        filePort = -1
         socksError = null
         httpError = null
+        fileError = null
         proxyError = null
         isRunning = false
         super.onDestroy()
@@ -234,9 +253,10 @@ class TetherService : Service() {
         )
         val socksLabel = if (socksPort > 0) socksPort.toString() else "—"
         val httpLabel = if (httpPort > 0) httpPort.toString() else "—"
+        val fileLabel = if (filePort > 0) filePort.toString() else "—"
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.app_name))
-            .setContentText("SOCKS5:$socksLabel  HTTP:$httpLabel")
+            .setContentText("SOCKS5:$socksLabel  HTTP:$httpLabel  Files:$fileLabel")
             .setSmallIcon(android.R.drawable.stat_notify_sync)
             .setContentIntent(tapIntent)
             .setOngoing(true)
@@ -268,6 +288,10 @@ class TetherService : Service() {
             internal set
         /** 실제 HTTP 포트(기본 ~ 기본+9). 바인딩되지 않았으면 -1. */
         @Volatile var httpPort: Int = -1
+            internal set
+
+        /** 실제 파일 서버 포트(기본 ~ 기본+9). 바인딩되지 않았으면 -1. */
+        @Volatile var filePort: Int = -1
             internal set
 
         /** 프록시 기동 실패 원인. 정상이면 null. */

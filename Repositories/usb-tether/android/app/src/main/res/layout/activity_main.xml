@@ -63,6 +63,20 @@
         app:strokeWidth="1dp"
         app:rippleColor="#33FFFFFF" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/folderButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="200dp"
+        android:text="@string/pick_folder"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="8dp"
+        app:backgroundTint="#000000"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="1dp"
+        app:rippleColor="#33FFFFFF" />
+
     <TextView
         android:id="@+id/statsText"
         android:layout_width="wrap_content"

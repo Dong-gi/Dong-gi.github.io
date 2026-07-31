@@ -11,4 +11,6 @@
     <string name="ssid_hint">SSID</string>
     <string name="passphrase_hint">Passphrase (8–63 chars)</string>
     <string name="hotspot_tile_label">Hotspot</string>
+    <string name="pick_folder">Choose shared folder</string>
+    <string name="folder_picker_unavailable">No file manager available to pick a folder</string>
 </resources>
