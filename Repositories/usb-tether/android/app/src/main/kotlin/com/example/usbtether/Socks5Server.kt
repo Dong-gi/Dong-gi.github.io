@@ -227,8 +227,7 @@ class Socks5Server(
      * 소켓 **하나**를 `0.0.0.0` 에 바인딩해 양방향에 함께 쓰고, "클라이언트가 보낸
      * 패킷"과 "원격이 보낸 응답"을 출처 주소·포트 비교로 **추론**했다. 클라이언트
      * 식별자는 **가장 먼저 도착한 패킷**의 출처에서 확정했고, `client.inetAddress`
-     * 와 대조하지 않았다. 연결을 묶기 위해 존재하는 RFC 1928 의 DST.ADDR/DST.PORT
-     * 는 파싱된 뒤 버려졌다. 그리고 확정된 클라이언트가 아닌 출처의 패킷은
+     * 와 대조하지 않았다. 그리고 확정된 클라이언트가 아닌 출처의 패킷은
      * "원격의 응답"으로 간주해 SOCKS5 헤더로 감싸 클라이언트에게 전달했다.
      *
      * 이 경로는 실사용에서 활성이었다 — `windows-wifi.bat` 이 `--dns over-tcp` 를
@@ -259,9 +258,18 @@ class Socks5Server(
      *
      * BND.ADDR/PORT 로는 `clientFacing` 의 바인딩 주소·포트를 응답한다.
      *
-     * **남는 한계**: `remoteFacing` 에 도착한 응답이 실제로 우리가 보낸 요청에
-     * 대응하는지 대조하지 않는다(NAT 테이블 미구현). 일반적인 SOCKS5 릴레이 구현과
-     * 같은 수준이며, off-path 공격자는 임의 ephemeral 포트를 맞혀야 한다.
+     * ## 남는 한계
+     *
+     *  - `remoteFacing` 에 도착한 응답이 실제로 우리가 보낸 요청에 대응하는지
+     *    대조하지 않는다(NAT 테이블 미구현). 일반적인 SOCKS5 릴레이 구현과 같은
+     *    수준이며, off-path 공격자는 임의 ephemeral 포트를 맞혀야 한다.
+     *  - **요청의 DST.ADDR/DST.PORT 를 쓰지 않는다.** [handleClient] 가 파싱하지만
+     *    `handleUdpAssociate` 는 `client` 소켓만 받으므로 그대로 버려진다. 출처
+     *    **주소**는 `client.inetAddress` 로 고정되어 있어 이 값이 없어도 탈취는
+     *    막히고, 그래서 우선순위가 낮다. 포트까지 이 값으로 고정하려면 넘겨받아
+     *    **0 이 아닐 때만** 적용하는 분기가 필요하다 — RFC 1928 §7 은 클라이언트가
+     *    미리 알 수 없을 때 0 을 넣도록 정하므로 무조건 적용하면 정상 클라이언트가
+     *    깨진다.
      */
     private fun handleUdpAssociate(client: Socket) {
         val out = client.getOutputStream()

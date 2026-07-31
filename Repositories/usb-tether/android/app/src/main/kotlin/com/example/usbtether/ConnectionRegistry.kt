@@ -34,12 +34,27 @@ internal class ConnectionRegistry {
     /** 현재 추적 중인 연결 수. 동시 세션 상한 판정에 쓴다. */
     val size: Int get() = sockets.size
 
-    /** 소켓을 추적 대상에 넣는다. `handleClient` 진입 직후 호출한다. */
+    /**
+     * 소켓을 추적 대상에 넣는다.
+     *
+     * **accept 직후, 워커에 넘기기 전에** 호출해야 한다. `handleClient` 안에서
+     * 등록하면 accept 와 등록 사이에 태스크가 쌓여 [size] 로 판정하는 동시 세션
+     * 상한이 무의미해지고 CachedThreadPool 이 스레드를 무제한으로 만든다.
+     *
+     * 실제 호출부는 `Socks5Server.acceptLoop` / `HttpProxyServer.acceptLoop` 의
+     * `executor.submit` 직전이다.
+     */
     fun register(socket: Socket) {
         sockets.add(socket)
     }
 
-    /** 추적 대상에서 제거한다. `handleClient` 의 finally 에서 호출한다. */
+    /**
+     * 추적 대상에서 제거한다.
+     *
+     * 두 곳에서 호출한다 — `handleClient` 의 finally, 그리고 `submit` 이 실패해
+     * `handleClient` 가 아예 실행되지 못한 경로. 후자를 빠뜨리면 세션 슬롯이
+     * 영구히 점유된다.
+     */
     fun unregister(socket: Socket) {
         sockets.remove(socket)
     }
