@@ -52,8 +52,14 @@ class WifiHotspot(
             lastError = "Custom SSID requires Android 10+"
             onResult(false); return
         }
-        if (passphrase.length !in 8..63) {
+        if (passphrase.length !in MIN_PASSPHRASE..MAX_PASSPHRASE) {
             lastError = "Passphrase must be 8–63 chars"
+            onResult(false); return
+        }
+        // 길이만 보면 12345678 같은 값이 통과한다. 그룹에 들어온 기기는 프록시와
+        // 폰의 로컬 서비스에 바로 접근하므로, 명백히 약한 값은 여기서 막는다.
+        if (isWeakPassphrase(passphrase)) {
+            lastError = "Passphrase is too easy to guess — use the generated one"
             onResult(false); return
         }
         // 프레임워크가 두루뭉술한 ERROR 코드를 돌려주기 전에, createGroup 실패의
@@ -186,6 +192,42 @@ class WifiHotspot(
 
     companion object {
         private const val TAG = "WifiHotspot"
+
+        /** WPA2 규격상 패스프레이즈 길이 범위. */
+        private const val MIN_PASSPHRASE = 8
+        private const val MAX_PASSPHRASE = 63
+
+        /**
+         * 자주 쓰이는 취약 패스프레이즈. 완전한 사전이 아니라 명백한 것만 막는다.
+         * 사전 공격을 전부 방어하려는 것이 아니라, 기본값을 그대로 쓰는 사고를
+         * 방지하는 것이 목적이다.
+         */
+        private val WEAK_PASSPHRASES = setOf(
+            "12345678", "123456789", "1234567890", "87654321",
+            "password", "passw0rd", "p@ssword", "abcdefgh",
+            "qwertyui", "asdfghjk", "iloveyou", "usbtether",
+            "00000000", "11111111", "aaaaaaaa", "hotspot1",
+        )
+
+        /**
+         * 명백히 추측하기 쉬운 패스프레이즈인지 판정한다.
+         *
+         * 세 가지를 본다: 알려진 취약 목록, 서로 다른 문자가 2종 이하, 전체가
+         * 오름차순/내림차순 연속(12345678, abcdefgh 등).
+         */
+        internal fun isWeakPassphrase(value: String): Boolean {
+            if (value.lowercase() in WEAK_PASSPHRASES) return true
+            if (value.toSet().size <= 2) return true
+            return isMonotonicSequence(value)
+        }
+
+        /** 인접 문자의 코드 차이가 전부 +1 이거나 전부 -1 인지. */
+        private fun isMonotonicSequence(value: String): Boolean {
+            if (value.length < 2) return false
+            val step = value[1].code - value[0].code
+            if (step != 1 && step != -1) return false
+            return value.zipWithNext().all { (a, b) -> b.code - a.code == step }
+        }
 
         /** Wi-Fi Direct GO 규격상 SSID 는 "DIRECT-xx-"(xx 는 두 글자)로 시작해야 한다. */
         fun normalizeSsid(raw: String): String {

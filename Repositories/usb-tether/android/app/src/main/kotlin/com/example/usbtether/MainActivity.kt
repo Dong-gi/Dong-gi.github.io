@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import java.security.SecureRandom
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         passphraseInput = findViewById(R.id.passphraseInput)
 
         ssidInput.setText(prefs.getString(KEY_SSID, DEFAULT_SSID))
-        passphraseInput.setText(prefs.getString(KEY_PASS, DEFAULT_PASS))
+        passphraseInput.setText(loadOrCreatePassphrase())
 
         requestPermissionsIfNeeded()
 
@@ -133,6 +134,37 @@ class MainActivity : AppCompatActivity() {
         handler.removeCallbacks(refreshTask)
     }
 
+    /**
+     * 저장된 패스프레이즈를 읽고, 없으면 새로 생성해 저장한 뒤 반환한다.
+     *
+     * 예전에는 `12345678` 을 기본값으로 프리필했다. 필드를 고치지 않고 핫스팟을 켠
+     * 사용자는 지나가는 사람이 몇 초에 접속하는 망을 띄우게 되고, 접속에 성공하면
+     * 프록시(사용자 데이터 요금)와 폰의 로컬 서비스, 폰이 붙어 있는 LAN 까지 노출된다.
+     * 그래서 상수 기본값을 없애고 기기마다 다른 난수를 생성한다.
+     */
+    private fun loadOrCreatePassphrase(): String {
+        prefs.getString(KEY_PASS, null)?.takeIf { it.isNotEmpty() }?.let { return it }
+        val generated = generatePassphrase()
+        prefs.edit { putString(KEY_PASS, generated) }
+        return generated
+    }
+
+    /**
+     * WPA2 패스프레이즈를 생성한다.
+     *
+     * 사용자가 다른 기기에서 직접 입력해야 하므로 혼동되는 문자(0/O, 1/l/I)를 뺀
+     * 알파벳을 쓴다. 56자 알파벳 × [PASSPHRASE_LENGTH]자면 약 116비트다.
+     * WPA2 규격상 8–63자 출력 가능 ASCII 여야 한다.
+     */
+    private fun generatePassphrase(): String {
+        val random = SecureRandom()
+        val builder = StringBuilder(PASSPHRASE_LENGTH)
+        repeat(PASSPHRASE_LENGTH) {
+            builder.append(PASSPHRASE_ALPHABET[random.nextInt(PASSPHRASE_ALPHABET.length)])
+        }
+        return builder.toString()
+    }
+
     private fun requestPermissionsIfNeeded() {
         val needed = mutableListOf<String>()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -189,6 +221,12 @@ class MainActivity : AppCompatActivity() {
         private const val KEY_SSID = "ssid"
         private const val KEY_PASS = "passphrase"
         private const val DEFAULT_SSID = "USBTether"
-        private const val DEFAULT_PASS = "12345678"
+
+        /** 생성할 패스프레이즈 길이. 56자 알파벳 기준 약 116비트. */
+        private const val PASSPHRASE_LENGTH = 20
+
+        /** 혼동되는 문자(0/O, 1/l/I)를 제외한 알파벳. 다른 기기에서 타이핑해야 하므로. */
+        private const val PASSPHRASE_ALPHABET =
+            "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789"
     }
 }
