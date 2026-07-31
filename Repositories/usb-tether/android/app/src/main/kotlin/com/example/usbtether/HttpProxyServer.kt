@@ -37,6 +37,21 @@ import kotlin.concurrent.thread
 /** 헤더 길이·개수 상한 초과. handleClient 가 431 로 응답하고 연결을 닫는다. */
 private class HeaderTooLargeException : Exception()
 
+/**
+ * 헤더 문법 오류. handleClient 가 400 으로 응답하고 연결을 닫는다.
+ *
+ * 특히 LF 를 동반하지 않는 CR 을 잡는다. 이전 readHeaderLine 은 그런 CR 을
+ * 그대로 보존했고, `.trim()` 은 양 끝만 다듬으므로 **줄 중간의** CR 이 살아남았다.
+ * 헤더를 ISO_8859_1 로 바이트 단위 그대로 상위에 다시 쓰기 때문에
+ * `X-A: foo\rEvil: 1` 이 그대로 전달되고, bare CR 을 줄 구분자로 취급하는
+ * 서버·프록시는 헤더가 하나 더 있는 것으로 본다(헤더 주입).
+ *
+ * 현재는 클라이언트가 이미 `CONNECT host:80` 으로 임의 바이트를 쓸 수 있어
+ * 추가 권한을 주지는 않는다. 그러나 CONNECT 를 제한하거나 인증을 붙이는 순간
+ * 이것이 우회로가 되므로 지금 막는다.
+ */
+private class MalformedRequestException : Exception()
+
 class HttpProxyServer(
     private val onTcpCount: (Int) -> Unit = {},
     private val onBytesIn: (Long) -> Unit = {},
@@ -170,6 +185,9 @@ class HttpProxyServer(
         } catch (_: HeaderTooLargeException) {
             Log.w(TAG, "헤더가 상한을 넘어 요청을 거부했다")
             try { sendStatus(client.getOutputStream(), 431, "Request Header Fields Too Large") } catch (_: Exception) {}
+        } catch (_: MalformedRequestException) {
+            Log.w(TAG, "헤더 문법 오류로 요청을 거부했다")
+            try { sendStatus(client.getOutputStream(), 400, "Bad Request") } catch (_: Exception) {}
         } catch (e: Exception) {
             Log.w(TAG, "client error: ${e.message}")
         } finally {
@@ -329,7 +347,9 @@ class HttpProxyServer(
                 '\r'.code -> {
                     val next = src.read()
                     if (next == '\n'.code || next == -1) return sb.toString()
-                    sb.append('\r').append(next.toChar())
+                    // LF 가 뒤따르지 않는 CR 은 프로토콜 오류다. 보존하면 헤더 주입이
+                    // 된다 — MalformedRequestException KDoc 참고.
+                    throw MalformedRequestException()
                 }
                 '\n'.code -> {
                     return sb.toString()
