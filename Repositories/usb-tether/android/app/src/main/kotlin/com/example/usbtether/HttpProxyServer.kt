@@ -8,7 +8,6 @@ import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.Executors
-import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
@@ -142,13 +141,22 @@ class HttpProxyServer(
                 connections.register(client)
                 try {
                     executor.submit { handleClient(client) }
-                } catch (_: RejectedExecutionException) {
+                } catch (t: Throwable) {
+                    // Throwable 을 잡는다. RejectedExecutionException 뿐 아니라
+                    // 스레드를 더 만들 수 없을 때의 OutOfMemoryError 도 여기로 온다.
+                    // Error 를 놓치면 등록된 소켓이 unregister 되지 않아 세션 슬롯을
+                    // 영구히 점유하고, accept 스레드까지 죽어 서버가 살아 있는 것처럼
+                    // 보이면서 아무 연결도 받지 못하는 상태가 된다.
                     connections.unregister(client)
                     try { client.close() } catch (_: Exception) {}
+                    Log.e(TAG, "작업 제출 실패: ${t.javaClass.simpleName}")
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "acceptLoop crashed", e)
+        } catch (t: Throwable) {
+            // Exception 이 아니라 Throwable — OutOfMemoryError 로 조용히 죽으면
+            // UI 는 계속 "Running" 을 표시한다. 원인을 남기고 상태를 내린다.
+            Log.e(TAG, "acceptLoop crashed", t)
+            running.set(false)
         }
     }
 
