@@ -67,8 +67,15 @@ object DestinationFilter {
     /**
      * 주소가 차단 대상인지 판정한다.
      *
-     * 차단: 와일드카드(0.0.0.0, ::), 루프백, 링크 로컬, 사설 대역(RFC1918),
-     * CGNAT(100.64.0.0/10), `0.0.0.0/8`, 멀티캐스트, IPv6 ULA(fc00::/7).
+     * 차단 대상:
+     *  - **IPv4** — 와일드카드(`0.0.0.0`), 루프백, 링크 로컬(`169.254.0.0/16`),
+     *    사설 대역(RFC 1918), 멀티캐스트, `0.0.0.0/8`, CGNAT(`100.64.0.0/10`),
+     *    예약 대역 `240.0.0.0/4`(제한 브로드캐스트 `255.255.255.255` 포함)
+     *  - **IPv6** — 와일드카드(`::`), 루프백(`::1`), 링크 로컬(`fe80::/10`),
+     *    멀티캐스트, ULA(`fc00::/7`)
+     *  - **IPv6 안에 IPv4 를 실어 나르는 형태** — IPv4-mapped(`::ffff:a.b.c.d`)는
+     *    정규화해 IPv4 규칙을 다시 적용하고, IPv4-compatible(`::/96`),
+     *    NAT64(`64:ff9b::/32`), 6to4(`2002::/16`)는 프리픽스째로 막는다
      */
     internal fun isBlocked(address: InetAddress): Boolean {
         if (address.isAnyLocalAddress) return true
@@ -95,13 +102,37 @@ object DestinationFilter {
             val b = v4.address[1].toInt() and 0xFF
             if (a == 0) return true                          // 0.0.0.0/8
             if (a == 100 && b in 64..127) return true        // 100.64.0.0/10 CGNAT
+            // 240.0.0.0/4 — 예약(구 class E). 제한 브로드캐스트 255.255.255.255 가
+            // 여기 들어 있다. 그 주소는 위의 어느 검사에도 걸리지 않는다
+            // (isAnyLocal / isLoopback / isLinkLocal / isSiteLocal / isMulticast
+            // 가 모두 false). DatagramSocket 은 SO_BROADCAST 가 기본으로 켜져 있어
+            // UDP 릴레이가 폰이 붙어 있는 LAN 으로 브로드캐스트를 뿌릴 수 있었다.
+            if (a >= 240) return true
             return false
         }
 
         if (address is Inet6Address) {
+            val bytes = address.address
             // fc00::/7 (ULA). Java 에 판정 헬퍼가 없어 직접 본다.
-            val first = address.address[0].toInt() and 0xFF
-            if (first and 0xFE == 0xFC) return true
+            if (bytes[0].toInt() and 0xFE == 0xFC) return true
+
+            // 아래 셋은 IPv6 주소 안에 IPv4 를 실어 위의 IPv4 규칙을 건너뛰는
+            // 형태다. 임베딩 위치가 프리픽스 길이마다 달라지거나(NAT64) 도달
+            // 경로가 중계기에 달려 있어(6to4) 주소를 해석해 판정하는 대신
+            // 프리픽스째로 막는다. 정상 용도가 없어 과차단의 대가가 없다.
+
+            // ::/96 — IPv4-compatible (RFC 4291 §2.5.5.1 에서 폐기됨).
+            // ::ffff: 형태는 위에서 asIpv4() 가 이미 정규화해 걸러냈다.
+            if ((0 until 12).all { bytes[it] == 0.toByte() }) return true
+
+            // 64:ff9b::/32 — NAT64 (RFC 6052 well-known + RFC 8215 local-use).
+            if (bytes[0] == 0x00.toByte() && bytes[1] == 0x64.toByte() &&
+                bytes[2] == 0xFF.toByte() && bytes[3] == 0x9B.toByte()
+            ) return true
+
+            // 2002::/16 — 6to4 (RFC 3056). 이어지는 4바이트가 임의의 IPv4 라서
+            // 사설 주소를 그대로 실을 수 있다.
+            if (bytes[0] == 0x20.toByte() && bytes[1] == 0x02.toByte()) return true
         }
         return false
     }
