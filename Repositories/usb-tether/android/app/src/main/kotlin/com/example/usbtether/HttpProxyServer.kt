@@ -136,7 +136,13 @@ class HttpProxyServer(
                     try { client.close() } catch (_: Exception) {}
                     continue
                 }
-                connections.register(client)
+                if (!connections.register(client)) {
+                    // stop() 이 이미 지나갔다. 워커에 넘기면 릴레이가 stop() 이후에도
+                    // 살아남는다.
+                    Log.w(TAG, "종료 중이라 연결을 거부했다")
+                    try { client.close() } catch (_: Exception) {}
+                    continue
+                }
                 try {
                     executor.submit { handleClient(client) }
                 } catch (t: Throwable) {

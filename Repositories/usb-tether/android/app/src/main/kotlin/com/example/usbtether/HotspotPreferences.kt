@@ -16,8 +16,14 @@ internal class HotspotPreferences(context: Context) {
     private val prefs: SharedPreferences =
         context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    /** 저장된 SSID. 없으면 기본값. */
-    fun ssid(): String = prefs.getString(KEY_SSID, DEFAULT_SSID) ?: DEFAULT_SSID
+    /**
+     * 저장된 SSID. 없거나 비어 있으면 기본값.
+     *
+     * 빈 값을 걸러내는 이유는 [save] 참고. 이미 빈 값이 저장된 기기도 이 검사로
+     * 정상 상태로 돌아온다.
+     */
+    fun ssid(): String =
+        prefs.getString(KEY_SSID, null)?.trim()?.takeIf { it.isNotEmpty() } ?: DEFAULT_SSID
 
     /**
      * 저장된 패스프레이즈를 읽고, 없으면 새로 생성해 저장한 뒤 반환한다.
@@ -37,9 +43,17 @@ internal class HotspotPreferences(context: Context) {
         return generated
     }
 
-    /** 사용자가 입력한 값을 저장한다. 패스프레이즈는 암호화된다. */
+    /**
+     * 사용자가 입력한 값을 저장한다. 패스프레이즈는 암호화된다.
+     *
+     * **빈 SSID 는 저장하지 않는다.** 저장하면 [ssid] 가 기본값 대신 빈 문자열을
+     * 돌려주고 `TetherService` 가 그 값을 거부한다. 앱에서는 입력란이 비어 있는 것을
+     * 보고 알아채지만, 퀵 설정 타일 경로는 앱을 열어 SSID 를 다시 넣을 때까지 계속
+     * 실패한다 — 사용자가 원인을 알 수 없는 상태로 갇힌다.
+     */
     fun save(ssid: String, passphrase: String) {
-        prefs.edit { putString(KEY_SSID, ssid) }
+        val trimmed = ssid.trim()
+        if (trimmed.isNotEmpty()) prefs.edit { putString(KEY_SSID, trimmed) }
         writePassphrase(passphrase)
     }
 

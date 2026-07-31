@@ -92,11 +92,16 @@ class MainActivity : AppCompatActivity() {
         val ssid = ssidInput.text.toString().trim()
         val pass = passphraseInput.text.toString()
         hotspotPrefs.save(ssid, pass)
+        // 빈 값은 저장되지 않으므로(HotspotPreferences.save) 실제로 쓰일 값을 다시
+        // 읽어 보낸다. 입력란을 비운 채 눌러도 기본 SSID 로 켜지고, 화면에도 그
+        // 값이 보인다.
+        val effectiveSsid = hotspotPrefs.ssid()
+        if (effectiveSsid != ssid) ssidInput.setText(effectiveSsid)
         ContextCompat.startForegroundService(
             this,
             Intent(this, TetherService::class.java).apply {
                 action = TetherService.ACTION_HOTSPOT_ON
-                putExtra(TetherService.EXTRA_SSID, ssid)
+                putExtra(TetherService.EXTRA_SSID, effectiveSsid)
                 putExtra(TetherService.EXTRA_PASSPHRASE, pass)
             },
         )
