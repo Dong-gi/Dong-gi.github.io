@@ -26,6 +26,14 @@ import java.util.concurrent.atomic.AtomicLong
  *
  * 외부로 나가는 모든 소켓은 Android OS 가 열기 때문에, 클라이언트가 어느 경로를
  * 썼는지와 무관하게 통신사가 보는 것은 평범한 폰 발신 트래픽뿐이다.
+ *
+ * ## 수명
+ *
+ * 사용자가 최근 앱 목록에서 앱을 밀어 없애면 서비스도 함께 끝난다.
+ * 예전에는 `onTaskRemoved` 에서 스스로를 다시 띄우고 `START_STICKY` 를 반환해,
+ * 앱을 닫았다고 생각한 뒤에도 인증 없는 리스너 두 개가 계속(또는 저메모리 종료
+ * 후 다시) 살아 있었다. 알림 하나가 유일한 단서였다. 지금은 사용자가 닫으면
+ * 실제로 닫힌다.
  */
 class TetherService : Service() {
 
@@ -74,7 +82,11 @@ class TetherService : Service() {
         }
 
         isRunning = true
-        return START_STICKY
+        // START_NOT_STICKY: 저메모리로 서비스가 죽었을 때 시스템이 되살리지 않는다.
+        // START_STICKY 는 null 인텐트로 서비스를 다시 띄워 인증 없는 리스너 두 개를
+        // 사용자가 모르는 사이에 되살렸다. 알림 하나가 유일한 단서였으므로
+        // "닫았다"는 사용자의 인식과 실제 상태가 달랐다.
+        return START_NOT_STICKY
     }
 
     private fun startHotspot(ssid: String, passphrase: String) {
@@ -116,15 +128,6 @@ class TetherService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
-
-    override fun onTaskRemoved(rootIntent: Intent?) {
-        // 사용자가 최근 앱 목록에서 앱을 밀어 없앨 때 서비스를 다시 띄운다.
-        // 이 처리가 없으면 시스템이 onDestroy() 를 호출해 프록시 서버가 멈춘다.
-        val restart = Intent(applicationContext, TetherService::class.java)
-        restart.setPackage(packageName)
-        startForegroundService(restart)
-        super.onTaskRemoved(rootIntent)
-    }
 
     override fun onDestroy() {
         Log.i(TAG, "TetherService stopping")
