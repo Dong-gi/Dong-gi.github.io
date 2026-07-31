@@ -22,17 +22,26 @@ import java.net.InetAddress
  * 부여하면 인터넷에서도 도달한다. Wi-Fi Direct 의 WPA2 패스프레이즈는 이 경로들을
  * 전혀 보호하지 못한다.
  *
- * 소켓 하나로 루프백(USB 모드의 `adb forward` 대상)과 P2P 그룹 주소를 동시에 바인딩할
- * 수는 없고, P2P 주소는 그룹 오너가 떠 있는 동안에만 존재한다. 수명이 다른 소켓 두 개를
- * 관리하는 대신, 와일드카드 소켓을 유지하고 accept 시점에 원치 않는 상대를 거부한다.
+ * ## 허용 범위
  *
- * ## 이것으로 막지 못하는 것
+ * Wi-Fi Direct 그룹의 클라이언트, 즉 `192.168.49.2` ~ `192.168.49.254` 만 허용한다.
  *
- * USB 경로 때문에 루프백은 계속 허용해야 하므로, 이 폰의 다른 앱은 여전히
- * `127.0.0.1` 로 프록시에 도달할 수 있다. 그 앱들은 VpnService 기반 방화벽과 UID 별
- * 데이터 제한을 우회하게 된다(트래픽이 이 앱에 귀속된다). 이를 막으려면 프록시 자체에
- * 인밴드 인증이 필요하다. 대신 적용되는 완화책은 [DestinationFilter] 다 — 그 앱들이
- * 우리를 통해 루프백 서비스나 사설 LAN 에 도달하지는 못한다.
+ * `192.168.49.1` (그룹 오너 = 이 폰 자신)은 **거부**한다. 폰 내부의 다른 앱이 그
+ * 주소로 접속하면 커널이 소스 주소로 같은 인터페이스 주소를 고르므로, 이 조건이
+ * 곧 "폰 내부 앱 차단"이 된다. 프록시는 다른 앱의 `INTERNET` 권한을 세탁해
+ * VpnService 기반 방화벽과 UID 별 데이터 제한을 우회시키는 통로가 될 수 있으므로
+ * 막아야 한다.
+ *
+ * **미검증 가정**: 로컬 목적지로 connect 할 때 커널이 소스 주소로 그 인터페이스
+ * 주소를 고른다는 동작에 의존한다. Linux 의 표준 동작이지만 실기기에서
+ * `adb shell` 로 확인하는 편이 좋다.
+ *
+ * 루프백은 허용하지 않는다. ADB 포트 포워딩을 쓰던 USB 경로가 제거되면서 루프백을
+ * 열어둘 이유가 없어졌다.
+ *
+ * 소켓을 `192.168.49.1` 에만 바인딩하면 이 필터 없이도 다른 네트워크가 차단되지만,
+ * 그 주소는 그룹 오너가 떠 있는 동안에만 존재해 프록시와 핫스팟의 수명을 묶어야 한다.
+ * 지금은 와일드카드 소켓을 유지하고 accept 시점에 거부한다.
  */
 object PeerFilter {
 
@@ -41,24 +50,27 @@ object PeerFilter {
     private const val P2P_OCTET_1 = 168
     private const val P2P_OCTET_2 = 49
 
+    /** 그룹 오너(이 폰) 자신의 마지막 옥텟. 폰 내부 앱의 접속을 뜻하므로 거부한다. */
+    private const val GROUP_OWNER_OCTET_3 = 1
+
     /**
      * [peer] 가 서비스해도 되는 클라이언트인지 판정한다.
      *
-     * 허용:
-     *  - 루프백(IPv4/IPv6) — USB 경로. `adb forward` 가 폰 자신의 루프백을 대상으로 한다
-     *  - `192.168.49.0/24` — Wi-Fi Direct 그룹
+     * 허용: `192.168.49.2` ~ `192.168.49.254` (Wi-Fi Direct 클라이언트)
      *
-     * 그 외는 모두 거부한다. 특히 일반 Wi-Fi LAN 의 주소, 셀룰러 인터페이스,
-     * 루프백이 아닌 모든 IPv6 가 거부된다.
+     * 거부: 그룹 오너 자신(`192.168.49.1`, 폰 내부 앱), 루프백, 일반 Wi-Fi LAN,
+     * 셀룰러 인터페이스, 모든 IPv6.
      */
     fun isAllowed(peer: InetAddress?): Boolean {
         if (peer == null) return false
-        if (peer.isLoopbackAddress) return true
 
-        val v4 = peer.asIpv4() ?: return false
-        val octets = v4.address
-        return (octets[0].toInt() and 0xFF) == P2P_OCTET_0 &&
-            (octets[1].toInt() and 0xFF) == P2P_OCTET_1 &&
-            (octets[2].toInt() and 0xFF) == P2P_OCTET_2
+        val octets = peer.asIpv4()?.address ?: return false
+        if ((octets[0].toInt() and 0xFF) != P2P_OCTET_0) return false
+        if ((octets[1].toInt() and 0xFF) != P2P_OCTET_1) return false
+        if ((octets[2].toInt() and 0xFF) != P2P_OCTET_2) return false
+
+        val host = octets[3].toInt() and 0xFF
+        // .0(네트워크 주소)과 .255(브로드캐스트)는 유효한 클라이언트가 아니다.
+        return host != GROUP_OWNER_OCTET_3 && host != 0 && host != 255
     }
 }

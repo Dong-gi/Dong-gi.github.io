@@ -30,7 +30,7 @@ import kotlin.concurrent.thread
  *
  * 리스닝 소켓은 **듀얼스택 와일드카드**다. IPv6 가 있는 JVM 에서 `0.0.0.0` 은 `::` 가
  * 되므로 포트가 모든 인터페이스에서 열린다. 그래서 accept 시점에 [PeerFilter] 로
- * 접근을 통제한다 — 루프백(USB)과 192.168.49.0/24(Wi-Fi Direct)만 서비스한다.
+ * 접근을 통제한다 — Wi-Fi Direct 클라이언트(192.168.49.2–254)만 서비스한다.
  * 전체 근거와 남는 빈틈은 PeerFilter 의 KDoc 을 볼 것.
  */
 class HttpProxyServer(
@@ -93,8 +93,8 @@ class HttpProxyServer(
                     break
                 }
                 // 와일드카드 바인딩은 모든 인터페이스를 덮는다(주소 하나로 좁힐 수 없는
-                // 이유는 PeerFilter 참고). USB 루프백 경로나 Wi-Fi Direct 클라이언트가
-                // 아니면 한 바이트도 읽기 전에 거부한다.
+                // 이유는 PeerFilter 참고). Wi-Fi Direct 클라이언트가 아니면
+                // 한 바이트도 읽기 전에 거부한다.
                 if (!PeerFilter.isAllowed(client.inetAddress)) {
                     Log.w(TAG, "허용되지 않은 네트워크의 클라이언트를 거부했다")
                     try { client.close() } catch (_: Exception) {}

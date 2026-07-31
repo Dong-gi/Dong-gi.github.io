@@ -12,24 +12,20 @@ import kotlin.concurrent.thread
  * SOCKS5 서버 (RFC 1928). `0.0.0.0` 에 바인딩한다. [BASE_PORT], [BASE_PORT]+1, …,
  * [BASE_PORT]+9 를 순서대로 최대 10회 시도해 비어 있는 첫 포트를 잡는다.
  * [start] 가 반환된 뒤 [actualPort] 를 읽으면 실제로 채택된 포트를 알 수 있다.
- * USB 경로(PC → `adb forward tcp:1080 tcp:1080` → 127.0.0.1)와 WifiHotspot 이
- * 켜져 있을 때의 Wi-Fi P2P 그룹, 양쪽에서 도달 가능하다.
+ * WifiHotspot 이 켜져 있을 때 Wi-Fi P2P 그룹의 클라이언트가 사용한다.
  *
  * CONNECT(TCP)와 UDP ASSOCIATE(RFC 1928 §7)를 지원한다. UDP ASSOCIATE 시에는
- * 임의 포트에 DatagramSocket 을 바인딩하고 BND.ADDR 로 client.localAddress 를
- * 응답한다(핫스팟 인터페이스면 192.168.49.1, USB 면 127.0.0.1).
+ * 임의 포트에 DatagramSocket 을 바인딩하고 BND.ADDR 로 client.localAddress
+ * (핫스팟 인터페이스 주소 192.168.49.1)를 응답한다.
  * tun2proxy 가 그 포트로 SOCKS5 헤더가 감싸인 UDP 데이터그램을 보내면, 서버가
  * 헤더를 벗겨 실제 목적지로 전달하고 응답을 다시 감싸서 돌려준다.
- *
- * USB 모드의 UDP ASSOCIATE 는 ADB 제약을 받는다 — ADB 는 TCP 만 포워딩하므로
- * 폰의 UDP 릴레이 소켓에 PC 에서 도달할 수 없다.
  *
  * 통신사가 보는 것은 평범한 폰 발신 소켓뿐이다. 모든 외부 연결을 Android OS 의
  * TCP/UDP 스택이 열기 때문에, 테더링 트래픽이 폰 자체 활동과 구별되지 않는다.
  *
  * 리스닝 소켓은 **듀얼스택 와일드카드**다. IPv6 가 있는 JVM 에서 `0.0.0.0` 은 `::` 가
  * 되므로 포트가 모든 인터페이스에서 열린다. 그래서 accept 시점에 [PeerFilter] 로
- * 접근을 통제한다 — 루프백(USB)과 192.168.49.0/24(Wi-Fi Direct)만 서비스한다.
+ * 접근을 통제한다 — Wi-Fi Direct 클라이언트(192.168.49.2–254)만 서비스한다.
  * 전체 근거와 남는 빈틈은 PeerFilter 의 KDoc 을 볼 것.
  */
 class Socks5Server(
@@ -83,8 +79,8 @@ class Socks5Server(
                     break
                 }
                 // 와일드카드 바인딩은 모든 인터페이스를 덮는다(주소 하나로 좁힐 수 없는
-                // 이유는 PeerFilter 참고). USB 루프백 경로나 Wi-Fi Direct 클라이언트가
-                // 아니면 한 바이트도 읽기 전에 거부한다.
+                // 이유는 PeerFilter 참고). Wi-Fi Direct 클라이언트가 아니면
+                // 한 바이트도 읽기 전에 거부한다.
                 if (!PeerFilter.isAllowed(client.inetAddress)) {
                     Log.w(TAG, "허용되지 않은 네트워크의 클라이언트를 거부했다")
                     try { client.close() } catch (_: Exception) {}
@@ -180,8 +176,7 @@ class Socks5Server(
             return
         }
         try {
-            // BND.ADDR = 이 TCP 연결이 도착한 인터페이스의 주소.
-            // Wi-Fi 핫스팟 클라이언트면 192.168.49.1, USB 면 127.0.0.1 이다.
+            // BND.ADDR = 이 TCP 연결이 도착한 인터페이스의 주소(192.168.49.1).
             val bindAddr = (client.localAddress as? Inet4Address)?.address ?: byteArrayOf(0, 0, 0, 0)
             val udpPort = udpSocket.localPort
             out.write(
