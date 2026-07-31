@@ -129,7 +129,15 @@ class TetherService : Service() {
             hotspotActive = ok
             hotspotSsid = if (ok) hs.displaySsid else null
             hotspotError = if (ok) null else hs.lastError
-            if (!ok) hotspot = null
+            if (!ok) {
+                // 그룹을 만들지 못한 인스턴스도 Channel 을 쥐고 있다. 닫지 않으면
+                // 실패한 시도마다 하나씩 누수되고, 재시도를 반복하게 되는 오류
+                // ("Wi-Fi is off", BUSY 불일치 등)가 정확히 이 경로다.
+                // stop() 이 아니라 release() 다 — 만든 적 없는 그룹에 removeGroup 을
+                // 걸면 다른 앱의 그룹을 내릴 수 있다.
+                hs.release()
+                hotspot = null
+            }
             broadcastHotspotState()
         }
     }

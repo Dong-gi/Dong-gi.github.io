@@ -268,6 +268,23 @@ class WifiHotspot(
     }
 
     /**
+     * 그룹을 만들지 못한 인스턴스를 버릴 때 호출한다. **Channel 만 닫고
+     * `removeGroup` 은 하지 않는다.**
+     *
+     * Channel 은 생성자에서 만들어지므로 [start] 가 사전 점검 단계에서 실패해도
+     * 이미 하나를 쥐고 있다("Wi-Fi is off", "Location off", BUSY 불일치 등 재시도를
+     * 반복하게 되는 오류들이 전부 이 경로다). 그 인스턴스를 그냥 버리면 시도마다
+     * 하나씩 누수된다.
+     *
+     * 이 경우 [stop] 을 쓰면 안 된다. 이 인스턴스는 그룹을 만든 적이 없으므로
+     * `removeGroup` 이 내리는 것은 **다른 앱이 만든 그룹**일 수 있다. 그것을 건드리지
+     * 않는 것이 [reuseExistingGroup] 의 자격증명 대조와 같은 취지다.
+     */
+    fun release() {
+        channel?.let { closeChannel(it) }
+    }
+
+    /**
      * Channel 을 닫는다.
      *
      * `Channel` 이 `AutoCloseable` 이 된 것은 API 27 이고 minSdk 는 26 이므로
