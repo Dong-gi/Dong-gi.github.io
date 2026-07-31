@@ -11,9 +11,18 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 
 /**
- * SOCKS5 서버 (RFC 1928). `0.0.0.0` 에 바인딩한다. [BASE_PORT], [BASE_PORT]+1, …,
- * [BASE_PORT]+9 를 순서대로 최대 10회 시도해 비어 있는 첫 포트를 잡는다.
- * [start] 가 반환된 뒤 [actualPort] 를 읽으면 실제로 채택된 포트를 알 수 있다.
+ * SOCKS5 서버 (RFC 1928). `0.0.0.0:`[BASE_PORT] 에만 바인딩한다.
+ *
+ * **포트 폴백을 하지 않는다(의도).** 예전에는 [BASE_PORT]+9 까지 훑어 비어 있는 첫
+ * 포트를 잡았고, PC 런처는 같은 범위를 훑어 SOCKS5 핸드셰이크에 응답하는 첫 포트를
+ * 채택했다. 그래서 폰의 악성 앱이 `INTERNET` 권한만으로 1080 을 먼저 잡고 `05 00`
+ * 만 답하면, 진짜 프록시는 1081 로 밀리고 런처는 그 악성 앱을 채택한다. 그 앱은
+ * **PC 트래픽 100%** 를 보고 변조할 수 있으며 CONNECT 의 종단이 자신이므로 TLS 도
+ * 벗겨낼 수 있다. 견고성을 위한 기능이 탈취 원시요소였다.
+ *
+ * 이제 1080 이 점유돼 있으면 조용히 옮기지 않고 **실패하고 알린다**. 사용자가
+ * 무언가 다른 것이 듣고 있다는 사실을 알게 되는 것이 조용한 이전보다 안전하다.
+ * 실패 원인은 [lastError] 로 노출된다.
  * WifiHotspot 이 켜져 있을 때 Wi-Fi P2P 그룹의 클라이언트가 사용한다.
  *
  * CONNECT(TCP)와 UDP ASSOCIATE(RFC 1928 §7)를 지원한다. UDP ASSOCIATE 시에는
@@ -41,37 +50,41 @@ class Socks5Server(
     /** 수립된 연결을 추적한다. stop() 이 실제로 끊을 수 있게 하는 유일한 수단이다. */
     private val connections = ConnectionRegistry()
 
-    /** 실제로 바인딩된 포트. 서버가 동작 중이 아니면 -1. */
+    /** 바인딩된 포트([BASE_PORT]). 서버가 동작 중이 아니면 -1. */
     @Volatile var actualPort: Int = -1
         private set
 
-    /** 호출자가 채택된 포트를 즉시 볼 수 있도록 동기적으로 바인딩한 뒤 accept 를 시작한다. */
+    /** 마지막 기동 실패 원인. UI 에 표시해 사용자가 원인을 알 수 있게 한다. */
+    @Volatile var lastError: String? = null
+        private set
+
+    /** 호출자가 결과를 즉시 볼 수 있도록 동기적으로 바인딩한 뒤 accept 를 시작한다. */
     fun start(): Int {
         if (!running.compareAndSet(false, true)) return actualPort
-        val sock = bindWithFallback() ?: run {
+        val sock = bind() ?: run {
             running.set(false)
             return -1
         }
         serverSocket = sock
         actualPort = sock.localPort
-        Log.i(TAG, "SOCKS5 listening on 0.0.0.0:$actualPort")
+        lastError = null
+        Log.i(TAG, "SOCKS5 listening on port $actualPort")
         thread(name = "socks5-acceptor", isDaemon = true) { acceptLoop() }
         return actualPort
     }
 
-    private fun bindWithFallback(): ServerSocket? {
-        for (offset in 0 until PORT_FALLBACK_ATTEMPTS) {
-            val port = BASE_PORT + offset
-            try {
-                return ServerSocket(port, 50, InetAddress.getByName("0.0.0.0")).apply {
-                    reuseAddress = true
-                }
-            } catch (e: Exception) {
-                Log.w(TAG, "bind on $port failed: ${e.message}")
-            }
+    /**
+     * [BASE_PORT] 에만 바인딩한다. 다른 포트로 옮기지 않는다 — 클래스 KDoc 의
+     * 포트 스쿼팅 설명 참고.
+     */
+    private fun bind(): ServerSocket? = try {
+        ServerSocket(BASE_PORT, 50, InetAddress.getByName("0.0.0.0")).apply {
+            reuseAddress = true
         }
-        Log.e(TAG, "could not bind on $BASE_PORT..${BASE_PORT + PORT_FALLBACK_ATTEMPTS - 1}")
-        return null
+    } catch (e: Exception) {
+        lastError = "SOCKS5 포트 $BASE_PORT 를 다른 앱이 쓰고 있습니다"
+        Log.e(TAG, "bind on $BASE_PORT failed: ${e.message}")
+        null
     }
 
     private fun acceptLoop() {
@@ -477,7 +490,6 @@ class Socks5Server(
     companion object {
         private const val TAG = "Socks5Server"
         private const val CONNECT_TIMEOUT_MS = 5000
-        private const val PORT_FALLBACK_ATTEMPTS = 10
 
         /**
          * 동시 세션 상한.
@@ -489,6 +501,8 @@ class Socks5Server(
          * 통과시키면 TCP 연결 하나당 세션 하나가 된다.
          */
         private const val MAX_CONCURRENT_SESSIONS = 256
+
+        /** 고정 포트. 폴백하지 않는 이유는 클래스 KDoc 참고. */
         const val BASE_PORT = 1080
 
         private const val ATYP_IPV4   = 1

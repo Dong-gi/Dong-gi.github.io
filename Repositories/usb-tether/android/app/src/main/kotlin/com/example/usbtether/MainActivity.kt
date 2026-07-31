@@ -141,6 +141,7 @@ class MainActivity : AppCompatActivity() {
                 else -> "Hotspot: off"
             }
             append(hotspotLine).append('\n')
+            TetherService.proxyError?.let { append("⚠ ").append(it).append('\n') }
             append("SOCKS5 port: ").append(portLabel(TetherService.socksPort)).append('\n')
             append("HTTP port:   ").append(portLabel(TetherService.httpPort)).append('\n')
             append("Bytes in:    ").append(formatBytes(TetherService.bytesIn.get())).append('\n')

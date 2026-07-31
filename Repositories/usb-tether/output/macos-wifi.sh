@@ -15,43 +15,16 @@ if [ "$(id -u)" -ne 0 ]; then
     exit
 fi
 
-probe_socks5() {
-    python3 - "$1" "$2" <<'EOF'
-import socket, sys
-try:
-    s = socket.socket()
-    s.settimeout(1.5)
-    s.connect((sys.argv[1], int(sys.argv[2])))
-    s.send(b'\x05\x01\x00')
-    r = s.recv(2)
-    s.close()
-    sys.exit(0 if r == b'\x05\x00' else 1)
-except Exception as e:
-    sys.exit(1)
-EOF
-}
-
-echo "[1/2] Probing SOCKS5 on 192.168.49.1 ports 1080-1089..."
-PORT=""
-for ((p=1080; p<=1089; p++)); do
-    if probe_socks5 192.168.49.1 $p; then
-        PORT=$p
-        echo "  port $p: SOCKS5 OK"
-        break
-    else
-        echo "  port $p: no SOCKS5 reply"
-    fi
-done
-
-if [ -z "$PORT" ]; then
-    echo ""
-    echo "Failed to find a SOCKS5 server on 192.168.49.1 ports 1080-1089."
-    echo "Check that the Mac is connected to the phone's hotspot and the app's 'Start' was pressed."
-    exit 1
-fi
+# --- SOCKS5 port is fixed at 1080 ---
+# The app no longer falls back to 1081-1089, and this script no longer probes.
+# Probing accepted whichever port answered a SOCKS5 greeting, which let a malicious
+# app on the phone squat 1080, answer 05 00, and become the proxy for 100% of the
+# Mac's traffic. Nothing in the greeting authenticates the peer.
+# If 1080 is taken the app now fails loudly and shows the reason in its UI.
+PORT="${1:-1080}"
 
 echo ""
-echo "[2/2] Starting tun2proxy on socks5://192.168.49.1:$PORT ..."
+echo "[1/1] Starting tun2proxy on socks5://192.168.49.1:$PORT ..."
 # UDP ASSOCIATE is supported in Wi-Fi mode, so --dns over-tcp is not needed.
 # --setup automatically adds a host route for 192.168.49.1 via the Wi-Fi interface,
 # preventing the proxy traffic itself from looping back into the TUN adapter.

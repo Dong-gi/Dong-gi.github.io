@@ -49,6 +49,9 @@ class TetherService : Service() {
                 onBytesOut = { bytesOut.addAndGet(it) },
             )
             socksPort = s.start()
+            // SOCKS5 는 포트를 옮기지 않으므로 실패를 조용히 넘기면 안 된다.
+            // 원인을 UI 로 올려 사용자가 점유 앱을 찾아볼 수 있게 한다.
+            proxyError = if (socksPort > 0) null else s.lastError
             socks = s
         }
         if (http == null) {
@@ -136,6 +139,7 @@ class TetherService : Service() {
         socks = null
         socksPort = -1
         httpPort = -1
+        proxyError = null
         isRunning = false
         super.onDestroy()
     }
@@ -192,6 +196,10 @@ class TetherService : Service() {
             internal set
         /** 실제 HTTP 포트(기본 또는 기본+1). 바인딩되지 않았으면 -1. */
         @Volatile var httpPort: Int = -1
+            internal set
+
+        /** 프록시 기동 실패 원인. 정상이면 null. */
+        @Volatile var proxyError: String? = null
             internal set
 
         @Volatile var hotspotActive = false
