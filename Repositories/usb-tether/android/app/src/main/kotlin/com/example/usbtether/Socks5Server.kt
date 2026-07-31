@@ -189,12 +189,15 @@ class Socks5Server(
             return
         }
         try {
-            val localAddr = (remote.localAddress as? Inet4Address)?.address ?: ByteArray(4)
-            val lp = remote.localPort
+            // BND.ADDR/BND.PORT 를 0.0.0.0:0 으로 응답한다.
+            //
+            // 이전에는 remote.localAddress 와 remote.localPort, 즉 폰의 **셀룰러
+            // 인터페이스 주소**를 그대로 넣었다. RFC 1928 이 허용하는 값이지만
+            // 클라이언트에게 통신사 할당 IP 를 알려주는 셈이라 추적·표적화에 쓰인다.
+            // tun2proxy 를 포함한 일반 클라이언트는 CONNECT 응답의 이 필드를 쓰지
+            // 않으므로, 대부분의 프록시처럼 0 으로 채운다.
             client.getOutputStream().write(
-                byteArrayOf(5, 0, 0, ATYP_IPV4.toByte(),
-                    localAddr[0], localAddr[1], localAddr[2], localAddr[3],
-                    (lp shr 8).toByte(), (lp and 0xFF).toByte())
+                byteArrayOf(5, 0, 0, ATYP_IPV4.toByte(), 0, 0, 0, 0, 0, 0)
             )
             client.soTimeout = 0
             relay(client, remote)
