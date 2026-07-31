@@ -44,24 +44,34 @@ internal class HotspotPreferences(context: Context) {
     }
 
     /**
-     * 암호화된 패스프레이즈를 읽는다.
+     * 저장된 패스프레이즈를 읽는다.
      *
      * 이전 버전이 평문으로 남긴 값도 읽어 들이고(마이그레이션), 즉시 암호화해
      * 다시 저장한 뒤 평문 키를 지운다.
+     *
+     * **취약한 값은 없는 것으로 취급한다.** 이전 버전의 기본값은 `12345678` 이었고
+     * [WifiHotspot.isWeakPassphrase] 가 이제 그것을 거부한다. 그대로 옮겨오면
+     * 업그레이드한 사용자는 입력란에 채워진 값으로 핫스팟을 켜려다 "추측하기 쉬운
+     * 패스프레이즈" 오류만 보고, 스스로 지우고 다시 입력하지 않으면 벗어날 수 없다.
+     * null 을 반환하면 호출부가 새 난수를 생성한다.
      */
     private fun readPassphrase(): String? {
         prefs.getString(KEY_PASS_ENCRYPTED, null)
             ?.let { SecretStore.decrypt(it) }
-            ?.takeIf { it.isNotEmpty() }
+            ?.takeIf { isUsable(it) }
             ?.let { return it }
 
-        val legacy = prefs.getString(KEY_PASS_LEGACY, null)?.takeIf { it.isNotEmpty() }
+        val legacy = prefs.getString(KEY_PASS_LEGACY, null)?.takeIf { isUsable(it) }
         if (legacy != null) {
             writePassphrase(legacy)
             return legacy
         }
         return null
     }
+
+    /** 비어 있지 않고 [WifiHotspot] 이 받아줄 값인지. */
+    private fun isUsable(passphrase: String): Boolean =
+        passphrase.isNotEmpty() && !WifiHotspot.isWeakPassphrase(passphrase)
 
     /**
      * 패스프레이즈를 암호화해 저장하고 평문 잔재를 제거한다.
