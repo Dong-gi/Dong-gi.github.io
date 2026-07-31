@@ -361,7 +361,7 @@ class HttpProxyServer(
         when (val verdict = DestinationFilter.resolve(host)) {
             is DestinationFilter.Result.Rejected -> {
                 Log.w(TAG, "목적지 거부: ${verdict.reason}")
-                sendStatus(client.getOutputStream(), 403, "Forbidden")
+                sendError(client.getOutputStream(), 403, "Forbidden", BLOCKED_DESTINATION_HELP)
                 null
             }
             is DestinationFilter.Result.Allowed -> verdict.address
@@ -396,6 +396,35 @@ class HttpProxyServer(
             // 않는다(로그 유출 방지 — handleConnect 참고).
             Log.v(TAG, "pipe 종료: ${e.javaClass.simpleName}")
         }
+    }
+
+    /**
+     * 상태 코드와 함께 설명 본문을 보낸다.
+     *
+     * 본문 없는 4xx 는 브라우저의 일반 오류 페이지만 띄워 원인을 감춘다. 특히 403 은
+     * "왜 거부됐는지" 가 전혀 드러나지 않아 사용자가 프록시를 의심하지 못한다 —
+     * 파일 서버(사설 주소)에 접속하려다 이 응답을 받는 것이 대표적인 경우다.
+     */
+    private fun sendError(out: OutputStream, code: Int, reason: String, message: String) {
+        try {
+            val body = message.toByteArray(Charsets.UTF_8)
+            sendHeadersWithBody(out, code, reason, body.size)
+            out.write(body)
+            out.flush()
+        } catch (_: Exception) {
+            // 이미 끊긴 연결. 알릴 방법이 없다.
+        }
+    }
+
+    private fun sendHeadersWithBody(out: OutputStream, code: Int, reason: String, length: Int) {
+        out.write(
+            (
+                "HTTP/1.1 $code $reason\r\n" +
+                    "Content-Type: text/plain; charset=utf-8\r\n" +
+                    "Content-Length: $length\r\n" +
+                    "Connection: close\r\n\r\n"
+                ).toByteArray(Charsets.ISO_8859_1)
+        )
     }
 
     private fun sendStatus(out: OutputStream, code: Int, reason: String) {
@@ -509,6 +538,25 @@ class HttpProxyServer(
 
         private fun isHopByHop(name: String): Boolean =
             name.lowercase(Locale.ROOT) in HOP_BY_HOP_HEADERS
+
+        /**
+         * 403 본문. 사설 주소가 막히는 것은 의도이고, 사용자가 밟는 가장 흔한 경우는
+         * 같은 폰의 파일 서버에 접속하려다 이 응답을 받는 것이다. 그래서 조치까지 적는다.
+         */
+        private val BLOCKED_DESTINATION_HELP = buildString {
+            appendLine("이 프록시는 사설·로컬 주소로 연결하지 않습니다 (의도된 동작).")
+            appendLine()
+            appendLine("프록시가 루프백이나 사설 대역에 닿을 수 있으면, 폰의 로컬 서비스와")
+            appendLine("폰이 붙어 있는 LAN(공유기 관리 페이지, NAS 등)이 클라이언트에게")
+            appendLine("노출됩니다.")
+            appendLine()
+            appendLine("이 폰의 파일 서버에 접속하려던 것이라면, 그 주소를 브라우저나")
+            appendLine("시스템의 프록시 예외 목록에 넣으세요:")
+            appendLine()
+            appendLine("    192.168.49.*")
+            appendLine()
+            appendLine("파일 서버는 프록시를 거치지 않고 직접 연결해야 합니다.")
+        }
 
         const val BASE_PORT = 8282
     }
