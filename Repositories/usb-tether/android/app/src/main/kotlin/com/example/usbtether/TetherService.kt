@@ -134,11 +134,23 @@ class TetherService : Service() {
     }
 
     private fun stopHotspot() {
-        hotspot?.stop()
+        val hs = hotspot
         hotspot = null
         hotspotActive = false
         hotspotSsid = null
         hotspotError = null
+        // 제거 결과를 기다리지 않고 먼저 off 를 게시한다 — 타일이 클릭 직후
+        // STATE_UNAVAILABLE 로 바꾸고 이 브로드캐스트를 기다리기 때문이다.
+        // 제거가 실패하면(그룹이 아직 살아 있을 수 있다) 콜백에서 사유를 붙여
+        // 한 번 더 알린다.
+        if (hs != null) {
+            hs.stop { removed ->
+                if (!removed) {
+                    hotspotError = hs.lastError
+                    broadcastHotspotState()
+                }
+            }
+        }
         broadcastHotspotState()
     }
 

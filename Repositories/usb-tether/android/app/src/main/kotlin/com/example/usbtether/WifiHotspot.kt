@@ -21,6 +21,9 @@ import android.util.Log
  * 동작한다.
  * 필요 권한: NEARBY_WIFI_DEVICES (API 33+) 또는 ACCESS_FINE_LOCATION (29–32),
  * 그리고 CHANGE_WIFI_STATE.
+ *
+ * **이 클래스는 1회용이다.** [stop] 이 `WifiP2pManager.Channel` 을 닫으므로 같은
+ * 인스턴스로 다시 [start] 할 수 없다. 켤 때마다 새로 만들어 쓴다.
  */
 class WifiHotspot(
     context: Context,
@@ -214,14 +217,61 @@ class WifiHotspot(
         return group.networkName == displaySsid && livePassphrase == passphrase
     }
 
+    /**
+     * 그룹을 내리고 이 인스턴스가 쥔 [WifiP2pManager.Channel] 을 닫는다.
+     *
+     * Channel 은 인스턴스마다 `initialize()` 로 새로 만들어지고 재사용되지 않는다
+     * ([TetherService] 는 `ACTION_HOTSPOT_ON` 마다 새 `WifiHotspot` 을 만든다).
+     * 닫지 않으면 **핫스팟 on/off 1회당 하나씩**, 그리고 실패한 기동 시도마다
+     * 하나씩 프레임워크와의 바인더 연결이 프로세스 수명 동안 쌓인다.
+     *
+     * `removeGroup` 의 결과도 버리지 않는다. 실패하면 P2P 그룹이 살아 있는데
+     * UI·타일만 "off" 가 되므로, 원인을 [lastError] 에 남기고 [onResult] 로
+     * 알린다. 성공이든 실패든 이 인스턴스는 버려지므로 Channel 은 닫는다.
+     */
     @SuppressLint("MissingPermission")
-    fun stop() {
-        val mgr = manager ?: return
-        val ch = channel ?: return
+    fun stop(onResult: ((Boolean) -> Unit)? = null) {
+        val mgr = manager
+        val ch = channel
+        if (mgr == null || ch == null) {
+            onResult?.invoke(true)
+            return
+        }
         try {
-            mgr.removeGroup(ch, null)
+            mgr.removeGroup(ch, object : WifiP2pManager.ActionListener {
+                override fun onSuccess() {
+                    closeChannel(ch)
+                    onResult?.invoke(true)
+                }
+
+                override fun onFailure(reason: Int) {
+                    lastError =
+                        "removeGroup failed (code=$reason) — the Wi-Fi Direct group may still be up"
+                    Log.w(TAG, lastError!!)
+                    closeChannel(ch)
+                    onResult?.invoke(false)
+                }
+            })
         } catch (e: Exception) {
-            Log.w(TAG, "removeGroup failed: ${e.message}")
+            lastError = "removeGroup threw: ${e.message}"
+            Log.w(TAG, lastError!!)
+            closeChannel(ch)
+            onResult?.invoke(false)
+        }
+    }
+
+    /**
+     * Channel 을 닫는다.
+     *
+     * `Channel` 이 `AutoCloseable` 이 된 것은 API 27 이고 minSdk 는 26 이므로
+     * 버전 가드가 필요하다. API 26 에서는 닫을 수단이 없어 그대로 둔다.
+     */
+    private fun closeChannel(ch: WifiP2pManager.Channel) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) return
+        try {
+            ch.close()
+        } catch (e: Exception) {
+            Log.w(TAG, "channel close failed: ${e.message}")
         }
     }
 
