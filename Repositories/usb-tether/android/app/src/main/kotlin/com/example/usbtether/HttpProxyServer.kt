@@ -312,6 +312,13 @@ class HttpProxyServer(
                 sb.append(k).append(": ").append(v).append("\r\n")
             }
             if (!hostHeaderWritten) sb.append("Host: ").append(hostPort).append("\r\n")
+            // hop-by-hop 헤더를 제거했으므로 이 홉의 연결 관리를 우리가 명시해야 한다.
+            // 생략하면 HTTP/1.1 상위는 keep-alive 로 간주하고, 클라이언트가
+            // `Connection: close` 를 보냈더라도 상위가 EOF 를 주지 않는다. 그러면
+            // relay() 가 클라이언트가 끊을 때까지 매달려 있다가 join(5초)를 다 쓰고,
+            // 요청 하나마다 소켓 하나와 스레드 둘을 그만큼 붙잡는다.
+            // 이 프록시는 요청마다 새 상위 연결을 열므로 close 가 맞다.
+            sb.append("Connection: close\r\n")
             sb.append("\r\n")
             remoteOut.write(sb.toString().toByteArray(Charsets.ISO_8859_1))
             remoteOut.flush()

@@ -90,7 +90,12 @@ class TetherService : Service() {
     }
 
     private fun startHotspot(ssid: String, passphrase: String) {
-        if (hotspot != null) return
+        if (hotspot != null) {
+            // 이미 기동 중이어도 상태를 알려야 한다. 타일이 클릭 직후
+            // STATE_UNAVAILABLE 로 바꾸고 이 브로드캐스트를 기다리기 때문이다.
+            broadcastHotspotState()
+            return
+        }
         if (ssid.isEmpty() || passphrase.isEmpty()) {
             hotspotError = "SSID/passphrase required"
             broadcastHotspotState()

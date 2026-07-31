@@ -52,12 +52,19 @@ class HotspotStartActivity : Activity() {
     }
 
     private fun startHotspot() {
-        if (TetherService.hotspotActive) return
+        // 조기 반환 시에도 상태를 브로드캐스트해야 한다. 타일은 클릭 직후
+        // STATE_UNAVAILABLE 로 바꾸고 ACTION_HOTSPOT_STATE_CHANGED 를 기다리므로,
+        // 아무것도 보내지 않으면 퀵 설정 패널을 다시 열 때까지 '사용 불가' 로 멈춘다.
+        if (TetherService.hotspotActive) {
+            notifyStateUnchanged()
+            return
+        }
 
         val ssid = hotspotPrefs.ssid()
         val passphrase = hotspotPrefs.passphraseOrCreate()
         if (ssid.isEmpty() || passphrase.isEmpty()) {
             Log.w(TAG, "저장된 SSID/패스프레이즈가 없어 타일 기동을 건너뛴다")
+            notifyStateUnchanged()
             return
         }
 
@@ -68,6 +75,19 @@ class HotspotStartActivity : Activity() {
                 putExtra(TetherService.EXTRA_SSID, ssid)
                 putExtra(TetherService.EXTRA_PASSPHRASE, passphrase)
             },
+        )
+    }
+
+    /**
+     * 상태가 바뀌지 않았음을 알린다.
+     *
+     * 타일이 낙관적으로 걸어둔 STATE_UNAVAILABLE 를 실제 상태로 되돌리게 하는 것이
+     * 목적이다. TetherService 가 보내는 것과 같은 브로드캐스트를 쓰고,
+     * setPackage 로 이 앱 안에서만 전달되게 한다.
+     */
+    private fun notifyStateUnchanged() {
+        sendBroadcast(
+            Intent(TetherService.ACTION_HOTSPOT_STATE_CHANGED).setPackage(packageName)
         )
     }
 
