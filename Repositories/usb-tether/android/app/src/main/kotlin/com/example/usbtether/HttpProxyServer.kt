@@ -180,6 +180,7 @@ class HttpProxyServer(
             if (method.equals("CONNECT", ignoreCase = true)) {
                 handleConnect(client, target)
             } else {
+                rejectDesyncHeaders(headers)
                 handleForward(client, method, target, version, headers)
             }
         } catch (_: HeaderTooLargeException) {
@@ -223,6 +224,39 @@ class HttpProxyServer(
         }
     }
 
+    /**
+     * 요청 스머글링(desync)에 쓰이는 헤더 조합을 거부한다.
+     *
+     * 이전에는 `Proxy-Connection` 과 `Proxy-Authorization` 만 걸러내고 나머지를
+     * 그대로 상위에 전달했다. 그래서 다음이 통과했다.
+     *
+     *  - `Content-Length` 와 `Transfer-Encoding` **동시 지정**. 상위 CDN·리버스
+     *    프록시와 본문 경계 해석이 갈리는 CL.TE / TE.CL desync 의 재료다.
+     *  - **중복 `Host`**. 프런트엔드와 백엔드가 서로 다른 Host 를 보고 라우팅해
+     *    캐시 오염·라우팅 desync 로 이어진다.
+     *
+     * 클라이언트가 이미 CONNECT 로 임의 바이트를 쓸 수 있어 권한 상승은 아니지만,
+     * 이 폰이 사용자의 통신사 IP 로 desync 공격을 세탁해 주는 경유지가 되는 것을
+     * 막는다. RFC 7230 §3.3.3 은 두 헤더가 함께 오면 400 으로 거부하도록 정한다.
+     *
+     * @throws MalformedRequestException 위 조합이 발견되면
+     */
+    private fun rejectDesyncHeaders(headers: List<Pair<String, String>>) {
+        var hasContentLength = false
+        var hasTransferEncoding = false
+        var hostCount = 0
+
+        for ((name, _) in headers) {
+            when {
+                name.equals("Content-Length", ignoreCase = true) -> hasContentLength = true
+                name.equals("Transfer-Encoding", ignoreCase = true) -> hasTransferEncoding = true
+                name.equals("Host", ignoreCase = true) -> hostCount++
+            }
+        }
+        if (hasContentLength && hasTransferEncoding) throw MalformedRequestException()
+        if (hostCount > 1) throw MalformedRequestException()
+    }
+
     private fun handleForward(
         client: Socket,
         method: String,
@@ -257,8 +291,9 @@ class HttpProxyServer(
             sb.append(method).append(' ').append(path).append(' ').append(version).append("\r\n")
             var hostHeaderWritten = false
             for ((k, v) in headers) {
-                if (k.equals("Proxy-Connection", ignoreCase = true)) continue
-                if (k.equals("Proxy-Authorization", ignoreCase = true)) continue
+                // hop-by-hop 헤더는 이 홉에서 끝나야 한다(RFC 7230 §6.1).
+                // 그대로 전달하면 상위와의 연결 관리·업그레이드 협상이 어긋난다.
+                if (HOP_BY_HOP_HEADERS.any { it.equals(k, ignoreCase = true) }) continue
                 if (k.equals("Host", ignoreCase = true)) hostHeaderWritten = true
                 sb.append(k).append(": ").append(v).append("\r\n")
             }
@@ -382,6 +417,23 @@ class HttpProxyServer(
 
         /** 헤더 개수 상한. 무제한 리스트 누적으로도 같은 OOM 에 도달할 수 있다. */
         private const val MAX_HEADER_COUNT = 100
+
+        /**
+         * 이 홉에서 소비하고 상위로 전달하지 않는 헤더 (RFC 7230 §6.1).
+         *
+         * Proxy-Authorization 은 인증을 쓰지 않는 지금도 목록에 둔다 —
+         * 자격증명을 목적지 서버로 흘려보내지 않기 위함이다.
+         */
+        private val HOP_BY_HOP_HEADERS = listOf(
+            "Proxy-Connection",
+            "Proxy-Authorization",
+            "Proxy-Authenticate",
+            "Connection",
+            "Keep-Alive",
+            "TE",
+            "Trailer",
+            "Upgrade",
+        )
         const val BASE_PORT = 8282
     }
 }
