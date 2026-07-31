@@ -4,6 +4,7 @@ import android.util.Log
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.*
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -50,6 +51,17 @@ class Socks5Server(
 
     /** 수립된 연결을 추적한다. stop() 이 실제로 끊을 수 있게 하는 유일한 수단이다. */
     private val connections = ConnectionRegistry()
+
+    /**
+     * UDP 도메인 목적지의 이름 해석 캐시. 근거는 [resolvedOrWarmUp].
+     *
+     * association 별이 아니라 서버 단위다 — 여러 association 이 같은 이름을 쓰는
+     * 편이 흔하므로 적중률이 높다.
+     */
+    private val udpDnsCache = ConcurrentHashMap<String, ResolvedName>()
+
+    /** 지금 백그라운드에서 해석 중인 이름. 같은 이름을 중복 조회하지 않는다. */
+    private val udpDnsInFlight: MutableSet<String> = ConcurrentHashMap.newKeySet()
 
     /** 바인딩된 포트([BASE_PORT]). 서버가 동작 중이 아니면 -1. */
     @Volatile var actualPort: Int = -1
@@ -365,13 +377,19 @@ class Socks5Server(
                 continue
             }
 
-            val (dstAddr, dstPort, payload) = parseUdpHeader(pkt) ?: continue
+            val request = parseUdpHeader(pkt) ?: continue
+            val dstAddr = when (val destination = request.destination) {
+                is UdpDestination.Literal -> destination.address
+                // 이름 해석은 이 스레드에서 하지 않는다 — resolvedOrWarmUp KDoc 참고.
+                is UdpDestination.Domain -> resolvedOrWarmUp(destination.name) ?: continue
+            }
             // TCP 경로와 같은 정책을 UDP 에도 적용한다. 이게 없으면 UDP 릴레이가
             // 루프백·사설 대역으로 가는 우회로가 된다.
             if (DestinationFilter.isBlocked(dstAddr)) continue
+            val payload = request.payload
             onBytesIn(payload.size.toLong())
             try {
-                remoteFacing.send(DatagramPacket(payload, payload.size, dstAddr, dstPort))
+                remoteFacing.send(DatagramPacket(payload, payload.size, dstAddr, request.port))
             } catch (e: Exception) {
                 Log.w(TAG, "UDP 전달 실패: ${e.message}")
             }
@@ -416,7 +434,11 @@ class Socks5Server(
         }
     }
 
-    private fun parseUdpHeader(pkt: DatagramPacket): Triple<InetAddress, Int, ByteArray>? {
+    /**
+     * SOCKS5 UDP 요청 헤더(RFC 1928 §7)를 파싱한다. **이름 해석은 하지 않는다** —
+     * 이 함수는 릴레이 스레드에서 호출되므로 블로킹 호출이 들어가면 안 된다.
+     */
+    private fun parseUdpHeader(pkt: DatagramPacket): UdpRequest? {
         val data = pkt.data
         val off = pkt.offset
         val end = off + pkt.length
@@ -425,23 +447,28 @@ class Socks5Server(
         if (data[off + 2].toInt() and 0xFF != 0) return null  // 단편화된 datagram 은 폐기 (FRAG != 0)
         val atyp = data[off + 3].toInt() and 0xFF
         var pos = off + 4
-        val dstAddr: InetAddress
+        val destination: UdpDestination
         when (atyp) {
             ATYP_IPV4 -> {
                 if (pos + 4 > end) return null
-                dstAddr = InetAddress.getByAddress(data.copyOfRange(pos, pos + 4))
+                // getByAddress 는 DNS 를 타지 않는다.
+                destination = UdpDestination.Literal(
+                    InetAddress.getByAddress(data.copyOfRange(pos, pos + 4))
+                )
                 pos += 4
             }
             ATYP_DOMAIN -> {
                 if (pos >= end) return null
                 val nameLen = data[pos++].toInt() and 0xFF
                 if (pos + nameLen > end) return null
-                dstAddr = InetAddress.getByName(String(data, pos, nameLen, Charsets.US_ASCII))
+                destination = UdpDestination.Domain(String(data, pos, nameLen, Charsets.US_ASCII))
                 pos += nameLen
             }
             ATYP_IPV6 -> {
                 if (pos + 16 > end) return null
-                dstAddr = InetAddress.getByAddress(data.copyOfRange(pos, pos + 16))
+                destination = UdpDestination.Literal(
+                    InetAddress.getByAddress(data.copyOfRange(pos, pos + 16))
+                )
                 pos += 16
             }
             else -> return null
@@ -449,7 +476,65 @@ class Socks5Server(
         if (pos + 2 > end) return null
         val dstPort = ((data[pos].toInt() and 0xFF) shl 8) or (data[pos + 1].toInt() and 0xFF)
         pos += 2
-        return Triple(dstAddr, dstPort, data.copyOfRange(pos, end))
+        return UdpRequest(destination, dstPort, data.copyOfRange(pos, end))
+    }
+
+    /**
+     * 도메인 목적지를 **캐시에서만** 해석한다. 캐시에 없으면 백그라운드 조회를 걸고
+     * null 을 반환해 이 데이터그램을 버린다.
+     *
+     * 이전에는 `parseUdpHeader` 가 `InetAddress.getByName()` 을 동기 호출했다. 그
+     * 스레드는 이 association 의 클라이언트→원격 방향을 처리하는 **유일한**
+     * 스레드이므로, 응답이 느린 이름 하나가 나머지 UDP 트래픽 전부를 막았다.
+     * 캐시도 없어 같은 이름을 데이터그램마다 다시 조회했다.
+     *
+     * 버리는 쪽을 택한 이유: UDP 는 유실을 전제하는 전송이고 클라이언트는
+     * 재전송한다. 재전송 시점에는 캐시가 채워져 있다. 그리고 스스로 이름을 해석하는
+     * 클라이언트(tun2proxy 포함)는 IP 리터럴(ATYP 1/4)을 보내므로 이 경로를 아예
+     * 타지 않는다.
+     *
+     * 폭주 방지: 동시 조회는 [UDP_DNS_MAX_INFLIGHT] 개, 캐시는 [UDP_DNS_CACHE_MAX]
+     * 개로 묶는다. 상한을 넘으면 조회를 걸지 않고 버린다 — 클라이언트가 서로 다른
+     * 이름을 계속 뿌려 스레드와 메모리를 늘리는 것을 막는다.
+     *
+     * DNS 응답의 실제 TTL 은 쓰지 않는다. `InetAddress` 로는 볼 수 없기 때문이며,
+     * 대신 [UDP_DNS_TTL_MS] 를 고정으로 쓴다.
+     */
+    private fun resolvedOrWarmUp(domain: String): InetAddress? {
+        val cached = udpDnsCache[domain]
+        if (cached != null) {
+            if (cached.expiresAtMs > System.currentTimeMillis()) return cached.address
+            udpDnsCache.remove(domain, cached)
+        }
+        warmUpName(domain)
+        return null
+    }
+
+    /** [resolvedOrWarmUp] 의 백그라운드 조회. 상한에 걸리면 아무것도 하지 않는다. */
+    private fun warmUpName(domain: String) {
+        if (udpDnsCache.size >= UDP_DNS_CACHE_MAX) return
+        if (udpDnsInFlight.size >= UDP_DNS_MAX_INFLIGHT) return
+        if (!udpDnsInFlight.add(domain)) return
+        try {
+            executor.submit {
+                try {
+                    val resolved = InetAddress.getByName(domain)
+                    udpDnsCache[domain] =
+                        ResolvedName(resolved, System.currentTimeMillis() + UDP_DNS_TTL_MS)
+                } catch (e: Exception) {
+                    // 실패는 캐시하지 않는다. 다음 데이터그램이 다시 시도한다.
+                    // 목적지 이름은 남기지 않는다(로그 유출 방지 — handleConnect 참고).
+                    Log.w(TAG, "UDP 목적지 이름 해석 실패: ${e.javaClass.simpleName}")
+                } finally {
+                    udpDnsInFlight.remove(domain)
+                }
+            }
+        } catch (t: Throwable) {
+            // 풀이 태스크를 받지 못한다(shutdown 이거나 스레드를 더 만들 수 없다).
+            // in-flight 표시를 반드시 되돌려야 슬롯이 새지 않는다.
+            udpDnsInFlight.remove(domain)
+            Log.w(TAG, "이름 해석 제출 실패: ${t.javaClass.simpleName}")
+        }
     }
 
     private fun buildUdpHeader(
@@ -511,6 +596,8 @@ class Socks5Server(
         try { serverSocket?.close() } catch (_: Exception) {}
         connections.closeAll()
         executor.shutdownNow()
+        udpDnsCache.clear()
+        udpDnsInFlight.clear()
         actualPort = -1
     }
 
@@ -541,6 +628,15 @@ class Socks5Server(
         /** UDP 수신 폴링 주기. 소켓이 닫혔는지 확인하려면 receive 가 주기적으로 풀려야 한다. */
         private const val UDP_POLL_TIMEOUT_MS = 2000
 
+        /** UDP 도메인 목적지 해석 결과의 유효 기간. 근거는 [resolvedOrWarmUp]. */
+        private const val UDP_DNS_TTL_MS = 60_000L
+
+        /** 이름 해석 캐시 항목 수 상한. */
+        private const val UDP_DNS_CACHE_MAX = 256
+
+        /** 동시에 진행하는 백그라운드 이름 해석 수 상한. */
+        private const val UDP_DNS_MAX_INFLIGHT = 8
+
         /** 릴레이 스레드 종료를 기다리는 시간. */
         private const val RELAY_JOIN_TIMEOUT_MS = 5000L
 
@@ -554,6 +650,25 @@ class Socks5Server(
         private const val REP_ATYP_UNSUPPORTED = 8
     }
 }
+
+/** SOCKS5 UDP 요청의 목적지. 리터럴 주소(ATYP 1/4)이거나 도메인(ATYP 3)이다. */
+private sealed interface UdpDestination {
+    /** 이미 주소 형태이므로 이름 해석이 필요 없다. */
+    class Literal(val address: InetAddress) : UdpDestination
+
+    /** 이름 해석이 필요하다. 릴레이 스레드에서 하면 안 된다. */
+    class Domain(val name: String) : UdpDestination
+}
+
+/** 파싱된 SOCKS5 UDP 요청 하나(RFC 1928 §7). */
+private class UdpRequest(
+    val destination: UdpDestination,
+    val port: Int,
+    val payload: ByteArray,
+)
+
+/** 이름 해석 결과와 만료 시각. */
+private class ResolvedName(val address: InetAddress, val expiresAtMs: Long)
 
 /**
  * 1바이트를 읽고 EOF 면 예외를 던진다.
