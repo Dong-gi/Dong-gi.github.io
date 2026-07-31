@@ -15,11 +15,13 @@ import java.util.concurrent.atomic.AtomicLong
 /**
  * 포그라운드 서비스. 기동하면 항상 다음 두 서버를 띄운다.
  *   - SOCKS5 프록시: `0.0.0.0:`[Socks5Server.BASE_PORT] 고정. 점유돼 있으면
- *     폴백하지 않고 실패하며 원인이 [proxyError] 로 올라온다
- *   - HTTP 프록시:   `0.0.0.0:`[HttpProxyServer.BASE_PORT] 부터 +9 까지 폴백
+ *     폴백하지 않고 실패한다
+ *   - HTTP 프록시:   `0.0.0.0:`[HttpProxyServer.BASE_PORT] 부터 +9 까지 폴백하고,
+ *     열 개가 모두 막혀 있으면 실패한다
  *
- * 실제로 바인딩된 포트는 [socksPort] / [httpPort] 에 게시되어 UI 에 표시된다.
- * 표시하거나 접속할 포트를 기본 상수에서 가져오면 안 된다.
+ * 어느 쪽이 실패하든 원인이 [proxyError] 로 올라온다. 실제로 바인딩된 포트는
+ * [socksPort] / [httpPort] 에 게시되어 UI 에 표시된다. 표시하거나 접속할 포트를
+ * 기본 상수에서 가져오면 안 된다.
  *
  * Wi-Fi Direct GO 는 배터리 소모가 크므로 ACTION_HOTSPOT_ON / ACTION_HOTSPOT_OFF 로
  * **따로** 토글한다. ACTION_HOTSPOT_ON 을 보낼 때 EXTRA_SSID 와 EXTRA_PASSPHRASE 로
@@ -34,6 +36,15 @@ class TetherService : Service() {
     private var http: HttpProxyServer? = null
     private var hotspot: WifiHotspot? = null
 
+    /**
+     * 각 프록시의 마지막 기동 실패 원인.
+     *
+     * 서버 인스턴스에 물어보지 않고 따로 들고 있는다. 실패한 인스턴스는 캐시하지
+     * 않으므로([startProxiesIfNeeded]) 실패 직후 참조가 사라지기 때문이다.
+     */
+    private var socksError: String? = null
+    private var httpError: String? = null
+
     override fun onCreate() {
         super.onCreate()
         startForeground(NOTIF_ID, buildNotification())
@@ -44,25 +55,7 @@ class TetherService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (socks == null) {
-            val s = Socks5Server(
-                onBytesIn = { bytesIn.addAndGet(it) },
-                onBytesOut = { bytesOut.addAndGet(it) },
-            )
-            socksPort = s.start()
-            // SOCKS5 는 포트를 옮기지 않으므로 실패를 조용히 넘기면 안 된다.
-            // 원인을 UI 로 올려 사용자가 점유 앱을 찾아볼 수 있게 한다.
-            proxyError = if (socksPort > 0) null else s.lastError
-            socks = s
-        }
-        if (http == null) {
-            val h = HttpProxyServer(
-                onBytesIn = { bytesIn.addAndGet(it) },
-                onBytesOut = { bytesOut.addAndGet(it) },
-            )
-            httpPort = h.start()
-            http = h
-        }
+        startProxiesIfNeeded()
         refreshNotification()
 
         when (intent?.action) {
@@ -76,6 +69,41 @@ class TetherService : Service() {
 
         isRunning = true
         return START_STICKY
+    }
+
+    /**
+     * 아직 뜨지 않은 프록시를 기동한다.
+     *
+     * **실패한 인스턴스를 필드에 남기지 않는다.** 남기면 이후 onStartCommand 가
+     * `== null` 검사만 보고 재시도하지 않으므로, 포트를 점유한 앱을 끈 뒤에도
+     * 사용자가 서비스를 Stop/Start 해야 벗어난다.
+     *
+     * 두 실패 원인을 합쳐 [proxyError] 로 게시한다. SOCKS5 는 포트를 옮기지 않고
+     * HTTP 는 10회 폴백 뒤 포기하는데, 어느 쪽이든 조용히 넘기면 UI 에는 이유 없는
+     * `—` 만 남는다.
+     */
+    private fun startProxiesIfNeeded() {
+        if (socks == null) {
+            val s = Socks5Server(
+                onBytesIn = { bytesIn.addAndGet(it) },
+                onBytesOut = { bytesOut.addAndGet(it) },
+            )
+            socksPort = s.start()
+            socksError = if (socksPort > 0) null else s.lastError
+            if (socksPort > 0) socks = s
+        }
+        if (http == null) {
+            val h = HttpProxyServer(
+                onBytesIn = { bytesIn.addAndGet(it) },
+                onBytesOut = { bytesOut.addAndGet(it) },
+            )
+            httpPort = h.start()
+            httpError = if (httpPort > 0) null else h.lastError
+            if (httpPort > 0) http = h
+        }
+        proxyError = listOfNotNull(socksError, httpError)
+            .joinToString("\n")
+            .ifEmpty { null }
     }
 
     private fun startHotspot(ssid: String, passphrase: String) {
@@ -145,6 +173,8 @@ class TetherService : Service() {
         socks = null
         socksPort = -1
         httpPort = -1
+        socksError = null
+        httpError = null
         proxyError = null
         isRunning = false
         super.onDestroy()

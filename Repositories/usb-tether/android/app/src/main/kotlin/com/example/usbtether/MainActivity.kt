@@ -128,7 +128,15 @@ class MainActivity : AppCompatActivity() {
     private fun updateUi() {
         val running = TetherService.isRunning
         val hotspotOn = TetherService.hotspotActive
-        statusText.text = if (running) getString(R.string.status_running) else getString(R.string.status_stopped)
+        // 서비스가 살아 있다는 것과 프록시가 실제로 듣고 있다는 것은 다르다.
+        // 포트가 하나도 잡히지 않았는데 "Running" 만 보여주면 사용자는 왜 접속이
+        // 안 되는지 알 수 없다. 아래 proxyError 줄과 짝을 이룬다.
+        val anyProxyUp = TetherService.socksPort > 0 || TetherService.httpPort > 0
+        statusText.text = when {
+            !running -> getString(R.string.status_stopped)
+            anyProxyUp -> getString(R.string.status_running)
+            else -> getString(R.string.status_no_proxy)
+        }
         toggleButton.text = if (running) getString(R.string.stop) else getString(R.string.start)
         hotspotButton.text = if (hotspotOn) getString(R.string.hotspot_stop) else getString(R.string.hotspot_start)
         ssidInput.isEnabled = !hotspotOn

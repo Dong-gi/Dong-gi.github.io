@@ -49,6 +49,16 @@ class HttpProxyServer(
     @Volatile var actualPort: Int = -1
         private set
 
+    /**
+     * 마지막 기동 실패 원인. 정상이면 null.
+     *
+     * 10회 폴백이 있어 실패가 드물지만, 드물다고 조용히 넘기면 UI 에 이유 없는
+     * `—` 만 남아 사용자가 손쓸 방법이 없다. "포트 문제는 조용히 옮기지 않고
+     * 알린다"는 원칙을 [Socks5Server] 와 똑같이 적용한다.
+     */
+    @Volatile var lastError: String? = null
+        private set
+
     /** 호출자가 채택된 포트를 즉시 볼 수 있도록 동기적으로 바인딩한 뒤 accept 를 시작한다. */
     fun start(): Int {
         if (!running.compareAndSet(false, true)) return actualPort
@@ -58,6 +68,7 @@ class HttpProxyServer(
         }
         serverSocket = sock
         actualPort = sock.localPort
+        lastError = null
         Log.i(TAG, "HTTP proxy listening on 0.0.0.0:$actualPort")
         thread(name = "http-proxy-acceptor", isDaemon = true) { acceptLoop() }
         return actualPort
@@ -90,7 +101,9 @@ class HttpProxyServer(
                 Log.w(TAG, "bind on $port failed: ${e.message}")
             }
         }
-        Log.e(TAG, "could not bind on $BASE_PORT..${BASE_PORT + PORT_FALLBACK_ATTEMPTS - 1}")
+        val lastPort = BASE_PORT + PORT_FALLBACK_ATTEMPTS - 1
+        lastError = "HTTP 포트 $BASE_PORT–$lastPort 를 모두 다른 앱이 쓰고 있습니다"
+        Log.e(TAG, "could not bind on $BASE_PORT..$lastPort")
         return null
     }
 
