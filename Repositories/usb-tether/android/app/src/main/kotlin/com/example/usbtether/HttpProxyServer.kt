@@ -1,6 +1,7 @@
 package com.example.usbtether
 
 import android.util.Log
+import java.io.BufferedInputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.InetAddress
@@ -160,7 +161,13 @@ class HttpProxyServer(
         try {
             client.tcpNoDelay = true
             client.soTimeout = 10_000
-            val inp = client.getInputStream()
+            // 헤더는 바이트 단위로 읽어야 본문 바이트가 스트림에 남는다
+            // ([readHeaderLine] KDoc). 그런데 raw SocketInputStream 에 대고 그렇게
+            // 하면 헤더 한 바이트마다 syscall 이 하나씩 들어간다. 버퍼로 감싸고
+            // **이 스트림을 relay() 까지 그대로 넘겨** 버퍼에 이미 들어온 본문
+            // 바이트가 유실되지 않게 한다. client.getInputStream() 을 다시 부르면
+            // 버퍼에 남은 것을 잃는다.
+            val inp = BufferedInputStream(client.getInputStream(), HEADER_BUFFER_BYTES)
             val out = client.getOutputStream()
 
             val requestLine = readHeaderLine(inp) ?: return
@@ -181,10 +188,10 @@ class HttpProxyServer(
             }
 
             if (method.equals("CONNECT", ignoreCase = true)) {
-                handleConnect(client, target)
+                handleConnect(client, inp, target)
             } else {
                 rejectDesyncHeaders(headers)
-                handleForward(client, method, target, version, headers)
+                handleForward(client, inp, method, target, version, headers)
             }
         } catch (_: HeaderTooLargeException) {
             Log.w(TAG, "헤더가 상한을 넘어 요청을 거부했다")
@@ -200,7 +207,7 @@ class HttpProxyServer(
         }
     }
 
-    private fun handleConnect(client: Socket, hostPort: String) {
+    private fun handleConnect(client: Socket, clientIn: InputStream, hostPort: String) {
         val (host, port) = splitHostPort(hostPort, defaultPort = 443) ?: run {
             sendStatus(client.getOutputStream(), 400, "Bad Request"); return
         }
@@ -222,7 +229,7 @@ class HttpProxyServer(
             client.getOutputStream().write("HTTP/1.1 200 Connection Established\r\n\r\n".toByteArray())
             client.getOutputStream().flush()
             client.soTimeout = 0
-            relay(client, remote)
+            relay(client, clientIn, remote)
         } finally {
             try { remote.close() } catch (_: Exception) {}
         }
@@ -263,6 +270,7 @@ class HttpProxyServer(
 
     private fun handleForward(
         client: Socket,
+        clientIn: InputStream,
         method: String,
         absoluteUri: String,
         version: String,
@@ -317,7 +325,7 @@ class HttpProxyServer(
             remoteOut.flush()
 
             client.soTimeout = 0
-            relay(client, remote)
+            relay(client, clientIn, remote)
         } finally {
             try { remote.close() } catch (_: Exception) {}
         }
@@ -339,12 +347,16 @@ class HttpProxyServer(
             is DestinationFilter.Result.Allowed -> verdict.address
         }
 
-    private fun relay(client: Socket, remote: Socket) {
+    /**
+     * @param clientIn 헤더를 읽을 때 쓴 것과 **같은** 스트림. 버퍼에 이미 들어온
+     *   본문 바이트가 여기 남아 있으므로 새로 얻어오면 안 된다.
+     */
+    private fun relay(client: Socket, clientIn: InputStream, remote: Socket) {
         val t = thread(isDaemon = true) {
             pipe(remote.getInputStream(), client.getOutputStream()) { onBytesOut(it) }
             try { client.shutdownOutput() } catch (_: Exception) {}
         }
-        pipe(client.getInputStream(), remote.getOutputStream()) { onBytesIn(it) }
+        pipe(clientIn, remote.getOutputStream()) { onBytesIn(it) }
         try { remote.shutdownOutput() } catch (_: Exception) {}
         t.join(5_000)
     }
@@ -426,6 +438,16 @@ class HttpProxyServer(
          * 전체 힙을 때린다.
          */
         private const val MAX_HEADER_LINE_BYTES = 8 * 1024
+
+        /**
+         * 헤더 읽기용 버퍼 크기.
+         *
+         * [readHeaderLine] 은 CRLF 를 직접 찾아야 해서 1바이트씩 읽는다. raw
+         * SocketInputStream 이면 그 한 번이 그대로 syscall 이므로(헤더 1KB 당 약
+         * 1000회) BufferedInputStream 으로 감싼다. 한 줄 상한과 같은 크기로 두어
+         * 정상 요청의 헤더 블록이 대체로 한 번의 read 로 채워지게 한다.
+         */
+        private const val HEADER_BUFFER_BYTES = MAX_HEADER_LINE_BYTES
 
         /** 헤더 개수 상한. 무제한 리스트 누적으로도 같은 OOM 에 도달할 수 있다. */
         private const val MAX_HEADER_COUNT = 100
