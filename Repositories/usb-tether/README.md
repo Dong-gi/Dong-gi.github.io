@@ -40,23 +40,31 @@ usb-tether/
 │       └── src/main/
 │           ├── AndroidManifest.xml
 │           ├── kotlin/com/example/usbtether/
-│           │   ├── MainActivity.kt      # 시작/정지 UI, SSID/패스프레이즈 입력, 통계 표시
-│           │   ├── TetherService.kt     # 포그라운드 서비스, 세 컴포넌트 수명 관리
-│           │   ├── Socks5Server.kt      # RFC 1928 SOCKS5 서버 (0.0.0.0:1080)
-│           │   ├── HttpProxyServer.kt   # HTTP/CONNECT 프록시 (0.0.0.0:8282)
-│           │   ├── PeerFilter.kt        # 접속 허용 판정 (도착 인터페이스 + 상대 주소)
-│           │   ├── DestinationFilter.kt # 목적지 허용 판정 (루프백·사설·CGNAT 차단)
-│           │   ├── IpAddress.kt         # IPv4-mapped IPv6 정규화 (두 필터 공용)
-│           │   └── WifiHotspot.kt       # Wi-Fi Direct GO (커스텀 SSID/패스프레이즈)
+│           │   ├── MainActivity.kt          # 시작/정지 UI, SSID/패스프레이즈 입력, 통계 표시
+│           │   ├── TetherService.kt         # 포그라운드 서비스, 프록시 2개 + 핫스팟 수명 관리
+│           │   ├── Socks5Server.kt          # RFC 1928 SOCKS5 서버 (0.0.0.0:1080)
+│           │   ├── HttpProxyServer.kt       # HTTP/CONNECT 프록시 (0.0.0.0:8282~8291)
+│           │   ├── ConnectionRegistry.kt    # accept 된 소켓 추적 (Stop 이 실제로 끊게)
+│           │   ├── PeerFilter.kt            # 접속 허용 판정 (도착 인터페이스 + 상대 주소)
+│           │   ├── DestinationFilter.kt     # 목적지 허용 판정 (루프백·사설·CGNAT 차단)
+│           │   ├── IpAddress.kt             # IPv4-mapped IPv6 정규화 (두 필터 공용)
+│           │   ├── WifiHotspot.kt           # Wi-Fi Direct GO (커스텀 SSID/패스프레이즈)
+│           │   ├── HotspotPreferences.kt    # SSID/패스프레이즈 저장, 난수 패스프레이즈 생성
+│           │   ├── SecretStore.kt           # 패스프레이즈 AES/GCM 암복호화 (Android Keystore)
+│           │   ├── HotspotTileService.kt    # 퀵 설정 타일 (핫스팟 토글)
+│           │   └── HotspotStartActivity.kt  # 타일 전용 비공개 트램폴린 (exported=false)
 │           └── res/
 └── output/                    # 사전 빌드된 실행 파일 / 스크립트
-    ├── adb.exe                # Android Debug Bridge (APK 설치·진단용)
+    ├── adb.exe                # Android Debug Bridge, Windows (APK 설치·진단용)
+    ├── adb                    # Android Debug Bridge, macOS universal
     ├── tun2proxy.exe          # TUN → SOCKS5 브릿지 (Windows)
+    ├── tun2proxy              # TUN → SOCKS5 브릿지 (macOS, arm64 전용)
     ├── wintun.dll             # WinTun 가상 NIC 드라이버 (Windows 전용)
-    ├── usb-tether.apk         # 컴파일된 안드로이드 앱
     ├── windows-wifi.bat       # Windows 시작 스크립트
     └── macos-wifi.sh          # macOS 시작 스크립트
 ```
+
+> APK 는 저장소에 포함되어 있지 않습니다. 아래처럼 직접 빌드하세요.
 
 ## 셋업 순서
 
@@ -72,17 +80,20 @@ usb-tether/
 
 ### Android 앱 설치
 
-사전 빌드된 APK 직접 설치:
-
-```bash
-output\adb.exe install output\usb-tether.apk
-```
-
-또는 소스에서 빌드:
+소스에서 빌드해 바로 설치:
 
 ```bash
 cd android
 ./gradlew installDebug
+```
+
+APK 파일만 만들어 폰으로 옮기고 싶다면:
+
+```bash
+cd android
+./gradlew assembleDebug
+# 결과물: android/app/build/outputs/apk/debug/app-debug.apk
+../output/adb.exe install android/app/build/outputs/apk/debug/app-debug.apk   # 또는 폰으로 직접 복사
 ```
 
 설치 후 폰에서 앱을 열고:
@@ -96,6 +107,15 @@ cd android
 > SSID는 Wi-Fi Direct 사양상 `DIRECT-` + 영숫자 두 글자로 시작해야 해서, 입력값 앞에 `DIRECT-UT-`가 자동으로 붙습니다.
 > (예: `MyPhone` → `DIRECT-UT-MyPhone`) 입력값이 이미 그 형태라면(`DIRECT-ab...`) 그대로 씁니다.
 > 접두사를 포함한 전체 길이가 32바이트를 넘으면 거부됩니다.
+
+프록시 포트가 화면에 `—` 로 나오면 그 포트를 다른 앱이 쓰고 있다는 뜻입니다. 바로 아래 줄에 이유가 표시되고, 점유한 앱을 끄면 **Start** 를 다시 눌러 재시도할 수 있습니다.
+
+### 퀵 설정 타일로 핫스팟 켜고 끄기
+
+앱을 열지 않고 핫스팟만 토글하려면 **퀵 설정 패널 편집 → `Hotspot` 타일 추가**. 저장된 SSID/패스프레이즈로 동작하므로 앱에서 한 번은 값을 확인해 두어야 합니다.
+
+- 타일을 켤 때 화면이 잠깐 깜빡일 수 있습니다. Android 는 이 앱의 액티비티가 포그라운드에 있지 않으면 Wi-Fi Direct 그룹 생성을 계속 거부하므로(`BUSY`), 보이지 않는 트램폴린 액티비티를 띄웠다가 바로 닫습니다.
+- 그 액티비티는 `exported="false"` 여서 다른 앱이 호출할 수 없습니다. 핫스팟을 켜는 동작이 외부에서 트리거되면 사용자 조작 없이 무선 공격면이 열리기 때문입니다.
 
 ### Wi-Fi 클라이언트에서 사용
 
@@ -123,13 +143,10 @@ output\windows-wifi.bat
 
 #### 사전 준비
 
-macOS용 바이너리는 `output/` 에 포함되어 있지 않으므로 직접 준비해야 합니다.
-
-- **tun2proxy**: [github.com/tun2proxy/tun2proxy/releases](https://github.com/tun2proxy/tun2proxy/releases) 에서 아키텍처에 맞는 파일 다운로드
-  - Apple Silicon: `tun2proxy-aarch64-apple-darwin.tar.gz`
-  - Intel: `tun2proxy-x86_64-apple-darwin.tar.gz`
-  - 압축 해제 후 바이너리를 `output/tun2proxy` 로 배치
-- **adb** (APK 설치용, 선택): `brew install android-platform-tools`
+- **tun2proxy**: `output/tun2proxy` 가 이미 포함되어 있습니다. 단 **Apple Silicon(arm64) 전용**입니다.
+  - Intel Mac 이라면 [github.com/tun2proxy/tun2proxy/releases](https://github.com/tun2proxy/tun2proxy/releases) 에서 `tun2proxy-x86_64-apple-darwin.tar.gz` 를 받아 압축 해제 후 `output/tun2proxy` 를 덮어쓰세요.
+  - 확인 방법: `file output/tun2proxy` → `Mach-O 64-bit arm64 executable`
+- **adb**: `output/adb` 가 universal 바이너리로 포함되어 있습니다(APK 설치·진단용, 선택).
 - **wintun.dll 불필요**: macOS는 커널에 TUN/utun 인터페이스가 내장되어 있습니다.
 
 스크립트를 처음 실행하기 전에 실행 권한을 부여합니다:
