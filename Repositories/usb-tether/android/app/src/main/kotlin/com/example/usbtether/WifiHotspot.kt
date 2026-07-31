@@ -5,6 +5,7 @@ import android.content.Context
 import android.location.LocationManager
 import android.net.wifi.WifiManager
 import android.net.wifi.p2p.WifiP2pConfig
+import android.net.wifi.p2p.WifiP2pGroup
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.Build
 import android.os.Looper
@@ -154,6 +155,25 @@ class WifiHotspot(
         }
     }
 
+    /**
+     * `createGroup` 이 BUSY 로 실패했을 때, 이미 떠 있는 그룹이 **우리가 만들려던
+     * 바로 그 그룹인지** 확인한 뒤에만 재사용한다.
+     *
+     * 이전에는 `group.isGroupOwner` 만 보고 무조건 채택해 성공을 보고했다.
+     * 그래서 두 가지가 가능했다.
+     *
+     *  - **UI 와 실제 무선망의 자격증명 불일치.** 입력란에는 이 앱이 생성한
+     *    116비트 패스프레이즈가 보이는데 실제로 떠 있는 그룹은 다른(사용자가 알 수
+     *    없는) 패스프레이즈를 쓴다. 접속되지 않는 이유를 알 수 없고, 더 나쁘게는
+     *    약한 패스프레이즈로 떠 있는 그룹을 강한 것으로 착각한다 —
+     *    [isWeakPassphrase] 검사가 그대로 우회된다.
+     *  - **남의 그룹 흡수.** 다른 앱이 만든 P2P 그룹도 채택되고, 이후 [stop] 이
+     *    그 그룹을 내려버린다.
+     *
+     * 이제 SSID 와 패스프레이즈가 **모두** 일치할 때만 재사용한다. 확인할 수 없는
+     * 경우(패스프레이즈 조회가 null 이거나 던지는 경우)도 불일치로 취급한다 —
+     * 판단할 수 없을 때 안전한 쪽은 재사용하지 않는 쪽이다.
+     */
     @SuppressLint("MissingPermission")
     private fun reuseExistingGroup(
         mgr: WifiP2pManager,
@@ -161,17 +181,37 @@ class WifiHotspot(
         onResult: (Boolean) -> Unit,
     ) {
         mgr.requestGroupInfo(ch) { group ->
-            if (group != null && group.isGroupOwner) {
-                displaySsid = group.networkName
-                lastError = null
-                Log.i(TAG, "Reusing existing Wi-Fi P2P group: $displaySsid")
-                onResult(true)
-            } else {
-                lastError = "createGroup failed (BUSY) — no existing group to reuse"
-                Log.w(TAG, lastError!!)
-                onResult(false)
+            when {
+                group == null || !group.isGroupOwner -> {
+                    lastError = "createGroup failed (BUSY) — no existing group to reuse"
+                    Log.w(TAG, lastError!!)
+                    onResult(false)
+                }
+                !isOwnGroup(group) -> {
+                    lastError = "Another Wi-Fi Direct group is already up with different " +
+                        "credentials — stop that app (or toggle Wi-Fi off and on) and retry"
+                    Log.w(TAG, lastError!!)
+                    onResult(false)
+                }
+                else -> {
+                    lastError = null
+                    Log.i(TAG, "Reusing our own Wi-Fi P2P group: $displaySsid")
+                    onResult(true)
+                }
             }
         }
+    }
+
+    /**
+     * 이미 떠 있는 그룹이 이 인스턴스가 만들려던 그룹과 같은지.
+     *
+     * 패스프레이즈 조회는 OEM 프레임워크나 권한 상태에 따라 null 을 주거나 던질 수
+     * 있다. 그 경우 null 이 되어 불일치로 판정된다(fail-safe).
+     */
+    @SuppressLint("MissingPermission")
+    private fun isOwnGroup(group: WifiP2pGroup): Boolean {
+        val livePassphrase = runCatching { group.passphrase }.getOrNull()
+        return group.networkName == displaySsid && livePassphrase == passphrase
     }
 
     @SuppressLint("MissingPermission")
