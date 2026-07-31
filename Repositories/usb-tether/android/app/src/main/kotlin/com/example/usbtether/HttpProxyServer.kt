@@ -25,8 +25,9 @@ import kotlin.concurrent.thread
  *   - GET/POST/… http://host[:port]/path HTTP/1.1
  *       → 절대 URI 를 벗겨 origin-form 요청으로 상위에 전달
  *
- * 인증은 없다. 외부로 나가는 소켓은 Android OS 의 TCP 스택이 열기 때문에,
- * 통신사가 보는 것은 평범한 폰 발신 트래픽뿐이다.
+ * 인증은 없다. 외부로 나가는 소켓은 Android OS 의 TCP 스택이 열기 때문에 통신사가
+ * 보는 것은 평범한 폰 발신 트래픽이다 — 단, 헤더 수준까지다. 페이로드로 드러나는
+ * 것에 대해서는 [Socks5Server] 의 KDoc 참고.
  *
  * 리스닝 소켓은 **듀얼스택 와일드카드**다. IPv6 가 있는 JVM 에서 `0.0.0.0` 은 `::` 가
  * 되므로 포트가 모든 인터페이스에서 열린다. 그래서 accept 시점에 [PeerFilter] 로

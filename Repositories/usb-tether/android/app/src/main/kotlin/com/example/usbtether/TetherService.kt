@@ -28,7 +28,8 @@ import java.util.concurrent.atomic.AtomicLong
  * 자격증명을 함께 전달한다.
  *
  * 외부로 나가는 모든 소켓은 Android OS 가 열기 때문에, 클라이언트가 어느 경로를
- * 썼는지와 무관하게 통신사가 보는 것은 평범한 폰 발신 트래픽뿐이다.
+ * 썼는지와 무관하게 통신사가 보는 것은 평범한 폰 발신 트래픽이다 — 단, 헤더
+ * 수준까지다. 페이로드로 드러나는 것에 대해서는 [Socks5Server] 의 KDoc 참고.
  */
 class TetherService : Service() {
 

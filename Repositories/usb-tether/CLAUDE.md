@@ -14,7 +14,7 @@ Plus an optional Wi-Fi Direct group owner (GO) with a user-chosen SSID/passphras
 
 Clients set the system per-network proxy to `192.168.49.1:8282` (HTTP), use a SOCKS5-aware app / VPN-based SOCKS client against port `1080`, or run `tun2proxy` on a PC to route all of its traffic through the SOCKS5 proxy.
 
-The phone's native TCP/IP stack opens every outbound connection, making traffic appear phone-originated to the carrier in every mode.
+The phone's native TCP/IP stack opens every outbound connection, so **at the IP/TCP header level** the traffic is phone-originated in every mode (TTL, TCP options, MSS). Payloads pass through untouched, so client-side fingerprints — TLS ClientHello (JA3/JA4), `User-Agent`, HTTP/2 SETTINGS, OS-specific traffic shape — still say "desktop". This defeats header-based tethering detection, not detection in general, and the boundary has not been measured. Do not restate this as "indistinguishable from the phone's own traffic".
 
 ## Build Commands
 
@@ -48,7 +48,7 @@ Requires Android SDK API 37 (`compileSdk` = `targetSdk` = 37, `minSdk` = 26). AG
                                   Android OS stack → Cellular
 ```
 
-The carrier sees only normal phone-originated sockets — Android's OS TCP/IP stack handles every outbound connection.
+Every outbound connection is a normal socket opened by Android's own TCP/IP stack. See the caveat in Project Overview for what payload fingerprints still reveal.
 
 ### Android Side (`android/app/src/main/kotlin/com/example/usbtether/`)
 

@@ -92,7 +92,7 @@ internal class HotspotPreferences(context: Context) {
      * WPA2 패스프레이즈를 생성한다.
      *
      * 사용자가 다른 기기에서 직접 입력해야 하므로 혼동되는 문자(0/O, 1/l/I)를 뺀
-     * 알파벳을 쓴다. 56자 알파벳 × [PASSPHRASE_LENGTH]자면 약 116비트다.
+     * 알파벳을 쓴다. 57자 알파벳 × [PASSPHRASE_LENGTH]자면 20·log2(57) ≈ 116비트다.
      * WPA2 규격상 8–63자 출력 가능 ASCII 여야 한다.
      */
     private fun generatePassphrase(): String {
@@ -116,7 +116,7 @@ internal class HotspotPreferences(context: Context) {
 
         private const val DEFAULT_SSID = "USBTether"
 
-        /** 생성할 패스프레이즈 길이. 56자 알파벳 기준 약 116비트. */
+        /** 생성할 패스프레이즈 길이. 57자 알파벳 기준 약 116비트. */
         private const val PASSPHRASE_LENGTH = 20
 
         /** 혼동되는 문자(0/O, 1/l/I)를 제외한 알파벳. 다른 기기에서 타이핑해야 하므로. */
