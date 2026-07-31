@@ -93,8 +93,9 @@ cd android
    - 직접 바꿀 수도 있지만 WPA2 규격상 8–63자여야 하고, `12345678` 처럼 명백히 추측하기 쉬운 값은 거부됩니다.
 3. 핫스팟 첫 실행 시 **NEARBY_WIFI_DEVICES**(Android 13+) 또는 **위치** 권한(Android 10–12)을 허용해야 GO 생성이 가능합니다.
 
-> SSID는 Wi-Fi Direct 사양상 `DIRECT-` 접두사가 필요해 입력값 앞에 `DIRECT-UT-`가 자동으로 붙습니다.
-> (예: `MyPhone` → `DIRECT-UT-MyPhone`)
+> SSID는 Wi-Fi Direct 사양상 `DIRECT-` + 영숫자 두 글자로 시작해야 해서, 입력값 앞에 `DIRECT-UT-`가 자동으로 붙습니다.
+> (예: `MyPhone` → `DIRECT-UT-MyPhone`) 입력값이 이미 그 형태라면(`DIRECT-ab...`) 그대로 씁니다.
+> 접두사를 포함한 전체 길이가 32바이트를 넘으면 거부됩니다.
 
 ### Wi-Fi 클라이언트에서 사용
 

@@ -58,6 +58,13 @@ class WifiHotspot(
             lastError = "Passphrase must be 8–63 chars"
             onResult(false); return
         }
+        // 접두사까지 합쳐 32바이트를 넘으면 프레임워크가 던지고, 그 예외는 아래에서
+        // 두루뭉술한 "Invalid SSID/passphrase" 가 된다. 여기서 미리 짚어 준다.
+        if (displaySsid.toByteArray(Charsets.UTF_8).size > MAX_SSID_BYTES) {
+            lastError = "SSID too long — name plus the $OWN_SSID_PREFIX prefix must fit in " +
+                "$MAX_SSID_BYTES bytes"
+            onResult(false); return
+        }
         // 길이만 보면 12345678 같은 값이 통과한다. 그룹에 들어온 기기는 프록시와
         // 폰의 로컬 서비스에 바로 접근하므로, 명백히 약한 값은 여기서 막는다.
         if (isWeakPassphrase(passphrase)) {
@@ -282,6 +289,9 @@ class WifiHotspot(
         private const val MIN_PASSPHRASE = 8
         private const val MAX_PASSPHRASE = 63
 
+        /** SSID(네트워크 이름) 최대 길이. 802.11 의 SSID 요소가 32옥텟이다. */
+        private const val MAX_SSID_BYTES = 32
+
         /**
          * 자주 쓰이는 취약 패스프레이즈. 완전한 사전이 아니라 명백한 것만 막는다.
          * 사전 공격을 전부 방어하려는 것이 아니라, 기본값을 그대로 쓰는 사고를
@@ -314,10 +324,32 @@ class WifiHotspot(
             return value.zipWithNext().all { (a, b) -> b.code - a.code == step }
         }
 
-        /** Wi-Fi Direct GO 규격상 SSID 는 "DIRECT-xx-"(xx 는 두 글자)로 시작해야 한다. */
+        /** 입력이 비어 있을 때 쓸 이름. 접두사는 [normalizeSsid] 가 붙인다. */
+        private const val DEFAULT_SSID_BODY = "USBTether"
+
+        /** 이 앱이 붙이는 접두사. `DIRECT-` + 영숫자 두 글자 규격을 만족한다. */
+        private const val OWN_SSID_PREFIX = "DIRECT-UT-"
+
+        /** 규격을 만족하는 접두사: `DIRECT-` 다음에 영숫자 두 글자. */
+        private val DIRECT_PREFIX = Regex("^DIRECT-[A-Za-z0-9]{2}")
+
+        /**
+         * Wi-Fi Direct 규격에 맞는 네트워크 이름으로 정규화한다.
+         *
+         * 규격은 `DIRECT-` 다음에 **영숫자 두 글자**를 요구한다. 이전 코드는
+         * `startsWith("DIRECT-")` 만 봤으므로 `DIRECT-`, `DIRECT-a`, `DIRECT-!!`
+         * 처럼 규격을 어기는 값이 그대로 통과해 프레임워크의 두루뭉술한
+         * "Invalid SSID/passphrase" 로만 실패했다. 두 글자를 요구한다고 적어 둔
+         * KDoc 을 코드가 따라가지 못한 쪽이었다.
+         *
+         * 이제 [DIRECT_PREFIX] 를 만족할 때만 입력을 그대로 쓰고, 아니면
+         * [OWN_SSID_PREFIX] 를 붙인다. 규격 미달인 값을 통과시키는 것보다 접두사를
+         * 붙이는 쪽이 안전하다 — `DIRECT-a` 는 `DIRECT-UT-DIRECT-a` 가 되어 보기에
+         * 이상하지만 동작한다.
+         */
         fun normalizeSsid(raw: String): String {
-            val cleaned = raw.trim().ifEmpty { "USBTether" }
-            return if (cleaned.startsWith("DIRECT-")) cleaned else "DIRECT-UT-$cleaned"
+            val cleaned = raw.trim().ifEmpty { DEFAULT_SSID_BODY }
+            return if (DIRECT_PREFIX.containsMatchIn(cleaned)) cleaned else "$OWN_SSID_PREFIX$cleaned"
         }
 
         private fun friendlyFailureMessage(reason: Int): String = when (reason) {
