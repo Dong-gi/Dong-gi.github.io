@@ -126,6 +126,15 @@ class TetherService : Service() {
         val hs = WifiHotspot(applicationContext, ssid, passphrase)
         hotspot = hs
         hs.start { ok ->
+            // 뒤늦게 도착한 콜백을 걸러낸다. `createGroup` 결과는 비동기이고
+            // ON → OFF → ON 사이에 이전 인스턴스의 콜백이 남아 있을 수 있다.
+            // 검사하지 않으면 그 콜백이 (1) 새 인스턴스의 상태를 덮어쓰고
+            // (2) `hotspot` 을 null 로 만들어 **새 인스턴스가 만든 GO 를 내릴 수단을
+            // 없앤다.** UI·타일은 off 를 표시하는데 무선망은 계속 떠 있는 상태가 된다.
+            if (hotspot !== hs) {
+                hs.release()
+                return@start
+            }
             hotspotActive = ok
             hotspotSsid = if (ok) hs.displaySsid else null
             hotspotError = if (ok) null else hs.lastError
@@ -154,7 +163,9 @@ class TetherService : Service() {
         // 한 번 더 알린다.
         if (hs != null) {
             hs.stop { removed ->
-                if (!removed) {
+                // 그 사이에 새 핫스팟이 떠 있으면 이 실패 메시지를 게시하지 않는다.
+                // 새 인스턴스의 상태를 이전 인스턴스의 결과로 덮어쓰게 된다.
+                if (!removed && hotspot == null) {
                     hotspotError = hs.lastError
                     broadcastHotspotState()
                 }
