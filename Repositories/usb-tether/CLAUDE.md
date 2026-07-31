@@ -25,7 +25,9 @@ cd android
 ./gradlew assemble        # Build APK only
 ./gradlew clean           # Clean build artifacts
 ```
-Requires Android SDK API 34, Java 17. Uses AGP 8.7.0 + Kotlin 2.0.20.
+Requires Android SDK API 37 (`compileSdk` = `targetSdk` = 37, `minSdk` = 26). AGP **9.2.1**, Gradle **9.4.1**. The Gradle daemon runs on JDK **21** (pinned in `gradle/gradle-daemon-jvm.properties`) while the app itself compiles to Java **17** bytecode (`compileOptions`).
+
+**No Kotlin plugin is applied anywhere, on purpose.** AGP 9 has built-in Kotlin support and carries its own KGP, so `org.jetbrains.kotlin.android` must not be added back — it collides with the new DSL. The trade-off is that the Kotlin version is not pinned in this repo; it follows whatever AGP 9.2.1 bundles. Pin it explicitly if a build ever needs to be reproduced exactly.
 
 ### Running End-to-End
 1. `output/` already contains `tun2proxy.exe` and `wintun.dll` — no separate download needed. `adb.exe` is kept only for installing the APK and for diagnostics.
