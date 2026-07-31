@@ -135,10 +135,20 @@ class Socks5Server(
     }
 
     private fun handleConnect(client: Socket, host: String, port: Int) {
+        // 이름을 한 번만 해석하고, 통과한 주소 객체로 연결한다. 문자열을 다시
+        // InetSocketAddress 에 넘기면 재해석이 일어나 DNS 리바인딩에 노출된다.
+        val destination = when (val verdict = DestinationFilter.resolve(host)) {
+            is DestinationFilter.Result.Rejected -> {
+                Log.w(TAG, "CONNECT 거부: ${verdict.reason}")
+                sendReply(client.getOutputStream(), REP_NOT_ALLOWED)
+                return
+            }
+            is DestinationFilter.Result.Allowed -> verdict.address
+        }
         val remote = try {
             Socket().apply {
                 tcpNoDelay = true
-                connect(InetSocketAddress(host, port), CONNECT_TIMEOUT_MS)
+                connect(InetSocketAddress(destination, port), CONNECT_TIMEOUT_MS)
             }
         } catch (e: Exception) {
             Log.w(TAG, "connect $host:$port failed: ${e.message}")
@@ -208,6 +218,9 @@ class Socks5Server(
                             clientUdpPort = pkt.port
                         }
                         val (dstAddr, dstPort, payload) = parseUdpHeader(pkt) ?: continue
+                        // TCP 경로와 같은 정책을 UDP 에도 적용한다. 이게 없으면
+                        // UDP 릴레이가 루프백·사설 대역으로 가는 우회로가 된다.
+                        if (DestinationFilter.isBlocked(dstAddr)) continue
                         onBytesIn(payload.size.toLong())
                         try {
                             udpSocket.send(DatagramPacket(payload, payload.size, dstAddr, dstPort))
@@ -344,6 +357,7 @@ class Socks5Server(
         private const val CMD_UDP_ASSOCIATE = 3
 
         private const val REP_GENERAL_FAILURE  = 1
+        private const val REP_NOT_ALLOWED      = 2  // 규칙에 의해 허용되지 않음
         private const val REP_CONN_REFUSED     = 5
         private const val REP_CMD_UNSUPPORTED  = 7
         private const val REP_ATYP_UNSUPPORTED = 8

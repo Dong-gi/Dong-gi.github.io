@@ -146,10 +146,11 @@ class HttpProxyServer(
         val (host, port) = splitHostPort(hostPort, defaultPort = 443) ?: run {
             sendStatus(client.getOutputStream(), 400, "Bad Request"); return
         }
+        val destination = resolveOrReject(client, host) ?: return
         val remote = try {
             Socket().apply {
                 tcpNoDelay = true
-                connect(InetSocketAddress(host, port), CONNECT_TIMEOUT_MS)
+                connect(InetSocketAddress(destination, port), CONNECT_TIMEOUT_MS)
             }
         } catch (e: Exception) {
             Log.w(TAG, "CONNECT $host:$port failed: ${e.message}")
@@ -185,10 +186,11 @@ class HttpProxyServer(
             sendStatus(client.getOutputStream(), 400, "Bad Request"); return
         }
 
+        val destination = resolveOrReject(client, host) ?: return
         val remote = try {
             Socket().apply {
                 tcpNoDelay = true
-                connect(InetSocketAddress(host, port), CONNECT_TIMEOUT_MS)
+                connect(InetSocketAddress(destination, port), CONNECT_TIMEOUT_MS)
             }
         } catch (e: Exception) {
             Log.w(TAG, "HTTP $host:$port failed: ${e.message}")
@@ -219,6 +221,22 @@ class HttpProxyServer(
             try { remote.close() } catch (_: Exception) {}
         }
     }
+
+    /**
+     * 목적지를 해석하고 정책을 적용한다. 거부되면 클라이언트에 403 을 보내고 null 을 반환한다.
+     *
+     * 통과한 **주소 객체**를 돌려주는 것이 중요하다. 호출부가 다시 문자열로 연결하면
+     * 재해석이 일어나 DNS 리바인딩으로 검사를 우회할 수 있다.
+     */
+    private fun resolveOrReject(client: Socket, host: String): InetAddress? =
+        when (val verdict = DestinationFilter.resolve(host)) {
+            is DestinationFilter.Result.Rejected -> {
+                Log.w(TAG, "목적지 거부: ${verdict.reason}")
+                sendStatus(client.getOutputStream(), 403, "Forbidden")
+                null
+            }
+            is DestinationFilter.Result.Allowed -> verdict.address
+        }
 
     private fun relay(client: Socket, remote: Socket) {
         val t = thread(isDaemon = true) {
