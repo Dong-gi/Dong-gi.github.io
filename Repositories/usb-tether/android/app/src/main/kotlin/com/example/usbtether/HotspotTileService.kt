@@ -37,13 +37,13 @@ class HotspotTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
-        // Show pending state while waiting for the result broadcast.
+        // 결과 브로드캐스트를 기다리는 동안 대기 상태를 표시한다.
         qsTile?.let { tile ->
             tile.state = Tile.STATE_UNAVAILABLE
             tile.updateTile()
         }
         if (TetherService.hotspotActive) {
-            // OFF works reliably from the background.
+            // OFF 는 백그라운드에서도 안정적으로 동작한다.
             ContextCompat.startForegroundService(
                 this,
                 Intent(this, TetherService::class.java).apply {
@@ -51,9 +51,9 @@ class HotspotTileService : TileService() {
                 },
             )
         } else {
-            // ON consistently fails (createGroup BUSY) when MainActivity isn't in
-            // the foreground, so hand off to MainActivity and let it issue the
-            // ACTION_HOTSPOT_ON intent while it's resumed.
+            // ON 은 MainActivity 가 포그라운드에 없으면 계속 실패한다(createGroup BUSY).
+            // 그래서 MainActivity 로 넘겨, 그쪽이 resumed 상태에서
+            // ACTION_HOTSPOT_ON 인텐트를 보내도록 한다.
             launchMainActivityForHotspotStart()
         }
     }

@@ -11,14 +11,15 @@ import android.os.Looper
 import android.util.Log
 
 /**
- * Wi-Fi P2P group owner — clients join via the GO's SSID/passphrase and get
- * an IP in 192.168.49.0/24 with gateway 192.168.49.1 (this phone). The proxy
- * servers (SOCKS5 on 1080, HTTP on 8282) listen on 0.0.0.0 so any joined
- * client can reach them.
+ * Wi-Fi P2P 그룹 오너(GO). 클라이언트는 GO 의 SSID/패스프레이즈로 접속해
+ * 192.168.49.0/24 대역의 IP 를 받고, 게이트웨이는 이 폰(192.168.49.1)이 된다.
+ * 프록시 서버(SOCKS5 1080, HTTP 8282)가 `0.0.0.0` 에서 듣고 있으므로 접속한
+ * 클라이언트는 모두 도달할 수 있다.
  *
- * Requires API 29+ for custom SSID/passphrase (setNetworkName / setPassphrase).
- * Permissions: NEARBY_WIFI_DEVICES (API 33+) or ACCESS_FINE_LOCATION (29–32),
- * plus CHANGE_WIFI_STATE.
+ * 커스텀 SSID/패스프레이즈(setNetworkName / setPassphrase)는 API 29 이상에서만
+ * 동작한다.
+ * 필요 권한: NEARBY_WIFI_DEVICES (API 33+) 또는 ACCESS_FINE_LOCATION (29–32),
+ * 그리고 CHANGE_WIFI_STATE.
  */
 class WifiHotspot(
     context: Context,
@@ -55,8 +56,8 @@ class WifiHotspot(
             lastError = "Passphrase must be 8–63 chars"
             onResult(false); return
         }
-        // Surface common causes of createGroup ERROR with actionable messages
-        // before the framework returns a generic ERROR code.
+        // 프레임워크가 두루뭉술한 ERROR 코드를 돌려주기 전에, createGroup 실패의
+        // 흔한 원인을 조치 가능한 메시지로 먼저 드러낸다.
         val envError = checkEnvironment()
         if (envError != null) {
             lastError = envError
@@ -76,7 +77,7 @@ class WifiHotspot(
         verifyP2pStateThenCreate(mgr, ch, config, onResult)
     }
 
-    /** Synchronous environment preflight. Returns an error message or null. */
+    /** 동기적 환경 사전 점검. 문제가 있으면 오류 메시지를, 없으면 null 을 반환한다. */
     private fun checkEnvironment(): String? {
         val wm = appContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
         if (wm != null && !wm.isWifiEnabled) {
@@ -108,7 +109,7 @@ class WifiHotspot(
                 }
             }
         } catch (e: Exception) {
-            // If the state probe misbehaves, fall through to createGroup.
+            // 상태 조회가 오작동하면 그냥 createGroup 으로 진행한다.
             Log.w(TAG, "requestP2pState threw: ${e.message}")
             tryCreateGroup(mgr, ch, config, onResult)
         }
@@ -186,7 +187,7 @@ class WifiHotspot(
     companion object {
         private const val TAG = "WifiHotspot"
 
-        /** Wi-Fi Direct GO requires the SSID to begin with "DIRECT-xx-" where xx is two chars. */
+        /** Wi-Fi Direct GO 규격상 SSID 는 "DIRECT-xx-"(xx 는 두 글자)로 시작해야 한다. */
         fun normalizeSsid(raw: String): String {
             val cleaned = raw.trim().ifEmpty { "USBTether" }
             return if (cleaned.startsWith("DIRECT-")) cleaned else "DIRECT-UT-$cleaned"

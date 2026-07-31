@@ -106,8 +106,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun consumeTileIntent(intent: Intent?) {
         if (intent?.action != ACTION_START_HOTSPOT_FROM_TILE) return
-        // Defer the actual start until onResume so the activity is fully foregrounded
-        // by the time WifiP2pManager.createGroup runs.
+        // WifiP2pManager.createGroup 이 실행되는 시점에 액티비티가 완전히
+        // 포그라운드에 있도록, 실제 기동은 onResume 까지 미룬다.
         pendingHotspotStartFromTile = true
         intent.action = null
     }

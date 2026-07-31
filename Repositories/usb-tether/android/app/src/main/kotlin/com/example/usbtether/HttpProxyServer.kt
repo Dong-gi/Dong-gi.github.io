@@ -13,20 +13,20 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 
 /**
- * HTTP proxy server bound to 0.0.0.0. Tries [BASE_PORT], [BASE_PORT]+1, ...,
- * [BASE_PORT]+9 in order (up to 10 attempts) and binds the first port that
- * is free (e.g. NetShare is already squatting on 8282). Inspect [actualPort]
- * after [start] returns to discover the chosen port.
- * Used by Wi-Fi P2P clients that set the system per-network proxy (Android only
- * accepts HTTP for that setting, not SOCKS5).
+ * HTTP 프록시 서버. `0.0.0.0` 에 바인딩한다. [BASE_PORT], [BASE_PORT]+1, …,
+ * [BASE_PORT]+9 를 순서대로 최대 10회 시도해 비어 있는 첫 포트를 잡는다
+ * (예: NetShare 가 이미 8282 를 점유한 경우). [start] 가 반환된 뒤
+ * [actualPort] 를 읽으면 실제로 채택된 포트를 알 수 있다.
+ * 시스템 네트워크별 프록시 설정을 사용하는 Wi-Fi P2P 클라이언트용이다
+ * (Android 의 그 설정은 HTTP 만 받고 SOCKS5 는 받지 않는다).
  *
- * Supports:
- *   - CONNECT host:port HTTP/1.1   → opaque TCP tunnel (HTTPS, WebSocket, etc.)
- *   - GET/POST/... http://host[:port]/path HTTP/1.1
- *       → strip absolute URI, forward to upstream as origin-form request
+ * 지원 형식:
+ *   - CONNECT host:port HTTP/1.1   → 불투명 TCP 터널 (HTTPS, WebSocket 등)
+ *   - GET/POST/… http://host[:port]/path HTTP/1.1
+ *       → 절대 URI 를 벗겨 origin-form 요청으로 상위에 전달
  *
- * No authentication. Outbound sockets are opened by Android's OS TCP stack,
- * so the carrier sees only normal phone-originated traffic.
+ * 인증은 없다. 외부로 나가는 소켓은 Android OS 의 TCP 스택이 열기 때문에,
+ * 통신사가 보는 것은 평범한 폰 발신 트래픽뿐이다.
  */
 class HttpProxyServer(
     private val onTcpCount: (Int) -> Unit = {},
@@ -38,11 +38,11 @@ class HttpProxyServer(
     private val executor = Executors.newCachedThreadPool()
     private val sessions = AtomicInteger(0)
 
-    /** Port actually bound, or -1 if the server isn't running. */
+    /** 실제로 바인딩된 포트. 서버가 동작 중이 아니면 -1. */
     @Volatile var actualPort: Int = -1
         private set
 
-    /** Bind synchronously so the caller sees the chosen port immediately, then start accepting. */
+    /** 호출자가 채택된 포트를 즉시 볼 수 있도록 동기적으로 바인딩한 뒤 accept 를 시작한다. */
     fun start(): Int {
         if (!running.compareAndSet(false, true)) return actualPort
         val sock = bindWithFallback() ?: run {
@@ -249,8 +249,8 @@ class HttpProxyServer(
     }
 
     /**
-     * Read one CRLF-terminated header line byte-by-byte so request body bytes stay
-     * in the InputStream — relay() will forward them to the upstream unchanged.
+     * CRLF 로 끝나는 헤더 한 줄을 바이트 단위로 읽는다. 이렇게 해야 요청 본문
+     * 바이트가 InputStream 에 남아 relay() 가 상위로 그대로 전달할 수 있다.
      */
     private fun readHeaderLine(src: InputStream): String? {
         val sb = StringBuilder()

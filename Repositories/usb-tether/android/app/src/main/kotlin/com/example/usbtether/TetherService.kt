@@ -13,19 +13,19 @@ import androidx.core.app.NotificationCompat
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * Foreground service. On start it always runs:
- *   - SOCKS5 proxy starting on 0.0.0.0:SOCKS_BASE_PORT, falling back to +1 if taken
- *   - HTTP proxy   starting on 0.0.0.0:HTTP_BASE_PORT, falling back to +1 if taken
+ * 포그라운드 서비스. 기동하면 항상 다음 두 서버를 띄운다.
+ *   - SOCKS5 프록시: `0.0.0.0:SOCKS_BASE_PORT` 부터, 점유돼 있으면 +1 로 폴백
+ *   - HTTP 프록시:   `0.0.0.0:HTTP_BASE_PORT` 부터, 점유돼 있으면 +1 로 폴백
  *
- * The actually-bound ports are published in [socksPort] / [httpPort] and surfaced
- * to the UI — never rely on the base constants for what to display or connect to.
+ * 실제로 바인딩된 포트는 [socksPort] / [httpPort] 에 게시되어 UI 에 표시된다.
+ * 표시하거나 접속할 포트를 기본 상수에서 가져오면 안 된다.
  *
- * The Wi-Fi Direct GO is **toggled separately** via ACTION_HOTSPOT_ON / ACTION_HOTSPOT_OFF
- * (battery-expensive). When ACTION_HOTSPOT_ON is dispatched, EXTRA_SSID and EXTRA_PASSPHRASE
- * supply the credentials.
+ * Wi-Fi Direct GO 는 배터리 소모가 크므로 ACTION_HOTSPOT_ON / ACTION_HOTSPOT_OFF 로
+ * **따로** 토글한다. ACTION_HOTSPOT_ON 을 보낼 때 EXTRA_SSID 와 EXTRA_PASSPHRASE 로
+ * 자격증명을 함께 전달한다.
  *
- * All outbound sockets are opened by Android's OS, so the carrier sees only normal
- * phone-originated traffic regardless of the path the client used.
+ * 외부로 나가는 모든 소켓은 Android OS 가 열기 때문에, 클라이언트가 어느 경로를
+ * 썼는지와 무관하게 통신사가 보는 것은 평범한 폰 발신 트래픽뿐이다.
  */
 class TetherService : Service() {
 
@@ -82,9 +82,9 @@ class TetherService : Service() {
             return
         }
         hotspotError = null
-        // Assign before calling start() — WifiHotspot's preflight failure paths
-        // invoke the result callback synchronously, and an .also { hs.start {...} }
-        // chain would clobber a synchronous `hotspot = null` set inside that callback.
+        // start() 호출 전에 대입해야 한다. WifiHotspot 의 사전 점검 실패 경로는
+        // 결과 콜백을 동기적으로 호출하는데, .also { hs.start {...} } 형태로 쓰면
+        // 그 콜백 안에서 동기적으로 설정한 `hotspot = null` 을 덮어써 버린다.
         val hs = WifiHotspot(applicationContext, ssid, passphrase)
         hotspot = hs
         hs.start { ok ->
@@ -115,8 +115,8 @@ class TetherService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        // Restart the service when the user swipes the app away from recents.
-        // Without this, the system calls onDestroy() and the proxy servers stop.
+        // 사용자가 최근 앱 목록에서 앱을 밀어 없앨 때 서비스를 다시 띄운다.
+        // 이 처리가 없으면 시스템이 onDestroy() 를 호출해 프록시 서버가 멈춘다.
         val restart = Intent(applicationContext, TetherService::class.java)
         restart.setPackage(packageName)
         startForegroundService(restart)
@@ -187,10 +187,10 @@ class TetherService : Service() {
         @Volatile var isRunning = false
             private set
 
-        /** Actual SOCKS5 port (base or base+1), -1 if not bound. */
+        /** 실제 SOCKS5 포트(기본 또는 기본+1). 바인딩되지 않았으면 -1. */
         @Volatile var socksPort: Int = -1
             internal set
-        /** Actual HTTP port (base or base+1), -1 if not bound. */
+        /** 실제 HTTP 포트(기본 또는 기본+1). 바인딩되지 않았으면 -1. */
         @Volatile var httpPort: Int = -1
             internal set
 

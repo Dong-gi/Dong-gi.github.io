@@ -9,23 +9,23 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
 
 /**
- * SOCKS5 server (RFC 1928) listening on 0.0.0.0. Tries [BASE_PORT], [BASE_PORT]+1,
- * ..., [BASE_PORT]+9 in order (up to 10 attempts) and binds the first port that
- * is free. Inspect [actualPort] after [start] returns to discover the chosen port.
- * Reachable both via USB (PC → `adb forward tcp:1080 tcp:1080` → 127.0.0.1) and via
- * the Wi-Fi P2P group when WifiHotspot is active.
+ * SOCKS5 서버 (RFC 1928). `0.0.0.0` 에 바인딩한다. [BASE_PORT], [BASE_PORT]+1, …,
+ * [BASE_PORT]+9 를 순서대로 최대 10회 시도해 비어 있는 첫 포트를 잡는다.
+ * [start] 가 반환된 뒤 [actualPort] 를 읽으면 실제로 채택된 포트를 알 수 있다.
+ * USB 경로(PC → `adb forward tcp:1080 tcp:1080` → 127.0.0.1)와 WifiHotspot 이
+ * 켜져 있을 때의 Wi-Fi P2P 그룹, 양쪽에서 도달 가능하다.
  *
- * Supports CONNECT (TCP) and UDP ASSOCIATE (RFC 1928 §7). For UDP ASSOCIATE the
- * server binds a DatagramSocket on an ephemeral port and replies with BND.ADDR =
- * client.localAddress (192.168.49.1 on the hotspot interface, 127.0.0.1 over USB).
- * tun2proxy sends SOCKS5-wrapped UDP datagrams to that port; the server strips the
- * header, forwards to the real destination, and wraps responses back.
+ * CONNECT(TCP)와 UDP ASSOCIATE(RFC 1928 §7)를 지원한다. UDP ASSOCIATE 시에는
+ * 임의 포트에 DatagramSocket 을 바인딩하고 BND.ADDR 로 client.localAddress 를
+ * 응답한다(핫스팟 인터페이스면 192.168.49.1, USB 면 127.0.0.1).
+ * tun2proxy 가 그 포트로 SOCKS5 헤더가 감싸인 UDP 데이터그램을 보내면, 서버가
+ * 헤더를 벗겨 실제 목적지로 전달하고 응답을 다시 감싸서 돌려준다.
  *
- * UDP ASSOCIATE over USB is limited by ADB, which only forwards TCP — the UDP relay
- * socket on the phone is unreachable from the PC in that mode.
+ * USB 모드의 UDP ASSOCIATE 는 ADB 제약을 받는다 — ADB 는 TCP 만 포워딩하므로
+ * 폰의 UDP 릴레이 소켓에 PC 에서 도달할 수 없다.
  *
- * The carrier sees only normal phone-originated sockets: Android's OS TCP/UDP stack
- * handles every outbound connection, so tethering looks identical to phone activity.
+ * 통신사가 보는 것은 평범한 폰 발신 소켓뿐이다. 모든 외부 연결을 Android OS 의
+ * TCP/UDP 스택이 열기 때문에, 테더링 트래픽이 폰 자체 활동과 구별되지 않는다.
  */
 class Socks5Server(
     private val onBytesIn: (Long) -> Unit = {},
@@ -35,11 +35,11 @@ class Socks5Server(
     private var serverSocket: ServerSocket? = null
     private val executor = Executors.newCachedThreadPool()
 
-    /** Port actually bound, or -1 if the server isn't running. */
+    /** 실제로 바인딩된 포트. 서버가 동작 중이 아니면 -1. */
     @Volatile var actualPort: Int = -1
         private set
 
-    /** Bind synchronously so the caller sees the chosen port immediately, then start accepting. */
+    /** 호출자가 채택된 포트를 즉시 볼 수 있도록 동기적으로 바인딩한 뒤 accept 를 시작한다. */
     fun start(): Int {
         if (!running.compareAndSet(false, true)) return actualPort
         val sock = bindWithFallback() ?: run {
@@ -91,15 +91,15 @@ class Socks5Server(
             val inp = client.getInputStream()
             val out = client.getOutputStream()
 
-            // Auth negotiation: pick NO_AUTH regardless of what client offers
+            // 인증 협상: 클라이언트가 무엇을 제시하든 NO_AUTH 를 선택한다
             if (inp.read() != 5) return
             repeat(inp.read()) { inp.read() }
             out.write(byteArrayOf(5, 0))
 
-            // Request header
+            // 요청 헤더
             if (inp.read() != 5) return
             val cmd = inp.read()
-            inp.read()  // RSV
+            inp.read()  // RSV (예약 필드)
 
             val host = when (inp.read()) {
                 ATYP_IPV4   -> InetAddress.getByAddress(inp.readN(4)).hostAddress!!
@@ -157,8 +157,8 @@ class Socks5Server(
             return
         }
         try {
-            // BND.ADDR = the interface this TCP connection arrived on.
-            // For Wi-Fi hotspot clients this is 192.168.49.1; for USB it is 127.0.0.1.
+            // BND.ADDR = 이 TCP 연결이 도착한 인터페이스의 주소.
+            // Wi-Fi 핫스팟 클라이언트면 192.168.49.1, USB 면 127.0.0.1 이다.
             val bindAddr = (client.localAddress as? Inet4Address)?.address ?: byteArrayOf(0, 0, 0, 0)
             val udpPort = udpSocket.localPort
             out.write(
@@ -189,7 +189,7 @@ class Socks5Server(
                     val ca = clientUdpAddr
                     val cp = clientUdpPort
                     if (ca == null || (pkt.address == ca && pkt.port == cp)) {
-                        // Packet from tun2proxy: parse SOCKS5 UDP header and forward to remote
+                        // tun2proxy 가 보낸 패킷: SOCKS5 UDP 헤더를 파싱해 원격으로 전달
                         if (ca == null) {
                             clientUdpAddr = pkt.address
                             clientUdpPort = pkt.port
@@ -202,7 +202,7 @@ class Socks5Server(
                             Log.w(TAG, "UDP fwd to $dstAddr:$dstPort: ${e.message}")
                         }
                     } else {
-                        // Packet from remote: wrap with SOCKS5 UDP header and send back to tun2proxy
+                        // 원격이 보낸 패킷: SOCKS5 UDP 헤더로 감싸 tun2proxy 에게 돌려보냄
                         val target = clientUdpAddr ?: continue
                         val targetPort = clientUdpPort.takeIf { it >= 0 } ?: continue
                         val wrapped = buildUdpHeader(pkt.address, pkt.port, pkt.data, pkt.offset, pkt.length)
@@ -216,9 +216,9 @@ class Socks5Server(
                 }
             }
 
-            // Block until the TCP control connection closes; closing udpSocket stops the relay thread
+            // TCP 제어 연결이 닫힐 때까지 블록한다. udpSocket 을 닫으면 릴레이 스레드가 멈춘다
             try {
-                while (client.getInputStream().read() != -1) { /* drain keepalive bytes */ }
+                while (client.getInputStream().read() != -1) { /* keepalive 바이트를 버린다 */ }
             } catch (_: Exception) {}
             Log.i(TAG, "UDP ASSOCIATE ended on port $udpPort")
         } finally {
@@ -231,8 +231,8 @@ class Socks5Server(
         val off = pkt.offset
         val end = off + pkt.length
         if (pkt.length < 10) return null
-        // data[off], data[off+1] = RSV (ignored)
-        if (data[off + 2].toInt() and 0xFF != 0) return null  // drop fragments (FRAG != 0)
+        // data[off], data[off+1] = RSV (무시)
+        if (data[off + 2].toInt() and 0xFF != 0) return null  // 단편화된 datagram 은 폐기 (FRAG != 0)
         val atyp = data[off + 3].toInt() and 0xFF
         var pos = off + 4
         val dstAddr: InetAddress
@@ -268,10 +268,10 @@ class Socks5Server(
     ): ByteArray {
         val addrBytes = srcAddr.address
         val atyp = if (addrBytes.size == 4) ATYP_IPV4 else ATYP_IPV6
-        val hdrSize = 4 + addrBytes.size + 2  // RSV(2) + FRAG(1) + ATYP(1) + addr + PORT(2)
+        val hdrSize = 4 + addrBytes.size + 2  // RSV(2) + FRAG(1) + ATYP(1) + 주소 + PORT(2)
         val result = ByteArray(hdrSize + length)
-        result[0] = 0; result[1] = 0  // RSV
-        result[2] = 0                  // FRAG
+        result[0] = 0; result[1] = 0  // RSV (예약 필드)
+        result[2] = 0                  // FRAG (단편화 없음)
         result[3] = atyp.toByte()
         addrBytes.copyInto(result, 4)
         var p = 4 + addrBytes.size
@@ -282,8 +282,8 @@ class Socks5Server(
     }
 
     private fun relay(client: Socket, remote: Socket) {
-        // Two pipes run concurrently; each shuts down the opposite write-side on EOF
-        // so the peer receives a clean FIN rather than a forceful RST.
+        // 두 파이프를 동시에 돌린다. 각 파이프가 EOF 에서 반대편의 쓰기 방향을 닫아,
+        // 상대가 강제 RST 가 아니라 정상적인 FIN 을 받도록 한다.
         val t = thread(isDaemon = true) {
             pipe(remote.getInputStream(), client.getOutputStream()) { onBytesOut(it) }
             try { client.shutdownOutput() } catch (_: Exception) {}
