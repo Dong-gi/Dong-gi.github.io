@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--
+        선언된 권한은 모두 코드에서 실제로 쓰이는 것만 남긴다.
+        지운 것: ACCESS_NETWORK_STATE, CHANGE_NETWORK_STATE (ConnectivityManager 를
+        쓰지 않는다), WAKE_LOCK (WakeLock 을 획득하는 코드가 없었다).
+        화면이 꺼진 동안 릴레이가 끊기는 것이 확인되면 PARTIAL_WAKE_LOCK 을 실제로
+        획득하는 코드와 함께 WAKE_LOCK 을 되살려야 한다. 권한만 선언해 두면 아무
+        효과가 없다.
+    -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
         android:maxSdkVersion="32" />
@@ -19,7 +24,7 @@
         android:usesPermissionFlags="neverForLocation" />
 
     <application
-        android:label="USB Tether"
+        android:label="@string/app_name"
         android:allowBackup="false"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">

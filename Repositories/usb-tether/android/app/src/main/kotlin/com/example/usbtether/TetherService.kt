@@ -197,7 +197,11 @@ class TetherService : Service() {
         val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (nm.getNotificationChannel(CHANNEL_ID) == null) {
             nm.createNotificationChannel(
-                NotificationChannel(CHANNEL_ID, "USB Tether", NotificationManager.IMPORTANCE_LOW).apply {
+                NotificationChannel(
+                    CHANNEL_ID,
+                    getString(R.string.app_name),
+                    NotificationManager.IMPORTANCE_LOW,
+                ).apply {
                     description = "Proxy servers and Wi-Fi hotspot running"
                 }
             )
@@ -212,7 +216,7 @@ class TetherService : Service() {
         val socksLabel = if (socksPort > 0) socksPort.toString() else "—"
         val httpLabel = if (httpPort > 0) httpPort.toString() else "—"
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("USB Tether")
+            .setContentTitle(getString(R.string.app_name))
             .setContentText("SOCKS5:$socksLabel  HTTP:$httpLabel")
             .setSmallIcon(android.R.drawable.stat_notify_sync)
             .setContentIntent(tapIntent)

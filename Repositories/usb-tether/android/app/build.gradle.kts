@@ -27,10 +27,9 @@ configure<ApplicationExtension> {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
-
+    // viewBinding 은 켜져 있었지만 쓰는 곳이 없었다(MainActivity 는 findViewById).
+    // 쓰지 않는 바인딩 클래스를 매 빌드마다 생성할 이유가 없어 껐다. 다시 쓰려면
+    // buildFeatures { viewBinding = true } 를 되살리고 findViewById 를 걷어내면 된다.
 }
 
 dependencies {
