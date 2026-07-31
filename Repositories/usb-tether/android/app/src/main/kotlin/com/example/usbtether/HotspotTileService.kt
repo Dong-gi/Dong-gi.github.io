@@ -51,16 +51,16 @@ class HotspotTileService : TileService() {
                 },
             )
         } else {
-            // ON 은 MainActivity 가 포그라운드에 없으면 계속 실패한다(createGroup BUSY).
-            // 그래서 MainActivity 로 넘겨, 그쪽이 resumed 상태에서
-            // ACTION_HOTSPOT_ON 인텐트를 보내도록 한다.
-            launchMainActivityForHotspotStart()
+            // ON 은 이 앱의 액티비티가 포그라운드에 없으면 계속 실패한다
+            // (createGroup BUSY). 그래서 비공개 트램폴린 액티비티를 띄워
+            // 그쪽이 resumed 상태에서 ACTION_HOTSPOT_ON 인텐트를 보내도록 한다.
+            launchTrampolineForHotspotStart()
         }
     }
 
-    private fun launchMainActivityForHotspotStart() {
-        val activityIntent = Intent(this, MainActivity::class.java).apply {
-            action = MainActivity.ACTION_START_HOTSPOT_FROM_TILE
+    private fun launchTrampolineForHotspotStart() {
+        // 명시 인텐트이고 대상이 exported=false 라 같은 앱만 띄울 수 있다.
+        val activityIntent = Intent(this, HotspotStartActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                     Intent.FLAG_ACTIVITY_CLEAR_TOP or
                     Intent.FLAG_ACTIVITY_SINGLE_TOP

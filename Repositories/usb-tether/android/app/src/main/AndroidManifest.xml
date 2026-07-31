@@ -33,6 +33,19 @@
             </intent-filter>
         </activity>
 
+        <!--
+            퀵 설정 타일용 트램폴린. exported="false" 이므로 같은 앱만 띄울 수 있다.
+            MainActivity 는 런처 필터 때문에 exported 여야 하므로, 핫스팟을 켜는
+            특권 동작을 여기로 분리했다. 자세한 근거는 HotspotStartActivity KDoc.
+        -->
+        <activity
+            android:name=".HotspotStartActivity"
+            android:exported="false"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <service
             android:name=".TetherService"
             android:exported="false"
