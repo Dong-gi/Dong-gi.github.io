@@ -29,7 +29,7 @@ Requires Android SDK API 34, Java 17. Uses AGP 8.7.0 + Kotlin 2.0.20.
 
 ### Running End-to-End
 1. `output/` already contains `tun2proxy.exe` and `wintun.dll` — no separate download needed. `adb.exe` is kept only for installing the APK and for diagnostics.
-2. **Windows (Administrator):** run `output/windows-wifi.bat` — it auto-elevates, probes `192.168.49.1` ports 1080–1089, and launches tun2proxy with `--setup`. `--dns over-tcp` is not needed because UDP ASSOCIATE works over Wi-Fi Direct.
+2. **Windows (Administrator):** run `output/windows-wifi.bat` — it auto-elevates and launches tun2proxy against `socks5://192.168.49.1:1080` with `--setup`. It does **not** probe for a port: accepting whichever port answered a SOCKS5 greeting was the hijack primitive described above, so the port is now fixed and only overridable by an explicit argument (`windows-wifi.bat 1085`). `--dns over-tcp` is not needed because UDP ASSOCIATE works over Wi-Fi Direct.
 
 The `pc/` directory (legacy Rust bridge) is no longer used and can be ignored.
 
