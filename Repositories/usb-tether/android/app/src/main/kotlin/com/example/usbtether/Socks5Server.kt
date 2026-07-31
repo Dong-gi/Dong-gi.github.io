@@ -133,23 +133,25 @@ class Socks5Server(
             val inp = client.getInputStream()
             val out = client.getOutputStream()
 
-            // 인증 협상: 클라이언트가 무엇을 제시하든 NO_AUTH 를 선택한다
-            if (inp.read() != 5) return
-            repeat(inp.read()) { inp.read() }
+            // 인증 협상: 클라이언트가 무엇을 제시하든 NO_AUTH 를 선택한다.
+            // 모든 읽기는 readByte() 로 한다 — inp.read() 를 그대로 쓰면 EOF(-1)가
+            // 값처럼 흘러 들어가 엉뚱한 예외로 바뀐다(아래 readByte KDoc 참고).
+            if (inp.readByte() != 5) return
+            repeat(inp.readByte()) { inp.readByte() }
             out.write(byteArrayOf(5, 0))
 
             // 요청 헤더
-            if (inp.read() != 5) return
-            val cmd = inp.read()
-            inp.read()  // RSV (예약 필드)
+            if (inp.readByte() != 5) return
+            val cmd = inp.readByte()
+            inp.readByte()  // RSV (예약 필드)
 
-            val host = when (inp.read()) {
+            val host = when (inp.readByte()) {
                 ATYP_IPV4   -> InetAddress.getByAddress(inp.readN(4)).hostAddress!!
-                ATYP_DOMAIN -> String(inp.readN(inp.read()), Charsets.US_ASCII)
+                ATYP_DOMAIN -> String(inp.readN(inp.readByte()), Charsets.US_ASCII)
                 ATYP_IPV6   -> InetAddress.getByAddress(inp.readN(16)).hostAddress!!
                 else -> { sendReply(out, REP_ATYP_UNSUPPORTED); return }
             }
-            val dstPort = (inp.read() shl 8) or inp.read()
+            val dstPort = (inp.readByte() shl 8) or inp.readByte()
 
             when (cmd) {
                 CMD_CONNECT       -> handleConnect(client, host, dstPort)
@@ -532,6 +534,29 @@ class Socks5Server(
         private const val REP_CMD_UNSUPPORTED  = 7
         private const val REP_ATYP_UNSUPPORTED = 8
     }
+}
+
+/**
+ * 1바이트를 읽고 EOF 면 예외를 던진다.
+ *
+ * `InputStream.read()` 는 EOF 에서 -1 을 돌려주는데, 이전 핸드셰이크 코드는 그 값을
+ * 검사하지 않고 그대로 썼다. 두 곳에서 문제가 됐다.
+ *
+ *  - `String(readN(read()), …)` → `readN(-1)` → `ByteArray(-1)` →
+ *    NegativeArraySizeException
+ *  - `(read() shl 8) or read()` → 어느 쪽이든 -1 이면 결과 전체가 -1 로 오염된다
+ *    (`(-1 shl 8) or -1 == -1`, `256 or -1 == -1`) → dstPort = -1 →
+ *    InetSocketAddress 가 IllegalArgumentException
+ *
+ * 둘 다 넓은 `catch (e: Exception)` 에 잡혀 메모리 안전성이나 로직 우회로 이어지지는
+ * 않았지만, 정상 종료를 예외로 보고하게 되고 의도가 코드에 드러나지 않는다.
+ *
+ * @throws EOFException 스트림이 끝났으면
+ */
+private fun InputStream.readByte(): Int {
+    val b = read()
+    if (b == -1) throw java.io.EOFException()
+    return b
 }
 
 private fun InputStream.readN(n: Int): ByteArray {
