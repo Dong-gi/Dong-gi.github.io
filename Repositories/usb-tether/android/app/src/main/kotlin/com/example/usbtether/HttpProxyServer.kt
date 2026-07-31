@@ -9,7 +9,6 @@ import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 
 /**
@@ -33,33 +32,13 @@ import kotlin.concurrent.thread
  * 접근을 통제한다 — Wi-Fi Direct 클라이언트(192.168.49.2–254)만 서비스한다.
  * 전체 근거와 남는 빈틈은 PeerFilter 의 KDoc 을 볼 것.
  */
-/** 헤더 길이·개수 상한 초과. handleClient 가 431 로 응답하고 연결을 닫는다. */
-private class HeaderTooLargeException : Exception()
-
-/**
- * 헤더 문법 오류. handleClient 가 400 으로 응답하고 연결을 닫는다.
- *
- * 특히 LF 를 동반하지 않는 CR 을 잡는다. 이전 readHeaderLine 은 그런 CR 을
- * 그대로 보존했고, `.trim()` 은 양 끝만 다듬으므로 **줄 중간의** CR 이 살아남았다.
- * 헤더를 ISO_8859_1 로 바이트 단위 그대로 상위에 다시 쓰기 때문에
- * `X-A: foo\rEvil: 1` 이 그대로 전달되고, bare CR 을 줄 구분자로 취급하는
- * 서버·프록시는 헤더가 하나 더 있는 것으로 본다(헤더 주입).
- *
- * 현재는 클라이언트가 이미 `CONNECT host:80` 으로 임의 바이트를 쓸 수 있어
- * 추가 권한을 주지는 않는다. 그러나 CONNECT 를 제한하거나 인증을 붙이는 순간
- * 이것이 우회로가 되므로 지금 막는다.
- */
-private class MalformedRequestException : Exception()
-
 class HttpProxyServer(
-    private val onTcpCount: (Int) -> Unit = {},
     private val onBytesIn: (Long) -> Unit = {},
     private val onBytesOut: (Long) -> Unit = {},
 ) {
     private val running = AtomicBoolean(false)
     private var serverSocket: ServerSocket? = null
     private val executor = Executors.newCachedThreadPool()
-    private val sessions = AtomicInteger(0)
 
     /** 수립된 연결을 추적한다. stop() 이 실제로 끊을 수 있게 하는 유일한 수단이다. */
     private val connections = ConnectionRegistry()
@@ -102,9 +81,9 @@ class HttpProxyServer(
         for (offset in 0 until PORT_FALLBACK_ATTEMPTS) {
             val port = BASE_PORT + offset
             try {
-                return ServerSocket(port, 50, InetAddress.getByName("0.0.0.0")).apply {
-                    reuseAddress = true
-                }
+                // reuseAddress 는 설정하지 않는다 — 생성자가 이미 바인딩을 끝낸
+                // 뒤라 효과가 없다(오해를 부르는 죽은 코드였다).
+                return ServerSocket(port, 50, InetAddress.getByName("0.0.0.0"))
             } catch (e: Exception) {
                 Log.w(TAG, "bind on $port failed: ${e.message}")
             }
@@ -227,9 +206,7 @@ class HttpProxyServer(
             client.getOutputStream().write("HTTP/1.1 200 Connection Established\r\n\r\n".toByteArray())
             client.getOutputStream().flush()
             client.soTimeout = 0
-            onTcpCount(sessions.incrementAndGet())
             relay(client, remote)
-            onTcpCount(sessions.decrementAndGet())
         } finally {
             try { remote.close() } catch (_: Exception) {}
         }
@@ -324,9 +301,7 @@ class HttpProxyServer(
             remoteOut.flush()
 
             client.soTimeout = 0
-            onTcpCount(sessions.incrementAndGet())
             relay(client, remote)
-            onTcpCount(sessions.decrementAndGet())
         } finally {
             try { remote.close() } catch (_: Exception) {}
         }
@@ -458,3 +433,21 @@ class HttpProxyServer(
         const val BASE_PORT = 8282
     }
 }
+
+/** 헤더 길이·개수 상한 초과. handleClient 가 431 로 응답하고 연결을 닫는다. */
+private class HeaderTooLargeException : Exception()
+
+/**
+ * 헤더 문법 오류. handleClient 가 400 으로 응답하고 연결을 닫는다.
+ *
+ * 특히 LF 를 동반하지 않는 CR 을 잡는다. 이전 readHeaderLine 은 그런 CR 을
+ * 그대로 보존했고, `.trim()` 은 양 끝만 다듬으므로 **줄 중간의** CR 이 살아남았다.
+ * 헤더를 ISO_8859_1 로 바이트 단위 그대로 상위에 다시 쓰기 때문에
+ * `X-A: foo\rEvil: 1` 이 그대로 전달되고, bare CR 을 줄 구분자로 취급하는
+ * 서버·프록시는 헤더가 하나 더 있는 것으로 본다(헤더 주입).
+ *
+ * 현재는 클라이언트가 이미 `CONNECT host:80` 으로 임의 바이트를 쓸 수 있어
+ * 추가 권한을 주지는 않는다. 그러나 CONNECT 를 제한하거나 인증을 붙이는 순간
+ * 이것이 우회로가 되므로 지금 막는다.
+ */
+private class MalformedRequestException : Exception()

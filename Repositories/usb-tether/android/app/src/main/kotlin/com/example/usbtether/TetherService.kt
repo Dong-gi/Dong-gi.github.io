@@ -14,8 +14,9 @@ import java.util.concurrent.atomic.AtomicLong
 
 /**
  * 포그라운드 서비스. 기동하면 항상 다음 두 서버를 띄운다.
- *   - SOCKS5 프록시: `0.0.0.0:SOCKS_BASE_PORT` 부터, 점유돼 있으면 +1 로 폴백
- *   - HTTP 프록시:   `0.0.0.0:HTTP_BASE_PORT` 부터, 점유돼 있으면 +1 로 폴백
+ *   - SOCKS5 프록시: `0.0.0.0:`[Socks5Server.BASE_PORT] 고정. 점유돼 있으면
+ *     폴백하지 않고 실패하며 원인이 [proxyError] 로 올라온다
+ *   - HTTP 프록시:   `0.0.0.0:`[HttpProxyServer.BASE_PORT] 부터 +9 까지 폴백
  *
  * 실제로 바인딩된 포트는 [socksPort] / [httpPort] 에 게시되어 UI 에 표시된다.
  * 표시하거나 접속할 포트를 기본 상수에서 가져오면 안 된다.
@@ -199,10 +200,10 @@ class TetherService : Service() {
         @Volatile var isRunning = false
             private set
 
-        /** 실제 SOCKS5 포트(기본 또는 기본+1). 바인딩되지 않았으면 -1. */
+        /** SOCKS5 포트. 폴백이 없으므로 성공 시 항상 [Socks5Server.BASE_PORT], 실패 시 -1. */
         @Volatile var socksPort: Int = -1
             internal set
-        /** 실제 HTTP 포트(기본 또는 기본+1). 바인딩되지 않았으면 -1. */
+        /** 실제 HTTP 포트(기본 ~ 기본+9). 바인딩되지 않았으면 -1. */
         @Volatile var httpPort: Int = -1
             internal set
 

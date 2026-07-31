@@ -34,8 +34,6 @@ class WifiHotspot(
 
     @Volatile var lastError: String? = null
         private set
-    @Volatile var active: Boolean = false
-        private set
 
     @Volatile var displaySsid: String = normalizeSsid(requestedSsid)
         private set
@@ -131,7 +129,6 @@ class WifiHotspot(
         try {
             mgr.createGroup(ch, config, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
-                    active = true
                     lastError = null
                     Log.i(TAG, "Wi-Fi P2P group up: $displaySsid")
                     onResult(true)
@@ -166,7 +163,6 @@ class WifiHotspot(
         mgr.requestGroupInfo(ch) { group ->
             if (group != null && group.isGroupOwner) {
                 displaySsid = group.networkName
-                active = true
                 lastError = null
                 Log.i(TAG, "Reusing existing Wi-Fi P2P group: $displaySsid")
                 onResult(true)
@@ -187,7 +183,6 @@ class WifiHotspot(
         } catch (e: Exception) {
             Log.w(TAG, "removeGroup failed: ${e.message}")
         }
-        active = false
     }
 
     companion object {

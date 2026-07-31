@@ -78,8 +78,19 @@ object DestinationFilter {
         if (address.isMulticastAddress) return true
 
         // IPv4-mapped IPv6 로 우회할 수 있으므로 정규화한 뒤 IPv4 규칙을 다시 본다.
+        //
+        // 현재 JDK/Android 는 `::ffff:a.b.c.d` 를 파싱해도 Inet4Address 를 돌려주므로
+        // 위의 검사들이 이미 걸러낸다. 그래도 여기서 다시 보는 이유는, 위의 검사가
+        // 정규화 없이 수행되는 형태로 바뀌거나 다른 스택에서 Inet6Address 가
+        // 돌아올 경우에 대비하기 위한 것이다. 주석만 그렇다고 적고 실제로는 일부만
+        // 검사하면 나중에 읽는 사람을 속인다.
         val v4 = address.asIpv4()
         if (v4 != null) {
+            if (v4.isAnyLocalAddress) return true
+            if (v4.isLoopbackAddress) return true
+            if (v4.isLinkLocalAddress) return true
+            if (v4.isSiteLocalAddress) return true
+            if (v4.isMulticastAddress) return true
             val a = v4.address[0].toInt() and 0xFF
             val b = v4.address[1].toInt() and 0xFF
             if (a == 0) return true                          // 0.0.0.0/8

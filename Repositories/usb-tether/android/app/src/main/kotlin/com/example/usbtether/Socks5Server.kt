@@ -77,9 +77,9 @@ class Socks5Server(
      * 포트 스쿼팅 설명 참고.
      */
     private fun bind(): ServerSocket? = try {
-        ServerSocket(BASE_PORT, 50, InetAddress.getByName("0.0.0.0")).apply {
-            reuseAddress = true
-        }
+        // reuseAddress 는 설정하지 않는다. ServerSocket 생성자가 이미 바인딩을
+        // 끝냈으므로 그 뒤에 켜도 효과가 없다(오해를 부르는 죽은 코드였다).
+        ServerSocket(BASE_PORT, 50, InetAddress.getByName("0.0.0.0"))
     } catch (e: Exception) {
         lastError = "SOCKS5 포트 $BASE_PORT 를 다른 앱이 쓰고 있습니다"
         Log.e(TAG, "bind on $BASE_PORT failed: ${e.message}")

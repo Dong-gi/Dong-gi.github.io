@@ -50,12 +50,12 @@ The carrier sees only normal phone-originated sockets — Android's OS TCP/IP st
 | File | Role |
 |------|------|
 | `TetherService.kt` | Foreground service. Proxies always run while the service is up; hotspot is toggled independently via `ACTION_HOTSPOT_ON` / `ACTION_HOTSPOT_OFF` (battery-expensive). Exposes stats to `MainActivity` |
-| `Socks5Server.kt` | RFC 1928 SOCKS5 server on `0.0.0.0:basePort` (peer-gated by `PeerFilter`) with fallback to `basePort+1`…`basePort+9` (up to 10 attempts); binds synchronously inside `start()` so callers see the chosen `actualPort` immediately. Supports CONNECT (TCP relay) and UDP ASSOCIATE (§7 relay via `DatagramSocket`); uses `CachedThreadPool` |
+| `Socks5Server.kt` | RFC 1928 SOCKS5 server on `0.0.0.0:basePort` (peer-gated by `PeerFilter`), **no port fallback** — binds 1080 only and reports failure via `lastError`; binds synchronously inside `start()` so callers see the result immediately. Supports CONNECT (TCP relay) and UDP ASSOCIATE (§7 relay via `DatagramSocket`); uses `CachedThreadPool` |
 | `PeerFilter.kt` | Which clients may connect (accept-time gate): only `192.168.49.2`–`192.168.49.254`. The group owner's own address `192.168.49.1` is rejected, which is what blocks other apps on the phone |
 | `DestinationFilter.kt` | Which destinations may be reached — blocks loopback/private/link-local/CGNAT/ULA/multicast, resolves once and hands back the address object so callers cannot be DNS-rebound |
 | `HttpProxyServer.kt` | HTTP proxy on `0.0.0.0:basePort` (peer-gated by `PeerFilter`) with the same 10-attempt fallback (same `start()` contract); supports `CONNECT host:port` (HTTPS tunnel) and absolute-URI forwarding (`GET http://...`); strips `Proxy-Connection`/`Proxy-Authorization`; no auth |
 | `WifiHotspot.kt` | Wi-Fi Direct GO via `WifiP2pManager.createGroup(config)` with custom SSID/passphrase (API 29+); SSID auto-prefixed with `DIRECT-UT-` since P2P requires it |
-| `MainActivity.kt` | UI: SSID + passphrase fields (persisted in SharedPreferences `usb_tether`), main Start/Stop (proxies), separate Start hotspot / Stop hotspot button (only enabled when service is running), hotspot status, byte counters |
+| `MainActivity.kt` | UI: SSID + passphrase fields (persisted via `HotspotPreferences`; the passphrase is encrypted with `SecretStore`), main Start/Stop (proxies), separate Start hotspot / Stop hotspot button, hotspot status, proxy error line, byte counters. Launcher only — it no longer handles any privileged intent action |
 
 ### PC Side
 
