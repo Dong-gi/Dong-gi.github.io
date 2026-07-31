@@ -43,6 +43,9 @@ class HttpProxyServer(
     private val executor = Executors.newCachedThreadPool()
     private val sessions = AtomicInteger(0)
 
+    /** 수립된 연결을 추적한다. stop() 이 실제로 끊을 수 있게 하는 유일한 수단이다. */
+    private val connections = ConnectionRegistry()
+
     /** 실제로 바인딩된 포트. 서버가 동작 중이 아니면 -1. */
     @Volatile var actualPort: Int = -1
         private set
@@ -61,9 +64,18 @@ class HttpProxyServer(
         return actualPort
     }
 
+    /**
+     * 서버를 멈춘다.
+     *
+     * 리스닝 소켓을 닫는 것만으로는 부족하다. `read()` 에 블록된 워커 스레드는
+     * 인터럽트를 무시하므로, 수립된 소켓을 직접 닫아야 릴레이가 실제로 끝난다.
+     * 순서가 중요하다: 새 연결을 먼저 막고(리스닝 소켓 닫기), 기존 연결을 끊고,
+     * 그다음 스레드풀을 내린다.
+     */
     fun stop() {
         if (!running.compareAndSet(true, false)) return
         try { serverSocket?.close() } catch (_: Exception) {}
+        connections.closeAll()
         executor.shutdownNow()
         actualPort = -1
     }
@@ -108,6 +120,7 @@ class HttpProxyServer(
     }
 
     private fun handleClient(client: Socket) {
+        connections.register(client)
         try {
             client.tcpNoDelay = true
             client.soTimeout = 10_000
@@ -138,6 +151,7 @@ class HttpProxyServer(
         } catch (e: Exception) {
             Log.w(TAG, "client error: ${e.message}")
         } finally {
+            connections.unregister(client)
             try { client.close() } catch (_: Exception) {}
         }
     }
