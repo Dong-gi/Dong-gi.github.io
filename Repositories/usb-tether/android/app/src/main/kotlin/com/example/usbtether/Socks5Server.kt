@@ -7,6 +7,7 @@ import java.net.*
 import java.util.concurrent.Executors
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 
 /**
@@ -186,84 +187,192 @@ class Socks5Server(
         }
     }
 
+    /**
+     * UDP ASSOCIATE (RFC 1928 §7).
+     *
+     * ## 이전 구현의 문제
+     *
+     * 소켓 **하나**를 `0.0.0.0` 에 바인딩해 양방향에 함께 쓰고, "클라이언트가 보낸
+     * 패킷"과 "원격이 보낸 응답"을 출처 주소·포트 비교로 **추론**했다. 클라이언트
+     * 식별자는 **가장 먼저 도착한 패킷**의 출처에서 확정했고, `client.inetAddress`
+     * 와 대조하지 않았다. 연결을 묶기 위해 존재하는 RFC 1928 의 DST.ADDR/DST.PORT
+     * 는 파싱된 뒤 버려졌다. 그리고 확정된 클라이언트가 아닌 출처의 패킷은
+     * "원격의 응답"으로 간주해 SOCKS5 헤더로 감싸 클라이언트에게 전달했다.
+     *
+     * 이 경로는 실사용에서 활성이었다 — `windows-wifi.bat` 이 `--dns over-tcp` 를
+     * 생략하므로 PC 의 DNS 질의 전량이 이 릴레이를 지난다.
+     *
+     * 결과적으로 네 가지가 가능했다.
+     *  1. **연결 탈취.** tun2proxy 보다 먼저 릴레이 포트에 패킷을 보낸 쪽이
+     *     클라이언트가 된다. 이후 PC 의 패킷은 "응답" 분기로 떨어져 공격자에게
+     *     전달된다 — 목적지와 DNS 질의 내용이 담긴 원본 datagram 그대로. PC 의
+     *     DNS 는 조용히 죽는다. 포트가 임의(ephemeral)라도 전 범위에 1패킷씩
+     *     뿌리면(약 28k 패킷) 생성 즉시 선점되므로 통제 수단이 아니다.
+     *  2. **오픈 UDP 프록시.** 확정 후 임의 목적지로 보낼 수 있고 폰의 통신사 IP 가
+     *     출처로 보인다.
+     *  3. **출처 위조 반사 증폭.** 클라이언트 식별자가 위조 가능한 패킷 출처에서
+     *     오므로, 피해자로 위조한 1패킷으로 큰 DNS 응답을 피해자에게 반사시킬 수 있다.
+     *  4. **PC 로의 응답 주입.** 릴레이 포트에 도달하는 아무 호스트나 자기 주소를
+     *     SRC 로 해서 PC 에 페이로드를 넣을 수 있어 DNS 캐시 오염이 가능했다.
+     *
+     * ## 현재 구조
+     *
+     * 방향을 추론하지 않고 **소켓 두 개로 구조화**한다.
+     *  - `clientFacing`: `client.localAddress`(192.168.49.1)에만 바인딩한다.
+     *    다른 인터페이스에서는 아예 도달할 수 없다. 수신 패킷의 출처 주소가
+     *    `client.inetAddress` 와 다르면 폐기한다(출처 **고정**). 포트만 첫 패킷에서
+     *    학습한다.
+     *  - `remoteFacing`: 원격으로 보내고 응답을 받는 전용 소켓. 여기서 온 것은
+     *    정의상 "응답"이므로 추론이 필요 없다.
+     *
+     * BND.ADDR/PORT 로는 `clientFacing` 의 바인딩 주소·포트를 응답한다.
+     *
+     * **남는 한계**: `remoteFacing` 에 도착한 응답이 실제로 우리가 보낸 요청에
+     * 대응하는지 대조하지 않는다(NAT 테이블 미구현). 일반적인 SOCKS5 릴레이 구현과
+     * 같은 수준이며, off-path 공격자는 임의 ephemeral 포트를 맞혀야 한다.
+     */
     private fun handleUdpAssociate(client: Socket) {
         val out = client.getOutputStream()
-        val udpSocket = try {
-            DatagramSocket(0, InetAddress.getByName("0.0.0.0")).apply { soTimeout = 2000 }
+        val clientAddress = client.inetAddress
+        val bindAddress = client.localAddress
+
+        val clientFacing = try {
+            DatagramSocket(0, bindAddress).apply { soTimeout = UDP_POLL_TIMEOUT_MS }
         } catch (e: Exception) {
             Log.e(TAG, "UDP socket creation failed: ${e.message}")
             sendReply(out, REP_GENERAL_FAILURE)
             return
         }
+        val remoteFacing = try {
+            DatagramSocket().apply { soTimeout = UDP_POLL_TIMEOUT_MS }
+        } catch (e: Exception) {
+            Log.e(TAG, "UDP socket creation failed: ${e.message}")
+            clientFacing.close()
+            sendReply(out, REP_GENERAL_FAILURE)
+            return
+        }
+
         try {
-            // BND.ADDR = 이 TCP 연결이 도착한 인터페이스의 주소(192.168.49.1).
-            val bindAddr = (client.localAddress as? Inet4Address)?.address ?: byteArrayOf(0, 0, 0, 0)
-            val udpPort = udpSocket.localPort
+            // BND.ADDR = clientFacing 이 바인딩된 인터페이스 주소(192.168.49.1).
+            val bindOctets = (bindAddress as? Inet4Address)?.address ?: byteArrayOf(0, 0, 0, 0)
+            val relayPort = clientFacing.localPort
             out.write(
                 byteArrayOf(5, 0, 0, ATYP_IPV4.toByte(),
-                    bindAddr[0], bindAddr[1], bindAddr[2], bindAddr[3],
-                    (udpPort shr 8).toByte(), (udpPort and 0xFF).toByte())
+                    bindOctets[0], bindOctets[1], bindOctets[2], bindOctets[3],
+                    (relayPort shr 8).toByte(), (relayPort and 0xFF).toByte())
             )
-            Log.i(TAG, "UDP ASSOCIATE: relay on port $udpPort")
             client.soTimeout = 0
 
-            var clientUdpAddr: InetAddress? = null
-            var clientUdpPort: Int = -1
+            // 클라이언트의 UDP 출처 포트. 주소는 고정이고 포트만 첫 패킷에서 배운다.
+            // 두 스레드가 함께 읽고 쓰므로 원자적으로 다룬다.
+            val clientPort = AtomicInteger(-1)
 
-            thread(isDaemon = true, name = "udp-relay-$udpPort") {
-                val buf = ByteArray(UDP_BUF_SIZE)
-                val pkt = DatagramPacket(buf, buf.size)
-                while (!udpSocket.isClosed && running.get()) {
-                    try {
-                        pkt.setData(buf)
-                        udpSocket.receive(pkt)
-                    } catch (_: SocketTimeoutException) {
-                        continue
-                    } catch (e: Exception) {
-                        if (!udpSocket.isClosed) Log.w(TAG, "UDP recv: ${e.message}")
-                        break
-                    }
-
-                    val ca = clientUdpAddr
-                    val cp = clientUdpPort
-                    if (ca == null || (pkt.address == ca && pkt.port == cp)) {
-                        // tun2proxy 가 보낸 패킷: SOCKS5 UDP 헤더를 파싱해 원격으로 전달
-                        if (ca == null) {
-                            clientUdpAddr = pkt.address
-                            clientUdpPort = pkt.port
-                        }
-                        val (dstAddr, dstPort, payload) = parseUdpHeader(pkt) ?: continue
-                        // TCP 경로와 같은 정책을 UDP 에도 적용한다. 이게 없으면
-                        // UDP 릴레이가 루프백·사설 대역으로 가는 우회로가 된다.
-                        if (DestinationFilter.isBlocked(dstAddr)) continue
-                        onBytesIn(payload.size.toLong())
-                        try {
-                            udpSocket.send(DatagramPacket(payload, payload.size, dstAddr, dstPort))
-                        } catch (e: Exception) {
-                            Log.w(TAG, "UDP fwd to $dstAddr:$dstPort: ${e.message}")
-                        }
-                    } else {
-                        // 원격이 보낸 패킷: SOCKS5 UDP 헤더로 감싸 tun2proxy 에게 돌려보냄
-                        val target = clientUdpAddr ?: continue
-                        val targetPort = clientUdpPort.takeIf { it >= 0 } ?: continue
-                        val wrapped = buildUdpHeader(pkt.address, pkt.port, pkt.data, pkt.offset, pkt.length)
-                        onBytesOut(pkt.length.toLong())
-                        try {
-                            udpSocket.send(DatagramPacket(wrapped, wrapped.size, target, targetPort))
-                        } catch (e: Exception) {
-                            Log.w(TAG, "UDP reply to $target:$targetPort: ${e.message}")
-                        }
-                    }
-                }
+            val toRemote = thread(isDaemon = true, name = "udp-to-remote-$relayPort") {
+                relayClientToRemote(clientFacing, remoteFacing, clientAddress, clientPort)
+            }
+            val toClient = thread(isDaemon = true, name = "udp-to-client-$relayPort") {
+                relayRemoteToClient(clientFacing, remoteFacing, clientAddress, clientPort)
             }
 
-            // TCP 제어 연결이 닫힐 때까지 블록한다. udpSocket 을 닫으면 릴레이 스레드가 멈춘다
+            // TCP 제어 연결이 닫힐 때까지 블록한다. 소켓을 닫으면 두 릴레이가 멈춘다.
             try {
                 while (client.getInputStream().read() != -1) { /* keepalive 바이트를 버린다 */ }
             } catch (_: Exception) {}
-            Log.i(TAG, "UDP ASSOCIATE ended on port $udpPort")
+
+            clientFacing.close()
+            remoteFacing.close()
+            toRemote.join(RELAY_JOIN_TIMEOUT_MS)
+            toClient.join(RELAY_JOIN_TIMEOUT_MS)
         } finally {
-            udpSocket.close()
+            clientFacing.close()
+            remoteFacing.close()
+        }
+    }
+
+    /**
+     * 클라이언트 → 원격 방향.
+     *
+     * 출처 주소가 [clientAddress] 와 일치하지 않는 패킷은 폐기한다. 이것이 연결
+     * 탈취·반사 증폭을 막는 핵심이다. 포트는 첫 유효 패킷에서 학습하고, 이후에는
+     * 그 포트만 받는다.
+     */
+    private fun relayClientToRemote(
+        clientFacing: DatagramSocket,
+        remoteFacing: DatagramSocket,
+        clientAddress: InetAddress,
+        clientPort: AtomicInteger,
+    ) {
+        val buf = ByteArray(UDP_BUF_SIZE)
+        val pkt = DatagramPacket(buf, buf.size)
+        while (!clientFacing.isClosed && running.get()) {
+            try {
+                pkt.setData(buf)
+                clientFacing.receive(pkt)
+            } catch (_: SocketTimeoutException) {
+                continue
+            } catch (e: Exception) {
+                if (!clientFacing.isClosed) Log.w(TAG, "UDP recv: ${e.message}")
+                break
+            }
+
+            // 출처 고정: 이 연결을 만든 클라이언트의 주소만 받는다.
+            if (pkt.address != clientAddress) continue
+
+            val learned = clientPort.get()
+            if (learned < 0) {
+                clientPort.compareAndSet(-1, pkt.port)
+            } else if (pkt.port != learned) {
+                continue
+            }
+
+            val (dstAddr, dstPort, payload) = parseUdpHeader(pkt) ?: continue
+            // TCP 경로와 같은 정책을 UDP 에도 적용한다. 이게 없으면 UDP 릴레이가
+            // 루프백·사설 대역으로 가는 우회로가 된다.
+            if (DestinationFilter.isBlocked(dstAddr)) continue
+            onBytesIn(payload.size.toLong())
+            try {
+                remoteFacing.send(DatagramPacket(payload, payload.size, dstAddr, dstPort))
+            } catch (e: Exception) {
+                Log.w(TAG, "UDP 전달 실패: ${e.message}")
+            }
+        }
+    }
+
+    /**
+     * 원격 → 클라이언트 방향.
+     *
+     * [remoteFacing] 에 도착한 것은 정의상 응답이므로 방향 추론이 필요 없다.
+     * 클라이언트 포트를 아직 배우지 못했으면 보낼 곳이 없으므로 폐기한다.
+     */
+    private fun relayRemoteToClient(
+        clientFacing: DatagramSocket,
+        remoteFacing: DatagramSocket,
+        clientAddress: InetAddress,
+        clientPort: AtomicInteger,
+    ) {
+        val buf = ByteArray(UDP_BUF_SIZE)
+        val pkt = DatagramPacket(buf, buf.size)
+        while (!remoteFacing.isClosed && running.get()) {
+            try {
+                pkt.setData(buf)
+                remoteFacing.receive(pkt)
+            } catch (_: SocketTimeoutException) {
+                continue
+            } catch (e: Exception) {
+                if (!remoteFacing.isClosed) Log.w(TAG, "UDP recv: ${e.message}")
+                break
+            }
+
+            val target = clientPort.get()
+            if (target < 0) continue
+
+            val wrapped = buildUdpHeader(pkt.address, pkt.port, pkt.data, pkt.offset, pkt.length)
+            onBytesOut(pkt.length.toLong())
+            try {
+                clientFacing.send(DatagramPacket(wrapped, wrapped.size, clientAddress, target))
+            } catch (e: Exception) {
+                Log.w(TAG, "UDP 응답 실패: ${e.message}")
+            }
         }
     }
 
@@ -387,6 +496,12 @@ class Socks5Server(
         private const val ATYP_IPV6   = 4
 
         private const val UDP_BUF_SIZE = 65535
+
+        /** UDP 수신 폴링 주기. 소켓이 닫혔는지 확인하려면 receive 가 주기적으로 풀려야 한다. */
+        private const val UDP_POLL_TIMEOUT_MS = 2000
+
+        /** 릴레이 스레드 종료를 기다리는 시간. */
+        private const val RELAY_JOIN_TIMEOUT_MS = 5000L
 
         private const val CMD_CONNECT       = 1
         private const val CMD_UDP_ASSOCIATE = 3
