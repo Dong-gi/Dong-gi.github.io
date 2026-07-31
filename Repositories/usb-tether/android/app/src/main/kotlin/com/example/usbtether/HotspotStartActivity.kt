@@ -1,10 +1,9 @@
 package com.example.usbtether
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import android.app.Activity
 import android.content.Intent
 import android.util.Log
+import androidx.core.content.ContextCompat
 
 /**
  * 퀵 설정 타일이 핫스팟을 켤 때 거쳐 가는 비공개 트램폴린 액티비티.
@@ -32,17 +31,19 @@ import android.util.Log
  * `Theme.NoDisplay` 는 최신 Android 에서 `onResume` 반환 전에 finish 하지 않으면
  * 크래시하므로 쓰지 않는다.
  *
+ * **`AppCompatActivity` 가 아니라 [Activity] 를 상속한다.** AppCompat 은
+ * `Theme.AppCompat` 계열이 아니면 `createSubDecor()` 에서
+ * `IllegalStateException("You need to use a Theme.AppCompat theme…")` 을 던진다.
+ * 매니페스트에 지정한 `Theme.Translucent.NoTitleBar` 는 플랫폼 테마라 그 조건을
+ * 만족하지 않는다. 이 액티비티는 UI 가 없어 AppCompat 기능을 전혀 쓰지 않으므로
+ * 플랫폼 Activity 로 충분하다.
+ *
  * 기동은 [onResume] 에서 한다. `createGroup` 이 실행되는 시점에 액티비티가 실제로
  * 포그라운드에 있어야 하기 때문이다.
  */
-class HotspotStartActivity : AppCompatActivity() {
+class HotspotStartActivity : Activity() {
 
     private val hotspotPrefs by lazy { HotspotPreferences(this) }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // UI 없음. onResume 에서 기동하고 즉시 끝낸다.
-    }
 
     override fun onResume() {
         super.onResume()

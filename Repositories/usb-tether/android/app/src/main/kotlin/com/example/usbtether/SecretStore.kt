@@ -66,17 +66,21 @@ internal object SecretStore {
      *
      * @return 평문. 형식이 맞지 않거나 복호화가 실패하면 null
      */
-    fun decrypt(stored: String): String? = try {
-        val parts = stored.split(SEPARATOR)
-        if (parts.size != 2) return null
-        val iv = decode(parts[0])
-        val ciphertext = decode(parts[1])
-        val cipher = Cipher.getInstance(TRANSFORMATION)
-        cipher.init(Cipher.DECRYPT_MODE, loadOrCreateKey(), GCMParameterSpec(GCM_TAG_BITS, iv))
-        String(cipher.doFinal(ciphertext), Charsets.UTF_8)
-    } catch (e: Exception) {
-        Log.w(TAG, "복호화 실패: ${e.javaClass.simpleName}")
-        null
+    fun decrypt(stored: String): String? {
+        // 블록 본문이어야 한다. Kotlin 은 표현식 본문 함수 안에서 return 을 허용하지
+        // 않는다(RETURN_IN_FUNCTION_WITH_EXPRESSION_BODY).
+        return try {
+            val parts = stored.split(SEPARATOR)
+            require(parts.size == 2) { "형식 불일치" }
+            val iv = decode(parts[0])
+            val ciphertext = decode(parts[1])
+            val cipher = Cipher.getInstance(TRANSFORMATION)
+            cipher.init(Cipher.DECRYPT_MODE, loadOrCreateKey(), GCMParameterSpec(GCM_TAG_BITS, iv))
+            String(cipher.doFinal(ciphertext), Charsets.UTF_8)
+        } catch (e: Exception) {
+            Log.w(TAG, "복호화 실패: ${e.javaClass.simpleName}")
+            null
+        }
     }
 
     /** Keystore 의 키를 가져오거나 없으면 만든다. 키는 기기를 떠날 수 없다. */
