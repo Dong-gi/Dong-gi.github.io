@@ -9,11 +9,22 @@ REM     Download or Build: https://github.com/tun2proxy/tun2proxy
 
 REM --- Auto-elevate to Administrator if not already ---
 net session >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Requesting Administrator privileges...
+if %errorlevel% equ 0 goto :elevated
+
+echo Requesting Administrator privileges...
+REM -ArgumentList has to be passed explicitly. Without it the elevated copy starts
+REM with no arguments, so an explicit port (windows-wifi.bat 1085) silently reverts
+REM to 1080 -- and that is the normal path, since this script is nearly always
+REM launched non-elevated. Reverting to 1080 either fails to connect or, worse,
+REM connects to whatever else is sitting on 1080.
+if "%~1"=="" (
     powershell -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
-    exit /b
+) else (
+    powershell -Command "Start-Process -FilePath '%~f0' -Verb RunAs -ArgumentList '%*'"
 )
+exit /b
+
+:elevated
 
 REM --- SOCKS5 port is fixed at 1080 ---
 REM The app no longer falls back to 1081-1089, and this script no longer probes.

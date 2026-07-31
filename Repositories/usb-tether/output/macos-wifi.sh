@@ -5,14 +5,19 @@
 #       https://github.com/tun2proxy/tun2proxy/releases
 #   - Mac connected to the phone's Wi-Fi hotspot (192.168.49.x)
 #   - Android app installed and "Start" tapped (hotspot must be running on the phone)
-#   - Run with sudo (TUN interface creation requires root)
+#   - Root (TUN interface creation requires it). The script re-runs itself under
+#     sudo, so calling it directly is fine.
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Auto-elevate
+# --- Auto-elevate to root ---
+# This used to only print "Run with sudo" and exit, which contradicted both the
+# comment above it and the README. Worse, a bare `exit` returns 0, so the failure
+# looked like success to anything calling this script.
+# "$@" is forwarded so an explicit port survives the re-exec.
 if [ "$(id -u)" -ne 0 ]; then
-    echo "Run with sudo"
-    exit
+    echo "Re-running with sudo..."
+    exec sudo "$0" "$@"
 fi
 
 # --- SOCKS5 port is fixed at 1080 ---
@@ -32,7 +37,10 @@ echo "[1/1] Starting tun2proxy on socks5://192.168.49.1:$PORT ..."
 cleanup() {
     echo ""
     echo "Cleaning up..."
-    networksetup -setdnsservers Wi-Fi Empty 2>/dev/null
+    # No DNS reset here. This script never touches the system resolver --
+    # tun2proxy applies --dns-addr to the TUN interface only. The previous
+    # `networksetup -setdnsservers Wi-Fi Empty` wiped whatever the user had
+    # configured on their Wi-Fi service: state this script never created.
     route delete 192.168.49.1 2>/dev/null
     ifconfig utun5 destroy 2>/dev/null
 }
