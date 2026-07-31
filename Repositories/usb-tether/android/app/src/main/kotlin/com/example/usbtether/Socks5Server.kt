@@ -5,6 +5,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.*
 import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
 
@@ -89,7 +90,21 @@ class Socks5Server(
                     try { client.close() } catch (_: Exception) {}
                     continue
                 }
-                executor.submit { handleClient(client) }
+                // 동시 세션 상한. 등록을 accept 시점에 하는 것이 중요하다 — handleClient
+                // 안에서 등록하면 accept 와 등록 사이에 태스크가 쌓여 CachedThreadPool 이
+                // 무제한으로 스레드를 만든다. 여기서 세면 풀 크기가 구조적으로 묶인다.
+                if (connections.size >= MAX_CONCURRENT_SESSIONS) {
+                    Log.w(TAG, "동시 세션 상한 초과로 연결을 거부했다")
+                    try { client.close() } catch (_: Exception) {}
+                    continue
+                }
+                connections.register(client)
+                try {
+                    executor.submit { handleClient(client) }
+                } catch (_: RejectedExecutionException) {
+                    connections.unregister(client)
+                    try { client.close() } catch (_: Exception) {}
+                }
             }
         } catch (e: Exception) {
             Log.e(TAG, "acceptLoop crashed", e)
@@ -97,7 +112,7 @@ class Socks5Server(
     }
 
     private fun handleClient(client: Socket) {
-        connections.register(client)
+        // 등록은 acceptLoop 에서 이미 했다(동시 세션 판정을 정확히 하기 위해).
         try {
             client.tcpNoDelay = true
             client.soTimeout = 10_000
@@ -354,6 +369,17 @@ class Socks5Server(
         private const val TAG = "Socks5Server"
         private const val CONNECT_TIMEOUT_MS = 5000
         private const val PORT_FALLBACK_ATTEMPTS = 10
+
+        /**
+         * 동시 세션 상한.
+         *
+         * 세션 하나가 스레드 두 개를 쓴다(풀 워커 + relay 의 반대 방향 스레드).
+         * 상한이 없으면 클라이언트가 연결만 열어두어 `OutOfMemoryError: unable to
+         * create new native thread` 를 유발할 수 있다. 정상 사용의 상한이 아니라
+         * 폭주 방지선이므로 넉넉하게 잡는다 — tun2proxy 로 PC 트래픽 전량을
+         * 통과시키면 TCP 연결 하나당 세션 하나가 된다.
+         */
+        private const val MAX_CONCURRENT_SESSIONS = 256
         const val BASE_PORT = 1080
 
         private const val ATYP_IPV4   = 1

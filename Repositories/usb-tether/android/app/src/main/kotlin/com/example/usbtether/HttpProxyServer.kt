@@ -8,6 +8,7 @@ import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
@@ -33,6 +34,9 @@ import kotlin.concurrent.thread
  * 접근을 통제한다 — Wi-Fi Direct 클라이언트(192.168.49.2–254)만 서비스한다.
  * 전체 근거와 남는 빈틈은 PeerFilter 의 KDoc 을 볼 것.
  */
+/** 헤더 길이·개수 상한 초과. handleClient 가 431 로 응답하고 연결을 닫는다. */
+private class HeaderTooLargeException : Exception()
+
 class HttpProxyServer(
     private val onTcpCount: (Int) -> Unit = {},
     private val onBytesIn: (Long) -> Unit = {},
@@ -112,7 +116,21 @@ class HttpProxyServer(
                     try { client.close() } catch (_: Exception) {}
                     continue
                 }
-                executor.submit { handleClient(client) }
+                // 동시 세션 상한. 등록을 accept 시점에 하는 것이 중요하다 — handleClient
+                // 안에서 등록하면 accept 와 등록 사이에 태스크가 쌓여 CachedThreadPool 이
+                // 무제한으로 스레드를 만든다. 여기서 세면 풀 크기가 구조적으로 묶인다.
+                if (connections.size >= MAX_CONCURRENT_SESSIONS) {
+                    Log.w(TAG, "동시 세션 상한 초과로 연결을 거부했다")
+                    try { client.close() } catch (_: Exception) {}
+                    continue
+                }
+                connections.register(client)
+                try {
+                    executor.submit { handleClient(client) }
+                } catch (_: RejectedExecutionException) {
+                    connections.unregister(client)
+                    try { client.close() } catch (_: Exception) {}
+                }
             }
         } catch (e: Exception) {
             Log.e(TAG, "acceptLoop crashed", e)
@@ -120,7 +138,7 @@ class HttpProxyServer(
     }
 
     private fun handleClient(client: Socket) {
-        connections.register(client)
+        // 등록은 acceptLoop 에서 이미 했다(동시 세션 판정을 정확히 하기 위해).
         try {
             client.tcpNoDelay = true
             client.soTimeout = 10_000
@@ -138,6 +156,7 @@ class HttpProxyServer(
             while (true) {
                 val line = readHeaderLine(inp) ?: break
                 if (line.isEmpty()) break
+                if (headers.size >= MAX_HEADER_COUNT) throw HeaderTooLargeException()
                 val idx = line.indexOf(':')
                 if (idx <= 0) continue
                 headers += line.substring(0, idx).trim() to line.substring(idx + 1).trim()
@@ -148,6 +167,9 @@ class HttpProxyServer(
             } else {
                 handleForward(client, method, target, version, headers)
             }
+        } catch (_: HeaderTooLargeException) {
+            Log.w(TAG, "헤더가 상한을 넘어 요청을 거부했다")
+            try { sendStatus(client.getOutputStream(), 431, "Request Header Fields Too Large") } catch (_: Exception) {}
         } catch (e: Exception) {
             Log.w(TAG, "client error: ${e.message}")
         } finally {
@@ -300,6 +322,7 @@ class HttpProxyServer(
     private fun readHeaderLine(src: InputStream): String? {
         val sb = StringBuilder()
         while (true) {
+            if (sb.length >= MAX_HEADER_LINE_BYTES) throw HeaderTooLargeException()
             val b = src.read()
             if (b == -1) return if (sb.isEmpty()) null else sb.toString()
             when (b) {
@@ -322,6 +345,23 @@ class HttpProxyServer(
         private const val TAG = "HttpProxyServer"
         private const val CONNECT_TIMEOUT_MS = 5000
         private const val PORT_FALLBACK_ATTEMPTS = 10
+
+        /** 동시 세션 상한. 근거는 Socks5Server 의 같은 상수 주석 참고. */
+        private const val MAX_CONCURRENT_SESSIONS = 256
+
+        /**
+         * 헤더 한 줄의 최대 바이트 수.
+         *
+         * 이전 readHeaderLine 은 CRLF 를 만날 때까지 StringBuilder 에 무제한으로
+         * 담았다. CR/LF 가 없는 바이트를 계속 흘리면 문자당 2바이트로 자라고, 읽기가
+         * 성공할 때마다 soTimeout 이 갱신되어 시간 제한도 없었다. OutOfMemoryError 는
+         * Error 라서 handleClient 의 catch (e: Exception) 에 걸리지 않고 프로세스
+         * 전체 힙을 때린다.
+         */
+        private const val MAX_HEADER_LINE_BYTES = 8 * 1024
+
+        /** 헤더 개수 상한. 무제한 리스트 누적으로도 같은 OOM 에 도달할 수 있다. */
+        private const val MAX_HEADER_COUNT = 100
         const val BASE_PORT = 8282
     }
 }
