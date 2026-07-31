@@ -8,6 +8,7 @@ import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
+import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
@@ -309,7 +310,7 @@ class HttpProxyServer(
             for ((k, v) in headers) {
                 // hop-by-hop 헤더는 이 홉에서 끝나야 한다(RFC 7230 §6.1).
                 // 그대로 전달하면 상위와의 연결 관리·업그레이드 협상이 어긋난다.
-                if (HOP_BY_HOP_HEADERS.any { it.equals(k, ignoreCase = true) }) continue
+                if (isHopByHop(k)) continue
                 if (k.equals("Host", ignoreCase = true)) hostHeaderWritten = true
                 sb.append(k).append(": ").append(v).append("\r\n")
             }
@@ -359,18 +360,24 @@ class HttpProxyServer(
         }
         pipe(clientIn, remote.getOutputStream()) { onBytesIn(it) }
         try { remote.shutdownOutput() } catch (_: Exception) {}
-        t.join(5_000)
+        t.join(RELAY_JOIN_TIMEOUT_MS)
     }
 
     private fun pipe(src: InputStream, dst: OutputStream, onBytes: (Long) -> Unit) {
         try {
-            val buf = ByteArray(8192)
+            val buf = ByteArray(RELAY_BUFFER_BYTES)
             var n: Int
             while (src.read(buf).also { n = it } != -1) {
                 dst.write(buf, 0, n)
                 onBytes(n.toLong())
             }
-        } catch (_: Exception) {}
+        } catch (e: Exception) {
+            // 정상 종료도 여기로 온다(상대가 끊음, stop() 이 소켓을 닫음). 그래서
+            // 경고가 아니라 verbose 다. 예전에는 완전히 삼켰기 때문에 릴레이가 왜
+            // 끊겼는지 알 방법이 전혀 없었다. 예외 종류만 남기고 목적지는 남기지
+            // 않는다(로그 유출 방지 — handleConnect 참고).
+            Log.v(TAG, "pipe 종료: ${e.javaClass.simpleName}")
+        }
     }
 
     private fun sendStatus(out: OutputStream, code: Int, reason: String) {
@@ -453,22 +460,38 @@ class HttpProxyServer(
         /** 헤더 개수 상한. 무제한 리스트 누적으로도 같은 OOM 에 도달할 수 있다. */
         private const val MAX_HEADER_COUNT = 100
 
+        /** 릴레이 스레드 종료를 기다리는 시간. */
+        private const val RELAY_JOIN_TIMEOUT_MS = 5000L
+
+        /** 파이프 한 방향당 버퍼 크기. */
+        private const val RELAY_BUFFER_BYTES = 8192
+
         /**
          * 이 홉에서 소비하고 상위로 전달하지 않는 헤더 (RFC 7230 §6.1).
          *
          * Proxy-Authorization 은 인증을 쓰지 않는 지금도 목록에 둔다 —
          * 자격증명을 목적지 서버로 흘려보내지 않기 위함이다.
+         *
+         * **소문자로 적고 Set 으로 둔다.** 예전에는 List 를 헤더마다 선형 순회하며
+         * `equals(ignoreCase = true)` 로 비교했다. 조회는 [isHopByHop] 이 하고,
+         * 소문자 변환에 반드시 `Locale.ROOT` 를 쓴다 — 기본 로케일을 쓰면 터키어
+         * 로케일에서 `I` 가 `ı` 로 바뀌어 `KEEP-ALIVE` 같은 표기가 목록과 어긋나고
+         * hop-by-hop 헤더가 상위로 새어 나간다.
          */
-        private val HOP_BY_HOP_HEADERS = listOf(
-            "Proxy-Connection",
-            "Proxy-Authorization",
-            "Proxy-Authenticate",
-            "Connection",
-            "Keep-Alive",
-            "TE",
-            "Trailer",
-            "Upgrade",
+        private val HOP_BY_HOP_HEADERS = setOf(
+            "proxy-connection",
+            "proxy-authorization",
+            "proxy-authenticate",
+            "connection",
+            "keep-alive",
+            "te",
+            "trailer",
+            "upgrade",
         )
+
+        private fun isHopByHop(name: String): Boolean =
+            name.lowercase(Locale.ROOT) in HOP_BY_HOP_HEADERS
+
         const val BASE_PORT = 8282
     }
 }

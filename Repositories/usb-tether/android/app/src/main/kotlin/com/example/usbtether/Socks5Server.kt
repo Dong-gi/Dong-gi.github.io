@@ -568,18 +568,24 @@ class Socks5Server(
         }
         pipe(client.getInputStream(), remote.getOutputStream()) { onBytesIn(it) }
         try { remote.shutdownOutput() } catch (_: Exception) {}
-        t.join(5_000)
+        t.join(RELAY_JOIN_TIMEOUT_MS)
     }
 
     private fun pipe(src: InputStream, dst: OutputStream, onBytes: (Long) -> Unit) {
         try {
-            val buf = ByteArray(8192)
+            val buf = ByteArray(RELAY_BUFFER_BYTES)
             var n: Int
             while (src.read(buf).also { n = it } != -1) {
                 dst.write(buf, 0, n)
                 onBytes(n.toLong())
             }
-        } catch (_: Exception) {}
+        } catch (e: Exception) {
+            // 정상 종료도 여기로 온다(상대가 끊음, stop() 이 소켓을 닫음). 그래서
+            // 경고가 아니라 verbose 다. 예전에는 완전히 삼켰기 때문에 릴레이가 왜
+            // 끊겼는지 알 방법이 전혀 없었다. 예외 종류만 남기고 목적지는 남기지
+            // 않는다(로그 유출 방지 — handleConnect 참고).
+            Log.v(TAG, "pipe 종료: ${e.javaClass.simpleName}")
+        }
     }
 
     private fun sendReply(out: OutputStream, rep: Int) {
@@ -640,8 +646,11 @@ class Socks5Server(
         /** 동시에 진행하는 백그라운드 이름 해석 수 상한. */
         private const val UDP_DNS_MAX_INFLIGHT = 8
 
-        /** 릴레이 스레드 종료를 기다리는 시간. */
+        /** 릴레이 스레드 종료를 기다리는 시간. TCP relay 와 UDP 릴레이가 공유한다. */
         private const val RELAY_JOIN_TIMEOUT_MS = 5000L
+
+        /** 파이프 한 방향당 버퍼 크기. */
+        private const val RELAY_BUFFER_BYTES = 8192
 
         private const val CMD_CONNECT       = 1
         private const val CMD_UDP_ASSOCIATE = 3
