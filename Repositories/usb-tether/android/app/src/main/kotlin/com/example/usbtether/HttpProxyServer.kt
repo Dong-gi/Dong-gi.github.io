@@ -208,7 +208,10 @@ class HttpProxyServer(
                 connect(InetSocketAddress(destination, port), CONNECT_TIMEOUT_MS)
             }
         } catch (e: Exception) {
-            Log.w(TAG, "CONNECT $host:$port failed: ${e.message}")
+            // 목적지 호스트·포트를 남기지 않는다. 실패한 접속만 모아도 부분적인
+            // 방문 기록이 되고, 이 워크플로는 APK 설치를 위해 ADB 를 쓰므로
+            // 연결된 PC 가 `adb logcat` 으로 읽어갈 수 있다. 예외 종류만 남긴다.
+            Log.w(TAG, "CONNECT 실패: ${e.javaClass.simpleName}")
             sendStatus(client.getOutputStream(), 502, "Bad Gateway")
             return
         }
@@ -281,7 +284,10 @@ class HttpProxyServer(
                 connect(InetSocketAddress(destination, port), CONNECT_TIMEOUT_MS)
             }
         } catch (e: Exception) {
-            Log.w(TAG, "HTTP $host:$port failed: ${e.message}")
+            // 목적지 호스트·포트를 남기지 않는다. 실패한 접속만 모아도 부분적인
+            // 방문 기록이 되고, 이 워크플로는 APK 설치를 위해 ADB 를 쓰므로
+            // 연결된 PC 가 `adb logcat` 으로 읽어갈 수 있다. 예외 종류만 남긴다.
+            Log.w(TAG, "HTTP 전달 실패: ${e.javaClass.simpleName}")
             sendStatus(client.getOutputStream(), 502, "Bad Gateway")
             return
         }
