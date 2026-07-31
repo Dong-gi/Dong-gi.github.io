@@ -519,9 +519,20 @@ class Socks5Server(
         return null
     }
 
-    /** [resolvedOrWarmUp] 의 백그라운드 조회. 상한에 걸리면 아무것도 하지 않는다. */
+    /**
+     * [resolvedOrWarmUp] 의 백그라운드 조회. 상한에 걸리면 아무것도 하지 않는다.
+     *
+     * 상한 검사 전에 만료 항목을 걷어낸다. [resolvedOrWarmUp] 은 **조회된 이름만**
+     * 만료 확인을 하므로, 그것만으로는 다시 조회되지 않는 이름이 만료된 채로 칸을
+     * 계속 차지한다. 서로 다른 이름 [UDP_DNS_CACHE_MAX] 개가 한 번 지나가면 이후
+     * 새 이름은 **영구히** 해석되지 않았다 — 전부 만료된 뒤에도 그랬다.
+     */
     private fun warmUpName(domain: String) {
-        if (udpDnsCache.size >= UDP_DNS_CACHE_MAX) return
+        if (udpDnsCache.size >= UDP_DNS_CACHE_MAX) {
+            purgeExpiredNames()
+            // 만료된 것을 걷어내도 여전히 꽉 찼다면 새 이름은 받지 않는다.
+            if (udpDnsCache.size >= UDP_DNS_CACHE_MAX) return
+        }
         if (udpDnsInFlight.size >= UDP_DNS_MAX_INFLIGHT) return
         if (!udpDnsInFlight.add(domain)) return
         try {
@@ -543,6 +554,20 @@ class Socks5Server(
             // in-flight 표시를 반드시 되돌려야 슬롯이 새지 않는다.
             udpDnsInFlight.remove(domain)
             Log.w(TAG, "이름 해석 제출 실패: ${t.javaClass.simpleName}")
+        }
+    }
+
+    /**
+     * 만료된 이름 해석 항목을 걷어낸다.
+     *
+     * `ConcurrentHashMap` 의 이터레이터는 약한 일관성을 가지므로 순회 중 다른
+     * 스레드가 넣고 빼도 안전하다. 놓친 항목은 다음 호출에서 걷힌다.
+     */
+    private fun purgeExpiredNames() {
+        val now = System.currentTimeMillis()
+        val iterator = udpDnsCache.entries.iterator()
+        while (iterator.hasNext()) {
+            if (iterator.next().value.expiresAtMs <= now) iterator.remove()
         }
     }
 
