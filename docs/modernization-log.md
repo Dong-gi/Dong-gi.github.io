@@ -4,7 +4,14 @@
 
 ## 현재 상태
 
-계획서의 **Phase 0(결함 수정)과 Phase 3-1~3-3(SEO·CI·문서화)이 완료**됐다. Phase 1(포스트 최신화)과 Phase 2(Repositories 재작성)는 착수 전이다.
+| Phase | 상태 |
+|---|---|
+| Phase 0 — 결함 수정 | **완료** (커밋 2~6, 8, 11) |
+| Phase 3-1~3-3 — SEO·CI·문서화 | **완료** (커밋 7, 9, 10, 13) |
+| Phase 2 — Repositories | **기계적 정리만 완료** (커밋 17~19). 재작성은 미착수 |
+| Phase 1 — 포스트 최신화 | **착수** (커밋 20~22). 우선순위 20건 중 1건 완료 |
+
+**Phase 2의 프레임워크 재작성(Spring Boot 4.0 / .NET 10 / compileSdk 36)은 이 환경에서 검증할 수 없다.** 샌드박스에 `javac`·`gradle`·`mvn`·`dotnet` 이 없어 빌드가 되는지 확인할 방법이 없다. 검증하지 못한 업그레이드를 커밋하는 대신, 빌드 없이 확인 가능한 작업(미참조 프로젝트 삭제, 산출물 제거, Gradle 설정 이름 교체)만 처리했다.
 
 ```
 $ npm run typecheck
@@ -19,6 +26,21 @@ HTML 617개 (현행 262, 리다이렉트 308, 보존 47, 새 고아 0) / posts.j
 ```
 
 경고 11건은 `posts.json` 에 등록되지 않은 pug 문서다. 공개 여부 결정이 필요한 사안이라 오류로 올리지 않았다.
+
+### 다음에 할 일
+
+Phase 1의 남은 우선순위 문서다. 문서당 공식 자료 조사가 필요하므로 하나씩 커밋한다.
+
+| # | 문서 | 줄 수 | 핵심 갱신 대상 |
+|---|---|---:|---|
+| 1 | `dev/JVM/spring_framework.pug` | 1,578 | Spring 5.x → 6/7, `javax.*` → `jakarta.*` |
+| 2 | `dev/JVM/spring_servlet.pug` | 1,338 | 위와 동일 + JSP/XML 전제 |
+| 3 | `dev/python/standard.pug` | 2,148 | `Since 3.8` 상한 → 3.14 |
+| 4 | `dev/dotnet/csharp.pug` | 1,562 | `.NET 6` / C# 10 → .NET 10 / C# 14 |
+| 5 | `dev/python/basic.pug` | 359 | 본문 내용을 3.14 기준으로 |
+| — | `dev/JVM/java_ee.pug`, `jpa.pug` | | Jakarta EE 이관 |
+| — | `dev/rpi.pug` | 395 | 2017년 Raspbian Stretch → 현행 |
+| — | `project/error.pug` | 367 | 종료된 Heroku 무료 티어 절 정리 |
 
 **커밋 11~15는 커밋 1~10에 대한 독립 리뷰에서 나온 지적을 반영한 것이다.** 리뷰는 별도 에이전트가 코드를 직접 실행·대조해 수행했고, CI를 막는 문제 1건과 잘못된 서술 여러 건을 찾아냈다.
 
