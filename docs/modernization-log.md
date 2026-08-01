@@ -7,6 +7,7 @@
 | # | 커밋 | 종류 | 계획서 항목 | 리뷰 포인트 |
 |---|---|---|---|---|
 | 1 | 고아 HTML 308건을 리다이렉트 스텁으로 치환 | chore | 별건 (선행 작업) | 스텁 형식, 보존 47건의 타당성 |
+| 2 | 사이트맵 URL에 누락된 `/posts/` 접두사 복원 | fix | Phase 0-1 | 250개 URL이 전부 깨져 있었음 |
 
 ---
 
@@ -38,3 +39,52 @@
 - 수동 큐레이션 22건의 매핑 타당성 (`tools/apply-redirects.mjs` 의 `OVERRIDE` 상수)
 
 상세 내역은 `docs/orphan-redirect-report.md` 참조.
+
+---
+
+## 2. 사이트맵 URL에 누락된 `/posts/` 접두사 복원
+
+**변경 파일**: `source/build.ts`, `files/sitemap.txt`
+
+### 무엇을
+
+사이트맵에 등록된 **251개 URL이 전부 무효**였다. 정상 형태로 재생성했다.
+
+```
+https://dong-gi.github.iobook/0/001.html          ← 기존 (깨짐)
+https://dong-gi.github.io/posts/book/0/001.html   ← 수정 후
+```
+
+### 왜
+
+`build.ts` 가 URL을 이렇게 만들고 있었다.
+
+```ts
+posts.list.map((post) => `https://dong-gi.github.io${post.file}`)
+```
+
+`post.file` 은 `"book/0/001.html"` 형태로 선행 슬래시도 `posts/` 접두사도 없다. 문자열이 그대로 이어붙어 호스트명이 `dong-gi.github.iobook` 이 되어버렸다.
+
+`robots.txt` 가 이 사이트맵을 가리키고 있어 색인에 직접 영향을 준다. 리다이렉트 스텁(커밋 1)의 효과를 검색엔진에 전달하려면 사이트맵 재제출이 필요한데, 그 전제가 되는 수정이다.
+
+### 어떻게
+
+오리진과 경로 접두사를 상수로 분리하고 `postUrl()` 헬퍼로 URL 생성 지점을 하나로 모았다. 같은 실수가 재발하지 않도록 문자열 템플릿을 코드에서 없앴다.
+
+```ts
+const SITE_ORIGIN = 'https://dong-gi.github.io';
+const POSTS_URL_PREFIX = '/posts/';
+
+function postUrl(post: Post): string {
+    return SITE_ORIGIN + POSTS_URL_PREFIX + post.file;
+}
+```
+
+### 검증
+
+재생성한 251개 URL 전부에 대해 대응하는 파일이 실제로 존재하는지 확인했다 (누락 0건).
+
+### 리뷰 포인트
+
+- `files/sitemap.txt` 는 빌드 산출물인데 저장소에 커밋되어 있다. 이번엔 스크립트로 직접 재생성해 커밋에 포함했다
+- 기존 사이트맵은 250줄, 새 사이트맵은 251줄이다. `posts.json` 항목 수(251)와 일치하므로 기존 것이 한 항목 뒤처진 상태였던 것으로 **추측**된다

@@ -23,6 +23,16 @@ interface Posts {
     list: Post[];
 }
 
+/** 사이트 오리진. 사이트맵 등 절대 URL 생성에 쓴다. */
+const SITE_ORIGIN = 'https://dong-gi.github.io';
+/** posts.json 의 file 값은 'dev/aws.html' 형태이므로 URL 생성 시 이 접두사가 필요하다. */
+const POSTS_URL_PREFIX = '/posts/';
+
+/** 포스트의 사이트 절대 URL을 만든다. */
+function postUrl(post: Post): string {
+    return SITE_ORIGIN + POSTS_URL_PREFIX + post.file;
+}
+
 const require = createRequire(import.meta.url);
 const exec = promisify(child_process.exec);
 const renderFile = promisify(require('pug').renderFile) as (path: string, options?: Record<string, unknown>) => Promise<string>;
@@ -246,10 +256,7 @@ if (isMainThread) {
         fsp.writeFile('./files/posts-compressed.json', JSON.stringify(posts)),
         fsp.writeFile(
             './files/sitemap.txt',
-            posts.list
-                .map((post) => `https://dong-gi.github.io${post.file}`)
-                .sort()
-                .join('\n'),
+            posts.list.map(postUrl).sort().join('\n'),
         ),
         exec(`chmod -R 644 d2/*`),
     ]);
