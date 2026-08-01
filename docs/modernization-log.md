@@ -1657,3 +1657,62 @@ npm ci && npm run typecheck && npm run build
 ### 출처
 
 `jakarta.ee` 릴리스 페이지(8/9/10/11/12), Servlet 6.0·6.1 XSD 원문, Eclipse Foundation 상표권 블로그, `tomcat.apache.org/whichversion.html`, 각 구현체 릴리스 노트.
+
+---
+
+## 34. Python 입문 문서를 3.14 기준으로 갱신
+
+**변경 파일**: `pugs/dev/python/basic.pug` (359 → 504줄), `posts/dev/python/basic.html`
+
+계획서 Phase 1 우선순위 5위. 입문 문서라 유입이 클 것으로 보이는데 **제목이 `Python 3.8` 이었고 본문의 설치 안내가 `C:\Program Files\Python36`, `python3.7` 을 예로 들고 있었다.** 제목은 커밋 21에서 이미 정리했고, 이번에 본문을 올렸다.
+
+### 접근 — 전면 개정이 아니라 부분 교체
+
+이 문서는 자료형·구문·함수·클래스처럼 **버전과 무관한 내용이 8할**이다. 통째로 `+legacy` 로 접으면 오히려 손해다. 두 군데만 손댔다.
+
+1. **설치 절 교체** — 구 안내는 `+legacy('구 설치 안내', 'Python 3.8 시절 기준')` 으로 접고 현행 내용으로 대체
+2. **버전별 절 추가** — 기존 `h1 Python 3.7`, `h1 Python 3.8` 뒤에 3.9 ~ 3.14 를 같은 형식으로 이어 붙임
+
+### 새로 쓴 설치·환경 내용
+
+| 절 | 요지 |
+|---|---|
+| 설치 | **3.14부터 Windows 배포가 Python Install Manager(PyManager) 중심**(PEP 773). `py install 3.14`. 기존 exe installer는 3.15까지 병행 |
+| PEP 668 | 배포판 파이썬에 `pip install` 하면 `error: externally-managed-environment`. **입문자가 가장 먼저 부딪히는 벽**이라 절을 따로 뺐다 |
+| 새 REPL | 3.13부터 기본. 여러 줄 편집, 색상, F1/F2/F3. 3.14에서 문법 하이라이팅 |
+
+### 버전별 절 (3.9 ~ 3.14)
+
+**언어 문법 변경만** 담았다. 표준 라이브러리 추가는 별도 문서(`dev/python/standard.pug`)의 몫이다.
+
+- **3.9** — dict 병합 `|`, 내장 제네릭 `list[int]`, PEG 파서
+- **3.10** — **구조적 패턴 매칭**, `X | Y` 유니온, 괄호 컨텍스트 매니저
+- **3.11** — `except*` / ExceptionGroup, `^^^^` 트레이스백, 3.10 대비 1.25배
+- **3.12** — **타입 파라미터 문법**과 `type` 문, f-string 정식 문법화, **`distutils` 제거**, **`venv` 가 setuptools를 넣지 않음**
+- **3.13** — 타입 파라미터 기본값, 새 REPL, **PEP 594 "dead batteries" 19개 모듈 일괄 제거**
+- **3.14** — **t-string**, 괄호 없는 다중 except, **어노테이션 지연 평가(전방 참조를 문자열로 감쌀 필요 없음)**, `types.UnionType` 통합
+
+### free-threaded / JIT 절을 따로 뺀 이유
+
+이 둘은 **"정식인가 실험인가"가 자주 잘못 알려진다.** 정확히 구분해 적었다.
+
+- **free-threaded** — 3.13 실험적 → 3.14에서 PEP 779로 **공식 지원**. 단 **기본값이 아니며** 별도 실행 파일(`python3.14t`)이 필요하고 단일 스레드 성능이 5~10% 떨어진다. 기본 빌드로 만드는 단계는 미정
+- **JIT** — 3.13 도입, **3.14에서도 여전히 실험적**. 다만 공식 macOS/Windows 바이너리에는 포함돼 있다
+- 3.14의 tail-call 인터프리터는 JIT와 **별개**다
+- **3.14.0~3.14.4는 증분 GC였으나 3.14.5에서 3.13의 세대별 GC로 되돌려졌다.** "3.14 = 증분 GC"라고 쓰면 틀린다
+
+### 검증
+
+- 렌더 성공, `h1` 25개, `legacy` 블록 1개
+- **코드 블록 23개 전부 부등호 이스케이프 검사 통과** — 이 과정에서 기존 `pip freeze > requirements.txt` 의 미이스케이프도 함께 고쳤다
+- 정합성 검사 오류 0건
+
+### 남은 것
+
+같은 카테고리에 **제목에 버전이 박힌 문서가 더 있다** — `Python Built-in Constants 3.8`, `Built-in Exceptions 3.8`, `Built-in Functions 3.8`, `Built-in Types 3.8`. 커밋 21에서 놓쳤다. `CLAUDE.md` 의 "제목에 버전을 넣지 않는다" 원칙에 어긋나므로 정리가 필요하다.
+
+`dev/python/standard.pug`(2,148줄)는 여전히 `Since 3.8` 이 상한이다. Phase 1 우선순위 3위로 남아 있다.
+
+### 출처
+
+`docs.python.org` 의 What's New 3.9~3.14, `devguide.python.org/versions/`, PEP 584·585·604·634·654·695·696·750·758·649·765·779·744·773·668·761, `packaging.python.org` 도구 권장(2026-07-29 갱신).
