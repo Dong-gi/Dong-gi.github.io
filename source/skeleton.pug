@@ -163,10 +163,12 @@ mixin post(options)
             - const origin = typeof siteOrigin === 'undefined' ? '' : siteOrigin
             - const url = typeof pageUrl === 'undefined' ? '' : pageUrl
             - const modified = typeof pageModified === 'undefined' ? '' : pageModified
+            //- 홈은 개별 문서가 아니라 사이트 자체이므로 타입이 다르다
+            - const isHome = url !== '' && url === origin + '/'
             if url
                 link(rel='canonical', href=url)
                 meta(property='og:url', content=url)
-            meta(property='og:type', content='article')
+            meta(property='og:type', content=isHome ? 'website' : 'article')
             meta(property='og:site_name', content='dong-gi.github.io')
             meta(property='og:locale', content='ko_KR')
             meta(property='og:title', content=options.title)
@@ -177,9 +179,19 @@ mixin post(options)
             meta(name='twitter:card', content='summary')
             if url
                 //- </script> 로 조기 종료되지 않도록 <, > 를 유니코드 이스케이프한다
-                - var ld = { '@context': 'https://schema.org', '@type': 'TechArticle', headline: options.title, url: url, inLanguage: 'ko-KR', author: { '@type': 'Person', name: 'Donggi Kim' }, publisher: { '@type': 'Person', name: 'Donggi Kim' } }
+                - const person = { '@type': 'Person', name: 'Donggi Kim' }
+                - var ld = { '@context': 'https://schema.org', url: url, inLanguage: 'ko-KR', author: person, publisher: person }
+                -
+                    if (isHome) {
+                        // WebSite 스키마는 headline / dateModified 를 쓰지 않는다
+                        ld['@type'] = 'WebSite'
+                        ld.name = options.title
+                    } else {
+                        ld['@type'] = 'TechArticle'
+                        ld.headline = options.title
+                        if (modified) ld.dateModified = modified
+                    }
                 - if (options.description) ld.description = options.description
-                - if (modified) ld.dateModified = modified
                 script(type='application/ld+json')!= JSON.stringify(ld).replace(/</g, '\\u003c').replace(/>/g, '\\u003e')
 
             script#highlight-js(src="/source/highlight.pack.js", async)

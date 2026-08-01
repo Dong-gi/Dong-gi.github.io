@@ -18,6 +18,7 @@
 | 10 | `CLAUDE.md` 작성 | docs | Phase 3-3 | 빌드 파이프라인·규칙 문서화 |
 | 11 | 타입 검사 범위에서 `Repositories` 제외 | fix | 리뷰 지적 (치명적) | CI가 반드시 실패하던 문제 |
 | 12 | 보존 대상 구 HTML 38건의 죽은 UA 태그 제거 | fix | 리뷰 지적 (중요) | 커밋 5의 미완 부분 |
+| 13 | 홈페이지 구조화 데이터를 `WebSite` 로 분리 | fix | 리뷰 지적 (중요) | 홈이 `TechArticle` 로 나가던 문제 |
 
 ---
 
@@ -522,3 +523,48 @@ Repositories/Node/test-231114/src/module/b.ts(1,26): TS2307 Cannot find module '
 - 변경된 38개 파일이 전부 보존 목록 안에 있음을 확인 (목록 밖 0건)
 - diff: 38 files changed, 38 insertions(+), 175 deletions(-) — UA 블록만 사라졌다
 - 정합성 검사 재실행: 오류 0건
+
+---
+
+## 13. 홈페이지 구조화 데이터를 `WebSite` 로 분리
+
+**변경 파일**: `source/skeleton.pug`, `index.html`, `posts/**` 262개(재렌더)
+
+### 무엇을
+
+`index.pug` 도 `+post` mixin을 쓰기 때문에 홈페이지가 개별 기술 문서와 똑같은 타입으로 나가고 있었다.
+
+```diff
+-<meta property="og:type" content="article">
+-{"@type":"TechArticle","headline":"Blog","dateModified":"..."}
++<meta property="og:type" content="website">
++{"@type":"WebSite","name":"Blog"}
+```
+
+### 왜
+
+커밋 7에서 메타데이터를 넣을 때 홈을 따로 생각하지 않았다. 홈은 문서가 아니라 사이트 자체이므로 `og:type` 은 `website`, schema.org 타입은 `WebSite` 여야 한다. 잘못된 타입의 구조화 데이터는 넣지 않느니만 못하다.
+
+### 어떻게
+
+mixin API를 늘리지 않고 `pageUrl` 이 오리진 루트와 같은지로 자동 판별한다.
+
+```pug
+- const isHome = url !== '' && url === origin + '/'
+```
+
+`WebSite` 스키마는 `headline` 과 `dateModified` 를 쓰지 않으므로, 타입에 따라 필드 구성을 나눴다.
+
+| | 홈 | 문서 |
+|---|---|---|
+| `og:type` | `website` | `article` |
+| `@type` | `WebSite` | `TechArticle` |
+| 제목 필드 | `name` | `headline` |
+| `dateModified` | 없음 | 있음 |
+
+### 검증
+
+- 263개 렌더 성공, 실패 0
+- 홈: `og:type=website`, `@type=WebSite`, `name` 필드 확인
+- 문서: `og:type=article`, `@type=TechArticle`, `headline` + `dateModified` 확인
+- `posts/**` 전체 분포 — `TechArticle` 262건, `WebSite` 0건
