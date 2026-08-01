@@ -16,12 +16,15 @@
     "url": "https://github.com/Dong-gi/Dong-gi.github.io/issues"
   },
   "homepage": "https://dong-gi.github.io",
+  "engines": {
+    "node": ">=24"
+  },
   "devDependencies": {
-    "@types/node": "^25.6.0",
+    "@types/node": "^24.10.1",
     "pug": "^3.0.3",
     "sharp": "^0.35.3",
     "svgo": "^4.0.2",
     "terser": "^5.49.0",
-    "typescript": "^7.0.2"
+    "typescript": "~6.0.3"
   }
 }
