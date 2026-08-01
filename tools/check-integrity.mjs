@@ -10,8 +10,8 @@
  *   E2 posts.json 항목에 대응하는 pug 소스가 존재하는가
  *   E3 posts.json 에 중복 file 항목이 없는가
  *   E4 pug 소스도 리다이렉트 스텁도 아니고 보존 목록에도 없는 고아 HTML이 없는가
- *   E5 리다이렉트 스텁의 대상이 존재하고 체인/자기참조가 없는가
- *   E6 pug 안의 /Repositories/... 코드 참조가 실제 파일을 가리키는가
+ *   E5 리다이렉트 스텁의 3중 신호가 서로 일치하고, 대상이 존재하며, 체인/자기참조가 없는가
+ *   E6 +codeBtn 이 가리키는 /Repositories/... 경로가 실제 파일인가 (디렉터리도 오류)
  *   E7 사이트맵의 모든 URL이 올바른 형식이고 실제 파일과 대응하는가
  *   W1 pug 소스는 있으나 posts.json 에 등록되지 않은 문서 (경고)
  *   W2 보존 목록에 있으나 파일이 사라진 항목 (경고)
@@ -54,12 +54,19 @@ const htmlRels = walk(rel('posts'), '.html');
 const pugKeys = new Set(walk(rel('pugs'), '.pug').map((p) => p.replace(/\.pug$/, '')));
 const posts = JSON.parse(fs.readFileSync(rel('source/posts.json'), 'utf8')).list;
 
-/** posts/<rel> 이 리다이렉트 스텁인지, 그렇다면 대상은 무엇인지. */
+/**
+ * posts/<rel> 이 리다이렉트 스텁인지, 그렇다면 3중 신호가 각각 어디를 가리키는지.
+ * meta refresh 하나만 봐서는 canonical 이나 JS 가 엇갈려도 알 수 없다.
+ */
 const stubTarget = new Map();
 for (const r of htmlRels) {
     const html = fs.readFileSync(rel('posts', r), 'utf8');
     if (!html.includes(REDIRECT_MARK)) continue;
-    stubTarget.set(r, html.match(/<meta http-equiv="refresh" content="0; url=\/posts\/([^"]+)"/)?.[1] ?? null);
+    stubTarget.set(r, {
+        refresh: html.match(/<meta\s+http-equiv="refresh"\s+content="0;\s*url=\/posts\/([^"]+)"/)?.[1] ?? null,
+        canonical: html.match(new RegExp(`<link\\s+rel="canonical"\\s+href="${SITE_ORIGIN}/posts/([^"]+)"`))?.[1] ?? null,
+        script: html.match(/location\.replace\("\/posts\/([^"]+)"/)?.[1] ?? null,
+    });
 }
 
 // ---------------------------------------------------------------- E1~E3 posts.json
@@ -97,11 +104,23 @@ for (const p of preserved) {
 
 // ---------------------------------------------------------------- E5 리다이렉트 스텁
 
-for (const [source, target] of stubTarget) {
-    if (target == null) {
-        errors.push(`E5 리다이렉트 스텁의 대상을 읽을 수 없음: posts/${source}`);
+for (const [source, signals] of stubTarget) {
+    const missing = Object.entries(signals)
+        .filter(([, v]) => v == null)
+        .map(([k]) => k);
+    if (missing.length) {
+        errors.push(`E5 리다이렉트 신호 누락 (${missing.join(', ')}): posts/${source}`);
         continue;
     }
+    const distinct = new Set(Object.values(signals));
+    if (distinct.size !== 1) {
+        errors.push(
+            `E5 리다이렉트 3중 신호 불일치: posts/${source} — refresh=${signals.refresh}, canonical=${signals.canonical}, script=${signals.script}`,
+        );
+        continue;
+    }
+
+    const target = signals.refresh;
     if (target === source) errors.push(`E5 리다이렉트 자기참조: posts/${source}`);
     if (!fs.existsSync(rel('posts', target))) errors.push(`E5 리다이렉트 대상 없음: posts/${source} -> posts/${target}`);
     if (stubTarget.has(target)) errors.push(`E5 리다이렉트 체인: posts/${source} -> posts/${target}`);
@@ -115,14 +134,27 @@ const sourceFiles = [
     rel('index.pug'),
 ].filter((f) => fs.existsSync(f));
 
+/**
+ * +codeBtn 이 여는 경로만 모은다.
+ *
+ * 단순히 본문에서 '/Repositories/...' 를 전부 긁으면
+ * +asA('https://github.com/.../tree/master/Repositories/...') 같은 외부 링크까지
+ * 걸려 오탐이 난다. codeBtn 호출만 대상으로 한다.
+ *
+ * 두 가지 호출 형태를 지원한다.
+ *   +codeBtn('/Repositories/x/y.java', 'java')
+ *   +codeBtn({ path: '/Repositories/x/y.java', lan: 'java', ... })
+ */
 const codeRefs = new Set();
 for (const f of sourceFiles) {
-    for (const m of fs.readFileSync(f, 'utf8').matchAll(/\/Repositories\/[A-Za-z0-9._ /-]+/g)) {
-        codeRefs.add(m[0].slice(1).trim());
-    }
+    const text = fs.readFileSync(f, 'utf8');
+    for (const m of text.matchAll(/\+codeBtn\(\s*'(\/Repositories\/[^']+)'/g)) codeRefs.add(m[1].slice(1));
+    for (const m of text.matchAll(/\+codeBtn\(\s*\{[\s\S]{0,400}?path:\s*'(\/Repositories\/[^']+)'/g)) codeRefs.add(m[1].slice(1));
 }
 for (const r of [...codeRefs].sort()) {
+    // 코드 버튼은 파일 하나를 여는 용도다. 디렉터리를 가리키면 버튼이 동작하지 않는다.
     if (!fs.existsSync(rel(r))) errors.push(`E6 존재하지 않는 코드 참조: /${r}`);
+    else if (fs.statSync(rel(r)).isDirectory()) errors.push(`E6 코드 참조가 파일이 아닌 디렉터리: /${r}`);
 }
 
 // ---------------------------------------------------------------- E7 사이트맵
@@ -134,6 +166,8 @@ if (!fs.existsSync(sitemapPath)) {
     const lines = fs.readFileSync(sitemapPath, 'utf8').trim().split('\n').filter(Boolean);
     const expectedPrefix = SITE_ORIGIN + POSTS_URL_PREFIX;
     for (const line of lines) {
+        // 홈은 posts/ 아래가 아니므로 별도로 허용한다
+        if (line === SITE_ORIGIN + '/') continue;
         if (!line.startsWith(expectedPrefix)) {
             errors.push(`E7 사이트맵 URL 형식 오류 (${expectedPrefix}... 이어야 함): ${line}`);
             continue;
@@ -156,8 +190,11 @@ for (const key of [...pugKeys].sort()) {
 
 // ---------------------------------------------------------------- 결과
 
+// 보존 목록에 선언된 것과 새로 생긴 고아를 구분해서 보여준다.
+const preservedCount = orphans.filter((o) => preserved.has(o)).length;
+const newOrphanCount = orphans.length - preservedCount;
 const summary = [
-    `HTML ${htmlRels.length}개 (현행 ${htmlRels.length - orphans.length - stubTarget.size}, 리다이렉트 ${stubTarget.size}, 보존 ${orphans.length})`,
+    `HTML ${htmlRels.length}개 (현행 ${htmlRels.length - orphans.length - stubTarget.size}, 리다이렉트 ${stubTarget.size}, 보존 ${preservedCount}, 새 고아 ${newOrphanCount})`,
     `posts.json ${posts.length}개`,
     `코드 참조 ${codeRefs.size}개`,
 ];

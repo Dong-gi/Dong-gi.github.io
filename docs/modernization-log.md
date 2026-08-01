@@ -19,6 +19,7 @@
 | 11 | 타입 검사 범위에서 `Repositories` 제외 | fix | 리뷰 지적 (치명적) | CI가 반드시 실패하던 문제 |
 | 12 | 보존 대상 구 HTML 38건의 죽은 UA 태그 제거 | fix | 리뷰 지적 (중요) | 커밋 5의 미완 부분 |
 | 13 | 홈페이지 구조화 데이터를 `WebSite` 로 분리 | fix | 리뷰 지적 (중요) | 홈이 `TechArticle` 로 나가던 문제 |
+| 14 | 정합성 검사 보완 + 그로 인해 드러난 코드 버튼 오류 수정 | fix | 리뷰 지적 (사소) | 검사가 실제 버그를 잡아냄 |
 
 ---
 
@@ -568,3 +569,51 @@ mixin API를 늘리지 않고 `pageUrl` 이 오리진 루트와 같은지로 자
 - 홈: `og:type=website`, `@type=WebSite`, `name` 필드 확인
 - 문서: `og:type=article`, `@type=TechArticle`, `headline` + `dateModified` 확인
 - `posts/**` 전체 분포 — `TechArticle` 262건, `WebSite` 0건
+
+---
+
+## 14. 정합성 검사 보완 + 그로 인해 드러난 코드 버튼 오류 수정
+
+**변경 파일**: `tools/check-integrity.mjs`, `pugs/dev/JVM/lombok.pug`, `posts/dev/JVM/lombok.html`
+
+### 검사 보완
+
+| 항목 | 기존 | 수정 |
+|---|---|---|
+| **E5** | `meta refresh` 하나만 파싱해 검증. canonical·JS가 엇갈려도 통과 | **3중 신호를 모두 파싱해 서로 일치하는지 검사** |
+| **E6** | `/Repositories/...` 문자열을 전부 긁어 오탐 발생. `existsSync` 라 디렉터리도 통과 | **`+codeBtn` 호출만 추출**, 디렉터리면 오류 |
+| 요약 | `보존 47` 이 새 고아까지 포함해 집계 | `보존 47, 새 고아 0` 으로 분리 |
+| E7 | 홈 URL(`origin/`)을 사이트맵에 넣으면 오류 | 홈 URL 허용 |
+
+E6의 오탐은 이런 것이었다.
+
+```pug
++asA('https://github.com/Dong-gi/Dong-gi.github.io/tree/master/Repositories/Node/test-231114')
+```
+
+GitHub 트리 링크인데 정규식이 `/Repositories/...` 부분을 코드 참조로 잡아 "디렉터리"라고 경고했다. `+codeBtn('...')` 과 `+codeBtn({ path: '...' })` 두 호출 형태만 추출하도록 바꿔 참조 수가 805 → 804로 정확해졌다.
+
+### 검사가 잡아낸 실제 버그
+
+보완한 E6가 `pugs/dev/JVM/lombok.pug` 에서 진짜 오류를 찾아냈다.
+
+```pug
+h1 @Getter, @Setter
+ol
+    +codeBtn('/Repositories/Eclipse', 'java')   ← 디렉터리를 가리킴
+```
+
+경로가 잘려 있었다. 버튼을 눌러도 아무것도 열리지 않는다. `LombokGetterAndSetterExample.java` 로 고쳤다.
+
+같은 파일을 확인하다 두 가지를 더 찾았다.
+
+- **`@CleanUp` 절이 `LombokNonNullExample.java` 를 열고 있었다.** 바로 위 `@NonNull` 절에서 복사한 흔적이다. `LombokCleanupExample.java` 로 고쳤다 — 파일은 있는데 아무 데서도 참조되지 않고 있었다
+- **`@Log` 절에만 코드 버튼이 없었다.** 다른 12개 절은 전부 있다. `LombokLogExample.java` 를 연결했다
+
+이 두 건은 경로가 존재하므로 검사로는 잡히지 않는다. 사람이 봐야 하는 종류다.
+
+### 검증
+
+- 회귀 테스트 — 스텁의 JS 대상만 다른 값으로 바꾸자 E5가 3중 신호 불일치로 검출
+- 회귀 테스트 — codeBtn을 디렉터리로 바꾸자 E6가 검출
+- 수정 후: 오류 0건, 경고 11건. 리다이렉트 스텁 무결성 통과

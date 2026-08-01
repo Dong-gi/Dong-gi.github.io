@@ -29,14 +29,14 @@ include ../../../source/skeleton.pug
 
     h1 @CleanUp
     ol
-        +codeBtn('/Repositories/Eclipse/lombok-example/src/main/java/LombokNonNullExample.java', 'java')
+        +codeBtn('/Repositories/Eclipse/lombok-example/src/main/java/LombokCleanupExample.java', 'java')
         li 지역 변수가 유효 스코프를 벗어나면 close()를 자동으로 호출한다
         li try ~ finally와 같은 방식으로 호출함을 보장한다
         li AutoCloseable을 구현할 필요가 없으며, 필요하다면 close 외 다른 인자 없는 메서드를 이용할 수 있다
 
     h1 @Getter, @Setter
     ol
-        +codeBtn('/Repositories/Eclipse', 'java')
+        +codeBtn('/Repositories/Eclipse/lombok-example/src/main/java/LombokGetterAndSetterExample.java', 'java')
         li 필드의 기본적인 getter와 setter를 자동 구현해준다
         li 기본 시그니처는 [TYPE] get[Name], boolean is[Name], void set[Name]
         li 기본 접근 제한은 public. 가능한 설정은 PUBLIC, PROTECTED, PACKAGE, PRIVATE
@@ -126,6 +126,7 @@ include ../../../source/skeleton.pug
 
     h1 @Log
     ol
+        +codeBtn('/Repositories/Eclipse/lombok-example/src/main/java/LombokLogExample.java', 'java')
         li 클래스에 log 필드를 자동으로 생성해준다
         li @CommonsLog : private static final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(LogExample.class);
         li @Flogger : private static final com.google.common.flogger.FluentLogger log = com.google.common.flogger.FluentLogger.forEnclosingClass();
