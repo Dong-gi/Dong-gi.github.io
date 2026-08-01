@@ -2,7 +2,7 @@
 apply plugin: 'java'
 apply plugin:'application'
 
-mainClassName = 'io.github.donggi.annotation.test.User'
+mainClass = 'io.github.donggi.annotation.test.User'
 version = '1.0'
 
 jar {

@@ -1272,3 +1272,59 @@ dotnet build WpfApp8/WpfApp8.csproj           # WPF + 패키지
 ```
 
 복원이 실패하는 패키지가 나오면 `dotnet list package --outdated` 로 한 번에 확인할 수 있다.
+
+---
+
+## 28. Spring을 쓰지 않는 Gradle 프로젝트 6개를 Gradle 9.3.1 / Java 25로
+
+**변경 파일**: `Repositories/Eclipse/annotation-processing3`, `Gradle/JUnit-Example`, `Gradle/project-01`, `Gradle/project-02`, `STS/netty-tutorial`, `STS/TOTP-example`
+
+Spring 의존이 있는 31개는 프레임워크 이관과 묶어야 해서 커밋 30으로 미뤘다. 여기서는 순수 Java 프로젝트만 다룬다.
+
+### 적용한 변경
+
+| 항목 | 기존 | 변경 |
+|---|---|---|
+| Gradle wrapper | 5.4 / 6.3 / 6.4 / 7.4 | 9.3.1 |
+| Java 지정 | `sourceCompatibility = JavaVersion.VERSION_12` 등 | `java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }` |
+| `jcenter()` | 사용 중 | `mavenCentral()` |
+
+### Gradle 7·8에서 제거된 API 세 가지를 찾아 고쳤다
+
+이것이 이번 커밋의 핵심이다. 단순 버전 상향이 아니라 **그대로 두면 Gradle 9에서 빌드가 실패하는 것들**이다.
+
+1. **`apply plugin: 'maven'`** → `'maven-publish'`
+   `maven` 플러그인은 **Gradle 7에서 제거**됐다. `annotation-processing3` 이 쓰고 있었다
+2. **`mainClassName`** → `mainClass`
+   `mainClassName` 은 **Gradle 8에서 제거**됐다. `JUnit-Example` 이 쓰고 있었다
+3. **`maven { url "..." }`** → `maven { url = uri("...") }`
+   Gradle 8에서 deprecated된 표기
+
+`sourceCompatibility` 대신 toolchain을 쓴 이유는, toolchain이 있으면 **Gradle이 해당 JDK를 자동으로 내려받아 쓰기 때문에** 빌드 머신의 JDK 버전과 무관해지기 때문이다.
+
+### 의존성 상향
+
+```
+org.projectlombok:lombok        1.18.6 / 1.18.12 / 1.18.22 -> 1.18.36
+junit:junit                     4.12                       -> 4.13.2
+org.junit.jupiter:junit-jupiter 5.6.0 / 5.8.2              -> 5.11.4
+com.google.guava:guava          28.2-jre / 30.1-jre        -> 33.4.0-jre
+io.netty:netty-all              4.1.51.Final               -> 4.1.115.Final
+org.slf4j:slf4j-api / -simple   1.7.30                     -> 2.0.16
+commons-codec:commons-codec     1.15                       -> 1.17.1
+```
+
+### ⚠ 검증하지 못한 것
+
+**Lombok의 Java 25 지원 여부가 가장 불확실하다.** Lombok은 컴파일러 내부 API에 의존하므로 JDK 메이저 버전이 오를 때마다 대응 릴리스가 필요하다. 1.18.36으로 올렸으나 **Java 25를 지원하는 최소 버전이 그보다 높을 수 있다.** 빌드가 `java.lang.NoSuchFieldError` 나 `IllegalAccessError` 로 실패하면 이 문제다.
+
+`slf4j 1.7 → 2.0` 은 메이저 업그레이드다. API는 호환되지만 바인딩 방식이 바뀌었으므로(`ServiceLoader` 기반) 로깅이 조용히 죽을 수 있다.
+
+**검증 방법**
+
+```bash
+cd Repositories/STS/TOTP-example && ./gradlew build          # Lombok + Java 25 조합 확인
+cd Repositories/Eclipse/annotation-processing3 && ./gradlew build   # maven-publish + 애너테이션 프로세서
+cd Repositories/Gradle/JUnit-Example && ./gradlew run        # mainClass 변경 확인
+cd Repositories/STS/netty-tutorial && ./gradlew build        # slf4j 2.x 확인
+```

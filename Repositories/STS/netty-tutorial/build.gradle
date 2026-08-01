@@ -2,8 +2,14 @@ plugins {
     id 'java'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 configurations {
@@ -13,10 +19,10 @@ configurations {
 }
 
 dependencies {
-	implementation 'io.netty:netty-all:4.1.51.Final'
-    implementation 'org.slf4j:slf4j-api:1.7.30'
-	implementation 'org.slf4j:slf4j-simple:1.7.30'
-	compileOnly 'org.projectlombok:lombok:1.18.12'
-	annotationProcessor 'org.projectlombok:lombok:1.18.12'
-	testImplementation 'junit:junit:4.12'
+	implementation 'io.netty:netty-all:4.1.115.Final'
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+	implementation 'org.slf4j:slf4j-simple:2.0.16'
+	compileOnly 'org.projectlombok:lombok:1.18.36'
+	annotationProcessor 'org.projectlombok:lombok:1.18.36'
+	testImplementation 'junit:junit:4.13.2'
 }

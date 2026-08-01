@@ -1,12 +1,12 @@
 
 buildscript {
     ext {
-        lombokVersion = '1.18.6'
+        lombokVersion = '1.18.36'
     }
 
     repositories {
         mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url = uri("https://plugins.gradle.org/m2/") }
         gradlePluginPortal()
     }
 }
@@ -19,10 +19,13 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
 
-    sourceCompatibility = JavaVersion.VERSION_12
-    targetCompatibility = JavaVersion.VERSION_12
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
+    }
 
     compileJava {
         options.encoding = 'UTF-8'
@@ -33,18 +36,18 @@ subprojects {
     }
 
     repositories {
-        jcenter()
+        mavenCentral()
         mavenLocal()
         gradlePluginPortal()
     }
 
     dependencies {
         // lombok
-        compileOnly "org.projectlombok:lombok:${lombokVersion}"
-        testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
-        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-        testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+        compileOnly "org.projectlombok:lombok:1.18.36"
+        testCompileOnly "org.projectlombok:lombok:1.18.36"
+        annotationProcessor "org.projectlombok:lombok:1.18.36"
+        testAnnotationProcessor "org.projectlombok:lombok:1.18.36"
 
-        testImplementation 'junit:junit:4.12'
+        testImplementation 'junit:junit:4.13.2'
     }
 }
