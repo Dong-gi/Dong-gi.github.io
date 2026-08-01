@@ -5,9 +5,38 @@ include ../../../source/skeleton.pug
     description: 'WPF 기초 정리',
 })
 
+    p.version-note .NET 10 기준으로 앞부분을 정리했습니다. 이후 본문은 .NET Framework · .NET 6 시절에 쓴 것으로, 레이아웃·바인딩·트리거 등 기초 설명은 그대로 유효합니다.
+
+    h1 .NET 9 · 10 의 변화
+    ol
+        li #[strong WPF 는 계속 지원되고 활발히 개발 중이다.] 다만 대형 신기능보다 성능·Fluent 마감·정리 작업 중심이다
+        li #[strong Windows Fluent 테마](.NET 9) — 라이트/다크 모드와 Windows 강조색을 반영한다. .NET 10 에서 #[+asInlineCode('DatePicker', 'xml')], #[+asInlineCode('GridSplitter', 'xml')], #[+asInlineCode('GroupBox', 'xml')], #[+asInlineCode('RichTextBox', 'xml')], #[+asInlineCode('TextBox', 'xml')] 등으로 확대됐다. #[strong 아직 진행 중]이다
+        li #[strong Grid 축약 문법](.NET 10) — 정의를 속성 하나로 쓸 수 있다
+        +asCode('xml').
+            &lt;Grid ColumnDefinitions="1*, 2*, Auto, *, 300"
+                  RowDefinitions="1*, Auto, 25, 14, 20" /&gt;
+        li #[+asInlineCode('MessageBox', 'csharp')] 에 버튼·결과가 추가됐다(.NET 10) — #[+asInlineCode('AbortRetryIgnore', 'csharp')], #[+asInlineCode('RetryCancel', 'csharp')], #[+asInlineCode('CancelTryContinue', 'csharp')] 와 대응 결과값
+        li 클립보드 API 가 WinForms 와 통일되고 JSON 직렬화 메서드가 추가됐다. #[+asInlineCode('BinaryFormatter', 'csharp')] 이탈을 돕기 위한 것이다
+        li 성능 — 내부 자료구조를 BCL 타입으로 교체, UI 자동화·파일 대화상자 할당 감소, 픽셀 포맷 변환과 XAML 파싱 최적화
+
+    h1 .NET 6 에서 올릴 때 걸리는 것
+    ol
+        li #[strong 빈 Grid 정의가 빌드 에러가 된다](.NET 10)
+        +asCode('xml').
+            &lt;!-- .NET 6 에서는 컴파일되어 1행 1열로 동작했다 --&gt;
+            &lt;Grid&gt;
+                &lt;Grid.ColumnDefinitions&gt;&lt;/Grid.ColumnDefinitions&gt;
+            &lt;/Grid&gt;
+            &lt;!-- error MC3063: Property 'ColumnDefinitions' does not have a value. --&gt;
+        p Grid 축약 문법을 넣으면서 생긴 부작용이다. 최소 하나의 #[+asInlineCode('&lt;ColumnDefinition /&gt;', 'xml')] 을 넣어야 한다
+        li #[strong BinaryFormatter 가 .NET 9 부터 항상 예외를 던진다.] 인박스 구현이 제거됐고 예전 설정 스위치도 삭제됐다. #[strong 클립보드와 드래그앤드롭에서 임의 객체를 주고받던 코드가 여기 걸린다]. 문자열만 다루는 #[+asInlineCode('Clipboard.SetText', 'csharp')] 는 영향이 없다
+        li #[+asInlineCode('DynamicResource', 'xml')] 를 잘못 쓰면 앱이 크래시한다(.NET 10). 이전에는 조용히 넘어갔다
+        li WPF 와 WinForms 를 동시에 참조하는 앱은 #[+asInlineCode('MenuItem', 'csharp')], #[+asInlineCode('ContextMenu', 'csharp')] 타입을 명시적으로 구분해야 컴파일된다
+        li #[+asInlineCode('WebClient', 'csharp')] 는 SYSLIB0014 로 폐기됐다. 동작은 하지만 경고가 뜨며 #[+asInlineCode('HttpClient', 'csharp')] 로 옮기는 것이 맞다
+
     h1 참고자료
     ul
-        li: +asA('https://docs.microsoft.com/ko-kr/dotnet/desktop/wpf/', '공식 문서')
+        li: +asA('https://learn.microsoft.com/ko-kr/dotnet/desktop/wpf/', '공식 문서')
 
     h1 실습 1
     ol

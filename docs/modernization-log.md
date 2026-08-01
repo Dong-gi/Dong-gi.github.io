@@ -1827,3 +1827,81 @@ fundamental/mcs.html         json="컴퓨터공학도를 위한 수학"         
 ### 알려진 잔여 문제
 
 코드 블록 60개 중 13개가 `>` 를 이스케이프하지 않고 있다(`&lt;String, Object>` 형태). **기존 문제**이며 이번에 만진 블록만 고쳤다. `java_ee.pug` 와 같은 성격의 부채다.
+
+---
+
+## 37. C#/.NET 문서와 WPF 문서를 .NET 10 / C# 14 기준으로 갱신
+
+**변경 파일**: `pugs/dev/dotnet/csharp.pug` (1,562 → 1,707줄), `pugs/dev/dotnet/wpf.pug` (162 → 191줄) + 생성 HTML 2개
+
+커밋 27에서 예제 17개를 `net10.0` 으로 올렸는데 문서는 `.NET 6.0 / C# 10` 기준이었다. 코드와 문서의 짝을 맞췄다.
+
+### `csharp.pug`
+
+기존 "작성 기준" 절이 이렇게 되어 있었다.
+
+```pug
+h1 작성 기준
+ul
+    li 2022년 04월
+    li .NET 6.0
+    li C# 10
+```
+
+이 절을 현행 기준으로 바꾸고 절 두 개를 새로 넣었다. 본문 1,500여 줄은 언어 기초 설명이라 손대지 않았다.
+
+**1. `.NET 6` 에서 `.NET 10` 으로 올릴 때** — `TargetFramework` 만 바꾸면 되는 게 아니다.
+
+| 항목 | 내용 |
+|---|---|
+| `LangVersion` | `net10.0` 이면 자동으로 C# 14. 명시했다면 지우는 편이 낫다 |
+| `RuntimeIdentifier` | .NET 8부터 RID 지정만으로 self-contained가 되지 않는다 |
+| `publish`/`pack` | .NET 8부터 기본 구성이 Debug → **Release** |
+| `PackageReference` | .NET 10 SDK부터 **버전 없는 참조는 에러**(NU1015) |
+| 컨테이너 | 기본 베이스가 Debian → Ubuntu. ASP.NET 기본 포트 80 → 8080 |
+
+**조용히 동작이 바뀌는 것**을 따로 강조했다. 컴파일 에러는 눈에 띄지만 이쪽은 그렇지 않다.
+
+- **C# 14의 span 변환 확대로 재컴파일만 해도 오버로드 해석 결과가 바뀔 수 있다**
+- 부동소수 → 정수 변환이 saturating으로(.NET 9)
+- **`.NET 10` 런타임이 기본 종료 시그널 핸들러를 제공하지 않는다** — Linux 데몬·컨테이너의 SIGTERM 처리 점검 필요
+- `SYSLIB0xxx` 경고는 `CS0618` 로 억제되지 않는다
+
+**2. 런타임 변화 요약** — .NET 7 Native AOT, 8 동적 PGO 기본화, 9 DATAS, 10 devirtualization·Arm64 write-barrier
+
+**3. `h3 C# 11 ~ 14` 절 추가** — 기존 `h3 C# 8.0/9.0/10` 뒤에 같은 형식으로. raw string, required, generic math, 주 생성자, 컬렉션 식, `params` 컬렉션, 새 `Lock` 타입, **확장 멤버**, **`field` 키워드**, null 조건 대입 등을 코드 예제와 함께.
+
+주 생성자에는 함정을 적었다 — **record가 아닌 타입에서는 public 프로퍼티가 생성되지 않는다.**
+
+### `wpf.pug`
+
+WPF 예제가 8개나 되는데 문서에 버전 기준이 없었다. `.NET 9 · 10 의 변화` 와 `.NET 6 에서 올릴 때 걸리는 것` 두 절을 앞에 넣었다.
+
+- Fluent 테마(.NET 9~), Grid 축약 문법, `MessageBox` 버튼 추가
+- **빈 `<Grid.ColumnDefinitions>` 가 .NET 10에서 빌드 에러**(`MC3063`). .NET 6에서는 컴파일되어 1행 1열로 동작했다
+- `DynamicResource` 오용 시 크래시
+- 죽은 `docs.microsoft.com` 링크를 `learn.microsoft.com` 으로 교체
+
+### 예제 코드를 실제로 검사했다
+
+문서만 쓰고 끝내지 않고 **커밋 27에서 올린 17개 프로젝트가 위 파괴적 변경에 걸리는지 직접 확인했다.**
+
+| 검사 | 결과 |
+|---|---|
+| 빈 `Grid.ColumnDefinitions`/`RowDefinitions` (XAML 19개) | **0건** — 빌드 에러 없음 |
+| `BinaryFormatter` | **0건** |
+| `WebRequest` / `HttpWebRequest` / `RNGCryptoServiceProvider` / `Rijndael` | **0건** |
+| `Clipboard.SetText` | 1건 (`WpfApp8`) — **문자열만 다루므로 영향 없음** |
+| `WebClient` | 1건 (`WpfApp8/Utility/FileUtility.cs`) — **SYSLIB0014 경고. 동작은 하지만 `HttpClient` 로 옮기는 것이 맞다** |
+
+즉 커밋 27의 `net10.0` 이관에서 **컴파일을 막을 요소는 발견되지 않았고, 경고 1건이 예상된다.**
+
+### 검증
+
+- `csharp.pug` 코드 블록 **81개 전부 이스케이프 검사 통과**
+- `wpf.pug` 8개 중 2개에 기존 미이스케이프 `>` (내가 추가한 3개는 통과)
+- 정합성 검사 오류 0건
+
+### 출처
+
+`learn.microsoft.com` 의 C# 12/13/14 whats-new, `csharp-version-history`(C# 11 단독 페이지는 여기로 리다이렉트된다), `language-versioning` 기본값 표, .NET 7~10 whats-new 와 compatibility(breaking changes), `syslib-diagnostics/obsoletions-overview`, WPF whats-new net90·net100, `wpf/10.0/empty-grid-definitions`.
