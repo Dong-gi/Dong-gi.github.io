@@ -9,13 +9,14 @@
 | 1 | 고아 HTML 308건을 리다이렉트 스텁으로 치환 | chore | 별건 (선행 작업) | 스텁 형식, 보존 47건의 타당성 |
 | 2 | 사이트맵 URL에 누락된 `/posts/` 접두사 복원 | fix | Phase 0-1 | 250개 URL이 전부 깨져 있었음 |
 | 3 | TypeScript 6 고정, `@types/node` 를 LTS 24로 하향 | chore | 채택 기준 | 6개월 룰 적용 결과 |
-| 4 | `sharp` 네임스페이스 타입 오류 수정, `typecheck` 스크립트 추가 | fix | — | 기존 오류. 타입 검사가 이제 통과 |
+| 4 | `sharp` 네임스페이스 타입 오류 수정, `typecheck` 스크립트 추가 | fix | — | 기존 오류. **커밋 11에서 검증 범위 정정** |
 | 5 | 수집이 중단된 Universal Analytics 태그 제거 | fix | Phase 0-2 | GA4 재도입 여부는 별도 판단 |
 | 6 | 제거된 서브모듈을 가리키던 깨진 코드 참조 정리 | fix | Phase 0-3 | 깨진 참조 2건 → 0건 |
 | 7 | canonical·Open Graph·JSON-LD 메타데이터 추가 | feat | Phase 3-1 | 생성 HTML 263개 전부 갱신 |
 | 8 | 사이트 정합성 검사를 빌드에 통합 | feat | Phase 0-5 · 2-5 | 고아 355개가 쌓인 근본 원인 차단 |
 | 9 | GitHub Actions 검증 워크플로 추가 | ci | Phase 3-2 | 배포에는 관여하지 않음 |
 | 10 | `CLAUDE.md` 작성 | docs | Phase 3-3 | 빌드 파이프라인·규칙 문서화 |
+| 11 | 타입 검사 범위에서 `Repositories` 제외 | fix | 리뷰 지적 (치명적) | CI가 반드시 실패하던 문제 |
 
 ---
 
@@ -156,7 +157,9 @@ TS 5.9 / 6.0 / 7.0 세 버전 모두에서 동일하게 나던 **기존 오류**
 
 ### 검증
 
-TS 6.0.3 기준 `tsc --noEmit` **오류 0건**. 검사 대상은 저장소 내 유일한 `.ts` 파일인 `source/build.ts` 다.
+TS 6.0.3 기준 `source/build.ts` 의 타입 오류 0건.
+
+> **정정 (커밋 11)** — 이 시점의 검증은 `source/build.ts` 만 대상으로 한 것이었다. 실제로는 `tsconfig.json` 의 `include: ["**/*"]` 가 `Repositories/` 하위 `.ts` 8개까지 끌어와 `npm run typecheck` 는 오류 4건으로 실패했다. 커밋 11에서 고쳤다.
 
 ### 리뷰 포인트
 
@@ -435,3 +438,46 @@ lock에서 **424줄이 삭제**됐는데, TypeScript 7이 플랫폼별 Go 네이
 
 - 사실관계가 코드와 어긋나는 부분이 있는지 확인 필요. 특히 이미지 변환 규격과 `category` 표기 규칙은 코드·데이터에서 읽어낸 것이라 의도와 다를 수 있다
 - `README.md` 는 그대로 두었다. 방문자용 소개와 개발자용 문서는 성격이 달라 분리해두는 편이 낫다고 판단했다
+
+---
+
+> **여기부터는 커밋 1~10에 대한 독립 리뷰에서 나온 지적을 반영한 것이다.**
+> 리뷰는 별도 에이전트가 코드를 직접 실행·대조해 수행했다.
+
+## 11. 타입 검사 범위에서 `Repositories` 제외
+
+**변경 파일**: `tsconfig.json`
+
+### 무엇을
+
+```diff
+-    "include": ["**/*"]
++    "include": ["**/*"],
++    "exclude": ["node_modules", "Repositories", "posts", "imgs-generated", "d2"]
+```
+
+### 왜 — CI가 첫 실행에서 반드시 실패하는 상태였다
+
+`include: ["**/*"]` 에 `exclude` 가 없어 `Repositories/` 하위 `.ts` 8개가 검사 대상에 들어간다. 실제로 돌려보면 오류 4건이 난다.
+
+```
+Repositories/Node/test-231114/src/module/a.test.ts(2,20): TS2307 Cannot find module 'vitest'
+Repositories/Node/test-231114/src/module/b.test.ts(2,20): TS2307 Cannot find module 'vitest'
+Repositories/Node/test-231114/src/module/b.test.ts(4,10): TS1484 'C' is a type and must be imported using a type-only import
+Repositories/Node/test-231114/src/module/b.ts(1,26): TS2307 Cannot find module 'lru-cache'
+```
+
+`vitest` 와 `lru-cache` 는 그 중첩 프로젝트의 의존성이라 루트 `npm ci` 로는 절대 설치되지 않는다. TS1484는 의존성과 무관하게 항상 난다.
+
+**커밋 4의 "타입 검사가 이제 통과한다"는 서술은 틀렸다.** 당시 검증은 `source/build.ts` 하나만 대상으로 한 것이었고, 저장소 전체 설정으로 돌린 것이 아니었다. 커밋 9에서 추가한 CI의 `npm run typecheck` 단계는 그대로 두면 첫 실행에서 실패했을 것이다.
+
+`Repositories/` 는 블로그 본문이 참조하는 예제 프로젝트 모음으로 각자 독립된 의존성과 빌드 설정을 가진다. 루트 tsconfig의 검사 대상이 아니다. `posts`, `imgs-generated`, `d2` 는 빌드 산출물이라 함께 뺐다.
+
+### 검증
+
+실제 `Repositories/**/*.ts` 8개를 격리 환경에 복사해 TS 6.0.3으로 대조했다.
+
+| 설정 | 결과 |
+|---|---|
+| `exclude` 없음 (기존) | 오류 **4건** |
+| `exclude` 적용 (수정 후) | 오류 **0건** |

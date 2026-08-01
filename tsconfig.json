@@ -14,5 +14,11 @@
         "skipLibCheck": true,
         "types": ["node"]
     },
-    "include": ["**/*"]
+    "include": ["**/*"],
+    "//exclude": [
+        "Repositories 는 블로그 본문이 참조하는 예제 프로젝트 모음으로, 각자 독립된 의존성과 빌드 설정을 가진다.",
+        "루트 npm ci 로는 vitest, lru-cache 같은 중첩 의존성이 설치되지 않아 검사가 항상 실패한다.",
+        "posts / imgs-generated / d2 는 빌드 산출물이라 검사 대상이 아니다."
+    ],
+    "exclude": ["node_modules", "Repositories", "posts", "imgs-generated", "d2"]
 }
