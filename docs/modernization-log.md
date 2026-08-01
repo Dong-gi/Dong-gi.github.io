@@ -1766,3 +1766,64 @@ fundamental/mcs.html         json="컴퓨터공학도를 위한 수학"         
 
 - `posts.json` 에 버전이 남은 제목 — `book/0/081.html` 의 `"13.67"` 하나뿐이며, 이건 **찬호께이 소설 제목**이라 대상이 아니다
 - 8개 재렌더 후 정합성 검사 오류 0건
+
+---
+
+## 36. JPA 문서를 Jakarta Persistence 3.2 기준으로 갱신
+
+**변경 파일**: `pugs/dev/JVM/jpa.pug` (930 → 994줄), `posts/dev/JVM/jpa.html`
+
+커밋 30에서 붙인 불일치 배너 4개 중 두 번째를 뗐다(첫 번째는 커밋 33의 `java_ee`).
+
+### 접근 — 앞에 새 절을 얹고 본문은 점 단위로 수정
+
+930줄 중 대부분이 `@Entity`·`@Column`·JPQL·Criteria 같은 **개념 설명이라 지금도 유효하다.** 통째로 접지 않고 세 개 절을 앞에 얹은 뒤, 본문에서 실제로 틀린 곳만 짚어 고쳤다.
+
+### 새로 쓴 절
+
+**1. JPA → Jakarta Persistence**
+
+`"JPA(Java Persistence API)" 라는 이름 자체가 더 이상 공식 명칭이 아니다`라는 점부터 적었다. 상표권 때문이며 정식 명칭은 Jakarta Persistence다.
+
+| Jakarta EE | Persistence | 네임스페이스 | Hibernate |
+|---|---|---|---|
+| Java EE 8 | JPA 2.2 | `javax.*` | 5.x |
+| Jakarta EE 9 / 9.1 | 3.0 | `jakarta.*` | 5.5+ |
+| Jakarta EE 10 | 3.1 | `jakarta.*` | 6.1+ |
+| Jakarta EE 11 | 3.2 | `jakarta.*` | 7.0+ |
+
+**2. Persistence 3.2 의 변경**
+
+- `getSingleResultOrNull()` — `NoResultException` catch 불필요
+- **Java Record 를 `@Embeddable` / `@IdClass` 로 사용 가능**
+- `java.time.Instant`, `Year` 자동 매핑
+- **`@Temporal` 과 `java.util`/`java.sql` 의 Date 계열이 deprecated**
+- CDI `@Inject` 로 `EntityManager` 주입
+- JPQL 에 `union`/`intersect`/`except`/`cast`/`||`, null precedence
+- `persistence.xml` 없이 Java 코드로 구성
+
+**3. Hibernate 6 이후 주의할 점**
+
+본문이 `PostgreSQL10Dialect` 를 쓰라고 안내하고 있었는데, **Hibernate 6에서 버전별 Dialect 클래스가 전부 사라졌다.** `PostgreSQLDialect` 하나가 접속 시점에 서버 버전을 감지한다. 대개는 설정 자체를 생략해도 된다.
+
+로깅 카테고리도 바뀌었다 — `org.hibernate.type.descriptor.sql` → `org.hibernate.orm.jdbc.bind`.
+
+### 본문에서 고친 것
+
+| 위치 | 기존 | 변경 |
+|---|---|---|
+| 락 타임아웃 힌트 | `"javax.persistence.lock.timeout"` | `"jakarta.persistence.lock.timeout"` |
+| `@Temporal` 절 | 설명만 | **deprecated 경고 한 줄 추가** |
+| Spring javadoc 링크 | `docs.spring.io/spring/docs/5.2.8.RELEASE/` | `spring-framework/docs/current/` |
+| EntityManager javadoc 주석 | `javaee.github.io` (죽은 링크) | `jakarta.ee/specifications/persistence/3.2/` |
+
+남은 `javax.persistence` 2건은 **의도적**이다 — 새 절에서 구/신 네임스페이스를 대조하는 코드 예시다.
+
+### 검증
+
+- 렌더 성공, 정합성 검사 오류 0건
+- 불일치 배너 제거 확인
+
+### 알려진 잔여 문제
+
+코드 블록 60개 중 13개가 `>` 를 이스케이프하지 않고 있다(`&lt;String, Object>` 형태). **기존 문제**이며 이번에 만진 블록만 고쳤다. `java_ee.pug` 와 같은 성격의 부채다.

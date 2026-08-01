@@ -5,7 +5,70 @@ include ../../../source/skeleton.pug
     description: 'JPA; Java Persistence API 정리',
 })
 
-    p.version-note 본문은 Spring 5.x / javax.* 기준입니다. 연결된 예제 코드는 Spring 7 / Jakarta EE(jakarta.*)로 이관되어 본문과 차이가 있습니다. 본문 최신화는 진행 중입니다.
+    p.version-note Jakarta Persistence 3.2(Jakarta EE 11) 기준으로 앞부분을 정리했습니다. 이후 본문은 JPA 2.x / Hibernate 5 시절에 쓴 것으로, 개념 설명은 대부분 그대로 유효합니다.
+
+    h1 JPA 에서 Jakarta Persistence 로
+    ol
+        li 상표권 문제로 이름과 네임스페이스가 모두 바뀌었다. #[strong "JPA(Java Persistence API)" 라는 이름은 더 이상 공식 명칭이 아니다]. 현재 정식 명칭은 #[strong Jakarta Persistence] 다
+        li #[strong Jakarta EE 9(2020-12)부터 javax.persistence 가 jakarta.persistence 로 바뀌었다.] 상세는 #[+asA('/posts/dev/JVM/java_ee.html', 'Jakarta EE 문서')] 참조
+        +asCode('java').
+            import javax.persistence.Entity;     // Java EE 8 / JPA 2.2 까지
+            import jakarta.persistence.Entity;   // Jakarta EE 9 이후
+        li 설정 키도 함께 바뀌었다
+        +asCode('java').
+            hints.put("jakarta.persistence.lock.timeout", 1234);     // 구
+            hints.put("jakarta.persistence.lock.timeout", 1234);   // 현행
+        li 버전 대응
+        +table()
+            +ths('Jakarta EE', 'Persistence', '네임스페이스', 'Hibernate')
+            +tds('Java EE 8', 'JPA 2.2', 'javax.*', '5.x')
+            +tds('Jakarta EE 9 / 9.1', '3.0', 'jakarta.*', '5.5+')
+            +tds('Jakarta EE 10', '3.1', 'jakarta.*', '6.1+')
+            +tds('Jakarta EE 11', '3.2', 'jakarta.*', '7.0+')
+
+    h1 Jakarta Persistence 3.2 의 변경
+    ol
+        li #[+asInlineCode('getSingleResultOrNull()', 'java')] 추가 — #[+asInlineCode('NoResultException', 'java')] 을 catch 하지 않아도 된다
+        +asCode('java').
+            // 3.1 까지
+            try { return query.getSingleResult(); }
+            catch (NoResultException e) { return null; }
+
+            // 3.2
+            return query.getSingleResultOrNull();
+        li #[strong Java Record 를 @Embeddable · @IdClass 로 쓸 수 있다]
+        +asCode('java').
+            @Embeddable
+            public record Address(String city, String street) {}
+        li #[+asInlineCode('java.time.Instant', 'java')], #[+asInlineCode('java.time.Year', 'java')] 가 기본 타입으로 자동 매핑된다
+        li #[strong @Temporal 과 java.util / java.sql 의 Date · Time · Timestamp · Calendar 가 deprecated 됐다.] 본문 뒤쪽 #[+asInlineCode('@Temporal', 'java')] 절은 이제 구식이며 #[+asInlineCode('java.time', 'java')] 타입을 쓰면 애너테이션 자체가 불필요하다
+        +asCode('java').
+            @Temporal(TemporalType.TIMESTAMP)   // 구
+            private java.util.Date createdAt;
+
+            private java.time.Instant createdAt;   // 현행. 애너테이션 불필요
+        li #[+asInlineCode('@PersistenceContext', 'java')] 대신 CDI #[+asInlineCode('@Inject', 'java')] 로 #[+asInlineCode('EntityManager', 'java')] 를 주입할 수 있고 스코프도 지정할 수 있다
+        li JPQL · Criteria 에 집합 연산과 함수가 추가됐다
+        +asCode('sql').
+            union  intersect  except        -- 집합 연산
+            cast  left  right  replace  ||  -- 함수
+            order by x nulls first / nulls last
+        li #[+asInlineCode('persistence.xml', 'xml')] 없이 Java 코드로 퍼시스턴스 유닛을 구성할 수 있다
+        li #[+asInlineCode('EntityManagerFactory.runInTransaction()', 'java')] / #[+asInlineCode('callInTransaction()', 'java')] 과 Schema Manager API 가 추가됐다
+
+    h1 Hibernate 6 이후 주의할 점
+    ol
+        li #[strong 버전별 Dialect 클래스가 사라졌다.] Hibernate 6 부터 #[+asInlineCode('PostgreSQLDialect', 'java')] 하나가 접속 시점에 서버 버전을 감지한다
+        +asCode('ini').
+            # Hibernate 5 (제거됨)
+            spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQL10Dialect
+
+            # Hibernate 6 이후. 대개는 생략해도 자동 감지된다
+            spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+        li 로깅 설정의 #[+asInlineCode('org.hibernate.type.descriptor.sql', 'text')] 카테고리가 Hibernate 6 에서 바뀌었다. 바인딩 값을 보려면 아래를 쓴다
+        +asCode('ini').
+            logging.level.org.hibernate.orm.jdbc.bind=trace
+        li Hibernate 6 은 쿼리 파서를 새로 썼다(Semantic Query Model). 기존 HQL 중 비표준 문법에 의존하던 것이 깨질 수 있다
 
     h1 JPA?
     div
@@ -196,7 +259,7 @@ include ../../../source/skeleton.pug
                 li void lock(Object entity, LockModeType lockMode, ...)
                 p 영속 컨텍스트의 객체를 잠근다
                 //- Query createQuery(String qlString)
-                //- https://javaee.github.io/javaee-spec/javadocs/javax/persistence/EntityManager.html
+                //- https://jakarta.ee/specifications/persistence/3.2/apidocs/jakarta.persistence/jakarta/persistence/entitymanager
         h2 @Entity
         ul
             li DB 입출력 단위
@@ -241,6 +304,7 @@ include ../../../source/skeleton.pug
                 @GeneratedValue(generator = "gen_name")
                 private Long userId;
         h2 @Temporal
+        p ⚠ Jakarta Persistence 3.2 에서 deprecated 됐다. java.time 타입을 쓰면 이 애너테이션이 필요 없다
         p date, time, timestamp 컬럼 명시. 각각 java.sql.Date, java.sql.Time, java.sql.Timestamp에 매핑
         h2 @Column
         ul 필드 또는 getter 메서드에 대해 컬럼 명시
@@ -447,7 +511,7 @@ include ../../../source/skeleton.pug
                     li 클래스, 메서드 둘 다에 적용 가능하고, 메서드에 붙으면 클래스의 것을 오버라이드한다
                     li @Transactional 메서드가 다른 @Transactional 메서드를 호출하고, 해당 메서드에서 롤백이 발생하면 default로 전역 롤백한다
                     p
-                        +asA('https://docs.spring.io/spring/docs/5.2.8.RELEASE/javadoc-api/org/springframework/transaction/support/AbstractPlatformTransactionManager.html#setGlobalRollbackOnParticipationFailure-boolean-')
+                        +asA('https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/AbstractPlatformTransactionManager.html#setGlobalRollbackOnParticipationFailure-boolean-')
                         |로 변경 가능
                 +asCode('java').
                     @Test
@@ -464,8 +528,8 @@ include ../../../source/skeleton.pug
                     // 즉시
                     entityManager.find(..., LockModeType.PESSIMISTIC_WRITE);
                     // timeout
-                    hints = new HashMap&lt;String, Object>();
-                    hints.put("javax.persistence.lock.timeout", 1234);
+                    hints = new HashMap&lt;String, Object&gt;();
+                    hints.put("jakarta.persistence.lock.timeout", 1234);
                     entityManager.find(..., LockModeType.PESSIMISTIC_WRITE, hints);
                     // JPQL
                     query = entityManager.createQuery(...);
