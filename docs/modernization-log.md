@@ -1716,3 +1716,51 @@ npm ci && npm run typecheck && npm run build
 ### 출처
 
 `docs.python.org` 의 What's New 3.9~3.14, `devguide.python.org/versions/`, PEP 584·585·604·634·654·695·696·750·758·649·765·779·744·773·668·761, `packaging.python.org` 도구 권장(2026-07-29 갱신).
+
+---
+
+## 35. 커밋 21에서 놓친 제목 박제 8건 정리
+
+**변경 파일**: `source/posts.json`, `pugs/dev/JVM/{com.sun.nio.sctp,gson,jackson,lombok}.pug`, `pugs/dev/python/built_in_{constant,exception,function,type}.pug` + 생성 HTML 8개
+
+### 무엇을 놓쳤나
+
+커밋 21은 **pug 의 `+post` title 만 검사**했다. 그런데 이 8건은 **pug title 은 이미 깨끗한데 `source/posts.json` 쪽에만 버전이 남아 있었다.**
+
+| `posts.json` (목록·검색에 표시) | pug `<title>` |
+|---|---|
+| `com.sun.nio.sctp Since 1.7` | `com.sun.nio.sctp` |
+| `Gson 2.8.6` | `Gson` |
+| `Jackson 2.10.1` | `Jackson` |
+| `lombok 1.18.10` | `lombok` |
+| `Python Built-in Constants 3.8` | `Python Built-in Constants` |
+| `Python Built-in Exceptions 3.8` | `Python Built-in Exceptions` |
+| `Python Built-in Functions 3.8` | `Python Built-in Functions` |
+| `Python Built-in Types 3.8` | `Python Built-in Types` |
+
+즉 **페이지 제목과 목록에 뜨는 이름이 서로 달랐다.** 커밋 34에서 Python 문서를 손보다 발견했다.
+
+### 처리
+
+`posts.json` 제목에서 버전을 빼고, 그 정보를 pug 본문의 `p.version-note` 로 옮겼다. 커밋 21과 같은 방식이다.
+
+`built_in_function.pug` 만 본문의 `Since` 상한이 3.9라 "Python 3.9 기준", 나머지 Python 문서 3건은 3.8로 적었다.
+
+### 부수 발견 — `posts.json` 과 pug 제목이 39건 다르다
+
+전수 비교해보니 불일치가 39건이다. **다만 대부분은 의도적으로 보인다.**
+
+```
+dev/JavaScript/npm-zx.html   json="npm zx : bash 스크립트 실행 간편화"   pug="npm zx"
+dev/JVM/jpa.html             json="JPA; Java Persistence API"        pug="JPA"
+fundamental/mcs.html         json="컴퓨터공학도를 위한 수학"              pug="Mathematics for Computer Science"
+```
+
+`posts.json` 쪽이 목록에서 알아보기 쉬운 설명적 이름이고, pug 쪽이 페이지 제목이다. **일괄 동기화하면 오히려 목록이 나빠진다.** 버전이 박힌 8건만 고치고 나머지는 그대로 두었다.
+
+> 다만 이 이중 관리는 잠재적 혼선이다. `posts.json` 에 `listTitle` 같은 별도 필드를 두어 의도를 명시하면 좋겠지만, 스키마 변경은 `default.js` 와 `build.ts` 를 함께 손봐야 해서 이번엔 미뤘다.
+
+### 검증
+
+- `posts.json` 에 버전이 남은 제목 — `book/0/081.html` 의 `"13.67"` 하나뿐이며, 이건 **찬호께이 소설 제목**이라 대상이 아니다
+- 8개 재렌더 후 정합성 검사 오류 0건
