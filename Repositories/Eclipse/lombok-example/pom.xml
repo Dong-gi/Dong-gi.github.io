@@ -8,14 +8,16 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
-        <java.version>12</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>25</java.version>
+        <maven.compiler.release>25</maven.compiler.release>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>1.18.36</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

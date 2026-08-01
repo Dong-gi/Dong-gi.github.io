@@ -11,6 +11,7 @@
     <url>http://maven.apache.org</url>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons.dbcp2.version>2.7.0</commons.dbcp2.version>
         <mysql.version>8.0.28</mysql.version>
     </properties>
