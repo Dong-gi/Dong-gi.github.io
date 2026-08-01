@@ -156,6 +156,32 @@ mixin post(options)
             meta(name='description', content=options.description)
             link(rel="icon", href="/imgs/favicon.png")
 
+            //-
+                canonical / Open Graph / JSON-LD.
+                siteOrigin, pageUrl, pageModified 는 build.ts 가 렌더 시점에 주입한다.
+                pug를 빌드 밖에서 단독 렌더할 때를 대비해 없으면 건너뛴다.
+            - const origin = typeof siteOrigin === 'undefined' ? '' : siteOrigin
+            - const url = typeof pageUrl === 'undefined' ? '' : pageUrl
+            - const modified = typeof pageModified === 'undefined' ? '' : pageModified
+            if url
+                link(rel='canonical', href=url)
+                meta(property='og:url', content=url)
+            meta(property='og:type', content='article')
+            meta(property='og:site_name', content='dong-gi.github.io')
+            meta(property='og:locale', content='ko_KR')
+            meta(property='og:title', content=options.title)
+            if options.description
+                meta(property='og:description', content=options.description)
+            if origin
+                meta(property='og:image', content=origin + '/imgs/favicon.png')
+            meta(name='twitter:card', content='summary')
+            if url
+                //- </script> 로 조기 종료되지 않도록 <, > 를 유니코드 이스케이프한다
+                - var ld = { '@context': 'https://schema.org', '@type': 'TechArticle', headline: options.title, url: url, inLanguage: 'ko-KR', author: { '@type': 'Person', name: 'Donggi Kim' }, publisher: { '@type': 'Person', name: 'Donggi Kim' } }
+                - if (options.description) ld.description = options.description
+                - if (modified) ld.dateModified = modified
+                script(type='application/ld+json')!= JSON.stringify(ld).replace(/</g, '\\u003c').replace(/>/g, '\\u003e')
+
             script#highlight-js(src="/source/highlight.pack.js", async)
             script#default-js(src='/source/default.min.js', defer)
             if options.useMath

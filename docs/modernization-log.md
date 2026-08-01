@@ -12,6 +12,7 @@
 | 4 | `sharp` 네임스페이스 타입 오류 수정, `typecheck` 스크립트 추가 | fix | — | 기존 오류. 타입 검사가 이제 통과 |
 | 5 | 수집이 중단된 Universal Analytics 태그 제거 | fix | Phase 0-2 | GA4 재도입 여부는 별도 판단 |
 | 6 | 제거된 서브모듈을 가리키던 깨진 코드 참조 정리 | fix | Phase 0-3 | 깨진 참조 2건 → 0건 |
+| 7 | canonical·Open Graph·JSON-LD 메타데이터 추가 | feat | Phase 3-1 | 생성 HTML 263개 전부 갱신 |
 
 ---
 
@@ -225,3 +226,70 @@ spring.cloud.config.server.git.uri=https://github.com/Dong-gi/Config
 
 - `config-client.properties` 의 실제 내용을 알고 계시면 인라인 코드로 넣는 편이 낫다
 - 외부 저장소 `Dong-gi/Config` 가 아직 공개 상태인지 확인 필요. 비공개거나 삭제되었다면 링크도 함께 정리해야 한다
+
+---
+
+## 7. canonical·Open Graph·JSON-LD 메타데이터 추가
+
+**변경 파일**: `source/skeleton.pug`, `source/build.ts`, `index.html`, `posts/**` 262개
+
+### 무엇을
+
+모든 페이지 `<head>` 에 아래를 추가했다.
+
+```html
+<link rel="canonical" href="https://dong-gi.github.io/posts/dev/aws.html">
+<meta property="og:url" content="https://dong-gi.github.io/posts/dev/aws.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="dong-gi.github.io">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="AWS">
+<meta property="og:description" content="AWS 정리">
+<meta property="og:image" content="https://dong-gi.github.io/imgs/favicon.png">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle",...}</script>
+```
+
+### 왜
+
+- **canonical** — 리다이렉트 스텁(커밋 1)에는 넣었는데 정작 현행 문서에는 없었다. 같은 문서가 여러 경로로 도달 가능할 때 색인 대상을 명확히 한다
+- **Open Graph** — Slack·카카오톡·X 등에 링크를 붙여도 미리보기가 나오지 않았다
+- **JSON-LD** — `dateModified` 를 구조화 데이터로 노출하면 검색 결과에 갱신일이 표시될 수 있다. `posts.json` 에 이미 `mtimeMs` 가 있었지만 HTML에는 어떤 날짜 정보도 없었다
+
+### 어떻게
+
+`skeleton.pug` 의 `post` mixin은 자기 출력 경로를 모른다. `build.ts` 가 렌더 시점에 세 값을 locals로 주입하도록 했다.
+
+```ts
+const { mtime } = await fsp.stat(o.path);
+const html = await renderFile(o.path, {
+    cache: true,
+    imgMap: workerImgMap,
+    siteOrigin: SITE_ORIGIN,
+    pageUrl: pageUrlOf(htmlPath),
+    pageModified: mtime.toISOString(),
+});
+```
+
+`dateModified` 는 소스 pug의 mtime을 쓴다. `posts.json` 의 `mtimeMs` 는 `processPugs()` 가 렌더 작업과 동시에 갱신하므로 워커에서 참조하면 경합이 생긴다. 워커가 직접 stat 하는 편이 단순하고 정확하다.
+
+`pageUrlOf()` 는 `/index.html` 을 `/` 로 정규화한다. 홈이 두 URL로 색인되는 것을 막는다.
+
+주의한 것 두 가지:
+
+- **JSON-LD의 `</script>` 조기 종료** — `<`, `>` 를 `<`, `>` 로 이스케이프했다. JSON 문자열 내부에서 유효한 이스케이프라 파싱 결과는 동일하다
+- **빌드 밖 단독 렌더** — locals가 없으면 해당 태그를 건너뛴다. `typeof x === 'undefined'` 가드로 처리
+
+### 검증
+
+- 263개 pug 전부 렌더 성공, 실패 0건
+- 제목에 `&`, `(`, `)` 가 든 문서 3종으로 JSON-LD를 `JSON.parse` 해 유효성 확인
+- locals 없이 렌더해도 예외가 나지 않음을 확인
+- 홈의 canonical이 `https://dong-gi.github.io/` 로 정규화되는지 확인
+- 리다이렉트 스텁 308건이 훼손되지 않았는지 `tools/verify-redirects.mjs` 재실행 (오류 0건)
+
+### 리뷰 포인트
+
+- `og:image` 가 favicon이다. 문서별 대표 이미지를 쓰려면 `post` mixin에 옵션을 추가해야 한다
+- `datePublished` 는 넣지 않았다. 최초 작성일을 알 방법이 마땅치 않아 지어내지 않았다. git 최초 커밋일을 쓸 수 있지만 대량 리팩터링 커밋 때문에 부정확하다
+- **이 커밋의 diff는 265개 파일이다.** 실질 변경은 `skeleton.pug` 와 `build.ts` 두 개뿐이고 나머지는 재생성된 산출물이다

@@ -33,6 +33,16 @@ function postUrl(post: Post): string {
     return SITE_ORIGIN + POSTS_URL_PREFIX + post.file;
 }
 
+/**
+ * 렌더 산출물 경로를 사이트 절대 URL로 바꾼다.
+ * './posts/dev/aws.html' -> 'https://dong-gi.github.io/posts/dev/aws.html'
+ * './index.html'         -> 'https://dong-gi.github.io/'
+ */
+function pageUrlOf(htmlPath: string): string {
+    const absolute = htmlPath.replace(/^\./, '').replace(/\/index\.html$/, '/');
+    return SITE_ORIGIN + absolute;
+}
+
 const require = createRequire(import.meta.url);
 const exec = promisify(child_process.exec);
 const renderFile = promisify(require('pug').renderFile) as (path: string, options?: Record<string, unknown>) => Promise<string>;
@@ -138,7 +148,16 @@ parentPort?.on('message', async (o: WorkMessage) => {
         case 'render-pug': {
             const htmlPath = o.path.replace('/pugs/', '/posts/').replace('.pug', '.html');
             try {
-                const html = await renderFile(o.path, { cache: true, imgMap: workerImgMap });
+                // canonical, Open Graph, JSON-LD 생성에 필요한 페이지 단위 정보.
+                // 소스 pug의 수정 시각을 문서 갱신일로 쓴다.
+                const { mtime } = await fsp.stat(o.path);
+                const html = await renderFile(o.path, {
+                    cache: true,
+                    imgMap: workerImgMap,
+                    siteOrigin: SITE_ORIGIN,
+                    pageUrl: pageUrlOf(htmlPath),
+                    pageModified: mtime.toISOString(),
+                });
                 await fsp.writeFile(htmlPath, html);
                 console.log(`${o.path} rendered`);
             } catch (e) {
