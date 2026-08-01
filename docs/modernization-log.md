@@ -15,6 +15,7 @@
 | 7 | canonical·Open Graph·JSON-LD 메타데이터 추가 | feat | Phase 3-1 | 생성 HTML 263개 전부 갱신 |
 | 8 | 사이트 정합성 검사를 빌드에 통합 | feat | Phase 0-5 · 2-5 | 고아 355개가 쌓인 근본 원인 차단 |
 | 9 | GitHub Actions 검증 워크플로 추가 | ci | Phase 3-2 | 배포에는 관여하지 않음 |
+| 10 | `CLAUDE.md` 작성 | docs | Phase 3-3 | 빌드 파이프라인·규칙 문서화 |
 
 ---
 
@@ -400,3 +401,37 @@ lock에서 **424줄이 삭제**됐는데, TypeScript 7이 플랫폼별 Go 네이
 - **아직 CI에서 실행해보지 않았다.** push 후 첫 실행 결과 확인이 필요하다
 - `npm ci` 가 `sharp` 프리빌트 바이너리를 받는다. 실패하면 `npm ci --ignore-scripts` 로 낮추거나 sharp를 optional로 분리하는 방법이 있다
 - 배포 자동화, 링크 체커, Lighthouse CI는 계획서 Phase 3-2에 남아 있다
+
+---
+
+## 10. `CLAUDE.md` 작성
+
+**변경 파일**: `CLAUDE.md` (신규)
+
+### 무엇을
+
+빌드 파이프라인, 디렉터리 구조, 새 글 작성 절차, mixin 목록, 정합성 검사 항목, 커밋 규칙을 한 파일에 정리했다.
+
+### 왜
+
+루트 `README.md` 가 링크 한 줄뿐이었다. 어디를 편집해야 하는지(`pugs/` 이고 `posts/` 가 아니라는 것), `posts.json` 등록이 필수라는 것, `posts/` 에 pug 소스 없는 파일이 왜 355개나 있는지 — 전부 코드를 읽어야만 알 수 있었다.
+
+`Repositories/iroiro-downloader` 와 `usb-tether` 는 이미 각자 `CLAUDE.md` 를 갖고 있는데 정작 블로그 본체에는 없었다.
+
+### 담은 내용
+
+- **요구 환경** — Node 24+, `d2` 바이너리, TS 6 고정 방침
+- **명령** — `build` / `check` / `typecheck`, `node source/build.ts new` 의 증분 렌더
+- **디렉터리 표** — 소스와 생성물 구분
+- **새 글 쓰기 3단계** — `posts.json` 등록을 빠뜨리면 어디에도 안 나온다는 점 명시
+- **mixin 표** — `+post`, `+codeBtn`, `+asCode` 등 13개
+- **빌드 동작** — 워커 3종 작업(pug/이미지/d2)과 이미지 변환 규격
+- **`posts/` 직접 편집이 허용되는 두 경우** — 리다이렉트 스텁, 보존 대상
+- **정합성 검사 E1~E7 / W1~W2 요약**
+- **커밋 규칙** — 기존 이력의 Conventional Commits + 한국어 본문
+- **주의** — `.gitattributes` CRLF 정규화, URL 상수 관리, 분석 도구 부재
+
+### 리뷰 포인트
+
+- 사실관계가 코드와 어긋나는 부분이 있는지 확인 필요. 특히 이미지 변환 규격과 `category` 표기 규칙은 코드·데이터에서 읽어낸 것이라 의도와 다를 수 있다
+- `README.md` 는 그대로 두었다. 방문자용 소개와 개발자용 문서는 성격이 달라 분리해두는 편이 낫다고 판단했다
