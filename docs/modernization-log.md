@@ -11,6 +11,7 @@
 | 3 | TypeScript 6 고정, `@types/node` 를 LTS 24로 하향 | chore | 채택 기준 | 6개월 룰 적용 결과 |
 | 4 | `sharp` 네임스페이스 타입 오류 수정, `typecheck` 스크립트 추가 | fix | — | 기존 오류. 타입 검사가 이제 통과 |
 | 5 | 수집이 중단된 Universal Analytics 태그 제거 | fix | Phase 0-2 | GA4 재도입 여부는 별도 판단 |
+| 6 | 제거된 서브모듈을 가리키던 깨진 코드 참조 정리 | fix | Phase 0-3 | 깨진 참조 2건 → 0건 |
 
 ---
 
@@ -180,3 +181,47 @@ Universal Analytics는 **2023-07-01 에 데이터 수집을 중단**했고 표�
 - **방문자 통계를 계속 보고 싶다면 GA4 측정 ID를 발급해 주석의 형태로 되살려야 한다.** 지금 상태는 통계 수집이 완전히 없는 상태다
 - 통계가 필요 없다면 이대로 두는 편이 페이지 로드가 빠르고 추적도 없다
 - 이미 생성된 `posts/**` HTML에는 여전히 옛 태그가 남아 있다. 빌드를 다시 돌려야 반영된다
+
+---
+
+## 6. 제거된 서브모듈을 가리키던 깨진 코드 참조 정리
+
+**변경 파일**: `pugs/dev/JVM/spring_framework.pug`, `posts/dev/JVM/spring_framework.html`, `.gitmodules` (삭제)
+
+### 무엇을
+
+`Spring Config Server` / `Spring Config Client` 절의 코드 버튼 2개가 존재하지 않는 파일을 가리키고 있었다. 누르면 실패한다.
+
+- `/Repositories/Config/webapp.properties`
+- `/Repositories/Config/config-client.properties`
+
+### 왜 (원인 추적)
+
+git 이력을 따라가 보니 `Repositories/Config` 는 파일이 아니라 **git 서브모듈**(`160000` 모드)이었고, 실체는 별도 저장소 `git@github.com:Dong-gi/Config.git` 다.
+
+2023-03-10 커밋 `50451059` 에서 서브모듈 5개(`Config`, `Android/CCTV`, `JavaScript/SF`, `Node/Rendezvous`, `STS/Reminder`)를 한꺼번에 제거하면서 `.gitmodules` 를 비웠는데, **pug 쪽 참조는 함께 정리되지 않았다.** 나머지 4개는 참조가 없어 문제가 드러나지 않았고 `Config` 만 남았다.
+
+`config-server/src/main/resources/bootstrap.properties` 가 아직 이 외부 저장소를 가리킨다.
+
+```properties
+spring.cloud.config.server.git.uri=https://github.com/Dong-gi/Config
+```
+
+### 어떻게
+
+서브모듈 제거는 2023년의 의도적 결정으로 보이므로 되돌리지 않고, 참조 방식을 바꿨다.
+
+- **`webapp.properties`** — 내용을 git 이력에서 복원했다(`c99c07db^` 시점, `message=Hello World`). 코드 버튼 대신 `+asCode` 로 인라인 표시
+- **`config-client.properties`** — 이 저장소 이력 어디에도 존재한 적이 없어 내용을 복원할 수 없다. 임의로 지어내지 않고, 파일명 규칙(클라이언트의 `spring.application.name` 과 동일)과 `HelloController` 가 `@Value("${message}")` 로 읽으므로 `message` 속성이 필요하다는 사실만 서술했다
+- 두 곳 모두 설정 저장소가 **별도 저장소**임을 명시하고 링크를 걸었다
+- 이미 비어 있던 `.gitmodules` 를 삭제했다
+
+### 검증
+
+- pug 렌더 성공, 생성된 HTML 확인
+- `pugs/`·`index.pug`·`source/` 전체에서 `/Repositories/...` 참조 **805건 중 깨진 것 0건** (수정 전 807건 중 2건 깨짐)
+
+### 리뷰 포인트
+
+- `config-client.properties` 의 실제 내용을 알고 계시면 인라인 코드로 넣는 편이 낫다
+- 외부 저장소 `Dong-gi/Config` 가 아직 공개 상태인지 확인 필요. 비공개거나 삭제되었다면 링크도 함께 정리해야 한다

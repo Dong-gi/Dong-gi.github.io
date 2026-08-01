@@ -1475,7 +1475,9 @@ include ../../../source/skeleton.pug
                 li 예시 코드
                 +codeBtn('/Repositories/STS/config-server/src/main/resources/bootstrap.properties', 'text') bootstrap.properties
                 +codeBtn('/Repositories/STS/config-server/src/main/java/io/github/donggi/ConfigServerApplication.java', 'java') @EnableConfigServer
-                +codeBtn('/Repositories/Config/webapp.properties', 'text') webapp.properties
+                p 설정 저장소는 이 블로그 저장소가 아닌 별도 저장소(#[+asA('https://github.com/Dong-gi/Config')])다. bootstrap.properties의 spring.cloud.config.server.git.uri가 이를 가리킨다
+                +asCode('text', 'webapp.properties (설정 저장소)')
+                    | message=Hello World
                 p 설정 저장소는 .properties나 .yml 파일들을 이루어진 디렉터리로, Git, Subversion, 로컬 디렉터리 모두 가능하다
                 p 설정 저장소에 있는 application.properties 또는 .yml은 공통 설정으로써 모든 config 클라이언트에게 전달된다
                 p Basic 인증 추가 : spring-boot-starter-security 의존성 추가하고 security.user.name, security.user.password 설정
@@ -1497,7 +1499,7 @@ include ../../../source/skeleton.pug
                 li Config Client, Actuator 선택
                 +w3img('/imgs/201910/20191009_124833.png')
                 li 예시 코드
-                +codeBtn('/Repositories/Config/config-client.properties', 'text') config-client.properties
+                p 설정 저장소(#[+asA('https://github.com/Dong-gi/Config')])에는 클라이언트의 spring.application.name과 같은 이름인 config-client.properties를 둔다. HelloController가 #[+asInlineCode('@Value("${message}")', 'java')]로 읽으므로 message 속성이 있어야 한다
                 +codeBtn('/Repositories/STS/config-client/src/main/resources/bootstrap.properties', 'text') bootstrap.properties
                 +codeBtn('/Repositories/STS/config-client/src/main/java/io/github/donggi/controller/HelloController.java', 'java') HelloController.java
                 p bootstrap.properties 파일은 application.properties 보다 먼저 로딩된다
