@@ -9,7 +9,7 @@
 | Phase 0 — 결함 수정 | **완료** (커밋 2~6, 8, 11) |
 | Phase 3-1~3-3 — SEO·CI·문서화 | **완료** (커밋 7, 9, 10, 13) |
 | Phase 2 — Repositories | **재작성 완료, 빌드 미검증** (커밋 17~19, 26~31) |
-| Phase 1 — 포스트 최신화 | **착수** (커밋 20~22). 우선순위 20건 중 1건 완료 |
+| Phase 1 — 포스트 최신화 | **진행 중** (커밋 20~22, 33~35). 우선순위 20건 중 3건 완료 |
 
 Phase 2에서 손댄 프로젝트는 **72개**다.
 
@@ -59,12 +59,11 @@ Phase 1의 남은 우선순위 문서다. 문서당 공식 자료 조사가 필�
 
 | # | 문서 | 줄 수 | 핵심 갱신 대상 |
 |---|---|---:|---|
-| 1 | `dev/JVM/spring_framework.pug` | 1,578 | Spring 5.x → 6/7, `javax.*` → `jakarta.*` |
+| 1 | `dev/JVM/spring_framework.pug` | 1,578 | Spring 5.x → 7, `javax.*` → `jakarta.*` (커밋 30에서 코드는 이미 이관됨) |
 | 2 | `dev/JVM/spring_servlet.pug` | 1,338 | 위와 동일 + JSP/XML 전제 |
 | 3 | `dev/python/standard.pug` | 2,148 | `Since 3.8` 상한 → 3.14 |
 | 4 | `dev/dotnet/csharp.pug` | 1,562 | `.NET 6` / C# 10 → .NET 10 / C# 14 |
-| 5 | `dev/python/basic.pug` | 359 | 본문 내용을 3.14 기준으로 |
-| — | `dev/JVM/java_ee.pug`, `jpa.pug` | | Jakarta EE 이관 |
+| — | `dev/JVM/jpa.pug` | | Jakarta EE 이관 (java_ee 는 커밋 33에서 완료) |
 | — | `dev/rpi.pug` | 395 | 2017년 Raspbian Stretch → 현행 |
 | — | `project/error.pug` | 367 | 종료된 Heroku 무료 티어 절 정리 |
 
@@ -108,6 +107,9 @@ Phase 1의 남은 우선순위 문서다. 문서당 공식 자료 조사가 필�
 | 30 | Spring 40개를 Jakarta EE / Boot 4.0으로 이관 | feat | Phase 2-3 | ⚠ **위험도 최상** |
 | 31 | Node 10개에 `engines`, 홈 빌드 안내 정정 | feat | Phase 2-4 | `build-all` 은 없는 스크립트였음 |
 | 32 | 검증 체크리스트 작성 | docs | — | 위험도 순 8개 항목 |
+| 33 | `JavaEE` 문서를 Jakarta EE 11 기준으로 갱신 | feat | Phase 1-2 | +legacy 첫 실사용 |
+| 34 | Python 입문 문서를 3.14 기준으로 갱신 | feat | Phase 1-2 | 359 → 504줄 |
+| 35 | 커밋 21에서 놓친 제목 박제 8건 정리 | fix | Phase 1-3 | posts.json 쪽에만 남아 있었음 |
 
 ---
 
