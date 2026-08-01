@@ -343,6 +343,9 @@ li:hover:has(ul, ol, menu){border:1px dashed coral}
     }
 }
 
+/* 문서 상단의 기준 버전 표기 */
+#contents p.version-note{margin:0 0 1rem;padding:0.4rem 0.8rem;border-left:6px solid rgba(0,0,0,.15);background:rgba(0,0,0,.03);color:#555;font-size:0.9em}
+
 /* +legacy mixin. 구버전 서술을 접어두는 블록 */
 #contents details.legacy{border-left-color:rgba(0,0,0,.25);background:rgba(0,0,0,.02)}
 #contents details.legacy>summary{color:#666;font-size:0.9em}

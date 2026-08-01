@@ -48,6 +48,7 @@ HTML 617개 (현행 262, 리다이렉트 308, 보존 47, 새 고아 0) / posts.j
 | 18 | 커밋된 컴파일 산출물 25개 제거 | chore | Phase 2-4 | 계획서의 잘못된 서술도 정정 |
 | 19 | Gradle 7에서 제거된 의존성 설정 158줄 교체 | fix | Phase 2-4 | 문서의 잘못된 예시도 갱신 |
 | 20 | 구버전 접기 `+legacy` mixin 추가 | feat | Phase 1-1 | Phase 1의 전제 |
+| 21 | 제목에 박제된 버전 13건 정리 | refactor | Phase 1-3 | URL은 그대로, 제목만 변경 |
 
 ---
 
@@ -918,3 +919,70 @@ mixin legacy(version, note)
 
 - `note` 있는 경우와 없는 경우 두 가지로 렌더해 `summary` 문구 확인 (없을 때 빈 괄호가 남지 않음)
 - **mixin 추가가 기존 263개 산출물에 아무 영향을 주지 않음을 드리프트 검사로 확인**
+
+---
+
+## 21. 제목에 박제된 버전 13건 정리
+
+**변경 파일**: `pugs/**` 13개, `posts/**` 13개, `source/posts.json`, `source/default.css`, `tools/detitle-version.mjs` (신규)
+
+### 무엇을
+
+제목에서 버전을 빼고 본문 상단의 기준 버전 표기로 옮겼다.
+
+| 기존 제목 | 새 제목 | 기준 버전 표기 |
+|---|---|---|
+| `Built-in 목록 2.3.28` | `FreeMarker Built-in 목록` | FreeMarker 2.3.28 |
+| `프로그래밍 가이드 2.3.28` | `FreeMarker 프로그래밍 가이드` | 〃 |
+| `템플릿 작성 가이드 2.3.28` | `FreeMarker 템플릿 작성 가이드` | 〃 |
+| `XML 처리 가이드 2.3.28` | `FreeMarker XML 처리 가이드` | 〃 |
+| `Python 3.8` | `Python` | Python 3.8 |
+| `Python 3.8 데이터 모델` | `Python 데이터 모델` | 〃 |
+| `JDK16 java.base 모듈` | `java.base 모듈` | JDK 16 |
+| `JDK16 java.net.http 모듈` | `java.net.http 모듈` | 〃 |
+| `Guava 30.1` | `Guava` | Guava 30.1 |
+| `Apache Commons Lang 3.9` | `Apache Commons Lang` | 3.9 |
+| `Apache Commons Collections 4.4` | `Apache Commons Collections` | 4.4 |
+| `Apache Commons Math 3.6.1` | `Apache Commons Math` | 3.6.1 |
+| `Apache Commons RNG 1.2` | `Apache Commons RNG` | 1.2 |
+
+FreeMarker 4종은 제목만으로는 무슨 도구인지 알 수 없어 `FreeMarker` 를 앞에 붙였다.
+
+```pug
++post({
+    title: 'Python',
+    description: 'Python 시작하기',
+})
+
+    p.version-note Python 3.8 기준입니다.
+
+    h1 설치
+```
+
+### 왜
+
+**버전을 갱신할 때마다 제목을 고치는 구조는 유지되지 않는다.** 실제로 FreeMarker 문서 4종은 2020년 이후 제목의 `2.3.28` 이 한 번도 갱신되지 않았다. 기준 버전을 본문으로 옮기면 내용 갱신과 같은 자리에서 함께 고치게 된다.
+
+제목을 바꿔도 **URL(파일 경로)은 그대로**라 리다이렉트가 필요 없다. 다만 `source/posts.json` 의 `title` 도 같이 고쳐야 목록·검색에 반영된다.
+
+### 어떻게
+
+`tools/detitle-version.mjs` 로 pug 헤더 교체 + 본문 상단 삽입 + `posts.json` 갱신을 한 번에 처리했다. 멱등이며 `--dry-run` 을 지원한다.
+
+**CRLF 처리에 주의했다.** 이 저장소의 작업 트리는 CRLF다. `posts.json` 을 LF로 다시 쓰면 251개 항목이 통째로 diff에 잡힌다. 원본의 줄바꿈 방식을 감지해 유지하도록 했고, 결과적으로 **`posts.json` diff는 제목 13줄뿐**이다.
+
+`default.css` 에 `p.version-note` 스타일을 추가했다.
+
+### 검증
+
+- dry-run → 13건 처리 예정 / 건너뜀 0 확인 후 적용
+- 재실행 시 13건 전부 "이미 처리됨" (멱등)
+- `posts.json` diff가 제목 13줄로 한정됨을 확인
+- 13개 재렌더 후 `<title>`, `version-note`, JSON-LD `headline` 반영 확인
+- 사이트맵은 파일 경로 기반이라 변경 없음 (확인함)
+- 정합성 검사 오류 0건
+
+### 리뷰 포인트
+
+- 새 제목이 목록에서 다른 문서와 헷갈리지 않는지. 특히 `Python` 은 `dev/python/` 아래 다른 문서들과 나란히 놓인다
+- 기준 버전 문구를 "…기준입니다."로 통일했다. 다른 표현을 원하시면 스크립트의 `basis` 값만 고치면 된다
