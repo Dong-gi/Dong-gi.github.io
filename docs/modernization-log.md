@@ -9,6 +9,7 @@
 | 1 | 고아 HTML 308건을 리다이렉트 스텁으로 치환 | chore | 별건 (선행 작업) | 스텁 형식, 보존 47건의 타당성 |
 | 2 | 사이트맵 URL에 누락된 `/posts/` 접두사 복원 | fix | Phase 0-1 | 250개 URL이 전부 깨져 있었음 |
 | 3 | TypeScript 6 고정, `@types/node` 를 LTS 24로 하향 | chore | 채택 기준 | 6개월 룰 적용 결과 |
+| 4 | `sharp` 네임스페이스 타입 오류 수정, `typecheck` 스크립트 추가 | fix | — | 기존 오류. 타입 검사가 이제 통과 |
 
 ---
 
@@ -120,3 +121,37 @@ TS 5.9.3 / 6.0.3 / 7.0.2 세 버전으로 실제 타입 검사를 돌려 비교�
 
 - TS 6.0은 2026-09-23에 6개월 룰을 충족한다. 그때까지는 엄밀히 말해 2개월 부족한 절충안이다
 - `engines` 는 npm이 기본으로 강제하지 않는다. 강제하려면 `.npmrc` 에 `engine-strict=true` 가 필요하다
+
+---
+
+## 4. `sharp` 네임스페이스 타입 오류 수정, `typecheck` 스크립트 추가
+
+**변경 파일**: `source/build.ts`, `package.json`
+
+### 무엇을
+
+`source/build.ts(152,22): error TS2503: Cannot find namespace 'sharp'` 를 고쳤다.
+
+```diff
+-import sharp from 'sharp';
++import sharp, { type Sharp } from 'sharp';
+...
+-            let img: sharp.Sharp | undefined;
++            let img: Sharp | undefined;
+```
+
+`npm run typecheck` 스크립트도 추가했다.
+
+### 왜
+
+`sharp` 의 타입 선언은 `declare namespace sharp` + `export = sharp` 형태다. `tsconfig.json` 에 `verbatimModuleSyntax: true` 가 걸려 있어 기본 임포트는 값 바인딩만 가져오고 네임스페이스는 가져오지 않는다. 그래서 `sharp.Sharp` 를 타입 위치에서 참조할 수 없었다.
+
+TS 5.9 / 6.0 / 7.0 세 버전 모두에서 동일하게 나던 **기존 오류**다. 타입 검사가 원래부터 실패하고 있었기 때문에, 이 상태로는 CI에 검사 단계를 넣을 수 없었다.
+
+### 검증
+
+TS 6.0.3 기준 `tsc --noEmit` **오류 0건**. 검사 대상은 저장소 내 유일한 `.ts` 파일인 `source/build.ts` 다.
+
+### 리뷰 포인트
+
+- `tsconfig.json` 의 `include` 가 `["**/*"]` 라 `Repositories/` 하위 JS까지 스캔 대상에 들어간다. `checkJs: false` 라 검사는 하지 않지만 스캔 비용은 발생한다. `exclude` 추가를 검토할 만하다

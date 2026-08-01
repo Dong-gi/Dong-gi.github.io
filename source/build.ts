@@ -5,7 +5,7 @@ import { promisify } from 'node:util';
 import { Worker, isMainThread, parentPort } from 'node:worker_threads';
 import { createRequire } from 'node:module';
 import { cpus } from 'node:os';
-import sharp from 'sharp';
+import sharp, { type Sharp } from 'sharp';
 import * as svgo from 'svgo';
 
 type WorkMessage =
@@ -149,7 +149,7 @@ parentPort?.on('message', async (o: WorkMessage) => {
         }
         case 'transform-img': {
             const animated = o.path.endsWith('gif');
-            let img: sharp.Sharp | undefined;
+            let img: Sharp | undefined;
             for (const width of [500, 1200, 2000]) {
                 for (const ext of animated ? (['gif', 'webp'] as const) : (['jpeg', 'webp', 'avif'] as const)) {
                     const outPath = o.path.replace('/imgs/', '/imgs-generated/').replace(/\.\w+$/, `-${width}.${ext}`);
