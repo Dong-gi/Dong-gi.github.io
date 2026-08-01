@@ -87,6 +87,7 @@ Phase 1의 남은 우선순위 문서다. 문서당 공식 자료 조사가 필�
 | 23 | 진행 상태 정리 | docs | — | 다음 작업 목록 포함 |
 | 24 | 문서 Java 예제 7개를 JDK 25로 실행 검증 | docs | — | 전부 통과 |
 | 25 | 예제 소스 132개의 Java 25 호환성 측정 | docs | Phase 2 사전 조사 | 비호환 0건 |
+| 26 | Android 7개를 compileSdk 36 / AGP 9로 이관 | feat | Phase 2-3 | ⚠ **빌드 미검증** |
 
 ---
 
@@ -1139,3 +1140,82 @@ record pattern + switch, virtual thread, sequenced collections, unnamed variable
 ### 한계
 
 표준 라이브러리만 쓰는 132개 한정이다. 나머지 545개는 Spring·Lombok 등 외부 의존성이 있어 이 환경에서 확인할 수 없다. `javax.*` → `jakarta.*` 전환처럼 프레임워크 쪽 변경은 완전히 별개 문제이며, 그쪽이 실제 작업량의 대부분일 것으로 **추측**된다.
+
+---
+
+> ## ⚠ 여기부터는 빌드로 검증하지 못한 변경이다
+>
+> 커밋 26 이후는 의존성 다운로드가 차단된 환경에서 **지식에 기반해 작성**한 것이다. 문법 오류나 버전 오타가 남아 있을 수 있다.
+> 각 항목 끝의 **검증 방법**을 로컬에서 한 번씩 돌려주시면 된다. 전체 체크리스트는 문서 맨 아래에 모아두었다.
+
+---
+
+## 26. Android 7개를 compileSdk 36 / AGP 9로 이관
+
+**변경 파일**: `Repositories/Android/Project01~07` 의 `settings.gradle`·`build.gradle`·`app/build.gradle`·`AndroidManifest.xml`·`gradle-wrapper.properties` (35개), `tools/migrate-android.mjs` (신규)
+
+### 왜 지금인가
+
+**Google Play가 2026-08-31부터 targetSdk 36을 요구한다.** 남은 기간이 한 달이다. 예제 프로젝트라 스토어에 올리지는 않겠지만, 블로그가 가르치는 설정이 스토어 정책에 못 미치는 상태로 남는 것은 곤란하다.
+
+기존 상태는 7개 전부 동일했다 — AGP 7.1.1, Gradle 7.2, compileSdk/targetSdk 31, minSdk 19(Project05만 21), `jcenter()`.
+
+### 적용한 변경
+
+| 대상 | 기존 | 변경 | 근거 |
+|---|---|---|---|
+| AGP | 7.1.1 | 9.0.0 | 6개월 룰 적격 (2026-01-15) |
+| Gradle wrapper | 7.2 | 9.3.1 | AGP 9 요구 |
+| `compileSdk` / `targetSdk` | 31 | 36 | Play 정책 |
+| `minSdk` | 19 | 21 | androidx 1.7 계열이 21을 요구 |
+| Java | 1.8 (일부만 지정) | 17 (전 프로젝트) | AGP 8+ 요구 |
+| 저장소 | `jcenter()` | `mavenCentral()` | **JCenter 서비스 종료** |
+
+구조적 변경 네 가지.
+
+1. **`package` 속성 → `namespace`** — AGP 8부터 `AndroidManifest.xml` 의 `package` 속성이 제거되고 `build.gradle` 의 `namespace` 로 대체됐다
+2. **`buildscript` + `classpath` → `plugins` DSL**
+3. **저장소 선언을 `settings.gradle` 로 중앙화** — `pluginManagement` 와 `dependencyResolutionManagement`, `FAIL_ON_PROJECT_REPOS`
+4. **`task clean(type: Delete)` → `tasks.register`**, `rootProject.buildDir` → `rootProject.layout.buildDirectory`
+
+의존성 버전도 올렸다.
+
+```
+androidx.appcompat:appcompat               1.4.1   -> 1.7.0
+androidx.constraintlayout:constraintlayout 2.1.3   -> 2.2.1
+com.google.android.material:material       1.5.0   -> 1.12.0
+androidx.test.ext:junit                    1.1.3   -> 1.2.1
+androidx.test.espresso:espresso-core       3.4.0   -> 3.6.1
+androidx.room:room-*                       2.4.1   -> 2.6.1
+org.projectlombok:lombok                   1.18.22 -> 1.18.34
+```
+
+### 검증한 것
+
+- `jcenter()` 잔존 **0건**
+- `AndroidManifest.xml` 의 `package` 속성 잔존 **0건**
+- 7개 × 5개 파일이 의도대로 바뀌었는지 육안 확인
+- `BuildConfig` 사용처가 없어 AGP 8의 `buildFeatures.buildConfig` 기본값 변경에 영향받지 않음
+
+### ⚠ 검증하지 못한 것
+
+빌드를 돌려보지 못했다. `dl.google.com` 과 Maven Central이 차단돼 AGP·androidx를 내려받을 수 없다.
+
+**AGP 9.0은 메이저 릴리스라 제가 모르는 파괴적 변경이 있을 수 있다.** 의심 지점 셋.
+
+1. **AGP 9.0의 Groovy DSL 지원 범위** — Kotlin DSL(`build.gradle.kts`)을 강제하거나 Groovy DSL 일부 문법을 제거했을 가능성. 참고로 같은 저장소의 `Repositories/usb-tether/android` 는 이미 Kotlin DSL + compileSdk 37 이다
+2. **`minifyEnabled` / `proguardFiles` 표기**가 AGP 9에서 바뀌었을 가능성
+3. **AGP 9가 요구하는 최소 JDK** — 17로 잡았으나 21 이상일 수 있다
+
+**검증 방법**
+
+```bash
+cd Repositories/Android/Project01
+./gradlew assembleDebug --warning-mode all
+```
+
+한 개만 통과시켜 본 뒤 문제가 있으면 `tools/migrate-android.mjs` 의 상수를 고쳐 7개에 다시 적용하면 된다. 스크립트는 멱등이 아니므로 재적용 전에 `git checkout -- Repositories/Android` 로 되돌릴 것.
+
+### 손대지 않은 것
+
+`Repositories/usb-tether/android` 는 이미 `compileSdk = 37`, Kotlin DSL 로 현행 상태라 제외했다.
