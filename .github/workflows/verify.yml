@@ -1,0 +1,44 @@
+# 이 저장소는 GitHub Pages 의 "deploy from branch" 방식으로 배포된다.
+# 이 워크플로는 검증만 하며 배포에는 관여하지 않는다.
+#
+# 전체 빌드(npm run build)는 d2 바이너리와 이미지 재생성이 필요해 여기서
+# 돌리지 않는다. 대신 소스만으로 확인 가능한 타입 검사와 정합성 검사를 한다.
+
+name: verify
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # package.json 의 engines.node 와 맞춘다
+          node-version: '24'
+          cache: npm
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 타입 검사
+        run: npm run typecheck
+
+      - name: 사이트 정합성 검사
+        # 고아 HTML, 깨진 코드 참조, posts.json 정합성, 사이트맵 형식을 본다.
+        # 세부 항목은 tools/check-integrity.mjs 주석 참조.
+        run: npm run check

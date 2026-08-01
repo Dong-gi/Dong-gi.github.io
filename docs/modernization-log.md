@@ -14,6 +14,7 @@
 | 6 | 제거된 서브모듈을 가리키던 깨진 코드 참조 정리 | fix | Phase 0-3 | 깨진 참조 2건 → 0건 |
 | 7 | canonical·Open Graph·JSON-LD 메타데이터 추가 | feat | Phase 3-1 | 생성 HTML 263개 전부 갱신 |
 | 8 | 사이트 정합성 검사를 빌드에 통합 | feat | Phase 0-5 · 2-5 | 고아 355개가 쌓인 근본 원인 차단 |
+| 9 | GitHub Actions 검증 워크플로 추가 | ci | Phase 3-2 | 배포에는 관여하지 않음 |
 
 ---
 
@@ -350,3 +351,52 @@ E6는 계획서 Phase 2(Repositories 재작성)의 **선행 조건**이기도 �
 
 - 경고 11건을 어떻게 할지 결정이 필요하다. `not-registered/` 를 계속 미공개로 둘 것이라면 아예 빌드 대상에서 빼는 편이 낫다. 지금은 **HTML은 생성되지만 사이트맵·목록 어디에도 없어 아무도 찾을 수 없는 상태**다
 - `npm run build` 가 검사 실패 시 종료 코드 1로 끝난다. 산출물은 이미 쓰인 뒤이므로 "빌드를 막는" 것이 아니라 "문제를 알리는" 동작이다
+
+---
+
+## 9. GitHub Actions 검증 워크플로 추가
+
+**변경 파일**: `.github/workflows/verify.yml` (신규), `package-lock.json`
+
+### 무엇을
+
+`.github/` 디렉터리가 아예 없었다. push·PR 시 타입 검사와 정합성 검사를 돌리는 워크플로를 추가했다.
+
+```
+actions/checkout@v4
+actions/setup-node@v4 (node 24, npm 캐시)
+npm ci
+npm run typecheck
+npm run check
+```
+
+### 왜
+
+커밋 8에서 만든 검사는 로컬에서 돌려야만 의미가 있다. CI가 없으면 규칙이 지켜지는지 알 수 없고, 계획서 Phase 1·2 처럼 큰 변경을 할 때 안전망이 없다.
+
+### 어떻게 — 배포는 건드리지 않았다
+
+이 저장소는 `posts/`, `index.html`, `files/` 를 **커밋된 산출물** 그대로 서빙하는 GitHub Pages "deploy from branch" 방식이다. Actions 배포 워크플로를 추가하면 배포 방식 자체가 바뀌므로 손대지 않았다. 검증 전용이다.
+
+전체 빌드(`npm run build`)도 CI에서 돌리지 않는다. `d2` 바이너리 설치와 이미지 재생성이 필요해 느리고 깨지기 쉽다. 소스만으로 확인 가능한 두 검사만 돌린다.
+
+### `package-lock.json` 재생성
+
+`npm ci` 는 `package.json` 과 lock이 어긋나면 실패한다. 커밋 3에서 의존성을 바꿨으므로 `npm install --package-lock-only` 로 lock을 갱신했다.
+
+| 패키지 | lock 해석 결과 |
+|---|---|
+| `typescript` | 6.0.3 |
+| `@types/node` | 24.13.3 |
+
+lock에서 **424줄이 삭제**됐는데, TypeScript 7이 플랫폼별 Go 네이티브 바이너리 패키지(`@typescript/native-preview-*`)를 여럿 끌어오던 것이 사라졌기 때문이다. 설치 용량이 줄어드는 부수 효과가 있다.
+
+### 검증
+
+`.github/workflows/verify.yml` 을 YAML 파서로 읽어 구조를 확인했다. 실제 실행 결과는 push 이후에 확인해야 한다.
+
+### 리뷰 포인트
+
+- **아직 CI에서 실행해보지 않았다.** push 후 첫 실행 결과 확인이 필요하다
+- `npm ci` 가 `sharp` 프리빌트 바이너리를 받는다. 실패하면 `npm ci --ignore-scripts` 로 낮추거나 sharp를 optional로 분리하는 방법이 있다
+- 배포 자동화, 링크 체커, Lighthouse CI는 계획서 Phase 3-2에 남아 있다
