@@ -1,6 +1,6 @@
 package io.github.donggi.anno;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

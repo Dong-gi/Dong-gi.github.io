@@ -1,13 +1,13 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.0-SNAPSHOT'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'org.springframework.boot' version '4.0.0-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.1.7'
 	id 'java'
 }
 
 group = 'link4.joy'
 version = '1'
-sourceCompatibility = '15'
-targetCompatibility = '15'
+sourceCompatibility = JavaVersion.VERSION_25
+targetCompatibility = JavaVersion.VERSION_25
 
 configurations {
 	compileOnly {

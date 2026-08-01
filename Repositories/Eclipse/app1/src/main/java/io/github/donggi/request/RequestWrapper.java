@@ -1,7 +1,7 @@
 package io.github.donggi.request;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 
 public class RequestWrapper extends HttpServletRequestWrapper {
     private HttpServletRequest request;

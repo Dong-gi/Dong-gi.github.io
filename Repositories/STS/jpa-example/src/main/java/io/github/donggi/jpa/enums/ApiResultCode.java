@@ -2,7 +2,7 @@ package io.github.donggi.jpa.enums;
 
 import java.util.Map;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 import io.github.donggi.jpa.utils.EnumUtil;
 

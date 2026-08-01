@@ -2,7 +2,7 @@ package io.github.donggi.jpa.dao;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;

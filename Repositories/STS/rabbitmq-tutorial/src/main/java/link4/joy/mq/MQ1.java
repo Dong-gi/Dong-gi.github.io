@@ -1,8 +1,8 @@
 package link4.joy.mq;
 
 import java.io.IOException;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 

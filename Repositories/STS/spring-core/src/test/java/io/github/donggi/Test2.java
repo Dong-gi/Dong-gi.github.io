@@ -2,7 +2,7 @@ package io.github.donggi;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javax.validation.ValidatorFactory;
+import jakarta.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,14 +45,14 @@ class Test2 {
     }
 /*
 2020-06-29 15:29:16.015  INFO 320304 --- [           main] io.github.donggi.Test2                   : Test2Bean
-2020-06-29 15:29:16.179  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='널이어서는 안됩니다', propertyPath=msg, rootBeanClass=class io.github.donggi.bean.Test2Bean, messageTemplate='{javax.validation.constraints.NotNull.message}'}
-2020-06-29 15:29:16.179  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='10 이상이어야 합니다', propertyPath=cost, rootBeanClass=class io.github.donggi.bean.Test2Bean, messageTemplate='{javax.validation.constraints.Min.message}'}
+2020-06-29 15:29:16.179  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='널이어서는 안됩니다', propertyPath=msg, rootBeanClass=class io.github.donggi.bean.Test2Bean, messageTemplate='{jakarta.validation.constraints.NotNull.message}'}
+2020-06-29 15:29:16.179  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='10 이상이어야 합니다', propertyPath=cost, rootBeanClass=class io.github.donggi.bean.Test2Bean, messageTemplate='{jakarta.validation.constraints.Min.message}'}
 2020-06-29 15:29:16.179  INFO 320304 --- [           main] io.github.donggi.Test2                   : Test2Bean2
-2020-06-29 15:29:16.208  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='10 이상이어야 합니다', propertyPath=test2Bean.cost, rootBeanClass=class io.github.donggi.bean.Test2Bean2, messageTemplate='{javax.validation.constraints.Min.message}'}
-2020-06-29 15:29:16.208  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='널이어서는 안됩니다', propertyPath=test2Bean.msg, rootBeanClass=class io.github.donggi.bean.Test2Bean2, messageTemplate='{javax.validation.constraints.NotNull.message}'}
-2020-06-29 15:29:16.208  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='널이어서는 안됩니다', propertyPath=list1[0].msg, rootBeanClass=class io.github.donggi.bean.Test2Bean2, messageTemplate='{javax.validation.constraints.NotNull.message}'}
-2020-06-29 15:29:16.208  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='10 이상이어야 합니다', propertyPath=list1[0].cost, rootBeanClass=class io.github.donggi.bean.Test2Bean2, messageTemplate='{javax.validation.constraints.Min.message}'}
-2020-06-29 15:29:16.208  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='비어 있을 수 없습니다', propertyPath=list2, rootBeanClass=class io.github.donggi.bean.Test2Bean2, messageTemplate='{javax.validation.constraints.NotEmpty.message}'}
+2020-06-29 15:29:16.208  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='10 이상이어야 합니다', propertyPath=test2Bean.cost, rootBeanClass=class io.github.donggi.bean.Test2Bean2, messageTemplate='{jakarta.validation.constraints.Min.message}'}
+2020-06-29 15:29:16.208  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='널이어서는 안됩니다', propertyPath=test2Bean.msg, rootBeanClass=class io.github.donggi.bean.Test2Bean2, messageTemplate='{jakarta.validation.constraints.NotNull.message}'}
+2020-06-29 15:29:16.208  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='널이어서는 안됩니다', propertyPath=list1[0].msg, rootBeanClass=class io.github.donggi.bean.Test2Bean2, messageTemplate='{jakarta.validation.constraints.NotNull.message}'}
+2020-06-29 15:29:16.208  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='10 이상이어야 합니다', propertyPath=list1[0].cost, rootBeanClass=class io.github.donggi.bean.Test2Bean2, messageTemplate='{jakarta.validation.constraints.Min.message}'}
+2020-06-29 15:29:16.208  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='비어 있을 수 없습니다', propertyPath=list2, rootBeanClass=class io.github.donggi.bean.Test2Bean2, messageTemplate='{jakarta.validation.constraints.NotEmpty.message}'}
 2020-06-29 15:29:16.209  INFO 320304 --- [           main] io.github.donggi.Test2                   : Test2Bean3
 2020-06-29 15:29:16.230  INFO 320304 --- [           main] io.github.donggi.Test2                   : ConstraintViolationImpl{interpolatedMessage='문자열 길이는 짝수여야 합니다. But hello', propertyPath=msg, rootBeanClass=class io.github.donggi.bean.Test2Bean3, messageTemplate='문자열 길이는 짝수여야 합니다. But hello'}
  */

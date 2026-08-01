@@ -2,7 +2,7 @@ package io.github.donggi.service;
 
 import java.sql.SQLException;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;

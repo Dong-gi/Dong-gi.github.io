@@ -1,6 +1,6 @@
 package io.github.donggi.config;
 
-import javax.websocket.server.ServerEndpointConfig;
+import jakarta.websocket.server.ServerEndpointConfig;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;

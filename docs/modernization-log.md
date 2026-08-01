@@ -1328,3 +1328,114 @@ cd Repositories/Eclipse/annotation-processing3 && ./gradlew build   # maven-publ
 cd Repositories/Gradle/JUnit-Example && ./gradlew run        # mainClass 변경 확인
 cd Repositories/STS/netty-tutorial && ./gradlew build        # slf4j 2.x 확인
 ```
+
+---
+
+## 30. Spring 프로젝트 40개를 Jakarta EE / Spring 7 / Boot 4.0으로 이관
+
+**변경 파일**: `Repositories/STS/**`, `Repositories/Eclipse/spring-*` 의 소스·빌드 파일 234개, `pugs/dev/JVM/{spring_servlet,spring_framework,java_ee,jpa}.pug` + 생성 HTML, `tools/migrate-jakarta.mjs` (신규)
+
+### 대상
+
+| 분류 | 개수 | 기존 |
+|---|---:|---|
+| Spring Boot (Gradle) | 7 | Boot 2.2.1 ~ 2.6.0 |
+| Spring Boot (Maven) | 9 | Boot 2.1.8 ~ 2.2.2 |
+| 순수 Spring MVC (`mvc-javaN`, `mvc-xmlN`) | 24 | spring-webmvc 5.2.8.RELEASE |
+
+`mvc-javaN` 18개는 이름과 달리 Java 버전별 예제가 아니라 **Java 기반 설정을 쓰는 Spring MVC 튜토리얼 시리즈**였다(`mvc-xmlN` 은 XML 설정판). 각 프로젝트가 인터셉터·파일 업로드·다중 디스패처 등 다른 주제를 다루므로, 일괄 상향이 적절하다고 판단했다. `spring_servlet.pug` 가 이들을 참조한다.
+
+### 핵심 — `javax` 를 전부 바꾸면 안 된다
+
+Spring 6 / Boot 3부터 `javax.*` 가 `jakarta.*` 로 바뀌었지만, **`javax` 로 시작한다고 다 Jakarta EE가 아니다.** 아래는 JDK 소속이라 바꾸면 컴파일이 깨진다.
+
+| 패키지 | 소속 모듈 |
+|---|---|
+| `javax.annotation.processing` | `java.compiler` |
+| `javax.lang.model`, `javax.tools` | `java.compiler` |
+| `javax.sql` | `java.sql` (JDBC `DataSource`) |
+| `javax.crypto` | `java.base` |
+| `javax.naming` | `java.naming` |
+
+그래서 전체 치환이 아니라 **허용 목록 방식**으로 처리했다. 변환 대상은 `servlet`, `persistence`, `validation`, `websocket`, `transaction`, `enterprise`, `inject`, `el`, `mail`, `ws.rs` 와 `javax.annotation` 중 `processing`·`Generated` 를 제외한 것.
+
+결과적으로 남은 `javax` 는 전부 JDK 소속이다.
+
+```
+javax.annotation.processing / javax.lang.model / javax.tools
+javax.sql / javax.crypto / javax.naming
+```
+
+### 적용한 변경
+
+```
+javax.persistence      -> jakarta.persistence     169곳
+javax.servlet.http     -> jakarta.servlet.http     82곳
+javax.servlet          -> jakarta.servlet          56곳
+javax.servlet.jsp      -> jakarta.servlet.jsp      50곳
+javax.annotation       -> jakarta.annotation       30곳
+javax.validation       -> jakarta.validation       23곳
+javax.websocket        -> jakarta.websocket        10곳
+javax.transaction      -> jakarta.transaction       9곳
+```
+
+빌드 좌표.
+
+```
+javax.servlet:javax.servlet-api:4.0.1      -> jakarta.servlet:jakarta.servlet-api:6.1.0
+javax.servlet.jsp:javax.servlet.jsp-api    -> jakarta.servlet.jsp:jakarta.servlet.jsp-api:4.0.0
+javax.websocket:javax.websocket-api:1.1    -> jakarta.websocket:jakarta.websocket-api:2.2.0
+javax.annotation:javax.annotation-api      -> jakarta.annotation:jakarta.annotation-api:3.0.0
+spring-webmvc / -websocket  5.2.8.RELEASE  -> 7.0.0
+spring-boot-starter-parent  2.x.x.RELEASE  -> 4.0.0
+org.springframework.boot (plugin)   2.x    -> 4.0.0
+io.spring.dependency-management            -> 1.1.7
+Java  11 / 13 / 15                         -> 25
+Gradle wrapper  5.6.4 / 6.3 / 6.4.1 / 7.x  -> 9.3.1
+slf4j 1.7.30 -> 2.0.16, logback 1.2.3 -> 1.5.16
+jackson-databind 2.11.2 -> 2.18.2, lombok -> 1.18.36, freemarker -> 2.3.34
+```
+
+### 작업 중 발견한 스크립트 버그 2건
+
+정직하게 남긴다. 둘 다 **적용 후 검사에서 잡아 고쳤다.**
+
+1. **좌표 변환 순서 오류** — 패키지 치환이 먼저 돌아 그룹 ID가 `jakarta.servlet` 로 바뀐 뒤에 `javax.servlet:javax.servlet-api` 패턴을 찾으니 매칭되지 않았다. 결과가 `jakarta.servlet:javax.servlet-api:4.0.1` 이라는 **존재하지 않는 좌표**였다
+2. **`.RELEASE` 꼬리 잔존** — `5\.[\d.]+` 가 `5.2.8.` 까지 탐욕적으로 먹어 `RELEASE` 가 남았고 `7.0.0RELEASE` 가 됐다
+
+전수 grep으로 두 패턴이 0건임을 확인했다.
+
+### 문서와의 불일치 처리
+
+`spring_servlet.pug`(1,338줄)와 `spring_framework.pug`(1,578줄)는 본문이 `javax.*` 와 XML 설정을 가르치는데, 이제 연결된 예제 코드는 `jakarta.*` 다. **본문 전면 개정은 Phase 1의 1·2순위 작업이라 이번 범위를 넘어선다.**
+
+대신 네 문서(`spring_servlet`, `spring_framework`, `java_ee`, `jpa`) 상단에 배너를 넣어 불일치를 명시했다.
+
+> 본문은 Spring 5.x / javax.* 기준입니다. 연결된 예제 코드는 Spring 7 / Jakarta EE(jakarta.*)로 이관되어 본문과 차이가 있습니다. 본문 최신화는 진행 중입니다.
+
+### ⚠ 검증하지 못한 것 — 이번 커밋이 가장 위험하다
+
+**1. Spring Boot 4.0 고유의 파괴적 변경을 반영하지 못했다.**
+Boot 2 → 4는 메이저를 두 번 건너뛴다. 제가 아는 것은 Boot 3의 변경(jakarta 전환, Java 17+)까지이고, **Boot 4에서 무엇이 더 바뀌었는지는 확신할 수 없다.** 모듈 재구성, 프로퍼티 키 변경, 자동 설정 클래스 이동 등이 있을 수 있다. 공식 마이그레이션 가이드 대조가 필요하다.
+
+**2. Spring Framework 7.0.0 이라는 버전이 실제로 존재하는지 확인하지 못했다.** 패치 번호가 다를 수 있다.
+
+**3. `spring-boot-starter-parent` 를 쓰는 프로젝트는 개별 라이브러리 버전을 명시하면 안 된다.** parent가 관리하는 버전과 충돌할 수 있다. slf4j·logback·jackson 버전을 올린 것이 Boot 관리 버전과 어긋날 가능성이 있다.
+
+**4. JSP / `web.xml` 기반 프로젝트** — `web.xml` 10개가 여전히 `web-app_2_3.dtd` DOCTYPE을 쓴다. Jakarta Servlet 6.1에서는 `jakarta.ee` 네임스페이스의 `web-app_6_0.xsd` 로 바꿔야 한다. **이번에 손대지 않았다.**
+
+**5. Tomcat 버전** — Jakarta Servlet 6.1은 Tomcat 11 이상이 필요하다. WAR 배포 대상 서버도 함께 올려야 한다.
+
+**검증 방법**
+
+```bash
+# 가장 단순한 것부터
+cd Repositories/STS/mvc-java1     && ./gradlew build
+cd Repositories/STS/app2          && ./gradlew build   # Spring Boot 4 Gradle
+cd Repositories/Eclipse/spring-aop && mvn -q compile    # Spring Boot 4 Maven
+cd Repositories/STS/jpa-example   && ./gradlew build   # jakarta.persistence
+cd Repositories/STS/mvc-java16    && ./gradlew build   # websocket
+cd Repositories/STS/mvc-xml2      && ./gradlew build   # web.xml + JSP
+```
+
+`mvc-java1` 하나만 통과시켜도 좌표·네임스페이스가 맞는지 대부분 판명된다. 되돌리려면 `git revert` 로 이 커밋만 떼어내면 된다.

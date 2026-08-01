@@ -1,7 +1,7 @@
 package io.github.donggi.mvc.config;
 
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.ServletContext;
+import jakarta.servlet.MultipartConfigElement;
+import jakarta.servlet.ServletContext;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;

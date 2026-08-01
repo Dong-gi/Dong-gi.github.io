@@ -1,6 +1,6 @@
 package io.github.donggi.jpa.entity;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

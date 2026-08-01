@@ -6,7 +6,7 @@ plugins {
 
 group = 'io.github.donggi'
 version = '0.0.1'
-sourceCompatibility = JavaVersion.VERSION_13
+sourceCompatibility = JavaVersion.VERSION_25
 
 eclipse {
     project.natures "org.springsource.ide.eclipse.gradle.core.nature"
@@ -17,6 +17,6 @@ repositories {
 }
 
 dependencies {
-	providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
-	providedCompile 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
+	providedCompile 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+	providedCompile 'jakarta.servlet.jsp:jakarta.servlet.jsp-api:4.0.0'
 }

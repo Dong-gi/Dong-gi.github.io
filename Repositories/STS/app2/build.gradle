@@ -1,13 +1,13 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.2.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'org.springframework.boot' version '4.0.0'
+	id 'io.spring.dependency-management' version '1.1.7'
 	id 'java'
     id 'war'
 }
 
 group = 'io.github.donggi'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_25
 
 configurations {
 	compileOnly {
@@ -22,7 +22,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
-    implementation 'javax.inject:javax.inject:1'
+    implementation 'jakarta.inject:jakarta.inject:1'
     implementation 'org.apache.commons:commons-collections4:4.4'
     implementation 'org.jboss.logging:jboss-logging:3.4.1.Final'
     compileOnly 'org.projectlombok:lombok'

@@ -1,6 +1,6 @@
 package io.github.donggi.mvc.request;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 import lombok.Data;
 

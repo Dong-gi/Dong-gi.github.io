@@ -2,7 +2,7 @@ package io.github.donggi.mvc.request;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import lombok.Data;
 

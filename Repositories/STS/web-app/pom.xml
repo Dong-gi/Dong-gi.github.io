@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.2.RELEASE</version>
+        <version>4.0.0</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.github.donggi</groupId>
@@ -17,7 +17,7 @@
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>25</java.version>
     </properties>
 
     <dependencies>
@@ -43,8 +43,8 @@
             <artifactId>spring-websocket</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
+            <groupId>jakarta.websocket</groupId>
+            <artifactId>jakarta.websocket-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

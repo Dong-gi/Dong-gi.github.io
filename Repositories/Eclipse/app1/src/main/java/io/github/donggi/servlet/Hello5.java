@@ -2,10 +2,10 @@ package io.github.donggi.servlet;
 
 import java.util.logging.Logger;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 
 @WebServlet(urlPatterns = { "/no_need_to_call_this" }, loadOnStartup = 10)
 public class Hello5 extends HttpServlet {
