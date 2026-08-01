@@ -1598,3 +1598,62 @@ npm ci && npm run typecheck && npm run build
 ```
 
 빌드 후 `npm run check` 가 자동으로 돌며, 오류 0건이어야 한다. 경고 11건(`posts.json` 미등록 문서)은 알려진 상태다.
+
+---
+
+## 33. `JavaEE` 문서를 Jakarta EE 11 기준으로 갱신
+
+**변경 파일**: `pugs/dev/JVM/java_ee.pug` (363 → 486줄), `posts/dev/JVM/java_ee.html`, `source/posts.json`
+
+커밋 30에서 예제 코드를 `jakarta.*` 로 옮기면서 문서와 어긋나게 만든 부채를 갚는 첫 작업이다. 제목도 `JavaEE` → `Jakarta EE` 로 바꿨다(URL은 `java_ee.html` 그대로라 리다이렉트 불필요).
+
+### 구성
+
+`+legacy` mixin의 첫 실사용이다. **기존 본문 353줄을 그대로 접고 그 위에 새 내용을 올렸다.**
+
+```pug
++post({ title: 'Jakarta EE', ... })
+
+    p.version-note Jakarta EE 11(2025-06-26) 기준으로 정리했습니다. ...
+
+    //- 새 내용 8개 절
+
+    +legacy('Java EE 8 / javax.*', 'Tomcat 9 이하 기준. Jakarta EE 9 부터 네임스페이스가 바뀌었습니다')
+        //- 기존 353줄을 들여쓰기만 해서 통째로
+```
+
+기존 본문은 **내용을 한 글자도 고치지 않고 4칸 들여쓰기만 했다.** Tomcat 8.0.52 경로, `javax.sql.DataSource`, JSP 스크립틀릿, MyBatis 설정 등이 그대로 남아 있어 구버전 환경을 쓰는 방문자에게는 여전히 유효하다.
+
+### 새로 쓴 내용
+
+| 절 | 요지 |
+|---|---|
+| Java EE → Jakarta EE | 2017 이관, 2018 이름 투표, **2019 상표권 협상 결렬**, 2020 big bang 전환 |
+| 버전 이력 | EE 8 ~ 11 표. 필요 Java, 네임스페이스, 핵심 변경 |
+| EE 11 사양 버전 | Servlet 6.1, Persistence 3.2, CDI 4.1, REST 4.0 등 |
+| 체감 변화 | Servlet 6.0/6.1, Persistence 3.2, **CDI 4.0의 `beans.xml` 파괴적 변경** |
+| `web.xml` 스키마 | EE 11 / EE 8 헤더 대조 |
+| 구현체 | Tomcat·Jetty·GlassFish·WildFly·Payara 버전 대응표 |
+| JSP의 현재 위치 | 유지보수 모드, Faces 4.0에서 뷰 기술로서 제거됨 |
+| 제거·폐기 | EE 9 / 10 / 11 각각 |
+
+특히 강조한 세 가지.
+
+1. **`javax` 로 시작한다고 다 Jakarta EE가 아니다** — `javax.sql`, `javax.crypto`, `javax.naming`, `javax.annotation.processing`, `javax.lang.model`, `javax.tools` 는 JDK 소속이다. 커밋 30에서 실제로 부딪힌 함정이라 코드 블록으로 명시했다
+2. **CDI 4.0에서 빈 `beans.xml` 의 의미가 바뀌었다** — explicit → implicit bean archive. "주입되던 것이 갑자기 안 되는" 전형적 원인
+3. **Tomcat 9가 `javax` 를 지원하는 마지막 메이저다** — Jakarta로 올리면 10.1 이상, Servlet 6.1을 쓰려면 11이 필요
+
+### 검증
+
+- 렌더 성공, `h1` 12개, `legacy` 블록 1개
+- **새로 쓴 코드 블록 11개 전부 부등호 이스케이프 검사 통과**
+- `posts.json` diff는 제목 1줄
+- 정합성 검사 오류 0건
+
+### 알려진 잔여 문제
+
+접어둔 구 본문의 코드 블록 10개가 `<` 는 `&lt;` 로 이스케이프하면서 `>` 는 그대로 두고 있다. **기존 문제이며 이번에 건드리지 않았다.** HTML 파서가 관대해 렌더는 정상이지만 일관성은 없다.
+
+### 출처
+
+`jakarta.ee` 릴리스 페이지(8/9/10/11/12), Servlet 6.0·6.1 XSD 원문, Eclipse Foundation 상표권 블로그, `tomcat.apache.org/whichversion.html`, 각 구현체 릴리스 노트.
