@@ -8,8 +8,22 @@
 |---|---|
 | Phase 0 — 결함 수정 | **완료** (커밋 2~6, 8, 11) |
 | Phase 3-1~3-3 — SEO·CI·문서화 | **완료** (커밋 7, 9, 10, 13) |
-| Phase 2 — Repositories | **기계적 정리만 완료** (커밋 17~19). 재작성은 미착수 |
+| Phase 2 — Repositories | **재작성 완료, 빌드 미검증** (커밋 17~19, 26~31) |
 | Phase 1 — 포스트 최신화 | **착수** (커밋 20~22). 우선순위 20건 중 1건 완료 |
+
+Phase 2에서 손댄 프로젝트는 **72개**다.
+
+| 분류 | 개수 | 내용 |
+|---|---:|---|
+| Spring | 40 | Jakarta EE 전환, Spring 7 / Boot 4.0, Java 25 |
+| .NET | 17 | net6.0 → net10.0 |
+| Node | 10 | `engines` 선언 |
+| Android | 7 | compileSdk 36 / AGP 9 |
+| Maven (Spring 외) | 8 | Java 25, `maven.compiler.release` |
+| Gradle (Spring 외) | 6 | Gradle 9.3.1, Java 25, 제거된 API 정리 |
+| 삭제 | 4 | 미참조 예제 |
+
+**커밋 26 이후는 빌드로 검증하지 못했다.** 문서 맨 아래 [검증 체크리스트](#검증-체크리스트)를 참조.
 
 **Phase 2의 프레임워크 재작성(Spring Boot 4.0 / .NET 10 / compileSdk 36)은 이 환경에서 검증할 수 없다.** 다만 그 이유는 처음에 적었던 것과 다르다.
 
@@ -88,6 +102,12 @@ Phase 1의 남은 우선순위 문서다. 문서당 공식 자료 조사가 필�
 | 24 | 문서 Java 예제 7개를 JDK 25로 실행 검증 | docs | — | 전부 통과 |
 | 25 | 예제 소스 132개의 Java 25 호환성 측정 | docs | Phase 2 사전 조사 | 비호환 0건 |
 | 26 | Android 7개를 compileSdk 36 / AGP 9로 이관 | feat | Phase 2-3 | ⚠ **빌드 미검증** |
+| 27 | .NET 17개를 net10.0으로 이관 | feat | Phase 2-3 | ⚠ 빌드 미검증 |
+| 28 | Spring 미사용 Gradle 6개를 Gradle 9.3.1 / Java 25로 | feat | Phase 2-3 | ⚠ 빌드 미검증 |
+| 29 | Spring 미사용 Maven 8개를 Java 25로 | feat | Phase 2-3 | ⚠ 빌드 미검증 |
+| 30 | Spring 40개를 Jakarta EE / Boot 4.0으로 이관 | feat | Phase 2-3 | ⚠ **위험도 최상** |
+| 31 | Node 10개에 `engines`, 홈 빌드 안내 정정 | feat | Phase 2-4 | `build-all` 은 없는 스크립트였음 |
+| 32 | 검증 체크리스트 작성 | docs | — | 위험도 순 8개 항목 |
 
 ---
 
