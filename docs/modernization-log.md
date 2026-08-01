@@ -9,7 +9,7 @@
 | Phase 0 — 결함 수정 | **완료** (커밋 2~6, 8, 11) |
 | Phase 3-1~3-3 — SEO·CI·문서화 | **완료** (커밋 7, 9, 10, 13) |
 | Phase 2 — Repositories | **재작성 완료, 빌드 미검증** (커밋 17~19, 26~31) |
-| Phase 1 — 포스트 최신화 | **진행 중** (커밋 20~22, 33~35). 우선순위 20건 중 3건 완료 |
+| Phase 1 — 포스트 최신화 | **진행 중** (커밋 20~22, 33~37). 우선순위 20건 중 6건 완료 |
 
 Phase 2에서 손댄 프로젝트는 **72개**다.
 
@@ -62,10 +62,8 @@ Phase 1의 남은 우선순위 문서다. 문서당 공식 자료 조사가 필�
 | 1 | `dev/JVM/spring_framework.pug` | 1,578 | Spring 5.x → 7, `javax.*` → `jakarta.*` (커밋 30에서 코드는 이미 이관됨) |
 | 2 | `dev/JVM/spring_servlet.pug` | 1,338 | 위와 동일 + JSP/XML 전제 |
 | 3 | `dev/python/standard.pug` | 2,148 | `Since 3.8` 상한 → 3.14 |
-| 4 | `dev/dotnet/csharp.pug` | 1,562 | `.NET 6` / C# 10 → .NET 10 / C# 14 |
-| — | `dev/JVM/jpa.pug` | | Jakarta EE 이관 (java_ee 는 커밋 33에서 완료) |
 | — | `dev/rpi.pug` | 395 | 2017년 Raspbian Stretch → 현행 |
-| — | `project/error.pug` | 367 | 종료된 Heroku 무료 티어 절 정리 |
+| — | ~~`project/error.pug`~~ | 367 | **대상 아님** — 무료 티어 내용이 없고, 항목마다 날짜가 붙은 트러블 로그라 시점 기록이 문서의 성격이다 |
 
 **커밋 11~15는 커밋 1~10에 대한 독립 리뷰에서 나온 지적을 반영한 것이다.** 리뷰는 별도 에이전트가 코드를 직접 실행·대조해 수행했고, CI를 막는 문제 1건과 잘못된 서술 여러 건을 찾아냈다.
 
@@ -110,6 +108,8 @@ Phase 1의 남은 우선순위 문서다. 문서당 공식 자료 조사가 필�
 | 33 | `JavaEE` 문서를 Jakarta EE 11 기준으로 갱신 | feat | Phase 1-2 | +legacy 첫 실사용 |
 | 34 | Python 입문 문서를 3.14 기준으로 갱신 | feat | Phase 1-2 | 359 → 504줄 |
 | 35 | 커밋 21에서 놓친 제목 박제 8건 정리 | fix | Phase 1-3 | posts.json 쪽에만 남아 있었음 |
+| 36 | JPA 문서를 Jakarta Persistence 3.2 기준으로 | feat | Phase 1-2 | 불일치 배너 2/4 제거 |
+| 37 | C#/.NET·WPF 문서를 .NET 10 / C# 14 기준으로 | feat | Phase 1-2 | 예제 17개 파괴적 변경 검사 포함 |
 
 ---
 
