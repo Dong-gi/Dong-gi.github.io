@@ -954,11 +954,15 @@ include ../../source/skeleton.pug
                 mavenCentral()
             }
             dependencies {
-                compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+                implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
 
-                providedCompile '' // 빌드 시 사용 && 출력에 미포함
-                compile ''         // 빌드 시 사용 && 출력에 포함
-                testCompile 'junit:junit:4.11'     // 테스트에만 필요
+                compileOnly ''            // 컴파일에만 사용, 런타임/출력에 미포함
+                providedCompile ''        // war 플러그인. 컨테이너가 제공하므로 출력에 미포함
+                implementation ''         // 빌드 시 사용 &amp;&amp; 출력에 포함. 소비자에게 노출 안 됨
+                api ''                    // java-library 플러그인. 소비자에게 전이 노출
+                runtimeOnly ''            // 런타임에만 필요
+                testImplementation 'junit:junit:4.13.2'   // 테스트에만 필요
+                annotationProcessor ''    // 애너테이션 프로세서
             }
 
         h2 사용자 정의 플러그인

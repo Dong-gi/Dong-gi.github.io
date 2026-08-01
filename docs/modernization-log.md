@@ -46,6 +46,7 @@ HTML 617개 (현행 262, 리다이렉트 308, 보존 47, 새 고아 0) / posts.j
 | 16 | 최종 검증, `gradle.html` 날짜 재생성 | chore | — | mtime 취약성의 실물 사례 |
 | 17 | 미참조 예제 프로젝트 4개 삭제 | chore | Phase 2-1 | 122 → 118개 |
 | 18 | 커밋된 컴파일 산출물 25개 제거 | chore | Phase 2-4 | 계획서의 잘못된 서술도 정정 |
+| 19 | Gradle 7에서 제거된 의존성 설정 158줄 교체 | fix | Phase 2-4 | 문서의 잘못된 예시도 갱신 |
 
 ---
 
@@ -805,3 +806,54 @@ local.properties
 
 - `git ls-files Repositories` 2,063건 중 산출물 패턴 매칭 → 수정 전 25건, 수정 후 0건
 - `.gitignore` 규칙이 `Chrome Proxy Extension` 등 다른 프로젝트에 영향을 주지 않는지 확인 (해당 경로에 `bin/` 없음)
+
+---
+
+## 19. Gradle 7에서 제거된 의존성 설정 158줄 교체
+
+**변경 파일**: `Repositories/**/build.gradle` 25개, `pugs/dev/gradle.pug`, `posts/dev/gradle.html`
+
+### 무엇을
+
+| 기존 | 변경 | 줄 수 | 파일 |
+|---|---|---:|---:|
+| `compile` | `implementation` | 134 | 25 |
+| `testCompile` | `testImplementation` | 24 | 24 |
+
+### 왜
+
+`compile` 과 `testCompile` 은 Gradle 4.10에서 deprecated, **Gradle 7에서 제거**됐다. 현재 예제들이 Gradle 5/6에 묶여 있는 이유 중 하나다. Phase 2의 Gradle 9.3.1 이관을 하려면 어차피 먼저 걷어내야 한다.
+
+`implementation` 은 Gradle 3.4부터 있으므로 **현재의 Gradle 5/6에서도 그대로 동작한다.** 즉 이 커밋만으로 깨지는 것은 없고, 앞으로의 이관 장벽만 낮아진다.
+
+`api` 가 아니라 `implementation` 을 택한 이유는 이 프로젝트들이 라이브러리가 아니라 독립 실행 예제·웹앱이기 때문이다. 소비자에게 전이 노출할 대상이 없다.
+
+### 건드리지 않은 것
+
+`providedCompile`(76건)은 `war` 플러그인이 제공하는 설정으로 Gradle 7 이후에도 유효하다. `annotationProcessor`, `compileOnly` 도 마찬가지다. 치환 스크립트가 이들을 훼손하지 않았는지 개수로 확인했다.
+
+### 문서의 잘못된 예시도 갱신
+
+`pugs/dev/gradle.pug` 의 dependencies 예시가 제거된 설정을 그대로 가르치고 있었다. 현행 설정 전체로 다시 썼다.
+
+```diff
+-providedCompile '' // 빌드 시 사용 && 출력에 미포함
+-compile ''         // 빌드 시 사용 && 출력에 포함
+-testCompile 'junit:junit:4.11'     // 테스트에만 필요
++compileOnly ''            // 컴파일에만 사용, 런타임/출력에 미포함
++providedCompile ''        // war 플러그인. 컨테이너가 제공하므로 출력에 미포함
++implementation ''         // 빌드 시 사용 && 출력에 포함. 소비자에게 노출 안 됨
++api ''                    // java-library 플러그인. 소비자에게 전이 노출
++runtimeOnly ''            // 런타임에만 필요
++testImplementation 'junit:junit:4.13.2'   // 테스트에만 필요
++annotationProcessor ''    // 애너테이션 프로세서
+```
+
+### 검증
+
+- 제거된 설정(`compile`/`testCompile`/`runtime`/`testRuntime`) 잔존 **0줄**
+- `providedCompile` 76건 그대로 보존
+- `implementation`/`testImplementation` 221줄
+- gradle.html 재렌더 후 정합성 검사 오류 0건
+
+> ⚠ **빌드로는 검증하지 못했다.** 이 샌드박스에 `gradle`·`javac` 가 없다. 설정 이름 치환은 Gradle 공식 마이그레이션 가이드의 1:1 대응이고 문법 변화가 없어 위험이 낮다고 판단했으나, 실제 빌드 확인은 로컬에서 한 번 필요하다.
