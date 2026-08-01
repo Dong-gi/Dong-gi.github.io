@@ -66,14 +66,14 @@ include ./source/skeleton.pug
         li 블로그 빌드
             +asCode('shell').
                 # https://github.com/nvm-sh/nvm
-                $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-                $ nvm install 20
+                $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+                $ nvm install 24   # package.json 의 engines 가 24 이상을 요구한다
 
                 # https://d2lang.com/
                 $ curl -fsSL https://d2lang.com/install.sh | sh -s --
 
-                $ npm install
-                $ npm run build-all
+                $ npm ci
+                $ npm run build
 
         li 외부 배포
             +asCode('shell').

@@ -7,5 +7,8 @@
   "scripts": {
     "test": "node --test"
   },
-  "//": "type=module 은 extension/**/*.js 가 Node 에서 ESM 으로 해석되게 하려는 것이다. 확장 동작에는 영향이 없다."
+  "//": "type=module 은 extension/**/*.js 가 Node 에서 ESM 으로 해석되게 하려는 것이다. 확장 동작에는 영향이 없다.",
+  "engines": {
+    "node": ">=24"
+  }
 }

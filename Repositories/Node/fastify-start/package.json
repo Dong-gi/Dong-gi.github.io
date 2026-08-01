@@ -8,6 +8,9 @@
   },
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
   "dependencies": {
     "fastify": "^3.27.1",
     "fastify-cors": "^6.0.2"

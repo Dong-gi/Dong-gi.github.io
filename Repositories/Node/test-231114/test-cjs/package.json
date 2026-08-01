@@ -7,5 +7,8 @@
   },
   "dependencies": {
     "@hi.donggi/test-231114": "file:../hi.donggi-test-231114-2.0.0.tgz"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

@@ -8,6 +8,9 @@
   },
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
   "devDependencies": {
     "mocha": "^7.1.1"
   }

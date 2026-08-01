@@ -8,6 +8,9 @@
   },
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
   "description": "",
   "dependencies": {
     "youtubei.js": "^16.0.1"

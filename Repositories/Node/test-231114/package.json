@@ -15,6 +15,9 @@
   },
   "author": "hi.donggi@gmail.com",
   "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
   "dependencies": {
     "lru-cache": "^11.2.4"
   },

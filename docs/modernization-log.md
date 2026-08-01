@@ -1439,3 +1439,40 @@ cd Repositories/STS/mvc-xml2      && ./gradlew build   # web.xml + JSP
 ```
 
 `mvc-java1` 하나만 통과시켜도 좌표·네임스페이스가 맞는지 대부분 판명된다. 되돌리려면 `git revert` 로 이 커밋만 떼어내면 된다.
+
+---
+
+## 31. Node 프로젝트 10개에 `engines` 선언 추가, 홈의 빌드 안내 정정
+
+**변경 파일**: `Repositories/**/package.json` 10개, `index.pug`, `index.html`
+
+### `engines` 추가
+
+10개 `package.json` 전부에 아래를 넣었다.
+
+```json
+"engines": { "node": ">=24" }
+```
+
+Node 24가 Active LTS(2025-10-28 승격)다. Node 20은 2026-04-30, 22는 Maintenance, 25는 2026-06-01에 EOL됐다.
+
+`engines` 는 npm이 기본으로 강제하지 않는다. 강제하려면 `.npmrc` 에 `engine-strict=true` 가 필요하다. 여기서는 **의도 표시**로만 넣었다.
+
+### 홈페이지의 빌드 안내가 틀려 있었다
+
+`index.pug` 의 "Oracle Cloud에 블로그 띄우는 절차" 절이 이렇게 되어 있었다.
+
+```diff
+-$ nvm install 20            # Node 20 은 2026-04-30 EOL
++$ nvm install 24            # package.json 의 engines 가 24 이상을 요구한다
+-$ npm install
++$ npm ci                    # lock 을 그대로 재현
+-$ npm run build-all         # 존재하지 않는 스크립트
++$ npm run build
+```
+
+**`npm run build-all` 은 존재하지 않는 스크립트다.** `package.json` 에 정의된 것은 `build`, `check`, `typecheck` 셋뿐이다. 이 안내를 그대로 따라 하면 실패한다. nvm 설치 스크립트 버전도 v0.39.7 → v0.40.1 로 올렸다.
+
+### 손대지 않은 의존성
+
+`express-start` 의 `mongodb ^3.5.6`, `jade 1.11.0`, `mocha 7.1.1`, `fastify-start` 의 `fastify ^3.27.1` 등은 그대로 두었다. 전부 메이저 업그레이드가 필요한데(`jade` 는 아예 `pug` 로 개명된 후 폐기), 예제 코드까지 함께 고쳐야 하므로 별도 작업이다.
