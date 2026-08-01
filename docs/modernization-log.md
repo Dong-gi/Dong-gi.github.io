@@ -11,7 +11,19 @@
 | Phase 2 — Repositories | **기계적 정리만 완료** (커밋 17~19). 재작성은 미착수 |
 | Phase 1 — 포스트 최신화 | **착수** (커밋 20~22). 우선순위 20건 중 1건 완료 |
 
-**Phase 2의 프레임워크 재작성(Spring Boot 4.0 / .NET 10 / compileSdk 36)은 이 환경에서 검증할 수 없다.** 샌드박스에 `javac`·`gradle`·`mvn`·`dotnet` 이 없어 빌드가 되는지 확인할 방법이 없다. 검증하지 못한 업그레이드를 커밋하는 대신, 빌드 없이 확인 가능한 작업(미참조 프로젝트 삭제, 산출물 제거, Gradle 설정 이름 교체)만 처리했다.
+**Phase 2의 프레임워크 재작성(Spring Boot 4.0 / .NET 10 / compileSdk 36)은 이 환경에서 검증할 수 없다.** 다만 그 이유는 처음에 적었던 것과 다르다.
+
+| 항목 | 상태 |
+|---|---|
+| JDK 25.0.3 (`javac` 포함) | **설치 가능** — `apt-get download` + `dpkg -x`, root 불필요 |
+| Maven Central | 차단 |
+| Gradle 배포본 (`services.gradle.org`) | 차단 |
+| GitHub raw / releases API | 차단 |
+| NuGet, .NET SDK, Android SDK (`dl.google.com`) | 차단 |
+
+즉 **컴파일러는 있지만 의존성을 하나도 내려받을 수 없다.** Spring·Android·.NET 프로젝트는 빌드 자체가 시작되지 않는다. 검증하지 못한 업그레이드를 커밋하는 대신, 확인 가능한 작업(미참조 프로젝트 삭제, 산출물 제거, Gradle 설정 이름 교체)만 처리했다.
+
+반대로 **의존성이 없는 Java 코드는 실제로 컴파일·실행해 검증할 수 있다.** 커밋 22의 예제 7개를 이 방법으로 전수 검증했다.
 
 ```
 $ npm run typecheck
@@ -72,6 +84,8 @@ Phase 1의 남은 우선순위 문서다. 문서당 공식 자료 조사가 필�
 | 20 | 구버전 접기 `+legacy` mixin 추가 | feat | Phase 1-1 | Phase 1의 전제 |
 | 21 | 제목에 박제된 버전 13건 정리 | refactor | Phase 1-3 | URL은 그대로, 제목만 변경 |
 | 22 | `Java 버전` 문서를 Java 26까지 갱신 | feat | Phase 1-2 (1순위) | 212 → 482줄 |
+| 23 | 진행 상태 정리 | docs | — | 다음 작업 목록 포함 |
+| 24 | 문서 Java 예제 7개를 JDK 25로 실행 검증 | docs | — | 전부 통과 |
 
 ---
 
@@ -1073,4 +1087,20 @@ record pattern + switch, virtual thread, sequenced collections, unnamed variable
 
 조사는 `openjdk.org` 의 릴리스 페이지(`/projects/jdk/17` ~ `/26`)와 개별 JEP 문서, Oracle Java SE 지원 로드맵, Adoptium 지원표를 대조해 수행했다.
 
-> JEP 506·512·519 원문은 fetch가 빈 응답을 반환해 직접 읽지 못했다. 세 건 모두 JDK 25 릴리스 페이지에 preview 표기 없이 올라와 있는 것으로 정식화를 확인했고 세부 내용은 2차 자료로 교차 검증했다. **특히 JEP 512 예제의 `IO.println` 호출 형태는 2차 자료 기준이므로 한 번 더 확인이 필요하다.**
+> JEP 506·512·519 원문은 fetch가 빈 응답을 반환해 직접 읽지 못했다. 세 건 모두 JDK 25 릴리스 페이지에 preview 표기 없이 올라와 있는 것으로 정식화를 확인했고 세부 내용은 2차 자료로 교차 검증했다.
+
+### 코드 예제 실행 검증 (커밋 23에서 추가)
+
+샌드박스에 **JDK 25.0.3을 설치해 문서의 예제 7개를 전부 실제로 실행했다.** 전부 통과했다.
+
+| 예제 | JEP | 실행 결과 |
+|---|---|---|
+| Compact Source File + Module Import | 512, 511 | `[1, 2, 3]` |
+| Record Pattern + sealed switch | 440, 441 | `12.0` |
+| Sequenced Collections | 431 | `[z, a, b, c] / c / [c, b, a, z]` |
+| Stream Gatherers | 485 | `[[1, 2, 3], [4, 5, 6], [7]]` |
+| Scoped Values | 506 | `alice` |
+| Virtual Threads 1만 개 | 444 | 1,073ms에 완료 |
+| Unnamed Variables | 456 | `*** x=7` |
+
+**2차 자료 기준이라 재확인이 필요하다고 적었던 JEP 512의 `IO.println` 호출 형태가 정확했음이 확인됐다.** `import module java.base;` 와 클래스 선언 없는 `void main()` 조합도 그대로 동작한다.
