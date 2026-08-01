@@ -5,6 +5,23 @@ include ../../../source/skeleton.pug
     description: 'Java 버전별 추가사항 정리',
 })
 
+    p.version-note Java 26(2026-03 GA)까지 정리. Preview·Incubator·Experimental 단계 기능은 제외하고 정식화(final)된 것만 담았습니다.
+
+    h1 어떤 버전을 쓸 것인가
+    ul
+        li 신규 프로젝트는 #[strong Java 25], 운영 중인 시스템은 21 유지 후 25로 이관하는 것이 2026년 8월 기준 무난한 선택이다
+        li Java 25 (LTS) : Oracle Premier Support 2030-09. Oracle JDK를 무상 NFTC 라이선스로 쓸 수 있는 유일한 LTS
+        li Java 21 (LTS) : Premier 2028-09. 다만 #[strong 2026년 9월부터 Oracle JDK 21 업데이트가 무상 NFTC에서 OTN 라이선스로 전환]된다. 무상으로 계속 쓰려면 Temurin 등 OpenJDK 빌드로 가거나 25로 올린다
+        li Java 17 (LTS) : Oracle Premier Support가 #[strong 2026년 9월 종료]. Temurin은 2027-10까지
+        li Java 11 / 8 : 보안 패치는 나오지만 신규 채택 이유가 없다
+        li: +asA('https://www.oracle.com/java/technologies/java-se-support-roadmap.html', 'Oracle Java SE 지원 로드맵')
+    ul
+        li 이관의 실질 동인
+        ul
+            li 17 → 21 : 가상 스레드, 패턴 매칭
+            li 21 → 25 : AOT 캐시(기동 시간 단축), Scoped Values, #[+asA('https://openjdk.org/jeps/491', 'JEP 491')]의 가상 스레드 피닝 해소
+        li JEP 491은 21에서 가상 스레드 도입을 막던 가장 큰 장애물이었다. #[+asInlineCode('synchronized', 'java')] 블록에서 가상 스레드가 캐리어 스레드에 고정되던 문제다. 가상 스레드를 본격적으로 쓸 계획이면 21보다 25가 맞다
+
     h1 Java 8
     ul
         li 람다 표현식 추가
@@ -84,7 +101,7 @@ include ../../../source/skeleton.pug
     h1 Java 10
     ol
         li
-            +asA('https://openjdk.java.net/jeps/286')
+            +asA('https://openjdk.org/jeps/286')
             |타입 추론 강화로 지역 변수의 타입 선언에 var를 이용할 수 있게 되었다
         ul
             li 지역변수를 선언하면서 초기화할 때 이용 가능
@@ -97,44 +114,44 @@ include ../../../source/skeleton.pug
     h1 Java 11
     ol
         li
-            +asA('https://openjdk.java.net/jeps/318')
+            +asA('https://openjdk.org/jeps/318')
             |Epsilon : 기능없는 GC
         p 메모리 할당만 하는 GC. 힙 고갈 시 JVM 셧다운
         li
-            +asA('https://openjdk.java.net/jeps/321')
+            +asA('https://openjdk.org/jeps/321')
             |HTTP/2, WebSocket API를 지원하는 java.net.http 표준 모듈 추가
         li
-            +asA('https://openjdk.java.net/jeps/323')
+            +asA('https://openjdk.org/jeps/323')
             |람다의 암시적인 매개변수 선언에 var 키워드 사용 가능
-        +asCode('java') (@NonNull var x, @NonNull var y) -> x.process(y);
+        +asCode('java') (@NonNull var x, @NonNull var y) -&gt; x.process(y);
         li
-            +asA('https://openjdk.java.net/jeps/324')
+            +asA('https://openjdk.org/jeps/324')
             |디피-헬만 키 교환보다 효율적이고 안전한
             +asA('https://tools.ietf.org/html/rfc7748')
             |의 구현
         li
-            +asA('https://openjdk.java.net/jeps/327')
+            +asA('https://openjdk.org/jeps/327')
             |유니코드 10.0 지원
         li
-            +asA('https://openjdk.java.net/jeps/330')
+            +asA('https://openjdk.org/jeps/330')
             |단일 파일 프로그램(Standalone)에 대해 간편한 실행 가능
         +asCode('shell') java Name.java [params] # Name.java를 컴파일하고 즉시 실행
         li
-            +asA('https://openjdk.java.net/jeps/332')
+            +asA('https://openjdk.org/jeps/332')
             |TLS 1.3 지원
 
     h1 Java 14
     ol
         li
-            +asA('https://openjdk.java.net/jeps/352')
+            +asA('https://openjdk.org/jeps/352')
             |비휘발성 메모리에 매핑하는 ByteBuffer 추가
         p jdk.nio.mapmode.ExtendedMapMode 이용
         li
-            +asA('https://openjdk.java.net/jeps/358')
+            +asA('https://openjdk.org/jeps/358')
             |친절한 NullPointerException
         p 누가 null인지 출력해준다. 출력에 사용되는 이름들은 바이트코드에 있는 정보이므로, 정확한 설명을 얻으려면 컴파일 시 필드명을 모두 남기도록 해야한다
         li
-            +asA('https://openjdk.java.net/jeps/361')
+            +asA('https://openjdk.org/jeps/361')
             |Switch expressions
         ul
             +codeBtn('/Repositories/Single/tutorial/SwitchExpression.java', 'java')
@@ -150,27 +167,27 @@ include ../../../source/skeleton.pug
     h1 Java 15
     ol
         li
-            +asA('https://openjdk.java.net/jeps/377')
+            +asA('https://openjdk.org/jeps/377')
             |ZGC: A Scalable Low-Latency Garbage Collector
         li
-            +asA('https://openjdk.java.net/jeps/378')
+            +asA('https://openjdk.org/jeps/378')
             |Text block
         p """를 이용해 여러 줄에 걸쳐 문자열 상수 작성 가능. ', " 이스케이프가 필요없어 편리
         li
-            +asA('https://openjdk.java.net/jeps/379')
+            +asA('https://openjdk.org/jeps/379')
             |Shenandoah: A Low-Pause-Time Garbage Collector
         li String.formatted(Object... args) 메서드 추가로 타이핑 용이
 
     h1 Java 16
     ol
         li
-            +asA('https://openjdk.java.net/jeps/380')
+            +asA('https://openjdk.org/jeps/380')
             |Unix-domain (AF_UNIX) socket 지원
         ul
             li 프로세스 간 통신에 있어 loopback을 이용한 TCP/IP보다 좋은 성능/보안을 제공한다. 컨테이너 환경에서 특히 유용할 것으로 기대
             li SocketChannel, ServerSocketChannel에서 지원
         li
-            +asA('https://openjdk.java.net/jeps/392')
+            +asA('https://openjdk.org/jeps/392')
             |jpackage tool
         ul
             li Windows(msi, exe), macOS(pkg, dmg), Linux(deb, rpm) 빌드 가능
@@ -184,11 +201,11 @@ include ../../../source/skeleton.pug
             # type 지정
             $ jpackage --name myapp --input lib --main-jar main.jar --type pkg
         li
-            +asA('https://openjdk.java.net/jeps/394')
+            +asA('https://openjdk.org/jeps/394')
             |Pattern Matching for instanceof
         +asCode('java') if (obj instanceof Point p) { p.move(1, 3); }
         li
-            +asA('https://openjdk.java.net/jeps/395')
+            +asA('https://openjdk.org/jeps/395')
             |Record; Simple immutale data class
         ul
             li 모든 record는 java.lang.Record를 상속한다
@@ -209,5 +226,258 @@ include ../../../source/skeleton.pug
         +asCode('java') record Point2D(int x, int y) {}
 
     h1 Java 17
+    p 2021-09 출시, LTS
     ol
-        li 21년 9월 출시 예정
+        li
+            +asA('https://openjdk.org/jeps/409')
+            |Sealed Classes
+        ul
+            li #[+asInlineCode('sealed', 'java')] / #[+asInlineCode('permits', 'java')] / #[+asInlineCode('non-sealed', 'java')] 로 상속 계층을 컴파일러가 아는 범위로 제한한다
+            li switch의 망라성 검사가 가능해지는 전제 조건이다 (Java 21의 JEP 441)
+        +asCode('java').
+            public sealed interface Shape permits Circle, Rect {}
+            public record Circle(double r) implements Shape {}
+            public record Rect(double w, double h) implements Shape {}
+        li
+            +asA('https://openjdk.org/jeps/403')
+            |Strongly Encapsulate JDK Internals
+        ul
+            li JDK 내부 API 강한 캡슐화가 기본값이 됐다
+            li #[+asInlineCode('--illegal-access', 'shell')] 완화 옵션이 더 이상 동작하지 않는다. Java 8/11에서 올라올 때 가장 자주 막히는 지점
+        li
+            +asA('https://openjdk.org/jeps/356')
+            |Enhanced Pseudo-Random Number Generators
+        p #[+asInlineCode('RandomGenerator', 'java')] 인터페이스와 #[+asInlineCode('RandomGeneratorFactory', 'java')] 도입. 난수 알고리즘을 이름으로 선택할 수 있다
+        li
+            +asA('https://openjdk.org/jeps/306')
+            |Restore Always-Strict Floating-Point Semantics
+        p 부동소수 연산이 항상 엄격 모드가 되어 #[+asInlineCode('strictfp', 'java')] 키워드가 사실상 무의미해졌다
+        li
+            +asA('https://openjdk.org/jeps/415')
+            |Context-Specific Deserialization Filters
+        li
+            +asA('https://openjdk.org/jeps/391')
+            |macOS/AArch64 Port — Apple Silicon 네이티브 지원
+        li
+            +asA('https://openjdk.org/jeps/382')
+            |New macOS Rendering Pipeline — Java2D 렌더링을 OpenGL에서 Metal로 교체
+        li 제거·폐기
+        ul
+            li #[+asA('https://openjdk.org/jeps/398', 'JEP 398')] Applet API 제거 예고 (Java 26에서 제거 완료)
+            li #[+asA('https://openjdk.org/jeps/411', 'JEP 411')] Security Manager 제거 예고 (Java 24에서 영구 비활성화)
+            li #[+asA('https://openjdk.org/jeps/407', 'JEP 407')] RMI Activation 제거
+            li #[+asA('https://openjdk.org/jeps/410', 'JEP 410')] 실험적 AOT(jaotc)와 Graal JIT 제거
+
+    h1 Java 18
+    p 2022-03 출시
+    ol
+        li
+            +asA('https://openjdk.org/jeps/400')
+            |UTF-8 by Default
+        p 표준 자바 API의 기본 문자셋이 플랫폼 의존에서 UTF-8로 고정됐다. 윈도우에서 파일을 읽을 때 깨지던 문제의 근원이 사라진 것이며, 반대로 플랫폼 기본 인코딩에 의존하던 기존 코드는 동작이 바뀔 수 있다
+        li
+            +asA('https://openjdk.org/jeps/408')
+            |Simple Web Server
+        p #[+asInlineCode('jwebserver', 'shell')] 커맨드와 #[+asInlineCode('com.sun.net.httpserver.SimpleFileServer', 'java')]. 정적 파일용 테스트 서버다
+        +asCode('shell') $ jwebserver -p 8000 -d /path/to/static
+        li
+            +asA('https://openjdk.org/jeps/413')
+            |Code Snippets in Java API Documentation — Javadoc #[+asInlineCode('@snippet', 'java')] 태그
+        li
+            +asA('https://openjdk.org/jeps/418')
+            |Internet-Address Resolution SPI — 호스트명 해석기 교체 가능
+        li 제거·폐기
+        ul
+            li #[+asA('https://openjdk.org/jeps/421', 'JEP 421')] #[+asInlineCode('Object.finalize()', 'java')] 제거 예고. #[+asInlineCode('--finalization=disabled', 'shell')] 로 미리 검증할 수 있다
+
+    h1 Java 19, 20
+    p 2022-09 / 2023-03 출시
+    ul
+        li 두 버전 모두 #[strong 정식화된 개발자 대상 기능이 없다]. Record Patterns, Virtual Threads, Pattern Matching for switch, FFM API, Structured Concurrency 등이 전부 preview 또는 incubator 단계로 들어왔고, Java 21과 22에서 정식화된다
+
+    h1 Java 21
+    p 2023-09 출시, LTS
+    ol
+        li
+            +asA('https://openjdk.org/jeps/444')
+            |Virtual Threads
+        ul
+            li JDK가 관리하는 경량 스레드. 블로킹 코드를 그대로 쓰면서 수십만 동시성을 확보한다
+            li OS 스레드를 점유하지 않으므로 스레드 풀 크기를 고민할 필요가 줄어든다
+            li 단 Java 21·22·23에서는 #[+asInlineCode('synchronized', 'java')] 블록 안에서 캐리어 스레드에 고정(pinning)된다. Java 24의 JEP 491에서 해소됐다
+        +asCode('java').
+            try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+                for (int i = 0; i &lt; 10_000; i++)
+                    executor.submit(() -&gt; { Thread.sleep(Duration.ofSeconds(1)); return null; });
+            }   // close()가 전체 완료를 기다린다
+        li
+            +asA('https://openjdk.org/jeps/441')
+            |Pattern Matching for switch
+        li
+            +asA('https://openjdk.org/jeps/440')
+            |Record Patterns
+        p 레코드를 구조 분해하는 패턴. sealed 타입과 결합하면 컴파일러가 망라성을 검사하므로 #[+asInlineCode('default', 'java')] 가 필요 없다
+        +asCode('java').
+            double area(Shape s) {
+                return switch (s) {
+                    case Circle(double r)         -&gt; Math.PI * r * r;
+                    case Rect(double w, double h) -&gt; w * h;
+                };
+            }
+        li
+            +asA('https://openjdk.org/jeps/431')
+            |Sequenced Collections
+        p #[+asInlineCode('SequencedCollection', 'java')] / #[+asInlineCode('SequencedSet', 'java')] / #[+asInlineCode('SequencedMap', 'java')] 도입. 첫/끝 원소 접근과 역순 순회가 통일됐다
+        +asCode('java').
+            SequencedCollection&lt;String&gt; list = new ArrayList&lt;&gt;(List.of("a", "b", "c"));
+            list.addFirst("z");            // [z, a, b, c]
+            String last = list.getLast();  // "c"  — 이전엔 get(size()-1)
+            var back = list.reversed();    // 역순 뷰 [c, b, a, z]
+        li
+            +asA('https://openjdk.org/jeps/439')
+            |Generational ZGC
+        p ZGC에 세대 구분 추가. 짧은 수명 객체를 따로 수거해 처리량과 부하 여유를 개선했다
+        li
+            +asA('https://openjdk.org/jeps/452')
+            |Key Encapsulation Mechanism API — #[+asInlineCode('javax.crypto.KEM', 'java')]
+        li 제거·폐기
+        ul
+            li #[+asA('https://openjdk.org/jeps/449', 'JEP 449')] Windows 32비트 x86 포트 제거 예고 (Java 24에서 제거)
+            li #[+asA('https://openjdk.org/jeps/451', 'JEP 451')] 실행 중 에이전트 동적 로딩 시 경고. 향후 #[+asInlineCode('-XX:+EnableDynamicAgentLoading', 'shell')] 필수화 예고
+
+    h1 Java 22
+    p 2024-03 출시
+    ol
+        li
+            +asA('https://openjdk.org/jeps/454')
+            |Foreign Function &amp; Memory API
+        p #[strong JNI를 대체하는 정식 API]. 네이티브 함수 호출과 힙 밖 메모리 접근을 자바 코드로 안전하게 수행한다
+        li
+            +asA('https://openjdk.org/jeps/456')
+            |Unnamed Variables &amp; Patterns — 쓰지 않는 변수·패턴 요소를 #[+asInlineCode('_', 'java')] 로 표기
+        +asCode('java').
+            for (Order _ : orders) total++;                  // 변수 미사용
+            case Point(int x, _) -&gt; System.out.println(x);   // 패턴 일부 무시
+        li
+            +asA('https://openjdk.org/jeps/458')
+            |Launch Multi-File Source-Code Programs
+        p #[+asInlineCode('java Main.java', 'shell')] 를 여러 파일로 구성된 프로그램에도 적용. 컴파일 없이 실행된다
+        li
+            +asA('https://openjdk.org/jeps/423')
+            |Region Pinning for G1
+        p JNI critical region 때문에 G1이 GC를 통째로 멈추던 문제를 해소했다
+
+    h1 Java 23
+    p 2024-09 출시
+    ol
+        li
+            +asA('https://openjdk.org/jeps/467')
+            |Markdown Documentation Comments — #[+asInlineCode('///', 'java')] 로 시작하는 Javadoc을 Markdown으로 작성
+        li
+            +asA('https://openjdk.org/jeps/474')
+            |ZGC: Generational Mode by Default
+        li 제거·폐기
+        ul
+            li #[+asA('https://openjdk.org/jeps/471', 'JEP 471')] #[+asInlineCode('sun.misc.Unsafe', 'java')] 메모리 접근 메서드 폐기 예고. 대체제는 VarHandle(9)과 FFM API(22)
+
+    h1 Java 24
+    p 2025-03 출시
+    ol
+        li
+            +asA('https://openjdk.org/jeps/491')
+            |Synchronize Virtual Threads without Pinning
+        p #[strong 가상 스레드를 실무에 쓰려면 이 버전 이상이 필요하다.] #[+asInlineCode('synchronized', 'java')] 블록에서 가상 스레드가 캐리어에 고정되던 문제가 해소되어, 기존 코드를 #[+asInlineCode('ReentrantLock', 'java')] 으로 바꿔 쓸 필요가 없어졌다
+        li
+            +asA('https://openjdk.org/jeps/483')
+            |Ahead-of-Time Class Loading &amp; Linking
+        p 훈련 실행으로 AOT 캐시를 만들어 클래스 로드·링크를 사전 수행한다. JEP 본문 기준 Spring PetClinic 기동이 4.49초에서 2.60초로 줄었다
+        li
+            +asA('https://openjdk.org/jeps/485')
+            |Stream Gatherers
+        p #[+asInlineCode('Stream.gather(Gatherer)', 'java')] 로 커스텀 중간 연산을 정의한다. #[+asInlineCode('windowFixed', 'java')], #[+asInlineCode('windowSliding', 'java')], #[+asInlineCode('scan', 'java')], #[+asInlineCode('fold', 'java')], #[+asInlineCode('mapConcurrent', 'java')] 가 내장돼 있다
+        +asCode('java').
+            var windows = Stream.of(1, 2, 3, 4, 5, 6, 7)
+                    .gather(Gatherers.windowFixed(3))
+                    .toList();      // [[1, 2, 3], [4, 5, 6], [7]]
+        li
+            +asA('https://openjdk.org/jeps/484')
+            |Class-File API — #[+asInlineCode('java.lang.classfile', 'java')]. ASM 없이 표준 API로 클래스 파일을 파싱·생성·변환한다
+        li
+            +asA('https://openjdk.org/jeps/493')
+            |Linking Run-Time Images without JMODs — JMOD 없이 #[+asInlineCode('jlink', 'shell')] 실행. JDK 배포 크기 약 25% 감소
+        li
+            +asA('https://openjdk.org/jeps/496')
+            |ML-KEM 양자내성 키 캡슐화, #[+asA('https://openjdk.org/jeps/497', 'JEP 497')] ML-DSA 양자내성 전자서명
+        li 제거·폐기
+        ul
+            li #[+asA('https://openjdk.org/jeps/486', 'JEP 486')] #[strong Security Manager 영구 비활성화]. #[+asInlineCode('System.setSecurityManager()', 'java')] 가 예외를 던진다
+            li #[+asA('https://openjdk.org/jeps/479', 'JEP 479')] Windows 32비트 x86 포트 제거
+            li #[+asA('https://openjdk.org/jeps/490', 'JEP 490')] ZGC 비세대 모드 제거
+            li #[+asA('https://openjdk.org/jeps/472', 'JEP 472')] JNI 사용 시 경고. 향후 #[+asInlineCode('--enable-native-access', 'shell')] 필수화 예고
+            li #[+asA('https://openjdk.org/jeps/498', 'JEP 498')] #[+asInlineCode('sun.misc.Unsafe', 'java')] 메모리 접근 메서드 최초 호출 시 런타임 경고
+
+    h1 Java 25
+    p 2025-09 출시, LTS
+    ol
+        li
+            +asA('https://openjdk.org/jeps/506')
+            |Scoped Values
+        p #[+asInlineCode('ThreadLocal', 'java')] 대체. 불변 바인딩을 정해진 범위 안에서만 공유하고 범위 종료 시 자동 해제한다. 가상 스레드에 적합하다
+        +asCode('java').
+            static final ScopedValue&lt;String&gt; USER = ScopedValue.newInstance();
+            ScopedValue.where(USER, "alice").run(() -&gt; handle());
+            // 이 범위 안이라면 호출 스택 어디서든 USER.get() → "alice"
+        li
+            +asA('https://openjdk.org/jeps/512')
+            |Compact Source Files and Instance Main Methods
+        p 클래스 선언 없이 최상위에 #[+asInlineCode('void main()', 'java')] 를 둘 수 있다. #[+asInlineCode('String[] args', 'java')] 도 #[+asInlineCode('static', 'java')] 도 필요 없다. 학습·스크립트 용도의 진입 장벽을 낮춘 변경이다
+        +asCode('java').
+            import module java.base;   // JEP 511
+            void main() {
+                IO.println(List.of(1, 2, 3));
+            }
+        li
+            +asA('https://openjdk.org/jeps/511')
+            |Module Import Declarations — #[+asInlineCode('import module java.base;', 'java')] 로 모듈이 export하는 모든 패키지를 한 번에 임포트
+        li
+            +asA('https://openjdk.org/jeps/513')
+            |Flexible Constructor Bodies
+        p #[+asInlineCode('super(...)', 'java')] / #[+asInlineCode('this(...)', 'java')] 호출 #[strong 앞에] 문장을 둘 수 있다. 인자 검증·정규화를 생성자 앞부분에서 처리할 수 있게 됐다
+        li
+            +asA('https://openjdk.org/jeps/514')
+            |AOT Command-Line Ergonomics — JEP 483의 2단계 훈련 절차를 #[+asInlineCode('-XX:AOTCacheOutput', 'shell')] 한 번으로 단순화
+        li
+            +asA('https://openjdk.org/jeps/515')
+            |AOT Method Profiling — 훈련 실행에서 수집한 메서드 프로파일을 캐시해 JIT warmup 단축
+        li
+            +asA('https://openjdk.org/jeps/519')
+            |Compact Object Headers — 객체 헤더 12바이트 → 8바이트. #[strong 기본값이 아니며] #[+asInlineCode('-XX:+UseCompactObjectHeaders', 'shell')] 가 필요하다
+        li
+            +asA('https://openjdk.org/jeps/521')
+            |Generational Shenandoah — product 승격. 기본값은 여전히 단일 세대이며 #[+asInlineCode('-XX:ShenandoahGCMode=generational', 'shell')] 로 활성화한다
+        li
+            +asA('https://openjdk.org/jeps/510')
+            |Key Derivation Function API — #[+asInlineCode('javax.crypto.KDF', 'java')]
+        li
+            +asA('https://openjdk.org/jeps/518')
+            |JFR Cooperative Sampling, #[+asA('https://openjdk.org/jeps/520', 'JEP 520')] JFR Method Timing &amp; Tracing
+        li 제거·폐기
+        ul
+            li #[+asA('https://openjdk.org/jeps/503', 'JEP 503')] 32비트 x86 포트 제거 완료. 이제 64비트 전용이다
+
+    h1 Java 26
+    p 2026-03 출시
+    ol
+        li
+            +asA('https://openjdk.org/jeps/517')
+            |HTTP/3 for the HTTP Client API — #[+asInlineCode('java.net.http', 'java')] 가 HTTP/3 지원
+        li
+            +asA('https://openjdk.org/jeps/516')
+            |Ahead-of-Time Object Caching with Any GC — AOT 캐시를 GC 종류와 무관하게 사용
+        li
+            +asA('https://openjdk.org/jeps/522')
+            |G1 GC: Improve Throughput by Reducing Synchronization
+        li 제거·폐기
+        ul
+            li #[+asA('https://openjdk.org/jeps/504', 'JEP 504')] #[strong Applet API 제거 완료]. Java 17에서 예고한 지 5년 만이다
+            li #[+asA('https://openjdk.org/jeps/500', 'JEP 500')] final 필드를 리플렉션으로 변경하는 코드에 경고. 향후 금지 예고

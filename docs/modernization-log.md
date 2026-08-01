@@ -49,6 +49,7 @@ HTML 617개 (현행 262, 리다이렉트 308, 보존 47, 새 고아 0) / posts.j
 | 19 | Gradle 7에서 제거된 의존성 설정 158줄 교체 | fix | Phase 2-4 | 문서의 잘못된 예시도 갱신 |
 | 20 | 구버전 접기 `+legacy` mixin 추가 | feat | Phase 1-1 | Phase 1의 전제 |
 | 21 | 제목에 박제된 버전 13건 정리 | refactor | Phase 1-3 | URL은 그대로, 제목만 변경 |
+| 22 | `Java 버전` 문서를 Java 26까지 갱신 | feat | Phase 1-2 (1순위) | 212 → 482줄 |
 
 ---
 
@@ -986,3 +987,68 @@ FreeMarker 4종은 제목만으로는 무슨 도구인지 알 수 없어 `FreeMa
 
 - 새 제목이 목록에서 다른 문서와 헷갈리지 않는지. 특히 `Python` 은 `dev/python/` 아래 다른 문서들과 나란히 놓인다
 - 기준 버전 문구를 "…기준입니다."로 통일했다. 다른 표현을 원하시면 스크립트의 `basis` 값만 고치면 된다
+
+---
+
+## 22. `Java 버전` 문서를 Java 26까지 갱신
+
+**변경 파일**: `pugs/dev/JVM/version.pug` (212 → 482줄), `posts/dev/JVM/version.html`
+
+### 갱신 전 상태
+
+문서가 Java 17에서 끝나는데, 그 내용이 이게 전부였다.
+
+```pug
+h1 Java 17
+ol
+    li 21년 9월 출시 예정
+```
+
+**Java 17이 출시된 지 5년, Java 26까지 나온 시점**이었다. "버전별 추가사항"이라는 문서 목적상 최신성이 곧 존재 이유이므로 계획서에서 우선순위 7위에 올렸으나, 규모가 작고 조사만 하면 되는 작업이라 먼저 처리했다.
+
+### 추가한 것
+
+Java 17 ~ 26의 **정식화(final)된 기능만** 담았다. Preview / Incubator / Experimental 단계는 제외했다. 이 구분을 지키지 않으면 "Java 19에 가상 스레드가 있다" 같은 흔한 오해를 문서가 재생산하게 된다.
+
+| 버전 | 다룬 내용 |
+|---|---|
+| 17 (LTS) | Sealed Classes, JDK 내부 강한 캡슐화, Enhanced PRNG, Always-Strict FP, macOS/AArch64 |
+| 18 | UTF-8 by Default, Simple Web Server, `@snippet` |
+| 19, 20 | **정식화 기능 없음** — 전부 preview/incubator였다는 사실 자체를 명시 |
+| 21 (LTS) | Virtual Threads, Pattern Matching for switch, Record Patterns, Sequenced Collections, Generational ZGC |
+| 22 | FFM API(JNI 대체), Unnamed Variables, 다중 파일 소스 실행 |
+| 23 | Markdown Javadoc, ZGC 세대 모드 기본값 |
+| 24 | **JEP 491 가상 스레드 피닝 해소**, AOT Class Loading, Stream Gatherers, Class-File API |
+| 25 (LTS) | Scoped Values, Compact Source Files, Module Import, Flexible Constructor Bodies |
+| 26 | HTTP/3, Applet API 제거 완료 |
+
+버전마다 **제거·폐기 항목을 따로 표기**했다. Java 8/11에서 올라올 때 실제로 발목을 잡는 것은 새 기능이 아니라 이쪽이기 때문이다. Security Manager 영구 비활성화(24), `sun.misc.Unsafe` 메모리 접근 폐기(23·24), 32비트 x86 제거(24·25) 등.
+
+### 문서 앞에 "어떤 버전을 쓸 것인가" 절 추가
+
+버전 목록만 있으면 정작 독자의 질문("그래서 뭘 써야 하나")에 답하지 못한다. Oracle 지원 로드맵을 근거로 절을 하나 새로 넣었다.
+
+- **2026년 9월부터 Oracle JDK 21 업데이트가 무상 NFTC에서 OTN 라이선스로 전환**된다 (한 달 남음)
+- Java 17의 Oracle Premier Support도 **2026년 9월 종료**
+- 가상 스레드를 본격적으로 쓸 거라면 21이 아니라 25여야 한다. 21~23에서는 `synchronized` 블록이 가상 스레드를 캐리어에 고정시켰고, 이게 JEP 491(Java 24)에서야 해소됐다
+
+### 코드 예제 6개
+
+record pattern + switch, virtual thread, sequenced collections, unnamed variables, stream gatherers, scoped values, compact source file.
+
+### 부수 수정
+
+- 기존 JEP 링크 18건이 `openjdk.java.net` 을 가리키고 있었다. 현재는 `openjdk.org` 로 리다이렉트되므로 전부 교체했다
+- Java 11 절의 `+asCode('java') ... -> x.process(y);` 에서 `>` 가 이스케이프되지 않은 채로 출력되고 있었다. `&gt;` 로 고쳤다 (기존 오류)
+
+### 검증
+
+- 렌더 성공, `h1` 17개, JEP 링크 79개, 구 도메인 잔존 0
+- **코드 블록 18개 전부 부등호 이스케이프 검사 통과** (이 과정에서 위의 기존 오류를 발견)
+- 정합성 검사 오류 0건
+
+### 출처
+
+조사는 `openjdk.org` 의 릴리스 페이지(`/projects/jdk/17` ~ `/26`)와 개별 JEP 문서, Oracle Java SE 지원 로드맵, Adoptium 지원표를 대조해 수행했다.
+
+> JEP 506·512·519 원문은 fetch가 빈 응답을 반환해 직접 읽지 못했다. 세 건 모두 JDK 25 릴리스 페이지에 preview 표기 없이 올라와 있는 것으로 정식화를 확인했고 세부 내용은 2차 자료로 교차 검증했다. **특히 JEP 512 예제의 `IO.println` 호출 형태는 2차 자료 기준이므로 한 번 더 확인이 필요하다.**
