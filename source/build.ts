@@ -13,7 +13,8 @@ type WorkMessage =
     | { api: 'init'; generatedPaths: string[]; imgMap: Record<string, { width: number; height: number }> };
 
 interface Post {
-    category: string;
+    /** 단일 소속은 문자열, 다중 소속은 문자열 배열. 계층은 '/' 로 표현한다. */
+    category: string | string[];
     file: string;
     title: string;
     mtimeMs?: number;

@@ -7,7 +7,7 @@
 | # | 커밋 | 종류 | 계획서 항목 | 리뷰 포인트 |
 |---|---|---|---|---|
 | 1 | 고아 HTML 308건을 리다이렉트 스텁으로 치환 | chore | 별건 (선행 작업) | 스텁 형식, 보존 47건의 타당성 |
-| 2 | 사이트맵 URL에 누락된 `/posts/` 접두사 복원 | fix | Phase 0-1 | 250개 URL이 전부 깨져 있었음 |
+| 2 | 사이트맵 URL에 누락된 `/posts/` 접두사 복원 | fix | Phase 0-1 | 251개 URL이 전부 깨져 있었음 |
 | 3 | TypeScript 6 고정, `@types/node` 를 LTS 24로 하향 | chore | 채택 기준 | 6개월 룰 적용 결과 |
 | 4 | `sharp` 네임스페이스 타입 오류 수정, `typecheck` 스크립트 추가 | fix | — | 기존 오류. **커밋 11에서 검증 범위 정정** |
 | 5 | 수집이 중단된 Universal Analytics 태그 제거 | fix | Phase 0-2 | GA4 재도입 여부는 별도 판단 |
@@ -20,6 +20,7 @@
 | 12 | 보존 대상 구 HTML 38건의 죽은 UA 태그 제거 | fix | 리뷰 지적 (중요) | 커밋 5의 미완 부분 |
 | 13 | 홈페이지 구조화 데이터를 `WebSite` 로 분리 | fix | 리뷰 지적 (중요) | 홈이 `TechArticle` 로 나가던 문제 |
 | 14 | 정합성 검사 보완 + 그로 인해 드러난 코드 버튼 오류 수정 | fix | 리뷰 지적 (사소) | 검사가 실제 버그를 잡아냄 |
+| 15 | 부정확한 서술 정정, `Post.category` 타입 수정 | docs | 리뷰 지적 (중요·사소) | 문서를 코드와 일치시킴 |
 
 ---
 
@@ -301,6 +302,7 @@ const html = await renderFile(o.path, {
 
 - `og:image` 가 favicon이다. 문서별 대표 이미지를 쓰려면 `post` mixin에 옵션을 추가해야 한다
 - `datePublished` 는 넣지 않았다. 최초 작성일을 알 방법이 마땅치 않아 지어내지 않았다. git 최초 커밋일을 쓸 수 있지만 대량 리팩터링 커밋 때문에 부정확하다
+- ⚠ **`dateModified` 가 mtime 기반이라 머신 간 재현성이 없다.** 새로 클론하면 모든 파일의 mtime이 체크아웃 시각이 되므로, 다른 머신에서 빌드를 한 번만 돌려도 263개 페이지의 날짜가 그날로 덮이고 대량 diff가 생긴다. 커밋 15에서 `CLAUDE.md` 에 경고를 넣었고, git 커밋 날짜 기반으로 바꾸는 것은 후속 과제로 남긴다
 - **이 커밋의 diff는 266개 파일이다.** 실질 변경은 `skeleton.pug` 와 `build.ts` 두 개뿐이고 나머지는 재생성된 산출물이다
 - diff에 재렌더 대상이 아닌 파일(`posts/algorithm/koreatech/*.html`, `posts/db/example/*.sql` 등)도 섞여 있다. `.gitattributes` 의 `* text=auto` 에 따라 **CRLF가 LF로 정규화된 것**이며 내용은 동일하다. CR을 제거한 뒤 해시를 비교해 확인했다. 저장소에 CRLF로 커밋되어 있던 기존 불일치가 이번에 정리된 것이다
 
@@ -617,3 +619,62 @@ ol
 - 회귀 테스트 — 스텁의 JS 대상만 다른 값으로 바꾸자 E5가 3중 신호 불일치로 검출
 - 회귀 테스트 — codeBtn을 디렉터리로 바꾸자 E6가 검출
 - 수정 후: 오류 0건, 경고 11건. 리다이렉트 스텁 무결성 통과
+
+---
+
+## 15. 부정확한 서술 정정, `Post.category` 타입 수정
+
+**변경 파일**: `CLAUDE.md`, `source/build.ts`, `docs/modernization-log.md`
+
+리뷰에서 지적된 사실관계 오류를 코드와 대조해 바로잡았다.
+
+### 1. `category` 다중 소속 표기 — **틀린 서술이었다**
+
+`CLAUDE.md` 가 "`,` 로 다중 소속을 표현한다 (예: `기초 과목,책`)" 라고 적었으나, 실제 데이터를 세어보니 **쉼표를 포함한 category 문자열은 0건이고 다중 소속은 문자열 배열 7건**이다.
+
+```json
+{ "category": ["개발 자료/책", "책"], "file": "book/0/010.html" }
+```
+
+`source/default.js:378` 이 `Array.isArray(post.category)` 로 분기해 각 카테고리 노드에 문서를 복제한다. 문서를 따라 쉼표로 쓰면 `기초 과목,책` 이라는 단일 노드가 생겨 목록이 깨진다.
+
+같은 오해가 코드에도 있었다. `build.ts` 의 `interface Post` 가 `category: string` 으로 선언되어 있어 실제 데이터(`string | string[]`)와 불일치했다. `posts.json` 을 `createRequire` 로 읽어 tsc가 잡지 못하던 기존 문제다.
+
+```diff
+ interface Post {
+-    category: string;
++    /** 단일 소속은 문자열, 다중 소속은 문자열 배열. 계층은 '/' 로 표현한다. */
++    category: string | string[];
+```
+
+### 2. mixin 표가 불완전했다
+
+`skeleton.pug` 에 **14개**가 있는데 표에는 10개만 있었고 커밋 메시지는 "13개"라고 했다. 누락됐던 `+goto`, `+pos`, `+hoverTemplate`, `+w3button` 을 추가하고 개수를 명시했다.
+
+`+asCode` 를 "인라인 코드 블록"이라 적은 것도 고쳤다. 블록 코드이고, 인라인은 `+asInlineCode` 다.
+
+### 3. `node source/build.ts new` 설명 보완
+
+10분(600000ms) 조건은 맞지만 `index.pug` 는 `build.ts:227` 에서 **무조건** 렌더된다. "수정된 pug만"은 부정확했다.
+
+### 4. `dateModified` 의 머신 간 재현성 문제 명시
+
+새로 클론한 저장소는 모든 파일 mtime이 체크아웃 시각이므로, 다른 머신에서 빌드를 한 번만 돌려도 263개 페이지의 날짜가 그날로 덮이고 대량 diff가 생긴다. 커밋 7의 로그에는 경합 회피 근거만 적고 이 부작용을 언급하지 않았다.
+
+`CLAUDE.md` 주의 항목과 로그 7절에 경고를 넣었다. **git 커밋 날짜 기반으로 바꾸는 것은 후속 과제로 남긴다.**
+
+### 5. 숫자 불일치
+
+로그 표 2행이 "250개 URL"이라 적었으나 본문과 실제는 251개다.
+
+### 남은 후속 과제
+
+리뷰에서 나왔으나 이번에 고치지 않은 것들이다.
+
+| 항목 | 사유 |
+|---|---|
+| `dateModified` 를 git 커밋 날짜 기반으로 | 대량 리팩터링 커밋 12건 때문에 단순 `git log -1` 로는 부정확. 별도 설계 필요 |
+| 리다이렉트 스텁이 쿼리스트링을 버림 | `location.hash` 만 이어붙인다. 이 사이트는 쿼리스트링을 쓰지 않아 영향 없음 |
+| 스텁 15개가 `not-registered/` 로 감 | `posts.json` 미등록 문서 처리 방침이 정해져야 결론이 남 (W1 경고 11건과 같은 사안) |
+| `index.pug` 가 `nvm install 20` 과 없는 `npm run build-all` 을 안내 | 홈 본문 내용이라 Phase 1(포스트 최신화)에서 다룬다 |
+| `posts/**/index.html` 형태 글이 생기면 canonical과 사이트맵이 갈림 | 현재 해당 문서 0건 |

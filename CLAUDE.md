@@ -18,7 +18,7 @@ npm run typecheck  # tsc --noEmit
 
 `npm run build` 는 마지막에 `npm run check` 를 돌린다. 검사 실패 시 종료 코드 1이지만 산출물은 이미 쓰인 뒤다. "빌드를 막는" 게 아니라 "문제를 알리는" 동작이다.
 
-`node source/build.ts new` 로 실행하면 최근 10분 내 수정된 pug만 렌더한다.
+`node source/build.ts new` 로 실행하면 최근 10분 내 수정된 pug만 렌더한다. 단 `index.pug` 는 이 조건과 무관하게 항상 렌더된다. 이미지와 d2는 증분 모드와 관계없이 매번 검사한다(이미 생성된 것은 건너뜀).
 
 ## 디렉터리
 
@@ -64,28 +64,41 @@ npm run typecheck  # tsc --noEmit
    ```
 
    `file` 은 `posts/` 를 뺀 상대 경로다. `mtimeMs` 는 빌드가 자동으로 채운다.
-   `category` 는 `/` 로 계층을, `,` 로 다중 소속을 표현한다 (예: `개발 자료/JVM`, `기초 과목,책`).
+
+   `category` 는 `/` 로 계층을 표현한다 (예: `개발 자료/JVM`). **다중 소속은 문자열 배열**이다.
+
+   ```json
+   { "category": ["개발 자료/책", "책"], "file": "book/0/010.html", "title": "..." }
+   ```
+
+   `source/default.js` 가 `Array.isArray(post.category)` 로 분기해 각 카테고리 노드에 문서를 복제해 넣는다. 쉼표로 이어 쓰면 `기초 과목,책` 이라는 단일 노드가 생기므로 쓰지 않는다.
 
 3. `npm run build`
 
 ## skeleton.pug mixin
 
+전체 14개다.
+
 | mixin | 용도 |
 |---|---|
 | `+post(options)` | 문서 전체를 감싸는 레이아웃. 모든 문서의 루트 |
-| `+codeBtn(path, lan)` | `Repositories/` 의 실제 파일을 여는 버튼. **경로가 실제로 있어야 한다** (검사 E6) |
-| `+asCode(lan, title)` | 인라인 코드 블록 |
-| `+asInlineCode(code, lan)` | 문장 중간의 짧은 코드 |
+| `+bookInfo(options)` | 도서 리뷰용 메타 정보 |
+| `+codeBtn(path, lan)` | `Repositories/` 의 실제 **파일**을 여는 버튼. 경로가 없거나 디렉터리면 검사 E6가 잡는다 |
+| `+asCode(lan, title)` | 블록 코드. 제목 줄과 함께 `<div class="as-code">` 로 감싼다 |
+| `+asInlineCode(code, lan)` | 문장 중간의 짧은 코드 (`<span>`) |
 | `+asA(href, text)` | 링크 버튼. `text` 생략 시 URL 마지막 조각을 씀 |
 | `+w3img(src, description)` | 이미지. `imgMap` 으로 크기를 미리 넣어 레이아웃 이동을 막는다 |
+| `+w3button(color)` | 범용 버튼. `+codeBtn` 이 내부적으로 쓴다 |
 | `+table()` / `+tds(...)` / `+ths(...)` | 표 |
-| `+bookInfo(options)` | 도서 리뷰용 메타 정보 |
+| `+pos(name)` | 문서 내 앵커 지점을 심는다 |
+| `+goto(name, href)` | `+pos` 로 심은 앵커로 가는 링크. `href` 를 주면 다른 문서의 앵커로 새 탭 이동 |
+| `+hoverTemplate()` | 마우스 오버 시 뜨는 팝오버 컨테이너 |
 
 ## 빌드 동작
 
 `source/build.ts` 는 CPU 코어 수만큼 `worker_threads` 를 띄우고 세 종류 작업을 분배한다.
 
-- **`render-pug`** — pug → HTML. 렌더 시 `siteOrigin`, `pageUrl`, `pageModified` 를 locals로 주입해 canonical·Open Graph·JSON-LD 를 만든다
+- **`render-pug`** — pug → HTML. 렌더 시 `siteOrigin`, `pageUrl`, `pageModified` 를 locals로 주입해 canonical·Open Graph·JSON-LD 를 만든다. 홈(`pageUrl` 이 오리진 루트)은 `WebSite`, 나머지는 `TechArticle` 로 나간다
 - **`transform-img`** — `imgs/` 원본을 sharp로 500 / 1200 / 2000px × `jpeg`/`webp`/`avif` (gif는 `gif`/`webp`) 로 변환. 이미 있으면 건너뛴다. 크기 정보는 `source/img-map.json` 에 캐시
 - **`render-d2`** — `d2` 로 SVG 생성 후 svgo 최적화 + 미사용 클래스 제거 + 반복 인라인 스타일의 클래스화
 
@@ -134,5 +147,6 @@ fix: 사이트맵 URL에 누락된 /posts/ 접두사 복원
 ## 주의
 
 - `.gitattributes` 가 `* text=auto` 라 커밋 시 CRLF가 LF로 정규화된다. 기존 파일을 `git add` 하면 줄바꿈만 바뀐 diff가 대량으로 생길 수 있다
+- **`dateModified` 는 pug 파일의 mtime을 쓴다.** 새로 클론한 저장소는 모든 파일의 mtime이 체크아웃 시각이므로, 다른 머신에서 빌드를 한 번만 돌려도 263개 페이지의 날짜가 그날로 덮이고 대량 diff가 생긴다. **빌드는 가급적 한 머신에서 하거나, 산출물 diff에 날짜만 바뀐 파일이 섞여 있는지 확인하고 커밋한다.** git 커밋 날짜를 쓰는 편이 안정적이지만 대량 리팩터링 커밋 때문에 부정확해 아직 바꾸지 않았다
 - 사이트 오리진과 `/posts/` 접두사는 `build.ts` 의 `SITE_ORIGIN`, `POSTS_URL_PREFIX` 상수 하나로 관리한다. URL 문자열을 코드 안에 직접 쓰지 않는다
 - 방문자 분석 도구는 현재 없다. 수집이 중단된 Universal Analytics 태그를 제거했고, GA4 재도입 형태는 `source/skeleton.pug` 주석에 남겨두었다
