@@ -6,6 +6,82 @@ include ../../../source/skeleton.pug
     useMath: true,
 })
 
+    p.version-note 본문의 모듈별 설명은 Python 3.8 기준으로 작성됐습니다. 아래에 3.9 ~ 3.14 의 표준 라이브러리 변화를 정리했습니다. 언어 문법 변경은 #[+asA('/posts/dev/python/basic.html', 'Python 문서')] 를 참조하세요.
+
+    h1 제거된 모듈 — 본문에 있어도 이제 없다
+    ol
+        li #[strong Python 3.13 에서 PEP 594 "dead batteries" 19개 모듈이 일괄 제거됐다.] 대부분 1990년대에 추가된 오래된 데이터 형식·프로토콜 모듈이다
+        +asCode('text').
+            aifc  audioop  cgi  cgitb  chunk  crypt  imghdr  mailcap  msilib
+            nis   nntplib  ossaudiodev  pipes  sndhdr  spwd  sunau  telnetlib
+            uu    xdrlib
+        li 대체제가 있는 것들
+        +table()
+            +ths('제거된 모듈', '대체')
+            +tds('crypt', 'hashlib, bcrypt, argon2-cffi, passlib')
+            +tds('imghdr / sndhdr', 'filetype, puremagic, python-magic')
+            +tds('pipes', 'subprocess')
+            +tds('telnetlib', 'telnetlib3, Exscript')
+            +tds('cgi.parse_header', 'email.message.Message')
+            +tds('spwd', 'python-pam')
+        li 그 밖에 제거된 것
+        ul
+            li #[strong distutils] (3.12) — #[+asA('https://peps.python.org/pep-0632/', 'PEP 632')]. #[+asInlineCode('setuptools', 'python')] 로
+            li #[+asInlineCode('asynchat', 'python')], #[+asInlineCode('asyncore', 'python')], #[+asInlineCode('imp', 'python')], #[+asInlineCode('smtpd', 'python')] (3.12)
+            li #[+asInlineCode('2to3', 'shell')] 도구와 #[+asInlineCode('lib2to3', 'python')] (3.13), #[+asInlineCode('tkinter.tix', 'python')] (3.13)
+            li #[+asInlineCode('parser', 'python')], #[+asInlineCode('formatter', 'python')] (3.10), #[+asInlineCode('binhex', 'python')] (3.11)
+        li #[strong 3.14 에서는 모듈 통째 제거가 없다.] 대신 개별 API 가 정리됐다
+        ul
+            li #[+asInlineCode('asyncio.get_event_loop()', 'python')] 이 실행 중인 루프가 없으면 #[+asInlineCode('RuntimeError', 'python')]. 암묵적으로 루프를 만들지 않는다
+            li #[+asInlineCode('ast.Num', 'python')] · #[+asInlineCode('Str', 'python')] · #[+asInlineCode('Bytes', 'python')] · #[+asInlineCode('NameConstant', 'python')] 과 #[+asInlineCode('Constant.n', 'python')] · #[+asInlineCode('.s', 'python')] 제거
+            li #[+asInlineCode('urllib.request.URLopener', 'python')] · #[+asInlineCode('FancyURLopener', 'python')], #[+asInlineCode('pkgutil.get_loader', 'python')] · #[+asInlineCode('find_loader', 'python')] 제거
+
+    h1 주목할 표준 라이브러리 추가
+    div
+        h2 3.9
+        ul
+            li #[+asInlineCode('zoneinfo', 'python')] — #[strong IANA 타임존을 표준 라이브러리에서 지원한다.] 본문 datetime 절에서 #[+asInlineCode('pytz', 'python')] 를 쓰던 부분은 이제 이쪽이 표준이다
+            +asCode('python').
+                from zoneinfo import ZoneInfo
+                from datetime import datetime
+                datetime.now(ZoneInfo("Asia/Seoul"))
+            li #[+asInlineCode('graphlib', 'python')] — 위상 정렬
+            li #[+asInlineCode('str.removeprefix()', 'python')] / #[+asInlineCode('removesuffix()', 'python')] — #[+asInlineCode('lstrip()', 'python')] 오용을 피할 수 있다
+    div
+        h2 3.10 ~ 3.11
+        ul
+            li #[+asInlineCode('tomllib', 'python')] (3.11) — TOML 파서가 표준에 들어왔다. #[+asInlineCode('pyproject.toml', 'text')] 를 외부 의존성 없이 읽을 수 있다
+            li #[+asInlineCode('ExceptionGroup', 'python')] / #[+asInlineCode('except*', 'python')] (3.11)
+            li #[+asInlineCode('asyncio.TaskGroup', 'python')] (3.11) — 구조적 동시성. #[+asInlineCode('gather()', 'python')] 보다 취소 전파가 명확하다
+            li #[+asInlineCode('contextlib.chdir()', 'python')] (3.11), #[+asInlineCode('datetime.UTC', 'python')] 별칭 (3.11)
+    div
+        h2 3.12 ~ 3.13
+        ul
+            li #[+asInlineCode('itertools.batched()', 'python')] (3.12) — 이터러블을 고정 크기로 자른다
+            +asCode('python').
+                from itertools import batched
+                list(batched('ABCDEFG', 3))   # [('A','B','C'), ('D','E','F'), ('G',)]
+            li #[+asInlineCode('pathlib.Path.walk()', 'python')] (3.12) — #[+asInlineCode('os.walk()', 'python')] 의 pathlib 판
+            li #[+asInlineCode('sys.monitoring', 'python')] (3.12) — 저오버헤드 프로파일링·디버깅 API
+            li #[+asInlineCode('copy.replace()', 'python')] (3.13) — 불변 객체의 일부 필드만 바꾼 복사본
+            li #[+asInlineCode('dbm.sqlite3', 'python')] (3.13) 이 기본 dbm 백엔드로
+            li #[+asInlineCode('random', 'python')] 모듈에 CLI 추가 (3.13) — #[+asInlineCode('python -m random', 'shell')]
+    div
+        h2 3.14
+        ul
+            li #[+asInlineCode('annotationlib', 'python')] — 어노테이션 지연 평가(PEP 649)에 따른 내성 API. #[+asInlineCode('Format.VALUE', 'python')] / #[+asInlineCode('FORWARDREF', 'python')] / #[+asInlineCode('STRING', 'python')]
+            li #[+asInlineCode('string.templatelib', 'python')] — t-string(PEP 750)의 #[+asInlineCode('Template', 'python')] 과 #[+asInlineCode('Interpolation', 'python')]
+            li #[+asInlineCode('concurrent.interpreters', 'python')] — 서브 인터프리터 표준 API
+            li #[+asInlineCode('compression.zstd', 'python')] — Zstandard 압축 지원
+            li #[+asInlineCode('unittest', 'python')] · #[+asInlineCode('argparse', 'python')] · #[+asInlineCode('json', 'python')] · #[+asInlineCode('calendar', 'python')] CLI 에 색상 출력
+
+    h1 본문을 읽을 때 유의할 점
+    ul
+        li 본문의 #[+asInlineCode('Since 3.x', 'text')] 표기는 #[strong 3.8 시점까지만 반영돼 있다]. 그 이후 추가된 매개변수·메서드는 빠져 있다
+        li #[+asInlineCode('datetime', 'python')] 절 — 타임존은 #[+asInlineCode('zoneinfo', 'python')](3.9) 를 쓴다. #[+asInlineCode('datetime.utcnow()', 'python')] 는 3.12 에서 deprecated 됐다. #[+asInlineCode('datetime.now(datetime.UTC)', 'python')] 를 쓴다
+        li #[+asInlineCode('collections.abc', 'python')] 절 — #[+asInlineCode('typing.List', 'python')] 계열 대신 내장 제네릭(#[+asInlineCode('list[int]', 'python')], 3.9)을 쓴다
+        li #[+asInlineCode('re', 'python')] 절 — 3.11 부터 아토믹 그룹 #[+asInlineCode('(?>...)', 'text')] 과 소유 수량자 #[+asInlineCode('*+', 'text')] · #[+asInlineCode('++', 'text')] 를 지원한다
+
     h1 string : 문자열 공통 연산
     div
         h2 Constants

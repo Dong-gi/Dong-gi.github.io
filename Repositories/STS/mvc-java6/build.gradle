@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework:spring-webmvc:7.0.0'
+	implementation 'org.springframework:spring-webmvc:7.0.8'
 	implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
 	implementation 'org.slf4j:slf4j-api:2.0.16'
 	implementation 'org.slf4j:slf4j-simple:2.0.16'

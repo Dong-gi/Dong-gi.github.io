@@ -1905,3 +1905,120 @@ WPF 예제가 8개나 되는데 문서에 버전 기준이 없었다. `.NET 9 ·
 ### 출처
 
 `learn.microsoft.com` 의 C# 12/13/14 whats-new, `csharp-version-history`(C# 11 단독 페이지는 여기로 리다이렉트된다), `language-versioning` 기본값 표, .NET 7~10 whats-new 와 compatibility(breaking changes), `syslib-diagnostics/obsoletions-overview`, WPF whats-new net90·net100, `wpf/10.0/empty-grid-definitions`.
+
+---
+
+## 38. Spring 패치 버전 정정 — 커밋 30의 오류
+
+**변경 파일**: `Repositories/**` 40개 빌드 파일
+
+커밋 30에서 지식에 의존해 넣은 버전이 **실제 최신과 달랐다.** 공식 데이터로 확인해 고쳤다.
+
+| 항목 | 커밋 30 | 실제 최신 (2026-08) |
+|---|---|---|
+| `spring-webmvc` 등 | `7.0.0` | **`7.0.8`** (2026-06-08) |
+| Spring Boot | `4.0.0` | **`4.0.7`** (2026-06-10) |
+
+`7.0.0`·`4.0.0` 도 존재하는 버전이라 빌드가 깨지지는 않았겠지만, 8개월치 버그·보안 수정이 빠진 상태였다.
+
+### 확인한 지원 현황
+
+| Spring Framework | 출시 | OSS 지원 종료 | Java | Jakarta EE |
+|---|---|---|---|---|
+| 7.0 | 2025-11-30 | 2027-06-30 | 17 ~ 25 | 11 ~ 12 |
+| 6.2 | 2024-11-30 | **2026-06-30 (종료)** | 17 ~ 25 | 9 ~ 10 |
+| 5.2 (블로그 본문 기준) | 2019-09-30 | **2021-12-31 (종료)** | 8 ~ 11 | — |
+
+| Spring Boot | 출시 | OSS 지원 종료 | Java |
+|---|---|---|---|
+| 4.1 | 2026-06 | 2027-07-31 | 17 ~ 26 |
+| 4.0 | 2025-11-30 | **2026-12-31** | 17 ~ 25 |
+| 3.5 | 2025-05-31 | **2026-06-30 (종료)** | 17 ~ 25 |
+
+> **6개월 룰과의 충돌** — Spring Boot 4.0은 **2026-12-31에 끝난다**(5개월 뒤). 더 오래가는 4.1은 2026-06 출시라 6개월 룰에 못 미친다. 4.0을 쓰되 **연말에 4.1로 한 번 더 올려야 한다**는 전제가 붙는다. 이 긴장은 문서에도 적었다.
+
+---
+
+## 39. Spring Framework · Spring Servlet 문서 갱신 — 배너 4개 전부 제거
+
+**변경 파일**: `pugs/dev/JVM/spring_framework.pug` (1,582 → 1,638줄), `pugs/dev/JVM/spring_servlet.pug` (1,340 → 1,381줄) + 생성 HTML
+
+커밋 30에서 붙인 코드·문서 불일치 배너 4개가 **모두 사라졌다** (`java_ee` 커밋 33, `jpa` 커밋 36, 나머지 둘이 이번).
+
+두 문서 합쳐 2,900여 줄인데 대부분이 DI·AOP·DispatcherServlet·애너테이션 컨트롤러 같은 개념 설명이라 지금도 유효하다. **앞에 절을 얹는 방식**으로 처리했다.
+
+### `spring_framework.pug` 에 추가한 절
+
+**1. 지금 어떤 버전을 써야 하나** — 위 커밋 38의 지원 현황표
+
+**2. Spring 5 에서 6 · 7 로 — 무엇이 달라지나**
+
+- `javax.*` → `jakarta.*` (Spring 6 / Boot 3부터). **`javax`로 시작한다고 다 바꾸면 안 된다**는 경고 포함
+- Java 17이 최소 요구 버전
+- **서블릿 컨테이너도 함께 올려야 한다** — Tomcat 9가 `javax`를 지원하는 마지막 메이저
+- AOT·GraalVM 네이티브 이미지, HTTP 인터페이스 클라이언트, `RestClient`, 가상 스레드
+
+**3. 이관 시 자주 걸리는 것**
+
+- **trailing slash 매칭 기본 비활성화** — 기존 클라이언트가 404를 받을 수 있다
+- `spring.factories` 자동 설정 등록 제거 → `AutoConfiguration.imports`
+- `spring-boot-properties-migrator` 로 바뀐 프로퍼티 키 찾기
+- **Boot 2 → 4 를 한 번에 건너뛰지 말 것.** 2 → 3(jakarta) → 4 로 나누면 원인을 좁히기 쉽다
+
+### `spring_servlet.pug` 에 추가한 절
+
+**1. 읽기 전에 — 본문과 현행의 차이** — 참조하는 예제 코드가 이미 `jakarta.*` 라는 점 명시
+
+**2. Spring 6 · 7 에서 달라진 웹 계층** — trailing slash, PathPattern, `RestClient`, HTTP 인터페이스, `ProblemDetail`(RFC 9457), 가상 스레드
+
+**3. JSP 는 어떻게 할 것인가** — 사양은 유지되나 유지보수 모드, Faces 4.0에서 뷰 기술로서 제거됨, Spring Boot는 예전부터 권장하지 않음(실행 가능 jar에서 동작 안 함). 대안은 Thymeleaf
+
+### 검증
+
+- 두 문서 렌더 성공, **배너 잔존 0**
+- 새로 쓴 코드 블록 전부 이스케이프 통과
+- 정합성 검사 오류 0건
+
+### 알려진 잔여 문제
+
+접지 않은 구 본문의 코드 블록에 미이스케이프 `>` 가 남아 있다(`spring_framework` 24건, `spring_servlet` 21건). **기존 문제**이며 이번에 건드리지 않았다.
+
+---
+
+## 40. Python 표준 라이브러리 · Raspberry Pi 문서 갱신
+
+**변경 파일**: `pugs/dev/python/standard.pug` (2,148 → 2,224줄), `pugs/dev/rpi.pug` (395 → 467줄) + 생성 HTML
+
+### `standard.pug` — 앞에 변화 요약만 얹었다
+
+2,148줄이 모듈별 레퍼런스라 통째로 손대는 것은 비현실적이다. **"본문에 있는데 이제 없는 것"** 을 앞에서 먼저 알려주는 편이 실용적이다.
+
+**1. 제거된 모듈** — 3.13의 PEP 594 "dead batteries" 19개를 목록과 대체제 표로. `distutils`(3.12), `asynchat`/`asyncore`/`imp`/`smtpd`(3.12), `2to3`/`lib2to3`(3.13)도.
+
+**2. 주목할 추가** — `zoneinfo`(3.9), `tomllib`(3.11), `asyncio.TaskGroup`(3.11), `itertools.batched`(3.12), `pathlib.Path.walk`(3.12), `annotationlib`·`string.templatelib`·`compression.zstd`(3.14)
+
+**3. 본문을 읽을 때 유의할 점** — `Since 3.x` 표기가 3.8까지만 반영돼 있다는 점, `datetime.utcnow()` 가 3.12에서 deprecated 된 점, 타임존은 `zoneinfo` 를 쓴다는 점
+
+### `rpi.pug` — `+legacy` 로 접고 현행을 얹었다
+
+2017년 실습 기록이라 **환경이 통째로 바뀌었다.** 본문 전체를 접고 현행 절을 새로 썼다.
+
+| 항목 | 본문(2017) | 현행 |
+|---|---|---|
+| 보드 | Pi 3 | Pi 4 / **Pi 5**(PCIe·NVMe) / Zero 2 W |
+| OS | Raspbian Stretch | **Raspberry Pi OS** Trixie(Debian 13). 64비트 기본, Wayland |
+| 카메라 | `picamera` + `raspistill` | **`picamera2`** + `rpicam-*` (libcamera 기반) |
+| 패키지 설치 | `pip install` | **PEP 668로 막힘** — venv 필수 |
+| OpenCV | 3.3 | 4.x |
+
+강조한 세 가지.
+
+1. **`picamera` 는 레거시다.** Bullseye에서 카메라 스택이 libcamera로 바뀌며 구 스택이 동작하지 않는다. 본문 예제가 그대로는 안 돌아간다
+2. **Bookworm부터 시스템 Python에 `pip install` 이 막힌다.** `--system-site-packages` 옵션을 준 venv를 쓰면 apt로 깐 `picamera2` 를 가상 환경에서도 볼 수 있다
+3. **`cv2.findContours` 의 반환값 개수가 OpenCV 3(3개)과 4(2개)에서 다르다.** 본문 예제가 여기 걸린다
+
+### 검증
+
+- `standard.pug` h1 27개, `rpi.pug` legacy 블록 1개
+- 새로 쓴 코드 블록 전부 이스케이프 통과 (`standard` 의 기존 5건은 미수정)
+- 정합성 검사 오류 0건

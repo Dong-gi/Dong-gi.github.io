@@ -5,7 +5,48 @@ include ../../../source/skeleton.pug
     description: 'Spring Servlet 정리',
 })
 
-    p.version-note 본문은 Spring 5.x / javax.* 기준입니다. 연결된 예제 코드는 Spring 7 / Jakarta EE(jakarta.*)로 이관되어 본문과 차이가 있습니다. 본문 최신화는 진행 중입니다.
+    p.version-note Spring Framework 7.0 기준으로 앞부분을 정리했습니다. 이후 본문은 Spring 5.x / javax.* / JSP 시절에 쓴 것으로, DispatcherServlet·애너테이션 컨트롤러 같은 개념 설명은 유효하나 패키지명이 다릅니다.
+
+    h1 읽기 전에 — 본문과 현행의 차이
+    ol
+        li 본문은 #[strong Spring 5.2 / javax.* / JSP·XML 설정] 기준이다. 버전 선택과 이관 전반은 #[+asA('/posts/dev/JVM/spring_framework.html', 'Spring Framework 문서')] 에 정리했다
+        li 이 문서가 참조하는 예제 코드(#[+asInlineCode('Repositories/STS/mvc-javaN', 'text')], #[+asInlineCode('mvc-xmlN', 'text')])는 #[strong Spring 7 / jakarta.* 로 이관되어 있다.] 본문의 임포트문과 다르다
+        +asCode('java').
+            import javax.servlet.http.HttpServletRequest;     // 본문
+            import jakarta.servlet.http.HttpServletRequest;   // 예제 코드
+        li 서블릿 컨테이너는 #[strong Tomcat 10.1 이상]이 필요하다. Tomcat 9 가 javax 를 지원하는 마지막 메이저다
+
+    h1 Spring 6 · 7 에서 달라진 웹 계층
+    ol
+        li #[strong trailing slash 매칭이 기본 비활성화됐다](Spring 6)
+        +asCode('java').
+            @GetMapping("/api/users")
+            // Spring 5 : /api/users 와 /api/users/ 둘 다 매칭
+            // Spring 6 : /api/users 만 매칭. /api/users/ 는 404
+        p 되돌리려면 #[+asInlineCode('PathMatchConfigurer.setUseTrailingSlashMatch(true)', 'java')] 를 쓸 수 있으나 deprecated 다. 리다이렉트로 처리하는 편이 낫다
+        li #[strong 경로 매칭이 PathPattern 기반]으로 통일됐다. 기존 #[+asInlineCode('AntPathMatcher', 'java')] 는 특수한 경우에만 쓴다
+        li #[strong RestClient](Spring 6.1) — #[+asInlineCode('RestTemplate', 'java')] 의 현대적 대체제. 유창한 API 를 쓰면서 동기 방식이다
+        +asCode('java').
+            RestClient client = RestClient.create();
+            User u = client.get()
+                    .uri("https://example.com/users/{id}", 1)
+                    .retrieve()
+                    .body(User.class);
+        li #[strong HTTP 인터페이스](Spring 6) — 선언형 클라이언트. 인터페이스만 정의하면 구현이 생성된다
+        li #[strong 문제 상세(RFC 9457) 지원] — #[+asInlineCode('ProblemDetail', 'java')] 로 오류 응답을 표준 형식으로 낸다
+        +asCode('java').
+            @ExceptionHandler(NotFoundException.class)
+            ProblemDetail handle(NotFoundException e) {
+                return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+            }
+        li #[strong 가상 스레드](Spring 6.1) — #[+asInlineCode('spring.threads.virtual.enabled=true', 'ini')] 로 서블릿 요청을 가상 스레드에서 처리한다. 블로킹 I/O 가 많은 애플리케이션에서 WebFlux 없이 동시성을 크게 올릴 수 있다. 단 #[strong Java 24 이상]에서 쓰는 편이 낫다 — 21~23 은 #[+asInlineCode('synchronized', 'java')] 블록에서 캐리어 스레드에 고정된다
+
+    h1 JSP 는 어떻게 할 것인가
+    ol
+        li 본문의 뷰 예제는 JSP 중심이다. #[strong JSP(Jakarta Pages) 는 사양이 유지되지만 유지보수 모드]이며 새 기능 개발은 없다
+        li #[strong Jakarta Faces 4.0(EE 10)에서 JSP 가 뷰 기술로서 제거됐다]
+        li Spring Boot 는 예전부터 #[strong JSP 사용을 권장하지 않는다]. 내장 컨테이너에서 제약이 많고 실행 가능 jar 에서 동작하지 않는다
+        li 서버 사이드 렌더링이 필요하면 #[strong Thymeleaf] 가 Spring Boot 의 사실상 표준이다. 그 외에는 REST + 프런트엔드 프레임워크 조합을 쓴다
 
     h1 Spring Web MVC
     ul

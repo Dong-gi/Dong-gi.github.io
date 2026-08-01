@@ -5,7 +5,63 @@ include ../../../source/skeleton.pug
     description: 'Spring Framework 코어 정리',
 })
 
-    p.version-note 본문은 Spring 5.x / javax.* 기준입니다. 연결된 예제 코드는 Spring 7 / Jakarta EE(jakarta.*)로 이관되어 본문과 차이가 있습니다. 본문 최신화는 진행 중입니다.
+    p.version-note Spring Framework 7.0 / Spring Boot 4.0 기준으로 앞부분을 정리했습니다. 이후 본문은 Spring 5.x / javax.* 시절에 쓴 것으로, 개념 설명은 대부분 유효하나 패키지명과 설정 방식이 다릅니다.
+
+    h1 지금 어떤 버전을 써야 하나
+    ol
+        li #[strong Spring Framework 5.x 와 Spring Boot 2.x 는 OSS 지원이 끝난 지 오래다.] 이 문서 본문의 기준인 5.2 는 2021-12-31 에 끝났다
+        li #[strong Spring Boot 3.x 도 2026-06-30 에 전 브랜치가 끝났다.] 3.5 가 마지막이었다
+        +table()
+            +ths('Spring Framework', '출시', 'OSS 지원 종료', 'Java', 'Jakarta EE')
+            +tds('7.0 (현행)', '2025-11-30', '2027-06-30', '17 ~ 25', '11 ~ 12')
+            +tds('6.2', '2024-11-30', '2026-06-30 (종료)', '17 ~ 25', '9 ~ 10')
+            +tds('5.3 (LTS)', '2020-10-31', '2024-08-31 (종료)', '8 ~ 21', '7 ~ 8')
+            +tds('5.2', '2019-09-30', '2021-12-31 (종료)', '8 ~ 11', '-')
+        +table()
+            +ths('Spring Boot', '출시', 'OSS 지원 종료', 'Java')
+            +tds('4.1', '2026-06', '2027-07-31', '17 ~ 26')
+            +tds('4.0 (권장)', '2025-11-30', '2026-12-31', '17 ~ 25')
+            +tds('3.5', '2025-05-31', '2026-06-30 (종료)', '17 ~ 25')
+            +tds('2.7', '2022-05-31', '2023-06-30 (종료)', '8 ~ 21')
+        li #[strong Spring Boot 4.0 은 2026-12-31 에 끝난다.] 4.1 이 더 오래가지만 2026-06 출시라 "GA 후 6개월" 기준에는 아직 못 미친다. 연말에 4.1 로 한 번 더 올리는 것을 전제로 4.0 을 쓰는 편이 무난하다
+
+    h1 Spring 5 에서 6 · 7 로 — 무엇이 달라지나
+    ol
+        li #[strong javax.* 가 jakarta.* 로 바뀌었다.] Spring 6 / Boot 3 부터다. 이것이 가장 큰 장벽이며 소스 전체를 고쳐야 한다
+        +asCode('java').
+            import javax.servlet.http.HttpServletRequest;     // Spring 5 까지
+            import jakarta.servlet.http.HttpServletRequest;   // Spring 6 이후
+        p 상세는 #[+asA('/posts/dev/JVM/java_ee.html', 'Jakarta EE 문서')] 참조. #[strong javax 로 시작한다고 다 바꾸면 안 된다] — #[+asInlineCode('javax.sql', 'java')], #[+asInlineCode('javax.crypto', 'java')], #[+asInlineCode('javax.naming', 'java')] 등은 JDK 소속이다
+        li #[strong Java 17 이 최소 요구 버전이다.] Spring 6 부터. 7 은 17 ~ 25 를 지원한다
+        li #[strong 서블릿 컨테이너도 함께 올려야 한다.] Jakarta Servlet 6.x 는 #[strong Tomcat 10.1 이상], Servlet 6.1 은 Tomcat 11 이 필요하다. Tomcat 9 가 javax 를 지원하는 마지막 메이저다
+        li 좌표도 바뀐다
+        +asCode('gradle').
+            // Spring 5
+            providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+            providedCompile 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
+
+            // Spring 7
+            providedCompile 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+            providedCompile 'jakarta.servlet.jsp:jakarta.servlet.jsp-api:4.0.0'
+        li #[strong AOT 와 GraalVM 네이티브 이미지]가 1급 기능이 됐다(Spring 6). 기동 시간과 메모리 사용량이 크게 준다
+        li #[strong HTTP 인터페이스 클라이언트](Spring 6) — 선언형 HTTP 클라이언트. #[+asInlineCode('RestTemplate', 'java')] 는 유지보수 모드다
+        +asCode('java').
+            interface RepoService {
+                @GetExchange("/repos/{owner}/{repo}")
+                Repo getRepo(@PathVariable String owner, @PathVariable String repo);
+            }
+        li #[+asInlineCode('RestClient', 'java')](Spring 6.1) — #[+asInlineCode('WebClient', 'java')] 스타일의 동기 클라이언트. #[+asInlineCode('RestTemplate', 'java')] 의 현대적 대체제다
+        li #[strong 가상 스레드 지원](Spring 6.1) — #[+asInlineCode('spring.threads.virtual.enabled=true', 'ini')]. 단 Java 21~23 에서는 #[+asInlineCode('synchronized', 'java')] 피닝 문제가 있어 #[strong Java 24 이상]에서 쓰는 편이 낫다
+        li Observability 통합(Micrometer), 문제 상세(RFC 9457) 지원
+
+    h1 이관 시 자주 걸리는 것
+    ol
+        li #[strong trailing slash 매칭이 기본 비활성화됐다](Spring 6). #[+asInlineCode('/api/users', 'text')] 와 #[+asInlineCode('/api/users/', 'text')] 가 더 이상 같지 않다. 기존 클라이언트가 404 를 받을 수 있다
+        li #[strong spring.factories 기반 자동 설정 등록이 제거됐다](Boot 3). #[+asInlineCode('META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports', 'text')] 로 옮겨야 한다
+        li #[strong 프로퍼티 키가 대량으로 바뀌었다](Boot 3). #[+asInlineCode('spring-boot-properties-migrator', 'text')] 를 임시로 의존성에 넣으면 기동 시 바뀐 키를 보고해준다
+        +asCode('gradle') runtimeOnly 'org.springframework.boot:spring-boot-properties-migrator'
+        li Hibernate 6 으로 올라가면서 #[strong 버전별 Dialect 클래스가 사라졌다]. 상세는 #[+asA('/posts/dev/JVM/jpa.html', 'JPA 문서')] 참조
+        li #[strong Boot 2 에서 4 로 두 단계를 한 번에 건너뛰지 않는 편이 좋다.] 2 → 3(jakarta 전환) → 4 로 나눠 올리면 문제의 원인을 좁히기 쉽다
 
     h1 Spring Framework
     div
