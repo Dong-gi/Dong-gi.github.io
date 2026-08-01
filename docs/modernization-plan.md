@@ -232,13 +232,16 @@ pug·index·source 어디에서도 참조하지 않는 프로젝트다.
 
 ### 2-4. 표준 위반 정리
 
-전체 스캔에서 확인된 항목:
+`git ls-files` 로 **실제 추적 중인 파일**을 확인한 결과다.
 
-- Gradle `testCompile`(Gradle 7에서 제거) → `testImplementation`
-- Eclipse `.classpath`/`.project`가 커밋되어 있음 → `.gitignore` 처리 검토
-- `local.properties`(Android SDK 절대 경로)가 커밋되어 있음 (`Repositories/usb-tether/android/local.properties`) → **머신 종속 파일이므로 제거 대상**
-- `.idea/` 일부 파일 커밋됨
-- `gradle-wrapper.jar` 커밋(이건 정상 관행)
+| 항목 | 상태 |
+|---|---|
+| Gradle `testCompile`(Gradle 7에서 제거) → `testImplementation` | 처리 필요 |
+| Eclipse/STS `bin/` 컴파일 산출물 25개 커밋됨 | **커밋 18에서 제거** |
+| `gradle-wrapper.jar` 커밋 | 정상 관행, 유지 |
+| Eclipse `.classpath`/`.project` 커밋됨 | 프로젝트를 그대로 import 하려면 필요. 유지 판단 |
+
+> **정정** — 초안에서 "`local.properties` 와 `.idea/` 가 커밋되어 있다"고 적었으나 사실이 아니다. 두 경로 모두 작업 트리에는 있지만 **git 추적 대상이 아니다**(`git ls-files` 결과 0건). 디스크의 파일만 보고 단정한 오류였다.
 
 ### 2-5. 참조 무결성 자동 검사
 

@@ -45,6 +45,7 @@ HTML 617개 (현행 262, 리다이렉트 308, 보존 47, 새 고아 0) / posts.j
 | 15 | 부정확한 서술 정정, `Post.category` 타입 수정 | docs | 리뷰 지적 (중요·사소) | 문서를 코드와 일치시킴 |
 | 16 | 최종 검증, `gradle.html` 날짜 재생성 | chore | — | mtime 취약성의 실물 사례 |
 | 17 | 미참조 예제 프로젝트 4개 삭제 | chore | Phase 2-1 | 122 → 118개 |
+| 18 | 커밋된 컴파일 산출물 25개 제거 | chore | Phase 2-4 | 계획서의 잘못된 서술도 정정 |
 
 ---
 
@@ -764,3 +765,43 @@ mtime을 원래 값으로 되돌리려 했으나 이 환경의 파일시스템�
 
 - 삭제 후 정합성 검사: 오류 0건 (E6 코드 참조 804건 전부 유효)
 - `Single/teamcity` 는 문서에 인라인 YAML이 있는지 대조 후 삭제
+
+---
+
+## 18. 커밋된 컴파일 산출물 25개 제거
+
+**변경 파일**: `Repositories/STS/{rabbitmq-tutorial,TOTP-example}/bin/` 삭제, `.gitignore`, `docs/modernization-plan.md`
+
+### 무엇을
+
+Eclipse/STS가 만드는 `bin/` 출력 디렉터리가 통째로 커밋되어 있었다.
+
+| 프로젝트 | 파일 |
+|---|---|
+| `STS/rabbitmq-tutorial` | `.class` 21개 + `application.properties` + `logback.xml` |
+| `STS/TOTP-example` | `.class` 2개 |
+
+`bin/main/application.properties` 와 `bin/main/logback.xml` 은 `src/main/resources/` 의 복사본이다. `diff` 로 동일함을 확인하고 지웠으므로 정보 손실은 없다.
+
+`.gitignore` 에 재발 방지 규칙을 넣었다.
+
+```gitignore
+# Eclipse/STS 가 만드는 컴파일 산출물 디렉터리.
+Repositories/**/bin/
+
+# 머신 종속 파일 (Android SDK 절대 경로 등)
+local.properties
+```
+
+### 계획서의 잘못된 서술 정정
+
+`docs/modernization-plan.md` Phase 2-4에 "`local.properties` 와 `.idea/` 가 커밋되어 있다"고 적었는데 **사실이 아니었다.**
+
+`git ls-files` 로 실제 추적 파일을 확인하니 두 경로 모두 0건이다. 작업 트리에 파일이 보인다는 이유로 커밋된 것이라 단정한 오류다. 계획서를 실측값 기준 표로 바꿨다.
+
+> 디스크에 있는 것과 git이 추적하는 것은 다르다. `find` 가 아니라 `git ls-files` 로 확인해야 한다.
+
+### 검증
+
+- `git ls-files Repositories` 2,063건 중 산출물 패턴 매칭 → 수정 전 25건, 수정 후 0건
+- `.gitignore` 규칙이 `Chrome Proxy Extension` 등 다른 프로젝트에 영향을 주지 않는지 확인 (해당 경로에 `bin/` 없음)
