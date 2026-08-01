@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "npx terser --compress --mangle -o source/default.min.js -- source/default.js && node source/build.ts",
+    "build": "npx terser --compress --mangle -o source/default.min.js -- source/default.js && node source/build.ts && npm run check",
+    "check": "node tools/check-integrity.mjs .",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
