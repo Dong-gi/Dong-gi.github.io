@@ -1476,3 +1476,105 @@ Node 24가 Active LTS(2025-10-28 승격)다. Node 20은 2026-04-30, 22는 Mainte
 ### 손대지 않은 의존성
 
 `express-start` 의 `mongodb ^3.5.6`, `jade 1.11.0`, `mocha 7.1.1`, `fastify-start` 의 `fastify ^3.27.1` 등은 그대로 두었다. 전부 메이저 업그레이드가 필요한데(`jade` 는 아예 `pug` 로 개명된 후 폐기), 예제 코드까지 함께 고쳐야 하므로 별도 작업이다.
+
+---
+
+# 검증 체크리스트
+
+커밋 26~31은 **의존성 다운로드가 차단된 환경에서 지식에 기반해 작성**한 것이라 빌드로 확인하지 못했다. 아래를 순서대로 돌려주시면 된다. **위험도가 높은 것부터** 배치했다.
+
+각 항목은 커밋 단위로 되돌릴 수 있다 — 문제가 크면 `git revert <sha>`.
+
+## 1. Spring — 위험도 높음 (커밋 `470c55c6`)
+
+Boot 2 → 4는 메이저를 두 번 건너뛴다. **여기가 깨질 확률이 가장 높다.**
+
+```bash
+cd Repositories/STS/mvc-java1      && ./gradlew build   # 가장 단순. 좌표·네임스페이스 판별용
+cd Repositories/STS/app2           && ./gradlew build   # Spring Boot 4 (Gradle)
+cd Repositories/Eclipse/spring-aop && mvn -q compile    # Spring Boot 4 (Maven)
+cd Repositories/STS/jpa-example    && ./gradlew build   # jakarta.persistence
+cd Repositories/STS/mvc-java16     && ./gradlew build   # jakarta.websocket
+cd Repositories/STS/mvc-xml2       && ./gradlew build   # web.xml + JSP
+```
+
+확인할 것.
+
+- [ ] `org.springframework:spring-webmvc:7.0.0` 이 실제로 존재하는 버전인가 (패치 번호 확인)
+- [ ] Spring Boot 4.0의 마이그레이션 가이드에 반영 안 된 항목이 있는가 (모듈 재구성, 프로퍼티 키 변경, 자동 설정 이동)
+- [ ] `spring-boot-starter-parent` 사용 프로젝트에서 slf4j·logback·jackson 버전을 명시한 것이 parent 관리 버전과 충돌하지 않는가 — **충돌하면 명시를 지우는 편이 맞다**
+- [ ] `web.xml` 10개가 아직 `web-app_2_3.dtd` 다. Jakarta Servlet 6.1용 `web-app_6_0.xsd` 로 바꿔야 하는가
+- [ ] 배포 대상 Tomcat이 11 이상인가 (Jakarta Servlet 6.1 요구)
+
+## 2. Android — 마감 있음 (커밋 `c2fc1681`)
+
+**Google Play targetSdk 36 강제가 2026-08-31이다.**
+
+```bash
+cd Repositories/Android/Project01 && ./gradlew assembleDebug --warning-mode all
+```
+
+- [ ] AGP 9.0이 Groovy DSL(`build.gradle`)을 계속 지원하는가 — Kotlin DSL 강제라면 7개 전부 `.kts` 로 다시 써야 한다
+- [ ] `minifyEnabled` / `proguardFiles` 표기가 AGP 9에서 유효한가
+- [ ] AGP 9의 최소 JDK 요구치 (17로 잡았음)
+- [ ] `minSdk` 를 19 → 21로 올린 것이 의도에 맞는가 (Android 5.0 미만 제외)
+
+하나만 통과시킨 뒤 문제가 있으면 `tools/migrate-android.mjs` 의 상수를 고쳐 재적용한다. **스크립트는 멱등이 아니므로 재적용 전 `git checkout -- Repositories/Android`.**
+
+## 3. Lombok + Java 25 — 여러 커밋에 걸침 (`16e4959c`, `9520b9b8`, `470c55c6`)
+
+Lombok은 컴파일러 내부 API에 의존해 JDK 메이저 버전마다 대응 릴리스가 필요하다. **1.18.36으로 올렸으나 Java 25 지원 최소 버전이 더 높을 수 있다.**
+
+```bash
+cd Repositories/STS/TOTP-example      && ./gradlew build
+cd Repositories/Eclipse/lombok-example && mvn -q compile
+```
+
+- [ ] `NoSuchFieldError` / `IllegalAccessError` 가 나면 Lombok 버전 문제다. 최신으로 올릴 것
+
+## 4. .NET (커밋 `9d8394cb`)
+
+```bash
+cd Repositories/VisualStudio
+dotnet build VisualStudio.sln
+dotnet list package --outdated
+```
+
+- [ ] 손대지 않은 패키지 8종이 net10.0에서 복원되는가 — `MySql.Data` 8.0.28, `System.Data.SQLite` 1.0.115.5, `Dapper` 2.0.123, `SSH.NET` 2020.0.2, `Npgsql` 8.0.3, `morelinq` 3.3.2, `Hardcodet.NotifyIcon.Wpf` 1.1.0
+- [ ] `VisualStudio.sln` 이 `Visual Studio Version 17`(VS 2022)인데 .NET 10 빌드에 더 최신 VS가 필요한가
+
+## 5. Gradle 9 이관 (커밋 `16e4959c`)
+
+```bash
+cd Repositories/Eclipse/annotation-processing3 && ./gradlew build   # maven-publish
+cd Repositories/Gradle/JUnit-Example           && ./gradlew run     # mainClass
+cd Repositories/STS/netty-tutorial             && ./gradlew build   # slf4j 2.x
+```
+
+- [ ] `slf4j 1.7 → 2.0` 은 바인딩 방식이 바뀐 메이저 업그레이드다. **로깅이 조용히 죽지 않는지** 실제 출력을 확인할 것
+
+## 6. Maven (커밋 `9520b9b8`)
+
+```bash
+cd Repositories/Eclipse/JavaSE && mvn -q compile
+```
+
+- [ ] `maven.compiler.release 25` 로 컴파일되는가
+
+## 7. 블로그 본문과의 정합성
+
+코드는 올렸지만 **본문이 아직 옛 내용인 문서가 있다.**
+
+- [ ] `spring_servlet.pug`(1,338줄), `spring_framework.pug`(1,578줄) — 본문이 `javax.*` / XML 설정 기준. 상단에 불일치 배너를 넣어두었다
+- [ ] `java_ee.pug`, `jpa.pug` — 동일
+- [ ] 코드 버튼이 여는 파일 내용이 본문 설명과 맞는지 (예: `mvc-javaN` 의 `jakarta.servlet` import)
+
+본문 개정은 Phase 1의 1·2순위 작업이다.
+
+## 8. 사이트 자체 (이 환경에서 검증 완료, 참고용)
+
+```bash
+npm ci && npm run typecheck && npm run build
+```
+
+빌드 후 `npm run check` 가 자동으로 돌며, 오류 0건이어야 한다. 경고 11건(`posts.json` 미등록 문서)은 알려진 상태다.
