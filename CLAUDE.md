@@ -77,12 +77,13 @@ npm run typecheck  # tsc --noEmit
 
 ## skeleton.pug mixin
 
-전체 14개다.
+전체 15개다.
 
 | mixin | 용도 |
 |---|---|
 | `+post(options)` | 문서 전체를 감싸는 레이아웃. 모든 문서의 루트 |
 | `+bookInfo(options)` | 도서 리뷰용 메타 정보 |
+| `+legacy(version, note)` | 구버전 서술을 `details` 로 접는다. 아래 "문서 최신화" 참조 |
 | `+codeBtn(path, lan)` | `Repositories/` 의 실제 **파일**을 여는 버튼. 경로가 없거나 디렉터리면 검사 E6가 잡는다 |
 | `+asCode(lan, title)` | 블록 코드. 제목 줄과 함께 `<div class="as-code">` 로 감싼다 |
 | `+asInlineCode(code, lan)` | 문장 중간의 짧은 코드 (`<span>`) |
@@ -112,6 +113,23 @@ npm run typecheck  # tsc --noEmit
 2. **보존 대상 47개** — `tools/preserved-orphans.json` 에 선언. 후계 문서가 없어 리다이렉트할 곳이 없고, 검색엔진에 색인되어 있어 삭제하지 않는다
 
 새 고아 HTML이 생기면 정합성 검사 E4가 잡는다.
+
+## 문서 최신화
+
+낡은 문서를 갱신할 때는 **기존 내용을 지우지 않고 `+legacy` 로 접은 뒤 최신 내용을 그 위에 올린다.**
+
+```pug
+h1 Python
+p 이 문서는 Python 3.14 기준입니다.
+//- ... 최신 내용 ...
+
++legacy('Python 3.8', '2024-10-07 지원 종료')
+    //- 기존 내용을 통째로 이 아래로 들여쓰기
+```
+
+기존 본문을 들여쓰기만 하므로 diff가 깨끗하고 되돌리기 쉽다. 구버전 환경을 쓰는 방문자에게도 정보가 남는다.
+
+**제목에는 버전을 넣지 않는다.** URL이 바뀌면 리다이렉트가 또 필요해지므로, 기준 버전은 본문 상단에 적는다.
 
 ## `Repositories/` 정리 시 주의
 

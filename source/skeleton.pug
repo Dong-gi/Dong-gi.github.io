@@ -265,6 +265,30 @@ mixin post(options)
         publisher: string,
         date: string
     }
+//-
+    구버전 서술을 접어두는 블록. 기존 내용을 지우지 않고 보존하면서
+    최신 내용을 위에 올릴 때 쓴다.
+
+    version : 접히는 내용의 기준 버전 (예: 'Python 3.8')
+    note    : EOL 날짜 등 부가 설명 (선택)
+
+    사용 예
+        h1 Python
+        p 이 문서는 Python 3.14 기준입니다.
+        //- ... 최신 내용 ...
+
+        +legacy('Python 3.8', '2024-10-07 지원 종료')
+            //- 기존 내용을 통째로 이 아래로 들여쓰기
+mixin legacy(version, note)
+    details.legacy
+        summary
+            = `구버전 기록 — ${version}`
+            if note
+                |  (
+                = note
+                |)
+        block
+
 mixin bookInfo(options)
     .book-info
         div: +w3img(options.imgSrc, '도서 이미지')&attributes({style: 'max-height:210px'})

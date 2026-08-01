@@ -47,6 +47,7 @@ HTML 617개 (현행 262, 리다이렉트 308, 보존 47, 새 고아 0) / posts.j
 | 17 | 미참조 예제 프로젝트 4개 삭제 | chore | Phase 2-1 | 122 → 118개 |
 | 18 | 커밋된 컴파일 산출물 25개 제거 | chore | Phase 2-4 | 계획서의 잘못된 서술도 정정 |
 | 19 | Gradle 7에서 제거된 의존성 설정 158줄 교체 | fix | Phase 2-4 | 문서의 잘못된 예시도 갱신 |
+| 20 | 구버전 접기 `+legacy` mixin 추가 | feat | Phase 1-1 | Phase 1의 전제 |
 
 ---
 
@@ -857,3 +858,63 @@ local.properties
 - gradle.html 재렌더 후 정합성 검사 오류 0건
 
 > ⚠ **빌드로는 검증하지 못했다.** 이 샌드박스에 `gradle`·`javac` 가 없다. 설정 이름 치환은 Gradle 공식 마이그레이션 가이드의 1:1 대응이고 문법 변화가 없어 위험이 낮다고 판단했으나, 실제 빌드 확인은 로컬에서 한 번 필요하다.
+
+---
+
+## 20. 구버전 접기 `+legacy` mixin 추가
+
+**변경 파일**: `source/skeleton.pug`, `source/default.css`, `CLAUDE.md`
+
+### 무엇을
+
+낡은 문서를 갱신할 때 쓸 표기를 먼저 정의했다. **Phase 1(포스트 최신화)의 전제**다.
+
+```pug
+mixin legacy(version, note)
+    details.legacy
+        summary
+            = `구버전 기록 — ${version}`
+            if note
+                |  (
+                = note
+                |)
+        block
+```
+
+렌더 결과.
+
+```html
+<details class="legacy">
+  <summary>구버전 기록 — Python 3.8 (2024-10-07 지원 종료)</summary>
+  ...기존 본문...
+</details>
+```
+
+### 왜 이 방식인가
+
+문서를 최신화하는 방법은 세 가지가 있다.
+
+1. 옛 내용을 지우고 새로 쓴다 — 구버전 환경을 쓰는 방문자가 잃는다. diff도 커진다
+2. 옛 내용 옆에 새 내용을 나란히 둔다 — 문서가 두 배로 길어지고 뭐가 현행인지 헷갈린다
+3. **옛 내용을 접고 그 위에 새 내용을 올린다** ← 택함
+
+3번은 **기존 본문을 들여쓰기만 하면 되므로 diff가 깨끗하고 되돌리기 쉽다.** 검색엔진은 `details` 안의 내용도 색인하므로 기존 유입도 유지된다.
+
+### 스타일
+
+`default.css` 에 4줄을 추가했다. 기존 `#contents details` 규칙을 물려받되 회색 계열로 낮춰 현행 내용과 시각적으로 구분한다.
+
+```css
+#contents details.legacy{border-left-color:rgba(0,0,0,.25);background:rgba(0,0,0,.02)}
+#contents details.legacy>summary{color:#666;font-size:0.9em}
+#contents details.legacy[open]>summary{margin-bottom:0.75rem}
+```
+
+### `CLAUDE.md` 에 문서 최신화 규칙 추가
+
+`+legacy` 사용법과 함께 **"제목에는 버전을 넣지 않는다"** 는 규칙을 명시했다. 제목을 바꾸려다 URL까지 바꾸면 리다이렉트가 또 필요해진다. 기준 버전은 본문 상단에 적는다.
+
+### 검증
+
+- `note` 있는 경우와 없는 경우 두 가지로 렌더해 `summary` 문구 확인 (없을 때 빈 괄호가 남지 않음)
+- **mixin 추가가 기존 263개 산출물에 아무 영향을 주지 않음을 드리프트 검사로 확인**
