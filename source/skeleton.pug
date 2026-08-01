@@ -161,12 +161,18 @@ mixin post(options)
             if options.useMath
                 script#MathJax-script(src='/source/tex-chtml.js', defer)
                 script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
-            script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=UA-143098403-1', async)
-            script.
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'UA-143098403-1');
+            //-
+                Universal Analytics(UA-143098403-1)는 2023-07-01 에 데이터 수집을 중단했고
+                표준 속성은 2024-07 에 삭제되었다. 아무것도 수집하지 않으면서 매 페이지마다
+                외부 스크립트만 받아오고 있어 제거했다.
+
+                다시 붙이려면 GA4 측정 ID(G-XXXXXXXXXX)를 발급받아 아래 형태로 넣는다.
+                    script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX', async)
+                    script.
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'G-XXXXXXXXXX');
 
         body
             aside.w3-animate-left#sidebar
