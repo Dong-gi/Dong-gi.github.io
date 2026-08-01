@@ -1219,3 +1219,56 @@ cd Repositories/Android/Project01
 ### 손대지 않은 것
 
 `Repositories/usb-tether/android` 는 이미 `compileSdk = 37`, Kotlin DSL 로 현행 상태라 제외했다.
+
+---
+
+## 27. .NET 17개를 net10.0으로 이관
+
+**변경 파일**: `Repositories/VisualStudio/**/*.csproj` 17개
+
+### 왜
+
+**.NET 6은 2024-11-12에 지원이 종료됐다.** 이미 2년 가까이 지난 상태다. .NET 10은 2025-11-11 GA된 LTS로 6개월 룰에 적격하며, 2028-11-14까지 지원된다.
+
+.NET 8과 9는 둘 다 2026-11-10에 종료되므로 지금 올릴 대상으로는 의미가 없다.
+
+### 적용한 변경
+
+| 대상 | 기존 | 변경 | 개수 |
+|---|---|---|---:|
+| 콘솔 앱 TFM | `net6.0` | `net10.0` | 9 |
+| WPF 앱 TFM | `net6.0-windows` | `net10.0-windows` | 8 |
+| `System.Configuration.ConfigurationManager` | 6.0.0 | 10.0.0 | 1 |
+| `Newtonsoft.Json` | 13.0.1 | 13.0.3 | 1 |
+
+`System.Configuration.ConfigurationManager` 는 .NET 버전과 함께 번호가 올라가는 패키지라 TFM과 반드시 같이 움직여야 한다.
+
+### ⚠ 검증하지 못한 것
+
+`dotnet` SDK도 NuGet도 이 환경에서 접근할 수 없다.
+
+**손대지 않은 패키지 8종** — 현행 버전을 확신할 수 없어 그대로 두었다. 대부분 `netstandard2.0` 을 타깃하므로 net10.0에서도 복원은 될 것으로 **추측**하지만, 오래된 것들이라 확인이 필요하다.
+
+| 패키지 | 현재 버전 |
+|---|---|
+| `MySql.Data` | 8.0.28 |
+| `System.Data.SQLite` (+ Core / EF6 / Linq) | 1.0.115.5 |
+| `Dapper` | 2.0.123 |
+| `SSH.NET` | 2020.0.2 |
+| `Npgsql` | 8.0.3 |
+| `morelinq` | 3.3.2 |
+| `Hardcodet.NotifyIcon.Wpf` | 1.1.0 |
+
+**솔루션 파일은 건드리지 않았다.** `VisualStudio.sln` 이 `Visual Studio Version 17`(VS 2022)로 되어 있는데, .NET 10을 빌드하려면 더 최신 VS가 필요할 수 있다. 솔루션 버전 문자열을 잘못 고치면 IDE가 열지 못하므로 실제 환경에서 판단하는 편이 낫다.
+
+**검증 방법**
+
+```bash
+cd Repositories/VisualStudio
+dotnet build VisualStudio.sln
+# 또는 개별 확인
+dotnet build ConsoleApp9/ConsoleApp9.csproj   # 패키지 참조가 가장 많은 프로젝트
+dotnet build WpfApp8/WpfApp8.csproj           # WPF + 패키지
+```
+
+복원이 실패하는 패키지가 나오면 `dotnet list package --outdated` 로 한 번에 확인할 수 있다.
