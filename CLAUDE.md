@@ -34,7 +34,7 @@ npm run typecheck  # tsc --noEmit
 | `imgs/` → `imgs-generated/` | 원본 이미지 → 반응형 변환본 |
 | `d2/*.d2` → `d2/*.svg` | 다이어그램 소스 → SVG |
 | `files/sitemap.txt` | 사이트맵. `robots.txt` 가 가리킨다 |
-| `Repositories/` | 본문 코드 버튼이 참조하는 예제 프로젝트 |
+| `Repositories/` | 본문 코드 버튼이 참조하는 예제 프로젝트 (아래 주의) |
 | `tools/` | 정합성 검사·리다이렉트 도구 |
 | `docs/` | 현대화 계획과 작업 로그 |
 
@@ -112,6 +112,18 @@ npm run typecheck  # tsc --noEmit
 2. **보존 대상 47개** — `tools/preserved-orphans.json` 에 선언. 후계 문서가 없어 리다이렉트할 곳이 없고, 검색엔진에 색인되어 있어 삭제하지 않는다
 
 새 고아 HTML이 생기면 정합성 검사 E4가 잡는다.
+
+## `Repositories/` 정리 시 주의
+
+대부분은 본문 `+codeBtn` 이 참조하는 예제지만, **참조가 없어도 지우면 안 되는 것들이 있다.**
+
+| 경로 | 사유 |
+|---|---|
+| `JavaScript/Chrome Proxy Extension` | 실제로 사용 중인 도구. 블로그 예제가 아니라 독립 산출물 |
+| `iroiro-downloader` | 자체 `CLAUDE.md`·`README.md` 를 가진 독립 프로젝트 |
+| `usb-tether` | 위와 같음 |
+
+"pug에서 참조하지 않음"은 삭제 근거로 충분하지 않다. 실제 용도를 확인하고 지운다.
 
 ## 정합성 검사
 

@@ -44,6 +44,7 @@ HTML 617개 (현행 262, 리다이렉트 308, 보존 47, 새 고아 0) / posts.j
 | 14 | 정합성 검사 보완 + 그로 인해 드러난 코드 버튼 오류 수정 | fix | 리뷰 지적 (사소) | 검사가 실제 버그를 잡아냄 |
 | 15 | 부정확한 서술 정정, `Post.category` 타입 수정 | docs | 리뷰 지적 (중요·사소) | 문서를 코드와 일치시킴 |
 | 16 | 최종 검증, `gradle.html` 날짜 재생성 | chore | — | mtime 취약성의 실물 사례 |
+| 17 | 미참조 예제 프로젝트 4개 삭제 | chore | Phase 2-1 | 122 → 118개 |
 
 ---
 
@@ -731,3 +732,35 @@ dateModified 제외 시 동일? true
 mtime을 원래 값으로 되돌리려 했으나 이 환경의 파일시스템이 초 단위로 절삭해 밀리초(`.807`)를 복원할 수 없었다. 내용은 git과 동일하고 실제 수정 시각도 초 단위까지 정확하므로, `.000` 으로 재생성해 커밋했다.
 
 **커밋 15에서 문서로만 경고했던 문제가 하루도 안 돼 실물로 나타난 셈이다.** `dateModified` 를 git 커밋 날짜 기반으로 바꾸는 후속 과제의 우선순위를 높일 근거가 된다.
+
+---
+
+## 17. 미참조 예제 프로젝트 4개 삭제
+
+**변경 파일**: `Repositories/` 4개 디렉터리 삭제, `CLAUDE.md`
+
+### 삭제한 것
+
+`pugs/`·`index.pug`·`source/` 어디에서도 참조하지 않는 프로젝트다.
+
+| 경로 | 파일 수 | 비고 |
+|---|---:|---|
+| `Eclipse/annotation-processing2` | 5 | 1·3은 참조되는데 2만 미참조 |
+| `Node/redis-start` | 2 | |
+| `STS/Skeleton-NonSpringBoot` | 13 | |
+| `Single/teamcity` | 2 | `docker-compose.yml` 내용이 `not-registered/CI-CD.pug` 에 인라인으로 그대로 있어 정보 손실 없음 |
+
+122개 → 118개.
+
+### 삭제하지 않은 것 — 판단 착오 정정
+
+처음에 `JavaScript/Chrome Proxy Extension`(34개 파일)도 미참조라 삭제 대상에 넣었으나, **실제로 사용 중인 도구라는 지적을 받고 되돌렸다.**
+
+"pug에서 참조하지 않음"을 삭제 근거로 삼은 것이 잘못이었다. `Repositories/` 에는 블로그 예제가 아닌 독립 산출물도 섞여 있다. `iroiro-downloader` 와 `usb-tether` 도 같은 이유로 처음부터 제외했었는데, 그 판단 기준을 `Chrome Proxy Extension` 에는 적용하지 못했다. 자체 `CLAUDE.md` 유무로만 갈랐던 탓이다.
+
+같은 실수가 반복되지 않도록 `CLAUDE.md` 에 "`Repositories/` 정리 시 주의" 절을 추가해 세 항목을 명시했다.
+
+### 검증
+
+- 삭제 후 정합성 검사: 오류 0건 (E6 코드 참조 804건 전부 유효)
+- `Single/teamcity` 는 문서에 인라인 YAML이 있는지 대조 후 삭제
