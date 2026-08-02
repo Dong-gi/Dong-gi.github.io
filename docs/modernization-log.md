@@ -2201,3 +2201,89 @@ $ (재렌더)
 ### 남은 판단 여지
 
 `8eaf5aec`(2025-03-24, 36개)는 도서 `author` 필드에서 번역자를 빼는 일괄 정리다. **표시 내용이 바뀌므로 실질 변경으로 두었지만**, 메타데이터 정규화로 보고 제외해도 무리는 없다. 지금은 도서 45편의 갱신일이 이 날짜다. 제외하려면 `refactor-commits.json` 에 SHA 를 추가하면 된다.
+
+---
+
+## 43. Windows 에서 빌드가 깨지던 문제 수정
+
+**변경 파일**: `source/build.ts`, `tools/test-paths.mjs` (신규), `package.json`, `.github/workflows/verify.yml`, `CLAUDE.md`
+
+### 증상과 원인
+
+Windows 에서 `path.join` 은 `\` 를 쓴다. `build.ts` 는 경로를 **문자열로 치환하는 곳이 많아서** 구분자가 섞이면 전부 어긋난다.
+
+```js
+// Windows 에서
+path.join('./pugs\\dev', 'aws.pug')          // 'pugs\dev\aws.pug'
+'./pugs\\dev\\aws.pug'.replace('/pugs/', '/posts/')   // 매칭 실패
+```
+
+실제로 어떻게 깨지는지 재현해봤다.
+
+| 항목 | Windows 에서의 실제 결과 |
+|---|---|
+| 산출물 경로 | `./pugs\dev\aws.html` — **`posts/` 가 아니라 소스 디렉터리에 HTML 을 쓴다** |
+| canonical URL | `https://dong-gi.github.io/pugs\dev\aws.html` |
+| `doc-dates.json` 조회 키 | `pugs\dev\aws.pug` — 매칭 실패 → mtime 으로 대체 |
+| 이미지 출력 경로 | `imgs/` 아래 그대로 |
+| 빌드 마지막 단계 | `chmod -R 644 d2/*` — **Windows 에 `chmod` 도 셸 글로브도 없어 실패** |
+
+마지막 항목이 눈에 보이는 증상이었을 것이고, 나머지는 **조용히 잘못된 곳에 파일을 쓰고 있었다.**
+
+### 수정
+
+**1. 경로를 받는 즉시 `/` 로 정규화**
+
+```ts
+function toPosix(p: string): string {
+    return p.split(/[\\/]/).join('/');
+}
+```
+
+`path.sep` 이 아니라 두 구분자를 모두 받는다. Windows 에서는 `/` 와 `\` 가 섞인 경로가 흔하고, 이렇게 해야 **어느 플랫폼에서든 이 함수를 검증할 수 있다.**
+
+적용 지점 5곳 — `processImgs` 의 출력 경로와 소스 경로, `processPugs` 의 `postDirs`·소스 경로, `generatedPaths`, `render-pug` 워커의 `htmlPath`, `docModified` 의 조회 키.
+
+**2. `chmod` 셸 호출을 Node API 로**
+
+```ts
+async function chmodD2() {
+    const names = await fsp.readdir('./d2');
+    await Promise.all(names.map((name) => fsp.chmod('./d2/' + name, 0o644)));
+}
+```
+
+POSIX 에서는 동작이 같고, Windows 에서는 읽기 전용 비트만 다루는 무해한 호출이 된다. 이제 외부 바이너리 호출은 `d2` 하나뿐이다.
+
+**3. 산출물 경로 안전장치**
+
+경로 치환이 어긋나면 조용히 소스를 오염시키는 대신 즉시 멈춘다.
+
+```ts
+if (htmlPath !== './index.html' && !htmlPath.startsWith('./posts/')) {
+    console.error(`${o.path} -> ${htmlPath} : 산출물 경로가 posts/ 밖이라 렌더를 중단한다`);
+    break;
+}
+```
+
+### 검증 — Windows 없이 Windows 를 테스트한다
+
+`tools/test-paths.mjs` 는 `path.win32.join` 으로 Windows 경로를 만든 뒤 `build.ts` 와 같은 변환을 적용한다. **리눅스 CI 러너에서도 유효하다.**
+
+```
+✅ 17개 검사 전부 통과   (posix 8 + win32 8 + doc-dates 키 1)
+```
+
+**이 테스트가 실제로 버그를 잡는지도 확인했다.** `toPosix` 를 수정 전 동작(항등 함수)으로 되돌리자 win32 검사 6건이 정확히 위 표의 증상으로 실패했다.
+
+```
+❌ win32  산출물 경로
+       기대 ./posts/dev/aws.html
+       실제 ./pugs\dev\aws.html
+```
+
+`npm test` 로 실행하며 CI 에도 넣었다.
+
+### 남은 Windows 의존성
+
+`d2` 바이너리 호출 하나다. `d2` 는 Windows 빌드를 제공하므로 PATH 에 있으면 동작한다. 없으면 그 작업만 실패하고 pug·이미지 렌더는 진행된다.

@@ -29,6 +29,22 @@ interface Posts {
     list: Post[];
 }
 
+/**
+ * 경로 구분자를 '/' 로 통일한다.
+ *
+ * Windows 에서 path.join 은 '\' 를 쓴다. 이 스크립트는 경로를 문자열로 다루는 곳이
+ * 많아('/pugs/' -> '/posts/' 치환, doc-dates.json 조회, URL 생성) 구분자가 섞이면
+ * 전부 어긋난다. 파일시스템에서 경로를 받는 즉시 이 함수를 통과시킨다.
+ * Node 의 fs API 는 Windows 에서도 '/' 를 그대로 받아들이므로 안전하다.
+ *
+ * path.sep 이 아니라 두 구분자를 모두 받는 이유는 두 가지다. Windows 에서는 '/' 와
+ * '\' 가 섞인 경로가 흔히 나오고, 이 함수 자체를 어느 플랫폼에서든 검증할 수 있다.
+ * POSIX 파일명에 '\' 가 들어 있으면 망가지지만 이 저장소에는 그런 파일이 없다.
+ */
+function toPosix(p: string): string {
+    return p.split(/[\\/]/).join('/');
+}
+
 /** 사이트 오리진. 사이트맵 등 절대 URL 생성에 쓴다. */
 const SITE_ORIGIN = 'https://dong-gi.github.io';
 /** posts.json 의 file 값은 'dev/aws.html' 형태이므로 URL 생성 시 이 접두사가 필요하다. */
@@ -61,7 +77,7 @@ function pageUrlOf(htmlPath: string): string {
  * @param pugPath './pugs/dev/aws.pug' 형태
  */
 async function docModified(pugPath: string): Promise<string> {
-    const key = pugPath.replace(/^\.\//, '');
+    const key = toPosix(pugPath).replace(/^\.\//, '');
     const recorded = workerDocDates[key];
     if (recorded != null) return recorded;
     const { mtime } = await fsp.stat(pugPath);
@@ -174,7 +190,13 @@ parentPort?.on('message', async (o: WorkMessage) => {
             break;
         }
         case 'render-pug': {
-            const htmlPath = o.path.replace('/pugs/', '/posts/').replace('.pug', '.html');
+            const htmlPath = toPosix(o.path).replace('/pugs/', '/posts/').replace('.pug', '.html');
+            // 경로 치환이 어긋나면 pugs/ 안에 HTML 을 쓰게 된다. 조용히 소스를 오염시키는
+            // 대신 즉시 실패시킨다. Windows 에서 실제로 이 상태였다.
+            if (htmlPath !== './index.html' && !htmlPath.startsWith('./posts/')) {
+                console.error(`${o.path} -> ${htmlPath} : 산출물 경로가 posts/ 밖이라 렌더를 중단한다`);
+                break;
+            }
             try {
                 // canonical, Open Graph, JSON-LD 생성에 필요한 페이지 단위 정보.
                 const html = await renderFile(o.path, {
@@ -228,12 +250,12 @@ async function processImgs() {
     const entries = await fsp.readdir('./imgs', { recursive: true, withFileTypes: true });
     for (const entry of entries) {
         if (!entry.isDirectory()) continue;
-        const outPath = './' + path.join(entry.parentPath, entry.name).replace(/^imgs\//, 'imgs-generated/');
+        const outPath = './' + toPosix(path.join(entry.parentPath, entry.name)).replace(/^imgs\//, 'imgs-generated/');
         await fsp.mkdir(outPath, { recursive: true });
     }
     for (const entry of entries) {
         if (!entry.isFile()) continue;
-        const filePath = './' + path.join(entry.parentPath, entry.name);
+        const filePath = './' + toPosix(path.join(entry.parentPath, entry.name));
         pushWork({ api: 'transform-img', path: filePath });
         const absolutePath = filePath.slice(1);
         if (imgMap[absolutePath] == null) {
@@ -264,13 +286,13 @@ async function processPugs() {
     const postDirs = new Set<string>();
     for (const entry of entries) {
         if (!entry.isDirectory()) continue;
-        postDirs.add('./' + path.join(entry.parentPath, entry.name).replace(/^pugs\//, 'posts/'));
+        postDirs.add('./' + toPosix(path.join(entry.parentPath, entry.name)).replace(/^pugs\//, 'posts/'));
     }
     await Promise.all([...postDirs].map((d) => fsp.mkdir(d, { recursive: true })));
     await Promise.all(
         entries.map(async (entry) => {
             if (!entry.isFile()) return;
-            const filePath = './' + path.join(entry.parentPath, entry.name);
+            const filePath = './' + toPosix(path.join(entry.parentPath, entry.name));
             const stats = await fsp.stat(filePath);
             const htmlPath = filePath.replace('/pugs/', '/posts/').replace('.pug', '.html');
             const post = postMap.get(htmlPath);
@@ -287,6 +309,18 @@ async function processPugs() {
     );
 }
 
+/**
+ * d2 산출물의 파일 모드를 644 로 맞춘다.
+ *
+ * 예전에는 exec('chmod -R 644 d2/*') 를 썼는데, Windows 에는 chmod 도 셸 글로브도
+ * 없어 빌드 마지막 단계가 통째로 실패했다. Node 의 fsp.chmod 로 바꾸면 POSIX 에서는
+ * 같은 동작을 하고 Windows 에서는 읽기 전용 비트만 다루는 무해한 호출이 된다.
+ */
+async function chmodD2() {
+    const names = await fsp.readdir('./d2');
+    await Promise.all(names.map((name) => fsp.chmod('./d2/' + name, 0o644)));
+}
+
 async function processD2s() {
     const names = await fsp.readdir('./d2');
     names.forEach((name) => {
@@ -298,7 +332,9 @@ async function processD2s() {
 }
 
 if (isMainThread) {
-    const generatedPaths = (await fsp.readdir('./imgs-generated', { recursive: true })).map((p) => './imgs-generated/' + p);
+    const generatedPaths = (await fsp.readdir('./imgs-generated', { recursive: true })).map(
+        (p) => './imgs-generated/' + toPosix(p),
+    );
     for (const w of workers) {
         w.postMessage({ api: 'init', generatedPaths, imgMap, docDates });
     }
@@ -307,10 +343,7 @@ if (isMainThread) {
     await Promise.all([
         fsp.writeFile('./source/img-map.json', imgMapTxt),
         fsp.writeFile('./files/posts-compressed.json', JSON.stringify(posts)),
-        fsp.writeFile(
-            './files/sitemap.txt',
-            posts.list.map(postUrl).sort().join('\n'),
-        ),
-        exec(`chmod -R 644 d2/*`),
+        fsp.writeFile('./files/sitemap.txt', posts.list.map(postUrl).sort().join('\n')),
+        chmodD2(),
     ]);
 }

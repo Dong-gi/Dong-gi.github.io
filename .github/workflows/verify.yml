@@ -38,6 +38,11 @@ jobs:
       - name: 타입 검사
         run: npm run typecheck
 
+      - name: 경로 처리 테스트
+        # Windows 경로(\)에서도 산출물이 posts/ 로 가는지 확인한다.
+        # 리눅스 러너에서도 path.win32 로 재현하므로 항상 유효하다.
+        run: npm test
+
       - name: 사이트 정합성 검사
         # 고아 HTML, 깨진 코드 참조, posts.json 정합성, 사이트맵 형식을 본다.
         # 세부 항목은 tools/check-integrity.mjs 주석 참조.

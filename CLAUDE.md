@@ -15,6 +15,7 @@ npm run build      # default.js 압축 -> pug/이미지/d2 렌더 -> 정합성 �
 npm run check      # 정합성 검사만
 npm run typecheck  # tsc --noEmit
 npm run dates      # 문서 갱신일 재계산 (아래 참조)
+npm test           # 경로 처리 테스트 (Windows 호환성)
 ```
 
 `npm run build` 는 마지막에 `npm run check` 를 돌린다. 검사 실패 시 종료 코드 1이지만 산출물은 이미 쓰인 뒤다. "빌드를 막는" 게 아니라 "문제를 알리는" 동작이다.
@@ -197,3 +198,5 @@ fix: 사이트맵 URL에 누락된 /posts/ 접두사 복원
 - `.gitattributes` 가 `* text=auto` 라 커밋 시 CRLF가 LF로 정규화된다. 기존 파일을 `git add` 하면 줄바꿈만 바뀐 diff가 대량으로 생길 수 있다
 - 사이트 오리진과 `/posts/` 접두사는 `build.ts` 의 `SITE_ORIGIN`, `POSTS_URL_PREFIX` 상수 하나로 관리한다. URL 문자열을 코드 안에 직접 쓰지 않는다
 - 방문자 분석 도구는 현재 없다. 수집이 중단된 Universal Analytics 태그를 제거했고, GA4 재도입 형태는 `source/skeleton.pug` 주석에 남겨두었다
+- **경로는 항상 `/` 로 다룬다.** `build.ts` 는 경로를 문자열로 치환하는 곳이 많아(`/pugs/` → `/posts/`, doc-dates 조회, URL 생성) 구분자가 섞이면 전부 어긋난다. 파일시스템에서 경로를 받으면 즉시 `toPosix()` 를 통과시킨다. Windows 에서 이걸 빠뜨리면 **HTML 이 `posts/` 가 아니라 `pugs/` 안에 쓰인다.** `npm test` 가 `path.win32` 로 이 상황을 재현해 검증한다
+- **셸 명령을 쓰지 않는다.** `chmod`·글로브 같은 POSIX 셸 기능은 Windows 에 없다. Node API(`fsp.chmod` 등)로 대체한다. 외부 바이너리 호출은 `d2` 하나뿐이다
