@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npx terser --compress --mangle -o source/default.min.js -- source/default.js && node source/build.ts && npm run check",
     "check": "node tools/check-integrity.mjs .",
+    "dates": "node tools/build-doc-dates.mjs .",
     "typecheck": "tsc --noEmit"
   },
   "repository": {

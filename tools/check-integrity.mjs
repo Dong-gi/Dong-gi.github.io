@@ -15,6 +15,7 @@
  *   E7 사이트맵의 모든 URL이 올바른 형식이고 실제 파일과 대응하는가
  *   W1 pug 소스는 있으나 posts.json 에 등록되지 않은 문서 (경고)
  *   W2 보존 목록에 있으나 파일이 사라진 항목 (경고)
+ *   W4 source/doc-dates.json 에 날짜가 없는 pug (경고) — npm run dates 필요
  *
  * 사용법
  *   node tools/check-integrity.mjs [저장소 루트] [--strict]
@@ -186,6 +187,24 @@ if (!fs.existsSync(sitemapPath)) {
 const indexed = new Set(posts.map((p) => p.file));
 for (const key of [...pugKeys].sort()) {
     if (!indexed.has(key + '.html')) warnings.push(`W1 pug는 있으나 posts.json 미등록: pugs/${key}.pug`);
+}
+
+// ---------------------------------------------------------------- W4 문서 갱신일
+
+/**
+ * doc-dates.json 에 없는 pug 는 빌드에서 mtime 으로 대체된다.
+ * mtime 은 클론할 때마다 바뀌므로 대량 diff 의 원인이 된다.
+ */
+const docDatesPath = rel('source/doc-dates.json');
+if (fs.existsSync(docDatesPath)) {
+    const recorded = new Set(Object.keys(JSON.parse(fs.readFileSync(docDatesPath, 'utf8')).dates));
+    const missingDates = [...pugKeys].filter((k) => !recorded.has(`pugs/${k}.pug`)).sort();
+    for (const k of missingDates) warnings.push(`W4 doc-dates.json 에 갱신일 없음 (npm run dates 필요): pugs/${k}.pug`);
+    for (const r of recorded) {
+        if (!fs.existsSync(rel(r))) warnings.push(`W4 doc-dates.json 에 있으나 파일이 없음: ${r}`);
+    }
+} else {
+    warnings.push('W4 source/doc-dates.json 이 없다. npm run dates 로 생성한다');
 }
 
 // ---------------------------------------------------------------- 결과

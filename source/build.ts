@@ -10,7 +10,12 @@ import * as svgo from 'svgo';
 
 type WorkMessage =
     | { api: 'render-pug' | 'transform-img' | 'render-d2'; path: string }
-    | { api: 'init'; generatedPaths: string[]; imgMap: Record<string, { width: number; height: number }> };
+    | {
+          api: 'init';
+          generatedPaths: string[];
+          imgMap: Record<string, { width: number; height: number }>;
+          docDates: Record<string, string>;
+      };
 
 interface Post {
     /** 단일 소속은 문자열, 다중 소속은 문자열 배열. 계층은 '/' 로 표현한다. */
@@ -44,6 +49,25 @@ function pageUrlOf(htmlPath: string): string {
     return SITE_ORIGIN + absolute;
 }
 
+/**
+ * 문서의 갱신일을 구한다.
+ *
+ * 기본은 source/doc-dates.json 에 기록된 git 이력 기반 날짜다. 대량 리팩터링 커밋과
+ * 공백만 바뀐 변경을 걸러낸 값이라 머신·클론과 무관하게 항상 같다.
+ *
+ * 그 파일에 없는 문서(새로 만들고 아직 npm run dates 를 안 돌린 경우)만 mtime 으로
+ * 대체한다. mtime 은 새로 클론하면 체크아웃 시각이 되므로 신뢰할 수 없다.
+ *
+ * @param pugPath './pugs/dev/aws.pug' 형태
+ */
+async function docModified(pugPath: string): Promise<string> {
+    const key = pugPath.replace(/^\.\//, '');
+    const recorded = workerDocDates[key];
+    if (recorded != null) return recorded;
+    const { mtime } = await fsp.stat(pugPath);
+    return mtime.toISOString();
+}
+
 const require = createRequire(import.meta.url);
 const exec = promisify(child_process.exec);
 const renderFile = promisify(require('pug').renderFile) as (path: string, options?: Record<string, unknown>) => Promise<string>;
@@ -54,6 +78,8 @@ let remainWorkCount = 0;
 let unrefTimeout: NodeJS.Timeout;
 let generatedImgSet: Set<string> = new Set();
 let workerImgMap: Record<string, { width: number; height: number }> = {};
+/** 'pugs/dev/aws.pug' -> ISO 날짜. source/doc-dates.json 의 내용. */
+let workerDocDates: Record<string, string> = {};
 parentPort?.on('message', async (o: WorkMessage) => {
     clearTimeout(unrefTimeout);
     remainWorkCount += 1;
@@ -61,6 +87,7 @@ parentPort?.on('message', async (o: WorkMessage) => {
         case 'init': {
             generatedImgSet = new Set(o.generatedPaths);
             workerImgMap = o.imgMap;
+            workerDocDates = o.docDates;
             break;
         }
         case 'render-d2': {
@@ -150,14 +177,12 @@ parentPort?.on('message', async (o: WorkMessage) => {
             const htmlPath = o.path.replace('/pugs/', '/posts/').replace('.pug', '.html');
             try {
                 // canonical, Open Graph, JSON-LD 생성에 필요한 페이지 단위 정보.
-                // 소스 pug의 수정 시각을 문서 갱신일로 쓴다.
-                const { mtime } = await fsp.stat(o.path);
                 const html = await renderFile(o.path, {
                     cache: true,
                     imgMap: workerImgMap,
                     siteOrigin: SITE_ORIGIN,
                     pageUrl: pageUrlOf(htmlPath),
-                    pageModified: mtime.toISOString(),
+                    pageModified: await docModified(o.path),
                 });
                 await fsp.writeFile(htmlPath, html);
                 console.log(`${o.path} rendered`);
@@ -224,6 +249,11 @@ async function processImgs() {
 }
 
 const posts: Posts = require('./posts.json');
+/**
+ * 문서별 갱신일. tools/build-doc-dates.mjs 가 git 이력에서 계산해 커밋해둔 값이다.
+ * 빌드 시점에 git 을 호출하지 않으므로 CI·tarball 어디서든 같은 결과가 나온다.
+ */
+const docDates: Record<string, string> = require('./doc-dates.json').dates;
 async function processPugs() {
     pushWork({ api: 'render-pug', path: './index.pug' });
     const postMap = new Map<string, Post>();
@@ -244,8 +274,11 @@ async function processPugs() {
             const stats = await fsp.stat(filePath);
             const htmlPath = filePath.replace('/pugs/', '/posts/').replace('.pug', '.html');
             const post = postMap.get(htmlPath);
-            if (post != null && stats.birthtimeMs !== stats.mtimeMs) {
-                post.mtimeMs = Math.floor(stats.mtimeMs);
+            if (post != null) {
+                // 홈의 "최근 갱신" 목록도 같은 기준을 쓴다. mtime 은 클론할 때마다 바뀐다.
+                const recorded = docDates[filePath.replace(/^\.\//, '')];
+                if (recorded != null) post.mtimeMs = Date.parse(recorded);
+                else if (stats.birthtimeMs !== stats.mtimeMs) post.mtimeMs = Math.floor(stats.mtimeMs);
             }
             if (isProcessNewFileOnly === false || stats.mtimeMs >= Date.now() - 600000) {
                 pushWork({ api: 'render-pug', path: filePath });
@@ -267,7 +300,7 @@ async function processD2s() {
 if (isMainThread) {
     const generatedPaths = (await fsp.readdir('./imgs-generated', { recursive: true })).map((p) => './imgs-generated/' + p);
     for (const w of workers) {
-        w.postMessage({ api: 'init', generatedPaths, imgMap });
+        w.postMessage({ api: 'init', generatedPaths, imgMap, docDates });
     }
     await Promise.all([processImgs(), processPugs(), processD2s()]);
     const imgMapTxt = JSON.stringify(imgMap);

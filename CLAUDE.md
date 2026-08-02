@@ -14,6 +14,7 @@
 npm run build      # default.js 압축 -> pug/이미지/d2 렌더 -> 정합성 검사
 npm run check      # 정합성 검사만
 npm run typecheck  # tsc --noEmit
+npm run dates      # 문서 갱신일 재계산 (아래 참조)
 ```
 
 `npm run build` 는 마지막에 `npm run check` 를 돌린다. 검사 실패 시 종료 코드 1이지만 산출물은 이미 쓰인 뒤다. "빌드를 막는" 게 아니라 "문제를 알리는" 동작이다.
@@ -31,6 +32,7 @@ npm run typecheck  # tsc --noEmit
 | `source/build.ts` | 빌드 스크립트 |
 | `source/posts.json` | **문서 색인.** 여기 없으면 목록·검색·사이트맵 어디에도 안 나온다 |
 | `source/default.css` / `default.js` | 사이트 스타일·스크립트. `default.min.js` 는 빌드 산출물 |
+| `source/doc-dates.json` | **문서 갱신일.** git 이력에서 계산한 값. `npm run dates` 로 생성 |
 | `imgs/` → `imgs-generated/` | 원본 이미지 → 반응형 변환본 |
 | `d2/*.d2` → `d2/*.svg` | 다이어그램 소스 → SVG |
 | `files/sitemap.txt` | 사이트맵. `robots.txt` 가 가리킨다 |
@@ -63,7 +65,7 @@ npm run typecheck  # tsc --noEmit
    { "category": "개발 자료", "file": "dev/gradle.html", "title": "Gradle" }
    ```
 
-   `file` 은 `posts/` 를 뺀 상대 경로다. `mtimeMs` 는 빌드가 자동으로 채운다.
+   `file` 은 `posts/` 를 뺀 상대 경로다. `mtimeMs` 는 빌드가 `source/doc-dates.json` 을 보고 채운다.
 
    `category` 는 `/` 로 계층을 표현한다 (예: `개발 자료/JVM`). **다중 소속은 문자열 배열**이다.
 
@@ -73,7 +75,22 @@ npm run typecheck  # tsc --noEmit
 
    `source/default.js` 가 `Array.isArray(post.category)` 로 분기해 각 카테고리 노드에 문서를 복제해 넣는다. 쉼표로 이어 쓰면 `기초 과목,책` 이라는 단일 노드가 생기므로 쓰지 않는다.
 
-3. `npm run build`
+3. 커밋한 뒤 `npm run dates` → `npm run build`
+
+   `dates` 는 git 이력에서 문서 갱신일을 다시 계산한다. **커밋 이후에 돌려야** 새 문서가 반영된다. 빼먹으면 정합성 검사 W4가 알려준다.
+
+## 문서 갱신일 (`dateModified`)
+
+`source/doc-dates.json` 에 문서별 갱신일이 들어 있고, 빌드는 이 값을 JSON-LD 의 `dateModified` 와 홈의 "최근 갱신" 목록에 쓴다. **파일 mtime 은 쓰지 않는다** — 새로 클론하면 전부 체크아웃 시각이 되어 263개 페이지의 날짜가 한꺼번에 덮이기 때문이다.
+
+`npm run dates` 가 git 이력에서 계산하며 두 가지를 걸러낸다.
+
+1. **`tools/refactor-commits.json` 에 선언된 커밋** — 내용은 그대로 두고 표기만 바꾼 대량 커밋. mixin 교체, 후행 쉼표 추가 같은 것들이다. 이걸 안 거르면 문서 대부분의 갱신일이 리팩터링 날짜로 뭉개진다
+2. **공백만 바뀐 변경** — 파일 단위로 판정하므로, 일부 파일만 실제 수정된 혼합 커밋에서도 정확하다. `+legacy` 로 본문을 접을 때가 여기 해당한다
+
+경로가 바뀐 문서는 rename 을 추적해 이동 이전 이력까지 이어붙인다.
+
+새 리팩터링 커밋을 만들었다면 `tools/refactor-commits.json` 에 SHA 를 추가하고 `npm run dates` 를 다시 돌린다.
 
 ## skeleton.pug mixin
 
@@ -154,6 +171,7 @@ p 이 문서는 Python 3.14 기준입니다.
 - **E7** 사이트맵 URL 형식과 대상 존재
 - **W1** pug는 있으나 `posts.json` 미등록 (현재 11건, 경고)
 - **W2** 보존 목록의 항목이 사라지거나 스텁이 됨
+- **W4** `source/doc-dates.json` 에 갱신일이 없는 pug (`npm run dates` 필요)
 
 CI(`.github/workflows/verify.yml`)가 push·PR마다 `npm run typecheck` 와 `npm run check` 를 돌린다. 배포에는 관여하지 않는다 — GitHub Pages "deploy from branch" 방식이라 커밋된 산출물이 그대로 서빙된다.
 
@@ -177,6 +195,5 @@ fix: 사이트맵 URL에 누락된 /posts/ 접두사 복원
 ## 주의
 
 - `.gitattributes` 가 `* text=auto` 라 커밋 시 CRLF가 LF로 정규화된다. 기존 파일을 `git add` 하면 줄바꿈만 바뀐 diff가 대량으로 생길 수 있다
-- **`dateModified` 는 pug 파일의 mtime을 쓴다.** 새로 클론한 저장소는 모든 파일의 mtime이 체크아웃 시각이므로, 다른 머신에서 빌드를 한 번만 돌려도 263개 페이지의 날짜가 그날로 덮이고 대량 diff가 생긴다. **빌드는 가급적 한 머신에서 하거나, 산출물 diff에 날짜만 바뀐 파일이 섞여 있는지 확인하고 커밋한다.** git 커밋 날짜를 쓰는 편이 안정적이지만 대량 리팩터링 커밋 때문에 부정확해 아직 바꾸지 않았다
 - 사이트 오리진과 `/posts/` 접두사는 `build.ts` 의 `SITE_ORIGIN`, `POSTS_URL_PREFIX` 상수 하나로 관리한다. URL 문자열을 코드 안에 직접 쓰지 않는다
 - 방문자 분석 도구는 현재 없다. 수집이 중단된 Universal Analytics 태그를 제거했고, GA4 재도입 형태는 `source/skeleton.pug` 주석에 남겨두었다
