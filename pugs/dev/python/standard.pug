@@ -2,11 +2,16 @@ include ../../../source/skeleton.pug
 
 +post({
     title: 'Python 표준 라이브러리',
-    description: 'Python 표준 라이브러리 정리',
     useMath: true,
 })
 
-    p.version-note 본문의 모듈별 설명은 Python 3.8 기준으로 작성됐습니다. 아래에 3.9 ~ 3.14 의 표준 라이브러리 변화를 정리했습니다. 언어 문법 변경은 #[+asA('/posts/dev/python/basic.html', 'Python 문서')] 를 참조하세요.
+    h1 README
+    ul
+        li 본문의 모듈별 설명은 Python 3.8 기준으로 작성됐습니다. 아래에 3.9 ~ 3.14 의 표준 라이브러리 변화를 정리했습니다. 언어 문법 변경은 #[+asA('/posts/dev/python/basic.html', 'Python 문서')] 를 참조하세요.
+        li 본문의 #[+asInlineCode('Since 3.x', 'text')] 표기는 #[strong 3.8 시점까지만 반영돼 있다]. 그 이후 추가된 매개변수·메서드는 빠져 있다
+        li #[+asInlineCode('datetime', 'python')] 절 — 타임존은 #[+asInlineCode('zoneinfo', 'python')](3.9) 를 쓴다. #[+asInlineCode('datetime.utcnow()', 'python')] 는 3.12 에서 deprecated 됐다. #[+asInlineCode('datetime.now(datetime.UTC)', 'python')] 를 쓴다
+        li #[+asInlineCode('collections.abc', 'python')] 절 — #[+asInlineCode('typing.List', 'python')] 계열 대신 내장 제네릭(#[+asInlineCode('list[int]', 'python')], 3.9)을 쓴다
+        li #[+asInlineCode('re', 'python')] 절 — 3.11 부터 아토믹 그룹 #[+asInlineCode('(?>...)', 'text')] 과 소유 수량자 #[+asInlineCode('*+', 'text')] · #[+asInlineCode('++', 'text')] 를 지원한다
 
     h1 제거된 모듈 — 본문에 있어도 이제 없다
     ol
@@ -74,13 +79,6 @@ include ../../../source/skeleton.pug
             li #[+asInlineCode('concurrent.interpreters', 'python')] — 서브 인터프리터 표준 API
             li #[+asInlineCode('compression.zstd', 'python')] — Zstandard 압축 지원
             li #[+asInlineCode('unittest', 'python')] · #[+asInlineCode('argparse', 'python')] · #[+asInlineCode('json', 'python')] · #[+asInlineCode('calendar', 'python')] CLI 에 색상 출력
-
-    h1 본문을 읽을 때 유의할 점
-    ul
-        li 본문의 #[+asInlineCode('Since 3.x', 'text')] 표기는 #[strong 3.8 시점까지만 반영돼 있다]. 그 이후 추가된 매개변수·메서드는 빠져 있다
-        li #[+asInlineCode('datetime', 'python')] 절 — 타임존은 #[+asInlineCode('zoneinfo', 'python')](3.9) 를 쓴다. #[+asInlineCode('datetime.utcnow()', 'python')] 는 3.12 에서 deprecated 됐다. #[+asInlineCode('datetime.now(datetime.UTC)', 'python')] 를 쓴다
-        li #[+asInlineCode('collections.abc', 'python')] 절 — #[+asInlineCode('typing.List', 'python')] 계열 대신 내장 제네릭(#[+asInlineCode('list[int]', 'python')], 3.9)을 쓴다
-        li #[+asInlineCode('re', 'python')] 절 — 3.11 부터 아토믹 그룹 #[+asInlineCode('(?>...)', 'text')] 과 소유 수량자 #[+asInlineCode('*+', 'text')] · #[+asInlineCode('++', 'text')] 를 지원한다
 
     h1 string : 문자열 공통 연산
     div

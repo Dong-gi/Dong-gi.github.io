@@ -1,0 +1,8 @@
+{
+    // 새로 만드는 파일은 LF. 저장소 전체 규칙은 .gitattributes 의 `* text=auto eol=lf` 다.
+    // 이 파일은 .gitignore 에 있어 공유되지 않으므로, 강제력은 .gitattributes 쪽에 있다.
+    "files.eol": "\n",
+    "[bat]": {
+        "files.eol": "\r\n"
+    }
+}

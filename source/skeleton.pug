@@ -8,6 +8,18 @@
         return hash
     }
 
+    /**
+     * 경로를 URL 로 쓸 수 있게 조각마다 인코딩한다. 구분자 '/' 는 남긴다.
+     *
+     * 이미지 파일명에 공백이 흔한데(`2023-03-05 204648.png`), srcset 은 공백으로
+     * URL 과 크기 서술자를 가른다. 인코딩하지 않으면 브라우저가 `.../2023-03-05` 를
+     * URL 로, `204648-500.avif` 를 서술자로 읽고 후보를 통째로 버린다.
+     * encodeURI 로는 부족하다. '#', '?' 를 그대로 두기 때문이다.
+     */
+    function encodePath(path) {
+        return path.split('/').map(encodeURIComponent).join('/')
+    }
+
 mixin asA(href, text)
     -
         if (!text) {
@@ -110,40 +122,30 @@ mixin w3img(src, description)
         -
             metadata = imgMap[src]
             description = description || (src.split('/').pop())
-            trimmedSrc = src.replace('/imgs/', '/imgs-generated/').replace(/\.\w+$/, '')
+            // imgMap 의 키는 인코딩 전 경로다. 조회를 마친 뒤에 인코딩한다.
+            trimmedSrc = encodePath(src.replace('/imgs/', '/imgs-generated/').replace(/\.\w+$/, ''))
+            encodedSrc = encodePath(src)
         if metadata != null
             picture
                 if src.endsWith('.gif')
                     source(srcset=(trimmedSrc + '-500.webp 500w, ' + trimmedSrc + '-1200.webp 1200w, ' + trimmedSrc + '-2000.webp 2000w'), type='image/webp')
-                    source(srcset=(trimmedSrc + '-500.gif 500w, ' + trimmedSrc + '-1200.gif 1200w, ' + trimmedSrc + '-2000.gif 2000w'), type='image/gif')
                     img.w3-round(src=(trimmedSrc + '-2000.gif'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
                 else
                     source(srcset=(trimmedSrc + '-500.avif 500w, ' + trimmedSrc + '-1200.avif 1200w, ' + trimmedSrc + '-2000.avif 2000w'), type='image/avif')
                     source(srcset=(trimmedSrc + '-500.webp 500w, ' + trimmedSrc + '-1200.webp 1200w, ' + trimmedSrc + '-2000.webp 2000w'), type='image/webp')
-                    source(srcset=(trimmedSrc + '-500.jpeg 500w, ' + trimmedSrc + '-1200.jpeg 1200w, ' + trimmedSrc + '-2000.jpeg 2000w'), type='image/jpeg')
                     img.w3-round(src=(trimmedSrc + '-2000.jpeg'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
         else
-            img.w3-round(src=src, alt=description, loading='lazy')&attributes(attributes)
+            img.w3-round(src=encodedSrc, alt=description, loading='lazy')&attributes(attributes)
         figcaption.w3-padding
             | #{'<' + description + '>'}
-            +asA(src, '[원본 보기]')&attributes({ target: '_blank' })
+            +asA(encodedSrc, '[원본 보기]')&attributes({ target: '_blank' })
 
 //-
     options = {
         title: string,
-        description: string,
         useMath: boolean,
     }
 mixin post(options)
-    -
-        if (arguments.length === 1 && typeof arguments[0] === 'string')
-            options = { title: arguments[0] }
-        else if (arguments.length > 1)
-            options = {
-                title: arguments[0],
-                description: arguments[2],
-                useMath: arguments[3],
-            }
     doctype html
     html(lang='ko-KR')
         head
@@ -151,66 +153,11 @@ mixin post(options)
             meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=yes')
             title= options.title || 'No title'
             link(rel="stylesheet", href="/source/default.css")
-            meta(name='google-site-verification', content='aH-DyzdytYQ0NPHNQFcs5dVoiu5YNs6CEEHYgqDmAFM')
-            meta(name='author', content='Donggi Kim <hi.donggi@gmail.com>')
-            meta(name='description', content=options.description)
-            link(rel="icon", href="/imgs/favicon.png")
-
-            //-
-                canonical / Open Graph / JSON-LD.
-                siteOrigin, pageUrl, pageModified 는 build.ts 가 렌더 시점에 주입한다.
-                pug를 빌드 밖에서 단독 렌더할 때를 대비해 없으면 건너뛴다.
-            - const origin = typeof siteOrigin === 'undefined' ? '' : siteOrigin
-            - const url = typeof pageUrl === 'undefined' ? '' : pageUrl
-            - const modified = typeof pageModified === 'undefined' ? '' : pageModified
-            //- 홈은 개별 문서가 아니라 사이트 자체이므로 타입이 다르다
-            - const isHome = url !== '' && url === origin + '/'
-            if url
-                link(rel='canonical', href=url)
-                meta(property='og:url', content=url)
-            meta(property='og:type', content=isHome ? 'website' : 'article')
-            meta(property='og:site_name', content='dong-gi.github.io')
-            meta(property='og:locale', content='ko_KR')
-            meta(property='og:title', content=options.title)
-            if options.description
-                meta(property='og:description', content=options.description)
-            if origin
-                meta(property='og:image', content=origin + '/imgs/favicon.png')
-            meta(name='twitter:card', content='summary')
-            if url
-                //- </script> 로 조기 종료되지 않도록 <, > 를 유니코드 이스케이프한다
-                - const person = { '@type': 'Person', name: 'Donggi Kim' }
-                - var ld = { '@context': 'https://schema.org', url: url, inLanguage: 'ko-KR', author: person, publisher: person }
-                -
-                    if (isHome) {
-                        // WebSite 스키마는 headline / dateModified 를 쓰지 않는다
-                        ld['@type'] = 'WebSite'
-                        ld.name = options.title
-                    } else {
-                        ld['@type'] = 'TechArticle'
-                        ld.headline = options.title
-                        if (modified) ld.dateModified = modified
-                    }
-                - if (options.description) ld.description = options.description
-                script(type='application/ld+json')!= JSON.stringify(ld).replace(/</g, '\\u003c').replace(/>/g, '\\u003e')
-
             script#highlight-js(src="/source/highlight.pack.js", async)
             script#default-js(src='/source/default.min.js', defer)
             if options.useMath
                 script#MathJax-script(src='/source/tex-chtml.js', defer)
                 script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
-            //-
-                Universal Analytics(UA-143098403-1)는 2023-07-01 에 데이터 수집을 중단했고
-                표준 속성은 2024-07 에 삭제되었다. 아무것도 수집하지 않으면서 매 페이지마다
-                외부 스크립트만 받아오고 있어 제거했다.
-
-                다시 붙이려면 GA4 측정 ID(G-XXXXXXXXXX)를 발급받아 아래 형태로 넣는다.
-                    script#google-analytics(src='https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX', async)
-                    script.
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){dataLayer.push(arguments);}
-                        gtag('js', new Date());
-                        gtag('config', 'G-XXXXXXXXXX');
 
         body
             aside.w3-animate-left#sidebar
@@ -221,29 +168,13 @@ mixin post(options)
                 hr
                 details.w3-small
                     summary LICENSE
-                    +table()
-                        +tds('Author', 'License')
-                        tr
-                            td &copy; <a href="mailto:hi.donggi@gmail.com">Donggi Kim</a>
-                            td: +asA('https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE', 'MIT')
-                        tr
-                            td: +asA('https://www.w3schools.com/w3css')
-                            td No license
-                        tr
-                            //- 11.11.1
-                            td: +asA('https://highlightjs.org/', 'highlight.js')
-                            td: +asA('https://github.com/highlightjs/highlight.js/blob/main/LICENSE', 'BSD-3-Clause')
-                        tr
-                            //- 4.1.0
-                            td: +asA('https://github.com/mathjax/MathJax')
-                            td: +asA('https://github.com/mathjax/MathJax/blob/master/LICENSE', 'Apache-2.0')
-                        tr
-                            td: +asA('https://github.com/davidshimjs/qrcodejs', 'QRCode.js')
-                            td: +asA('https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE', 'MIT')
-                        tr
-                            //- 0.7.1
-                            td: +asA('https://github.com/terrastruct/d2', 'D2')
-                            td: +asA('https://github.com/terrastruct/d2/blob/master/LICENSE.txt', 'MPL-2.0')
+                    ul
+                        li This Site: <a href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT</a>
+                        li <a href="https://www.w3schools.com/w3css">w3css</a>: No license
+                        li <a href="https://highlightjs.org/">highlight.js 11.11.1</a>: <a href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause</a>
+                        li <a href="https://github.com/mathjax/MathJax">MathJax 4.1.0</a>: <a href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a>
+                        li <a href="https://github.com/davidshimjs/qrcodejs">QRCode.js</a>: <a href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT</a>
+                        li <a href="https://github.com/terrastruct/d2">D2 0.7.1</a>: <a href="https://github.com/terrastruct/d2/blob/master/LICENSE.txt">MPL-2.0</a>
                 hr
 
             main#main

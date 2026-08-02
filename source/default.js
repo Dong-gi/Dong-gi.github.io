@@ -4,18 +4,36 @@
  */
 
 /**
+ * posts-compressed.json 의 항목. category 는 다중 소속을 담는 배열이다.
  * @typedef {Object} Post
- * @property {string | string[]} category
+ * @property {string[]} category
  * @property {string} file
  * @property {string} title
  * @property {number} mtimeMs
  */
 
-/** @type {{ list: Post[], codes: { [key: string] : string }} */
-const posts = {};
+/**
+ * 카테고리마다 한 항목씩 펼친 목록. 여기서 category 는 문자열 하나다.
+ * @typedef {Omit<Post, 'category'> & { category: string }} FlatPost
+ */
+
+/** @type {FlatPost[]} 로드 전에는 비어 있다. */
+let posts = [];
+
+/** @type {Map<string, string>} +codeBtn 이 받아온 코드 본문 캐시. 모달의 복사·다운로드가 쓴다. */
+const codeCache = new Map();
 
 /**
- * @param {string} str 
+ * 경로를 문서 비교용 키로 바꾼다. `/posts/dev/AWS.html` 도 `dev/aws.html` 도 `dev/aws` 가 된다.
+ * @param {string} path
+ * @returns {string}
+ */
+function postKeyOf(path) {
+    return decodeURIComponent(path).toLowerCase().replace(/^\/?posts\//, '').replace(/\.html$/, '');
+}
+
+/**
+ * @param {string} str
  * @returns {number}
  */
 function stringHashCode(str) {
@@ -310,7 +328,7 @@ async function initCodeBtn() {
 
             codeDiv = asNodes(`<div id="${codeDivId}" class="w3-leftbar w3-border-green code-div"></div>`);
             const lan = button.getAttribute('lan');
-            posts.codes[codeId] = codeTxt;
+            codeCache.set(codeId, codeTxt);
             fillCodeDiv(codeDiv, lan, codeTxt, button.getAttribute('displayRange'));
 
             if (lan !== 'nohighlight') {
@@ -367,33 +385,18 @@ window.addEventListener('load', async () => {
         initGoto(),
         initCodeBtn(),
         initHoverContent(),
-        fetch('/files/posts-compressed.json').then(res => {
+        fetch('/source/posts-compressed.json').then(res => {
             return res.json()
-        }).then(async o => {
-            Object.assign(posts, o);
-
-            const singleCategoryPosts = [];
-            const multiCategoryPosts = [];
-            for (const post of posts.list) {
-                if (Array.isArray(post.category)) {
-                    for (const category of post.category) {
-                        multiCategoryPosts.push(Object.assign({}, post, { category }));
-                    }
-                } else {
-                    singleCategoryPosts.push(post);
-                }
-            }
-            posts.list = [...singleCategoryPosts, ...multiCategoryPosts].sort((post1, post2) => {
-                const r1 = post1.category.localeCompare(post2.category);
-                if (r1 !== 0) {
-                    return r1;
-                }
-                return post1.title.localeCompare(post2.title);
-            });
+        }).then(async (/** @type {Post[]} */ list) => {
+            /* 다중 소속은 카테고리마다 한 항목으로 펼친다. 트리의 각 노드가 문서를 따로 갖는다. */
+            posts = list
+                .flatMap(post => post.category.map(category => ({ ...post, category })))
+                .sort((post1, post2) => post1.category.localeCompare(post2.category) || post1.title.localeCompare(post2.title));
 
             await Promise.all([updatePostList(), updateMarkerList()]);
 
-            const currentPost = posts.list.find(x => location.pathname.endsWith(x.file));
+            const currentKey = postKeyOf(location.pathname);
+            const currentPost = posts.find(x => postKeyOf(x.file) === currentKey);
             if (currentPost != null) {
                 if (Number.isInteger(currentPost.mtimeMs)) {
                     document.getElementById('contents').prepend(asNodes(`<p>Last update : ${new Date(currentPost.mtimeMs).toISOString()}</p>`));
@@ -441,16 +444,16 @@ function goto(target) {
 async function updatePostList() {
     /** @type {Map<string, {details: HTMLDetailsElement, ul: HTMLUListElement}>} */
     const categoryToDomMap = new Map();
-    /** @type {Map<string, {posts: Post[], isCurrentPosts: boolean[]}>} */
+    /** @type {Map<string, {posts: FlatPost[], isCurrentPosts: boolean[]}>} */
     const categoryToPostMap = new Map();
     /** @type {HTMLDetailsElement} */
     const rootDetails = asNodes(`<details open class="w3-small"><summary>Category</summary><ul></ul></details>`)
     const rootUl = rootDetails.querySelector('ul');
-    const lowHref = location.href.toLowerCase()
+    const currentKey = postKeyOf(location.pathname);
 
-    for (const post of posts.list) {
+    for (const post of posts) {
         const categoryPartArr = post.category.split('/');
-        const isCurrentPost = lowHref.search(post.file.toLowerCase()) >= 0;
+        const isCurrentPost = postKeyOf(post.file) === currentKey;
         /** @type {MapValue<typeof categoryToDomMap> | undefined} */
         let parentDom
 
@@ -665,13 +668,13 @@ function showModal(codeId) {
     body.style.height = window.innerHeight - parseFloat(window.getComputedStyle(header).height);
 
     footer.querySelector('button.copy').onclick = function () {
-        navigator.clipboard.writeText(posts.codes[codeId]);
+        navigator.clipboard.writeText(codeCache.get(codeId));
         showSnackbar('복사 완료', modal);
         modal.focus();
     }
     footer.querySelector('button.download').onclick = function () {
         downloadText(
-            posts.codes[codeId],
+            codeCache.get(codeId),
             document.getElementById(`code-button-${codeId}`).title.split('/').pop()
         );
     }

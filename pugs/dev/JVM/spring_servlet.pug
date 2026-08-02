@@ -2,13 +2,11 @@ include ../../../source/skeleton.pug
 
 +post({
     title: 'Spring Servlet',
-    description: 'Spring Servlet 정리',
 })
 
-    p.version-note Spring Framework 7.0 기준으로 앞부분을 정리했습니다. 이후 본문은 Spring 5.x / javax.* / JSP 시절에 쓴 것으로, DispatcherServlet·애너테이션 컨트롤러 같은 개념 설명은 유효하나 패키지명이 다릅니다.
-
-    h1 읽기 전에 — 본문과 현행의 차이
-    ol
+    h1 README
+    ul
+        li Spring Framework 7.0 기준으로 앞부분을 정리했습니다. 이후 본문은 Spring 5.x / javax.* / JSP 시절에 쓴 것으로, DispatcherServlet·애너테이션 컨트롤러 같은 개념 설명은 유효하나 패키지명이 다릅니다.
         li 본문은 #[strong Spring 5.2 / javax.* / JSP·XML 설정] 기준이다. 버전 선택과 이관 전반은 #[+asA('/posts/dev/JVM/spring_framework.html', 'Spring Framework 문서')] 에 정리했다
         li 이 문서가 참조하는 예제 코드(#[+asInlineCode('Repositories/STS/mvc-javaN', 'text')], #[+asInlineCode('mvc-xmlN', 'text')])는 #[strong Spring 7 / jakarta.* 로 이관되어 있다.] 본문의 임포트문과 다르다
         +asCode('java').

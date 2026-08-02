@@ -1,14 +1,4 @@
+node_modules/
+.omc/
+.claude/
 *.log
-
-node_modules
-mail-server-data
-.omc
-.claude
-.vscode/settings.json
-
-# Eclipse/STS 가 만드는 컴파일 산출물 디렉터리.
-# src/main/resources 의 복사본과 .class 파일이 들어가므로 커밋 대상이 아니다.
-Repositories/**/bin/
-
-# 머신 종속 파일 (Android SDK 절대 경로 등)
-local.properties

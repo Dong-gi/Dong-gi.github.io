@@ -1,4 +1,10 @@
-# Auto detect text files and perform LF normalization
-* text=auto
-# These are explicitly windows files and should use crlf
-*.bat           text eol=crlf
+# 줄바꿈은 LF 로 통일한다.
+#
+# text=auto 만 두면 인덱스에만 LF 로 들어가고, 작업 트리는 core.autocrlf 설정에
+# 따라 Windows 에서 CRLF 로 풀린다. 그러면 파일을 다루는 코드마다 "원래 줄바꿈을
+# 유지" 하는 처리를 넣어야 한다. eol=lf 로 체크아웃까지 LF 로 못박아 그 부담을 없앤다.
+* text=auto eol=lf
+
+# Windows 전용 스크립트만 예외. cmd.exe 는 LF 만 있는 배치 파일을 잘못 읽는 경우가 있다.
+*.bat text eol=crlf
+*.cmd text eol=crlf

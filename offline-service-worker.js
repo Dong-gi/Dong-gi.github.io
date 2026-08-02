@@ -5,7 +5,7 @@ self.addEventListener('install', (ev) => {
                 '/',
                 '/source/highlight.pack.js',
                 '/source/default.min.js',
-                '/files/posts-compressed.json',
+                '/source/posts-compressed.json',
             ])
         })
     )
@@ -17,7 +17,7 @@ self.addEventListener('fetch', ev => {
     }
 
     const url = new URL(ev.request.url)
-    if (url.hostname !== 'free.4joy.link' && url.hostname !== 'dong-gi.github.io') {
+    if (url.hostname !== '4joy.is-a.dev' && url.hostname !== 'dong-gi.github.io') {
         return
     }
 

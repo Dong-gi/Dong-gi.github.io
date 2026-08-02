@@ -5,7 +5,6 @@ include ./source/skeleton.pug
 
 +post({
     title: 'Blog',
-    description: '프로그래밍 블로그를 지향하는 정적 사이트',
     useMath: false,
 })
 
@@ -17,8 +16,9 @@ include ./source/skeleton.pug
     ul#recently-changed-posts
     script.
         const h = setInterval(() => {
+            /* default.js 가 posts 를 채울 때까지 기다린다. 카테고리별로 펼쳐져 있어 같은 문서가 여러 번 나온다. */
             try {
-                if (posts == null || !Array.isArray(posts.list)) {
+                if (!Array.isArray(posts) || posts.length === 0) {
                     return;
                 }
             } catch {
@@ -29,7 +29,7 @@ include ./source/skeleton.pug
             const ul = document.getElementById('recently-changed-posts');
             const addedFileSet = new Set();
             let renderedCount = 0;
-            for (const post of [...posts.list].sort((a, b) => (b.mtimeMs ?? 0) - (a.mtimeMs ?? 0))) {
+            for (const post of [...posts].sort((a, b) => (b.mtimeMs ?? 0) - (a.mtimeMs ?? 0))) {
                 if (addedFileSet.has(post.file)) {
                     continue;
                 }
