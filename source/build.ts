@@ -13,11 +13,11 @@ import { $ } from 'zx';
 type WorkMessage =
     | { api: 'render-pug' | 'transform-img' | 'render-d2'; path: string }
     | {
-          api: 'init';
-          generatedPaths: string[];
-          imgMap: Record<string, { width: number; height: number }>;
-          docDates: Record<string, number>;
-      };
+        api: 'init';
+        generatedPaths: string[];
+        imgMap: Record<string, { width: number; height: number }>;
+        docDates: Record<string, number>;
+    };
 
 /** source/posts.json 의 항목. 파일 자체는 이 항목의 배열이다. */
 interface Post {
@@ -53,14 +53,14 @@ const POSTS_URL_PREFIX = '/posts/';
 const require = createRequire(import.meta.url);
 const renderFile = promisify(require('pug').renderFile) as (path: string, options?: Record<string, unknown>) => Promise<string>;
 const workers = isMainThread ? cpus().map(() => new Worker(import.meta.filename)) : [];
+const imgMap: Record<string, { width: number; height: number }> = require('./img-map.json');
+const posts: Post[] = require('./posts.json');
 
 // 워커 스레드 영역
 let remainWorkCount = 0;
 let unrefTimeout: NodeJS.Timeout;
 let generatedImgSet: Set<string> = new Set();
 let workerImgMap: Record<string, { width: number; height: number }> = {};
-/** 'pugs/dev/aws.pug' -> ISO 날짜. source/doc-dates.json 의 내용. */
-let workerDocDates: Record<string, number> = {};
 parentPort?.on('message', async (o: WorkMessage) => {
     clearTimeout(unrefTimeout);
     remainWorkCount += 1;
@@ -68,7 +68,6 @@ parentPort?.on('message', async (o: WorkMessage) => {
         case 'init': {
             generatedImgSet = new Set(o.generatedPaths);
             workerImgMap = o.imgMap;
-            workerDocDates = o.docDates;
             break;
         }
         case 'render-d2': {
@@ -217,7 +216,6 @@ function pushWork(o: WorkMessage): void {
     workCount += 1;
 }
 
-const imgMap: Record<string, { width: number; height: number }> = require('./img-map.json');
 async function processImgs() {
     const entries = await fsp.readdir('./imgs', { recursive: true, withFileTypes: true });
     for (const entry of entries) {
@@ -225,11 +223,13 @@ async function processImgs() {
         const outPath = './' + toPosix(path.join(entry.parentPath, entry.name)).replace(/^imgs\//, 'imgs-generated/');
         await fsp.mkdir(outPath, { recursive: true });
     }
+    const activeKeySet = new Set<string>();
     for (const entry of entries) {
         if (!entry.isFile()) continue;
         const filePath = './' + toPosix(path.join(entry.parentPath, entry.name));
         pushWork({ api: 'transform-img', path: filePath });
         const absolutePath = filePath.slice(1);
+        activeKeySet.add(absolutePath);
         if (imgMap[absolutePath] == null) {
             const animated = filePath.endsWith('gif');
             const img = sharp(filePath, { animated });
@@ -238,6 +238,11 @@ async function processImgs() {
                 width: metadata.width,
                 height: metadata.height,
             };
+        }
+    }
+    for (const key in imgMap) {
+        if (!activeKeySet.has(key)) {
+            delete imgMap[key];
         }
     }
 }
@@ -394,18 +399,15 @@ async function updateDocDates(): Promise<DocDates['dates']> {
         prompt?.close();
     }
 
-    return saveDocDates(state, head);
-}
-
-/** 기준 커밋을 옮기고, 사라진 문서를 정리한 뒤 저장한다. */
-function saveDocDates(state: DocDates, head: string): DocDates['dates'] {
-    for (const key of Object.keys(state.dates)) {
-        if (!fs.existsSync('./' + key)) delete state.dates[key];
-    }
-    // 경로순으로 써야 diff 가 읽힌다. 줄바꿈은 저장소 전체 규칙대로 LF 다(.gitattributes).
+    // 경로순으로 써야 diff 가 잘 잡힌다
+    const activeKeySet = new Set(posts.map(x => 'pugs/' + x.file.replace(/\.html$/, '.pug')));
     const payload: DocDates = {
         lastSha: head,
-        dates: Object.fromEntries(Object.entries(state.dates).sort(([a], [b]) => a.localeCompare(b))),
+        dates: Object.fromEntries(
+            Object.entries(state.dates)
+                .filter(x => activeKeySet.has(x[0]))
+                .sort(([a], [b]) => a.localeCompare(b))
+        ),
     };
     fs.writeFileSync(DOC_DATES_FILE, JSON.stringify(payload, null, 4) + '\n');
     return state.dates;
@@ -413,7 +415,6 @@ function saveDocDates(state: DocDates, head: string): DocDates['dates'] {
 
 // ---------------------------------------------------------------- pug 렌더
 
-const posts: Post[] = require('./posts.json');
 /** 문서별 갱신일. 메인 스레드가 updateDocDates() 로 채운다. */
 let docDates: DocDates['dates'] = {};
 async function processPugs() {
@@ -437,7 +438,7 @@ async function processPugs() {
             const htmlPath = filePath.replace('/pugs/', '/posts/').replace('.pug', '.html');
             const post = postMap.get(htmlPath);
             if (post != null) {
-                // doc-dates 에 없는 문서만 mtime 으로 대체한다. mtime 은 클론할 때마다 바뀐다.
+                // 홈의 "최근 갱신" 목록도 docModified() 와 같은 기준을 쓴다.
                 const recorded = docDates[filePath.replace(/^\.\//, '')];
                 post.mtimeMs = recorded != null ? recorded : Math.floor(stats.mtimeMs);
             }
