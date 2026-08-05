@@ -1,3 +1,7 @@
+"""다운로드 옵션(비디오/음성, 품질) 선택 다이얼로그.
+
+익스트랙터가 제공하는 :class:`OptionsSchema` 만 보고 화면을 구성한다 — 사이트별 분기 없음.
+"""
 from PySide6.QtWidgets import (
     QComboBox,
     QDialog,
@@ -9,25 +13,14 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-_AUDIO_QUALITIES = [
-    ("최고 품질", "best"),
-    ("중간 (128kbps)", "128"),
-    ("저용량 (64kbps)", "64"),
-]
-
-_VIDEO_QUALITIES = [
-    ("4K (2160p)", "2160"),
-    ("1080p", "1080"),
-    ("720p", "720"),
-    ("480p", "480"),
-    ("360p", "360"),
-]
+from src.extractors.base import MODE_AUDIO, MODE_VIDEO, OptionsSchema
 
 
-class YoutubeOptionsDialog(QDialog):
-    def __init__(self, parent=None):
+class MediaOptionsDialog(QDialog):
+    def __init__(self, schema: OptionsSchema, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("YouTube 다운로드 옵션")
+        self._schema = schema
+        self.setWindowTitle(schema.title)
         self.setMinimumWidth(300)
         self._build()
 
@@ -64,23 +57,30 @@ class YoutubeOptionsDialog(QDialog):
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
 
-        self._refresh_quality_items(is_audio=False)
+        self._refresh_quality_items()
 
     def _on_mode_changed(self):
-        self._refresh_quality_items(is_audio=self._radio_audio.isChecked())
+        self._refresh_quality_items()
 
-    def _refresh_quality_items(self, is_audio: bool):
+    def _current_mode(self) -> str:
+        return MODE_AUDIO if self._radio_audio.isChecked() else MODE_VIDEO
+
+    def _refresh_quality_items(self):
+        mode = self._current_mode()
+        choices = self._schema.qualities(mode)
+        default = self._schema.default_quality(mode)
+
         self._quality_combo.clear()
-        items = _AUDIO_QUALITIES if is_audio else _VIDEO_QUALITIES
-        for label, _ in items:
-            self._quality_combo.addItem(label)
-        self._quality_combo.setCurrentIndex(0 if is_audio else 1)
+        for choice in choices:
+            self._quality_combo.addItem(choice.label, choice.value)
+
+        index = next(
+            (i for i, c in enumerate(choices) if c.value == default), 0
+        )
+        self._quality_combo.setCurrentIndex(index)
 
     def get_options(self) -> dict:
-        is_audio = self._radio_audio.isChecked()
-        items = _AUDIO_QUALITIES if is_audio else _VIDEO_QUALITIES
-        idx = max(0, self._quality_combo.currentIndex())
         return {
-            "mode": "audio" if is_audio else "video",
-            "quality": items[idx][1],
+            "mode": self._current_mode(),
+            "quality": self._quality_combo.currentData(),
         }

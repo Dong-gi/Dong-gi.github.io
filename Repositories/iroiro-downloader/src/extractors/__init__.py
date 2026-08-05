@@ -1,5 +1,6 @@
 from src.config import Config
 from src.extractors.base import BaseExtractor
+from src.extractors.bilibili import BilibiliExtractor
 from src.extractors.hitomi import HitomiExtractor
 from src.extractors.m3u8 import M3u8Extractor
 from src.extractors.mpd import MpdExtractor
@@ -8,13 +9,14 @@ from src.extractors.youtube import YoutubeExtractor
 
 
 class ExtractorRegistry:
-    """익스트랙터 인스턴스 모음. URL 또는 클래스로 조회."""
+    """익스트랙터 인스턴스 모음. URL · 클래스 · site_id로 조회."""
 
     def __init__(self, config: Config) -> None:
         # 등록 순서가 매칭 우선순위 — 더 구체적인 사이트를 앞에 두고 generic은 뒤로.
         self._extractors: list[BaseExtractor] = [
             PixivExtractor(config),
             YoutubeExtractor(config),
+            BilibiliExtractor(config),
             HitomiExtractor(config),
             M3u8Extractor(config),
             MpdExtractor(config),
@@ -27,12 +29,15 @@ class ExtractorRegistry:
                 return ext
         return None
 
-    def find(self, cls: type) -> BaseExtractor | None:
-        """레지스트리에서 특정 클래스의 인스턴스를 반환 (URL 매칭 거치지 않음)."""
+    def by_site_id(self, site_id: str) -> BaseExtractor | None:
+        """site_id로 조회. task ID에서 역추출한 값으로 찾을 때 사용."""
         for ext in self._extractors:
-            if isinstance(ext, cls):
+            if ext.site_id == site_id:
                 return ext
         return None
+
+    def all(self) -> list[BaseExtractor]:
+        return list(self._extractors)
 
 
 # 모듈-레벨 단일 인스턴스 (앱 시작 시 init_registry로 생성)
@@ -49,5 +54,9 @@ def get_extractor(url: str) -> BaseExtractor | None:
     return _registry.get(url) if _registry else None
 
 
-def find_extractor(cls: type) -> BaseExtractor | None:
-    return _registry.find(cls) if _registry else None
+def extractor_for_site(site_id: str) -> BaseExtractor | None:
+    return _registry.by_site_id(site_id) if _registry else None
+
+
+def all_extractors() -> list[BaseExtractor]:
+    return _registry.all() if _registry else []

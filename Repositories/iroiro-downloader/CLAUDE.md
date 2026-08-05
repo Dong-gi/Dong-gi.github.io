@@ -3,7 +3,7 @@
 ## 프로젝트 개요
 
 개인 사용 목적의 미디어 다운로더. Python 3.12+ / PySide6 GUI / httpx HTTP 클라이언트.
-Pixiv, YouTube, hitomi.la, M3U8(HLS) 스트림, MPD(MPEG-DASH) 스트림을 지원하며, 새 사이트를 쉽게 추가할 수 있는 익스트랙터 구조로 설계되어 있다.
+Pixiv, YouTube, bilibili, hitomi.la, M3U8(HLS) 스트림, MPD(MPEG-DASH) 스트림을 지원하며, 새 사이트를 쉽게 추가할 수 있는 익스트랙터 구조로 설계되어 있다.
 
 ## 실행
 
@@ -64,11 +64,27 @@ worker.pause()
 
 ### 익스트랙터 레지스트리
 
-`ExtractorRegistry` 클래스가 익스트랙터 인스턴스를 보관한다. `init_registry(config)`로 단일 레지스트리를 초기화하고, 모듈-레벨 헬퍼 `get_extractor(url)` / `find_extractor(cls)`로 조회한다.
+`ExtractorRegistry` 클래스가 익스트랙터 인스턴스를 보관한다. `init_registry(config)`로 단일 레지스트리를 초기화하고, 모듈-레벨 헬퍼로 조회한다.
 - `get_extractor(url)` — `can_handle()`이 True인 첫 번째 익스트랙터
-- `find_extractor(cls)` — 클래스 기반 조회 (URL 매칭 거치지 않음, AUTH_FAILED 처리 등에 사용)
+- `extractor_for_site(site_id)` — site_id 기반 조회 (task ID에서 역추출한 값으로 인증 처리 시 사용)
+- `all_extractors()` — 전체 목록 (설정 창이 인증 항목을 구성할 때 사용)
 
-각 익스트랙터는 `site_id` 클래스 변수를 가진다 (예: `"pixiv"`, `"youtube"`, `"hitomi"`). `make_task_id()`가 이 값을 task ID prefix로 사용하며, `site_id_from_task_id(task_id)` 헬퍼로 역추출 가능.
+각 익스트랙터는 `site_id` 클래스 변수를 가진다 (예: `"pixiv"`, `"youtube"`, `"bilibili"`). `make_task_id()`가 이 값을 task ID prefix로 사용하며, `site_id_from_task_id(task_id)` 헬퍼로 역추출 가능.
+
+### GUI ↔ 익스트랙터 계약 (사이트 하드코딩 금지)
+
+GUI는 **사이트별 분기(isinstance/site 문자열 비교)를 하지 않는다.** 익스트랙터가 자신의 능력을 선언하고 GUI는 그것만 읽는다. 사이트를 추가해도 GUI 코드는 그대로다.
+
+| 선언 | 위치 | GUI 동작 |
+|------|------|----------|
+| `options_schema() -> OptionsSchema \| None` | `BaseExtractor` | None이 아니면 URL 추가 시 `MediaOptionsDialog` 표시 |
+| `CookieAuth` 상속 + `COOKIE_PROMPT` | `base.py` 능력 인터페이스 | 인증 실패 시 `CookiesDialog`를 해당 안내문으로 오픈 |
+| `COOKIES_PERSISTENT` | `CookieAuth` | True인 사이트만 설정 창에 인증 관리 항목 노출 |
+
+- `OptionsSchema`/`QualityChoice` — 비디오·음성 품질 선택지와 기본값. 선택 결과는 `task.options`의 `mode`(`MODE_VIDEO`/`MODE_AUDIO`) · `quality`로 저장된다.
+- `CookiePrompt` — 다이얼로그 제목/안내 HTML/placeholder/저장 정책 안내/재시도 실패 메시지.
+- Pixiv만 예외적으로 site 문자열 분기가 남아 있다 (쿠키가 아니라 OAuth 로그인 창으로 유도해야 하므로).
+- 인증 실패 시 **세션 전용 쿠키만 즉시 폐기**한다. 영속 저장 쿠키는 지우지 않는다 — yt-dlp 메시지로는 "만료"와 "계정 권한 없음"을 구분할 수 없어, 멀쩡한 자격 증명을 삭제하는 부작용이 더 크기 때문. 사용자가 새로 입력하면 덮어쓰고, 취소하면 기존 값이 유지된다.
 
 ### URL 정규화
 
@@ -89,12 +105,14 @@ src/
 ├── auth/
 │   └── pixiv_oauth.py      # PKCE 생성, 레지스트리 등록/해제, 코드 교환
 ├── extractors/
-│   ├── __init__.py         # ExtractorRegistry / init_registry() / get_extractor() / find_extractor()
-│   ├── _util.py            # safe_filename(), CancelDownload 등 공통 유틸
+│   ├── __init__.py         # ExtractorRegistry / init_registry() / get_extractor() / extractor_for_site()
+│   ├── _util.py            # safe_filename(), clean_message(), write_netscape_cookies(), CancelDownload
+│   ├── _ytdlp.py           # YtdlpExtractor 베이스 + CookieFileAuthMixin
 │   ├── _stream.py          # StreamExtractor 베이스 (HLS/DASH 등 스트리밍 매니페스트)
-│   ├── base.py             # BaseExtractor ABC + site_id_from_task_id()
-│   ├── pixiv.py            # PixivExtractor
-│   ├── youtube.py          # YoutubeExtractor (yt-dlp 기반)
+│   ├── base.py             # BaseExtractor ABC / CookieAuth / OptionsSchema / CookiePrompt
+│   ├── pixiv.py            # PixivExtractor (httpx 직접 구현)
+│   ├── youtube.py          # YoutubeExtractor (YtdlpExtractor)
+│   ├── bilibili.py         # BilibiliExtractor (YtdlpExtractor)
 │   ├── hitomi.py           # HitomiExtractor (ltn.gold-usergeneratedcontent.net)
 │   ├── m3u8.py             # M3u8Extractor (HLS) — StreamExtractor 서브클래스
 │   └── mpd.py              # MpdExtractor (MPEG-DASH) — StreamExtractor 서브클래스
@@ -104,8 +122,8 @@ src/
     ├── task_widget.py              # 개별 작업 위젯 (진행률 표시)
     ├── settings_dialog.py          # 설정 다이얼로그
     ├── pixiv_login_dialog.py       # 브라우저 OAuth 로그인 다이얼로그
-    ├── youtube_options_dialog.py   # YouTube 다운로드 옵션 선택 다이얼로그
-    └── youtube_cookies_dialog.py   # YouTube 쿠키 붙여넣기 다이얼로그
+    ├── media_options_dialog.py     # 다운로드 옵션 선택 (OptionsSchema 기반, 사이트 무관)
+    └── cookies_dialog.py           # 쿠키 붙여넣기 (CookiePrompt 기반, 사이트 무관)
 ```
 
 ## 새 익스트랙터 추가
@@ -151,6 +169,71 @@ self._extractors = [
 ]
 ```
 
+## yt-dlp 공통 베이스 (`_ytdlp.py`)
+
+yt-dlp로 받는 사이트는 `BaseExtractor`가 아니라 **`YtdlpExtractor`를 상속**한다. `download()` 전체 흐름(2단계 probe/다운로드, 협력적 취소, 진행률 계산, 오류 정리)이 베이스에 있고, 서브클래스는 훅만 채운다.
+
+| 훅 | 기본값 | 용도 |
+|----|--------|------|
+| `PROBE` | `True` | 메타데이터 추출 단계 수행 여부. 업로더/제목이 필요 없으면 `False` |
+| `_extra_opts(task)` | `{}` | 사이트별 yt-dlp 옵션 (probe·다운로드 양쪽에 적용) |
+| `_format_spec(task)` | `"best"` | format 선택자 |
+| `_dest_dir(task, info, save_dir)` | — | 저장 디렉토리 (필수 구현) |
+| `_filename_template(task, info)` | `%(title)s.%(ext)s` | outtmpl의 파일명 부분 |
+| `_title(task, info)` | `info["title"]` | 작업 목록 표시 제목 |
+| `_stream_labels(task)` | `()` | 순차 스트림 표시명. 비어 있으면 현재 파일 기준 진행률만 표시 |
+| `_resolve_url(task)` | `task.url` | 실제로 넘길 URL (짧은 링크 해석 등) |
+| `_translate_error(msg)` | `None` | yt-dlp 오류 → 사이트별 예외 변환. 반환값이 있으면 그것을 raise |
+
+`task.save_path` 설정, 디렉토리 생성, `%` escape(`escape_outtmpl`)는 베이스가 처리하므로 서브클래스에서 신경 쓸 필요 없다.
+
+### format_selector 라이프사이클 (함정)
+
+**`YoutubeDL.format_selector`는 `__init__`에서 한 번만 빌드된다.** `process_video_result`가 매번 새로 만드는 것처럼 보이지만 실제로는 init에서 만든 것을 사용한다. 따라서 **`ydl.params["format"] = ...`로 나중에 바꿔도 반영되지 않는다.** 모든 옵션(`format`, `outtmpl`, `extractor_args`, `progress_hooks`, `postprocessors`)은 생성자 인자로 전달해야 한다.
+
+베이스가 probe와 다운로드에 **동일 옵션으로 인스턴스 2개**를 만드는 이유다. probe는 메타데이터만, 다운로드 인스턴스가 재추출하므로 URL 만료(YouTube n-param ~6시간)도 자동 해결된다.
+
+참고: yt-dlp/yt-dlp#12482, #13058, #16350
+
+### 네트워크 재시도 (함정 — 반드시 명시할 것)
+
+**`retries` / `fragment_retries` / `file_access_retries`의 기본값은 yt-dlp CLI 옵션 파서(`options.py`)에만 있다.** `YoutubeDL` 클래스는 이 값을 모른다.
+
+```python
+# yt_dlp/downloader/http.py
+for retry in RetryManager(self.params.get('retries'), self.report_retry):
+# yt_dlp/utils/_utils.py — RetryManager.__init__
+self.retries = _retries or 0        # None → 0회
+```
+
+Python API에서 지정하지 않으면 **재시도 0회**가 되어, CDN이 전송 도중 연결을 끊으면 (`[download] Got error: N bytes read, M more expected`) 그대로 실패한다. CLI로는 10번 재시도하며 `.part`에서 이어받으므로 성공하는 상황이 API에서는 실패하는, 재현 조건이 헷갈리는 버그가 된다.
+
+베이스가 `_RETRY_OPTS`로 다음을 항상 주입한다: `retries=10`, `fragment_retries=10`, `file_access_retries=3`, 지수 백오프(1→2→4→…→30초), `socket_timeout=20`, `continuedl=True`.
+
+전송 중단·타임아웃 계열 오류는 `_translate_common_error()`가 "재시작하면 이어받는다"는 안내로 바꾼다. 사이트별 `_translate_error()`가 우선한다.
+
+### 협력적 취소
+
+progress_hook에서 `stop_event` 확인 시 `CancelDownload(BaseException)`를 raise한다. `BaseException` 상속이므로 yt-dlp 내부의 `except Exception:`을 통과해 베이스의 `download()`까지 전파되고 거기서 `InterruptedError`로 재포장된다.
+
+### 쿠키 인증 (`CookieFileAuthMixin`)
+
+쿠키 문자열을 임시 Netscape 파일로 기록하고 yt-dlp `cookiefile`로 넘긴다.
+
+- **인메모리 `ydl.cookiejar.set_cookie()` 주입은 금지.** `YoutubeDLCookieJar.load()` 경로를 우회하면 extractor의 로그인 판정(`__Secure-3PAPISID` → `SAPISID` 파생, `_HTTPONLY_PREFIX` 처리 등)이 동작하지 않는다.
+- 영속 저장 여부는 `_load_saved_cookies()` / `_save_cookies()` 재정의로 표현. 기본은 세션 전용.
+- `COOKIE_DOMAIN`(예: `".bilibili.com"`)이 Netscape 파일의 도메인 필드로 쓰인다.
+
+```python
+class ExampleExtractor(CookieFileAuthMixin, YtdlpExtractor):   # 믹스인을 앞에
+    COOKIE_DOMAIN = ".example.com"
+    COOKIES_PERSISTENT = True
+    COOKIE_PROMPT = CookiePrompt(...)
+
+    def _extra_opts(self, task):
+        return {"noplaylist": True, **self._cookie_opts()}
+```
+
 ## Pixiv 인증
 
 - Pixiv API는 OAuth refresh token 방식. 토큰은 `config.pixiv_refresh_token`에서 읽는다.
@@ -160,10 +243,11 @@ self._extractors = [
 
 ### 인증 정보 저장 방식
 
-- `pixiv_refresh_token`은 Windows Credential Manager에 저장 (`keyring` 라이브러리 사용).
-  - 서비스명: `iroiro-downloader`, 사용자명: `pixiv_refresh_token`
-  - 평문 파일에 기록되지 않음
-- YouTube 쿠키는 저장하지 않음 — `YoutubeExtractor._cookies_jar`에 메모리 전용 보관. 자세한 내용은 "YouTube 인증" 섹션 참고.
+- Windows Credential Manager에 저장 (`keyring` 라이브러리, 서비스명 `iroiro-downloader`). 평문 파일에 기록되지 않음.
+  - `pixiv_refresh_token` — Pixiv OAuth refresh token
+  - `bilibili_cookies` — bilibili cookie 헤더 문자열 (SESSDATA 등)
+  - 접근은 `Config._get_secret()` / `Config._set_secret()` 한 쌍을 통해서만.
+- YouTube 쿠키는 저장하지 않음 — 임시 파일에만 기록하고 종료 시 삭제. 자세한 내용은 "YouTube 인증" 섹션 참고.
 - 나머지 설정(`save_dir`, `max_concurrent`)은 `%APPDATA%\iroiro-downloader\config.json`에 JSON으로 저장.
   - 프로젝트 디렉토리 바깥이므로 git 범위 외.
 
@@ -193,21 +277,20 @@ token exchange의 `redirect_uri`는 `https://app-api.pixiv.net/web/v1/users/auth
 
 YouTube 쿠키는 실측상 **30분 이내**로 회전된다(SIDCC + 메인 세션 토큰 양쪽). 따라서 영속 저장은 무의미하며 **세션 전용 + 반응형(필요 시 입력 요청)** 방식을 채택.
 
-- 사용자 입력 쿠키 문자열은 임시 Netscape 포맷 파일(`%TEMP%\iroiro_yt_cookies_*.txt`)에 기록 → yt-dlp의 `cookiefile` 옵션으로 전달.
-  - **인메모리 `ydl.cookiejar.set_cookie()` 주입은 사용 금지**. 이 경로는 yt-dlp의 `YoutubeDLCookieJar.load()`를 우회하므로 YouTube extractor의 `_has_auth_cookies` 검사(`__Secure-3PAPISID` → `SAPISID` 자동 파생, `_HTTPONLY_PREFIX` 처리 등)가 동작하지 않아 로그인 상태가 인식되지 않는다.
-  - 파일은 `set_cookies()` 호출 시 새로 작성·이전 파일 삭제, `atexit`로 프로그램 종료 시 정리.
-- 설정 창에는 YouTube 섹션 없음 — 사전 입력 UI 미제공.
+- 메커니즘은 `CookieFileAuthMixin` 공통 구현 사용 (`%TEMP%\iroiro_youtube_cookies_*.txt`). `COOKIES_PERSISTENT = False`이므로 `_save_cookies`를 재정의하지 않아 디스크에 남지 않고, `atexit`로 종료 시 파일 삭제.
+- `COOKIES_PERSISTENT = False`라서 **설정 창에 YouTube 항목이 나타나지 않는다** — 사전 입력 UI 미제공.
 - 다운로드 흐름:
-  1. 쿠키 없이 시도 → 인증 필요한 영상이면 `RuntimeError("AUTH_REQUIRED")`
-  2. `MainWindow._on_failed` → `TaskStatus.AUTH_FAILED` + `_prompt_youtube_cookies()` 호출
-  3. `YoutubeCookiesDialog` 오픈 → 사용자가 cookie 헤더 붙여넣기
+  1. 쿠키 없이 시도 → 인증 필요한 영상이면 `RuntimeError(AUTH_REQUIRED)`
+  2. `MainWindow._on_failed` → `TaskStatus.AUTH_FAILED` + `_prompt_cookies(site)` 호출
+  3. `CookiesDialog`가 해당 사이트의 `COOKIE_PROMPT` 문구로 오픈 → 사용자가 cookie 헤더 붙여넣기
   4. accept 시 `extractor.set_cookies(...)` → AUTH_FAILED 작업 자동 재시작
-- 쿠키 만료 감지 시 `AuthExpiredError("youtube")` → `_on_auth_failed` → 쿠키 파일 삭제 후 동일 다이얼로그 재오픈.
-- 동시 실패는 `already_handled` 체크 + `_yt_cookies_dialog is not None` 가드로 한 번만 처리.
+- 쿠키 만료 감지 시 `AuthExpiredError("youtube")` → `_on_auth_failed` → 쿠키 폐기 후 동일 다이얼로그 재오픈.
+- 동시 실패는 `already_handled` 체크 + `_cookies_dialog is not None` 가드로 한 번만 처리.
+- 방금 입력한 쿠키로 또 실패하면 무한 루프 방지를 위해 FAILED로 강등하고 `COOKIE_PROMPT.retry_failed_message`를 오류로 표시 (`_cookies_freshly_set` 집합으로 추적).
 
 ### 다운로드 옵션
 
-URL 추가 시 `YoutubeOptionsDialog`가 자동으로 표시된다. 선택 결과는 `task.options`에 저장되어 익스트랙터로 전달된다.
+URL 추가 시 `MediaOptionsDialog`가 `YoutubeExtractor.options_schema()`를 읽어 자동으로 표시된다. 선택 결과는 `task.options`에 저장되어 익스트랙터로 전달된다.
 
 | 옵션 | 선택지 | 기본값 |
 |------|--------|--------|
@@ -258,17 +341,7 @@ YouTube의 `web`/`ios` player_client는 PO Token 없이는 **SABR-only formats**
 
 여러 client를 나열하면 yt-dlp가 각 client에서 포맷 목록을 받아 합친다. 이로써 다운로드 가능한 포맷 발견 확률이 크게 올라간다.
 
-### format_selector 라이프사이클 (함정)
-
-**`YoutubeDL.format_selector`는 `__init__`에서 한 번만 빌드된다.** `process_video_result`는 매번 새 selector를 만드는 것처럼 보이지만 실제로는 init에서 만든 것을 사용한다. 따라서 **`ydl.params["format"] = "..."`로 나중에 바꿔도 반영되지 않는다**. 모든 옵션(`format`, `outtmpl`, `extractor_args`, `progress_hooks`, `postprocessors`)은 반드시 생성자 인자로 전달해야 한다.
-
-이 때문에 두 단계 흐름(probe → dl)은 **동일한 `ydl_opts`로 두 개의 인스턴스**를 사용한다. probe는 메타데이터(uploader/title)만 가져오고, dl이 실제 다운로드 수행. URL 만료(YouTube n-param ~6시간)도 dl 단계 재추출로 자동 해결.
-
-참고: yt-dlp/yt-dlp#12482, #13058, #16350, [PO Token Guide](https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide)
-
-### 협력적 취소
-
-progress_hook에서 `stop_event` 확인 시 `_CancelDownload(BaseException)`를 raise한다. `BaseException` 상속이므로 yt-dlp 내부의 `except Exception:` 블록을 통과하여 `download()` 레이어까지 전파되고, `InterruptedError`로 재포장된다.
+참고: [PO Token Guide](https://github.com/yt-dlp/yt-dlp/wiki/PO-Token-Guide). format_selector 라이프사이클·협력적 취소는 "yt-dlp 공통 베이스" 섹션 참고.
 
 ### 저장 경로
 
@@ -282,11 +355,81 @@ progress_hook에서 `stop_event` 확인 시 `_CancelDownload(BaseException)`를 
 
 `can_handle()`은 `_VIDEO_RE`로 단일 영상 URL(`watch?v=`, `shorts/`, `youtu.be/`)만 매칭한다. 플레이리스트/채널 URL은 의도적으로 거부한다 — 코드는 단일 영상 메타데이터만 처리하므로.
 
+## bilibili 다운로드
+
+yt-dlp의 `BiliBiliIE` 사용. 비디오/음성만 선택은 YouTube와 동일하게 `task.options`의 `mode`·`quality`로 전달된다.
+
+### URL 처리 범위
+
+`can_handle()`이 받는 것은 **단일 영상 하나**뿐이다.
+
+| 형태 | 예 | task ID |
+|------|-----|---------|
+| BV | `bilibili.com/video/BV1xx411c7mD` | `bilibili-video-BV1xx411c7mD` |
+| av (레거시) | `bilibili.com/video/av170001` | `bilibili-video-av170001` |
+| 분P | `.../BV1xx411c7mD?p=4` | `bilibili-video-BV1xx411c7mD-p4` |
+| 짧은 링크 | `b23.tv/AbCd12` | `bilibili-short-AbCd12` |
+
+의도적으로 제외: 番剧(`/bangumi/play/...`), UP주 전체(`space.bilibili.com/...`), 라이브. 재생목록·유료/지역 판정이 단일 Task 모델과 맞지 않는다.
+
+- **BV ID는 대소문자를 구분한다.** 정규식은 `IGNORECASE`로 매칭하되 캡처한 문자열은 원본 그대로 사용할 것.
+- av ↔ BV 상호 변환은 하지 않는다. 같은 영상을 av 링크와 BV 링크로 각각 추가하면 별개 작업이 된다 (알려진 한계).
+
+### canonical_url
+
+`spm_id_from`, `vd_source`, `t`, `share_*` 등 추적 파라미터를 제거한다. 단 **`?p=N`(분P)은 보존**한다 — YouTube의 `list=`와 달리 어느 파트를 받을지 결정하는 의미 있는 값이다.
+
+`p=1`은 제거한다. `noplaylist=True` 상태에서 "p 없음"과 "p=1"은 yt-dlp가 같은 파트로 처리하므로(`part_id = part_id or 1`) 동일 작업으로 취급해야 중복 감지가 맞는다.
+
+### 분P (anthology)
+
+한 BV가 여러 편을 담는 구조. yt-dlp는 이를 재생목록으로 확장하려 하므로 `noplaylist=True`로 막고 URL의 `?p=N`(없으면 1편)만 받는다. 1 Task = 1 파일 모델을 유지하기 위한 선택.
+
+### b23.tv 짧은 링크
+
+실제 ID는 리다이렉트를 따라가야만 알 수 있는데 URL 추가 시점(메인 스레드)에서 네트워크를 쓸 수 없다. 따라서 **task ID는 짧은 코드 기준**으로 만들고, 실제 해석은 워커 스레드의 `_resolve_url()`에서 httpx로 수행한다(본문은 읽지 않고 최종 URL만 확인). 해석 결과가 영상 URL이 아니면 명시적으로 실패시킨다.
+
+### 포맷
+
+bilibili는 DASH라 영상/음성이 항상 분리 제공된다.
+
+- **비디오**: `bestvideo[height<=Q][vcodec^=avc1]+bestaudio[ext=m4a]` 우선(플레이어 호환성) → mp4 → 무조건 폴백 순으로 체인. ffmpeg 병합.
+- **음성만**: `bestaudio[abr<=Q]` 계열 + `FFmpegExtractAudio(m4a)`. 원본이 이미 m4a(AAC)라 사실상 재인코딩 없이 통과한다.
+- 실측 오디오 트랙은 **64k(30216) / 132k(30232) / 192k(30280)** 세 종류. 옵션의 `value`는 `abr<=` 임계값이라 라벨의 비트레이트보다 약간 높게 잡혀 있다(`140`, `70`). YouTube의 128/64를 그대로 쓰면 132k를 건너뛰고 64k가 잡힌다.
+
+### PCDN 노드 대응
+
+bilibili는 재생 URL을 `*.mcdn.bilivideo.cn` · `*.szbdyd.com` 같은 **PCDN(개인 회선 P2P CDN)** 노드로 배정하는 일이 잦다. 이 노드는 수십 KB/s로 느리고 전송 도중 연결을 끊는다 — 증상은 `N bytes read, M more expected`.
+
+대응으로 `http_chunk_size = 10MB`를 적용한다. Range로 잘라 받으므로 연결 하나가 오래 유지되지 않고, 끊겨도 그 조각만 다시 받는다. 여기에 베이스의 재시도(10회 + 이어받기)가 겹쳐 대부분 복구된다.
+
+호스트를 `upos-*.bilivideo.com`으로 치환하면 더 빠르지만, bilibili의 CDN 배정을 우회하는 방식이라 채택하지 않았다 (yt-dlp도 코어 반영을 거부하고 플러그인 영역으로 분류). 참고: yt-dlp/yt-dlp#12421, #14498
+
+### 인증
+
+`SESSDATA` 쿠키. YouTube와 달리 수명이 길어 **`COOKIES_PERSISTENT = True`** — Credential Manager(`bilibili_cookies`)에 저장하고 기동 시 복원한다. 따라서 설정 창에 "Bilibili 인증" 항목(쿠키 입력/삭제)이 노출된다.
+
+로그인 없이도 오디오 트랙은 대체로 받히지만, 720p 이상·대회원 전용 영상은 쿠키가 필요하다.
+
+### 오류 변환 (`_translate_error`)
+
+| 조건 | 처리 |
+|------|------|
+| `premium member` / `registered users` / `log in` 등 | 쿠키 있으면 `AuthExpiredError`, 없으면 `AUTH_REQUIRED` |
+| `blocked by server` 또는 `\b412\b` | "일시적 차단(412) — 잠시 후 재시도 또는 yt-dlp 업데이트" 안내 |
+| geo restricted | 지역 제한 안내 |
+
+412는 2026년 들어 자주 보고되는 증상이라 별도 안내를 붙였다. 영상 ID 안의 숫자에 오탐하지 않도록 단어 경계(`\b412\b`)로 검사한다.
+
+### 저장 경로
+
+`{save_dir}/Bilibili/{UP주명}/{제목}.{ext}`. `task.save_path`는 UP주 폴더.
+
 ## 스트리밍 매니페스트 (HLS / DASH) 다운로드
 
 직접적인 매니페스트 URL을 yt-dlp의 generic extractor + 번들 ffmpeg로 처리한다. (다른 사이트의 비디오 페이지가 아닌 raw playlist/manifest URL만 매칭.)
 
-공통 로직은 `_stream.StreamExtractor`에 모이고, 각 포맷은 얇은 서브클래스:
+`StreamExtractor`는 `YtdlpExtractor`의 서브클래스이며 `PROBE = False`(매니페스트에는 업로더/제목 메타데이터가 없어 probe 불필요)로 동작한다. 각 포맷은 다시 얇은 서브클래스:
 - `M3u8Extractor` — `.m3u8` URL (HLS), folder `M3U8/`
 - `MpdExtractor` — `.mpd` URL (MPEG-DASH), folder `MPD/`
 
@@ -342,7 +485,9 @@ url = f"https://{subdomain}.gold-usergeneratedcontent.net/{gg.b}{g}/{hash}.{ext}
 
 ## 주요 설계 결정
 
-- Pixiv는 yt-dlp 지원이 불완전(이미지/만화 미지원)하므로 httpx로 직접 구현. YouTube는 yt-dlp 사용. hitomi.la 역시 yt-dlp가 현행 CDN/AVIF 전환을 따라가지 못해 httpx 직접 구현.
+- Pixiv는 yt-dlp 지원이 불완전(이미지/만화 미지원)하므로 httpx로 직접 구현. YouTube·bilibili는 yt-dlp 사용. hitomi.la 역시 yt-dlp가 현행 CDN/AVIF 전환을 따라가지 못해 httpx 직접 구현.
+- yt-dlp 기반 사이트가 셋 이상이 되면서 공통 흐름을 `YtdlpExtractor`로 올렸다. 사이트별 코드는 훅 구현만 남기고, 중복된 진행률·오류·취소 처리를 다시 만들지 말 것.
+- GUI는 익스트랙터의 선언(`options_schema()`, `CookieAuth`)만 보고 동작한다. 새 사이트를 추가할 때 GUI에 `isinstance`/site 문자열 분기를 넣는 것은 회귀로 간주한다.
 - 익스트랙터 인스턴스는 레지스트리에서 앱 전체에 하나만 존재(싱글턴). 여러 워커가 공유하므로 상태를 task 객체에 저장하고 익스트랙터 자체는 무상태에 가깝게 유지할 것.
 - `task.save_path`는 익스트랙터가 dest_dir 확정 시 즉시 설정한다. 삭제 팝업의 "파일도 삭제"가 이 경로를 사용하므로 설정을 누락하면 파일이 삭제되지 않는다.
 - `task.options`는 익스트랙터별 추가 파라미터 전달에 사용. Pixiv는 사용 안 함. YouTube는 `mode`, `quality`를 담는다.

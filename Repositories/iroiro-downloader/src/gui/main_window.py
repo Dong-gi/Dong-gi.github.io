@@ -22,13 +22,17 @@ from PySide6.QtWidgets import (
 
 from src.config import Config
 from src.core.worker import DownloadWorker
-from src.extractors import find_extractor, get_extractor
-from src.extractors.base import site_id_from_task_id
-from src.extractors.youtube import YoutubeExtractor
+from src.extractors import extractor_for_site, get_extractor
+from src.extractors.base import (
+    AUTH_REQUIRED,
+    BaseExtractor,
+    CookieAuth,
+    site_id_from_task_id,
+)
+from src.gui.cookies_dialog import CookiesDialog
+from src.gui.media_options_dialog import MediaOptionsDialog
 from src.gui.settings_dialog import SettingsDialog
 from src.gui.task_widget import TaskWidget
-from src.gui.youtube_cookies_dialog import YoutubeCookiesDialog
-from src.gui.youtube_options_dialog import YoutubeOptionsDialog
 from src.models.task import Task, TaskStatus
 
 _STATUS_ORDER = {
@@ -51,10 +55,10 @@ class MainWindow(QMainWindow):
         self._pending_delete: set[str] = set()  # 삭제를 위해 일시정지 중인 작업 ID
         self._section_headers: dict[TaskStatus, QWidget] = {}
         self._settings_dialog: SettingsDialog | None = None
-        self._yt_cookies_dialog: YoutubeCookiesDialog | None = None
-        # 사용자가 방금 쿠키를 입력했는지 추적 — 그 직후 또 인증 실패하면 무한 루프 방지를 위해
+        self._cookies_dialog: CookiesDialog | None = None
+        # 방금 쿠키를 입력한 사이트들 — 그 직후 또 인증 실패하면 무한 루프 방지를 위해
         # 재차 묻지 않고 작업을 명확한 메시지와 함께 실패시킨다.
-        self._yt_cookies_freshly_set = False
+        self._cookies_freshly_set: set[str] = set()
         self._build()
         self._load_session()
 
@@ -72,7 +76,7 @@ class MainWindow(QMainWindow):
 
         row = QHBoxLayout()
         self._url_input = QLineEdit()
-        self._url_input.setPlaceholderText("Pixiv / YouTube URL을 입력하세요")
+        self._url_input.setPlaceholderText("Pixiv / YouTube / bilibili URL을 입력하세요")
         self._url_input.returnPressed.connect(self._add_task)
         add_btn = QPushButton("추가")
         add_btn.setFixedWidth(60)
@@ -120,9 +124,11 @@ class MainWindow(QMainWindow):
             self._show_duplicate_dialog(self._tasks[task_id])
             return
 
+        # 옵션 스키마를 노출하는 익스트랙터만 선택 다이얼로그를 띄운다 (사이트별 분기 없음)
         options: dict = {}
-        if isinstance(extractor, YoutubeExtractor):
-            dlg = YoutubeOptionsDialog(self)
+        schema = extractor.options_schema()
+        if schema is not None:
+            dlg = MediaOptionsDialog(schema, self)
             if not dlg.exec():
                 return
             options = dlg.get_options()
@@ -330,17 +336,16 @@ class MainWindow(QMainWindow):
             task.completed_at = datetime.now()
             self._widgets[task_id].update_task(task)
         # 쿠키가 한 번이라도 정상 동작했으면 freshly_set 플래그 해제
-        # (이후 다른 작업이 회전 만료로 실패하면 정상적으로 재입력 요청 가능하도록)
-        if site_id_from_task_id(task_id) == YoutubeExtractor.site_id:
-            self._yt_cookies_freshly_set = False
+        # (이후 다른 작업이 만료로 실패하면 정상적으로 재입력 요청 가능하도록)
+        self._cookies_freshly_set.discard(site_id_from_task_id(task_id))
         self._workers.pop(task_id, None)
         self._sort_tasks()
         self._try_start_next()
         self._refresh_status()
 
     def _on_failed(self, task_id: str, error: str):
-        # AUTH_REQUIRED는 YouTube에서 쿠키 없이 인증 필요 시 발생
-        auth_required = error == "AUTH_REQUIRED"
+        # AUTH_REQUIRED는 쿠키 없이 인증이 필요한 리소스를 만났을 때 발생
+        auth_required = error == AUTH_REQUIRED
         task = self._tasks.get(task_id)
         if task:
             task.status = TaskStatus.AUTH_FAILED if auth_required else TaskStatus.FAILED
@@ -353,7 +358,7 @@ class MainWindow(QMainWindow):
         self._refresh_status()
 
         if auth_required:
-            self._prompt_youtube_cookies()
+            self._prompt_cookies(site_id_from_task_id(task_id))
 
     def _on_auth_failed(self, task_id: str, site: str):
         # 같은 사이트에 이미 AUTH_FAILED 작업이 있으면 재인증 절차 생략
@@ -364,20 +369,15 @@ class MainWindow(QMainWindow):
             for t in self._tasks.values()
         )
 
-        # YouTube에서 방금 입력한 쿠키로도 실패한 경우 — 무한 루프 방지를 위해 FAILED로 강등
-        cookies_just_failed = site == "youtube" and self._yt_cookies_freshly_set
-        if cookies_just_failed:
-            self._yt_cookies_freshly_set = False
+        # 방금 입력한 쿠키로도 실패한 경우 — 무한 루프 방지를 위해 FAILED로 강등
+        cookies_just_failed = site in self._cookies_freshly_set
+        self._cookies_freshly_set.discard(site)
 
         task = self._tasks.get(task_id)
         if task:
             if cookies_just_failed:
                 task.status = TaskStatus.FAILED
-                task.error = (
-                    "쿠키를 적용했지만 인증에 실패했습니다. "
-                    "쿠키가 회전됐거나(보통 30분 이내), 본 영상에 대해 계정 권한이 없을 수 있습니다 "
-                    "(예: YouTube 본인 인증 미완료)."
-                )
+                task.error = self._retry_failed_message(site)
             else:
                 task.status = TaskStatus.AUTH_FAILED
             task.completed_at = datetime.now()
@@ -391,43 +391,59 @@ class MainWindow(QMainWindow):
             return
 
         if site == "pixiv":
+            # Pixiv는 OAuth — 설정 창의 브라우저 로그인으로 유도
             self._config.pixiv_refresh_token = ""
             self._open_settings(highlight={site})
-        elif site == "youtube":
-            # YouTube 쿠키는 메모리 전용 — 만료 감지 즉시 클리어 후 재입력 요청
-            self._clear_youtube_cookies()
-            self._prompt_youtube_cookies()
-
-    def _clear_youtube_cookies(self) -> None:
-        ext = self._yt_extractor()
-        if ext:
-            ext.set_cookies("")
-
-    def _yt_extractor(self) -> YoutubeExtractor | None:
-        ext = find_extractor(YoutubeExtractor)
-        return ext if isinstance(ext, YoutubeExtractor) else None
-
-    def _prompt_youtube_cookies(self) -> None:
-        """YouTube 쿠키 입력 다이얼로그. 중복 오픈 방지."""
-        if self._yt_cookies_dialog is not None:
-            self._yt_cookies_dialog.raise_()
-            self._yt_cookies_dialog.activateWindow()
             return
-        dlg = YoutubeCookiesDialog("", self)
-        self._yt_cookies_dialog = dlg
+
+        ext = self._cookie_extractor(site)
+        if ext is None:
+            return
+        if not ext.COOKIES_PERSISTENT:
+            # 세션 전용 쿠키(YouTube)는 어차피 회전으로 만료된 것 — 즉시 폐기
+            ext.set_cookies("")
+        # 영속 저장 쿠키(bilibili)는 지우지 않는다. "권한 없음"과 "만료"를 메시지로
+        # 구분할 수 없어, 멀쩡한 자격 증명을 삭제하는 부작용이 더 크다.
+        # 사용자가 새 쿠키를 입력하면 그때 덮어쓰고, 취소하면 기존 값이 유지된다.
+        self._prompt_cookies(site)
+
+    # ─────────────────────────────────────────── 쿠키 인증
+
+    @staticmethod
+    def _cookie_extractor(site: str) -> CookieAuth | None:
+        """해당 사이트가 쿠키 인증을 지원하면 익스트랙터 반환."""
+        ext: BaseExtractor | None = extractor_for_site(site)
+        return ext if isinstance(ext, CookieAuth) else None
+
+    def _retry_failed_message(self, site: str) -> str:
+        ext = self._cookie_extractor(site)
+        if ext is None:
+            return "인증에 실패했습니다."
+        return ext.COOKIE_PROMPT.retry_failed_message
+
+    def _prompt_cookies(self, site: str) -> None:
+        """쿠키 입력 다이얼로그. 중복 오픈 방지."""
+        ext = self._cookie_extractor(site)
+        if ext is None:
+            return
+        if self._cookies_dialog is not None:
+            self._cookies_dialog.raise_()
+            self._cookies_dialog.activateWindow()
+            return
+
+        dlg = CookiesDialog(ext.COOKIE_PROMPT, "", self)
+        self._cookies_dialog = dlg
         accepted = dlg.exec()
-        self._yt_cookies_dialog = None
+        self._cookies_dialog = None
         if not accepted:
             return
         cookie_str = dlg.cookie_string
         if not cookie_str:
             return
-        ext = self._yt_extractor()
-        if ext is None:
-            return
+
         ext.set_cookies(cookie_str)
-        self._yt_cookies_freshly_set = True
-        self._on_credentials_updated("youtube")
+        self._cookies_freshly_set.add(site)
+        self._on_credentials_updated(site)
 
     def _on_credentials_updated(self, site: str):
         """인증 정보가 새로 저장됐을 때 해당 사이트의 AUTH_FAILED 작업을 재시작."""
