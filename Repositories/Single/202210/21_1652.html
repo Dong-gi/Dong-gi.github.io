@@ -1,0 +1,40 @@
+<div class="div-221021-1652">
+    <div>Header</div>
+    <div>Sidebar</div>
+    <div>Content</div>
+    <div>Footer</div>
+</div>
+
+
+<style>
+    .div-221021-1652 div:nth-child(1) {
+        grid-area: h;
+    }
+
+    .div-221021-1652 div:nth-child(2) {
+        grid-area: s;
+    }
+
+    .div-221021-1652 div:nth-child(3) {
+        grid-area: c;
+    }
+
+    .div-221021-1652 div:nth-child(4) {
+        grid-area: f;
+    }
+
+    .div-221021-1652 {
+        border: solid;
+        display: grid;
+        grid-template:
+            "h h h h h h" minmax(10ch, auto)
+            "s s c c c c" minmax(10ch, auto)
+            ". f f f f ." minmax(10ch, auto)
+            / 1fr 1fr 1fr 1fr 1fr 1fr
+    }
+
+    .div-221021-1652 div {
+        border: inherit;
+        flex-basis: 3ch;
+    }
+</style>

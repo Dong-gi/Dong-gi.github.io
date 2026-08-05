@@ -1,0 +1,13 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="c1" class="io.github.donggi.bean.Hello20$C1"
+		depends-on="c3" />
+	<bean id="c2" class="io.github.donggi.bean.Hello20$C2" />
+	<bean id="c3" class="io.github.donggi.bean.Hello20$C3"
+		depends-on="c2" />
+</beans>

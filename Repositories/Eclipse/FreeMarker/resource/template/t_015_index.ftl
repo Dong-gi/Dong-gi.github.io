@@ -1,0 +1,12 @@
+<#include "t_015_boolean.ftl">
+<#include "t_015_cap_first.ftl">
+<#include "t_015_capitalize.ftl">
+<#include "t_015_chop_linebreak.ftl">
+<#include "t_015_contains.ftl">
+<#include "t_015_datetime.ftl">
+<#include "t_015_esc.ftl">
+<#include "t_015_tmp_1.html">
+<#include "t_015_index_of.html">
+<#include "t_015_keep.html">
+<#include "t_015_matches.html">
+<#include "t_015_replace.html">

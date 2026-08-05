@@ -1,0 +1,720 @@
+include ../../source/skeleton.pug
+
++post({
+    title: '잡다한 팁',
+})
+
+    h1 AWS
+    div
+        h2 CloudWatch &gt; Logs Insights
+        div
+            h3 GLOB 패턴을 이용한 필드 추출
+            +asCode('sql').
+                fields @timestamp, @message
+                | parse @message "\"pid\":*," as pid
+                | parse @message "\"url\":\"*\"" as url
+                | display @timestamp, pid, url, @message
+                | sort @timestamp desc
+                | limit 10000
+
+            h3 JSON 프로퍼티 존재 여부 확인
+            +asCode('sql').
+                fields @timestamp, isPresent(detail.hpDiff) as isHp, isPresent(detail.mpDiff) as isMp
+                | filter event = "battle-action"
+                | stats sum(isHp) as hpChangedCount, sum(isMp) as mpChangedCount
+
+            h3 정규식을 이용한 필드 추출
+            p 아래 쿼리에서, abs()는 문자열을 숫자로 변환하기 위해 사용됨
+            +asCode('sql').
+                fields @timestamp, @message
+                | filter @message like /SOME_TARGET_MESSAGE/
+                | parse @message /"targetProperty":(?&lt;targetCount&gt;\d+)/
+                | stats sum(abs(targetCount)) by bin(1h)
+
+        h2 S3
+        div
+            h3 공통 접두어 획득
+            +asCode('shell') $ aws s3api list-objects-v2 --bucket BUCKET_NAME --delimiter / --query 'CommonPrefixes[].Prefix'
+
+            h3 삭제된 객체 복구
+            ul
+                li 버전 관리 활성화 필요함에 유의
+                li 객체 삭제 마커를 삭제함으로써 객체를 복원한다
+            +asCode('shell').
+                # 삭제된 객체 목록 획득
+                $ aws s3api list-object-versions --bucket BUCKET_NAME --prefix tmp/ --query 'DeleteMarkers[?IsLatest==`true`]'
+
+                # 삭제된 객체 복구
+                $ aws s3api list-object-versions --bucket BUCKET_NAME --prefix tmp/ --output json --query 'DeleteMarkers[?IsLatest==`true`].[Key, VersionId]' | jq -r '.[] | "--key '\''" + .[0] + "'\'' --version-id " + .[1]' | xargs -L1 aws s3api delete-object --bucket BUCKET_NAME
+
+    h1 Claude Code
+    ul
+        li: +asA('https://x.com/trq212/status/2024574133011673516', '출처')
+
+        li 프롬프트 캐싱은 접두사 일치 방식으로 작동합니다. 가능한 한 많은 요청이 동일한 접두사를 공유하도록, 정적 콘텐츠를 먼저 만들고 동적 콘텐츠는 나중에 만듭니다. 클로드 코드의 경우 다음과 같습니다.
+            ol
+                li 정적 시스템 프롬프트 및 도구(전역 캐시됨)
+                li CLAUDE.md (프로젝트 내에 캐시됨)
+                li 세션 컨텍스트 (세션 내에 캐시됨)
+                li 대화 메시지
+
+        li 세션 도중 모델을 변경하지 마세요
+            p 만약 Opus와 10만 토큰 대화를 나눈 후 쉽게 답할 수 있는 질문을 하는 경우, Haiku로 전환하는 것이 Opus가 답변하는 것보다 비용이 더 많이 들 수 있습니다. Haiku로 전환하면 프롬프트 캐시를 다시 구축해야 하기 때문입니다.
+            p 모델을 전환해야 하는 경우, 가장 좋은 방법은 서브에이전트를 이용하는 것입니다. Opus는 다른 모델이 수행해야 할 작업에 대한 "인수인계" 메시지를 준비합니다.
+
+        li 세션 도중 도구를 추가하거나 제거하지 마십시오
+            p 직관적으로 생각하면 모델에게 지금 당장 필요하다고 생각되는 도구만 제공해야 할 것 같습니다. 하지만 도구는 캐시 접두사의 일부이기 때문에 도구를 추가하거나 제거하면 전체 대화의 캐시가 무효화됩니다.
+
+    h1 DNS
+    ul
+        li 1.1.1.1 : CloudFlare
+        li 8.8.8.8 : Google
+
+    h1 Eclipse 단축키
+    ul
+        li Ctrl + Shift + L : 전체 단축키 목록
+        li F3 : 정의로 이동
+        li F4 : Type hierarchy
+        li Ctrl + Shift + G : 참조 위치 검색
+        li Ctrl + E : 열린 파일 목록 팝업
+        li Ctrl + D : 라인 제거
+        li Ctrl + L : 라인 이동
+        li Ctrl + O : Outline 팝업
+        li Alt + ←/→ : 편집 위치 전/후이동
+        li Ctrl + (Shift) + K : 블록 지정 텍스트 (뒤로) 검색
+        li Ctrl + (Shift) + / : 블록 지정 텍스트 (/**/) 주석 토글
+        li Ctrl + (Shift) + W : (전체) 파일 닫기
+        li Ctrl + Shift + F, Ctrl + I : 블록 지정 텍스트에 포맷 적용
+        li Ctrl + 1 : Quick fix
+        li Ctrl + Shift + O : import 정돈
+        li Ctrl + Shift + T : 클래스 검색
+        li Ctrl + Shift + R : 리소스 검색
+
+    h1: +asA('https://ffmpegbyexample.com/', 'FFmpeg 길라잡이')
+
+    h1 Google Play Store 인앱 결제 상품 변경 사항을 바로 적용
+    ol
+        li 변경할 부분들을 모두 변경한 다음 상품을 '비활성' 상태로 저장
+        li 상품을 다시 '활성' 상태로 저장하면 변경 사항이 즉시 반영된다
+
+    h1 Nox ADB 연결
+    ul
+        li nox_adb.exe connect 127.0.0.1:5037
+        li 5037 포트는 안드로이드 ADB 기본 포트
+
+    h1 PostgreSQL
+    +pos('PostgreSQL')
+    div
+        h2 upsert 수행 시 삽입/변경된 행의 개수 확인하기
+        ul
+            li insert ... on conflict 수행 시 전체 삽입/갱신된 행의 개수만 반환됨
+            li update 발생 시 기존 행은 삭제되므로 시스템 컬럼 xmax에 0이 아닌 값이 설정됨을 이용
+                +asCode('sql') insert ... on conflict ... returning *, (xmax = 0) as is_inserted;
+
+        h2 (DDL의) 잠금 획득 대기로 인해 다른 요청들이 장기 차단되는 것 방지하기
+        +asCode('sql') set statement_timeout = '500ms';
+
+        h2 테이블 제약 조건 추가 시 검증을 생략하여 테이블 잠금 짧게 하기
+        +pos('not valid')
+        ol
+            li not valid 옵션을 사용하여 테이블 제약조건 추가
+                +asCode('sql') ALTER TABLE distributors ADD CONSTRAINT distfk FOREIGN KEY (address) REFERENCES addresses (address) NOT VALID;
+            li 보다 낮은 잠금 수준으로 나중에 제약조건 검증
+                +asCode('sql') ALTER TABLE distributors VALIDATE CONSTRAINT distfk;
+
+        h2 기존 컬럼에 not null 설정을 빠르게 추가하기
+        div
+            h3.no-marker PostgreSQL 11~
+            ol
+                li not null default -1과 같이 기본값을 포함하여 설정 추가
+                li 기존 행의 값 업데이트
+                li default 조건 제거
+
+            h3.no-marker PostgreSQL 12~
+            ol
+                li check 제약 조건으로 not null 검사 추가
+                    p #[+goto('not valid')] 옵션을 이용해 검사를 나중으로 미룰 수도 있다
+                li not null 제약 조건 추가 -- check 제약 조건으로 이미 검증되었으므로 스캔 생략됨
+                li check 제약 조건 삭제
+
+            h3.no-marker PostgreSQL 18~
+            p not null 제약조건을 #[+goto('not valid')] 옵션으로 한 번에 추가 가능
+
+        h2 인덱스 관련 작업에서 테이블 수준 잠금 피하기
+        ul
+            li 인덱스 생성 시 CONCURRENTLY를 항상 사용하는 것이 좋다
+                p 생성에 실패한 경우, 재시도하기 전에 잔여물을 삭제해야 한다
+            li 인덱스 삭제 시에도 CONCURRENTLY를 사용할 수 있다
+            li 현재 ALTER INDEX에는 CONCURRENTLY 옵션이 없으므로, 신규 생성 후 이전 걸 삭제하면 된다
+
+        h2 민감 정보는 제외하고, 특정 컬럼에 대한 권한만 부여하기
+        +asCode('sql') GRANT SELECT (id, username) ON users TO analyst;
+
+        h2 목록을 이용한 패턴 매칭
+        p 아래와 같은 쿼리를 이용하면 프로그램 코드에서 배열 또는 리스트 변수를 직접 SQL 매핑에 이용할 수 있어 편리하다
+        +asCode('sql') WHERE email ~ ANY(ARRAY['@gmail\.com$', '@yahoo\.com$'])
+
+        h2 CSV로 쓰기
+        +asCode('sql').
+            copy (
+                select * from test
+            )
+            to stdout
+            with (format csv, header true, null 'NULL');
+
+        h2 $$를 이용한 문자열 리터럴 표기
+        +asCode('sql').
+            select $$some
+            long
+            text$$;
+
+            select $tag$some
+            long
+            $$
+            text$tag$;
+
+        h2 서브쿼리 없이 첫 번째 또는 마지막 행 가져오기
+        p order by 절에 등장하는 표현식(들)을 순서대로 distinct on ()에 이용하면 된다
+        +asCode('sql').
+            select distinct on (class) *
+            from students
+            order by class, height desc;
+
+        h2 null도 값으로 취급하여 비교하기
+        +asCode('sql').
+            a is distinct from b
+
+            a is not distinct from b
+
+        h2 기존 앱이 실행 중인 상태에서 컬럼 제거하기
+        ol
+            li search_path 상 선순위에 같은 이름의 뷰 생성
+                +asCode('sql') CREATE VIEW app.users AS SELECT username, true AS active FROM public.users;
+            li 테이블에서 컬럼 삭제
+            li 앱 업데이트
+            li 대체 뷰 삭제
+
+        h2 무효한 인덱스 찾기 ~ 복구
+        ul
+            li \d table_name 결과의 인덱스에 INVALID 표시
+            li 또는 시스템 테이블에서 조회
+                +asCode('sql').
+                    select *
+                    from pg_index join pg_class on pg_index.indexrelid = pg_class.oid
+                    where pg_index.indisvalid = false
+            li 무효한 인덱스는 reindex concurrently를 이용해 복구 가능
+            li reindex 실패한 경우, _ccnew 접미사가 붙은 인덱스가 남으므로 삭제하고 다시 reindex
+
+        h2 파티션 테이블에 새로운 인덱스 추가하기
+        p 부모 테이블에 대해 create index concurrently가 불가능하므로, 아래 절차로 생성
+        ol
+            li 부모 테이블에 only 옵션으로 create index 실행
+                p 자식(파티션) 테이블에 대해 create index가 재귀적으로 실행되지 않는다. 따라서 전체 index는 INVALID 상태
+            li 각 파티션 테이블에 대해 create index concurrently 실행
+                +asCode('sql').
+                    create index concurrently idx_xxx_2024 on xxx_2024 (xxx);
+                    alter index idx_xxx attach partition idx_xxx_2024;
+                p 모든 파티션 테이블에 대해 인덱스가 연결되면 전체 index는 자동으로 VALID 상태로 변경
+
+        h2 실행 중인 프로세스 확인, 종료
+        ul
+            li 프로세스 확인
+                +asCode('sql').
+                    select datname, pid, substr(query, 1, 120), age(clock_timestamp(), query_start) age
+                    from pg_stat_activity
+                    where state = 'active' and query not like '%pg_stat_activity%'
+                    order by age desc
+
+            li 쿼리 취소
+                +asCode('sql') select pg_cancel_backend(pid)
+
+            li 프로세스 종료
+                +asCode('sql') select pg_terminate_backend(pid)
+
+        h2 JDBC 연결 URL 설정
+        ul
+            li ssl=true : 보안 연결 사용
+            li sslmode=no-verify 또는 sslfactory=org.postgresql.ssl.NonValidatingFactory : 서버측 인증서의 유효성을 검증하지 않음
+            li sslrootcert=name.pem : 서버측 인증서의 유효성을 검증할 수 있는 키 파일 지정
+            li stringtype=unspecified : JSONB 쓰기에 오류가 발생하지 않도록 설정
+
+        h2 dead tuple 수 확인
+        +asCode('sql').
+            select relname, n_dead_tup, last_vacuum, last_autovacuum
+            from pg_stat_all_tables
+            where n_dead_tup &gt; 0
+        p 단, vaccum full 수행 시 n_dead_tup이 즉시 갱신되지 않을 수 있음에 유의 -- analyze 실행하면 반영 (참조 : #[+asA('https://pskbigstar.tistory.com/entry/PostgreSQL-dead-tuple-%EB%AA%A8%EB%8B%88%ED%84%B0%EB%A7%81-%EC%8B%9C-%EC%A3%BC%EC%9D%98vacuum-full')])
+
+        h2 대략적인 행 개수 확인
+        +asCode('sql') select relname, reltuples from pg_class order by 1
+
+        h2 UPDATE ... FROM VALUES
+        +asCode('sql').
+            wiz=# insert into t_player_item values (123, 1, 123), (123, 2, 123);
+
+            INSERT 0 2
+
+            wiz=# update t_player_item as t1 set amount = amount + diff
+                  from ( values ('123'::bigint, '1'::int, '1'::int), ('123', '2', '-1') ) as t2 (player_id, item_id, diff)
+                  where t1.player_id = t2.player_id and t1.item_id = t2.item_id
+                  returning *;
+
+             player_id | item_id | amount | player_id | item_id | diff 
+            -----------+---------+--------+-----------+---------+------
+                   123 |       1 |    124 |       123 |       1 |    1
+                   123 |       2 |    122 |       123 |       2 |   -1
+            (2 rows)
+
+            UPDATE 2
+
+        h2 시각 차이 획득
+        +asCode('sql') select abs(extract (epoch from (insert_datetime - '2019-07-04 19:39:55'::timestamp)));
+
+        h2 시간대 변경
+        +asCode('sql').
+            with tmp as (
+                select '2024-11-03 08:30:00'::timestamp t
+                union all
+                select '2024-11-03 09:30:00'::timestamp t
+            )
+            select
+                t,
+                t at time zone 'Asia/Seoul',
+                t at time zone 'America/Los_Angeles',
+                (t at time zone 'UTC') at time zone 'Asia/Seoul',
+                (t at time zone 'UTC') at time zone 'America/Los_Angeles'
+            from tmp;
+
+                      t          |        timezone        |        timezone        |      timezone       |      timezone       
+            ---------------------+------------------------+------------------------+---------------------+---------------------
+             2024-11-03 08:30:00 | 2024-11-02 23:30:00+00 | 2024-11-03 16:30:00+00 | 2024-11-03 17:30:00 | 2024-11-03 01:30:00
+             2024-11-03 09:30:00 | 2024-11-03 00:30:00+00 | 2024-11-03 17:30:00+00 | 2024-11-03 18:30:00 | 2024-11-03 01:30:00
+            (2 rows)
+
+        h2 테이블 목록 획득
+        +asCode('sql') select * from information_schema.tables
+
+        h2 테이블 정보 획득
+        +asCode('sql') select * from information_schema.columns where table_name = '{tableName}'
+
+        h2 테이블 기본 키 획득
+        +asCode('sql').
+            SELECT pg_attribute.attname as column FROM pg_index, pg_class, pg_attribute, pg_namespace
+            WHERE
+                pg_class.oid = '{tableName}'::regclass AND
+                indrelid = pg_class.oid AND
+                nspname = 'public' AND
+                pg_class.relnamespace = pg_namespace.oid AND
+                pg_attribute.attrelid = pg_class.oid AND
+                pg_attribute.attnum = any(pg_index.indkey) AND
+                indisprimary;
+
+        h2 변수를 이용하는 쿼리에 대한 explain 실행
+        +asCode('sql').
+            prepare test(bigint, int, int) as
+                insert into t_player_item values ($1, $2, $3);
+
+            explain analyze execute test(3, 4, 5);
+
+            deallocate test;
+
+    h1 psql
+    ul
+        li \x : 컬럼이 너무 많아 보기 힘든 경우, 컬럼을 행마다 구분하여 표시
+        li \pset null '[NULL]' : null을 알기 쉬운 대체 문자열로 표시
+        li \copy (select * from some_table) to 'my_file.csv' CSV HEADER
+        li \o output.txt
+        li \i query.sql
+        li ~/.psqlrc : psql 세션 시작할 때마다 가장 먼저 실행
+
+    h1 SQL
+    div
+        h2 OVERLAPS : 날짜 구간 겹침 확인
+        ul
+            li (start1, end1) OVERLAPS (start2, end2)
+                p [start1, end1) 구간과 [start2, end2) 구간에 겹침이 존재하는지 여부를 반환한다
+            li 종료 시각 대신 interval을 이용할 수 있다
+                p (start1, length1) OVERLAPS (start2, length2)
+            li 구간의 시작 시각과 종료 시각이 같은 경우, 구간은 지정된 시각에 한정된다
+
+        h2 null을 일반값으로 취급하여 비교
+        p x is (not) distinct from y
+
+        h2 그룹별 1개 행만 반환
+        +asCode('sql').
+            select distinct on (player_id)
+                player_id,
+                play_data
+            from t_player_play_history
+            order by player_id, play_end_time desc
+
+        h2 그룹별 n개 행만 반환
+        p LATERAL JOIN은 좌항의 테이블을 모두 구성한 뒤, 좌항 테이블 행을 직접 참조하여 우항의 테이블을 구성할 수 있게 해준다
+        +asCode('sql').
+            select
+                player_id,
+                t2.play_data
+            from (
+                select distinct player_id
+                from t_player_play_history
+            ) t1 join lateral (
+                select play_end_time, play_data
+                from t_player_play_history x
+                where x.player_id = t1.player_id
+                order by play_end_time desc
+                limit 3
+            ) t2 on true
+            order by player_id, play_end_time desc
+
+    h1 Shell &gt; 세션 동안 SSH 인증 정보 기억하기
+    p 참고자료 : #[+asA('https://gist.github.com/nepsilon/45fae11f8d173e3370c3')]
+    +asCode('shell') $ ssh-add .ssh/my_key
+
+    h1 SSL 인증서
+    div
+        h2 Certbot
+        ul
+            li: +asA('https://certbot.eff.org/')
+            li 무료 SSL 인증서(3개월) 제공
+            li 저장 위치 : /etc/letsencrypt/
+            li DNS 레코드를 이용한 인증서 발급
+            +asCode('shell') $ sudo certbot certonly -d *.4joy.link --manual --preferred-challenges dns
+            p DNS 레코드 확인
+            +asCode('shell') $ nslookup -q=TXT _acme-challenge.4joy.link
+            li certbot renew [--cert-name CERTNAME] [options]
+            ul
+                li 만료 30일 미만인 (모든) 인증서 갱신
+                li 인증서 이름은 certbot certificates로 확인 가능
+                li --pre-hook "service nginx stop" --post-hook "service nginx start"
+                p 인증서를 하나라도 갱신해야 하는 경우, 각 갱신 전후에 실행. hook가 실패해도 인증서 갱신은 계속 진행된다
+                li --deploy-hook DEPLOY_HOOK
+                p 갱신에 성공한 각 경우에만 실행
+                li --force-renewal
+                p 만료 기간과 무관하게 갱신
+        div
+            h3 2024년 9월 - Let's Encrypt 인증서 체인 변경
+            ul
+                li 이전까지는 인증서가 널리 신뢰될 수 있도록 자체 루트 체인(ISRG Root X1)만 사용하지 않고, IdenTrust의 루트 인증서에 의해 교차 서명된 인증서를 발급함
+                li ISRG Root X1을 신뢰하는 안드로이드 기기가 93.9%까지 증가했고, 안드로이드 14부터 Google Play를 통해 OS 업데이트 필요 없이 루트 인증서를 업데이트할 수 있게됨에 따라 #[+asA('https://letsencrypt.org/2023/07/10/cross-sign-expiration.html', '2023년 7월')], 교차 서명을 종료함을 발표
+                li 2024년 2월 8일 : 기본적으로 교차 서명 제공 중단
+                li 2024년 5월 15일 : Cloudflare 발급 인증서도 교차 서명되지 않음 / 사용자 정의 인증서를 업로드해도 교차 서명된 체인 대신 ISRG Root X1 체인과 번들로 제공
+                li 2024년 9월 30일 : 교차 서명 인증서 만료
+                li 인증서로 인한 연결 오류 발생 시,
+                ul
+                    li Android 7 이하 : 자체 인증서 저장소를 이용하는 FireFox 브라우저 이용
+                    li #[+asA('https://help.iwinv.kr/manual/read.html?idx=867')]를 참고하여 CA 인증서 업데이트 또는 설치
+
+        h2 오라클 클라우드 &gt; 로드밸런서 &gt; 인증서 추가
+        ul
+            li SSL 인증서로 cert.pem 설정
+            li CA 인증서로 fullchain.pem 설정
+            li 전용 키에 privkey.pem 설정
+
+    h1 SVG 크기가 안 맞을 때
+    p html 노드로 설정한 크기에 맞게 출력되지 않는 경우, svg 파일을 텍스트 에디터로 열어 width, height 속성을 삭제하고, 대신 viewBox 등으로 출력 범위를 지정
+    +asCode('xml') &lt;svg width="" height=""&gt; → &lt;svg viewBox="0 0 100 100"&gt;
+
+    h1 TCP_NODELAY 옵션 활성화
+    ul
+        li: +asA('https://brooker.co.za/blog/2024/05/09/nagle.html', '참고 블로그')
+        li #[+asA('https://datatracker.ietf.org/doc/html/rfc896')]은 세션에서 이전에 보낸 패킷에 대한 ACK를 수신하기 전까지 새로운 TCP 세그먼트를 보내지 않고 지연시키는 것을 제안한다
+        li 이는 저지연이 필수적인 시스템에서 오히려 비효율적일 수 있으므로, TCP_NODELAY 소켓 옵션을 활성화하여 Nagle 알고리즘을 비활성화하는 것이 좋을 수 있다
+
+    h1 Visual Studio
+    ol
+        li.marker 리소스 디렉터리 전체 출력 디렉터리에 복사
+        p 예시(temp 디렉터리 하위 항목 모두 복사)처럼 프로젝트 파일 편집
+        +asCode('xml').
+            &lt;ItemGroup&gt;
+                &lt;Content Include="temp\**"&gt;
+                    &lt;CopyToOutputDirectory&gt;PreserveNewest&lt;/CopyToOutputDirectory&gt;
+                &lt;/Content&gt;
+            &lt;/ItemGroup&gt;
+
+        li.marker 정의 탐색(F12) 실패 해결
+        p NuGet 패키지 Microsoft.Net.Compilers 설치
+
+    h1 VS Code
+    ul
+        li.marker 단축키로 날짜 입력
+        +asA('https://marketplace.visualstudio.com/items?itemName=jsynowiec.vscode-insertdatestring')
+        p 를 설치하면, Ctrl + Shift + I를 이용해 곧바로 날짜 문자열을 입력할 수 있다
+        li.marker 파일 탐색 뷰에서 현재 문서 자동 추적 중지
+        +w3img('/imgs/201903/20190330_214623.png')
+        li.marker 특정 언어 포매터 설정
+        p Ctrl + Shift + P &gt; Preferences: Configure Language Specific Settings &gt; "editor.defaultFormatter": "redhat.java"
+
+    h1 Windows
+    ul
+        li.marker 차단한 앱 알림 해제
+        p 레지스트리 : HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\
+
+        li.marker 확장자 일괄 변경
+        +asCode('shell') ren *.html *.txt
+
+        li.marker dir 결과 저장
+        +asCode('shell') dir /s /b *.png &gt; png.txt
+        ul
+            li /s : 재귀
+            li /b : "디렉터리/파일명"만 출력
+            li &gt; : 저장
+
+        li.marker 시작 프로그램 등록
+        ol
+            li shell:startup 실행
+            p C:\Users\%USER_NAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+            li exe 바로가기 붙여넣기
+
+        li.marker 부트매니저 설정
+        ul
+            li SSD에 설치한 윈도우가 BIOS 설정에서는 검색되지 않는 경우에 대해 해결됨 확인
+            li: +asA('https://m.blog.naver.com/pspsim/221141734669', '참고 자료')
+            ol
+                li msconfig 실행
+                li 부팅 메뉴에서 기본값 설정, 불필요한 부팅 옵션 삭제 등 처리 후 저장
+
+        li.marker SSD 인식 불량 해결
+        ul
+            li 파티션은 활성 상태인데 볼륨은 비활성 상태인 경우에 대해 해결됨 확인
+            li: +asA('https://kin.naver.com/qna/detail.nhn?d1id=1&dirId=1010305&docId=291566434&qb=7KeI66y4CSDtlZjrk5zrlJTsiqTtgawg7J247Iud7J20IOyViOuQmOuEpOyalA==', '참고 자료')
+            +asCode('shell').
+                diskpart
+                list disk
+                select disk 1 # 디스크 번호는 list 결과에 따라 적절히
+                clean
+                create partition primary # 부팅 디스크로 이용하려면 주(primary) 파티션이어야 함
+                list partition
+                select partition 1
+                active # 파티션 활성화
+                format fs=ntfs quick # 빠른 포맷 진행
+                exit
+
+    h1 브라우저
+    div
+        h2 Chromium 콘솔
+        ul
+            li $0 ~ $4 : 최근 선택한 element(또는 JavaScript object) 참조
+            li $(selector), $$(selector) : 각각 parent.querySelector(), parent.querySelectorAll()의 축약
+            li copy(object) : 클립보드에 객체 문자열 표현 복사
+            li debug(function) ↔ undebug : 해당 함수가 호출되면 자동 중단
+            li inspect(element or function) : Elements 또는 Sources 탭에서 해당 요소 표시
+            li monitor(function) ↔ unmonitor : 해당 함수가 호출되면 인자 출력
+            li monitorEvents(object[, events]) ↔ unmonitorEvents : 이벤트가 발생하면 출력
+            li queryObjects(constructor) : 해당 생성자로 만들어진 객체 목록 출력
+            li table(data[, columns]) : 객체를 테이블로 출력
+
+        h2 Firefox 미디어 자동재생 해제 &amp; 다운로드 설정
+        ol
+            li about:config 접속
+            li media.play-stand-alone 항목 false로 설정
+
+        h2 https://maplestory.fandom.com/wiki/Music
+        p 메이플스토리 OST 다운로드
+        +codeBtn('/Repositories/JavaScript/Browser/maplestory.fandom.com.js', 'javascript')
+
+        h2 https://www.steamgifts.com/
+        p 게임 나눔 자동 참여
+        +codeBtn('/Repositories/JavaScript/Browser/steamgifts.com.js', 'javascript')
+
+        h2 PC 연결 없이 모바일 브라우저 디버깅
+        ul
+            li #[+asA('https://github.com/liriliri/eruda')]
+                +asCode('html').
+                    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/3.3.0/eruda.min.js"&gt;&lt;/script&gt;
+                    &lt;script&gt;
+                      eruda.init({useShadowDom: false});
+                      eruda.position({x:0,y:0});
+                      document.querySelector('.eruda-container').style.height = '80vh';
+                    &lt;/script&gt;
+            li #[+asA('https://github.com/Tencent/vConsole')]
+                +asCode('html').
+                    &lt;script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"&gt;&lt;/script&gt;
+                    &lt;script&gt;
+                      var vConsole = new window.VConsole();
+                    &lt;/script&gt;
+
+        h2 넷플릭스 작품 정보 복사
+        +codeBtn({ path: '/Repositories/JavaScript/Browser/netflix.js', lan: 'javascript', title: '북마클릿' })
+
+        h2 이미지 인코딩/디코딩
+        ol
+            li 비트열 a, b에 대하여 (a ^ b) ^ b = a임을 이용
+            li 인코딩 ::= 기존 데이터의 각 바이트에 대하여, data[i] ^= mask[i]
+            li 디코딩 ::= 인코딩된 데이터 각 바이트에 대하여, data[i] ^= mask[i]
+            li 따라서 XOR에 이용하는 mask만 정확히 재현할 수 있다면 빠르게 in-place 인코딩/디코딩이 가능하다
+        ul
+            li: +codeBtn('/Repositories/Single/202202/imageEncoding.html', 'nohighlight') View live
+            li
+                +codeBtn('/Repositories/Single/202202/imageEncoding.html', 'javascript', '[45,66]') encode()
+                +codeBtn('/Repositories/Single/202202/imageEncoding.html', 'javascript', '[68,87]') decode()
+
+        h2 핫딜 목록 정리 (추천수 5이상만 남기기)
+        +codeBtn({ path: '/Repositories/JavaScript/Browser/hot-deal.js', lan: 'javascript', title: '북마클릿' })
+
+    h1 도메인 구입 전 확인할 것
+    ul
+        li: +asA('https://www.bryanbraun.com/2024/10/25/before-you-buy-a-domain-name-first-check-to-see-if-its-haunted/', '출처')
+        li 도메인이 이전에 불법적인 활동에 이용됐을 수 있음에 주의해야 한다
+        li: +asA('https://transparencyreport.google.com/copyright/domains/musicbox.fun', 'Google Transparency Report > 저작권 위반 삭제 요청')
+        li: +asA('https://lumendatabase.org/', 'DMCA 신고 검색')
+        li: +asA('https://web.archive.org/', '이전 스냅샷 검색')
+
+    h1 암호화 알고리즘 선택
+    ul
+        li: +asA('https://blog.trailofbits.com/2019/07/08/fuck-rsa/', '참고 자료')
+        li RSA는 이해하기 쉽다 -&gt; 이 때문에 개발자들은 (잘못된) 구현을 시도하기 십상이다
+        li ECC는 어렵다 -&gt; 따라서 개발자들은 널리 쓰이는 라이브러리를 이용하게 된다
+            p 해당 라이브러리는 전문가에 의해 잘 설계되었기 때문에, 개발자들은 암호화에 이용할 랜덤 비트열만 생성하면 되므로 오류를 범할 가능성이 매우 작다
+        li 출처의 사이트는 키 교환과 서명에는 Curve25519, 이후 통신에는 대칭키 암호화를 사용하는 ECIES를 권장한다
+
+    h1 유니코드
+    div
+        h2 서로 다른 하이픈들(&#x002D;, &#x2010;)을 똑같이 처리하려면?
+        p #[+asA('https://en.wikipedia.org/wiki/Unicode_character_property', '유니코드 카테고리')] 값을 이용. #[+asA('https://pyatl.dev/2024/09/01/bitten-by-unicode/', '참고 자료')]
+        +asCode('python').
+            def is_hyphen(char: str) -&gt; bool:
+                return unicodedata.category(char) == 'Pd'
+
+        h2 정규표현식 일본어 검색
+        ol
+            li 히라가나 : [\u3041-\u3096]
+            li 가타카나 : [\u30A1-\u30FA]
+            li 한자 : [\u4E00-\u9FEF\u3400-\u4DBF\uF900-\uFADF]
+            li 특문 : [\u3000-\u303F\uFF00-\uFF9F]
+            li 전체 : [\u3041-\u3096\u30A1-\u30FA\u4E00-\u9FEF\u3400-\u4DBF\uF900-\uFADF\u3000-\u303F\uFF00-\uFF9F]
+
+        h2: +asA('https://www.owasp.org/index.php/Password_special_characters', '특수문자 영어 이름')
+        +table()
+            +ths('Character','Name','Unicode')
+            +tds('','Space','U+0020')
+            +tds('!','Exclamation','U+0021')
+            +tds('"','Doublequote','U+0022')
+            +tds('#','Numbersign(hash)','U+0023')
+            +tds('$','Dollarsign','U+0024')
+            +tds('%','Percent','U+0025')
+            +tds('&','Ampersand','U+0026')
+            +tds("'",'Singlequote','U+0027')
+            +tds('(','Leftparenthesis','U+0028')
+            +tds(')','Rightparenthesis','U+0029')
+            +tds('*','Asterisk','U+002A')
+            +tds('+','Plus','U+002B')
+            +tds(',','Comma','U+002C')
+            +tds('-','Minus','U+002D')
+            +tds('.','Fullstop','U+002E')
+            +tds('/','Slash','U+002F')
+            +tds(':','Colon','U+003A')
+            +tds(';','Semicolon','U+003B')
+            +tds('<','Lessthan','U+003C')
+            +tds('=','Equalsign','U+003D')
+            +tds('>','Greaterthan','U+003E')
+            +tds('?','Questionmark','U+003F')
+            +tds('@','Atsign','U+0040')
+            +tds('[','Leftbracket','U+005B')
+            +tds('\\','Backslash','U+005C')
+            +tds(']','Rightbracket','U+005D')
+            +tds('^','Caret','U+005E')
+            +tds('_','Underscore','U+005F')
+            +tds('`','Graveaccent(backtick)','U+0060')
+            +tds('{','Leftbrace','U+007B')
+            +tds('|','Verticalbar','U+007C')
+            +tds('}','Rightbrace','U+007D')
+            +tds('~','Tilde','U+007E')
+
+        h2 한글 종성 구분
+        ol
+            li 한글은 0xAC00('가')부터 0xD7A3('힣')까지 총 11,172자가 정의
+            li 11,172 = 초성 19 * 중성 21 * 종성 28(종성 없는 경우 포함)
+                +asA('http://www.unicode.org/Public/UNIDATA/EastAsianWidth.txt')
+            li 코드 포인트 = (초성 인덱스 * 21 + 중성 인덱스) * 28 + 종성 인덱스 + '가'0xAC00
+            ul
+                li (코드 포인트 - '가'0xAC00) % 28 = 종성 인덱스
+                li (코드 포인트 - 종성 인덱스 - '가'0xAC00) / 28 % 21 = 중성 인덱스
+                li ((코드 포인트 - 종성 인덱스 - '가'0xAC00) / 28 - 중성 인덱스) / 21 = 초성 인덱스
+            li 조사 처리 예시 코드
+                +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/HangulUtility.java', 'java')
+
+    h1 운전면허증 분실 시
+    p 운전면허증 분실 신고가 따로 존재하지 않기 때문에, 재발급 신청으로 기존 면허증을 만료시켜야 한다
+
+    h1 코드 조각
+    div
+        h2 C# &gt; Console Redirect
+        +codeBtn('/Repositories/VisualStudio/WpfApp8/Utility/ConsoleRedirectWriter.cs', 'cs')
+
+        h2 C# &gt; Naive HTTP Server
+        +codeBtn('/Repositories/VisualStudio/WpfApp8/Utility/NaiveHttpServer.cs', 'cs')
+
+        h2 JavaScript &gt; CSV 파서
+        +codeBtn('/Repositories/JavaScript/CSV/parseCSV.js', 'javascript')
+
+        h2 JSDoc &gt; .d.ts 생성
+        p 참고자료 : #[+asA('https://www.typescriptlang.org/ko/docs/handbook/declaration-files/dts-from-js.html')]
+        +asCode('shell', 'CLI 실행 예시') npx typescript src/**/*.js --declaration --allowJs --emitDeclarationOnly --outDir dist/types
+
+        h2 JSDoc &gt; 마크다운 유사 구문 
+        +codeBtn({ path: '/Repositories/Single/202509/22-1353.js', lan: 'javascript' })
+
+        h2 JSDoc, TypeScript &gt; Pick&lt;Type, Keys&gt; 직접 정의하기
+        +asCode('JavaScript').
+            /**
+             * @typedef {{ [Key in keyof T as Key extends K ? Key : never] : T[Key] }} CustomPick&lt;T, K extends keyof T&gt;
+             * @template T
+             * @template K
+             */
+
+        h2 JSDoc, TypeScript &gt; URL path parameter에 대한 타입 자동완성
+        ul
+            li JSDoc 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1137.js', lan: 'JavaScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 11.35.30 AM.png')
+            li TypeScript 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1137.ts', lan: 'TypeScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 11.36.31 AM.png')
+
+        h2 JSDoc &gt; TypeScript 배열 원소 타입 자동완성
+        ul
+            li JSDoc 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1421.js', lan: 'JavaScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 2.21.17 PM.png')
+            li TypeScript 예.
+                +codeBtn({ path: '/Repositories/Single/202506/12-1422.ts', lan: 'TypeScript' })
+                +w3img('/imgs/202506/Screenshot 2025-06-12 at 2.26.25 PM.png')
+
+        h2 날짜 계산
+        ul
+            li year, month, day로부터 요일 구하기
+                p
+                    +asA('https://cs.uwaterloo.ca/~alopez-o/math-faq/mathtext/node39.html', '출처')
+                    br
+                    |예. 2020년 2월 22일
+                ul
+                    li d = 22 # 22일
+                    li m = 12 # 1(3월), 2(4월), ..., 12(2월)
+                    li c = 20 # year // 100
+                    li y = 19 # (year % 100), 1-2월이면 -1
+                    li w = (d + floor(2.6 * m - 0.2) - 2 * c + y + (y // 4) + (c // 4)) % 7
+                        p Week day : 0(일요일), 1(월요일), ..., 6(토요일)
+
+        h2 비트 연산
+        ul
+            li 양의 정수 n이 2의 거듭제곱인지 빠르게 판별
+                +asCode('java') (n &amp; (n - 1)) == 0
+            li 양의 정수 n, x에 대하여, 빠른 x % 2^n 계산
+            ul
+                li shift 연산 이용
+                    +asCode('java') x &lt;&lt; (32 - n) &gt;&gt;&gt; (32 - n)
+                li and 연산 이용; (2^n - 1)는 사전에 계산되어 있어야 빠르다
+                    +asCode('java') x &amp; (2^n - 1)
+
+        h2 소수 찾기
+        ul
+            li 에라토스테네스의 체 : 
+                +codeBtn('/Repositories/Single/202202/FindPrime.java', 'java')
+            li Library 지원
+                +asCode('java').
+                    var i = BigInteger.valueOf(10000000000000L);
+                    for (var count = 0; count &lt; 100; ++count) {
+                        // 합성수일 가능성은 2^(-100)을 넘지 않는다
+                        i = i.nextProbablePrime();
+                        System.out.println(i);
+                    }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        선언된 권한은 모두 코드에서 실제로 쓰이는 것만 남긴다.
+        지운 것: ACCESS_NETWORK_STATE, CHANGE_NETWORK_STATE (ConnectivityManager 를
+        쓰지 않는다), WAKE_LOCK (WakeLock 을 획득하는 코드가 없었다).
+        화면이 꺼진 동안 릴레이가 끊기는 것이 확인되면 PARTIAL_WAKE_LOCK 을 실제로
+        획득하는 코드와 함께 WAKE_LOCK 을 되살려야 한다. 권한만 선언해 두면 아무
+        효과가 없다.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation" />
+
+    <application
+        android:label="@string/app_name"
+        android:allowBackup="false"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            퀵 설정 타일용 트램폴린. exported="false" 이므로 같은 앱만 띄울 수 있다.
+            MainActivity 는 런처 필터 때문에 exported 여야 하므로, 핫스팟을 켜는
+            특권 동작을 여기로 분리했다. 자세한 근거는 HotspotStartActivity KDoc.
+        -->
+        <activity
+            android:name=".HotspotStartActivity"
+            android:exported="false"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <service
+            android:name=".TetherService"
+            android:exported="false"
+            android:stopWithTask="false"
+            android:foregroundServiceType="specialUse">
+            <!--
+                Play 심사에 제출되는 자유 서술 문자열이다. 이전 값 "ip_packet_tunnel"
+                은 부정확했다 — 이 앱은 클라이언트의 IP 패킷을 포워딩하지 않는다.
+                SOCKS5/HTTP 프록시가 페이로드만 옮기고 외부 연결은 Android 의 TCP/IP
+                스택이 새로 연다(README 의 아키텍처 절). VpnService 도 쓰지 않는다.
+            -->
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="userspace_socks5_and_http_proxy_for_wifi_direct_tethering" />
+        </service>
+
+        <service
+            android:name=".HotspotTileService"
+            android:label="@string/hotspot_tile_label"
+            android:icon="@drawable/ic_hotspot_tile"
+            android:exported="true"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+    </application>
+
+</manifest>

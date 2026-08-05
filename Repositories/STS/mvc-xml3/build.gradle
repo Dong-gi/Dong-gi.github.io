@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'eclipse-wtp'
+    id 'war'
+}
+
+group = 'io.github.donggi'
+version = '0.0.1'
+sourceCompatibility = JavaVersion.VERSION_25
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+eclipse {
+    project.natures "org.springsource.ide.eclipse.gradle.core.nature"
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework:spring-webmvc:7.0.8'
+	implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
+	implementation 'org.slf4j:slf4j-api:2.0.16'
+	providedCompile 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+	providedCompile 'jakarta.servlet.jsp:jakarta.servlet.jsp-api:4.0.0'
+	providedCompile 'org.projectlombok:lombok:1.18.36'
+	annotationProcessor 'org.projectlombok:lombok:1.18.36'
+	testImplementation 'junit:junit:4.13.2'
+}

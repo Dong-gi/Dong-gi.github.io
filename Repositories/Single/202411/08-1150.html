@@ -1,0 +1,55 @@
+<style>
+    :root {
+        --section-241108-1150-1-size: 50rem;
+    }
+
+    #section-241108-1150-1 {
+        container-type: size;
+        width: var(--section-241108-1150-1-size);
+        outline-style: solid;
+        margin: 8px;
+
+        p {
+            color: white;
+            background-color: black;
+        }
+
+        @container (width < 33rem) {
+            p {
+                color: black;
+                background-color: white;
+            }
+        }
+
+        @container (33rem < width <=66rem) {
+            p {
+                color: black;
+                background-color: yellow;
+            }
+        }
+    }
+</style>
+
+<article style="min-height: 10rem">
+    Width :
+    <input id="input-241108-1150-1" type="range" min="10" max="90" value="50" step="5">
+
+    <section id="section-241108-1150-1">
+        <p>
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+            industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+            scrambled
+            it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic
+            typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
+            sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
+            PageMaker
+            including versions of Lorem Ipsum.
+        </p>
+    </section>
+</article>
+
+<script>
+    document.getElementById('input-241108-1150-1').addEventListener('input', function (ev) {
+        document.documentElement.style.setProperty('--section-241108-1150-1-size', this.value + 'rem')
+    })
+</script>

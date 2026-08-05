@@ -1,0 +1,17 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: '이 모든 것은 무엇을 의미하는가?',
+})
+
+    h1 도서 정보
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788958202677.jpg',
+        title: '이 모든 것은 무엇을 의미하는가?', author: '토머스 네이글',
+        isbn: '978-89-5820-267-7 (03100)',
+        publisher: '궁리출판', date: '2014.02.07',
+    })
+
+    h1 독서 기록
+    ul
+        li 우리 모두는 우리가 태어나기 전, 우리가 존재하기 전의 시간이 있었다는 것을 받아들인다. 그렇다면 왜 우리는 죽은 후에 존재하지 않게 될 것이라는 전망에 그렇게 불안해질까?

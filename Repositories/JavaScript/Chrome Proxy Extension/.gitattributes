@@ -1,0 +1,27 @@
+# 줄바꿈 정책
+#
+# 셸 스크립트와 서버 설정 템플릿은 **반드시 LF** 여야 한다.
+# CRLF 가 섞이면 Linux 에서 shebang 뒤에 \r 이 붙어 다음과 같이 깨진다:
+#   set: pipefail: invalid option name
+#   syntax error near unexpected token `$'{\r''
+#   /usr/bin/env: 'bash\r': No such file or directory
+# Windows 편집기에서 저장하다 CRLF 로 바뀌는 사고를 git 단계에서 막는다.
+
+* text=auto eol=lf
+
+*.sh        text eol=lf
+*.tmpl      text eol=lf
+*.conf      text eol=lf
+
+*.js        text eol=lf
+*.mjs       text eol=lf
+*.json      text eol=lf
+*.html      text eol=lf
+*.css       text eol=lf
+*.md        text eol=lf
+
+# Windows 전용 배치 파일은 CRLF 가 맞다
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+
+*.png       binary

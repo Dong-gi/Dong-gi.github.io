@@ -1,0 +1,19 @@
+shape: sequence_diagram
+
+o: Resource owner
+c: Client
+rs: Resource server
+as: Authorization server
+
+토큰 발급: {
+    c -> as -> o    : 권한 요청
+    o -> as -> c    : 권한 승인
+    c."Client는 access code를 받는다"
+}
+
+토큰 사용: {
+    c -> rs     : 자원 요청
+    rs -> as    : 토큰 검증 요청
+    as -> rs    : 토큰 검증
+    rs -> c     : 자원 전송
+}

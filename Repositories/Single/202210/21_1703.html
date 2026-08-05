@@ -1,0 +1,49 @@
+<div class="div-221021-1703">
+    <div>Header</div>
+    <div>Sidebar</div>
+    <div>Content</div>
+    <div>Footer</div>
+    <div>Overlay</div>
+</div>
+
+
+<style>
+    .div-221021-1703 div:nth-child(1) {
+        grid-area: h;
+    }
+
+    .div-221021-1703 div:nth-child(2) {
+        grid-area: s;
+    }
+
+    .div-221021-1703 div:nth-child(3) {
+        grid-area: c;
+    }
+
+    .div-221021-1703 div:nth-child(4) {
+        grid-area: f;
+    }
+
+    .div-221021-1703 {
+        border: solid;
+        display: grid;
+        grid-template-rows: repeat(3, minmax(10ch, auto));
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-areas:
+            "h h h h h h"
+            "s s c c c c"
+            ". f f f f ."
+    }
+
+    .div-221021-1703 div {
+        border: inherit;
+        flex-basis: 3ch;
+    }
+
+    .div-221021-1703 div:nth-child(5) {
+        z-index: 1;
+        grid-column: f-start / f-end;
+        grid-row: h-start / c-end;
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+</style>

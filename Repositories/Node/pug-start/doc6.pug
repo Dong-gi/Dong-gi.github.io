@@ -1,0 +1,18 @@
+mixin table()
+    table.w3-table-all.w3-card.w3-small.ordered-table&attributes(attributes)
+        if block
+            block
+
+mixin tableRow(...cells)
+    - console.log(arguments)
+    - console.log(cells)
+    - console.log(attributes)
+    tr&attributes(attributes)
+        each content, idx in cells
+            td(class=`td-${idx+1}`)= content
+
++table()&attributes({class:'no-sort'})
+    +tableRow(1, 2, 3, 4, 5)&attributes({class:'head-row'})
+    +tableRow(6, 7, 8, 9, 10)
+    +tableRow(11, 12, 13, 14, 15)
+

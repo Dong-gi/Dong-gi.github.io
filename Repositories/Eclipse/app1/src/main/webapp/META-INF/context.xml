@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+    <Resource
+        name="jdbc/MySQL/localhost/test"
+        auth="Container"
+        type="javax.sql.DataSource"
+        factory="org.apache.commons.dbcp2.BasicDataSourceFactory"
+        validationQuery="SELECT 1"
+        testOnBorrow="true"
+        testWhileIdle="true"
+        timeBetweenEvictionRunsMillis="10000"
+        minEvictableIdleTimeMillis="60000"
+        username="root"
+        password="root"
+        driverClassName="com.mysql.cj.jdbc.Driver"
+        url="jdbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8&amp;serverTimezone=UTC"
+        closeMethod="close" />
+</Context>

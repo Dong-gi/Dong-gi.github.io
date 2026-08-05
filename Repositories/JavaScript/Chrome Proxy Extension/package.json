@@ -1,0 +1,14 @@
+{
+  "name": "remote-proxy-router",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Edge 트래픽을 원격 HTTPS 프록시로 라우팅하는 MV3 확장 + Oracle Linux 8 서버 구성 도구",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "//": "type=module 은 extension/**/*.js 가 Node 에서 ESM 으로 해석되게 하려는 것이다. 확장 동작에는 영향이 없다.",
+  "engines": {
+    "node": ">=24"
+  }
+}

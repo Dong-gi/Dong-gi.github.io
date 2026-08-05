@@ -1,0 +1,136 @@
+//-
+    &#x23; for #
+include ./source/skeleton.pug
+
++post({
+    title: 'Blog',
+})
+    h1 Hello World!
+    p 방문을 환영합니다. 개인적으로 이것저것 정리하는 곳입니다.
+
+
+    h1 최근 수정된 포스트
+    ul#recently-changed-posts
+    script.
+        const h = setInterval(() => {
+            /* default.js 가 posts 를 채울 때까지 기다린다. 카테고리별로 펼쳐져 있어 같은 문서가 여러 번 나온다. */
+            try {
+                if (!Array.isArray(posts) || posts.length === 0) {
+                    return;
+                }
+            } catch {
+                return;
+            }
+            clearInterval(h);
+
+            const ul = document.getElementById('recently-changed-posts');
+            const addedFileSet = new Set();
+            let renderedCount = 0;
+            for (const post of [...posts].sort((a, b) => (b.mtimeMs ?? 0) - (a.mtimeMs ?? 0))) {
+                if (addedFileSet.has(post.file)) {
+                    continue;
+                }
+                addedFileSet.add(post.file);
+                ul.appendChild(asNodes(`<li><a href="/posts/${post.file}">${post.title}@${new Date(post.mtimeMs).toISOString()}</a></li>`));
+                if (++renderedCount >= 10) { break; }
+            }
+        }, 100);
+
+    h1 타임라인?
+    +table()
+        +ths('시간', '내용')
+        tr
+            td 2024
+            td Let's Encrypt의 인증서 체인에서, DST Root CA X3 루트 인증서를 제거하고 자체 루트 체인(ISRG Root X1)만 이용. #[+asA('https://letsencrypt.org/2023/07/10/cross-sign-expiration.html', '참고 1')]
+        tr
+            td 2024-07-22
+            td Google Chrome에서 3자 쿠키를 제거하는 계획을 철회. 대신 사용자 선택 권한을 강화하는 쪽으로 선회. #[+asA('https://privacysandbox.com/intl/en_us/news/privacy-sandbox-update/', '참고 1')]
+        tr
+            td 2024-07-29
+            td 위 발표에 대하여 W3C 블로그에 우려의 목소리가 게시. #[+asA('https://www.w3.org/blog/2024/third-party-cookies-have-got-to-go/', '참고 1')] #[+asA('https://www.w3.org/2001/tag/doc/web-without-3p-cookies/', '참고 2')]
+        tr
+            td 2025-05-30
+            td Math.abs()가 음수 입력에 대해 음수를 반환하는 끔찍한 버그에 관한 글을 발견. #[+asA('https://www.clientserver.dev/p/war-story-the-hardest-bug-i-ever')]
+        +tds('~2035', '윤초 폐지')
+
+    h1 Oracle Cloud에 블로그 띄우는 절차
+    ol
+        li 블로그 클론
+            +asCode('shell').
+                $ sudo yum install git -y
+                $ git clone git@github.com:Dong-gi/Dong-gi.github.io.git
+
+        li 블로그 빌드
+            +asCode('shell').
+                # https://github.com/nvm-sh/nvm
+                $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+                $ nvm install 24   # package.json 의 engines 가 24 이상을 요구한다
+
+                # https://d2lang.com/
+                $ curl -fsSL https://d2lang.com/install.sh | sh -s --
+
+                $ npm ci
+                $ npm run build
+
+        li 외부 배포
+            +asCode('shell').
+                $ sudo yum install nginx
+                $ sudo systemctl enable --now nginx
+
+                # 권한 설정
+                $ sudo chcon -Rt httpd_sys_content_t /public/Dong-gi.github.io/
+                $ sudo firewall-cmd --permanent --add-service=http
+                $ sudo firewall-cmd --permanent --add-service=https
+                $ sudo firewall-cmd --permanent --add-port=80/tcp
+                $ sudo firewall-cmd --permanent --add-port=443/tcp
+                $ sudo firewall-cmd --reload
+
+                # snapd 설치를 위해 EPEL 패키지 사용 설정 필요
+                $ sudo cat /etc/yum.repos.d/oracle-epel-ol9.repo
+                [ol9_developer_EPEL]
+                name=Oracle Linux $releasever EPEL Packages for Development ($basearch)
+                baseurl=https://yum$ociregion.$ocidomain/repo/OracleLinux/OL9/developer/EPEL/$basearch/
+                gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+                gpgcheck=1
+                enabled=1 <- 이 부분
+
+                # https://snapcraft.io/docs/installing-snapd : certbot 설치에 이용
+                $ sudo yum install snapd -y
+                $ sudo systemctl enable --now snapd.socket
+                $ sudo ln -s /var/lib/snapd/snap /snap
+                # snapd 실행 준비를 위해 재로그인 또는 시스템 재시작 필요
+
+                # https://certbot.eff.org/instructions : 인증서 발급
+                $ sudo snap install --classic certbot
+                $ sudo ln -s /snap/bin/certbot /usr/bin/certbot
+                # 인증서 발급 전, 블로그 도메인 => 컴퓨팅 인스턴스 IP 주소 연결
+                $ sudo certbot --nginx
+
+        li nginx.conf 예
+            +asCode('nginx').
+                server {
+                    listen 80;
+                    server_name free.4joy.link;
+                    include /etc/nginx/default.d/*.conf;
+                    return 301 https://$server_name$request_uri;
+                }
+
+                server {
+                    listen       443 ssl http2;
+                    listen       [::]:443 ssl http2;
+                    server_name  free.4joy.link;
+
+                    include /etc/nginx/default.d/*.conf;
+
+                    ssl_certificate /etc/letsencrypt/live/free.4joy.link/fullchain.pem; # managed by Certbot
+                    ssl_certificate_key /etc/letsencrypt/live/free.4joy.link/privkey.pem; # managed by Certbot
+                    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+                    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+                    location / {
+                        root /public/Dong-gi.github.io;
+                        add_header Cache-Control "no-cache";
+                    }
+
+                    error_page 404 /;
+                }

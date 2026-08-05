@@ -1,0 +1,34 @@
+{
+  "name": "dong-gi.github.io",
+  "description": "blog",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "npm run compress-js && node source/build.ts",
+    "build-new": "npm run compress-js && node source/build.ts new",
+    "compress-js": "npx terser --compress --mangle -o source/default.min.js -- source/default.js",
+    "local": "npx serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dong-gi/Dong-gi.github.io.git"
+  },
+  "author": "Donggi Kim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dong-gi/Dong-gi.github.io/issues"
+  },
+  "homepage": "https://dong-gi.github.io",
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "pug": "^3.0.3",
+    "sharp": "^0.35.3",
+    "svgo": "^4.0.2",
+    "terser": "^5.49.0",
+    "typescript": "^6.0.3",
+    "zx": "^8.8.5"
+  }
+}

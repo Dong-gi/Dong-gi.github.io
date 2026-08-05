@@ -1,0 +1,30 @@
+plugins {
+	id 'org.springframework.boot' version '4.0.7'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'java'
+}
+
+group = 'io.github.donggi'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_25
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	implementation 'org.slf4j:slf4j-api'
+	implementation 'ch.qos.logback:logback-classic'
+	compileOnly "org.projectlombok:lombok"
+	testCompileOnly "org.projectlombok:lombok"
+	annotationProcessor "org.projectlombok:lombok"
+	testAnnotationProcessor "org.projectlombok:lombok"
+}
+
+test {
+	useJUnitPlatform()
+}

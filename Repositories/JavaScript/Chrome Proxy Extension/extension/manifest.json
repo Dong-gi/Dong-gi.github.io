@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Remote Proxy Router",
+  "version": "1.0.0",
+  "description": "브라우저 트래픽을 원격 HTTPS 프록시로 라우팅한다. PAC 기반, fail-closed, WebRTC 누출 방어 포함.",
+  "minimum_chrome_version": "116",
+
+  "permissions": [
+    "proxy",
+    "privacy",
+    "storage",
+    "alarms",
+    "notifications",
+    "webRequest",
+    "webRequestAuthProvider"
+  ],
+
+  "host_permissions": ["<all_urls>"],
+
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+
+  "action": {
+    "default_title": "Remote Proxy Router",
+    "default_popup": "ui/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "options_page": "ui/options.html",
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

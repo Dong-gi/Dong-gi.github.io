@@ -1,0 +1,47 @@
+<bookshelf>
+
+    <owner>
+        <name>Donggi Kim</name>
+    </owner>
+
+    <book category = "문학">
+        <title>제목1</title>
+        <author>저자1</author>
+        <isbn>ISBN1</isbn>
+        <summary>요약1</summary>
+
+        <text>
+            <chapter>
+                <title>1장</title>
+                <p>문단 1-1</p>
+                <p>문단 1-2</p>
+            </chapter>
+            <chapter>
+                <title>2장</title>
+                <p>문단 2-1</p>
+                <p>문단 2-2</p>
+            </chapter>
+        </text>
+    </book>
+
+    <book category = "금서" reason = "그냥">
+        <title>제목2</title>
+        <author>저자2</author>
+        <isbn>ISBN2</isbn>
+        <summary>요약2</summary>
+
+        <text>
+            <chapter>
+                <title>3장</title>
+                <p>문단 3-1</p>
+                <p>문단 3-2</p>
+            </chapter>
+            <chapter>
+                <title>4장</title>
+                <p>문단 4-1</p>
+                <p>문단 4-2</p>
+            </chapter>
+        </text>
+    </book>
+
+</bookshelf>

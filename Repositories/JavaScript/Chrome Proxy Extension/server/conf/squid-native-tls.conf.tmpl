@@ -1,0 +1,115 @@
+# =============================================================================
+# squid.conf — TLS 종단을 Squid 가 직접 수행하는 포워드 프록시
+#
+# setup-squid.sh 가 @PLACEHOLDER@ 를 치환해 /etc/squid/squid.conf 로 설치한다.
+# 직접 수정하지 말고 이 템플릿을 고친 뒤 스크립트를 재실행할 것.
+#
+# 참고: Chrome/Edge 는 GUI 에서 HTTPS 프록시를 지정할 수 없고, PAC 스크립트에서
+#       "HTTPS host:port" 토큰으로만 지정할 수 있다. 확장이 그 PAC 를 생성한다.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 수신 포트 — TLS 로 감싼 포워드 프록시
+#   ssl-bump / intercept 를 쓰지 않는다. 클라이언트가 명시적으로 프록시를
+#   지정하므로 MITM 이 필요 없고, 인증서 경고도 발생하지 않는다.
+# -----------------------------------------------------------------------------
+# tls-dh 은 지정하지 않는다. 아래 cipher 목록이 전부 ECDHE 이므로 고전 DH
+# 파라미터가 필요 없고, dhparam 파일 의존성을 없애 실패 지점을 줄인다.
+https_port @PORT@ \
+    tls-cert=@TLS_DIR@/fullchain.pem \
+    tls-key=@TLS_DIR@/privkey.pem \
+    options=NO_SSLv2,NO_SSLv3,NO_TLSv1,NO_TLSv1_1 \
+    cipher=ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305
+
+# -----------------------------------------------------------------------------
+# 인증 — Basic over TLS
+#   Basic 자체는 평문이지만 전체 연결이 TLS 로 보호되므로 노출되지 않는다.
+#   (평문 http_port 로 Basic 을 쓰면 자격증명이 그대로 노출된다.)
+# -----------------------------------------------------------------------------
+auth_param basic program @NCSA_AUTH@ @PASSWD_FILE@
+auth_param basic children 8 startup=2 idle=1
+auth_param basic realm proxy
+auth_param basic credentialsttl 12 hours
+auth_param basic casesensitive on
+
+acl authenticated proxy_auth REQUIRED
+
+# -----------------------------------------------------------------------------
+# 접근 제어
+# -----------------------------------------------------------------------------
+acl SSL_ports port 443 10443
+acl Safe_ports port 80          # http
+acl Safe_ports port 21          # ftp
+acl Safe_ports port 443 10443    # https
+acl Safe_ports port 70          # gopher
+acl Safe_ports port 210         # wais
+acl Safe_ports port 1025-65535  # unregistered ports
+acl Safe_ports port 280         # http-mgmt
+acl Safe_ports port 488         # gss-http
+acl Safe_ports port 591         # filemaker
+acl Safe_ports port 777         # multiling http
+acl CONNECT method CONNECT
+
+http_access deny !Safe_ports
+http_access deny CONNECT !SSL_ports
+http_access allow localhost manager
+http_access deny manager
+http_access allow authenticated
+http_access deny all
+
+# -----------------------------------------------------------------------------
+# 프라이버시 — 원 클라이언트를 드러내는 헤더를 제거한다.
+#   이게 없으면 목적지 사이트가 Via / X-Forwarded-For 로 프록시 경유를 알 수 있다.
+# -----------------------------------------------------------------------------
+via off
+forwarded_for delete
+httpd_suppress_version_string on
+request_header_access X-Forwarded-For deny all
+request_header_access Via deny all
+request_header_access Cache-Control allow all
+reply_header_access Via deny all
+reply_header_access X-Cache deny all
+reply_header_access X-Cache-Lookup deny all
+visible_hostname @VISIBLE_HOSTNAME@
+
+# -----------------------------------------------------------------------------
+# 캐시 비활성 — cache_dir 을 정의하지 않으므로 디스크 캐시가 없다.
+#   프라이버시 목적이라 메모리 캐시도 최소화한다.
+# -----------------------------------------------------------------------------
+cache deny all
+cache_mem 16 MB
+
+# -----------------------------------------------------------------------------
+# 로깅 — 접속 로그를 남기지 않는다. 문제 추적이 필요하면 access_log 줄을
+#   'access_log daemon:/var/log/squid/access.log squid' 로 바꿀 것.
+# -----------------------------------------------------------------------------
+access_log none
+cache_store_log none
+cache_log /var/log/squid/cache.log
+logfile_rotate 3
+
+# -----------------------------------------------------------------------------
+# DNS — 목적지 이름 해석을 서버(해외)에서 수행한다.
+#   클라이언트 측 통신사 DNS 차단이 여기서 무력화된다.
+# -----------------------------------------------------------------------------
+dns_nameservers 1.1.1.1 8.8.8.8
+positive_dns_ttl 5 minutes
+negative_dns_ttl 30 seconds
+
+# -----------------------------------------------------------------------------
+# 타임아웃 / 커넥션
+#   셀룰러 경유라 RTT 가 크다. 기본값보다 여유를 둔다.
+# -----------------------------------------------------------------------------
+connect_timeout 20 seconds
+read_timeout 5 minutes
+request_timeout 2 minutes
+client_idle_pconn_timeout 2 minutes
+server_idle_pconn_timeout 2 minutes
+half_closed_clients off
+shutdown_lifetime 5 seconds
+
+# 대용량 업로드 허용 (기본 무제한이지만 명시)
+request_body_max_size 0 KB
+
+pid_filename /run/squid.pid
+coredump_dir /var/spool/squid

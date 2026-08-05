@@ -1,0 +1,34 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/util
+						http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- locations="classpath:io/github/donggi/something.properties" -->
+	<context:property-placeholder
+		location="src/main/resource/beans43-1.properties" order="1" ignore-unresolvable="true" properties-ref="props1" />
+	<context:property-placeholder
+		location="src/main/resource/beans43-2.properties" order="2" properties-ref="props2" />
+
+	<util:properties id="props1">
+		<prop key="hello.class">io.github.donggi.bean.Hello1</prop>
+		<prop key="hello.message">Hello World 1</prop>
+	</util:properties>
+	<util:properties id="props2">
+		<prop key="hello.class">io.github.donggi.bean.Hello17</prop>
+	</util:properties>
+
+	<bean id="h1" class="${hello.class}">
+		<property name="message" value="${hello.message}" />
+	</bean>
+	<bean id="h2" class="${hello17.class}">
+		<constructor-arg name="message" value="${hello17.message}" />
+	</bean>
+</beans>

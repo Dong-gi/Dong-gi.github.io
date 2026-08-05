@@ -1,0 +1,13 @@
+<#list ['a', 'b', 'c', 'd', 'e', 'f', 'g'] as i>
+  <tr class="${i?item_cycle('row1', 'row2', 'row3')}">${i}</tr>
+</#list>
+<#--
+  <tr class="row1">a</tr>
+  <tr class="row2">b</tr>
+  <tr class="row3">c</tr>
+  <tr class="row1">d</tr>
+  <tr class="row2">e</tr>
+  <tr class="row3">f</tr>
+  <tr class="row1">g</tr>
+
+-->

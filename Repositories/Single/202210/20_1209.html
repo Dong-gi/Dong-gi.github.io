@@ -1,0 +1,37 @@
+<div class="div-221020-1209">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+</div>
+
+
+<style>
+    .div-221020-1209 {
+        border: solid;
+        display: grid;
+        grid-template-columns: 2fr repeat(2, 1fr);
+    }
+
+    .div-221020-1209 div {
+        border: inherit;
+        flex-basis: 3ch;
+    }
+
+    .div-221020-1209 div:nth-child(1) {
+        order: 3;
+    }
+
+    .div-221020-1209 div:nth-child(3) {
+        order: -1;
+    }
+
+    .div-221020-1209 div:nth-child(4) {
+        order: 5;
+    }
+
+    .div-221020-1209 div:nth-child(5) {
+        order: 3;
+    }
+</style>

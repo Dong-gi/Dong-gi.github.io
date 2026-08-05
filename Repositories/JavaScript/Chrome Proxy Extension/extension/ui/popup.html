@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>Remote Proxy Router</title>
+    <link rel="stylesheet" href="common.css" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup stack">
+      <div class="row">
+        <div>
+          <h1>Remote Proxy Router</h1>
+          <p class="muted" id="server-label">서버 미설정</p>
+        </div>
+        <label class="switch" title="프록시 라우팅 켜기/끄기">
+          <input type="checkbox" id="toggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="banner error" id="error-banner" hidden></div>
+
+      <section class="card stack">
+        <div class="row">
+          <span><span class="status-dot" id="status-dot" data-status="off"></span
+            ><strong id="status-text">꺼짐</strong></span>
+          <button id="recheck" type="button">다시 확인</button>
+        </div>
+        <dl class="kv">
+          <dt>출구 IP</dt>
+          <dd id="egress-ip">—</dd>
+          <dt>출구 국가</dt>
+          <dd id="egress-loc">—</dd>
+          <dt>왕복 지연</dt>
+          <dd id="latency">—</dd>
+          <dt>확인 시각</dt>
+          <dd id="checked-at">—</dd>
+        </dl>
+      </section>
+
+      <p class="muted" id="hint"></p>
+
+      <div class="row">
+        <button id="open-options" type="button" class="primary">설정 열기</button>
+      </div>
+    </main>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

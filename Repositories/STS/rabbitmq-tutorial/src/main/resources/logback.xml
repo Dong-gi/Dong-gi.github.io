@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<configuration>
+	<appender name="CONSOLE"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %.-1level [%thread] [%logger{0}] %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com.rabbitmq" additivity="true">
+		<level value="DEBUG" />
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<logger name="io.netty" additivity="true">
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<logger name="org.springframework" additivity="true">
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<logger name="link4.joy" additivity="true">
+		<level value="DEBUG" />
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<root level="INFO"></root>
+</configuration>

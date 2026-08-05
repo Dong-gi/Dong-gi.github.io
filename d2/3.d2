@@ -1,0 +1,17 @@
+Condition1: Partitioned?
+Condition2: Consistency vs Availability
+Condition3: Latency vs Consistency
+
+Leaf1: PA
+Leaf2: PC
+Leaf3: EL
+Leaf4: EC
+
+Condition1 -> Condition2: "Yes (Partitioned)"
+Condition1 -> Condition3: "No (Eelse)"
+
+Condition2 -> Leaf1: A
+Condition2 -> Leaf2: C
+
+Condition3 -> Leaf3: L
+Condition3 -> Leaf4: C

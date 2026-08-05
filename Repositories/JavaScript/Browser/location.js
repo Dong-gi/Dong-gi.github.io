@@ -1,0 +1,11 @@
+console.log(location.href);
+console.log(location.protocol);
+console.log(location.host);
+console.log(location.hostname);
+console.log(location.port);
+console.log(location.pathname);
+console.log(location.search);
+//location.href = 'http://www.google.com';
+//location.assign(location.href);
+//location.replace(location.href);
+//location.reload();

@@ -1,0 +1,17 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: 'Tiger',
+})
+
+    h1 도서 정보
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9791198183095.jpg',
+        title: 'Tiger', author: '구시키 리우',
+        isbn: '979-11-981830-9-5 (03830)',
+        publisher: '허밍북스', date: '2024.06.01',
+    })
+
+    h1 독서 기록
+    ul
+        li 모르는 사람은 따라가면 안 된다고 선생님은 말했다. 곤경에 빠진 사람을 보거든 도와주라고도 말했다. 이번 경우는 어느 쪽일까.

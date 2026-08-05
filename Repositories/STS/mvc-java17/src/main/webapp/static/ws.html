@@ -1,0 +1,20 @@
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ws</title>
+</head>
+
+<body>
+    <script>
+    let ws = new WebSocket("ws://localhost:8080/mvc-java17/ws/echo/donggi")
+    ws.onmessage = (e) => { document.body.innerText = `${document.body.innerText}\n${e.data}` }
+    ws.onopen = (e) => {
+        ws.send("Hello World")
+        ws.send("안녕 세상")
+        setTimeout(() => ws.close(), 2000);
+    }
+    </script>
+</body>
+
+</html>

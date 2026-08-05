@@ -1,0 +1,13 @@
+<button id="btn-260304-0932" class="w3-button w3-green">click</button>
+
+<script>
+  function callback_260304_0932(data) {
+    window.alert(`Run with remote data : ${JSON.stringify(data)}`);
+  }
+
+  document.getElementById("btn-260304-0932").addEventListener("click", () => {
+    const script = document.createElement("script");
+    script.src = "/Repositories/Single/202603/04-0932.js";
+    document.body.append(script);
+  });
+</script>

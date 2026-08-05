@@ -1,0 +1,8 @@
+plugins {
+    id "hello"
+}
+
+hello {
+    message("hello", "world")
+    name = "world2"
+}

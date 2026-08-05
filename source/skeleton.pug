@@ -1,0 +1,231 @@
+-
+    String.prototype.hashCode = String.prototype.hashCode || function () {
+        let hash = 0
+        for (let i = 0; i < this.length; i++) {
+            hash = (hash << 5) - hash + this.charCodeAt(i)
+            hash |= 0 // 32 bit 제한을 위해
+        }
+        return hash
+    }
+
+    /**
+     * 경로를 URL 로 쓸 수 있게 조각마다 인코딩한다. 구분자 '/' 는 남긴다.
+     *
+     * 이미지 파일명에 공백이 흔한데(`2023-03-05 204648.png`), srcset 은 공백으로
+     * URL 과 크기 서술자를 가른다. 인코딩하지 않으면 브라우저가 `.../2023-03-05` 를
+     * URL 로, `204648-500.avif` 를 서술자로 읽고 후보를 통째로 버린다.
+     * encodeURI 로는 부족하다. '#', '?' 를 그대로 두기 때문이다.
+     */
+    function encodePath(path) {
+        return path.split('/').map(encodeURIComponent).join('/')
+    }
+
+mixin asA(href, text)
+    -
+        if (!text) {
+            text = href.split('/').reverse().filter(part => part.length > 0)[0] || href
+            if (text.search('#') < 0) {
+                text = text.replace(/\..+$/, '')
+            }
+        }
+        text = decodeURIComponent(text)
+    a.w3-padding.w3-round-xlarge.w3-small.w3-border.w3-hover-black&attributes({ href })&attributes(attributes)= text
+
+mixin asCode(lan, title)
+    - lan = lan || 'text'
+    - title = title || lan
+    p: strong
+        |#{'↓ '}
+        = title
+    .as-code.code-div.w3-leftbar.w3-border-green(lan=lan)
+        if block
+            block
+
+mixin asInlineCode(code, lan)
+    - lan = lan || 'text'
+    span.as-code.code-span&attributes({ lan })= code
+
+//-
+    options = {
+        path: string,
+        lan: string,
+        displayRange?: string | Array<int>,
+        title?: string
+    }
+mixin codeBtn(options)
+    -
+        if (arguments.length > 1 || typeof arguments[0] === 'string') {
+            options = {
+                path: arguments[0],
+                lan: arguments[1],
+                displayRange: arguments[2]
+            }
+        }
+        const attr = {
+            class: 'btn-code',
+            title: options.path,
+            displayRange: Array.isArray(options.displayRange) ? JSON.stringify(options.displayRange) : options.displayRange,
+            lan: options.lan || 'text'
+        }
+    +w3button()&attributes(attr)&attributes(attributes)
+        if block
+            block
+        else if (options.title)
+            = options.title
+        else
+            = options.path.split('/').pop()
+
+-
+    GOTO_COUNTER = {}
+mixin goto(positionName, href)
+    -
+        GOTO_COUNTER[positionName] = (GOTO_COUNTER[positionName] || 0) + 1
+    +asA(
+        `${href || ''}#pos${positionName.hashCode()}`,
+        href ? (href + ' > ' + positionName) : positionName
+    ).goto&attributes({ id: `goto-${positionName.hashCode()}-${GOTO_COUNTER[positionName]}`, target: href ? '_blank' : '_self' })
+
+mixin hoverTemplate()
+    div.w3-container.w3-leftbar.w3-border-green.w3-white(style="position:absolute;display:none;overflow:auto;padding:8px 16px;")&attributes(attributes)
+        if block
+            block
+
+mixin pos(positionName)
+    span(class='pos-span', id=`pos${positionName.hashCode()}`)
+
+mixin table()
+    table.w3-table-all.w3-card.w3-small&attributes(attributes)
+        block
+
+mixin tds(...cells)
+    tr&attributes(attributes)
+        each content, idx in cells
+            td= content
+
+mixin ths(...cells)
+    tr&attributes(attributes)
+        each content, idx in cells
+            th= content
+
+mixin w3button(color)
+    if color
+        button.w3-btn.w3-round-xxlarge.w3-small(class=color, type='button')&attributes(attributes)
+            if block
+                block
+    else
+        button.w3-btn.w3-round-xxlarge.w3-small.w3-teal(type='button')&attributes(attributes)
+            if block
+                block
+
+mixin w3img(src, description)
+    figure.w3-margin-bottom
+        -
+            metadata = imgMap[src]
+            description = description || (src.split('/').pop())
+            // imgMap 의 키는 인코딩 전 경로다. 조회를 마친 뒤에 인코딩한다.
+            trimmedSrc = encodePath(src.replace('/imgs/', '/imgs-generated/').replace(/\.\w+$/, ''))
+            encodedSrc = encodePath(src)
+        if metadata != null
+            picture
+                if src.endsWith('.gif')
+                    source(srcset=(trimmedSrc + '-500.webp 500w, ' + trimmedSrc + '-1200.webp 1200w, ' + trimmedSrc + '-2000.webp 2000w'), type='image/webp')
+                    img.w3-round(src=(trimmedSrc + '-2000.gif'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
+                else
+                    source(srcset=(trimmedSrc + '-500.avif 500w, ' + trimmedSrc + '-1200.avif 1200w, ' + trimmedSrc + '-2000.avif 2000w'), type='image/avif')
+                    source(srcset=(trimmedSrc + '-500.webp 500w, ' + trimmedSrc + '-1200.webp 1200w, ' + trimmedSrc + '-2000.webp 2000w'), type='image/webp')
+                    img.w3-round(src=(trimmedSrc + '-2000.jpeg'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
+        else
+            img.w3-round(src=encodedSrc, alt=description, loading='lazy')&attributes(attributes)
+        figcaption.w3-padding
+            | #{'<' + description + '>'}
+            +asA(encodedSrc, '[원본 보기]')&attributes({ target: '_blank' })
+
+//-
+    options = {
+        title: string,
+        useMath: boolean,
+    }
+mixin post(options)
+    doctype html
+    html(lang='ko-KR')
+        head
+            meta(charset='UTF-8')
+            meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=yes')
+            title= options.title || 'No title'
+            link(rel="stylesheet", href="/source/default.css")
+            script#highlight-js(src="/source/highlight.pack.js", async)
+            script#default-js(src='/source/default.min.js', defer)
+            if options.useMath
+                script#MathJax-script(src='/source/tex-chtml.js', defer)
+                script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
+
+        body
+            aside.w3-animate-left#sidebar
+                hr
+                #marker-list
+                hr
+                #post-list
+                hr
+                details.w3-small
+                    summary LICENSE
+                    ul
+                        li This Site: <a href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT</a>
+                        li <a href="https://www.w3schools.com/w3css">w3css</a>: No license
+                        li <a href="https://highlightjs.org/">highlight.js 11.11.1</a>: <a href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause</a>
+                        li <a href="https://github.com/mathjax/MathJax">MathJax 4.1.0</a>: <a href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a>
+                        li <a href="https://github.com/davidshimjs/qrcodejs">QRCode.js</a>: <a href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT</a>
+                        li <a href="https://github.com/terrastruct/d2">D2 0.7.1</a>: <a href="https://github.com/terrastruct/d2/blob/master/LICENSE.txt">MPL-2.0</a>
+                hr
+
+            main#main
+                nav.w3-bar.w3-blue#nav
+                    button.w3-bar-item.w3-button.w3-hover-theme#nav-toggle-btn(type='button', aria-label='Toggle navigation menu', title='Toggle navigation menu') &#9776;
+                    form(role='search')
+                        input.w3-bar-item#query(type='search',placeholder='search',style='max-width:35%')
+                    a.w3-bar-item.w3-button.w3-hover-theme(href='/') Home
+                article#contents
+                    if block
+                        block
+
+//-
+    options = {
+        imgSrc: string,
+        title: string,
+        author: string,
+        isbn: string,
+        publisher: string,
+        date: string
+    }
+//-
+    구버전 서술을 접어두는 블록. 기존 내용을 지우지 않고 보존하면서
+    최신 내용을 위에 올릴 때 쓴다.
+
+    version : 접히는 내용의 기준 버전 (예: 'Python 3.8')
+    note    : EOL 날짜 등 부가 설명 (선택)
+
+    사용 예
+        h1 Python
+        p 이 문서는 Python 3.14 기준입니다.
+        //- ... 최신 내용 ...
+
+        +legacy('Python 3.8', '2024-10-07 지원 종료')
+            //- 기존 내용을 통째로 이 아래로 들여쓰기
+mixin legacy(version, note)
+    details.legacy
+        summary
+            = `구버전 기록 — ${version}`
+            if note
+                |  (
+                = note
+                |)
+        block
+
+mixin bookInfo(options)
+    .book-info
+        div: +w3img(options.imgSrc, '도서 이미지')&attributes({style: 'max-height:210px'})
+        div: +table()
+            +tds('표제', options.title)
+            +tds('저자', options.author)
+            +tds('ISBN', options.isbn)
+            +tds('출판사', options.publisher)
+            +tds('발행일', options.date)

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE logback>
+<included>
+
+    <property name="LOG_HOME" value="/var/log/donggi/logback_gradle" />
+    <property name="REQUEST_LOG_HOME" value="${LOG_HOME}/request" />
+    <property name="RESPONSE_LOG_HOME" value="${LOG_HOME}/response" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <appender name="REQUEST_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${REQUEST_LOG_HOME}/request.log</File>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${REQUEST_LOG_HOME}/request.log.%d{yyyy-MM-dd}</FileNamePattern>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RESPONSE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${RESPONSE_LOG_HOME}/response.log</File>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${RESPONSE_LOG_HOME}/response.log.%d{yyyy-MM-dd}</FileNamePattern>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/info.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/info.log.%d{yyyy-MM-dd}</FileNamePattern>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/error.log</File>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/error.log.%d{yyyy-MM-dd}</FileNamePattern>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+</included>

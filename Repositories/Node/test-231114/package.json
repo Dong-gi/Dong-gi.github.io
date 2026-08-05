@@ -1,0 +1,33 @@
+{
+  "name": "@hi.donggi/test-231114",
+  "version": "2.0.0",
+  "description": "Simple practice package",
+  "files": [
+    "lib"
+  ],
+  "type": "module",
+  "main": "./lib/index.js",
+  "scripts": {
+    "clean": "rm -rf ./lib hi.donggi-test-*.tgz *.tsbuildinfo",
+    "build": "npm run clean && tsc && npm pack",
+    "test": "vitest run --testTimeout=2000 --maxConcurrency=8",
+    "test-all": "node script/test-all.js"
+  },
+  "author": "hi.donggi@gmail.com",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "lru-cache": "^11.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "eslint": "^10.8.0",
+    "prettier": "^3.7.4",
+    "typescript": "^6.0.0",
+    "typescript-eslint": "^8.50.1",
+    "vitest": "^4.0.16",
+    "zx": "^8.8.5"
+  }
+}

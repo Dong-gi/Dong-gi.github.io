@@ -1,0 +1,408 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: '브라우저 JavaScript',
+})
+
+    h1 JavaScript를 이용하여 접근할 수 있는 브라우저 주요 부분
+    div
+        h2 BOM; Browser Object Model
+        p 웹브라우저에서 제공하는 객체들로, window를 최상위 전역 객체로 하여 노출된다. DOM과 다르게 표준 제정이 없으므로, 세부 사항은 브라우저 공급자마다 다를 수 있다
+        ul
+            li window : 브라우저 윈도우(탭)를 가리키는 객체
+            li screen : window.screen과 동일. 표시되는 화면과 연관
+            li location : window.location과 동일. 현재 페이지 URL과 연관
+            li history : window.history와 동일. 페이지 기록과 연관
+            li navigator : window.navigator와 동일. 브라우저 자체(user agent; UA)와 연관
+            li document : window.document와 동일. 표시되는 페이지 내용과 연관(DOM)
+
+        h2 DOM; Document Object Model
+        p 브라우저 탭에 로드된 HTML 문서는 DOM으로 표현된다. 이는 HTML 구조에 쉽게 접근할 수 있도록 설계된 트리 구조의 표현 방식으로, 브라우저는 페이지를 렌더링할 때 올바른 요소에 스타일과 기타 정보를 적용하기 위해 이를 사용하고, 개발자는 페이지가 렌더링된 이후 JavaScript를 통해 DOM을 조작할 수 있다
+        ul
+            li 요소 선택 : firstChild, children 등의 속성, querySelector(), getElementById() 등의 메서드 이용
+            li 요소 수정 : textContent, style, value 등의 속성, setAttribute() 등의 메서드 이용
+            li 요소 추가/이동 : after(), before(), append() 등의 메서드 이용
+            li 요소 생성 : createElement(), cloneNode() 등의 메서드 이용
+            +codeBtn({
+                path: '/Repositories/Single/202411/11-0956.html',
+                lan: 'nohighlight',
+                title: 'cloneNode() 예'
+            })
+            +codeBtn({
+                path: '/Repositories/Single/202411/11-0956.html',
+                lan: 'HTML',
+                title: '<- 코드'
+            })
+            li 요소 삭제 : remove(), removeChild() 등의 메서드 이용
+
+    h1 이벤트 모델
+    div
+        h2 DOM 이벤트 흐름
+        p 이벤트 캡처링 → 타깃 → 이벤트 버블링
+        ul
+            li 이벤트 캡처링 : 최상위 노드로부터 이벤트가 전달되는 과정
+            p 캡처링 단계에서 핸들러를 호출하려면 addEventListener()의 옵션 매개변수를 지정해야 한다 -- 기본적으로는 이벤트 버블링 단계에 등록된다
+            +asCode('JavaScript') document.body.addEventListener("click", handleClick, { capture: true });
+            li 이벤트 버블링 : 최하위 노드로부터 이벤트가 전달되는 과정
+            p 이를 이용하여 여러 자식요소들에 각각 이벤트 리스너를 등록하는 대신, 부모에만 한 번 등록하여 처리를 위임할 수 있다 (event delegation)
+            li 따라서 이벤트의 target과 currentTarget이 가리키는 요소가 서로 다를 수 있음에 유의해야 한다
+
+        h2 JavaScript 이벤트 핸들러 설정
+        ol
+            li EventTarget : Element, Document, Window, XMLHttpRequest
+            li EventTarget.addEventListener() : 이벤트 핸들러 추가
+            li EventTarget.dispatchEvent() : 처리할 이벤트 추가
+            li EventTarget.removeEventListener() : 이벤트 핸들러 제거
+            p 또는 핸들러 등록 시 AbortSignal 객체를 같이 전달한 뒤, 객체의 abort()를 호출하면 관련된 모든 핸들러를 제거할 수 있다
+            +codeBtn('/Repositories/Single/202411/05-1432.html', 'nohighlight') 예시
+            +codeBtn('/Repositories/Single/202411/05-1432.html', 'HTML') 예시 코드
+
+    h1 폼 검증
+    ul
+        li checkValidity() : 지정한 요소의 값이 유효한지 검사하여 boolean을 반환한다
+        li reportValidity() : checkValidity와 마찬가지로 유효성을 검사하고 boolean을 반환한다. 유효하지 않은 필드에 대해 invalid 이벤트가 발생하여 기본적으로는 브라우저가 알림을 표시하게 된다
+        li setCustomValidity(message) : 인자가 빈 문자열이 아닌 경우, 지정한 메시지로 해당 필드가 무효하다고 지정한다. 브라우저는 알림을 표시할 때 해당 메시지가 이용된다
+
+    h1 브라우저 저장소
+    div
+        p 클라이언트에 정보를 저장하는 API로, 도메인 별로 격리된다 -- 다른 도메인의 데이터를 JavaScript로 접근할 수 없다
+
+        h2 크기 제한
+        p 크기 제한은 브라우저별로 다를 수 있으며, 정확한 내용은 확인하기 어렵다. 따라서 아래 내용은 실제와 다를 수 있다. #[+asA('https://web.dev/articles/storage-for-the-web?authuser=2#how-much')]
+        ul
+            li 크롬은 origin 하나가 디스크의 총 60%까지 사용할 수 있도록 허용한다
+            li 시크릿 모드 크롬은 origin 하나가 디스크의 총 5%까지 사용할 수 있도록 허용한다
+            li 사용자가 사이트를 닫으면 데이터를 지우도록 설정한 경우, 크롬은 300MB까지 사용할 수 있도록 허용한다
+            li 파이어폭스는 #[+asA('https://pkg.go.dev/golang.org/x/net/publicsuffix?utm_source=godoc', 'eTLD+1')] 그룹 하나가 디스크의 총 50%까지 사용할 수 있도록 허용한다
+            li 사파리는 1GB까지 사용할 수 있도록 허용한다
+            li 사파리 PWA는 별도 저장 공간을 할당받으며, 모바일 브라우저와 데이터가 공유되지 않는다
+        p 한편 브라우저 표준으로 도입된 #[+asA('https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/estimate', 'navigator.storage.estimate()')] 함수를 이용해 저장소 제한량을 확인할 수 있게 되었다
+
+        h2 쿠키
+        ul
+            li 가장 오래된 방법으로, 저장된 키-값 쌍들은 해당 도메인 서버로 보내지는 요청에 헤더로 자동 포함된다
+            li 일반적으로 정보 저장은 서버 응답 헤더(Set-Cookie)를 통해 발생하고, 클라이언트 코드는 이 헤더에 직접적으로 접근할 수 없다
+            li 설정된 쿠키를 JavaScript로 접근할 수 없도록, Set-Cookie 헤더를 이용할 때 HttpOnly 옵션을 설정하는 것이 권장된다
+            li Expires나 Max-Age를 지정하지 않은 쿠키들은 클라이언트 종료 시 삭제된다
+            li SameSite 속성으로 CSRF에 대한 보호를 일부 제공할 수 있다
+            ul
+                li SameSite=Lax : 기본값으로, 외부 사이트에서 요청이 발생하는 경우 쿠키가 포함되지 않음. 단, 외부 사이트에서 원본 사이트를 이동하면서 발생하는 요청에는 쿠키 포함
+                li SameSite=Strict : 동일 사이트 &amp; 동일 스킴 요청에만 쿠키 포함
+                li SameSite=None : 외부 사이트에서 요청이 발생해도 쿠키 포함. 쿠키 설정 시 Secure 옵션도 같이 설정해야 한다
+            li 키/값으로 제어 문자를 제외한 US-ASCII 문자열을 이용할 수 있는데, 값으로는 #[+asA('https://developer.mozilla.org/en-US/docs/Glossary/Percent-encoding')]이 보통 이용된다 -- 표준 스펙에 정의하는 사항은 아님
+        +codeBtn({
+            path: '/Repositories/Single/202411/11-1344.html',
+            lan: 'nohighlight',
+            title: '쿠키 예'
+        })
+        +codeBtn({
+            path: '/Repositories/Single/202411/11-1344.html',
+            lan: 'HTML',
+            title: '<- 코드'
+        })
+
+        h2 캐시
+        ul
+            li HTTPS 응답 자체를 일시 보관하여 이후 동일 요청 발생 시 사용한다
+            li 캐시를 사용하기에 앞서 먼저 서비스 워커를 설치해야 한다
+            ol
+                li 서비스 워커가 사용 가능한지 확인하고
+                +asCode('JavaScript') if ("serviceWorker" in navigator) {}
+
+                li 서비스 워커를 등록한다
+                +asCode('JavaScript') navigator.serviceWorker.register('path-to-js')
+
+                li 페이지를 다시 로드하면 서비스 워커가 페이지를 제어할 수 있다
+                +asCode('JavaScript', '워커 코드') self.addEventListener("install", (e) => {})
+
+                li CacheStorage는 캐시 집합으로, 키를 이용해 각 캐시들을 구별한다
+                +codeBtn({
+                    path: '/offline-service-worker.js',
+                    lan: 'JavaScript'
+                })
+
+        h2 웹 저장소
+        ul
+            li sessionStorage : 브라우저가 열려 있는 동안에만 유지
+            li localStorage : 브라우저가 종료돼도 유지
+        +codeBtn({
+            path: '/Repositories/Single/202411/11-1453.html',
+            lan: 'nohighlight',
+            title: 'localStorage 예'
+        })
+        +codeBtn({
+            path: '/Repositories/Single/202411/11-1453.html',
+            lan: 'HTML',
+            title: '<- 코드'
+        })
+
+        h2 IndexedDB
+        ul
+            li 객체 저장소로, JavaScript 기본 자료형뿐만 아니라 Blob(이미지, 비디오 등)과 같은 객체도 저장할 수 있다
+            li 웹 저장소에 비해 제공되는 용량이 훨씬 크다 -- 단, 한계에 도달하면 기존 데이터를 희생한다
+        +codeBtn({
+            path: '/Repositories/Single/202411/11-1505.html',
+            lan: 'nohighlight',
+            title: 'IndexedDB 예'
+        })
+        +codeBtn({
+            path: '/Repositories/Single/202411/11-1505.html',
+            lan: 'HTML',
+            title: '<- 코드'
+        })
+        ol
+            li IDBFactory#open() 메서드로 연결을 시작한다
+            ul
+                li 연결에 성공한 경우 success 이벤트의 result 속성으로 IDBDatabase 객체가 설정된다
+                li 버전 지정 없이 존재하지 않는 DB에 연결하는 경우, 신규 DB를 버전 1로 생성하여 연결한다
+                li 버전 지정 없이 이미 존재하는 DB에 연결하는 경우, DB 버전을 변경하지 않고 연결한다
+                li DB가 새로 생성됐거나, 새로운 버전으로 변경된 경우 upgradeneeded 이벤트가 발생한다 -- target.result 속성으로 IDBDatabase 객체가 설정된다
+
+            li IDBDatabase#createObjectStore() 메서드로 객체 저장소(RDB의 테이블에 해당)를 생성한다
+            ul
+                li 객체 저장소 생성 시 키 정의가 필수다
+                li 키를 자동으로 순서대로 생성하기 원한다면 autoIncrement 옵션을 true로 설정한다 -- 기본값 false
+                li 값 객체로부터 키를 자동으로 구성하기 원한다면 or 자동 생성한 키를 값에 설정하려면 유효한 식별자로 keyPath 옵션을 설정한다 -- 기본값 미설정
+                li keyPath를 지정하지 않으면 out-of-line 키를 사용하게 되며, 레코드 저장 시 값과 별도로 저장된다
+
+            li IDBObjectStore 객체를 이용해 연산을 수행한다
+            ul
+                li createIndex() 메서드로 레코드의 필드/컬럼을 정의한다
+                li add() 메서드로 신규 레코드 삽입 -- 이미 키가 존재하면 ConstraintError 이벤트 발생 
+                li put() 메서드로 upsert 수행
+                li count(), get(), getAll(), openCursor() 등으로 키를 기반으로 한 조회 쿼리 수행
+                p IDBIndex를 이용해 인덱스를 기반으로 한 조회 쿼리 수행 가능
+
+            li 명시적 트랜잭션을 수행하려면 아래와 같이 작업한다
+            ol
+                li IDBDatabase#transaction() 메서드로 새 트랜잭션을 시작한다
+                p durability 옵션으로 complete 이벤트를 발생할 조건을 지정할수 있다
+                ul
+                    li strict : 물리적으로 저장됐음을 확인한 후 이벤트 발생
+                    li relaxed : 커밋을 OS에 전달했으면 이벤트 발생
+                li 반환된 IDBTransaction 인스턴스로 객체 저장소에 연산을 수행한다
+                li commit() 메서드는 사용이 권장되지 않는다 -- 새로운 요청이 없으면 자동으로 커밋된다
+                li 트랜잭션은 생성된 순서대로 반영된다
+
+
+    h1 웹 워커
+    ol
+        li 메인 페이지와 별개의 스코프에서 백그라운드에서 실행되는 작업자
+        p 메인 스레드와 워커 스레드는 서로 메시지를 주고 받음으로써 실행을 조율한다
+
+        li 웹 워커 내부에서 전역 객체는 worker 자체
+
+        li dedicated worker 외의 워커를 디버깅하려면 전용 브라우저 개발 도구를 이용한다
+        +asCode().
+            chrome://inspect/#workers   // chrome
+            edge://inspect/#workers     // edge
+            about:debugging#workers     // firefox
+    div
+        h2 Dedicated Worker
+        p 단일 스크립트 인스턴스에서만 사용
+        +codeBtn({
+            path: '/Repositories/Single/202411/08-1725-main.html',
+            lan: 'nohighlight',
+            title: '메인 HTML'
+        })
+        +codeBtn({
+            path: '/Repositories/Single/202411/08-1725-main.html',
+            lan: 'HTML',
+            title: '메인 코드'
+        })
+        +codeBtn({
+            path: '/Repositories/Single/202411/08-1725-worker.js',
+            lan: 'JavaScript',
+            title: '워커 코드'
+        })
+
+        h2 Shared Worker
+        ul
+            li 동일 출처의 스크립트들에 한하여, 서로 다른 창에서 실행되는 스크립트들이 공유 가능
+            li 공유 워커는 자신을 참조하는 활성 페이지가 존재하는 동안 계속 실행
+            li 지원하지 않는 브라우저가 많음 (2024-11-08 기준)
+
+        h2 Service Worker
+        ul
+            li: +asA('https://developer.chrome.com/docs/workbox', 'Workbox : Chrome팀의 서비스 워커 라이브러리')
+            li 클라이언트와 API 서버 사이의 프록시 서버처럼 작동한다. 요청을 가로챈 다음 적절한 방법으로 응답을 설정한다
+                ul
+                    li 실제 네트워크로 요청을 보내 신선한 응답을 받기
+                    li 이미 캐시한 응답을 그대로 재사용하기
+                    li 응답을 직접 만들어내 전달하기
+            li 서비스 워커가 위치한 폴더는 제어 범위를 결정한다
+                ul
+                    li example.com/my-pwa/sw.js에 있는 서비스 워커는 example.com/my-pwa/demos/와 같이 my-pwa 이하의 경로에 대해서만 동작한다
+                    li 브라우저는 범위 당 하나의 서비스 워커만 실행을 허용한다
+            li 서비스 워커의 업데이트는 자동으로 이루어진다
+                ul
+                    li 설치된 서비스 워커와 동일한 파일의 최신 서버 버전이 바이트 단위로 다르다면, 신규 버전이 설치되고 대기한다
+                    li 이후 현재 실행 중인 서비스 워커가 클라이언트를 제어하지 않게 되면, 다음 실행부터 신규 버전의 워커가 클라이언트를 제어한다
+                        ul
+                            li 이를 통해 서비스 워커가 2개 이상 실행되는 상황이 방지된다
+                            li 페이지 새로고침으로는 업데이트가 완료되지 않는다
+            li 서비스 워커의 시작과 종료도 자동으로 이루어진다
+                ul
+                    li 네트워크 요청 발생, 주기적 백그라운드 동기화, 푸시와 같은 이벤트가 발생하면 시작된다
+                    li 유휴 상태가 오래되거나, 너무 오랫동안 실행되면 종료된다 -- 이후 다시 시작된다
+
+    h1 웹 소켓
+    ol
+        li 오래 지속되는 하나의 연결을 이용해 완전한 양방향 통신을 제공한다
+        li 프로토콜은 ws(비보안), wss(보안)
+        li 웹 소켓은 동일 소스 정책이 적용되지 않으므로, 연결을 수락할지는 완전히 서버의 권한
+        li 이벤트 종류 : open, message, error, close
+        li 연결 유효성 확인을 위해 주기적으로 ping-pong을 주고받는 것이 권장된다
+    +asCode('javascript').
+        let connection = new WebSocket("ws://host-address/page_or_function_name");
+        // new WebSocket("wss://secure.example.com/chat", {"chat.v1", "chat.v2"});
+        // connection.readyState === WebSocket.OPEN // CONNECTING, OPEN, CLOSING, CLOSED
+        // connection.bufferedAmount : 전송 대기중인 크기
+
+        connection.send("Hello World");
+        connection.onmessage = function(event) { event.data ... }
+        // onopen, onclose, onerror
+        // onclose 이벤트 종료코드 1000외는 모두 비정상 종료 : http://tools.ietf.org/html/rfc6455#section-7.4
+        // onmessage 이벤트 data 프로퍼티 : 메시지가 텍스트면 문자열, 메시지가 바이너리고 connection.binaryType이 "blob"(기본)이면 Blob, 메시지가 바이너리고 connection.binaryType이 "arraybuffer"면 ArrayBuffer
+
+        connection.close(); // close 이벤트 객체는 wasClean, code, reason 프로퍼티 존재
+
+    h1 함수 감속
+    p 윈도우 resize, scroll 이벤트처럼 연속적으로 발생하지만 연속적으로 처리할 필요가 없는 경우, 타이머를 등록한 뒤 로직이 실행되도록 하고, 로직이 실행되기 전에 재호출되면 기존 타이머를 제거하고 타이머를 재등록하는 기법
+    +asCode('javascript').
+        function throttle(f, t, opt) {
+            return function (args) {
+                let previousCall = this.lastCall;
+                this.lastCall = Date.now();
+                if (!previousCall || (!!opt && !!opt.fast) || (this.lastCall - previousCall) > t) {
+                    f(args);
+                }
+            }
+        }
+        function debounce(f, t, opt) {
+            return function (args) {
+                let previousCall = this.lastCall;
+                this.lastCall = Date.now();
+                if (previousCall && ((this.lastCall - previousCall) &lt;= t)) {
+                    if (!opt || !opt.fast)
+                        clearTimeout(this.lastCallTimer);
+                }
+                this.lastCallTimer = setTimeout(() => f(args), t);
+            }
+        }
+
+    h1 AJAX; Asynchronous JavaScript and XML
+    ul
+        li 필요한 시점에 동적으로 코드를 포함한 리소스를 로드하는 기술을 지칭한다. 현대 웹 개발에서는 fetch + 적절한 CORS 설정을 이용한다
+        li JSONP : JSON with Padding
+            ol
+                li &lt;script&gt; 사용에 cross origin 제약이 적용되지 않는 걸 이용하여 임의의 동적 코드를 로드하는 기법
+                li 예를 들어, #[+asInlineCode('<script src="https://api-server/data?callback=my_callback">', 'HTML')]는 스크립트 #[+asInlineCode('my_callback({...})', 'JavaScript')]를 응답한다
+                li
+                    +codeBtn({ path: '/Repositories/Single/202603/04-0932.html', lan: 'nohighlight', title: '라이브 예시' })
+                    +codeBtn({ path: '/Repositories/Single/202603/04-0932.html', lan: 'HTML', title: 'HTML 코드' })
+                    +codeBtn({ path: '/Repositories/Single/202603/04-0932.js', lan: 'JavaScript', title: 'JavaScript 코드' })
+
+        li XMLHttpRequest; XHR
+            ul
+                li 콜백 방식의 비동기 서버 호출을 지원한다
+                li 이벤트
+                    ul
+                        li loadstart : 응답의 첫 번째 바이트를 수신
+                        li progress : 응답 수신 중 계속 발생
+                        li error : 요청에 에러가 있을 때
+                        li abort : abort() 호출로 연결을 종료했을 때
+                        li load : 응답을 완전히 받았을 때
+                        li loadend : 통신 종료. error, abort, load보다 나중에 발생
+                        li timeout : 설정한 시간을 초과하여 연결 종료하는 경우
+        +asCode('JavaScript').
+            // XMLHttpRequest 예
+            const xhr = new XMLHttpRequest()
+            xhr.open('GET', '/index.html')
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText)
+                }
+            }
+            xhr.send()
+
+    h1 파일 API
+    ol
+        li 이전에는 자바스크립트에서 로컬 파일에 접근하는 것이 불가능했지만, 사용자가 입력 태그에 직접 설정한 파일에 대해 읽기가 가능해졌다
+        p 로컬 파일 접근을 허용하는 브라우저에서 &lt;input type="file"> 요소의 files 프로퍼티는 FileList 객체다
+            |FileList는 길이 0 이상의 File 객체 목록이며, File 객체는 name과 lastModifiedDate 프로퍼티가 있는 Blob 객체다
+        li 아래 입력 필드에 아무 파일이나(이왕이면 이미지로) 드롭해보세요
+        p
+            input#basic2-input-files1(type='file', multiple)
+            +codeBtn('/Repositories/JavaScript/Browser/file_example.js', 'javascript')
+        li File, Blob 객체를 slice하면 Blob 객체가 반환된다
+        li BLOB; BInary Large Object
+        ul
+            li postMessage()로 웹 워커에 blob을 보낼 수 있다
+            li XMLHttpRequest.send()로 blob을 보낼 수 있다
+            li URL.createObjectURL()로 blob:// 주소를 가져올 수 있으며, 이 url은 DOM이나 CSS를 활용할 수 있다
+            p Blob URL 삭제 : URL.revokeObjectURL()
+                +codeBtn('/Repositories/JavaScript/Browser/blob_example.js', 'javascript')
+            li FileReader 객체를 사용하면 Blob 내용을 비동기적으로 문자열이나 ArrayBuffer로 추출할 수 있다
+        li FileReader
+        +asCode('javascript') readAsText(file, encoding), readAsDataURL(file), readAsBinaryString(file), readAsArrayBuffer(file)
+
+    h1 AbortController
+    ul
+        li 비동기 작업을 중도 취소할 수 있다
+        li 예. 이벤트 리스너 제거
+            +asCode('JavaScript').
+                const abortController = new AbortController()
+                window.addEventListener('scroll', console.log, { signal: abortController.signal })
+                setTimeout(() => abortController.abort(), 5000)
+        li 예. fetch 취소
+            +asCode('JavaScript').
+                fetch(
+                    'https://mdn.github.io/dom-examples/abort-api/sintel.mp4',
+                    { 
+                        signal: AbortSignal.any([new AbortController().signal, AbortSignal.timeout(10)])
+                    }
+                ).then(console.log).catch(console.log)
+        li 예. 사용자 정의 구현
+            +asCode('JavaScript').
+                async function doSomething({ signal }) {
+                    return await new Promise((resolve, reject) => {
+                        if (signal?.aborted) {
+                            return reject(signal.reason)
+                        }
+                        signal?.addEventListener('abort', () => {
+                            reject(signal.reason)
+                        })
+                        // ...
+                    })
+                }
+
+    h1 importmap
+    ul
+        li Baseline since March 2023
+        li 임포트 경로 변경을 비즈니스 로직과 분리할 수 있게 해준다
+        li
+            +asA('/Repositories/Single/202603/04-1211.html', '라이브 예시')
+            +codeBtn({ path: '/Repositories/Single/202603/04-1211.html', lan: 'HTML', title: 'HTML 코드' })
+            +codeBtn({ path: '/Repositories/Single/202603/04-1211.js', lan: 'JavaScript', title: 'JavaScript 코드' })
+
+    h1 잡다한 코드
+    ul
+        li 특정 노드로 스크롤 이동
+        +asCode('javascript') node.scrollIntoView()
+
+        li 특정 위치로 스크롤 이동
+        +asCode('javascript') window.scrollTo({ top: 123 })
+
+        li 페이지 갱신없이 히스토리 변경
+        +asCode('javascript').
+            // 이동
+            window.history.pushState({ html: path, pageTitle: document.title }, document.title, `${location.origin}${path}`);
+            // 뒤로가기 이벤트 리슨
+            window.onpopstate = function(e) {
+                let postQuery = e.state.html.match(/[?&]post=([^&]+)/);
+                if (!!postQuery) {
+                    document.title = e.state.pageTitle;
+                    scrollToPost(postQuery[1]);
+                }
+            };

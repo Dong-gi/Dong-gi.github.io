@@ -1,0 +1,279 @@
+/* common.css — 팝업과 옵션 페이지가 공유하는 스타일.
+   MV3 CSP 상 인라인 스타일을 쓸 수 없으므로 모든 스타일은 이 파일들에 둔다. */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1f2937;
+  --fg-muted: #6b7280;
+  --border: #e5e7eb;
+  --accent: #2563eb;
+  --ok: #16a34a;
+  --warn: #ca8a04;
+  --err: #dc2626;
+  --surface: #f9fafb;
+  --radius: 8px;
+  --font: -apple-system, "Segoe UI", system-ui, "Malgun Gothic", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1f2024;
+    --fg: #e5e7eb;
+    --fg-muted: #9ca3af;
+    --border: #374151;
+    --surface: #26272c;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+h1 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+p {
+  margin: 0 0 8px;
+}
+
+.muted {
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* --- 상태 표시 --- */
+.status-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: var(--fg-muted);
+  flex: 0 0 auto;
+}
+
+.status-dot[data-status='ok'] { background: var(--ok); }
+.status-dot[data-status='unknown'] { background: var(--warn); }
+.status-dot[data-status='unreachable'],
+.status-dot[data-status='conflict'],
+.status-dot[data-status='misconfigured'] { background: var(--err); }
+.status-dot[data-status='off'] { background: var(--fg-muted); }
+
+/* --- 토글 스위치 --- */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 24px;
+  flex: 0 0 auto;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch .slider {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  background: #9ca3af;
+  border-radius: 24px;
+  transition: background 0.15s ease;
+}
+
+.switch .slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.15s ease;
+}
+
+.switch input:checked + .slider {
+  background: var(--ok);
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(18px);
+}
+
+.switch input:focus-visible + .slider {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --- 폼 --- */
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+input[type='text'],
+input[type='number'],
+input[type='password'],
+input[type='url'],
+select,
+textarea {
+  width: 100%;
+  padding: 6px 8px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+textarea {
+  min-height: 90px;
+  font-family: ui-monospace, "Consolas", monospace;
+  font-size: 12px;
+  resize: vertical;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+  border-color: var(--accent);
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.checkbox-row input {
+  margin-top: 3px;
+  flex: 0 0 auto;
+}
+
+.checkbox-row label {
+  margin: 0;
+  font-weight: 400;
+}
+
+button {
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+button.primary {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* --- 알림 배너 --- */
+.banner {
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid transparent;
+}
+
+.banner[hidden] {
+  display: none;
+}
+
+.banner.error {
+  color: var(--err);
+  border-color: var(--err);
+  background: color-mix(in srgb, var(--err) 8%, transparent);
+}
+
+.banner.ok {
+  color: var(--ok);
+  border-color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 8%, transparent);
+}
+
+.banner.warn {
+  color: var(--warn);
+  border-color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 10%, transparent);
+}
+
+.banner ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+dl.kv {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  margin: 0;
+}
+
+dl.kv dt {
+  color: var(--fg-muted);
+}
+
+dl.kv dd {
+  margin: 0;
+  font-family: ui-monospace, "Consolas", monospace;
+  word-break: break-all;
+}

@@ -1,0 +1,18 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="hello22" class="io.github.donggi.bean.Hello22">
+		<replaced-method name="multipleMessage" replacer="hello22replacement">
+			<!-- 필요한 경우에만 아래와 같이 매개변수 명시 -->
+			<arg-type>int</arg-type>
+		</replaced-method>
+		<property name="message" value="Hello World" />
+	</bean>
+
+	<bean id="hello22replacement"
+		class="io.github.donggi.bean.Hello22Replacement" />
+</beans>
