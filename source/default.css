@@ -229,7 +229,9 @@ img{max-width:100%;max-width:min(100%,100vw,100cqw);height:auto;vertical-align:m
 /* End W3.CSS 4.15 */
 
 
-div,p,pre,ol,ul,li{overflow-wrap:break-word;word-break:break-all}
+/* 헤딩도 포함한다. 예전에는 헤딩을 감싼 래퍼 div 에서 상속받았으나
+   그 래퍼를 걷어냈으므로 헤딩에 직접 적용해야 줄바꿈 동작이 유지된다. */
+div,p,pre,ol,ul,li,h1,h2,h3,h4,h5,h6{overflow-wrap:break-word;word-break:break-all}
 h1,h2,h3,h4,h5,h6{border-bottom:1px solid #ccc}
 h1::before,h2::before,h3::before,h4::before,h5::before,h6::before{float:left;content: attr(data-before-text);padding-right:0.5ch}
 .pos-span{padding:0;margin:0;width:0;height:0;overflow:hidden}
@@ -269,6 +271,15 @@ li:hover:has(ul, ol, menu){border:1px dashed coral}
 
 .book-info { display: flex }
 .book-info>:first-child { min-width: 20ch }
+
+/* 예제·풀이 영역 스타일 */
+.example{margin:16px 0}
+.example>.example-label{margin:8px 0 4px}
+/* 예제 안의 풀이는 예제 테두리에 붙여 한 덩어리로 읽히게 한다 */
+#contents .example details.solution{margin-left:0}
+details.solution>summary{cursor:pointer;font-weight:700}
+/* 접힌 상태에서 풀이가 있다는 것이 눈에 띄도록 */
+details.solution:not([open])>summary{opacity:.7}
 
 /* 하이라이트 애니메이션 */
 @keyframes highlight{from{background:#ff0}to{background:#fff}}

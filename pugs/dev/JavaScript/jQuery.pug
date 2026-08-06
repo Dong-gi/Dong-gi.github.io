@@ -6,72 +6,71 @@ include ../../../source/skeleton.pug
 
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js")
     h1 jQuery 시작하기
-    div
-        +table().marker
-            caption 선택자
-            thead
-                tr
-                    th 구분
-                    th 문법
-                    th 예시
-            tbody
-                tr
-                    td 전체 선택
-                    td *
-                    td $('*').length
-                tr
-                    td 클래스 선택
-                    td(colspan='2') .className
-                tr
-                    td ID 선택
-                    td(colspan='2') #id
-                tr
-                    td 다중 선택
-                    td ,
-                    td $('h1, h2, h3, h4, h5, h6')
-                tr
-                    td 자식 선택
-                    td >
-                    td $('details > summary')
-                tr
-                    td 후손 선택
-                    td ' '(스페이스)
-                    td $('div div')
-                tr
-                    td 속성 선택
-                    td [attrName]
-                    td $('input[value]')
-                tr
-                    td 속성값 일치
-                    td [attrName="value"]
-                    td $('input[value="hello"]')
-                tr
-                    td 속성값 포함
-                    td [attrName*="subString"]
-                    td $('input[value*="hello"]')
-                tr
-                    td 속성값 시작
-                    td [attrName^="subString"]
-                    td $('input[value^="hello"]')
-                tr
-                    td 속성값 종료
-                    td [attrName$="subString"]
-                    td $('input[value$="hello"]')
-                tr
-                    td 속성값 단어로 포함
-                    td [attrName~="word"]
-                    td $('input[value~="hello"]')
-                tr
-                    td Pseudo-class 선택
-                    td :pseudo-class
-                    td $('a:hover')
-                tr
-                    td 필터 선택
-                    td :odd|even|first|last
-                    td $('li:even')
-                tr
-                    td 함수 필터
-                    td(colspan='2') :contains("subStr")|eq(n)|gt(n)|lt(n)|has("tagName")|not("selector")|nth-child(2n+3)
+    +table().marker
+        caption 선택자
+        thead
+            tr
+                th 구분
+                th 문법
+                th 예시
+        tbody
+            tr
+                td 전체 선택
+                td *
+                td $('*').length
+            tr
+                td 클래스 선택
+                td(colspan='2') .className
+            tr
+                td ID 선택
+                td(colspan='2') #id
+            tr
+                td 다중 선택
+                td ,
+                td $('h1, h2, h3, h4, h5, h6')
+            tr
+                td 자식 선택
+                td >
+                td $('details > summary')
+            tr
+                td 후손 선택
+                td ' '(스페이스)
+                td $('div div')
+            tr
+                td 속성 선택
+                td [attrName]
+                td $('input[value]')
+            tr
+                td 속성값 일치
+                td [attrName="value"]
+                td $('input[value="hello"]')
+            tr
+                td 속성값 포함
+                td [attrName*="subString"]
+                td $('input[value*="hello"]')
+            tr
+                td 속성값 시작
+                td [attrName^="subString"]
+                td $('input[value^="hello"]')
+            tr
+                td 속성값 종료
+                td [attrName$="subString"]
+                td $('input[value$="hello"]')
+            tr
+                td 속성값 단어로 포함
+                td [attrName~="word"]
+                td $('input[value~="hello"]')
+            tr
+                td Pseudo-class 선택
+                td :pseudo-class
+                td $('a:hover')
+            tr
+                td 필터 선택
+                td :odd|even|first|last
+                td $('li:even')
+            tr
+                td 함수 필터
+                td(colspan='2') :contains("subStr")|eq(n)|gt(n)|lt(n)|has("tagName")|not("selector")|nth-child(2n+3)
     +asCode('javascript').
         jQuery === $
             // $.noConflict()를 호출하면 $를 사용할 수 없다

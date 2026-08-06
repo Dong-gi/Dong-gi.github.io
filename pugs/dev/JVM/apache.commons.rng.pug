@@ -10,12 +10,11 @@ include ../../../source/skeleton.pug
 
     h1 org.apache.commons.rng
     p 참고 자료 : #[+asA('https://javadoc.io/doc/org.apache.commons/commons-rng-core/latest/index.html')]
-    div
-        h2 RestorableUniformRandomProvider
-        p 난수 생성기 상태를 저장/복원할 수 있다
-        +asCode('java').
-            RandomProviderState saveState()
-            void restoreState(RandomProviderState state)
+    h2 RestorableUniformRandomProvider
+    p 난수 생성기 상태를 저장/복원할 수 있다
+    +asCode('java').
+        RandomProviderState saveState()
+        void restoreState(RandomProviderState state)
 
     h1 ...core.source32
     ol
@@ -33,13 +32,12 @@ include ../../../source/skeleton.pug
         p WELL1024a 알고리즘 의사 난수 생성기 + Well19937a, Well19937c, Well44497a, Well44497b, Well512a
 
     h1 ...core.util
-    div
-        h2 NumberFactory
-        +asCode('java').
-            static double makeDouble(int v, int w)    // + 오버로딩
-            static float makeFloat(int v)
-            static long makeLong(int v, int w)        // + 오버로딩
-            static int extractHi(long v) + extractLo
-            static byte[] makeByteArray(long[] input) // + 오버로딩
-            static int makeInt(byte[] input)
-            static int[] makeIntArray(byte[] input)   // + makeLongArray
+    h2 NumberFactory
+    +asCode('java').
+        static double makeDouble(int v, int w)    // + 오버로딩
+        static float makeFloat(int v)
+        static long makeLong(int v, int w)        // + 오버로딩
+        static int extractHi(long v) + extractLo
+        static byte[] makeByteArray(long[] input) // + 오버로딩
+        static int makeInt(byte[] input)
+        static int[] makeIntArray(byte[] input)   // + makeLongArray

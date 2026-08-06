@@ -12,11 +12,10 @@ include ../../source/skeleton.pug
         isbn: '978-89-6848-152-9 [93000]',
         publisher: '한빛미디어', date: '2015년 02월 01일',
     })
-    div
-        h2.no-marker 책의 오류
-        ul
-            li 80p 정수 타입 배열에는 final 키워드를 사용할 수 없다
-                p -> 배열 원소의 타입과 무관하게 final 키워드 사용 가능하며, 해당 변수 초기화 이후 재할당은 불가하다
+    h2.no-marker 책의 오류
+    ul
+        li 80p 정수 타입 배열에는 final 키워드를 사용할 수 없다
+            p -> 배열 원소의 타입과 무관하게 final 키워드 사용 가능하며, 해당 변수 초기화 이후 재할당은 불가하다
 
     +bookInfo({
         imgSrc: 'https://www.hanbit.co.kr/data/books/B9005920688_l.jpg',
@@ -125,52 +124,51 @@ include ../../source/skeleton.pug
         li 가장 고치기 어려웠던 버그는 무엇이었는지?
 
     h1 알고리즘/코딩 질문
-    div
-        h2 big-O 표기법
-        ul
-            li 아래 코드의 시간복잡도는?
-                +asCode('java').
-                    void print(int[] arr1, int[] arr2) {
-                        for (var i = 0; i &lt; arr1.length; ++i) {
-                            for (var j = 0; j &lt; arr2.length; ++j) {
-                                if (arr1[i] &lt; arr2[j])
-                                    System.out.print("Found");
-                            }
+    h2 big-O 표기법
+    ul
+        li 아래 코드의 시간복잡도는?
+            +asCode('java').
+                void print(int[] arr1, int[] arr2) {
+                    for (var i = 0; i &lt; arr1.length; ++i) {
+                        for (var j = 0; j &lt; arr2.length; ++j) {
+                            if (arr1[i] &lt; arr2[j])
+                                System.out.print("Found");
                         }
                     }
-                p ↓ if 블록은 상수 시간에 수행되므로,
-                +asCode('java').
-                    for (var i = 0; i &lt; arr1.length; ++i)
-                        for (var j = 0; j &lt; arr2.length; ++j)
-                            /* O(1) 작업 */
-                p 따라서 답은 O(NM)
-            li 문자열 배열이 주어졌을 때, 문자열 각각을 정렬한 뒤, 배열을 정렬하는 시간복잡도는?
-                p → 배열 크기를 N, 가장 긴 문자열의 길이를 L이라고 할 때, 각 문자열을 정렬하는 시간은 O(N*LlogL)이면 충분하다. 배열을 정렬하는 데에 O(NlogN) 번의 비교가 필요하고, 각 비교에 O(L) 시간이 소요되므로, 총 소요 시간은 O(N*LlogL + L*NlogN) = O(NL(logL + logN))
-            li 순열을 모두 출력하는 아래 코드의 시간복잡도는?
-                +asCode('java').
-                    void permutation(String str) {
-                        permutation(str, "");
-                    }
-                    void permutation(String str, String prefix) {
-                        if (str.length() == 0)
-                            System.out.println(prefix);
-                        else {
-                            for (var i = 0; i &lt; str.length(); ++i) {
-                                var remain = str.substring(0, i) + str.substring(i+1);
-                                permutation(remain, prefix + str.charAt(i));
-                            }
+                }
+            p ↓ if 블록은 상수 시간에 수행되므로,
+            +asCode('java').
+                for (var i = 0; i &lt; arr1.length; ++i)
+                    for (var j = 0; j &lt; arr2.length; ++j)
+                        /* O(1) 작업 */
+            p 따라서 답은 O(NM)
+        li 문자열 배열이 주어졌을 때, 문자열 각각을 정렬한 뒤, 배열을 정렬하는 시간복잡도는?
+            p → 배열 크기를 N, 가장 긴 문자열의 길이를 L이라고 할 때, 각 문자열을 정렬하는 시간은 O(N*LlogL)이면 충분하다. 배열을 정렬하는 데에 O(NlogN) 번의 비교가 필요하고, 각 비교에 O(L) 시간이 소요되므로, 총 소요 시간은 O(N*LlogL + L*NlogN) = O(NL(logL + logN))
+        li 순열을 모두 출력하는 아래 코드의 시간복잡도는?
+            +asCode('java').
+                void permutation(String str) {
+                    permutation(str, "");
+                }
+                void permutation(String str, String prefix) {
+                    if (str.length() == 0)
+                        System.out.println(prefix);
+                    else {
+                        for (var i = 0; i &lt; str.length(); ++i) {
+                            var remain = str.substring(0, i) + str.substring(i+1);
+                            permutation(remain, prefix + str.charAt(i));
                         }
                     }
-                ol
-                    li permutation(String, String) 호출 트리를 그려보면, 총 n!개의 단말 노드가 존재한다
-                    li 호출 트리의 깊이는 O(n)이므로, 총 노드의 개수는 O(n*n!)
-                    li 각 단말 노드는 출력 작업 O(n), 내부 노드들은 문자열 연결 작업 O(n)을 수행한다
-                    li 따라서 총 수행 시간은 식[O(n^2 \cdot n!)]식을 넘지 않는다
+                }
+            ol
+                li permutation(String, String) 호출 트리를 그려보면, 총 n!개의 단말 노드가 존재한다
+                li 호출 트리의 깊이는 O(n)이므로, 총 노드의 개수는 O(n*n!)
+                li 각 단말 노드는 출력 작업 O(n), 내부 노드들은 문자열 연결 작업 O(n)을 수행한다
+                li 따라서 총 수행 시간은 식[O(n^2 \cdot n!)]식을 넘지 않는다
 
-        h2 코드 작성 시 유의 사항
-        ul
-            li 발생 가능한 예외, 경계조건에서의 동작 확인
-            li 단위 테스트 꼭 작성
+    h2 코드 작성 시 유의 사항
+    ul
+        li 발생 가능한 예외, 경계조건에서의 동작 확인
+        li 단위 테스트 꼭 작성
 
     h1 Java 질문
     ol

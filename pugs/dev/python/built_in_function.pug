@@ -9,96 +9,95 @@ include ../../../source/skeleton.pug
         li Python 3.9 기준입니다.
 
     h1 타입 관련
-    div
-        h2 class bool([x])
-        ul
-            li True, False 중 하나를 반환한다. int의 서브클래스로, 더 상속할 수 없다
-            li Since 3.7 : x는 키워드 인자로 전달할 수 없다
-        h2 class bytearray([source[, encoding[, errors]]])
-        ol
-            li 변경할 수 있는 바이트 배열. 생성자에 인자가 없으면 크기가 0인 바이트 배열을 반환한다
-            li source가 문자열인 경우 : encoding이 반드시 설정되어야 하며, str.encode()를 통해 변환된다
-            li source가 정수인 경우 : 해당 바이트 크기 만큼의 배열이 0 초기화된다
-            li source가 buffer 인터페이스와 호환되는 객체일 경우, 객체의 읽기 전용 버퍼로 배열을 초기화한다
-            li source가 iterable인 경우 : 반복자 모든 요소가 [0, 255] 사이의 정수여야 한다
-        h2 class bytes([source[, encoding[, errors]]])
-        p bytearray의 변경 불가 버전. b"Hello World"처럼 리터럴 표기를 통해 객체를 생성할 수도 있다
-        h2 class complex([real[, imag]])
-        ol
-            li '1+2j'와 같이 문자열을 넘길 수도 있다
-            li 아무 인자도 넘기지 않으면 0j를 반환한다
-            li complex(x)의 대리자 호출 순서 : __complex__() → __float__() → __index__()
-            li Since 3.6 : '_'이 포함된 숫자 리터럴도 허용된다
-            li Since 3.8 : __complex__(), __float__() 둘 다 없으면 __index__() 호출
-        h2 class float([x])
-        ul
-            li "nan", "inf", "infinity"도 인자로 가능하다
-            li 일반 객체의 경우 __float__() 메서드를 호출한다
-            li Since 3.6 : 숫자 리터럴에 '_' 허용
-            li Since 3.7 : x는 키워드 인자로 전달할 수 없다
-            li Since 3.8 : __float__()이 없는 경우 __index__()를 찾는다
-        h2.
-            class int([x])<br>
-            class int(x, base=10)
-        ul
-            li 무인자 : 0
-            li x.__int__() → 없으면 x.__index__() Since 3.8 → x.__trunc__()
-            li 문자열 : base에 따라 파싱
-            li Since 3.6 : 숫자 리터럴에 '_' 허용
-        h2.
-            class str(object=")<br>
-            class str(object=b", encoding='utf-8', errors='strict')
-        ul
-            li encoding, errors 둘 다 없으면 object.__str__() 또는 repr(object) 반환
-            li encoding, errors 하나라도 있으면 object는 bytes-like object여야 한다. bytes.decode(encoding, errors)를 반환
-        h2 내장 컬렉션
-        +asCode('python').
-            class dict(**kwarg)
-            class dict(maping, **kwarg)
-            class dict(iterable, **kwarg)
-            class set([iterable])
-            class frozenset([iterable])
-            class list([iterable])
-        h2 class object
-        p object는 __dict__이 없으므로 임의로 속성을 할당할 수 없다
-        h2 class property(fget=None, fset=None, fdel=None, doc=None)
-        ul
-            li property 속성을 반환한다. fget은 getter, fset은 setter, fdel은 속성 소멸자, doc은 도움말로써, 없으면 fget의 docstring을 복사해온다
-            li @property 데커레이터를 통해 쉽게 읽기전용 property를 만들 수 있다
-            li property 객체의 getter, setter, deleter 메서드 각각을 데커레이터로 정의할 수 있다
-            +codeBtn('/Repositories/Python/Basic/property_example.py', 'python', '[1,17,20,35]')
-        h2.
-            class slice(stop)<br>
-            class slice(start, stop[, step])
-        h2.
-            class type(object)<br>
-            class type(name, bases, dict)
-        ul
-            li 인자 하나만 전달됐을 경우 : 객체의 타입을 반환한다. 보통 object.__class__와 같다
-            p Since 3.6 type.__new__를 재정의하지 않은 type의 서브클래스들은 type(object)를 이용할 수 없다
-            li 세 인자 모두 전달됐을 경우 : 동적으로 타입 객체를 생성한다
-            p name : 클래스 이름, bases : 상속할 타입들의 튜플, dict : 클래스 내부 네임스페이스
-        h2 @classmethod, @staticmethod
-        +asCode('python').
-            @classmethod  # 메서드를 클래스 메서드로 변경한다
-            @staticmethod # static method는 클래스 메서드나 객체 메서드와 달리 명시된 인자가 없다
-        h2.
-            range(stop)<br>
-            range(start, stop[, step])<br>
-            tuple([iterable])
-        p 불변 시퀀스 반환
-        h2 memoryview(obj)
-        p obj에 대한 memoryview 객체를 반환한다
-        h2 isinstance(object, classinfo)
-        p 호환 여부 반환. classinfo는 여러 타입 객체들로 구성된 튜플일 수 있으며, 하나라도 만족하면 True를 반환한다
-        h2 issubclass(class, classinfo)
-        p 클래스 호환 여부 반환. classinfo는 여러 클래스 객체로 구성된 튜플일 수 있으며, 모두를 만족해야 True를 반환한다
-        h2 super([type[, object-or-type]])
-        ul
-            li 메서드 호출을 상위 클래스로 연결하는 프록시 객체를 반환한다
-            p 예. type(obj).__mro__의 순서가 D → C → B → A → object일 때, super(C, obj)의 탐색 순서는 B → A → object
-                +codeBtn('/Repositories/Python/Basic/super_example.py', 'python')
-            li object-or-type이 객체인 경우 isinstance(obj, type) == True, 타입인 경우 issubclass(type2, type) == True를 만족해야 한다
+    h2 class bool([x])
+    ul
+        li True, False 중 하나를 반환한다. int의 서브클래스로, 더 상속할 수 없다
+        li Since 3.7 : x는 키워드 인자로 전달할 수 없다
+    h2 class bytearray([source[, encoding[, errors]]])
+    ol
+        li 변경할 수 있는 바이트 배열. 생성자에 인자가 없으면 크기가 0인 바이트 배열을 반환한다
+        li source가 문자열인 경우 : encoding이 반드시 설정되어야 하며, str.encode()를 통해 변환된다
+        li source가 정수인 경우 : 해당 바이트 크기 만큼의 배열이 0 초기화된다
+        li source가 buffer 인터페이스와 호환되는 객체일 경우, 객체의 읽기 전용 버퍼로 배열을 초기화한다
+        li source가 iterable인 경우 : 반복자 모든 요소가 [0, 255] 사이의 정수여야 한다
+    h2 class bytes([source[, encoding[, errors]]])
+    p bytearray의 변경 불가 버전. b"Hello World"처럼 리터럴 표기를 통해 객체를 생성할 수도 있다
+    h2 class complex([real[, imag]])
+    ol
+        li '1+2j'와 같이 문자열을 넘길 수도 있다
+        li 아무 인자도 넘기지 않으면 0j를 반환한다
+        li complex(x)의 대리자 호출 순서 : __complex__() → __float__() → __index__()
+        li Since 3.6 : '_'이 포함된 숫자 리터럴도 허용된다
+        li Since 3.8 : __complex__(), __float__() 둘 다 없으면 __index__() 호출
+    h2 class float([x])
+    ul
+        li "nan", "inf", "infinity"도 인자로 가능하다
+        li 일반 객체의 경우 __float__() 메서드를 호출한다
+        li Since 3.6 : 숫자 리터럴에 '_' 허용
+        li Since 3.7 : x는 키워드 인자로 전달할 수 없다
+        li Since 3.8 : __float__()이 없는 경우 __index__()를 찾는다
+    h2.
+        class int([x])<br>
+        class int(x, base=10)
+    ul
+        li 무인자 : 0
+        li x.__int__() → 없으면 x.__index__() Since 3.8 → x.__trunc__()
+        li 문자열 : base에 따라 파싱
+        li Since 3.6 : 숫자 리터럴에 '_' 허용
+    h2.
+        class str(object=")<br>
+        class str(object=b", encoding='utf-8', errors='strict')
+    ul
+        li encoding, errors 둘 다 없으면 object.__str__() 또는 repr(object) 반환
+        li encoding, errors 하나라도 있으면 object는 bytes-like object여야 한다. bytes.decode(encoding, errors)를 반환
+    h2 내장 컬렉션
+    +asCode('python').
+        class dict(**kwarg)
+        class dict(maping, **kwarg)
+        class dict(iterable, **kwarg)
+        class set([iterable])
+        class frozenset([iterable])
+        class list([iterable])
+    h2 class object
+    p object는 __dict__이 없으므로 임의로 속성을 할당할 수 없다
+    h2 class property(fget=None, fset=None, fdel=None, doc=None)
+    ul
+        li property 속성을 반환한다. fget은 getter, fset은 setter, fdel은 속성 소멸자, doc은 도움말로써, 없으면 fget의 docstring을 복사해온다
+        li @property 데커레이터를 통해 쉽게 읽기전용 property를 만들 수 있다
+        li property 객체의 getter, setter, deleter 메서드 각각을 데커레이터로 정의할 수 있다
+        +codeBtn('/Repositories/Python/Basic/property_example.py', 'python', '[1,17,20,35]')
+    h2.
+        class slice(stop)<br>
+        class slice(start, stop[, step])
+    h2.
+        class type(object)<br>
+        class type(name, bases, dict)
+    ul
+        li 인자 하나만 전달됐을 경우 : 객체의 타입을 반환한다. 보통 object.__class__와 같다
+        p Since 3.6 type.__new__를 재정의하지 않은 type의 서브클래스들은 type(object)를 이용할 수 없다
+        li 세 인자 모두 전달됐을 경우 : 동적으로 타입 객체를 생성한다
+        p name : 클래스 이름, bases : 상속할 타입들의 튜플, dict : 클래스 내부 네임스페이스
+    h2 @classmethod, @staticmethod
+    +asCode('python').
+        @classmethod  # 메서드를 클래스 메서드로 변경한다
+        @staticmethod # static method는 클래스 메서드나 객체 메서드와 달리 명시된 인자가 없다
+    h2.
+        range(stop)<br>
+        range(start, stop[, step])<br>
+        tuple([iterable])
+    p 불변 시퀀스 반환
+    h2 memoryview(obj)
+    p obj에 대한 memoryview 객체를 반환한다
+    h2 isinstance(object, classinfo)
+    p 호환 여부 반환. classinfo는 여러 타입 객체들로 구성된 튜플일 수 있으며, 하나라도 만족하면 True를 반환한다
+    h2 issubclass(class, classinfo)
+    p 클래스 호환 여부 반환. classinfo는 여러 클래스 객체로 구성된 튜플일 수 있으며, 모두를 만족해야 True를 반환한다
+    h2 super([type[, object-or-type]])
+    ul
+        li 메서드 호출을 상위 클래스로 연결하는 프록시 객체를 반환한다
+        p 예. type(obj).__mro__의 순서가 D → C → B → A → object일 때, super(C, obj)의 탐색 순서는 B → A → object
+            +codeBtn('/Repositories/Python/Basic/super_example.py', 'python')
+        li object-or-type이 객체인 경우 isinstance(obj, type) == True, 타입인 경우 issubclass(type2, type) == True를 만족해야 한다
 
     h1 객체 관련
     ul

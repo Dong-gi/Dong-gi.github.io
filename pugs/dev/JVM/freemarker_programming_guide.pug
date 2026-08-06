@@ -26,58 +26,54 @@ include ../../../source/skeleton.pug
         li Template과 data-model 머지
 
     h1 Data-model
-    div
-        h2 Scalar
-        p 각 스칼라 타입은 Template
-            i TypeName
-            |Model 인터페이스에 해당한다
-        p Boolean, Number, String, Date-like(Date, Time, Date-time)
-        h2 Container
-        div
-            h3 Hash
-            +asCode('java').
-                interface TemplateHashModel extends TemplateModel  {
-                    TemplateModel get(String key)
-                    boolean isEmpty()
-                }
+    h2 Scalar
+    p 각 스칼라 타입은 Template
+        i TypeName
+        |Model 인터페이스에 해당한다
+    p Boolean, Number, String, Date-like(Date, Time, Date-time)
+    h2 Container
+    h3 Hash
+    +asCode('java').
+        interface TemplateHashModel extends TemplateModel  {
+            TemplateModel get(String key)
+            boolean isEmpty()
+        }
 
-            h3 Sequence
-            +asCode('java').
-                interface TemplateSequenceModel extends TemplateModel {
-                    TemplateModel get(int index)
-                    int size()
-                }
+    h3 Sequence
+    +asCode('java').
+        interface TemplateSequenceModel extends TemplateModel {
+            TemplateModel get(int index)
+            int size()
+        }
 
-            h3 Collection
-            +asCode('java').
-                interface TemplateCollectionModel extends TemplateModel {
-                    TemplateModelIterator iterator()
-                }
+    h3 Collection
+    +asCode('java').
+        interface TemplateCollectionModel extends TemplateModel {
+            TemplateModelIterator iterator()
+        }
 
-        h2 Method
-        div
-            +asCode('java').
-                interface TemplateMethodModelEx extends TemplateMethodModel {
-                    Object exec(List arguments)
-                }
-            +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/ProgrammerGuilde.java', 'java', '[18, 26]') Java »
-            +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_013_method.ftl', 'xml', '[1, 1, 3, 3]') FTL + 결과 »
+    h2 Method
+    +asCode('java').
+        interface TemplateMethodModelEx extends TemplateMethodModel {
+            Object exec(List arguments)
+        }
+    +codeBtn('/Repositories/Eclipse/FreeMarker/src/io/github/donggi/ProgrammerGuilde.java', 'java', '[18, 26]') Java »
+    +codeBtn('/Repositories/Eclipse/FreeMarker/resource/template/t_013_method.ftl', 'xml', '[1, 1, 3, 3]') FTL + 결과 »
 
-        h2 Object Wrapper
-        div
-            h3 interface ObjectWrapper
-            ol
-                li TemplateModel wrap(Object obj)
-            h3 interface ObjectWrapperAndUnwrapper extends ObjectWrapper
-            ol
-                li static final Object CANT_UNWRAP_TO_TARGET_CLASS
-                p unwrap은 가능하지만, 결과물이 타깃 클래스 인스턴스가 아닐 수 있음을 표시. 아니면 null
-                li Object unwrap(TemplateModel tm)
-                p unwrap 실패의 의미로 null을 반환하지 말 것
-                li Object tryUnwrapTo(TemplateModel tm, Class targetClass)
-                p targetClass가 Object.class가 아닌 경우, 변환이 안 될 것 같으면 CANT_UNWRAP_TO_TARGET_CLASS 반환
-            h3 class DefaultObjectWrapper extends BeansWrapper
-            p FreeMarker에서 기본으로 사용하는 ObjectWrapper. Configuration#getDefaultObjectWrapper 또는 DefaultObjectWrapperBuilder#build로 획득
+    h2 Object Wrapper
+    h3 interface ObjectWrapper
+    ol
+        li TemplateModel wrap(Object obj)
+    h3 interface ObjectWrapperAndUnwrapper extends ObjectWrapper
+    ol
+        li static final Object CANT_UNWRAP_TO_TARGET_CLASS
+        p unwrap은 가능하지만, 결과물이 타깃 클래스 인스턴스가 아닐 수 있음을 표시. 아니면 null
+        li Object unwrap(TemplateModel tm)
+        p unwrap 실패의 의미로 null을 반환하지 말 것
+        li Object tryUnwrapTo(TemplateModel tm, Class targetClass)
+        p targetClass가 Object.class가 아닌 경우, 변환이 안 될 것 같으면 CANT_UNWRAP_TO_TARGET_CLASS 반환
+    h3 class DefaultObjectWrapper extends BeansWrapper
+    p FreeMarker에서 기본으로 사용하는 ObjectWrapper. Configuration#getDefaultObjectWrapper 또는 DefaultObjectWrapperBuilder#build로 획득
 
     h1 Configuration
     ol

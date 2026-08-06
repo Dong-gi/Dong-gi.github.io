@@ -58,142 +58,141 @@ include ../../../source/skeleton.pug
     ul
         li 파이썬 변수는 동적 자료형(실행중 변경 가능)으로, type() 함수를 통해 자료형을 확인할 수 있다
         li 변수 선언이 따로 필요없으며, 식별자만 있으면 변수로써 이용할 수 있다
-    div
-        h2 bool
-        ol
-            li True, False
-            li bool 연산 : and, or, not
-            li False로 간주되는 값 : None, 0, 0.0, '', [], (), {}, set()
+    h2 bool
+    ol
+        li True, False
+        li bool 연산 : and, or, not
+        li False로 간주되는 값 : None, 0, 0.0, '', [], (), {}, set()
 
-        h2 int
-        ol
-            li 모든 정수는 int형이며, 크기 제한은 없다
-            li 정수는 0으로 시작할 수 없다
-            li 리터럴 : 2진수 0b, 8진수 0o, 16진수 0x
-            li / : 부동소수 몫, // : 정수 몫, divmod() : (정수 몫, 나머지)
-            li ** : 거듭제곱
-            li int() : 형변환, 소수점이나 지수가 표현된 문자열은 정수로 변환 불가
-                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[1,9]')
+    h2 int
+    ol
+        li 모든 정수는 int형이며, 크기 제한은 없다
+        li 정수는 0으로 시작할 수 없다
+        li 리터럴 : 2진수 0b, 8진수 0o, 16진수 0x
+        li / : 부동소수 몫, // : 정수 몫, divmod() : (정수 몫, 나머지)
+        li ** : 거듭제곱
+        li int() : 형변환, 소수점이나 지수가 표현된 문자열은 정수로 변환 불가
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[1,9]')
 
-        h2 float
-        ol
-            li 부동소수도 +, -, *, /, //, **, %, divmod() 모두 가능하다
-            li float 정밀도는 그대로 가진다
-            li float() : 형변환, 소수점이나 지수가 표현된 문자열은 정수로 변환 불가
-                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[12,17]')
+    h2 float
+    ol
+        li 부동소수도 +, -, *, /, //, **, %, divmod() 모두 가능하다
+        li float 정밀도는 그대로 가진다
+        li float() : 형변환, 소수점이나 지수가 표현된 문자열은 정수로 변환 불가
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[12,17]')
 
-        h2 complex
-        p 복소수 a + bj
+    h2 complex
+    p 복소수 a + bj
 
-        h2 str
-        ol
-            li 파이썬 문자열은 상수(불변)다. 리터럴로 ''와 ""모두 사용 가능하다
-            li + : 문자열 결합 연산자
-                br
-                |* : 문자열 복제 연산자
-                br
-                |문자열 리터럴은 단순히 공백을 기준으로 나열만 해도 연결된다
-                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[20,22]')
-            li ''' 또는 """로 열고 닫음으로써 여러 줄의 문자열 리터럴을 작성할 수 있다. 이진 문자열도 가능하다
-                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[23,26]')
-            li r'' → Raw String 리터럴. 이스케이프하지 않는다
-            li str() : 사람이 읽기 편한 형태로 객체의 문자열 표현 반환
-                br
-                |repr() : 개발자를 위한 형태로 객체의 문자열 표현 반환. repr() 그대로 객체를 복원할 수 있도록 하자
-            li str은 시퀀스이므로 슬라이싱
-                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[28,33]') 가능
-                |  , len() 이용
-                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[35,35]') 가능
-            li split() : 분리. 기본은 공백 문자
-                br
-                |join() : 문자열 접합
-                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[37,40]')
-            li strip() : 앞뒤 문자열 제거. 기본은 공백 제거
-                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[42,43]')
-            li 정렬
-                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[45,50]')
-            li replace() : 부분 문자열 대체
-                +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[52,53]')
-
-        h2 Formatted string literal(aka. f-string)
-        ul
-            li f_string ::= (
-                i literal_char
-                |  | "{{" | "}}" |
-                i replacement_field
-                |  )*
-            p {{, }}는 각각 {, }를 표시하기 위한 리터럴
-            li replacement_field ::= "{"
-                i f_expression
-                |  [!
-                i conversion
-                |] [:
-                i format_spec
-                |] "}"
-            li f_expression : 값을 산출하는 표현식
-                +codeBtn('/Repositories/Python/Basic/f_string.py', 'python', '[1,2]')
-            li conversion ::= "s" | "r" | "a"
-                +codeBtn('/Repositories/Python/Basic/f_string.py', 'python', '[4,11]')
-            p 각각 해당하는 함수를 호출한다 : !s → str(), !r → repr(), !a → ascii()
-            li f_expression이 산출한 값이 conversion을 거쳐 __format__(format_spec)으로 포매팅된다
-            li format_spec ::= [[
-                i fill
-                |]
-                i align
-                |][
-                i sign
-                |][#][0][
-                i width
-                |][
-                i grouping_option
-                |][.
-                i precision
-                |][
-                i type
-                |]
-            li fill ::= 임의_문자
-            li align ::= "&lt;" | ">" | "=" | "^"
-                +codeBtn('/Repositories/Python/Basic/f_string.py', 'python', '[13,17]')
-            li sign ::= "+" | "-" | " "
-            li '#' 옵션이 있으면 2, 8, 16진수 앞에 '0b', '0o', '0x'를 각각 붙인다
-            li width ::= digit+
-            li grouping_option ::= "_" | ","
-            li precision ::= digit+
-            li type ::= "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"
-
-        h2 list
-        p 가변 시퀀스
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[56,57]') 생성 : [], list()
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[59,61]') 슬라이스
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[63,66]') 리스트 병합 : +, extend()
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[68,80]') 요소 추가/삭제
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[82,85]') 검색
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[87,91]') 정렬
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[93,109]') 복사
-
-        h2 tuple
-        p 불변 시퀀스. 불변이므로 딕셔너리의 키로 사용 가능
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[112,116]') 생성, 병합
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[118,121,191,198]') 튜플 패킹/언패킹
-
-        h2 collections.namedtuple
-        p collections.namedtuple(typename, field_names, verbose=False, rename=False)
+    h2 str
+    ol
+        li 파이썬 문자열은 상수(불변)다. 리터럴로 ''와 ""모두 사용 가능하다
+        li + : 문자열 결합 연산자
             br
-            |각 필드를 주어진 이름으로 접근할 수 있는 tuple의 서브클래스를 반환한다. DTO 작성에 유용
+            |* : 문자열 복제 연산자
             br
-            |_fields, _make(iterable), _asdict()
+            |문자열 리터럴은 단순히 공백을 기준으로 나열만 해도 연결된다
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[20,22]')
+        li ''' 또는 """로 열고 닫음으로써 여러 줄의 문자열 리터럴을 작성할 수 있다. 이진 문자열도 가능하다
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[23,26]')
+        li r'' → Raw String 리터럴. 이스케이프하지 않는다
+        li str() : 사람이 읽기 편한 형태로 객체의 문자열 표현 반환
+            br
+            |repr() : 개발자를 위한 형태로 객체의 문자열 표현 반환. repr() 그대로 객체를 복원할 수 있도록 하자
+        li str은 시퀀스이므로 슬라이싱
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[28,33]') 가능
+            |  , len() 이용
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[35,35]') 가능
+        li split() : 분리. 기본은 공백 문자
+            br
+            |join() : 문자열 접합
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[37,40]')
+        li strip() : 앞뒤 문자열 제거. 기본은 공백 제거
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[42,43]')
+        li 정렬
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[45,50]')
+        li replace() : 부분 문자열 대체
+            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[52,53]')
 
-        h2 set
-        p
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[124,131]') 생성, 요소 추가
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[133,143]') 원소 포함 여부
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[145,158]') 집합 연산
+    h2 Formatted string literal(aka. f-string)
+    ul
+        li f_string ::= (
+            i literal_char
+            |  | "{{" | "}}" |
+            i replacement_field
+            |  )*
+        p {{, }}는 각각 {, }를 표시하기 위한 리터럴
+        li replacement_field ::= "{"
+            i f_expression
+            |  [!
+            i conversion
+            |] [:
+            i format_spec
+            |] "}"
+        li f_expression : 값을 산출하는 표현식
+            +codeBtn('/Repositories/Python/Basic/f_string.py', 'python', '[1,2]')
+        li conversion ::= "s" | "r" | "a"
+            +codeBtn('/Repositories/Python/Basic/f_string.py', 'python', '[4,11]')
+        p 각각 해당하는 함수를 호출한다 : !s → str(), !r → repr(), !a → ascii()
+        li f_expression이 산출한 값이 conversion을 거쳐 __format__(format_spec)으로 포매팅된다
+        li format_spec ::= [[
+            i fill
+            |]
+            i align
+            |][
+            i sign
+            |][#][0][
+            i width
+            |][
+            i grouping_option
+            |][.
+            i precision
+            |][
+            i type
+            |]
+        li fill ::= 임의_문자
+        li align ::= "&lt;" | ">" | "=" | "^"
+            +codeBtn('/Repositories/Python/Basic/f_string.py', 'python', '[13,17]')
+        li sign ::= "+" | "-" | " "
+        li '#' 옵션이 있으면 2, 8, 16진수 앞에 '0b', '0o', '0x'를 각각 붙인다
+        li width ::= digit+
+        li grouping_option ::= "_" | ","
+        li precision ::= digit+
+        li type ::= "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"
 
-        h2 dict
-        p
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[161,178]') 생성, 병합
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[180,183]') 키-값 얻기
-            +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[185,189]') 복사
+    h2 list
+    p 가변 시퀀스
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[56,57]') 생성 : [], list()
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[59,61]') 슬라이스
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[63,66]') 리스트 병합 : +, extend()
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[68,80]') 요소 추가/삭제
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[82,85]') 검색
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[87,91]') 정렬
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[93,109]') 복사
+
+    h2 tuple
+    p 불변 시퀀스. 불변이므로 딕셔너리의 키로 사용 가능
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[112,116]') 생성, 병합
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[118,121,191,198]') 튜플 패킹/언패킹
+
+    h2 collections.namedtuple
+    p collections.namedtuple(typename, field_names, verbose=False, rename=False)
+        br
+        |각 필드를 주어진 이름으로 접근할 수 있는 tuple의 서브클래스를 반환한다. DTO 작성에 유용
+        br
+        |_fields, _make(iterable), _asdict()
+
+    h2 set
+    p
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[124,131]') 생성, 요소 추가
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[133,143]') 원소 포함 여부
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[145,158]') 집합 연산
+
+    h2 dict
+    p
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[161,178]') 생성, 병합
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[180,183]') 키-값 얻기
+        +codeBtn('/Repositories/Python/Basic/type_example.py', 'python', '[185,189]') 복사
 
     h1 구문
     p
