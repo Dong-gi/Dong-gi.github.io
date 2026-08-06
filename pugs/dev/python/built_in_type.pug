@@ -86,11 +86,10 @@ include ../../../source/skeleton.pug
             # iterator 자기 자신을 반환하면 된다
         iterator.__next__()
             # 다음 요소 반환. 없으면 StopIteration 발생
-    div
-        h2 Generator Types
-        p generator는 iterator protocol을 쉽게 제공한다. container의 __iter__()가 generator로 정의된 경우, 자동으로 __iter__()와 __next__()를 지원하는 iterator 객체를 반환한다
-            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[143,150]') 예시 1 »
-            +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[70,76]') 예시 2»
+    h2 Generator Types
+    p generator는 iterator protocol을 쉽게 제공한다. container의 __iter__()가 generator로 정의된 경우, 자동으로 __iter__()와 __next__()를 지원하는 iterator 객체를 반환한다
+        +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[143,150]') 예시 1 »
+        +codeBtn('/Repositories/Python/Basic/syntax.py', 'python', '[70,76]') 예시 2»
 
     h1 Sequence Types
     ul
@@ -284,100 +283,97 @@ include ../../../source/skeleton.pug
             contiguous   # Since 3.3, 메모리가 contiguous인지
 
     h1 Set Types
-    div
-        h2
-            |class set([iterable])
-            br
-            |class frozenset([iterable])
-        ul
-            li 해시 가능한 순서 없는 collection. frozenset은 불변이며, 다른 set의 원소가 될 수 있다
-            li 연산자 버전이 있는 메서드들은 인자로 iterable도 받을 수 있다
-            li set과 frozenset 두 가지에 대한 연산 결과는 첫번째 피연산자의 타입이다
-        +asCode('python').
-            len(s)
-            x in s
-            x not in s
-            for x in set
+    h2
+        |class set([iterable])
+        br
+        |class frozenset([iterable])
+    ul
+        li 해시 가능한 순서 없는 collection. frozenset은 불변이며, 다른 set의 원소가 될 수 있다
+        li 연산자 버전이 있는 메서드들은 인자로 iterable도 받을 수 있다
+        li set과 frozenset 두 가지에 대한 연산 결과는 첫번째 피연산자의 타입이다
+    +asCode('python').
+        len(s)
+        x in s
+        x not in s
+        for x in set
 
-            isdisjoint(other)                  # 교집합이 공집합인지 여부
-            issubset(other)                    # 연산자 &lt;=, &lt;로도 가능
-            issuperset(other)                  # 연산자 >=, >로도 가능
-            union(*others)                     # 연산자 |로도 가능
-            intersection(*others)              # 연산자 &로도 가능
-            difference(*others)                # 연산자 -로도 가능
-            symmetric_difference(other)        # 연산자 ^로도 가능
-            update(*others)                    # others의 모든 원소 추가. set |= other | ...
-            intersection_update(*others)       # 모든 집합에 속하는 공통 원소들만 보존. set &= other & ...
-            difference_update(*others)         # 호출자에 속하는 원소들만 보존. set -= other | ...
-            symmetric_difference_update(other) # set ^= other
+        isdisjoint(other)                  # 교집합이 공집합인지 여부
+        issubset(other)                    # 연산자 &lt;=, &lt;로도 가능
+        issuperset(other)                  # 연산자 >=, >로도 가능
+        union(*others)                     # 연산자 |로도 가능
+        intersection(*others)              # 연산자 &로도 가능
+        difference(*others)                # 연산자 -로도 가능
+        symmetric_difference(other)        # 연산자 ^로도 가능
+        update(*others)                    # others의 모든 원소 추가. set |= other | ...
+        intersection_update(*others)       # 모든 집합에 속하는 공통 원소들만 보존. set &= other & ...
+        difference_update(*others)         # 호출자에 속하는 원소들만 보존. set -= other | ...
+        symmetric_difference_update(other) # set ^= other
 
-            # ↓ elem은 set일 수 있다
-            copy()
-            add(elem)
-            discard(elem) # 포함하면 삭제
-            remove(elem)  # 없으면 KeyError
-            pop()         # 임의 원소 삭제
-            clear()
+        # ↓ elem은 set일 수 있다
+        copy()
+        add(elem)
+        discard(elem) # 포함하면 삭제
+        remove(elem)  # 없으면 KeyError
+        pop()         # 임의 원소 삭제
+        clear()
 
     h1 Mapping Types
-    div
-        h2
-            |class dict(**kwarg)
-            br
-            |class dict(mapping, **kwarg)
-            br
-            |class dict(iterable, **kwarg)
-        p mapping 객체는 해시 가능한 값을 임의 객체로 매핑한다
-        +asCode('python').
-            a = dict(one=1, two=2, three=3)
-            b = {'one': 1, 'two': 2, 'three': 3}
-            c = dict(zip(['one', 'two', 'three'], [1, 2, 3]))
-            d = dict([('two', 2), ('one', 1), ('three', 3)])
-            e = dict({'three': 3, 'one': 1, 'two': 2})
+    h2
+        |class dict(**kwarg)
+        br
+        |class dict(mapping, **kwarg)
+        br
+        |class dict(iterable, **kwarg)
+    p mapping 객체는 해시 가능한 값을 임의 객체로 매핑한다
+    +asCode('python').
+        a = dict(one=1, two=2, three=3)
+        b = {'one': 1, 'two': 2, 'three': 3}
+        c = dict(zip(['one', 'two', 'three'], [1, 2, 3]))
+        d = dict([('two', 2), ('one', 1), ('three', 3)])
+        e = dict({'three': 3, 'one': 1, 'two': 2})
 
-            a == b == c == d == e
-        div
-            h3 Dictionary Operations
-            +asCode('python').
-                len(d)
-                d[key]
-                d[key] = value
-                del d[key]
-                key in d
-                key not in d
-                iter(d)
-                copy()
-                clear()
-                list(d) # 키 리스트 반환
+        a == b == c == d == e
+    h3 Dictionary Operations
+    +asCode('python').
+        len(d)
+        d[key]
+        d[key] = value
+        del d[key]
+        key in d
+        key not in d
+        iter(d)
+        copy()
+        clear()
+        list(d) # 키 리스트 반환
 
-                classmethod fromkeys(seq[, value])
-                    # seq를 키로 하는 dict 반환. value의 기본값은 None
-                get(key[, default])
-                    # key가 없으면 default 반환
-                items()
-                    # (key, value)쌍에 대한 view 반환
-                keys()
-                    # key에 대한 view 반환
-                values()
-                    # value에 대한 view 반환
+        classmethod fromkeys(seq[, value])
+            # seq를 키로 하는 dict 반환. value의 기본값은 None
+        get(key[, default])
+            # key가 없으면 default 반환
+        items()
+            # (key, value)쌍에 대한 view 반환
+        keys()
+            # key에 대한 view 반환
+        values()
+            # value에 대한 view 반환
 
-                pop(key[, default])
-                popitem() # 임의 키-값 쌍 제거
+        pop(key[, default])
+        popitem() # 임의 키-값 쌍 제거
 
-                setdefault(key[, default])
-                    # key가 있으면 value 반환, 없으면 default로 추가하고 defualt 반환. 둘 다 없으면 KeyError
-                update([other])
-                    # other에는 dict 생성 인자들 모두 허용된다
+        setdefault(key[, default])
+            # key가 있으면 value 반환, 없으면 default로 추가하고 defualt 반환. 둘 다 없으면 KeyError
+        update([other])
+            # other에는 dict 생성 인자들 모두 허용된다
 
-                # Since 3.8 → dict 순서를 reversed()로 뒤집을 수 있다
+        # Since 3.8 → dict 순서를 reversed()로 뒤집을 수 있다
 
-            h3 Dictionary view objects
-            p dict.keys(), dict.values(), dict.items()로 반환된 뷰. dict의 변화는 뷰에도 반영된다
-            +asCode('python').
-                len(dictview)
-                iter(dictview) # dict 수정 중엔 RuntimeError 발생 가능
-                x in dictview
-                reversed(dictview) # Since 3.8
+    h3 Dictionary view objects
+    p dict.keys(), dict.values(), dict.items()로 반환된 뷰. dict의 변화는 뷰에도 반영된다
+    +asCode('python').
+        len(dictview)
+        iter(dictview) # dict 수정 중엔 RuntimeError 발생 가능
+        x in dictview
+        reversed(dictview) # Since 3.8
 
     h1 Context Manager Types
     ul

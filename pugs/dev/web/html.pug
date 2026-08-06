@@ -75,568 +75,562 @@ include ../../../source/skeleton.pug
         p #{'<head>'} 요소는 문서 또는 웹앱에 대한 메타데이터를 기술한다. 검색 엔진에 제공할 페이지 설명, CSS 스타일 정보, 문자 집합 선언 등
         li #{'<body>'}
         p #{'<body>'} 요소는 페이지에 표시할 모든 요소를 포함한다
-    div
-        h2 head
-        div
-            h3 Charactr set
-            p #{'<head>'} 요소의 첫 번째 요소로 문자 집합을 지정함으로써, 제목과 이하 문서들을 올바르게 표시할 수 있게 함이 좋다
-            +asCode('html') #{'<meta charset="utf-8">'}
+    h2 head
+    h3 Charactr set
+    p #{'<head>'} 요소의 첫 번째 요소로 문자 집합을 지정함으로써, 제목과 이하 문서들을 올바르게 표시할 수 있게 함이 좋다
+    +asCode('html') #{'<meta charset="utf-8">'}
 
-            h3 Title
-            p 브라우저 탭, 열린 윈도우, 방문 기록, 검색 결과 등에서 보여지는 제목
-            +asCode('html') #{'<title>My Homepage</title>'}
+    h3 Title
+    p 브라우저 탭, 열린 윈도우, 방문 기록, 검색 결과 등에서 보여지는 제목
+    +asCode('html') #{'<title>My Homepage</title>'}
 
-            h3 Viewport
-            p 뷰 영역의 너비와 관계없이 컨텐츠를 보기 좋게 표현(반응형 웹)하기 위한 기본적인 설정을 기술한다. Viewport 설정은 사이트의 접근성 품질 검사 항목 중 하나로, 콘텐츠를 확대/축소 가능하고, 최대 크기 제한이 없으면 검사를 통과한다
-            +asCode('html') #{'<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">'}
-            p 모바일 브라우저는 980픽셀이 사람들이 디자인하는 너비라고 가정하여, 980픽셀의 너비를 적용한 다음 렌더링된 웹 페이지를 화면의 실제 너비로 축소한다. 반응형 디자인을 사용하면, 브라우저에게 그러한 크기 조정을 하지 말라고 알려야 한다
+    h3 Viewport
+    p 뷰 영역의 너비와 관계없이 컨텐츠를 보기 좋게 표현(반응형 웹)하기 위한 기본적인 설정을 기술한다. Viewport 설정은 사이트의 접근성 품질 검사 항목 중 하나로, 콘텐츠를 확대/축소 가능하고, 최대 크기 제한이 없으면 검사를 통과한다
+    +asCode('html') #{'<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">'}
+    p 모바일 브라우저는 980픽셀이 사람들이 디자인하는 너비라고 가정하여, 980픽셀의 너비를 적용한 다음 렌더링된 웹 페이지를 화면의 실제 너비로 축소한다. 반응형 디자인을 사용하면, 브라우저에게 그러한 크기 조정을 하지 말라고 알려야 한다
+    ul
+        li width=device-width : 웹사이트의 너비는 기기의 것과 동일하다
+        li initial-scale=1 : 처음부터 크기 조정을 할 필요가 없다
+
+    h3 Description
+    p 문서에 대한 짧은 설명으로, 검색 엔진의 검색 결과에 이용된다. 이전에는 키워드 설정도 따로 존재했지만, 스팸이 많아 더 이상 사용되지 않는다
+    +asCode('html') #{'<meta name="description" content="문서에 대한 짧은 요약">'}
+
+    h3 Open Graph Protocol
+    p #[+asA('https://ogp.me/', '공식 사이트')]. 페이지에 대해 보다 풍부한 메타데이터를 일관적으로 외부에 제공하기 위하여 Facebook이 만든 포로토콜. 아래와 같은 정보를 갖춘 페이지 링크를 Facebook 안에 공유하면, 단순한 텍스트 대신 페이지 요약이 함께 표시된다
+    +asCode('html').
+        #{'<meta property="og:image" content="..." />'}
+        #{'<meta property="og:description" content="..." />'}
+        #{'<meta property="og:title" content="..." />'}
+    +w3img('https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML/facebook-output.png')
+
+    h3 Stylesheet link
+    p 스타일을 먼저 지시함으로써 렌더링한 요소를 다시 그리는 작업을 피할 수 있다. CSS의 다운로드 및 구문 해석이 완료되기 전까지 렌더링이 차단되므로, 첫 화면에서 미사용되는 스타일이 많을수록 렌더링까지의 지연 시간이 늘어날 수 있다
+    +asCode('html') #{'<link rel="stylesheet" href="my-css-file.css" />'}
+
+    h3 Icon
+    +asCode('html').
+        #{'<link rel="icon" href="/imgs/favicon.png"/>'}
+        ↑ /favicon.ico 대신 사용할 즐겨찾기 아이콘 지정
+
+        #{'<link rel="apple-touch-icon" href="/imgs/iOS-icon.png"/>'}
+        ↑ 비표준. 사이트를 iOS 기기의 홈 화면에 추가한 경우의 아이콘
+
+    h3 Script
+    p 스크립트는 기본적으로 CSS와 마찬가지로 다운로드 및 해석되기 전까지 렌더링이 차단되고, 이에 더해 다른 리소스의 다운로드까지 중지된다. 이러한 지연을 방지하기 위한 속성이 존재한다
+    ul
+        li defer : HTML 렌더링을 차단하지 않는다. 스크립트는 렌더링이 완료된 후 실행된다
+        li async : 스크립트를 다운로드하는 동안은 HTML 렌더링을 차단하지 않는다. 다운로드 후 스크립트 실행 중에는 차단한다
+        li 위 속성들은 외부 스크립트를 사용하는 경우 적용 가능하며, 인라인 스크립트에는 적용되지 않는다
+    p 다른 요소의 속성에 스크립트를 작성할 수도 있다
+    ul
+        li 예시1.
+            +codeBtn('/Repositories/Single/202410/29-1355.html', 'HTML')
+            +codeBtn('/Repositories/Single/202410/29-1355.html', 'nohighlight') Show
+        li 예시2.
+            +codeBtn('/Repositories/Single/202410/29-1358.html', 'HTML')
+            +codeBtn('/Repositories/Single/202410/29-1358.html', 'nohighlight') Show
+
+    h3 Speculative loading
+    ul
+        li #{'<link rel="preconnect">'}
+        p 추후 사용될 가능성이 높으므로, DNS 조회 ~ TCP 연결 ~ TLS 연결 미리 수행
+        +asCode('HTML') #{'<link rel="preconnect" href="https://example.com" />'}
+        +asCode('HTTP', 'HTTP 헤더로도 지시 가능') #{'Link: <https://example.com>; rel="preconnect"'}
+
+        li #{'<link rel="dns-prefetch">'}
+        p 추후 사용될 가능성이 있으므로, DNS 조회 미리 수행
+        +asCode('HTML') #{'<link rel="dns-prefetch" href="https://example.com" />'}
+
+        li #{'<link rel="preload">'}
+        p 이 페이지에서 반드시 사용되는 리소스 중, 높은 우선순위의 것을 미리 가져오기 후 캐싱
+        +asCode('HTML').
+            #{'<link rel="preload" href="main.js" as="script" />'}
+            #{'<link rel="preload" href="https://www.example.com/fonts/xxx.woff2" as="font" type="font/woff2" crossorigin />'}
+        +asCode('HTTP', 'HTTP 헤더로도 지시 가능') #{'Link: <https://www.example.com/fonts/xxx.woff2>; rel="preload"'}
+
+        li #{'<link rel="prefetch">'}
+        p preload보다는 낮은 우선순위로 리소스 가져오기 후 캐싱
+
+        li #{'<link rel="modulepreload">'}
+        p 이 페이지에서 반드시 사용되는 모듈 중, 높은 우선순위의 것을 미리 가져와 파싱 및 컴파일까지 수행
+
+    h3 Base URL
+    p 모든 상대경로에 대한 기본 주소를 지시한다
+    +asCode('html') #{'<base href="https://example.com">'}
+    p 한 가지 문제는, #{'<a href="#ref">를 <a href="https://example.com#ref">'}로 변경해 버린다는 것
+
+    h3 CSP; Content-Security-Policy
+    ul
+        li 참고 자료 : #[+asA('https://content-security-policy.com')]
+        p CSP에는 버전이 존재하므로, 오래된 브라우저는 최신 기능을 지원하지 않을 수 있다. 위 사이트에 CSP 버전 별로 대응하는 브라우저 버전들이 나열되어 있다
+
+        li 원래는 HTTP 응답 헤더에 이용됐지만, #{'<meta>'} 태그로도 설정 가능하다
+        p 일부 directive들(frame-ancestors, report-uri, sandbox 등)은 헤더로만 설정 가능하다
+        +asCode('text', '페이스북 응답 헤더 예').
+            content-security-policy:
+                default-src data: blob: 'self' https://*.fbsbx.com 'unsafe-inline' *.facebook.com 'unsafe-eval' *.fbcdn.net;
+                script-src *.facebook.com *.fbcdn.net *.facebook.net *.google-analytics.com *.google.com 127.0.0.1:* 'unsafe-inline' 'unsafe-eval' blob: data: 'self' connect.facebook.net;style-src fonts.googleapis.com *.fbcdn.net data: *.facebook.com 'unsafe-inline';
+                connect-src *.facebook.com facebook.com *.fbcdn.net *.facebook.net wss://*.facebook.com:* wss://*.whatsapp.com:* wss://*.fbcdn.net attachment.fbsbx.com ws://localhost:* blob: *.cdninstagram.com 'self' wss://gateway.facebook.com wss://edge-chat.facebook.com wss://snaptu-d.facebook.com wss://kaios-d.facebook.com/ v.whatsapp.net *.fbsbx.com *.fb.com;
+                font-src data: *.gstatic.com *.facebook.com *.fbcdn.net *.fbsbx.com;
+                img-src *.fbcdn.net *.facebook.com data: https://*.fbsbx.com *.tenor.co media.tenor.com facebook.com *.cdninstagram.com fbsbx.com fbcdn.net *.giphy.com connect.facebook.net *.carriersignal.info blob: android-webview-video-poster: googleads.g.doubleclick.net www.googleadservices.com *.whatsapp.net *.fb.com *.oculuscdn.com;
+                media-src *.cdninstagram.com blob: *.fbcdn.net *.fbsbx.com www.facebook.com *.facebook.com https://*.giphy.com data:;
+                frame-src *.doubleclick.net *.google.com *.facebook.com www.googleadservices.com *.fbsbx.com fbsbx.com data: www.instagram.com *.fbcdn.net https://paywithmybank.com;
+                worker-src blob: *.facebook.com data:;
+                block-all-mixed-content;
+                upgrade-insecure-requests;
+        +asCode('HTML', '<meta> 태그 예').
+            #{`<meta http-equiv="Content-Security-Policy" content="default-src 'self'">`}
+
+    h4 Directive
+    p CSP 값은 1개 이상의 지시문(directive)으로 구성되고, 위 예시와 같이 각 directive들은 ;으로 구별한다
+    ul
+        li default-src
+        p 명시적으로 설정하지 않은 리소스 획득 정책에 대한 기본값으로 이용된다. JavaScript, 이미지, CSS, 폰트, XHR 등이 이에 포함되지만, 모든 것에 대한 기본값으로 이용되는 것은 아니다
+
+        li script-src
+        p JavaScript 및 웹 어셈블리 출처 제한
+
+        li style-src
+        p CSS 출처 제한
+
+        li img-src
+        p 이미지(favicon 포함) 출처 제한
+
+        li connect-src
+        p XHR, WebSocket, fetch(), #{'<a ping>'}, EventSource를 통해 연결할 수 있는 출처 제한 -- 제한된 경우 브라우저는 400 응답 코드를 생성
+
+        li font-src
+        p 웹 폰트(@font-face) 출처 제한
+
+        li object-src
+        p #{'<object>, <embed>, <applet>'}과 같은 플러그인 출처 제한
+
+        li media-src
+        p #{'<audio>, <video>, <track>'}과 같은 미디어 출처 제한
+
+        li frame-src
+        p 프레임 출처 제한. CSP Level 2에서 deprecated 상태로 변경됐고, 대신 child-src를 이용하라고 안내
+
+        li sandbox
+        p 페이지가 해당 #[+asA('https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox', 'sandbox 속성')]을 가진 iframe을 통해 로드된 것처럼 취급된다 -- 동일 출처 정책 적용, 팝업 제한, 플러그인 제한, 스크립트 실행 제한 등
+        p 샌드박스 환경에서 허용하고 싶은 것들은 플래그로 설정하면 된다 : allow-forms, allow-scripts, allow-popups 등
+        +asCode('text', 'sandbox directive 예') sandbox allow-forms allow-scripts;
+
+        li report-uri
+        p CSP로 리소스가 차단된 경우 POST 보고할 URI. CSP Level 3에서는 deprecated 상태로 변경됐고, report-to를 이용하라고 안내
+
+        li child-src
+        p 웹 워커, 페이지에 포함된 프레임 컨텐츠(#{'<frame>, <iframe>'}) 출처 제한
+
+        li form-action
+        p #{'<form>'} action으로 설정할 수 있는 출처 제한
+
+        li frame-ancestors
+        p 임베딩되는 리소스들(#{'<frame>, <iframe>, <object>, <embed>, <applet>'})에 대한 출처 제한. 이 directive 값을 'none'으로 설정하면 #[+asInlineCode('X-Frame-Options: DENY')] 헤더를 설정한 것과 거의 동등한 효과.
+        p 참고로 X-Frame-Options 헤더는 deprecated 상태이며, CSP 헤더를 이용할 것이 권장됨.
+
+        li plugin-types
+        p #{'<object>, <embed>, <applet>'}과 같은 플러그인 MIME 타입 제한
+
+        li manifest-src
+        p 웹앱 매니페스트 파일 출처 제한
+
+        li worker-src
+        p 웹 워커 출처 제한
+
+    h4 출처 목록
+    p "-src"로 끝나는 directive들은 모두 출처 목록을 값으로 가질 수 있다. 목록에 항목이 2개 이상인 경우, 공백 문자로 구별한다
+    +table()
+        +ths('Source Value', 'Example', 'Description')
+        +tds('*', 'img-src *', '모든 URL 허용. 단, 다음의 스킴들은 비허용 -- data:, blob:, filesystem:')
+        +tds("'none'", "object-src 'none'", "해당 리소스 전체 차단")
+        +tds("'self'", "script-src 'self'", "동일 출처(스킴, 호스트, 포트까지 포함) 로드 허용")
+        +tds("data:", "img-src 'self' data:", "data 스킴을 통한 로드 허용; 다른 스킴들(blob:, https: 등)도 이용 가능")
+        +tds("domain.example.com", "img-src domain.example.com", "지정 호스트 로드 허용 -- 스킴, 포트, 경로(prefix) 설정은 선택사항")
+        +tds("*.example.com", "img-src *.example.com", "지정 도메인의 모든 서브도메인 로드 허용")
+        +tds("'unsafe-inline'", "script-src 'unsafe-inline'", "HTML 인라인 스타일 요소, 인라인 스크립트 요소, 요소의 속성으로 설정된 javascript: URI 등 허용")
+        +tds("'unsafe-eval'", "script-src 'unsafe-eval'", "eval(), setImmediate(), window.execScript() 등을 이용한 코드 동적 실행 허용")
+        +tds("'sha256-'", "script-src 'sha256-xyz...'", "해시가 일치하는 경우에만 스크립트 및 CSS 실행 허용")
+        +tds("'nonce-'", "script-src 'nonce-rAnd0m'", "태그의 nonce 속성이 일치하는 경우에만 스크립트 및 CSS 실행 허용")
+        +tds("'strict-dynamic'", "script-src 'nonce-rAnd0m' 'strict-dynamic'", "해시 또는 nonce를 통해 명시적으로 허용한 스크립트들은 document.createElement('script') 등을 이용해 허용이 명시되지 않은 출처의 스크립트를 로드할 수 있도록 허용")
+        +tds("'unsafe-hashes'", "script-src 'unsafe-hashes' 'sha256-abc...'", "onclick과 같이 요소의 이벤트 핸들러 스크립트 실행 허용. 인라인 <script>와 javascript: 스킴에는 적용되지 않음")
+
+    h2 body
+    h3 제목과 단락
+    ul
+        li 제목(heading)은 그 수준에 따라 #{'<h1>'}(최상위 제목)부터 #{'<h6>'}(최하위 제목)까지 존재한다
+        li 텍스트 단락(paragraph)은 #{'<p>'} 태그를 이용해 구분한다
+
+    h3 하이퍼링크
+    ul
+        li #{'<a>'}(anchor) 태그는 서로 다른 페이지(리소스) 사이의 연결을 표시하는 요소로, 웹을 웹답게 만드는 핵심 요소다
+        li href 속성 : 이동할 위치나 주소
+        p # : 현재 또는 다른 문서의 특정 위치(id)로 이동하기 위한 프래그먼트(fragment) 식별자
+        ul
+            li 예를 들어 #{'href="#here"'}은 현재 페이지의 HTML 요소 중 id가 'here'인 것을 가리킨다
+            li 한편 # 또는 #top은 문서의 최상단을 가리킨다
+        li 링크를 이용해 이메일 작성으로 이동할 수 있다
+        +asCode('html') #{'<a href="mailto:id1@domain.com,id2@domain.com?cc=id3@domain.com,id4@domain.com&subject=mail%20subject&body=mail%20body">이메일 보내기</a>'}
+        |<a href="mailto:id1@domain.com,id2@domain.com?cc=id3@domain.com,id4@domain.com&subject=mail%20subject&body=mail%20body">이메일 보내기</a>
+        li target 속성 : _blank(새탭이나 새창에서 열기), _self, _parent, _top, custom_context_name
+        li download 속성을 이용해 리소스를 여는 대신 다운로드하도록 설정할 수 있다
+        li ping 속성을 이용해 링크 클릭을 추적 가능
+        li 한편 document.links 속성은 href 속성이 있는 a, area 요소 컬렉션을 반환한다
+
+    h3 텍스트 강조
+    ol
+        li #{'<strong>'} : 중요한 텍스트. 굵게 표시
+        li #{'<em>'} : 강조된 단어. 기울여 표시
+        p 예를 들어, 구어에서 특정 단어를 강조하여 비꼬는 뉘앙스를 주는 경우, 해당 단어를 #{'<em>'} 태그로 감싸기에 적합하다
+        li #{'<mark>'} : 형광펜으로 눈에 띄게 표시
+        li #{'<del>'} : 취소선
+        li #{'<sub>'} : 아랫첨자
+        li #{'<sup>'} : 윗첨자
+
+    h3 표
+    ol
+        li table : (caption) + (thead) + tbody + (tfoot)
+        p tbody 외에는 모두 선택 사항이다. tbody는 HTML로 명시하지 않아도 자동으로 추가된다
+        li thead, tbody, tfoot는 tr들로 이루어진다
+        li tr은 th와 td들로 이루어진다
+        li colgroup/rowgroup을 이용해 열/행들을 논리적으로 분리할 수 있다
+            +asA('https://mdn.github.io/learning-area/html/tables/advanced/items-sold-scope.html', '예시 테이블')
+
+    h3 리스트
+    ul
+        li 번호를 매기지 않은 리스트 (unordered list) : #{'<ul>'}
+        li 번호를 매긴 리스트 : #{'<ol>'}
             ul
-                li width=device-width : 웹사이트의 너비는 기기의 것과 동일하다
-                li initial-scale=1 : 처음부터 크기 조정을 할 필요가 없다
+                li type 속성을 이용해 1, 2, 3, ...이 아닌 다른 문자들로 순서를 매길 수 있다
+                li "1"(default), "A", "a", "I"(로마숫자), "i"
+        li 리스트 항목(list item) : #{'<li>'}
+        li 리스트를 중첩하려는 경우, #{'<li>'} 안에 포함하는 것이 정의상 적절하다
+            p 리스트의 자식 요소로는 #{'<li>'}만 있어야 한다
 
-            h3 Description
-            p 문서에 대한 짧은 설명으로, 검색 엔진의 검색 결과에 이용된다. 이전에는 키워드 설정도 따로 존재했지만, 스팸이 많아 더 이상 사용되지 않는다
-            +asCode('html') #{'<meta name="description" content="문서에 대한 짧은 요약">'}
+    h3 범용 컨테이너
+    ul
+        li div : 가로 100%를 점유하는 block element 대표
+        li span : 가로 공간이 여유롭다면 병렬로 표시되는 inline element 대표
 
-            h3 Open Graph Protocol
-            p #[+asA('https://ogp.me/', '공식 사이트')]. 페이지에 대해 보다 풍부한 메타데이터를 일관적으로 외부에 제공하기 위하여 Facebook이 만든 포로토콜. 아래와 같은 정보를 갖춘 페이지 링크를 Facebook 안에 공유하면, 단순한 텍스트 대신 페이지 요약이 함께 표시된다
-            +asCode('html').
-                #{'<meta property="og:image" content="..." />'}
-                #{'<meta property="og:description" content="..." />'}
-                #{'<meta property="og:title" content="..." />'}
-            +w3img('https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML/facebook-output.png')
+    h3 주석
+    p #{'<!-- 주석 -->'}
 
-            h3 Stylesheet link
-            p 스타일을 먼저 지시함으로써 렌더링한 요소를 다시 그리는 작업을 피할 수 있다. CSS의 다운로드 및 구문 해석이 완료되기 전까지 렌더링이 차단되므로, 첫 화면에서 미사용되는 스타일이 많을수록 렌더링까지의 지연 시간이 늘어날 수 있다
-            +asCode('html') #{'<link rel="stylesheet" href="my-css-file.css" />'}
-
-            h3 Icon
-            +asCode('html').
-                #{'<link rel="icon" href="/imgs/favicon.png"/>'}
-                ↑ /favicon.ico 대신 사용할 즐겨찾기 아이콘 지정
-
-                #{'<link rel="apple-touch-icon" href="/imgs/iOS-icon.png"/>'}
-                ↑ 비표준. 사이트를 iOS 기기의 홈 화면에 추가한 경우의 아이콘
-
-            h3 Script
-            p 스크립트는 기본적으로 CSS와 마찬가지로 다운로드 및 해석되기 전까지 렌더링이 차단되고, 이에 더해 다른 리소스의 다운로드까지 중지된다. 이러한 지연을 방지하기 위한 속성이 존재한다
+    h3 이미지
+    ul
+        li 이미지 렌더링으로 인해 레이아웃이 도중에 변경되면 CLS(Cumulative Layout Shift) 점수가 나빠지므로, 아래와 같은 설정이 권장된다
             ul
-                li defer : HTML 렌더링을 차단하지 않는다. 스크립트는 렌더링이 완료된 후 실행된다
-                li async : 스크립트를 다운로드하는 동안은 HTML 렌더링을 차단하지 않는다. 다운로드 후 스크립트 실행 중에는 차단한다
-                li 위 속성들은 외부 스크립트를 사용하는 경우 적용 가능하며, 인라인 스크립트에는 적용되지 않는다
-            p 다른 요소의 속성에 스크립트를 작성할 수도 있다
+                li img 태그의 width, height에는 원본 크기를 설정
+                li CSS로 #[+asInlineCode('img { max-width: 100%; height: auto; }', 'css')] 설정
+                    p height가 어떻게 결정되는가에 대해선 걱정하지 않아도 된다. #[+asA('https://caniuse.com/mdn-html_elements_img_aspect_ratio_computed_from_attributes', '2019년부터')] 브라우저들은 width와 height를 이용해 계산한 종횡비를 이용해 자리를 차지하게 해준다
+        li 모든 이미지에 loading="lazy"를 설정하는 것이 단순하고 매력적일 수 있으나, 좋은 LCP(Largest Contentful Paint) 점수를 위해 최초 뷰포트에 표시될 가능성이 있는 이미지들에는 설정하지 않는 것이 좋다 -- 특히 쇼핑몰과 같은 경우
+            p 특별히 중요한 이미지에는 loading="eager", fetchpriority="high" 설정 가능
+        li SVG
             ul
-                li 예시1.
-                    +codeBtn('/Repositories/Single/202410/29-1355.html', 'HTML')
-                    +codeBtn('/Repositories/Single/202410/29-1355.html', 'nohighlight') Show
-                li 예시2.
-                    +codeBtn('/Repositories/Single/202410/29-1358.html', 'HTML')
-                    +codeBtn('/Repositories/Single/202410/29-1358.html', 'nohighlight') Show
-
-            h3 Speculative loading
+                li 벡터 이미지
+                li 아이콘처럼 요소의 대부분이 선과 점으로 이루어진 이미지에 적합
+                li 복잡한 이미지는 끝까지 그리는 데 시간이 오래 걸릴 수 있다
+        li GIF
             ul
-                li #{'<link rel="preconnect">'}
-                p 추후 사용될 가능성이 높으므로, DNS 조회 ~ TCP 연결 ~ TLS 연결 미리 수행
-                +asCode('HTML') #{'<link rel="preconnect" href="https://example.com" />'}
-                +asCode('HTTP', 'HTTP 헤더로도 지시 가능') #{'Link: <https://example.com>; rel="preconnect"'}
-
-                li #{'<link rel="dns-prefetch">'}
-                p 추후 사용될 가능성이 있으므로, DNS 조회 미리 수행
-                +asCode('HTML') #{'<link rel="dns-prefetch" href="https://example.com" />'}
-
-                li #{'<link rel="preload">'}
-                p 이 페이지에서 반드시 사용되는 리소스 중, 높은 우선순위의 것을 미리 가져오기 후 캐싱
-                +asCode('HTML').
-                    #{'<link rel="preload" href="main.js" as="script" />'}
-                    #{'<link rel="preload" href="https://www.example.com/fonts/xxx.woff2" as="font" type="font/woff2" crossorigin />'}
-                +asCode('HTTP', 'HTTP 헤더로도 지시 가능') #{'Link: <https://www.example.com/fonts/xxx.woff2>; rel="preload"'}
-
-                li #{'<link rel="prefetch">'}
-                p preload보다는 낮은 우선순위로 리소스 가져오기 후 캐싱
-
-                li #{'<link rel="modulepreload">'}
-                p 이 페이지에서 반드시 사용되는 모듈 중, 높은 우선순위의 것을 미리 가져와 파싱 및 컴파일까지 수행
-
-            h3 Base URL
-            p 모든 상대경로에 대한 기본 주소를 지시한다
-            +asCode('html') #{'<base href="https://example.com">'}
-            p 한 가지 문제는, #{'<a href="#ref">를 <a href="https://example.com#ref">'}로 변경해 버린다는 것
-
-            h3 CSP; Content-Security-Policy
+                li 무손실 래스터 이미지 : 256색상 초과 시 색상은 일부 뭉개짐
+                li 여러 프레임을 지원하므로 애니메이션 표현 가능
+                li 현재로써는 모든 사용 사례에서 다른 포맷들보다 비효율적
+        li PNG
             ul
-                li 참고 자료 : #[+asA('https://content-security-policy.com')]
-                p CSP에는 버전이 존재하므로, 오래된 브라우저는 최신 기능을 지원하지 않을 수 있다. 위 사이트에 CSP 버전 별로 대응하는 브라우저 버전들이 나열되어 있다
-
-                li 원래는 HTTP 응답 헤더에 이용됐지만, #{'<meta>'} 태그로도 설정 가능하다
-                p 일부 directive들(frame-ancestors, report-uri, sandbox 등)은 헤더로만 설정 가능하다
-                +asCode('text', '페이스북 응답 헤더 예').
-                    content-security-policy:
-                        default-src data: blob: 'self' https://*.fbsbx.com 'unsafe-inline' *.facebook.com 'unsafe-eval' *.fbcdn.net;
-                        script-src *.facebook.com *.fbcdn.net *.facebook.net *.google-analytics.com *.google.com 127.0.0.1:* 'unsafe-inline' 'unsafe-eval' blob: data: 'self' connect.facebook.net;style-src fonts.googleapis.com *.fbcdn.net data: *.facebook.com 'unsafe-inline';
-                        connect-src *.facebook.com facebook.com *.fbcdn.net *.facebook.net wss://*.facebook.com:* wss://*.whatsapp.com:* wss://*.fbcdn.net attachment.fbsbx.com ws://localhost:* blob: *.cdninstagram.com 'self' wss://gateway.facebook.com wss://edge-chat.facebook.com wss://snaptu-d.facebook.com wss://kaios-d.facebook.com/ v.whatsapp.net *.fbsbx.com *.fb.com;
-                        font-src data: *.gstatic.com *.facebook.com *.fbcdn.net *.fbsbx.com;
-                        img-src *.fbcdn.net *.facebook.com data: https://*.fbsbx.com *.tenor.co media.tenor.com facebook.com *.cdninstagram.com fbsbx.com fbcdn.net *.giphy.com connect.facebook.net *.carriersignal.info blob: android-webview-video-poster: googleads.g.doubleclick.net www.googleadservices.com *.whatsapp.net *.fb.com *.oculuscdn.com;
-                        media-src *.cdninstagram.com blob: *.fbcdn.net *.fbsbx.com www.facebook.com *.facebook.com https://*.giphy.com data:;
-                        frame-src *.doubleclick.net *.google.com *.facebook.com www.googleadservices.com *.fbsbx.com fbsbx.com data: www.instagram.com *.fbcdn.net https://paywithmybank.com;
-                        worker-src blob: *.facebook.com data:;
-                        block-all-mixed-content;
-                        upgrade-insecure-requests;
-                +asCode('HTML', '<meta> 태그 예').
-                    #{`<meta http-equiv="Content-Security-Policy" content="default-src 'self'">`}
-
-            div
-                h4 Directive
-                p CSP 값은 1개 이상의 지시문(directive)으로 구성되고, 위 예시와 같이 각 directive들은 ;으로 구별한다
-                ul
-                    li default-src
-                    p 명시적으로 설정하지 않은 리소스 획득 정책에 대한 기본값으로 이용된다. JavaScript, 이미지, CSS, 폰트, XHR 등이 이에 포함되지만, 모든 것에 대한 기본값으로 이용되는 것은 아니다
-
-                    li script-src
-                    p JavaScript 및 웹 어셈블리 출처 제한
-
-                    li style-src
-                    p CSS 출처 제한
-
-                    li img-src
-                    p 이미지(favicon 포함) 출처 제한
-
-                    li connect-src
-                    p XHR, WebSocket, fetch(), #{'<a ping>'}, EventSource를 통해 연결할 수 있는 출처 제한 -- 제한된 경우 브라우저는 400 응답 코드를 생성
-
-                    li font-src
-                    p 웹 폰트(@font-face) 출처 제한
-
-                    li object-src
-                    p #{'<object>, <embed>, <applet>'}과 같은 플러그인 출처 제한
-
-                    li media-src
-                    p #{'<audio>, <video>, <track>'}과 같은 미디어 출처 제한
-
-                    li frame-src
-                    p 프레임 출처 제한. CSP Level 2에서 deprecated 상태로 변경됐고, 대신 child-src를 이용하라고 안내
-
-                    li sandbox
-                    p 페이지가 해당 #[+asA('https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox', 'sandbox 속성')]을 가진 iframe을 통해 로드된 것처럼 취급된다 -- 동일 출처 정책 적용, 팝업 제한, 플러그인 제한, 스크립트 실행 제한 등
-                    p 샌드박스 환경에서 허용하고 싶은 것들은 플래그로 설정하면 된다 : allow-forms, allow-scripts, allow-popups 등
-                    +asCode('text', 'sandbox directive 예') sandbox allow-forms allow-scripts;
-
-                    li report-uri
-                    p CSP로 리소스가 차단된 경우 POST 보고할 URI. CSP Level 3에서는 deprecated 상태로 변경됐고, report-to를 이용하라고 안내
-
-                    li child-src
-                    p 웹 워커, 페이지에 포함된 프레임 컨텐츠(#{'<frame>, <iframe>'}) 출처 제한
-
-                    li form-action
-                    p #{'<form>'} action으로 설정할 수 있는 출처 제한
-
-                    li frame-ancestors
-                    p 임베딩되는 리소스들(#{'<frame>, <iframe>, <object>, <embed>, <applet>'})에 대한 출처 제한. 이 directive 값을 'none'으로 설정하면 #[+asInlineCode('X-Frame-Options: DENY')] 헤더를 설정한 것과 거의 동등한 효과.
-                    p 참고로 X-Frame-Options 헤더는 deprecated 상태이며, CSP 헤더를 이용할 것이 권장됨.
-
-                    li plugin-types
-                    p #{'<object>, <embed>, <applet>'}과 같은 플러그인 MIME 타입 제한
-
-                    li manifest-src
-                    p 웹앱 매니페스트 파일 출처 제한
-
-                    li worker-src
-                    p 웹 워커 출처 제한
-
-                h4 출처 목록
-                p "-src"로 끝나는 directive들은 모두 출처 목록을 값으로 가질 수 있다. 목록에 항목이 2개 이상인 경우, 공백 문자로 구별한다
-                +table()
-                    +ths('Source Value', 'Example', 'Description')
-                    +tds('*', 'img-src *', '모든 URL 허용. 단, 다음의 스킴들은 비허용 -- data:, blob:, filesystem:')
-                    +tds("'none'", "object-src 'none'", "해당 리소스 전체 차단")
-                    +tds("'self'", "script-src 'self'", "동일 출처(스킴, 호스트, 포트까지 포함) 로드 허용")
-                    +tds("data:", "img-src 'self' data:", "data 스킴을 통한 로드 허용; 다른 스킴들(blob:, https: 등)도 이용 가능")
-                    +tds("domain.example.com", "img-src domain.example.com", "지정 호스트 로드 허용 -- 스킴, 포트, 경로(prefix) 설정은 선택사항")
-                    +tds("*.example.com", "img-src *.example.com", "지정 도메인의 모든 서브도메인 로드 허용")
-                    +tds("'unsafe-inline'", "script-src 'unsafe-inline'", "HTML 인라인 스타일 요소, 인라인 스크립트 요소, 요소의 속성으로 설정된 javascript: URI 등 허용")
-                    +tds("'unsafe-eval'", "script-src 'unsafe-eval'", "eval(), setImmediate(), window.execScript() 등을 이용한 코드 동적 실행 허용")
-                    +tds("'sha256-'", "script-src 'sha256-xyz...'", "해시가 일치하는 경우에만 스크립트 및 CSS 실행 허용")
-                    +tds("'nonce-'", "script-src 'nonce-rAnd0m'", "태그의 nonce 속성이 일치하는 경우에만 스크립트 및 CSS 실행 허용")
-                    +tds("'strict-dynamic'", "script-src 'nonce-rAnd0m' 'strict-dynamic'", "해시 또는 nonce를 통해 명시적으로 허용한 스크립트들은 document.createElement('script') 등을 이용해 허용이 명시되지 않은 출처의 스크립트를 로드할 수 있도록 허용")
-                    +tds("'unsafe-hashes'", "script-src 'unsafe-hashes' 'sha256-abc...'", "onclick과 같이 요소의 이벤트 핸들러 스크립트 실행 허용. 인라인 <script>와 javascript: 스킴에는 적용되지 않음")
-
-        h2 body
-        div
-            h3 제목과 단락
+                li 무손실 래스터 이미지 : 256; 트루컬러에선 1600만 색상 이하
+                li 완전 투명/불투명 2가지만 지원하는 GIF와 다르게 256단계의 알파 채널 지원
+                li 반투명한 이미지가 필요한 경우가 아니라면 PNG는 대부분의 경우에서 부적합하며, 반투명 이미지도 WebP와 비교해볼 것
+                li PNG와 호환되는 APNG는 GIF처럼 애니메이션을 지원한다 -- APNG를 지원하지 않는 다수의 디코더들도 첫 프레임을 PNG로 해석하는 것은 가능
+        li JPEG
             ul
-                li 제목(heading)은 그 수준에 따라 #{'<h1>'}(최상위 제목)부터 #{'<h6>'}(최하위 제목)까지 존재한다
-                li 텍스트 단락(paragraph)은 #{'<p>'} 태그를 이용해 구분한다
-
-            h3 하이퍼링크
+                li 손실 래스터 이미지 : 픽셀이 아닌 블록 단위로 인코딩하고, 시각적으로 인지하기 어려운 차이를 뭉개 크기를 효율적으로 줄인다
+                li 베이스라인 JPEG : 전송에 따라 이미지를 위에서 아래로 차례대로 렌더링
+                li 프로그레시브 JPEG : 전체 크기 이미지가 서서히 렌더링. 베이스라인 JPEG보다 크기도 작은 반면, 디코딩 연산은 좀 더 많이 필요
+                li JPEG 압축은 상당히 추상화되어, 많은 도구들은 0~100 사이의 정수 하나로 품질을 조절할 수 있게 해준다
+        li WebP
             ul
-                li #{'<a>'}(anchor) 태그는 서로 다른 페이지(리소스) 사이의 연결을 표시하는 요소로, 웹을 웹답게 만드는 핵심 요소다
-                li href 속성 : 이동할 위치나 주소
-                p # : 현재 또는 다른 문서의 특정 위치(id)로 이동하기 위한 프래그먼트(fragment) 식별자
-                ul
-                    li 예를 들어 #{'href="#here"'}은 현재 페이지의 HTML 요소 중 id가 'here'인 것을 가리킨다
-                    li 한편 # 또는 #top은 문서의 최상단을 가리킨다
-                li 링크를 이용해 이메일 작성으로 이동할 수 있다
-                +asCode('html') #{'<a href="mailto:id1@domain.com,id2@domain.com?cc=id3@domain.com,id4@domain.com&subject=mail%20subject&body=mail%20body">이메일 보내기</a>'}
-                |<a href="mailto:id1@domain.com,id2@domain.com?cc=id3@domain.com,id4@domain.com&subject=mail%20subject&body=mail%20body">이메일 보내기</a>
-                li target 속성 : _blank(새탭이나 새창에서 열기), _self, _parent, _top, custom_context_name
-                li download 속성을 이용해 리소스를 여는 대신 다운로드하도록 설정할 수 있다
-                li ping 속성을 이용해 링크 클릭을 추적 가능
-                li 한편 document.links 속성은 href 속성이 있는 a, area 요소 컬렉션을 반환한다
-
-            h3 텍스트 강조
-            ol
-                li #{'<strong>'} : 중요한 텍스트. 굵게 표시
-                li #{'<em>'} : 강조된 단어. 기울여 표시
-                p 예를 들어, 구어에서 특정 단어를 강조하여 비꼬는 뉘앙스를 주는 경우, 해당 단어를 #{'<em>'} 태그로 감싸기에 적합하다
-                li #{'<mark>'} : 형광펜으로 눈에 띄게 표시
-                li #{'<del>'} : 취소선
-                li #{'<sub>'} : 아랫첨자
-                li #{'<sup>'} : 윗첨자
-
-            h3 표
-            ol
-                li table : (caption) + (thead) + tbody + (tfoot)
-                p tbody 외에는 모두 선택 사항이다. tbody는 HTML로 명시하지 않아도 자동으로 추가된다
-                li thead, tbody, tfoot는 tr들로 이루어진다
-                li tr은 th와 td들로 이루어진다
-                li colgroup/rowgroup을 이용해 열/행들을 논리적으로 분리할 수 있다
-                    +asA('https://mdn.github.io/learning-area/html/tables/advanced/items-sold-scope.html', '예시 테이블')
-
-            h3 리스트
+                li (무)손실 래스터 이미지 : Google에서 개발한 포맷으로, JPEG, PNG, GIF 모두를 대체 가능
+                li 블록 예측 : 각 블록을 모두 데이터에 나열하는 대신, 블록 예측 알고리즘과 각 블록의 오차로 표현함으로써 압축 효율을 높인다
+                li 적응형 블록 양자화 : 모든 블록을 동일한 수준으로 뭉개지 않고, 이미지를 시각적으로 유사한 세그먼트로 쪼개 독립적으로 압축하여 품질을 높인다
+                li 공식 CLI 도구도 존재 : #[+asA('https://developers.google.com/speed/webp/docs/using')]
+        li AVIF
             ul
-                li 번호를 매기지 않은 리스트 (unordered list) : #{'<ul>'}
-                li 번호를 매긴 리스트 : #{'<ol>'}
-                    ul
-                        li type 속성을 이용해 1, 2, 3, ...이 아닌 다른 문자들로 순서를 매길 수 있다
-                        li "1"(default), "A", "a", "I"(로마숫자), "i"
-                li 리스트 항목(list item) : #{'<li>'}
-                li 리스트를 중첩하려는 경우, #{'<li>'} 안에 포함하는 것이 정의상 적절하다
-                    p 리스트의 자식 요소로는 #{'<li>'}만 있어야 한다
-
-            h3 범용 컨테이너
-            ul
-                li div : 가로 100%를 점유하는 block element 대표
-                li span : 가로 공간이 여유롭다면 병렬로 표시되는 inline element 대표
-
-            h3 주석
-            p #{'<!-- 주석 -->'}
-
-            h3 이미지
-            ul
-                li 이미지 렌더링으로 인해 레이아웃이 도중에 변경되면 CLS(Cumulative Layout Shift) 점수가 나빠지므로, 아래와 같은 설정이 권장된다
-                    ul
-                        li img 태그의 width, height에는 원본 크기를 설정
-                        li CSS로 #[+asInlineCode('img { max-width: 100%; height: auto; }', 'css')] 설정
-                            p height가 어떻게 결정되는가에 대해선 걱정하지 않아도 된다. #[+asA('https://caniuse.com/mdn-html_elements_img_aspect_ratio_computed_from_attributes', '2019년부터')] 브라우저들은 width와 height를 이용해 계산한 종횡비를 이용해 자리를 차지하게 해준다
-                li 모든 이미지에 loading="lazy"를 설정하는 것이 단순하고 매력적일 수 있으나, 좋은 LCP(Largest Contentful Paint) 점수를 위해 최초 뷰포트에 표시될 가능성이 있는 이미지들에는 설정하지 않는 것이 좋다 -- 특히 쇼핑몰과 같은 경우
-                    p 특별히 중요한 이미지에는 loading="eager", fetchpriority="high" 설정 가능
-                li SVG
-                    ul
-                        li 벡터 이미지
-                        li 아이콘처럼 요소의 대부분이 선과 점으로 이루어진 이미지에 적합
-                        li 복잡한 이미지는 끝까지 그리는 데 시간이 오래 걸릴 수 있다
-                li GIF
-                    ul
-                        li 무손실 래스터 이미지 : 256색상 초과 시 색상은 일부 뭉개짐
-                        li 여러 프레임을 지원하므로 애니메이션 표현 가능
-                        li 현재로써는 모든 사용 사례에서 다른 포맷들보다 비효율적
-                li PNG
-                    ul
-                        li 무손실 래스터 이미지 : 256; 트루컬러에선 1600만 색상 이하
-                        li 완전 투명/불투명 2가지만 지원하는 GIF와 다르게 256단계의 알파 채널 지원
-                        li 반투명한 이미지가 필요한 경우가 아니라면 PNG는 대부분의 경우에서 부적합하며, 반투명 이미지도 WebP와 비교해볼 것
-                        li PNG와 호환되는 APNG는 GIF처럼 애니메이션을 지원한다 -- APNG를 지원하지 않는 다수의 디코더들도 첫 프레임을 PNG로 해석하는 것은 가능
-                li JPEG
-                    ul
-                        li 손실 래스터 이미지 : 픽셀이 아닌 블록 단위로 인코딩하고, 시각적으로 인지하기 어려운 차이를 뭉개 크기를 효율적으로 줄인다
-                        li 베이스라인 JPEG : 전송에 따라 이미지를 위에서 아래로 차례대로 렌더링
-                        li 프로그레시브 JPEG : 전체 크기 이미지가 서서히 렌더링. 베이스라인 JPEG보다 크기도 작은 반면, 디코딩 연산은 좀 더 많이 필요
-                        li JPEG 압축은 상당히 추상화되어, 많은 도구들은 0~100 사이의 정수 하나로 품질을 조절할 수 있게 해준다
-                li WebP
-                    ul
-                        li (무)손실 래스터 이미지 : Google에서 개발한 포맷으로, JPEG, PNG, GIF 모두를 대체 가능
-                        li 블록 예측 : 각 블록을 모두 데이터에 나열하는 대신, 블록 예측 알고리즘과 각 블록의 오차로 표현함으로써 압축 효율을 높인다
-                        li 적응형 블록 양자화 : 모든 블록을 동일한 수준으로 뭉개지 않고, 이미지를 시각적으로 유사한 세그먼트로 쪼개 독립적으로 압축하여 품질을 높인다
-                        li 공식 CLI 도구도 존재 : #[+asA('https://developers.google.com/speed/webp/docs/using')]
-                li AVIF
-                    ul
-                        li (무)손실 래스터 이미지 : 2020년부터 브라우저 지원이 시작된 포맷으로, WebP 대체 가능
-                        li 최신 포맷이기 때문에 AVIF 이미지가 가장 효율적이더라도, 다른 이미지 포맷 역시 같이 제공할 필요가 있다
+                li (무)손실 래스터 이미지 : 2020년부터 브라우저 지원이 시작된 포맷으로, WebP 대체 가능
+                li 최신 포맷이기 때문에 AVIF 이미지가 가장 효율적이더라도, 다른 이미지 포맷 역시 같이 제공할 필요가 있다
 
     h1 Form
-    div
-        h2 #{'<form>'}
+    h2 #{'<form>'}
+    ul
+        li form은 HTML 페이지로부터 데이터를 전송하기 위한 정형화된 틀이다. form 내부는 input 태그들로 채워진다
+
+        li id 속성
+        p 특정 form에 대한 입력 요소가 해당 form 외부에 정의될 수도 있다. 이 경우 외부 요소의 form 속성에 연결할 form의 id를 설정한다
+
+        li action 속성
+        p form을 제출할 주소를 지정한다
+
+        li target 속성
+        p 응답을 어디서 표시할 것인지 지정한다
         ul
-            li form은 HTML 페이지로부터 데이터를 전송하기 위한 정형화된 틀이다. form 내부는 input 태그들로 채워진다
+            li _self (기본값) : 현재 브라우징 컨텍스트에서 로드한다
+            li _blank : 이름 없는 새 브라우징 컨텍스트에서 로드한다
+            li _parent : 부모 브라우징 컨텍스트에서 로드한다 -- 없으면 _self로 작동
+            li _top : 최상위 부모 브라우징 컨텍스트에서 로드한다 -- 없으면 _self로 작동
 
-            li id 속성
-            p 특정 form에 대한 입력 요소가 해당 form 외부에 정의될 수도 있다. 이 경우 외부 요소의 form 속성에 연결할 form의 id를 설정한다
-
-            li action 속성
-            p form을 제출할 주소를 지정한다
-
-            li target 속성
-            p 응답을 어디서 표시할 것인지 지정한다
-            ul
-                li _self (기본값) : 현재 브라우징 컨텍스트에서 로드한다
-                li _blank : 이름 없는 새 브라우징 컨텍스트에서 로드한다
-                li _parent : 부모 브라우징 컨텍스트에서 로드한다 -- 없으면 _self로 작동
-                li _top : 최상위 부모 브라우징 컨텍스트에서 로드한다 -- 없으면 _self로 작동
-
-            li method 속성
-            p form을 제출할 방법을 지정한다
-            ul
-                li get : URL 쿼리 파라미터로 전달
-                li post : HTTP body로 전달
-                li dialog : #{'<dialog>'} 안에 form을 정의한 경우, dialog를 닫고 submit 이벤트를 발생한다
-
-            li form 안에 다른 form을 포함하지 말아야 한다
-
-        h2 #{'<fieldset>, <legend>'}
-        p 관련된 입력 요소들을 fieldset 태그를 이용해 그룹으로 나누면 스타일 지정하기도 편하고, 의미적인 가독성도 더 좋다. legend 태그를 fieldset의 첫 번째 자식으로 둠으로써, 해당 그룹이 무엇을 위해 존재하는지 명시할 수 있다.
-        p 예를 들어, legend 다음에 (라디오 버튼, label) 쌍들이 다음과 같이 나열되어 있을 때,
-        +asCode('HTML').
-            #{'<fieldset>'}
-            #{'    <legend>음료수 크기</legend>'}
-
-            #{'    <input type="radio" name="size" id="size_1" value="small" />'}
-            #{'    <label for="size_1">작음</label>'}
-
-            #{'    <input type="radio" name="size" id="size_2" value="medium" />'}
-            #{'    <label for="size_2">보통</label>'}
-
-            #{'    <input type="radio" name="size" id="size_3" value="large" />'}
-            #{'    <label for="size_3">큼</label>'}
-            #{'</fieldset>'}
-        p 스크린 리더는 각 입력 요소를 "음료수 크기 작음", "음료수 크기 보통", "음료수 크기 큼"으로 읽는다
-
-        h2 #{'<label>'}
+        li method 속성
+        p form을 제출할 방법을 지정한다
         ul
-            li label 태그는 특정 input 요소가 무엇에 대한 입력을 받기 위한 것인지를 표현한다. 물론 span과 같은 요소를 이용해서도 같은 작업을 할 수 있지만, label을 사용함으로써 아래의 이점을 얻을 수 있다
-            ul
-                li 각 label은 특정 input 요소와 1:1 관계를 가진다 (그렇게 작성해야 한다)
-                li 라디오 버튼을 포함한 일부 input 요소에 대한 확장을 제공한다 -- label을 클릭하면 input을 클릭한 것과 같은 효과를 가진다
-                li 스크린 리더와 같은 접근성 도구도 이해할 수 있다
-            li label 태그 안에 input 태그를 직접 둬 1:1 관계를 정의하는 것도 가능하지만, 둘을 병렬로 정의하고 label의 for 속성으로 input의 id를 설정하는 것이 권장된다
+            li get : URL 쿼리 파라미터로 전달
+            li post : HTTP body로 전달
+            li dialog : #{'<dialog>'} 안에 form을 정의한 경우, dialog를 닫고 submit 이벤트를 발생한다
 
-        h2 #{'<input>'}
+        li form 안에 다른 form을 포함하지 말아야 한다
+
+    h2 #{'<fieldset>, <legend>'}
+    p 관련된 입력 요소들을 fieldset 태그를 이용해 그룹으로 나누면 스타일 지정하기도 편하고, 의미적인 가독성도 더 좋다. legend 태그를 fieldset의 첫 번째 자식으로 둠으로써, 해당 그룹이 무엇을 위해 존재하는지 명시할 수 있다.
+    p 예를 들어, legend 다음에 (라디오 버튼, label) 쌍들이 다음과 같이 나열되어 있을 때,
+    +asCode('HTML').
+        #{'<fieldset>'}
+        #{'    <legend>음료수 크기</legend>'}
+
+        #{'    <input type="radio" name="size" id="size_1" value="small" />'}
+        #{'    <label for="size_1">작음</label>'}
+
+        #{'    <input type="radio" name="size" id="size_2" value="medium" />'}
+        #{'    <label for="size_2">보통</label>'}
+
+        #{'    <input type="radio" name="size" id="size_3" value="large" />'}
+        #{'    <label for="size_3">큼</label>'}
+        #{'</fieldset>'}
+    p 스크린 리더는 각 입력 요소를 "음료수 크기 작음", "음료수 크기 보통", "음료수 크기 큼"으로 읽는다
+
+    h2 #{'<label>'}
+    ul
+        li label 태그는 특정 input 요소가 무엇에 대한 입력을 받기 위한 것인지를 표현한다. 물론 span과 같은 요소를 이용해서도 같은 작업을 할 수 있지만, label을 사용함으로써 아래의 이점을 얻을 수 있다
         ul
-            li name 속성
-            p 서버에 제출할 데이터의 이름을 지정한다
+            li 각 label은 특정 input 요소와 1:1 관계를 가진다 (그렇게 작성해야 한다)
+            li 라디오 버튼을 포함한 일부 input 요소에 대한 확장을 제공한다 -- label을 클릭하면 input을 클릭한 것과 같은 효과를 가진다
+            li 스크린 리더와 같은 접근성 도구도 이해할 수 있다
+        li label 태그 안에 input 태그를 직접 둬 1:1 관계를 정의하는 것도 가능하지만, 둘을 병렬로 정의하고 label의 for 속성으로 input의 id를 설정하는 것이 권장된다
 
-            li value 속성
-            p 서버에 제출할 데이터의 값을 지정한다 -- 보통 사용자의 입력에 의해 변경된다
+    h2 #{'<input>'}
+    ul
+        li name 속성
+        p 서버에 제출할 데이터의 이름을 지정한다
 
-            li autofocus 속성
-            p 문서 내에 하나만 설정해야 하는 속성으로, 페이지 로드 시 자동으로 포커스를 가져갈 요소를 지정한다
+        li value 속성
+        p 서버에 제출할 데이터의 값을 지정한다 -- 보통 사용자의 입력에 의해 변경된다
 
-            li disabled 속성
-            p 사용자가 해당 요소에 데이터를 입력할 수 없게 한다
+        li autofocus 속성
+        p 문서 내에 하나만 설정해야 하는 속성으로, 페이지 로드 시 자동으로 포커스를 가져갈 요소를 지정한다
 
-            li required 속성
-            p form 제출 시 값이 설정되어 있지 않으면 브라우저에서 알림을 보여준다
+        li disabled 속성
+        p 사용자가 해당 요소에 데이터를 입력할 수 없게 한다
 
-            li pattern 속성
-            p 입력 텍스트가 지정한 정규식을 만족하는지 검사하고, 만족하지 않는 경우 form 제출 시 알림을 보여준다
+        li required 속성
+        p form 제출 시 값이 설정되어 있지 않으면 브라우저에서 알림을 보여준다
 
-            li type 속성
-            p 어떤 종류의 데이터를 입력받는지 지정한다. 브라우저들은 전용 UI를 이용해 이를 표현하고, 가상 키보드의 경우 키보드의 레이아웃도 이에 맞춰 변경해기도 한다. type에 따라 추가 속성(min, max 등)들이 지원되기도 한다.
-            ul
-                li text : 한 줄짜리 텍스트. 줄바꿈 문자를 포함할 수 없다
+        li pattern 속성
+        p 입력 텍스트가 지정한 정규식을 만족하는지 검사하고, 만족하지 않는 경우 form 제출 시 알림을 보여준다
 
-                li password : text와 유사하지만, 내용을 *과 같이 검열하여 표시한다
-
-                li search : text와 유사하지만, 다음과 같은 차이점이 보일 수 있다
-                ul
-                    li 입력한 전체 내용을 지울 수 있는 x 아이콘 표시
-                    li 가상 키보드 Enter 위치에 검색 아이콘 표시
-                    li 검색 이력 저장 -- 자동 완성 제공
-
-                li tel : 전화번호를 입력받을 때 사용
-                p 기본적으로 숫자 가상 키보드가 표시되는데, 전화번호 형식은 국가마다 다르기 때문에 임의 문자 입력을 허용한다
-
-                li number : 숫자를 입력받을 때 사용
-                    ul
-                        li 기본적으로 숫자 가상 키보드가 표시된다
-                        li 숫자를 표현하지 않는 문자의 입력은 허용되지 않는다
-                        li 소수를 입력하려면 step="any" 또는 step="0.01" 같이 설정해야 한다
-                        li 브라우저에서 값의 증감을 위한 UI 화살표를 보여주는데, 이러한 UI가 필요 없는 경우 type="text" inputmode="numeric"를 설정하는 것이 좋다
-
-                li range : 지정한 범위의 숫자 중 하나만 선택 가능한 슬라이더를 표시
-                p 현재 선택 중인 값이 무엇인지 보여주지 않는다는 점은 단점 중 하나
-
-                li checkbox : 동일 name 속성에 대하여 0개 이상의 값을 선택 가능할 때 사용
-
-                li radio : 동일 name 속성에 대하여 최대 1개의 값만 선택 가능할 때 사용
-
-                li submit : form에 채워진 내용물을 action에 제출하는 버튼
-                p #{'<input type="submit"> 대신 <button type="submit">을 이용하는 게 스타일 지정하기 좋다'}
-
-                li reset : form의 각 입력 요소들을 초기 상태로 변경하는 버튼
-                p #{'<input type="reset"> 대신 <button type="reset">을 이용하는 게 스타일 지정하기 좋다'}
-
-                li button : 기본 동작이 없는 버튼
-                p #{'<input type="button"> 대신 <button type="button">을 이용하는 게 스타일 지정하기 좋다'}
-
-                li file : 파일 업로드에 사용
-
-                li image : 클릭한 좌표를 제출하는 특수한 버튼을 표시한다
-                p: +codeBtn({
-                    path: '/Repositories/Single/202411/25-1134.html',
-                    lan: 'HTML',
-                    title: '예시 코드'
-                })
-                iframe(src='/Repositories/Single/202411/25-1134.html',width=500,height=360)
-
-                li 날짜 및 시간 입력
-                ul
-                    li datetime-local : 로컬 시간대로 날자와 시간을 입력
-                    li month : 년 + 월 입력
-                    li time : 날짜 없이 시간만 입력
-                    li week : 년 + 몇 번째 주인지 입력
-                    p 한 주는 반드시 월요일에 시작하여 일요일에 종료하고, 각 해의 첫 번째 주는 반드시 첫 번째 목요일을 포함해야 한다
-
-                li color, email, url, ...
-
-            li autocomplete 속성
-                ul
-                    li autocomplete="name"과 같이 지정하면 브라우저의 자동완성 지원을 받을 수 있다
-                    li autocomplete="section-1 street-address", autocomplete="section-2 street-address"와 같이 그룹을 나눌 수도 있다
-                    li Safari 14 이상에서는 autocomplete="one-time-code"를 사용하여 SMS OTP 자동완성이 가능하다
-                        p Android Chrome에서는 JavaScript로 WebOTP API를 사용하여 이를 달성할 수 있다
-                    li 사용자에게는 표시되지 않는 더미 입력 요소(honeypot)들을 이용해 봇과 매크로 등을 탐지하고 있는 경우, 해당 요소들에는 autocomplete="off"를 설정해 브라우저가 자동완성하지 않도록 설정해야 한다
-
-        h2 input 외 입력 컨트롤 태그
+        li type 속성
+        p 어떤 종류의 데이터를 입력받는지 지정한다. 브라우저들은 전용 UI를 이용해 이를 표현하고, 가상 키보드의 경우 키보드의 레이아웃도 이에 맞춰 변경해기도 한다. type에 따라 추가 속성(min, max 등)들이 지원되기도 한다.
         ul
-            li #{'<select> + <option>'}
-            p radio와 checkbox 기능을 모두 포함하며, 정의된 값을 (드롭-다운) 목록으로 보여준다
+            li text : 한 줄짜리 텍스트. 줄바꿈 문자를 포함할 수 없다
 
-            li #{'<textarea>'}
-            p 여러 줄 텍스트를 입력받을 때 사용한다. 한 번에 표시할 기본 크기를 rows, cols 속성으로 지정할 수 있다
+            li password : text와 유사하지만, 내용을 *과 같이 검열하여 표시한다
 
-            li #{'<datalist>'}
-            p input 요소에 대한 자동 완성 목록을 제공한다
-                +codeBtn({
-                    path: '/Repositories/Single/202411/25-1536.html',
-                    lan: 'nohighlight',
-                    title: '예시'
-                })
-                +codeBtn({
-                    path: '/Repositories/Single/202411/25-1536.html',
-                    lan: 'HTML',
-                    title: '<- 코드'
-                })
+            li search : text와 유사하지만, 다음과 같은 차이점이 보일 수 있다
+            ul
+                li 입력한 전체 내용을 지울 수 있는 x 아이콘 표시
+                li 가상 키보드 Enter 위치에 검색 아이콘 표시
+                li 검색 이력 저장 -- 자동 완성 제공
 
-        h2 그 외 컨트롤 태그
+            li tel : 전화번호를 입력받을 때 사용
+            p 기본적으로 숫자 가상 키보드가 표시되는데, 전화번호 형식은 국가마다 다르기 때문에 임의 문자 입력을 허용한다
+
+            li number : 숫자를 입력받을 때 사용
+                ul
+                    li 기본적으로 숫자 가상 키보드가 표시된다
+                    li 숫자를 표현하지 않는 문자의 입력은 허용되지 않는다
+                    li 소수를 입력하려면 step="any" 또는 step="0.01" 같이 설정해야 한다
+                    li 브라우저에서 값의 증감을 위한 UI 화살표를 보여주는데, 이러한 UI가 필요 없는 경우 type="text" inputmode="numeric"를 설정하는 것이 좋다
+
+            li range : 지정한 범위의 숫자 중 하나만 선택 가능한 슬라이더를 표시
+            p 현재 선택 중인 값이 무엇인지 보여주지 않는다는 점은 단점 중 하나
+
+            li checkbox : 동일 name 속성에 대하여 0개 이상의 값을 선택 가능할 때 사용
+
+            li radio : 동일 name 속성에 대하여 최대 1개의 값만 선택 가능할 때 사용
+
+            li submit : form에 채워진 내용물을 action에 제출하는 버튼
+            p #{'<input type="submit"> 대신 <button type="submit">을 이용하는 게 스타일 지정하기 좋다'}
+
+            li reset : form의 각 입력 요소들을 초기 상태로 변경하는 버튼
+            p #{'<input type="reset"> 대신 <button type="reset">을 이용하는 게 스타일 지정하기 좋다'}
+
+            li button : 기본 동작이 없는 버튼
+            p #{'<input type="button"> 대신 <button type="button">을 이용하는 게 스타일 지정하기 좋다'}
+
+            li file : 파일 업로드에 사용
+
+            li image : 클릭한 좌표를 제출하는 특수한 버튼을 표시한다
+            p: +codeBtn({
+                path: '/Repositories/Single/202411/25-1134.html',
+                lan: 'HTML',
+                title: '예시 코드'
+            })
+            iframe(src='/Repositories/Single/202411/25-1134.html',width=500,height=360)
+
+            li 날짜 및 시간 입력
+            ul
+                li datetime-local : 로컬 시간대로 날자와 시간을 입력
+                li month : 년 + 월 입력
+                li time : 날짜 없이 시간만 입력
+                li week : 년 + 몇 번째 주인지 입력
+                p 한 주는 반드시 월요일에 시작하여 일요일에 종료하고, 각 해의 첫 번째 주는 반드시 첫 번째 목요일을 포함해야 한다
+
+            li color, email, url, ...
+
+        li autocomplete 속성
+            ul
+                li autocomplete="name"과 같이 지정하면 브라우저의 자동완성 지원을 받을 수 있다
+                li autocomplete="section-1 street-address", autocomplete="section-2 street-address"와 같이 그룹을 나눌 수도 있다
+                li Safari 14 이상에서는 autocomplete="one-time-code"를 사용하여 SMS OTP 자동완성이 가능하다
+                    p Android Chrome에서는 JavaScript로 WebOTP API를 사용하여 이를 달성할 수 있다
+                li 사용자에게는 표시되지 않는 더미 입력 요소(honeypot)들을 이용해 봇과 매크로 등을 탐지하고 있는 경우, 해당 요소들에는 autocomplete="off"를 설정해 브라우저가 자동완성하지 않도록 설정해야 한다
+
+    h2 input 외 입력 컨트롤 태그
+    ul
+        li #{'<select> + <option>'}
+        p radio와 checkbox 기능을 모두 포함하며, 정의된 값을 (드롭-다운) 목록으로 보여준다
+
+        li #{'<textarea>'}
+        p 여러 줄 텍스트를 입력받을 때 사용한다. 한 번에 표시할 기본 크기를 rows, cols 속성으로 지정할 수 있다
+
+        li #{'<datalist>'}
+        p input 요소에 대한 자동 완성 목록을 제공한다
+            +codeBtn({
+                path: '/Repositories/Single/202411/25-1536.html',
+                lan: 'nohighlight',
+                title: '예시'
+            })
+            +codeBtn({
+                path: '/Repositories/Single/202411/25-1536.html',
+                lan: 'HTML',
+                title: '<- 코드'
+            })
+
+    h2 그 외 컨트롤 태그
+    ul
+        li #{'<meter>'}
         ul
-            li #{'<meter>'}
+            li 현재 값이 적정 범주에 존재하는지를 색상을 이용해 표시한다
+            li min, max, low, high 속성을 이용하여 3개 구간을 정의한다
             ul
-                li 현재 값이 적정 범주에 존재하는지를 색상을 이용해 표시한다
-                li min, max, low, high 속성을 이용하여 3개 구간을 정의한다
-                ul
-                    li Lower part ::= [min, low]
-                    li Medium part ::= (low, high)
-                    li Higher part ::= [high, max]
-                li optimum을 이용하여 어느 구간이 선호되는지 결정한다
-                ul
-                    li optimum in lower part
-                    +asCode('HTML').
-                        #{'<meter min="0" max="100" low="33" high="66" optimum="0" value="30">30</meter>'}
-                        #{'<meter min="0" max="100" low="33" high="66" optimum="0" value="50">50</meter>'}
-                        #{'<meter min="0" max="100" low="33" high="66" optimum="0" value="70">70</meter>'}
-                    <meter min="0" max="100" low="33" high="66" optimum="0" value="30">30</meter>
-                    <meter min="0" max="100" low="33" high="66" optimum="0" value="50">50</meter>
-                    <meter min="0" max="100" low="33" high="66" optimum="0" value="70">70</meter>
-
-                    li optimum in medium part
-                    +asCode('HTML').
-                        #{'<meter min="0" max="100" low="33" high="66" optimum="50" value="30">30</meter>'}
-                        #{'<meter min="0" max="100" low="33" high="66" optimum="50" value="50">50</meter>'}
-                        #{'<meter min="0" max="100" low="33" high="66" optimum="50" value="70">70</meter>'}
-                    <meter min="0" max="100" low="33" high="66" optimum="50" value="30">30</meter>
-                    <meter min="0" max="100" low="33" high="66" optimum="50" value="50">50</meter>
-                    <meter min="0" max="100" low="33" high="66" optimum="50" value="70">70</meter>
-                    li optimum in higher part
-                    +asCode('HTML').
-                        #{'<meter min="0" max="100" low="33" high="66" optimum="100" value="30">30</meter>'}
-                        #{'<meter min="0" max="100" low="33" high="66" optimum="100" value="50">50</meter>'}
-                        #{'<meter min="0" max="100" low="33" high="66" optimum="100" value="70">70</meter>'}
-                    <meter min="0" max="100" low="33" high="66" optimum="100" value="30">30</meter>
-                    <meter min="0" max="100" low="33" high="66" optimum="100" value="50">50</meter>
-                    <meter min="0" max="100" low="33" high="66" optimum="100" value="70">70</meter>
-                li 태그 사이의 텍스트는 이 태그를 지원하지 않는 브라우저 및 스크린 리더와 같은 접근성 도구를 위해 사용된다
-
-            li #{'<progress>'}
+                li Lower part ::= [min, low]
+                li Medium part ::= (low, high)
+                li Higher part ::= [high, max]
+            li optimum을 이용하여 어느 구간이 선호되는지 결정한다
             ul
-                li 진행도를 간단히 시각적으로 표시한다
-                +asCode('HTML') #{'<progress max="100" value="75">75/100</progress>'}
-                <progress max="100" value="75">75/100</progress>
+                li optimum in lower part
+                +asCode('HTML').
+                    #{'<meter min="0" max="100" low="33" high="66" optimum="0" value="30">30</meter>'}
+                    #{'<meter min="0" max="100" low="33" high="66" optimum="0" value="50">50</meter>'}
+                    #{'<meter min="0" max="100" low="33" high="66" optimum="0" value="70">70</meter>'}
+                <meter min="0" max="100" low="33" high="66" optimum="0" value="30">30</meter>
+                <meter min="0" max="100" low="33" high="66" optimum="0" value="50">50</meter>
+                <meter min="0" max="100" low="33" high="66" optimum="0" value="70">70</meter>
 
-                li 태그 사이의 텍스트는 이 태그를 지원하지 않는 브라우저 및 스크린 리더와 같은 접근성 도구를 위해 사용된다
+                li optimum in medium part
+                +asCode('HTML').
+                    #{'<meter min="0" max="100" low="33" high="66" optimum="50" value="30">30</meter>'}
+                    #{'<meter min="0" max="100" low="33" high="66" optimum="50" value="50">50</meter>'}
+                    #{'<meter min="0" max="100" low="33" high="66" optimum="50" value="70">70</meter>'}
+                <meter min="0" max="100" low="33" high="66" optimum="50" value="30">30</meter>
+                <meter min="0" max="100" low="33" high="66" optimum="50" value="50">50</meter>
+                <meter min="0" max="100" low="33" high="66" optimum="50" value="70">70</meter>
+                li optimum in higher part
+                +asCode('HTML').
+                    #{'<meter min="0" max="100" low="33" high="66" optimum="100" value="30">30</meter>'}
+                    #{'<meter min="0" max="100" low="33" high="66" optimum="100" value="50">50</meter>'}
+                    #{'<meter min="0" max="100" low="33" high="66" optimum="100" value="70">70</meter>'}
+                <meter min="0" max="100" low="33" high="66" optimum="100" value="30">30</meter>
+                <meter min="0" max="100" low="33" high="66" optimum="100" value="50">50</meter>
+                <meter min="0" max="100" low="33" high="66" optimum="100" value="70">70</meter>
+            li 태그 사이의 텍스트는 이 태그를 지원하지 않는 브라우저 및 스크린 리더와 같은 접근성 도구를 위해 사용된다
+
+        li #{'<progress>'}
+        ul
+            li 진행도를 간단히 시각적으로 표시한다
+            +asCode('HTML') #{'<progress max="100" value="75">75/100</progress>'}
+            <progress max="100" value="75">75/100</progress>
+
+            li 태그 사이의 텍스트는 이 태그를 지원하지 않는 브라우저 및 스크린 리더와 같은 접근성 도구를 위해 사용된다
 
     h1 HTML5
-    div
-        h2 시맨틱 태그
-        p HTML5 전 웹페이지들은 table 태그를 주로 사용하여 디자인했다. 중첩된 table들로 이루어진 웹페이지는 검색 엔진을 비롯한 프로그램이 기계적으로 의미를 찾기 어려워 HTML5는 문서에 대한 의미를 태그가 포함하는 방향을 모색했다
-        ul
-            li header : 컨텐츠를 소개하는 부분으로, body 바로 아래에 정의된 경우 전체 페이지에 대한 소개, 특정 컨텐츠 아래에 정의된 경우 해당 컨텐츠에 대한 소개를 정의
-            li nav : 페이지 내 주요 요소들로의 이동을 정의
-            li main : 페이지의 컨텐츠를 감싸는 요소. 페이지당 하나만 사용하고, body 바로 아래에 정의하는 것을 권장
-            li article : 페이지의 나머지 부분이 없어도 독립적으로 의미를 갖는 컨텐츠 블록
-            li section : article과 유사하게 컨텐츠를 감싸는데, 기능적으로 연관 있는 요소들을 함께 묶을 때 이용. 각 section은 제목(h1~h6)으로 시작하는 것이 권장
-            li aside : 메인 컨텐츠에 대한 추가 정보 제공 (예. 참고자료 목록, 저자 소개)
-            li footer : 페이지를 끝맺는 컨텐츠
+    h2 시맨틱 태그
+    p HTML5 전 웹페이지들은 table 태그를 주로 사용하여 디자인했다. 중첩된 table들로 이루어진 웹페이지는 검색 엔진을 비롯한 프로그램이 기계적으로 의미를 찾기 어려워 HTML5는 문서에 대한 의미를 태그가 포함하는 방향을 모색했다
+    ul
+        li header : 컨텐츠를 소개하는 부분으로, body 바로 아래에 정의된 경우 전체 페이지에 대한 소개, 특정 컨텐츠 아래에 정의된 경우 해당 컨텐츠에 대한 소개를 정의
+        li nav : 페이지 내 주요 요소들로의 이동을 정의
+        li main : 페이지의 컨텐츠를 감싸는 요소. 페이지당 하나만 사용하고, body 바로 아래에 정의하는 것을 권장
+        li article : 페이지의 나머지 부분이 없어도 독립적으로 의미를 갖는 컨텐츠 블록
+        li section : article과 유사하게 컨텐츠를 감싸는데, 기능적으로 연관 있는 요소들을 함께 묶을 때 이용. 각 section은 제목(h1~h6)으로 시작하는 것이 권장
+        li aside : 메인 컨텐츠에 대한 추가 정보 제공 (예. 참고자료 목록, 저자 소개)
+        li footer : 페이지를 끝맺는 컨텐츠
 
-        h2 반응형 웹
-        ol
-            li 스마트폰 대중화 이전의 일반 사용자 컴퓨팅 환경은 가로 768px 이상의 직사각형 모니터가 대부분이었다
-            li 스마트폰이 대중화 되면서 다양한 사용자 웹서핑 환경에 맞춰 알맞게 페이지를 보여줄 필요가 생겼다
-            li viewport로 대표되는 screen 속성을 이용해 페이지를 다시 로드할 필요 없이 디자인이 변경되는 반응형 웹 기술이 발전하게 되었다
+    h2 반응형 웹
+    ol
+        li 스마트폰 대중화 이전의 일반 사용자 컴퓨팅 환경은 가로 768px 이상의 직사각형 모니터가 대부분이었다
+        li 스마트폰이 대중화 되면서 다양한 사용자 웹서핑 환경에 맞춰 알맞게 페이지를 보여줄 필요가 생겼다
+        li viewport로 대표되는 screen 속성을 이용해 페이지를 다시 로드할 필요 없이 디자인이 변경되는 반응형 웹 기술이 발전하게 되었다
 
-        h2 반응형 이미지
-        ul
-            li 브라우저의 이미지 에셋에 대한 요청은 상당히 빠른 순서로 시작된다
-                ul
-                    li 이미지를 요청하는 시점에 스타일 적용은 커녕 스타일에 대해 요청이 시작하기도 전일 수 있다
-                    li 여러 가능한 이미지 소스 중 어떠한 것을 선택할 때 브라우저가 알고 있는 정보는 다음과 같다 : 뷰포트 크기, 디스플레이 픽셀 밀도, 브라우저 환경설정 등
-                        p 이후, 컨테이너 쿼리를 이용한 크기 조건 설정도 가능해질 수 있다
+    h2 반응형 이미지
+    ul
+        li 브라우저의 이미지 에셋에 대한 요청은 상당히 빠른 순서로 시작된다
+            ul
+                li 이미지를 요청하는 시점에 스타일 적용은 커녕 스타일에 대해 요청이 시작하기도 전일 수 있다
+                li 여러 가능한 이미지 소스 중 어떠한 것을 선택할 때 브라우저가 알고 있는 정보는 다음과 같다 : 뷰포트 크기, 디스플레이 픽셀 밀도, 브라우저 환경설정 등
+                    p 이후, 컨테이너 쿼리를 이용한 크기 조건 설정도 가능해질 수 있다
 
-            li x를 이용한 설명적 구문
-                ul
-                    li window.devicePixelRatio : 디바이스의 물리적 픽셀 개수를 CSS의 픽셀 개수로 나눈 비율로, 값이 클수록 동일한 CSS 크기로 보다 선명한 표현이 가능하다
-                    li 아래 코드는 물리적 픽셀이 2배인 디스플레이에 특정 이미지가 더 적합함을 브라우저에 설명하는 코드의 예시다
-                        +asCode('HTML') #{'<img src="low-density.jpg" srcset="double-density.jpg 2x">'}
-                    li 위 코드는 특정 이미지가 특정 경우에 더 적합하다는 것을 의미할 뿐, window.devicePixelRatio가 2면 특정 이미지를 그리라는 명령이 아니다. 예를 들어, 사용자가 브라우저 대역폭 설정을 조정한 경우 저밀도 이미지가 항상 선택될 수 있다
+        li x를 이용한 설명적 구문
+            ul
+                li window.devicePixelRatio : 디바이스의 물리적 픽셀 개수를 CSS의 픽셀 개수로 나눈 비율로, 값이 클수록 동일한 CSS 크기로 보다 선명한 표현이 가능하다
+                li 아래 코드는 물리적 픽셀이 2배인 디스플레이에 특정 이미지가 더 적합함을 브라우저에 설명하는 코드의 예시다
+                    +asCode('HTML') #{'<img src="low-density.jpg" srcset="double-density.jpg 2x">'}
+                li 위 코드는 특정 이미지가 특정 경우에 더 적합하다는 것을 의미할 뿐, window.devicePixelRatio가 2면 특정 이미지를 그리라는 명령이 아니다. 예를 들어, 사용자가 브라우저 대역폭 설정을 조정한 경우 저밀도 이미지가 항상 선택될 수 있다
 
-            li w를 이용한 설명적 구문
-                ul
-                    li 아래 코드는 이미지가 뷰포트의 80%를 차지할 것임을 브라우저에 설명하는 코드의 예시다
-                        +asCode('HTML') #{'<img sizes="80vw" srcset="small.jpg 600w, medium.jpg 1200w, large.jpg 2000w" src="fallback.jpg">'}
-                        p 예를 들어, 뷰포트가 1000px, window.devicePixelRatio가 1인 디바이스에서 브라우저는 업스케일링이 필요하지 않은 최소 이미지로 medium.jpg를 선택할 가능성이 크다.
-                    li 위 코드는 이미지를 뷰포트의 80%를 차지하도록 그리라는 지시가 아님에 유의해야 한다. x를 이용한 설명적 구문과 마찬가지로 브라우저에 이미지에 대한 설명을 제공할 뿐이다
-                    li sizes 속성에는 #[+asA('https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Values_and_Units/CSS_Value_Functions#math_functions', 'CSS 산술 함수')]와 미디어 쿼리 구문을 이용해 이미지의 최종 크기를 구체적으로 설명할 수 있다
-                        +asCode('HTML') #{'<img sizes="(max-width: 1200px) 100vw, calc(80vw - 2em)" ...>'}
-                        p loading="lazy"로 설정한 img에 한해 sizes="auto" 설정이 가능하다 -- 자동 판단
+        li w를 이용한 설명적 구문
+            ul
+                li 아래 코드는 이미지가 뷰포트의 80%를 차지할 것임을 브라우저에 설명하는 코드의 예시다
+                    +asCode('HTML') #{'<img sizes="80vw" srcset="small.jpg 600w, medium.jpg 1200w, large.jpg 2000w" src="fallback.jpg">'}
+                    p 예를 들어, 뷰포트가 1000px, window.devicePixelRatio가 1인 디바이스에서 브라우저는 업스케일링이 필요하지 않은 최소 이미지로 medium.jpg를 선택할 가능성이 크다.
+                li 위 코드는 이미지를 뷰포트의 80%를 차지하도록 그리라는 지시가 아님에 유의해야 한다. x를 이용한 설명적 구문과 마찬가지로 브라우저에 이미지에 대한 설명을 제공할 뿐이다
+                li sizes 속성에는 #[+asA('https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Values_and_Units/CSS_Value_Functions#math_functions', 'CSS 산술 함수')]와 미디어 쿼리 구문을 이용해 이미지의 최종 크기를 구체적으로 설명할 수 있다
+                    +asCode('HTML') #{'<img sizes="(max-width: 1200px) 100vw, calc(80vw - 2em)" ...>'}
+                    p loading="lazy"로 설정한 img에 한해 sizes="auto" 설정이 가능하다 -- 자동 판단
 
-            li picture를 이용한 규정적 구문
-                ul
-                    li 지원하는 브라우저에서 한해, 조건을 만족하는 최초의 source 이미지를 그린다 -- 브라우저가 picture를 인식하지 못하면 마지막 자식 요소인 img가 폴백으로 사용된다
-                    li img의 width, height 속성을 이용해 종횡비를 알려줄 수 있듯, source에서도 동일하게 종횡비를 브라우저에 알려 렌더링에 도움을 줄 수 있다
-                        +asCode('HTML').
-                            #{'<picture>'}
-                            #{'   <source'}
-                            #{'      media="(min-width: 800px)"'}
-                            #{'      srcset="high-bp-1600.jpg 1600w, high-bp-1000.jpg 1000w"'}
-                            #{'      width="1600"'}
-                            #{'      height="800">'}
-                            #{'   <img src="fallback.jpg"'}
-                            #{'      srcset="lower-bp-1200.jpg 1200w, lower-bp-800.jpg 800w"'}
-                            #{'      sizes="calc(100vw - 2em)"'}
-                            #{'      width="1200"'}
-                            #{'      height="750"'}
-                            #{'      alt="…">'}
-                            #{'</picture>'}
-                        p source의 종횡비가 img와 같다면 img에만 설정하면 된다
-                    li source의 type 속성에 MIME 타입을 설정하여 브라우저가 지원하지 않는 타입을 스킵하도록 할 수 있다
+        li picture를 이용한 규정적 구문
+            ul
+                li 지원하는 브라우저에서 한해, 조건을 만족하는 최초의 source 이미지를 그린다 -- 브라우저가 picture를 인식하지 못하면 마지막 자식 요소인 img가 폴백으로 사용된다
+                li img의 width, height 속성을 이용해 종횡비를 알려줄 수 있듯, source에서도 동일하게 종횡비를 브라우저에 알려 렌더링에 도움을 줄 수 있다
+                    +asCode('HTML').
+                        #{'<picture>'}
+                        #{'   <source'}
+                        #{'      media="(min-width: 800px)"'}
+                        #{'      srcset="high-bp-1600.jpg 1600w, high-bp-1000.jpg 1000w"'}
+                        #{'      width="1600"'}
+                        #{'      height="800">'}
+                        #{'   <img src="fallback.jpg"'}
+                        #{'      srcset="lower-bp-1200.jpg 1200w, lower-bp-800.jpg 800w"'}
+                        #{'      sizes="calc(100vw - 2em)"'}
+                        #{'      width="1200"'}
+                        #{'      height="750"'}
+                        #{'      alt="…">'}
+                        #{'</picture>'}
+                    p source의 종횡비가 img와 같다면 img에만 설정하면 된다
+                li source의 type 속성에 MIME 타입을 설정하여 브라우저가 지원하지 않는 타입을 스킵하도록 할 수 있다
 
     h1 Canvas
     ul
@@ -645,276 +639,270 @@ include ../../../source/skeleton.pug
             +codeBtn('/Repositories/JavaScript/Browser/draw1.js', 'javascript')
         li 캔버스의 기본 그리기 요소는 직사각형과 path(일련의 점들을 선분으로 연결) 두 가지
         canvas#tutorial-canvas-1(width='100%', max-height='33%') 연습용 캔버스1
-    div
-        h2 interface HTMLCanvasElement : HTMLElement
+    h2 interface HTMLCanvasElement : HTMLElement
+    ul
+        li width, height : 각각 캔버스의 너비, 높이. 기본값은 300, 150
+        li getContext(contextType[, contextAttributes])
+        p contextType : '2d'(CanvasRenderingContext2D), 'webgl'(WebGLRenderingContext), 'webgl2'(WebGL2RenderingContext), 'bitmaprenderer'(ImageBitmapRenderingContext)
+        li toDataURL([type][, encoderOptions])
+        p type : default 'image/png', encoderOptions : default 0.92, 이미지 퀄리티[0, 1]
+        li toBlob(callback[, mimeType][, qualityArgument])
+        p callback : Blob을 먹는 함수, mimeType : default 'image/png', qualityArgument : 이미지 퀄리티[0, 1]
+
+    h2 interface CanvasRenderingContext2D
+    h3 사각형 그리기
+    ul
+        li clearRect(x, y, width, height)
+        p 지정 사각형을 rgba(0,0,0,0)로 초기화. 이후 path를 그릴 땐 beginPath()를 다시 호출해야 함에 유의
+        li fillRect(x, y, width, height)
+        p 지정 사각형을 현재 fillStyle로 채우기 == rect() + fill()
+        li strokeRect(x, y, width, height)
+        p 지정 사각형에 현재 strokeStyle로 외각선 그리기 == rect() + stroke()
+    h3 텍스트 그리기
+    ul
+        li fillText(text, x, y[, maxWidth])
+        p 텍스트를 그리고 글자 내부는 현재 fillStyle로 채운다
+        li strokeText(text, x, y,[, maxWidth])
+        p 텍스트를 그리고 글자 외각선은 현재 fillStyle로 채운다
+        li measureText(text)
+        p 텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는
+            +asA('https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics', 'TextMetrics')
+            |  객체 반환
+    h3 path 생성
+    ul
+        p 아래 메서드들은 실제 그리기 작업을 수행하지는 않는다
+        li beginPath() : 그리기 시작 명시
+        li closePath() : path 조각이 하나 이상 추가되었고, 마지막 정점이 시작점과 다른 경우 두 점을 잇는 선분을 추가한다
+        li moveTo(x, y) : path 조각의 시작점을 설정
+        li lineTo(x, y) : 마지막 정점으로부터 (x, y)까지의 선분을 추가
+        li bazierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
+        p 마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는
+            +asA('https://ko.wikipedia.org/wiki/베지에_곡선', '베지에 곡선')
+            |을 추가한다
+        li quadraticCurveTo(cpx, cpy, x, y)
+        p 마지막 정점으로부터 (x, y)까지를 잇는, 1개의 조절점을 이용하는
+            +asA('https://ko.wikipedia.org/wiki/베지에_곡선', '베지에 곡선')
+            |을 추가한다
+        li arc(x, y, radius, startAngle, endAngle[, anticlockwise])
+        p (x, y)를 기준점으로 하는 반지름 radius인 호를 추가한다. anticlockwise의 기본값은 false. anticlockwise를 true로 한다고 각도의 증감 방향이 바뀌진 않는다
+        li arcTo(x1, y1, x2, y2, radius)
+        ol
+            li 조절점1(x1, y1), 조절점2(x2, y2), 선분1(마지막 정점-조절점1), 선분2(조절점1-조절점2)를 생각한다
+            li 선분1, 선분2 모두와 거리가 radius만큼 떨어진 정점2를 생각한다. 그러면 정점2에서 반지름 radius인 원을 그렸을 때 선분1, 선분2와의 교점1, 교점2가 존재한다
+            li lineTo(교점1)
+            li 교점1부터 교점2까지의 호를 추가한다. arc(정점2, radius, ...)
+        li ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle[, anticlockwise])
+        p rotation은 라디안 단위의 값으로, 해당 값만큼 타원을 회전시킨다
+        li rect(x, y, width, height)
+    h3 path 그리기
+    ul
+        li fill([fillRule])
+            br
+            |fill(path[, fillRule])
+        ul 현재 또는 지정된 path의 영역 내부를 칠한다
+            li fillRule : '
+                +asA('https://en.wikipedia.org/wiki/Nonzero-rule', 'nonzero')
+                |'(default) | '
+                +asA('https://en.wikipedia.org/wiki/Even-odd_rule', 'evenodd')
+                |'
+            li path :
+                +asA('https://developer.mozilla.org/en-US/docs/Web/API/Path2D', 'Path2D')
+                |  인스턴스
+        li stroke([path])
+        p 현재 또는 지정된 path의 외각선을 그린다(outline)
+        li drawFocusIfNeeded(element)
+            br
+            |drawFocusIfNeeded(path, element)
+        p element가 focus를 얻은 상태면 현재 또는 지정된 path 주변에 강조선을 그린다
+        li scrollPathIntoView([path])
+        p Experimental. Element.scrollIntoView()와 유사하게, 현재 또는 지정된 path가 스크린에 표시되도록 스크롤을 이동한다
+        li clip([fillRule])
+            br
+            |clip(path[, fillRule])
+        p fillRule은 fill()과 동일. 현재 또는 지정된 path를 관심영역으로 설정한다. 이후의 그리기는 관심영역 내부의 것만 렌더링된다
+        li isPointInPath(x, y[, fillRule])
+            br
+            |isPointInPath(path, x, y[, fillRule])
+        p fillRule은 fill()과 동일. 정점이 현재 또는 지정된 path의 내부에 있는지 판별한다
+        li isPointInStroke(x, y)
+            br
+            |isPointInStroke(path, x, y)
+        p 정점이 현재 또는 지정된 path의 외각선 위에 있는지 판별한다
+    h3 path 스타일
+    ul
+        li lineWidth : default 1.0
+        li lineCap : 종점 표시 종류. 'butt'(default), 'round', 'square'
+        li lineJoin : 교점 표시 종류. 'round', 'bevel', 'miter'(default)
+        p + miterLimit
+        li getLineDash() + setter
+        p 선분 요소와 공백(gap)의 길이로 이루어진 배열. 원소가 홀수개라면 자동으로 뒤에 똑같은 배열이 덧붙여져 짝수 크기가 된다
+            br
+            |+ lineDashOffset : 선분을 그리기 시작할 offset. default 0.0
+    h3 텍스트 스타일
+    ul
+        li font : default '10px sans-serif'
+        li textAlign : 'start'(default), 'end', 'left', 'right', 'center'
+        li textBaseline : 'top', 'hanging', 'middle', 'alphabetic'(default), 'ideographic', 'bottom'
+        li direction : 'inherit'(default), 'ltr'(left to right), 'rtl'
+            ul
+                li 앱 자체는 LTR이고, 일부 입력 필드만 RTL을 지원하면 되는 경우 : 요소 수준으로 dir="auto" 지정
+                li 문서 전체에 RTL을 지원해야 하는 경우 : html 요소에 dir="rtl" 지정
+    h3 fillStyle, strokeStyle
+    ol
+        p default '#000', 값으로 가능한 타입은 아래 3가지
+        li DOMString : CSS 색상으로 파싱될 수 있는 문자열
+        li CanvasGradient
         ul
-            li width, height : 각각 캔버스의 너비, 높이. 기본값은 300, 150
-            li getContext(contextType[, contextAttributes])
-            p contextType : '2d'(CanvasRenderingContext2D), 'webgl'(WebGLRenderingContext), 'webgl2'(WebGL2RenderingContext), 'bitmaprenderer'(ImageBitmapRenderingContext)
-            li toDataURL([type][, encoderOptions])
-            p type : default 'image/png', encoderOptions : default 0.92, 이미지 퀄리티[0, 1]
-            li toBlob(callback[, mimeType][, qualityArgument])
-            p callback : Blob을 먹는 함수, mimeType : default 'image/png', qualityArgument : 이미지 퀄리티[0, 1]
+            li CanvasRenderingContext2D.createLinearGradient(x0, y0, x1, y1)
+            p 선형 그래디언트의 시작점(x0, y0), 종점(x1, y1)
+            li CanvasRenderingContext2D.createRadialGradient(x0, y0, r0, x1, y1, r1)
+            p 원형 그래디언트의 시작 원(x0, y0, r0), 끝 원(x1, y1, r1)
+        li CanvasPattern
+        ul
+            li CanvasRenderingContext2D.createPattern(image, repetition)
+            ul
+                li image : HTMLImageElement, SVGImageElement, HTMLVideoElement, HTMLCanvasElement, ImageBitmap, OffscreenCanvas
+                li repetition : 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
+    h3 그림자 그리기
+    ul
+        li shadowBlur : default 0
+        li shadowColor : CSS 색상으로 파싱될 수 있는 문자열
+        li shadowOffsetX : default 0
+        li shadowOffsetY : default 0
+    h3 이미지 그리기
+    ul
+        li drawImage(image, dx, dy);
+            +codeBtn('/Repositories/JavaScript/Browser/draw2.js', 'javascript')
+        li drawImage(image, dx, dy, dWidth, dHeight);
+        li drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+    canvas#tutorial-canvas-2(width='100%', max-height='33%') 연습용 캔버스2
+    h3 변환
+    h4 DOMMatrix
+    ul
+        li 2D 및 3D 변환을 나타내는 4x4 행렬
+        li 속성
+        ul
+            li readonly is2D : true면 2D 변환행렬, false면 3D
+            li readonly isIdentity : 단위행렬인지 여부
+            li m11, m12, ..., m43, m44 : 행렬 성분. double
+            li a, b, c, d, e, f : 2D 변환에 사용되는 값. 차례로 2x2 변환행렬, dx, dy에 해당하며, m11, m12, m21, m22, m41, m42에 대응한다
+    ul
+        li setTransform(a, b, c, d, e, f)
+            br
+            |setTransform(matrix) + getTransform()
+        li transform(a, b, c, d, e, f)
+        p old = ctx.getTransform();
+            br
+            |식[m_{old} = \begin{bmatrix} old.a & old.c & old.e \\ old.b & old.d & old.f \\ 0 & 0 & 1 \end{bmatrix}]식
+            br
+            |식[m_{new} = m_{old} \begin{bmatrix} a & c & e \\ b & d & f \\ 0 & 0 & 1 \end{bmatrix}]식
+        li scale(x, y)
+        p 기본적으로 캔버스 내의 단위는 정확히 px과 같지만 이를 변경할 수 있다. 음수 스케일링은 요소를 뒤집는 효과가 있다
+        li rotate(angle) : (0, 0)을 기준으로 시계방향 회전. 단위는 라디안
+        li translate(x, y)
+        p 현재의 dx, dy에 각각 x, y만큼 추가한다
 
-        h2 interface CanvasRenderingContext2D
-        div
-            h3 사각형 그리기
-            ul
-                li clearRect(x, y, width, height)
-                p 지정 사각형을 rgba(0,0,0,0)로 초기화. 이후 path를 그릴 땐 beginPath()를 다시 호출해야 함에 유의
-                li fillRect(x, y, width, height)
-                p 지정 사각형을 현재 fillStyle로 채우기 == rect() + fill()
-                li strokeRect(x, y, width, height)
-                p 지정 사각형에 현재 strokeStyle로 외각선 그리기 == rect() + stroke()
-            h3 텍스트 그리기
-            ul
-                li fillText(text, x, y[, maxWidth])
-                p 텍스트를 그리고 글자 내부는 현재 fillStyle로 채운다
-                li strokeText(text, x, y,[, maxWidth])
-                p 텍스트를 그리고 글자 외각선은 현재 fillStyle로 채운다
-                li measureText(text)
-                p 텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는
-                    +asA('https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics', 'TextMetrics')
-                    |  객체 반환
-            h3 path 생성
-            ul
-                p 아래 메서드들은 실제 그리기 작업을 수행하지는 않는다
-                li beginPath() : 그리기 시작 명시
-                li closePath() : path 조각이 하나 이상 추가되었고, 마지막 정점이 시작점과 다른 경우 두 점을 잇는 선분을 추가한다
-                li moveTo(x, y) : path 조각의 시작점을 설정
-                li lineTo(x, y) : 마지막 정점으로부터 (x, y)까지의 선분을 추가
-                li bazierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
-                p 마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는
-                    +asA('https://ko.wikipedia.org/wiki/베지에_곡선', '베지에 곡선')
-                    |을 추가한다
-                li quadraticCurveTo(cpx, cpy, x, y)
-                p 마지막 정점으로부터 (x, y)까지를 잇는, 1개의 조절점을 이용하는
-                    +asA('https://ko.wikipedia.org/wiki/베지에_곡선', '베지에 곡선')
-                    |을 추가한다
-                li arc(x, y, radius, startAngle, endAngle[, anticlockwise])
-                p (x, y)를 기준점으로 하는 반지름 radius인 호를 추가한다. anticlockwise의 기본값은 false. anticlockwise를 true로 한다고 각도의 증감 방향이 바뀌진 않는다
-                li arcTo(x1, y1, x2, y2, radius)
-                ol
-                    li 조절점1(x1, y1), 조절점2(x2, y2), 선분1(마지막 정점-조절점1), 선분2(조절점1-조절점2)를 생각한다
-                    li 선분1, 선분2 모두와 거리가 radius만큼 떨어진 정점2를 생각한다. 그러면 정점2에서 반지름 radius인 원을 그렸을 때 선분1, 선분2와의 교점1, 교점2가 존재한다
-                    li lineTo(교점1)
-                    li 교점1부터 교점2까지의 호를 추가한다. arc(정점2, radius, ...)
-                li ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle[, anticlockwise])
-                p rotation은 라디안 단위의 값으로, 해당 값만큼 타원을 회전시킨다
-                li rect(x, y, width, height)
-            h3 path 그리기
-            ul
-                li fill([fillRule])
-                    br
-                    |fill(path[, fillRule])
-                ul 현재 또는 지정된 path의 영역 내부를 칠한다
-                    li fillRule : '
-                        +asA('https://en.wikipedia.org/wiki/Nonzero-rule', 'nonzero')
-                        |'(default) | '
-                        +asA('https://en.wikipedia.org/wiki/Even-odd_rule', 'evenodd')
-                        |'
-                    li path :
-                        +asA('https://developer.mozilla.org/en-US/docs/Web/API/Path2D', 'Path2D')
-                        |  인스턴스
-                li stroke([path])
-                p 현재 또는 지정된 path의 외각선을 그린다(outline)
-                li drawFocusIfNeeded(element)
-                    br
-                    |drawFocusIfNeeded(path, element)
-                p element가 focus를 얻은 상태면 현재 또는 지정된 path 주변에 강조선을 그린다
-                li scrollPathIntoView([path])
-                p Experimental. Element.scrollIntoView()와 유사하게, 현재 또는 지정된 path가 스크린에 표시되도록 스크롤을 이동한다
-                li clip([fillRule])
-                    br
-                    |clip(path[, fillRule])
-                p fillRule은 fill()과 동일. 현재 또는 지정된 path를 관심영역으로 설정한다. 이후의 그리기는 관심영역 내부의 것만 렌더링된다
-                li isPointInPath(x, y[, fillRule])
-                    br
-                    |isPointInPath(path, x, y[, fillRule])
-                p fillRule은 fill()과 동일. 정점이 현재 또는 지정된 path의 내부에 있는지 판별한다
-                li isPointInStroke(x, y)
-                    br
-                    |isPointInStroke(path, x, y)
-                p 정점이 현재 또는 지정된 path의 외각선 위에 있는지 판별한다
-            h3 path 스타일
-            ul
-                li lineWidth : default 1.0
-                li lineCap : 종점 표시 종류. 'butt'(default), 'round', 'square'
-                li lineJoin : 교점 표시 종류. 'round', 'bevel', 'miter'(default)
-                p + miterLimit
-                li getLineDash() + setter
-                p 선분 요소와 공백(gap)의 길이로 이루어진 배열. 원소가 홀수개라면 자동으로 뒤에 똑같은 배열이 덧붙여져 짝수 크기가 된다
-                    br
-                    |+ lineDashOffset : 선분을 그리기 시작할 offset. default 0.0
-            h3 텍스트 스타일
-            ul
-                li font : default '10px sans-serif'
-                li textAlign : 'start'(default), 'end', 'left', 'right', 'center'
-                li textBaseline : 'top', 'hanging', 'middle', 'alphabetic'(default), 'ideographic', 'bottom'
-                li direction : 'inherit'(default), 'ltr'(left to right), 'rtl'
-                    ul
-                        li 앱 자체는 LTR이고, 일부 입력 필드만 RTL을 지원하면 되는 경우 : 요소 수준으로 dir="auto" 지정
-                        li 문서 전체에 RTL을 지원해야 하는 경우 : html 요소에 dir="rtl" 지정
-            h3 fillStyle, strokeStyle
-            ol
-                p default '#000', 값으로 가능한 타입은 아래 3가지
-                li DOMString : CSS 색상으로 파싱될 수 있는 문자열
-                li CanvasGradient
-                ul
-                    li CanvasRenderingContext2D.createLinearGradient(x0, y0, x1, y1)
-                    p 선형 그래디언트의 시작점(x0, y0), 종점(x1, y1)
-                    li CanvasRenderingContext2D.createRadialGradient(x0, y0, r0, x1, y1, r1)
-                    p 원형 그래디언트의 시작 원(x0, y0, r0), 끝 원(x1, y1, r1)
-                li CanvasPattern
-                ul
-                    li CanvasRenderingContext2D.createPattern(image, repetition)
-                    ul
-                        li image : HTMLImageElement, SVGImageElement, HTMLVideoElement, HTMLCanvasElement, ImageBitmap, OffscreenCanvas
-                        li repetition : 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
-            h3 그림자 그리기
-            ul
-                li shadowBlur : default 0
-                li shadowColor : CSS 색상으로 파싱될 수 있는 문자열
-                li shadowOffsetX : default 0
-                li shadowOffsetY : default 0
-            h3 이미지 그리기
-            ul
-                li drawImage(image, dx, dy);
-                    +codeBtn('/Repositories/JavaScript/Browser/draw2.js', 'javascript')
-                li drawImage(image, dx, dy, dWidth, dHeight);
-                li drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-            canvas#tutorial-canvas-2(width='100%', max-height='33%') 연습용 캔버스2
-            h3 변환
-            div
-                h4 DOMMatrix
-                ul
-                    li 2D 및 3D 변환을 나타내는 4x4 행렬
-                    li 속성
-                    ul
-                        li readonly is2D : true면 2D 변환행렬, false면 3D
-                        li readonly isIdentity : 단위행렬인지 여부
-                        li m11, m12, ..., m43, m44 : 행렬 성분. double
-                        li a, b, c, d, e, f : 2D 변환에 사용되는 값. 차례로 2x2 변환행렬, dx, dy에 해당하며, m11, m12, m21, m22, m41, m42에 대응한다
-            ul
-                li setTransform(a, b, c, d, e, f)
-                    br
-                    |setTransform(matrix) + getTransform()
-                li transform(a, b, c, d, e, f)
-                p old = ctx.getTransform();
-                    br
-                    |식[m_{old} = \begin{bmatrix} old.a & old.c & old.e \\ old.b & old.d & old.f \\ 0 & 0 & 1 \end{bmatrix}]식
-                    br
-                    |식[m_{new} = m_{old} \begin{bmatrix} a & c & e \\ b & d & f \\ 0 & 0 & 1 \end{bmatrix}]식
-                li scale(x, y)
-                p 기본적으로 캔버스 내의 단위는 정확히 px과 같지만 이를 변경할 수 있다. 음수 스케일링은 요소를 뒤집는 효과가 있다
-                li rotate(angle) : (0, 0)을 기준으로 시계방향 회전. 단위는 라디안
-                li translate(x, y)
-                p 현재의 dx, dy에 각각 x, y만큼 추가한다
+    h3 전역 속성
+    ul
+        li globalAlpha
+        p 캔버스에 그려지기 전에 도형, 이미지 등에 적용되는 투명도. default 1.0
+        li: +asA('https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation', 'globalCompositeOperation')
+        p 캔버스의 기존 내용에 새로운 도형, 이미지를 추가할 때의 합성 방법. 기본값은 덮어쓰기('source-over').
 
-            h3 전역 속성
-            ul
-                li globalAlpha
-                p 캔버스에 그려지기 전에 도형, 이미지 등에 적용되는 투명도. default 1.0
-                li: +asA('https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation', 'globalCompositeOperation')
-                p 캔버스의 기존 내용에 새로운 도형, 이미지를 추가할 때의 합성 방법. 기본값은 덮어쓰기('source-over').
+    h3 비트 조작
+    h4 ImageData
+    ul
+        li 캔버스 비트 배열 정보를 갖는 인터페이스. CanvasRenderingContext2D 메서드 또는 생성자로 인스턴스를 얻을 수 있다
+        li 생성자
+        ul
+            li ImageData(array, width[, height])
+            p array는 RGBA값을 담은 Uint8ClampedArray. 길이가 정확하지 않으면 에러 발생
+            li ImageData(width, height) : 검은 사각형
+        li 속성
+        ul
+            li data : RGBA값을 가진 Uint8ClampedArray
+            li width, height
+    ul
+        li getImageData(sx, sy, sw, sh)
+        p 지정 사각형 영역의 정보를 가진 ImageData 반환. 여기서 지정한 사각형은 변환 행렬의 영향을 받지 않으며, 캔버스 바깥을 포함하는 경우 RGBA(0, 0, 0, 0)로 채워진다
+        li putImageData(imageData, dx, dy[, dirtyX, dirtyY, dirtyWidth, dirtyHeight])
+        p 지정 위치에 imageData를 덮어쓴다. dirty* 매개변수로 그릴 imageData 영역을 지정할 수 있다
+        li createImageData(width, height)
+            br
+            |createImageData(imagedata)
+        p RGBA(0, 0, 0, 0)으로 채워진 새 ImageData 인스턴스를 반환한다. imagedata로 호출한 경우, imagedata의 width, height만 사용된다
 
-            h3 비트 조작
-            div
-                h4 ImageData
-                ul
-                    li 캔버스 비트 배열 정보를 갖는 인터페이스. CanvasRenderingContext2D 메서드 또는 생성자로 인스턴스를 얻을 수 있다
-                    li 생성자
-                    ul
-                        li ImageData(array, width[, height])
-                        p array는 RGBA값을 담은 Uint8ClampedArray. 길이가 정확하지 않으면 에러 발생
-                        li ImageData(width, height) : 검은 사각형
-                    li 속성
-                    ul
-                        li data : RGBA값을 가진 Uint8ClampedArray
-                        li width, height
-            ul
-                li getImageData(sx, sy, sw, sh)
-                p 지정 사각형 영역의 정보를 가진 ImageData 반환. 여기서 지정한 사각형은 변환 행렬의 영향을 받지 않으며, 캔버스 바깥을 포함하는 경우 RGBA(0, 0, 0, 0)로 채워진다
-                li putImageData(imageData, dx, dy[, dirtyX, dirtyY, dirtyWidth, dirtyHeight])
-                p 지정 위치에 imageData를 덮어쓴다. dirty* 매개변수로 그릴 imageData 영역을 지정할 수 있다
-                li createImageData(width, height)
-                    br
-                    |createImageData(imagedata)
-                p RGBA(0, 0, 0, 0)으로 채워진 새 ImageData 인스턴스를 반환한다. imagedata로 호출한 경우, imagedata의 width, height만 사용된다
-
-            h3 상태 저장/복구
-            ul
-                li canvas : 연관 HTMLCanvasElement 객체. null일 수 있음
-                li save()
-                p 다음 항목들을 저장한다 : 변환행렬, 관심영역, lineDash, strokeStyle, fillStyle, globalAlpha, lineWidth, lineCap, lineJoin, miterLimit, lineDashOffset, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, globalCompositeOperation, font, textAlign, textBaseline, direction, imageSmoothingEnabled
-                li restore() : save()로 저장한 사항 복구
+    h3 상태 저장/복구
+    ul
+        li canvas : 연관 HTMLCanvasElement 객체. null일 수 있음
+        li save()
+        p 다음 항목들을 저장한다 : 변환행렬, 관심영역, lineDash, strokeStyle, fillStyle, globalAlpha, lineWidth, lineCap, lineJoin, miterLimit, lineDashOffset, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, globalCompositeOperation, font, textAlign, textBaseline, direction, imageSmoothingEnabled
+        li restore() : save()로 저장한 사항 복구
 
     h1 접근성
-    div
-        h2 개요
+    h2 개요
+    ul
+        li 접근성은 누가, 어느 도구를 사용해 페이지를 방문하는지 무관하게 기능과 컨텐츠를 사용할 수 있음을 의미한다
         ul
-            li 접근성은 누가, 어느 도구를 사용해 페이지를 방문하는지 무관하게 기능과 컨텐츠를 사용할 수 있음을 의미한다
-            ul
-                li 예. 키보드/마우스가 없는 환경일 수 있다
-                li 예. Alexa, Google Home 같은 음성 도우미로 접근할 수도 있다
-            li 일부 국가는 법률을 통해 일정 수준 이상의 접근성을 강제하고 있다
-            li Mozilla는 Firefox 개발자 도구에 접근성 검사 도구를 추가하여 접근성 확장에 도움을 주고 있다 #[+asA('https://blog.mozilla.org/press/2019/10/mozillas-accessibility-inspector-helps-developers-to-make-websites-and-content-accessible-for-all/', '참고 자료')]
+            li 예. 키보드/마우스가 없는 환경일 수 있다
+            li 예. Alexa, Google Home 같은 음성 도우미로 접근할 수도 있다
+        li 일부 국가는 법률을 통해 일정 수준 이상의 접근성을 강제하고 있다
+        li Mozilla는 Firefox 개발자 도구에 접근성 검사 도구를 추가하여 접근성 확장에 도움을 주고 있다 #[+asA('https://blog.mozilla.org/press/2019/10/mozillas-accessibility-inspector-helps-developers-to-make-websites-and-content-accessible-for-all/', '참고 자료')]
 
-        h2 HTML
+    h2 HTML
+    ul
+        li 기본적으로는 의미에 가장 적절한 HTML 요소를 사용(and vice-versa)하는 것이 가장 쉽고 권장되는 방법이다
+        li tabindex="0" 속성을 이용해 키보드(tab 포함)를 이용하여 접근할 수 있게 만들 수 있다
+        li role="button" 속성을 추가해 요소와 상호작용 가능함을 명시할 수 있다
+        li "Click here" 같은 일반적인 문구보다, 고유한 텍스트를 사용하는 것이 좋다
+        li alt 속성은 이미지가 전달하는 모든 정보를 포함하되, 주변 텍스트에 중복되는 정보는 포함하지 않아야 한다
+        p 유의미하지 않은 장식 이미지는 아래와 같이 처리할 수 있다
         ul
-            li 기본적으로는 의미에 가장 적절한 HTML 요소를 사용(and vice-versa)하는 것이 가장 쉽고 권장되는 방법이다
-            li tabindex="0" 속성을 이용해 키보드(tab 포함)를 이용하여 접근할 수 있게 만들 수 있다
-            li role="button" 속성을 추가해 요소와 상호작용 가능함을 명시할 수 있다
-            li "Click here" 같은 일반적인 문구보다, 고유한 텍스트를 사용하는 것이 좋다
-            li alt 속성은 이미지가 전달하는 모든 정보를 포함하되, 주변 텍스트에 중복되는 정보는 포함하지 않아야 한다
-            p 유의미하지 않은 장식 이미지는 아래와 같이 처리할 수 있다
-            ul
-                li CSS를 이용해 표시
-                li alt="" 설정 -- 그렇지 않으면 스크린 리더가 src를 읽으려고 할 수 있다
-                li role="presentation" 설정
-            li 상호작용 가능한 요소들 사이에 충분한 공간 두기
-            li 동적으로 컨텐츠가 변경되는 요소의 경우, 스크린 리더에게 이를 알려줄 수 있다
-            ul
-                li aria-live="off" : 기본값. 컨텐츠가 변경돼도 다시 읽지 않음
-                li aria-live="polite" : 사용자가 유휴 상태일 때 업데이트를 알림
-                li aria-live="assertive" : 가능한 한 빠르게 사용자에게 업데이트를 알림
+            li CSS를 이용해 표시
+            li alt="" 설정 -- 그렇지 않으면 스크린 리더가 src를 읽으려고 할 수 있다
+            li role="presentation" 설정
+        li 상호작용 가능한 요소들 사이에 충분한 공간 두기
+        li 동적으로 컨텐츠가 변경되는 요소의 경우, 스크린 리더에게 이를 알려줄 수 있다
+        ul
+            li aria-live="off" : 기본값. 컨텐츠가 변경돼도 다시 읽지 않음
+            li aria-live="polite" : 사용자가 유휴 상태일 때 업데이트를 알림
+            li aria-live="assertive" : 가능한 한 빠르게 사용자에게 업데이트를 알림
 
-        h2 CSS
+    h2 CSS
+    ul
+        li HTML의 의미를 해칠 정도로 스타일을 변경하지 말기
+        li 링크 상태에 대한 피드백을 제공하기
+        li 테이블 행의 배경색을 번갈아 설정하여 쉽게 구별할 수 있게 하기
+        li 사용자가 스타일을 재정의할 수 있음에 유의하기
         ul
-            li HTML의 의미를 해칠 정도로 스타일을 변경하지 말기
-            li 링크 상태에 대한 피드백을 제공하기
-            li 테이블 행의 배경색을 번갈아 설정하여 쉽게 구별할 수 있게 하기
-            li 사용자가 스타일을 재정의할 수 있음에 유의하기
-            ul
-                li 예. 브라우저 확장 프로그램을 이용한 경우
-                li 예. 시각 장애를 위해 모든 웹사이트의 텍스트 크기를 크게 설정한 경우
+            li 예. 브라우저 확장 프로그램을 이용한 경우
+            li 예. 시각 장애를 위해 모든 웹사이트의 텍스트 크기를 크게 설정한 경우
 
-        h2 JavaScript
-        ul
-            li 가능하다면 unobtrusive JavaScript를 사용할 것 -- 기본 기능은 JavaScript 없이도 동작하고, JavaScript는 기본 기능을 보완
-            li 요소에 접근할 수 있는 다양한 기기를 고려할 것
-            p 예. 마우스 이벤트만 처리하는 것보단, 키보드 이벤트도 처리하는 것이 접근성이 더 좋다. 한편, 'click'이벤트는 마우스 클릭 외에도 발생한다.
+    h2 JavaScript
+    ul
+        li 가능하다면 unobtrusive JavaScript를 사용할 것 -- 기본 기능은 JavaScript 없이도 동작하고, JavaScript는 기본 기능을 보완
+        li 요소에 접근할 수 있는 다양한 기기를 고려할 것
+        p 예. 마우스 이벤트만 처리하는 것보단, 키보드 이벤트도 처리하는 것이 접근성이 더 좋다. 한편, 'click'이벤트는 마우스 클릭 외에도 발생한다.
 
-        h2 모바일 접근성
-        ul
-            li 과거 모바일 브라우저들은 데스크톱과 다른 웨 빅술을 사용하여, 프론트엔드 개발자들은 브라우저 감지를 통해 별도의 사이트를 제공해야 했다
-            li 현재는 주요 모바일 브라우저들은 웹 표준을 잘 지원하며, 데스크톱 브라우저와 동일한 버전이 매겨진다
+    h2 모바일 접근성
+    ul
+        li 과거 모바일 브라우저들은 데스크톱과 다른 웨 빅술을 사용하여, 프론트엔드 개발자들은 브라우저 감지를 통해 별도의 사이트를 제공해야 했다
+        li 현재는 주요 모바일 브라우저들은 웹 표준을 잘 지원하며, 데스크톱 브라우저와 동일한 버전이 매겨진다
 
     h1 페이지 성능
-    div
-        h2 개요
-        ul
-            li 페이지 성능이 좋다면 사용자 경험이 증대되어 수익이 증대될 수 있다
-            li 페이지 성능이 좋다면 서비스 비용을 절감할 수 있다
-            li 효율적인 서비스를 통해 환경에 미치는 영향을 줄일 수 있다
+    h2 개요
+    ul
+        li 페이지 성능이 좋다면 사용자 경험이 증대되어 수익이 증대될 수 있다
+        li 페이지 성능이 좋다면 서비스 비용을 절감할 수 있다
+        li 효율적인 서비스를 통해 환경에 미치는 영향을 줄일 수 있다
 
-        h2 성능 지표
-        ul
-            li FCP(First Contentful Paint) : 페이지의 첫 번째 컨텐츠를 렌더링하는 데 걸린 시간
-            li TBT(Total Blocking Time) : 사용자 입력에 반응하지 못하는 총 시간
-            li LCP(Largest Contentful Paint) : 표시 영역에서 가장 큰 컨텐츠 요소가 렌더링되기까지의 시간
+    h2 성능 지표
+    ul
+        li FCP(First Contentful Paint) : 페이지의 첫 번째 컨텐츠를 렌더링하는 데 걸린 시간
+        li TBT(Total Blocking Time) : 사용자 입력에 반응하지 못하는 총 시간
+        li LCP(Largest Contentful Paint) : 표시 영역에서 가장 큰 컨텐츠 요소가 렌더링되기까지의 시간
 
-        h2 측정 도구
-        ul
-            li 개별 웹 브라우저 개발자 도구에서 제공하는 기능 이용
-            li: +asA('https://pagespeed.web.dev/')
+    h2 측정 도구
+    ul
+        li 개별 웹 브라우저 개발자 도구에서 제공하는 기능 이용
+        li: +asA('https://pagespeed.web.dev/')

@@ -500,11 +500,11 @@ async function updatePostList() {
 async function updateMarkerList() {
     const details = asNodes(`<details open class="w3-small"><summary>Content</summary><ul style="scroll-target-group:auto"></ul></details>`);
     const ul = details.querySelector('ul');
-    const contentRoot = document.querySelector('#contents');
-    const skipLevelCheckTagSet = new Set(['THEAD', 'TBODY', 'TR', 'SPAN']);
     const headingLevels = [0, 0, 0, 0, 0, 0, 0, 0];
     const headingTagSet = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
     const markerNameCounter = new Map()
+    // 마커(표·이미지·details)는 자체 레벨이 없다. 직전 헤딩의 레벨을 이어받는다.
+    let lastHeadingLevel = -1;
     for (const markerTarget of document.querySelectorAll(':is(h1,h2,h3,h4,h5,h6,.marker):not(.no-marker)')) {
         const markerName = makeMarkerName(markerTarget);
         let posId = `pos${stringHashCode(markerName)}`
@@ -517,15 +517,19 @@ async function updateMarkerList() {
         /** @type {HTMLLIElement} */
         const markerLi = asNodes(`<li><a title="${markerName}" href="#${posId}"></a></li>`);
 
-        let level = 0;
-        let parent = markerTarget.parentElement;
-        while (parent !== contentRoot) {
-            parent = parent.parentElement;
-            if (skipLevelCheckTagSet.has(parent.tagName)) {
-                continue;
-            }
-            level += 1;
+        // 목차 레벨은 DOM 중첩 깊이가 아니라 헤딩 태그에서 얻는다.
+        // 깊이로 계산하면 스타일용 래퍼가 하나만 끼어도 번호가 밀리고, 무엇보다
+        // 스크린리더가 실제로 읽는 값(h1~h6)과 화면의 번호가 어긋날 수 있다.
+        // 중첩이 레벨을 정한다는 발상은 HTML5 문서 개요 알고리즘 그대로인데,
+        // 그 알고리즘은 어떤 브라우저·보조기술도 구현하지 않았고 스펙에서 삭제됐다.
+        let level;
+        if (headingTagSet.has(markerTarget.tagName)) {
+            level = Number(markerTarget.tagName[1]) - 1;
+            lastHeadingLevel = level;
+        } else {
+            level = lastHeadingLevel + 1;
         }
+
         if (level !== 0) {
             markerLi.classList.add(`margin-left-${level}`)
         }

@@ -5,28 +5,27 @@ include ../../../source/skeleton.pug
 })
 
     h1 Version
-    div
-        h2 v24.2.0
-        ul
-            li import.meta.main : ES 모듈이 현재 프로세스의 실행 진입점인지 여부 반환
+    h2 v24.2.0
+    ul
+        li import.meta.main : ES 모듈이 현재 프로세스의 실행 진입점인지 여부 반환
 
-        h2 v22.12.0, v20.19.0
-        ul
-            li require(esm) 기본 활성화 -- 아직 experimental 단계
+    h2 v22.12.0, v20.19.0
+    ul
+        li require(esm) 기본 활성화 -- 아직 experimental 단계
 
-        h2 v20.19.0
-        ul
-            li 모호한 모듈 파일을 CommonJS로 해석하는 데 실패한 경우, ES module로 다시 해석 시도
+    h2 v20.19.0
+    ul
+        li 모호한 모듈 파일을 CommonJS로 해석하는 데 실패한 경우, ES module로 다시 해석 시도
 
-        h2 v20.6.0
-        ul
-            li .env 파일 지원 내장
-                +asCode('shell') node --env-file=config.env index.js
+    h2 v20.6.0
+    ul
+        li .env 파일 지원 내장
+            +asCode('shell') node --env-file=config.env index.js
 
-        h2 v20.0.0
-        ul
-            li 내장 테스트 러너 기능이 stable 단계로 변경
-                +asCode('shell') node --test
+    h2 v20.0.0
+    ul
+        li 내장 테스트 러너 기능이 stable 단계로 변경
+            +asCode('shell') node --test
 
     h1 V8 엔진 고려사항
     ul
@@ -43,191 +42,188 @@ include ../../../source/skeleton.pug
                 li 핫 객체에서 delete 사용 시 객체를 "딕셔너리 모드"로 전환해 접근이 느려진다 =&gt; 가능하다면 = undefined 할당이 더 좋다
 
     h1 NPM
-    div
-        h2 패키지 보안
-        +asA('https://github.com/lirantal/npm-security-best-practices')
+    h2 패키지 보안
+    +asA('https://github.com/lirantal/npm-security-best-practices')
 
-        h2 버전 정의
-        ul
-            li npm 패키지 버전 : Major.Minor.Patch
-            ol
-                li Major : 이전 버전과 호환되지 않으면 변경
-                li Minor : 이전 버전과 호환되면서 신규 기능 추가
-                li Patch : 이전 버전과 호환되면서 버그 수정
-            li ^1.2.2 : [1.2.2, 2.0.0) 호환
-            p 0이 아닌 최초 버전의 하위 버전 변경 모두를 포함
-            li ~1.2.2 : [1.2.2, 1.3) 호환
-            p 지정된 버전의 상위 버전 변경 전까지 모두를 포함
-            li 1.2.2-1.4.4 : 직접 지정
-            p >=1.2.2 &lt;=1.4.4와 동일
-            li 1.2.x : 와일드카드
+    h2 버전 정의
+    ul
+        li npm 패키지 버전 : Major.Minor.Patch
+        ol
+            li Major : 이전 버전과 호환되지 않으면 변경
+            li Minor : 이전 버전과 호환되면서 신규 기능 추가
+            li Patch : 이전 버전과 호환되면서 버그 수정
+        li ^1.2.2 : [1.2.2, 2.0.0) 호환
+        p 0이 아닌 최초 버전의 하위 버전 변경 모두를 포함
+        li ~1.2.2 : [1.2.2, 1.3) 호환
+        p 지정된 버전의 상위 버전 변경 전까지 모두를 포함
+        li 1.2.2-1.4.4 : 직접 지정
+        p >=1.2.2 &lt;=1.4.4와 동일
+        li 1.2.x : 와일드카드
 
-        h2 프로젝트 의존성 관리
-        +asCode('shell').
-            $ npm init    # package.json 생성
-            $ npm install # package.json대로 의존 라이브러리 설치
+    h2 프로젝트 의존성 관리
+    +asCode('shell').
+        $ npm init    # package.json 생성
+        $ npm install # package.json대로 의존 라이브러리 설치
 
-            # name 패키지 설치 후 package.json에 의존성 추가
-            $ npm install name --save
-            $ npm install name --save-dev
-        div
-            h3 package.json
-            p 아래 예시는 다른 패키지의 것들을 맘대로 섞은 것임
-            +asCode('javascript').
-                {
-                    "name": "mongodb",    // 대문자 사용 불가. URL 안전해야 함
-                    "version": "3.5.4",
-                    "description": "The official MongoDB driver for Node.js",
-                    "author": {           // 1명만 가능. name은 필수
-                        "name": "TJ Holowaychuk",
-                        "email": "tj@vision-media.ca",
-                        "url": "http://1.1.1.1/"
-                    },
-                    "contributors": [
-                        "Aaron Heckmann &lt;aaron.heckmann+github@gmail.com>",
-                        "Ciaran Jessup &lt;ciaranj@gmail.com>"
-                    ],
-                    "keywords": [         // npm 검색 키워드
-                        "mongodb",
-                        "driver"
-                    ],
-                    "homepage": "https://github.com/mongodb/node-mongodb-native",
-                    "repository": {       // 버전 관리 저장소
-                        "type": "git",
-                        "url": "git@github.com:mongodb/node-mongodb-native.git"
-                    },
-                    "bugs": {             // url 또는 email 하나만 적용
-                        "url": "https://github.com/mongodb/node-mongodb-native/issues"
-                    },
-                    "license": "Apache-2.0",
-                    "main": "index.js",   // 메인 모듈 설정. require시 해당 모듈의 exports가 넘겨진다
-                    "files": [            // 패키지 포함 목록. ".npmignore" 파일로 제외 항목 관리 가능
-                        "index.js",
-                        "lib"
-                    ],
-                    "bin": {              // 패키지 설치 시 실행 파일에 대한 링크를 만들어 CLI 실행 가능하게 한다
-                        "forever": "./bin/forever.js"
-                    },
-                    "dependencies": {     // 의존 패키지
-                        "bl": "^2.2.0",
-                    },
-                    "peerDependencies": { // 의존 관계 X. 같이 사용될 수 있는 패키지
-                        "kerberos": "^1.1.0",
-                    },                    // 패키지 테스트, 문서화에 필요한 패키지; 모듈 사용만 하는 경우엔 불필요한 패키지
-                    "devDependencies": {
-                        "eslint": "2.13.1",
-                        "mocha": "7.0.1"
-                    },
-                    "scripts": {          // npm이 패키지 관리 시 실행할 명령. https://docs.npmjs.com/misc/scripts
-                        "lint": "eslint .",
-                        "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/ test/acceptance/"
-                    },
-                    "engines": {          // Node 버전 제한
-                        "node": ">=10"
-                    }
-                }
+        # name 패키지 설치 후 package.json에 의존성 추가
+        $ npm install name --save
+        $ npm install name --save-dev
+    h3 package.json
+    p 아래 예시는 다른 패키지의 것들을 맘대로 섞은 것임
+    +asCode('javascript').
+        {
+            "name": "mongodb",    // 대문자 사용 불가. URL 안전해야 함
+            "version": "3.5.4",
+            "description": "The official MongoDB driver for Node.js",
+            "author": {           // 1명만 가능. name은 필수
+                "name": "TJ Holowaychuk",
+                "email": "tj@vision-media.ca",
+                "url": "http://1.1.1.1/"
+            },
+            "contributors": [
+                "Aaron Heckmann &lt;aaron.heckmann+github@gmail.com>",
+                "Ciaran Jessup &lt;ciaranj@gmail.com>"
+            ],
+            "keywords": [         // npm 검색 키워드
+                "mongodb",
+                "driver"
+            ],
+            "homepage": "https://github.com/mongodb/node-mongodb-native",
+            "repository": {       // 버전 관리 저장소
+                "type": "git",
+                "url": "git@github.com:mongodb/node-mongodb-native.git"
+            },
+            "bugs": {             // url 또는 email 하나만 적용
+                "url": "https://github.com/mongodb/node-mongodb-native/issues"
+            },
+            "license": "Apache-2.0",
+            "main": "index.js",   // 메인 모듈 설정. require시 해당 모듈의 exports가 넘겨진다
+            "files": [            // 패키지 포함 목록. ".npmignore" 파일로 제외 항목 관리 가능
+                "index.js",
+                "lib"
+            ],
+            "bin": {              // 패키지 설치 시 실행 파일에 대한 링크를 만들어 CLI 실행 가능하게 한다
+                "forever": "./bin/forever.js"
+            },
+            "dependencies": {     // 의존 패키지
+                "bl": "^2.2.0",
+            },
+            "peerDependencies": { // 의존 관계 X. 같이 사용될 수 있는 패키지
+                "kerberos": "^1.1.0",
+            },                    // 패키지 테스트, 문서화에 필요한 패키지; 모듈 사용만 하는 경우엔 불필요한 패키지
+            "devDependencies": {
+                "eslint": "2.13.1",
+                "mocha": "7.0.1"
+            },
+            "scripts": {          // npm이 패키지 관리 시 실행할 명령. https://docs.npmjs.com/misc/scripts
+                "lint": "eslint .",
+                "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/ test/acceptance/"
+            },
+            "engines": {          // Node 버전 제한
+                "node": ">=10"
+            }
+        }
 
-        h2 패키지 배포 (2025-12-23 업데이트)
-        div
-            h3.fake 참고자료
+    h2 패키지 배포 (2025-12-23 업데이트)
+    h3.fake 참고자료
+    ul
+        li: +asA('https://www.totaltypescript.com/how-to-create-an-npm-package')
+        li: +asA('https://github.com/Dong-gi/Dong-gi.github.io/tree/master/Repositories/Node/test-231114')
+
+    h3 프로젝트 설정
+    ol
+        li 프로젝트를 위한 GitHub 저장소가 없다면 하나 생성
+        li 작업 환경에 GitHub 저장소 클론
+        li npm 프로젝트 설정이 안 됐다면 #[+asInlineCode('$ npm init', 'shell')]으로 package.json 초기화
+        li 프로젝트 이름에 npm 사용자/조직 이름을 포함하여 구분시키기
+            p 예. @aws-sdk/client-s3
+
+    h3 NPM 계정 생성
+    ol
+        li: +asA('https://www.npmjs.com/signup')
+        li #[+asInlineCode('$ npm login', 'shell')]
+
+    h3 배포 관련 커맨드
+    +asCode('shell').
+        $ npm pack                      # 패키지 tar 생성. --dry-run 가능
+        $ npm publish --access=public   # 패키지 배포. --dry-run 가능
+        $ npm version                   # 버전 설정/증가
+        $ npm unpublish                 # 배포 중단
+
+    h3 VS Code + Node 24 개발 예시
+    ol
+        li VS Code Extension 설치
             ul
-                li: +asA('https://www.totaltypescript.com/how-to-create-an-npm-package')
-                li: +asA('https://github.com/Dong-gi/Dong-gi.github.io/tree/master/Repositories/Node/test-231114')
+                li: +asA('https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint', 'ESLint')
+                li: +asA('https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode', 'Prettier - Code formatter')
 
-            h3 프로젝트 설정
-            ol
-                li 프로젝트를 위한 GitHub 저장소가 없다면 하나 생성
-                li 작업 환경에 GitHub 저장소 클론
-                li npm 프로젝트 설정이 안 됐다면 #[+asInlineCode('$ npm init', 'shell')]으로 package.json 초기화
-                li 프로젝트 이름에 npm 사용자/조직 이름을 포함하여 구분시키기
-                    p 예. @aws-sdk/client-s3
+        li 설정 파일
+            ul
+                li VS Code
+                    +codeBtn({
+                        path: '/Repositories/Node/test-231114/.vscode/settings.json',
+                        lan: 'JSON'
+                    })
+                li ESLint
+                    +codeBtn({
+                        path: '/Repositories/Node/test-231114/eslint.config.mjs',
+                        lan: 'JavaScript'
+                    })
+                li Prettier
+                    +codeBtn({
+                        path: '/Repositories/Node/test-231114/.prettierrc',
+                        lan: 'JSON'
+                    })
+                li TypeScript
+                    +codeBtn({
+                        path: '/Repositories/Node/test-231114/tsconfig.json',
+                        lan: 'JSON'
+                    })
+                li NPM
+                    +codeBtn({
+                        path: '/Repositories/Node/test-231114/package.json',
+                        lan: 'JSON'
+                    })
 
-            h3 NPM 계정 생성
-            ol
-                li: +asA('https://www.npmjs.com/signup')
-                li #[+asInlineCode('$ npm login', 'shell')]
-
-            h3 배포 관련 커맨드
-            +asCode('shell').
-                $ npm pack                      # 패키지 tar 생성. --dry-run 가능
-                $ npm publish --access=public   # 패키지 배포. --dry-run 가능
-                $ npm version                   # 버전 설정/증가
-                $ npm unpublish                 # 배포 중단
-
-            h3 VS Code + Node 24 개발 예시
-            ol
-                li VS Code Extension 설치
-                    ul
-                        li: +asA('https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint', 'ESLint')
-                        li: +asA('https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode', 'Prettier - Code formatter')
-
-                li 설정 파일
-                    ul
-                        li VS Code
-                            +codeBtn({
-                                path: '/Repositories/Node/test-231114/.vscode/settings.json',
-                                lan: 'JSON'
-                            })
-                        li ESLint
-                            +codeBtn({
-                                path: '/Repositories/Node/test-231114/eslint.config.mjs',
-                                lan: 'JavaScript'
-                            })
-                        li Prettier
-                            +codeBtn({
-                                path: '/Repositories/Node/test-231114/.prettierrc',
-                                lan: 'JSON'
-                            })
-                        li TypeScript
-                            +codeBtn({
-                                path: '/Repositories/Node/test-231114/tsconfig.json',
-                                lan: 'JSON'
-                            })
-                        li NPM
-                            +codeBtn({
-                                path: '/Repositories/Node/test-231114/package.json',
-                                lan: 'JSON'
-                            })
-
-                li 코드 예
-                    ul
-                        li 빌드 전 소스 : src/module/b.ts
-                            +codeBtn({
-                                path: '/Repositories/Node/test-231114/src/module/b.ts',
-                                lan: 'TypeScript'
-                            })
-                        li 빌드 전 테스트 : src/module/b.test.ts
-                            +codeBtn({
-                                path: '/Repositories/Node/test-231114/src/module/b.test.ts',
-                                lan: 'TypeScript'
-                            })
-                        li 빌드 후 코드 : lib/module/b.js
-                            +asCode('JavaScript').
-                                import { LRUCache } from 'lru-cache';
-                                const cache = new LRUCache({ max: 1000 });
-                                /**
-                                 * @param x anything
-                                 */
-                                export function remember(x) {
-                                    cache.set(x, true);
-                                }
-                                /**
-                                 * @param x anything
-                                 */
-                                export function isCached(x) {
-                                    return cache.has(x);
-                                }
-                                //# sourceMappingURL=b.js.map
-                        li 빌드 후 테스트(CommonJS)
-                            +codeBtn({
-                                path: '/Repositories/Node/test-231114/test-cjs/test/module/b.js',
-                                lan: 'JavaScript'
-                            })
-                        li 빌드 후 테스트(ES Module)
-                            +codeBtn({
-                                path: '/Repositories/Node/test-231114/test-mjs/test/module/b.js',
-                                lan: 'JavaScript'
-                            })
+        li 코드 예
+            ul
+                li 빌드 전 소스 : src/module/b.ts
+                    +codeBtn({
+                        path: '/Repositories/Node/test-231114/src/module/b.ts',
+                        lan: 'TypeScript'
+                    })
+                li 빌드 전 테스트 : src/module/b.test.ts
+                    +codeBtn({
+                        path: '/Repositories/Node/test-231114/src/module/b.test.ts',
+                        lan: 'TypeScript'
+                    })
+                li 빌드 후 코드 : lib/module/b.js
+                    +asCode('JavaScript').
+                        import { LRUCache } from 'lru-cache';
+                        const cache = new LRUCache({ max: 1000 });
+                        /**
+                         * @param x anything
+                         */
+                        export function remember(x) {
+                            cache.set(x, true);
+                        }
+                        /**
+                         * @param x anything
+                         */
+                        export function isCached(x) {
+                            return cache.has(x);
+                        }
+                        //# sourceMappingURL=b.js.map
+                li 빌드 후 테스트(CommonJS)
+                    +codeBtn({
+                        path: '/Repositories/Node/test-231114/test-cjs/test/module/b.js',
+                        lan: 'JavaScript'
+                    })
+                li 빌드 후 테스트(ES Module)
+                    +codeBtn({
+                        path: '/Repositories/Node/test-231114/test-mjs/test/module/b.js',
+                        lan: 'JavaScript'
+                    })
 
     h1 TypeScript
     ol

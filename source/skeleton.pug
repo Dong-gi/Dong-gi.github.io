@@ -124,7 +124,7 @@ mixin w3img(src, description)
             description = description || (src.split('/').pop())
             // imgMap 의 키는 인코딩 전 경로다. 조회를 마친 뒤에 인코딩한다.
             trimmedSrc = encodePath(src.replace('/imgs/', '/imgs-generated/').replace(/\.\w+$/, ''))
-            encodedSrc = encodePath(src)
+            encodedSrc = src.startsWith('http') ? src : encodePath(src)
         if metadata != null
             picture
                 if src.endsWith('.gif')
@@ -155,9 +155,12 @@ mixin post(options)
             link(rel="stylesheet", href="/source/default.css")
             script#highlight-js(src="/source/highlight.pack.js", async)
             script#default-js(src='/source/default.min.js', defer)
+            //-
+                수식은 빌드가 미리 조판한다. build.ts 가 이 표식을 보고 TeX 를 CHTML 로
+                바꿔 넣으므로, 브라우저는 MathJax 를 받지도 조판하지도 않는다.
+                구분자 설정은 build.ts 의 prerenderMath 에 있다. 양쪽이 어긋나면 조판이 안 된다.
             if options.useMath
-                script#MathJax-script(src='/source/tex-chtml.js', defer)
-                script MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};
+                meta(name='mathjax-prerender', content='1')
 
         body
             aside.w3-animate-left#sidebar
@@ -172,7 +175,8 @@ mixin post(options)
                         li This Site: <a href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT</a>
                         li <a href="https://www.w3schools.com/w3css">w3css</a>: No license
                         li <a href="https://highlightjs.org/">highlight.js 11.11.1</a>: <a href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause</a>
-                        li <a href="https://github.com/mathjax/MathJax">MathJax 4.1.0</a>: <a href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a>
+                        li <a href="https://github.com/mathjax/MathJax">MathJax 4.1.3</a>: <a href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a> (수식은 빌드 시점에 조판)
+                        li <a href="https://ctan.org/pkg/newcomputermodern">New Computer Modern</a> (C) 2019-2021 Antonis Tsolomitis: <a href="https://ctan.org/license/gfl">GUST Font License</a>
                         li <a href="https://github.com/davidshimjs/qrcodejs">QRCode.js</a>: <a href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT</a>
                         li <a href="https://github.com/terrastruct/d2">D2 0.7.1</a>: <a href="https://github.com/terrastruct/d2/blob/master/LICENSE.txt">MPL-2.0</a>
                 hr
@@ -229,3 +233,49 @@ mixin bookInfo(options)
             +tds('ISBN', options.isbn)
             +tds('출판사', options.publisher)
             +tds('발행일', options.date)
+
+-
+    EXAMPLE_COUNTER = 0
+
+//-
+    예제 블록.
+
+    문제 서술을 블록에 담고, 풀이는 그 안에 +solution 으로 넣는다.
+    번호는 문서 안에서 자동으로 붙는다. 예제를 중간에 끼워 넣어도
+    뒤쪽 번호를 손볼 필요가 없다.
+
+    label : 자동 번호 대신 쓸 제목 (선택)
+
+    앵커 id 는 'example-{번호}' 로 붙으므로 다른 문서에서
+    /posts/fundamental/physics.html#example-7 처럼 가리킬 수 있다.
+
+    사용 예
+        +example()
+            p 식[f(x)=x^{2}]식 의 도함수를 구하라.
+            +solution()
+                p 식[f'(x)=2x]식
+mixin example(label)
+    -
+        EXAMPLE_COUNTER += 1
+        exampleNo = EXAMPLE_COUNTER
+    .example.w3-panel.w3-leftbar.w3-border-blue(id=`example-${exampleNo}`)&attributes(attributes)
+        p.example-label: strong
+            = label || `예제 ${exampleNo}`
+        if block
+            block
+
+//-
+    풀이 블록. 기본으로 접혀 있어 스스로 풀어본 뒤 펼쳐 볼 수 있다.
+
+    title : summary 에 표시할 문구 (선택, 기본 '풀이 보기')
+    open  : true 면 처음부터 펼친 상태 (선택).
+            증명처럼 본문의 일부로 읽혀야 하는 경우에 쓴다.
+
+    사용 예
+        +solution('증명', true)
+            p ...
+mixin solution(title, open)
+    details.solution(open=!!open)&attributes(attributes)
+        summary= title || '풀이 보기'
+        if block
+            block

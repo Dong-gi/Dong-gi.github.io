@@ -5,81 +5,75 @@ include ../../source/skeleton.pug
 })
 
     h1 지금의 Raspberry Pi 환경
-    div
-        h2 하드웨어
-        ul
-            li Pi 3 이후로 #[strong Pi 4, Pi 5, Pi Zero 2 W] 가 나왔다. Pi 5 는 PCIe 를 지원해 NVMe SSD 를 붙일 수 있다
-            li 카메라도 세대가 바뀌었다. Camera Module 3(IMX708, 오토포커스)과 HQ Camera(IMX477) 가 현행이다
+    h2 하드웨어
+    ul
+        li Pi 3 이후로 #[strong Pi 4, Pi 5, Pi Zero 2 W] 가 나왔다. Pi 5 는 PCIe 를 지원해 NVMe SSD 를 붙일 수 있다
+        li 카메라도 세대가 바뀌었다. Camera Module 3(IMX708, 오토포커스)과 HQ Camera(IMX477) 가 현행이다
 
-    div
-        h2 OS — Raspbian 이라는 이름은 이제 안 쓴다
-        ul
-            li 공식 명칭은 #[strong Raspberry Pi OS] 다. Debian 기반이며 Debian 릴리스 주기를 따라간다
-            li 현행은 #[strong Trixie](Debian 13) 이고 그 전이 #[strong Bookworm](Debian 12) 이다. 문서 본문의 Raspbian 은 Stretch(Debian 9) 세대다
-            li #[strong 64비트가 기본]이다. Pi 3 이상에서 쓸 수 있다
-            li 데스크톱이 X11 에서 #[strong Wayland] 로 넘어갔다. Bookworm 부터 기본이며 Pi 4 이상에서 활성화된다
-            li #[strong 메이저 버전 간 업그레이드는 권장되지 않는다.] Bookworm 에서 Trixie 로 갈 때는 새 이미지로 클린 설치하는 것이 공식 권고다
-            +asCode('shell').
-                $ sudo apt update
-                $ sudo apt full-upgrade    # 같은 메이저 버전 안에서만
+    h2 OS — Raspbian 이라는 이름은 이제 안 쓴다
+    ul
+        li 공식 명칭은 #[strong Raspberry Pi OS] 다. Debian 기반이며 Debian 릴리스 주기를 따라간다
+        li 현행은 #[strong Trixie](Debian 13) 이고 그 전이 #[strong Bookworm](Debian 12) 이다. 문서 본문의 Raspbian 은 Stretch(Debian 9) 세대다
+        li #[strong 64비트가 기본]이다. Pi 3 이상에서 쓸 수 있다
+        li 데스크톱이 X11 에서 #[strong Wayland] 로 넘어갔다. Bookworm 부터 기본이며 Pi 4 이상에서 활성화된다
+        li #[strong 메이저 버전 간 업그레이드는 권장되지 않는다.] Bookworm 에서 Trixie 로 갈 때는 새 이미지로 클린 설치하는 것이 공식 권고다
+        +asCode('shell').
+            $ sudo apt update
+            $ sudo apt full-upgrade    # 같은 메이저 버전 안에서만
 
-    div
-        h2 카메라 — PiCamera 는 더 이상 쓰지 않는다
-        ul
-            li #[strong 본문의 picamera 라이브러리는 레거시다.] Bullseye 부터 카메라 스택이 #[strong libcamera] 기반으로 바뀌면서 구 스택(#[+asInlineCode('raspistill', 'shell')], #[+asInlineCode('raspivid', 'shell')], #[+asInlineCode('picamera', 'python')])이 동작하지 않는다
-            li 현행은 #[strong picamera2] 다. libcamera 위에 올라간 Python 바인딩이며 Raspberry Pi OS 에 기본 포함돼 있다
-            +asCode('python').
-                from picamera2 import Picamera2
-                picam2 = Picamera2()
-                picam2.configure(picam2.create_preview_configuration())
-                picam2.start()
-                picam2.capture_file("test.jpg")
-            li 커맨드라인 도구도 바뀌었다 — #[+asInlineCode('rpicam-still', 'shell')], #[+asInlineCode('rpicam-vid', 'shell')], #[+asInlineCode('rpicam-hello', 'shell')] (구 #[+asInlineCode('libcamera-*', 'shell')])
-            li OpenCV 와 함께 쓸 때는 #[+asInlineCode('picam2.capture_array()', 'python')] 로 numpy 배열을 직접 받는다. 본문의 #[+asInlineCode('PiRGBArray', 'python')] 방식은 필요 없다
-            +asCode('python').
-                import cv2
-                from picamera2 import Picamera2
-                picam2 = Picamera2()
-                picam2.start()
-                frame = picam2.capture_array()      # numpy 배열
-                cv2.imshow("frame", frame)
+    h2 카메라 — PiCamera 는 더 이상 쓰지 않는다
+    ul
+        li #[strong 본문의 picamera 라이브러리는 레거시다.] Bullseye 부터 카메라 스택이 #[strong libcamera] 기반으로 바뀌면서 구 스택(#[+asInlineCode('raspistill', 'shell')], #[+asInlineCode('raspivid', 'shell')], #[+asInlineCode('picamera', 'python')])이 동작하지 않는다
+        li 현행은 #[strong picamera2] 다. libcamera 위에 올라간 Python 바인딩이며 Raspberry Pi OS 에 기본 포함돼 있다
+        +asCode('python').
+            from picamera2 import Picamera2
+            picam2 = Picamera2()
+            picam2.configure(picam2.create_preview_configuration())
+            picam2.start()
+            picam2.capture_file("test.jpg")
+        li 커맨드라인 도구도 바뀌었다 — #[+asInlineCode('rpicam-still', 'shell')], #[+asInlineCode('rpicam-vid', 'shell')], #[+asInlineCode('rpicam-hello', 'shell')] (구 #[+asInlineCode('libcamera-*', 'shell')])
+        li OpenCV 와 함께 쓸 때는 #[+asInlineCode('picam2.capture_array()', 'python')] 로 numpy 배열을 직접 받는다. 본문의 #[+asInlineCode('PiRGBArray', 'python')] 방식은 필요 없다
+        +asCode('python').
+            import cv2
+            from picamera2 import Picamera2
+            picam2 = Picamera2()
+            picam2.start()
+            frame = picam2.capture_array()      # numpy 배열
+            cv2.imshow("frame", frame)
 
-    div
-        h2 Python 패키지 설치 — pip 가 그냥 안 된다
-        ul
-            li #[strong Bookworm 부터 시스템 Python 에 pip install 을 할 수 없다.] #[+asA('https://peps.python.org/pep-0668/', 'PEP 668')] 에 따른 변화이며 Raspberry Pi 가 아니라 Python 커뮤니티가 정한 것이다
-            +asCode('shell').
-                $ pip install numpy
-                error: externally-managed-environment
-            li 해법은 가상 환경이다
-            +asCode('shell').
-                $ python -m venv --system-site-packages myenv
-                $ source myenv/bin/activate
-                $ pip install opencv-python
-            p #[+asInlineCode('--system-site-packages', 'shell')] 를 주면 apt 로 깐 시스템 패키지(picamera2 등)를 가상 환경에서도 볼 수 있다
-            li 또는 apt 로 설치한다 — #[+asInlineCode('sudo apt install python3-opencv python3-numpy', 'shell')]
+    h2 Python 패키지 설치 — pip 가 그냥 안 된다
+    ul
+        li #[strong Bookworm 부터 시스템 Python 에 pip install 을 할 수 없다.] #[+asA('https://peps.python.org/pep-0668/', 'PEP 668')] 에 따른 변화이며 Raspberry Pi 가 아니라 Python 커뮤니티가 정한 것이다
+        +asCode('shell').
+            $ pip install numpy
+            error: externally-managed-environment
+        li 해법은 가상 환경이다
+        +asCode('shell').
+            $ python -m venv --system-site-packages myenv
+            $ source myenv/bin/activate
+            $ pip install opencv-python
+        p #[+asInlineCode('--system-site-packages', 'shell')] 를 주면 apt 로 깐 시스템 패키지(picamera2 등)를 가상 환경에서도 볼 수 있다
+        li 또는 apt 로 설치한다 — #[+asInlineCode('sudo apt install python3-opencv python3-numpy', 'shell')]
 
-    div
-        h2 OpenCV
-        ul
-            li 본문은 OpenCV 3.3 기준이다. 현행은 #[strong 4.x] 이며 API 가 일부 다르다
-            li #[strong cv2.findContours 의 반환값 개수가 바뀌었다.] OpenCV 3 은 3개, 4 는 2개를 반환한다. 본문 예제가 여기 걸린다
-            +asCode('python').
-                # OpenCV 3
-                image, contours, hierarchy = cv2.findContours(...)
-                # OpenCV 4
-                contours, hierarchy = cv2.findContours(...)
-            li #[+asInlineCode('cv2.cv', 'python')] 네임스페이스와 상수(#[+asInlineCode('cv2.cv.CV_*', 'python')])는 제거됐다. #[+asInlineCode('cv2.*', 'python')] 를 직접 쓴다
-            li SIFT · SURF 는 특허 만료로 4.4 부터 메인 모듈에 들어왔다. #[+asInlineCode('cv2.SIFT_create()', 'python')]
+    h2 OpenCV
+    ul
+        li 본문은 OpenCV 3.3 기준이다. 현행은 #[strong 4.x] 이며 API 가 일부 다르다
+        li #[strong cv2.findContours 의 반환값 개수가 바뀌었다.] OpenCV 3 은 3개, 4 는 2개를 반환한다. 본문 예제가 여기 걸린다
+        +asCode('python').
+            # OpenCV 3
+            image, contours, hierarchy = cv2.findContours(...)
+            # OpenCV 4
+            contours, hierarchy = cv2.findContours(...)
+        li #[+asInlineCode('cv2.cv', 'python')] 네임스페이스와 상수(#[+asInlineCode('cv2.cv.CV_*', 'python')])는 제거됐다. #[+asInlineCode('cv2.*', 'python')] 를 직접 쓴다
+        li SIFT · SURF 는 특허 만료로 4.4 부터 메인 모듈에 들어왔다. #[+asInlineCode('cv2.SIFT_create()', 'python')]
 
     +legacy('Raspberry Pi 3 + Raspbian + OpenCV 3.3', '2017년 실습 기록')
-        h1 개요
-        div
-            Raspberry Pi 3 + Raspbian + OpenCV 3.3(python) 실습 내용 정리
-            +asA('https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/')
-            +asA('http://www.nitc.ac.in/electrical/ipg/python/opencv-python-tutroals.pdf')
+        h2 개요
+        Raspberry Pi 3 + Raspbian + OpenCV 3.3(python) 실습 내용 정리
+        +asA('https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/')
+        +asA('http://www.nitc.ac.in/electrical/ipg/python/opencv-python-tutroals.pdf')
 
-        h1 Python PiCamera 라이브러리 이용 예
+        h2 Python PiCamera 라이브러리 이용 예
         ol
             li.marker
                 |start_preview(), stop_preview()
@@ -106,118 +100,114 @@ include ../../source/skeleton.pug
                 |capture to an OpenCV object
                 +codeBtn('/Repositories/Python/Raspbian/start08.py', 'python')
 
-        h1 Picamera with OpenCV 예
+        h2 Picamera with OpenCV 예
         ol
             li.marker
                 |fps change by resolution
                 +codeBtn('/Repositories/Python/Raspbian/cam01.py', 'python')
-                div
-                    h3 테스트 결과
-                    |// jpeg quality [0, 100] default 85
-                    br
-                    |// resolution can not changed in running
-                    br
-                    |(320x240) : 14.05fps
-                    br
-                    |(480x272) : 12.78fps
-                    br
-                    |(600x400) : 10.94fps
-                    br
-                    |(800x600) : 7.72fps
-                    br
-                    |(1024x768) : 5.68fps
-                    br
-                    |(1280x960) : 4.22fps
-                    br
-                    |(1366x768) : 4.88fps
-                    br
-                    |(1440x900) : 4.11fps
-                    br
-                    |(1600x900) : 3.81fps
-                    br
-                    |(1920x1080) : 2.56fps
+                h3 테스트 결과
+                |// jpeg quality [0, 100] default 85
+                br
+                |// resolution can not changed in running
+                br
+                |(320x240) : 14.05fps
+                br
+                |(480x272) : 12.78fps
+                br
+                |(600x400) : 10.94fps
+                br
+                |(800x600) : 7.72fps
+                br
+                |(1024x768) : 5.68fps
+                br
+                |(1280x960) : 4.22fps
+                br
+                |(1366x768) : 4.88fps
+                br
+                |(1440x900) : 4.11fps
+                br
+                |(1600x900) : 3.81fps
+                br
+                |(1920x1080) : 2.56fps
             li.marker
                 |fps change by ISO(sensitivity to light), default 0
                 +codeBtn('/Repositories/Python/Raspbian/cam02.py', 'python')
-                div
-                    h3 테스트 결과
-                    |// ISO can not changed in running
-                    br
-                    |// if ISO > 0 : exposure_mode property becomes non-functional
-                    br
-                    |(600x400, ISO:0) : 10.35fps
-                    br
-                    |(600x400, ISO:100) : 11.20fps
-                    br
-                    |(600x400, ISO:200) : 10.55fps
-                    br
-                    |(600x400, ISO:400) : 11.04fps
-                    br
-                    |(600x400, ISO:800) : 11.03fps
-                    br
-                    |(600x400, ISO:1600) : 10.20fps
-                    br
-                    |(1600x900, ISO:0) : 3.80fps
-                    br
-                    |(1600x900, ISO:100) : 3.77fps
-                    br
-                    |(1600x900, ISO:200) : 3.81fps
-                    br
-                    |(1600x900, ISO:400) : 3.73fps
-                    br
-                    |(1600x900, ISO:800) : 3.68fps
-                    br
-                    |(1600x900, ISO:1600) : 3.54fps
+                h3 테스트 결과
+                |// ISO can not changed in running
+                br
+                |// if ISO > 0 : exposure_mode property becomes non-functional
+                br
+                |(600x400, ISO:0) : 10.35fps
+                br
+                |(600x400, ISO:100) : 11.20fps
+                br
+                |(600x400, ISO:200) : 10.55fps
+                br
+                |(600x400, ISO:400) : 11.04fps
+                br
+                |(600x400, ISO:800) : 11.03fps
+                br
+                |(600x400, ISO:1600) : 10.20fps
+                br
+                |(1600x900, ISO:0) : 3.80fps
+                br
+                |(1600x900, ISO:100) : 3.77fps
+                br
+                |(1600x900, ISO:200) : 3.81fps
+                br
+                |(1600x900, ISO:400) : 3.73fps
+                br
+                |(1600x900, ISO:800) : 3.68fps
+                br
+                |(1600x900, ISO:1600) : 3.54fps
             li.marker
                 |awb_mode(auto-white-balance), default 'auto'
                 +codeBtn('/Repositories/Python/Raspbian/cam03.py', 'python')
-                div
-                    h3 테스트 결과
-                    |// awb_mode can changed in running
-                    br
-                    |// possible values can be obtained from PiCamera.AWB_MODES
-                    br
-                    |// {'cloudy': 3, 'auto': 1, 'tungsten': 5, 'flash': 8, 'horizon': 9, 'fluorescent': 6, 'incandescent': 7, 'shade': 4, 'off': 0, 'sunlight': 2}
-                    br
-                    |(600x400, awb_mode:horizon) : 10.28fps
-                    br
-                    |(600x400, awb_mode:off) : 11.97fps
-                    br
-                    |(600x400, awb_mode:cloudy) : 10.19fps
-                    br
-                    |(600x400, awb_mode:shade) : 10.86fps
-                    br
-                    |(600x400, awb_mode:fluorescent) : 10.55fps
-                    br
-                    |(600x400, awb_mode:tungsten) : 10.63fps
-                    br
-                    |(600x400, awb_mode:auto) : 10.71fps
-                    br
-                    |(600x400, awb_mode:flash) : 10.46fps
-                    br
-                    |(600x400, awb_mode:sunlight) : 10.57fps
-                    br
-                    |(600x400, awb_mode:incandescent) : 10.42fps
-        div
-            h2 카메라 동작 중에 변경할 수 있는 picamera 인자들
-            ol
-                li brightness // [0, 100], default 50
-                li color_effects // (u, v) tuple where u, v are in [0, 255] // ex. (128, 128) => black and white
-                li contrast // [-100, 100], default 0
-                li crop // (x, y, w, h) where in [0.0, 1.0], default (0., 0., 1., 1.)
-                li exposure_compensation : [-25, 25], default 0
-                li exposure_mode : PiCamera.EXPOSURE_MODES, default 'auto'
-                li image_effect : PiCamera.IMAGE_EFFECTS, default 'none'
-                li meter_mode : PiCamera.METER_MODES, default 'average'
-                li preview_alpha : alpha of preview window, [0, 255], default 255
-                li rotation : {0, 90, 180, 270}, default 0
-                li saturation : [-100, 100], default 0
-                li sharpness : [-100, 100], default 0 // a measure of the amount of post-processing to reduce or increase image sharpness
-                li shutter_speed : in microseconds, default 0(auto)
-                li hflip : default False
-                li vflip : default False
+                h3 테스트 결과
+                |// awb_mode can changed in running
+                br
+                |// possible values can be obtained from PiCamera.AWB_MODES
+                br
+                |// {'cloudy': 3, 'auto': 1, 'tungsten': 5, 'flash': 8, 'horizon': 9, 'fluorescent': 6, 'incandescent': 7, 'shade': 4, 'off': 0, 'sunlight': 2}
+                br
+                |(600x400, awb_mode:horizon) : 10.28fps
+                br
+                |(600x400, awb_mode:off) : 11.97fps
+                br
+                |(600x400, awb_mode:cloudy) : 10.19fps
+                br
+                |(600x400, awb_mode:shade) : 10.86fps
+                br
+                |(600x400, awb_mode:fluorescent) : 10.55fps
+                br
+                |(600x400, awb_mode:tungsten) : 10.63fps
+                br
+                |(600x400, awb_mode:auto) : 10.71fps
+                br
+                |(600x400, awb_mode:flash) : 10.46fps
+                br
+                |(600x400, awb_mode:sunlight) : 10.57fps
+                br
+                |(600x400, awb_mode:incandescent) : 10.42fps
+        h3 카메라 동작 중에 변경할 수 있는 picamera 인자들
+        ol
+            li brightness // [0, 100], default 50
+            li color_effects // (u, v) tuple where u, v are in [0, 255] // ex. (128, 128) => black and white
+            li contrast // [-100, 100], default 0
+            li crop // (x, y, w, h) where in [0.0, 1.0], default (0., 0., 1., 1.)
+            li exposure_compensation : [-25, 25], default 0
+            li exposure_mode : PiCamera.EXPOSURE_MODES, default 'auto'
+            li image_effect : PiCamera.IMAGE_EFFECTS, default 'none'
+            li meter_mode : PiCamera.METER_MODES, default 'average'
+            li preview_alpha : alpha of preview window, [0, 255], default 255
+            li rotation : {0, 90, 180, 270}, default 0
+            li saturation : [-100, 100], default 0
+            li sharpness : [-100, 100], default 0 // a measure of the amount of post-processing to reduce or increase image sharpness
+            li shutter_speed : in microseconds, default 0(auto)
+            li hflip : default False
+            li vflip : default False
 
-        h1 영상처리 이론
+        h2 영상처리 이론
         ol
             li.marker Image Operation : [0, 255]의 값만 사용된다
                 ul
@@ -323,7 +313,7 @@ include ../../source/skeleton.pug
                     li Top Hat : Open - 원본
                     li Black Hat : Closing - 원본
 
-        h1 영상처리 관련 Python 라이브러리
+        h2 영상처리 관련 Python 라이브러리
         ol
             li NumPy : 다차원 배열 처리
             li SciPy : 다양한 거리 계산 함수, kd-tree 지원
@@ -337,7 +327,7 @@ include ../../source/skeleton.pug
             li h5py : NumPy array 저장 지원
             li scikit-image : 신기술이 곧잘 지원된다.(효율적이라곤 단정할 수 없음)
 
-        h1 OpenCV for Python 실습
+        h2 OpenCV for Python 실습
         ol
             li.marker cv 전체 속성 출력 : help(cv2.Attr)
             li.marker
@@ -368,14 +358,13 @@ include ../../source/skeleton.pug
                 |HSV
                 +codeBtn('/Repositories/Python/Raspbian/cv08.py', 'python')
                 p OpenCV의 HSV 색공간은 [0, 179], [0, 255], [0, 255]이므로 다른 범위를 쓰는 프로그램은 정규화 필요
-                div
-                    h3 HSV에서의 색상 추출
-                    ul
-                        li green = np.uint8([[[0, 255, 0]]])
-                        li hsv_green = cv2.cvtColor(green, cv2.COLOR_BGR2HSV)
-                        li hue, saturation, value = hsv_green
-                        li low_green = np.array([hue-10, 100, 100])
-                        li high_green = np.array([hue+10, 255, 255])
+                h3 HSV에서의 색상 추출
+                ul
+                    li green = np.uint8([[[0, 255, 0]]])
+                    li hsv_green = cv2.cvtColor(green, cv2.COLOR_BGR2HSV)
+                    li hue, saturation, value = hsv_green
+                    li low_green = np.array([hue-10, 100, 100])
+                    li high_green = np.array([hue+10, 255, 255])
             li.marker
                 |Image Thresholding
                 +codeBtn('/Repositories/Python/Raspbian/cv09.py', 'python')
@@ -419,7 +408,7 @@ include ../../source/skeleton.pug
                 |cv2::findContours
                 +codeBtn('/Repositories/Python/Raspbian/cv15.py', 'python')
 
-        h1 테스트용 이미지 수집
+        h2 테스트용 이미지 수집
         +asCode('javascript').
             // 웹브라우저 콘솔에서 jQuery 추가
             let script = document.createElement('script');
@@ -436,7 +425,7 @@ include ../../source/skeleton.pug
             hiddenElement.download = 'urls.txt';
             hiddenElement.click();
 
-        h1 실습 과제
+        h2 실습 과제
         ol
             li.marker
                 |정면 얼굴 및 눈 검출 시도
@@ -444,20 +433,19 @@ include ../../source/skeleton.pug
             li.marker
                 |화재 검출 시도
                 +codeBtn('/Repositories/Python/Raspbian/cctv02.py', 'python')
-                div
-                    +codeBtn('/Repositories/Python/Raspbian/cctv02-2.py', 'python')
-                    +codeBtn('/Repositories/Python/Raspbian/cctv02-3.py', 'python')
-                    +codeBtn('/Repositories/Python/Raspbian/cctv02-4.py', 'python')
-                    h3 화재 검출?
-                    ul
-                        li CCTV → 가시광선 영역
-                        li 화재 특성
-                            ol
-                                li 고온(+ 급격한 온도 상승), CO2를 비롯한 가스 방출
-                                    +asA('https://www.kfpa.or.kr/pdf_file/D/1/D1_1-1.pdf')
-                                li 실내온도 역시 덩달아 상승. 550 전후에서 플래시오버 발생 → 복사열로 인해 화재 확산
-                        li 화재의 종류
-                            p A급 화재 : 일반가연물 화재, B급 화재 : 유류 및 가스화재, C급 화재 : 전기화재, D급 화재 : 금속화재, F급/K급 화재 : 식용유화재
+                +codeBtn('/Repositories/Python/Raspbian/cctv02-2.py', 'python')
+                +codeBtn('/Repositories/Python/Raspbian/cctv02-3.py', 'python')
+                +codeBtn('/Repositories/Python/Raspbian/cctv02-4.py', 'python')
+                h3 화재 검출?
+                ul
+                    li CCTV → 가시광선 영역
+                    li 화재 특성
+                        ol
+                            li 고온(+ 급격한 온도 상승), CO2를 비롯한 가스 방출
+                                +asA('https://www.kfpa.or.kr/pdf_file/D/1/D1_1-1.pdf')
+                            li 실내온도 역시 덩달아 상승. 550 전후에서 플래시오버 발생 → 복사열로 인해 화재 확산
+                    li 화재의 종류
+                        p A급 화재 : 일반가연물 화재, B급 화재 : 유류 및 가스화재, C급 화재 : 전기화재, D급 화재 : 금속화재, F급/K급 화재 : 식용유화재
             li.marker 소켓 전송
                 +codeBtn('/Repositories/Python/Raspbian/sender.py', 'python')
                 +codeBtn('/Repositories/Python/Raspbian/socket02.py', 'python')

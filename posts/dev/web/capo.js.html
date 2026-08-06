@@ -1,1 +1,519 @@
-<!DOCTYPE html><html lang="ko-KR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"><title>capo.js</title><link rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js" async></script><script id="default-js" src="/source/default.min.js" defer></script><script id="MathJax-script" src="/source/tex-chtml.js" defer></script><script>MathJax={tex:{tags:'ams',inlineMath:[['식[', ']식']]}};</script></head><body><aside class="w3-animate-left" id="sidebar"><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details class="w3-small"><summary>LICENSE</summary><ul><li>This Site: <a href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT</a></li><li><a href="https://www.w3schools.com/w3css">w3css</a>: No license</li><li><a href="https://highlightjs.org/">highlight.js 11.11.1</a>: <a href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause</a></li><li><a href="https://github.com/mathjax/MathJax">MathJax 4.1.0</a>: <a href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a></li><li><a href="https://github.com/davidshimjs/qrcodejs">QRCode.js</a>: <a href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT</a></li><li><a href="https://github.com/terrastruct/d2">D2 0.7.1</a>: <a href="https://github.com/terrastruct/d2/blob/master/LICENSE.txt">MPL-2.0</a></li></ul></details><hr></aside><main id="main"><nav class="w3-bar w3-blue" id="nav"><button class="w3-bar-item w3-button w3-hover-theme" id="nav-toggle-btn" type="button" aria-label="Toggle navigation menu" title="Toggle navigation menu">&#9776;</button><form role="search"><input class="w3-bar-item" id="query" type="search" placeholder="search" style="max-width:35%"></form><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></nav><article id="contents"><h1>자료</h1><ul><li><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/rviscomi/capo.js">capo</a></li></ul><h1>요약</h1><ul><li>&lt;head&gt; 내 요소들을 성능에 영향을 미치는 순으로 정렬하여, 페이지 성능을 향상시키는 데 도움을 준다</li><figure class="w3-margin-bottom"><picture><source srcset="/imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-500.avif 500w, /imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-1200.avif 1200w, /imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-2000.avif 2000w" type="image/avif"/><source srcset="/imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-500.webp 500w, /imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-1200.webp 1200w, /imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-2000.webp 2000w" type="image/webp"/><img class="w3-round" src="/imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-2000.jpeg" alt="Screenshot 2024-07-24 at 7.07.26 PM.png" loading="lazy" sizes="auto" width="1408" height="1116"/></picture><figcaption class="w3-padding">&lt;Screenshot 2024-07-24 at 7.07.26 PM.png&gt;<a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="/imgs/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM.png" target="_blank">[원본 보기]</a></figcaption></figure></ul></article></main></body></html>
+<!DOCTYPE html>
+<html lang="ko-KR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"><title>capo.js</title><link rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js" async=""></script><script id="default-js" src="/source/default.min.js" defer=""></script><meta name="mathjax-prerender" content="1"><style id="MJX-CHTML-styles">
+mjx-container[overflow="scroll"][display] {
+  overflow: auto clip;
+  min-width: initial !important;
+}
+
+mjx-container[overflow="truncate"][display] {
+  overflow: hidden clip;
+  min-width: initial !important;
+}
+
+mjx-container[display] {
+  display: block;
+  text-align: center;
+  justify-content: center;
+  margin: .7em 0;
+  padding: .3em 2px;
+}
+
+mjx-container[display][width="full"] {
+  display: flex;
+}
+
+mjx-container[justify="left"] {
+  text-align: left;
+  justify-content: left;
+}
+
+mjx-container[justify="right"] {
+  text-align: right;
+  justify-content: right;
+}
+
+mjx-container[jax="CHTML"] {
+  white-space: nowrap;
+}
+
+mjx-mo > mjx-c, mjx-mi > mjx-c, mjx-mn > mjx-c, mjx-ms > mjx-c, mjx-mtext > mjx-c {
+  clip-path: padding-box polygon(-1em -2px, calc(100% + 1em) -2px, calc(100% + 1em) calc(100% + 2px), -1em calc(100% + 2px));
+}
+
+mjx-stretchy-h {
+  clip-path: padding-box polygon(0 -2px, 100% -2px, 100% calc(100% + 2px), 0 calc(100% + 2px));
+}
+
+mjx-stretchy-v {
+  clip-path: padding-box polygon(-2px 0, calc(100% + 2px) 0, calc(100% + 2px) 100%, -2px 100%);
+}
+
+mjx-container [space="1"] {
+  margin-left: .111em;
+}
+
+mjx-container [space="2"] {
+  margin-left: .167em;
+}
+
+mjx-container [space="3"] {
+  margin-left: .222em;
+}
+
+mjx-container [space="4"] {
+  margin-left: .278em;
+}
+
+mjx-container [space="5"] {
+  margin-left: .333em;
+}
+
+mjx-container [rspace="1"] {
+  margin-right: .111em;
+}
+
+mjx-container [rspace="2"] {
+  margin-right: .167em;
+}
+
+mjx-container [rspace="3"] {
+  margin-right: .222em;
+}
+
+mjx-container [rspace="4"] {
+  margin-right: .278em;
+}
+
+mjx-container [rspace="5"] {
+  margin-right: .333em;
+}
+
+mjx-container [size="s"] {
+  font-size: 70.7%;
+}
+
+mjx-container [size="ss"] {
+  font-size: 50%;
+}
+
+mjx-container [size="Tn"] {
+  font-size: 60%;
+}
+
+mjx-container [size="sm"] {
+  font-size: 85%;
+}
+
+mjx-container [size="lg"] {
+  font-size: 120%;
+}
+
+mjx-container [size="Lg"] {
+  font-size: 144%;
+}
+
+mjx-container [size="LG"] {
+  font-size: 173%;
+}
+
+mjx-container [size="hg"] {
+  font-size: 207%;
+}
+
+mjx-container [size="HG"] {
+  font-size: 249%;
+}
+
+mjx-container [width="full"] {
+  width: 100%;
+}
+
+mjx-box {
+  display: inline-block;
+}
+
+mjx-block {
+  display: block;
+}
+
+mjx-itable {
+  display: inline-table;
+}
+
+mjx-row {
+  display: table-row;
+}
+
+mjx-row > mjx-cell, mjx-row > mjx-base, mjx-row > mjx-under, mjx-row > mjx-over, mjx-row > mjx-den {
+  display: table-cell;
+}
+
+mjx-container [inline-breaks] {
+  display: inline;
+}
+
+mjx-container .mjx-selected {
+  outline: 2px solid black;
+}
+
+@media (prefers-color-scheme: dark) {
+  mjx-container .mjx-selected {
+    outline: 2px solid #C8C8C8;
+  }
+}
+
+mjx-mtext {
+  display: inline-block;
+}
+
+mjx-mstyle {
+  display: inline-block;
+}
+
+mjx-merror {
+  display: inline-block;
+  color: red;
+  background-color: yellow;
+}
+
+mjx-mphantom {
+  visibility: hidden;
+}
+
+mjx-assistive-mml {
+  position: absolute !important;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: polygon(0 0, 0 1px, 1px 1px, 1px 0);
+  padding: 1px 0px 0px 0px !important;
+  border: 0px !important;
+  display: block !important;
+  width: auto !important;
+  overflow: hidden !important;
+  text-indent: 0px ! important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+mjx-assistive-mml[display="block"] {
+  width: 100% !important;
+}
+
+mjx-container[jax="CHTML"] > mjx-math.NCM-N[breakable] > * {
+  font-family: MJX-NCM-ZERO, MJX-NCM-N;
+}
+
+.NCM-N {
+  font-family: MJX-NCM-ZERO, MJX-NCM-N;
+}
+
+.NCM-B {
+  font-family: MJX-NCM-ZERO, MJX-NCM-B;
+}
+
+.NCM-I {
+  font-family: MJX-NCM-ZERO, MJX-NCM-I;
+}
+
+.NCM-BI {
+  font-family: MJX-NCM-ZERO, MJX-NCM-BI;
+}
+
+.NCM-DS {
+  font-family: MJX-NCM-ZERO, MJX-NCM-DS;
+}
+
+.NCM-F {
+  font-family: MJX-NCM-ZERO, MJX-NCM-F;
+}
+
+.NCM-FB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-FB;
+}
+
+.NCM-SS {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SS;
+}
+
+.NCM-SSB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SSB;
+}
+
+.NCM-SSI {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SSI;
+}
+
+.NCM-SSBI {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SSBI;
+}
+
+.NCM-M {
+  font-family: MJX-NCM-ZERO, MJX-NCM-M;
+}
+
+.NCM-SO {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SO;
+}
+
+.NCM-LO {
+  font-family: MJX-NCM-ZERO, MJX-NCM-LO;
+}
+
+.NCM-S3 {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S3;
+}
+
+.NCM-S4 {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S4;
+}
+
+.NCM-S5 {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S5;
+}
+
+.NCM-S6 {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S6;
+}
+
+.NCM-S7 {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S7;
+}
+
+.NCM-MI {
+  font-family: MJX-NCM-ZERO, MJX-NCM-MI;
+}
+
+.NCM-C {
+  font-family: MJX-NCM-ZERO, MJX-NCM-C;
+}
+
+.NCM-CB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-CB;
+}
+
+.NCM-OS {
+  font-family: MJX-NCM-ZERO, MJX-NCM-OS;
+}
+
+.NCM-OB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-OB;
+}
+
+.NCM-V {
+  font-family: MJX-NCM-ZERO, MJX-NCM-V;
+}
+
+.NCM-LT {
+  font-family: MJX-NCM-ZERO, MJX-NCM-LT;
+}
+
+.NCM-RB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-RB;
+}
+
+.NCM-EM {
+  font-family: MJX-NCM-ZERO, MJX-NCM-EM;
+}
+
+.NCM-B-a {
+  font-family: MJX-NCM-ZERO, MJX-NCM-B-a;
+}
+
+.NCM-U {
+  font-family: MJX-NCM-ZERO, MJX-NCM-U;
+}
+
+.NCM-U-a {
+  font-family: MJX-NCM-ZERO, MJX-NCM-U-a;
+}
+
+.NCM-S {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S;
+}
+
+.NCM-SB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SB;
+}
+
+@font-face /* MJX-NCM-ZERO */ {
+  font-family: MJX-NCM-ZERO;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-zero.woff2") format("woff2");
+}
+
+@font-face /* MJX-BRK */ {
+  font-family: MJX-BRK;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-brk.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-N */ {
+  font-family: MJX-NCM-N;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-n.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-B */ {
+  font-family: MJX-NCM-B;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-b.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-I */ {
+  font-family: MJX-NCM-I;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-i.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-BI */ {
+  font-family: MJX-NCM-BI;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-bi.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-DS */ {
+  font-family: MJX-NCM-DS;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ds.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-F */ {
+  font-family: MJX-NCM-F;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-f.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-FB */ {
+  font-family: MJX-NCM-FB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-fb.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SS */ {
+  font-family: MJX-NCM-SS;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ss.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SSB */ {
+  font-family: MJX-NCM-SSB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ssb.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SSI */ {
+  font-family: MJX-NCM-SSI;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ssi.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SSBI */ {
+  font-family: MJX-NCM-SSBI;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ssbi.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-M */ {
+  font-family: MJX-NCM-M;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-m.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SO */ {
+  font-family: MJX-NCM-SO;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-so.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-LO */ {
+  font-family: MJX-NCM-LO;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-lo.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S3 */ {
+  font-family: MJX-NCM-S3;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s3.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S4 */ {
+  font-family: MJX-NCM-S4;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s4.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S5 */ {
+  font-family: MJX-NCM-S5;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s5.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S6 */ {
+  font-family: MJX-NCM-S6;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s6.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S7 */ {
+  font-family: MJX-NCM-S7;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s7.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-MI */ {
+  font-family: MJX-NCM-MI;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-mi.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-C */ {
+  font-family: MJX-NCM-C;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-c.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-CB */ {
+  font-family: MJX-NCM-CB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-cb.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-OS */ {
+  font-family: MJX-NCM-OS;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-os.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-OB */ {
+  font-family: MJX-NCM-OB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ob.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-V */ {
+  font-family: MJX-NCM-V;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-v.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-LT */ {
+  font-family: MJX-NCM-LT;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-lt.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-RB */ {
+  font-family: MJX-NCM-RB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-rb.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-EM */ {
+  font-family: MJX-NCM-EM;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-em.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-B-a */ {
+  font-family: MJX-NCM-B-a;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-b-a.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-U */ {
+  font-family: MJX-NCM-U;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-u.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-U-a */ {
+  font-family: MJX-NCM-U-a;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-u-a.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S */ {
+  font-family: MJX-NCM-S;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SB */ {
+  font-family: MJX-NCM-SB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-sb.woff2") format("woff2");
+}
+</style></head><body><aside class="w3-animate-left" id="sidebar"><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details class="w3-small"><summary>LICENSE</summary><ul><li>This Site: <a href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT</a></li><li><a href="https://www.w3schools.com/w3css">w3css</a>: No license</li><li><a href="https://highlightjs.org/">highlight.js 11.11.1</a>: <a href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause</a></li><li><a href="https://github.com/mathjax/MathJax">MathJax 4.1.3</a>: <a href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a> (수식은 빌드 시점에 조판)</li><li><a href="https://ctan.org/pkg/newcomputermodern">New Computer Modern</a> (C) 2019-2021 Antonis Tsolomitis: <a href="https://ctan.org/license/gfl">GUST Font License</a></li><li><a href="https://github.com/davidshimjs/qrcodejs">QRCode.js</a>: <a href="https://github.com/davidshimjs/qrcodejs/blob/master/LICENSE">MIT</a></li><li><a href="https://github.com/terrastruct/d2">D2 0.7.1</a>: <a href="https://github.com/terrastruct/d2/blob/master/LICENSE.txt">MPL-2.0</a></li></ul></details><hr></aside><main id="main"><nav class="w3-bar w3-blue" id="nav"><button class="w3-bar-item w3-button w3-hover-theme" id="nav-toggle-btn" type="button" aria-label="Toggle navigation menu" title="Toggle navigation menu">☰</button><form role="search"><input class="w3-bar-item" id="query" type="search" placeholder="search" style="max-width:35%"></form><a class="w3-bar-item w3-button w3-hover-theme" href="/">Home</a></nav><article id="contents"><h1>자료</h1><ul><li><a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="https://github.com/rviscomi/capo.js">capo</a></li></ul><h1>요약</h1><ul><li>&lt;head&gt; 내 요소들을 성능에 영향을 미치는 순으로 정렬하여, 페이지 성능을 향상시키는 데 도움을 준다</li><figure class="w3-margin-bottom"><picture><source srcset="/imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-500.avif 500w, /imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-1200.avif 1200w, /imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-2000.avif 2000w" type="image/avif"><source srcset="/imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-500.webp 500w, /imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-1200.webp 1200w, /imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-2000.webp 2000w" type="image/webp"><img class="w3-round" src="/imgs-generated/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM-2000.jpeg" alt="Screenshot 2024-07-24 at 7.07.26 PM.png" loading="lazy" sizes="auto" width="1408" height="1116"></picture><figcaption class="w3-padding">&lt;Screenshot 2024-07-24 at 7.07.26 PM.png&gt;<a class="w3-padding w3-round-xlarge w3-small w3-border w3-hover-black" href="/imgs/202407/Screenshot%202024-07-24%20at%207.07.26%E2%80%AFPM.png" target="_blank">[원본 보기]</a></figcaption></figure></ul></article></main></body></html>

@@ -56,11 +56,86 @@ const workers = isMainThread ? cpus().map(() => new Worker(import.meta.filename)
 const imgMap: Record<string, { width: number; height: number }> = require('./img-map.json');
 const posts: Post[] = require('./posts.json');
 
+/**
+ * skeleton.pug 가 useMath 인 문서에 심는 표식. 이 문자열이 있는 페이지만 수식을 조판한다.
+ * 본문에서 구분자를 찾아 헤매는 대신 표식 하나로 판단한다.
+ */
+const MATH_MARKER = '<meta name="mathjax-prerender" content="1">';
+/** 자체 호스팅 폰트 위치. @font-face 의 src 가 이 경로를 기준으로 만들어진다. */
+const MATH_FONT_URL = '/fonts/mathjax-newcm';
+
 // 워커 스레드 영역
 let remainWorkCount = 0;
 let unrefTimeout: NodeJS.Timeout;
 let generatedImgSet: Set<string> = new Set();
 let workerImgMap: Record<string, { width: number; height: number }> = {};
+
+/**
+ * MathJax 기동은 1초 가까이 걸리므로 워커당 한 번만 한다.
+ * 수식 문서가 없는 워커는 아예 불러오지 않는다.
+ */
+let mathJaxPromise: Promise<any> | undefined;
+function getMathJax(): Promise<any> {
+    mathJaxPromise ??= import('@mathjax/src/components/mjs/node-main/node-main.mjs').then(({ init }) =>
+        init({
+            loader: { load: ['input/tex', 'adaptors/liteDOM', 'output/chtml', 'a11y/assistive-mml'] },
+            // 구분자는 skeleton.pug 가 쓰던 런타임 설정과 같아야 한다. 어긋나면 조판이 안 된다.
+            tex: { tags: 'ams', inlineMath: [['식[', ']식']], displayMath: [['\\[', '\\]']] },
+            chtml: { fontURL: MATH_FONT_URL },
+            startup: { typeset: false },
+        }),
+    );
+    return mathJaxPromise;
+}
+
+/**
+ * 페이지의 TeX 를 빌드 시점에 CHTML 로 바꾼다.
+ *
+ * 이렇게 하면 브라우저가 MathJax 를 받아 조판할 필요가 없다. physics 기준으로
+ * 첫 수식이 보이기까지 16.5초에서 1.8초로 줄었고, tex-chtml.js 884KB 도 사라진다.
+ *
+ * updateDocument() 가 `<style id="MJX-CHTML-styles">` 를 head 에 직접 넣으므로
+ * 여기서 CSS 를 따로 삽입하면 안 된다. 그러면 30KB 가 두 번 들어간다.
+ */
+async function prerenderMath(html: string): Promise<string> {
+    const MathJax = await getMathJax();
+    const { mathjax, adaptor, input, output, handler } = MathJax.startup;
+
+    // MathJax 4 는 필요한 자원을 비동기로 더 불러온다. 폰트 데이터뿐 아니라 HTML
+    // 엔티티 표도 그렇다. 동기 코드에서는 그 지점에서 예외를 던지므로 재시도 래퍼로 감싼다.
+    //
+    // 파싱을 먼저 해 두는 이유: 문자열을 그대로 넘기면 MathJax 가 핸들러를 고르며
+    // 스스로 파싱하는데, 그 안의 try/catch 가 위 재시도 예외까지 삼켜 버려
+    // "Can't find handler for document" 로 둔갑한다(dev/web/html.pug 가 실제로 그랬다).
+    // 미리 파싱해 문서 객체를 넘기면 그 경로를 타지 않고, 이중 파싱도 없어진다.
+    let lite: any;
+    await mathjax.handleRetriesFor(() => {
+        lite = adaptor.parse(html, 'text/html');
+    });
+
+    let doc: any;
+    await mathjax.handleRetriesFor(() => {
+        // 문서 사이에 상태가 새지 않도록 초기화한다. 셋 중 하나라도 빠지면 앞 문서의
+        // 수식 번호나 CSS 가 뒤 문서에 섞여, 같은 문서인데 빌드 순서에 따라 결과가 달라진다.
+        MathJax.texReset();
+        output.clearCache();
+        output.reset();
+
+        // startup.handler 를 직접 쓴다. a11y/assistive-mml 같은 확장은 핸들러를 감싸는
+        // 방식으로 붙으므로, mathjax.document() 로 전역 목록에서 핸들러를 새로 고르면
+        // 확장이 빠진 문서가 만들어진다.
+        doc = handler.create(lite, { InputJax: input, OutputJax: output });
+        // 개별 단계를 손으로 부르지 않고 render() 를 쓴다. 스타일시트 삽입과
+        // 보조 MathML 부착이 렌더 액션으로 등록돼 있어서, 손으로 부르면 그것들이 빠진다.
+        doc.render();
+    });
+
+    // outerHTML 은 <html> 부터만 돌려준다. DOCTYPE 을 다시 붙이지 않으면 브라우저가
+    // 쿼크 모드로 렌더해서 박스 모델이 달라진다. 실제로 상단바의 Home 링크가
+    // 15px 아래로 밀려 내려갔다. 파서는 DOCTYPE 을 갖고 있으므로 그대로 되돌린다.
+    const doctype = adaptor.doctype(doc.document);
+    return `${doctype ? doctype + '\n' : ''}${adaptor.outerHTML(adaptor.root(doc.document))}`;
+}
 parentPort?.on('message', async (o: WorkMessage) => {
     clearTimeout(unrefTimeout);
     remainWorkCount += 1;
@@ -173,10 +248,15 @@ parentPort?.on('message', async (o: WorkMessage) => {
             }
             try {
                 // canonical, Open Graph, JSON-LD 생성에 필요한 페이지 단위 정보.
-                const html = await renderFile(o.path, {
+                let html = await renderFile(o.path, {
                     cache: true,
                     imgMap: workerImgMap,
                 });
+                if (html.includes(MATH_MARKER)) {
+                    const t0 = Date.now();
+                    html = await prerenderMath(html);
+                    console.log(`${o.path} math prerendered (${Date.now() - t0}ms)`);
+                }
                 await fsp.writeFile(htmlPath, html);
                 console.log(`${o.path} rendered`);
             } catch (e) {

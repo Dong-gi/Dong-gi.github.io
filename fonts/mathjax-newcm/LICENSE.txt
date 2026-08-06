@@ -1,0 +1,35 @@
+이 폴더의 woff2 파일들에 적용되는 저작권·라이선스 표기.
+
+아래 두 문장은 각 폰트 파일의 name 테이블(nameID 0, Copyright)에 실제로
+박혀 있는 문자열을 그대로 옮긴 것이다. 105개 파일 전부를 확인했다.
+
+  84개 파일:
+    (C) 2019-2021 Antonis Tsolomitis. This work is released under the
+    GUST Font License -- see
+    http://tug.org/fonts/licenses/GUST-FONT-LICENSE.txt for details.
+
+  21개 파일:
+    Copyright (c) 2024 MathJax, Inc. (www.mathjax.org)
+    Original copyright: (C) 2019-2021 Antonis Tsolomitis.
+    This work is released under the GUST Font License -- see
+    http://tug.org/fonts/licenses/GUST-FONT-LICENSE.txt for details.
+
+------------------------------------------------------------------------
+
+라이선스 : GUST Font License (GFL)
+           LaTeX Project Public License 1.3c 를 폰트용으로 조정한 것.
+           배포와 수정을 모두 허용한다. 파생물의 개명은 요청 사항이며
+           법적 의무가 아니다("requested, but not legally required").
+           MathJax 는 이미 mjx-ncm-* 로 개명해 그 요청을 따랐다.
+
+전문      : http://tug.org/fonts/licenses/GUST-FONT-LICENSE.txt
+            https://ctan.org/license/gfl
+
+원본 폰트 : New Computer Modern — https://ctan.org/pkg/newcomputermodern
+패키지    : @mathjax/mathjax-newcm-font 4.1.3 (npm)
+            npm 패키지의 package.json 은 Apache-2.0 을 선언하지만 그것은
+            함께 담긴 JavaScript 래퍼에 대한 것이고, 글리프 데이터 자체는
+            위와 같이 GFL 이다.
+
+참고: 라이선스 전문 파일을 이 폴더에 함께 두려면 위 tug.org 주소에서
+      GUST-FONT-LICENSE.txt 를 내려받아 넣으면 된다.
