@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" width="640" height="380" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">강산-강염기 적정 곡선</title><desc id="d">당량점 pH 7 에서 수직으로 뛰는 곡선</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="gr" d="M74 302 V54"/><path class="gr" d="M160 302 V54"/><path class="gr" d="M246 302 V54"/><path class="gr" d="M332 302 V54"/><path class="gr" d="M418 302 V54"/><path class="gr" d="M504 302 V54"/><path class="gr" d="M74 302 H504"/><path class="gr" d="M74 266.57 H504"/><path class="gr" d="M74 231.14 H504"/><path class="gr" d="M74 195.71 H504"/><path class="gr" d="M74 160.29 H504"/><path class="gr" d="M74 124.86 H504"/><path class="gr" d="M74 89.43 H504"/><path class="gr" d="M74 54 H504"/><path class="ax" marker-end="url(#ark)" d="M74 302 H514"/><path class="ax" marker-end="url(#ark)" d="M74 302 V44"/><text class="sm ink2" x="160" y="317" text-anchor="middle">10</text><text class="sm ink2" x="246" y="317" text-anchor="middle">20</text><text class="sm ink2" x="332" y="317" text-anchor="middle">30</text><text class="sm ink2" x="418" y="317" text-anchor="middle">40</text><text class="sm ink2" x="504" y="317" text-anchor="middle">50</text><text class="sm ink2" x="68" y="270.57" text-anchor="end">2</text><text class="sm ink2" x="68" y="235.14" text-anchor="end">4</text><text class="sm ink2" x="68" y="199.71" text-anchor="end">6</text><text class="sm ink2" x="68" y="164.29" text-anchor="end">8</text><text class="sm ink2" x="68" y="128.86" text-anchor="end">10</text><text class="sm ink2" x="68" y="93.43" text-anchor="end">12</text><text class="sm ink2" x="68" y="58" text-anchor="end">14</text><text class="sm ink2" x="518" y="306">넣은 NaOH (mL)</text><text class="sm ink2" x="74" y="36" text-anchor="middle">pH</text><path class="cv s1" d="M74 284.29 L91.2 283.05 L117 281.17 L160 277.77 L203 273.62 L246 267.38 L263.2 263.12 L271.8 259.84 L280.4 254.35 L284.7 248.93 L287.28 241.84 L288.14 236.49 L289 178 L289.86 119.54 L290.72 114.22 L293.3 107.22 L297.6 101.96 L306.2 96.78 L314.8 93.81 L332 90.16 L375 85.5 L418 83 L461 81.35 L504 80.17"/><path class="gr" stroke-dasharray="4 3" d="M289 302 L289 54"/><path class="gr" stroke-dasharray="4 3" d="M74 178 L504 178"/><circle class="f2" cx="289" cy="178" r="5"/><text class="ink bold" x="299" y="168" text-anchor="start">당량점  pH 7.00</text><text class="ink2 sm" x="299" y="186" text-anchor="start">넣은 NaOH 몰수 = 처음 HCl 몰수</text><path class="s2" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M323.4 222.29 L294.16 195.71"/><text class="ink2 sm" x="327.4" y="226.29" text-anchor="start">1 mL 사이에 pH 가 4 넘게 뛴다</text><text class="ink2 sm" x="91.2" y="272.29" text-anchor="start">시작 pH 1.00</text><text class="ink bold" x="20" y="32" text-anchor="start">0.100 mol/L HCl 25.00 mL 를 0.100 mol/L NaOH 로 적정</text><text class="ink2 sm" x="626" y="370" text-anchor="end">당량점 앞뒤가 거의 수직이라, 한 방울 차이로 색이 변해도 오차가 작다</text>
+</svg>

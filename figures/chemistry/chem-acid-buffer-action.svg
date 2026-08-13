@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" width="720" height="430" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">완충 용액의 작동</title><desc id="d">두 창고 도식과 pH 변화 비교 그래프</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="250" y="96" width="220" height="86" rx="8" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.6"/><text class="ink bold" x="360" y="124" text-anchor="middle">완충 용액</text><text class="ink" x="360" y="146" text-anchor="middle">HA 도 많이,  A⁻ 도 많이</text><text class="ink2 sm" x="360" y="168" text-anchor="middle">두 창고가 함께 있다</text><path class="s2" fill="none" stroke-width="2.2" stroke-linecap="round" marker-end="url(#ar2)" d="M220 139 L242 139"/><text class="ink bold" x="210" y="132" text-anchor="end">산을 넣으면</text><text class="ink2 sm" x="210" y="152" text-anchor="end">H₃O⁺</text><path class="s3" fill="none" stroke-width="2.2" stroke-linecap="round" marker-end="url(#ar3)" d="M500 139 L478 139"/><text class="ink bold" x="510" y="132" text-anchor="start">염기를 넣으면</text><text class="ink2 sm" x="510" y="152" text-anchor="start">OH⁻</text><rect x="40" y="208" width="300" height="62" rx="6" fill="none" fill-opacity="1" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="190" y="232" text-anchor="middle">A⁻ + H₃O⁺ → HA + H₂O</text><text class="ink2 sm" x="190" y="254" text-anchor="middle">A⁻ 창고가 받아낸다</text><rect x="380" y="208" width="300" height="62" rx="6" fill="none" fill-opacity="1" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="530" y="232" text-anchor="middle">HA + OH⁻ → A⁻ + H₂O</text><text class="ink2 sm" x="530" y="254" text-anchor="middle">HA 창고가 받아낸다</text><path class="gr" d="M96 388 V296"/><path class="gr" d="M236 388 V296"/><path class="gr" d="M376 388 V296"/><path class="gr" d="M96 388 H376"/><path class="gr" d="M96 342 H376"/><path class="gr" d="M96 296 H376"/><path class="ax" marker-end="url(#ark)" d="M96 388 H386"/><path class="ax" marker-end="url(#ark)" d="M96 388 V286"/><text class="sm ink2" x="236" y="403" text-anchor="middle">5</text><text class="sm ink2" x="376" y="403" text-anchor="middle">10</text><text class="sm ink2" x="90" y="346" text-anchor="end">7</text><text class="sm ink2" x="90" y="300" text-anchor="end">14</text><text class="sm ink2" x="390" y="392">mL</text><text class="sm ink2" x="96" y="278" text-anchor="middle">pH</text><path class="cv s1" d="M96 356.85 L152 357.77 L208 358.95 L264 360.4 L320 362.37 L376 365"/><path class="cv s2" stroke-dasharray="6 4" d="M96 342 L104.4 361.71 L124 370.91 L208 374.2 L376 376.83"/><text class="ink2 sm" x="200" y="296" text-anchor="middle">강산을 조금씩 넣었을 때</text><text class="ink bold" x="424" y="316" text-anchor="start">완충 용액 — 거의 평평하다</text><text class="ink2 sm" x="424" y="338" text-anchor="start">순수한 물(점선) — 곧바로 떨어진다</text><text class="ink2 sm" x="424" y="368" text-anchor="start">완충 능력에는 한계가 있다. 한쪽 창고가</text><text class="ink2 sm" x="424" y="386" text-anchor="start">바닥나면 그때부터 pH 가 무너진다</text><text class="ink bold" x="24" y="40" text-anchor="start">완충 용액은 산을 받아낼 창고와 염기를 받아낼 창고를 함께 가진다</text>
+</svg>

@@ -1,0 +1,45 @@
+# 분자생물학의 중심원리 — 10장(분자생물학의 중심원리).
+#
+# 무엇을 읽어야 하나: 화살표의 방향이 전부다. 정보는 핵산에서 단백질로 흐르고
+# 그 반대로는 흐르지 않는다. 굵은 세 화살표(복제·전사·번역)가 이 장의 뼈대이고,
+# 점선 화살표는 "예외"가 아니라 나중에 추가로 발견된 경로다.
+# 맨 아래의 X 표시된 경로가 중심원리가 실제로 금지하는 것이다.
+direction: right
+
+DNA: {
+  label: "DNA\n정보를 보관한다\n네 글자 A T G C"
+}
+
+RNA: {
+  label: "RNA\n정보를 옮긴다\n네 글자 A U G C"
+}
+
+단백질: {
+  label: "단백질\n일을 한다\n스무 글자 (아미노산)"
+}
+
+DNA -> DNA: "복제 (replication)\n같은 것을 한 벌 더 만든다\n반보존적"
+DNA -> RNA: "전사 (transcription)\n한 가닥을 읽어 RNA 를 만든다"
+RNA -> 단백질: "번역 (translation)\n세 글자마다 아미노산 하나\n리보솜이 한다"
+
+역전사: {
+  label: "역전사 (reverse transcription)\nRNA 를 주형으로 DNA 를 만든다\n레트로바이러스, 텔로머레이스"
+  style.stroke-dash: 3
+}
+
+RNA -> 역전사 -> DNA: {
+  style.stroke-dash: 3
+}
+
+금지: {
+  label: "단백질의 아미노산 차례를\n핵산 서열로 되돌려 적는 경로\n— 알려진 것이 없다"
+  style.stroke-dash: 5
+}
+
+단백질 -> 금지: {
+  style.stroke-dash: 5
+}
+금지 -> DNA: {
+  label: "이 방향이 중심원리가 금지하는 것"
+  style.stroke-dash: 5
+}

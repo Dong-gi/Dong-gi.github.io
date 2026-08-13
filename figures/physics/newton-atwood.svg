@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 320" width="580" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">애트우드 기계</title><desc id="d">도르래 양쪽 물체에 걸린 장력과 무게</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" stroke-width="2" fill="none" d="M130 6 h140"/><path class="ax" d="M200 6 V30"/><circle cx="200" cy="70" r="40" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><circle class="ink2" cx="200" cy="70" r="3"/><path class="ax" stroke-width="2" fill="none" d="M160 70 V196 M240 70 V152"/><rect x="133" y="196" width="54" height="42" rx="4" fill="none" stroke="var(--ink2)" stroke-width="1.6"/><text class="ink sm" x="160" y="222" text-anchor="middle">3.0 kg</text><rect x="213" y="152" width="54" height="42" rx="4" fill="none" stroke="var(--ink2)" stroke-width="1.6"/><text class="ink sm" x="240" y="178" text-anchor="middle">5.0 kg</text><path class="s2" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar2)" d="M160 196 L160 146"/><text class="ink sm" x="152" y="166" text-anchor="end">T</text><path class="s2" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar2)" d="M240 152 L240 102"/><text class="ink sm" x="248" y="122" text-anchor="start">T</text><path class="s1" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M160 238 L160 272"/><text class="ink sm" x="152" y="268" text-anchor="end">m<tspan baseline-shift="-22%" font-size="76%">1</tspan> g</text><path class="s1" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M240 194 L240 246"/><text class="ink sm" x="248" y="240" text-anchor="start">m<tspan baseline-shift="-22%" font-size="76%">2</tspan> g</text><path class="s3" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)" d="M86 224 L86 188"/><text class="ink sm" x="80" y="208" text-anchor="end">a</text><path class="s3" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)" d="M314 172 L314 208"/><text class="ink sm" x="320" y="194" text-anchor="start">a</text><text class="ink" x="352" y="70" text-anchor="start">줄이 늘어나지 않으므로</text><text class="ink" x="352" y="90" text-anchor="start">두 물체의 가속도 크기가 같다</text><text class="ink2 sm" x="352" y="126" text-anchor="start">도르래가 가볍고 마찰이 없으면</text><text class="ink2 sm" x="352" y="144" text-anchor="start">줄 양쪽의 T 도 같다</text><text class="ink bold" x="352" y="180" text-anchor="start">가벼운 쪽: T − m<tspan baseline-shift="-22%" font-size="76%">1</tspan> g = m<tspan baseline-shift="-22%" font-size="76%">1</tspan> a</text><text class="ink bold" x="352" y="202" text-anchor="start">무거운 쪽: m<tspan baseline-shift="-22%" font-size="76%">2</tspan> g − T = m<tspan baseline-shift="-22%" font-size="76%">2</tspan> a</text><text class="ink2 sm" x="566" y="308" text-anchor="end">두 물체를 따로 그려야 T 와 a 를 함께 구할 수 있다</text>
+</svg>

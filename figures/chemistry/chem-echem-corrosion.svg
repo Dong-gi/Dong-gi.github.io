@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" width="720" height="400" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">부식과 희생 양극</title><desc id="d">맨 철과 아연 도금 철의 부식 비교</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="20" y="50" width="330" height="320" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="185" y="70" text-anchor="middle">맨 철</text><text class="ink2 sm" x="185" y="86" text-anchor="middle">물방울 하나가 작은 전지를 만든다</text><rect x="46" y="250" width="278" height="44" rx="2" fill="var(--ink2)" fill-opacity="0.28" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink bold" x="185" y="278" text-anchor="middle">철</text><path d="M96 250 Q 96 176 185 176 Q 274 176 274 250 Z" fill="var(--s1)" fill-opacity="0.16" stroke="var(--s1)" stroke-width="1.4"/><text class="ink2 sm" x="185" y="166" text-anchor="middle">물방울</text><circle cx="185" cy="250" r="5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><text class="ink sm" x="185" y="216" text-anchor="middle">Fe → Fe²⁺ + 2e⁻</text><text class="ink2 sm" x="185" y="234" text-anchor="middle">가운데는 산화전극</text><path class="s1" fill="none" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar1)" d="M175 262 L108 262"/><path class="s1" fill="none" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar1)" d="M195 262 L262 262"/><text class="ink2 sm" x="185" y="306" text-anchor="middle">e⁻ 는 금속 속을 지나 가장자리로 간다</text><text class="ink sm" x="185" y="326" text-anchor="middle">가장자리: O₂ + 2H₂O + 4e⁻ → 4OH⁻</text><text class="ink2 sm" x="185" y="346" text-anchor="middle">Fe²⁺ 와 OH⁻ 가 만나 녹이 된다</text><rect x="370" y="50" width="330" height="320" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="535" y="70" text-anchor="middle">아연을 입힌 철</text><text class="ink2 sm" x="535" y="86" text-anchor="middle">흠집이 나도 철이 아니라 아연이 녹는다</text><rect x="396" y="250" width="278" height="44" rx="2" fill="var(--ink2)" fill-opacity="0.28" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink bold" x="535" y="278" text-anchor="middle">철</text><rect x="396" y="236" width="120" height="14" rx="2" fill="var(--s3)" fill-opacity="0.4" stroke="var(--s3)" stroke-width="1.2"/><rect x="556" y="236" width="118" height="14" rx="2" fill="var(--s3)" fill-opacity="0.4" stroke="var(--s3)" stroke-width="1.2"/><text class="ink2 sm" x="456" y="228" text-anchor="middle">아연 도금</text><text class="ink2 sm" x="536" y="228" text-anchor="middle">흠집</text><path d="M486 236 Q 486 182 560 182 Q 634 182 634 236 Z" fill="var(--s1)" fill-opacity="0.16" stroke="var(--s1)" stroke-width="1.4"/><text class="ink2 sm" x="560" y="172" text-anchor="middle">물방울</text><text class="ink sm" x="516" y="208" text-anchor="middle">Zn → Zn²⁺ + 2e⁻</text><path class="s3" fill="none" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar3)" d="M500 262 L570 262"/><text class="ink sm" x="535" y="306" text-anchor="middle">E°(Zn²⁺/Zn) = −0.76 V  &lt;  E°(Fe²⁺/Fe) = −0.44 V</text><text class="ink2 sm" x="535" y="326" text-anchor="middle">더 작은 쪽이 산화전극이 된다</text><text class="ink bold sm" x="535" y="346" text-anchor="middle">아연이 대신 녹는 동안 철은 멀쩡하다</text><text class="ink bold" x="20" y="32" text-anchor="start">부식은 철 위에서 저절로 만들어지는 전지다</text>
+</svg>

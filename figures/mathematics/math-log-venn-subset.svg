@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 262" width="700" height="262" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">부분집합과 그렇지 않은 경우</title><desc id="d">B 밖으로 벗어난 원소가 하나라도 있으면 부분집합이 아니다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="350" y="26" text-anchor="middle">부분집합인가 아닌가는 원소 하나가 정한다</text><rect x="20" y="42" width="320" height="196" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="180" y="63" text-anchor="middle">A ⊆ B</text><text class="ink2 sm" x="180" y="80" text-anchor="middle">A 의 원소가 모두 B 안에 있다</text><ellipse cx="186" cy="156" rx="116" ry="62" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.7"/><ellipse cx="160" cy="156" rx="58" ry="38" fill="var(--s2)" fill-opacity="0.16" stroke="var(--s2)" stroke-width="1.7"/><text class="ink bold sm" x="160" y="132" text-anchor="middle">A</text><text class="ink bold sm" x="272" y="122" text-anchor="middle">B</text><circle cx="142" cy="164" r="3.5" fill="var(--s2)"/><circle cx="176" cy="160" r="3.5" fill="var(--s2)"/><circle cx="232" cy="174" r="3.5" fill="var(--s1)"/><rect x="360" y="42" width="320" height="196" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="520" y="63" text-anchor="middle">A ⊄ B</text><text class="ink2 sm" x="520" y="80" text-anchor="middle">B 밖으로 나간 원소가 하나 있다</text><ellipse cx="546" cy="156" rx="100" ry="60" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.7"/><ellipse cx="462" cy="156" rx="62" ry="44" fill="var(--s2)" fill-opacity="0.16" stroke="var(--s2)" stroke-width="1.7"/><text class="ink bold sm" x="438" y="122" text-anchor="middle">A</text><text class="ink bold sm" x="614" y="120" text-anchor="middle">B</text><circle cx="492" cy="158" r="3.5" fill="var(--s2)"/><circle cx="424" cy="152" r="4.5" fill="var(--s2)"/><path fill="none" stroke="var(--s2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M404 214 L420 164"/><text class="ink sm" x="400" y="230" text-anchor="middle">이 원소가 B 에 없다</text>
+</svg>

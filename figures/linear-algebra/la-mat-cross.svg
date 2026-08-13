@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 360" width="740" height="360" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">외적의 방향과 크기</title><desc id="d">외적은 두 벡터가 만드는 평면에 수직이고 크기는 평행사변형의 넓이이며 순서를 바꾸면 방향이 뒤집힌다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="370" y="26" text-anchor="middle">외적 — 두 벡터가 만드는 평면에 수직인 벡터</text><rect x="24" y="44" width="330" height="248" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="189" y="64" text-anchor="middle">u × v</text><text class="ink2 sm" x="189" y="80" text-anchor="middle">오른손 네 손가락을 u 에서 v 로 감으면 엄지 방향</text><path d="M182 214 L134.44 241.06 L163.14 278.37 L210.7 251.31 Z" fill="var(--s3)" fill-opacity="0.25" stroke="var(--s3)" stroke-width="1.5" stroke-linejoin="round"/><path fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M182 214 L134.44 241.06"/><path fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar2)" d="M182 214 L210.7 251.31"/><path fill="none" stroke="var(--ink2)" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ark)" d="M182 214 L182 130.03"/><text class="ink bold sm" x="154.65" y="245.56" text-anchor="middle">u</text><text class="ink bold sm" x="220.18" y="243.67" text-anchor="start">v</text><text class="ink bold sm" x="192" y="135.03" text-anchor="start">u × v</text><path d="M171.57 219.93 L171.57 207.93 L182 202" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="386" y="44" width="330" height="248" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="551" y="64" text-anchor="middle">v × u</text><text class="ink2 sm" x="551" y="80" text-anchor="middle">순서를 바꾸면 정반대 방향</text><path d="M544 148 L496.44 175.06 L525.14 212.37 L572.7 185.31 Z" fill="var(--s3)" fill-opacity="0.25" stroke="var(--s3)" stroke-width="1.5" stroke-linejoin="round"/><path fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M544 148 L496.44 175.06"/><path fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar2)" d="M544 148 L572.7 185.31"/><path fill="none" stroke="var(--ink2)" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ark)" d="M544 148 L544 231.97"/><text class="ink bold sm" x="516.65" y="179.56" text-anchor="middle">u</text><text class="ink bold sm" x="582.18" y="177.67" text-anchor="start">v</text><text class="ink bold sm" x="554" y="236.97" text-anchor="start">v × u</text><path d="M533.57 153.93 L533.57 165.93 L544 160" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold sm" x="370" y="314" text-anchor="middle">두 경우 모두 크기는 같다. 색칠한 평행사변형의 넓이 4 가 그 크기다</text><text class="ink2 sm" x="370" y="332" text-anchor="middle">‖u × v‖ = ‖u‖‖v‖ sin θ 이고, 내적의 cos 자리에 sin 이 들어간 것이다</text><text class="ink2 sm" x="370" y="350" text-anchor="middle">그래서 두 벡터가 나란하면 외적이 영벡터가 된다. 넓이가 0 이기 때문이다</text>
+</svg>

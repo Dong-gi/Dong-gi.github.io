@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 306" width="660" height="306" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">수소 스펙트럼선</title><desc id="d">발머 계열 네 선의 파장</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="16" y="26" text-anchor="start">수소가 내는 빛 — 이어진 띠가 아니라 몇 개의 선뿐이다</text><defs><linearGradient id="vis" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6a00a8"/><stop offset="10.53%" stop-color="#2200ff"/><stop offset="22.37%" stop-color="#0090ff"/><stop offset="31.58%" stop-color="#00c8b4"/><stop offset="39.47%" stop-color="#22c000"/><stop offset="51.32%" stop-color="#ffd800"/><stop offset="60.53%" stop-color="#ff8000"/><stop offset="78.95%" stop-color="#e01000"/><stop offset="100%" stop-color="#6b0000"/></linearGradient></defs><rect x="60" y="70" width="560" height="62" fill="url(#vis)" stroke="var(--ink2)" stroke-width="1.4"/><rect x="465.58" y="70" width="3.2" height="62" fill="#111"/><path fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" d="M467.18 132 L467.18 150"/><text class="ink bold" x="467.18" y="166" text-anchor="middle">Hα</text><text class="ink2 sm" x="467.18" y="184" text-anchor="middle">656.3 nm</text><text class="ink2 sm" x="467.18" y="200" text-anchor="middle">n = 3 → 2</text><rect x="214.76" y="70" width="3.2" height="62" fill="#111"/><path fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" d="M216.36 132 L216.36 150"/><text class="ink bold" x="216.36" y="166" text-anchor="middle">Hβ</text><text class="ink2 sm" x="216.36" y="184" text-anchor="middle">486.1 nm</text><text class="ink2 sm" x="216.36" y="200" text-anchor="middle">n = 4 → 2</text><rect x="137.98" y="70" width="3.2" height="62" fill="#111"/><path fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" d="M139.58 132 L139.58 150"/><text class="ink bold" x="139.58" y="166" text-anchor="middle">Hγ</text><text class="ink2 sm" x="139.58" y="184" text-anchor="middle">434 nm</text><text class="ink2 sm" x="139.58" y="200" text-anchor="middle">n = 5 → 2</text><rect x="102.91" y="70" width="3.2" height="62" fill="#111"/><path fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" d="M104.51 132 L104.51 212"/><text class="ink bold" x="104.51" y="228" text-anchor="middle">Hδ</text><text class="ink2 sm" x="104.51" y="246" text-anchor="middle">410.2 nm</text><text class="ink2 sm" x="104.51" y="262" text-anchor="middle">n = 6 → 2</text><text class="ink2 sm" x="89.47" y="62" text-anchor="middle">400 nm</text><text class="ink2 sm" x="236.84" y="62" text-anchor="middle">500 nm</text><text class="ink2 sm" x="384.21" y="62" text-anchor="middle">600 nm</text><text class="ink2 sm" x="531.58" y="62" text-anchor="middle">700 nm</text><text class="ink2 sm" x="16" y="278" text-anchor="start">선의 자리가 곧 에너지 준위 차다. 원소마다 선의 무늬가 달라 별빛만 보고도 성분을 안다.</text><text class="ink2 sm" x="16" y="298" text-anchor="start">n → 1 (라이먼)은 자외선, n → 3 (파셴)은 적외선이라 눈에 보이는 것은 발머 계열뿐이다.</text>
+</svg>

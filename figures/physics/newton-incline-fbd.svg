@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 590 350" width="590" height="350" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">경사면의 자유물체도</title><desc id="d">무게를 경사면 좌표로 분해한 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" fill="none" d="M60 280 L380 280 L380 95.24791385931977 Z"/><path class="gr" d="M122 280 A62 62 0 0 0 113.69 249"/><text class="sm ink2" x="133.41" y="264.33" text-anchor="middle">θ = 30°</text><g transform="translate(239.20000000000002 176.53883176121906) rotate(-30)"><rect x="-24" y="-28" width="48" height="28" rx="3" fill="none" stroke="var(--ink2)" stroke-width="1.6"/><text class="sm ink2" x="0" y="-10" text-anchor="middle">m</text></g><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M232.2 164.41 L232.2 260.41"/><text class="ink" x="238.2" y="262.41" text-anchor="start">mg</text><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" d="M232.2 164.41 L184.2 81.28"/><text class="ink" x="178.2" y="75.28" text-anchor="end">N</text><path class="s3" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar3)" d="M232.2 164.41 L296.29 127.41"/><text class="ink" x="302.29" y="123.41" text-anchor="start">f</text><path class="s1" fill="none" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar1)" stroke-dasharray="5 4" d="M232.2 164.41 L190.63 188.41"/><text class="ink2 sm" x="184.63" y="204.41" text-anchor="end">mg sin θ</text><path class="s1" fill="none" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar1)" stroke-dasharray="5 4" d="M232.2 164.41 L273.77 236.41"/><text class="ink2 sm" x="281.77" y="240.41" text-anchor="start">mg cos θ</text><text class="ink" x="24" y="32" text-anchor="start">축을 경사면에 맞춰 돌린다. 그러면 가속도가 한 축에만 생긴다.</text><text class="ink" x="414" y="84" text-anchor="start">경사면에 수직:</text><text class="ink bold" x="414" y="104" text-anchor="start">N = mg cos θ</text><text class="ink" x="414" y="140" text-anchor="start">경사면 방향:</text><text class="ink bold" x="414" y="160" text-anchor="start">mg sin θ − f = m a</text><text class="ink2 sm" x="414" y="196" text-anchor="start">무게를 두 조각으로</text><text class="ink2 sm" x="414" y="214" text-anchor="start">나누는 것이 첫 단계다</text><text class="ink2 sm" x="576" y="338" text-anchor="end">경사각 θ 는 무게와 수직항력 사이 각으로 다시 나타난다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 764 356" width="764" height="356" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">코사인법칙의 증명 그림</title><desc id="d">한 꼭짓점에서 대변에 수선을 내리면 어느 경우에도 같은 식이 나온다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="382" y="26" text-anchor="middle">코사인법칙 — 수선을 내리고 피타고라스를 두 번 쓴다</text><text class="ink bold sm" x="190" y="62" text-anchor="middle">C 가 예각일 때</text><path d="M60 244 L250 244 L170 118 Z" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/><path d="M170 118 L170 244" fill="none" stroke="var(--s2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M170 233 L159 233 L159 244" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="60" cy="244" r="4" fill="var(--ink2)"/><text class="ink sm" x="50" y="256" text-anchor="end">A</text><circle cx="250" cy="244" r="4" fill="var(--ink2)"/><text class="ink sm" x="256" y="264" text-anchor="middle">C</text><circle cx="170" cy="118" r="4" fill="var(--ink2)"/><text class="ink sm" x="176" y="106" text-anchor="start">B</text><circle cx="170" cy="244" r="3.5" fill="var(--ink2)"/><text class="ink sm" x="174" y="264" text-anchor="middle">H</text><text class="ink bold" x="103" y="173" text-anchor="middle">c</text><text class="ink bold" x="224" y="181" text-anchor="start">a</text><text class="ink bold" x="129" y="266" text-anchor="middle">b</text><text class="ink2 sm" x="161" y="181" text-anchor="end">a sin C</text><text class="ink2 sm" x="190" y="296" text-anchor="middle">CH = a cos C 이고 AH = b − a cos C</text><text class="ink bold sm" x="570" y="62" text-anchor="middle">C 가 둔각일 때</text><path d="M610 244 L680 244" fill="none" stroke="var(--ink2)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 4"/><path d="M440 244 L610 244 L680 118 Z" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/><path d="M680 118 L680 244" fill="none" stroke="var(--s2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M680 233 L669 233 L669 244" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="440" cy="244" r="4" fill="var(--ink2)"/><text class="ink sm" x="430" y="256" text-anchor="end">A</text><circle cx="610" cy="244" r="4" fill="var(--ink2)"/><text class="ink sm" x="606" y="264" text-anchor="middle">C</text><circle cx="680" cy="118" r="4" fill="var(--ink2)"/><text class="ink sm" x="686" y="106" text-anchor="start">B</text><circle cx="680" cy="244" r="3.5" fill="var(--ink2)"/><text class="ink sm" x="684" y="264" text-anchor="middle">H</text><text class="ink bold" x="548" y="173" text-anchor="middle">c</text><text class="ink bold" x="659" y="181" text-anchor="start">a</text><text class="ink bold" x="517" y="266" text-anchor="middle">b</text><text class="ink2 sm" x="690" y="181" text-anchor="start">a sin C</text><text class="ink2 sm" x="570" y="296" text-anchor="middle">H 가 C 바깥으로 나가지만 AH = b − a cos C 는 그대로다</text><text class="ink sm" x="382" y="326" text-anchor="middle">두 경우 모두 직각삼각형 ABH 에 피타고라스를 쓰면</text><text class="ink bold sm" x="382" y="346" text-anchor="middle">c² = (a sin C)² + (b − a cos C)² = a² + b² − 2ab cos C</text>
+</svg>

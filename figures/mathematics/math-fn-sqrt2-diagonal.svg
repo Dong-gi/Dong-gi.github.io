@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 320" width="580" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한 변 1 인 정사각형의 대각선이 √2 이고 그 점이 수직선 위에 있다</title><desc id="d">피타고라스 정리로 대각선 길이가 √2 임을 얻고 컴퍼스로 그 길이를 수직선에 옮겨 √2 의 자리를 찍는다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink" x="52" y="38" text-anchor="start">한 변이 1 인 정사각형의 대각선을 컴퍼스로 수직선에 옮긴 것.</text><text class="ink2 sm" x="52" y="58" text-anchor="start">자와 컴퍼스로 찍을 수 있는 점인데 유리수가 아니다.</text><path d="M60.2 258 L452.4 258" fill="none" stroke="var(--ink2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M92 258 L92 265" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="92" y="282" text-anchor="middle">0</text><path d="M198 258 L198 265" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="198" y="282" text-anchor="middle">1</text><path d="M304 258 L304 265" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="304" y="282" text-anchor="middle">2</text><path d="M410 258 L410 265" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="410" y="282" text-anchor="middle">3</text><rect x="92" y="152" width="106" height="106" rx="0" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.8"/><path d="M92 258 L198 152" fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text class="ink" x="145" y="278" text-anchor="middle">1</text><text class="ink" x="207" y="209" text-anchor="start">1</text><text class="ink bold" x="126.98" y="199.7" text-anchor="middle">√2</text><path class="gr" fill="none" d="M186 258 L186 246 L198 246"/><path d="M198 152 A 149.91 149.91 0 0 1 241.91 258" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-dasharray="5 4"/><circle cx="241.91" cy="258" r="5" fill="var(--s2)"/><path d="M241.91 254 L241.91 216" fill="none" stroke="var(--s2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 3"/><text class="ink bold" x="251.91" y="210" text-anchor="start">√2 = 1.41421356…</text><text class="ink2 sm" x="251.91" y="228" text-anchor="start">분수로는 결코 적을 수 없다</text>
+</svg>

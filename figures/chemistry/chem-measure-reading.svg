@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="600" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">눈금 읽기와 유효숫자</title><desc id="d">눈금실린더에서 24.6 mL 를 읽는 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="102" y="180.4" width="96" height="119.6" rx="0" fill="var(--s1)" fill-opacity="0.18" stroke="none" stroke-width="0"/><rect x="102" y="40" width="96" height="260" rx="4" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.6"/><path d="M102 300 L128 300" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="94" y="304" text-anchor="end">20</text><path d="M102 274 L117 274" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M102 248 L117 248" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M102 222 L117 222" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M102 196 L117 196" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M102 170 L128 170" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="94" y="174" text-anchor="end">25</text><path d="M102 144 L117 144" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M102 118 L117 118" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M102 92 L117 92" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M102 66 L117 66" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M102 40 L128 40" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="94" y="44" text-anchor="end">30</text><path d="M102 173.4 Q 150 189.4 198 173.4" fill="none" stroke="var(--s1)" stroke-width="2"/><path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M298 180.4 L206 180.4"/><text class="ink" x="306" y="185.4" text-anchor="start">오목한 바닥을 읽는다</text><text class="ink2 sm" x="306" y="210.4" text-anchor="start">눈금은 1 mL 간격 → 24 와 25 사이인 것은 확실</text><text class="ink2 sm" x="306" y="230.4" text-anchor="start">그 아래 한 자리는 눈대중 → 24.6 의 6</text><text class="ink bold" x="306" y="258.4" text-anchor="start">24.6 mL — 유효숫자 3자리</text><text class="ink bold" x="20" y="24" text-anchor="start">눈금실린더로 부피 재기</text><text class="ink2 sm" x="586" y="328" text-anchor="end">확실한 자리 + 어림한 한 자리 = 유효숫자</text>
+</svg>

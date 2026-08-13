@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 770 330" width="770" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">세 평면이 놓이는 방법과 해의 개수</title><desc id="d">한 점에서 만나면 해가 하나, 한 직선을 공유하면 무수히 많고, 공통점이 없으면 해가 없다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="385" y="26" text-anchor="middle">미지수가 셋이면 방정식 하나가 평면 하나다</text><rect x="18" y="44" width="234" height="234" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="135" y="64" text-anchor="middle">한 점에서 만난다</text><text class="ink2 sm" x="135" y="80" text-anchor="middle">해가 하나</text><path d="M107 144 L211 166 L163 208 L59 186 Z" fill="var(--s1)" fill-opacity="0.16" stroke="var(--s1)" stroke-width="1.4" stroke-linejoin="round"/><path d="M83 211 L187 233 L187 141 L83 119 Z" fill="var(--s2)" fill-opacity="0.16" stroke="var(--s2)" stroke-width="1.4" stroke-linejoin="round"/><path d="M159 201 L111 243 L111 151 L159 109 Z" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.4" stroke-linejoin="round"/><circle cx="135" cy="176" r="5" fill="var(--ink)"/><text class="ink bold sm" x="135" y="266" text-anchor="middle">공통점 하나</text><rect x="268" y="44" width="234" height="234" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="385" y="64" text-anchor="middle">한 직선을 공유한다</text><text class="ink2 sm" x="385" y="80" text-anchor="middle">해가 무수히 많다</text><path d="M333 211 L437 233 L437 141 L333 119 Z" fill="var(--s1)" fill-opacity="0.16" stroke="var(--s1)" stroke-width="1.4" stroke-linejoin="round"/><path d="M355 196 L415 248 L415 156 L355 104 Z" fill="var(--s2)" fill-opacity="0.16" stroke="var(--s2)" stroke-width="1.4" stroke-linejoin="round"/><path d="M409 201 L361 243 L361 151 L409 109 Z" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.4" stroke-linejoin="round"/><path d="M385 114 L385 238" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold sm" x="385" y="266" text-anchor="middle">공통 직선</text><rect x="518" y="44" width="234" height="234" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="635" y="64" text-anchor="middle">공통점이 없다</text><text class="ink2 sm" x="635" y="80" text-anchor="middle">해가 없다</text><path d="M607 110 L711 132 L663 174 L559 152 Z" fill="var(--s1)" fill-opacity="0.16" stroke="var(--s1)" stroke-width="1.4" stroke-linejoin="round"/><path d="M607 178 L711 200 L663 242 L559 220 Z" fill="var(--s1)" fill-opacity="0.16" stroke="var(--s1)" stroke-width="1.4" stroke-linejoin="round"/><path d="M583 215 L687 237 L687 137 L583 115 Z" fill="var(--s2)" fill-opacity="0.16" stroke="var(--s2)" stroke-width="1.4" stroke-linejoin="round"/><path d="M583 131 L687 153" fill="none" stroke="var(--s3)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M583 199 L687 221" fill="none" stroke="var(--s3)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold sm" x="635" y="266" text-anchor="middle">두 교선이 나란하다</text><text class="ink2 sm" x="385" y="318" text-anchor="middle">평면이 셋이어도 답의 개수는 여전히 0 · 1 · 무한뿐이다. 가운데처럼 한 직선을 공유하면 그 직선 위의 점이 모두 해가 된다</text>
+</svg>

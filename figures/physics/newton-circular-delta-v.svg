@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 610 330" width="610" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">구심가속도의 방향</title><desc id="d">원 위 두 속도 벡터와 그 차이</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<circle cx="190" cy="180" r="100" fill="none" stroke="var(--grid)" stroke-width="1.5" stroke-dasharray="6 5"/><circle class="ink2" cx="190" cy="180" r="3.5"/><text class="ink2 sm" x="198" y="196" text-anchor="start">O</text><path class="gr" d="M190 180 L240 93.39745962155614 M190 180 L140.00000000000003 93.39745962155612"/><text class="ink2 sm" x="223" y="136.7" text-anchor="start">r</text><circle class="f1" cx="240" cy="93.39745962155614" r="4.5"/><circle class="f1" cx="140.00000000000003" cy="93.39745962155612" r="4.5"/><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M240 93.4 L182.84 60.4"/><text class="ink sm" x="178.84" y="52.4" text-anchor="end">처음 v</text><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M140 93.4 L82.84 126.4"/><text class="ink sm" x="84.84" y="142.4" text-anchor="middle">나중 v</text><text class="ink2 sm" x="250" y="83.4" text-anchor="start">처음 위치</text><text class="ink2 sm" x="130" y="81.4" text-anchor="end">나중 위치</text><path class="ink2" fill="none" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ark)" d="M156 310 L224 310"/><text class="ink2 sm" x="190" y="302" text-anchor="middle">이 방향으로 돈다</text><text class="ink" x="360" y="40" text-anchor="start">두 속도를 한 점에 모아 그리면</text><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M430 110 L372.84 143"/><text class="ink sm" x="366.84" y="147" text-anchor="end">처음 v</text><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M430 110 L372.84 77"/><text class="ink sm" x="368.84" y="69" text-anchor="end">나중 v</text><path class="s2" fill="none" stroke-width="3" stroke-linecap="round" marker-end="url(#ar2)" d="M372.84 143 L372.84 77"/><text class="ink bold" x="364.84" y="116" text-anchor="end">Δv</text><text class="ink2 sm" x="360" y="240" text-anchor="start">Δv 는 두 위치의 한가운데에서</text><text class="ink bold" x="360" y="258" text-anchor="start">원의 중심을 가리킨다</text><text class="ink2 sm" x="360" y="286" text-anchor="start">가속도 = Δv / Δt 도 중심 방향</text><text class="ink2 sm" x="596" y="320" text-anchor="end">속력이 일정해도 방향이 변하면 가속도가 있다</text>
+</svg>

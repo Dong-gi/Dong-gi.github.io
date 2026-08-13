@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 430" width="470" height="430" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">덧셈정리는 단위원 위 두 점 사이의 거리를 두 가지로 계산해 얻는다</title><desc id="d">단위원 위의 두 점 A, B 를 잇는 선분의 길이를 코사인법칙과 거리 공식으로 각각 구해 견주는 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<circle cx="206" cy="176" r="130" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/><path d="M56 176 L358 176" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M206 322 L206 30" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M206 176 L241.83 51.04" fill="none" stroke="var(--s1)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M206 176 L328.16 131.54" fill="none" stroke="var(--s2)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M241.83 51.04 L328.16 131.54" fill="none" stroke="var(--s3)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="241.83" cy="51.04" r="5" fill="var(--s1)"/><circle cx="328.16" cy="131.54" r="5" fill="var(--s2)"/><path class="gr" d="M260 176 A54 54 0 0 0 220.88 124.09"/><text class="sm ink2" x="260.31" y="139.08" text-anchor="middle">α</text><path class="gr" d="M298 176 A92 92 0 0 0 292.45 144.53"/><text class="sm ink2" x="310.39" y="161.59" text-anchor="middle">β</text><text class="ink bold" x="249.83" y="41.04" text-anchor="start">A(cos α, sin α)</text><text class="ink bold" x="338.16" y="133.54" text-anchor="start">B(cos β, sin β)</text><text class="ink" x="281" y="107.29" text-anchor="start">AB</text><text class="ink2 sm" x="194" y="196" text-anchor="end">O</text><text class="ink2 sm" x="277.5" y="196" text-anchor="middle">반지름 1</text><text class="ink bold" x="26" y="356" text-anchor="start">AB 의 길이를 두 가지 방법으로 재고 견준다.</text><text class="ink2 sm" x="26" y="378" text-anchor="start">① 코사인법칙(5장) — 끼인각이 α − β 다</text><text class="ink2 sm" x="26" y="398" text-anchor="start">② 두 좌표 사이의 거리 공식</text><text class="ink2 sm" x="26" y="418" text-anchor="start">같은 길이를 두 방법으로 적으면 덧셈정리가 나온다.</text>
+</svg>

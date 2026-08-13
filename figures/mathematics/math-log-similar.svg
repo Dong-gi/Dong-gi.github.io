@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 300" width="740" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">닮음비와 넓이비</title><desc id="d">변을 두 배로 늘린 삼각형은 원래 삼각형 네 개로 정확히 나뉜다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="370" y="28" text-anchor="middle">닮음비가 1 : 2 이면 넓이비는 1 : 4</text><path d="M56 240 L156 240 L106 154 Z" fill="var(--s1)" fill-opacity="0.16" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/><path d="M76 240 A20 20 0 0 0 66.05 222.71" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><path d="M145.95 222.71 A20 20 0 0 0 136 240" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink2 sm" x="106" y="262" text-anchor="middle">변의 길이 1</text><text class="ink bold sm" x="106" y="208" text-anchor="middle">넓이 1</text><path d="M240 240 L440 240 L340 68 Z" fill="var(--s1)" fill-opacity="0.16" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/><path d="M340 240 L390 154" fill="none" stroke="var(--s2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M390 154 L290 154" fill="none" stroke="var(--s2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M290 154 L340 240" fill="none" stroke="var(--s2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M260 240 A20 20 0 0 0 250.05 222.71" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><path d="M429.95 222.71 A20 20 0 0 0 420 240" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink2 sm" x="340" y="262" text-anchor="middle">변의 길이 2</text><text class="ink sm" x="290" y="226" text-anchor="middle">1</text><text class="ink sm" x="390" y="226" text-anchor="middle">1</text><text class="ink sm" x="340" y="140" text-anchor="middle">1</text><text class="ink sm" x="340" y="198" text-anchor="middle">1</text><text class="ink bold sm" x="340" y="52" text-anchor="middle">넓이 4</text><path d="M482 74 L482 256" fill="none" stroke="var(--grid)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><text class="ink sm" x="496" y="96" text-anchor="start">두 각이 같으면 닮음이다</text><text class="ink2 sm" x="496" y="122" text-anchor="start">(나머지 한 각은 저절로 같다)</text><text class="ink sm" x="496" y="156" text-anchor="start">대응변의 비가 모두 같고</text><text class="ink2 sm" x="496" y="180" text-anchor="start">그 비를 닮음비라 한다</text><text class="ink bold" x="496" y="214" text-anchor="start">닮음비 k → 넓이비 k²</text><text class="ink2 sm" x="496" y="240" text-anchor="start">큰 삼각형이 작은 것 네 개로 나뉜다</text>
+</svg>

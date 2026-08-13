@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 326" width="680" height="326" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">생존곡선 세 유형</title><desc id="d">세로축을 로그 눈금으로 두면 사망률이 일정한 II 형이 직선이 되고, I 형과 III 형이 그 위아래로 갈린다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="gr" d="M84 254 V68"/><path class="gr" d="M159 254 V68"/><path class="gr" d="M234 254 V68"/><path class="gr" d="M309 254 V68"/><path class="gr" d="M384 254 V68"/><path class="gr" d="M84 254 H384"/><path class="gr" d="M84 192 H384"/><path class="gr" d="M84 130 H384"/><path class="gr" d="M84 68 H384"/><path class="ax" marker-end="url(#ark)" d="M84 254 H396"/><path class="ax" marker-end="url(#ark)" d="M84 254 V56"/><text class="ink2 sm" x="84" y="270" text-anchor="middle">0%</text><text class="ink2 sm" x="159" y="270" text-anchor="middle">25%</text><text class="ink2 sm" x="234" y="270" text-anchor="middle">50%</text><text class="ink2 sm" x="309" y="270" text-anchor="middle">75%</text><text class="ink2 sm" x="384" y="270" text-anchor="middle">100%</text><text class="ink2 sm" x="78" y="258" text-anchor="end">1</text><text class="ink2 sm" x="78" y="196" text-anchor="end">10</text><text class="ink2 sm" x="78" y="134" text-anchor="end">100</text><text class="ink2 sm" x="78" y="72" text-anchor="end">1000</text><text class="ink2 sm" x="84" y="48" text-anchor="middle">살아남은 수</text><path class="cv s1" d="M84 68 L174 69.24 L234 72.34 L294 81.64 L330 99 L354 136.2 L372 192 L384 254"/><path class="cv s2" d="M84 68 L384 254"/><path class="cv s3" d="M84 68 L90 145.5 L99 170.3 L114 184.56 L174 199.44 L264 215.56 L384 254"/><text class="ink bold sm" x="264" y="76.68" text-anchor="start">I 형</text><text class="ink bold sm" x="270" y="170.3" text-anchor="start">II 형</text><text class="ink bold sm" x="174" y="190.2" text-anchor="start">III 형</text><text class="ink2 sm" x="234" y="290" text-anchor="middle">수명 대비 나이</text><text class="ink2 sm" x="404" y="84" text-anchor="start">세로 눈금은 한 칸이 10배인 로그</text><text class="ink2 sm" x="404" y="102" text-anchor="start">눈금이다. 그래서 사망률이 늘 일정한</text><text class="ink2 sm" x="404" y="120" text-anchor="start">II 형이 곧은 직선으로 보인다.</text><text class="ink sm" x="404" y="156" text-anchor="start">I 형 — 어릴 때 거의 죽지 않고 노년에</text><text class="ink2 sm" x="404" y="174" text-anchor="start">   몰려 죽는다. 자손이 적고 오래 돌본다.</text><text class="ink sm" x="404" y="192" text-anchor="start">III 형 — 어릴 때 대부분 죽고 살아남은</text><text class="ink2 sm" x="404" y="210" text-anchor="start">   소수가 오래 산다. 자손이 아주 많다.</text><text class="ink sm" x="404" y="246" text-anchor="start">곡선의 모양이 곧 그 종이 어디에</text><text class="ink sm" x="404" y="264" text-anchor="start">투자했는지를 말해 준다.</text><text class="ink2 sm" x="30" y="26" text-anchor="start">세로축은 처음 1000 마리 중 그 나이까지 살아남은 수다. 로그 눈금이라야 세 유형이 모양으로 갈린다</text><text class="ink2 sm" x="30" y="314" text-anchor="start">유형은 연속적이며, 한 종의 곡선이 구간마다 다른 유형을 보이는 것도 흔하다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 390" width="700" height="390" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">헤스의 법칙</title><desc id="d">두 경로를 비교한 엔탈피 준위 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="26" y="34" text-anchor="start">엔탈피는 상태함수다 — 어느 길로 가도 낙차는 같다</text><path fill="none" stroke="var(--ink2)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#ark)" d="M64 300 L64 92"/><text class="ink2 sm" x="58" y="84" text-anchor="middle">H</text><path d="M120 108 L600 108" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round"/><text class="ink" x="120" y="98" text-anchor="start">C(흑연) + O₂(g)</text><path d="M330 162 L600 162" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round"/><text class="ink" x="330" y="152" text-anchor="start">CO(g) + ½O₂(g)</text><path d="M120 300 L600 300" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round"/><text class="ink" x="120" y="322" text-anchor="start">CO₂(g)</text><path class="s1" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M178 108 L178 300"/><text class="ink bold" x="170" y="206" text-anchor="end">직접 가는 길</text><text class="ink" x="170" y="228" text-anchor="end">−393.5 kJ</text><path class="s2" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar2)" d="M430 108 L430 162"/><text class="ink bold" x="440" y="140" text-anchor="start">1단계 — 구하려는 값</text><path class="s2" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar2)" d="M430 162 L430 300"/><text class="ink" x="440" y="236" text-anchor="start">2단계  −283.0 kJ</text><text class="ink" x="350" y="344" text-anchor="middle">두 길의 총 낙차가 같아야 하므로   ? + (−283.0) = −393.5</text><text class="ink2 sm" x="350" y="368" text-anchor="middle">? = −110.5 kJ — 직접 재기 어려운 값을 재기 쉬운 두 값으로 얻는다</text>
+</svg>

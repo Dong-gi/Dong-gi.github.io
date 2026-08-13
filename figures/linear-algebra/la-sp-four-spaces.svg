@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 342" width="760" height="342" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">계수-퇴화차수 정리를 그림으로</title><desc id="d">정의역이 영공간과 행공간으로 갈리고, 행공간만 열공간에 일대일로 대응한다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="380" y="26" text-anchor="middle">정의역은 ‘0 으로 눌리는 부분’과 ‘일대일로 살아남는 부분’으로 갈린다</text><ellipse cx="196" cy="190" rx="118" ry="120" fill="var(--s1)" fill-opacity="0.06" stroke="var(--ink2)" stroke-width="1.4"/><path d="M84 214 L308 214" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 4"/><text class="ink bold sm" x="196" y="144" text-anchor="middle">행공간 row(A)</text><text class="ink2 sm" x="196" y="162" text-anchor="middle">차원 r = rank(A)</text><text class="ink bold sm" x="196" y="252" text-anchor="middle">영공간 null(A)</text><text class="ink2 sm" x="196" y="270" text-anchor="middle">차원 n − r = nullity(A)</text><text class="ink bold" x="196" y="68" text-anchor="middle">Rⁿ  (정의역)</text><ellipse cx="566" cy="190" rx="118" ry="120" fill="var(--s2)" fill-opacity="0.06" stroke="var(--ink2)" stroke-width="1.4"/><path d="M454 214 L678 214" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 4"/><text class="ink bold sm" x="566" y="144" text-anchor="middle">열공간 col(A)</text><text class="ink2 sm" x="566" y="162" text-anchor="middle">차원 r — 상(image) 이다</text><circle cx="566" cy="250" r="5" fill="var(--s3)"/><text class="ink bold sm" x="578" y="254" text-anchor="start">0</text><text class="ink2 sm" x="566" y="278" text-anchor="middle">열공간 밖은 도달하지 못한다</text><text class="ink bold" x="566" y="68" text-anchor="middle">Rᵐ  (공역)</text><path fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M292 128 L470 128"/><text class="ink bold sm" x="381" y="120" text-anchor="middle">일대일로 대응</text><path fill="none" stroke="var(--s3)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar3)" d="M288 256 L548 250"/><text class="ink2 sm" x="375" y="236" text-anchor="middle">전부 0 으로 눌린다</text><text class="ink bold" x="380" y="326" text-anchor="middle">n = rank(A) + nullity(A)</text>
+</svg>

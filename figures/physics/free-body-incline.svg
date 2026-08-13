@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 330" width="520" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">경사면 위 물체의 자유물체도</title><desc id="d">무게·수직항력·마찰력 세 벡터</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" d="M70 268 L430 268 L430 76.58460460186765 Z" fill="none"/><path class="gr" d="M378.79 240.77 A58 58 0 0 0 372 268"/><text class="sm ink2" x="360.14" y="254.58" text-anchor="middle">θ = 28°</text><g transform="translate(250 172.29230230093384) rotate(-28)"><rect x="-23" y="-28" width="46" height="28" rx="3" fill="none" stroke="var(--ink2)" stroke-width="1.5"/><text class="sm ink2" x="0" y="-10" text-anchor="middle">m</text></g><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M256.57 159.93 L256.57 251.93"/><text class="ink" x="262.57" y="255.93" text-anchor="start">mg</text><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" d="M256.57 159.93 L299.76 78.7"/><text class="ink" x="305.76" y="78.7" text-anchor="start">N</text><path class="s3" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar3)" d="M256.57 159.93 L325.44 123.31"/><text class="ink" x="331.44" y="119.31" text-anchor="start">f</text><path class="s1" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" stroke-dasharray="4 3" d="M256.57 159.93 L218.44 180.21"/><text class="ink2 sm" x="210.44" y="194.21" text-anchor="end">mg sin θ</text><text class="ink" x="24" y="40" text-anchor="start">경사면 좌표로 나누면</text><text class="ink2 sm" x="24" y="60" text-anchor="start">mg sin θ  (경사 아래 방향)</text><text class="ink2 sm" x="24" y="78" text-anchor="start">mg cos θ  (경사면에 수직)</text><text class="ink2 sm" x="24" y="100" text-anchor="start">N = mg cos θ,  f ≤ μ N</text><rect x="370" y="32" width="14" height="3" rx="1.5" class="f1"/><text class="sm ink2" x="390" y="38">무게 mg</text><rect x="370" y="50" width="14" height="3" rx="1.5" class="f2"/><text class="sm ink2" x="390" y="56">수직항력 N</text><rect x="370" y="68" width="14" height="3" rx="1.5" class="f3"/><text class="sm ink2" x="390" y="74">마찰력 f</text>
+</svg>

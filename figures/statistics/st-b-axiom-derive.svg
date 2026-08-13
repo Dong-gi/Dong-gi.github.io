@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 320" width="740" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">콜모고로프 공리에서 유도되는 세 가지 성질</title><desc id="d">단조성 여사건 덧셈정리를 벤 다이어그램으로 보인 것. 셋 다 배반인 조각으로 쪼갠 뒤 셋째 공리를 쓴 결과다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<style>svg{--bgfix:#ffffff}@media (prefers-color-scheme:dark){svg{--bgfix:#121212}}</style><text class="ink bold" x="370" y="28" text-anchor="middle">공리는 셋뿐이다. 나머지는 전부 여기서 끌어낸 것이다</text><rect x="40" y="48" width="210" height="190" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="145" y="69" text-anchor="middle">포함하면 크다</text><rect x="64" y="92" width="162" height="118" rx="4" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><circle cx="145" cy="152" r="52" fill="var(--s1)" fill-opacity="0.18" stroke="var(--s1)" stroke-width="1.5"/><circle cx="132" cy="158" r="27" fill="var(--s2)" fill-opacity="0.4" stroke="var(--s2)" stroke-width="1.5"/><text class="ink bold" x="132" y="162" text-anchor="middle">A</text><text class="ink bold" x="186" y="116" text-anchor="middle">B</text><text class="ink sm" x="145" y="228" text-anchor="middle">A ⊂ B ⟹ P(A) ≤ P(B)</text><rect x="266" y="48" width="210" height="190" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="371" y="69" text-anchor="middle">전체에서 뺀다</text><rect x="290" y="92" width="162" height="118" rx="4" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><mask id="mC"><rect x="290" y="92" width="162" height="118" fill="white"/><circle cx="352" cy="151" r="40" fill="black"/></mask><rect x="290" y="92" width="162" height="118" fill="var(--s3)" fill-opacity="0.3" mask="url(#mC)"/><circle cx="352" cy="151" r="40" fill="var(--s1)" fill-opacity="0.28" stroke="var(--s1)" stroke-width="1.5"/><text class="ink bold" x="352" y="156" text-anchor="middle">A</text><text class="ink bold" x="424" y="110" text-anchor="middle">Aᶜ</text><text class="ink sm" x="371" y="228" text-anchor="middle">P(Aᶜ) = 1 − P(A)</text><rect x="492" y="48" width="210" height="190" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="597" y="69" text-anchor="middle">겹친 만큼 뺀다</text><rect x="516" y="92" width="162" height="118" rx="4" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><circle cx="576" cy="151" r="42" fill="var(--s1)" fill-opacity="0.25" stroke="var(--s1)" stroke-width="1.5"/><circle cx="622" cy="151" r="42" fill="var(--s2)" fill-opacity="0.25" stroke="var(--s2)" stroke-width="1.5"/><clipPath id="cX"><circle cx="576" cy="151" r="42"/></clipPath><g clip-path="url(#cX)"><circle cx="622" cy="151" r="42" fill="var(--s2)" fill-opacity="0.45"/></g><text class="ink bold" x="550" y="156" text-anchor="middle">A</text><text class="ink bold" x="648" y="156" text-anchor="middle">B</text><text class="ink sm" x="597" y="228" text-anchor="middle">P(A∪B) = P(A)+P(B)−P(A∩B)</text><path d="M40 254 L700 254" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink" x="370" y="278" text-anchor="middle">증명의 요령은 하나다. 겹치지 않게 조각으로 쪼갠 뒤 셋째 공리를 쓴다</text><text class="ink2 sm" x="370" y="302" text-anchor="middle">예컨대 B 를 A 와 (B − A) 로 쪼개면 P(B) = P(A) + P(B−A) ≥ P(A) 가 곧바로 나온다</text>
+</svg>

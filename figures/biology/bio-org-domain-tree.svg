@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" width="640" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">세 영역과 두 번의 세포내공생</title><desc id="d">리보솜 RNA 비교로 세균과 고세균이 갈리고 진핵생물이 고세균 쪽에 가깝게 놓인다. 미토콘드리아와 엽록체는 갈라진 것이 아니라 세균을 삼켜 들인 결과다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path d="M70 169 L150 169" fill="none" stroke="var(--ink2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M150 88 L150 213" fill="none" stroke="var(--ink2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M150 88 L470 88" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M150 213 L250 213" fill="none" stroke="var(--ink2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M250 176 L250 250" fill="none" stroke="var(--ink2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M250 176 L470 176" fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M250 250 L470 250" fill="none" stroke="var(--s3)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold" x="480" y="93" text-anchor="start">세균 (Bacteria)</text><text class="ink bold" x="480" y="181" text-anchor="start">고세균 (Archaea)</text><text class="ink bold" x="480" y="255" text-anchor="start">진핵생물 (Eukarya)</text><text class="ink2 sm" x="66" y="159" text-anchor="start">공통 조상</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" stroke-dasharray="5 4" d="M300 88 L336 244"/><text class="ink2 sm" x="258" y="152" text-anchor="start">미토콘드리아</text><text class="ink2 sm" x="258" y="168" text-anchor="start">(알파프로테오박테리아)</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" stroke-dasharray="5 4" d="M390 88 L420 244"/><text class="ink2 sm" x="404" y="196" text-anchor="start">엽록체</text><text class="ink2 sm" x="404" y="212" text-anchor="start">(시아노박테리아)</text><circle cx="250" cy="213" r="5" fill="var(--ink2)" fill-opacity="1" stroke="none" stroke-width="0"/><text class="ink bold" x="242" y="217" text-anchor="end">?</text><text class="ink2 sm" x="30" y="28" text-anchor="start">세로 막대는 갈라진 자리다. 잎이 그려진 위아래 순서에는 뜻이 없다</text><text class="ink2 sm" x="30" y="46" text-anchor="start">물음표 마디 — 진핵생물이 고세균의 한 갈래 안에서 나왔다는 견해도 유력하다</text><text class="ink2 sm" x="30" y="290" text-anchor="start">점선 화살표는 갈라짐이 아니라 삼켜 들인 것이다. 계통수의 가지와 성질이 전혀 다르다</text><text class="ink2 sm" x="30" y="308" text-anchor="start">그래서 진핵세포의 족보는 나무 하나로 그려지지 않는다</text>
+</svg>

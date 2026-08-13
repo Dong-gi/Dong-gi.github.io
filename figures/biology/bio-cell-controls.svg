@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 320" width="700" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">대조군의 역할</title><desc id="d">네 조건의 발아율 막대와 각 대조군이 걸러 내는 것</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="20" y="30" text-anchor="start">대조군을 두지 않으면 효과를 부풀려 읽는다</text><text class="ink2 sm" x="20" y="50" text-anchor="start">같은 종자를 네 조건에 나누어 심고 발아율을 세었다</text><path class="gr" d="M74 246 H324"/><path class="gr" d="M74 214 H324"/><path class="gr" d="M74 182 H324"/><path class="gr" d="M74 150 H324"/><path class="gr" d="M74 118 H324"/><path class="gr" d="M74 86 H324"/><path class="ax" marker-end="url(#ark)" d="M74 246 H334"/><path class="ax" marker-end="url(#ark)" d="M74 246 V76"/><text class="sm ink2" x="68" y="218" text-anchor="end">20</text><text class="sm ink2" x="68" y="186" text-anchor="end">40</text><text class="sm ink2" x="68" y="154" text-anchor="end">60</text><text class="sm ink2" x="68" y="122" text-anchor="end">80</text><text class="sm ink2" x="68" y="90" text-anchor="end">100</text><text class="sm ink2" x="74" y="68" text-anchor="middle">발아율 (%)</text><rect x="86.5" y="150" width="37.5" height="96" rx="3" fill="var(--s3)" fill-opacity="0.28" stroke="var(--s3)" stroke-width="1.4"/><text class="ink sm" x="105.25" y="142" text-anchor="middle">60</text><text class="ink" x="105.25" y="266" text-anchor="middle">①</text><rect x="149" y="134" width="37.5" height="112" rx="3" fill="var(--s2)" fill-opacity="0.28" stroke="var(--s2)" stroke-width="1.4"/><text class="ink sm" x="167.75" y="126" text-anchor="middle">70</text><text class="ink" x="167.75" y="266" text-anchor="middle">②</text><rect x="211.5" y="126" width="37.5" height="120" rx="3" fill="var(--s1)" fill-opacity="0.28" stroke="var(--s1)" stroke-width="1.4"/><text class="ink sm" x="230.25" y="118" text-anchor="middle">75</text><text class="ink" x="230.25" y="266" text-anchor="middle">③</text><rect x="274" y="114.8" width="37.5" height="131.2" rx="3" fill="var(--s3)" fill-opacity="0.28" stroke="var(--s3)" stroke-width="1.4"/><text class="ink sm" x="292.75" y="106.8" text-anchor="middle">82</text><text class="ink" x="292.75" y="266" text-anchor="middle">④</text><text class="ink2 sm" x="360" y="88" text-anchor="start">① 아무것도 넣지 않음</text><text class="ink2 sm" x="360" y="106" text-anchor="start">② 용매만 넣음 — 음성 대조군</text><text class="ink2 sm" x="360" y="124" text-anchor="start">③ 용매에 녹인 추출물 — 처리군</text><text class="ink2 sm" x="360" y="142" text-anchor="start">④ 이미 아는 촉진제 — 양성 대조군</text><text class="ink sm" x="360" y="176" text-anchor="start">③ 을 ① 과 견주면 +15 로 보인다.</text><text class="ink2 sm" x="360" y="194" text-anchor="start">그런데 ② 가 이미 +10 이다. 용매가 올린 몫이다.</text><text class="ink sm" x="360" y="212" text-anchor="start">추출물 자체의 몫은 ③ − ② = +5 뿐이다.</text><text class="ink2 sm" x="360" y="240" text-anchor="start">④ 가 오르지 않았다면 추출물을 논하기 전에</text><text class="ink2 sm" x="360" y="258" text-anchor="start">실험계 자체가 작동하는지를 의심해야 한다.</text><text class="ink2 sm" x="20" y="296" text-anchor="start">음성 대조군은 ‘조작 자체의 효과’를 걸러 내고, 양성 대조군은 ‘실험이 아예 안 돌아가는 경우’를 걸러 낸다.</text>
+</svg>

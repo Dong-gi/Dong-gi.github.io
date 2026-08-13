@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 390" width="720" height="390" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">용해의 에너지 수지</title><desc id="d">격자 파괴와 수화의 준위 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="26" y="34" text-anchor="start">녹는다는 것은 두 큰 값의 줄다리기다</text><path fill="none" stroke="var(--ink2)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#ark)" d="M60 300 L60 84"/><text class="ink2 sm" x="54" y="76" text-anchor="middle">H</text><path d="M268 100 L492 100" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round"/><text class="ink" x="380" y="90" text-anchor="middle">K⁺(g) + Cl⁻(g)  +  물</text><path d="M104 292 L268 292" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round"/><text class="ink" x="104" y="314" text-anchor="start">KCl(s) + 물</text><path d="M492 288 L660 288" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round"/><text class="ink" x="660" y="276" text-anchor="end">K⁺(aq) + Cl⁻(aq)</text><path class="s2" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar2)" d="M216 292 L216 100"/><text class="ink bold" x="208" y="176" text-anchor="end">격자를 부순다</text><text class="ink" x="208" y="198" text-anchor="end">+715 kJ/mol</text><text class="ink2 sm" x="208" y="218" text-anchor="end">(흡열)</text><path class="s1" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M556 100 L556 288"/><text class="ink bold" x="566" y="176" text-anchor="start">물이 이온을 감싼다</text><text class="ink" x="566" y="198" text-anchor="start">−698 kJ/mol</text><text class="ink2 sm" x="566" y="218" text-anchor="start">(발열, 물을 벌리는 비용까지 포함)</text><rect x="276" y="250" width="176" height="40" rx="6" fill="var(--s3)" fill-opacity="0.14" stroke="var(--s3)" stroke-width="1.4"/><text class="ink bold" x="364" y="268" text-anchor="middle">ΔH(용해) = +17 kJ/mol</text><text class="ink2 sm" x="364" y="286" text-anchor="middle">겨우 이만큼만 남는다</text><text class="ink" x="360" y="344" text-anchor="middle">700 가까운 두 값의 차이가 17 이다. 어느 쪽이 조금만 달라도 부호가 뒤집힌다</text><text class="ink2 sm" x="360" y="368" text-anchor="middle">그래서 용해 엔탈피는 계산으로 예측하지 않고 직접 잰다. 흡열인데도 녹는 이유는 엔트로피에 있다</text>
+</svg>

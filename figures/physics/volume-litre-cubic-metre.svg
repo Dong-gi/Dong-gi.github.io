@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 330" width="560" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">1 m³ 안에 1 L 가 1000개</title><desc id="d">한 변 1 m 정육면체를 10 cm 칸으로 나눈 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path d="M70 250 L260 250 L260 60 L70 60 Z" fill="var(--s1)" fill-opacity="0.06" stroke="var(--ink2)" stroke-width="1.2"/><path d="M70 60 L260 60 L322 16 L132 16 Z" fill="var(--s1)" fill-opacity="0.12" stroke="var(--ink2)" stroke-width="1.2"/><path d="M260 250 L322 206 L322 16 L260 60 Z" fill="var(--s1)" fill-opacity="0.03" stroke="var(--ink2)" stroke-width="1.2"/><path class="gr" d="M89 250 L89 60"/><path class="gr" d="M70 231 L260 231"/><path class="gr" d="M108 250 L108 60"/><path class="gr" d="M70 212 L260 212"/><path class="gr" d="M127 250 L127 60"/><path class="gr" d="M70 193 L260 193"/><path class="gr" d="M146 250 L146 60"/><path class="gr" d="M70 174 L260 174"/><path class="gr" d="M165 250 L165 60"/><path class="gr" d="M70 155 L260 155"/><path class="gr" d="M184 250 L184 60"/><path class="gr" d="M70 136 L260 136"/><path class="gr" d="M203 250 L203 60"/><path class="gr" d="M70 117 L260 117"/><path class="gr" d="M222 250 L222 60"/><path class="gr" d="M70 98 L260 98"/><path class="gr" d="M241 250 L241 60"/><path class="gr" d="M70 79 L260 79"/><path d="M70 250 L89 250 L89 231 L70 231 Z" fill="var(--s2)" fill-opacity="0.85" stroke="var(--ink2)" stroke-width="1.2"/><path class="s2" fill="none" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar2)" d="M19.5 286.5 L73.5 248.5"/><text class="ink" x="6" y="312" text-anchor="start">색칠한 칸 하나 = 1 L</text><text class="ink2 sm" x="6" y="330" text-anchor="start">(한 변 10 cm 인 정육면체)</text><text class="ink" x="165" y="250" text-anchor="start"></text><text class="ink2 sm" x="165" y="272" text-anchor="middle">1 m = 100 cm</text><text class="ink2 sm" x="274" y="155" text-anchor="start">1 m</text><text class="ink2 sm" x="544" y="40" text-anchor="end">가로 10칸 × 세로 10칸 × 깊이 10칸</text><text class="ink bold" x="544" y="62" text-anchor="end">= 1000칸</text><text class="ink" x="544" y="88" text-anchor="end">1 m³ = 1000 L,   1 L = 0.001 m³</text><text class="ink2 sm" x="544" y="316" text-anchor="end">길이는 10배지만 부피는 10³ = 1000배가 된다</text>
+</svg>

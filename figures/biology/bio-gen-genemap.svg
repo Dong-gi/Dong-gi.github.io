@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 278" width="660" height="278" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">세 유전자좌의 지도</title><desc id="d">짧은 구간의 재조합률을 이어 붙여 만든 유전자 지도</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="330" y="26" text-anchor="middle">재조합률을 이어 붙여 만든 지도 — 1 cM 은 재조합률 1%</text><rect x="70" y="99" width="500" height="18" rx="9" fill="var(--ink2)" fill-opacity="0.1" stroke="var(--ink2)" stroke-width="1.2"/><path d="M120 94 L120 122" fill="none" stroke="var(--s1)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold" x="120" y="84" text-anchor="middle">a</text><path d="M245 94 L245 122" fill="none" stroke="var(--s1)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold" x="245" y="84" text-anchor="middle">b</text><path d="M430 94 L430 122" fill="none" stroke="var(--s1)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold" x="430" y="84" text-anchor="middle">c</text><path d="M120 153 L120 167" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M245 153 L245 167" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M120 160 L245 160" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="142.5" y="149" width="80" height="22" rx="4" fill="var(--ink2)" fill-opacity="0.001" stroke="none" stroke-width="0"/><text class="ink" x="182.5" y="146" text-anchor="middle">12.5 cM</text><path d="M245 153 L245 167" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M430 153 L430 167" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M245 160 L430 160" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="297.5" y="149" width="80" height="22" rx="4" fill="var(--ink2)" fill-opacity="0.001" stroke="none" stroke-width="0"/><text class="ink" x="337.5" y="146" text-anchor="middle">18.5 cM</text><path d="M120 201 L120 215" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M430 201 L430 215" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M120 208 L430 208" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="235" y="197" width="80" height="22" rx="4" fill="var(--ink2)" fill-opacity="0.001" stroke="none" stroke-width="0"/><text class="ink" x="275" y="194" text-anchor="middle">합 31.0 cM</text><text class="ink2 sm" x="330" y="244" text-anchor="middle">두 끝을 직접 재면 29.0% 가 나온다. 사이에서 교차가 두 번 일어난 자손이 부모형으로 되돌아가 빠졌기 때문이다</text><text class="ink2 sm" x="330" y="264" text-anchor="middle">그래서 지도는 짧은 구간을 재서 이어 붙인다. 멀리 떨어진 두 좌를 한 번에 재면 늘 과소평가된다</text>
+</svg>

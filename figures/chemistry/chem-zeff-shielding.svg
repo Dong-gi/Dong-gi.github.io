@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" width="700" height="400" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">차폐와 유효핵전하</title><desc id="d">나트륨 원자에서 안쪽 전자가 바깥 전자를 가리는 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<circle cx="180" cy="216" r="128" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 3"/><circle cx="180" cy="216" r="62" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 3"/><circle cx="180" cy="216" r="26" fill="var(--s2)" fill-opacity="0.35" stroke="var(--s2)" stroke-width="1.6"/><text class="ink bold" x="180" y="221" text-anchor="middle">+11</text><circle cx="240.07" cy="231.34" r="6" fill="var(--s1)" fill-opacity="0.8" stroke="none" stroke-width="0"/><circle cx="219.58" cy="263.72" r="6" fill="var(--s1)" fill-opacity="0.8" stroke="none" stroke-width="0"/><circle cx="183.98" cy="277.87" r="6" fill="var(--s1)" fill-opacity="0.8" stroke="none" stroke-width="0"/><circle cx="146.85" cy="268.39" r="6" fill="var(--s1)" fill-opacity="0.8" stroke="none" stroke-width="0"/><circle cx="122.38" cy="238.9" r="6" fill="var(--s1)" fill-opacity="0.8" stroke="none" stroke-width="0"/><circle cx="119.93" cy="200.66" r="6" fill="var(--s1)" fill-opacity="0.8" stroke="none" stroke-width="0"/><circle cx="140.42" cy="168.28" r="6" fill="var(--s1)" fill-opacity="0.8" stroke="none" stroke-width="0"/><circle cx="176.02" cy="154.13" r="6" fill="var(--s1)" fill-opacity="0.8" stroke="none" stroke-width="0"/><circle cx="213.15" cy="163.61" r="6" fill="var(--s1)" fill-opacity="0.8" stroke="none" stroke-width="0"/><circle cx="237.62" cy="193.1" r="6" fill="var(--s1)" fill-opacity="0.8" stroke="none" stroke-width="0"/><circle cx="180" cy="88" r="8" fill="var(--s3)" fill-opacity="0.95" stroke="none" stroke-width="0"/><text class="ink sm" x="194" y="84" text-anchor="start">바깥 전자</text><path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M166 98 L166 182"/><text class="ink2 sm" x="158" y="138" text-anchor="end">핵이 끌어당긴다</text><text class="ink2 sm" x="158" y="156" text-anchor="end">+11</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M220 168 L192 104"/><text class="ink2 sm" x="226" y="164" text-anchor="start">안쪽 전자 10개가</text><text class="ink2 sm" x="226" y="182" text-anchor="start">밀어낸다  −10</text><text class="ink bold" x="390" y="96" text-anchor="start">남는 것: 대략 +1</text><text class="ink2 sm" x="390" y="118" text-anchor="start">이 값을 유효핵전하라 하고 Z(eff) 로 적는다</text><text class="ink2 sm" x="390" y="160" text-anchor="start">같은 주기를 오른쪽으로 가면</text><text class="ink2 sm" x="390" y="180" text-anchor="start">양성자는 하나씩 늘어나는데</text><text class="ink2 sm" x="390" y="200" text-anchor="start">새 전자는 같은 껍질에 들어가 잘 가려 주지 못한다</text><text class="ink bold" x="390" y="226" text-anchor="start">→ Z(eff) 가 커지고 원자가 작아진다</text><text class="ink2 sm" x="390" y="264" text-anchor="start">같은 족을 아래로 내려가면</text><text class="ink2 sm" x="390" y="284" text-anchor="start">껍질이 하나 더 붙어 바깥 전자가 멀어진다</text><text class="ink bold" x="390" y="310" text-anchor="start">→ 원자가 커진다</text><text class="ink bold" x="20" y="30" text-anchor="start">나트륨 원자 — 바깥 전자 하나가 실제로 느끼는 끌림</text><text class="ink2 sm" x="686" y="388" text-anchor="end">가려 주는 정도는 껍질마다 달라서 실제 값은 정수가 아니다</text>
+</svg>

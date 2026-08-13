@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 330" width="680" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">전자전달계의 전위 계단</title><desc id="d">NADH 에서 산소까지 전자가 내려가는 단계와 세 복합체</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="20" y="30" text-anchor="start">전자는 계단을 굴러떨어지고, 세 칸에서 일이 뽑혀 나온다</text><path class="gr" d="M92 248.67 H472"/><path class="gr" d="M92 195.33 H472"/><path class="gr" d="M92 142 H472"/><path class="gr" d="M92 88.67 H472"/><path class="ax" marker-end="url(#ark)" d="M92 195.33 H482"/><path class="ax" marker-end="url(#ark)" d="M92 262 V52"/><text class="sm ink2" x="86" y="252.67" text-anchor="end">-0.4</text><text class="sm ink2" x="86" y="146" text-anchor="end">0.4</text><text class="sm ink2" x="86" y="92.67" text-anchor="end">0.8</text><text class="sm ink2" x="92" y="44" text-anchor="middle">전자를 끌어당기는 세기 (V)</text><path class="cv s1" d="M93.9 238 L135.7 238"/><circle class="f1" cx="114.8" cy="238" r="3.5"/><text class="ink sm" x="114.8" y="226" text-anchor="middle">NADH</text><path class="s2" fill="none" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar2)" d="M135.7 238 L162.3 191.33"/><path class="cv s1" d="M162.3 191.33 L204.1 191.33"/><circle class="f1" cx="183.2" cy="191.33" r="3.5"/><text class="ink sm" x="183.2" y="179.33" text-anchor="middle">유비퀴논</text><path class="s2" fill="none" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar2)" d="M204.1 191.33 L253.5 162"/><path class="cv s1" d="M253.5 162 L295.3 162"/><circle class="f1" cx="274.4" cy="162" r="3.5"/><text class="ink sm" x="274.4" y="150" text-anchor="middle">사이토크롬 c</text><path class="s2" fill="none" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar2)" d="M295.3 162 L344.7 86"/><path class="cv s1" d="M344.7 86 L386.5 86"/><circle class="f1" cx="365.6" cy="86" r="3.5"/><text class="ink sm" x="365.6" y="74" text-anchor="middle">O₂ → 물</text><text class="ink sm" x="149" y="254" text-anchor="middle">복합체 I</text><text class="ink sm" x="228.8" y="254" text-anchor="middle">복합체 III</text><text class="ink sm" x="320" y="254" text-anchor="middle">복합체 IV</text><path class="cv s3" stroke-dasharray="4 3" d="M418.8 238 L418.8 86"/><text class="ink sm" x="426.8" y="166" text-anchor="start">전체 1.14 V</text><text class="ink2 sm" x="20" y="288" text-anchor="start">세로축이 클수록 전자를 세게 당긴다. 전자는 약하게 당기는 쪽(NADH)에서 세게 당기는 쪽(산소)으로 간다.</text><text class="ink2 sm" x="20" y="310" text-anchor="start">한 번에 떨어뜨리면 그 에너지가 전부 열이 된다. 세 칸으로 나누어 떨어뜨려야 각 칸에서 양성자를 퍼낼 수 있다.</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 300" width="660" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">토양에서 잎까지 이어지는 수분퍼텐셜의 계단</title><desc id="d">토양에서 잎으로 갈수록 수분퍼텐셜이 낮아지고, 잎에서 대기로 넘어갈 때 낙차가 가장 크다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="gr" d="M92 234 V56"/><path class="gr" d="M160.18 234 V56"/><path class="gr" d="M228.36 234 V56"/><path class="gr" d="M296.55 234 V56"/><path class="gr" d="M364.73 234 V56"/><path class="gr" d="M92 56 H392"/><path class="gr" d="M92 90.23 H392"/><path class="gr" d="M92 124.46 H392"/><path class="gr" d="M92 158.69 H392"/><path class="gr" d="M92 192.92 H392"/><path class="gr" d="M92 227.15 H392"/><path class="ax" marker-end="url(#ark)" d="M92 234 H404"/><path class="ax" marker-end="url(#ark)" d="M92 234 V44"/><text class="ink2 sm" x="92" y="250" text-anchor="middle">토양</text><text class="ink2 sm" x="160.18" y="250" text-anchor="middle">뿌리</text><text class="ink2 sm" x="228.36" y="250" text-anchor="middle">줄기 아래</text><text class="ink2 sm" x="296.55" y="250" text-anchor="middle">줄기 위</text><text class="ink2 sm" x="364.73" y="250" text-anchor="middle">잎</text><text class="ink2 sm" x="86" y="60" text-anchor="end">0.0</text><text class="ink2 sm" x="86" y="94.23" text-anchor="end">-0.5</text><text class="ink2 sm" x="86" y="128.46" text-anchor="end">-1.0</text><text class="ink2 sm" x="86" y="162.69" text-anchor="end">-1.5</text><text class="ink2 sm" x="86" y="196.92" text-anchor="end">-2.0</text><text class="ink2 sm" x="86" y="231.15" text-anchor="end">-2.5</text><text class="ink2 sm" x="92" y="36" text-anchor="middle">Ψ (MPa)</text><path class="cv s1" d="M92 76.54 L160.18 93.65 L228.36 131.31 L296.55 172.38 L364.73 213.46"/><circle class="f1" cx="92" cy="76.54" r="4.5"/><circle class="f1" cx="160.18" cy="93.65" r="4.5"/><circle class="f1" cx="228.36" cy="131.31" r="4.5"/><circle class="f1" cx="296.55" cy="172.38" r="4.5"/><circle class="f1" cx="364.73" cy="213.46" r="4.5"/><text class="ink2 sm" x="96" y="68.54" text-anchor="start">−0.30</text><text class="ink2 sm" x="358.73" y="229.46" text-anchor="end">−2.30</text><path fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M372.73 221.46 L388.59 230.58"/><text class="ink sm" x="430" y="66" text-anchor="start">물이 위로 가려면 위쪽 Ψ 가 더 낮아야</text><text class="ink sm" x="430" y="83" text-anchor="start">한다. 그래서 이 선은 반드시 내려간다.</text><text class="ink2 sm" x="430" y="117" text-anchor="start">내려가는 이유는 둘이다.</text><text class="ink2 sm" x="430" y="134" text-anchor="start">· 높이 1 m 마다 약 9.8 kPa</text><text class="ink2 sm" x="430" y="151" text-anchor="start">· 관을 지나며 생기는 마찰 손실</text><text class="ink2 sm" x="430" y="185" text-anchor="start">가장 큰 낙차는 잎에서 대기로 넘어갈</text><text class="ink2 sm" x="430" y="202" text-anchor="start">때 생긴다. 물을 끌어올리는 힘이</text><text class="ink2 sm" x="430" y="219" text-anchor="start">거기서 나온다.</text><text class="ink2 sm" x="30" y="26" text-anchor="start">한 칸씩 내려가는 계단이다. 어느 칸에서 얼마나 떨어지는지가 곧 그 구간의 저항이다</text><text class="ink sm" x="150" y="272" text-anchor="start">오른쪽 아래로 빠져나가는 화살표가 대기다. 상대습도 50% 면 약 −100 MPa 로 뚝 떨어진다</text><text class="ink2 sm" x="30" y="292" text-anchor="start">뿌리압으로 만들 수 있는 값은 +0.1 MPa 규모다. 이 계단을 거슬러 오를 크기가 못 된다</text>
+</svg>

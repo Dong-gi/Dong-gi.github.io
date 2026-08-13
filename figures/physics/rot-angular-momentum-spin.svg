@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 372" width="620" height="372" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">팔을 당기면 빨라지는 이유</title><desc id="d">관성모멘트가 줄면 각속도가 커진다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="24" y="32" text-anchor="start">축 방향으로 외부 토크가 없으면 L = I ω 는 변하지 않는다</text><circle cx="162" cy="170" r="90" fill="var(--grid)" fill-opacity="0.25" stroke="none"/><path d="M96 170 H228" stroke="var(--ink2)" stroke-width="2.5"/><circle class="f1" cx="96" cy="170" r="15" fill-opacity="0.8" stroke="var(--ink2)" stroke-width="1.2"/><circle class="f1" cx="228" cy="170" r="15" fill-opacity="0.8" stroke="var(--ink2)" stroke-width="1.2"/><circle cx="162" cy="170" r="4" class="ink2"/><path class="s2" fill="none" stroke-width="3" stroke-linecap="round" marker-end="url(#ar2)" d="M241.67 103.15 A104 104 0 0 0 126.43 72.27"/><text class="ink bold" x="162" y="296" text-anchor="middle">팔을 벌리면</text><text class="ink2 sm" x="162" y="316" text-anchor="middle">I 크다 → ω 작다</text><circle cx="440" cy="170" r="52" fill="var(--grid)" fill-opacity="0.25" stroke="none"/><path d="M412 170 H468" stroke="var(--ink2)" stroke-width="2.5"/><circle class="f1" cx="412" cy="170" r="15" fill-opacity="0.8" stroke="var(--ink2)" stroke-width="1.2"/><circle class="f1" cx="468" cy="170" r="15" fill-opacity="0.8" stroke="var(--ink2)" stroke-width="1.2"/><circle cx="440" cy="170" r="4" class="ink2"/><path class="s2" fill="none" stroke-width="3" stroke-linecap="round" marker-end="url(#ar2)" d="M490.56 127.58 A66 66 0 1 0 407 227.16"/><text class="ink bold" x="440" y="296" text-anchor="middle">팔을 당기면</text><text class="ink2 sm" x="440" y="316" text-anchor="middle">I 작다 → ω 크다</text><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M280 170 L356 170"/><text class="ink2 sm" x="318" y="158" text-anchor="middle">팔을 당긴다</text><text class="ink" x="310" y="346" text-anchor="middle">L 은 그대로지만 K = L² / (2 I) 는 커진다</text><text class="ink2 sm" x="310" y="366" text-anchor="middle">그 에너지는 팔을 당기는 근육이 한 일에서 온다</text>
+</svg>

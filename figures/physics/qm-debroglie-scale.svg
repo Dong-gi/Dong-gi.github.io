@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320" width="680" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">드브로이 파장 비교</title><desc id="d">자릿수로 본 물질파의 크기</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="16" y="26" text-anchor="start">드브로이 파장 — 무거울수록 터무니없이 짧아진다</text><path fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round" d="M204 236 L648 236"/><path fill="none" stroke="var(--ink2)" stroke-width="1.3" stroke-linecap="round" d="M214 236 L214 242"/><text class="ink2 sm" x="214" y="258" text-anchor="middle">10⁻³⁶</text><path fill="none" stroke="var(--ink2)" stroke-width="1.3" stroke-linecap="round" d="M294.9 236 L294.9 242"/><text class="ink2 sm" x="294.9" y="258" text-anchor="middle">10⁻³⁰</text><path fill="none" stroke="var(--ink2)" stroke-width="1.3" stroke-linecap="round" d="M375.81 236 L375.81 242"/><text class="ink2 sm" x="375.81" y="258" text-anchor="middle">10⁻²⁴</text><path fill="none" stroke="var(--ink2)" stroke-width="1.3" stroke-linecap="round" d="M456.71 236 L456.71 242"/><text class="ink2 sm" x="456.71" y="258" text-anchor="middle">10⁻¹⁸</text><path fill="none" stroke="var(--ink2)" stroke-width="1.3" stroke-linecap="round" d="M537.61 236 L537.61 242"/><text class="ink2 sm" x="537.61" y="258" text-anchor="middle">10⁻¹²</text><path fill="none" stroke="var(--ink2)" stroke-width="1.3" stroke-linecap="round" d="M618.52 236 L618.52 242"/><text class="ink2 sm" x="618.52" y="258" text-anchor="middle">10⁻⁶</text><text class="ink2 sm" x="652" y="240" text-anchor="start">λ (m)</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="5 4" stroke-linecap="round" d="M564.58 62 L564.58 236"/><text class="ink2 sm" x="564.58" y="56" text-anchor="middle">원자 지름</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="5 4" stroke-linecap="round" d="M510.65 46 L510.65 236"/><text class="ink2 sm" x="510.65" y="40" text-anchor="middle">원자핵 지름</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="3 4" stroke-linecap="round" d="M208 84 L614.47 84"/><circle cx="614.47" cy="84" r="5.5" fill="var(--s1)"/><text class="ink2 sm" x="200" y="88" text-anchor="end">가시광선 광자 (500 nm)</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="3 4" stroke-linecap="round" d="M208 120 L565.79 120"/><circle cx="565.79" cy="120" r="5.5" fill="var(--s1)"/><text class="ink2 sm" x="200" y="124" text-anchor="end">100 eV 로 가속한 전자 (0.12 nm)</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="3 4" stroke-linecap="round" d="M208 156 L557.03 156"/><circle cx="557.03" cy="156" r="5.5" fill="var(--s3)"/><text class="ink2 sm" x="200" y="160" text-anchor="end">상온의 질소 분자 (28 pm)</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="3 4" stroke-linecap="round" d="M208 192 L241.78 192"/><circle cx="241.78" cy="192" r="5.5" fill="var(--s2)"/><text class="ink2 sm" x="200" y="196" text-anchor="end">야구공 0.145 kg, 40 m/s</text><text class="ink2 sm" x="16" y="288" text-anchor="start">λ = h / p. 야구공의 파장은 원자핵보다 10¹⁹배 넘게 작아 잴 방법이 없다.</text><text class="ink2 sm" x="16" y="308" text-anchor="start">전자의 파장이 원자 간격과 같은 자리 수라는 것이 전자 회절과 전자현미경의 근거다.</text>
+</svg>

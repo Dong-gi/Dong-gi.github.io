@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 570 310" width="570" height="310" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">벡터의 덧셈</title><desc id="d">화살표를 이어 붙이는 방법과 평행사변형</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="gr" d="M70.69 254 V34"/><path class="gr" d="M122.41 254 V34"/><path class="gr" d="M174.14 254 V34"/><path class="gr" d="M225.86 254 V34"/><path class="gr" d="M277.59 254 V34"/><path class="gr" d="M329.31 254 V34"/><path class="gr" d="M50 234.87 H350"/><path class="gr" d="M50 187.04 H350"/><path class="gr" d="M50 139.22 H350"/><path class="gr" d="M50 91.39 H350"/><path class="gr" d="M50 43.57 H350"/><path class="ax" marker-end="url(#ark)" d="M50 234.87 H360"/><path class="ax" marker-end="url(#ark)" d="M70.69 254 V24"/><text class="sm ink2" x="122.41" y="249.87" text-anchor="middle">1</text><text class="sm ink2" x="174.14" y="249.87" text-anchor="middle">2</text><text class="sm ink2" x="225.86" y="249.87" text-anchor="middle">3</text><text class="sm ink2" x="277.59" y="249.87" text-anchor="middle">4</text><text class="sm ink2" x="329.31" y="249.87" text-anchor="middle">5</text><text class="sm ink2" x="64.69" y="191.04" text-anchor="end">1</text><text class="sm ink2" x="64.69" y="143.22" text-anchor="end">2</text><text class="sm ink2" x="64.69" y="95.39" text-anchor="end">3</text><text class="sm ink2" x="64.69" y="47.57" text-anchor="end">4</text><text class="sm ink2" x="364" y="238.87">x</text><text class="sm ink2" x="70.69" y="16" text-anchor="middle">y</text><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M70.69 234.87 L225.86 187.04"/><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" d="M225.86 187.04 L303.45 67.48"/><path class="s2" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M70.69 234.87 L148.28 115.3"/><path class="s1" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M148.28 115.3 L303.45 67.48"/><path class="s3" fill="none" stroke-width="3" stroke-linecap="round" marker-end="url(#ar3)" d="M70.69 234.87 L303.45 67.48"/><text class="ink" x="153.45" y="213.35" text-anchor="start">A</text><text class="ink" x="273.24" y="120.09" text-anchor="start">B</text><text class="ink2 sm" x="87.72" y="163.13" text-anchor="start">B</text><text class="ink2 sm" x="216.69" y="75.83" text-anchor="start">A</text><text class="ink" x="309.45" y="61.48" text-anchor="start">A + B</text><text class="ink" x="378" y="66" text-anchor="start">A 의 머리에 B 의 꼬리를</text><text class="ink" x="378" y="86" text-anchor="start">붙이면 처음 꼬리에서</text><text class="ink" x="378" y="106" text-anchor="start">마지막 머리까지가 합이다</text><text class="ink2 sm" x="378" y="146" text-anchor="start">순서를 바꿔 B 다음에 A 를</text><text class="ink2 sm" x="378" y="164" text-anchor="start">이어도 같은 자리에 닿는다</text><text class="ink2 sm" x="378" y="200" text-anchor="start">성분으로는 그냥 더한다</text><text class="ink bold" x="378" y="222" text-anchor="start">(3 + 1.5, 1 + 2.5)</text><text class="ink bold" x="378" y="242" text-anchor="start">= (4.5, 3.5)</text><text class="ink2 sm" x="556" y="298" text-anchor="end">벡터의 합은 자리를 옮겨 이어 붙인 화살표다</text>
+</svg>
