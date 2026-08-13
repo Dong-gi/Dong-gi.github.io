@@ -621,6 +621,7 @@ include ../../source/skeleton.pug
             l = [n for subList in radixList for n in subList]
             radixList = [[] for _ in range(10)]
 
+    +pos('위상 정렬(Topological sort)')
     h2 위상 정렬(Topological sort)
     p 특정 원소쌍들에 대한 분명한 선후관계만 만족하면, 나머지 원소의 순서는 아무래도 상관없는 정렬을 방향 그래프를 이용해 구하는 방법
     h3.fake 방법 1 : 정방향

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 330" width="640" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">식물의 세대교번</title><desc id="d">반수체 배우체와 이배체 포자체가 번갈아 나타난다. 감수분열의 산물이 배우자가 아니라 포자라는 점이 동물과 결정적으로 다르다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<circle cx="250" cy="178" r="108" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4" stroke-dasharray="5 5"/><path d="M116 178 A134 134 0 0 1 384 178 Z" fill="var(--s1)" fill-opacity="0.08"/><path d="M384 178 A134 134 0 0 1 116 178 Z" fill="var(--s3)" fill-opacity="0.08"/><path d="M116 178 L384 178" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/><circle cx="250" cy="70" r="7" fill="var(--ink)" fill-opacity="1" stroke="none" stroke-width="0"/><text class="ink bold sm" x="250" y="56" text-anchor="middle">포자체 (2n)</text><text class="ink2 sm" x="250" y="72" text-anchor="middle">우리가 보는 양치식물</text><circle cx="358" cy="178" r="7" fill="var(--ink)" fill-opacity="1" stroke="none" stroke-width="0"/><text class="ink bold sm" x="370" y="183" text-anchor="start">포자모세포 (2n)</text><circle cx="304" cy="271.53" r="7" fill="var(--ink)" fill-opacity="1" stroke="none" stroke-width="0"/><text class="ink bold sm" x="316" y="276.53" text-anchor="start">포자 (n)</text><circle cx="196" cy="271.53" r="7" fill="var(--ink)" fill-opacity="1" stroke="none" stroke-width="0"/><text class="ink bold sm" x="184" y="276.53" text-anchor="end">배우체 (n)</text><text class="ink2 sm" x="184" y="292.53" text-anchor="end">독립된 다세포 개체</text><circle cx="142" cy="178" r="7" fill="var(--ink)" fill-opacity="1" stroke="none" stroke-width="0"/><text class="ink bold sm" x="130" y="183" text-anchor="end">배우자 (n)</text><text class="ink2 sm" x="130" y="199" text-anchor="end">정자와 난자</text><text class="ink2 sm" x="250" y="164" text-anchor="middle">위쪽 = 이배체 (2n)</text><text class="ink2 sm" x="250" y="198" text-anchor="middle">아래쪽 = 반수체 (n)</text><text class="ink bold sm" x="352.99" y="238" text-anchor="start">감수분열 ★</text><text class="ink2 sm" x="335.2" y="102.8" text-anchor="start">유사분열</text><text class="ink2 sm" x="256" y="294" text-anchor="start">유사분열</text><text class="ink2 sm" x="147.01" y="238" text-anchor="end">유사분열</text><text class="ink bold sm" x="164.8" y="102.8" text-anchor="end">수정 ★</text><text class="ink bold" x="410" y="74" text-anchor="start">동물과 무엇이 다른가</text><text class="ink2 sm" x="410" y="98" text-anchor="start">동물: 감수분열의 산물이</text><text class="ink2 sm" x="410" y="114" text-anchor="start">곧 배우자다. 반수체 상태가</text><text class="ink2 sm" x="410" y="130" text-anchor="start">세포 하나로 끝난다.</text><text class="ink2 sm" x="410" y="158" text-anchor="start">식물: 감수분열의 산물은</text><text class="ink2 sm" x="410" y="174" text-anchor="start">포자다. 포자가 자라 다세포</text><text class="ink2 sm" x="410" y="190" text-anchor="start">개체(배우체)가 되고,</text><text class="ink2 sm" x="410" y="206" text-anchor="start">그 개체가 유사분열로</text><text class="ink2 sm" x="410" y="222" text-anchor="start">배우자를 만든다.</text><text class="ink2 sm" x="30" y="30" text-anchor="start">한 바퀴에 감수분열이 딱 한 번, 수정이 딱 한 번이다. 표를 채우고 나서 이것으로 검산한다</text><text class="ink2 sm" x="30" y="318" text-anchor="start">진화의 방향은 배우체가 작아지고 포자체가 커지는 쪽이었다. 종자식물의 배우체가 꽃가루와 배낭이다</text>
+</svg>

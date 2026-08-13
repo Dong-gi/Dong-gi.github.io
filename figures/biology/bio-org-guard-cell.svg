@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 322" width="660" height="322" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">기공은 왜 부풀면 열리는가</title><desc id="d">공변세포는 안쪽 벽이 두껍고 미세섬유가 둘레로 감겨 있어, 팽압이 오르면 길이 방향으로만 늘어나 바깥으로 휘고 가운데가 벌어진다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path d="M148 99 Q148 165 148 231 L152 231 Q152 165 152 99 Z" fill="var(--ink)" fill-opacity="0.16" stroke="none"/><path d="M148 99 Q114 165 148 231 Q148 165 148 99 Z" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.8"/><path d="M152 99 Q186 165 152 231 Q152 165 152 99 Z" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.8"/><path d="M148 99 Q148 165 148 231" fill="none" stroke="var(--ink2)" stroke-width="3.4"/><path d="M152 99 Q152 165 152 231" fill="none" stroke="var(--ink2)" stroke-width="3.4"/><path d="M378 99 Q361 165 378 231 L382 231 Q399 165 382 99 Z" fill="var(--ink)" fill-opacity="0.16" stroke="none"/><path d="M378 99 Q327 165 378 231 Q361 165 378 99 Z" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.8"/><path d="M382 99 Q433 165 382 231 Q399 165 382 99 Z" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.8"/><path d="M378 99 Q361 165 378 231" fill="none" stroke="var(--ink2)" stroke-width="3.4"/><path d="M382 99 Q399 165 382 231" fill="none" stroke="var(--ink2)" stroke-width="3.4"/><text class="ink sm" x="380" y="170" text-anchor="middle">기공</text><text class="ink bold" x="150" y="70" text-anchor="middle">닫힘</text><text class="ink bold" x="380" y="70" text-anchor="middle">열림</text><text class="ink2 sm" x="150" y="262" text-anchor="middle">K⁺ 이 빠져나가 팽압이 낮다</text><text class="ink2 sm" x="380" y="262" text-anchor="middle">물이 들어와 팽압이 높다</text><path fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M288 150 L322 157"/><text class="ink sm" x="284" y="154" text-anchor="end">K⁺ 과 물</text><text class="ink2 sm" x="486" y="92" text-anchor="start">공변세포의 안쪽 벽이 바깥쪽보다</text><text class="ink2 sm" x="486" y="109" text-anchor="start">두껍고, 셀룰로스 미세섬유가</text><text class="ink2 sm" x="486" y="126" text-anchor="start">둘레 방향으로 감겨 있다.</text><text class="ink sm" x="486" y="160" text-anchor="start">그래서 물이 들어와 부풀 때 늘어날</text><text class="ink sm" x="486" y="177" text-anchor="start">수 있는 방향은 길이뿐이고, 길어진</text><text class="ink sm" x="486" y="194" text-anchor="start">세포가 바깥으로 휘면서 가운데가</text><text class="ink sm" x="486" y="211" text-anchor="start">벌어진다.</text><text class="ink2 sm" x="486" y="245" text-anchor="start">여는 신호: 청색광, 잎 안 CO₂ 감소</text><text class="ink2 sm" x="486" y="262" text-anchor="start">닫는 신호: 앱시스산, 건조, 고온</text><text class="ink2 sm" x="30" y="26" text-anchor="start">같은 세포가 물을 얻었을 뿐인데 구멍이 생긴다. 벽의 구조가 변형의 방향을 정한다</text><text class="ink2 sm" x="30" y="306" text-anchor="start">기공이 열리면 CO₂ 가 들어오고 물이 나간다. 잎은 두 요구를 동시에 만족시킬 수 없다</text>
+</svg>

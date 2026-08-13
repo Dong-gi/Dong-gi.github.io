@@ -71,6 +71,57 @@ let generatedImgSet: Set<string> = new Set();
 let workerImgMap: Record<string, { width: number; height: number }> = {};
 
 /**
+ * MathJax 의 지연 로더가 Windows 에서 깨지는 것을 우회한다.
+ *
+ * `@mathjax/src` 4.1.3 의 `components/mjs/node-main/node-main.js` 는 스스로 만든 값을
+ * 잘못 재사용한다.
+ *
+ *   1. `context.path()` 가 Windows 에서 `__dirname` 을 URL 문자열로 바꾼다.
+ *      `C:\…\components\mjs\node-main` → `file://C:/…/components/mjs/node-main`
+ *   2. 63행이 그 URL 문자열을 다시 `path.resolve()` 에 넣는다. `file://C:/…` 는
+ *      Windows 에서 절대 경로가 아니므로 cwd 가 앞에 붙고, 결과 `ROOT` 는
+ *      `<cwd>\file:\C:\…\@mathjax\src\mjs` 라는 존재하지 않는 경로가 된다.
+ *
+ * 그 뒤 `mathjax.asyncLoad` 가 `path.resolve(ROOT, name)` 을 `import()` 에 그대로
+ * 넘긴다. 인자가 `C:\…` 로 시작하니 ESM 로더는 `C:` 를 URL 스킴으로 읽고
+ * `ERR_UNSUPPORTED_ESM_URL_SCHEME … Received protocol 'c:'` 로 죽는다.
+ *
+ * 이 경로를 타는 호출부는 `mjs/util/Entities.js` 한 곳뿐이다. 수식 안에 기본 표에
+ * 없는 명명 엔티티(`&larr;` 같은)가 있으면 `./util/entities/<첫 글자>.js` 를 지연
+ * 로드한다. 폰트 데이터는 `[mathjax-newcm]/…` 형태라 다른 분기를 타므로 무사하고,
+ * 그래서 증상이 특정 문서에서만 나타난다.
+ *
+ * `ROOT` 자체가 틀린 값이라 스킴만 바로잡아서는 고쳐지지 않는다. `.` 로 시작하는
+ * 이름만 가로채 패키지 위치에서 다시 해석한다. 나머지(`[…]` 접두사, 베어
+ * 스펙파이어)는 상류 구현이 옳으므로 그대로 넘긴다.
+ *
+ * POSIX 에서는 `context.path` 가 항등함수라 상류도 정상이고 이 함수가 만드는 URL 도
+ * 같은 파일을 가리킨다. 플랫폼 분기를 두지 않는 이유다 — 분기를 두면 Windows 에서만
+ * 실행되는 코드가 되어 조용히 썩는다.
+ *
+ * 상류가 고치면(4.1.3 이 최신이고 수정본은 없다) 이 함수를 지울 수 있다.
+ */
+function patchMathJaxAsyncLoad(MathJax: any): void {
+    const mjsRoot = new URL(
+        '../../../mjs/',
+        import.meta.resolve('@mathjax/src/components/mjs/node-main/node-main.mjs'),
+    );
+    // 내부 구조에 의존하므로 어긋나면 즉시 알아챌 수 있게 한다. 조용히 넘어가면
+    // Windows 빌드가 다시 ERR_UNSUPPORTED_ESM_URL_SCHEME 로 죽고, 원인이 여기라는
+    // 단서가 남지 않는다.
+    const mathjax = MathJax?._?.mathjax?.mathjax;
+    if (typeof mathjax?.asyncLoad !== 'function') {
+        throw new Error(
+            'MathJax 내부 구조가 바뀌었다: _.mathjax.mathjax.asyncLoad 를 찾지 못했다. ' +
+            'patchMathJaxAsyncLoad 가 아직 필요한지 확인할 것.',
+        );
+    }
+    const upstream = mathjax.asyncLoad as (name: string) => Promise<unknown>;
+    mathjax.asyncLoad = (name: string): Promise<unknown> =>
+        name.startsWith('.') ? import(new URL(name, mjsRoot).href) : upstream(name);
+}
+
+/**
  * MathJax 기동은 1초 가까이 걸리므로 워커당 한 번만 한다.
  * 수식 문서가 없는 워커는 아예 불러오지 않는다.
  */
@@ -84,7 +135,10 @@ function getMathJax(): Promise<any> {
             chtml: { fontURL: MATH_FONT_URL },
             startup: { typeset: false },
         }),
-    );
+    ).then((MathJax: any) => {
+        patchMathJaxAsyncLoad(MathJax);
+        return MathJax;
+    });
     return mathJaxPromise;
 }
 
@@ -537,18 +591,30 @@ async function processPugs() {
  * 같은 동작을 하고 Windows 에서는 읽기 전용 비트만 다루는 무해한 호출이 된다.
  */
 async function chmodD2() {
-    const names = await fsp.readdir('./d2');
-    await Promise.all(names.map((name) => fsp.chmod('./d2/' + name, 0o644)));
+    const files = await d2Files();
+    await Promise.all(files.map((f) => fsp.chmod(f, 0o644)));
+}
+
+/**
+ * d2/ 아래의 파일을 하위 폴더까지 훑는다.
+ *
+ * 예전에는 최상위만 읽어서 d2/1.d2 처럼 평면으로 둘 수밖에 없었다. 그림이 늘면
+ * 이름이 금세 바닥나므로 d2/physics/heat-engine.d2 처럼 과목별로 나눈다.
+ */
+async function d2Files(): Promise<string[]> {
+    const entries = await fsp.readdir('./d2', { recursive: true, withFileTypes: true });
+    return entries
+        .filter((e) => e.isFile())
+        .map((e) => './' + toPosix(path.join(e.parentPath, e.name)));
 }
 
 async function processD2s() {
-    const names = await fsp.readdir('./d2');
-    names.forEach((name) => {
-        if (!name.endsWith('.d2')) {
-            return;
+    for (const file of await d2Files()) {
+        if (!file.endsWith('.d2')) {
+            continue;
         }
-        pushWork({ api: 'render-d2', path: './d2/' + name });
-    });
+        pushWork({ api: 'render-d2', path: file });
+    }
 }
 
 if (isMainThread) {

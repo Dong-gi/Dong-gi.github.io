@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 310" width="600" height="310" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">관성모멘트와 질량 분포</title><desc id="d">같은 질량, 다른 반지름의 아령 둘</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="24" y="32" text-anchor="start">질량이 같아도 축에서 멀리 퍼져 있으면 돌리기 어렵다</text><path class="gr" stroke-dasharray="6 4" d="M160 82 V236"/><path d="M114 160 H206" stroke="var(--ink2)" stroke-width="2.5" fill="none"/><circle class="f1" cx="114" cy="160" r="16" fill-opacity="0.8" stroke="var(--ink2)" stroke-width="1.2"/><circle class="f1" cx="206" cy="160" r="16" fill-opacity="0.8" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink" x="114" y="134" text-anchor="middle">m</text><text class="ink" x="206" y="134" text-anchor="middle">m</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M160 206 L206 206"/><text class="ink" x="183" y="224" text-anchor="middle">r</text><text class="ink2 sm" x="160" y="72" text-anchor="middle">회전축</text><text class="ink bold" x="160" y="260" text-anchor="middle">I = 2 m r²</text><path class="gr" stroke-dasharray="6 4" d="M430 82 V236"/><path d="M338 160 H522" stroke="var(--ink2)" stroke-width="2.5" fill="none"/><circle class="f1" cx="338" cy="160" r="16" fill-opacity="0.8" stroke="var(--ink2)" stroke-width="1.2"/><circle class="f1" cx="522" cy="160" r="16" fill-opacity="0.8" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink" x="338" y="134" text-anchor="middle">m</text><text class="ink" x="522" y="134" text-anchor="middle">m</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M430 206 L522 206"/><text class="ink" x="476" y="224" text-anchor="middle">2r</text><text class="ink2 sm" x="430" y="72" text-anchor="middle">회전축</text><text class="ink bold" x="430" y="260" text-anchor="middle">I = 8 m r²  (4배)</text><text class="ink2 sm" x="300" y="300" text-anchor="middle">거리가 제곱으로 들어가므로 두 배 벌리면 관성모멘트는 네 배가 된다</text>
+</svg>

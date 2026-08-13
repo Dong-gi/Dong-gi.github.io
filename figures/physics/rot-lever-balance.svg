@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 300" width="580" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">지레의 평형</title><desc id="d">받침점을 축으로 잡은 토크 평형</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="70" y="143" width="440" height="14" rx="3" fill="var(--grid)" fill-opacity="0.5" stroke="var(--ink2)" stroke-width="1.3"/><path d="M290 158 L268 202 L312 202 Z" fill="none" stroke="var(--ink2)" stroke-width="1.5"/><path class="ax" d="M220 202 H360"/><path class="gr" d="M220 202 L213 210"/><path class="gr" d="M234 202 L227 210"/><path class="gr" d="M248 202 L241 210"/><path class="gr" d="M262 202 L255 210"/><path class="gr" d="M276 202 L269 210"/><path class="gr" d="M290 202 L283 210"/><path class="gr" d="M304 202 L297 210"/><path class="gr" d="M318 202 L311 210"/><path class="gr" d="M332 202 L325 210"/><path class="gr" d="M346 202 L339 210"/><path class="s3" fill="none" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ar3)" d="M290 154 L290 72"/><text class="ink2 sm" x="280" y="82" text-anchor="end">N (받침점이 미는 힘)</text><rect x="108" y="104" width="44" height="40" rx="3" fill="none" stroke="var(--ink2)" stroke-width="1.5"/><text class="ink2 sm" x="130" y="128" text-anchor="middle">m<tspan baseline-shift="-22%" font-size="76%">1</tspan></text><path class="s1" fill="none" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ar1)" d="M130 160 L130 228"/><text class="ink" x="122" y="224" text-anchor="end">m<tspan baseline-shift="-22%" font-size="76%">1</tspan> g</text><rect x="360" y="92" width="52" height="52" rx="3" fill="none" stroke="var(--ink2)" stroke-width="1.5"/><text class="ink2 sm" x="386" y="122" text-anchor="middle">m<tspan baseline-shift="-22%" font-size="76%">2</tspan></text><path class="s2" fill="none" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ar2)" d="M386 160 L386 246"/><text class="ink" x="394" y="242" text-anchor="start">m<tspan baseline-shift="-22%" font-size="76%">2</tspan> g</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M290 262 L130 262"/><text class="ink" x="210" y="256" text-anchor="middle">d<tspan baseline-shift="-22%" font-size="76%">1</tspan></text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M290 262 L386 262"/><text class="ink" x="338" y="256" text-anchor="middle">d<tspan baseline-shift="-22%" font-size="76%">2</tspan></text><path class="gr" stroke-dasharray="4 3" d="M130 150 V268"/><path class="gr" stroke-dasharray="4 3" d="M386 150 V268"/><path class="gr" stroke-dasharray="4 3" d="M290 150 V268"/><text class="ink bold" x="24" y="34" text-anchor="start">평형의 두 조건: 힘의 합도 0, 토크의 합도 0</text><text class="ink2 sm" x="24" y="60" text-anchor="start">받침점을 축으로 잡으면 N 의 토크가 0 이라 식에서 사라진다</text><text class="ink" x="566" y="270" text-anchor="end">m<tspan baseline-shift="-22%" font-size="76%">1</tspan> g d<tspan baseline-shift="-22%" font-size="76%">1</tspan> = m<tspan baseline-shift="-22%" font-size="76%">2</tspan> g d<tspan baseline-shift="-22%" font-size="76%">2</tspan></text><text class="ink2 sm" x="566" y="290" text-anchor="end">반시계 토크와 시계 토크가 같으면 기울지 않는다</text>
+</svg>

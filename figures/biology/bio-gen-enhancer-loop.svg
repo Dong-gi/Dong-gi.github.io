@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 344" width="700" height="344" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">인핸서와 프로모터의 고리 형성</title><desc id="d">멀리 있는 조절 서열이 고리를 통해 프로모터에 작용한다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="350" y="26" text-anchor="middle">인핸서 — 멀리 떨어져 있어도 고리를 만들어 프로모터에 닿는다</text><text class="ink bold sm" x="30" y="66" text-anchor="start">서열 위의 배치</text><path d="M30 100 L670 100" fill="none" stroke="var(--ink2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="60" y="87" width="84" height="26" rx="3" fill="var(--s2)" fill-opacity="0.3" stroke="var(--ink2)" stroke-width="1.1"/><text class="ink bold sm" x="102" y="105" text-anchor="middle">인핸서</text><rect x="300" y="87" width="74" height="26" rx="3" fill="var(--ink2)" fill-opacity="0.18" stroke="var(--ink2)" stroke-width="1.1"/><text class="ink bold sm" x="337" y="105" text-anchor="middle">프로모터</text><rect x="378" y="87" width="130" height="26" rx="3" fill="var(--s1)" fill-opacity="0.24" stroke="var(--ink2)" stroke-width="1.1"/><text class="ink bold sm" x="443" y="105" text-anchor="middle">유전자</text><rect x="566" y="87" width="84" height="26" rx="3" fill="var(--ink2)" fill-opacity="0.1" stroke="var(--ink2)" stroke-width="1.1"/><text class="ink bold sm" x="608" y="105" text-anchor="middle">다른 유전자</text><path d="M538 78 L538 122" fill="none" stroke="var(--s3)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 3"/><text class="ink2 sm" x="538" y="138" text-anchor="middle">경계</text><text class="ink2 sm" x="102" y="138" text-anchor="middle">수만 염기쌍 떨어져 있어도 된다</text><text class="ink bold sm" x="30" y="182" text-anchor="start">실제 공간에서</text><path d="M120 254 C150 176, 262 176, 302 254" fill="none" stroke="var(--ink2)" stroke-width="2.4"/><path d="M302 254 L560 254" fill="none" stroke="var(--ink2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="120" cy="254" r="18" fill="var(--s2)" fill-opacity="0.45" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink bold sm" x="120" y="259" text-anchor="middle">인핸서</text><circle cx="150" cy="220" r="14" fill="var(--s2)" fill-opacity="0.7" stroke="var(--ink2)" stroke-width="1.2"/><circle cx="176" cy="204" r="14" fill="var(--s2)" fill-opacity="0.7" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink2 sm" x="196" y="196" text-anchor="start">전사인자 (서열을 알아본다)</text><ellipse cx="250" cy="218" rx="42" ry="22" fill="var(--s3)" fill-opacity="0.35" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink bold sm" x="250" y="223" text-anchor="middle">매개자</text><circle cx="310" cy="236" r="20" fill="var(--s1)" fill-opacity="0.5" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink bold sm" x="310" y="241" text-anchor="middle">Pol</text><path fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M334 254 L404 254"/><text class="ink sm" x="412" y="250" text-anchor="start">전사 시작</text><text class="ink2 sm" x="30" y="308" text-anchor="start">인핸서는 방향과 거리에 거의 무관하다. 대신 경계를 넘어서는 잘 작용하지 못한다.</text><text class="ink2 sm" x="30" y="330" text-anchor="start">그래서 경계가 망가지면 엉뚱한 유전자가 남의 인핸서를 가져다 쓰는 일이 생긴다</text>
+</svg>

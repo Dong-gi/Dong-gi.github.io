@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" width="620" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">희석</title><desc id="d">물을 부어도 용질 알갱이 수는 변하지 않는다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="60" y="90" width="90" height="140" rx="4" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.8"/><rect x="62" y="184" width="86" height="44" rx="2" fill="var(--s1)" fill-opacity="0.16" stroke="none" stroke-width="0"/><circle cx="82" cy="218" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><circle cx="106" cy="200" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><circle cx="128" cy="216" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><circle cx="90" cy="194" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><circle cx="116" cy="222" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><circle cx="130" cy="196" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><text class="ink bold" x="105" y="254" text-anchor="middle">진한 용액 조금</text><text class="ink2 sm" x="105" y="272" text-anchor="middle">용질 6알, 부피 작다</text><path class="s3" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar3)" d="M190 180 L250 180"/><text class="ink2 sm" x="220" y="164" text-anchor="middle">물을 붓는다</text><rect x="290" y="90" width="150" height="140" rx="4" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.8"/><rect x="292" y="112" width="146" height="116" rx="2" fill="var(--s1)" fill-opacity="0.16" stroke="none" stroke-width="0"/><circle cx="316" cy="204" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><circle cx="354" cy="140" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><circle cx="408" cy="190" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><circle cx="332" cy="160" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><circle cx="386" cy="214" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><circle cx="420" cy="130" r="4.5" fill="var(--s2)" fill-opacity="1" stroke="none" stroke-width="0"/><text class="ink bold" x="365" y="254" text-anchor="middle">묽은 용액</text><text class="ink2 sm" x="365" y="272" text-anchor="middle">용질은 그대로 6알, 부피만 커졌다</text><text class="ink bold" x="480" y="116" text-anchor="start">용질의 몰수는 변하지 않는다</text><text class="ink bold" x="480" y="144" text-anchor="start">C₁V₁ = C₂V₂</text><text class="ink2 sm" x="480" y="172" text-anchor="start">양쪽 다 &quot;용질의 몰수&quot;를</text><text class="ink2 sm" x="480" y="190" text-anchor="start">적은 것일 뿐이다</text><text class="ink2 sm" x="480" y="220" text-anchor="start">부피가 3배가 되면</text><text class="ink2 sm" x="480" y="238" text-anchor="start">농도는 3분의 1이 된다</text><text class="ink bold" x="20" y="34" text-anchor="start">희석 — 물을 부어도 녹아 있는 알갱이 수는 그대로다</text>
+</svg>

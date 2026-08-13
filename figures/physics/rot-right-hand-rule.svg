@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 390" width="620" height="390" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">토크의 방향과 크기</title><desc id="d">r, F, 모멘트 팔, 그리고 면에 수직인 토크 벡터</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path d="M49.9 339.12 L405.9 339.12 L474.5 198 L118.5 198 Z" fill="var(--grid)" fill-opacity="0.35" stroke="none"/><path d="M49.9 339.12 L405.9 339.12 L474.5 198 L118.5 198 Z" fill="none" stroke="var(--grid)" stroke-width="1.2"/><text class="ink2 sm" x="53.9" y="357.12" text-anchor="start">r 과 F 가 놓인 면</text><path class="gr" stroke-dasharray="5 4" d="M310 306 L294.19 208.12"/><path class="s3" fill="none" stroke-width="2" stroke-dasharray="5 4" d="M150 306 L302.87 261.88"/><text class="ink2 sm" x="222.44" y="273.94" text-anchor="middle">d⊥ = r sin φ</text><path class="s1" fill="none" stroke-width="3" stroke-linecap="round" marker-end="url(#ar1)" d="M150 306 L310 306"/><text class="ink" x="230" y="328" text-anchor="middle">r</text><path class="s2" fill="none" stroke-width="3" stroke-linecap="round" marker-end="url(#ar2)" d="M310 306 L299.46 240.75"/><text class="ink" x="309.46" y="238.75" text-anchor="start">F</text><path class="gr" d="M342 306 A32 32 0 0 0 304.89 274.41"/><text class="sm ink2" x="339.82" y="274.97" text-anchor="middle">φ</text><circle cx="150" cy="306" r="4" class="ink2"/><text class="ink2 sm" x="140" y="326" text-anchor="end">축 O</text><path class="s3" fill="none" stroke-width="2.2" stroke-linecap="round" marker-end="url(#ar3)" d="M223.59 298.26 A74 74 0 0 0 132.1 234.2"/><text class="ink2 sm" x="234" y="214" text-anchor="start">r 에서 F 쪽으로 감는다</text><path class="s3" fill="none" stroke-width="3.2" stroke-linecap="round" marker-end="url(#ar3)" d="M150 306 L150 130"/><text class="ink" x="158" y="134" text-anchor="start">τ = r × F</text><text class="ink2 sm" x="158" y="152" text-anchor="start">(면에 수직)</text><text class="ink bold" x="346" y="54" text-anchor="start">오른손 법칙</text><text class="ink2 sm" x="346" y="78" text-anchor="start">오른손 네 손가락을 r 에서 F 쪽으로</text><text class="ink2 sm" x="346" y="96" text-anchor="start">감아쥐면 세운 엄지가 τ 의 방향이다</text><text class="ink" x="346" y="124" text-anchor="start">크기: τ = r F sin φ = F d⊥</text><text class="ink2 sm" x="346" y="150" text-anchor="start">φ = 90° 이면 τ = r F 로 가장 크고</text><text class="ink2 sm" x="346" y="168" text-anchor="start">φ = 0° 또는 180° 이면 τ = 0 이다</text><text class="ink2 sm" x="606" y="380" text-anchor="end">평면 문제에서는 방향 대신 부호로 쓴다: 반시계 +, 시계 −</text>
+</svg>

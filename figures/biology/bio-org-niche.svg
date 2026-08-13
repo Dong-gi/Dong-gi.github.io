@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 336" width="680" height="336" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">기본 지위와 실현 지위</title><desc id="d">조간대 따개비 두 종의 분포. 경쟁자를 제거했을 때 분포가 넓어지면 그 경계는 경쟁이, 넓어지지 않으면 물리적 조건이 만든 것이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M118 276 L118 84"/><text class="ink2 sm" x="110" y="90" text-anchor="end">높은 곳</text><text class="ink2 sm" x="110" y="106" text-anchor="end">(오래 드러난다)</text><text class="ink2 sm" x="110" y="262" text-anchor="end">낮은 곳</text><text class="ink2 sm" x="110" y="278" text-anchor="end">(거의 잠겨 있다)</text><rect x="170" y="92" width="44" height="158" rx="3" fill="var(--s1)" fill-opacity="0.25" stroke="var(--s1)" stroke-width="1.8"/><rect x="240" y="152" width="44" height="120" rx="3" fill="var(--s2)" fill-opacity="0.25" stroke="var(--s2)" stroke-width="1.8"/><rect x="410" y="92" width="44" height="60" rx="3" fill="var(--s1)" fill-opacity="0.25" stroke="var(--s1)" stroke-width="1.8"/><rect x="410" y="152" width="44" height="98" rx="3" fill="none" fill-opacity="0.25" stroke="var(--s1)" stroke-width="1.8" stroke-dasharray="5 4"/><rect x="480" y="152" width="44" height="120" rx="3" fill="var(--s2)" fill-opacity="0.25" stroke="var(--s2)" stroke-width="1.8"/><text class="ink bold" x="192" y="84" text-anchor="middle">A</text><text class="ink bold" x="262" y="144" text-anchor="middle">B</text><text class="ink bold" x="432" y="84" text-anchor="middle">A</text><text class="ink bold" x="502" y="144" text-anchor="middle">B</text><text class="ink bold sm" x="227" y="62" text-anchor="middle">따로 두었을 때 = 기본 지위</text><text class="ink bold sm" x="467" y="62" text-anchor="middle">함께 있을 때 = 실현 지위</text><text class="ink2 sm" x="404" y="200" text-anchor="end">경쟁으로 잃은 구간</text><text class="ink bold sm" x="548" y="100" text-anchor="start">판정 규칙</text><text class="ink2 sm" x="548" y="122" text-anchor="start">상대를 없앴을 때</text><text class="ink2 sm" x="548" y="138" text-anchor="start">넓어지면 경쟁이,</text><text class="ink2 sm" x="548" y="154" text-anchor="start">그대로면 물리적</text><text class="ink2 sm" x="548" y="170" text-anchor="start">조건이 정한</text><text class="ink2 sm" x="548" y="186" text-anchor="start">경계다.</text><text class="ink2 sm" x="30" y="26" text-anchor="start">실현 지위는 언제나 기본 지위의 부분집합이다. 두 지위의 차이를 만든 것이 무엇인지가 질문이다</text><text class="ink sm" x="30" y="300" text-anchor="start">A 의 아래쪽 경계 — B 를 없애면 A 가 아래로 퍼졌다. 경쟁이 정한 경계다</text><text class="ink sm" x="30" y="320" text-anchor="start">B 의 위쪽 경계 — A 를 없애도 B 는 올라가지 않았다. 건조를 견디지 못하는 것이다</text>
+</svg>

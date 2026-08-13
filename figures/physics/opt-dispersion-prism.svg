@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 340" width="620" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">프리즘의 분산</title><desc id="d">파장에 따라 다른 각으로 꺾이는 빛</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="16" y="26" text-anchor="start">분산 — 파장이 짧을수록 더 크게 꺾인다</text><path d="M252 58 L168 203.49 L336 203.49 Z" fill="var(--s1)" fill-opacity="0.08" stroke="var(--ink2)" stroke-width="1.8" stroke-linejoin="round"/><path fill="none" stroke="var(--ink2)" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ark)" d="M43.19 186.88 L134.94 156.01"/><path fill="none" stroke="var(--ink2)" stroke-width="2.4" stroke-linecap="round" d="M134.94 156.01 L210 130.75"/><text class="ink2 sm" x="46.98" y="176.88" text-anchor="start">백색광</text><path fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" d="M210 130.75 L292.84 128.73"/><path fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M292.84 128.73 L475.09 172.78"/><path fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" d="M475.09 172.78 L535.84 187.46"/><path fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" d="M210 130.75 L294.37 131.38"/><path fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)" d="M294.37 131.38 L470.17 196.55"/><path fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" d="M470.17 196.55 L528.78 218.28"/><path fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" d="M210 130.75 L295.77 133.8"/><path fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M295.77 133.8 L461.18 222.09"/><path fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" d="M461.18 222.09 L516.32 251.52"/><path fill="none" stroke="var(--s2)" stroke-width="3" stroke-linecap="round" d="M430 88 L454 88"/><text class="ink2 sm" x="460" y="92" text-anchor="start">빨강 (긴 파장, n 작다)</text><path fill="none" stroke="var(--s3)" stroke-width="3" stroke-linecap="round" d="M430 108 L454 108"/><text class="ink2 sm" x="460" y="112" text-anchor="start">초록</text><path fill="none" stroke="var(--s1)" stroke-width="3" stroke-linecap="round" d="M430 128 L454 128"/><text class="ink2 sm" x="460" y="132" text-anchor="start">파랑 (짧은 파장, n 크다)</text><text class="ink2 sm" x="16" y="308" text-anchor="start">유리의 굴절률은 파장에 따라 조금 달라진다. 실제로 벌어지는 각은 1° 남짓이라</text><text class="ink2 sm" x="16" y="326" text-anchor="start">이 그림에서는 알아보기 쉽게 굴절률 차이를 크게 잡았다(1.44 / 1.52 / 1.60).</text>
+</svg>

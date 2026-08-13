@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 370" width="660" height="370" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">전류 고리의 토크</title><desc id="d">반대 방향 두 힘이 만드는 회전</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="16" y="26" text-anchor="start">전류 고리는 자기장 안에서 돌아간다</text><path class="s2" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar2)" d="M28 110 L256 110"/><path class="s2" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar2)" d="M28 288 L256 288"/><text class="ink" x="260" y="114" text-anchor="start">B</text><rect x="66" y="132" width="150" height="132" fill="none" stroke="var(--ink2)" stroke-width="2.4"/><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M66 246 L66 150"/><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M216 150 L216 246"/><text class="ink" x="56" y="166" text-anchor="end">I</text><g stroke="var(--s3)" stroke-width="2" fill="none"><circle cx="66" cy="198" r="12"/><path d="M58.08 190.08 L73.92 205.92 M58.08 205.92 L73.92 190.08"/></g><circle cx="216" cy="198" r="12" fill="none" stroke="var(--s3)" stroke-width="2"/><circle cx="216" cy="198" r="3.6" fill="var(--s3)"/><text class="ink2 sm" x="84" y="184" text-anchor="start">힘은 안으로</text><text class="ink2 sm" x="198" y="224" text-anchor="end">힘은 밖으로</text><path class="gr" stroke-dasharray="5 4" d="M141 108 V288"/><text class="ink2 sm" x="141" y="102" text-anchor="middle">회전축</text><text class="ink2 sm" x="16" y="334" text-anchor="start">세로 두 변만 힘을 받고 그 방향이 서로 반대라</text><text class="ink2 sm" x="16" y="352" text-anchor="start">고리가 돈다</text><path class="gr" d="M334 64 V344"/><text class="ink bold" x="360" y="92" text-anchor="start">위에서 내려다보면</text><path class="s2" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar2)" d="M364 136 L636 136"/><path class="s2" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar2)" d="M364 256 L636 256"/><text class="ink" x="614" y="128" text-anchor="start">B</text><path stroke="var(--ink)" fill="none" stroke-width="4.5" stroke-linecap="round" d="M531 249.62 L441 142.38"/><text class="ink2 sm" x="360" y="288" text-anchor="start">굵은 선이 고리를 옆에서 본 모습</text><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M486 196 L536.56 153.58"/><text class="ink" x="543.62" y="153.58" text-anchor="start">μ</text><path class="gr" d="M528 196 A42 42 0 0 0 518.17 169"/><text class="sm ink2" x="538.62" y="180.85" text-anchor="middle">θ</text><circle cx="486" cy="196" r="3.5" class="f3"/><text class="ink2 sm" x="360" y="316" text-anchor="start">μ = N I A 는 고리 면에 수직인 화살표다</text><text class="ink bold" x="360" y="334" text-anchor="start">τ = μ B sin θ</text><text class="ink2 sm" x="360" y="352" text-anchor="start">μ 가 B 와 나란해지면 토크가 0 이 된다</text>
+</svg>

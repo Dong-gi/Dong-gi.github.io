@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 350" width="620" height="350" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">부력</title><desc id="d">압력 차로 생기는 부력과 떠 있는 물체의 잠긴 부피</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="16" y="24" text-anchor="start">부력은 위아래 압력의 차이다</text><path d="M40 64 H290 V258 H40 Z" fill="var(--s1)" fill-opacity="0.14" stroke="none"/><path class="s1" fill="none" stroke-width="2" d="M40 64 H290"/><path class="ax" d="M40 64 V258 H290 V64"/><rect x="118" y="122" width="92" height="66" rx="3" fill="none" stroke="var(--ink)" stroke-width="1.8"/><path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M145.6 88 L145.6 116"/><path class="s3" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)" d="M145.6 246 L145.6 194"/><path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M182.4 88 L182.4 116"/><path class="s3" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)" d="M182.4 246 L182.4 194"/><text class="ink2 sm" x="218" y="100" text-anchor="start">위에서 누르는 힘 (작다)</text><text class="ink2 sm" x="218" y="228" text-anchor="start">아래에서 미는 힘 (크다)</text><text class="ink" x="164" y="160" text-anchor="middle">V</text><text class="ink" x="40" y="284" text-anchor="start">차이가 곧 부력이다</text><text class="ink" x="40" y="306" text-anchor="start">F<tspan baseline-shift="-22%" font-size="76%">B</tspan> = ρ<tspan baseline-shift="-22%" font-size="76%">유</tspan>체 g V<tspan baseline-shift="-22%" font-size="76%">잠긴부피</tspan></text><path d="M340 128 H580 V258 H340 Z" fill="var(--s1)" fill-opacity="0.14" stroke="none"/><path class="s1" fill="none" stroke-width="2" d="M340 128 H580"/><path class="ax" d="M340 128 V258 H580 V128"/><rect x="406" y="128" width="108" height="62" fill="var(--s2)" fill-opacity="0.28" stroke="none"/><rect x="406" y="94" width="108" height="96" rx="3" fill="none" stroke="var(--ink)" stroke-width="1.8"/><path class="gr" stroke-dasharray="4 3" d="M406 128 H514"/><path class="s2" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M390 159 L390 128"/><path class="s2" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M390 159 L390 190"/><text class="ink2 sm" x="384" y="163" text-anchor="end">잠긴 부피</text><path class="s3" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar3)" d="M482 190 L482 68"/><text class="ink" x="490" y="78" text-anchor="start">F<tspan baseline-shift="-22%" font-size="76%">B</tspan></text><path class="s1" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M434 112 L434 216"/><text class="ink" x="426" y="212" text-anchor="end">mg</text><text class="ink" x="340" y="284" text-anchor="start">떠 있으면 F<tspan baseline-shift="-22%" font-size="76%">B</tspan> = mg 이므로</text><text class="ink" x="340" y="306" text-anchor="start">V<tspan baseline-shift="-22%" font-size="76%">잠긴</tspan> / V<tspan baseline-shift="-22%" font-size="76%">전체</tspan> = ρ<tspan baseline-shift="-22%" font-size="76%">물</tspan>체 / ρ<tspan baseline-shift="-22%" font-size="76%">유</tspan>체</text><text class="ink2 sm" x="16" y="342" text-anchor="start">부력에 들어가는 것은 유체의 밀도와 잠긴 부피뿐이다. 물체가 무엇으로 되어 있는지는 들어가지 않는다</text>
+</svg>

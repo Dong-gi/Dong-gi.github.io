@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 344" width="760" height="344" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">사인법칙의 증명 그림</title><desc id="d">외접원의 지름을 그으면 직각삼각형이 생기고 거기서 a = 2R sin A 가 나온다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="380" y="26" text-anchor="middle">사인법칙은 외접원의 지름에서 나온다</text><circle cx="292" cy="186" r="110" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.4"/><path d="M245.51 86.31 L201.89 249.09 L391.69 232.49 Z" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/><path d="M201.89 249.09 L382.11 122.91" fill="none" stroke="var(--s2)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M382.11 122.91 L391.69 232.49" fill="none" stroke="var(--s2)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M379.74 233.53 L378.69 221.58 L390.65 220.53" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M237.75 115.28 A30 30 0 0 0 266.73 107.52" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink2 sm" x="257.16" y="133.77" text-anchor="middle">A</text><path d="M384.55 150.8 A28 28 0 0 1 359.17 138.97" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink2 sm" x="363.93" y="165.88" text-anchor="middle">A</text><circle cx="245.51" cy="86.31" r="4" fill="var(--ink2)"/><text class="ink sm" x="239.51" y="74.31" text-anchor="middle">A</text><circle cx="201.89" cy="249.09" r="4" fill="var(--ink2)"/><text class="ink sm" x="191.89" y="261.09" text-anchor="end">B</text><circle cx="391.69" cy="232.49" r="4" fill="var(--ink2)"/><text class="ink sm" x="401.69" y="242.49" text-anchor="start">C</text><circle cx="382.11" cy="122.91" r="4" fill="var(--ink2)"/><text class="ink sm" x="392.11" y="116.91" text-anchor="start">A′</text><circle cx="292" cy="186" r="3.5" fill="var(--ink2)"/><text class="ink sm" x="298" y="178" text-anchor="start">O</text><text class="ink bold" x="296.79" y="260.79" text-anchor="middle">a</text><text class="ink2 sm" x="296" y="208" text-anchor="middle">지름 2R</text><path d="M432 70 L432 296" fill="none" stroke="var(--grid)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><text class="ink sm" x="448" y="96" text-anchor="start">BA′ 를 지름으로 잡으면</text><text class="ink sm" x="448" y="120" text-anchor="start">∠BCA′ 는 직각이다</text><text class="ink sm" x="448" y="152" text-anchor="start">∠BA′C 와 ∠BAC 는</text><text class="ink sm" x="448" y="176" text-anchor="start">같은 호 BC 를 보는 원주각이라 같다</text><text class="ink sm" x="448" y="210" text-anchor="start">직각삼각형 BCA′ 에서</text><text class="ink bold" x="448" y="234" text-anchor="start">sin A = a ÷ 2R</text><text class="ink bold" x="448" y="266" text-anchor="start">곧 a ÷ sin A = 2R</text><text class="ink2 sm" x="448" y="290" text-anchor="start">B, C 에 대해서도 똑같다</text><text class="ink2 sm" x="380" y="336" text-anchor="middle">세 비가 모두 같은 값 2R 이 되는 것은 셋 다 같은 외접원에서 나오기 때문이다</text>
+</svg>

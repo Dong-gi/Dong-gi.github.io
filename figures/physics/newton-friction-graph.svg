@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 610 300" width="610" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">정지마찰과 운동마찰</title><desc id="d">미는 힘 대 마찰력 그래프</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="gr" d="M60 249 V34"/><path class="gr" d="M135 249 V34"/><path class="gr" d="M210 249 V34"/><path class="gr" d="M285 249 V34"/><path class="gr" d="M360 249 V34"/><path class="gr" d="M60 249 H360"/><path class="gr" d="M60 179.65 H360"/><path class="gr" d="M60 110.29 H360"/><path class="gr" d="M60 40.94 H360"/><path class="ax" marker-end="url(#ark)" d="M60 249 H370"/><path class="ax" marker-end="url(#ark)" d="M60 249 V24"/><text class="sm ink2" x="135" y="264" text-anchor="middle">20</text><text class="sm ink2" x="210" y="264" text-anchor="middle">40</text><text class="sm ink2" x="285" y="264" text-anchor="middle">60</text><text class="sm ink2" x="360" y="264" text-anchor="middle">80</text><text class="sm ink2" x="54" y="183.65" text-anchor="end">20</text><text class="sm ink2" x="54" y="114.29" text-anchor="end">40</text><text class="sm ink2" x="54" y="44.94" text-anchor="end">60</text><text class="sm ink2" x="374" y="253">미는 힘 F (N)</text><text class="sm ink2" x="60" y="16" text-anchor="middle">마찰력 f (N)</text><path class="cv s1" d="M60 249 L247.5 75.61"/><path class="cv s2" d="M247.5 110.29 L352.5 110.29"/><path class="gr" stroke-dasharray="4 3" d="M247.5 249 L247.5 75.61"/><path class="gr" stroke-dasharray="4 3" d="M60 75.61 L247.5 75.61"/><path class="gr" stroke-dasharray="4 3" d="M60 110.29 L247.5 110.29"/><path class="cv s2" stroke-dasharray="4 4" d="M247.5 75.61 L247.5 110.29"/><circle class="f1" cx="247.5" cy="75.61" r="3.5"/><circle class="f2" cx="247.5" cy="110.29" r="3.5"/><text class="ink" x="253.5" y="67.61" text-anchor="start">최대 정지마찰 μ<tspan baseline-shift="-22%" font-size="76%">s</tspan> N</text><text class="ink" x="300" y="100.29" text-anchor="middle">μ<tspan baseline-shift="-22%" font-size="76%">k</tspan> N</text><text class="ink2 sm" x="132.5" y="144.97" text-anchor="end">f = F</text><text class="ink2 sm" x="150" y="228.19" text-anchor="middle">아직 정지</text><text class="ink2 sm" x="300" y="228.19" text-anchor="middle">미끄러지는 중</text><text class="ink" x="388" y="62" text-anchor="start">움직이기 전에는 마찰력이</text><text class="ink" x="388" y="82" text-anchor="start">미는 만큼만 커진다</text><text class="ink2 sm" x="388" y="118" text-anchor="start">정지마찰은 f ≤ μ<tspan baseline-shift="-22%" font-size="76%">s</tspan> N 이라는</text><text class="ink2 sm" x="388" y="136" text-anchor="start">부등식이지 등식이 아니다</text><text class="ink" x="388" y="172" text-anchor="start">한 번 미끄러지면 마찰이</text><text class="ink" x="388" y="192" text-anchor="start">조금 줄고 거의 일정해진다</text><text class="ink2 sm" x="388" y="226" text-anchor="start">N = 100 N, μ<tspan baseline-shift="-22%" font-size="76%">s</tspan> = 0.50, μ<tspan baseline-shift="-22%" font-size="76%">k</tspan> = 0.40 인 예</text><text class="ink2 sm" x="596" y="288" text-anchor="end">무거운 짐이 처음 밀 때 가장 힘든 이유가 이 꺾인 점이다</text>
+</svg>

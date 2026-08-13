@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 320" width="660" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">순열과 조합의 차이</title><desc id="d">세 개에서 두 개를 뽑는 순열 6가지를 순서를 지워 묶으면 조합 3가지가 된다. 한 묶음의 크기가 2! 이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<style>svg{--bgfix:#ffffff}@media (prefers-color-scheme:dark){svg{--bgfix:#121212}}</style><text class="ink bold" x="158" y="48" text-anchor="middle">줄 세운다 — 6가지</text><text class="ink bold" x="520" y="48" text-anchor="middle">순서를 지운다 — 3가지</text><rect x="56" y="60" width="204" height="44" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><rect x="74" y="68" width="78" height="28" rx="5" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.2"/><text class="ink" x="113" y="87" text-anchor="middle">ㄱㄴ</text><rect x="170" y="68" width="78" height="28" rx="5" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.2"/><text class="ink" x="209" y="87" text-anchor="middle">ㄴㄱ</text><path fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M276 82 L428 82"/><rect x="440" y="66" width="160" height="32" rx="5" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.3"/><text class="ink" x="520" y="87" text-anchor="middle">{ㄱ, ㄴ}</text><rect x="56" y="130" width="204" height="44" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><rect x="74" y="138" width="78" height="28" rx="5" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.2"/><text class="ink" x="113" y="157" text-anchor="middle">ㄱㄷ</text><rect x="170" y="138" width="78" height="28" rx="5" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.2"/><text class="ink" x="209" y="157" text-anchor="middle">ㄷㄱ</text><path fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M276 152 L428 152"/><rect x="440" y="136" width="160" height="32" rx="5" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.3"/><text class="ink" x="520" y="157" text-anchor="middle">{ㄱ, ㄷ}</text><rect x="56" y="200" width="204" height="44" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><rect x="74" y="208" width="78" height="28" rx="5" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.2"/><text class="ink" x="113" y="227" text-anchor="middle">ㄴㄷ</text><rect x="170" y="208" width="78" height="28" rx="5" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.2"/><text class="ink" x="209" y="227" text-anchor="middle">ㄷㄴ</text><path fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M276 222 L428 222"/><rect x="440" y="206" width="160" height="32" rx="5" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.3"/><text class="ink" x="520" y="227" text-anchor="middle">{ㄴ, ㄷ}</text><text class="ink2 sm" x="352" y="142" text-anchor="middle">순서를</text><text class="ink2 sm" x="352" y="162" text-anchor="middle">지운다</text><text class="ink sm" x="330" y="274" text-anchor="middle">한 조합마다 2! = 2 개의 순열이 붙는다. 그래서 조합의 수는 순열의 수를 2! 로 나눈 것이다</text><text class="ink bold" x="330" y="300" text-anchor="middle">6 ÷ 2 = 3</text>
+</svg>

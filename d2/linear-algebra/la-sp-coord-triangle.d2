@@ -1,0 +1,20 @@
+# 벡터와 좌표는 다른 것이다 — 선형대수 6장.
+#
+# 무엇을 읽어야 하나: 가운데 벡터는 하나뿐이고 기저를 고를 때마다 좌표가 새로 생긴다.
+# 두 좌표 사이를 오가는 것이 전이행렬이고, 두 방향의 전이행렬은 서로 역행렬이다.
+direction: right
+
+v: { label: "벡터 v\n기저와 무관한 실체"; shape: circle; style.bold: true }
+
+B: { label: "기저 B 로 잰 좌표\n[v]_B"; style.bold: true }
+BP: { label: "기저 B′ 로 잰 좌표\n[v]_B′"; style.bold: true }
+
+v -> B: "B 의 눈금으로 읽는다"
+v -> BP: "B′ 의 눈금으로 읽는다"
+B -> BP: "P(B→B′) 를 곱한다"
+BP -> B: "P(B′→B) 를 곱한다"
+
+구하기: {
+  label: "구하는 법: [B′ | B] 를 소거해 [I | P(B→B′)] 로 만든다.\n두 전이행렬은 서로 역행렬이다 — P(B′→B) = (P(B→B′))⁻¹"
+  shape: text
+}

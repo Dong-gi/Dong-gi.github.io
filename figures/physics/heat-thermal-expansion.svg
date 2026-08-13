@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="600" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">열팽창 — 구멍도 함께 커진다</title><desc id="d">데우기 전과 후의 금속판</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="36" y="40" text-anchor="start">① 데우기 전</text><text class="ink bold" x="310" y="40" text-anchor="start">② 데운 뒤 (팽창을 과장해 그렸다)</text><rect x="70" y="110" width="160" height="96" rx="3" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.5"/><circle cx="150" cy="158" r="26" fill="var(--ink)" fill-opacity="0.06" stroke="var(--s1)" stroke-width="1.5"/><text class="ink2 sm" x="150" y="163" text-anchor="middle">구멍</text><rect x="340" y="110" width="160" height="96" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="4 3"/><circle cx="420" cy="158" r="26" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="4 3"/><rect x="322.4" y="99.44" width="195.2" height="117.12" rx="3" fill="var(--s2)" fill-opacity="0.14" stroke="var(--s2)" stroke-width="1.5"/><circle cx="420" cy="158" r="31.72" fill="var(--ink)" fill-opacity="0.06" stroke="var(--s2)" stroke-width="1.5"/><path class="s2" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M447 158 L459.72 158"/><path class="s2" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M502 118 L525.6 118"/><text class="ink sm" x="420" y="242.56" text-anchor="middle">구멍도 판과 같은 비율로 커진다</text><text class="ink2 sm" x="150" y="232" text-anchor="middle">사진을 확대하듯 모두 같은 비율</text><text class="ink bold" x="36" y="260" text-anchor="start">ΔL = α L ΔT   (길이),    ΔV ≈ 3α V ΔT   (부피)</text><text class="ink2 sm" x="36" y="282" text-anchor="start">α 는 물질마다 정해진 값이다. 데우면 구멍이 좁아진다고 착각하기 쉽다</text>
+</svg>

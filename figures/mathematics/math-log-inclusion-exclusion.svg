@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 290" width="700" height="290" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">포함배제 원리</title><desc id="d">두 집합의 크기를 더하면 겹친 부분을 두 번 세므로 한 번 빼야 한다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="350" y="28" text-anchor="middle">겹친 부분을 두 번 세지 않으려면</text><rect x="72" y="62" width="344" height="202" rx="4" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/><text class="ink2 sm" x="80" y="80" text-anchor="start">U</text><path d="M116 168 a 84 84 0 1 0 168 0 a 84 84 0 1 0 -168 0 Z" fill="var(--s1)" fill-opacity="0.16" stroke="none" stroke-width="1.5"/><path d="M204 168 a 84 84 0 1 0 168 0 a 84 84 0 1 0 -168 0 Z" fill="var(--s2)" fill-opacity="0.16" stroke="none" stroke-width="1.5"/><circle cx="200" cy="168" r="84" fill="none" fill-opacity="1" stroke="var(--s1)" stroke-width="1.7"/><circle cx="288" cy="168" r="84" fill="none" fill-opacity="1" stroke="var(--s2)" stroke-width="1.7"/><text class="ink bold" x="138" y="106" text-anchor="middle">A</text><text class="ink bold" x="350" y="106" text-anchor="middle">B</text><text class="ink bold" x="160" y="174" text-anchor="middle">12</text><text class="ink bold" x="244" y="174" text-anchor="middle">5</text><text class="ink bold" x="328" y="174" text-anchor="middle">8</text><text class="ink bold" x="388" y="248" text-anchor="middle">6</text><text class="ink2 sm" x="388" y="232" text-anchor="middle">바깥</text><path d="M434 84 L434 252" fill="none" stroke="var(--grid)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><text class="ink sm" x="448" y="104" text-anchor="start">|A| = 12 + 5 = 17</text><text class="ink sm" x="448" y="130" text-anchor="start">|B| = 8 + 5 = 13</text><text class="ink2 sm" x="448" y="160" text-anchor="start">그냥 더하면 17 + 13 = 30</text><text class="ink2 sm" x="448" y="184" text-anchor="start">겹친 5 를 두 번 세었다</text><text class="ink bold" x="448" y="214" text-anchor="start">|A ∪ B| = 30 − 5 = 25</text><text class="ink sm" x="448" y="240" text-anchor="start">전체는 25 + 6 = 31</text>
+</svg>

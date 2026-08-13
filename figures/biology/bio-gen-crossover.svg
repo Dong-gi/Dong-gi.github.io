@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">교차와 재조합형 염색분체</title><desc id="d">사분체에서 교차가 한 번 일어나면 부모형 둘과 재조합형 둘이 나온다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="320" y="28" text-anchor="middle">교차 — 상동염색체의 비자매 염색분체끼리 같은 자리를 맞바꾼다</text><text class="ink bold" x="130" y="54" text-anchor="middle">교차 전</text><rect x="91" y="66" width="10" height="150" fill="var(--s1)" fill-opacity="0.9"/><rect x="109" y="66" width="10" height="150" fill="var(--s1)" fill-opacity="0.9"/><rect x="141" y="66" width="10" height="150" fill="var(--s2)" fill-opacity="0.9"/><rect x="159" y="66" width="10" height="150" fill="var(--s2)" fill-opacity="0.9"/><path d="M114 159 L146 159" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="130" y="238" text-anchor="middle">가운데 두 가닥이 겹친 곳</text><text class="ink2 sm" x="130" y="254" text-anchor="middle">= 키아즈마</text><text class="ink sm" x="68" y="74" text-anchor="end">A</text><text class="ink sm" x="68" y="186" text-anchor="end">B</text><text class="ink sm" x="192" y="74" text-anchor="start">a</text><text class="ink sm" x="192" y="186" text-anchor="start">b</text><path fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)" d="M232 150 L286 150"/><text class="ink bold" x="454" y="54" text-anchor="middle">만들어지는 염색분체 4가닥</text><rect x="359" y="66" width="10" height="150" fill="var(--s1)" fill-opacity="0.9"/><text class="ink bold" x="364" y="238" text-anchor="middle">A B</text><text class="ink2 sm" x="364" y="256" text-anchor="middle">부모형</text><rect x="415" y="66" width="10" height="93" fill="var(--s1)" fill-opacity="0.9"/><rect x="415" y="159" width="10" height="57" fill="var(--s2)" fill-opacity="0.9"/><text class="ink bold" x="420" y="238" text-anchor="middle">A b</text><text class="ink2 sm" x="420" y="256" text-anchor="middle">재조합형</text><rect x="471" y="66" width="10" height="93" fill="var(--s2)" fill-opacity="0.9"/><rect x="471" y="159" width="10" height="57" fill="var(--s1)" fill-opacity="0.9"/><text class="ink bold" x="476" y="238" text-anchor="middle">a B</text><text class="ink2 sm" x="476" y="256" text-anchor="middle">재조합형</text><rect x="527" y="66" width="10" height="150" fill="var(--s2)" fill-opacity="0.9"/><text class="ink bold" x="532" y="238" text-anchor="middle">a b</text><text class="ink2 sm" x="532" y="256" text-anchor="middle">부모형</text><path d="M348 159 L548 159" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 3"/><text class="ink2 sm" x="556" y="163" text-anchor="start">교차 지점</text><text class="ink2 sm" x="320" y="288" text-anchor="middle">한 번의 교차는 네 가닥 중 두 가닥만 바꾼다. 그래서 재조합률의 상한이 50%다</text>
+</svg>

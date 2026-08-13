@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 296" width="720" height="296" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">수학적 귀납법의 도미노 그림</title><desc id="d">출발점과 이어짐 두 조건이 모두 있어야 전체가 넘어진다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="360" y="28" text-anchor="middle">수학적 귀납법은 도미노 두 조건이다</text><path d="M46 236 L560 236" fill="none" stroke="var(--grid)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><g transform="rotate(46 103 236)"><rect x="88" y="162" width="15" height="74" rx="2" fill="var(--s2)" fill-opacity="0.24" stroke="var(--s2)" stroke-width="1.6"/></g><text class="ink2 sm" x="95" y="254" text-anchor="middle">1</text><rect x="142" y="162" width="15" height="74" rx="2" fill="var(--ink2)" fill-opacity="0.24" stroke="var(--ink2)" stroke-width="1.6"/><text class="ink2 sm" x="149" y="254" text-anchor="middle">2</text><rect x="196" y="162" width="15" height="74" rx="2" fill="var(--ink2)" fill-opacity="0.24" stroke="var(--ink2)" stroke-width="1.6"/><text class="ink2 sm" x="203" y="254" text-anchor="middle">3</text><text class="ink2" x="258" y="206" text-anchor="middle">···</text><rect x="310" y="162" width="15" height="74" rx="2" fill="var(--s1)" fill-opacity="0.24" stroke="var(--s1)" stroke-width="1.6"/><text class="ink2 sm" x="317" y="254" text-anchor="middle">k</text><rect x="376" y="162" width="15" height="74" rx="2" fill="var(--s1)" fill-opacity="0.24" stroke="var(--s1)" stroke-width="1.6"/><text class="ink2 sm" x="383" y="254" text-anchor="middle">k+1</text><text class="ink2" x="444" y="206" text-anchor="middle">···</text><rect x="492" y="162" width="15" height="74" rx="2" fill="var(--ink2)" fill-opacity="0.24" stroke="var(--ink2)" stroke-width="1.6"/><text class="ink2 sm" x="499" y="254" text-anchor="middle">n</text><path fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M48 132 L82 156"/><text class="ink sm" x="40" y="122" text-anchor="start">① 첫 번째를 민다</text><path d="M318 148 Q351 114 384 148" fill="none" stroke="var(--s1)" stroke-width="1.8" marker-end="url(#ar1)"/><text class="ink sm" x="351" y="106" text-anchor="middle">② 넘어지면 다음도 넘어진다</text><text class="ink sm" x="586" y="150" text-anchor="start">두 조건이 갖추어지면</text><text class="ink sm" x="586" y="172" text-anchor="start">몇 번째든 언젠가</text><text class="ink bold sm" x="586" y="194" text-anchor="start">넘어진다</text><path d="M574 128 L574 208" fill="none" stroke="var(--grid)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="360" y="284" text-anchor="middle">②만 있고 ①이 없으면 아무것도 넘어지지 않는다는 점이 중요하다</text>
+</svg>

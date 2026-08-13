@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" width="620" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">곱의 법칙을 수형도로 본 것</title><desc id="d">첫 단계 3가지 각각에 대해 두 번째 단계가 2가지씩 붙어 끝의 가지가 6개가 된다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<style>svg{--bgfix:#ffffff}@media (prefers-color-scheme:dark){svg{--bgfix:#121212}}</style><circle cx="56" cy="150" r="5" fill="var(--ink2)"/><text class="ink2 sm" x="56" y="174" text-anchor="middle">출발</text><path fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M64 150 L168 64"/><text class="ink" x="176" y="68" text-anchor="start">윗옷 ㄱ</text><path fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar2)" d="M248 64 L316 34"/><text class="ink2 sm" x="324" y="38" text-anchor="start">바지 1</text><path fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar2)" d="M248 64 L316 94"/><text class="ink2 sm" x="324" y="98" text-anchor="start">바지 2</text><path fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M64 150 L168 150"/><text class="ink" x="176" y="154" text-anchor="start">윗옷 ㄴ</text><path fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar2)" d="M248 150 L316 120"/><text class="ink2 sm" x="324" y="124" text-anchor="start">바지 1</text><path fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar2)" d="M248 150 L316 180"/><text class="ink2 sm" x="324" y="184" text-anchor="start">바지 2</text><path fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M64 150 L168 236"/><text class="ink" x="176" y="240" text-anchor="start">윗옷 ㄷ</text><path fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar2)" d="M248 236 L316 206"/><text class="ink2 sm" x="324" y="210" text-anchor="start">바지 1</text><path fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar2)" d="M248 236 L316 266"/><text class="ink2 sm" x="324" y="270" text-anchor="start">바지 2</text><path d="M404 40 L404 268" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 3"/><text class="ink" x="430" y="96" text-anchor="start">첫 단계에서 3가지,</text><text class="ink" x="430" y="120" text-anchor="start">그 각각에 대해 2가지.</text><text class="ink2 sm" x="430" y="156" text-anchor="start">끝의 가지 수는</text><text class="ink bold" x="430" y="184" text-anchor="start">3 × 2 = 6</text><text class="ink2 sm" x="430" y="214" text-anchor="start">더하는 것이 아니라</text><text class="ink2 sm" x="430" y="232" text-anchor="start">곱하는 이유가 그림에 있다.</text><text class="ink2 sm" x="310" y="292" text-anchor="middle">단계가 이어지면 곱하고, 서로 겹치지 않는 경우가 나란히 놓이면 더한다</text>
+</svg>

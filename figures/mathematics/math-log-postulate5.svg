@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 350" width="780" height="350" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">유클리드의 다섯 번째 공준</title><desc id="d">가로지르는 직선이 만드는 같은 쪽 두 내각의 합이 180° 보다 작으면 그쪽에서 만난다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="390" y="28" text-anchor="middle">다섯 번째 공준 — 어느 쪽에서 만나는지까지 말한다</text><path d="M60 130 L700 194" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M60 280 L700 190.4" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M140 64 L140 330" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text class="ink sm" x="130" y="76" text-anchor="end">가로지르는 직선</text><circle cx="140" cy="138" r="4" fill="var(--ink2)"/><circle cx="140" cy="268.8" r="4" fill="var(--ink2)"/><path d="M140 172 A34 34 0 0 0 173.83 141.38" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink2 sm" x="172.88" y="178.33" text-anchor="middle">84°</text><path d="M173.67 264.09 A34 34 0 0 0 140 234.8" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink2 sm" x="172.16" y="235.83" text-anchor="middle">82°</text><circle cx="685" cy="192.5" r="5" fill="var(--s2)"/><text class="ink bold sm" x="679" y="176.5" text-anchor="end">여기서 만난다</text><text class="ink sm" x="300" y="200" text-anchor="middle">두 내각의 합 84° + 82° = 166° &lt; 180°</text><text class="ink2 sm" x="300" y="222" text-anchor="middle">그러면 이 오른쪽에서 두 직선이 만난다</text><text class="ink2 sm" x="64" y="300" text-anchor="start">왼쪽 두 내각의 합은 194° 라</text><text class="ink2 sm" x="64" y="320" text-anchor="start">이쪽에서는 만나지 않는다</text><text class="ink2 sm" x="390" y="346" text-anchor="middle">내각의 합이 정확히 180° 일 때만 두 직선이 영영 만나지 않는다 — 그것이 평행이다</text>
+</svg>

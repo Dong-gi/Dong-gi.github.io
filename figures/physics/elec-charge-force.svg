@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 250" width="640" height="250" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">전기력의 방향</title><desc id="d">척력과 인력</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<circle cx="120" cy="128" r="22" fill="var(--s2)" fill-opacity="0.2" stroke="var(--s2)" stroke-width="1.5"/><text class="ink bold" x="120" y="135" text-anchor="middle">+</text><circle cx="250" cy="128" r="22" fill="var(--s2)" fill-opacity="0.2" stroke="var(--s2)" stroke-width="1.5"/><text class="ink bold" x="250" y="135" text-anchor="middle">+</text><path class="s1" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M98 128 L58 128"/><path class="s1" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M272 128 L312 128"/><text class="ink bold" x="185" y="60" text-anchor="middle">같은 부호</text><text class="ink2 sm" x="185" y="82" text-anchor="middle">민다 (척력)</text><circle cx="420" cy="128" r="22" fill="var(--s2)" fill-opacity="0.2" stroke="var(--s2)" stroke-width="1.5"/><text class="ink bold" x="420" y="135" text-anchor="middle">+</text><circle cx="560" cy="128" r="22" fill="var(--s1)" fill-opacity="0.2" stroke="var(--s1)" stroke-width="1.5"/><text class="ink bold" x="560" y="135" text-anchor="middle">−</text><path class="s1" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M444 128 L478 128"/><path class="s1" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M536 128 L502 128"/><text class="ink bold" x="490" y="60" text-anchor="middle">다른 부호</text><text class="ink2 sm" x="490" y="82" text-anchor="middle">당긴다 (인력)</text><text class="ink sm" x="185" y="196" text-anchor="middle">두 힘은 크기가 같고 방향이 반대다</text><text class="ink sm" x="490" y="196" text-anchor="middle">전하가 작은 쪽이 받는 힘도 같은 크기다</text><text class="ink2 sm" x="320" y="230" text-anchor="middle">5장의 작용·반작용이 전기력에도 그대로 적용된다</text>
+</svg>

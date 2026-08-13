@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" width="640" height="280" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">유리수를 두 무리로 가르면 경계에 수가 없을 수 있다</title><desc id="d">제곱이 2 보다 작은 유리수와 큰 유리수로 가르면 유리수 안에는 경계가 없다. 실수에서는 경계점 √2 가 존재한다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<style>svg{--bgfix:#ffffff}@media (prefers-color-scheme:dark){svg{--bgfix:#121212}}</style><text class="ink bold" x="80" y="66" text-anchor="start">유리수만 있는 세계</text><text class="ink2 sm" x="80" y="84" text-anchor="start">가른 자리에 해당하는 수가 없다 — 구멍이 남는다</text><path d="M80 112 L325.24 112" fill="none" stroke="var(--s1)" stroke-width="5" stroke-linecap="butt" stroke-linejoin="round"/><path d="M339.24 112 L568 112" fill="none" stroke="var(--s2)" stroke-width="5" stroke-linecap="butt" stroke-linejoin="round"/><circle cx="332.24" cy="112" r="6" fill="var(--bgfix)" stroke="var(--ink2)" stroke-width="2"/><text class="ink2 sm" x="80" y="136" text-anchor="start">제곱하면 2 보다 작은 쪽</text><text class="ink2 sm" x="568" y="136" text-anchor="end">2 보다 큰 쪽</text><text class="ink bold" x="80" y="174" text-anchor="start">실수</text><text class="ink2 sm" x="80" y="192" text-anchor="start">어떻게 갈라도 경계에 반드시 수가 있다 — 완비성</text><path d="M80 220 L325.24 220" fill="none" stroke="var(--s1)" stroke-width="5" stroke-linecap="butt" stroke-linejoin="round"/><path d="M339.24 220 L568 220" fill="none" stroke="var(--s2)" stroke-width="5" stroke-linecap="butt" stroke-linejoin="round"/><circle cx="332.24" cy="220" r="5.5" fill="var(--ink)"/><text class="ink2 sm" x="80" y="244" text-anchor="start">제곱하면 2 보다 작은 쪽</text><text class="ink2 sm" x="568" y="244" text-anchor="end">2 보다 큰 쪽</text><path d="M332.24 124 L332.24 206" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 3"/><text class="ink bold" x="343.24" y="212" text-anchor="start">√2</text>
+</svg>

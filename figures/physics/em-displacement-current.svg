@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 380" width="680" height="380" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">변위전류</title><desc id="d">같은 고리에 걸친 두 면의 모순</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="16" y="26" text-anchor="start">충전 중인 축전기 — 같은 고리에 두 개의 면</text><path class="s2" fill="none" stroke-width="3" stroke-linecap="round" marker-end="url(#ar2)" d="M70 208 L396 208"/><path class="s2" fill="none" stroke-width="3" stroke-linecap="round" marker-end="url(#ar2)" d="M452 208 L640 208"/><text class="ink" x="112" y="196" text-anchor="start">I</text><text class="ink" x="600" y="196" text-anchor="start">I</text><path class="ax" stroke-width="3.5" d="M396 162 V254 M452 162 V254"/><text class="ink bold" x="388" y="154" text-anchor="end">+</text><text class="ink bold" x="460" y="154" text-anchor="start">−</text><path class="s1" fill="none" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar1)" d="M402 180 L446 180"/><path class="s1" fill="none" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar1)" d="M402 208 L446 208"/><path class="s1" fill="none" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar1)" d="M402 236 L446 236"/><text class="ink2 sm" x="424" y="276" text-anchor="middle">E 가 커지는 중</text><path d="M190 134 C320 60 414 104 422 208 C414 312 320 356 190 282" fill="var(--s2)" fill-opacity="0.10" stroke="var(--s2)" stroke-width="1.8" stroke-dasharray="5 4"/><ellipse cx="190" cy="208" rx="16" ry="74" fill="var(--s1)" fill-opacity="0.16" stroke="none"/><ellipse cx="190" cy="208" rx="16" ry="74" fill="none" stroke="var(--s3)" stroke-width="2.6" stroke-dasharray="7 4"/><text class="ink bold" x="164" y="126" text-anchor="end">같은 앙페르 고리</text><path class="s3" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar3)" d="M166 130 L182 142"/><text class="ink" x="16" y="322" text-anchor="start">면 1 — 도선을 자른다</text><text class="ink2 sm" x="16" y="340" text-anchor="start">지나가는 전류 = I</text><path class="s1" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M96 314 L180 270"/><text class="ink" x="664" y="322" text-anchor="end">면 2 — 판 사이를 지난다</text><text class="ink2 sm" x="664" y="340" text-anchor="end">지나가는 전류 = 0</text><path class="s2" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M530 314 L414 266"/><text class="ink2 sm" x="16" y="52" text-anchor="start">고리는 하나인데 고리에 걸친 면은 무수히 많다.</text><text class="ink2 sm" x="16" y="70" text-anchor="start">어느 면을 고르냐에 따라 답이 달라지면 법칙이 아니다.</text><text class="ink bold" x="16" y="370" text-anchor="start">맥스웰의 보탬: 판 사이에서 E 가 커지는 몫을 전류처럼 세면 두 면의 답이 같아진다</text>
+</svg>

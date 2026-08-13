@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 330" width="700" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">공통 이온 효과</title><desc id="d">10의 거듭제곱 눈금 위의 두 용해도</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="26" y="34" text-anchor="start">이미 들어 있는 이온이 용해를 막는다 — 눈금 한 칸이 10배다</text><path d="M82 168 L634 168" fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M96 162 L96 174" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="96" y="194" text-anchor="middle">10⁻⁸</text><path d="M200.8 162 L200.8 174" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="200.8" y="194" text-anchor="middle">10⁻⁷</text><path d="M305.6 162 L305.6 174" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="305.6" y="194" text-anchor="middle">10⁻⁶</text><path d="M410.4 162 L410.4 174" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="410.4" y="194" text-anchor="middle">10⁻⁵</text><path d="M515.2 162 L515.2 174" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="515.2" y="194" text-anchor="middle">10⁻⁴</text><path d="M620 162 L620 174" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="620" y="194" text-anchor="middle">10⁻³</text><text class="ink2 sm" x="640" y="194" text-anchor="start">mol/L</text><circle cx="548.97" cy="168" r="6" fill="var(--s1)" fill-opacity="0.95" stroke="none" stroke-width="0"/><path d="M548.97 162 L548.97 120" fill="none" stroke="var(--s1)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 3"/><text class="ink bold" x="548.97" y="112" text-anchor="middle">순수한 물에서</text><text class="ink2 sm" x="548.97" y="132" text-anchor="middle">2.1 × 10⁻⁴ mol/L</text><circle cx="262.74" cy="168" r="6" fill="var(--s2)" fill-opacity="0.95" stroke="none" stroke-width="0"/><path d="M262.74 162 L262.74 76" fill="none" stroke="var(--s2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 3"/><text class="ink bold" x="262.74" y="68" text-anchor="middle">0.010 mol/L NaF 에서</text><text class="ink2 sm" x="262.74" y="88" text-anchor="middle">3.9 × 10⁻⁷ mol/L</text><path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M542.97 132 L268.74 132"/><text class="ink bold" x="405.86" y="124" text-anchor="middle">약 540배 줄었다</text><text class="ink" x="350" y="254" text-anchor="middle">CaF₂ 의 몰 용해도. F⁻ 가 이미 있으면 Q 가 곧바로 K<tspan baseline-shift="-22%" font-size="76%">sp</tspan> 에 닿아 더 녹지 못한다</text><text class="ink2 sm" x="350" y="280" text-anchor="middle">눈금 한 칸이 10배인 자를 쓴 이유는, 보통 자에서는 오른쪽 값이 점 하나로도 보이지 않기 때문이다</text><text class="ink2 sm" x="350" y="306" text-anchor="middle">침전을 남김없이 거두려는 실험에서 침전제를 넉넉히 넣는 근거가 이것이다</text>
+</svg>

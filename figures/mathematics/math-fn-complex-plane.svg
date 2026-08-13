@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" width="520" height="400" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">복소평면 위의 z = 3 + 2i 와 그 켤레복소수</title><desc id="d">가로축이 실수부 세로축이 허수부다. 켤레복소수는 실수축에 대한 대칭점이고 절댓값은 원점에서의 거리다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="gr" d="M101.38 350 V40"/><path class="gr" d="M239.31 350 V40"/><path class="gr" d="M308.28 350 V40"/><path class="gr" d="M377.24 350 V40"/><path class="gr" d="M446.21 350 V40"/><path class="gr" d="M60 340.31 H460"/><path class="gr" d="M60 291.88 H460"/><path class="gr" d="M60 243.44 H460"/><path class="gr" d="M60 146.56 H460"/><path class="gr" d="M60 98.13 H460"/><path class="gr" d="M60 49.69 H460"/><path class="ax" marker-end="url(#ark)" d="M60 195 H470"/><path class="ax" marker-end="url(#ark)" d="M170.34 350 V30"/><text class="sm ink2" x="101.38" y="210" text-anchor="middle">-1</text><text class="sm ink2" x="239.31" y="210" text-anchor="middle">1</text><text class="sm ink2" x="308.28" y="210" text-anchor="middle">2</text><text class="sm ink2" x="377.24" y="210" text-anchor="middle">3</text><text class="sm ink2" x="446.21" y="210" text-anchor="middle">4</text><text class="sm ink2" x="164.34" y="344.31" text-anchor="end">-3</text><text class="sm ink2" x="164.34" y="295.88" text-anchor="end">-2</text><text class="sm ink2" x="164.34" y="247.44" text-anchor="end">-1</text><text class="sm ink2" x="164.34" y="150.56" text-anchor="end">1</text><text class="sm ink2" x="164.34" y="102.13" text-anchor="end">2</text><text class="sm ink2" x="164.34" y="53.69" text-anchor="end">3</text><text class="ink2 sm" x="468" y="185" text-anchor="end">실수부</text><text class="ink2 sm" x="179.34" y="34" text-anchor="start">허수부</text><path class="gr" stroke-dasharray="4 3" d="M377.24 195 L377.24 98.13"/><path class="gr" stroke-dasharray="4 3" d="M170.34 98.13 L377.24 98.13"/><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M170.34 195 L377.24 98.13"/><circle class="f1" cx="377.24" cy="98.13" r="5"/><text class="ink bold" x="387.24" y="90.13" text-anchor="start">z = 3 + 2i</text><path class="gr" stroke-dasharray="4 3" d="M377.24 195 L377.24 291.88"/><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" d="M170.34 195 L377.24 291.88"/><circle class="f2" cx="377.24" cy="291.88" r="5"/><text class="ink bold" x="387.24" y="307.88" text-anchor="start">켤레 3 − 2i</text><text class="ink" x="263.45" y="127.19" text-anchor="middle">|z| = √13</text><path class="gr" d="M204.34 195 A34 34 0 0 0 198.63 176.14"/><text class="ink2 sm" x="212.34" y="186" text-anchor="start">θ</text><text class="ink2 sm" x="60" y="378" text-anchor="start">켤레는 실수축에 대한 거울상, |z| 는 원점에서 그 점까지의 거리다.</text>
+</svg>

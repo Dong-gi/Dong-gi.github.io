@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 336" width="740" height="336" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">이상점 하나가 회귀직선을 끌고 간다</title><desc id="d">자료 뭉치에서 멀리 떨어진 점 하나를 더하면 기울기와 결정계수가 크게 달라진다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<style>svg{--bgfix:#ffffff}@media (prefers-color-scheme:dark){svg{--bgfix:#121212}}</style><text class="ink bold" x="370" y="24" text-anchor="middle">점 아홉 개가 만든 직선에 멀리 떨어진 점 하나를 더했다</text><path class="ax" marker-end="url(#ark)" d="M92 226 H558"/><path class="ax" marker-end="url(#ark)" d="M92 226 V40"/><text class="ink2 sm" x="144.11" y="242" text-anchor="middle">2</text><text class="ink2 sm" x="196.23" y="242" text-anchor="middle">4</text><text class="ink2 sm" x="248.34" y="242" text-anchor="middle">6</text><text class="ink2 sm" x="300.46" y="242" text-anchor="middle">8</text><text class="ink2 sm" x="352.57" y="242" text-anchor="middle">10</text><text class="ink2 sm" x="404.69" y="242" text-anchor="middle">12</text><text class="ink2 sm" x="456.8" y="242" text-anchor="middle">14</text><text class="ink2 sm" x="508.91" y="242" text-anchor="middle">16</text><text class="ink2 sm" x="86" y="198" text-anchor="end">2</text><text class="ink2 sm" x="86" y="166" text-anchor="end">4</text><text class="ink2 sm" x="86" y="134" text-anchor="end">6</text><text class="ink2 sm" x="86" y="102" text-anchor="end">8</text><text class="ink2 sm" x="86" y="70" text-anchor="end">10</text><path class="cv s1" stroke-dasharray="6 4" d="M99.82 218.24 L369.59 54.8"/><path class="cv s2" d="M99.82 170.34 L534.97 102.1"/><circle cx="118.06" cy="206.8" r="4" fill="var(--ink)"/><circle cx="144.11" cy="187.6" r="4" fill="var(--ink)"/><circle cx="170.17" cy="181.2" r="4" fill="var(--ink)"/><circle cx="196.23" cy="157.2" r="4" fill="var(--ink)"/><circle cx="222.29" cy="144.4" r="4" fill="var(--ink)"/><circle cx="248.34" cy="133.2" r="4" fill="var(--ink)"/><circle cx="274.4" cy="107.6" r="4" fill="var(--ink)"/><circle cx="300.46" cy="99.6" r="4" fill="var(--ink)"/><circle cx="326.51" cy="78.8" r="4" fill="var(--ink)"/><circle cx="508.91" cy="170" r="6" fill="var(--s2)"/><circle cx="508.91" cy="170" r="11" fill="none" fill-opacity="1" stroke="var(--s2)" stroke-width="1.4" stroke-dasharray="3 3"/><text class="ink bold sm" x="492.91" y="156" text-anchor="end">더한 점 하나</text><rect x="580" y="74" width="14" height="3" rx="1.5" class="f1"/><text class="sm ink2" x="600" y="80">없을 때 기울기 0.99</text><rect x="580" y="92" width="14" height="3" rx="1.5" class="f2"/><text class="sm ink2" x="600" y="98">있을 때 기울기 0.26</text><text class="ink sm" x="580" y="136" text-anchor="start">R² 은 0.99 에서</text><text class="ink sm" x="580" y="154" text-anchor="start">0.18 로 떨어진다</text><text class="ink2 sm" x="580" y="180" text-anchor="start">점 하나가 결론을</text><text class="ink2 sm" x="580" y="196" text-anchor="start">뒤집을 수 있다</text><path d="M46 250 L694 250" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold" x="370" y="272" text-anchor="middle">x 가 자료 뭉치에서 멀리 떨어진 점은 지렛대가 길어 직선을 크게 움직인다</text><text class="ink" x="370" y="294" text-anchor="middle">제곱이 큰 잔차를 크게 벌주기 때문이며, 이것이 최소제곱의 대가다</text><text class="ink2 sm" x="370" y="318" text-anchor="middle">그래서 계수를 읽기 전에 산점도와 잔차 그림을 먼저 본다. 지워도 되는 점인지는 자료를 되짚어 판단한다</text>
+</svg>

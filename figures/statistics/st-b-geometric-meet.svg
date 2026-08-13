@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 350" width="700" height="350" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">기하학적 확률 — 넓이의 비로 확률을 정한다</title><desc id="d">두 도착 시각을 좌표로 삼으면 만나는 경우가 정사각형 안의 띠가 된다. 그 넓이 비가 확률이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<style>svg{--bgfix:#ffffff}@media (prefers-color-scheme:dark){svg{--bgfix:#121212}}</style><path d="M92 282 L92 224 L266 50 L324 50 L324 108 L150 282 Z" fill="var(--s1)" fill-opacity="0.28" stroke="none"/><rect x="92" y="50" width="232" height="232" rx="0" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.4"/><path class="cv s2" d="M92 224 L266 50"/><path class="cv s2" d="M150 282 L324 108"/><text class="ink2 sm" x="92" y="300" text-anchor="middle">0</text><text class="ink2 sm" x="84" y="286" text-anchor="end">0</text><text class="ink2 sm" x="150" y="300" text-anchor="middle">15</text><text class="ink2 sm" x="84" y="228" text-anchor="end">15</text><text class="ink2 sm" x="208" y="300" text-anchor="middle">30</text><text class="ink2 sm" x="84" y="170" text-anchor="end">30</text><text class="ink2 sm" x="266" y="300" text-anchor="middle">45</text><text class="ink2 sm" x="84" y="112" text-anchor="end">45</text><text class="ink2 sm" x="324" y="300" text-anchor="middle">60</text><text class="ink2 sm" x="84" y="54" text-anchor="end">60</text><text class="ink2 sm" x="208" y="320" text-anchor="middle">먼저 정한 도착 시각 x (분)</text><text class="ink2 sm" x="74" y="40" text-anchor="middle">y (분)</text><text class="ink bold" x="208" y="171" text-anchor="middle">만난다</text><text class="ink2 sm" x="142.27" y="100.4" text-anchor="middle">못 만난다</text><text class="ink2 sm" x="273.73" y="239.6" text-anchor="middle">못 만난다</text><text class="ink" x="366" y="62" text-anchor="start">두 사람이 한 시간 안에 아무 때나 와서</text><text class="ink" x="366" y="84" text-anchor="start">15분만 기다린다. 결과가 무한히 많으니</text><text class="ink" x="366" y="106" text-anchor="start">세어서 나눌 수 없다. 넓이의 비로 정한다.</text><text class="ink2 sm" x="366" y="144" text-anchor="start">전체 넓이 = 60 × 60 = 3600</text><text class="ink2 sm" x="366" y="166" text-anchor="start">못 만나는 두 삼각형</text><text class="ink2 sm" x="366" y="186" text-anchor="start">= 2 × (45 × 45 ÷ 2) = 2025</text><text class="ink2 sm" x="366" y="208" text-anchor="start">만나는 넓이 = 3600 − 2025 = 1575</text><path d="M366 222 L664 222" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold" x="366" y="248" text-anchor="start">P(만난다) = 1575 / 3600 = 0.4375</text><text class="ink2 sm" x="366" y="280" text-anchor="start">넓이 비가 확률이 되려면 ‘한 점을 고르는</text><text class="ink2 sm" x="366" y="300" text-anchor="start">방식이 균등하다’는 약속이 먼저 있어야 한다.</text><text class="ink2 sm" x="366" y="320" text-anchor="start">그 약속을 바꾸면 답도 바뀐다.</text>
+</svg>

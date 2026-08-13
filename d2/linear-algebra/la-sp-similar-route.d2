@@ -1,0 +1,28 @@
+# 닮음은 ‘기저를 바꿔 보기’다 — 선형대수 7장.
+#
+# 무엇을 읽어야 하나: 곧장 가는 길이 표준기저에서의 A 이고,
+# 옆으로 돌아 내려갔다 올라오는 길이 B 기저에서의 D 다.
+# 두 길의 결과가 같으므로 A = PDP⁻¹, 곧 D = P⁻¹AP 다.
+direction: down
+
+x: { label: "x\n표준좌표"; style.bold: true }
+Ax: { label: "Ax\n표준좌표"; style.bold: true }
+xb: { label: "[x]_B\nB 좌표" }
+Dxb: { label: "D[x]_B\nB 좌표" }
+
+x -> Ax: "A — 곧장 가는 길"
+x -> xb: "P⁻¹ 로 B 좌표로 바꾼다"
+xb -> Dxb: "D — B 좌표에서는 대각행렬"
+Dxb -> Ax: "P 로 표준좌표로 되돌린다"
+
+결론: {
+  label: "두 길의 결과가 같다\nA = PDP⁻¹  ⟺  D = P⁻¹AP"
+  shape: hexagon
+  style.bold: true
+}
+Ax -> 결론
+
+메모: {
+  label: "P 의 열은 새 기저벡터를 표준좌표로 적은 것이다.\nP = [b_1  b_2  …  b_n]"
+  shape: text
+}

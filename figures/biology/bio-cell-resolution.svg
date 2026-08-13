@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 330" width="660" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">배율과 해상도</title><desc id="d">같은 두 점을 광학현미경과 전자현미경으로 본 결과 비교</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="20" y="30" text-anchor="start">배율과 해상도는 다른 것이다</text><text class="ink2 sm" x="20" y="50" text-anchor="start">두 점이 얼마나 가까운지는 그대로인데, 크게만 키우면 흐린 덩어리가 커질 뿐이다</text><rect x="30" y="70" width="170" height="210" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="115" y="90" text-anchor="middle">실제 물체</text><text class="ink2 sm" x="115" y="107" text-anchor="middle">두 점의 거리 0.05 μm</text><circle cx="95" cy="190" r="9" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.4"/><circle cx="125" cy="190" r="9" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.4"/><path d="M95 218 L125 218" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="110" y="236" text-anchor="middle">0.05 μm</text><path fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)" d="M206 140 L244 140"/><text class="ink2 sm" x="225" y="128" text-anchor="middle">광학</text><path fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)" d="M206 236 L244 236"/><text class="ink2 sm" x="225" y="224" text-anchor="middle">전자</text><rect x="250" y="70" width="190" height="100" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="345" y="90" text-anchor="middle">광학현미경으로 본 상</text><text class="ink2 sm" x="345" y="107" text-anchor="middle">한계 0.2 μm</text><ellipse cx="345" cy="135" rx="34" ry="17" fill="var(--s2)" fill-opacity="0.28" stroke="var(--s2)" stroke-width="1.2" stroke-dasharray="4 3"/><text class="ink sm" x="345" y="158" text-anchor="middle">하나로 뭉쳐 보인다</text><rect x="250" y="182" width="190" height="100" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="345" y="202" text-anchor="middle">전자현미경으로 본 상</text><text class="ink2 sm" x="345" y="219" text-anchor="middle">한계 0.1 nm</text><circle cx="325" cy="240" r="13" fill="var(--s3)" fill-opacity="0.45" stroke="var(--s3)" stroke-width="1.4"/><circle cx="367" cy="240" r="13" fill="var(--s3)" fill-opacity="0.45" stroke="var(--s3)" stroke-width="1.4"/><text class="ink sm" x="346" y="272" text-anchor="middle">둘로 갈라져 보인다</text><text class="ink bold" x="462" y="100" text-anchor="start">배율 (magnification)</text><text class="ink2 sm" x="462" y="120" text-anchor="start">몇 배로 키워 보이느냐.</text><text class="ink2 sm" x="462" y="138" text-anchor="start">렌즈를 더 끼우면 얼마든지</text><text class="ink2 sm" x="462" y="156" text-anchor="start">올릴 수 있다.</text><text class="ink bold" x="462" y="194" text-anchor="start">해상도 (resolution)</text><text class="ink2 sm" x="462" y="214" text-anchor="start">얼마나 가까운 두 점까지</text><text class="ink2 sm" x="462" y="232" text-anchor="start">둘로 구별하느냐.</text><text class="ink2 sm" x="462" y="250" text-anchor="start">조명의 파장이 정한다.</text><text class="ink2 sm" x="462" y="268" text-anchor="start">올리려면 파장을 줄여야 한다.</text><text class="ink2 sm" x="644" y="316" text-anchor="end">해상도를 넘겨 키운 배율을 빈 배율(empty magnification)이라 한다</text>
+</svg>

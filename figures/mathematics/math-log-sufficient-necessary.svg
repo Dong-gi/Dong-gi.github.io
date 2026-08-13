@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 730 340" width="730" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">충분조건과 필요조건</title><desc id="d">p 의 영역이 q 의 영역 안에 들어 있는 그림으로 충분조건, 필요조건, 대우를 함께 읽는다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="365" y="26" text-anchor="middle">p ⟹ q 를 영역으로 보면</text><ellipse cx="228" cy="190" rx="152" ry="108" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.8"/><ellipse cx="196" cy="190" rx="76" ry="58" fill="var(--s2)" fill-opacity="0.16" stroke="var(--s2)" stroke-width="1.8"/><text class="ink bold" x="196" y="196" text-anchor="middle">p</text><text class="ink bold" x="330" y="122" text-anchor="middle">q</text><circle cx="180" cy="218" r="4" fill="var(--s2)"/><circle cx="300" cy="236" r="4" fill="var(--s1)"/><text class="ink2 sm" x="300" y="256" text-anchor="middle">q 지만 p 는 아니다</text><circle cx="120" cy="316" r="4" fill="var(--ink2)"/><text class="ink2 sm" x="120" y="334" text-anchor="middle">q 밖 — p 도 아니다</text><path fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ark)" stroke-dasharray="4 3" d="M150 306 L176 226"/><text class="ink" x="412" y="106" text-anchor="start">p 안에 있으면 반드시 q 안에 있다</text><text class="ink2 sm" x="412" y="128" text-anchor="start">p 는 q 이기 위한 충분조건</text><text class="ink" x="412" y="172" text-anchor="start">q 안에 있다고 p 안에 있지는 않다</text><text class="ink2 sm" x="412" y="194" text-anchor="start">q 는 p 이기 위한 필요조건</text><text class="ink" x="412" y="238" text-anchor="start">q 밖으로 나가면 p 밖이다</text><text class="ink2 sm" x="412" y="260" text-anchor="start">이것이 대우 ¬q ⟹ ¬p 다</text><path d="M400 88 L400 272" fill="none" stroke="var(--grid)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

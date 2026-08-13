@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 340" width="660" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">앙페르 법칙</title><desc id="d">고리가 감싼 전류가 합을 정한다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="16" y="26" text-anchor="start">닫힌 고리를 한 바퀴 돌며 자기장을 더하면</text><text class="ink2 sm" x="16" y="48" text-anchor="start">그 값은 고리가 감싼 전류만으로 정해진다. 고리의 모양이나 크기는 상관없다.</text><rect x="16" y="86" width="192" height="188" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.2"/><path d="M48 200 C50 138 118 134 142 160 C182 192 164 256 108 252 C68 248 46 232 48 200 Z" fill="var(--s1)" fill-opacity="0.07" stroke="var(--s1)" stroke-width="2" stroke-dasharray="6 4"/><path class="s1" fill="none" stroke-width="1.8" marker-end="url(#ar1)" d="M43.9 211.28 A12 12 0 0 1 43.9 188.72"/><circle cx="98" cy="200" r="11" fill="none" stroke="var(--s2)" stroke-width="2"/><circle cx="98" cy="200" r="3.3" fill="var(--s2)"/><text class="ink sm" x="115" y="205" text-anchor="start">I</text><text class="ink bold" x="112" y="108" text-anchor="middle">합 = μ<tspan baseline-shift="-22%" font-size="76%">0</tspan> I</text><text class="ink2 sm" x="112" y="292" text-anchor="middle">고리가 전류를 감쌌다</text><rect x="234" y="86" width="192" height="188" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.2"/><path d="M266 200 C268 138 336 134 360 160 C400 192 382 256 326 252 C286 248 264 232 266 200 Z" fill="var(--s1)" fill-opacity="0.07" stroke="var(--s1)" stroke-width="2" stroke-dasharray="6 4"/><path class="s1" fill="none" stroke-width="1.8" marker-end="url(#ar1)" d="M261.9 211.28 A12 12 0 0 1 261.9 188.72"/><circle cx="434" cy="206" r="11" fill="none" stroke="var(--s2)" stroke-width="2"/><circle cx="434" cy="206" r="3.3" fill="var(--s2)"/><text class="ink sm" x="451" y="211" text-anchor="start">I</text><text class="ink bold" x="330" y="108" text-anchor="middle">합 = 0</text><text class="ink2 sm" x="330" y="292" text-anchor="middle">전류가 고리 밖에 있다</text><rect x="452" y="86" width="192" height="188" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.2"/><path d="M484 200 C486 138 554 134 578 160 C618 192 600 256 544 252 C504 248 482 232 484 200 Z" fill="var(--s1)" fill-opacity="0.07" stroke="var(--s1)" stroke-width="2" stroke-dasharray="6 4"/><path class="s1" fill="none" stroke-width="1.8" marker-end="url(#ar1)" d="M479.9 211.28 A12 12 0 0 1 479.9 188.72"/><circle cx="518" cy="192" r="11" fill="none" stroke="var(--s2)" stroke-width="2"/><circle cx="518" cy="192" r="3.3" fill="var(--s2)"/><text class="ink sm" x="535" y="197" text-anchor="start">I</text><g stroke="var(--s2)" stroke-width="2" fill="none"><circle cx="556" cy="222" r="11"/><path d="M548.74 214.74 L563.26 229.26 M548.74 229.26 L563.26 214.74"/></g><text class="ink sm" x="573" y="227" text-anchor="start">I</text><text class="ink bold" x="548" y="108" text-anchor="middle">합 = 0</text><text class="ink2 sm" x="548" y="292" text-anchor="middle">반대 방향 두 전류가 상쇄</text><text class="ink2 sm" x="16" y="328" text-anchor="start">전류가 고리 밖에 있으면 자기장이 0이라는 뜻이 아니다. 한 바퀴 돌며 더한 값이 0이라는 뜻이다</text>
+</svg>

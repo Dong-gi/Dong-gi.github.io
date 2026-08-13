@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 404" width="600" height="404" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">유도공식은 단위원 위 네 점의 좌표를 견주는 것이다</title><desc id="d">각 θ, π−θ, π+θ, −θ 자리의 네 점은 좌표의 부호만 다르다. 그 부호를 읽은 것이 유도공식이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<circle cx="300" cy="190" r="118" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/><path d="M156 190 L444 190" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M300 330 L300 50" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M209.61 114.15 L390.39 114.15" fill="none" stroke="var(--s3)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 4"/><path d="M390.39 114.15 L390.39 265.85" fill="none" stroke="var(--s3)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 4"/><text class="ink2 sm" x="300" y="99.15" text-anchor="middle">높이가 같다 — 사인이 같다</text><text class="ink2 sm" x="399.39" y="222" text-anchor="start">가로가 같다 — 코사인이 같다</text><path d="M300 190 L209.61 265.85" fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M300 190 L390.39 265.85" fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M300 190 L390.39 114.15" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M300 190 L209.61 114.15" fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="390.39" cy="114.15" r="5" fill="var(--s1)"/><circle cx="209.61" cy="114.15" r="5" fill="var(--s2)"/><circle cx="209.61" cy="265.85" r="4" fill="var(--ink2)"/><circle cx="390.39" cy="265.85" r="4" fill="var(--ink2)"/><path class="gr" d="M340 190 A40 40 0 0 0 330.64 164.29"/><text class="sm ink2" x="350.74" y="175.53" text-anchor="middle">θ</text><text class="ink bold" x="404.39" y="102.15" text-anchor="start">θ</text><text class="ink2 sm" x="404.39" y="120.15" text-anchor="start">(cos θ, sin θ)</text><text class="ink bold" x="195.61" y="102.15" text-anchor="end">π − θ</text><text class="ink2 sm" x="195.61" y="120.15" text-anchor="end">(−cos θ, sin θ)</text><text class="ink bold" x="195.61" y="281.85" text-anchor="end">π + θ</text><text class="ink2 sm" x="195.61" y="299.85" text-anchor="end">(−cos θ, −sin θ)</text><text class="ink bold" x="404.39" y="281.85" text-anchor="start">−θ</text><text class="ink2 sm" x="404.39" y="299.85" text-anchor="start">(cos θ, −sin θ)</text><text class="ink bold" x="28" y="356" text-anchor="start">π − θ 는 θ 를 y축에 대해 뒤집은 자리다.</text><text class="ink2 sm" x="28" y="378" text-anchor="start">5장이 빌려 쓴 sin(180° − θ) = sin θ 와 cos(180° − θ) = −cos θ 가 이 그림 한 장이다.</text>
+</svg>

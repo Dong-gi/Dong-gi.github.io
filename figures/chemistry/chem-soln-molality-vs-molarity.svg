@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" width="720" height="380" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">몰농도와 몰랄농도</title><desc id="d">온도를 올린 같은 용액 두 개</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="26" y="34" text-anchor="start">왜 총괄성에서는 부피 대신 질량을 기준으로 삼는가</text><rect x="98" y="164" width="146" height="102" rx="2" fill="var(--s1)" fill-opacity="0.18" stroke="none" stroke-width="0"/><rect x="96" y="96" width="150" height="172" rx="4" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.8"/><path d="M88 164 L254 164" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 4"/><text class="ink bold" x="171" y="82" text-anchor="middle">20 °C</text><text class="ink" x="171" y="292" text-anchor="middle">부피 1.02 L</text><text class="ink2 sm" x="171" y="314" text-anchor="middle">몰농도 c = 0.98 mol/L</text><rect x="476" y="128" width="146" height="138" rx="2" fill="var(--s1)" fill-opacity="0.18" stroke="none" stroke-width="0"/><rect x="474" y="96" width="150" height="172" rx="4" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.8"/><path d="M466 128 L632 128" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 4"/><text class="ink bold" x="549" y="82" text-anchor="middle">80 °C</text><text class="ink" x="549" y="292" text-anchor="middle">부피 1.06 L (예시)</text><text class="ink2 sm" x="549" y="314" text-anchor="middle">몰농도 c = 0.94 mol/L</text><path class="s2" fill="none" stroke-width="2.2" stroke-linecap="round" marker-end="url(#ar2)" d="M300 170 L456 170"/><text class="ink" x="378" y="158" text-anchor="middle">데우면 부풀어 오른다</text><rect x="268" y="196" width="220" height="76" rx="6" fill="var(--s3)" fill-opacity="0.12" stroke="var(--s3)" stroke-width="1.4"/><text class="ink bold" x="378" y="220" text-anchor="middle">들어 있는 것은 그대로</text><text class="ink sm" x="378" y="242" text-anchor="middle">NaCl 1.00 mol</text><text class="ink sm" x="378" y="262" text-anchor="middle">물 1.000 kg</text><text class="ink bold" x="360" y="348" text-anchor="middle">몰랄농도 b = 1.00 mol/kg — 두 그림에서 같다</text><text class="ink2 sm" x="360" y="372" text-anchor="middle">어는점·끓는점 실험은 온도를 바꾸면서 하므로 부피 기준 농도를 쓸 수 없다</text>
+</svg>

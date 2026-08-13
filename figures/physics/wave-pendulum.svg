@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 340" width="640" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">단진자</title><desc id="d">무게를 접선 성분과 실 방향 성분으로 나눈 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="16" y="24" text-anchor="start">진자를 되돌리는 것은 무게의 접선 성분이다</text><path class="ax" stroke-width="2" d="M130 34 L250 34"/><path class="gr" d="M130 34 L122 42"/><path class="gr" d="M140 34 L132 42"/><path class="gr" d="M150 34 L142 42"/><path class="gr" d="M160 34 L152 42"/><path class="gr" d="M170 34 L162 42"/><path class="gr" d="M180 34 L172 42"/><path class="gr" d="M190 34 L182 42"/><path class="gr" d="M200 34 L192 42"/><path class="gr" d="M210 34 L202 42"/><path class="gr" d="M220 34 L212 42"/><path class="gr" d="M230 34 L222 42"/><path class="gr" d="M240 34 L232 42"/><path class="gr" d="M250 34 L242 42"/><path class="gr" stroke-dasharray="5 4" d="M190 42 V277"/><path class="gr" stroke-dasharray="4 4" d="M100.13 226.25 A205 205 0 0 1 279.87 226.25"/><path class="ax" d="M190 42 L279.87 226.25"/><path class="gr" d="M190 104 A62 62 0 0 0 217.18 97.73"/><text class="sm ink2" x="207.1" y="120.05" text-anchor="middle">θ</text><circle class="f1" cx="279.87" cy="226.25" r="14"/><text class="ink" x="301.87" y="230.25" text-anchor="start">m</text><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M279.87 226.25 L279.87 318.25"/><text class="ink" x="285.87" y="332.25" text-anchor="start">mg</text><path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M279.87 226.25 L243.62 243.93"/><text class="ink" x="235.62" y="259.93" text-anchor="end">mg sin θ</text><path class="s3" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)" d="M279.87 226.25 L316.11 300.57"/><text class="ink2 sm" x="324.11" y="304.57" text-anchor="start">mg cos θ</text><text class="ink2 sm" x="194" y="293" text-anchor="middle">평형 위치</text><rect x="16" y="52" width="14" height="3" rx="1.5" class="f1"/><text class="sm ink2" x="36" y="58">무게 mg</text><rect x="16" y="70" width="14" height="3" rx="1.5" class="f2"/><text class="sm ink2" x="36" y="76">되돌리는 성분</text><rect x="16" y="88" width="14" height="3" rx="1.5" class="f3"/><text class="sm ink2" x="36" y="94">실이 버티는 성분</text><text class="ink2 sm" x="392" y="148" text-anchor="start">호를 따라 잰 변위는 s = Lθ</text><text class="ink2 sm" x="392" y="168" text-anchor="start">되돌리는 힘 = −mg sin θ</text><text class="ink2 sm" x="392" y="188" text-anchor="start"></text><text class="ink2 sm" x="392" y="208" text-anchor="start">작은 각에서 sin θ ≈ θ 이므로</text><text class="ink" x="392" y="228" text-anchor="start">    힘 ≈ −(mg/L) s</text><text class="ink2 sm" x="392" y="248" text-anchor="start"></text><text class="ink2 sm" x="392" y="268" text-anchor="start">용수철의 k 자리에 mg/L 가 들어간다.</text><text class="ink2 sm" x="392" y="288" text-anchor="start">ω = √(g/L),  T = 2π√(L/g)</text><text class="ink" x="392" y="308" text-anchor="start">질량 m 이 없어진다.</text>
+</svg>

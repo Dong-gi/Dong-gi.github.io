@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 344" width="640" height="344" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">구르는 바퀴의 속도 분포</title><desc id="d">중심 v, 꼭대기 2v, 접촉점 0</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" d="M40 282 H400"/><path class="gr" d="M40 282 L33 290"/><path class="gr" d="M54 282 L47 290"/><path class="gr" d="M68 282 L61 290"/><path class="gr" d="M82 282 L75 290"/><path class="gr" d="M96 282 L89 290"/><path class="gr" d="M110 282 L103 290"/><path class="gr" d="M124 282 L117 290"/><path class="gr" d="M138 282 L131 290"/><path class="gr" d="M152 282 L145 290"/><path class="gr" d="M166 282 L159 290"/><path class="gr" d="M180 282 L173 290"/><path class="gr" d="M194 282 L187 290"/><path class="gr" d="M208 282 L201 290"/><path class="gr" d="M222 282 L215 290"/><path class="gr" d="M236 282 L229 290"/><path class="gr" d="M250 282 L243 290"/><path class="gr" d="M264 282 L257 290"/><path class="gr" d="M278 282 L271 290"/><path class="gr" d="M292 282 L285 290"/><path class="gr" d="M306 282 L299 290"/><path class="gr" d="M320 282 L313 290"/><path class="gr" d="M334 282 L327 290"/><path class="gr" d="M348 282 L341 290"/><path class="gr" d="M362 282 L355 290"/><path class="gr" d="M376 282 L369 290"/><path class="gr" d="M390 282 L383 290"/><circle cx="200" cy="190" r="92" fill="none" stroke="var(--ink2)" stroke-width="2"/><path class="gr" d="M108 190 L292 190"/><path class="gr" d="M134.95 255.05 L265.05 124.95"/><path class="gr" d="M200 282 L200 98"/><path class="gr" d="M265.05 255.05 L134.95 124.95"/><circle cx="200" cy="190" r="4" class="ink2"/><path class="s3" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar3)" d="M166.54 152.84 A50 50 0 1 1 227.96 231.45"/><text class="ink" x="136" y="154" text-anchor="start">ω</text><path class="s1" fill="none" stroke-width="2.8" stroke-linecap="round" marker-end="url(#ar1)" d="M200 190 L272 190"/><text class="ink" x="278" y="195" text-anchor="start">v = Rω</text><path class="s2" fill="none" stroke-width="2.8" stroke-linecap="round" marker-end="url(#ar2)" d="M200 98 L344 98"/><text class="ink" x="350" y="103" text-anchor="start">2v — 맨 위가 가장 빠르다</text><circle cx="200" cy="282" r="6" fill="var(--s3)" fill-opacity="0.9"/><text class="ink" x="214" y="304" text-anchor="start">0 — 접촉점은 그 순간 정지해 있다</text><text class="ink bold" x="24" y="34" text-anchor="start">구르기 = 질량중심의 병진 + 중심 둘레의 회전</text><text class="ink" x="24" y="56" text-anchor="start">미끄러지지 않으면 v = R ω</text><text class="ink bold" x="420" y="176" text-anchor="start">구를 때의 운동에너지</text><text class="ink" x="420" y="200" text-anchor="start">K = ½ M v² + ½ I ω²</text><text class="ink2 sm" x="420" y="230" text-anchor="start">접촉점이 정지해 있으므로</text><text class="ink2 sm" x="420" y="248" text-anchor="start">정지마찰은 일을 하지 않는다</text><text class="ink2 sm" x="420" y="266" text-anchor="start">→ 에너지 보존을 그대로 쓸 수 있다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 350" width="580" height="350" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">유압 장치</title><desc id="d">작은 피스톤과 큰 피스톤, 힘과 거리의 맞바꿈</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="16" y="24" text-anchor="start">작은 힘으로 큰 힘을 얻는 대신 많이 눌러야 한다</text><path d="M90 168 V288 H460 V124 H330 V270 H134 V168 Z" fill="var(--s1)" fill-opacity="0.14" stroke="none"/><path class="ax" d="M90 168 V288 H460 V124 H330 V270 H134 V168 Z" fill="none"/><rect x="90" y="154" width="44" height="14" fill="var(--ink2)" fill-opacity="0.5" stroke="var(--ink2)" stroke-width="1.4"/><path class="s1" fill="none" stroke-width="3" stroke-linecap="round" marker-end="url(#ar1)" d="M112 72 L112 146"/><text class="ink" x="120" y="108" text-anchor="start">F<tspan baseline-shift="-22%" font-size="76%">1</tspan> (작다)</text><path class="s3" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar3)" d="M78 129 L78 168"/><path class="s3" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar3)" d="M78 129 L78 90"/><text class="ink2 sm" x="72" y="128" text-anchor="end">d<tspan baseline-shift="-22%" font-size="76%">1</tspan> (많이)</text><text class="ink2 sm" x="112" y="312" text-anchor="middle">넓이 A<tspan baseline-shift="-22%" font-size="76%">1</tspan></text><rect x="330" y="110" width="130" height="14" fill="var(--ink2)" fill-opacity="0.5" stroke="var(--ink2)" stroke-width="1.4"/><path class="s2" fill="none" stroke-width="4" stroke-linecap="round" marker-end="url(#ar2)" d="M395 102 L395 36"/><text class="ink" x="405" y="58" text-anchor="start">F<tspan baseline-shift="-22%" font-size="76%">2</tspan> (크다)</text><path class="s3" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar3)" d="M474 102 L474 110"/><path class="s3" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar3)" d="M474 102 L474 94"/><text class="ink2 sm" x="482" y="106" text-anchor="start">d<tspan baseline-shift="-22%" font-size="76%">2</tspan> (조금)</text><text class="ink2 sm" x="395" y="312" text-anchor="middle">넓이 A<tspan baseline-shift="-22%" font-size="76%">2</tspan></text><text class="ink2 sm" x="232" y="132" text-anchor="middle">갇힌 유체는 압력을 그대로 전한다</text><text class="ink" x="566" y="186" text-anchor="end">F<tspan baseline-shift="-22%" font-size="76%">1</tspan> / A<tspan baseline-shift="-22%" font-size="76%">1</tspan> = F<tspan baseline-shift="-22%" font-size="76%">2</tspan> / A<tspan baseline-shift="-22%" font-size="76%">2</tspan></text><text class="ink" x="566" y="210" text-anchor="end">A<tspan baseline-shift="-22%" font-size="76%">1</tspan> d<tspan baseline-shift="-22%" font-size="76%">1</tspan> = A<tspan baseline-shift="-22%" font-size="76%">2</tspan> d<tspan baseline-shift="-22%" font-size="76%">2</tspan></text><text class="ink2 sm" x="566" y="232" text-anchor="end">두 식을 곱하면</text><text class="ink" x="566" y="252" text-anchor="end">F<tspan baseline-shift="-22%" font-size="76%">1</tspan> d<tspan baseline-shift="-22%" font-size="76%">1</tspan> = F<tspan baseline-shift="-22%" font-size="76%">2</tspan> d<tspan baseline-shift="-22%" font-size="76%">2</tspan></text><text class="ink2 sm" x="16" y="340" text-anchor="start">힘은 넓이 비만큼 커지지만 움직이는 거리는 그만큼 줄어, 한 일은 양쪽이 같다</text>
+</svg>

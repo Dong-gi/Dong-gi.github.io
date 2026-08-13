@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 320" width="740" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">이변량정규분포의 등고선</title><desc id="d">상관이 0 이면 등고선이 원이고 상관이 커지면 대각선 방향으로 길쭉한 타원이 된다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<style>svg{--bgfix:#ffffff}@media (prefers-color-scheme:dark){svg{--bgfix:#121212}}</style><text class="ink bold" x="370" y="28" text-anchor="middle">이변량정규분포 — 등고선이 타원이고 ρ 가 기울기를 정한다</text><path class="ax" marker-end="url(#ark)" d="M66 150 H244"/><path class="ax" marker-end="url(#ark)" d="M150 226 V64"/><ellipse cx="150" cy="150" rx="45.47" ry="41.14" transform="rotate(-45 150 150)" fill="var(--s1)" fill-opacity="0.13" stroke="var(--s1)" stroke-width="1.3"/><ellipse cx="150" cy="150" rx="37.12" ry="33.59" transform="rotate(-45 150 150)" fill="var(--s1)" fill-opacity="0.13" stroke="var(--s1)" stroke-width="1.3"/><ellipse cx="150" cy="150" rx="26.25" ry="23.75" transform="rotate(-45 150 150)" fill="var(--s1)" fill-opacity="0.13" stroke="var(--s1)" stroke-width="1.3"/><circle cx="150" cy="150" r="3" fill="var(--s2)"/><text class="ink bold" x="150" y="60" text-anchor="middle">ρ = 0 — 원</text><path class="ax" marker-end="url(#ark)" d="M286 150 H464"/><path class="ax" marker-end="url(#ark)" d="M370 226 V64"/><ellipse cx="370" cy="150" rx="61" ry="18.4" transform="rotate(-45 370 150)" fill="var(--s1)" fill-opacity="0.13" stroke="var(--s1)" stroke-width="1.3"/><ellipse cx="370" cy="150" rx="49.81" ry="15.02" transform="rotate(-45 370 150)" fill="var(--s1)" fill-opacity="0.13" stroke="var(--s1)" stroke-width="1.3"/><ellipse cx="370" cy="150" rx="35.22" ry="10.62" transform="rotate(-45 370 150)" fill="var(--s1)" fill-opacity="0.13" stroke="var(--s1)" stroke-width="1.3"/><circle cx="370" cy="150" r="3" fill="var(--s2)"/><text class="ink bold" x="370" y="60" text-anchor="middle">ρ = 0.8 — 오른쪽 위로</text><path class="ax" marker-end="url(#ark)" d="M506 150 H684"/><path class="ax" marker-end="url(#ark)" d="M590 226 V64"/><ellipse cx="590" cy="150" rx="20.33" ry="55.19" transform="rotate(-45 590 150)" fill="var(--s1)" fill-opacity="0.13" stroke="var(--s1)" stroke-width="1.3"/><ellipse cx="590" cy="150" rx="16.6" ry="45.06" transform="rotate(-45 590 150)" fill="var(--s1)" fill-opacity="0.13" stroke="var(--s1)" stroke-width="1.3"/><ellipse cx="590" cy="150" rx="11.74" ry="31.86" transform="rotate(-45 590 150)" fill="var(--s1)" fill-opacity="0.13" stroke="var(--s1)" stroke-width="1.3"/><circle cx="590" cy="150" r="3" fill="var(--s2)"/><text class="ink bold" x="590" y="60" text-anchor="middle">ρ = −0.8 — 왼쪽 위로</text><text class="ink2 sm" x="150" y="246" text-anchor="middle">한 변수를 알아도</text><text class="ink2 sm" x="150" y="264" text-anchor="middle">다른 쪽 예측이 나아지지 않는다</text><text class="ink2 sm" x="370" y="246" text-anchor="middle">x 를 알면 y 의 범위가</text><text class="ink2 sm" x="370" y="264" text-anchor="middle">크게 좁아진다</text><text class="ink2 sm" x="590" y="246" text-anchor="middle">방향만 반대일 뿐</text><text class="ink2 sm" x="590" y="264" text-anchor="middle">좁아지는 정도는 같다</text><path d="M66 284 L674 284" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink" x="370" y="308" text-anchor="middle">이 분포에서만은 ρ = 0 이 곧 독립이다. 일반적으로는 성립하지 않는 특별한 성질이다</text>
+</svg>

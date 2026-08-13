@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 330" width="700" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">연속균등분포의 밀도함수와 누적분포함수</title><desc id="d">구간 a 부터 b 까지 높이가 1/(b−a) 인 직사각형 밀도와, 그 넓이를 왼쪽부터 쌓아 만든 직선 모양의 누적분포함수</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<style>svg{--bgfix:#ffffff}@media (prefers-color-scheme:dark){svg{--bgfix:#121212}}</style><rect x="40" y="42" width="300" height="214" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="190" y="61" text-anchor="middle">밀도함수 f(x)</text><text class="ink2 sm" x="190" y="77" text-anchor="middle">높이가 일정한 직사각형</text><path d="M115.04 208 L115.04 125.73 L268.96 125.73 L268.96 208 Z" fill="var(--s1)" fill-opacity="0.24" stroke="none"/><path class="ax" marker-end="url(#ark)" d="M74 208 H320"/><path class="cv s2" d="M74 208 L115.04 208"/><path class="cv s2" d="M115.04 125.73 L268.96 125.73"/><path class="cv s2" d="M268.96 208 L307.43 208"/><path d="M115.04 208 L115.04 125.73" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 3"/><path d="M268.96 208 L268.96 125.73" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 3"/><text class="ink2 sm" x="115.04" y="224" text-anchor="middle">a</text><text class="ink2 sm" x="268.96" y="224" text-anchor="middle">b</text><text class="ink sm" x="109.04" y="117.73" text-anchor="start">1/(b − a)</text><text class="ink sm" x="192" y="166.87" text-anchor="middle">넓이 = 1</text><rect x="360" y="42" width="300" height="214" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="510" y="61" text-anchor="middle">누적분포함수 F(x)</text><text class="ink2 sm" x="510" y="77" text-anchor="middle">0 에서 1 까지 곧게 올라간다</text><path class="ax" marker-end="url(#ark)" d="M400 208 H642"/><path class="cv s3" d="M400 208 L440.35 208 L591.65 108 L629.48 108"/><path d="M400 108 L632 108" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 3"/><text class="ink2 sm" x="394" y="112" text-anchor="end">1</text><text class="ink2 sm" x="440.35" y="224" text-anchor="middle">a</text><text class="ink2 sm" x="591.65" y="224" text-anchor="middle">b</text><text class="ink sm" x="522" y="166" text-anchor="start">기울기 = 1/(b − a)</text><text class="ink" x="350" y="288" text-anchor="middle">어느 자리든 똑같이 그럴듯하다는 것을 식으로 적으면 밀도가 상수라는 말이 된다</text><text class="ink2 sm" x="350" y="314" text-anchor="middle">μ = (a + b)/2 로 한가운데,  σ² = (b − a)²/12 로 구간 길이의 제곱에 비례한다</text>
+</svg>
