@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 296" width="800" height="296" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">파스칼 항등식의 조합적 증명</title><desc id="d">n 명에서 k 명을 뽑는 방법을 Bob 이 뽑히는지로 가른 셈과 그냥 센 셈이 같다는 것이 파스칼 항등식이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="400" y="26" text-anchor="middle">한 집합을 두 방식으로 세면 항등식이 공짜로 나온다</text><rect x="96" y="74" width="34" height="30" rx="2" fill="var(--s2)" fill-opacity="0.22" stroke="var(--s2)" stroke-width="1.9"/><text class="ink sm" x="113" y="94" text-anchor="middle">Bob</text><rect x="130" y="74" width="34" height="30" rx="2" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><rect x="164" y="74" width="34" height="30" rx="2" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><rect x="198" y="74" width="34" height="30" rx="2" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><rect x="232" y="74" width="34" height="30" rx="2" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><rect x="266" y="74" width="34" height="30" rx="2" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><rect x="300" y="74" width="34" height="30" rx="2" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink sm" x="350" y="94" text-anchor="start">n 명에서 k 명을 뽑는 방법의 집합 S</text><rect x="40" y="130" width="348" height="100" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="214" y="150" text-anchor="middle">세는 법 ①  Bob 을 기준으로 가른다</text><text class="ink2 sm" x="58" y="172" text-anchor="start">Bob 이 뽑힌다 → 남은 n−1 에서 k−1 명</text><text class="ink2 sm" x="58" y="194" text-anchor="start">Bob 이 빠진다 → 남은 n−1 에서 k 명</text><text class="ink bold sm" x="58" y="220" text-anchor="start">C(n−1, k−1) + C(n−1, k)</text><rect x="412" y="130" width="348" height="100" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="586" y="150" text-anchor="middle">세는 법 ②  가르지 않고 그냥 센다</text><text class="ink2 sm" x="430" y="172" text-anchor="start">크기가 k 인 부분집합의 수를</text><text class="ink2 sm" x="430" y="194" text-anchor="start">곧바로 적는다</text><text class="ink bold sm" x="430" y="220" text-anchor="start">C(n, k)</text><path fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M214 110 L214 126"/><path fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M586 110 L586 126"/><text class="ink bold sm" x="400" y="256" text-anchor="middle">둘이 같은 집합을 센 값이므로  C(n, k) = C(n−1, k−1) + C(n−1, k).  대수 계산은 한 줄도 하지 않았다</text><text class="ink2 sm" x="400" y="280" text-anchor="middle">두 경우가 겹치지 않는지와 빠뜨린 경우가 없는지를 확인하는 것이 이 증명의 알맹이다</text>
+</svg>

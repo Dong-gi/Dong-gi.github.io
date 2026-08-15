@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 378" width="780" height="378" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">관계의 상과 역상</title><desc id="d">담당자와 과목 사이의 관계 도식에서 부분집합 Y 의 상과, 어떤 과목의 역상을 표시한 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="390" y="26" text-anchor="middle">상은 화살표를 따라가고, 역상은 거꾸로 온다</text><rect x="126" y="72" width="128" height="96" rx="6" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.6"/><text class="bold" x="116" y="88" text-anchor="end">Y</text><rect x="496" y="72" width="132" height="96" rx="6" fill="var(--s3)" fill-opacity="0.14" stroke="var(--s3)" stroke-width="1.6"/><text class="bold" x="638" y="88" text-anchor="start">R(Y)</text><circle cx="190" cy="94" r="5" fill="var(--s1)"/><text class="ink sm" x="176" y="99" text-anchor="end">갑</text><circle cx="190" cy="138" r="5" fill="var(--s1)"/><text class="ink sm" x="176" y="143" text-anchor="end">을</text><circle cx="190" cy="182" r="5" fill="var(--ink2)"/><text class="ink sm" x="176" y="187" text-anchor="end">병</text><circle cx="190" cy="226" r="5" fill="var(--ink2)"/><text class="ink sm" x="176" y="231" text-anchor="end">정</text><circle cx="190" cy="270" r="5" fill="var(--ink2)"/><text class="ink sm" x="176" y="275" text-anchor="end">무</text><circle cx="560" cy="94" r="5" fill="var(--s3)"/><text class="ink sm" x="574" y="99" text-anchor="start">수학</text><circle cx="560" cy="138" r="5" fill="var(--s3)"/><text class="ink sm" x="574" y="143" text-anchor="start">논리</text><circle cx="560" cy="182" r="5" fill="var(--ink2)"/><text class="ink sm" x="574" y="187" text-anchor="start">알고리즘</text><circle cx="560" cy="226" r="5" fill="var(--ink2)"/><text class="ink sm" x="574" y="231" text-anchor="start">통계</text><path fill="none" stroke="var(--s1)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar1)" d="M199 94 L551 94"/><path fill="none" stroke="var(--s1)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar1)" d="M199 94 L551 138"/><path fill="none" stroke="var(--s1)" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar1)" d="M199 138 L551 138"/><path fill="none" stroke="var(--grid)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#ark)" d="M199 182 L551 182"/><path fill="none" stroke="var(--grid)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#ark)" d="M199 182 L551 226"/><path fill="none" stroke="var(--grid)" stroke-width="1.3" stroke-linecap="round" marker-end="url(#ark)" d="M199 270 L551 226"/><text class="ink2 sm" x="190" y="50" text-anchor="middle">담당자</text><text class="ink2 sm" x="560" y="50" text-anchor="middle">과목</text><text class="ink2 sm" x="375" y="50" text-anchor="middle">‘담당한다’ 관계</text><path d="M20 296 L760 296" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink sm" x="20" y="320" text-anchor="start">R(Y) = 갑과 을이 담당한 과목 전체 = { 수학, 논리 }. 역상 R⁻¹({ 통계 }) = 통계를 담당한 사람 전체 = { 병, 무 }</text><text class="ink2 sm" x="20" y="342" text-anchor="start">치역 range(R) 은 R(A) 다 — 위 그림에서 화살표가 하나라도 들어오는 과목들. 알고리즘도 여기 든다</text><text class="ink2 sm" x="20" y="364" text-anchor="start">support(R) = R⁻¹(B) 는 화살표가 하나라도 나가는 담당자들이다. ‘정’ 은 여기서 빠진다</text>
+</svg>

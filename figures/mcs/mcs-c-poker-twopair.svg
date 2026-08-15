@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 316" width="820" height="316" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">두 쌍 손을 세는 사상은 2 대 1 이다</title><desc id="d">첫 쌍과 둘째 쌍의 자리를 맞바꾼 두 수열이 같은 손으로 가므로 수열의 수를 둘로 나누어야 한다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="410" y="26" text-anchor="middle">첫 쌍과 둘째 쌍을 구별할 근거가 없으므로 수열이 손을 두 번 센다</text><text class="ink2 sm" x="34" y="66" text-anchor="start">수열 두 개</text><rect x="34" y="76" width="322" height="42" rx="3" fill="var(--s1)" fill-opacity="0.08" stroke="var(--s1)" stroke-width="1.3"/><text class="ink sm" x="48" y="102" text-anchor="start">( 3, {◆,♠}, Q, {◆,♥}, A, ♣ )</text><rect x="34" y="132" width="322" height="42" rx="3" fill="var(--s1)" fill-opacity="0.08" stroke="var(--s1)" stroke-width="1.3"/><text class="ink sm" x="48" y="158" text-anchor="start">( Q, {◆,♥}, 3, {◆,♠}, A, ♣ )</text><text class="ink2 sm" x="36" y="196" text-anchor="start">첫 쌍의 끗수 · 무늬 · 둘째 쌍의 끗수 · 무늬 · 남는 카드의 끗수 · 무늬</text><text class="ink2 sm" x="486" y="66" text-anchor="start">손 하나</text><rect x="486" y="100" width="44" height="34" rx="4" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.4"/><text class="ink sm" x="508" y="122" text-anchor="middle">3◆</text><rect x="538" y="100" width="44" height="34" rx="4" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.4"/><text class="ink sm" x="560" y="122" text-anchor="middle">3♠</text><rect x="590" y="100" width="44" height="34" rx="4" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.4"/><text class="ink sm" x="612" y="122" text-anchor="middle">Q◆</text><rect x="642" y="100" width="44" height="34" rx="4" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.4"/><text class="ink sm" x="664" y="122" text-anchor="middle">Q♥</text><rect x="694" y="100" width="44" height="34" rx="4" fill="var(--ink2)" fill-opacity="0.16" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink sm" x="716" y="122" text-anchor="middle">A♣</text><rect x="476" y="84" width="274" height="66" rx="6" fill="none" fill-opacity="1" stroke="var(--s3)" stroke-width="1.6"/><path fill="none" stroke="var(--s2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M360 92 L468 110"/><path fill="none" stroke="var(--s2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M360 152 L468 126"/><text class="ink2 sm" x="478" y="176" text-anchor="start">손은 집합이므로 순서가 없다 — 어느 쪽이</text><text class="ink2 sm" x="478" y="196" text-anchor="start">‘첫’ 쌍인지 가릴 방법이 없다</text><path d="M24 218 L796 218" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="24" y="242" text-anchor="start">틀린 답 — 사상을 전단사라 여긴 것</text><text class="ink2 sm" x="392" y="242" text-anchor="start">13 · C(4,2) · 12 · C(4,2) · 11 · 4</text><text class="ink bold sm" x="24" y="268" text-anchor="start">옳은 답 — 2 대 1 이므로 둘로 나눈다</text><text class="ink bold sm" x="392" y="268" text-anchor="start">13 · C(4,2) · 12 · C(4,2) · 11 · 4 / 2</text><text class="ink sm" x="24" y="294" text-anchor="start">다른 길로 검산 — 두 끗수를 한꺼번에 고른다</text><text class="ink sm" x="392" y="294" text-anchor="start">C(13,2) · C(4,2) · C(4,2) · 11 · 4      두 값이 같다</text>
+</svg>

@@ -6,12 +6,27 @@ Pug → 정적 HTML 개인 블로그. `pugs/**/*.pug` 가 `posts/**/*.html` 로 
 
 ```bash
 npm ci
-npm run build        # 전체 렌더
-npm run build-new    # 최근 10분 내 수정된 파일만
-npm run figures      # figures/*.mjs → figures/<과목>/*.svg
+npm run build         # 요소 여섯 개를 병렬로. 콘솔에는 성패만
+npm run build-pug     # 요소 하나만. build-figure / build-d2 / build-img / build-js / build-dates 도 같은 꼴
 ```
 
-Node 24 이상, 다이어그램 렌더에는 `d2` 바이너리가 필요하다 (없으면 해당 파일만 건너뛴다).
+빌드는 **요소별로 나뉘어 있고**, 요소 스크립트와 그 산출물이 모두 `source/build/` 에 있다.
+
+```
+source/build/pug.ts                   요소 스크립트
+source/build/build-pug.log            그 요소의 로그 (git 무시)
+source/build/build-pug-sha.json       그 요소의 내용 해시 기록 (커밋한다)
+```
+
+sha 는 (정규화 경로 → 내용 해시) 기록이고, 빌드는 이것과 견줘 **바뀐 것만** 다시 만든다.
+어떤 요소를 통째로 다시 만들고 싶으면 **`source/build/build-<요소>-sha.json` 을 지우면
+된다.** 요소 목록과 의존 관계는 `README.md` 첫머리에 있다.
+
+Node 24 이상, 다이어그램 렌더에는 `d2` 바이너리가 필요하다 (없으면 그 요소를 통째로
+건너뛰고, 해시를 남기지 않아 설치 후 다시 돌리면 만들어진다).
+
+빌드 출력을 파일로 돌리지 마라(`npm run build > build.log`). 로그는 이미 요소마다
+따로 남고, 화면을 돌리면 `build-dates` 의 물음이 보이지 않는다.
 
 수식은 **빌드 시점에 미리 렌더**된다(MathJax 4 CHTML + assistive MathML). 브라우저에서
 MathJax 를 돌리지 않으므로 `tex-chtml.js` 는 없고, 폰트는 `fonts/mathjax-newcm/` 에서
@@ -26,8 +41,9 @@ MathJax 를 돌리지 않으므로 `tex-chtml.js` 는 없고, 폰트는 `fonts/m
    { "category": ["기초 과목"], "file": "fundamental/physics.html", "title": "일반물리학" }
    ```
    `file` 은 `.html` 확장자다. `category` 는 배열이며 `/` 로 계층, 원소 여러 개로 다중 소속을 표현한다.
-3. `pugs/` 아래에는 `.pug` 와 `.d2` 만 둔다. 빌드가 `pugs/` 의 모든 파일을 렌더 대상으로
-   훑기 때문에 `.md` 같은 파일을 넣으면 쓸데없는 실패 로그가 남는다.
+3. `pugs/` 아래에는 **`.pug` 만** 둔다. 그림은 `figures/` 나 `d2/` 에 두고 문서에서는
+   `+w3img('/d2/<과목>/이름.svg')` 처럼 경로로 참조한다. `.md` 같은 파일을 넣으면
+   렌더되지 않고 `build-pug` 가 경고한다.
 
 ## Pug 규약
 
@@ -125,9 +141,10 @@ MathJax 를 돌리지 않으므로 `tex-chtml.js` 는 없고, 폰트는 `fonts/m
 여러 담당자가 동시에 장을 쓸 때는 **원장(ledger)이 유일한 계약**이다.
 장을 끝낸 사람은 "이 장이 새로 도입한 것"을 보고하고, 그것이 다음 원장이 된다.
 
-진행 상황(2026-08 기준): 물리·화학·생물·기초수학·선형대수·통계학 재작성 완료.
-mcs·알고리즘은 아직 개조식 목록이고 `+example` 이 하나도 없다.
-mcs 는 `h3.fake 문제 N` 으로 문제 24개를 수동 번호로 달고 있으며 풀이가 없다.
+진행 상황(2026-08 기준): `pugs/fundamental/` 여덟 문서 **전부 재작성 완료**.
+물리·화학·생물·기초수학·선형대수·통계학·알고리즘·mcs.
+합계 약 3만 6천 줄, 예제 1,700개, 그림 1,000개 남짓이다.
+mcs 는 원서(`files/mcs.pdf`, MIT 6.042) 22개 장 전부를 다루며 이 사이트에서 가장 큰 문서다.
 
 ## 확인 명령
 

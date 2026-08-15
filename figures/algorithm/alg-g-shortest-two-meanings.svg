@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 764 332" width="764" height="332" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">‘가장 짧은 길’ 의 두 가지 뜻</title><desc id="d">간선 수로 재면 직행이 짧고 가중치 합으로 재면 세 번 갈아타는 쪽이 짧다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="382" y="24" text-anchor="middle">간선 수로 재느냐 가중치 합으로 재느냐에 따라 답이 달라진다</text><path d="M128.42 113.34 L245.7 83.64" fill="none" stroke="var(--s2)" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ar2)"/><text class="ink2 bold sm" x="191.7" y="112.66" text-anchor="middle">2</text><path d="M287 78 L403 78" fill="none" stroke="var(--s2)" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ar2)"/><text class="ink2 bold sm" x="347" y="93" text-anchor="middle">3</text><path d="M444.42 82.66 L561.7 112.36" fill="none" stroke="var(--s2)" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ar2)"/><text class="ink2 bold sm" x="502.3" y="112.66" text-anchor="middle">2</text><circle cx="110" cy="118" r="19" fill="none" fill-opacity="0" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="110" y="123" text-anchor="middle">S</text><circle cx="268" cy="78" r="19" fill="none" fill-opacity="0" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="268" y="83" text-anchor="middle">A</text><circle cx="426" cy="78" r="19" fill="none" fill-opacity="0" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="426" y="83" text-anchor="middle">B</text><circle cx="584" cy="118" r="19" fill="none" fill-opacity="0" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="584" y="123" text-anchor="middle">T</text><path d="M124 134 C 240 226, 460 226, 570 134" fill="none" stroke="var(--s1)" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ar1)"/><text class="ink2 bold sm" x="347" y="218" text-anchor="middle">10</text><path d="M30 240 L58 240" fill="none" stroke="var(--s1)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><text class="ink sm" x="66" y="244" text-anchor="start">간선 수로 가장 짧은 길 — S 에서 T 로 바로. 간선 1개, 가중치 10</text><path d="M30 266 L58 266" fill="none" stroke="var(--s2)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><text class="ink sm" x="66" y="270" text-anchor="start">가중치 합으로 가장 짧은 길 — S → A → B → T. 간선 3개, 가중치 2+3+2 = 7</text><text class="ink2 sm" x="20" y="288" text-anchor="start">8장의 너비 우선 탐색은 앞의 답을 준다. 간선 하나를 한 걸음으로 세기 때문이다.</text><text class="ink2 sm" x="20" y="306" text-anchor="start">이 장은 뒤의 답을 구한다. 걸음마다 값이 다르면 걸음 수를 세는 것이 뜻을 잃는다.</text><text class="ink2 sm" x="20" y="324" text-anchor="start">가중치가 전부 같으면 두 답이 일치한다 — 너비 우선 탐색은 이 장의 특별한 경우다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 812 400" width="812" height="400" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">P · NP · NP-완전 · NP-난해의 관계</title><desc id="d">NP 와 NP-난해가 겹치는 자리가 NP-완전이고 P = NP 라면 그 셋이 하나로 무너진다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="406" y="26" text-anchor="middle">아무도 모르는 것은 왼쪽인가 오른쪽인가 하나다</text><rect x="20" y="46" width="386" height="296" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="213" y="66" text-anchor="middle">P ≠ NP 라면 (대부분이 그렇게 믿는다)</text><text class="ink2 sm" x="213" y="82" text-anchor="middle">풀기는 어려운데 확인은 쉬운 문제가 있다</text><ellipse cx="160" cy="202" rx="106" ry="74" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.8"/><ellipse cx="300" cy="202" rx="100" ry="82" fill="none" fill-opacity="0" stroke="var(--s2)" stroke-width="1.8" stroke-dasharray="6 5"/><ellipse cx="124" cy="208" rx="62" ry="44" fill="var(--s3)" fill-opacity="0.18" stroke="var(--s3)" stroke-width="1.8"/><text class="ink bold" x="124" y="204" text-anchor="middle">P</text><text class="ink2 sm" x="124" y="226" text-anchor="middle">정렬 · 최단경로</text><text class="ink bold" x="104" y="148" text-anchor="middle">NP</text><text class="ink bold" x="352" y="152" text-anchor="middle">NP-난해</text><text class="ink bold sm" x="228" y="206" text-anchor="middle">NP-완전</text><text class="ink2 sm" x="228" y="302" text-anchor="middle">SAT · 클리크 · TSP</text><text class="ink2 sm" x="360" y="302" text-anchor="middle">정지 문제</text><text class="ink2 sm" x="213" y="330" text-anchor="middle">겹치는 자리가 NP-완전 — NP 안에서 가장 어려운 것들</text><rect x="406" y="46" width="386" height="296" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="599" y="66" text-anchor="middle">P = NP 라면</text><text class="ink2 sm" x="599" y="82" text-anchor="middle">확인이 쉬우면 푸는 것도 쉽다</text><ellipse cx="548" cy="202" rx="104" ry="76" fill="var(--s1)" fill-opacity="0.12" stroke="var(--s1)" stroke-width="1.8"/><ellipse cx="694" cy="202" rx="94" ry="82" fill="none" fill-opacity="0" stroke="var(--s2)" stroke-width="1.8" stroke-dasharray="6 5"/><text class="ink bold" x="548" y="196" text-anchor="middle">P = NP</text><text class="ink bold sm" x="548" y="218" text-anchor="middle">= NP-완전</text><text class="ink bold" x="716" y="152" text-anchor="middle">NP-난해</text><text class="ink2 sm" x="716" y="302" text-anchor="middle">정지 문제는 그대로</text><text class="ink2 sm" x="548" y="302" text-anchor="middle">세 겹이 하나로 무너진다</text><text class="ink2 sm" x="599" y="330" text-anchor="middle">공개키 암호가 무너지고 최적화가 전부 쉬워진다</text><text class="ink2 sm" x="406" y="370" text-anchor="middle">P ⊆ NP 는 쉽게 보인다. 답을 다항 시간에 찾을 수 있으면 증명서를 무시하고 그냥 풀어 확인하면 되기 때문이다.</text><text class="ink2 sm" x="406" y="390" text-anchor="middle">반대쪽, 곧 NP ⊆ P 인지가 열려 있는 문제다</text>
+</svg>

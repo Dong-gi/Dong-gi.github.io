@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 772 356" width="772" height="356" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">양방향 탐색</title><desc id="d">한쪽에서 거리 d 까지 넓히는 대신 양쪽에서 d/2 까지 넓혀 가운데서 만난다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="386" y="24" text-anchor="middle">반지름 d 짜리 공 하나보다 반지름 d/2 짜리 공 두 개가 훨씬 작다</text><rect x="14" y="42" width="366" height="232" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="197" y="62" text-anchor="middle">한쪽에서만 넓히기</text><text class="ink2 sm" x="197" y="78" text-anchor="middle">거리 d 까지 전부 훑는다</text><circle cx="168" cy="178" r="70" fill="var(--s1)" fill-opacity="0.16" stroke="var(--s1)" stroke-width="1.6" stroke-dasharray="5 4"/><circle cx="168" cy="178" r="15" fill="var(--s1)" fill-opacity="0.18" stroke="var(--s1)" stroke-width="2"/><text class="ink" x="168" y="183" text-anchor="middle">S</text><circle cx="238" cy="178" r="15" fill="var(--s2)" fill-opacity="0.18" stroke="var(--s2)" stroke-width="2"/><text class="ink" x="238" y="183" text-anchor="middle">T</text><path d="M168 178 L238 178" fill="none" stroke="var(--ink2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/><text class="ink2 sm" x="194" y="158" text-anchor="middle">반지름 d</text><text class="ink2 sm" x="30" y="266" text-anchor="start">훑는 정점 수는 대략 b 의 d 제곱</text><rect x="396" y="42" width="366" height="232" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="579" y="62" text-anchor="middle">양쪽에서 동시에 넓히기</text><text class="ink2 sm" x="579" y="78" text-anchor="middle">가운데서 만나면 멈춘다</text><circle cx="538" cy="178" r="42" fill="var(--s1)" fill-opacity="0.16" stroke="var(--s1)" stroke-width="1.6" stroke-dasharray="5 4"/><circle cx="622" cy="178" r="42" fill="var(--s2)" fill-opacity="0.16" stroke="var(--s2)" stroke-width="1.6" stroke-dasharray="5 4"/><circle cx="538" cy="178" r="15" fill="var(--s1)" fill-opacity="0.18" stroke="var(--s1)" stroke-width="2"/><text class="ink" x="538" y="183" text-anchor="middle">S</text><circle cx="622" cy="178" r="15" fill="var(--s2)" fill-opacity="0.18" stroke="var(--s2)" stroke-width="2"/><text class="ink" x="622" y="183" text-anchor="middle">T</text><circle cx="580" cy="178" r="4" fill="var(--ink)"/><text class="ink2 sm" x="580" y="118" text-anchor="middle">여기서 만난다</text><path d="M580 126 L580 168" fill="none" stroke="var(--ink2)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 3"/><text class="ink2 sm" x="412" y="266" text-anchor="start">훑는 정점 수는 대략 b 의 d/2 제곱의 두 배</text><text class="ink2 sm" x="20" y="312" text-anchor="start">갈래가 b = 10 이고 거리가 d = 6 이면 한쪽에서만 넓힐 때 10 의 6 제곱, 곧 100만 개다.</text><text class="ink2 sm" x="20" y="330" text-anchor="start">양쪽에서 넓히면 10 의 3 제곱을 두 번, 곧 2000 개다. 500 배 차이다.</text><text class="ink2 sm" x="20" y="348" text-anchor="start">쓸 수 있는 조건이 있다. 도착점을 알아야 하고 간선을 거꾸로도 따라갈 수 있어야 한다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 322" width="780" height="322" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">비둘기집 원리는 사상 규칙의 대우다</title><desc id="d">다섯 개를 네 칸에 넣으면 어느 칸에 둘이 들어가는 그림과, 그것이 단사 조건의 대우라는 설명</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="390" y="26" text-anchor="middle">넣을 것이 칸보다 많으면 어느 칸에는 둘이 들어간다</text><rect x="60" y="116" width="96" height="62" rx="6" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.4"/><rect x="174" y="116" width="96" height="62" rx="6" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.4"/><rect x="288" y="116" width="96" height="62" rx="6" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.4"/><rect x="402" y="116" width="96" height="62" rx="6" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.4"/><circle cx="108" cy="147" r="12" fill="var(--s1)"/><text class="sm" fill="#ffffff" x="108" y="152" text-anchor="middle">b₁</text><circle cx="200" cy="147" r="12" fill="var(--s2)"/><text class="sm" fill="#ffffff" x="200" y="152" text-anchor="middle">b₂</text><circle cx="244" cy="147" r="12" fill="var(--s2)"/><text class="sm" fill="#ffffff" x="244" y="152" text-anchor="middle">b₃</text><circle cx="336" cy="147" r="12" fill="var(--s1)"/><text class="sm" fill="#ffffff" x="336" y="152" text-anchor="middle">b₄</text><circle cx="450" cy="147" r="12" fill="var(--s1)"/><text class="sm" fill="#ffffff" x="450" y="152" text-anchor="middle">b₅</text><rect x="170" y="110" width="104" height="74" rx="8" fill="none" fill-opacity="1" stroke="var(--s2)" stroke-width="2.2"/><text class="bold sm sm" x="222" y="102" text-anchor="middle">여기에 둘</text><text class="ink2 sm" x="60" y="204" text-anchor="start">넣을 것 5 개 → 칸 4 개</text><path d="M20 214 L760 214" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold sm" x="20" y="238" text-anchor="start">사상 규칙으로 옮기면 이렇다 — A 에서 B 로 가는 전함수가 단사이면 |A| ≤ |B| 다.</text><text class="ink2 sm" x="20" y="260" text-anchor="start">이 함의의 대우가 비둘기집 원리다. |A| &gt; |B| 이면 A 에서 B 로 가는 어떤 전함수도 단사가 아니다.</text><text class="ink2 sm" x="20" y="282" text-anchor="start">즉 값이 같아지는 서로 다른 두 원소가 반드시 있다</text><text class="ink2 sm" x="20" y="308" text-anchor="start">증명은 화살표를 세는 것이 전부다. 전함수라 화살표가 |A| 개 이상이고, 단사라면 화살표가 |B| 개 이하다</text>
+</svg>

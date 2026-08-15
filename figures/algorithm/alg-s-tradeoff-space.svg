@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 336" width="820" height="336" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">정확함을 조금 포기하고 공간을 크게 아낀다</title><desc id="d">같은 질문에 답하는 해시 집합과 블룸 필터의 공간 차이, 그리고 그 대가로 포기하는 것들</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="410" y="26" text-anchor="middle">주소 1억 개를 담아 ‘이것을 본 적 있는가’ 에 답하려 한다 — 주소 하나가 평균 60바이트라 하자</text><text class="ink bold sm" x="198" y="88" text-anchor="end">해시 집합 (5장)</text><rect x="210" y="70" width="470" height="26" rx="3" fill="var(--s1)" fill-opacity="0.3" stroke="var(--s1)" stroke-width="1.6"/><text class="ink bold sm" x="692" y="88" text-anchor="start">약 6 GB</text><text class="ink2 sm" x="210" y="118" text-anchor="start">키를 통째로 저장한다. 틀리는 일이 없고, 원소 목록을 그대로 되돌려 받을 수 있다</text><text class="ink bold sm" x="198" y="174" text-anchor="end">블룸 필터</text><rect x="210" y="156" width="9.4" height="26" rx="1" fill="var(--s2)" fill-opacity="0.55" stroke="var(--s2)" stroke-width="1.6"/><path fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar2)" d="M234 169 L222 169"/><text class="ink bold sm" x="240" y="174" text-anchor="start">약 120 MB — 같은 그림에서 이만큼밖에 안 된다</text><text class="ink2 sm" x="210" y="204" text-anchor="start">비트만 저장한다. 키는 어디에도 남지 않는다</text><path d="M60 232 L760 232" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><rect x="78" y="248" width="330" height="74" rx="5" fill="none" fill-opacity="1" stroke="var(--s2)" stroke-width="1.4"/><text class="ink bold sm" x="90" y="266" text-anchor="start">포기하는 것</text><text class="ink2 sm" x="90" y="285" text-anchor="start">· 없는 것을 있다고 할 확률 1%</text><text class="ink2 sm" x="90" y="300" text-anchor="start">· 원소 목록을 되돌려 받을 수 없다</text><text class="ink2 sm" x="90" y="315" text-anchor="start">· 한 번 넣은 것을 지울 수 없다</text><rect x="434" y="248" width="330" height="74" rx="5" fill="none" fill-opacity="1" stroke="var(--s3)" stroke-width="1.4"/><text class="ink bold sm" x="446" y="266" text-anchor="start">그대로 얻는 것</text><text class="ink2 sm" x="446" y="285" text-anchor="start">· 있는 것을 없다고 하는 일은 절대 없다</text><text class="ink2 sm" x="446" y="300" text-anchor="start">· 넣기 · 찾기가 해시 k 번으로 끝난다</text><text class="ink2 sm" x="446" y="315" text-anchor="start">· 원소 수가 늘어도 크기가 그대로다</text>
+</svg>

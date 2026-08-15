@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 316" width="780" height="316" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">모호한 재귀적 정의가 함수를 정하지 못하는 까닭</title><desc id="d">빈 문자열을 기저로 만드는 길과 두 빈 문자열을 이어붙여 만드는 길에서 같은 함수가 0 과 1 이라는 두 값을 갖게 되는 그림, 그리고 모호한 정의와 그렇지 않은 정의의 비교</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="390" y="26" text-anchor="middle">같은 문자열을 두 길로 만들 수 있으면 그 위의 재귀 함수가 두 값을 갖는다</text><rect x="20" y="46" width="386" height="190" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="213" y="66" text-anchor="middle">λ 를 두 가지로 만들 수 있다</text><text class="sm bold" fill="var(--s1)" x="44" y="94" text-anchor="start">길 1 — 기저를 쓴다</text><rect x="44" y="106" width="120" height="28" rx="4" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.4"/><text class="ink bold sm" x="104" y="125" text-anchor="middle">λ ∈ 집합</text><path fill="none" stroke="var(--s1)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar1)" d="M170 120 L208 120"/><rect x="214" y="106" width="140" height="28" rx="4" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.4"/><text class="ink bold sm" x="284" y="125" text-anchor="middle">f(λ) = 0</text><text class="sm bold" fill="var(--s2)" x="44" y="164" text-anchor="start">길 2 — 이어붙이기 구성자를 쓴다</text><rect x="44" y="176" width="120" height="28" rx="4" fill="var(--s2)" fill-opacity="0.14" stroke="var(--s2)" stroke-width="1.4"/><text class="ink bold sm" x="104" y="195" text-anchor="middle">λ = λ λ</text><path fill="none" stroke="var(--s2)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar2)" d="M170 190 L208 190"/><rect x="214" y="176" width="140" height="28" rx="4" fill="var(--s2)" fill-opacity="0.14" stroke="var(--s2)" stroke-width="1.4"/><text class="ink bold sm" x="284" y="195" text-anchor="middle">f(λ) = 1 + 0 + 0</text><text class="sm bold" fill="var(--s2)" x="200" y="224" text-anchor="middle">0 = 1 이 되었다</text><rect x="424" y="46" width="336" height="190" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="592" y="66" text-anchor="middle">두 정의의 차이</text><text class="sm bold" fill="var(--s3)" x="444" y="92" text-anchor="start">모호하지 않은 정의</text><text class="ink2 sm" x="444" y="112" text-anchor="start">기저: λ</text><text class="ink2 sm" x="444" y="130" text-anchor="start">구성자: s, t 가 들어 있으면 [s]t 도</text><text class="ink2 sm" x="444" y="148" text-anchor="start">→ 문자열마다 만드는 길이 하나뿐이다</text><text class="sm bold" fill="var(--s2)" x="444" y="174" text-anchor="start">모호한 정의</text><text class="ink2 sm" x="444" y="194" text-anchor="start">기저: λ</text><text class="ink2 sm" x="444" y="212" text-anchor="start">구성자: [s] 도, st 도</text><text class="ink2 sm" x="444" y="230" text-anchor="start">→ 읽기는 쉬운데 함수를 얹을 수 없다</text><text class="ink2 sm" x="24" y="262" text-anchor="start">두 정의가 정하는 집합은 같다. 그런데도 모호하지 않은 쪽을 골라 두는 이유가 이 그림이다 — 재귀 함수를 정의할 자리를 남겨 두기 위해서다.</text><text class="ink2 sm" x="24" y="282" text-anchor="start">모호한 정의로도 집합에 대한 구조적 귀납법은 쓸 수 있다. 못 쓰는 것은 재귀 함수 정의뿐이다</text>
+</svg>

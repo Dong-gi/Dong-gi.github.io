@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 336" width="780" height="336" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">집합의 분배법칙과 논리의 분배법칙</title><desc id="d">두 벤 다이어그램이 같은 영역을 칠하는 것과, 원소 하나를 잡고 동치 사슬로 이어 증명하는 네 줄</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="390" y="26" text-anchor="middle">집합 등식의 증명은 논리 동치를 한 번 쓰는 일이다</text><rect x="16" y="46" width="200" height="202" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="116" y="66" text-anchor="middle">A ∩ (B ∪ C)</text><defs>
+<clipPath id="v1A"><circle cx="92.08" cy="140.2" r="46"/></clipPath>
+<clipPath id="v1B"><circle cx="139.92" cy="140.2" r="46"/></clipPath>
+<clipPath id="v1C"><circle cx="116" cy="182.52" r="46"/></clipPath>
+</defs><g clip-path="url(#v1A)"><g clip-path="url(#v1B)"><circle cx="92.08" cy="140.2" r="46" fill="var(--s1)" fill-opacity="0.4"/></g></g><g clip-path="url(#v1A)"><g clip-path="url(#v1C)"><circle cx="92.08" cy="140.2" r="46" fill="var(--s1)" fill-opacity="0.4"/></g></g><circle cx="92.08" cy="140.2" r="46" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><circle cx="139.92" cy="140.2" r="46" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><circle cx="116" cy="182.52" r="46" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink bold" x="58.96" y="109.84" text-anchor="middle">A</text><text class="ink bold" x="173.04" y="109.84" text-anchor="middle">B</text><text class="ink bold" x="116" y="235.88" text-anchor="middle">C</text><rect x="240" y="46" width="200" height="202" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="340" y="66" text-anchor="middle">(A ∩ B) ∪ (A ∩ C)</text><defs>
+<clipPath id="v2A"><circle cx="316.08" cy="140.2" r="46"/></clipPath>
+<clipPath id="v2B"><circle cx="363.92" cy="140.2" r="46"/></clipPath>
+<clipPath id="v2C"><circle cx="340" cy="182.52" r="46"/></clipPath>
+</defs><g clip-path="url(#v2A)"><g clip-path="url(#v2B)"><circle cx="316.08" cy="140.2" r="46" fill="var(--s1)" fill-opacity="0.4"/></g></g><g clip-path="url(#v2A)"><g clip-path="url(#v2C)"><circle cx="316.08" cy="140.2" r="46" fill="var(--s1)" fill-opacity="0.4"/></g></g><circle cx="316.08" cy="140.2" r="46" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><circle cx="363.92" cy="140.2" r="46" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><circle cx="340" cy="182.52" r="46" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink bold" x="282.96" y="109.84" text-anchor="middle">A</text><text class="ink bold" x="397.04" y="109.84" text-anchor="middle">B</text><text class="ink bold" x="340" y="235.88" text-anchor="middle">C</text><text class="ink bold" x="228" y="154" text-anchor="middle">=</text><rect x="456" y="46" width="308" height="202" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="610" y="66" text-anchor="middle">무엇이 실제로 증명하는가</text><text class="ink sm" x="472" y="92" text-anchor="start">z ∈ A ∩ (B ∪ C)</text><text class="ink sm" x="472" y="120" text-anchor="start">⟺ z∈A ∧ (z∈B ∨ z∈C)</text><text class="ink bold sm" x="472" y="148" text-anchor="start">⟺ (z∈A ∧ z∈B) ∨ (z∈A ∧ z∈C)</text><text class="ink sm" x="472" y="176" text-anchor="start">⟺ z ∈ (A∩B) ∪ (A∩C)</text><text class="ink2 sm" x="472" y="212" text-anchor="start">굵은 줄에서 쓴 것은</text><text class="ink2 sm" x="472" y="232" text-anchor="start">논리의 분배법칙 하나뿐이다</text><path d="M20 266 L760 266" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="20" y="288" text-anchor="start">벤 다이어그램은 확인이지 증명이 아니다. 원 세 개로 모든 배치를 다 그릴 수 있다는 보장이 없기 때문이다</text><text class="ink2 sm" x="20" y="310" text-anchor="start">반면 오른쪽 사슬은 임의의 원소 z 하나를 잡고 동치로만 이었으므로 증명이다</text><text class="ink2 sm" x="20" y="332" text-anchor="start">집합 연산에 ∧ 를 쓰거나 논리식에 ∪ 를 쓰면 형이 맞지 않는다. 대응하는 것과 같은 것은 다르다</text>
+</svg>
