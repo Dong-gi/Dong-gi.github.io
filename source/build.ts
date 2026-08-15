@@ -1,643 +1,230 @@
-import fs from 'node:fs';
+/**
+ * 빌드 오케스트레이터.
+ *
+ *     npm run build
+ *
+ * 빌드 **요소**들을 각각 자식 프로세스로 돌리고, 성공과 실패만 콘솔에 한 줄씩 보고한다.
+ * 자세한 내용은 요소마다 자기 로그 파일에 남는다.
+ *
+ *     npm run build-dates     source/build/dates.ts      source/build/build-dates.log
+ *     npm run build-js        source/build/js.ts         source/build/build-js.log
+ *     npm run build-figure    source/build/figure.ts     source/build/build-figure.log
+ *     npm run build-d2        source/build/d2.ts         source/build/build-d2.log
+ *     npm run build-img       source/build/img.ts        source/build/build-img.log
+ *     npm run build-pug       source/build/pug.ts        source/build/build-pug.log
+ *
+ * 로그와 해시 기록은 요소 스크립트와 같은 폴더에 둔다. 저장소 루트에 부산물이 흩어져
+ * 있으면 루트를 열 때마다 사이트의 소스보다 그것들이 먼저 눈에 들어온다.
+ *
+ * 요소는 따로 돌려도 결과가 같다. `npm run build` 는 그 명령들을 대신 불러 줄 뿐이다.
+ *
+ * ## 왜 프로세스인가
+ *
+ * 예전 빌드는 워커 스레드 풀 하나에 pug·d2·img 작업을 번갈아 밀어 넣었다. 그래서
+ * 로그 한 줄이 어느 작업의 것인지 알 수 없었다. 지금은 요소 하나가 프로세스 하나이고
+ * 프로세스 하나가 로그 파일 하나다. 출처를 따질 일이 없다.
+ *
+ * ## 왜 요소 안은 단일 스레드인가
+ *
+ * 병렬은 여기 한 곳에만 있다. 요소 안은 순차 실행이다. 해시 매니페스트
+ * (`source/build/build-<요소>-sha.json`) 덕분에 평소 빌드의 대상은 방금 고친 문서 한두 개라,
+ * 요소 안에서 더 쪼개도 얻을 것이 거의 없다. 전면 재빌드는 드물게 일어나고, 그때의
+ * 몇 분을 아끼자고 로그의 출처를 다시 잃을 이유는 없다.
+ *
+ * ## 순서
+ *
+ * 요소 사이의 의존은 두 개뿐이고 `needs` 에 적혀 있다. 나머지는 모두 동시에 돈다.
+ *
+ *   img   → pug   `source/img-map.json` (문서가 반응형 이미지를 쓰려면 원본 크기를 알아야 한다)
+ *   dates → pug   `source/doc-dates.json` (문서의 갱신일)
+ *
+ * `needs` 는 **순서만** 뜻한다. 선행 요소가 실패해도 뒤 요소는 돈다. 사진 하나가
+ * 깨졌다고 문서 250개의 렌더를 막을 이유는 없고, 그때 pug 가 읽는 것은 지난번의
+ * 온전한 산출물이기 때문이다. 나중에 선행 요소가 성공하면 그 산출물의 해시가 바뀌므로
+ * 뒤 요소가 스스로 다시 돈다 — 손으로 챙길 것이 없다.
+ *
+ * `dates` 는 사람에게 묻는 유일한 요소라 다른 요소보다 먼저, 혼자 돈다. 물음과 다른
+ * 요소의 출력이 섞이면 무엇에 답하는지 알 수 없다.
+ */
 import fsp from 'node:fs/promises';
 import path from 'node:path';
-import readline from 'node:readline/promises';
-import { promisify } from 'node:util';
-import { Worker, isMainThread, parentPort } from 'node:worker_threads';
-import { createRequire } from 'node:module';
-import { cpus } from 'node:os';
-import sharp, { type Sharp } from 'sharp';
-import * as svgo from 'svgo';
-import { $ } from 'zx';
+import { spawn } from 'node:child_process';
+import { QUIET_ENV, SUMMARY_PREFIX } from './build/lib/log.ts';
+import { ROOT, logPathOf, resolve } from './build/lib/paths.ts';
 
-type WorkMessage =
-    | { api: 'render-pug' | 'transform-img' | 'render-d2'; path: string }
-    | {
-        api: 'init';
-        generatedPaths: string[];
-        imgMap: Record<string, { width: number; height: number }>;
-        docDates: Record<string, number>;
-    };
+interface Component {
+    name: string;
+    /** 저장소 기준 스크립트 경로. package.json 의 `build-<이름>` 이 부르는 것과 같다. */
+    script: string;
+    /** 이 요소보다 먼저 성공해야 하는 요소들. */
+    needs: string[];
+    /**
+     * 사람에게 묻는가. 묻는 요소는 다른 요소가 하나도 돌지 않는 동안 혼자 돈다.
+     * 그래야 물음과 답이 다른 출력에 묻히지 않는다.
+     */
+    interactive?: boolean;
+}
 
-/** source/posts.json 의 항목. 파일 자체는 이 항목의 배열이다. */
-interface Post {
-    /** 소속 카테고리. 계층은 '/' 로, 다중 소속은 원소 여러 개로 표현한다. */
-    category: string[];
-    file: string;
-    title: string;
-    /** 빌드가 doc-dates 에서 채운다. 파일에는 없다. */
-    mtimeMs?: number;
+const COMPONENTS: Component[] = [
+    { name: 'dates', script: 'source/build/dates.ts', needs: [], interactive: true },
+    { name: 'js', script: 'source/build/js.ts', needs: [] },
+    { name: 'figure', script: 'source/build/figure.ts', needs: [] },
+    { name: 'd2', script: 'source/build/d2.ts', needs: [] },
+    { name: 'img', script: 'source/build/img.ts', needs: [] },
+    { name: 'pug', script: 'source/build/pug.ts', needs: ['img', 'dates'] },
+];
+
+interface Result {
+    name: string;
+    ok: boolean;
+    /** 요소가 로그 끝에 남긴 요약 한 줄. */
+    summary: string;
+    elapsedMs: number;
+}
+
+const byName = new Map(COMPONENTS.map((c) => [c.name, c]));
+const NAME_WIDTH = Math.max(...COMPONENTS.map((c) => c.name.length));
+
+function logPath(name: string): string {
+    return resolve(logPathOf(name));
 }
 
 /**
- * 경로 구분자를 '/' 로 통일한다.
+ * 요소가 남긴 `[요약] …` 줄을 로그에서 읽는다.
  *
- * Windows 에서 path.join 은 '\' 를 쓴다. 이 스크립트는 경로를 문자열로 다루는 곳이
- * 많아('/pugs/' -> '/posts/' 치환, doc-dates.json 조회, URL 생성) 구분자가 섞이면
- * 전부 어긋난다. 파일시스템에서 경로를 받는 즉시 이 함수를 통과시킨다.
- * Node 의 fs API 는 Windows 에서도 '/' 를 그대로 받아들이므로 안전하다.
- *
- * path.sep 이 아니라 두 구분자를 모두 받는 이유는 두 가지다. Windows 에서는 '/' 와
- * '\' 가 섞인 경로가 흔히 나오고, 이 함수 자체를 어느 플랫폼에서든 검증할 수 있다.
- * POSIX 파일명에 '\' 가 들어 있으면 망가지지만 이 저장소에는 그런 파일이 없다.
+ * 자식의 stdout 을 가로채지 않고 파일에서 읽는 이유는, 대화형 요소는 stdio 를
+ * 그대로 물려받아 가로챌 수 없기 때문이다. 파일에서 읽으면 두 경우를 같게 다룬다.
  */
-function toPosix(p: string): string {
-    return p.split(/[\\/]/).join('/');
-}
-
-/** 사이트 오리진. 사이트맵 등 절대 URL 생성에 쓴다. */
-const SITE_ORIGIN = 'https://dong-gi.github.io';
-/** posts.json 의 file 값은 'dev/aws.html' 형태이므로 URL 생성 시 이 접두사가 필요하다. */
-const POSTS_URL_PREFIX = '/posts/';
-
-const require = createRequire(import.meta.url);
-const renderFile = promisify(require('pug').renderFile) as (path: string, options?: Record<string, unknown>) => Promise<string>;
-const workers = isMainThread ? cpus().map(() => new Worker(import.meta.filename)) : [];
-const imgMap: Record<string, { width: number; height: number }> = require('./img-map.json');
-const posts: Post[] = require('./posts.json');
-
-/**
- * skeleton.pug 가 useMath 인 문서에 심는 표식. 이 문자열이 있는 페이지만 수식을 조판한다.
- * 본문에서 구분자를 찾아 헤매는 대신 표식 하나로 판단한다.
- */
-const MATH_MARKER = '<meta name="mathjax-prerender" content="1">';
-/** 자체 호스팅 폰트 위치. @font-face 의 src 가 이 경로를 기준으로 만들어진다. */
-const MATH_FONT_URL = '/fonts/mathjax-newcm';
-
-// 워커 스레드 영역
-let remainWorkCount = 0;
-let unrefTimeout: NodeJS.Timeout;
-let generatedImgSet: Set<string> = new Set();
-let workerImgMap: Record<string, { width: number; height: number }> = {};
-
-/**
- * MathJax 의 지연 로더가 Windows 에서 깨지는 것을 우회한다.
- *
- * `@mathjax/src` 4.1.3 의 `components/mjs/node-main/node-main.js` 는 스스로 만든 값을
- * 잘못 재사용한다.
- *
- *   1. `context.path()` 가 Windows 에서 `__dirname` 을 URL 문자열로 바꾼다.
- *      `C:\…\components\mjs\node-main` → `file://C:/…/components/mjs/node-main`
- *   2. 63행이 그 URL 문자열을 다시 `path.resolve()` 에 넣는다. `file://C:/…` 는
- *      Windows 에서 절대 경로가 아니므로 cwd 가 앞에 붙고, 결과 `ROOT` 는
- *      `<cwd>\file:\C:\…\@mathjax\src\mjs` 라는 존재하지 않는 경로가 된다.
- *
- * 그 뒤 `mathjax.asyncLoad` 가 `path.resolve(ROOT, name)` 을 `import()` 에 그대로
- * 넘긴다. 인자가 `C:\…` 로 시작하니 ESM 로더는 `C:` 를 URL 스킴으로 읽고
- * `ERR_UNSUPPORTED_ESM_URL_SCHEME … Received protocol 'c:'` 로 죽는다.
- *
- * 이 경로를 타는 호출부는 `mjs/util/Entities.js` 한 곳뿐이다. 수식 안에 기본 표에
- * 없는 명명 엔티티(`&larr;` 같은)가 있으면 `./util/entities/<첫 글자>.js` 를 지연
- * 로드한다. 폰트 데이터는 `[mathjax-newcm]/…` 형태라 다른 분기를 타므로 무사하고,
- * 그래서 증상이 특정 문서에서만 나타난다.
- *
- * `ROOT` 자체가 틀린 값이라 스킴만 바로잡아서는 고쳐지지 않는다. `.` 로 시작하는
- * 이름만 가로채 패키지 위치에서 다시 해석한다. 나머지(`[…]` 접두사, 베어
- * 스펙파이어)는 상류 구현이 옳으므로 그대로 넘긴다.
- *
- * POSIX 에서는 `context.path` 가 항등함수라 상류도 정상이고 이 함수가 만드는 URL 도
- * 같은 파일을 가리킨다. 플랫폼 분기를 두지 않는 이유다 — 분기를 두면 Windows 에서만
- * 실행되는 코드가 되어 조용히 썩는다.
- *
- * 상류가 고치면(4.1.3 이 최신이고 수정본은 없다) 이 함수를 지울 수 있다.
- */
-function patchMathJaxAsyncLoad(MathJax: any): void {
-    const mjsRoot = new URL(
-        '../../../mjs/',
-        import.meta.resolve('@mathjax/src/components/mjs/node-main/node-main.mjs'),
-    );
-    // 내부 구조에 의존하므로 어긋나면 즉시 알아챌 수 있게 한다. 조용히 넘어가면
-    // Windows 빌드가 다시 ERR_UNSUPPORTED_ESM_URL_SCHEME 로 죽고, 원인이 여기라는
-    // 단서가 남지 않는다.
-    const mathjax = MathJax?._?.mathjax?.mathjax;
-    if (typeof mathjax?.asyncLoad !== 'function') {
-        throw new Error(
-            'MathJax 내부 구조가 바뀌었다: _.mathjax.mathjax.asyncLoad 를 찾지 못했다. ' +
-            'patchMathJaxAsyncLoad 가 아직 필요한지 확인할 것.',
-        );
-    }
-    const upstream = mathjax.asyncLoad as (name: string) => Promise<unknown>;
-    mathjax.asyncLoad = (name: string): Promise<unknown> =>
-        name.startsWith('.') ? import(new URL(name, mjsRoot).href) : upstream(name);
-}
-
-/**
- * MathJax 기동은 1초 가까이 걸리므로 워커당 한 번만 한다.
- * 수식 문서가 없는 워커는 아예 불러오지 않는다.
- */
-let mathJaxPromise: Promise<any> | undefined;
-function getMathJax(): Promise<any> {
-    mathJaxPromise ??= import('@mathjax/src/components/mjs/node-main/node-main.mjs').then(({ init }) =>
-        init({
-            loader: { load: ['input/tex', 'adaptors/liteDOM', 'output/chtml', 'a11y/assistive-mml'] },
-            // 구분자는 skeleton.pug 가 쓰던 런타임 설정과 같아야 한다. 어긋나면 조판이 안 된다.
-            tex: { tags: 'ams', inlineMath: [['식[', ']식']], displayMath: [['\\[', '\\]']] },
-            chtml: { fontURL: MATH_FONT_URL },
-            startup: { typeset: false },
-        }),
-    ).then((MathJax: any) => {
-        patchMathJaxAsyncLoad(MathJax);
-        return MathJax;
-    });
-    return mathJaxPromise;
-}
-
-/**
- * 페이지의 TeX 를 빌드 시점에 CHTML 로 바꾼다.
- *
- * 이렇게 하면 브라우저가 MathJax 를 받아 조판할 필요가 없다. physics 기준으로
- * 첫 수식이 보이기까지 16.5초에서 1.8초로 줄었고, tex-chtml.js 884KB 도 사라진다.
- *
- * updateDocument() 가 `<style id="MJX-CHTML-styles">` 를 head 에 직접 넣으므로
- * 여기서 CSS 를 따로 삽입하면 안 된다. 그러면 30KB 가 두 번 들어간다.
- */
-async function prerenderMath(html: string): Promise<string> {
-    const MathJax = await getMathJax();
-    const { mathjax, adaptor, input, output, handler } = MathJax.startup;
-
-    // MathJax 4 는 필요한 자원을 비동기로 더 불러온다. 폰트 데이터뿐 아니라 HTML
-    // 엔티티 표도 그렇다. 동기 코드에서는 그 지점에서 예외를 던지므로 재시도 래퍼로 감싼다.
-    //
-    // 파싱을 먼저 해 두는 이유: 문자열을 그대로 넘기면 MathJax 가 핸들러를 고르며
-    // 스스로 파싱하는데, 그 안의 try/catch 가 위 재시도 예외까지 삼켜 버려
-    // "Can't find handler for document" 로 둔갑한다(dev/web/html.pug 가 실제로 그랬다).
-    // 미리 파싱해 문서 객체를 넘기면 그 경로를 타지 않고, 이중 파싱도 없어진다.
-    let lite: any;
-    await mathjax.handleRetriesFor(() => {
-        lite = adaptor.parse(html, 'text/html');
-    });
-
-    let doc: any;
-    await mathjax.handleRetriesFor(() => {
-        // 문서 사이에 상태가 새지 않도록 초기화한다. 셋 중 하나라도 빠지면 앞 문서의
-        // 수식 번호나 CSS 가 뒤 문서에 섞여, 같은 문서인데 빌드 순서에 따라 결과가 달라진다.
-        MathJax.texReset();
-        output.clearCache();
-        output.reset();
-
-        // startup.handler 를 직접 쓴다. a11y/assistive-mml 같은 확장은 핸들러를 감싸는
-        // 방식으로 붙으므로, mathjax.document() 로 전역 목록에서 핸들러를 새로 고르면
-        // 확장이 빠진 문서가 만들어진다.
-        doc = handler.create(lite, { InputJax: input, OutputJax: output });
-        // 개별 단계를 손으로 부르지 않고 render() 를 쓴다. 스타일시트 삽입과
-        // 보조 MathML 부착이 렌더 액션으로 등록돼 있어서, 손으로 부르면 그것들이 빠진다.
-        doc.render();
-    });
-
-    // outerHTML 은 <html> 부터만 돌려준다. DOCTYPE 을 다시 붙이지 않으면 브라우저가
-    // 쿼크 모드로 렌더해서 박스 모델이 달라진다. 실제로 상단바의 Home 링크가
-    // 15px 아래로 밀려 내려갔다. 파서는 DOCTYPE 을 갖고 있으므로 그대로 되돌린다.
-    const doctype = adaptor.doctype(doc.document);
-    return `${doctype ? doctype + '\n' : ''}${adaptor.outerHTML(adaptor.root(doc.document))}`;
-}
-parentPort?.on('message', async (o: WorkMessage) => {
-    clearTimeout(unrefTimeout);
-    remainWorkCount += 1;
-    switch (o.api) {
-        case 'init': {
-            generatedImgSet = new Set(o.generatedPaths);
-            workerImgMap = o.imgMap;
-            break;
-        }
-        case 'render-d2': {
-            const svgPath = o.path.replace(/\.d2$/, '.svg');
-            // 외부 바이너리 호출은 이것 하나뿐이다. 인용은 zx 가 셸에 맞게 처리한다.
-            // d2 가 없거나 실패해도 여기서 끝낸다. 예전에는 이 예외가 워커의 error
-            // 이벤트로 올라가 메인 스레드까지 죽었다. 다이어그램 하나 때문에 pug
-            // 251개 렌더를 잃을 이유는 없다. render-pug 와 같은 처리다.
-            try {
-                await $`d2 ${o.path} ${svgPath}`;
-            } catch (e) {
-                console.log(`${o.path} failed to render`);
-                console.error(e instanceof Error ? e.message : e);
-                break;
-            }
-            console.log(`${o.path} rendered`);
-
-            const svg = await fsp.readFile(svgPath);
-            let svgTxt = svgo.optimize(
-                svg
-                    .toString()
-                    // 불필요 속성 제거
-                    .replace(/data-d2-version="[^"]+"/, '')
-                    .replace(/\{[^}]*font-family[^}]*\}/g, '{}')
-                    .replace(/stroke-width: *0;?/g, '')
-                    .replace(/ rx="0"/g, '')
-                    .replace(/ stroke-width="0"/g, ''),
-            ).data;
-            const styleTxt = svgTxt.match(/<style>.+<\/style>/)![0];
-            for (const classMatch of svgTxt.matchAll(/class="([^ ]+?)"/g)) {
-                if (styleTxt.includes(classMatch[1])) {
-                    continue;
-                }
-                // 미사용 클래스 제거
-                svgTxt = svgTxt.replaceAll(classMatch[0], '');
-            }
-            // 공백 정규화
-            svgTxt = svgTxt.replace(/\s+/g, ' ');
-            // 미사용 클래스 제거
-            svgTxt = svgTxt.replace(/class="text /g, 'class="');
-            // 외부 중복 <svg> 래퍼 제거, xmlns를 내부 svg로 이동
-            svgTxt = svgTxt.replace(/<svg (xmlns="[^"]*")[^>]*?><svg /, '<svg $1 ');
-            svgTxt = svgTxt.replace(/<\/svg><\/svg>/, '</svg>');
-            // CSS 클래스와 중복되는 인라인 fill/stroke 속성 제거
-            svgTxt = svgTxt.replace(/<[^>]+>/g, (tag) => {
-                const cls = tag.match(/class="([^"]*)"/);
-                if (cls == null) return tag;
-                if (/\bfill-/.test(cls[1])) tag = tag.replace(/ fill="[^"]*"/, '');
-                if (/\bstroke-/.test(cls[1])) tag = tag.replace(/ stroke="[^"]*"/, '');
-                return tag;
-            });
-            // 속성 없는 빈 <g> 래퍼 제거 (안쪽부터 반복)
-            while (true) {
-                const beforeLength = svgTxt.length;
-                svgTxt = svgTxt.replace(/<g *>((?:(?!<g[ >]).)*?)<\/g *>/g, '$1');
-                if (svgTxt.length === beforeLength) {
-                    break;
-                }
-            }
-            // 반복되는 inline style을 CSS class로 압축
-            const styleCounts = new Map<string, number>();
-            for (const m of svgTxt.matchAll(/ style="([^"]+)"/g)) {
-                styleCounts.set(m[1], (styleCounts.get(m[1]) ?? 0) + 1);
-            }
-            if (styleCounts.size !== 0 && /<style>(.+?)<\/style>/.test(svgTxt)) {
-                let classIdx = 0;
-                let cssInsert = '';
-                const styleToClass = new Map<string, string>();
-                for (const [style, count] of styleCounts) {
-                    if (count < 2) continue;
-                    const cls = `s${classIdx++}`;
-                    cssInsert += `.${cls}{${style}}`;
-                    styleToClass.set(style, cls);
-                }
-                if (cssInsert) {
-                    svgTxt = svgTxt.replace('</style>', cssInsert + '</style>');
-                    // 태그 단위로 style을 class에 병합
-                    svgTxt = svgTxt.replace(/<[^>]+ style="[^"]*"[^>]*>/g, (tag) => {
-                        const styleMatch = tag.match(/ style="([^"]*)"/)!;
-                        if (!styleToClass.has(styleMatch[1])) return tag;
-                        const cls = styleToClass.get(styleMatch[1])!;
-                        tag = tag.replace(styleMatch[0], '');
-                        const classMatch = tag.match(/class="([^"]*)"/);
-                        if (classMatch) {
-                            tag = tag.replace(classMatch[0], `class="${classMatch[1]} ${cls}"`);
-                        } else {
-                            tag = tag.replace(/>$/, ` class="${cls}">`);
-                        }
-                        return tag;
-                    });
-                }
-            }
-            fsp.writeFile(svgPath, svgTxt);
-            break;
-        }
-        case 'render-pug': {
-            const htmlPath = toPosix(o.path).replace('/pugs/', '/posts/').replace('.pug', '.html');
-            // 경로 치환이 어긋나면 pugs/ 안에 HTML 을 쓰게 된다. 조용히 소스를 오염시키는
-            // 대신 즉시 실패시킨다. Windows 에서 실제로 이 상태였다.
-            if (htmlPath !== './index.html' && !htmlPath.startsWith('./posts/')) {
-                console.error(`${o.path} -> ${htmlPath} : 산출물 경로가 posts/ 밖이라 렌더를 중단한다`);
-                break;
-            }
-            try {
-                // canonical, Open Graph, JSON-LD 생성에 필요한 페이지 단위 정보.
-                let html = await renderFile(o.path, {
-                    cache: true,
-                    imgMap: workerImgMap,
-                });
-                if (html.includes(MATH_MARKER)) {
-                    const t0 = Date.now();
-                    html = await prerenderMath(html);
-                    console.log(`${o.path} math prerendered (${Date.now() - t0}ms)`);
-                }
-                await fsp.writeFile(htmlPath, html);
-                console.log(`${o.path} rendered`);
-            } catch (e) {
-                console.log(`${o.path} failed to render`);
-                console.error(e);
-            }
-            break;
-        }
-        case 'transform-img': {
-            const animated = o.path.endsWith('gif');
-            let img: Sharp | undefined;
-            for (const width of [500, 1200, 2000]) {
-                for (const ext of animated ? (['webp'] as const) : (['webp', 'avif'] as const)) {
-                    const outPath = o.path.replace('/imgs/', '/imgs-generated/').replace(/\.\w+$/, `-${width}.${ext}`);
-                    if (generatedImgSet.has(outPath)) {
-                        continue;
-                    }
-                    img ??= sharp(o.path, { animated });
-                    await img.clone().resize({ width, withoutEnlargement: true })[ext]().toFile(outPath);
-                    console.log(`${outPath} generated`);
-                }
-            }
-            break;
-        }
-    }
-    remainWorkCount -= 1;
-    if (remainWorkCount === 0) {
-        unrefTimeout = setTimeout(() => parentPort?.unref(), 500);
-    }
-});
-
-// 메인 스레드 영역
-const isProcessNewFileOnly = process.argv[2] === 'new';
-let workCount = 0;
-function pushWork(o: WorkMessage): void {
-    workers[workCount % workers.length].postMessage(o);
-    workCount += 1;
-}
-
-async function processImgs() {
-    const entries = await fsp.readdir('./imgs', { recursive: true, withFileTypes: true });
-    for (const entry of entries) {
-        if (!entry.isDirectory()) continue;
-        const outPath = './' + toPosix(path.join(entry.parentPath, entry.name)).replace(/^imgs\//, 'imgs-generated/');
-        await fsp.mkdir(outPath, { recursive: true });
-    }
-    const activeKeySet = new Set<string>();
-    for (const entry of entries) {
-        if (!entry.isFile()) continue;
-        const filePath = './' + toPosix(path.join(entry.parentPath, entry.name));
-        pushWork({ api: 'transform-img', path: filePath });
-        const absolutePath = filePath.slice(1);
-        activeKeySet.add(absolutePath);
-        if (imgMap[absolutePath] == null) {
-            const animated = filePath.endsWith('gif');
-            const img = sharp(filePath, { animated });
-            const metadata = await img.metadata();
-            imgMap[absolutePath] = {
-                width: metadata.width,
-                height: metadata.height,
-            };
-        }
-    }
-    for (const key in imgMap) {
-        if (!activeKeySet.has(key)) {
-            delete imgMap[key];
-        }
-    }
-}
-
-// ---------------------------------------------------------------- 문서 갱신일
-//
-// 파일 mtime 을 그대로 쓰지 않는 이유는, 새로 클론하면 전부 체크아웃 시각이 되어
-// 250여 페이지의 날짜가 한꺼번에 덮이기 때문이다. git 이력에서 구한 값을
-// source/doc-dates.json 에 적어두고, lastSha 이후의 커밋만 증분으로 확인한다.
-// 여기에 없는 문서만 mtime 으로 대체한다.
-
-/** source/doc-dates.json */
-interface DocDates {
-    /** 마지막으로 갱신일 계산에 반영한 커밋. 이 커밋 이후만 다시 본다. */
-    lastSha: string | null;
-    /** 'pugs/dev/aws.pug' -> UNIX timestamp */
-    dates: Record<string, number>;
-}
-
-const DOC_DATES_FILE = './source/doc-dates.json';
-
-/** 한 커밋 안에서 pug 파일 하나에 일어난 변경. */
-interface Change {
-    /** 변경 후 경로 */
-    path: string;
-    /** rename 이면 변경 전 경로 */
-    from?: string;
-    /** 내용이 실제로 바뀌었는가. 순수 rename 이면 false */
-    edited: boolean;
-}
-
-/**
- * git 을 부른다. 실패하면 null.
- *
- * 저장소가 아니거나(tarball), git 이 없거나, zx 가 쓸 셸이 없는 환경을 모두 여기서
- * 흡수한다. 갱신일을 못 구하는 것이 빌드를 멈출 이유는 아니다.
- */
-async function git(...args: string[]): Promise<string | null> {
+async function readSummary(name: string): Promise<string> {
     try {
-        const result = await $({ nothrow: true })`git ${args}`;
-        return result.exitCode === 0 ? result.stdout : null;
+        const text = await fsp.readFile(logPath(name), 'utf8');
+        const lines = text.split('\n').filter((l) => l.startsWith(SUMMARY_PREFIX));
+        return lines.length === 0 ? '' : lines[lines.length - 1].slice(SUMMARY_PREFIX.length);
     } catch {
-        return null;
+        return '';
     }
 }
 
 /**
- * `git show --numstat -z` 출력을 푼다.
+ * 실패했을 때 콘솔에 보여 줄 부분.
  *
- * 보통은 `추가\t삭제\t경로\0` 이지만, rename 은 경로 자리가 비고 옛 경로와 새 경로가
- * 뒤이어 두 개의 NUL 필드로 온다. (`1\t1\t\0old\0new\0`)
+ * 그냥 마지막 몇 줄을 잘라 오면 안 된다. 요소가 마지막에 경고를 여럿 남기면 정작
+ * 원인인 오류가 화면 밖으로 밀려난다. 오류 줄과 그에 딸린 들여쓴 상세만 모으고,
+ * 오류가 하나도 없을 때만 꼬리로 물러선다.
  */
-function parseNumstat(out: string): Change[] {
-    const tokens = out.split('\0');
-    const changes: Change[] = [];
-    for (let i = 0; i < tokens.length; i += 1) {
-        if (tokens[i] === '') continue;
-        const [add, del, p] = tokens[i].split('\t');
-        const edited = add !== '0' || del !== '0';
-        if (p === '' || p == null) {
-            const from = tokens[i + 1];
-            const to = tokens[i + 2];
-            i += 2;
-            if (to?.endsWith('.pug')) changes.push({ path: to, from, edited });
-        } else if (p.endsWith('.pug')) {
-            changes.push({ path: p, edited });
+async function readFailureDetail(name: string, lines: number): Promise<string[]> {
+    let text: string;
+    try {
+        text = await fsp.readFile(logPath(name), 'utf8');
+    } catch {
+        return [];
+    }
+    const all = text.split('\n').filter((l) => l !== '');
+    const picked: string[] = [];
+    let inError = false;
+    for (const line of all) {
+        if (line.startsWith('오류: ')) {
+            inError = true;
+            picked.push(line);
+        } else if (inError && /^\s/.test(line)) {
+            picked.push(line);
+        } else {
+            inError = false;
         }
     }
-    return changes;
+    return (picked.length === 0 ? all : picked).slice(-lines);
 }
 
-/**
- * 질문 하나에 인터페이스 하나를 만들면 안 된다. readline 은 stdin 을 청크 단위로
- * 읽어 남는 입력을 자기 버퍼에 들고 있다가 close 할 때 버린다. 커밋이 여러 개면
- * 두 번째 질문부터 답을 잃는다. 그래서 하나를 만들어 끝까지 쓴다.
- */
-let prompt: readline.Interface | null = null;
-/** 물을 수 있는 상태인가. 비대화형이거나 입력이 끊기면 기본값으로 넘어간다. */
-let interactive = process.stdin.isTTY === true;
-
-/** [Y/n] 을 묻는다. 엔터만 치면 y. */
-async function confirm(message: string): Promise<boolean> {
-    if (!interactive) {
-        console.log(`${message} [Y/n] y (비대화형이라 기본값)`);
-        return true;
-    }
-    prompt ??= readline.createInterface({ input: process.stdin, output: process.stdout });
-    let answer: string;
-    try {
-        answer = await prompt.question(`${message} [Y/n] `);
-    } catch {
-        // Ctrl+D 등으로 입력이 끊긴 경우. 여기서 빌드를 죽이는 것보다 기본값이 낫다.
-        interactive = false;
-        console.log('\n  입력이 끊겨 남은 커밋은 기본값(y)으로 처리한다');
-        return true;
-    }
-    const normalized = answer.trim().toLowerCase();
-    return normalized === '' || normalized === 'y' || normalized === 'yes';
-}
-
-/**
- * lastSha 이후의 커밋을 하나씩 확인해 갱신일을 반영하고, 그 결과를 돌려준다.
- *
- * rename 은 답변과 무관하게 항상 따라간다. 경로가 바뀌었다고 이력을 잃을 이유는 없다.
- * 사라진 pug 의 항목은 정리한다.
- *
- * git 을 쓸 수 없으면 저장된 값을 그대로 쓴다. 빌드는 계속되고, 날짜가 없는 문서는
- * mtime 으로 대체된다.
- */
-async function updateDocDates(): Promise<DocDates['dates']> {
-    const state = JSON.parse(fs.readFileSync(DOC_DATES_FILE, 'utf8')) as DocDates;
-    const head = (await git('rev-parse', 'HEAD'))?.trim();
-    if (!head) {
-        console.log('⚠ git 이력을 읽을 수 없어 저장된 갱신일을 그대로 쓴다');
-        return state.dates;
-    }
-    if (state.lastSha === head) {
-        return state.dates;
-    }
-
-    const log = (await git('log', '--reverse', '--format=%H%x09%aI%x09%s', `${state.lastSha}..HEAD`, '--', 'pugs')) ?? '';
-    const commits = log
-        .split('\n')
-        .filter((l) => l !== '')
-        .map((l) => {
-            const [sha, iso, subject] = l.split('\t');
-            return { sha, iso, subject };
+function spawnComponent(c: Component): Promise<{ code: number | null; stderr: string }> {
+    return new Promise((settle) => {
+        // 요소의 진행 로그는 콘솔로 내보내지 않는다. 여섯 개가 뒤섞이면 요소를 나눈
+        // 뜻이 없다. 각자 자기 source/build/build-<이름>.log 에 남긴다.
+        //
+        // 대화형 요소만 stdio 를 물려받는다. readline 의 물음은 BuildLog 를 거치지 않고
+        // stdout 으로 바로 나가므로, QUIET 를 켜도 질문은 화면에 그대로 보인다.
+        const child = spawn(process.execPath, [path.join(ROOT, c.script)], {
+            cwd: ROOT,
+            env: { ...process.env, [QUIET_ENV]: '1' },
+            stdio: c.interactive ? 'inherit' : ['ignore', 'ignore', 'pipe'],
         });
-
-    try {
-        if (commits.length !== 0) console.log(`문서 갱신일: 확인할 커밋 ${commits.length}개`);
-        for (const { sha, iso, subject } of commits) {
-            const numstat = (await git('show', '-w', '--format=', '--numstat', '-M', '-z', sha, '--', 'pugs')) ?? '';
-            const changes = parseNumstat(numstat);
-
-            // rename 은 판단 대상이 아니다. 답변과 무관하게 이력을 새 경로로 옮긴다.
-            for (const c of changes) {
-                if (c.from == null || state.dates[c.from] == null) continue;
-                state.dates[c.path] = state.dates[c.from];
-                delete state.dates[c.from];
-            }
-
-            const edited = changes.filter((c) => c.edited);
-            // -w 로 봤으므로 공백만 바뀐 파일은 여기 없다. 남은 게 없으면 물을 것도 없다.
-            if (edited.length === 0) continue;
-
-            const day = iso.slice(0, 10);
-            const answer = await confirm(`  ${sha.slice(0, 8)} ${day} 문서 ${edited.length}개 — ${subject}\n  갱신일로 쓸까?`);
-            if (!answer) continue;
-            for (const c of edited) state.dates[c.path] = new Date(iso).getTime();
-        }
-    } finally {
-        // 안 닫으면 stdin 이 열린 채로 남아 빌드가 끝나지 않는다.
-        prompt?.close();
-    }
-
-    // 경로순으로 써야 diff 가 잘 잡힌다
-    const activeKeySet = new Set(posts.map(x => 'pugs/' + x.file.replace(/\.html$/, '.pug')));
-    const payload: DocDates = {
-        lastSha: head,
-        dates: Object.fromEntries(
-            Object.entries(state.dates)
-                .filter(x => activeKeySet.has(x[0]))
-                .sort(([a], [b]) => a.localeCompare(b))
-        ),
-    };
-    fs.writeFileSync(DOC_DATES_FILE, JSON.stringify(payload, null, 4) + '\n');
-    return state.dates;
+        let stderr = '';
+        child.stderr?.on('data', (chunk) => {
+            stderr += String(chunk);
+        });
+        child.on('error', (e) => {
+            stderr += e instanceof Error ? e.message : String(e);
+            settle({ code: 1, stderr });
+        });
+        child.on('close', (code) => settle({ code, stderr }));
+    });
 }
 
-// ---------------------------------------------------------------- pug 렌더
+/**
+ * 요소 하나를 돌린다. 선행 요소가 있으면 그것부터 돌린다.
+ *
+ * 같은 요소를 두 번 부르면 같은 약속을 돌려준다. 그래서 의존 그래프를 따로 정렬하지
+ * 않아도 각 요소가 정확히 한 번 실행되고, 의존이 없는 요소들은 자연히 동시에 돈다.
+ */
+const started = new Map<string, Promise<Result>>();
+function launch(c: Component): Promise<Result> {
+    const existing = started.get(c.name);
+    if (existing != null) return existing;
 
-/** 문서별 갱신일. 메인 스레드가 updateDocDates() 로 채운다. */
-let docDates: DocDates['dates'] = {};
-async function processPugs() {
-    pushWork({ api: 'render-pug', path: './index.pug' });
-    const postMap = new Map<string, Post>();
-    posts.forEach((p) => postMap.set('./posts/' + p.file, p));
-    posts.sort((a, b) => a.file.localeCompare(b.file));
+    const promise = (async (): Promise<Result> => {
+        const deps = await Promise.all(c.needs.map((n) => launch(byName.get(n)!)));
+        const broken = deps.filter((d) => !d.ok).map((d) => d.name);
+        const t0 = Date.now();
+        const { code, stderr } = await spawnComponent(c);
+        const elapsedMs = Date.now() - t0;
+        const summary = (await readSummary(c.name)) || (code === 0 ? '완료' : stderr.trim().split('\n').at(-1) ?? `종료 코드 ${code}`);
+        const note = broken.length === 0 ? '' : ` — 선행 ${broken.join(', ')} 실패, 지난 산출물로 진행`;
+        return { name: c.name, ok: code === 0, summary: summary + note, elapsedMs };
+    })();
 
-    const entries = await fsp.readdir('./pugs', { recursive: true, withFileTypes: true });
-    const postDirs = new Set<string>();
-    for (const entry of entries) {
-        if (!entry.isDirectory()) continue;
-        postDirs.add('./' + toPosix(path.join(entry.parentPath, entry.name)).replace(/^pugs\//, 'posts/'));
-    }
-    await Promise.all([...postDirs].map((d) => fsp.mkdir(d, { recursive: true })));
-    await Promise.all(
-        entries.map(async (entry) => {
-            if (!entry.isFile()) return;
-            const filePath = './' + toPosix(path.join(entry.parentPath, entry.name));
-            const stats = await fsp.stat(filePath);
-            const htmlPath = filePath.replace('/pugs/', '/posts/').replace('.pug', '.html');
-            const post = postMap.get(htmlPath);
-            if (post != null) {
-                // 홈의 "최근 갱신" 목록도 docModified() 와 같은 기준을 쓴다.
-                const recorded = docDates[filePath.replace(/^\.\//, '')];
-                post.mtimeMs = recorded != null ? recorded : Math.floor(stats.mtimeMs);
-            }
-            if (isProcessNewFileOnly === false || stats.mtimeMs >= Date.now() - 600000) {
-                pushWork({ api: 'render-pug', path: filePath });
-            }
+    started.set(c.name, promise);
+    return promise;
+}
+
+function report(r: Result): void {
+    const time = `${(r.elapsedMs / 1000).toFixed(1)}초`.padStart(7);
+    console.log(`  ${r.ok ? '✔' : '✘'} ${r.name.padEnd(NAME_WIDTH)} ${time}  ${r.summary}`);
+}
+
+// ---------------------------------------------------------------- 실행
+
+const startedAt = Date.now();
+const interactive = COMPONENTS.filter((c) => c.interactive);
+const concurrent = COMPONENTS.filter((c) => !c.interactive);
+
+console.log(`빌드 시작 — 요소 ${COMPONENTS.length}개. 자세한 내용은 source/build/build-<요소>.log\n`);
+
+// 묻는 요소를 먼저, 하나씩. 결과가 started 에 남으므로 뒤의 의존이 그대로 쓴다.
+for (const c of interactive) report(await launch(c));
+
+// 나머지는 의존이 풀리는 대로 동시에. 끝나는 순서대로 보고한다.
+const done = await Promise.all(
+    concurrent.map((c) =>
+        launch(c).then((r) => {
+            report(r);
+            return r;
         }),
+    ),
+);
+const all = [...(await Promise.all(interactive.map((c) => launch(c)))), ...done];
+
+const failed = all.filter((r) => !r.ok);
+console.log('');
+if (failed.length === 0) {
+    console.log(`${all.length}개 요소 모두 성공 — ${((Date.now() - startedAt) / 1000).toFixed(1)}초`);
+} else {
+    console.log(
+        `${all.length - failed.length}개 성공, ${failed.length}개 실패: ${failed.map((r) => r.name).join(', ')}` +
+        ` — ${((Date.now() - startedAt) / 1000).toFixed(1)}초`,
     );
-}
-
-/**
- * d2 산출물의 파일 모드를 644 로 맞춘다.
- *
- * 예전에는 exec('chmod -R 644 d2/*') 를 썼는데, Windows 에는 chmod 도 셸 글로브도
- * 없어 빌드 마지막 단계가 통째로 실패했다. Node 의 fsp.chmod 로 바꾸면 POSIX 에서는
- * 같은 동작을 하고 Windows 에서는 읽기 전용 비트만 다루는 무해한 호출이 된다.
- */
-async function chmodD2() {
-    const files = await d2Files();
-    await Promise.all(files.map((f) => fsp.chmod(f, 0o644)));
-}
-
-/**
- * d2/ 아래의 파일을 하위 폴더까지 훑는다.
- *
- * 예전에는 최상위만 읽어서 d2/1.d2 처럼 평면으로 둘 수밖에 없었다. 그림이 늘면
- * 이름이 금세 바닥나므로 d2/physics/heat-engine.d2 처럼 과목별로 나눈다.
- */
-async function d2Files(): Promise<string[]> {
-    const entries = await fsp.readdir('./d2', { recursive: true, withFileTypes: true });
-    return entries
-        .filter((e) => e.isFile())
-        .map((e) => './' + toPosix(path.join(e.parentPath, e.name)));
-}
-
-async function processD2s() {
-    for (const file of await d2Files()) {
-        if (!file.endsWith('.d2')) {
-            continue;
-        }
-        pushWork({ api: 'render-d2', path: file });
+    for (const r of failed) {
+        const detail = await readFailureDetail(r.name, 20);
+        console.log(`\n--- source/build/build-${r.name}.log ---`);
+        for (const line of detail) console.log(`  ${line}`);
     }
-}
-
-if (isMainThread) {
-    // 워커에 넘기기 전에 끝내야 한다. 새 커밋이 있으면 여기서 사람에게 묻는다.
-    docDates = await updateDocDates();
-    const generatedPaths = (await fsp.readdir('./imgs-generated', { recursive: true })).map(
-        (p) => './imgs-generated/' + toPosix(p),
-    );
-    for (const w of workers) {
-        w.postMessage({ api: 'init', generatedPaths, imgMap, docDates });
-    }
-    await Promise.all([processImgs(), processPugs(), processD2s()]);
-    const imgMapTxt = JSON.stringify(imgMap);
-    await Promise.all([
-        fsp.writeFile('./source/img-map.json', imgMapTxt),
-        fsp.writeFile('./source/posts-compressed.json', JSON.stringify(posts)),
-        fsp.writeFile(
-            './files/sitemap.txt',
-            posts
-                .map((p) => SITE_ORIGIN + POSTS_URL_PREFIX + p.file)
-                .sort()
-                .join('\n'),
-        ),
-        chmodD2(),
-    ]);
+    process.exitCode = 1;
 }

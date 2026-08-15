@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 320" width="660" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">부분문제의 크기와 개수가 정하는 해의 규모</title><desc id="d">부분문제를 가산적으로 줄이는지 배수적으로 줄이는지와 부분문제 개수로 나눈 네 칸에 해의 규모를 적은 격자</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold sm" x="20" y="24" text-anchor="start">점화식의 감각 — 부분문제를 어떻게 줄이는가가 해의 규모를 정한다</text><rect x="168" y="74" width="232" height="82" rx="5" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.3"/><text class="ink2 sm" x="180" y="96" text-anchor="start">개수 2</text><text class="ink bold" x="180" y="120" text-anchor="start">2ⁿ 규모</text><text class="ink2 sm" x="180" y="140" text-anchor="start">하노이 탑, 피보나치</text><rect x="412" y="74" width="232" height="82" rx="5" fill="var(--s3)" fill-opacity="0.1" stroke="var(--s3)" stroke-width="1.3"/><text class="ink2 sm" x="424" y="96" text-anchor="start">개수 3</text><text class="ink bold" x="424" y="120" text-anchor="start">3ⁿ 규모</text><text class="ink2 sm" x="424" y="140" text-anchor="start">뿌리가 2에서 3으로</text><rect x="168" y="170" width="232" height="82" rx="5" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.3"/><text class="ink2 sm" x="180" y="192" text-anchor="start">개수 2</text><text class="ink bold" x="180" y="216" text-anchor="start">n log n 규모</text><text class="ink2 sm" x="180" y="236" text-anchor="start">병합정렬</text><rect x="412" y="170" width="232" height="82" rx="5" fill="var(--s3)" fill-opacity="0.1" stroke="var(--s3)" stroke-width="1.3"/><text class="ink2 sm" x="424" y="192" text-anchor="start">개수 3</text><text class="ink bold" x="424" y="216" text-anchor="start">n^(log₂3) 규모</text><text class="ink2 sm" x="424" y="236" text-anchor="start">카라추바 곱셈</text><text class="ink bold sm" x="158" y="116" text-anchor="end">가산적으로</text><text class="ink bold sm" x="158" y="134" text-anchor="end">줄인다</text><text class="ink bold sm" x="158" y="212" text-anchor="end">배수적으로</text><text class="ink bold sm" x="158" y="230" text-anchor="end">줄인다</text><text class="ink2 sm" x="284" y="64" text-anchor="middle">부분문제 2개</text><text class="ink2 sm" x="528" y="64" text-anchor="middle">부분문제 3개</text><path d="M20 258 L640 258" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="20" y="278" text-anchor="start">위 줄은 지수, 아래 줄은 다항식이다. 가로로 옮기면(부분문제를 하나 더 만들면) 지수의 밑이나 지수 자리가 바뀐다.</text><text class="ink bold sm" x="20" y="296" text-anchor="start">반면 한 번의 추가 작업을 1 에서 n 으로 늘리는 것은 상수배만 바꾼다.</text><text class="ink2 sm" x="20" y="314" text-anchor="start">그러므로 알고리즘을 빠르게 하려면 층마다의 일을 줄이기보다 부분문제를 작게 만들어야 한다.</text>
+</svg>

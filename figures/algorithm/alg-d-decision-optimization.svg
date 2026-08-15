@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320" width="800" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">최적화 · 판정 · 탐색 문제의 관계</title><desc id="d">판정 문제를 다항 번 부르면 최적값과 답 자체를 모두 얻을 수 있어 판정만 다루어도 잃는 것이 없다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="400" y="26" text-anchor="middle">왜 하필 예 · 아니오 문제만 다루는가 — 잃는 것이 없기 때문이다</text><rect x="40" y="58" width="216" height="66" rx="4" fill="var(--s1)" fill-opacity="0.16" stroke="var(--s1)" stroke-width="1.7"/><text class="ink sm" x="148" y="80" text-anchor="middle">최적화 문제</text><text class="ink sm" x="148" y="95" text-anchor="middle">가장 큰 클리크의</text><text class="ink sm" x="148" y="110" text-anchor="middle">크기는 얼마인가</text><rect x="292" y="58" width="216" height="66" rx="4" fill="var(--s2)" fill-opacity="0.16" stroke="var(--s2)" stroke-width="1.7"/><text class="ink sm" x="400" y="80" text-anchor="middle">판정 문제</text><text class="ink sm" x="400" y="95" text-anchor="middle">크기 k 인 클리크가</text><text class="ink sm" x="400" y="110" text-anchor="middle">있는가 (예 / 아니오)</text><rect x="544" y="58" width="216" height="66" rx="4" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.7"/><text class="ink sm" x="652" y="80" text-anchor="middle">탐색 문제</text><text class="ink sm" x="652" y="95" text-anchor="middle">그 클리크를</text><text class="ink sm" x="652" y="110" text-anchor="middle">실제로 내놓아라</text><path fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M264 91 L284 91"/><path fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M516 91 L536 91"/><text class="ink2 sm" x="148" y="158" text-anchor="middle">판정 문제를 다항 번 부르면</text><text class="ink bold sm" x="148" y="177" text-anchor="middle">최적값이 나온다</text><text class="ink2 sm" x="148" y="215" text-anchor="middle">k 를 1 부터 n 까지 이분 탐색하면</text><text class="ink2 sm" x="148" y="234" text-anchor="middle">log₂ n 번이면 충분하다</text><text class="ink bold sm" x="400" y="158" text-anchor="middle">이론은 여기서만 한다</text><text class="ink2 sm" x="400" y="196" text-anchor="middle">답이 예 · 아니오 하나뿐이라</text><text class="ink2 sm" x="400" y="215" text-anchor="middle">기계와 문제를 깔끔하게</text><text class="ink2 sm" x="400" y="234" text-anchor="middle">견줄 수 있기 때문이다</text><text class="ink2 sm" x="652" y="158" text-anchor="middle">판정을 풀 수 있으면 정점을 하나씩</text><text class="ink bold sm" x="652" y="177" text-anchor="middle">지워 보며 답을 복원한다</text><text class="ink2 sm" x="652" y="215" text-anchor="middle">지워도 답이 그대로면</text><text class="ink2 sm" x="652" y="234" text-anchor="middle">그 정점은 필요 없었던 것이다</text><text class="ink2 sm" x="400" y="286" text-anchor="middle">셋은 다항 시간 안에서 서로 오갈 수 있다. 그래서 ‘판정 문제가 어렵다’ 와 ‘최적화 문제가 어렵다’ 가 같은 말이 된다.</text><text class="ink2 sm" x="400" y="308" text-anchor="middle">앞으로 나오는 SAT · 클리크 · 정점 덮개 · 해밀턴 경로 · TSP 는 모두 가운데 형태로 적은 것이다</text>
+</svg>

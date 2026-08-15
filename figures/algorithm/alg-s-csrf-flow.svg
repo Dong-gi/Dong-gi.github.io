@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 844 424" width="844" height="424" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">CSRF — 브라우저가 쿠키를 대신 붙여 준다</title><desc id="d">이용자가 로그인해 둔 사이트로 남의 페이지가 요청을 보내면 쿠키가 자동으로 붙어 정상 요청처럼 처리된다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="422" y="26" text-anchor="middle">요청을 누가 보냈는지 서버가 구분하지 못한다</text><text class="ink bold sm" x="130" y="58" text-anchor="middle">이용자의 브라우저</text><path d="M130 68 L130 300" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/><text class="ink bold sm" x="400" y="58" text-anchor="middle">공격자 사이트 A</text><path d="M400 68 L400 300" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/><text class="ink bold sm" x="670" y="58" text-anchor="middle">은행 B</text><path d="M670 68 L670 300" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/><path fill="none" stroke="var(--s1)" stroke-width="1.7" stroke-linecap="round" marker-end="url(#ar1)" d="M130 96 L670 96"/><text class="ink2 sm" x="400" y="88" text-anchor="middle">① 로그인한다 — 서버가 쿠키를 심어 준다</text><path fill="none" stroke="var(--ink2)" stroke-width="1.7" stroke-linecap="round" marker-end="url(#ark)" d="M400 148 L130 148"/><text class="ink2 sm" x="265" y="140" text-anchor="middle">② 다른 일로 A 를 방문한다</text><path fill="none" stroke="var(--s2)" stroke-width="1.7" stroke-linecap="round" marker-end="url(#ar2)" d="M130 200 L670 200"/><text class="ink bold sm" x="400" y="192" text-anchor="middle">③ A 의 페이지 안에 숨어 있던 폼이 B 로 요청을 보낸다</text><path fill="none" stroke="var(--s2)" stroke-width="1.7" stroke-linecap="round" marker-end="url(#ar2)" d="M670 252 L130 252"/><text class="ink bold sm" x="400" y="244" text-anchor="middle">④ B 는 쿠키가 붙어 있으니 본인이라 여기고 처리한다</text><text class="ink bold sm" x="422" y="288" text-anchor="middle">이용자는 ③ 을 누른 적도 본 적도 없다. 브라우저가 B 로 가는 요청에 쿠키를 자동으로 붙였을 뿐이다</text><path d="M40 314 L804 314" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold sm" x="40" y="336" text-anchor="start">무엇이 잘못 설계되었나</text><text class="ink2 sm" x="220" y="336" text-anchor="start">쿠키는 ‘어느 서버로 가는가’ 만 보고 붙는다. ‘누가 이 요청을 일으켰는가’ 는 담기지 않는다</text><text class="ink bold sm" x="40" y="364" text-anchor="start">· SameSite 쿠키</text><text class="ink2 sm" x="220" y="364" text-anchor="start">다른 사이트에서 시작된 요청에는 쿠키를 붙이지 않는다 — 가장 근본적인 수정</text><text class="ink bold sm" x="40" y="384" text-anchor="start">· 요청 토큰</text><text class="ink2 sm" x="220" y="384" text-anchor="start">서버가 준 값을 요청 본문에 함께 넣게 한다. 남의 사이트는 그 값을 읽을 수 없다</text><text class="ink bold sm" x="40" y="404" text-anchor="start">· 출처 헤더 검사</text><text class="ink2 sm" x="220" y="404" text-anchor="start">Origin · Sec-Fetch-Site 로 요청이 어디서 시작됐는지 서버가 직접 본다</text><text class="ink bold sm" x="40" y="418" text-anchor="start">남의 스크립트가 페이지 안에서 도는 것을 허용하면 이 방어는 전부 무력해진다. 그 스크립트는 토큰도 읽어 갈 수 있다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 358" width="780" height="358" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한정사 순서가 뜻을 바꾼다</title><desc id="d">왼쪽은 모든 사람이 하나의 대상을 가리키는 그림, 오른쪽은 사람마다 다른 대상을 가리키는 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="390" y="26" text-anchor="middle">∀ 와 ∃ 의 순서를 바꾸면 다른 주장이 된다</text><rect x="16" y="46" width="366" height="244" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="199" y="66" text-anchor="middle">먼저 꿈 하나를 고른다</text><text class="ink2 sm" x="199" y="82" text-anchor="middle">∃d ∀a. H(a, d)</text><circle cx="82" cy="128" r="5" fill="var(--s1)"/><text class="ink sm" x="70" y="133" text-anchor="end">a₁</text><circle cx="82" cy="170" r="5" fill="var(--s1)"/><text class="ink sm" x="70" y="175" text-anchor="end">a₂</text><circle cx="82" cy="212" r="5" fill="var(--s1)"/><text class="ink sm" x="70" y="217" text-anchor="end">a₃</text><circle cx="282" cy="170" r="5" fill="var(--s2)"/><text class="ink sm" x="294" y="175" text-anchor="start">d</text><path fill="none" stroke="var(--s1)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar1)" d="M90 128 L274 170"/><path fill="none" stroke="var(--s1)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar1)" d="M90 170 L274 170"/><path fill="none" stroke="var(--s1)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar1)" d="M90 212 L274 170"/><text class="ink2 sm" x="36" y="260" text-anchor="start">모두가 같은 꿈을 공유한다.</text><text class="ink2 sm" x="36" y="280" text-anchor="start">훨씬 강한 주장이다</text><rect x="398" y="46" width="366" height="244" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="581" y="66" text-anchor="middle">먼저 사람을 고른다</text><text class="ink2 sm" x="581" y="82" text-anchor="middle">∀a ∃d. H(a, d)</text><circle cx="464" cy="128" r="5" fill="var(--s1)"/><text class="ink sm" x="452" y="133" text-anchor="end">a₁</text><circle cx="464" cy="170" r="5" fill="var(--s1)"/><text class="ink sm" x="452" y="175" text-anchor="end">a₂</text><circle cx="464" cy="212" r="5" fill="var(--s1)"/><text class="ink sm" x="452" y="217" text-anchor="end">a₃</text><circle cx="664" cy="128" r="5" fill="var(--s2)"/><text class="ink sm" x="676" y="133" text-anchor="start">d₁</text><circle cx="664" cy="170" r="5" fill="var(--s2)"/><text class="ink sm" x="676" y="175" text-anchor="start">d₂</text><circle cx="664" cy="212" r="5" fill="var(--s2)"/><text class="ink sm" x="676" y="217" text-anchor="start">d₃</text><path fill="none" stroke="var(--s1)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar1)" d="M472 128 L656 128"/><path fill="none" stroke="var(--s1)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar1)" d="M472 170 L656 170"/><path fill="none" stroke="var(--s1)" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ar1)" d="M472 212 L656 212"/><text class="ink2 sm" x="418" y="260" text-anchor="start">사람마다 제 꿈이 있으면 된다.</text><text class="ink2 sm" x="418" y="280" text-anchor="start">꿈이 서로 달라도 참이다</text><text class="ink2 sm" x="20" y="314" text-anchor="start">왼쪽이 참이면 오른쪽도 참이다. 반대는 성립하지 않는다 — ∃x∀y. P(x,y) → ∀y∃x. P(x,y) 는 타당하지만 역은 타당하지 않다</text><text class="ink2 sm" x="20" y="340" text-anchor="start">골드바흐 추측에서 순서를 바꾸면 ‘같은 두 소수의 합으로 모든 짝수가 된다’ 는 노골적인 거짓이 된다</text>
+</svg>

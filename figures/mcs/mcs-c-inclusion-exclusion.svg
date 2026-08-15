@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 348" width="800" height="348" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">세 집합의 포함배제</title><desc id="d">세 전공 집합이 겹친 벤 다이어그램과, 한 사람이 몇 번 세어지는지를 전공 수별로 확인한 표</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="400" y="26" text-anchor="middle">두 번 센 것을 빼면 세 번 센 것까지 지워지므로 다시 더한다</text><circle cx="214" cy="124" r="78" fill="var(--s1)" fill-opacity="0.2" stroke="var(--s1)" stroke-width="1.4"/><circle cx="171.68" cy="197.6" r="78" fill="var(--s2)" fill-opacity="0.2" stroke="var(--s2)" stroke-width="1.4"/><circle cx="256.32" cy="197.6" r="78" fill="var(--s3)" fill-opacity="0.2" stroke="var(--s3)" stroke-width="1.4"/><text class="ink bold sm" x="214" y="78" text-anchor="middle">수학 60</text><text class="ink bold sm" x="156" y="240" text-anchor="middle">전산 200</text><text class="ink bold sm" x="272" y="240" text-anchor="middle">물리 40</text><text class="ink sm" x="184" y="160" text-anchor="middle">6</text><text class="ink sm" x="244" y="160" text-anchor="middle">5</text><text class="ink sm" x="214" y="216" text-anchor="middle">13</text><text class="ink bold sm" x="214" y="184" text-anchor="middle">2</text><rect x="400" y="58" width="376" height="222" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="588" y="78" text-anchor="middle">한 사람이 몇 번 세어지는가</text><text class="ink2 sm" x="588" y="94" text-anchor="middle">더하기와 빼기를 번갈아 하면 딱 한 번이다</text><text class="ink2 sm" x="420" y="108" text-anchor="start">전공이 하나뿐</text><text class="ink sm" x="558" y="108" text-anchor="start">+1</text><text class="ink bold sm" x="752" y="108" text-anchor="end">= 1</text><text class="ink2 sm" x="420" y="140" text-anchor="start">이중 전공</text><text class="ink sm" x="558" y="140" text-anchor="start">+1 +1 −1</text><text class="ink bold sm" x="752" y="140" text-anchor="end">= 1</text><text class="ink2 sm" x="420" y="172" text-anchor="start">삼중 전공</text><text class="ink sm" x="558" y="172" text-anchor="start">+3 −3 +1</text><text class="ink bold sm" x="752" y="172" text-anchor="end">= 1</text><path d="M420 216 L756 216" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="420" y="240" text-anchor="start">k 중 전공이면 C(k,1) − C(k,2) + ⋯ 이고</text><text class="ink bold sm" x="420" y="262" text-anchor="start">이 값은 1 − (1 − 1)^k = 1 이다 — 이 세 줄이 증명이다</text><path d="M24 296 L776 296" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="24" y="322" text-anchor="start">합집합 = 60 + 200 + 40 − 6 − 5 − 13 + 2 = 278.  요령은 두 방향으로 세는 것이 아니라 한 사람이 세어지는 횟수를 맞추는 것이다</text><text class="ink2 sm" x="24" y="342" text-anchor="start">겹치지 않으면 합의 규칙으로 끝나지만, 겹치면 겹친 만큼을 빼고 그 과정에서 지나치게 빠진 만큼을 되돌려야 한다</text>
+</svg>

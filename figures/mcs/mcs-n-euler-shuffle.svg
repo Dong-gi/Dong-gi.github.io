@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="720" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">오일러 정리의 증명 뼈대</title><desc id="d">10 과 서로소인 네 수에 3 을 곱하면 같은 네 수의 순서만 바뀐다는 것을 화살표로 보인 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold sm" x="360" y="26" text-anchor="middle">오일러 정리의 뼈대 — ‘곱하기 3’ 은 가역원들을 잃지도 겹치지도 않고 뒤섞는다</text><text x="180" y="58" text-anchor="middle" fill="var(--ink)" class="sm bold">10 과 서로소인 수 넷</text><text x="430" y="58" text-anchor="middle" fill="var(--ink)" class="sm bold">각각에 3 을 곱한 것</text><circle cx="180" cy="80" r="19" fill="var(--s1)" fill-opacity="0.18" stroke="var(--s1)" stroke-width="1.6"/><text x="180" y="84" text-anchor="middle" fill="var(--ink)" class="sm">1</text><circle cx="430" cy="80" r="19" fill="var(--s3)" fill-opacity="0.18" stroke="var(--s3)" stroke-width="1.6"/><text x="430" y="84" text-anchor="middle" fill="var(--ink)" class="sm">1</text><circle cx="180" cy="132" r="19" fill="var(--s1)" fill-opacity="0.18" stroke="var(--s1)" stroke-width="1.6"/><text x="180" y="136" text-anchor="middle" fill="var(--ink)" class="sm">3</text><circle cx="430" cy="132" r="19" fill="var(--s3)" fill-opacity="0.18" stroke="var(--s3)" stroke-width="1.6"/><text x="430" y="136" text-anchor="middle" fill="var(--ink)" class="sm">3</text><circle cx="180" cy="184" r="19" fill="var(--s1)" fill-opacity="0.18" stroke="var(--s1)" stroke-width="1.6"/><text x="180" y="188" text-anchor="middle" fill="var(--ink)" class="sm">7</text><circle cx="430" cy="184" r="19" fill="var(--s3)" fill-opacity="0.18" stroke="var(--s3)" stroke-width="1.6"/><text x="430" y="188" text-anchor="middle" fill="var(--ink)" class="sm">7</text><circle cx="180" cy="236" r="19" fill="var(--s1)" fill-opacity="0.18" stroke="var(--s1)" stroke-width="1.6"/><text x="180" y="240" text-anchor="middle" fill="var(--ink)" class="sm">9</text><circle cx="430" cy="236" r="19" fill="var(--s3)" fill-opacity="0.18" stroke="var(--s3)" stroke-width="1.6"/><text x="430" y="240" text-anchor="middle" fill="var(--ink)" class="sm">9</text><path fill="none" stroke="var(--s2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M199.58 84.07 L410.42 127.93"/><path fill="none" stroke="var(--s2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M198.47 139.68 L411.53 228.32"/><path fill="none" stroke="var(--s2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M198.47 176.32 L411.53 87.68"/><path fill="none" stroke="var(--s2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)" d="M199.58 231.93 L410.42 188.07"/><text x="560" y="110" text-anchor="start" fill="var(--ink2)" class="sm">넷이 넷으로,</text><text x="560" y="128" text-anchor="start" fill="var(--ink2)" class="sm">한 칸에 하나씩 간다.</text><text x="560" y="156" text-anchor="start" fill="var(--s3)" class="sm">그래서 오른쪽 전체가</text><text x="560" y="174" text-anchor="start" fill="var(--s3)" class="sm">왼쪽 전체와 같은 집합이다.</text><text class="ink2 sm" x="360" y="278" text-anchor="middle">넷을 다 곱한 값을 P 라 하면, 화살표를 따라 곱해도 같은 P 가 나오는데 그 곱은 3⁴ · P 이기도 하다.</text><text class="ink2 sm" x="360" y="298" text-anchor="middle">P 는 가역원이므로 지울 수 있고, 3⁴ = 1 (Z<tspan baseline-shift="-22%" font-size="76%">10</tspan>) 이 남는다. 여기서 4 는 φ(10) 이다</text>
+</svg>

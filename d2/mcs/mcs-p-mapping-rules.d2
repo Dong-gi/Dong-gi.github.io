@@ -1,0 +1,37 @@
+# 사상 규칙 — mcs 6장.
+#
+# 무엇을 읽어야 하나: 유한집합의 크기 비교는 함수의 성질로 바꿔 말할 수 있다.
+# 왼쪽 열이 관계의 성질, 가운데가 그때 성립하는 크기 부등호, 오른쪽이 그 쓸모다.
+direction: right
+
+surj: { label: "A surj B\nA 에서 B 로 가는 전사 함수가 있다"; style.bold: true }
+inj: { label: "A inj B\nA 에서 B 로 가는 단사인 전관계가 있다"; style.bold: true }
+bij: { label: "A bij B\nA 와 B 사이에 전단사가 있다"; style.bold: true }
+
+ge: { label: "|A| ≥ |B|" }
+le: { label: "|A| ≤ |B|" }
+eq: { label: "|A| = |B|" }
+
+surj -> ge: "화살표를 센다"
+inj -> le: "화살표를 센다"
+bij -> eq
+
+ge -> surj: "거꾸로도 성립한다"
+le -> inj: "거꾸로도 성립한다"
+eq -> bij: "거꾸로도 성립한다"
+
+쓸모1: { label: "부분집합 세기\npow(A) 와 길이 |A| 인 비트열 사이에 전단사가 있으므로 2ⁿ 개" }
+쓸모2: { label: "비둘기집 원리\n|A| > |B| 이면 A 에서 B 로 가는 전함수는 단사가 아니다" }
+
+eq -> 쓸모1
+le -> 쓸모2: "대우를 취한다"
+
+대칭: {
+  label: "A surj B 와 B inj A 는 같은 말이다.\n관계의 화살표를 모두 거꾸로 돌리면 [≤1 out] 이 [≤1 in] 이 되고 [≥1 in] 이 [≥1 out] 이 되기 때문이다"
+  shape: text
+}
+
+무한: {
+  label: "여기까지는 유한집합 이야기다. 무한집합에서는 |A| 를 세는 방법이 없으므로\nsurj·inj·bij 자체를 크기 비교의 정의로 삼는다. 그것이 10장의 출발점이다"
+  shape: text
+}

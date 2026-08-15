@@ -1,0 +1,39 @@
+# 무한집합의 크기 비교 규칙 — mcs 10장.
+#
+# 무엇을 읽어야 하나: 왼쪽 세 줄은 6장에서 유한 가정 없이 증명해 둔 것이라 무한집합에 그대로 쓴다.
+# 오른쪽 두 줄은 유한집합에서 참이지만 무한집합에서는 증명이 필요하거나 거짓이다.
+# 그 경계를 아는 것이 이 장의 첫 관문이다.
+direction: right
+
+정의: {
+  label: "무한집합에서는 |A| 를 세지 않는다\nsurj · inj · bij 자체를 크기 비교의 정의로 삼는다\nA strict B ::= NOT(A surj B)"
+  shape: oval
+  style.bold: true
+}
+
+그대로: {
+  label: "6장에서 그대로 가져오는 것\n· A surj B ↔ B inj A\n· surj 와 inj 와 bij 는 추이적이다\n· A bij B ↔ B bij A"
+  style.bold: true
+}
+증명필요: {
+  label: "무한에서 따로 증명해야 하는 것\n· 슈뢰더 · 베른슈타인:\n  A surj B 이고 B surj A 이면 A bij B\n· 임의의 A, B 에 대해 A surj B 또는 B surj A"
+  style.bold: true
+}
+거짓: {
+  label: "무한에서 깨지는 것\n· b ∉ A 이면 A 와 A ∪ {b} 는 크기가 다르다\n  → 무한집합에서는 오히려 같다\n· ‘진부분집합은 더 작다’ → 거짓"
+  style.bold: true
+}
+
+정의 -> 그대로
+정의 -> 증명필요
+정의 -> 거짓
+
+이유: {
+  label: "왼쪽 세 줄이 그대로 넘어오는 이유: 6장의 증명이 화살표를 돌리고 합성하는 논증뿐이었고\n‘개수’ 라는 말이 한 번도 나오지 않았다. 그래서 유한 가정이 필요하지 않다.\n담당 A 가 그 증명들을 그렇게 써 둔 까닭이 이것이다"
+  shape: text
+}
+
+주의: {
+  label: "가운데 두 줄의 증명에는 서수 이론이나 선택 공리가 필요하다.\n이 문서에서는 결과만 쓰고 증명은 하지 않는다. 대신 이 둘로부터 나오는 것 —\nA strict B 이고 B strict C 이면 A strict C — 은 예제에서 직접 유도한다"
+  shape: text
+}

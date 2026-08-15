@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 340" width="660" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">집합론에서 온 확률 규칙 여섯 개</title><desc id="d">두 사건의 벤 그림과 합의 규칙에서 나오는 여섯 가지 확률 규칙 목록</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold sm" x="20" y="24" text-anchor="start">유한집합의 크기에 대한 규칙이 확률로 그대로 옮겨 온다 — 크기를 재는 자가 |·| 에서 Pr 로 바뀔 뿐이다</text><circle cx="124" cy="130" r="54" fill="none" stroke="var(--s1)" stroke-width="1.8"/><circle cx="176" cy="130" r="54" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text class="ink bold" x="88" y="86" text-anchor="start">A</text><text class="ink bold" x="208" y="86" text-anchor="start">B</text><text class="ink2 sm" x="150" y="134" text-anchor="middle">A ∩ B</text><text class="ink2 sm" x="98" y="134" text-anchor="middle">A − B</text><text class="ink2 sm" x="202" y="134" text-anchor="middle">B − A</text><rect x="44" y="52" width="212" height="156" rx="4" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="50" y="68" text-anchor="start">S</text><text class="ink2 sm" x="150" y="234" text-anchor="middle">겹치는 부분을 두 번 세면 Pr[A ∪ B] 가 부풀려진다</text><rect x="306" y="46" width="336" height="32" rx="4" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="316" y="67" text-anchor="start">합의 규칙</text><text class="ink2 sm" x="402" y="67" text-anchor="start">서로소이면 Pr[A ∪ B] = Pr[A] + Pr[B]</text><rect x="306" y="84" width="336" height="32" rx="4" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="316" y="105" text-anchor="start">여사건 규칙</text><text class="ink2 sm" x="402" y="105" text-anchor="start">Pr[¬A] = 1 − Pr[A]</text><rect x="306" y="122" width="336" height="32" rx="4" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="316" y="143" text-anchor="start">차의 규칙</text><text class="ink2 sm" x="402" y="143" text-anchor="start">Pr[B − A] = Pr[B] − Pr[A ∩ B]</text><rect x="306" y="160" width="336" height="32" rx="4" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="316" y="181" text-anchor="start">포함배제</text><text class="ink2 sm" x="402" y="181" text-anchor="start">Pr[A ∪ B] = Pr[A] + Pr[B] − Pr[A ∩ B]</text><rect x="306" y="198" width="336" height="32" rx="4" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="316" y="219" text-anchor="start">불의 부등식</text><text class="ink2 sm" x="402" y="219" text-anchor="start">Pr[A ∪ B] ≤ Pr[A] + Pr[B]</text><rect x="306" y="236" width="336" height="32" rx="4" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="316" y="257" text-anchor="start">단조성</text><text class="ink2 sm" x="402" y="257" text-anchor="start">A ⊆ B 이면 Pr[A] ≤ Pr[B]</text><path d="M20 268 L640 268" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><text class="ink bold sm" x="20" y="290" text-anchor="start">여섯 규칙 모두 첫 줄의 합의 규칙 하나에서 나온다. 서로소인 조각으로 쪼개고 다시 더하는 것이 증명의 전부다.</text><text class="ink2 sm" x="20" y="312" text-anchor="start">균등 확률공간에서는 Pr[E] = |E| / |S| 이므로 17장의 셈의 규칙이 그대로 확률 계산이 된다.</text><text class="ink2 sm" x="20" y="330" text-anchor="start">가산 가법성 덕분에 사건이 무한히 많아도 같은 규칙을 쓴다 — 합집합 한계가 그 예다.</text>
+</svg>

@@ -1,0 +1,40 @@
+# 점근 표기 여섯 개의 관계 — mcs 16장.
+#
+# 무엇을 읽어야 하나: 여섯 표기 가운데 정의가 필요한 것은 셋(o, O, ∼)뿐이고
+# 나머지 셋(Ω, ω, Θ)은 그 셋을 뒤집거나 겹친 것이다.
+# 화살표는 함의의 방향이고, 반대 방향으로는 성립하지 않는다는 것이 요점이다.
+direction: down
+
+기본: {
+  label: "정의가 필요한 것은 셋뿐이다"
+  style.bold: true
+
+  little: { label: "f = o(g)\nlim f/g = 0\n‘g 보다 확실히 느리다’"; style.bold: true }
+  big: { label: "f = O(g)\n어떤 c, x₀ 가 있어 x ≥ x₀ 에서 |f| ≤ c·g\n‘g 보다 크게 빠르지는 않다’"; style.bold: true }
+  sim: { label: "f ∼ g\nlim f/g = 1\n‘앞머리가 같다’"; style.bold: true }
+}
+
+유도: {
+  label: "나머지 셋은 뒤집거나 겹친 것이다"
+  style.bold: true
+
+  omega: { label: "f = Ω(g) ::= g = O(f)" }
+  lomega: { label: "f = ω(g) ::= g = o(f)" }
+  theta: { label: "f = Θ(g) ::= f = O(g) 이고 g = O(f)"; style.bold: true }
+}
+
+기본.little -> 기본.big: 함의한다
+기본.sim -> 기본.big: 함의한다
+기본.sim -> 유도.theta: 함의한다
+유도.theta -> 기본.big: 정의상
+기본.little -> 유도.lomega: 방향만 뒤집은 것
+
+반례: {
+  label: "역은 성립하지 않는다\n· 2x = O(x) 이지만 2x ∼ x 도 아니고 2x = o(x) 도 아니다\n· x = Θ(x) 이지만 x ∼ 2x 는 거짓이다\n· f = o(g) 이면 g = O(f) 는 거짓이다"
+  shape: text
+}
+
+관계로보기: {
+  label: "관계로 보면 성질이 갈린다.\n∼ 와 Θ 는 동치관계다(반사·대칭·추이).\no 와 ω 는 강한 부분순서다(반사적이지 않다).\nO 는 반사적·추이적이지만 반대칭이 아니라 부분순서가 되지 못한다.\n그리고 어느 것도 전순서가 아니다 — x 와 x·sin²x + 1 은 서로 견줄 수 없다"
+  shape: text
+}
