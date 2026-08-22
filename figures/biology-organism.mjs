@@ -404,9 +404,9 @@ add((() => {
             { anchor: Math.cos((((d1 + d2) / 2) * Math.PI) / 180) > 0 ? 'start' : 'end', cls: color, size: 'sm' });
     };
     b.push(evt(0, -60, '감수분열 ★', 'ink bold'));
-    b.push(evt(90, 0, '유사분열', 'ink2'));
-    b.push(evt(-60, -120, '유사분열', 'ink2'));
-    b.push(evt(-120, -180, '유사분열', 'ink2'));
+    b.push(evt(90, 0, '체세포분열', 'ink2'));
+    b.push(evt(-60, -120, '체세포분열', 'ink2'));
+    b.push(evt(-120, -180, '체세포분열', 'ink2'));
     b.push(evt(180, 90, '수정 ★', 'ink bold'));
     b.push(txt(410, 74, '동물과 무엇이 다른가', { cls: 'ink bold' }));
     b.push(txt(410, 98, '동물: 감수분열의 산물이', { cls: 'ink2', size: 'sm' }));
@@ -415,7 +415,7 @@ add((() => {
     b.push(txt(410, 158, '식물: 감수분열의 산물은', { cls: 'ink2', size: 'sm' }));
     b.push(txt(410, 174, '포자다. 포자가 자라 다세포', { cls: 'ink2', size: 'sm' }));
     b.push(txt(410, 190, '개체(배우체)가 되고,', { cls: 'ink2', size: 'sm' }));
-    b.push(txt(410, 206, '그 개체가 유사분열로', { cls: 'ink2', size: 'sm' }));
+    b.push(txt(410, 206, '그 개체가 체세포분열로', { cls: 'ink2', size: 'sm' }));
     b.push(txt(410, 222, '배우자를 만든다.', { cls: 'ink2', size: 'sm' }));
     b.push(txt(30, 30, '한 바퀴에 감수분열이 딱 한 번, 수정이 딱 한 번이다. 표를 채우고 나서 이것으로 검산한다', { cls: 'ink2', size: 'sm' }));
     b.push(txt(30, H - 12, '진화의 방향은 배우체가 작아지고 포자체가 커지는 쪽이었다. 종자식물의 배우체가 꽃가루와 배낭이다', { cls: 'ink2', size: 'sm' }));

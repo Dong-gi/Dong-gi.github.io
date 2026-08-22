@@ -14,6 +14,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { hashCode, runtimeMarkerIds } from './lib-markers.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -32,11 +33,22 @@ const files = process.argv.length > 2
     ? process.argv.slice(2).map((f) => path.join(ROOT, f))
     : collect(path.join(ROOT, 'posts'));
 
-/** 문서마다 가진 id 집합을 미리 만들어 둔다. */
+/**
+ * 문서마다 가진 id 집합을 미리 만들어 둔다.
+ *
+ * **정적 HTML 의 id 만 세면 안 된다.** `source/default.js` 의 `updateMarkerList()` 가
+ * 페이지를 열 때 h1~h6 앞에 `pos-span` 을 심으므로, 헤딩 텍스트와 같은 이름의 앵커는
+ * 소스에 `+pos()` 가 없어도 실제로는 존재한다. 그것을 세지 않으면 멀쩡한 링크를
+ * 깨졌다고 보고하게 된다 — 검사기가 거짓말을 하면 아무도 안 믿는다.
+ *
+ * 실행 시점 계산은 `scripts/lib-markers.mjs` 에 있고 `default.js` 와 같은 결과를 내야 한다.
+ */
 const idsOf = new Map();
 for (const f of files) {
     const html = fs.readFileSync(f, 'utf8');
-    idsOf.set(f, new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])));
+    const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+    for (const id of runtimeMarkerIds(html)) ids.add(id);
+    idsOf.set(f, ids);
 }
 
 /**
@@ -44,14 +56,7 @@ for (const f of files) {
  * 해시만 적힌 오류 메시지("#pos1399817165 없음")로는 어디를 고쳐야 할지 알 수 없다.
  * skeleton.pug 의 String.prototype.hashCode 와 같은 계산이어야 한다.
  */
-function hashCode(s) {
-    let h = 0;
-    for (let i = 0; i < s.length; i += 1) {
-        h = (h << 5) - h + s.charCodeAt(i);
-        h |= 0;
-    }
-    return h;
-}
+// hashCode 는 scripts/lib-markers.mjs 가 갖고 있다. 두 곳에 두면 갈라진다.
 
 const nameOfHash = new Map();
 (function collectNames(dir) {

@@ -1,0 +1,57 @@
+# 커리-하워드 대응 — 논리학 19장.
+#
+# 무엇을 읽어야 하나: 왼쪽 칸과 오른쪽 칸이 한 줄씩 짝지어져 있다는 것.
+# 특히 맨 아래 두 줄 — 증명을 다듬는 일이 프로그램을 실행하는 일이고,
+# IP 에는 짝이 될 프로그램이 없다.
+direction: down
+
+대응: {
+  label: "명제는 타입이고, 증명은 프로그램이다"
+  style.bold: true
+  grid-rows: 12
+  grid-columns: 2
+  grid-gap: 6
+
+  h1: { label: "논리 쪽 — 7장에서 세운 것"; style.bold: true }
+  h2: { label: "프로그램 쪽"; style.bold: true }
+
+  a1: { label: "명제 φ" }
+  a2: { label: "타입 φ" }
+
+  b1: { label: "φ 의 증명" }
+  b2: { label: "타입 φ 를 갖는 프로그램" }
+
+  c1: { label: "φ → ψ" }
+  c2: { label: "φ 를 받아 ψ 를 돌려주는 함수의 타입" }
+
+  d1: { label: "→I — 가정을 열고 닫는다" }
+  d2: { label: "함수를 정의한다. 가정이 매개변수가 된다" }
+
+  e1: { label: "→E — 전건 긍정" }
+  e2: { label: "함수를 호출한다" }
+
+  f1: { label: "φ ∧ ψ 와 ∧E" }
+  f2: { label: "쌍의 타입. ∧E 는 쌍에서 한쪽을 꺼내는 일" }
+
+  g1: { label: "φ ∨ ψ 와 ∨E" }
+  g2: { label: "어느 쪽인지 표가 붙은 값의 타입. ∨E 는 분기" }
+
+  h3: { label: "⊥" }
+  h4: { label: "값이 하나도 없는 타입" }
+
+  i1: { label: "∃x Fx 의 증명" }
+  i2: { label: "원소 하나와 그것에 대한 증명의 쌍" }
+
+  j1: { label: "증명에서 군더더기를 없애는 일" }
+  j2: { label: "프로그램을 실행하는 일" }
+
+  k1: { label: "IP"; style.stroke-dash: 4; style.bold: true }
+  k2: { label: "짝이 없다 — ¬¬φ → φ 타입의 함수는 적을 수 없다"; style.stroke-dash: 4; style.bold: true }
+}
+
+요점: {
+  label: "BHK 해석의 오른쪽 칸이 전부 ‘쌍’, ‘함수’, ‘표가 붙은 값’ 이었던 것이 우연이 아니다.\n직관주의 증명은 그대로 프로그램이고, 존재 정리를 증명하면 증인을 계산하는 프로그램이 딸려 나온다.\n마지막 줄이 이 대응의 경계다 — 언어에 제어 흐름을 뒤집는 장치를 넣으면 대응이 고전 논리까지 늘어난다"
+  shape: text
+  style.bold: true
+}
+대응 -> 요점

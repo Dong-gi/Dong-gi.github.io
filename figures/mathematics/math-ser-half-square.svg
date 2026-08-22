@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 340" width="620" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">1/2 + 1/4 + 1/8 + … 은 정사각형 하나를 채운다</title><desc id="d">넓이 1 인 정사각형을 절반씩 잘라 채워 가면 남은 빈칸이 언제나 방금 넣은 조각과 같다는 것을 보이는 그림</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="46" y="40" width="125" height="250" rx="0" fill="var(--s1)" fill-opacity="0.2" stroke="var(--s1)" stroke-width="1.4"/><text class="ink bold" x="108.5" y="170" text-anchor="middle">1/2</text><rect x="171" y="165" width="125" height="125" rx="0" fill="var(--s2)" fill-opacity="0.2" stroke="var(--s2)" stroke-width="1.4"/><text class="ink bold" x="233.5" y="232.5" text-anchor="middle">1/4</text><rect x="171" y="40" width="62.5" height="125" rx="0" fill="var(--s3)" fill-opacity="0.2" stroke="var(--s3)" stroke-width="1.4"/><text class="ink bold" x="202.25" y="107.5" text-anchor="middle">1/8</text><rect x="233.5" y="102.5" width="62.5" height="62.5" rx="0" fill="var(--s1)" fill-opacity="0.2" stroke="var(--s1)" stroke-width="1.4"/><text class="ink bold" x="264.75" y="138.75" text-anchor="middle">1/16</text><rect x="233.5" y="40" width="31.25" height="62.5" rx="0" fill="var(--s2)" fill-opacity="0.2" stroke="var(--s2)" stroke-width="1.4"/><rect x="264.75" y="71.25" width="31.25" height="31.25" rx="0" fill="var(--s3)" fill-opacity="0.2" stroke="var(--s3)" stroke-width="1.4"/><rect x="264.75" y="40" width="31.25" height="31.25" rx="0" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.4"/><rect x="46" y="40" width="250" height="250" rx="0" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="2"/><text class="ink2 sm" x="171" y="28" text-anchor="middle">넓이가 1 인 정사각형</text><text class="ink bold" x="336" y="66" text-anchor="start">조각을 넣을 때마다</text><text class="ink bold" x="336" y="88" text-anchor="start">남은 빈칸의 넓이가</text><text class="ink bold" x="336" y="110" text-anchor="start">방금 넣은 조각과 같다.</text><text class="ink" x="336" y="144" text-anchor="start">S<tspan baseline-shift="-22%" font-size="76%">n</tspan> = 1 − (1/2)ⁿ</text><text class="ink2 sm" x="336" y="168" text-anchor="start">빈칸이 0 으로 가므로</text><text class="ink2 sm" x="336" y="186" text-anchor="start">부분합은 1 로 간다.</text><text class="ink2 sm" x="336" y="220" text-anchor="start">공비가 1 보다 작을 때만</text><text class="ink2 sm" x="336" y="238" text-anchor="start">이 그림을 그릴 수 있다.</text><text class="ink2 sm" x="46" y="316" text-anchor="start">무한히 더해도 정사각형을 넘지 않는다. 넘칠 수 없다는 것이 눈에 보이는 것이 이 그림의 값어치다.</text>
+</svg>

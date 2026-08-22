@@ -192,7 +192,7 @@ if [ -t 2 ]; then echo hello; fi # STDERR</div></td></tr><tr><td>[ -u FILE ]</td
 echo $?                # 1
 let "x = (( 0 &amp;&amp; 1))"
 echo $x                # 0
-echo $?                # 1</div></li><li>else<p><strong>↓ bash</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="bash">if ...; then ... else ... fi</div></li><li>elif<p><strong>↓ bash</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="bash">if ...; then ... elif ...; then ... fi</div></li><li>if 구문 중첩 가능</li></ul><h3>case<span class="pos-span" id="pos3046192"></span></h3><ul><li>;; -> case 옵션 종결 &amp;&amp; case 구문 종료</li><li>;;&amp; -> case 옵션 종결 &amp;&amp; 다음 패턴 검사 실행. Since bash 4</li><li>;&amp; -> case 옵션 종결 &amp;&amp; 다음 옵션 무조건 실행. Since bash 4</li></ul><p><strong>↓ bash</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="bash">case "$1" in
+echo $?                # 1</div></li><li>else<p><strong>↓ bash</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="bash">if ...; then ... else ... fi</div></li><li>elif<p><strong>↓ bash</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="bash">if ...; then ... elif ...; then ... fi</div></li><li>if 구문 중첩 가능</li></ul><h3>case</h3><ul><li>;; -> case 옵션 종결 &amp;&amp; case 구문 종료</li><li>;;&amp; -> case 옵션 종결 &amp;&amp; 다음 패턴 검사 실행. Since bash 4</li><li>;&amp; -> case 옵션 종결 &amp;&amp; 다음 옵션 무조건 실행. Since bash 4</li></ul><p><strong>↓ bash</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="bash">case "$1" in
     start) # POSIX range, class 사용 가능
         start
         ;;

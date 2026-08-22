@@ -1,0 +1,49 @@
+# 4장이 버린 양상을 18장이 되찾는다. 논리학 18장.
+#
+# 무엇을 읽어야 하나: 가운데 두 줄을 견주어라. 왼쪽 두 문장은 뜻이 다른데
+# 4장의 도구로 옮기면 같은 P 가 된다. 오른쪽에서 갈라지는 것이 이 장이 하는 일이다.
+direction: down
+
+원문: {
+  label: "자연어 문장 둘 — 뜻이 분명히 다르다"
+  style.bold: true
+  grid-rows: 1
+  grid-columns: 2
+  grid-gap: 8
+
+  a: { label: "독신자는 미혼이다\n— 어길 수 없는 사실이다" }
+  b: { label: "이 방의 사람은 미혼이다\n— 그럴 수도 있고 아닐 수도 있다" }
+}
+
+사장: {
+  label: "4장의 도구로 옮기면 — 손실 압축"
+  style.bold: true
+  grid-rows: 1
+  grid-columns: 2
+  grid-gap: 8
+
+  a2: { label: "P" }
+  b2: { label: "P′" }
+  메모: { label: "둘 다 문장문자 하나다. ‘어길 수 없다’ 는\n연결자에도 원자에도 자리가 없어 사라진다.\n4장 손실 표의 ‘양상’ 줄이 이것이다"; shape: text }
+}
+
+이장: {
+  label: "18장의 도구로 옮기면 — 갈라진다"
+  style.bold: true
+  grid-rows: 1
+  grid-columns: 2
+  grid-gap: 8
+
+  a3: { label: "□P\n필연적으로 P"; style.bold: true }
+  b3: { label: "P ∧ ◇¬P\nP 이지만 아닐 수도 있었다"; style.bold: true }
+  메모3: { label: "연결자 하나를 어휘에 더한 값이다.\n문법은 5장 그대로, 의미론만 넓힌다"; shape: text }
+}
+
+원문 -> 사장: "옮긴다"
+사장 -> 이장: "되찾는다"
+
+경고: {
+  label: "되찾은 것은 ‘양상’ 이지 ‘시제’ 도 ‘정도’ 도 아니다.\n4장 손실 표의 나머지 줄은 여전히 열려 있고, 그중 정도는 19장이 맡는다"
+  shape: text
+}
+이장 -> 경고

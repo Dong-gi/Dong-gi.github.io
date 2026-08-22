@@ -1,0 +1,47 @@
+# 7장·11장·12장의 규칙 목록에서 지워지는 한 줄 — 논리학 19장.
+#
+# 무엇을 읽어야 하나: 지워진 줄이 하나뿐이라는 것. 그리고 그 줄이
+# 연결자 표의 어느 칸에도 들어가지 않는 자리에 있었다는 것.
+# 7장이 ‘IP 만 성격이 다르다’ 고 적어 둔 까닭이 여기서 눈에 보인다.
+direction: down
+
+남는다: {
+  label: "직관주의 논리 — 열여섯 줄이 그대로 남는다 (동일성 규칙 둘은 따로 센다)"
+  style.bold: true
+  grid-rows: 3
+  grid-columns: 3
+  grid-gap: 6
+
+  a: { label: "∧I / ∧E" }
+  b: { label: "∨I / ∨E" }
+  c: { label: "→I / →E" }
+  d: { label: "↔I / ↔E" }
+  e: { label: "¬I / ¬E\n가정 아래 ⊥ 를 얻어 ¬φ 를 적는 쪽" }
+  f: { label: "⊥E 폭발률\n직관주의는 이것을 지킨다" }
+  g: { label: "∀I / ∀E" }
+  h: { label: "∃I / ∃E\n변수 조건도 그대로" }
+  i: { label: "=I / =E · R 반복" }
+}
+
+지운다: {
+  label: "지우는 규칙 — 한 줄"
+  style.bold: true
+  grid-rows: 1
+  grid-columns: 2
+  grid-gap: 10
+  ip: { label: "IP 간접증명\n¬φ 를 가정해 ⊥ 를 얻으면 φ"; style.bold: true; style.stroke-dash: 4 }
+  설명: { label: "위 표의 어느 칸에도 들어가지 않는다.\n어느 연결자의 도입도 제거도 아니다.\nIP 가 말하는 것은 연결자의 뜻이 아니라\n‘참과 거짓 말고 다른 것은 없다’ 는 태도다" }
+}
+
+남는다 -> 지운다: "열일곱 줄 가운데 하나"
+
+결과: {
+  label: "지운 결과 — 거래다"
+  style.bold: true
+  grid-rows: 1
+  grid-columns: 2
+  grid-gap: 10
+  잃음: { label: "잃는 것\n\nφ ∨ ¬φ 배중률\n¬¬φ → φ 이중부정 제거\n¬(φ ∧ ψ) → (¬φ ∨ ¬ψ)\n((φ → ψ) → φ) → φ 페이르스 법칙\n(¬ψ → ¬φ) → (φ → ψ)\n¬∀x Fx → ∃x ¬Fx\n귀류법으로 존재를 보이는 논증" }
+  얻음: { label: "얻는 것\n\n선언 성질\n⊢ φ ∨ ψ 이면 어느 한쪽이 따로 도출된다\n\n존재 성질\n⊢ ∃x Fx 이면 증인이 하나 나온다\n\n증명이 그대로 프로그램이 된다"; style.bold: true }
+}
+지운다 -> 결과

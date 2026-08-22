@@ -302,7 +302,6 @@ include ../../../source/skeleton.pug
             }
         li HTTP 요청에 따라 @GetMapping, @PostMapping, @PutMapping, @DeleteMapping, @PatchMapping 존재
     h3 URI Patterns
-    +pos('URI Patterns')
     +table()
         tr
             th Pattern
@@ -541,7 +540,6 @@ include ../../../source/skeleton.pug
         |  참고
     h3
         |Matrix Variables
-        +pos('Matrix Variables')
     ul
         li Java Config 
             +codeBtn('/Repositories/STS/mvc-java7/src/main/java/io/github/donggi/mvc/config/AppConfig.java', 'java', [10], true)
@@ -569,7 +567,6 @@ include ../../../source/skeleton.pug
         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [21,27], true)
     h3
         |@ModelAttribute
-        +pos('@ModelAttribute')
     ol @ModelAttribute로 선언된 인자는 아래 순서에 따라 획득된다
         li 이미 Model에 추가된 객체
         li @SessionAttribute로 저장된 객체
@@ -588,13 +585,11 @@ include ../../../source/skeleton.pug
             +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller4.java', 'java', [13,35,36,45], true)
     h3
         |@RequestAttribute
-        +pos('@RequestAttribute')
     p Filter, HandlerInterceptor 등에 의해 추가된 속성을 획득할 수 있다 
         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/interceptor/Controller5Interceptor.java', 'java', [9,15], true)
         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller5.java', 'java', [14,31], true)
     h3
         |Redirect Attributes
-        +pos('Redirect Attributes')
     ul
         li 기본적으로 Model의 속성들은 리다이렉트 URL에 포함된다 
             +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller6.java', 'java', [38,44,21,26,46,50,27,31,52,56], true)
@@ -604,7 +599,6 @@ include ../../../source/skeleton.pug
         p 하위 호환을 위해 false가 기본값이다
     h3
         |Flash Attributes
-        +pos('Flash Attributes')
     ul
         li Flash attribute는 다음 요청에서 소비하기 위해 일시적으로 세션에 저장하는 데이터다. 주로 리다이렉션 처리에 이용된다
         li 임시 속성을 담는 데 FlashMap이 이용되고, FlashMapManager이 FlashMap을 관리한다
@@ -615,7 +609,6 @@ include ../../../source/skeleton.pug
         p 그럼에도 불구하고 비동기적으로 빈번하게 요청이 들어오는 경우, 실제로 전달되어야 할 곳이 아닌 다른 요청에 임시 속성을 전달될 가능성이 있다
     h3
         |@ResponseBody
-        +pos('@ResponseBody')
     ul
         li 메서드에 @ResponseBody가 적용된 경우 반환 객체를 HTTP 응답으로(HttpMessageConverter) 전송한다. AJAX에 유용
         li Jackson JSON 예 
@@ -623,7 +616,6 @@ include ../../../source/skeleton.pug
             +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller7.java', 'java', [9], true)
     h3
         |ResponseEntity
-        +pos('ResponseEntity')
     p 예 
         +codeBtn('/Repositories/STS/mvc-java8/src/main/java/io/github/donggi/mvc/controller/Controller8.java', 'java', [10], true)
     h2 Model
@@ -634,7 +626,6 @@ include ../../../source/skeleton.pug
         li @ModelAttribute 메서드는 @RequestMapping 메서드가 사용하는 매개변수 타입들을 사용할 수 있다 ─ @ModelAttribute, 요청 body 관련 부분 제외
     h2
         |DataBinder
-        +pos('DataBinder')
     ul
         li @Controller, @ControllerAdvice 클래스는 @InitBinder 메서드에서 WebDataBinder 인스턴스를 초기화할 수 있다
         p 이를 통해 PropertyEditor, Converter, Formatter를 등록할 수 있다 
@@ -853,12 +844,10 @@ include ../../../source/skeleton.pug
         li DeferredResultProcessingInterceptor, CallableProcessingInterceptor
     h2
         |DeferredResult
-        +pos('DeferredResult')
     p 별개 스레드에서 값을 쓴다 
         +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller1.java', 'java', [9], true)
     h2
         |Callable
-        +pos('Callable')
     p Callable에서 값을 반환한다 
         +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller2.java', 'java', [7], true)
     h2 Processing
@@ -880,7 +869,6 @@ include ../../../source/skeleton.pug
         p 요청 처리에 대한 모든 단계가 비동기적으로 처리될 수 있다. IO는 non-blocking이다
     h2
         |HTTP Streaming
-        +pos('HTTP Streaming')
     h3 ResponseBodyEmitter
     p 각 객체들은 HttpMessageConverter를 통해 변환된다. 
         +codeBtn('/Repositories/STS/mvc-java10/src/main/java/io/github/donggi/mvc/controller/Controller5.java', 'java', [9], true)
@@ -894,7 +882,6 @@ include ../../../source/skeleton.pug
     p Servlet API는 클라이언트 연결 종료를 통지하지 않음에 유의
     h1
         |CORS
-        +pos('CORS')
     h2 @CrossOrigin
     ul ↓ 기본 설정
         li 모든 origin 허용
@@ -958,7 +945,6 @@ include ../../../source/skeleton.pug
         }
     h1
         |View Technologies
-        +pos('View Technologies')
     h2 Thymeleaf
     p Spring MVC 연동은 Thymeleaf 프로젝트가 관리한다. 다음 빈들이 필요하다 ─ ServletContextTemplateResolver, SpringTemplateEngine, ThymeleafViewResolver
     h2 FreeMarker

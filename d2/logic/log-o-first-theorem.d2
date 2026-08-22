@@ -1,0 +1,60 @@
+# 제1 불완전성 정리 — 증명의 두 갈래. 논리학 17장.
+#
+# 무엇을 읽어야 하나: 두 갈래가 대칭이 아니라는 것. 왼쪽은 일관성만으로
+# 닫히고 오른쪽은 조건이 하나 더 든다. 괴델이 ω-일관성을 쓴 자리가 거기고
+# 로서가 그것을 없앤 자리도 거기다. 맨 아래 줄은 갈래 1 에서만 따라 나온다.
+direction: down
+
+씨앗: {
+  label: "대각화 보조정리를 ψ(x) = ¬Prov(x) 에 적용해 얻은 문장 G\nT ⊢ G ↔ ¬Prov(⌜G⌝)     읽기: ‘나는 T 에서 증명되지 않는다’"
+  style.bold: true
+}
+
+왼: {
+  label: "갈래 1 — T ⊬ G      (일관성만으로 닫힌다)"
+  style.bold: true
+  grid-rows: 2
+  grid-columns: 2
+  grid-gap: 8
+
+  a1: { label: "① T ⊢ G 라고 하자" }
+  a2: { label: "② 도출이 실제로 있으니\n그 번호를 넣어\nT ⊢ Prov(⌜G⌝)" }
+  a3: { label: "③ 그런데 G 의 뜻에서\nT ⊢ ¬Prov(⌜G⌝)" }
+  a4: { label: "④ 둘 다 도출되니 T 가 비일관.\n조건 (다) 위반이다" }
+}
+
+오른: {
+  label: "갈래 2 — T ⊬ ¬G      (여기가 어려운 쪽이다)"
+  style.bold: true
+  grid-rows: 2
+  grid-columns: 2
+  grid-gap: 8
+
+  b1: { label: "① T ⊢ ¬G 라고 하자" }
+  b2: { label: "② 그러면 T ⊢ Prov(⌜G⌝).\n‘G 의 도출이 있다’ 를\nT 가 증명한다" }
+  b3: { label: "③ 그런데 갈래 1 에서\n실제 도출은 없었다. 즉 낱낱의\n수 n 마다 T ⊢ ¬Prf(n, ⌜G⌝)" }
+  b4: { label: "④ ‘하나 있다’ 는 증명하면서 후보를\n대면 모두 아니라고 증명한다 = ω-비일관.\n로서는 G 를 손봐 단순 일관성만으로 닫았다" }
+}
+
+참: {
+  label: "그리고 G 는 표준 모형 ℕ 에서 참이다"
+  style.bold: true
+  grid-rows: 1
+  grid-columns: 3
+  grid-gap: 8
+
+  c1: { label: "① 갈래 1 에서\nT ⊬ G 를 얻었다" }
+  c2: { label: "② 그러니 어떤 자연수도\nG 의 도출 번호가 아니다" }
+  c3: { label: "③ ℕ 에서 ∃y Prf(y, ⌜G⌝) 는 거짓\n→ ¬Prov(⌜G⌝) 는 참 → G 는 참" }
+}
+
+씨앗 -> 왼
+씨앗 -> 오른
+왼 -> 참: "갈래 1 에서만 따라 나온다"
+
+주의: {
+  label: "이 마지막 줄은 우리가 메타언어에서 확인한 것이지 T 가 증명한 것이 아니다.\n‘참’ 은 표준 모형 ℕ 에서 참이라는 뜻이고, T 의 모든 모형에서 참이라는 뜻이 아니다"
+  shape: text
+  style.bold: true
+}
+참 -> 주의

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 372" width="800" height="372" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">꽉 찬 모형 둘을 가르는 문장</title><desc id="d">크기 1 과 크기 2 의 꽉 찬 모형은 동일성 없는 문장으로 구별되지 않고 x 와 y 가 다르다는 문장 하나로 구별된다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="400" y="26" text-anchor="middle">술어를 모두 꽉 채운 두 모형 — 크기만 다르다</text><rect x="14" y="46" width="372" height="214" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="200" y="66" text-anchor="middle">작은 모형</text><text class="ink2 sm" x="200" y="83" text-anchor="middle">D = { 1 },  모든 상수는 1 을 가리킨다</text><rect x="54" y="110" width="292" height="118" rx="10" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4" stroke-dasharray="6 4"/><text x="336" y="218" text-anchor="end" fill="var(--ink2)" font-size="11">D</text><text x="200" y="128" text-anchor="middle" fill="var(--s1)" font-size="11" font-weight="600">모든 술어의 해석을 꽉 채웠다</text><path fill="none" stroke="var(--s1)" stroke-width="1.7" stroke-linecap="round" marker-end="url(#ar1)" d="M192.2 168.25 C174 137.7 226 137.7 208.06 168.64"/><circle cx="200" cy="182" r="6" fill="var(--ink)"/><text class="ink bold sm" x="200" y="206" text-anchor="middle">1</text><rect x="414" y="46" width="372" height="214" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="600" y="66" text-anchor="middle">큰 모형</text><text class="ink2 sm" x="600" y="83" text-anchor="middle">D = { 1, 2 },  모든 상수는 1 을 가리킨다</text><rect x="454" y="110" width="292" height="118" rx="10" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4" stroke-dasharray="6 4"/><text x="736" y="218" text-anchor="end" fill="var(--ink2)" font-size="11">D</text><text x="600" y="128" text-anchor="middle" fill="var(--s1)" font-size="11" font-weight="600">모든 술어의 해석을 꽉 채웠다</text><path fill="none" stroke="var(--s1)" stroke-width="1.7" marker-start="url(#ar1)" marker-end="url(#ar1)" d="M553 182 L647 182"/><path fill="none" stroke="var(--s1)" stroke-width="1.7" stroke-linecap="round" marker-end="url(#ar1)" d="M532.2 168.25 C514 137.7 566 137.7 548.06 168.64"/><circle cx="540" cy="182" r="6" fill="var(--ink)"/><text class="ink bold sm" x="540" y="206" text-anchor="middle">1</text><path fill="none" stroke="var(--s1)" stroke-width="1.7" stroke-linecap="round" marker-end="url(#ar1)" d="M652.2 168.25 C634 137.7 686 137.7 668.06 168.64"/><circle cx="660" cy="182" r="6" fill="var(--ink)"/><text class="ink bold sm" x="660" y="206" text-anchor="middle">2</text><rect x="14" y="274" width="772" height="42" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/><text x="400" y="300" text-anchor="middle" fill="var(--ink)" font-size="11" font-weight="600">= 가 없는 언어에서는 원자식이 둘 다 전부 참이므로, 모든 문장의 값이 두 모형에서 똑같다</text><rect x="14" y="324" width="772" height="42" rx="6" fill="none" fill-opacity="1" stroke="var(--s2)" stroke-width="1.5"/><text x="400" y="350" text-anchor="middle" fill="var(--s2)" font-weight="600">∃x ∃y  x ≠ y  —  이 한 문장이 오른쪽에서 참, 왼쪽에서 거짓이 되어 둘을 가른다</text>
+</svg>

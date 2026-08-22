@@ -1,0 +1,54 @@
+# 공리와 프레임 성질의 대응. 논리학 18장.
+#
+# 무엇을 읽어야 하나: 줄마다 가로로 읽어라. 왼쪽은 대상언어의 논리식이고
+# 오른쪽은 관계 R 에 대한 메타언어의 조건이다. 가운데 ⟺ 가 정리다 —
+# 두 방향이 각각 증명을 요구하고, 어려운 쪽은 오른쪽에서 왼쪽이 아니라
+# 왼쪽에서 오른쪽이다(공리가 타당하면 프레임이 그 성질을 갖는다).
+direction: down
+
+대응: {
+  label: "공리 하나가 관계 조건 하나와 정확히 맞물린다"
+  style.bold: true
+  grid-rows: 6
+  grid-columns: 3
+  grid-gap: 8
+
+  머리1: { label: "공리 이름과 도식\n대상언어에 적힌 논리식"; style.bold: true }
+  머리2: { label: "⟺"; style.bold: true }
+  머리3: { label: "프레임 ⟨W, R⟩ 의 조건\nR 에 대한 메타언어의 말"; style.bold: true }
+
+  k1: { label: "K   □(φ → ψ) → (□φ → □ψ)" }
+  k2: { label: "조건 없음" }
+  k3: { label: "모든 프레임에서 타당하다.\n대응이라 부를 것이 없는 바닥이다" }
+
+  d1: { label: "D   □φ → ◇φ" }
+  d2: { label: "⟺" }
+  d3: { label: "직렬적 — 모든 w 에 나가는 화살표가 하나는 있다" }
+
+  t1: { label: "T   □φ → φ"; style.bold: true }
+  t2: { label: "⟺"; style.bold: true }
+  t3: { label: "반사적 — 모든 w 에 대해 wRw"; style.bold: true }
+
+  f1: { label: "4   □φ → □□φ"; style.bold: true }
+  f2: { label: "⟺"; style.bold: true }
+  f3: { label: "추이적 — wRu 이고 uRv 이면 wRv"; style.bold: true }
+
+  e1: { label: "5   ◇φ → □◇φ"; style.bold: true }
+  e2: { label: "⟺"; style.bold: true }
+  e3: { label: "유클리드적 — wRu 이고 wRv 이면 uRv"; style.bold: true }
+}
+
+정리: {
+  label: "이 표 자체가 정리다"
+  style.bold: true
+  쉬운쪽: { label: "← 쉬운 방향\n프레임이 그 성질을 가지면 공리가 타당하다.\n□ 조항을 펴고 성질을 한 번 쓰면 끝난다" }
+  어려운쪽: { label: "→ 어려운 방향\n공리가 프레임에서 타당하면 프레임이 그 성질을 갖는다.\n대우로 간다 — 성질이 깨진 자리를 잡고\n그 자리를 겨냥한 배당 V 를 손으로 만들어 공리를 무너뜨린다"; style.bold: true }
+}
+대응 -> 정리
+
+주의: {
+  label: "양쪽 층을 섞지 마라. 왼쪽 칸은 논리식이고 오른쪽 칸은 논리식이 아니다.\nR 이 반사적이라는 말은 양상 언어 안에서 적을 수 없다 — 우리가 프레임에 대해 하는 말이다.\n5장이 대상언어와 메타언어를 갈라 둔 것이 이 장에서 다시 값을 한다"
+  shape: text
+  style.bold: true
+}
+정리 -> 주의
