@@ -24,7 +24,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { runComponent, ToolError, type BuildLog } from './lib/log.ts';
 import { runIncremental, type Job } from './lib/manifest.ts';
-import { MATH_MARKER, prerenderMath } from './lib/math.ts';
+import { MATH_MARKER, prerenderMath, recycleMathJaxIfHeavy } from './lib/math.ts';
 import { ensureDirFor, fileExists, normalize, resolve, walkFiles } from './lib/paths.ts';
 
 const require = createRequire(import.meta.url);
@@ -91,6 +91,12 @@ async function renderOne(log: BuildLog, source: string, target: string): Promise
         const t1 = Date.now();
         html = await prerenderMath(html);
         mathMs = Date.now() - t1;
+    }
+    // 큰 수식 문서를 이어서 조판하면 MathJax 가 붙든 것이 쌓여 프로세스가 죽는다.
+    // 자세한 사정은 lib/math.ts 의 RSS_LIMIT_BYTES 주석에 있다.
+    const recycled = recycleMathJaxIfHeavy();
+    if (recycled != null) {
+        log.line(`MathJax 를 새로 세운다 — RSS ${(recycled / 1024 / 1024).toFixed(0)}MB`);
     }
     await ensureDirFor(target);
     await fsp.writeFile(resolve(target), html);

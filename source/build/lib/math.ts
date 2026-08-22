@@ -66,17 +66,61 @@ function patchMathJaxAsyncLoad(MathJax: any): void {
 }
 
 /**
- * MathJax 기동은 1초 가까이 걸리므로 프로세스당 한 번만 한다.
+ * 이 크기를 넘으면 조판을 마친 뒤 MathJax 를 버리고 새로 세운다.
+ *
+ * 문서 하나를 조판할 때마다 MathJax 인스턴스가 붙드는 것이 쌓인다. 실제로 재 보면
+ * 큰 문서 넷을 이어서 조판했을 때 RSS 가 306MB → 460 → 695 → 692 로 올라가고 내려오지
+ * 않는다. 수식 문서가 열둘이므로 한 프로세스에서 전부 조판하면 2GB 를 넘길 수 있다.
+ *
+ * (기록해 둔다 — 이 장치를 처음 넣을 때는 빌드가 물리 문서에서 죽는 원인이 이것이라고
+ * 판단했는데 **틀렸다.** 그 죽음은 원격 셸 세션이 끝나면서 프로세스가 함께 죽은 것이었다.
+ * 그래도 위 누적은 실제로 측정된 것이라 장치는 남긴다. 다만 지금까지 이 한도에 걸려
+ * 실제로 다시 세운 적은 없다.)
+ *
+ * `output.clearCache()` 와 `output.reset()` 은 이미 문서마다 부르는데도 줄지 않는다.
+ * 붙들고 있는 것이 `startup` 아래의 인스턴스 상태(adaptor·output·handler)이기 때문이다.
+ * 그래서 인스턴스를 통째로 버린다. 모듈 코드는 그대로 남으므로 다시 세우는 값은
+ * 1초 남짓이고, 수식 문서가 열둘뿐이라 전체 빌드에 몇 초를 더할 뿐이다.
+ */
+const RSS_LIMIT_BYTES = 800 * 1024 * 1024;
+
+/**
+ * MathJax 기동은 1초 가까이 걸리므로 되도록 다시 세우지 않는다.
  * 수식 문서를 하나도 만나지 않으면 아예 불러오지 않는다.
  */
 let mathJaxPromise: Promise<any> | undefined;
+
+/**
+ * 메모리가 많이 올라갔으면 MathJax 를 버린다. 다음 조판에서 새로 세워진다.
+ *
+ * 버린 크기(바이트)를 돌려준다. 버리지 않았으면 null. 호출자가 로그에 남기라고
+ * 값을 주는 것이다 — 조용히 일어나면 빌드가 느려진 이유를 찾을 수 없다.
+ */
+export function recycleMathJaxIfHeavy(): number | null {
+    if (mathJaxPromise == null) return null;
+    const rss = process.memoryUsage().rss;
+    if (rss < RSS_LIMIT_BYTES) return null;
+    mathJaxPromise = undefined;
+    return rss;
+}
 function getMathJax(): Promise<any> {
     mathJaxPromise ??= import('@mathjax/src/components/mjs/node-main/node-main.mjs')
         .then(({ init }) =>
             init({
-                loader: { load: ['input/tex', 'adaptors/liteDOM', 'output/chtml', 'a11y/assistive-mml'] },
+                loader: {
+                    load: ['input/tex', 'adaptors/liteDOM', 'output/chtml', 'a11y/assistive-mml', '[tex]/bussproofs'],
+                },
                 // 구분자는 skeleton.pug 가 쓰던 런타임 설정과 같아야 한다. 어긋나면 조판이 안 된다.
-                tex: { tags: 'ams', inlineMath: [['식[', ']식']], displayMath: [['\\[', '\\]']] },
+                //
+                // bussproofs 는 증명 트리(\begin{prooftree})를 위한 것이다. 논리학 문서의
+                // 자연연역이 이것으로 조판된다. 다른 문서에는 영향이 없다 — 쓰지 않으면
+                // 아무 일도 일어나지 않는다.
+                tex: {
+                    packages: { '[+]': ['bussproofs'] },
+                    tags: 'ams',
+                    inlineMath: [['식[', ']식']],
+                    displayMath: [['\\[', '\\]']],
+                },
                 chtml: { fontURL: MATH_FONT_URL },
                 startup: { typeset: false },
             }),

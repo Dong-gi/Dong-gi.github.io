@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 384" width="800" height="384" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">뢰벤하임-스콜렘 정리가 모형의 크기에 대해 말하는 것</title><desc id="d">무한 모형 하나에서 아래로는 가산 모형이, 위로는 임의로 큰 모형이 따라 나온다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="400" y="26" text-anchor="middle">뢰벤하임-스콜렘 — 한 번 무한 모형이 생기면 크기가 위아래로 미끄러진다</text><path d="M210 84 L210 316" fill="none" stroke="var(--grid)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M194 96 L226 96" fill="none" stroke="var(--s3)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><text x="184" y="101" text-anchor="end" fill="var(--s3)" font-size="11" font-weight="600">더 큰 것들 — 끝이 없다</text><path d="M194 162 L226 162" fill="none" stroke="var(--s3)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><text x="184" y="167" text-anchor="end" fill="var(--s3)" font-size="11" font-weight="600">비가산 — ℝ 과 같은 크기</text><path d="M194 228 L226 228" fill="none" stroke="var(--s1)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><text x="184" y="233" text-anchor="end" fill="var(--s1)" font-size="11" font-weight="600">가산 무한 — ℕ 과 같은 크기</text><path d="M194 300 L226 300" fill="none" stroke="var(--ink2)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><text x="184" y="305" text-anchor="end" fill="var(--ink2)" font-size="11">유한 — 크기 1, 2, 3, …</text><path d="M20 264 L510 264" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 4"/><text x="516" y="268" text-anchor="start" fill="var(--ink2)" font-size="11">무한과 유한의 경계</text><circle cx="210" cy="162" r="7.5" fill="var(--s2)"/><text x="236" y="150" text-anchor="start" fill="var(--s2)" font-size="11" font-weight="600">ℳ — 손에 든 무한 모형 하나</text><text x="236" y="168" text-anchor="start" fill="var(--ink2)" font-size="11">이것이 Γ 를 참으로 만든다</text><path fill="none" stroke="var(--s1)" stroke-width="2.2" stroke-linecap="round" marker-end="url(#ar1)" d="M294 176 L294 220"/><text x="306" y="200" text-anchor="start" fill="var(--s1)" font-size="11" font-weight="600">아래로 — Γ 를 참으로 만드는 가산 모형이 있다</text><path fill="none" stroke="var(--s3)" stroke-width="2.2" stroke-linecap="round" marker-end="url(#ar3)" d="M294 150 L294 104"/><text x="306" y="120" text-anchor="start" fill="var(--s3)" font-size="11" font-weight="600">위로 — 아무리 큰 크기를 잡아도 그 크기의 모형이 있다</text><path d="M250 240 L250 292" fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 4"/><path d="M240 262 L260 278" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M260 262 L240 278" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="270" y="306" text-anchor="start" fill="var(--ink2)" font-size="11">아래로는 가산에서 멈춘다. 유한까지 내려가지는 않는다</text><rect x="14" y="330" width="772" height="44" rx="6" fill="none" fill-opacity="1" stroke="var(--s2)" stroke-width="1.5"/><text x="400" y="357" text-anchor="middle" fill="var(--s2)" font-weight="600">어떤 문장 집합도 자기 모형의 크기를 무한 안에서 한 칸으로 좁히지 못한다</text>
+</svg>

@@ -869,7 +869,125 @@ add((() => {
     };
 })());
 
-/* ---- 8-3. 대칭행렬의 고유방향은 직교한다 ---- */
+/* ---- 8-3. 두 가지 중복도 — 살아남는 방향의 개수 ---- */
+add((() => {
+    const W = 760; const H = 350;
+    const g = [];
+    g.push(txt(W / 2, 26, '고유값이 같아도 제자리 직선에 남는 방향의 개수는 다를 수 있다',
+        { anchor: 'middle', cls: 'ink bold' }));
+    const xR = [-3.4, 3.4]; const yR = [-0.9, 3.5];
+    const dirs = [0, 40, 90, 140];
+    const unit = deg => [Math.cos((deg * Math.PI) / 180), Math.sin((deg * Math.PI) / 180)];
+
+    const draw = (px, title, sub, M, foot, keep) => {
+        const py = 44; const pw = 356; const ph = 272;
+        const { f, w, h, x, y } = sq(xR, yR, px + 35, py + 58, 42);
+        g.push(panel(px, py, pw, ph, title, sub));
+        g.push(axes(f, { xRange: xR, yRange: yR }));
+        const inner = [];
+        for (const deg of dirs) {
+            const u = unit(deg);
+            const far = [u[0] * 3.6, u[1] * 3.6];
+            const near = [-u[0] * 0.9, -u[1] * 0.9];
+            const on = keep == null || keep.includes(deg);
+            inner.push(dln(f, [near, far], { stroke: on ? C1 : CG, sw: on ? 1.6 : 1.2, dash: '5 4' }));
+        }
+        for (const deg of dirs) {
+            const u = unit(deg);
+            const q = mv(M, u);
+            const on = keep == null || keep.includes(deg);
+            inner.push(varw(f, [0, 0], q, { cls: on ? 's1' : 's2', width: 2.6 }));
+            inner.push(varw(f, [0, 0], u, { cls: 'ark', width: 1.6 }));
+        }
+        g.push(clip(x, y, w, h, inner.join('')));
+        g.push(txt(px + pw / 2, py + ph - 14, foot, { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+        return f;
+    };
+
+    {
+        const f = draw(12, '고유공간이 평면 전체', 'B = 3I  :  (x, y) → (3x, 3y)', [[3, 0], [0, 3]],
+            '네 방향 모두 점선 위에 남는다 — 기하적 중복도 2', null);
+        g.push(dtxt(f, [2.12, 2.12], '3배만 커진다', { dx: 6, dy: -6, cls: 'ink bold', size: 'sm' }));
+    }
+    {
+        const f = draw(392, '고유공간이 직선 하나', 'C  :  (x, y) → (3x + y, 3y)', [[3, 1], [0, 3]],
+            '가로축 하나만 점선 위에 남는다 — 기하적 중복도 1', [0]);
+        g.push(dtxt(f, [3.1, 0], '이 방향만 살아남는다', { dx: 0, dy: 24, anchor: 'end', cls: 'ink bold', size: 'sm' }));
+        g.push(dtxt(f, [1, 3], '점선을 벗어났다', { dx: 10, dy: 2, cls: 'ink2', size: 'sm' }));
+    }
+    g.push(txt(W / 2, H - 12, '가는 검은 화살표가 넣은 방향, 굵은 화살표가 나온 방향이다. 두 행렬 모두 고유값은 λ = 3 하나뿐이고 대수적 중복도는 2다',
+        { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    return {
+        name: 'la-sp-multiplicity',
+        svg: svg({
+            width: W,
+            height: H,
+            title: '대수적 중복도와 기하적 중복도의 차이',
+            desc: '고유값 3 이 두 번 겹치는 두 행렬. 3I 는 모든 방향이 고유방향이고 전단이 섞인 쪽은 가로축 하나만 남는다',
+            body: g.join(''),
+        }),
+    };
+})());
+
+/* ---- 8-4. AP = PD 를 열별로 읽는다 ---- */
+add((() => {
+    const W = 780; const H = 336;
+    const g = [];
+    g.push(txt(W / 2, 26, 'AP = PD 는 열마다 A p~j = λ~j p~j 라는 말이다',
+        { anchor: 'middle', cls: 'ink bold' }));
+    const A = [[4, -1], [2, 1]];
+    const xR = [-0.8, 3.8]; const yR = [-0.8, 4.6];
+    {
+        const px = 12; const py = 44; const pw = 340; const ph = 272;
+        const { f } = sq(xR, yR, px + 87, py + 48, 36);
+        g.push(panel(px, py, pw, ph, 'P 의 두 열을 A 에 통과시킨다', 'A  :  (x, y) → (4x − y, 2x + y)'));
+        g.push(axes(f, { xRange: xR, yRange: yR, xTicks: [1, 2, 3], yTicks: [1, 2, 3, 4] }));
+        g.push(dln(f, [[-0.7, -0.7], [3.7, 3.7]], { stroke: CG, sw: 1.4, dash: '6 4' }));
+        g.push(dln(f, [[-0.35, -0.7], [2.25, 4.5]], { stroke: CG, sw: 1.4, dash: '6 4' }));
+        const p1 = [1, 1]; const p2 = [1, 2];
+        g.push(varw(f, [0, 0], mv(A, p1), { cls: 's1', width: 2.8 }));
+        g.push(varw(f, [0, 0], mv(A, p2), { cls: 's2', width: 2.8 }));
+        g.push(varw(f, [0, 0], p1, { cls: 'ark', width: 1.8 }));
+        g.push(varw(f, [0, 0], p2, { cls: 'ark', width: 1.8 }));
+        g.push(dtxt(f, p1, 'p~1', { dx: 13, dy: 11, cls: 'ink2', size: 'sm' }));
+        g.push(dtxt(f, mv(A, p1), 'A p~1 = 3 p~1', { dx: 2, dy: 20, cls: 'f1 bold', size: 'sm' }));
+        g.push(dtxt(f, p2, 'p~2', { dx: -22, dy: 2, cls: 'ink2', size: 'sm' }));
+        g.push(dtxt(f, mv(A, p2), 'A p~2 = 2 p~2', { dx: 9, dy: 4, cls: 'f2 bold', size: 'sm' }));
+        g.push(txt(px + pw / 2, py + ph - 14, '두 화살표 모두 제 점선 위에 남고 길이만 λ 배가 된다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    }
+    {
+        const px = 364; const py = 44; const pw = 404; const ph = 272;
+        g.push(panel(px, py, pw, ph, '같은 사실을 열로 적으면', 'j 열끼리만 견주면 된다'));
+        const cx = px + 92; const cw = 250; const chh = 46;
+        const cell = (y, label, a, b) => {
+            g.push(txt(cx - 14, y + chh / 2 + 5, label, { anchor: 'end', cls: 'ink bold', size: 'sm' }));
+            g.push(box(cx, y, cw, chh, { stroke: CG, sw: 1.3, rx: 4 }));
+            g.push(ln([[cx + cw / 2, y], [cx + cw / 2, y + chh]], { stroke: CG, sw: 1.3 }));
+            g.push(txt(cx + cw / 4, y + chh / 2 + 5, a, { anchor: 'middle', cls: 'f1 bold', size: 'sm' }));
+            g.push(txt(cx + (3 * cw) / 4, y + chh / 2 + 5, b, { anchor: 'middle', cls: 'f2 bold', size: 'sm' }));
+        };
+        cell(py + 62, 'AP =', 'A p~1', 'A p~2');
+        cell(py + 132, 'PD =', 'λ~1 p~1', 'λ~2 p~2');
+        g.push(txt(px + pw / 2, py + 128, '위아래가 같아야 한다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+        g.push(ln([[cx + cw / 4, py + 196], [cx + cw / 4, py + 214]], { stroke: CK, sw: 1.4 }));
+        g.push(ln([[cx + (3 * cw) / 4, py + 196], [cx + (3 * cw) / 4, py + 214]], { stroke: CK, sw: 1.4 }));
+        g.push(txt(cx + cw / 4, py + 234, 'A p~1 = λ~1 p~1', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+        g.push(txt(cx + (3 * cw) / 4, py + 234, 'A p~2 = λ~2 p~2', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+        g.push(txt(px + pw / 2, py + ph - 14, '그래서 P 의 열은 고유벡터, D 의 대각성분은 그 고유값이어야 한다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    }
+    return {
+        name: 'la-sp-diagonalize-columns',
+        svg: svg({
+            width: W,
+            height: H,
+            title: 'AP = PD 를 열 단위로 읽는다',
+            desc: 'AP 의 j 열은 A p_j 이고 PD 의 j 열은 lambda_j p_j 이므로 두 행렬이 같다는 것은 열마다 고유벡터 관계가 성립한다는 뜻이다',
+            body: g.join(''),
+        }),
+    };
+})());
+
+/* ---- 8-5. 대칭행렬의 고유방향은 직교한다 ---- */
 add((() => {
     const W = 780; const H = 322;
     const g = [];
@@ -932,7 +1050,7 @@ add((() => {
     };
 })());
 
-/* ---- 8-4. 복소 고유값 ---- */
+/* ---- 8-6. 복소 고유값 ---- */
 add((() => {
     const W = 760; const H = 326;
     const g = [];
@@ -990,7 +1108,7 @@ add((() => {
     };
 })());
 
-/* ---- 8-5. 켤레복소 쌍은 회전과 확대다 ---- */
+/* ---- 8-7. 켤레복소 쌍은 회전과 확대다 ---- */
 add((() => {
     const W = 744; const H = 316;
     const g = [];

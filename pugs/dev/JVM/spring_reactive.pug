@@ -96,7 +96,6 @@ include ../../../source/skeleton.pug
 
     h2 Reactive Core
     h3 HttpHandler
-        +pos('HttpHandler')
     p 지원하는 HTTP 서버들에 대한 최소한의 추상화
     +asCode('java', 'interface HttpHandler') Mono&lt;Void&gt; handle(ServerHttpRequest request, ServerHttpResponse response)
     +asCode('java', 'Reactor Netty').
@@ -105,7 +104,6 @@ include ../../../source/skeleton.pug
         HttpServer.create().host(host).port(port).handle(adapter).bind().block();
 
     h3 WebHandler API
-        +pos('WebHandler API')
     p org.springframework.web.server 패키지는 HttpHandler 규약 위에서, 컴포넌트 체인(N개 WebExceptionHandler, N개 WebFilter, 1개 WebHandler)을 이용해 요청을 처리한다
     p WebHttpHandlerBuilder를 이용해 체인을 구성할 수 있는데, 직접 builder에 등록하거나, 컴포넌트를 자동 감지한 ApplicationContext를 지정해주면 된다
     p WebHandler API는 웹앱 공통 기능들을 지원한다 : 유저 세션 with 속성, 요청 속성, 요청 Locale/Principal 결정, form data, multipart data 등
@@ -210,7 +208,6 @@ include ../../../source/skeleton.pug
     h3 View Resolution
 
     h2 Annotated Controllers
-        +pos('Annotated Controllers')
     h3 @Controller
     h3 Request Mapping
     h3 Handler Methods
@@ -220,7 +217,6 @@ include ../../../source/skeleton.pug
     h3 Controller Advice
 
     h2 Functional Endpoints
-        +pos('Functional Endpoints')
     h3 Overview
     h3 HandlerFunction
     h3 RouterFunction
@@ -235,4 +231,3 @@ include ../../../source/skeleton.pug
     h2 HTTP Caching
     h2 WebFlux Config
     h3 HTTP message codecs
-        +pos('HTTP message codecs')

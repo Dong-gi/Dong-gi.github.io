@@ -29,7 +29,9 @@ for (const file of process.argv.slice(2)) {
     // 1) 렌더
     // 뼈대는 pugs/ 안에서와 같은 상대 경로로 include 해야 한다.
     const wrapper = `include ../../source/skeleton.pug\n+post({ title: '검사', useMath: true })\n${src}\n`;
-    const tmp = path.join(ROOT, 'pugs/fundamental/.check-tmp.pug');
+    // 파일 이름에 pid 를 넣는다. 여러 담당자가 동시에 이 스크립트를 돌리면
+    // 고정 이름은 서로의 임시 파일을 덮어써 검사 결과가 뒤섞인다.
+    const tmp = path.join(ROOT, `pugs/fundamental/.check-tmp-${process.pid}.pug`);
     fs.writeFileSync(tmp, wrapper);
     let html = '';
     try {

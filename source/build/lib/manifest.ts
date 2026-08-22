@@ -182,30 +182,41 @@ export async function runIncremental(opts: IncrementalOptions): Promise<Incremen
         }
     }
 
+    // 끝난 작업의 해시를 담아 둔다. 실패한 작업은 넣지 않는다 — 넣으면 다음 빌드가
+    // "최신"이라 판단해 실패한 산출물이 영영 갱신되지 않는다.
+    const done: Manifest = { ...next };
+    for (const job of jobs) {
+        if (!dirty.includes(job)) done[job.key] = hashes.get(job.key)!;
+    }
+
     const failed: string[] = [];
     if (dirty.length === 0) {
         log.line(`모두 최신이다 — ${jobs.length}개 건너뜀`);
     } else {
         log.line(`대상 ${dirty.length}개, 건너뜀 ${jobs.length - dirty.length}개`);
         let index = 0;
+        let lastSaved = Date.now();
         for (const job of dirty) {
             index += 1;
             try {
                 await job.run();
+                done[job.key] = hashes.get(job.key)!;
             } catch (e) {
                 failed.push(job.key);
                 log.error(`[${index}/${dirty.length}] ${job.key}`, e);
             }
+            // 도중에 끊겨도 여기까지의 진행이 남게 한다. 수식 문서 하나가 20초씩
+            // 걸리는 빌드에서 프로세스가 죽으면(원격 셸의 시간 제한, Ctrl+C, 절전)
+            // 매니페스트를 끝에서 한 번만 쓰는 구조는 **전부를 잃는다.**
+            // 5초 간격이면 25KB 쓰기가 빌드에 보태는 값은 무시할 만하다.
+            if (Date.now() - lastSaved >= 5000) {
+                await writeManifest(name, done);
+                lastSaved = Date.now();
+            }
         }
     }
 
-    // 실패한 작업은 기록하지 않는다. 기록하면 다음 빌드가 "최신"이라 판단해
-    // 실패한 산출물이 영영 갱신되지 않는다.
-    const failedSet = new Set(failed);
-    for (const job of jobs) {
-        if (failedSet.has(job.key)) continue;
-        next[job.key] = hashes.get(job.key)!;
-    }
+    Object.assign(next, done);
     await writeManifest(name, next);
 
     if (opts.orphanScan) await reportOrphans(opts, jobs, log);
