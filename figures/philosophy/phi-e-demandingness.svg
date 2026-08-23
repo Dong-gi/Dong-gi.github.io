@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 336" width="880" height="336" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">기근 구제 논증이 요구하는 세기를 한 축에 늘어놓은 그림</title><desc id="d">아무 의무도 없음에서 전부 내놓음까지의 축 위에 약한 판본, 문턱 응답, 강한 판본, 그리고 우리가 실제로 하는 자리를 찍었다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">기근 구제가 요구하는 것 — 얼마나 강한가</text><path d="M96 126 L770 126" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"/><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)" d="M768 126 L786 126"/><text class="ink2 sm" x="88" y="156" text-anchor="start">아무 의무도 없다</text><text class="ink2 sm" x="788" y="156" text-anchor="end">가진 것을 다 내놓을 때까지</text><path d="M176.88 114 L176.88 138" fill="none" stroke="var(--ink2)" stroke-width="2.4" stroke-linecap="round"/><circle cx="176.88" cy="126" r="6" fill="var(--ink2)"/><text class="ink bold sm" x="176.88" y="104" text-anchor="middle">우리가 실제로 하는 것</text><text class="ink2 sm" x="176.88" y="184" text-anchor="middle">논증의 결론이</text><text class="ink2 sm" x="176.88" y="202" text-anchor="middle">어디에 있든</text><text class="ink2 sm" x="176.88" y="220" text-anchor="middle">이 왼쪽이다</text><path d="M392.56 114 L392.56 138" fill="none" stroke="var(--s3)" stroke-width="2.4" stroke-linecap="round"/><circle cx="392.56" cy="126" r="6" fill="var(--s3)"/><text class="ink bold sm" x="392.56" y="104" text-anchor="middle">약한 판본</text><text class="ink2 sm" x="392.56" y="184" text-anchor="middle">도덕적으로 중요한</text><text class="ink2 sm" x="392.56" y="202" text-anchor="middle">무엇도 희생하지</text><text class="ink2 sm" x="392.56" y="220" text-anchor="middle">않는 선까지</text><path d="M540.84 114 L540.84 138" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round"/><circle cx="540.84" cy="126" r="6" fill="var(--s1)"/><text class="ink bold sm" x="540.84" y="104" text-anchor="middle">문턱을 둔 응답</text><text class="ink2 sm" x="540.84" y="184" text-anchor="middle">일정한 몫까지가</text><text class="ink2 sm" x="540.84" y="202" text-anchor="middle">의무이고 그 위는</text><text class="ink2 sm" x="540.84" y="220" text-anchor="middle">초과 의무다</text><path d="M689.12 114 L689.12 138" fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round"/><circle cx="689.12" cy="126" r="6" fill="var(--s2)"/><text class="ink bold sm" x="689.12" y="104" text-anchor="middle">강한 판본</text><text class="ink2 sm" x="689.12" y="184" text-anchor="middle">비슷하게 중요한 것을</text><text class="ink2 sm" x="689.12" y="202" text-anchor="middle">희생하기 직전까지</text><text class="ink2 sm" x="40" y="258" text-anchor="start">요구가 크다는 것 자체는 반론이 아니다. 도덕이 편하리라는 보장은 어디에도 없다</text><text class="ink2 sm" x="40" y="279" text-anchor="start">그래도 우리 판단은 어느 지점 너머에서 저항한다. 그 저항이 자료인지 편의인지가 다툼이고, 아직 결판나지 않았다</text><text class="ink2 sm" x="40" y="300" text-anchor="start">어느 판본을 잡아도 우리가 실제로 하는 자리보다 오른쪽이다. 그것이 이 논증이 남기는 것이다</text>
+</svg>

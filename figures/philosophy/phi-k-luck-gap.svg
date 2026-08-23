@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 826 372" width="826" height="372" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">게티어 사례에서 갈라지는 두 길</title><desc id="d">정당화가 대는 근거와 명제를 실제로 참이게 만든 것이 서로 다른 길일 때 게티어 사례가 된다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="20" y="44" width="372" height="250" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.1"/><text class="ink bold sm" x="206" y="30" text-anchor="middle">앎일 때</text><rect x="40" y="148" width="92" height="44" rx="4" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.6"/><text class="ink bold sm" x="86" y="168" text-anchor="middle">믿음</text><text class="ink2 sm" x="86" y="184" text-anchor="middle">P 라고 믿는다</text><rect x="282" y="148" width="92" height="44" rx="4" fill="var(--s3)" fill-opacity="0.14" stroke="var(--s3)" stroke-width="1.6"/><text class="ink bold sm" x="328" y="168" text-anchor="middle">P 가 참</text><text class="ink2 sm" x="328" y="184" text-anchor="middle">이라는 사실</text><path d="M136 170 L271 170" fill="none" stroke="var(--s1)" stroke-width="2.2" stroke-linecap="round"/><path d="M278 170 L271 174.34 L271 165.66 z" fill="var(--s1)"/><text class="ink sm" x="206" y="132" text-anchor="middle">정당화가 대는 근거</text><text class="ink2 sm" x="206" y="208" text-anchor="middle">그 근거가 곧 P 를 참이게 한 것이다</text><text class="ink bold sm" x="206" y="240" text-anchor="middle">두 길이 하나다</text><rect x="434" y="44" width="372" height="250" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.1"/><text class="ink bold sm" x="620" y="30" text-anchor="middle">게티어 사례일 때</text><rect x="454" y="148" width="92" height="44" rx="4" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.6"/><text class="ink bold sm" x="500" y="168" text-anchor="middle">믿음</text><text class="ink2 sm" x="500" y="184" text-anchor="middle">P 라고 믿는다</text><rect x="696" y="148" width="92" height="44" rx="4" fill="var(--s3)" fill-opacity="0.14" stroke="var(--s3)" stroke-width="1.6"/><text class="ink bold sm" x="742" y="168" text-anchor="middle">P 가 참</text><text class="ink2 sm" x="742" y="184" text-anchor="middle">이라는 사실</text><path d="M550 160 Q620 92 692 160" fill="none" stroke="var(--s1)" stroke-width="2.2" stroke-linecap="round"/><path d="M692 160 L680 152 L678 166 z" fill="var(--s1)"/><text class="ink sm" x="620" y="86" text-anchor="middle">정당화가 대는 근거</text><text class="ink2 sm" x="620" y="104" text-anchor="middle">(사실은 거짓이었다)</text><path d="M550 182 Q620 252 692 182" fill="none" stroke="var(--s2)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="6 4"/><path d="M692 182 L680 190 L678 176 z" fill="var(--s2)"/><text class="ink sm" x="620" y="268" text-anchor="middle">P 를 실제로 참이게 만든 것</text><text class="ink2 sm" x="620" y="284" text-anchor="middle">(믿는 사람은 이것을 모른다)</text><circle cx="620" cy="171" r="5" fill="var(--s2)"/><text class="ink bold sm" x="620" y="226" text-anchor="middle">두 길이 갈라졌다</text><text class="ink2 sm" x="20" y="326" text-anchor="start">왼쪽에서는 내가 대는 근거가 곧 그 명제를 참이게 한 것이다. 오른쪽에서는 근거가 헛다리를 짚었는데도 명제가 따로 참이 되었다</text><text class="ink2 sm" x="20" y="348" text-anchor="start">정당화는 왼쪽 화살표까지만 보증한다. 오른쪽 화살표가 어디로 가는지는 정당화가 관여하지 않는다 — 그 틈으로 운이 들어온다</text>
+</svg>

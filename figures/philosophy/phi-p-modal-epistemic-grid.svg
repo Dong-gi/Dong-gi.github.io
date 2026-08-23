@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 396" width="820" height="396" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">필연·우연과 선험·후험의 교차표</title><desc id="d">두 구분이 서로 다른 축이며 크립키가 반대각선 두 칸을 채웠다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="36" y="26" text-anchor="start">양상의 축과 인식의 축은 서로 다른 축이다</text><text class="ink bold sm" x="340" y="74" text-anchor="middle">필연적 — 달리 될 수 없었다</text><text class="ink bold sm" x="655" y="74" text-anchor="middle">우연적 — 달리 될 수 있었다</text><text class="ink bold sm" x="174" y="132" text-anchor="end">선험적</text><text class="ink2 sm" x="174" y="152" text-anchor="end">경험 없이 안다</text><text class="ink bold sm" x="174" y="236" text-anchor="end">후험적</text><text class="ink2 sm" x="174" y="256" text-anchor="end">경험으로 안다</text><rect x="190" y="92" width="300" height="100" rx="4" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.8"/><text class="ink bold sm" x="204" y="118" text-anchor="start">전통적으로 편안한 칸</text><text class="ink2 sm" x="204" y="142" text-anchor="start">2 + 2 = 4</text><text class="ink2 sm" x="204" y="161" text-anchor="start">총각은 미혼이다</text><rect x="505" y="92" width="300" height="100" rx="4" fill="var(--s2)" fill-opacity="0.1" stroke="var(--s2)" stroke-width="1.8"/><text class="ink bold sm" x="519" y="118" text-anchor="start">크립키가 채운 칸</text><text class="ink2 sm" x="519" y="142" text-anchor="start">그 막대의 길이는 1 m 다</text><text class="ink2 sm" x="519" y="161" text-anchor="start">— 그 정의를 세운 사람에게</text><rect x="190" y="196" width="300" height="100" rx="4" fill="var(--s2)" fill-opacity="0.1" stroke="var(--s2)" stroke-width="1.8"/><text class="ink bold sm" x="204" y="222" text-anchor="start">크립키가 채운 칸</text><text class="ink2 sm" x="204" y="246" text-anchor="start">물은 H<tspan baseline-shift="-22%" font-size="76%">2</tspan>O 다</text><text class="ink2 sm" x="204" y="265" text-anchor="start">헤스페루스는 포스포러스다</text><rect x="505" y="196" width="300" height="100" rx="4" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.8"/><text class="ink bold sm" x="519" y="222" text-anchor="start">전통적으로 편안한 칸</text><text class="ink2 sm" x="519" y="246" text-anchor="start">에베레스트가 가장 높다</text><text class="ink2 sm" x="519" y="265" text-anchor="start">지금 비가 온다</text><text class="ink2 sm" x="36" y="330" text-anchor="start">전통적으로는 대각선 두 칸만 있다고 보았다. 필연은 생각만으로 알고 우연은 겪어야 안다는 것이다</text><text class="ink2 sm" x="36" y="349" text-anchor="start">크립키는 반대각선 두 칸을 채웠다. 무엇이 달리 될 수 있었느냐와 무엇을 어떻게 아느냐는 다른 물음이다</text><text class="ink2 sm" x="36" y="368" text-anchor="start">왼쪽 아래 칸을 떠받치는 장치가 고정지시어이고, 그것은 16장이 세운다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 480" width="840" height="480" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">용감한 장교와 기억의 사슬</title><desc id="d">장교는 소년을 기억하고 장군은 장교를 기억하지만 장군은 소년을 기억하지 못한다. 겹치는 사슬로 고치면 이어진다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">용감한 장교 — 기억 관계는 이행적이지 않다</text><path d="M90 200 L740 200" fill="none" stroke="var(--grid)" stroke-width="1.6" stroke-linecap="round"/><circle cx="150" cy="200" r="7" fill="var(--s2)"/><text class="ink bold sm" x="150" y="226" text-anchor="middle">소년</text><text class="ink2 sm" x="150" y="244" text-anchor="middle">과수원에서 매를 맞는다</text><circle cx="410" cy="200" r="7" fill="var(--s2)"/><text class="ink bold sm" x="410" y="226" text-anchor="middle">장교</text><text class="ink2 sm" x="410" y="244" text-anchor="middle">전투에서 깃발을 빼앗는다</text><circle cx="670" cy="200" r="7" fill="var(--s2)"/><text class="ink bold sm" x="670" y="226" text-anchor="middle">장군</text><text class="ink2 sm" x="670" y="244" text-anchor="middle">군대를 지휘한다</text><path d="M410 188 Q280 142 150 188" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round"/><text class="ink2 sm" x="280" y="152" text-anchor="middle">매 맞은 일을 기억한다</text><path d="M670 188 Q540 142 410 188" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round"/><text class="ink2 sm" x="540" y="152" text-anchor="middle">깃발 빼앗은 일을 기억한다</text><path d="M150 140 L150 178" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="4 3"/><path d="M670 140 L670 178" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="4 3"/><path d="M670 140 Q410 78 150 140" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 4"/><path d="M402 101 L418 117 M418 101 L402 117" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" fill="none"/><text class="ink2 sm" x="410" y="86" text-anchor="middle">매 맞은 일은 기억하지 못한다</text><text class="ink2 sm" x="40" y="296" text-anchor="start">직접 기억을 기준으로 삼으면 — 장교는 소년과 같은 사람이고, 장군은 장교와 같은 사람인데,</text><text class="ink2 sm" x="40" y="316" text-anchor="start">장군은 소년과 같은 사람이 아니다. 동일성은 이런 식으로 끊길 수 없다</text><text class="ink bold sm" x="40" y="356" text-anchor="start">고침 — 직접 기억 대신 겹치는 사슬을 쓴다</text><path d="M150 400 L670 400" fill="none" stroke="var(--grid)" stroke-width="1.4" stroke-linecap="round"/><circle cx="150" cy="400" r="5" fill="var(--ink2)"/><circle cx="410" cy="400" r="5" fill="var(--ink2)"/><circle cx="670" cy="400" r="5" fill="var(--ink2)"/><path d="M150 387 L410 387" fill="none" stroke="var(--s3)" stroke-width="3" stroke-linecap="round"/><path d="M410 413 L670 413" fill="none" stroke="var(--s3)" stroke-width="3" stroke-linecap="round"/><text class="ink2 sm" x="280" y="378" text-anchor="middle">소년 — 장교</text><text class="ink2 sm" x="540" y="434" text-anchor="middle">장교 — 장군</text><text class="ink2 sm" x="700" y="405" text-anchor="start">두 마디가 장교에서 겹친다</text><text class="ink2 sm" x="40" y="466" text-anchor="start">사슬로 잇는 순간 기준의 이름이 바뀐다. 기억 기준이 아니라 심리 연속성 기준이 된다</text>
+</svg>

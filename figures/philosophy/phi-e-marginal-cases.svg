@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 368" width="880" height="368" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">능력을 도덕적 지위의 근거로 삼고 선을 그어 본 축</title><desc id="d">이성과 언어와 도덕적 행위 능력의 축 위에 사람과 동물을 놓고 두 개의 후보 경계선을 그었다. 어느 선도 사람과 동물을 깔끔히 가르지 못한다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">능력을 지위의 근거로 삼고 선을 그어 본다</text><text class="ink2 sm" x="40" y="50" text-anchor="start">가로축 — 지위의 근거로 흔히 드는 능력. 이성 · 언어 · 도덕적 행위 능력</text><path d="M70 148 L820 148" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"/><text class="ink2 sm" x="70" y="172" text-anchor="start">낮다</text><text class="ink2 sm" x="820" y="172" text-anchor="end">높다</text><circle cx="145" cy="148" r="5.5" fill="var(--s3)"/><text class="ink sm" x="145" y="132" text-anchor="middle">물고기</text><circle cx="265" cy="148" r="5.5" fill="var(--s3)"/><text class="ink sm" x="265" y="110" text-anchor="middle">개 · 돼지</text><circle cx="385" cy="148" r="5.5" fill="var(--s1)"/><text class="ink sm" x="385" y="132" text-anchor="middle">갓 태어난 아기</text><circle cx="460" cy="148" r="5.5" fill="var(--s3)"/><text class="ink sm" x="460" y="110" text-anchor="middle">유인원</text><circle cx="535" cy="148" r="5.5" fill="var(--s1)"/><text class="ink sm" x="535" y="132" text-anchor="middle">심한 인지 장애가 있는 사람</text><circle cx="730" cy="148" r="5.5" fill="var(--s1)"/><text class="ink sm" x="730" y="132" text-anchor="middle">보통의 성인</text><path d="M325 138 L325 188" fill="none" stroke="var(--s1)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="6 4"/><path d="M610 138 L610 188" fill="none" stroke="var(--s2)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="6 4"/><text class="ink bold sm" x="325" y="204" text-anchor="middle">선 B</text><text class="ink bold sm" x="610" y="204" text-anchor="middle">선 A</text><text class="ink bold sm" x="60" y="234" text-anchor="start">선 B — 모든 사람을 안에 두려면 여기쯤이다</text><text class="ink2 sm" x="60" y="252" text-anchor="start">그러면 많은 동물이 함께 안으로 들어온다</text><text class="ink bold sm" x="460" y="234" text-anchor="start">선 A — 모든 동물을 밖에 두려면 여기쯤이다</text><text class="ink2 sm" x="460" y="252" text-anchor="start">그러면 왼쪽에 있는 사람들도 함께 밖으로 나간다</text><text class="ink2 sm" x="40" y="290" text-anchor="start">이 형태가 가장자리 사례 논증이다. 능력을 근거로 삼으면 어느 높이에 그어도 한쪽이 어긋난다</text><text class="ink2 sm" x="40" y="311" text-anchor="start">응답들 — 종의 구성원임 자체가 근거라는 것, 관계와 소속이 의무를 낳는다는 것, 정상적인 종의 능력을 본다는 것</text><text class="ink2 sm" x="40" y="332" text-anchor="start">이 틀 자체에 대한 반론도 있다. 어떤 사람들을 ‘가장자리’ 로 놓고 논증의 재료로 쓰는 것이 옳으냐는 것이다</text><text class="ink2 sm" x="40" y="353" text-anchor="start">쾌고 감수 능력을 근거로 삼으면 축이 아예 달라진다. 그때는 선이 사람과 동물 사이에 그어지지 않는다</text>
+</svg>

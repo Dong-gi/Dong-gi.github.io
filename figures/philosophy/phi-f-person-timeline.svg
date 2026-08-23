@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 352" width="820" height="352" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">시간을 지나는 한 사람</title><desc id="d">다섯 살·스무 살·예순 살에서 몸도 믿음도 기억도 달라지는데 우리는 그것을 한 사람으로 센다. 무엇이 하나로 묶는지가 물음이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">성질은 전부 바뀌었는데 우리는 하나로 센다</text><path d="M70 176 L746 176" fill="none" stroke="var(--grid)" stroke-width="1.6" stroke-linecap="round"/><path class="s1" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M740 176 L760 176"/><text class="ink2 sm" x="760" y="202" text-anchor="end">시간</text><circle cx="150" cy="176" r="7" fill="var(--s2)"/><text class="ink bold sm" x="150" y="158" text-anchor="middle">다섯 살</text><text class="ink2 sm" x="150" y="206" text-anchor="middle">몸의 물질이 지금과 거의</text><text class="ink2 sm" x="150" y="223" text-anchor="middle">겹치지 않는다</text><circle cx="400" cy="176" r="7" fill="var(--s2)"/><text class="ink bold sm" x="400" y="158" text-anchor="middle">스무 살</text><text class="ink2 sm" x="400" y="206" text-anchor="middle">믿음도 성격도</text><text class="ink2 sm" x="400" y="223" text-anchor="middle">그때와 다르다</text><circle cx="650" cy="176" r="7" fill="var(--s2)"/><text class="ink bold sm" x="650" y="158" text-anchor="middle">예순 살</text><text class="ink2 sm" x="650" y="206" text-anchor="middle">다섯 살 때 일을</text><text class="ink2 sm" x="650" y="223" text-anchor="middle">거의 기억하지 못한다</text><path d="M150 118 L150 104 L650 104 L650 118" fill="none" stroke="var(--s1)" stroke-width="1.8" stroke-linecap="round"/><text class="ink bold sm" x="400" y="94" text-anchor="middle">그런데도 한 사람이다 — 수적으로 하나</text><text class="ink bold" x="400" y="74" text-anchor="middle">무엇이 이 셋을 하나로 묶는가</text><text class="ink2 sm" x="40" y="264" text-anchor="start">10장이 배에 대해 물은 것을 여기서는 사람에 대해 묻는다. 달라지는 것이 둘 있다</text><text class="ink2 sm" x="40" y="286" text-anchor="start">첫째, 사람은 안에서 자기를 바라본다. 어느 쪽이 나인지가 내게는 남의 일이 아니다</text><text class="ink2 sm" x="40" y="308" text-anchor="start">둘째, 답이 실천을 움직인다. 책임을 누구에게 묻고, 누구의 앞날을 미리 걱정할지가 여기에 걸려 있다</text><text class="ink2 sm" x="40" y="336" text-anchor="start">질적으로 같다는 말과 수적으로 하나라는 말을 섞지 않는 것이 이 장의 첫 단추다</text>
+</svg>

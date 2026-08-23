@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 398" width="840" height="398" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">빨간 사과 둘을 읽는 두 가지 방식</title><desc id="d">실재론은 두 사과 위에 보편자 하나를 두고 유명론은 그 자리를 비워 둔다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="36" y="26" text-anchor="start">빨간 사과 둘 — 같은 장면을 두 가지로 읽는다</text><rect x="36" y="44" width="376" height="252" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="224" y="70" text-anchor="middle">실재론 — 하나가 여럿에 걸쳐 있다</text><rect x="139" y="86" width="170" height="34" rx="4" fill="var(--s1)" fill-opacity="0.14" stroke="var(--s1)" stroke-width="1.6"/><text class="ink sm" x="224" y="108" text-anchor="middle">보편자 ‘빨강’ 하나</text><path d="M190 122 L158 166" fill="none" stroke="var(--s1)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M258 122 L290 166" fill="none" stroke="var(--s1)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar1)"/><circle cx="150" cy="198" r="28" fill="var(--s2)" fill-opacity="0.3" stroke="var(--s2)" stroke-width="1.5"/><circle cx="298" cy="198" r="28" fill="var(--s2)" fill-opacity="0.3" stroke="var(--s2)" stroke-width="1.5"/><text class="ink sm" x="150" y="248" text-anchor="middle">사과 a</text><text class="ink sm" x="298" y="248" text-anchor="middle">사과 b</text><text class="ink2 sm" x="224" y="278" text-anchor="middle">같은 것 하나를 둘이 나눠 가진다</text><rect x="444" y="44" width="376" height="252" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold sm" x="632" y="70" text-anchor="middle">유명론 — 그런 것은 없다</text><text class="ink2 sm" x="632" y="108" text-anchor="middle">보편자가 놓일 자리를 비워 둔다</text><rect x="500" y="158" width="264" height="104" rx="10" fill="none" fill-opacity="1" stroke="var(--s3)" stroke-width="1.6" stroke-dasharray="6 4"/><circle cx="558" cy="198" r="28" fill="var(--s2)" fill-opacity="0.3" stroke="var(--s2)" stroke-width="1.5"/><circle cx="706" cy="198" r="28" fill="var(--s2)" fill-opacity="0.3" stroke="var(--s2)" stroke-width="1.5"/><text class="ink sm" x="558" y="248" text-anchor="middle">사과 a</text><text class="ink sm" x="706" y="248" text-anchor="middle">사과 b</text><text class="ink2 sm" x="632" y="278" text-anchor="middle">‘빨강’ 은 이 둘을 함께 부르는 말이다</text><text class="ink2 sm" x="36" y="328" text-anchor="start">두 입장은 보이는 것을 두고 다투지 않는다. 사과가 둘 있고 둘 다 빨갛다는 데는 합의한다</text><text class="ink2 sm" x="36" y="347" text-anchor="start">다투는 것은 그 사실을 참으로 만드는 목록에 항목이 하나 더 있느냐다. 실재론은 둔다. 유명론은 두지 않는다</text><text class="ink2 sm" x="36" y="366" text-anchor="start">그래서 이 다툼은 사과를 더 자세히 들여다본다고 풀리지 않는다. 여기가 형이상학이 경험 과학과 갈리는 자리다</text>
+</svg>

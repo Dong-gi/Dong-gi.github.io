@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 384" width="880" height="384" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">열린 물음 검사와 그 검사에 대한 오늘의 평가</title><desc id="d">닫힌 물음과 열린 물음을 나란히 놓고, 무어의 결론과 그 결론이 결정적이지 않은 두 이유를 적었다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">열린 물음 검사 — 두 물음을 나란히 놓는다</text><rect x="40" y="48" width="396" height="116" rx="3" fill="var(--s3)" fill-opacity="0.14" stroke="var(--s3)" stroke-width="1.9"/><text class="ink bold sm" x="51" y="71" text-anchor="start">닫힌 물음</text><text class="ink2 sm" x="51" y="92" text-anchor="start">‘그는 결혼하지 않은 성인 남자다.</text><text class="ink2 sm" x="51" y="109" text-anchor="start">그런데 그는 총각인가?’</text><text class="ink2 sm" x="51" y="126" text-anchor="start">물을 것이 남아 있지 않다. 두 말의 뜻이 같다</text><rect x="464" y="48" width="376" height="116" rx="3" fill="var(--s2)" fill-opacity="0.14" stroke="var(--s2)" stroke-width="1.9"/><text class="ink bold sm" x="475" y="71" text-anchor="start">열린 물음</text><text class="ink2 sm" x="475" y="92" text-anchor="start">‘그 행위는 쾌락의 총량을 늘린다.</text><text class="ink2 sm" x="475" y="109" text-anchor="start">그런데 그 행위는 좋은가?’</text><text class="ink2 sm" x="475" y="126" text-anchor="start">여전히 물을 것이 남아 보인다</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M436 106 L462 106"/><rect x="40" y="182" width="800" height="66" rx="3" fill="none" fill-opacity="1" stroke="var(--s1)" stroke-width="1.6"/><text class="ink bold sm" x="52" y="206" text-anchor="start">무어의 논증 — 어떤 자연적 성질을 넣어도 물음이 열려 있다면, 좋음은 그 성질이 아니다.</text><text class="ink bold sm" x="52" y="230" text-anchor="start">그러므로 좋음은 자연적 성질이 아니고, 더 쪼갤 수 없는 단순한 것이다</text><text class="ink2 sm" x="40" y="284" text-anchor="start">오늘의 표준 평가 — 이 논증은 결정적이지 않다. 두 자리에서 새어 나간다</text><text class="ink2 sm" x="40" y="305" text-anchor="start">① 옳은 분석이라 해도 그것이 말하는 사람에게 곧바로 보이리라는 보장이 없다. 보이면 시시하고 안 보이면 열려 보인다</text><text class="ink2 sm" x="40" y="326" text-anchor="start">② 11장의 후험적 필연 — 참인 동일성인데도 물음이 열려 보이는 일이 실제로 있다. 물과 그 화학적 구성이 그렇다</text><text class="ink2 sm" x="40" y="347" text-anchor="start">결정적이지 않다는 것과 자연주의가 이겼다는 것은 다르다. 물음이 왜 열려 보이는지는 여전히 설명되어야 한다</text>
+</svg>

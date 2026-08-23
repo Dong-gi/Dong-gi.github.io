@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 348" width="800" height="348" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">결정론이 참인 세계와 거짓인 세계</title><desc id="d">왼쪽은 지금에서 미래로 가는 길이 하나뿐인 세계, 오른쪽은 셋으로 갈라지는 세계다. 어느 쪽에도 자유는 그려져 있지 않다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">결정론이 참인 세계와 거짓인 세계 — 미래의 갈래</text><rect x="40" y="46" width="350" height="176" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/><text class="ink bold sm" x="58" y="72" text-anchor="start">결정론이 참인 세계</text><text class="ink2 sm" x="58" y="92" text-anchor="start">과거의 상태와 자연법칙이 미래를 하나로 못 박는다</text><path d="M196 112 L196 196" fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="4 3"/><path d="M62 150 L196 150" fill="none" stroke="var(--ink2)" stroke-width="2.6" stroke-linecap="round"/><path class="s1" fill="none" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ar1)" d="M196 150 L372 150"/><circle cx="196" cy="150" r="5.5" fill="var(--s2)"/><text class="ink2 sm" x="62" y="212" text-anchor="start">과거</text><text class="ink2 sm" x="196" y="212" text-anchor="middle">지금</text><text class="ink2 sm" x="372" y="212" text-anchor="end">미래</text><rect x="410" y="46" width="350" height="176" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/><text class="ink bold sm" x="428" y="72" text-anchor="start">결정론이 거짓인 세계</text><text class="ink2 sm" x="428" y="92" text-anchor="start">같은 과거와 같은 법칙에서 여러 미래가 열려 있다</text><path d="M566 112 L566 196" fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="4 3"/><path d="M432 150 L566 150" fill="none" stroke="var(--ink2)" stroke-width="2.6" stroke-linecap="round"/><path class="s1" fill="none" stroke-width="2.2" stroke-linecap="round" marker-end="url(#ar1)" d="M566 150 L742 118"/><path class="s1" fill="none" stroke-width="2.2" stroke-linecap="round" marker-end="url(#ar1)" d="M566 150 L742 150"/><path class="s1" fill="none" stroke-width="2.2" stroke-linecap="round" marker-end="url(#ar1)" d="M566 150 L742 182"/><circle cx="566" cy="150" r="5.5" fill="var(--s2)"/><text class="ink2 sm" x="432" y="212" text-anchor="start">과거</text><text class="ink2 sm" x="566" y="212" text-anchor="middle">지금</text><text class="ink2 sm" x="742" y="212" text-anchor="end">미래</text><text class="ink2 sm" x="40" y="258" text-anchor="start">두 그림 어디에도 자유는 그려져 있지 않다. 갈래가 여럿이라는 것과 그 갈래를 내가 고른다는 것은 다른 말이다</text><text class="ink2 sm" x="40" y="280" text-anchor="start">왼쪽에서 자유가 사라지는지, 오른쪽에서 자유가 생기는지 — 그림만 보아서는 정해지지 않는다</text><text class="ink2 sm" x="40" y="302" text-anchor="start">어느 쪽이 우리 세계인가는 첫째 물음이고, 자유의지가 그것과 양립하는가는 둘째 물음이다. 둘은 서로 다른 물음이다</text><text class="ink2 sm" x="40" y="330" text-anchor="start">결정론은 예측 가능성이 아니다. 아무도 계산할 수 없어도 미래가 하나로 정해져 있으면 결정론은 참이다</text>
+</svg>

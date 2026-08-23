@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 884 396" width="884" height="396" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">논증 재구성의 전과 후</title><desc id="d">산문 한 문단을 번호 붙은 전제와 결론으로 옮긴 결과</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="30" y="28" text-anchor="start">재구성 — 산문 한 문단에서 번호 붙은 논증으로</text><text class="ink bold sm" x="30" y="54" text-anchor="start">원래 글</text><rect x="30" y="64" width="372" height="244" rx="4" fill="var(--grid)" fill-opacity="0.3" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink sm" x="46" y="96" text-anchor="start">도서관 개방 시간을 늘려야 한다. 시험 기간이면</text><text class="ink sm" x="46" y="122" text-anchor="start">자리가 모자라 학생들이 복도에 앉아 있다. 학교는</text><text class="ink sm" x="46" y="148" text-anchor="start">학생이 공부할 자리를 마련할 책임이 있다.</text><text class="ink sm" x="46" y="174" text-anchor="start">예산이 든다는 반대가 있지만, 지난해 예산은</text><text class="ink sm" x="46" y="200" text-anchor="start">쓰지 못하고 남았다.</text><text class="ink2 sm" x="46" y="250" text-anchor="start">걷어낸 것 — ‘복도에 앉아 있다’ 는 자리가</text><text class="ink2 sm" x="46" y="270" text-anchor="start">모자란다는 전제의 예시일 뿐 따로 된 전제가 아니다.</text><path d="M406 186 L440 186" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><text class="ink bold sm" x="452" y="54" text-anchor="start">재구성한 논증</text><rect x="452" y="64" width="402" height="244" rx="4" fill="var(--s1)" fill-opacity="0.07" stroke="var(--s1)" stroke-width="1.6"/><text class="ink bold sm" x="468" y="96" text-anchor="start">(P1)</text><text class="ink sm" x="508" y="96" text-anchor="start">시험 기간에 도서관 자리가 모자란다</text><text class="ink bold sm" x="468" y="126" text-anchor="start">(P2)</text><text class="ink sm" x="508" y="126" text-anchor="start">학교는 학생이 공부할 자리를 마련할 책임이 있다</text><text class="ink bold sm" x="468" y="156" text-anchor="start">(P3)</text><text class="ink sm" x="508" y="156" text-anchor="start">개방 시간을 늘리면 자리 부족이 줄어든다</text><text class="ink bold sm" x="468" y="186" text-anchor="start">(P4)</text><text class="ink sm" x="508" y="186" text-anchor="start">남은 예산으로 비용을 댈 수 있다</text><text class="ink2 sm" x="508" y="235" text-anchor="start">(P3) 은 글에 없다 — 채워 넣은 숨은 전제</text><path d="M468 252 L838 252" fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linecap="round"/><text class="ink bold sm" x="468" y="276" text-anchor="start">(C)</text><text class="ink bold sm" x="508" y="276" text-anchor="start">도서관 개방 시간을 늘려야 한다</text><text class="ink2 sm" x="30" y="340" text-anchor="start">오른쪽 형태가 되어야 비로소 물을 수 있는 것들이 있다. 어느 전제를 공격할 것인가, 전제가 다 참이면 결론이 정말 따라 나오는가,</text><text class="ink2 sm" x="30" y="360" text-anchor="start">그리고 (P3) 처럼 글쓴이가 말하지 않고 기대고 있던 것이 무엇인가. 산문 상태에서는 이 물음들이 서로 엉켜 있다.</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 288" width="800" height="288" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">가짜 헛간 들판</title><desc id="d">가짜 헛간 여럿 사이에서 하필 진짜를 본 사람의 믿음은 참이고 정당화되었지만 앎으로 보이지 않는다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="30" y="26" text-anchor="start">가짜 헛간 들판 — 하필 진짜를 보았다</text><path d="M30 124 L770 124" fill="none" stroke="var(--grid)" stroke-width="1.4" stroke-linecap="round"/><path d="M88 120 L88 94 L110 76 L132 94 L132 120 z" fill="var(--s2)" fill-opacity="0.1" stroke="var(--s2)" stroke-width="1.7" stroke-dasharray="5 4"/><text class="ink2 sm" x="110" y="136" text-anchor="middle">앞면뿐</text><path d="M188 120 L188 94 L210 76 L232 94 L232 120 z" fill="var(--s2)" fill-opacity="0.1" stroke="var(--s2)" stroke-width="1.7" stroke-dasharray="5 4"/><text class="ink2 sm" x="210" y="136" text-anchor="middle">앞면뿐</text><path d="M288 120 L288 94 L310 76 L332 94 L332 120 z" fill="var(--s2)" fill-opacity="0.1" stroke="var(--s2)" stroke-width="1.7" stroke-dasharray="5 4"/><text class="ink2 sm" x="310" y="136" text-anchor="middle">앞면뿐</text><path d="M388 120 L388 94 L410 76 L432 94 L432 120 z" fill="var(--s3)" fill-opacity="0.24" stroke="var(--s3)" stroke-width="1.7"/><path d="M388 120 L396 112 L440 112 L432 120" fill="none" stroke="var(--s3)" stroke-width="1.4" stroke-linecap="round"/><path d="M432 94 L440 86 L440 112" fill="none" stroke="var(--s3)" stroke-width="1.4" stroke-linecap="round"/><text class="ink bold sm" x="414" y="136" text-anchor="middle">진짜</text><path d="M488 120 L488 94 L510 76 L532 94 L532 120 z" fill="var(--s2)" fill-opacity="0.1" stroke="var(--s2)" stroke-width="1.7" stroke-dasharray="5 4"/><text class="ink2 sm" x="510" y="136" text-anchor="middle">앞면뿐</text><path d="M588 120 L588 94 L610 76 L632 94 L632 120 z" fill="var(--s2)" fill-opacity="0.1" stroke="var(--s2)" stroke-width="1.7" stroke-dasharray="5 4"/><text class="ink2 sm" x="610" y="136" text-anchor="middle">앞면뿐</text><path d="M688 120 L688 94 L710 76 L732 94 L732 120 z" fill="var(--s2)" fill-opacity="0.1" stroke="var(--s2)" stroke-width="1.7" stroke-dasharray="5 4"/><text class="ink2 sm" x="710" y="136" text-anchor="middle">앞면뿐</text><circle cx="410" cy="208" r="9" fill="none" stroke="var(--s1)" stroke-width="2"/><text class="ink sm" x="410" y="236" text-anchor="middle">지나가는 사람</text><path d="M410 196 L410 159" fill="none" stroke="var(--s1)" stroke-width="1.8" stroke-linecap="round"/><path d="M410 152 L414.34 159 L405.66 159 z" fill="var(--s1)"/><text class="ink2 sm" x="392" y="178" text-anchor="end">이 하나만 본다</text><rect x="486" y="164" width="284" height="76" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.1"/><text class="ink sm" x="498" y="186" text-anchor="start">믿음 — 저기 헛간이 있다</text><text class="ink sm" x="498" y="204" text-anchor="start">참인가 — 참이다. 진짜 헛간이다</text><text class="ink sm" x="498" y="222" text-anchor="start">정당화되었는가 — 눈으로 보았다</text><text class="ink2 sm" x="30" y="170" text-anchor="start">거짓인 전제를</text><text class="ink2 sm" x="30" y="188" text-anchor="start">거친 적이 없다.</text><text class="ink2 sm" x="30" y="206" text-anchor="start">그런데도 앎이</text><text class="ink2 sm" x="30" y="224" text-anchor="start">아닌 것 같다</text><text class="ink2 sm" x="30" y="272" text-anchor="start">조금만 왼쪽이나 오른쪽을 보았다면 같은 방식으로 거짓을 믿었을 것이다 — 참이 된 것이 그 사람의 공이 아니다</text>
+</svg>

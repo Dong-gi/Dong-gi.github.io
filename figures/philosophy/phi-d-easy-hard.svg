@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 458" width="900" height="458" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">쉬운 문제들과 어려운 문제, 그리고 설명적 간극</title><desc id="d">쉬운 문제 다섯 줄은 물음이 닫히는 선에 닿고 어려운 문제 한 줄만 선에 닿지 못한 채 간극이 남는다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">한 축에 놓으면 설명적 간극이 생기는 자리가 보인다</text><path d="M706 62 L706 366" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round"/><text class="ink bold sm" x="718" y="66" text-anchor="start">물음이</text><text class="ink bold sm" x="718" y="84" text-anchor="start">닫히는 자리</text><text class="ink bold sm" x="40" y="76" text-anchor="start">쉬운 문제 — 무엇을 하면 풀리는지 안다</text><text class="ink sm" x="46" y="108" text-anchor="start">자극을 갈라낸다</text><path d="M292 104 L702 104" fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)"/><text class="ink sm" x="46" y="138" text-anchor="start">주의가 옮겨 간다</text><path d="M292 134 L702 134" fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)"/><text class="ink sm" x="46" y="168" text-anchor="start">정보가 여러 체계에 쓰이게 된다</text><path d="M292 164 L702 164" fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)"/><text class="ink sm" x="46" y="198" text-anchor="start">자기 내부 상태를 보고한다</text><path d="M292 194 L702 194" fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)"/><text class="ink sm" x="46" y="228" text-anchor="start">잠과 깸이 갈린다</text><path d="M292 224 L702 224" fill="none" stroke="var(--s1)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)"/><text class="ink2 sm" x="495" y="262" text-anchor="middle">메커니즘을 찾아내면 그 줄은 선에 닿는다</text><path d="M40 296 L860 296" fill="none" stroke="var(--grid)" stroke-width="1.1" stroke-linecap="round" stroke-dasharray="5 4"/><text class="ink bold sm" x="40" y="326" text-anchor="start">어려운 문제 — 하나뿐이다</text><text class="ink sm" x="46" y="352" text-anchor="start">왜 그 모든 처리에 겪어짐이 따라붙는가</text><path d="M292 348 L520 348" fill="none" stroke="var(--s2)" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar2)"/><path d="M528 348 L672 348" fill="none" stroke="var(--s2)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="4 5"/><path d="M604 338 L624 358 M624 338 L604 358" stroke="var(--s2)" stroke-width="2.6" stroke-linecap="round" fill="none"/><text class="ink bold sm" x="614" y="324" text-anchor="middle">설명적 간극</text><text class="ink2 sm" x="614" y="378" text-anchor="middle">메커니즘을 아무리 가리켜도</text><text class="ink2 sm" x="614" y="396" text-anchor="middle">‘그런데 왜 그것이 겪어지는가’ 가 다시 물어진다</text><text class="ink2 sm" x="40" y="428" text-anchor="start">쉽다는 말은 풀기 쉽다는 뜻이 아니라 무엇을 찾아야 하는지가 정해져 있다는 뜻이다</text><text class="ink2 sm" x="40" y="448" text-anchor="start">이 가름 자체가 중립적인 분류는 아니다. 어려운 문제가 잘못 세워진 물음이라고 보는 쪽은 아래 줄을 별개의 줄로 받아들이지 않는다</text>
+</svg>

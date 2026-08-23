@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 830 384" width="830" height="384" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">당구공 충돌에서 관찰되는 것과 되지 않는 것</title><desc id="d">접촉과 선행과 반복은 관찰되지만 필연적 연결에 해당하는 광경은 없다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="36" y="26" text-anchor="start">당구공이 부딪친다 — 무엇이 보이는가</text><rect x="36" y="44" width="758" height="118" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><path d="M415 50 L415 156" fill="none" stroke="var(--grid)" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/><text class="ink2 sm" x="226" y="68" text-anchor="middle">부딪치기 전</text><text class="ink2 sm" x="604" y="68" text-anchor="middle">부딪친 뒤</text><circle cx="150" cy="118" r="22" fill="var(--s1)" fill-opacity="0.28" stroke="var(--s1)" stroke-width="1.5"/><text class="ink sm" x="150" y="123" text-anchor="middle">A</text><path d="M178 118 L244 118" fill="none" stroke="var(--s1)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar1)"/><circle cx="300" cy="118" r="22" fill="var(--s2)" fill-opacity="0.28" stroke="var(--s2)" stroke-width="1.5"/><text class="ink sm" x="300" y="123" text-anchor="middle">B</text><circle cx="500" cy="118" r="22" fill="var(--s1)" fill-opacity="0.28" stroke="var(--s1)" stroke-width="1.5"/><text class="ink sm" x="500" y="123" text-anchor="middle">A</text><circle cx="600" cy="118" r="22" fill="var(--s2)" fill-opacity="0.28" stroke="var(--s2)" stroke-width="1.5"/><text class="ink sm" x="600" y="123" text-anchor="middle">B</text><path d="M628 118 L720 118" fill="none" stroke="var(--s2)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar2)"/><rect x="36" y="176" width="758" height="28" rx="4" fill="var(--s3)" fill-opacity="0.07"/><text class="ink bold" x="44" y="196" text-anchor="start">✓</text><text class="ink sm" x="70" y="196" text-anchor="start">닿았다 — 두 공이 한자리에서 만났다</text><rect x="36" y="210" width="758" height="28" rx="4" fill="var(--s3)" fill-opacity="0.07"/><text class="ink bold" x="44" y="230" text-anchor="start">✓</text><text class="ink sm" x="70" y="230" text-anchor="start">앞뒤가 있다 — A 의 움직임이 먼저고 B 의 움직임이 나중이다</text><rect x="36" y="244" width="758" height="28" rx="4" fill="var(--s3)" fill-opacity="0.07"/><text class="ink bold" x="44" y="264" text-anchor="start">✓</text><text class="ink sm" x="70" y="264" text-anchor="start">늘 그랬다 — 이런 장면을 여러 번 보았고 어긋난 적이 없다</text><rect x="36" y="278" width="758" height="28" rx="4" fill="var(--s2)" fill-opacity="0.14"/><text class="ink bold" x="44" y="298" text-anchor="start">✗</text><text class="ink sm" x="70" y="298" text-anchor="start">‘A 때문에 B 가 움직일 수밖에 없었다’ — 이것에 해당하는 광경은 없다</text><text class="ink2 sm" x="36" y="352" text-anchor="start">흄의 논점은 인과가 없다는 것이 아니라, 넷째 줄에 해당하는 것을 감각에서 찾을 수 없다는 것이다</text>
+</svg>

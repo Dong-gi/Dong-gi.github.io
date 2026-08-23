@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 372" width="840" height="372" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">중용은 두 극단의 산술적 중간이 아니다</title><desc id="d">두 축 위에서 중용의 자리가 각각 중간이 아닌 곳에 찍혀 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">중용은 산술적 중간이 아니다</text><text class="ink2 sm" x="40" y="74" text-anchor="start">두려움과</text><text class="ink2 sm" x="40" y="90" text-anchor="start">자신감</text><path d="M150 80 L760 80" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"/><path d="M150 73 L150 87" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"/><path d="M760 73 L760 87" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"/><circle cx="528.2" cy="80" r="7" fill="var(--s1)"/><text class="ink2 sm" x="150" y="104" text-anchor="start">결핍 — 비겁</text><text class="ink2 sm" x="760" y="104" text-anchor="end">과잉 — 무모</text><text class="ink bold sm" x="528.2" y="64" text-anchor="middle">중용 — 용기</text><path d="M455 54 L455 88" fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="4 3"/><text class="ink2 sm" x="40" y="166" text-anchor="start">몸의 즐거움</text><path d="M150 170 L760 170" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"/><path d="M150 163 L150 177" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"/><path d="M760 163 L760 177" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round"/><circle cx="381.8" cy="170" r="7" fill="var(--s1)"/><text class="ink2 sm" x="150" y="194" text-anchor="start">결핍 — 무감각</text><text class="ink2 sm" x="760" y="194" text-anchor="end">과잉 — 방종</text><text class="ink bold sm" x="381.8" y="154" text-anchor="middle">중용 — 절제</text><path d="M455 144 L455 178" fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="4 3"/><text class="ink2 sm" x="150" y="214" text-anchor="start">점선이 산술적 중간이다. 중용은 거기 있지 않다</text><text class="ink2 sm" x="40" y="254" text-anchor="start">중용의 자리는 사람마다 상황마다 다르다. 그래서 표로 미리 적어 둘 수 없다</text><text class="ink2 sm" x="40" y="275" text-anchor="start">어디가 중용인지 그 자리에서 짚어 내는 능력이 실천지다. 규칙 목록으로 대신하려 하면 덕 윤리가 아니게 된다</text><text class="ink2 sm" x="40" y="296" text-anchor="start">이것이 강점이자 약점이다 — 상황을 살리는 대신, 무엇을 하라는 지침을 주지 못한다는 반론을 받는다</text><text class="ink2 sm" x="40" y="317" text-anchor="start">그리고 모든 것에 중용이 있는 것도 아니다. 잔인함이나 시기에는 알맞은 양이 없다</text>
+</svg>

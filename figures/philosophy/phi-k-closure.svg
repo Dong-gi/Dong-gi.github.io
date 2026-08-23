@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 826 372" width="826" height="372" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">폐쇄 원리와 그것을 뒤집어 쓴 회의주의</title><desc id="d">앎이 함의 아래 닫혀 있다면 함의된 것을 모를 때 원래 명제도 모른다는 결론이 따라 나온다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="30" y="26" text-anchor="start">폐쇄 원리는 앎의 울타리가 함의 아래에서 새지 않는다고 말한다</text><rect x="30" y="44" width="372" height="240" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.1"/><text class="ink bold sm" x="216" y="68" text-anchor="middle">원리가 말하는 것</text><ellipse cx="216" cy="172" rx="150" ry="66" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.8"/><text class="ink2 sm" x="56" y="96" text-anchor="start">내가 아는 것들</text><circle cx="160" cy="172" r="6" fill="var(--s1)"/><text class="ink bold sm" x="160" y="156" text-anchor="middle">P</text><circle cx="272" cy="172" r="6" fill="var(--s1)"/><text class="ink bold sm" x="272" y="156" text-anchor="middle">Q</text><path d="M170 172 L255 172" fill="none" stroke="var(--ink2)" stroke-width="1.5" stroke-linecap="round"/><path d="M262 172 L255 176.34 L255 167.66 z" fill="var(--ink2)"/><text class="ink2 sm" x="216" y="200" text-anchor="middle">P → Q 를 알고 있다면</text><text class="ink2 sm" x="216" y="218" text-anchor="middle">Q 도 울타리 안에 있어야 한다</text><rect x="428" y="44" width="372" height="240" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.1"/><text class="ink bold sm" x="614" y="68" text-anchor="middle">회의주의자가 쓰는 방향</text><ellipse cx="572" cy="172" rx="118" ry="58" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.8"/><text class="ink2 sm" x="454" y="96" text-anchor="start">내가 아는 것들</text><circle cx="556" cy="172" r="7" fill="none" stroke="var(--s2)" stroke-width="2"/><text class="ink sm" x="556" y="152" text-anchor="middle">P — 손이 있다</text><path d="M548 164 L564 180" fill="none" stroke="var(--s2)" stroke-width="2.2" stroke-linecap="round"/><path d="M564 164 L548 180" fill="none" stroke="var(--s2)" stroke-width="2.2" stroke-linecap="round"/><circle cx="748" cy="172" r="6" fill="var(--s2)"/><text class="ink sm" x="748" y="138" text-anchor="middle">Q — 나는 통 속의</text><text class="ink sm" x="748" y="154" text-anchor="middle">뇌가 아니다</text><text class="ink2 sm" x="748" y="194" text-anchor="middle">울타리 밖</text><path d="M600 172 L727 172" fill="none" stroke="var(--s2)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="5 4"/><path d="M734 172 L727 176.34 L727 167.66 z" fill="var(--s2)"/><text class="ink2 sm" x="614" y="248" text-anchor="middle">Q 를 모른다면 P 도 모르는 것이 된다</text><text class="ink2 sm" x="614" y="266" text-anchor="middle">이것이 폐쇄 원리를 뒤집어 쓴 것이다</text><text class="ink2 sm" x="30" y="310" text-anchor="start">왼쪽은 아주 그럴듯하다 — 아는 것에서 따라 나오는 것을 알아차렸다면 그것도 아는 것 아닌가.</text><text class="ink2 sm" x="30" y="332" text-anchor="start">오른쪽은 같은 원리를 반대 방향으로 읽었을 뿐이다. 그래서 원리를 지키면서 결론만 피하기가 어렵다.</text><text class="ink2 sm" x="30" y="354" text-anchor="start">논리학 문서 3장의 후건 부정이 그대로 쓰인 자리다 — 뒤가 아니면 앞도 아니다</text>
+</svg>

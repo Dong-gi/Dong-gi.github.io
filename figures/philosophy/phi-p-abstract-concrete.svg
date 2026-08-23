@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 830 382" width="830" height="382" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">구체와 추상을 가르는 두 기준</title><desc id="d">시공간 자리와 인과 관여를 두 축으로 놓으면 대각선은 편안하고 반대각선이 다투는 자리다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="36" y="26" text-anchor="start">구체와 추상을 가르는 기준은 둘인데 늘 같이 가지는 않는다</text><text class="ink bold sm" x="346" y="74" text-anchor="middle">시공간에 자리가 있다</text><text class="ink bold sm" x="662" y="74" text-anchor="middle">시공간에 자리가 없다</text><text class="ink bold sm" x="178" y="138" text-anchor="end">인과에 관여한다</text><text class="ink bold sm" x="178" y="238" text-anchor="end">인과에 관여하지 않는다</text><rect x="196" y="92" width="300" height="96" rx="4" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.8"/><text class="ink bold sm" x="210" y="118" text-anchor="start">구체적 대상</text><text class="ink2 sm" x="210" y="140" text-anchor="start">이 사과, 이 책상,</text><text class="ink2 sm" x="210" y="158" text-anchor="start">어제 친 천둥</text><rect x="512" y="92" width="300" height="96" rx="4" fill="var(--grid)" fill-opacity="0.3" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink bold sm" x="526" y="118" text-anchor="start">다투는 자리</text><text class="ink2 sm" x="526" y="140" text-anchor="start">시공간 밖에서 인과에 관여한다는 것 —</text><text class="ink2 sm" x="526" y="158" text-anchor="start">신, 데카르트의 정신(14장)</text><rect x="196" y="192" width="300" height="96" rx="4" fill="var(--grid)" fill-opacity="0.3" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink bold sm" x="210" y="218" text-anchor="start">다투는 자리</text><text class="ink2 sm" x="210" y="240" text-anchor="start">그림자·구멍처럼 자리는 있는데</text><text class="ink2 sm" x="210" y="258" text-anchor="start">스스로 무엇을 하지는 않아 보이는 것</text><rect x="512" y="192" width="300" height="96" rx="4" fill="var(--s2)" fill-opacity="0.1" stroke="var(--s2)" stroke-width="1.8"/><text class="ink bold sm" x="526" y="218" text-anchor="start">추상적 대상</text><text class="ink2 sm" x="526" y="240" text-anchor="start">수 7, 집합, 명제,</text><text class="ink2 sm" x="526" y="258" text-anchor="start">삼각형 그 자체</text><text class="ink2 sm" x="36" y="320" text-anchor="start">대각선 두 칸은 편안하다. 사과는 여기 있고 무엇을 하며, 수 7 은 어디에도 없고 아무것도 하지 않는다</text><text class="ink2 sm" x="36" y="339" text-anchor="start">문제는 반대각선이다. 기준 둘이 어긋나는 사례가 있으므로 ‘추상적’ 은 한 낱말로 정의되지 않는다</text><text class="ink2 sm" x="36" y="358" text-anchor="start">10장에서 다투는 것은 오른쪽 아래 칸이 비어 있느냐다. 유명론은 비었다고 하고 실재론은 차 있다고 한다</text>
+</svg>

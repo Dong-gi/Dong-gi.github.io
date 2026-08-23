@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 828 366" width="828" height="366" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">반성적 평형</title><desc id="d">개별 판단과 일반 원리가 서로를 고치고 배경 이론이 둘 다 미는 구조</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="36" y="28" text-anchor="start">반성적 평형 — 양쪽을 서로 고쳐 가며 맞춘다</text><rect x="56" y="62" width="288" height="66" rx="4" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.8"/><text class="ink bold sm" x="200" y="90" text-anchor="middle">개별 사례에 대한 판단</text><text class="ink2 sm" x="200" y="111" text-anchor="middle">‘이 경우에는 이렇다’ 는 직관</text><rect x="484" y="62" width="288" height="66" rx="4" fill="var(--s2)" fill-opacity="0.1" stroke="var(--s2)" stroke-width="1.8"/><text class="ink bold sm" x="628" y="90" text-anchor="middle">일반 원리</text><text class="ink2 sm" x="628" y="111" text-anchor="middle">모든 경우를 한꺼번에 판정하는 규칙</text><path d="M344 82 L474 82" fill="none" stroke="var(--s1)" stroke-width="1.7" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M484 110 L354 110" fill="none" stroke="var(--s2)" stroke-width="1.7" stroke-linecap="round" marker-end="url(#ar2)"/><rect x="268" y="186" width="292" height="62" rx="4" fill="var(--s3)" fill-opacity="0.1" stroke="var(--s3)" stroke-width="1.8"/><text class="ink bold sm" x="414" y="212" text-anchor="middle">배경 이론과 다른 분야의 지식</text><text class="ink2 sm" x="414" y="233" text-anchor="middle">과학·수학·역사에서 이미 알아낸 것</text><path d="M300 186 L222 134" fill="none" stroke="var(--s3)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M528 186 L606 134" fill="none" stroke="var(--s3)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ar3)"/><circle cx="42" cy="279" r="4.5" fill="var(--s1)"/><text class="ink2 sm" x="56" y="284" text-anchor="start">판단이 원리를 시험한다 — 원리가 어떤 사례를 도저히 받아들일 수 없게 판정하면 원리를 고친다.</text><circle cx="42" cy="303" r="4.5" fill="var(--s2)"/><text class="ink2 sm" x="56" y="308" text-anchor="start">원리가 판단을 시험한다 — 원리가 다른 곳에서 잘 버티면 어긋난 그 판단 쪽을 버린다.</text><circle cx="42" cy="327" r="4.5" fill="var(--s3)"/><text class="ink2 sm" x="56" y="332" text-anchor="start">배경 이론이 둘 다 민다 — 판단이 어디서 나왔는지 알고 나면 그 판단의 무게가 달라진다.</text><text class="ink sm" x="36" y="358" text-anchor="start">고정점이 없다는 것이 요점이다. 직관도 원리도 무조건 이기지 않는다. 그래서 결과는 증명이 아니라 잠정적인 균형이다.</text>
+</svg>

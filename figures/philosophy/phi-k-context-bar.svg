@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 812 340" width="812" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">맥락에 따라 움직이는 앎의 기준선</title><desc id="d">증거의 높이는 그대로인데 맥락이 요구하는 기준선이 오르내려 같은 문장의 참 거짓이 갈린다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="30" y="26" text-anchor="start">움직이는 것은 세계도 나의 증거도 아니다. ‘안다’ 가 요구하는 높이다</text><rect x="96" y="62" width="620" height="168" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.1"/><text class="ink2 sm" x="86" y="76" text-anchor="end">높음</text><text class="ink2 sm" x="86" y="224" text-anchor="end">낮음</text><text class="ink2 sm" x="86" y="146" text-anchor="end">요구되는</text><text class="ink2 sm" x="86" y="162" text-anchor="end">기준</text><path d="M96 158 L716 158" fill="none" stroke="var(--s1)" stroke-width="3" stroke-linecap="round"/><text class="ink bold sm" x="724" y="163" text-anchor="start">내 증거</text><path d="M120 196 L376 196" fill="none" stroke="var(--s3)" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="7 4"/><text class="ink sm" x="120" y="216" text-anchor="start">일상 맥락 — 은행이 토요일에 여는지 묻는 자리</text><text class="ink2 sm" x="120" y="186" text-anchor="start">기준선</text><path d="M432 96 L692 96" fill="none" stroke="var(--s2)" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="7 4"/><text class="ink2 sm" x="432" y="86" text-anchor="start">기준선</text><text class="ink sm" x="432" y="124" text-anchor="start">회의주의 논의가 시작된 맥락 —</text><text class="ink sm" x="432" y="142" text-anchor="start">통 속의 뇌 가능성이 화제에 오른 자리</text><text class="ink bold sm" x="136" y="254" text-anchor="start">증거가 기준을 넘는다</text><text class="ink2 sm" x="136" y="272" text-anchor="start">‘나는 안다’ 가 참이 된다</text><text class="ink bold sm" x="448" y="254" text-anchor="start">증거가 기준에 못 미친다</text><text class="ink2 sm" x="448" y="272" text-anchor="start">‘나는 안다’ 가 거짓이 된다</text><text class="ink2 sm" x="30" y="306" text-anchor="start">두 문장이 모순되지 않는 것은 ‘안다’ 가 두 자리에서 다른 것을 요구하기 때문이다. 사람이 달라진 것도,</text><text class="ink2 sm" x="30" y="328" text-anchor="start">증거가 달라진 것도, 사실이 달라진 것도 아니다 — 이것이 맥락주의가 붙드는 하나의 주장이다</text>
+</svg>

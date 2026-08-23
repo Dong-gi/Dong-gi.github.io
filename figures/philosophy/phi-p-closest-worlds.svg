@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 862 396" width="862" height="396" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">반사실 조건문과 가장 가까운 세계</title><desc id="d">실제 세계를 중심으로 닮음의 순서를 매기고 A 가 참인 가장 가까운 세계에서 C 를 확인한다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="36" y="26" text-anchor="start">반사실 조건문을 가능세계로 읽는다</text><ellipse cx="290" cy="170" rx="168" ry="118" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/><ellipse cx="290" cy="170" rx="112" ry="80" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/><ellipse cx="290" cy="170" rx="58" ry="42" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/><ellipse cx="540" cy="170" rx="110" ry="112" fill="var(--s2)" fill-opacity="0.12" stroke="var(--s2)" stroke-width="1.8" stroke-dasharray="6 4"/><text class="ink sm" x="566" y="176" text-anchor="middle">A 가 참인 세계들</text><circle cx="290" cy="170" r="5.5" fill="var(--s1)"/><text class="ink bold sm" x="290" y="192" text-anchor="middle">실제 세계</text><circle cx="444" cy="170" r="5.5" fill="var(--s2)"/><text class="ink bold sm" x="444" y="152" text-anchor="middle">w<tspan baseline-shift="-22%" font-size="76%">1</tspan></text><text class="ink2 sm" x="290" y="228" text-anchor="middle">가장 닮은 세계들</text><text class="ink2 sm" x="290" y="266" text-anchor="middle">그다음으로 닮은 세계들</text><text class="ink2 sm" x="290" y="304" text-anchor="middle">덜 닮은 세계들</text><text class="ink2 sm" x="36" y="340" text-anchor="start">A □→ C 가 참인가는, A 가 참인 세계 가운데 실제 세계와 가장 닮은 것 w<tspan baseline-shift="-22%" font-size="76%">1</tspan> 에서 C 가 참인가로 정해진다</text><text class="ink2 sm" x="36" y="359" text-anchor="start">가까움은 거리가 아니라 닮음의 순서다. 무엇이 얼마나 닮았는지를 이 이론은 정해 주지 않는다 — 여기가 약한 곳이다</text><text class="ink2 sm" x="36" y="378" text-anchor="start">이 그림은 가능세계를 형이상학의 도구로 쓴 것이다. 접근관계와 공리 체계는 논리학 문서 18장이 세운다</text>
+</svg>

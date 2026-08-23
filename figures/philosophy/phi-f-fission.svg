@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 380" width="820" height="380" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">반구 분할 이식 — 한쪽만 옮길 때와 양쪽을 옮길 때</title><desc id="d">한쪽만 옮기면 그 사람이 나다. 양쪽을 옮기면 같은 관계가 두 번 성립하는데 동일성은 하나에 하나만 성립한다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">한쪽만 옮길 때와 양쪽을 옮길 때</text><rect x="40" y="46" width="360" height="210" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/><text class="ink bold sm" x="58" y="72" text-anchor="start">한쪽만 옮긴다</text><text class="ink2 sm" x="70" y="148" text-anchor="start">수술 전의 나</text><path d="M70 160 L200 160" fill="none" stroke="var(--ink2)" stroke-width="2.8" stroke-linecap="round"/><circle cx="200" cy="160" r="6" fill="var(--s2)"/><path class="s1" fill="none" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ar1)" d="M200 160 L350 130"/><text class="ink bold sm" x="356" y="128" text-anchor="end">A</text><path d="M200 160 L330 200" fill="none" stroke="var(--grid)" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="5 4"/><text class="ink2 sm" x="336" y="208" text-anchor="end">버려진 반구</text><text class="ink2 sm" x="58" y="236" text-anchor="start">A 가 나다 — 여기까지는 다툴 것이 적다</text><rect x="420" y="46" width="360" height="210" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/><text class="ink bold sm" x="438" y="72" text-anchor="start">양쪽을 다 옮긴다</text><text class="ink2 sm" x="450" y="148" text-anchor="start">수술 전의 나</text><path d="M450 160 L580 160" fill="none" stroke="var(--ink2)" stroke-width="2.8" stroke-linecap="round"/><circle cx="580" cy="160" r="6" fill="var(--s2)"/><path class="s1" fill="none" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ar1)" d="M580 160 L730 122"/><path class="s3" fill="none" stroke-width="2.6" stroke-linecap="round" marker-end="url(#ar3)" d="M580 160 L730 198"/><text class="ink bold sm" x="736" y="120" text-anchor="end">A</text><text class="ink bold sm" x="736" y="204" text-anchor="end">B</text><text class="ink2 sm" x="438" y="236" text-anchor="start">심리 연속성이 A 로도 B 로도 이어진다</text><text class="ink2 sm" x="40" y="292" text-anchor="start">나와 A 사이의 관계는 두 그림에서 조금도 다르지 않다. 달라진 것은 B 쪽에서 일어난 일뿐이다</text><text class="ink2 sm" x="40" y="314" text-anchor="start">그런데 동일성은 하나에 하나만 성립한다. A 도 나이고 B 도 나이면 A 와 B 가 서로 같아야 하는데,</text><text class="ink2 sm" x="40" y="336" text-anchor="start">A 와 B 는 서로 다른 방에서 따로 살아간다. 그러므로 심리 연속성 기준이 이대로는 동일성의 기준일 수 없다</text><text class="ink2 sm" x="40" y="366" text-anchor="start">이것은 기준이 답을 못 맞힌 것이 아니라, 기준이 동일성이 아닌 다른 것을 재고 있었다는 신호다</text>
+</svg>

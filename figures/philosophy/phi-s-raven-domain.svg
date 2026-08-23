@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 782 348" width="782" height="348" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">까마귀의 역설에서 두 영역의 크기</title><desc id="d">까마귀는 좁고 검지 않은 것은 넓다. 확증의 몫이 갈리는 자리가 여기다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="36" y="26" text-anchor="start">까마귀의 역설 — 어느 쪽을 훑고 있는가</text><rect x="40" y="52" width="700" height="190" rx="4" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink2 sm" x="730" y="72" text-anchor="end">세상의 모든 것</text><rect x="60" y="74" width="250" height="150" rx="4" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.6"/><text class="ink bold sm" x="72" y="96" text-anchor="start">검은 것</text><rect x="84" y="120" width="160" height="84" rx="4" fill="var(--s3)" fill-opacity="0.16" stroke="var(--s3)" stroke-width="1.6"/><text class="ink bold sm" x="96" y="146" text-anchor="start">까마귀</text><text class="ink2 sm" x="96" y="168" text-anchor="start">가설이 참이면</text><text class="ink2 sm" x="96" y="186" text-anchor="start">이 안에 갇힌다</text><text class="ink sm" x="360" y="122" text-anchor="start">검지 않은 것 — 흰 구두, 붉은 연필, 물, 하늘, …</text><text class="ink bold sm" x="360" y="146" text-anchor="start">이 영역이 압도적으로 크다</text><text class="ink2 sm" x="360" y="172" text-anchor="start">여기서 하나를 집어 까마귀가 아님을 확인하는 것도</text><text class="ink2 sm" x="360" y="190" text-anchor="start">가설을 시험한 것이기는 하다</text><text class="ink2 sm" x="36" y="274" text-anchor="start">니코 조건 — 검은 까마귀 하나는 ‘모든 까마귀는 검다’ 를 확증한다</text><text class="ink2 sm" x="36" y="296" text-anchor="start">동치 조건 — 같은 것을 말하는 두 문장은 같은 관찰로 확증된다</text><text class="ink bold sm" x="36" y="318" text-anchor="start">둘을 합치면 흰 구두 하나도 확증한다. 남는 물음은 ‘얼마나’ 다</text>
+</svg>

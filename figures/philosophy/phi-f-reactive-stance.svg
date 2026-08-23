@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 372" width="820" height="372" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">참여자 관점과 객관적 관점</title><desc id="d">반응적 태도가 나오는 참여자 관점과, 사람을 다룰 대상으로 보는 객관적 관점. 둘 사이를 오가는 이유가 무엇인지가 요점이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">사람을 대하는 두 관점 — 스트로슨</text><rect x="40" y="48" width="370" height="214" rx="3" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="1.8"/><text class="ink bold sm" x="54" y="74" text-anchor="start">참여자 관점</text><text class="ink2 sm" x="54" y="100" text-anchor="start">상대를 함께 사는 사람으로 대한다</text><text class="ink2 sm" x="54" y="134" text-anchor="start">여기서 나오는 것 — 반응적 태도</text><text class="ink2 sm" x="54" y="151" text-anchor="start">분개, 원한, 감사, 용서, 죄책감, 자랑</text><text class="ink2 sm" x="54" y="185" text-anchor="start">이 태도들은 상대의 행위에 담긴</text><text class="ink2 sm" x="54" y="202" text-anchor="start">선의·악의·무관심에 대한 반응이다</text><text class="ink2 sm" x="54" y="236" text-anchor="start">‘책임이 있다’ 는 말은 이 태도의</text><text class="ink2 sm" x="54" y="253" text-anchor="start">대상이 된다는 뜻이다</text><rect x="430" y="48" width="370" height="214" rx="3" fill="var(--s3)" fill-opacity="0.1" stroke="var(--s3)" stroke-width="1.8"/><text class="ink bold sm" x="444" y="74" text-anchor="start">객관적 관점</text><text class="ink2 sm" x="444" y="100" text-anchor="start">상대를 다루고 관리할 대상으로 본다</text><text class="ink2 sm" x="444" y="134" text-anchor="start">여기서 나오는 것 — 치료, 훈련, 격리</text><text class="ink2 sm" x="444" y="151" text-anchor="start">분개는 자리를 잃는다</text><text class="ink2 sm" x="444" y="185" text-anchor="start">우리는 이미 이 관점으로 넘어간다</text><text class="ink2 sm" x="444" y="202" text-anchor="start">어린아이, 중한 정신질환, 강요된 행위</text><text class="ink2 sm" x="444" y="236" text-anchor="start">지쳤을 때 잠시 넘어가기도 한다</text><text class="ink2 sm" x="444" y="253" text-anchor="start">그러나 오래 머무르기는 어렵다</text><path class="s2" fill="none" stroke-width="2.2" stroke-linecap="round" marker-end="url(#ar2)" d="M410 155 L430 155"/><text class="ink2 sm" x="40" y="292" text-anchor="start">스트로슨의 주장 — 우리가 참여자 관점에서 객관적 관점으로 넘어가는 것은 사례별 사정 때문이지</text><text class="ink2 sm" x="40" y="312" text-anchor="start">결정론이 참이라는 일반적 이유 때문이 아니다. 결정론은 어느 한 사례를 면제해 주는 종류의 사실이 아니다</text><text class="ink2 sm" x="40" y="338" text-anchor="start">반론 — 그것은 우리가 무엇을 하는지에 대한 서술일 뿐, 우리가 그렇게 해도 되는지에 대한 정당화가 아니다</text>
+</svg>

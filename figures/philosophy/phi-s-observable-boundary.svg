@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 782 330" width="782" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">실재론과 구성적 경험주의가 갈리는 자리</title><desc id="d">이론의 주장 가운데 관찰 불가능한 부분을 믿느냐에서만 두 입장이 갈린다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="36" y="26" text-anchor="start">이론이 하는 주장을 둘로 나누면</text><rect x="48" y="50" width="420" height="214" rx="4" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.4"/><rect x="64" y="68" width="388" height="96" rx="4" fill="var(--s2)" fill-opacity="0.1" stroke="var(--s2)" stroke-width="1.5"/><text class="ink bold sm" x="80" y="94" text-anchor="start">관찰 불가능한 것에 대한 주장</text><text class="ink sm" x="80" y="118" text-anchor="start">전자가 있다 / 장이 있다 /</text><text class="ink sm" x="80" y="140" text-anchor="start">분자는 이런 모양으로 배열되어 있다</text><rect x="64" y="178" width="388" height="70" rx="4" fill="var(--s3)" fill-opacity="0.13" stroke="var(--s3)" stroke-width="1.5"/><text class="ink bold sm" x="80" y="204" text-anchor="start">관찰 가능한 것에 대한 주장</text><text class="ink sm" x="80" y="228" text-anchor="start">계기 바늘이 이만큼 움직인다 / 무늬가 여기 생긴다</text><path d="M486 56 L498 56 L498 258 L486 258" fill="none" stroke="var(--s1)" stroke-width="1.8" stroke-linecap="round"/><text class="ink bold sm" x="510" y="104" text-anchor="start">과학적 실재론 — 다수설</text><text class="ink sm" x="510" y="126" text-anchor="start">둘 다 참이라고 믿는다</text><path d="M486 182 L498 182 L498 244 L486 244" fill="none" stroke="var(--s3)" stroke-width="1.8" stroke-linecap="round"/><text class="ink bold sm" x="510" y="190" text-anchor="start">구성적 경험주의 — 소수설</text><text class="ink sm" x="510" y="212" text-anchor="start">아래만 참이라고 믿는다.</text><text class="ink sm" x="510" y="232" text-anchor="start">위는 받아들이되 믿지는 않는다</text><text class="ink2 sm" x="36" y="292" text-anchor="start">두 입장은 같은 이론을 쓰고 같은 실험을 하고 같은 예측을 한다. 갈리는 것은 무엇을 믿느냐 하나다</text><text class="ink2 sm" x="36" y="314" text-anchor="start">위 상자를 ‘뜻이 없는 말’ 로 보는 것은 도구주의이고, 구성적 경험주의는 그렇게 보지 않는다</text>
+</svg>

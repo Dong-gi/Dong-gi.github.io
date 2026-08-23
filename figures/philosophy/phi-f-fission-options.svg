@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 368" width="840" height="368" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">분열 사례의 답들과 그 대가</title><desc id="d">다섯 답 각각이 무엇을 포기해야 하는지. 비분지 조항은 형식으로는 듣지만 생존을 외부 사실에 맡기게 된다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">분열 사례에 줄 수 있는 답과 그 대가</text><rect x="40" y="48" width="214" height="32" rx="3" fill="var(--grid)" fill-opacity="0.4" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink bold sm" x="50" y="69" text-anchor="start">답</text><rect x="254" y="48" width="546" height="32" rx="3" fill="var(--grid)" fill-opacity="0.4" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink bold sm" x="264" y="69" text-anchor="start">무엇을 치러야 하는가</text><rect x="40" y="80" width="214" height="38" rx="3" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink2 sm" x="50" y="104" text-anchor="start">A 만 나다</text><rect x="254" y="80" width="546" height="38" rx="3" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink2 sm" x="264" y="104" text-anchor="start">A 와 B 는 대칭이다. 왜 A 인지 말할 방법이 없다</text><rect x="40" y="118" width="214" height="38" rx="3" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink2 sm" x="50" y="142" text-anchor="start">B 만 나다</text><rect x="254" y="118" width="546" height="38" rx="3" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink2 sm" x="264" y="142" text-anchor="start">같은 이유로 말할 방법이 없다</text><rect x="40" y="156" width="214" height="38" rx="3" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink2 sm" x="50" y="180" text-anchor="start">둘 다 나다</text><rect x="254" y="156" width="546" height="38" rx="3" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink2 sm" x="264" y="180" text-anchor="start">동일성은 하나에 하나만 성립한다는 성질을 버려야 한다</text><rect x="40" y="194" width="214" height="38" rx="3" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink2 sm" x="50" y="218" text-anchor="start">둘 다 내가 아니다</text><rect x="254" y="194" width="546" height="38" rx="3" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink2 sm" x="264" y="218" text-anchor="start">한쪽만 옮겼으면 살아남았을 텐데, 성공을 하나 더 보태자 죽었다는 말이 된다</text><rect x="40" y="232" width="214" height="38" rx="3" fill="var(--s1)" fill-opacity="0.12" stroke="var(--s1)" stroke-width="1.7"/><text class="ink bold sm" x="50" y="256" text-anchor="start">갈라지지 않을 때만 나다</text><rect x="254" y="232" width="546" height="38" rx="3" fill="var(--s1)" fill-opacity="0.12" stroke="var(--s1)" stroke-width="1.7"/><text class="ink bold sm" x="264" y="256" text-anchor="start">내 생존이 저쪽 수술실에서 무슨 일이 일어나는가에 달리게 된다</text><text class="ink2 sm" x="40" y="300" text-anchor="start">마지막 줄이 비분지 조항이다. 형식으로는 잘 듣지만 대가가 이상하다 — 내가 살아남는지가</text><text class="ink2 sm" x="40" y="320" text-anchor="start">나와 그 사람 사이의 관계만으로 정해지지 않고, 나와 아무 관계 없는 곳의 사실에 좌우된다</text><text class="ink2 sm" x="40" y="346" text-anchor="start">파핏은 여기서 다른 길로 간다. 다섯 답 중 하나를 고르는 대신, 고를 것이 없다고 말한다</text>
+</svg>

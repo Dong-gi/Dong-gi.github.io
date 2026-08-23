@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 400" width="880" height="400" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">도덕 속성의 수반이 금지하는 짝</title><desc id="d">자연적 사실이 완전히 같은 두 경우에 도덕 판정만 다른 짝은 성립하지 않는다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="40" y="28" text-anchor="start">도덕 속성은 자연적 속성에 수반한다</text><rect x="40" y="48" width="356" height="176" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/><text class="ink bold sm" x="58" y="74" text-anchor="start">경우 A</text><text class="ink2 sm" x="58" y="100" text-anchor="start">같은 행위</text><text class="ink2 sm" x="58" y="120" text-anchor="start">같은 결과</text><text class="ink2 sm" x="58" y="140" text-anchor="start">같은 동기</text><text class="ink2 sm" x="58" y="160" text-anchor="start">같은 사정</text><path d="M58 188 L376 188" fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="4 3"/><text class="ink bold sm" x="58" y="210" text-anchor="start">도덕 판정 — 허용된다</text><rect x="484" y="48" width="356" height="176" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/><text class="ink bold sm" x="502" y="74" text-anchor="start">경우 B</text><text class="ink2 sm" x="502" y="100" text-anchor="start">같은 행위</text><text class="ink2 sm" x="502" y="120" text-anchor="start">같은 결과</text><text class="ink2 sm" x="502" y="140" text-anchor="start">같은 동기</text><text class="ink2 sm" x="502" y="160" text-anchor="start">같은 사정</text><path d="M502 188 L820 188" fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="4 3"/><text class="ink bold sm" x="502" y="210" text-anchor="start">도덕 판정 — 금지된다</text><path d="M424 120 L456 152 M456 120 L424 152" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" fill="none"/><text class="ink2 sm" x="440" y="176" text-anchor="middle">이런 짝은 없다</text><text class="ink2 sm" x="40" y="264" text-anchor="start">11장이 정의한 수반이다 — 아래에서 차이가 없으면 위에서도 차이가 있을 수 없다</text><text class="ink2 sm" x="40" y="285" text-anchor="start">이 자리는 실재론 쪽과 반실재론 쪽이 대체로 함께 받아들인다. 그래서 논쟁의 심판이 못 된다</text><text class="ink2 sm" x="40" y="306" text-anchor="start">오히려 양쪽이 각자 설명해야 하는 것이 된다 — 자연주의는 쉽게 설명하고, 비자연주의는 부담을 지고,</text><text class="ink2 sm" x="40" y="327" text-anchor="start">표현주의는 우리 태도가 자연적 특징에 반응한다는 것으로 설명한다</text><text class="ink2 sm" x="40" y="348" text-anchor="start">수반은 의존을 말할 뿐 정체를 말하지 않는다. 수반한다고 해서 같은 것이 되지는 않는다</text>
+</svg>
