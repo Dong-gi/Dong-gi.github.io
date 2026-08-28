@@ -129,11 +129,11 @@ mixin w3img(src, description)
             picture
                 if src.endsWith('.gif')
                     source(srcset=(trimmedSrc + '-500.webp 500w, ' + trimmedSrc + '-1200.webp 1200w, ' + trimmedSrc + '-2000.webp 2000w'), type='image/webp')
-                    img.w3-round(src=(trimmedSrc + '-2000.gif'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
+                    img.w3-round(src=(trimmedSrc + '-2000.webp'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
                 else
                     source(srcset=(trimmedSrc + '-500.avif 500w, ' + trimmedSrc + '-1200.avif 1200w, ' + trimmedSrc + '-2000.avif 2000w'), type='image/avif')
                     source(srcset=(trimmedSrc + '-500.webp 500w, ' + trimmedSrc + '-1200.webp 1200w, ' + trimmedSrc + '-2000.webp 2000w'), type='image/webp')
-                    img.w3-round(src=(trimmedSrc + '-2000.jpeg'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
+                    img.w3-round(src=(trimmedSrc + '-2000.webp'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
         else
             img.w3-round(src=encodedSrc, alt=description, loading='lazy')&attributes(attributes)
         figcaption.w3-padding
