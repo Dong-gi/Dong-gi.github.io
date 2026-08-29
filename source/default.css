@@ -6,7 +6,7 @@ article,aside,details,figcaption,figure,footer,header,main,menu,nav,section{disp
 audio,canvas,progress,video{display:inline-block}progress{vertical-align:baseline}
 audio:not([controls]){display:none;height:0}[hidden],template{display:none}
 a{background-color:transparent}a:active,a:hover{outline-width:0}
-abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}
+abbr[title]{border-bottom:none;text-decoration:underline dotted}
 b,strong{font-weight:bolder}dfn{font-style:italic}mark{background:#ff0;color:#000}
 small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
 sub{bottom:-0.25em}sup{top:-0.5em}figure{margin:1em 40px}img{border-style:none}
@@ -17,13 +17,13 @@ fieldset{border:1px solid #c0c0c0;margin:0 2px;padding:.35em .625em .75em}
 legend{color:inherit;display:table;max-width:100%;padding:0;white-space:normal}textarea{overflow:auto}
 [type=checkbox],[type=radio]{padding:0}
 /* End extract */
-html,body{font-family:Verdana,sans-serif;font-size:15px;line-height:1.5}html{overflow-x:hidden}
-h1,.fake-h1{font-size:36px}h2,.fake-h2{font-size:30px}h3,.fake-h3{font-size:24px}h4,.fake-h4{font-size:20px}h5,.fake-h5{font-size:18px}h6,.fake-h6{font-size:16px}
+html,body{font-family:Verdana,sans-serif;font-size:16px;line-height:1.5}html{overflow-x:hidden}
+h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-size:18px}h6{font-size:16px}
 .w3-serif{font-family:serif}.w3-sans-serif{font-family:sans-serif}.w3-cursive{font-family:cursive}.w3-monospace{font-family:monospace}
-h1,h2,h3,h4,h5,h6,.fake-h1,.fake-h2,.fake-h3,.fake-h4,.fake-h5,.fake-h6{font-family:"Segoe UI",Arial,sans-serif;font-weight:400;margin:10px 0}.w3-wide{letter-spacing:4px}
+h1,h2,h3,h4,h5,h6{font-family:"Segoe UI",Arial,sans-serif;font-weight:400;margin:10px 0}.w3-wide{letter-spacing:4px}
 hr{border:0;border-top:1px solid #eee;margin:20px 0}
-img{max-width:100%;max-width:min(100%,100vw,100cqw);height:auto;vertical-align:middle}a{color:inherit}
-.w3-table,.w3-table-all{border-collapse:collapse;border-spacing:0;max-width:100%;max-width:min(100%,100vw,100cqw);}.w3-table-all{border:1px solid #ccc}
+img{max-width:min(100%,100vw);height:auto;vertical-align:middle}a{color:inherit}
+table{border-collapse:collapse;border-spacing:0;max-width:min(100%,100vw);}.w3-table-all{border:1px solid #ccc}
 .w3-bordered tr,.w3-table-all tr{border-bottom:1px solid #ddd}.w3-striped tbody tr:nth-child(even){background-color:#f1f1f1}
 .w3-table-all tr:nth-child(odd){background-color:#fff}.w3-table-all tr:nth-child(even){background-color:#f1f1f1}
 .w3-hoverable tbody tr:hover,.w3-ul.w3-hoverable li:hover{background-color:#ccc}.w3-centered tr th,.w3-centered tr td{text-align:center}
@@ -50,8 +50,7 @@ img{max-width:100%;max-width:min(100%,100vw,100cqw);height:auto;vertical-align:m
 .w3-bar-block .w3-dropdown-hover,.w3-bar-block .w3-dropdown-click{width:100%}
 .w3-bar-block .w3-dropdown-hover .w3-dropdown-content,.w3-bar-block .w3-dropdown-click .w3-dropdown-content{min-width:100%}
 .w3-bar-block .w3-dropdown-hover .w3-button,.w3-bar-block .w3-dropdown-click .w3-button{width:100%;text-align:left;padding:8px 16px}
-.w3-main,#main{transition:margin-left .4s}
-.w3-modal{z-index:3;display:none;padding-top:100px;position:fixed;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgb(0,0,0);background-color:rgba(0,0,0,0.4)}
+.w3-modal{z-index:3;display:none;padding-top:100px;position:fixed;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.4)}
 .w3-modal-content{margin:auto;background-color:#fff;position:relative;padding:0;outline:0;width:600px}
 .w3-bar{width:100%;overflow:hidden}.w3-center .w3-bar{display:inline-block;width:auto}
 .w3-bar .w3-bar-item{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
@@ -229,18 +228,14 @@ img{max-width:100%;max-width:min(100%,100vw,100cqw);height:auto;vertical-align:m
 /* End W3.CSS 4.15 */
 
 
-/* 헤딩도 포함한다. 예전에는 헤딩을 감싼 래퍼 div 에서 상속받았으나
-   그 래퍼를 걷어냈으므로 헤딩에 직접 적용해야 줄바꿈 동작이 유지된다. */
-div,p,pre,ol,ul,li,h1,h2,h3,h4,h5,h6{overflow-wrap:break-word;word-break:break-all}
+div,p,pre,ol,ul,li,h1,h2,h3,h4,h5,h6{overflow-wrap:anywhere}
 h1,h2,h3,h4,h5,h6{border-bottom:1px solid #ccc}
 h1::before,h2::before,h3::before,h4::before,h5::before,h6::before{float:left;content: attr(data-before-text);padding-right:0.5ch}
 .pos-span{padding:0;margin:0;width:0;height:0;overflow:hidden}
 caption{padding-top:8px;padding-bottom:8px}
 hr{border-top:3px solid rgba(0, 0, 0, .1)}
-br{content:'';display:block;margin:0.5rem 0}
-:not(print) li,summary{margin:0.5rem 0}
-print li,summary{margin:0}
-:target-current{background-color:antiquewhite}
+br{display:block;margin:0.5rem 0}
+
 li:hover:not(:has(ul, ol, menu)){background-color:antiquewhite}
 li:not(:hover):has(ul, ol, menu){padding:1px}
 li:hover:has(ul, ol, menu){border:1px dashed coral}
@@ -254,7 +249,6 @@ li:hover:has(ul, ol, menu){border:1px dashed coral}
 #post-list ul{padding-left:20px}
 #post-list li:has(>details:only-child){list-style-type:none}
 
-/* 포스트 영역 스타일 */
 #contents details{margin-left:0.5em;padding-left:1.0em;border-left:6px solid rgba(0, 0, 0, .1)}
 
 /* 코드 영역 스타일 */
@@ -286,14 +280,13 @@ details.solution:not([open])>summary{opacity:.7}
 
 /* Snackbar from https://www.w3schools.com/howto/howto_js_snackbar.asp */
 #snackbar{visibility:hidden;min-width:250px;margin-left:-125px;background-color:#333;color:#fff;text-align:center;border-radius:2px;padding:16px;position:fixed;z-index:1000000;left:50%;bottom:30px;font-size:17px}
-#snackbar.show{visibility:visible;-webkit-animation:sf-fadein 0.5s,sf-fadeout 0.5s 2.5s;animation:sf-fadein 0.5s,sf-fadeout 0.5s 2.5s}
-@-webkit-keyframes sf-fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
+#snackbar.show{visibility:visible;animation:sf-fadein 0.5s,sf-fadeout 0.5s 2.5s}
 @keyframes sf-fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
-@-webkit-keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
 @keyframes sf-fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
 
 /* 기본 레이아웃 */
 :root {
+    color-scheme: light;
     --sidebar-width: 333px;
     --nav-height: 2.5rem;
 }
@@ -319,8 +312,11 @@ details.solution:not([open])>summary{opacity:.7}
     }
 }
 
+#sidebar ul{margin:0}
+
 @media screen and (min-width: 1234px) {
     #sidebar {
+        display: block;
         position: fixed;
         width: var(--sidebar-width);
         height: 100vh;
@@ -330,11 +326,15 @@ details.solution:not([open])>summary{opacity:.7}
     #main {
         margin-left: var(--sidebar-width)
     }
+
+    #nav-toggle-btn {
+        display: none;
+    }
 }
 
-@media screen and (max-width: 1234px) {
+@media screen and (max-width: 1233.98px) {
     body {
-        width: 100wh;
+        width: 100vw;
         height: 100vh;
         overflow: auto;
     }
@@ -348,10 +348,23 @@ details.solution:not([open])>summary{opacity:.7}
         height: calc(100vh - var(--nav-height));
         overflow: auto;
         background-color: #fff;
-        @media (prefers-color-scheme: dark) {
-            background-color: #121212;
-        }
     }
+    #sidebar.open {
+        display: block;
+    }
+}
+
+#contents mjx-container[display="true"] {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+#contents mjx-container:not([display="true"]) {
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+    vertical-align: middle;
 }
 
 /* XCode style (c) Angel Garcia <angelgarcia.mail@gmail.com> */

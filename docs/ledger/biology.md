@@ -143,3 +143,52 @@ DNA 와 RNA 가 무엇인지(4장 핵산), 단백질이 아미노산 사슬이�
 
 **판독형과 추론형 예제에는 거의 항상 그림이 따라야 한다.** 그림 개수를 채우기
 좋은 자리이기도 하다.
+
+---
+
+## 이 문서가 쓰는 사진 (2026-08 추가)
+
+규격 `docs/SELF-STUDY-SPEC.md` **§3-5**(외부에서 가져온 사진)에 따라 넣었다.
+`figures/` 와 `d2/` 는 선과 도형만 만들 수 있어서 **겉모습 자체가 자료인 자리**를
+담지 못한다. 이 문서에서 그런 자리가 셋이었다.
+
+| 자리 | 파일 | 도식이 무엇을 빠뜨렸나 |
+|---|---|---|
+| 8장 상동염색체 절 | `imgs/biology/karyotype-armadillo.png` | 핵형은 **분염 무늬로 짝을 찾는** 것인데, 무늬는 그려 낼 수 없다. 그려 내면 가짜다 |
+| 8장 체세포분열 절 | `imgs/biology/mitosis-onion-root.jpg` | 도식은 염색체를 넷으로 줄이고 색을 입힌다. 실제로는 전부 같은 색이고 개수를 세기 어렵다. "판정은 개수가 아니라 배열을 보고"라는 본문의 말이 사진에서만 확인된다 |
+| 13장 전기영동 절 | `imgs/biology/gel-electrophoresis.png` | `bio-gen-gel.svg` 의 띠는 전부 같은 크기의 둥근 직사각형이다. 본문은 "작은 조각이 안 보여 빠졌을 수 있다", "연속적인 얼룩이 된다"에 기대어 논증하는데 **도식은 둘 다 원리적으로 그릴 수 없다** |
+
+### 라이선스 — 2026-08 에 각 설명 페이지에서 직접 확인했다
+
+| 파일 | 제목 · 저작자 | 출처 | 라이선스 |
+|---|---|---|---|
+| `karyotype-armadillo.png` | Karyotype of nine-banded armadillo · Marta Svartman, Gary Stone, Roscoe Stanyon | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Karyotype_of_nine-banded_armadillo.png) | **CC0 1.0** |
+| `gel-electrophoresis.png` | Agarose gel electrophoresis of DNA · Ultrabem | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Agarose_gel_electrophoresis_of_DNA.png) | **CC0 1.0** |
+| `mitosis-onion-root.jpg` | Mitotic Stages in Apical Meristem of Allium Root Tip · bccoer | [Flickr](https://www.flickr.com/photos/146824358@N03/36762516673) | **CC0 1.0** |
+
+핵형 원본은 PLoS Genetics 2(7): e109 (2006) 의 도판이고, Commons 업로더가 CC0 로
+올린 것이다. 셋 다 **손대지 않았다.** 라벨을 붙이거나 자르지 않았다.
+
+본문 표시는 규격 §3-5 대로 **캡션에 넣지 않고** 각 장 끝 `h2 이 장의 출처` 에
+TASL(제목·저작자·출처·라이선스)로 모았다.
+
+### 내려받기
+
+`fetch-biology-images.ps1`(저장소 루트)이 이 셋을 받는다.
+**User-Agent 를 반드시 보내야 한다** — Wikimedia 는 설명 없는 요청을 403 으로 막는다.
+실제로 막혀서 스크립트에 그 줄이 들어갔다.
+
+### 아직 자리가 비어 있는 것 둘
+
+조사에서 자격을 통과했으나 규격을 만족하는 파일을 찾지 못했다.
+
+- **5장 소기관 절 — 실제 세포의 투과전자현미경 사진.** 847행 예제가 "전자현미경으로
+  두 세포를 관찰했다"로 시작하는데 문서는 EM 을 한 장도 보여 준 적이 없다. 찾은
+  후보는 해상도가 512px 로 너무 작거나(Wellcome Collection, CC BY) 논문 도판이라
+  A·B·C 라벨과 화살표가 얹혀 있었다.
+- **5장 세포골격 절 — 면역형광 사진.** 이 절의 요점은 "세포 안이 실로 가득 차 있다"인데,
+  Commons 의 `Cytokeratin filaments.jpg` 는 그물이 잘 보이지만 **CC BY-SA** 라 §3-5 가
+  배제하고, `Cytoskeleton.jpg`(CC BY)는 배율이 낮아 섬유가 보이지 않는다.
+
+둘 다 **CC BY-SA 를 배제한 것이 직접적인 원인**이다. 과학 사진에 이 라이선스가 흔하다.
+규격을 완화할지는 따로 판단할 문제이고, 지금은 완화하지 않았다.

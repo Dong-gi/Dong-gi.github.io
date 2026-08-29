@@ -176,7 +176,6 @@ const activeHoverContents = new Set()
  * @param {MouseEvent} e
  */
 function onHoverElementMouseleave(e) {
-    console.log('leave', e, { activeHoverElements, activeHoverContents })
     if (
         activeHoverElements.size === 0 ||
         [...activeHoverElements].some(element => isMouseInRect(element, e))
@@ -237,7 +236,7 @@ function downloadText(text, fileName) {
 function printElement(element) {
     const y = window.scrollY;
     const html = document.getElementsByTagName('html')[0];
-    const print = asNodes(`<print>${element.innerHTML}</print>`);
+    const print = asNodes(`<print class="code-div">${element.innerHTML}</print>`);
     html.append(print);
     document.body.style.display = 'none';
     window.print();
@@ -273,19 +272,122 @@ async function initGoto() {
     }
 }
 
+/**
+ * 실제로 스크롤되는 요소를 돌려준다.
+ *
+ * 이 사이트는 폭에 따라 스크롤 컨테이너가 **바뀐다.** 1234px 이상에서는 문서 전체가
+ * 스크롤되고, 그 아래에서는 `default.css` 의 미디어 쿼리가 `body` 에 `height:100vh`
+ * 와 `overflow:auto` 를 걸어 `body` 가 스크롤 컨테이너가 된다.
+ *
+ * 창을 줄이다 그 경계를 넘으면 스크롤 위치가 한쪽에서 다른 쪽으로 넘어가지 못하고
+ * 그대로 사라진다. 읽던 자리가 맨 위로 튀던 원인이 이것이다.
+ */
+function scrollHost() {
+    const doc = document.documentElement;
+    if (doc.scrollHeight > doc.clientHeight + 1) return doc;
+    if (document.body.scrollHeight > document.body.clientHeight + 1) return document.body;
+    return doc;
+}
+
+/**
+ * 창 폭이 바뀌어도 읽던 자리를 지킨다.
+ *
+ * 스크롤 값을 저장했다 되돌리는 것으로는 못 막는다. **읽던 요소**를 기억해 두었다가 그 요소를 같은 자리로 되돌려야 한다.
+ *
+ * 두 가지를 한다.
+ *
+ *   - 스크롤이 멎을 때마다 화면 맨 위에 있는 요소와 그 요소의 위치를 적어 둔다.
+ *   - 본문 **폭**이 바뀌면 그 요소를 적어 둔 자리로 되돌린다.
+ *
+ * 높이 변화에는 반응하지 않는다. 늦게 불려 오는 그림 때문에 높이는 수시로 바뀌는데,
+ * 그때마다 손대면 브라우저가 이미 잘 하고 있는 일을 망친다.
+ *
+ * CSS 의 `overflow-anchor`(스크롤 앵커링)로는 안 된다. 그것은 화면 **위쪽**에서 내용이
+ * 늘거나 줄 때를 위한 장치이고, 폭이 바뀌어 전체가 다시 흐르는 경우는 다루지 않는다.
+ */
+function initReadingAnchor() {
+    const contents = document.getElementById('contents');
+    if (contents == null) return;
+    const nav = document.getElementById('nav');
+
+    /** 읽기 영역의 위쪽 경계. 상단바가 가리는 만큼 내려간다. */
+    const readingTop = () => (nav == null ? 0 : nav.getBoundingClientRect().bottom);
+
+    let anchor = null;
+    let offset = 0;
+    let restoring = false;
+
+    /*
+     * 화면 맨 위에 있는 표식을 이진 탐색으로 찾는다.
+     *
+     * 처음에는 `document.elementFromPoint()` 를 썼는데, 26만 노드짜리 문서(mcs)에서
+     * 강제 레이아웃이 걸려 스크롤이 멎을 때마다 0.12~0.59초씩 멈췄다. 대신
+     * `updateMarkerList()` 가 헤딩마다 심어 둔 `.pos-span` 을 쓴다. 문서 순서대로
+     * 놓여 있으므로 이진 탐색이 되고, 비용이 rect 읽기 log n 번으로 떨어진다.
+     */
+    const remember = () => {
+        if (restoring) return;
+        const marks = contents.querySelectorAll('.pos-span');
+        if (marks.length === 0) return;
+        const top = readingTop();
+        let lo = 0, hi = marks.length - 1, found = 0;
+        while (lo <= hi) {
+            const mid = (lo + hi) >> 1;
+            if (marks[mid].getBoundingClientRect().top <= top + 1) {
+                found = mid;
+                lo = mid + 1;
+            } else {
+                hi = mid - 1;
+            }
+        }
+        anchor = marks[found];
+        offset = anchor.getBoundingClientRect().top - top;
+    };
+
+    const restore = () => {
+        if (anchor == null || !anchor.isConnected) return;
+        const delta = anchor.getBoundingClientRect().top - (readingTop() + offset);
+        if (Math.abs(delta) < 0.5) return;
+        restoring = true;
+        scrollHost().scrollTop += delta;
+        // 되돌리느라 생긴 scroll 이벤트를 기억으로 받아들이지 않는다.
+        requestAnimationFrame(() => { restoring = false; });
+    };
+
+    /*
+     * 본문이 스크롤될 때만 기억한다. 예전에는 `capture:true` 로 문서 전체의 스크롤을
+     * 받아서, **사이드바를 굴려도** 발동해 큰 문서에서 0.5초씩 멈췄다.
+     * 폭에 따라 스크롤 컨테이너가 문서일 수도 body 일 수도 있으므로(scrollHost 참고)
+     * 사이드바에서 올라온 것만 걸러 낸다.
+     */
+    const sidebar = document.getElementById('sidebar');
+    let timer = 0;
+    addEventListener('scroll', (ev) => {
+        if (sidebar != null && ev.target instanceof Node && sidebar.contains(ev.target)) return;
+        clearTimeout(timer);
+        timer = setTimeout(remember, 150);
+    }, { passive: true, capture: true });
+
+    // 폭이 바뀔 때만 되돌린다. window 의 resize 대신 본문을 직접 지켜보면
+    // 창 크기 말고 다른 이유로 폭이 바뀌는 경우까지 함께 잡힌다.
+    let lastWidth = contents.clientWidth;
+    new ResizeObserver(() => {
+        const width = contents.clientWidth;
+        if (width === lastWidth) return;
+        lastWidth = width;
+        restore();
+    }).observe(contents);
+
+    remember();
+    document.addEventListener('markers-ready', remember, { once: true });
+}
+
 function initNav() {
     document.getElementById('nav-toggle-btn').addEventListener('click', function (ev) {
+        // 좁은 화면 전용이다. 넓은 화면에서는 CSS 가 이 버튼을 숨긴다.
         ev.preventDefault();
         ev.stopPropagation();
-
-        const sidebar = document.getElementById('sidebar');
-        if (sidebar.computedStyleMap().get('display')?.value === 'none') {
-            sidebar.style.display = 'block';
-            document.documentElement.style.setProperty('--sidebar-width', '333px');
-        } else {
-            sidebar.style.display = 'none';
-            document.documentElement.style.setProperty('--sidebar-width', '0px');
-        }
+        document.getElementById('sidebar').classList.toggle('open');
     });
 
     document.getElementById('query').onkeydown = function (e) {
@@ -319,7 +421,11 @@ async function initCodeBtn() {
             }
 
             const codeTxt = await fetch(path)
-                .then(res => res.text())
+                .then(res => {
+                    // res.ok 를 보지 않으면 404 페이지의 HTML 을 코드로 렌더하게 된다.
+                    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+                    return res.text();
+                })
                 .then(text => text.trimEnd())
                 .catch(e => {
                     console.log('Fetch failed...', e)
@@ -332,7 +438,7 @@ async function initCodeBtn() {
             fillCodeDiv(codeDiv, lan, codeTxt, button.getAttribute('displayRange'));
 
             if (lan !== 'nohighlight') {
-                const modalButton = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-blue">모달로 보기</button>');
+                const modalButton = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-blue">모달로 보기</button>');
                 modalButton.onclick = () => showModal(codeId);
                 button.after(modalButton);
                 modalButton.after(codeDiv);
@@ -341,7 +447,7 @@ async function initCodeBtn() {
             }
 
             if (/javascript/i.test(lan)) {
-                const script = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green">실행</button>');
+                const script = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-green">실행</button>');
                 script.onclick = function () {
                     const code = Array.from(codeDiv.querySelectorAll('li')).map(li => li.textContent).join('\n');
                     eval(code);
@@ -365,7 +471,7 @@ async function initInlineCode() {
         const lan = codeDiv.getAttribute('lan') ?? 'text';
         fillCodeDiv(codeDiv, lan, code);
         if (/javascript/i.test(lan)) {
-            const execButton = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-small w3-green">실행</button>')
+            const execButton = asNodes('<button class="w3-btn w3-round w3-round-xxlarge w3-green">실행</button>')
             execButton.addEventListener('click', () => { eval(code) })
             codeDiv.previousSibling.appendChild(execButton)
         }
@@ -373,12 +479,13 @@ async function initInlineCode() {
 
     observeIntersectionOnce(document.body.querySelectorAll('span.as-code'), codeSpan => {
         const code = codeSpan.innerHTML.trimEnd().replace(/&lt;/gm, '<').replace(/&gt;/gm, '>').replace(/&amp;/gm, '&');
-        codeSpan.innerHTML = hljs.highlight(code, { language: codeSpan.getAttribute('lan') ?? 'text', ignoreIllegals: true })['value'];
+        codeSpan.innerHTML = hljs.highlight(code, { language: safeLanguage(codeSpan.getAttribute('lan') ?? 'text'), ignoreIllegals: true })['value'];
     });
 }
 
 window.addEventListener('load', async () => {
     initNav();
+    initReadingAnchor();
 
     await Promise.allSettled([
         initInlineCode(),
@@ -394,6 +501,8 @@ window.addEventListener('load', async () => {
                 .sort((post1, post2) => post1.category.localeCompare(post2.category) || post1.title.localeCompare(post2.title));
 
             await Promise.all([updatePostList(), updateMarkerList()]);
+            // .pos-span 이 이제 생겼다. 읽기 앵커가 그것을 쓰므로 다시 잡아 준다.
+            document.dispatchEvent(new Event('markers-ready'));
 
             const currentKey = postKeyOf(location.pathname);
             const currentPost = posts.find(x => postKeyOf(x.file) === currentKey);
@@ -447,7 +556,7 @@ async function updatePostList() {
     /** @type {Map<string, {posts: FlatPost[], isCurrentPosts: boolean[]}>} */
     const categoryToPostMap = new Map();
     /** @type {HTMLDetailsElement} */
-    const rootDetails = asNodes(`<details open class="w3-small"><summary>Category</summary><ul></ul></details>`)
+    const rootDetails = asNodes(`<details open><summary>Category</summary><ul></ul></details>`)
     const rootUl = rootDetails.querySelector('ul');
     const currentKey = postKeyOf(location.pathname);
 
@@ -464,7 +573,7 @@ async function updatePostList() {
                 parentDom.details.open ||= isCurrentPost;
                 continue;
             }
-            const li = asNodes(`<li><details class="w3-small" title="${subCategory}"><summary>${categoryPartArr[i]}</summary><ul></ul></details></li>`);
+            const li = asNodes(`<li><details title="${subCategory}"><summary>${categoryPartArr[i]}</summary><ul></ul></details></li>`);
             const details = li.firstChild;
             const ul = details.querySelector('ul');
             categoryToDomMap.set(subCategory, { details, ul });
@@ -498,7 +607,7 @@ async function updatePostList() {
 }
 
 async function updateMarkerList() {
-    const details = asNodes(`<details open class="w3-small"><summary>Content</summary><ul style="scroll-target-group:auto"></ul></details>`);
+    const details = asNodes(`<details open><summary>Content</summary><ul style="scroll-target-group:auto"></ul></details>`);
     const ul = details.querySelector('ul');
     const headingLevels = [0, 0, 0, 0, 0, 0, 0, 0];
     const headingTagSet = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
@@ -573,6 +682,14 @@ function makeMarkerName(marker) {
  * @param {string} text 
  * @param {string} [displayRange] 예. [1, 10, 21, 30] => 1 ~ 10라인, 21 ~ 30라인 표시
  */
+/**
+ * highlight.js 번들에 없는 언어를 안전한 이름으로 바꾼다
+ */
+function safeLanguage(lan) {
+    if (typeof hljs === 'undefined') return 'plaintext';
+    return hljs.getLanguage(lan) == null ? 'plaintext' : lan;
+}
+
 function fillCodeDiv(div, lan, text, displayRange) {
     if (lan === 'nohighlight') {
         const nodes = asNodes(text);
@@ -620,7 +737,7 @@ function fillCodeDiv(div, lan, text, displayRange) {
             displayLineArr = displayLineArr.map(line => line.slice(commonBlankSize));
         }
 
-        displayLineArr = hljs.highlight(displayLineArr.join('\n'), { language: lan, ignoreIllegals: true })['value'].split(/\n/gm);
+        displayLineArr = hljs.highlight(displayLineArr.join('\n'), { language: safeLanguage(lan), ignoreIllegals: true })['value'].split(/\n/gm);
 
         displayPartArr.push(displayLineArr);
         totalLineCount += displayLineArr.length;
