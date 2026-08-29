@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 380" width="840" height="380" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">여러 항목 가운데 몇 개 이상이라는 규칙의 성질</title><desc id="d">같은 이름을 받은 두 사람이 공유하는 항목이 하나도 없을 수 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="420" y="48" text-anchor="middle">이름 없는 항목 열 개 가운데 다섯 개 이상이면 같은 이름을 붙이는 규칙</text>
+<text class="ink2 sm" x="213" y="92" text-anchor="middle">1</text>
+<text class="ink2 sm" x="259" y="92" text-anchor="middle">2</text>
+<text class="ink2 sm" x="305" y="92" text-anchor="middle">3</text>
+<text class="ink2 sm" x="351" y="92" text-anchor="middle">4</text>
+<text class="ink2 sm" x="397" y="92" text-anchor="middle">5</text>
+<text class="ink2 sm" x="443" y="92" text-anchor="middle">6</text>
+<text class="ink2 sm" x="489" y="92" text-anchor="middle">7</text>
+<text class="ink2 sm" x="535" y="92" text-anchor="middle">8</text>
+<text class="ink2 sm" x="581" y="92" text-anchor="middle">9</text>
+<text class="ink2 sm" x="627" y="92" text-anchor="middle">10</text>
+<text class="ink bold" x="172" y="134" text-anchor="end">사람 가</text>
+<rect x="194" y="110" width="38" height="34" rx="3" fill="var(--s1)" fill-opacity="0.85" stroke="var(--s1)" stroke-width="1.4"/>
+<rect x="240" y="110" width="38" height="34" rx="3" fill="var(--s1)" fill-opacity="0.85" stroke="var(--s1)" stroke-width="1.4"/>
+<rect x="286" y="110" width="38" height="34" rx="3" fill="var(--s1)" fill-opacity="0.85" stroke="var(--s1)" stroke-width="1.4"/>
+<rect x="332" y="110" width="38" height="34" rx="3" fill="var(--s1)" fill-opacity="0.85" stroke="var(--s1)" stroke-width="1.4"/>
+<rect x="378" y="110" width="38" height="34" rx="3" fill="var(--s1)" fill-opacity="0.85" stroke="var(--s1)" stroke-width="1.4"/>
+<rect x="424" y="110" width="38" height="34" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/>
+<rect x="470" y="110" width="38" height="34" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/>
+<rect x="516" y="110" width="38" height="34" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/>
+<rect x="562" y="110" width="38" height="34" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/>
+<rect x="608" y="110" width="38" height="34" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/>
+<text class="ink bold" x="172" y="184" text-anchor="end">사람 나</text>
+<rect x="194" y="160" width="38" height="34" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/>
+<rect x="240" y="160" width="38" height="34" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/>
+<rect x="286" y="160" width="38" height="34" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/>
+<rect x="332" y="160" width="38" height="34" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/>
+<rect x="378" y="160" width="38" height="34" rx="3" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.4"/>
+<rect x="424" y="160" width="38" height="34" rx="3" fill="var(--s2)" fill-opacity="0.85" stroke="var(--s2)" stroke-width="1.4"/>
+<rect x="470" y="160" width="38" height="34" rx="3" fill="var(--s2)" fill-opacity="0.85" stroke="var(--s2)" stroke-width="1.4"/>
+<rect x="516" y="160" width="38" height="34" rx="3" fill="var(--s2)" fill-opacity="0.85" stroke="var(--s2)" stroke-width="1.4"/>
+<rect x="562" y="160" width="38" height="34" rx="3" fill="var(--s2)" fill-opacity="0.85" stroke="var(--s2)" stroke-width="1.4"/>
+<rect x="608" y="160" width="38" height="34" rx="3" fill="var(--s2)" fill-opacity="0.85" stroke="var(--s2)" stroke-width="1.4"/>
+<text class="ink" x="190" y="232" text-anchor="start">두 사람 다 다섯 개를 만족했으므로 같은 이름을 받는다.</text>
+<text class="ink bold" x="190" y="256" text-anchor="start">그런데 공유하는 항목이 하나도 없다.</text>
+<text class="ink" x="190" y="296" text-anchor="start">열 개 가운데 다섯 개 이상을 만족하는 조합은 638가지다.</text>
+<text class="ink2" x="190" y="320" text-anchor="start">하나의 이름 아래 638가지가 들어 있다는 뜻이다.</text>
+<text class="ink2 sm" x="190" y="352" text-anchor="start">항목은 전부 이름 없는 보기다. 이 그림은 분류 규칙의 성질에 대한 것이지 무엇을 판별하는 방법이 아니다.</text>
+</svg>

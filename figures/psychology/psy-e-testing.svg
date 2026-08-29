@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 400" width="880" height="400" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">인출 연습과 학습자의 예측</title><desc id="d">지연 시험에서는 인출 연습이 낫지만 학습자는 반대로 예측하는 도식</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold sm" x="180" y="92" text-anchor="middle">5분 뒤 시험</text><rect x="120" y="132.8" width="54" height="167.2" rx="3" fill="var(--s2)" fill-opacity="0.85"/><rect x="186" y="148" width="54" height="152" rx="3" fill="var(--s1)" fill-opacity="0.85"/><text class="ink2 sm" x="180" y="322" text-anchor="middle">다시 읽기가 조금 낫다</text><text class="ink bold sm" x="420" y="92" text-anchor="middle">한 주 뒤 시험</text><rect x="360" y="220.2" width="54" height="79.8" rx="3" fill="var(--s2)" fill-opacity="0.85"/><rect x="426" y="163.20000000000002" width="54" height="136.8" rx="3" fill="var(--s1)" fill-opacity="0.85"/><text class="ink2 sm" x="420" y="322" text-anchor="middle">인출 연습이 크게 낫다</text><text class="ink bold sm" x="660" y="92" text-anchor="middle">학습자 스스로의 예측</text><rect x="600" y="138.5" width="54" height="161.5" rx="3" fill="var(--s2)" fill-opacity="0.85"/><rect x="666" y="182.2" width="54" height="117.8" rx="3" fill="var(--s1)" fill-opacity="0.85"/><text class="ink2 sm" x="660" y="322" text-anchor="middle">다시 읽기 쪽을 높게 본다</text><rect x="132" y="342" width="20" height="9" rx="2" fill="var(--s2)" fill-opacity="0.85"/><text class="ink2 sm" x="160" y="351" text-anchor="start">같은 시간 동안 다시 읽기</text><rect x="382" y="342" width="20" height="9" rx="2" fill="var(--s1)" fill-opacity="0.85"/><text class="ink2 sm" x="410" y="351" text-anchor="start">같은 시간 동안 인출 연습(보지 않고 떠올려 적기)</text><text class="ink bold" x="440" y="34" text-anchor="middle">나중에 남는 것과 지금 남을 것 같은 느낌이 어긋난다 — 도식</text><text class="ink2 sm" x="440" y="60" text-anchor="middle">두 조건의 학습 시간은 같다. 다른 것은 그 시간에 무엇을 했는가뿐이다</text><text class="ink2 sm" x="440" y="380" text-anchor="middle">막대 높이에 눈금을 달지 않았다. 값이 아니라 어느 쪽이 높은지만 읽는 그림이다</text>
+</svg>

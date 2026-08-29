@@ -16,7 +16,8 @@ const pug = require('pug');
 // 이 스크립트는 scripts/ 아래에 있으므로 저장소 루트는 한 단계 위다.
 // 경로를 박아 두면 다른 기계에서 그대로 쓸 수 없다.
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const imgMap = JSON.parse(fs.readFileSync(path.join(ROOT, 'source/img-map.json'), 'utf8'));
+// 원본 그림의 크기는 빌드와 같은 헬퍼로 읽는다. img-map.json 은 더 이상 없다.
+const { imageSize } = await import(path.join(ROOT, 'source/build/lib/image-size.ts'));
 
 let bad = 0;
 const fail = m => { console.log('  ❌ ' + m); bad += 1; };
@@ -35,7 +36,7 @@ for (const file of process.argv.slice(2)) {
     fs.writeFileSync(tmp, wrapper);
     let html = '';
     try {
-        html = pug.renderFile(tmp, { cache: false, imgMap });
+        html = pug.renderFile(tmp, { cache: false, imgSize: imageSize });
         ok(`렌더 성공 (${(html.length / 1024).toFixed(0)}KB)`);
     } catch (e) {
         fail(`렌더 실패: ${String(e.message).split('\n').slice(0, 3).join(' | ')}`);

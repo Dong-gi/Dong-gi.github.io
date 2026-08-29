@@ -11,20 +11,29 @@
  *   - `source/posts-compressed.json` — 브라우저가 받아 사이드바 목록을 만든다.
  *   - `files/sitemap.txt`
  *
- * 이 요소가 읽는 다른 요소의 산출물은 `source/img-map.json`(img 요소)과
- * `source/doc-dates.json`(dates 요소)이다. 그래서 `source/build.ts` 는 이 요소를
- * 그 둘 뒤에 돌린다.
+ * **이 요소는 다른 요소의 산출물을 하나도 읽지 않는다.** 그래서 모든 요소가 동시에 돈다.
  *
- * 해시 검사의 입력에는 **그 문서가 include 하는 파일까지** 넣는다. 거의 모든 문서가
- * `source/skeleton.pug` 를 include 하므로, skeleton 을 고치면 전체가 다시 렌더된다.
+ * img 요소와도 독립이다. `+w3img` 가 쓰는 원본 크기는 `lib/image-size.ts` 가
+ * 원본 파일 헤더에서 직접 읽는다. 예전에는 img 요소가 만든 `source/img-map.json` 을
+ * 통째로 읽었는데, 그러면 그림 하나가 늘어도 **모든 문서가 다시 렌더되었다.**
+ * `imgs-generated/` 의 변환본 경로는 규약으로 만들 뿐 존재를 확인하지 않으므로,
+ * 두 요소는 같은 원본을 각자 보면 된다.
+ *
+ * 해시 검사의 입력에는 **그 문서가 include 하는 파일과 참조하는 그림까지** 넣는다.
+ * 거의 모든 문서가 `source/skeleton.pug` 를 include 하므로 skeleton 을 고치면 전체가
+ * 다시 렌더되고, 그림이 새로 들어오면 **그 그림을 쓰는 문서만** 다시 렌더된다.
  * 그 판단을 사람이 기억할 필요가 없게 하려는 것이다.
  */
+import { existsSync } from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { createRequire } from 'node:module';
 import { runComponent, ToolError, type BuildLog } from './lib/log.ts';
 import { runIncremental, type Job } from './lib/manifest.ts';
 import { MATH_MARKER, prerenderMath, recycleMathJaxIfHeavy } from './lib/math.ts';
+import { imageSize } from './lib/image-size.ts';
 import { ensureDirFor, fileExists, normalize, resolve, walkFiles } from './lib/paths.ts';
 
 const require = createRequire(import.meta.url);
@@ -35,9 +44,9 @@ const SITE_ORIGIN = 'https://dong-gi.github.io';
 /** posts.json 의 file 값은 'dev/aws.html' 형태이므로 URL 생성 시 이 접두사가 필요하다. */
 const POSTS_URL_PREFIX = '/posts/';
 
-const IMG_MAP_FILE = 'source/img-map.json';
-const DOC_DATES_FILE = 'source/doc-dates.json';
 const POSTS_FILE = 'source/posts.json';
+/** 저장소의 GitHub 주소. 홈의 최근 커밋 표가 sha 를 여기로 건다. */
+const REPO_URL = 'https://github.com/Dong-gi/Dong-gi.github.io';
 
 /** source/posts.json 의 항목. 파일 자체는 이 항목의 배열이다. */
 interface Post {
@@ -45,8 +54,16 @@ interface Post {
     category: string[];
     file: string;
     title: string;
-    /** 빌드가 doc-dates 에서 채운다. 파일에는 없다. */
-    mtimeMs?: number;
+}
+
+/** 홈에 싣는 커밋 한 건. */
+interface Commit {
+    sha: string;
+    shortSha: string;
+    url: string;
+    /** KST `yyyy-MM-dd HH:mm`. */
+    when: string;
+    posts: { href: string; title: string }[];
 }
 
 /**
@@ -78,14 +95,123 @@ async function includedFiles(rel: string, seen = new Set<string>()): Promise<str
     return found;
 }
 
+/**
+ * 문서가 `+w3img` 로 참조하는 **원본 그림**을 모은다. 문서와 그 include 를 함께 훑는다.
+ *
+ * 이것이 문서의 진짜 입력이다. `+w3img` 는 `imageSize(src)` 로 원본 헤더를 읽어
+ * `width`/`height` 를 박고, 크기를 못 읽으면 `<picture>` 대신 평범한 `<img>` 를 낸다.
+ * 그러니 **그림이 없다가 생기는 것만으로 산출물이 달라진다.** 없는 파일도 목록에
+ * 넣어야 그 변화가 해시에 잡힌다.
+ *
+ * 리터럴만 본다. `+w3img` 호출 1,365 개 가운데 첫 인자가 리터럴이 아닌 것은
+ * `+bookInfo` 의 표지 하나뿐이고, 그 값은 모두 외부 URL 이라 `imageSize` 가 곧바로
+ * null 을 돌려준다 — 파일 의존이 아니다.
+ */
+async function referencedImages(rel: string, included: string[]): Promise<string[]> {
+    const found = new Set<string>();
+    for (const file of [rel, ...included]) {
+        const text = await fsp.readFile(resolve(file), 'utf8').catch(() => '');
+        for (const m of text.matchAll(/\+w3img\(\s*'(\/imgs\/[^']+)'/g)) {
+            found.add(normalize(m[1].replace(/^\//, '')));
+        }
+    }
+    // 해시는 순서에 딸리므로 정렬해서 넘긴다.
+    return [...found].sort();
+}
+
 /** `pugs/fundamental/physics.pug` → `posts/fundamental/physics.html`, `index.pug` → `index.html` */
 function outputOf(rel: string): string {
     return rel.replace(/^pugs\//, 'posts/').replace(/\.pug$/, '.html');
 }
 
+const run = promisify(execFile);
+
+/** KST 기준 `yyyy-MM-dd`. 시각을 넣지 않는 이유는 skeleton.pug 주석에 있다. */
+function kstDate(d: Date): string {
+    return d.toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
+}
+
+/** KST 기준 `yyyy-MM-dd HH:mm`. 커밋 시각은 고정된 자료라 시각까지 적는다. */
+function kstDateTime(iso: string): string {
+    const d = new Date(iso);
+    const date = d.toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
+    const time = d.toLocaleTimeString('en-GB', { timeZone: 'Asia/Seoul', hour: '2-digit', minute: '2-digit' });
+    return `${date} ${time}`;
+}
+
+/**
+ * 홈의 &#34;최근 수정&#34; 표에 실을 커밋을 git 이력에서 뽑는다.
+ *
+ * 예전에는 브라우저가 `posts-compressed.json` 의 갱신일로 목록을 만들었고, 그 갱신일을
+ * 채우려고 git 이력을 훑는 빌드 요소(dates)가 따로 있었다. 이제 빌드 때 한 번 뽑아
+ * HTML 에 박는다.
+ *
+ * **문서를 많이 건드린 커밋은 뺀다.** 규격을 손보거나 일괄 치환한 커밋이 목록을
+ * 통째로 차지해 &#34;무엇이 새로 쓰였는가&#34; 를 가리기 때문이다.
+ *
+ * git 이 없거나 저장소가 아니면 빈 배열이다. 표가 비는 것이 빌드를 세우는 것보다 낫다.
+ */
+async function recentCommitsOf(posts: Post[], limit = 5, maxFiles = 5): Promise<Commit[]> {
+    const titleOf = new Map(posts.map((p) => [p.file, p.title]));
+    let stdout: string;
+    try {
+        ({ stdout } = await run(
+            'git',
+            // 경로를 pugs/ 와 index.pug 로 좁힌다. source/skeleton.pug 같은 틀은 포스트가
+            // 아니고, 틀을 고친 커밋은 어차피 문서 전부를 건드린 것으로 세어져 걸러진다.
+            ['log', '--format=%H%x09%cI', '--name-only', '--diff-filter=ACMR', '--', 'pugs', 'index.pug'],
+            { cwd: resolve('.'), maxBuffer: 64 * 1024 * 1024 },
+        ));
+    } catch {
+        return [];
+    }
+
+    const out: Commit[] = [];
+    let sha = '';
+    let iso = '';
+    let files: string[] = [];
+    const flush = (): void => {
+        if (sha === '' || files.length === 0 || files.length > maxFiles) return;
+        if (out.length >= limit) return;
+        out.push({
+            sha,
+            shortSha: sha.slice(0, 10),
+            url: `${REPO_URL}/commit/${sha}`,
+            when: kstDateTime(iso),
+            posts: files.map((f) => {
+                if (f === 'index.pug') return { href: '/', title: '홈' };
+                const file = f.replace(/^pugs\//, '').replace(/\.pug$/, '.html');
+                // posts.json 에 없는 문서는 경로를 그대로 보인다. 등록을 빠뜨린 것이
+                // 눈에 띄는 편이 낫다.
+                return { href: POSTS_URL_PREFIX + file, title: titleOf.get(file) ?? file };
+            }),
+        });
+    };
+    for (const line of stdout.split('\n')) {
+        const head = line.match(/^([0-9a-f]{40})\t(.+)$/);
+        if (head != null) {
+            flush();
+            if (out.length >= limit) break;
+            sha = head[1];
+            iso = head[2];
+            files = [];
+            continue;
+        }
+        const file = line.trim();
+        if (file.endsWith('.pug') && (file === 'index.pug' || file.startsWith('pugs/'))) {
+            files.push(normalize(file));
+        }
+    }
+    flush();
+    return out;
+}
+
+/** 모든 문서에 함께 넘기는 값. 렌더 시작 전에 한 번 채운다. */
+let locals: Record<string, unknown> = {};
+
 async function renderOne(log: BuildLog, source: string, target: string): Promise<void> {
     const t0 = Date.now();
-    let html = pug.renderFile(resolve(source), { cache: true, imgMap });
+    let html = pug.renderFile(resolve(source), { cache: true, ...locals });
     let mathMs = 0;
     if (html.includes(MATH_MARKER)) {
         const t1 = Date.now();
@@ -104,12 +230,11 @@ async function renderOne(log: BuildLog, source: string, target: string): Promise
     log.line(`${target}  ${(html.length / 1024).toFixed(0)}KB (${Date.now() - t0}ms${math})`);
 }
 
-/** renderOne 이 pug 에 넘길 전역. 문서가 `+w3img` 에서 쓴다. */
-let imgMap: Record<string, { width: number; height: number }> = {};
-
 await runComponent('pug', async (log) => {
-    imgMap = JSON.parse(await fsp.readFile(resolve(IMG_MAP_FILE), 'utf8').catch(() => '{}'));
     const posts: Post[] = JSON.parse(await fsp.readFile(resolve(POSTS_FILE), 'utf8'));
+    const recentCommits = await recentCommitsOf(posts);
+    if (recentCommits.length === 0) log.line('git 이력을 읽지 못해 홈의 최근 커밋 표를 비운다');
+    locals = { imgSize: imageSize, buildDate: kstDate(new Date()), recentCommits };
 
     const sources = ['index.pug', ...(await walkFiles('pugs'))].filter((f) => f.endsWith('.pug'));
     // pugs/ 는 문서의 원본만 두는 곳이다. 그림은 figures/ 와 d2/ 에 있고 문서는 경로로
@@ -127,9 +252,15 @@ await runComponent('pug', async (log) => {
         if (target !== 'index.html' && !target.startsWith('posts/')) {
             throw new Error(`${source} -> ${target} : 산출물 경로가 posts/ 밖이다`);
         }
+        const included = await includedFiles(source);
         jobs.push({
             key: source,
-            inputs: [source, ...(await includedFiles(source))],
+            // 홈의 최근 커밋 표는 git 이력에서 나온다. 커밋을 해도 index.pug 자체는
+            // 바뀌지 않으므로 해시로는 낡음을 알 수 없다. 한 장이라 매번 렌더한다.
+            always: source === 'index.pug',
+            // 참조하는 그림도 입력이다. 없는 파일도 그대로 넣는다 — hashOf 가 '없음'
+            // 으로 다루므로, 나중에 그림이 도착하면 해시가 달라져 이 문서만 다시 돈다.
+            inputs: [source, ...included, ...(await referencedImages(source, included))],
             outputs: [target],
             run: () => renderOne(log, source, target),
         });
@@ -139,40 +270,18 @@ await runComponent('pug', async (log) => {
         name: 'pug',
         log,
         jobs,
-        // 모든 문서가 함께 보는 입력. 어느 문서의 것이라고 말하기 어렵다.
-        shared: [IMG_MAP_FILE],
         orphanScan: { dirs: ['posts'], match: (f) => f.endsWith('.html') },
     });
 
     // ---- posts-compressed.json 과 sitemap.txt
     //
-    // 렌더 결과와 무관하게 매번 다시 쓴다. posts.json 과 갱신일만 있으면 만들 수 있고
-    // 비용이 없어서, 건너뛸 조건을 따지는 쪽이 오히려 틀리기 쉽다.
-    const docDates: Record<string, number> = JSON.parse(
-        await fsp.readFile(resolve(DOC_DATES_FILE), 'utf8').catch(() => '{"dates":{}}'),
-    ).dates ?? {};
-
+    // 렌더 결과와 무관하게 매번 다시 쓴다. posts.json 만 있으면 만들 수 있고 비용이
+    // 없어서, 건너뛸 조건을 따지는 쪽이 오히려 틀리기 쉽다.
     posts.sort((a, b) => a.file.localeCompare(b.file));
-    const missing: string[] = [];
-    for (const post of posts) {
-        const source = 'pugs/' + post.file.replace(/\.html$/, '.pug');
-        // 홈의 "최근 갱신" 목록도 docModified() 와 같은 기준을 쓴다. git 이력에 없는
-        // 문서만 파일 mtime 으로 대체한다.
-        const recorded = docDates[source];
-        if (recorded != null) {
-            post.mtimeMs = recorded;
-            continue;
-        }
-        const stats = await fsp.stat(resolve(source)).catch(() => null);
-        if (stats == null) {
-            missing.push(source);
-            continue;
-        }
-        post.mtimeMs = Math.floor(stats.mtimeMs);
-    }
+    const missing = posts.filter((p) => !existsSync(resolve('pugs/' + p.file.replace(/\.html$/, '.pug'))));
     // 한 줄로 묶는다. 하나씩 경고하면 로그 끝이 경고로 뒤덮여 정작 오류가 안 보인다.
     if (missing.length !== 0) {
-        log.warn(`${POSTS_FILE} 에 등록됐지만 원본이 없는 문서 ${missing.length}개: ${missing.slice(0, 5).join(', ')}${missing.length > 5 ? ' …' : ''}`);
+        log.warn(`${POSTS_FILE} 에 등록됐지만 원본이 없는 문서 ${missing.length}개: ${missing.slice(0, 5).map((p) => p.file).join(', ')}${missing.length > 5 ? ' …' : ''}`);
     }
 
     await fsp.writeFile(resolve('source/posts-compressed.json'), JSON.stringify(posts));

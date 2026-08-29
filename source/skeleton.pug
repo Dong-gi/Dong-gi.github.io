@@ -120,17 +120,13 @@ mixin w3button(color)
 mixin w3img(src, description)
     figure.w3-margin-bottom
         -
-            metadata = imgMap[src]
+            size = imgSize(src)
             description = description || (src.split('/').pop())
-            // imgMap 의 키는 인코딩 전 경로다. 조회를 마친 뒤에 인코딩한다.
             trimmedSrc = encodePath(src.replace('/imgs/', '/imgs-generated/').replace(/\.\w+$/, ''))
             encodedSrc = src.startsWith('http') ? src : encodePath(src)
-        if metadata != null
-            picture
-                if !src.endsWith('.gif')
-                    source(srcset=(trimmedSrc + '-500.avif 500w, ' + trimmedSrc + '-1200.avif 1200w, ' + trimmedSrc + '-2000.avif 2000w'), type='image/avif')
-                source(srcset=(trimmedSrc + '-500.webp 500w, ' + trimmedSrc + '-1200.webp 1200w, ' + trimmedSrc + '-2000.webp 2000w'), type='image/webp')
-                img.w3-round(src=(trimmedSrc + '-2000.webp'), alt=description, loading='lazy', sizes='auto', width=metadata.width, height=metadata.height)&attributes(attributes)
+            genExt = src.endsWith('.gif') ? 'webp' : 'avif'
+        if size != null
+            img.w3-round(srcset=(trimmedSrc + '-500.' + genExt + ' 500w, ' + trimmedSrc + '-1200.' + genExt + ' 1200w, ' + trimmedSrc + '-2000.' + genExt + ' 2000w'), src=(trimmedSrc + '-2000.' + genExt), alt=description, loading='lazy', sizes='auto', width=size.width, height=size.height)&attributes(attributes)
         else
             img.w3-round(src=encodedSrc, alt=description, loading='lazy')&attributes(attributes)
         figcaption.w3-padding
@@ -184,6 +180,12 @@ mixin post(options)
                     form(role='search')
                         input.w3-bar-item#query(type='search',placeholder='search',style='max-width:35%')
                 article#contents
+                    //- 빌드 시각. 예전에는 default.js 가 posts-compressed.json 의 갱신일을
+                        읽어 여기에 끼워 넣었는데, 그 값을 만들려고 git 이력을 훑는 빌드
+                        요소를 따로 두어야 했다. 이제 이 문서가 렌더된 날을 그대로 적는다.
+                        날짜만 적는 이유는 시각까지 넣으면 같은 입력으로 다시 빌드해도
+                        산출물이 달라져, 빌드가 멱등한지 확인할 수 없기 때문이다.
+                    p 빌드 날짜: #{buildDate}
                     if block
                         block
 

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 420" width="820" height="420" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">같은 능력을 횡단으로 잰 곡선과 종단으로 잰 곡선</title><desc id="d">횡단은 이른 나이부터 꾸준히 내려가고 종단은 오래 유지되다 늦게 내려간다. 눈금 없는 도식이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" marker-end="url(#ark)" d="M110 330 H600"/><path class="ax" marker-end="url(#ark)" d="M110 330 V56"/><text class="sm ink2" x="230" y="345" text-anchor="middle">40</text><text class="sm ink2" x="350" y="345" text-anchor="middle">55</text><text class="sm ink2" x="470" y="345" text-anchor="middle">70</text><text class="sm ink2" x="590" y="345" text-anchor="middle">85</text>
+<text class="ink2 sm" x="350" y="374" text-anchor="middle">나이</text>
+<text class="ink2 sm" x="46" y="52" text-anchor="start">검사 점수</text>
+<path class="cv s1" d="M110 102.96 L114 103.91 L118 104.86 L122 105.81 L126 106.76 L130 107.71 L134 108.66 L138 109.61 L142 110.56 L146 111.51 L150 112.46 L154 113.41 L158 114.36 L162 115.32 L166 116.27 L170 117.22 L174 118.17 L178 119.12 L182 120.07 L186 121.02 L190 121.97 L194 122.92 L198 123.87 L202 124.82 L206 125.77 L210 126.72 L214 127.67 L218 128.62 L222 129.57 L226 130.52 L230 131.47 L234 132.42 L238 133.37 L242 134.32 L246 135.27 L250 136.22 L254 137.17 L258 138.12 L262 139.08 L266 140.03 L270 140.98 L274 141.93 L278 142.88 L282 143.83 L286 144.78 L290 145.73 L294 146.68 L298 147.63 L302 148.58 L306 149.53 L310 150.48 L314 151.43 L318 152.38 L322 153.33 L326 154.28 L330 155.23 L334 156.18 L338 157.13 L342 158.08 L346 159.03 L350 159.98 L354 160.93 L358 161.88 L362 162.84 L366 163.79 L370 164.74 L374 165.69 L378 166.64 L382 167.59 L386 168.54 L390 169.49 L394 170.44 L398 171.39 L402 172.34 L406 173.29 L410 174.24 L414 175.19 L418 176.14 L422 177.09 L426 178.04 L430 178.99 L434 179.94 L438 180.89 L442 181.84 L446 182.79 L450 183.74 L454 184.69 L458 185.64 L462 186.6 L466 187.55 L470 188.5 L474 189.45 L478 190.4 L482 191.35 L486 192.3 L490 193.25 L494 194.2 L498 195.15 L502 196.1 L506 197.05 L510 198 L514 198.95 L518 199.9 L522 200.85 L526 201.8 L530 202.75 L534 203.7 L538 204.65 L542 205.6 L546 206.55 L550 207.5 L554 208.45 L558 209.4 L562 210.36 L566 211.31 L570 212.26 L574 213.21 L578 214.16 L582 215.11 L586 216.06 L590 217.01"/>
+<path class="cv s2" d="M110 132 L114 131.84 L118 131.68 L122 131.52 L126 131.37 L130 131.21 L134 131.05 L138 130.89 L142 130.73 L146 130.57 L150 130.42 L154 130.26 L158 130.1 L162 129.94 L166 129.78 L170 129.62 L174 129.47 L178 129.31 L182 129.15 L186 128.99 L190 128.83 L194 128.67 L198 128.52 L202 128.36 L206 128.2 L210 128.04 L214 127.88 L218 127.72 L222 127.56 L226 127.41 L230 127.25 L234 127.09 L238 126.93 L242 126.77 L246 126.61 L250 126.46 L254 126.3 L258 126.14 L262 125.98 L266 125.82 L270 125.66 L274 125.51 L278 125.35 L282 125.19 L286 125.03 L290 124.87 L294 124.71 L298 124.56 L302 124.4 L306 124.24 L310 124.08 L314 123.92 L318 123.76 L322 123.6 L326 123.45 L330 123.29 L334 123.13 L338 122.97 L342 122.81 L346 122.65 L350 122.5 L354 122.34 L358 122.18 L362 122.02 L366 121.86 L370 121.7 L374 121.55 L378 121.47 L382 121.56 L386 121.71 L390 121.92 L394 122.19 L398 122.52 L402 122.9 L406 123.35 L410 123.86 L414 124.43 L418 125.06 L422 125.74 L426 126.49 L430 127.3 L434 128.16 L438 129.09 L442 130.07 L446 131.12 L450 132.23 L454 133.39 L458 134.62 L462 135.9 L466 137.25 L470 138.65 L474 140.11 L478 141.64 L482 143.22 L486 144.86 L490 146.57 L494 148.33 L498 150.15 L502 152.04 L506 153.98 L510 155.98 L514 158.04 L518 160.16 L522 162.34 L526 164.58 L530 166.88 L534 169.25 L538 171.67 L542 174.15 L546 176.68 L550 179.28 L554 181.94 L558 184.66 L562 187.44 L566 190.28 L570 193.18 L574 196.14 L578 199.15 L582 202.23 L586 205.37 L590 208.56"/>
+<text class="ink bold" x="478" y="216.04" text-anchor="middle">횡단</text>
+<text class="ink bold" x="406" y="111.29" text-anchor="middle">종단</text>
+<text class="ink bold sm" x="624" y="108" text-anchor="start">두 곡선이 갈리는 까닭</text>
+<text class="ink2 sm" x="624" y="134" text-anchor="start">횡단에서 80세와 30세는</text>
+<text class="ink2 sm" x="624" y="154" text-anchor="start">나이만 다른 것이 아니라</text>
+<text class="ink2 sm" x="624" y="174" text-anchor="start">자란 시대가 다르다.</text>
+<text class="ink2 sm" x="624" y="208" text-anchor="start">종단에서는 시대가 같지만</text>
+<text class="ink2 sm" x="624" y="228" text-anchor="start">탈락과 연습이 끼어든다.</text>
+<text class="ink2 sm" x="624" y="262" text-anchor="start">세로축 눈금은 일부러</text>
+<text class="ink2 sm" x="624" y="282" text-anchor="start">넣지 않았다. 모양만</text>
+<text class="ink2 sm" x="624" y="302" text-anchor="start">옮긴 도식이다.</text>
+</svg>

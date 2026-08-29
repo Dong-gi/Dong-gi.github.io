@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 420" width="860" height="420" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">획득 · 소거 · 자발적 회복</title><desc id="d">조건반응이 올라갔다 내려간 뒤 쉬고 다시 재면 일부가 돌아오는 모양</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="82" y="94" width="238" height="234" rx="2" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="201" y="86" text-anchor="middle">획득 — 조건자극 뒤에 무조건자극이 온다</text><rect x="320" y="94" width="168" height="234" rx="2" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="404" y="86" text-anchor="middle">소거 — 조건자극만 온다</text><rect x="488" y="94" width="98" height="234" rx="2" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="537" y="86" text-anchor="middle">쉼 (재지 않는다)</text><rect x="586" y="94" width="196" height="234" rx="2" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="684" y="86" text-anchor="middle">다시 조건자극만</text><path class="ax" marker-end="url(#ark)" d="M82 322 H792"/><path class="ax" marker-end="url(#ark)" d="M82 322 V90"/><path class="cv s1" d="M82 322 L89 298.59 L96 277.78 L103 259.28 L110 242.84 L117 228.21 L124 215.22 L131 203.66 L138 193.39 L145 184.25 L152 176.13 L159 168.92 L166 162.5 L173 156.79 L180 151.72 L187 147.21 L194 143.21 L201 139.64 L208 136.47 L215 133.66 L222 131.15 L229 128.93 L236 126.95 L243 125.19 L250 123.63 L257 122.24 L264 121 L271 119.9 L278 118.92 L285 118.06 L292 117.28 L299 116.6 L306 115.99 L313 115.45 L320 114.96"/><path class="cv s2" d="M320 108.88 L327 139.63 L334 165.81 L341 188.08 L348 207.04 L355 223.17 L362 236.9 L369 248.58 L376 258.53 L383 266.99 L390 274.19 L397 280.32 L404 285.54 L411 289.98 L418 293.75 L425 296.97 L432 299.71 L439 302.03 L446 304.02 L453 305.7 L460 307.14 L467 308.36 L474 309.4 L481 310.28 L488 311.04"/><path class="cv s2" d="M586 213.22 L593 225.97 L600 237.12 L607 246.89 L614 255.43 L621 262.91 L628 269.45 L635 275.18 L642 280.2 L649 284.58 L656 288.42 L663 291.78 L670 294.72 L677 297.3 L684 299.55 L691 301.52 L698 303.24 L705 304.75 L712 306.08 L719 307.23 L726 308.24 L733 309.13 L740 309.91 L747 310.58 L754 311.18 L761 311.7 L768 312.15 L775 312.55 L782 312.9"/><path class="cv s3" stroke-dasharray="5 4" d="M488 311.04 L586 219.88"/><circle class="f3" cx="586" cy="219.88" r="5"/><text class="ink bold sm" x="594" y="207.88" text-anchor="start">자발적 회복</text><text class="ink2 sm" x="314" y="103.32" text-anchor="end">획득의 끝</text><text class="ink2 sm" x="778" y="298.68" text-anchor="end">다시 내려간다</text><text class="ink2 sm" x="30" y="62" text-anchor="start">세로축 — 조건반응의 크기 (눈금 없음. 값이 아니라 모양만 읽는다)</text><text class="ink2 sm" x="432" y="350" text-anchor="middle">시행 (왼쪽에서 오른쪽으로 시간이 간다)</text><text class="ink bold" x="430" y="34" text-anchor="middle">소거는 지우는 것이 아니다 — 도식</text><text class="ink2 sm" x="430" y="394" text-anchor="middle">소거 뒤에 남는 것이 없다면 쉬고 다시 재도 아무 반응이 없어야 한다. 그렇지 않다는 것이 이 그림의 요점이다</text>
+</svg>

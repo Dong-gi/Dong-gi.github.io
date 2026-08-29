@@ -28,7 +28,8 @@ import { fileExists, normalize, resolve, walkFiles } from './lib/paths.ts';
 
 /** 그림을 둘 과목. 여기 없는 접두어의 모듈은 무시된다. */
 const SUBJECTS = ['physics', 'chemistry', 'biology', 'mathematics',
-    'linear-algebra', 'statistics', 'algorithm', 'mcs', 'logic', 'philosophy'];
+    'linear-algebra', 'statistics', 'algorithm', 'mcs', 'logic', 'philosophy',
+    'psychology'];
 
 interface Figure {
     name: string;

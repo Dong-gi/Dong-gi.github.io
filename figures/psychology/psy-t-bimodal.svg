@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 420" width="820" height="420" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한 덩어리 분포를 잘라 두 유형을 만드는 일</title><desc id="d">골짜기 없는 분포를 가운데서 자르면 유형이 생기지만 경계는 자료에 있던 것이 아니다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" marker-end="url(#ark)" d="M100 306 H570"/><path class="ax" marker-end="url(#ark)" d="M100 306 V56"/>
+<text class="ink2 sm" x="330" y="352" text-anchor="middle">어떤 특성의 점수</text>
+<text class="ink2 sm" x="36" y="52" text-anchor="start">그 점수를 받은 사람 수</text>
+<rect x="297.8" y="66" width="64.4" height="240" rx="3" fill="var(--s2)" fill-opacity="0.13" stroke="none" stroke-width="1.4"/>
+<path class="cv s1" d="M100 303.24 L103.83 302.81 L107.67 302.33 L111.5 301.79 L115.33 301.18 L119.17 300.49 L123 299.72 L126.83 298.86 L130.67 297.9 L134.5 296.83 L138.33 295.65 L142.17 294.34 L146 292.9 L149.83 291.31 L153.67 289.58 L157.5 287.68 L161.33 285.61 L165.17 283.37 L169 280.93 L172.83 278.31 L176.67 275.48 L180.5 272.44 L184.33 269.18 L188.17 265.71 L192 262.02 L195.83 258.1 L199.67 253.96 L203.5 249.6 L207.33 245.02 L211.17 240.22 L215 235.22 L218.83 230.02 L222.67 224.64 L226.5 219.08 L230.33 213.36 L234.17 207.51 L238 201.54 L241.83 195.47 L245.67 189.33 L249.5 183.14 L253.33 176.94 L257.17 170.75 L261 164.6 L264.83 158.53 L268.67 152.56 L272.5 146.74 L276.33 141.09 L280.17 135.65 L284 130.46 L287.83 125.54 L291.67 120.93 L295.5 116.66 L299.33 112.75 L303.17 109.24 L307 106.14 L310.83 103.48 L314.67 101.28 L318.5 99.55 L322.33 98.3 L326.17 97.55 L330 97.3 L333.83 97.55 L337.67 98.3 L341.5 99.55 L345.33 101.28 L349.17 103.48 L353 106.14 L356.83 109.24 L360.67 112.75 L364.5 116.66 L368.33 120.93 L372.17 125.54 L376 130.46 L379.83 135.65 L383.67 141.09 L387.5 146.74 L391.33 152.56 L395.17 158.53 L399 164.6 L402.83 170.75 L406.67 176.94 L410.5 183.14 L414.33 189.33 L418.17 195.47 L422 201.54 L425.83 207.51 L429.67 213.36 L433.5 219.08 L437.33 224.64 L441.17 230.02 L445 235.22 L448.83 240.22 L452.67 245.02 L456.5 249.6 L460.33 253.96 L464.17 258.1 L468 262.02 L471.83 265.71 L475.67 269.18 L479.5 272.44 L483.33 275.48 L487.17 278.31 L491 280.93 L494.83 283.37 L498.67 285.61 L502.5 287.68 L506.33 289.58 L510.17 291.31 L514 292.9 L517.83 294.34 L521.67 295.65 L525.5 296.83 L529.33 297.9 L533.17 298.86 L537 299.72 L540.83 300.49 L544.67 301.18 L548.5 301.79 L552.33 302.33 L556.17 302.81 L560 303.24"/>
+<path d="M330 306 L330 76.43" fill="none" stroke="var(--s2)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4"/>
+<text class="ink bold" x="210.4" y="332" text-anchor="middle">유형 가</text>
+<text class="ink bold" x="449.6" y="332" text-anchor="middle">유형 나</text>
+<text class="ink2 sm" x="330" y="64.43" text-anchor="middle">여기서 자른다</text>
+<text class="ink bold sm" x="330" y="293.48" text-anchor="middle">흔들리는 구간</text>
+<text class="ink bold sm" x="596" y="108" text-anchor="start">분포에 골짜기가 없다</text>
+<text class="ink2 sm" x="596" y="134" text-anchor="start">두 덩어리라면 가운데가</text>
+<text class="ink2 sm" x="596" y="154" text-anchor="start">비어 있어야 한다.</text>
+<text class="ink2 sm" x="596" y="174" text-anchor="start">가장 사람이 많은 자리가</text>
+<text class="ink2 sm" x="596" y="194" text-anchor="start">바로 경계다.</text>
+<text class="ink2 sm" x="596" y="228" text-anchor="start">경계 바로 왼쪽과 오른쪽은</text>
+<text class="ink2 sm" x="596" y="248" text-anchor="start">서로 거의 같고, 같은 유형의</text>
+<text class="ink2 sm" x="596" y="268" text-anchor="start">양 끝끼리는 아주 다르다.</text>
+<text class="ink2 sm" x="596" y="302" text-anchor="start">주황 띠 안의 사람은 다시 재면</text>
+<text class="ink2 sm" x="596" y="322" text-anchor="start">유형이 바뀐다. 곡선은 도식이다.</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 380" width="880" height="380" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">틀 효과</title><desc id="d">같은 선택지를 이득으로 적을 때와 손실로 적을 때 선택 비율이 뒤집히는 도식</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold sm" x="60" y="106" text-anchor="start">살릴 수 있는 수로 적었을 때</text><text class="ink2 sm" x="60" y="126" text-anchor="start">‘200명이 산다’ 대 ‘3분의 1 확률로 600명이 산다’</text><rect x="60" y="136" width="273.6" height="54" rx="3" fill="var(--s1)" fill-opacity="0.88"/><rect x="333.6" y="136" width="106.4" height="54" rx="3" fill="var(--s2)" fill-opacity="0.88"/><rect x="60" y="136" width="380" height="54" rx="3" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><text class="ink bold sm" x="60" y="226" text-anchor="start">잃는 수로 적었을 때</text><text class="ink2 sm" x="60" y="246" text-anchor="start">‘400명이 죽는다’ 대 ‘3분의 2 확률로 600명이 죽는다’</text><rect x="60" y="256" width="83.6" height="54" rx="3" fill="var(--s1)" fill-opacity="0.88"/><rect x="143.6" y="256" width="296.4" height="54" rx="3" fill="var(--s2)" fill-opacity="0.88"/><rect x="60" y="256" width="380" height="54" rx="3" fill="none" fill-opacity="1" stroke="var(--ink2)" stroke-width="1.2"/><rect x="60" y="326" width="16" height="12" rx="2" fill="var(--s1)" fill-opacity="0.88"/><text class="ink2 sm" x="84" y="337" text-anchor="start">확실한 쪽을 골랐다</text><rect x="250" y="326" width="16" height="12" rx="2" fill="var(--s2)" fill-opacity="0.88"/><text class="ink2 sm" x="274" y="337" text-anchor="start">확률에 거는 쪽을 골랐다</text><rect x="486" y="96" width="366" height="196" rx="5" fill="none" fill-opacity="1" stroke="var(--s2)" stroke-width="1.6"/><text class="ink bold sm" x="506" y="124" text-anchor="start">두 문제는 같은 문제다</text><text class="ink2 sm" x="506" y="152" text-anchor="start">600명 가운데 200명이 사는 것과 400명이</text><text class="ink2 sm" x="506" y="172" text-anchor="start">죽는 것은 같은 결과다. 확률 쪽도 마찬가지다.</text><text class="ink2 sm" x="506" y="202" text-anchor="start">달라진 것은 그 결과를 어느 쪽에서</text><text class="ink2 sm" x="506" y="222" text-anchor="start">적었는가뿐이다.</text><text class="ink2 sm" x="506" y="252" text-anchor="start">막대 길이는 방향만 보이는 도식이고</text><text class="ink2 sm" x="506" y="272" text-anchor="start">비율에는 눈금을 달지 않았다</text><text class="ink bold" x="440" y="44" text-anchor="middle">같은 선택지를 어느 쪽에서 적는가가 선택을 바꾼다</text><text class="ink2 sm" x="440" y="366" text-anchor="middle">두 줄이 담고 있는 선택지는 수치까지 같다. 다른 것은 그것을 적은 방향뿐이다</text>
+</svg>

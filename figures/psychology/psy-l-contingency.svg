@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 400" width="860" height="400" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">수반성과 조건형성</title><desc id="d">조건자극 없이 무조건자극이 오는 비율이 올라갈수록 조건반응이 사라지는 도식</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="gr" d="M110 300 V80"/><path class="gr" d="M227.5 300 V80"/><path class="gr" d="M345 300 V80"/><path class="gr" d="M462.5 300 V80"/><path class="gr" d="M580 300 V80"/><path class="ax" marker-end="url(#ark)" d="M110 300 H590"/><path class="ax" marker-end="url(#ark)" d="M110 300 V70"/><text class="sm ink2" x="227.5" y="315" text-anchor="middle">0.1</text><text class="sm ink2" x="345" y="315" text-anchor="middle">0.2</text><text class="sm ink2" x="462.5" y="315" text-anchor="middle">0.3</text><text class="sm ink2" x="580" y="315" text-anchor="middle">0.4</text><path class="cv s1" d="M110 91 L121.75 98.02 L133.5 104.98 L145.25 111.88 L157 118.71 L168.75 125.48 L180.5 132.17 L192.25 138.8 L204 145.36 L215.75 151.85 L227.5 158.26 L239.25 164.61 L251 170.87 L262.75 177.06 L274.5 183.16 L286.25 189.19 L298 195.13 L309.75 200.99 L321.5 206.75 L333.25 212.43 L345 218.01 L356.75 223.5 L368.5 228.88 L380.25 234.16 L392 239.34 L403.75 244.4 L415.5 249.34 L427.25 254.17 L439 258.86 L450.75 263.42 L462.5 267.84 L474.25 272.1 L486 276.2 L497.75 280.13 L509.5 283.86 L521.25 287.38 L533 290.66 L544.75 293.67 L556.5 295.6 L568.25 295.6"/><path class="cv ax" stroke-dasharray="4 3" d="M580 300 L580 80"/><text class="ink bold sm" x="572" y="141.6" text-anchor="end">두 확률이 같아지는 자리</text><text class="ink2 sm" x="572" y="168" text-anchor="end">조건자극이 아무것도 알려 주지 않는다</text><circle class="f2" cx="110" cy="91" r="6"/><text class="ink sm" x="126" y="127" text-anchor="start">조건자극이 있을 때만 무조건자극이 온다</text><text class="ink2 sm" x="345" y="332" text-anchor="middle">조건자극이 없을 때 무조건자극이 올 확률</text><text class="ink2 sm" x="30" y="64" text-anchor="start">세로축 — 조건반응의 크기 (눈금 없음)</text><rect x="602" y="84" width="236" height="158" rx="5" fill="none" fill-opacity="1" stroke="var(--s2)" stroke-width="1.6"/><text class="ink bold sm" x="618" y="110" text-anchor="start">고정해 둔 것</text><text class="ink2 sm" x="618" y="134" text-anchor="start">조건자극이 있을 때 무조건자극이</text><text class="ink2 sm" x="618" y="152" text-anchor="start">올 확률은 0.4 로 붙박아 둔다.</text><text class="ink2 sm" x="618" y="176" text-anchor="start">즉 어느 조건에서나 조건자극과</text><text class="ink2 sm" x="618" y="194" text-anchor="start">무조건자극이 짝지어진 비율은</text><text class="ink2 sm" x="618" y="212" text-anchor="start">같다. 달라지는 것은 조건자극</text><text class="ink2 sm" x="618" y="230" text-anchor="start">없이 오는 몫뿐이다</text><text class="ink bold" x="430" y="34" text-anchor="middle">짝지음이 같아도 예측력이 없으면 배우지 않는다 — 도식</text><text class="ink2 sm" x="430" y="372" text-anchor="middle">레스콜라(1968)가 보고한 방향을 옮긴 도식이다. 값이 아니라 내려가는 모양만 읽는다</text>
+</svg>

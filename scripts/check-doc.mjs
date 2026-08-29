@@ -60,13 +60,47 @@ for (const file of process.argv.slice(2)) {
     const manual = (src.match(/예제\s*\d+/g) || []).length;
     manual === 0 ? ok('수동 예제 번호 없음') : fail(`수동 번호 ${manual}건`);
 
-    // 7) 표 칸 안의 HTML — +ths/+tds 는 인자를 이스케이프하므로 태그가 그대로 찍힌다
-    const tableHtml = lines
+    // 7) 인자를 이스케이프하는 믹스인 안의 HTML/엔티티
+    //    +ths/+tds/+asA/+w3img 는 인자를 이스케이프한다. 인자 안에 태그나 엔티티를
+    //    쓰면 화면에 글자 그대로 찍힌다. 따옴표는 ‘ ’ 를 쓴다.
+    //    한 줄 전체를 보면 안 된다. 산문 속 <b> 와 인라인 #[+asA(...)] 가 같은 줄에
+    //    있는 것이 정상이기 때문이다. 호출의 인자만 떼어 검사한다.
+    //    +asA 와 +w3img 의 첫 인자는 URL·경로다. URL 의 & 는 href 로 나갈 때
+    //    &amp; 가 되는 것이 정상이므로 첫 인자는 뺀다.
+    const escapeArtifact = /<\/?[a-z]+>|&#\d+;|&lt;|&amp;/;
+    // 한 줄에서 이스케이프 믹스인 호출들의 '검사 대상 인자'만 모은다.
+    const escapedArgs = line => {
+        const out = [];
+        const call = /\+(ths|tds|asA|w3img)\(/g;
+        let m;
+        while ((m = call.exec(line)) !== null) {
+            const skipFirst = m[1] === 'asA' || m[1] === 'w3img';
+            let depth = 1;
+            let k = m.index + m[0].length;
+            let seen = 0;
+            while (k < line.length && depth > 0) {
+                const ch = line[k];
+                if (ch === "'") {
+                    const end = line.indexOf("'", k + 1);
+                    if (end < 0) break;
+                    seen += 1;
+                    if (!(skipFirst && seen === 1)) out.push(line.slice(k + 1, end));
+                    k = end + 1;
+                    continue;
+                }
+                if (ch === '(') depth += 1;
+                else if (ch === ')') depth -= 1;
+                k += 1;
+            }
+        }
+        return out;
+    };
+    const argHits = lines
         .map((l, i) => [i + 1, l])
-        .filter(([, l]) => /\+t(ds|hs)\(/.test(l) && /<\/?[a-z]+>|&#\d+;|&lt;|&amp;/.test(l));
-    tableHtml.length === 0
-        ? ok('표 칸에 HTML 없음')
-        : fail(`표 칸의 HTML/엔티티 ${tableHtml.length}건: ${tableHtml.slice(0, 5).map(([n]) => n + '행').join(', ')}`);
+        .filter(([, l]) => escapedArgs(l).some(a => escapeArtifact.test(a)));
+    argHits.length === 0
+        ? ok('이스케이프 믹스인 인자에 HTML 없음')
+        : fail(`이스케이프되는 인자 안의 HTML/엔티티 ${argHits.length}건: ${argHits.slice(0, 5).map(([n]) => n + '행').join(', ')}`);
 
     // 8) 금지 단위 (환산표 절 안은 예외)
     const convStart = lines.findIndex(l => /h3 SI 허용 단위/.test(l));
@@ -115,8 +149,12 @@ for (const file of process.argv.slice(2)) {
         gone.length === 0
             ? ok(`HTML 자원 ${new Set(srcs).size}종 전부 존재`)
             : fail(`HTML 에서 없는 자원: ${gone.join(', ')}`);
-        const raw = (h.match(/&lt;b&gt;|&amp;#34;/g) || []).length;
-        raw === 0 ? ok('이스케이프 사고 없음') : fail(`화면에 태그가 찍히는 곳 ${raw}건`);
+        // 이스케이프 사고는 렌더된 HTML 에서 이중 이스케이프로 나타난다.
+        // <b> 는 &lt;b&gt; 로, &#34; 는 &amp;#34; 로, & 는 &amp;amp; 로 찍힌다.
+        const rawHits = h.match(/&lt;\/?[a-z]+&gt;|&amp;#\d+;|&amp;amp;|&amp;lt;|&amp;gt;/g) || [];
+        rawHits.length === 0
+            ? ok('이스케이프 사고 없음')
+            : fail(`화면에 태그·엔티티가 찍히는 곳 ${rawHits.length}건: ${[...new Set(rawHits)].slice(0, 5).join(' ')}`);
     } else {
         fail(`생성된 HTML 이 없다: ${html}`);
     }

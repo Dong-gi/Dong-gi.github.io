@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 420" width="840" height="420" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">환경이 고른 집단에서 유전율이 더 높게 나오는 까닭</title><desc id="d">유전의 몫이 그대로여도 총분산이 줄면 그 비율인 유전율은 올라간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="120" y="216" width="120" height="104" rx="3" fill="var(--s1)" fill-opacity="0.85" stroke="var(--s1)" stroke-width="1.4"/>
+<rect x="120" y="60" width="120" height="156" rx="3" fill="var(--s2)" fill-opacity="0.35" stroke="var(--s2)" stroke-width="1.4"/>
+<text class="ink bold sm" x="180" y="273" text-anchor="middle">유전 40</text>
+<text class="ink bold sm" x="180" y="143" text-anchor="middle">환경 60</text>
+<text class="ink bold sm" x="180" y="344" text-anchor="middle">환경이 제각각인 집단</text>
+<text class="ink2 sm" x="180" y="364" text-anchor="middle">유전율 = 40 나누기 100 = 0.4</text>
+<text class="ink2 sm" x="180" y="46" text-anchor="middle">총분산 100</text>
+<rect x="340" y="216" width="120" height="104" rx="3" fill="var(--s1)" fill-opacity="0.85" stroke="var(--s1)" stroke-width="1.4"/>
+<rect x="340" y="190" width="120" height="26" rx="3" fill="var(--s2)" fill-opacity="0.35" stroke="var(--s2)" stroke-width="1.4"/>
+<text class="ink bold sm" x="400" y="273" text-anchor="middle">유전 40</text>
+<text class="ink bold sm" x="400" y="208" text-anchor="middle">환경 10</text>
+<text class="ink bold sm" x="400" y="344" text-anchor="middle">환경이 고른 집단</text>
+<text class="ink2 sm" x="400" y="364" text-anchor="middle">유전율 = 40 나누기 50 = 0.8</text>
+<text class="ink2 sm" x="400" y="176" text-anchor="middle">총분산 50</text>
+<path d="M100 320 L480 320" fill="none" stroke="var(--ink2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text class="ink bold sm" x="556" y="104" text-anchor="start">두 막대에서 파란 칸의 높이가</text>
+<text class="ink bold sm" x="556" y="124" text-anchor="start">똑같다는 것을 먼저 보라.</text>
+<text class="ink2 sm" x="556" y="158" text-anchor="start">유전의 몫은 그대로인데 유전율이</text>
+<text class="ink2 sm" x="556" y="178" text-anchor="start">두 배가 되었다. 분모가 줄었기</text>
+<text class="ink2 sm" x="556" y="198" text-anchor="start">때문이다.</text>
+<text class="ink2 sm" x="556" y="232" text-anchor="start">그래서 ‘유전율이 높다’ 는 말은</text>
+<text class="ink2 sm" x="556" y="252" text-anchor="start">‘환경이 무력하다’ 는 뜻이 아니다.</text>
+<text class="ink2 sm" x="556" y="272" text-anchor="start">오히려 환경을 고르게 만들수록</text>
+<text class="ink2 sm" x="556" y="292" text-anchor="start">유전율은 올라간다.</text>
+<text class="ink2 sm" x="556" y="326" text-anchor="start">숫자는 뜻을 보이려고 정한 보기다.</text>
+</svg>

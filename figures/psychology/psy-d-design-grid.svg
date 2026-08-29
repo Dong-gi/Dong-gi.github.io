@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 430" width="880" height="430" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">출생 연도와 측정 연도로 만든 표</title><desc id="d">세로 한 줄은 횡단, 가로 한 줄은 종단, 같은 나이가 나오는 두 칸은 계열 설계가 견주는 자리다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="477" y="46" text-anchor="middle">측정 연도</text>
+<text class="ink bold" x="38" y="234" text-anchor="start">출생 연도</text>
+<rect x="560" y="106" width="190" height="246" rx="5" fill="none" fill-opacity="1" stroke="var(--s1)" stroke-width="2.4" stroke-dasharray="6 4"/>
+<rect x="202" y="184" width="550" height="90" rx="5" fill="none" fill-opacity="1" stroke="var(--s2)" stroke-width="2.4" stroke-dasharray="6 4"/>
+<text class="ink2" x="299" y="92" text-anchor="middle">2000</text>
+<text class="ink2" x="477" y="92" text-anchor="middle">2010</text>
+<text class="ink2" x="655" y="92" text-anchor="middle">2020</text>
+<text class="ink2" x="196" y="160" text-anchor="end">1950</text>
+<rect x="210" y="118" width="170" height="66" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/>
+<text class="ink bold" x="295" y="162" text-anchor="middle">50세</text>
+<rect x="388" y="118" width="170" height="66" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/>
+<text class="ink bold" x="473" y="162" text-anchor="middle">60세</text>
+<rect x="566" y="118" width="170" height="66" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/>
+<text class="ink bold" x="651" y="162" text-anchor="middle">70세</text>
+<text class="ink2" x="196" y="234" text-anchor="end">1970</text>
+<rect x="210" y="192" width="170" height="66" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/>
+<text class="ink bold" x="295" y="236" text-anchor="middle">30세</text>
+<rect x="388" y="192" width="170" height="66" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/>
+<text class="ink bold" x="473" y="236" text-anchor="middle">40세</text>
+<rect x="566" y="192" width="170" height="66" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/>
+<text class="ink bold" x="651" y="236" text-anchor="middle">50세</text>
+<text class="ink2" x="196" y="308" text-anchor="end">1990</text>
+<rect x="210" y="266" width="170" height="66" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/>
+<text class="ink bold" x="295" y="310" text-anchor="middle">10세</text>
+<rect x="388" y="266" width="170" height="66" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/>
+<text class="ink bold" x="473" y="310" text-anchor="middle">20세</text>
+<rect x="566" y="266" width="170" height="66" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/>
+<text class="ink bold" x="651" y="310" text-anchor="middle">30세</text>
+<circle cx="295" cy="156" r="30" fill="none" stroke="var(--s3)" stroke-width="2.4"/>
+<circle cx="651" cy="230" r="30" fill="none" stroke="var(--s3)" stroke-width="2.4"/>
+<text class="ink2 sm" x="651" y="374" text-anchor="middle">횡단 — 한 시점에 나이가 다른 사람</text>
+<text class="ink2 sm" x="768" y="229" text-anchor="start">종단</text>
+<text class="ink2 sm" x="60" y="396" text-anchor="start">초록 동그라미 두 칸은 나이가 같고 출생 연도와 측정 연도가 다르다. 계열 설계가 견주는 자리다</text>
+</svg>

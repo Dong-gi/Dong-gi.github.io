@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 830 420" width="830" height="420" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">문턱을 조금 옮기면 이름을 받는 사람 수가 크게 달라진다</title><desc id="d">골짜기 없는 분포에 그은 문턱의 자리가 분류의 경계를 정한다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="352" y="70" width="37.8" height="230" rx="3" fill="var(--s2)" fill-opacity="0.18" stroke="none" stroke-width="1.4"/>
+<path class="ax" marker-end="url(#ark)" d="M100 300 H530"/><path class="ax" marker-end="url(#ark)" d="M100 300 V60"/>
+<text class="ink2 sm" x="310" y="344" text-anchor="middle">어떤 연속된 특성의 점수</text>
+<text class="ink2 sm" x="36" y="56" text-anchor="start">그 점수를 받은 사람 수</text>
+<path class="cv s1" d="M100 292.36 L103.5 291.41 L107 290.37 L110.5 289.21 L114 287.95 L117.5 286.57 L121 285.06 L124.5 283.41 L128 281.63 L131.5 279.69 L135 277.6 L138.5 275.35 L142 272.93 L145.5 270.34 L149 267.57 L152.5 264.61 L156 261.47 L159.5 258.13 L163 254.61 L166.5 250.9 L170 246.99 L173.5 242.9 L177 238.62 L180.5 234.16 L184 229.54 L187.5 224.74 L191 219.8 L194.5 214.71 L198 209.49 L201.5 204.16 L205 198.73 L208.5 193.23 L212 187.66 L215.5 182.06 L219 176.45 L222.5 170.84 L226 165.27 L229.5 159.76 L233 154.34 L236.5 149.03 L240 143.87 L243.5 138.87 L247 134.07 L250.5 129.49 L254 125.16 L257.5 121.1 L261 117.34 L264.5 113.9 L268 110.81 L271.5 108.07 L275 105.71 L278.5 103.75 L282 102.18 L285.5 101.03 L289 100.31 L292.5 100.01 L296 100.14 L299.5 100.69 L303 101.67 L306.5 103.07 L310 104.88 L313.5 107.08 L317 109.67 L320.5 112.62 L324 115.93 L327.5 119.56 L331 123.5 L334.5 127.72 L338 132.21 L341.5 136.92 L345 141.84 L348.5 146.95 L352 152.2 L355.5 157.58 L359 163.06 L362.5 168.61 L366 174.2 L369.5 179.82 L373 185.43 L376.5 191.01 L380 196.54 L383.5 202 L387 207.37 L390.5 212.64 L394 217.78 L397.5 222.78 L401 227.64 L404.5 232.33 L408 236.86 L411.5 241.21 L415 245.38 L418.5 249.36 L422 253.15 L425.5 256.75 L429 260.16 L432.5 263.37 L436 266.41 L439.5 269.25 L443 271.92 L446.5 274.41 L450 276.72 L453.5 278.88 L457 280.87 L460.5 282.72 L464 284.42 L467.5 285.98 L471 287.41 L474.5 288.72 L478 289.92 L481.5 291.01 L485 292 L488.5 292.89 L492 293.7 L495.5 294.43 L499 295.08 L502.5 295.67 L506 296.19 L509.5 296.66 L513 297.08 L516.5 297.45 L520 297.78"/>
+<path d="M352 300 L352 90" fill="none" stroke="var(--s2)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4"/>
+<path d="M389.8 300 L389.8 90" fill="none" stroke="var(--s3)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4"/>
+<text class="ink2 sm" x="352" y="80" text-anchor="middle">문턱을 여기 두면</text>
+<text class="ink2 sm" x="395.8" y="102" text-anchor="start">여기 두면</text>
+<text class="ink bold sm" x="370.9" y="326" text-anchor="middle">이만큼의 사람이 편을 바꾼다</text>
+<text class="ink bold sm" x="556" y="106" text-anchor="start">문턱은 자료에서 발견된 것이</text>
+<text class="ink bold sm" x="556" y="126" text-anchor="start">아니라 정해진 것이다</text>
+<text class="ink2 sm" x="556" y="158" text-anchor="start">분포에 골짜기가 없으면 어디를</text>
+<text class="ink2 sm" x="556" y="178" text-anchor="start">잘라도 자를 수 있다. 그리고</text>
+<text class="ink2 sm" x="556" y="198" text-anchor="start">어디를 자르느냐가 이름을 받는</text>
+<text class="ink2 sm" x="556" y="218" text-anchor="start">사람 수를 크게 바꾼다.</text>
+<text class="ink2 sm" x="556" y="250" text-anchor="start">그래서 분류 체계가 개정될 때마다</text>
+<text class="ink2 sm" x="556" y="270" text-anchor="start">이 자리가 논쟁이 된다.</text>
+<text class="ink2 sm" x="556" y="302" text-anchor="start">가로축은 이름 없는 보기다.</text>
+<text class="ink2 sm" x="556" y="322" text-anchor="start">특정한 무엇에 대한 그림이 아니다.</text>
+</svg>

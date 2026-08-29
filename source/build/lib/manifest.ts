@@ -90,6 +90,11 @@ export interface Job {
     /** 존재를 확인할 산출물. 하나라도 없으면 해시가 같아도 다시 만든다. */
     outputs: string[];
     run(): Promise<void>;
+    /**
+     * 해시와 상관없이 매번 돈다. 산출물이 저장소 밖의 것(예: git 이력)에 딸려 있어
+     * 입력 해시로는 낡음을 알 수 없는 작업에만 쓴다. 값이 싼 작업이어야 한다.
+     */
+    always?: boolean;
 }
 
 export interface IncrementalReport {
@@ -165,7 +170,7 @@ export async function runIncremental(opts: IncrementalOptions): Promise<Incremen
     for (const job of jobs) {
         const h = await hashOf(job.inputs);
         hashes.set(job.key, h);
-        if (rebuiltAll || previous[job.key] !== h) {
+        if (rebuiltAll || job.always === true || previous[job.key] !== h) {
             dirty.push(job);
             continue;
         }
@@ -226,10 +231,21 @@ export async function runIncremental(opts: IncrementalOptions): Promise<Incremen
 
 /** 어떤 작업도 만들지 않는 산출물이 남아 있는지 본다. 지우지 않고 알리기만 한다. */
 async function reportOrphans(opts: IncrementalOptions, jobs: Job[], log: BuildLog): Promise<void> {
-    const { dirs, match } = opts.orphanScan!;
     const expected = new Set<string>();
     for (const job of jobs) for (const out of job.outputs) expected.add(normalize(out));
+    await warnOrphans(opts.orphanScan!, expected, log);
+}
 
+/**
+ * 만들어질 것으로 예정되지 않은 산출물이 남아 있는지 본다.
+ *
+ * `runIncremental` 을 쓰지 않는 요소(img)도 같은 검사가 필요해서 따로 뺐다.
+ */
+export async function warnOrphans(
+    { dirs, match }: { dirs: string[]; match: (rel: string) => boolean },
+    expected: Set<string>,
+    log: BuildLog,
+): Promise<void> {
     const orphans: string[] = [];
     for (const dir of dirs) {
         for (const file of await walkFiles(dir)) {

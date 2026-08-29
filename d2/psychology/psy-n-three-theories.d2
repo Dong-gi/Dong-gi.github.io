@@ -1,0 +1,56 @@
+# 정서의 세 고전 이론 — 심리학 16장.
+#
+# 무엇을 읽어야 하나: 셋이 같은 재료를 다른 차례로 늘어놓았다는 것,
+# 그리고 그 차례가 각각 무엇을 예측하는지가 다르다는 것.
+direction: down
+
+자극: {
+  label: "곰을 만났다"
+  shape: oval
+  style.bold: true
+}
+
+제임스랑게: {
+  label: "제임스-랑게"
+  direction: right
+  a: { label: "몸이 먼저 반응한다\n심장이 뛰고 다리에 힘이 들어간다" }
+  b: { label: "그 몸의 변화를 알아차린다" }
+  c: { label: "그 알아차림이 곧 무서움이다"; style.bold: true }
+  a -> b -> c
+  예측: { label: "예측 — 몸의 반응이 정서마다 달라야 한다.\n그리고 몸의 반응을 막으면 정서도 약해져야 한다"; shape: text }
+  c -> 예측: { style.stroke-dash: 3 }
+}
+
+캐넌바드: {
+  label: "캐넌-바드"
+  direction: right
+  a2: { label: "자극이 들어온다" }
+  b2: { label: "몸의 반응과 느낌이 각각 따로,\n거의 동시에 일어난다"; style.bold: true }
+  c2: { label: "몸이 무섭게 만드는 것이 아니다.\n둘은 나란히 간다" }
+  a2 -> b2 -> c2
+  예측2: { label: "예측 — 몸의 반응이 여러 정서에서 비슷해도 된다.\n그리고 몸의 되먹임을 끊어도 정서가 남아야 한다"; shape: text }
+  c2 -> 예측2: { style.stroke-dash: 3 }
+}
+
+이요인: {
+  label: "샥터-싱어 두 요인"
+  direction: right
+  a3: { label: "몸이 각성된다\n다만 그 각성은 무슨 정서인지 말해 주지 않는다" }
+  b3: { label: "그 각성이 왜 생겼는지를 상황에서 찾아 이름을 붙인다"; style.bold: true }
+  c3: { label: "각성 + 이름표 = 정서" }
+  a3 -> b3 -> c3
+  예측3: { label: "예측 — 각성의 원인을 모르게 만든 뒤 상황을 바꾸면\n같은 각성이 다른 정서로 이름 붙어야 한다"; shape: text }
+  c3 -> 예측3: { style.stroke-dash: 3 }
+}
+
+자극 -> 제임스랑게
+자극 -> 캐넌바드
+자극 -> 이요인
+
+지금: {
+  label: "　\n지금의 자리 — 셋 가운데 하나를 고르는 문제로 다루지 않는다.\n몸의 되먹임이 정서에 얼마나 기여하는가, 상황을 읽는 일이 어디에서 들어오는가는\n각각 따로 재는 물음이 되었고, 두 물음 다 아직 열려 있다"
+  shape: text
+}
+제임스랑게 -> 지금: { style.stroke-dash: 3 }
+캐넌바드 -> 지금: { style.stroke-dash: 3 }
+이요인 -> 지금: { style.stroke-dash: 3 }

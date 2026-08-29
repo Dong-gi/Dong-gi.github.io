@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 340" width="840" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">p 값 분포의 두 모양</title><desc id="d">효과가 있을 때와 자유도를 쓴 문헌에서 p 값이 쌓이는 모양의 대비</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="44" y="72" width="326" height="200" rx="4" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/><rect x="60" y="88" width="48" height="162" rx="2" fill="var(--s1)" fill-opacity="0.85"/><rect x="116" y="136.6" width="48" height="113.4" rx="2" fill="var(--s1)" fill-opacity="0.85"/><rect x="172" y="169" width="48" height="81" rx="2" fill="var(--s1)" fill-opacity="0.85"/><rect x="228" y="196" width="48" height="54" rx="2" fill="var(--s1)" fill-opacity="0.85"/><rect x="284" y="212.2" width="48" height="37.800000000000004" rx="2" fill="var(--s2)" fill-opacity="0.85"/><path d="M52 250 L352 250" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="84" y="270" text-anchor="middle">.01</text><text class="ink2 sm" x="140" y="270" text-anchor="middle">.02</text><text class="ink2 sm" x="196" y="270" text-anchor="middle">.03</text><text class="ink2 sm" x="252" y="270" text-anchor="middle">.04</text><text class="ink2 sm" x="308" y="270" text-anchor="middle">.05</text><text class="ink2 sm" x="200" y="294" text-anchor="middle">p 값 (0.05 아래만 그렸다)</text><text class="ink bold sm" x="200" y="60" text-anchor="middle">효과가 실제로 있을 때</text><text class="ink2 sm" x="200" y="314" text-anchor="middle">0 쪽이 두껍다</text><rect x="454" y="72" width="326" height="200" rx="4" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/><rect x="470" y="190.6" width="48" height="59.400000000000006" rx="2" fill="var(--s1)" fill-opacity="0.85"/><rect x="526" y="201.4" width="48" height="48.6" rx="2" fill="var(--s1)" fill-opacity="0.85"/><rect x="582" y="206.8" width="48" height="43.2" rx="2" fill="var(--s1)" fill-opacity="0.85"/><rect x="638" y="201.4" width="48" height="48.6" rx="2" fill="var(--s1)" fill-opacity="0.85"/><rect x="694" y="82.6" width="48" height="167.4" rx="2" fill="var(--s2)" fill-opacity="0.85"/><path d="M462 250 L762 250" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><text class="ink2 sm" x="494" y="270" text-anchor="middle">.01</text><text class="ink2 sm" x="550" y="270" text-anchor="middle">.02</text><text class="ink2 sm" x="606" y="270" text-anchor="middle">.03</text><text class="ink2 sm" x="662" y="270" text-anchor="middle">.04</text><text class="ink2 sm" x="718" y="270" text-anchor="middle">.05</text><text class="ink2 sm" x="610" y="294" text-anchor="middle">p 값 (0.05 아래만 그렸다)</text><text class="ink bold sm" x="610" y="60" text-anchor="middle">자유도를 써서 문턱을 넘긴 문헌</text><text class="ink2 sm" x="610" y="314" text-anchor="middle">문턱 바로 아래가 두껍다</text><text class="ink bold" x="420" y="32" text-anchor="middle">p 값이 쌓이는 모양이 다르다 — 도식</text>
+</svg>

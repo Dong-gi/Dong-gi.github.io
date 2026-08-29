@@ -41,7 +41,7 @@ const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromi
 let bad = 0;
 
 const DEFAULT_PAGES = ['physics', 'chemistry', 'biology', 'elementary-mathematics',
-    'linear-algebra', 'probability', 'mcs', 'algorithm', 'logic', 'philosophy'];
+    'linear-algebra', 'probability', 'mcs', 'algorithm', 'logic', 'philosophy', 'psychology'];
 const pages = process.argv.length > 2 ? process.argv.slice(2) : DEFAULT_PAGES;
 
 for (const name of pages) {

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 410" width="840" height="410" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">각성과 수행의 뒤집힌 U 곡선</title><desc id="d">꼭대기가 과제 난이도에 따라 옮겨 간다는 그림. 눈금 없는 도식이며 오른쪽에 이 곡선을 쓸 때의 단서가 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" marker-end="url(#ark)" d="M110 312 H520"/><path class="ax" marker-end="url(#ark)" d="M110 312 V52"/>
+<text class="ink2 sm" x="310" y="352" text-anchor="middle">각성 수준</text>
+<text class="ink2 sm" x="44" y="48" text-anchor="start">수행</text>
+<path class="cv s1" d="M134 251.56 L136.93 246.12 L139.87 240.77 L142.8 235.52 L145.73 230.35 L148.67 225.28 L151.6 220.29 L154.53 215.4 L157.47 210.6 L160.4 205.89 L163.33 201.28 L166.27 196.75 L169.2 192.32 L172.13 187.98 L175.07 183.72 L178 179.56 L180.93 175.5 L183.87 171.52 L186.8 167.63 L189.73 163.84 L192.67 160.14 L195.6 156.53 L198.53 153.01 L201.47 149.58 L204.4 146.24 L207.33 143 L210.27 139.84 L213.2 136.78 L216.13 133.81 L219.07 130.93 L222 128.14 L224.93 125.44 L227.87 122.84 L230.8 120.32 L233.73 117.9 L236.67 115.57 L239.6 113.33 L242.53 111.18 L245.47 109.12 L248.4 107.16 L251.33 105.28 L254.27 103.5 L257.2 101.81 L260.13 100.21 L263.07 98.7 L266 97.29 L268.93 95.96 L271.87 94.73 L274.8 93.58 L277.73 92.53 L280.67 91.57 L283.6 90.7 L286.53 89.93 L289.47 89.24 L292.4 88.65 L295.33 88.14 L298.27 87.73 L301.2 87.41 L304.13 87.18 L307.07 87.05 L310 87 L312.93 87.05 L315.87 87.18 L318.8 87.41 L321.73 87.73 L324.67 88.14 L327.6 88.65 L330.53 89.24 L333.47 89.93 L336.4 90.7 L339.33 91.57 L342.27 92.53 L345.2 93.58 L348.13 94.73 L351.07 95.96 L354 97.29 L356.93 98.7 L359.87 100.21 L362.8 101.81 L365.73 103.5 L368.67 105.28 L371.6 107.16 L374.53 109.12 L377.47 111.18 L380.4 113.33 L383.33 115.57 L386.27 117.9 L389.2 120.32 L392.13 122.84 L395.07 125.44 L398 128.14 L400.93 130.93 L403.87 133.81 L406.8 136.78 L409.73 139.84 L412.67 143 L415.6 146.24 L418.53 149.58 L421.47 153.01 L424.4 156.53 L427.33 160.14 L430.27 163.84 L433.2 167.63 L436.13 171.52 L439.07 175.5 L442 179.57 L444.93 183.72 L447.87 187.98 L450.8 192.32 L453.73 196.75 L456.67 201.28 L459.6 205.89 L462.53 210.6 L465.47 215.4 L468.4 220.29 L471.33 225.28 L474.27 230.35 L477.2 235.52 L480.13 240.77 L483.07 246.12 L486 251.56"/>
+<path class="cv s2" stroke-dasharray="6 4" d="M126 226.5 L128.2 221.43 L130.4 216.46 L132.6 211.58 L134.8 206.79 L137 202.1 L139.2 197.5 L141.4 192.99 L143.6 188.58 L145.8 184.26 L148 180.04 L150.2 175.91 L152.4 171.87 L154.6 167.93 L156.8 164.08 L159 160.32 L161.2 156.66 L163.4 153.1 L165.6 149.62 L167.8 146.24 L170 142.96 L172.2 139.76 L174.4 136.66 L176.6 133.66 L178.8 130.75 L181 127.93 L183.2 125.21 L185.4 122.58 L187.6 120.04 L189.8 117.6 L192 115.25 L194.2 112.99 L196.4 110.83 L198.6 108.77 L200.8 106.79 L203 104.91 L205.2 103.13 L207.4 101.43 L209.6 99.84 L211.8 98.33 L214 96.92 L216.2 95.6 L218.4 94.38 L220.6 93.25 L222.8 92.21 L225 91.27 L227.2 90.42 L229.4 89.67 L231.6 89.01 L233.8 88.44 L236 87.97 L238.2 87.59 L240.4 87.3 L242.6 87.11 L244.8 87.01 L247 87.01 L249.2 87.1 L251.4 87.28 L253.6 87.56 L255.8 87.93 L258 88.4 L260.2 88.95 L262.4 89.61 L264.6 90.35 L266.8 91.19 L269 92.12 L271.2 93.15 L273.4 94.27 L275.6 95.49 L277.8 96.8 L280 98.2 L282.2 99.69 L284.4 101.28 L286.6 102.97 L288.8 104.75 L291 106.62 L293.2 108.58 L295.4 110.64 L297.6 112.79 L299.8 115.04 L302 117.38 L304.2 119.81 L306.4 122.34 L308.6 124.96 L310.8 127.68 L313 130.49 L315.2 133.39 L317.4 136.39 L319.6 139.48 L321.8 142.66 L324 145.94 L326.2 149.31 L328.4 152.78 L330.6 156.33 L332.8 159.99 L335 163.73 L337.2 167.58 L339.4 171.51 L341.6 175.54 L343.8 179.66 L346 183.88 L348.2 188.18 L350.4 192.59 L352.6 197.08 L354.8 201.68 L357 206.36 L359.2 211.14 L361.4 216.01 L363.6 220.98 L365.8 226.04 L368 231.19 L370.2 236.44 L372.4 241.78 L374.6 247.21 L376.8 252.74 L379 258.36 L381.2 264.08 L383.4 269.89 L385.6 275.79 L387.8 281.79 L390 287.88"/>
+<text class="ink bold" x="310" y="72" text-anchor="middle">쉬운 과제</text>
+<text class="ink bold" x="162" y="107" text-anchor="end">어려운 과제</text>
+<path class="gr" stroke-dasharray="4 3" d="M310 312 L310 87"/>
+<path class="gr" stroke-dasharray="4 3" d="M246 312 L246 87"/>
+<text class="ink bold sm" x="556" y="96" text-anchor="start">이 곡선을 쓸 때 조심할 것</text>
+<text class="ink2 sm" x="556" y="124" text-anchor="start">원 연구는 20세기 초의 동물</text>
+<text class="ink2 sm" x="556" y="144" text-anchor="start">실험이었다. 그 뒤 사람의</text>
+<text class="ink2 sm" x="556" y="164" text-anchor="start">온갖 상황으로 넓혀 쓰였다.</text>
+<text class="ink2 sm" x="556" y="198" text-anchor="start">‘각성’ 이 무엇인지가 자리마다</text>
+<text class="ink2 sm" x="556" y="218" text-anchor="start">다르게 조작적으로 정의된다.</text>
+<text class="ink2 sm" x="556" y="252" text-anchor="start">꼭대기가 어디인지는 사후에만</text>
+<text class="ink2 sm" x="556" y="272" text-anchor="start">말할 수 있어서, 어떤 결과가</text>
+<text class="ink2 sm" x="556" y="292" text-anchor="start">나와도 설명이 된다.</text>
+<text class="ink2 sm" x="556" y="326" text-anchor="start">축에 눈금이 없는 것은</text>
+<text class="ink2 sm" x="556" y="346" text-anchor="start">도식이기 때문이다.</text>
+</svg>

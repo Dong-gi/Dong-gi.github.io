@@ -1,0 +1,55 @@
+# 상관에서 인과로 갈 수 없는 세 갈림 — 심리학 4장.
+#
+# 무엇을 읽어야 하나: 자료가 똑같아도 세 그림이 모두 그 자료를 낼 수 있다는 것.
+# 상관 자료만으로는 셋 가운데 어느 것인지 가릴 수 없다.
+direction: right
+
+자료: {
+  label: "손에 있는 것\nX 와 Y 가 함께 높고 함께 낮다"
+  shape: oval
+  style.bold: true
+}
+
+가능: {
+  label: "이 자료를 낼 수 있는 그림들"
+  direction: down
+
+  일: {
+    label: "1. X 가 Y 를 일으킨다"
+    direction: right
+    x1: { label: "X" }
+    y1: { label: "Y" }
+    x1 -> y1
+  }
+  이: {
+    label: "2. Y 가 X 를 일으킨다 — 방향이 반대다"
+    direction: right
+    y2: { label: "Y" }
+    x2: { label: "X" }
+    y2 -> x2
+  }
+  삼: {
+    label: "3. 제3의 변수 Z 가 둘 다 일으킨다 — 혼입변수"
+    direction: right
+    z: { label: "Z"; style.bold: true }
+    x3: { label: "X" }
+    y3: { label: "Y" }
+    z -> x3
+    z -> y3
+  }
+  사: {
+    label: "4. 우연이다 — 변수를 많이 뒤지면 관계는 저절로 나온다"
+  }
+}
+
+자료 -> 가능: "네 그림이 모두 같은 산점도를 만든다"
+
+가르는법: {
+  label: "무엇이 갈라 주는가"
+  direction: down
+  실험: { label: "X 를 무선배정으로 정한다\n그러면 2 와 3 이 지워진다. 이것이 실험이 하는 일의 전부다"; style.bold: true }
+  통제: { label: "Z 를 재서 통제한다\n3 을 그 Z 에 대해서만 지운다. 재지 않은 Z 는 남는다" }
+  시간: { label: "시간 순서를 확인한다\n2 를 약하게 만든다. 지우지는 못한다" }
+  되풀이: { label: "다른 표본에서 되풀이한다\n4 를 걸러 낸다" }
+}
+가능 -> 가르는법

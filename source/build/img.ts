@@ -3,65 +3,111 @@
  *
  *     npm run build-img        → source/build/build-img.log
  *
- * `imgs/` 의 사진을 폭 500·1200·2000 의 avif/webp 로 만들어 `imgs-generated/` 에 두고,
- * 원본의 크기를 `source/img-map.json` 에 적는다.
+ * `imgs/` 의 사진을 폭 500·1200·2000 의 avif/webp 로 만들어 `imgs-generated/` 에 둔다.
+ * 그것이 전부다.
  *
- * pug 의 `+w3img(src)` 가 그 두 가지를 함께 쓴다. img-map 에 등재된 경로면 반응형
- * `<picture>` 세트를 쓰고, 없으면 평범한 `<img>` 로 폴백한다. 그래서 이 요소는
- * **pug 보다 먼저** 끝나야 한다(`source/build.ts` 가 그 순서를 강제한다).
+ * **pug 요소와는 서로 독립이다.** `+w3img` 가 쓰는 원본 크기는 pug 쪽이
+ * `lib/image-size.ts` 로 원본 헤더에서 직접 읽는다. 예전에는 이 요소가
+ * `source/img-map.json` 을 만들어 넘겼는데, 사전 하나를 통째로 의존하는 바람에
+ * **그림 하나가 늘면 문서 250여 개가 전부 다시 렌더되었다.** 변환본 경로는 규약이라
+ * pug 가 존재를 확인하지 않고 만들어 내므로, 두 요소가 같은 원본을 각자 보면 된다.
  *
  * `figures/`, `d2/` 가 만든 SVG 는 여기 오지 않는다. 벡터는 크기를 미리 알릴 필요가 없다.
  *
- * img-map 은 키 순서로 정렬해 쓴다. 순서가 흔들리면 내용이 같아도 해시가 달라져
- * pug 요소가 250여 개 문서를 통째로 다시 렌더한다.
+ * ## 무엇을 다시 만드는가 — 해시 파일 대신 git
+ *
+ * 다른 요소와 달리 이 요소는 `build-img-sha.json` 을 두지 않는다. **원본과 변환본이
+ * 둘 다 저장소에 커밋되어 있어서**, 무엇이 달라졌는지는 git 이 이미 알고 있다.
+ * 해시를 따로 적어 두면 같은 사실을 두 곳에 두는 셈이다.
+ *
+ * 그래서 규칙이 둘이다.
+ *
+ *   - **HEAD 와 달라진 원본** — 변환본을 전부 다시 만든다. 제자리에서 그림을 바꾼
+ *     경우가 여기 걸린다. 예전에는 &#34;이미 있으면 건너뛴다&#34; 였고, 그래서 그림을
+ *     바꿔 넣어도 변환본이 옛것으로 남았다.
+ *   - **나머지** — 빠진 변환본만 채운다. 새 폭을 더했거나 산출물을 지운 경우다.
+ *
+ * git 을 쓸 수 없으면(내려받기만 한 사본 등) 뒤쪽 규칙만 적용하고 그 사실을 로그에
+ * 남긴다. **원본을 고치고 빌드하지 않은 채 커밋하면** 다음 빌드가 그것을 모른다.
+ * 그때는 해당 변환본을 지우고 다시 돌리면 된다.
  */
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 import sharp, { type Sharp } from 'sharp';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { runComponent, ToolError, type BuildLog } from './lib/log.ts';
-import { runIncremental, type Job } from './lib/manifest.ts';
-import { fileExists, resolve, walkDirs, walkFiles } from './lib/paths.ts';
+import { warnOrphans } from './lib/manifest.ts';
+import { fileExists, normalize, resolve, walkDirs, walkFiles } from './lib/paths.ts';
 
-const IMG_MAP_FILE = 'source/img-map.json';
+const run = promisify(execFile);
+
 const WIDTHS = [500, 1200, 2000] as const;
 
-interface Size {
-    width: number;
-    height: number;
+/**
+ * 이 원본이 만들어야 할 산출물 목록. **폭마다 한 형식씩**이다.
+ *
+ * 정지 그림은 avif 만 만든다. 예전에는 webp 도 함께 만들어 `<picture>` 로 골라 쓰게
+ * 했는데, avif 가 널리 쓰이게 되어(2026-08 기준 Baseline, 전 세계 94% 남짓) 두 벌을
+ * 둘 이유가 없어졌다. 같은 화질에서 avif 가 더 작다.
+ *
+ * gif 만 webp 다. 움직이는 그림을 avif 로 만들지 않기 때문이다.
+ */
+function extOf(rel: string): 'webp' | 'avif' {
+    return rel.endsWith('gif') ? 'webp' : 'avif';
 }
 
-/** `imgs/202303/a.png` → `/imgs/202303/a.png`. skeleton.pug 가 쓰는 키 형태다. */
-function mapKey(rel: string): string {
-    return '/' + rel;
-}
-
-/** 이 원본이 만들어야 할 산출물 목록. gif 는 avif 를 만들지 않는다(애니메이션 지원). */
 function outputsOf(rel: string): string[] {
-    const animated = rel.endsWith('gif');
-    const outputs: string[] = [];
-    for (const width of WIDTHS) {
-        for (const ext of animated ? ['webp'] : ['webp', 'avif']) {
-            outputs.push(rel.replace(/^imgs\//, 'imgs-generated/').replace(/\.\w+$/, `-${width}.${ext}`));
-        }
-    }
-    return outputs;
+    const ext = extOf(rel);
+    return WIDTHS.map((width) =>
+        rel.replace(/^imgs\//, 'imgs-generated/').replace(/\.\w+$/, `-${width}.${ext}`),
+    );
 }
 
-async function transformOne(log: BuildLog, rel: string): Promise<void> {
+async function transformOne(log: BuildLog, rel: string, force: boolean): Promise<number> {
     const animated = rel.endsWith('gif');
     let img: Sharp | undefined;
     let made = 0;
     for (const out of outputsOf(rel)) {
-        // 이미 있는 변환본은 다시 만들지 않는다. 산출물 하나가 빠져 작업이 다시 도는
-        // 경우에도 빠진 것만 채우면 된다.
-        if (await fileExists(out)) continue;
+        // force 면 있어도 다시 만든다. 원본이 바뀌었다는 뜻이기 때문이다.
+        if (!force && (await fileExists(out))) continue;
         img ??= sharp(resolve(rel), { animated });
         const ext = out.endsWith('.avif') ? 'avif' : 'webp';
         const width = Number(out.match(/-(\d+)\.\w+$/)![1]);
+        // eslint 없는 저장소라 적어 둔다 — ext 는 out 에서 되읽는다. outputsOf 가 정한
+        // 형식과 언제나 같지만, 파일 이름이 곧 계약이므로 이름을 믿는 편이 안전하다.
         await img.clone().resize({ width, withoutEnlargement: true })[ext]().toFile(resolve(out));
         made += 1;
     }
-    log.line(`${rel} — 변환본 ${made}개 생성`);
+    if (made !== 0) log.line(`${rel} — 변환본 ${made}개 ${force ? '갱신' : '생성'}`);
+    return made;
+}
+
+/**
+ * HEAD 와 내용이 다른 `imgs/` 아래 파일들. 추가·수정·이름 변경·미추적을 모두 센다.
+ *
+ * git 을 쓸 수 없으면 `null` 이다. 빈 집합과 구별해야 한다 — 빈 집합은 &#34;바뀐 것이
+ * 없다&#34; 이고 null 은 &#34;알 수 없다&#34; 여서 로그가 달라진다.
+ */
+async function changedSources(): Promise<Set<string> | null> {
+    let stdout: string;
+    try {
+        ({ stdout } = await run('git', ['status', '--porcelain', '--untracked-files=all', '--', 'imgs'], {
+            cwd: resolve('.'),
+            maxBuffer: 16 * 1024 * 1024,
+        }));
+    } catch {
+        return null;
+    }
+    const out = new Set<string>();
+    for (const line of stdout.split('\n')) {
+        if (line.length < 4) continue;
+        // `XY <경로>`. 이름 변경은 `R  옛 -> 새` 형태라 화살표 뒤가 지금 파일이다.
+        const p = line.slice(3).trim();
+        const now = p.includes(' -> ') ? p.slice(p.indexOf(' -> ') + 4) : p;
+        out.add(normalize(now.replace(/^\"|\"$/g, '')));
+    }
+    return out;
 }
 
 await runComponent('img', async (log) => {
@@ -76,65 +122,38 @@ await runComponent('img', async (log) => {
     }
     await fsp.mkdir(resolve('imgs-generated'), { recursive: true });
 
-    const jobs: Job[] = sources.map((rel) => ({
-        key: rel,
-        inputs: [rel],
-        outputs: outputsOf(rel),
-        run: () => transformOne(log, rel),
-    }));
-
-    const report = await runIncremental({
-        name: 'img',
-        log,
-        jobs,
-        orphanScan: { dirs: ['imgs-generated'], match: () => true },
-    });
-
-    // ---- img-map.json
-    //
-    // 변환을 건너뛴 원본도 크기는 있어야 한다. 그래서 이 갱신은 작업 목록과 무관하게
-    // 전체를 훑는다. 이미 아는 크기는 다시 재지 않으므로 비용은 무시할 만하다.
-    let previousMap: Record<string, Size> = {};
-    try {
-        previousMap = JSON.parse(await fsp.readFile(resolve(IMG_MAP_FILE), 'utf8'));
-    } catch {
-        log.line(`${IMG_MAP_FILE} 이 없어 새로 만든다`);
-    }
-    const imgMap: Record<string, Size> = {};
-    let measured = 0;
-    for (const rel of sources) {
-        const key = mapKey(rel);
-        const known = previousMap[key];
-        if (known != null && typeof known.width === 'number' && typeof known.height === 'number') {
-            imgMap[key] = known;
-            continue;
-        }
-        try {
-            const metadata = await sharp(resolve(rel), { animated: rel.endsWith('gif') }).metadata();
-            imgMap[key] = { width: metadata.width, height: metadata.height };
-            measured += 1;
-        } catch (e) {
-            // 읽을 수 없는 파일 하나 때문에 img-map 전체를 못 쓰게 두지 않는다.
-            // 등재되지 않은 경로는 `+w3img` 가 평범한 <img> 로 폴백한다.
-            log.error(`${rel} 의 크기를 잴 수 없다`, e);
-        }
-    }
-    const dropped = Object.keys(previousMap).filter((k) => imgMap[k] == null);
-    if (dropped.length !== 0) log.line(`img-map 에서 사라진 원본 ${dropped.length}개를 지웠다`);
-
-    // 정렬해 쓴다. 이 파일은 pug 요소의 공유 입력이라 순서가 흔들리면 전체 재렌더가 된다.
-    const sortedMap = Object.fromEntries(Object.entries(imgMap).sort(([a], [b]) => a.localeCompare(b)));
-    const text = JSON.stringify(sortedMap);
-    const before = await fsp.readFile(resolve(IMG_MAP_FILE), 'utf8').catch(() => null);
-    if (before !== text) {
-        await fsp.writeFile(resolve(IMG_MAP_FILE), text);
-        log.line(`${IMG_MAP_FILE} 갱신 — 항목 ${Object.keys(sortedMap).length}개 (새로 잰 것 ${measured}개)`);
+    const changed = await changedSources();
+    if (changed == null) {
+        log.line('git 을 쓸 수 없어 바뀐 원본을 가리지 못한다 — 빠진 변환본만 채운다');
     } else {
-        log.line(`${IMG_MAP_FILE} 변경 없음 — 항목 ${Object.keys(sortedMap).length}개`);
+        log.line(`HEAD 와 달라진 원본 ${changed.size}개`);
     }
 
-    if (report.failed.length !== 0) {
-        throw new ToolError(`변환 실패 ${report.failed.length}개: ${report.failed.join(', ')}`);
+    let updated = 0;
+    let filled = 0;
+    const failed: string[] = [];
+    for (const rel of sources) {
+        const force = changed?.has(rel) === true;
+        try {
+            const made = await transformOne(log, rel, force);
+            if (made === 0) continue;
+            if (force) updated += 1;
+            else filled += 1;
+        } catch (e) {
+            failed.push(rel);
+            log.error(rel, e);
+        }
     }
-    return report.ran === 0 ? `변경 없음 (${report.skipped}개)` : `갱신 ${report.ran} · 건너뜀 ${report.skipped}`;
+
+    const expected = new Set<string>();
+    for (const rel of sources) for (const out of outputsOf(rel)) expected.add(normalize(out));
+    await warnOrphans({ dirs: ['imgs-generated'], match: () => true }, expected, log);
+
+    if (failed.length !== 0) {
+        throw new ToolError(`변환 실패 ${failed.length}개: ${failed.join(', ')}`);
+    }
+    const parts: string[] = [];
+    if (updated !== 0) parts.push(`갱신 ${updated}`);
+    if (filled !== 0) parts.push(`채움 ${filled}`);
+    return parts.length === 0 ? `변경 없음 (${sources.length}개)` : `${parts.join(' · ')} · 건너뜀 ${sources.length - updated - filled}`;
 });

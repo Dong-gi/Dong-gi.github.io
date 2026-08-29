@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 400" width="820" height="400" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">종단 연구에서 탈락이 평균을 움직인다</title><desc id="d">낮은 점수 쪽이 더 많이 빠지면 남은 사람의 평균이 올라간다. 개인은 아무도 변하지 않았다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path d="M130 54 L130 342" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text class="ink2 sm" x="118" y="46" text-anchor="end">점수</text>
+<text class="ink2 sm" x="118" y="76" text-anchor="end">높다</text>
+<text class="ink2 sm" x="118" y="330" text-anchor="end">낮다</text>
+<circle cx="208" cy="181.84" r="4" fill="var(--s1)"/>
+<circle cx="225.6" cy="319.6" r="4" fill="var(--s1)"/>
+<circle cx="243.2" cy="103.95" r="4" fill="var(--s1)"/>
+<circle cx="212.4" cy="173.76" r="4" fill="var(--s1)"/>
+<circle cx="230" cy="212.8" r="4" fill="var(--s1)"/>
+<circle cx="247.6" cy="155.44" r="4" fill="var(--s1)"/>
+<circle cx="216.8" cy="181.65" r="4" fill="var(--s1)"/>
+<circle cx="234.4" cy="167.67" r="4" fill="var(--s1)"/>
+<circle cx="252" cy="199.79" r="4" fill="var(--s1)"/>
+<circle cx="221.2" cy="195.3" r="4" fill="var(--s1)"/>
+<circle cx="238.8" cy="159.19" r="4" fill="var(--s1)"/>
+<circle cx="208" cy="233.42" r="4" fill="var(--s1)"/>
+<circle cx="225.6" cy="109.5" r="4" fill="var(--s1)"/>
+<circle cx="243.2" cy="151.76" r="4" fill="var(--s1)"/>
+<circle cx="212.4" cy="230.9" r="4" fill="var(--s1)"/>
+<circle cx="230" cy="98.26" r="4" fill="var(--s1)"/>
+<circle cx="247.6" cy="319.6" r="4" fill="var(--s1)"/>
+<circle cx="216.8" cy="155.07" r="4" fill="var(--s1)"/>
+<circle cx="234.4" cy="282.2" r="4" fill="var(--s1)"/>
+<circle cx="252" cy="220.97" r="4" fill="var(--s1)"/>
+<circle cx="221.2" cy="251.17" r="4" fill="var(--s1)"/>
+<circle cx="238.8" cy="266.69" r="4" fill="var(--s1)"/>
+<circle cx="208" cy="172.33" r="4" fill="var(--s1)"/>
+<circle cx="225.6" cy="105.83" r="4" fill="var(--s1)"/>
+<circle cx="243.2" cy="181.94" r="4" fill="var(--s1)"/>
+<circle cx="212.4" cy="246.7" r="4" fill="var(--s1)"/>
+<circle cx="230" cy="80.4" r="4" fill="var(--s1)"/>
+<circle cx="247.6" cy="123.64" r="4" fill="var(--s1)"/>
+<circle cx="216.8" cy="217.95" r="4" fill="var(--s1)"/>
+<circle cx="234.4" cy="80.4" r="4" fill="var(--s1)"/>
+<circle cx="252" cy="148.4" r="4" fill="var(--s1)"/>
+<circle cx="221.2" cy="160.67" r="4" fill="var(--s1)"/>
+<circle cx="238.8" cy="269.52" r="4" fill="var(--s1)"/>
+<circle cx="208" cy="184.72" r="4" fill="var(--s1)"/>
+<circle cx="225.6" cy="246.43" r="4" fill="var(--s1)"/>
+<circle cx="243.2" cy="185.24" r="4" fill="var(--s1)"/>
+<circle cx="212.4" cy="201.02" r="4" fill="var(--s1)"/>
+<circle cx="230" cy="167.17" r="4" fill="var(--s1)"/>
+<circle cx="247.6" cy="145.41" r="4" fill="var(--s1)"/>
+<circle cx="216.8" cy="215.14" r="4" fill="var(--s1)"/>
+<circle cx="234.4" cy="207.88" r="4" fill="var(--s1)"/>
+<circle cx="252" cy="280.57" r="4" fill="var(--s1)"/>
+<circle cx="221.2" cy="121.26" r="4" fill="var(--s1)"/>
+<circle cx="238.8" cy="196.27" r="4" fill="var(--s1)"/>
+<circle cx="208" cy="236.45" r="4" fill="var(--s1)"/>
+<circle cx="225.6" cy="220.75" r="4" fill="var(--s1)"/>
+<path d="M186 190.58 L286 190.58" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text class="ink bold sm" x="292" y="195.58" text-anchor="start">평균</text>
+<circle cx="578" cy="181.84" r="4" fill="var(--s3)"/>
+<circle cx="595.6" cy="103.95" r="4" fill="var(--s3)"/>
+<circle cx="613.2" cy="173.76" r="4" fill="var(--s3)"/>
+<circle cx="582.4" cy="212.8" r="4" fill="var(--s3)"/>
+<circle cx="600" cy="155.44" r="4" fill="var(--s3)"/>
+<circle cx="617.6" cy="181.65" r="4" fill="var(--s3)"/>
+<circle cx="586.8" cy="167.67" r="4" fill="var(--s3)"/>
+<circle cx="604.4" cy="199.79" r="4" fill="var(--s3)"/>
+<circle cx="622" cy="195.3" r="4" fill="var(--s3)"/>
+<circle cx="591.2" cy="159.19" r="4" fill="var(--s3)"/>
+<circle cx="608.8" cy="109.5" r="4" fill="var(--s3)"/>
+<circle cx="578" cy="151.76" r="4" fill="var(--s3)"/>
+<circle cx="595.6" cy="98.26" r="4" fill="var(--s3)"/>
+<circle cx="613.2" cy="155.07" r="4" fill="var(--s3)"/>
+<circle cx="582.4" cy="172.33" r="4" fill="var(--s3)"/>
+<circle cx="600" cy="105.83" r="4" fill="var(--s3)"/>
+<circle cx="617.6" cy="181.94" r="4" fill="var(--s3)"/>
+<circle cx="586.8" cy="246.7" r="4" fill="var(--s3)"/>
+<circle cx="604.4" cy="80.4" r="4" fill="var(--s3)"/>
+<circle cx="622" cy="123.64" r="4" fill="var(--s3)"/>
+<circle cx="591.2" cy="80.4" r="4" fill="var(--s3)"/>
+<circle cx="608.8" cy="148.4" r="4" fill="var(--s3)"/>
+<circle cx="578" cy="160.67" r="4" fill="var(--s3)"/>
+<circle cx="595.6" cy="184.72" r="4" fill="var(--s3)"/>
+<circle cx="613.2" cy="185.24" r="4" fill="var(--s3)"/>
+<circle cx="582.4" cy="201.02" r="4" fill="var(--s3)"/>
+<circle cx="600" cy="167.17" r="4" fill="var(--s3)"/>
+<circle cx="617.6" cy="145.41" r="4" fill="var(--s3)"/>
+<circle cx="586.8" cy="215.14" r="4" fill="var(--s3)"/>
+<circle cx="604.4" cy="207.88" r="4" fill="var(--s3)"/>
+<circle cx="622" cy="121.26" r="4" fill="var(--s3)"/>
+<circle cx="591.2" cy="196.27" r="4" fill="var(--s3)"/>
+<circle cx="608.8" cy="220.75" r="4" fill="var(--s3)"/>
+<path d="M556 163.37 L656 163.37" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text class="ink bold sm" x="662" y="168.37" text-anchor="start">평균</text>
+<circle cx="404" cy="319.6" r="3.4" fill="var(--grid)"/>
+<circle cx="416.8" cy="233.42" r="3.4" fill="var(--grid)"/>
+<circle cx="429.6" cy="230.9" r="3.4" fill="var(--grid)"/>
+<circle cx="407.2" cy="319.6" r="3.4" fill="var(--grid)"/>
+<circle cx="420" cy="282.2" r="3.4" fill="var(--grid)"/>
+<circle cx="432.8" cy="220.97" r="3.4" fill="var(--grid)"/>
+<circle cx="410.4" cy="251.17" r="3.4" fill="var(--grid)"/>
+<circle cx="423.2" cy="266.69" r="3.4" fill="var(--grid)"/>
+<circle cx="436" cy="246.7" r="3.4" fill="var(--grid)"/>
+<circle cx="413.6" cy="217.95" r="3.4" fill="var(--grid)"/>
+<circle cx="426.4" cy="269.52" r="3.4" fill="var(--grid)"/>
+<circle cx="404" cy="246.43" r="3.4" fill="var(--grid)"/>
+<text class="ink2 sm" x="420" y="301.4" text-anchor="middle">중간에 빠진 사람</text>
+<path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M300 190 L400 190"/>
+<path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M452 190 L552 190"/>
+<text class="ink bold sm" x="230" y="360" text-anchor="middle">첫 측정 — 모두 있다</text>
+<text class="ink bold sm" x="618" y="360" text-anchor="middle">몇 해 뒤 — 남은 사람만</text>
+<text class="ink2 sm" x="60" y="388" text-anchor="start">평균이 올라갔다. 그런데 개인의 점수는 아무도 오르지 않았다</text>
+</svg>

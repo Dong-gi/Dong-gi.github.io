@@ -9,7 +9,6 @@
  * @property {string[]} category
  * @property {string} file
  * @property {string} title
- * @property {number} mtimeMs
  */
 
 /**
@@ -503,14 +502,6 @@ window.addEventListener('load', async () => {
             await Promise.all([updatePostList(), updateMarkerList()]);
             // .pos-span 이 이제 생겼다. 읽기 앵커가 그것을 쓰므로 다시 잡아 준다.
             document.dispatchEvent(new Event('markers-ready'));
-
-            const currentKey = postKeyOf(location.pathname);
-            const currentPost = posts.find(x => postKeyOf(x.file) === currentKey);
-            if (currentPost != null) {
-                if (Number.isInteger(currentPost.mtimeMs)) {
-                    document.getElementById('contents').prepend(asNodes(`<p>Last update : ${new Date(currentPost.mtimeMs).toISOString()}</p>`));
-                }
-            }
         })
     ]);
 

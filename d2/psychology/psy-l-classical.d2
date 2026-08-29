@@ -1,0 +1,43 @@
+# 고전적 조건형성의 세 국면 — 심리학 7장.
+#
+# 무엇을 읽어야 하나: 조건형성 전에 이미 반응을 내던 자극(무조건자극)과, 아무
+# 반응도 내지 않던 자극(중성자극)이 따로 있다는 것. 조건형성이 하는 일은 뒤의
+# 것에 앞의 것을 예측하는 힘을 붙이는 일이다.
+direction: down
+
+전: {
+  label: "조건형성 전"
+  direction: right
+  us: { label: "무조건자극\n먹이"; style.bold: true }
+  ur: { label: "무조건반응\n침" }
+  ns: { label: "중성자극\n종소리" }
+  no: { label: "반응 없음\n(귀를 기울이는 정도)"; style.stroke-dash: 3 }
+  us -> ur: "배운 적 없이 나온다"
+  ns -> no
+}
+
+중: {
+  label: "조건형성 중 — 여러 번 되풀이한다"
+  direction: right
+  cs: { label: "종소리\n(먼저)"; style.bold: true }
+  us2: { label: "먹이\n(뒤에)"; style.bold: true }
+  ur2: { label: "침" }
+  cs -> us2: "이 순서가 중요하다"
+  us2 -> ur2
+}
+
+후: {
+  label: "조건형성 후"
+  direction: right
+  cs2: { label: "조건자극\n종소리"; style.bold: true }
+  cr: { label: "조건반응\n침"; style.bold: true }
+  cs2 -> cr: "이제 종소리만으로 나온다"
+}
+
+전 -> 중 -> 후
+
+주의: {
+  label: "　\n용어가 헷갈리는 자리 — ‘무조건’ 은 강하다는 뜻이 아니라 배우지 않았다는 뜻이고,\n‘조건’ 은 약하다는 뜻이 아니라 배운 것이라는 뜻이다.\n그리고 조건반응이 무조건반응과 똑같은 것도 아니다. 대개 더 작고, 다른 데가 있다"
+  shape: text
+}
+후 -> 주의: { style.stroke-dash: 3 }

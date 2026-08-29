@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 830 400" width="830" height="400" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">세대에 걸친 원점수 상승과 평평한 표준화 점수</title><desc id="d">같은 문항에서 맞힌 개수는 올라가는데 보고되는 표준화 점수는 그대로다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" marker-end="url(#ark)" d="M116 312 H526"/><path class="ax" marker-end="url(#ark)" d="M116 312 V52"/><text class="sm ink2" x="230.29" y="327" text-anchor="middle">1950</text><text class="sm ink2" x="344.57" y="327" text-anchor="middle">1970</text><text class="sm ink2" x="458.86" y="327" text-anchor="middle">1990</text>
+<text class="ink2 sm" x="316" y="356" text-anchor="middle">검사를 받은 해</text>
+<text class="ink2 sm" x="44" y="48" text-anchor="start">점수</text>
+<path class="cv s1" d="M116 227 L201.71 204.5 L287.43 177 L373.14 147 L458.86 119.5 L516 102"/>
+<path class="cv s2" stroke-dasharray="6 4" d="M116 257 L516 257"/>
+<text class="ink bold" x="476" y="90" text-anchor="end">같은 문항에서 맞힌 개수</text>
+<text class="ink bold" x="476" y="245" text-anchor="end">보고되는 표준화 점수</text>
+<text class="ink bold sm" x="556" y="104" text-anchor="start">아래 선이 평평한 것은</text>
+<text class="ink bold sm" x="556" y="124" text-anchor="start">아무것도 안 변해서가 아니다</text>
+<text class="ink2 sm" x="556" y="158" text-anchor="start">표준화 점수는 그 시대 사람들</text>
+<text class="ink2 sm" x="556" y="178" text-anchor="start">가운데 어디쯤인지를 적은 값이다.</text>
+<text class="ink2 sm" x="556" y="198" text-anchor="start">규준을 다시 잡으면 평균이 다시</text>
+<text class="ink2 sm" x="556" y="218" text-anchor="start">가운데로 온다.</text>
+<text class="ink2 sm" x="556" y="252" text-anchor="start">그래서 이 상승은 규준을</text>
+<text class="ink2 sm" x="556" y="272" text-anchor="start">다시 잡는 작업에서 드러났다.</text>
+<text class="ink2 sm" x="556" y="306" text-anchor="start">눈금 없는 도식이다. 기울기는</text>
+<text class="ink2 sm" x="556" y="326" text-anchor="start">어느 자료의 값도 아니다.</text>
+</svg>

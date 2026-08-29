@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 440" width="900" height="440" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">이 장이 다루는 결과들이 재현 검사에서 어떻게 되었는가</title><desc id="d">검사를 많이 받은 결과 가운데 살아남은 것과 무너진 것이 함께 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" marker-end="url(#ark)" d="M116 356 H506"/><path class="ax" marker-end="url(#ark)" d="M116 356 V46"/>
+<text class="ink2 sm" x="306" y="404" text-anchor="middle">독립적인 재현 검사를 얼마나 받았는가</text>
+<text class="ink2 sm" x="116" y="420" text-anchor="middle">적게</text>
+<text class="ink2 sm" x="496" y="420" text-anchor="middle">많이</text>
+<text class="ink2 sm" x="40" y="42" text-anchor="start">그 검사에서 어떻게 되었는가</text>
+<text class="ink2 sm" x="108" y="68" text-anchor="end">버팀</text>
+<text class="ink2 sm" x="108" y="344" text-anchor="end">무너짐</text>
+<path d="M116 206 L496 206" fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+<circle cx="154" cy="332" r="10" fill="var(--s2)"/>
+<text x="154" y="336" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">1</text>
+<circle cx="458" cy="326" r="10" fill="var(--s2)"/>
+<text x="458" y="330" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">2</text>
+<circle cx="427.6" cy="308" r="10" fill="var(--s2)"/>
+<text x="427.6" y="312" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">3</text>
+<circle cx="442.8" cy="284" r="10" fill="var(--s2)"/>
+<text x="442.8" y="288" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">4</text>
+<circle cx="473.2" cy="269" r="10" fill="var(--s2)"/>
+<text x="473.2" y="273" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">5</text>
+<circle cx="450.4" cy="248" r="10" fill="var(--s2)"/>
+<text x="450.4" y="252" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">6</text>
+<circle cx="306" cy="200" r="10" fill="var(--s1)"/>
+<text x="306" y="204" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">7</text>
+<circle cx="275.6" cy="176" r="10" fill="var(--s1)"/>
+<text x="275.6" y="180" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">8</text>
+<circle cx="442.8" cy="164" r="10" fill="var(--s3)"/>
+<text x="442.8" y="168" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">9</text>
+<circle cx="435.2" cy="134" r="10" fill="var(--s3)"/>
+<text x="435.2" y="138" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">10</text>
+<circle cx="404.8" cy="89" r="10" fill="var(--s3)"/>
+<text x="404.8" y="93" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">11</text>
+<circle cx="450.4" cy="104" r="10" fill="var(--s3)"/>
+<text x="450.4" y="108" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">12</text>
+<text class="ink sm" x="548" y="84" text-anchor="start">1. 스탠퍼드 감옥 실험 — 연구로 성립하지 않는다</text>
+<text class="ink sm" x="548" y="108" text-anchor="start">2. 자아 고갈 — 다중연구실에서 효과 거의 0</text>
+<text class="ink sm" x="548" y="132" text-anchor="start">3. 사회적 점화 — 재현 실패</text>
+<text class="ink sm" x="548" y="156" text-anchor="start">4. 파워 포즈, 호르몬과 행동 — 재현되지 않음</text>
+<text class="ink sm" x="548" y="180" text-anchor="start">5. 행위자-관찰자 비대칭 — 메타분석에서 거의 0</text>
+<text class="ink sm" x="548" y="204" text-anchor="start">6. 암묵적 연합 검사의 개인 행동 예측력 — 작다</text>
+<text class="ink sm" x="548" y="228" text-anchor="start">7. 밀그램 복종 — 결과는 되풀이, 해석은 논쟁</text>
+<text class="ink sm" x="548" y="252" text-anchor="start">8. 인지부조화 — 틀은 살아 있고 대안 설명과 겨룬다</text>
+<text class="ink sm" x="548" y="276" text-anchor="start">9. 파워 포즈, 주관적 보고 — 재현되었다</text>
+<text class="ink sm" x="548" y="300" text-anchor="start">10. 방관자 효과 — 메타분석에서 지지됨</text>
+<text class="ink sm" x="548" y="324" text-anchor="start">11. 대응 편향 — 다중연구실에서 되풀이됨</text>
+<text class="ink sm" x="548" y="348" text-anchor="start">12. 애쉬 동조 — 여러 나라에서 되풀이됨</text>
+<text class="ink2 sm" x="46" y="434" text-anchor="start">두 축 다 눈금이 없다. 이 배치는 본문의 판정을 옮긴 지도이고 어느 연구의 수치도 아니다</text>
+</svg>

@@ -5,14 +5,13 @@
   "type": "module",
   "scripts": {
     "build": "node source/build.ts",
-    "build-dates": "node source/build/dates.ts",
     "build-js": "node source/build/js.ts",
     "build-figure": "node source/build/figure.ts",
     "build-d2": "node source/build/d2.ts",
     "build-img": "node source/build/img.ts",
     "build-pug": "node source/build/pug.ts",
     "local": "npx serve",
-    "check": "node scripts/check-doc.mjs pugs/fundamental/physics.pug pugs/fundamental/chemistry.pug pugs/fundamental/biology.pug pugs/fundamental/elementary-mathematics.pug pugs/fundamental/linear-algebra.pug pugs/fundamental/probability.pug pugs/fundamental/algorithm.pug pugs/fundamental/mcs.pug pugs/fundamental/logic.pug pugs/fundamental/philosophy.pug",
+    "check": "node scripts/check-doc.mjs pugs/fundamental/physics.pug pugs/fundamental/chemistry.pug pugs/fundamental/biology.pug pugs/fundamental/elementary-mathematics.pug pugs/fundamental/linear-algebra.pug pugs/fundamental/probability.pug pugs/fundamental/algorithm.pug pugs/fundamental/mcs.pug pugs/fundamental/logic.pug pugs/fundamental/philosophy.pug pugs/fundamental/psychology.pug",
     "check-links": "node scripts/check-links.mjs",
     "verify": "node scripts/verify-pages.mjs"
   },

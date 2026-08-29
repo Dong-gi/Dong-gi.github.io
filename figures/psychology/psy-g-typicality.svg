@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" width="860" height="380" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">전형성과 판단 시간</title><desc id="d">전형적인 사례일수록 범주 판단이 빠른 도식</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" marker-end="url(#ark)" d="M108 290 H598"/><path class="ax" marker-end="url(#ark)" d="M108 290 V72"/><path class="cv s1" d="M108 102.8 L120 106.02 L132 109.25 L144 112.47 L156 115.7 L168 118.92 L180 122.14 L192 125.37 L204 128.59 L216 131.82 L228 135.04 L240 138.26 L252 141.49 L264 144.71 L276 147.94 L288 151.16 L300 154.38 L312 157.61 L324 160.83 L336 164.06 L348 167.28 L360 170.5 L372 173.73 L384 176.95 L396 180.18 L408 183.4 L420 186.62 L432 189.85 L444 193.07 L456 196.3 L468 199.52 L480 202.74 L492 205.97 L504 209.19 L516 212.42 L528 215.64 L540 218.86 L552 222.09 L564 225.31 L576 228.54 L588 231.76"/><circle class="f2" cx="165.6" cy="118.28" r="6"/><text class="ink bold sm" x="165.6" y="104.28" text-anchor="middle">참새</text><circle class="f2" cx="319.2" cy="159.54" r="6"/><text class="ink bold sm" x="319.2" y="145.54" text-anchor="middle">오리</text><circle class="f2" cx="511.2" cy="211.13" r="6"/><text class="ink bold sm" x="511.2" y="197.13" text-anchor="middle">펭귄</text><text class="ink2 sm" x="348" y="318" text-anchor="middle">전형적이라고 평정된 정도 (오른쪽으로 갈수록 덜 전형적)</text><text class="ink2 sm" x="30" y="62" text-anchor="start">세로축 — ‘새인가’ 에 답하는 데 걸린 시간. 위가 빠르다 (눈금 없음)</text><rect x="612" y="96" width="228" height="140" rx="5" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1.2"/><text class="ink bold sm" x="628" y="122" text-anchor="start">왜 이것이 문제인가</text><text class="ink2 sm" x="628" y="146" text-anchor="start">셋 다 새다. 정의를 만족하는지</text><text class="ink2 sm" x="628" y="164" text-anchor="start">따지는 일이라면 걸리는 시간이</text><text class="ink2 sm" x="628" y="182" text-anchor="start">이렇게 갈릴 이유가 없다.</text><text class="ink2 sm" x="628" y="206" text-anchor="start">범주 안에도 가운데와 가장자리가</text><text class="ink2 sm" x="628" y="224" text-anchor="start">있다는 뜻이다</text><text class="ink bold" x="430" y="36" text-anchor="middle">범주 안에도 가운데와 가장자리가 있다 — 도식</text><text class="ink2 sm" x="430" y="356" text-anchor="middle">세로축에 눈금을 달지 않았다. 값이 아니라 내려가는 방향만 읽는 그림이다</text>
+</svg>

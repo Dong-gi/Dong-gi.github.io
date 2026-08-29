@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 430" width="840" height="430" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">집단 안의 차이와 집단 사이의 차이는 다른 물음이다</title><desc id="d">같은 씨앗을 두 흙에 나눠 심으면 집단 안의 차이는 유전이고 집단 사이의 차이는 흙이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" marker-end="url(#ark)" d="M100 298 H580"/><path class="ax" marker-end="url(#ark)" d="M100 298 V78"/>
+<text class="ink2 sm" x="335" y="386" text-anchor="middle">다 자란 뒤의 키</text>
+<text class="ink2 sm" x="36" y="74" text-anchor="start">그만큼 자란 그루 수</text>
+<path class="cv s2" d="M100 297.43 L103.92 297.22 L107.83 296.95 L111.75 296.59 L115.67 296.13 L119.58 295.54 L123.5 294.79 L127.42 293.86 L131.33 292.69 L135.25 291.25 L139.17 289.5 L143.08 287.38 L147 284.86 L150.92 281.87 L154.83 278.38 L158.75 274.34 L162.67 269.71 L166.58 264.47 L170.5 258.61 L174.42 252.12 L178.33 245.03 L182.25 237.37 L186.17 229.21 L190.08 220.63 L194 211.72 L197.92 202.63 L201.83 193.5 L205.75 184.48 L209.67 175.76 L213.58 167.51 L217.5 159.9 L221.42 153.13 L225.33 147.34 L229.25 142.67 L233.17 139.25 L237.08 137.16 L241 136.46 L244.92 137.16 L248.83 139.25 L252.75 142.67 L256.67 147.34 L260.58 153.13 L264.5 159.9 L268.42 167.51 L272.33 175.76 L276.25 184.48 L280.17 193.5 L284.08 202.63 L288 211.72 L291.92 220.63 L295.83 229.21 L299.75 237.37 L303.67 245.03 L307.58 252.12 L311.5 258.61 L315.42 264.47 L319.33 269.71 L323.25 274.34 L327.17 278.38 L331.08 281.87 L335 284.86 L338.92 287.38 L342.83 289.5 L346.75 291.25 L350.67 292.69 L354.58 293.86 L358.5 294.79 L362.42 295.54 L366.33 296.13 L370.25 296.59 L374.17 296.95 L378.08 297.22 L382 297.43 L385.92 297.58 L389.83 297.7 L393.75 297.79 L397.67 297.85 L401.58 297.89 L405.5 297.93 L409.42 297.95 L413.33 297.96 L417.25 297.98 L421.17 297.98 L425.08 297.99 L429 297.99 L432.92 298 L436.83 298 L440.75 298 L444.67 298 L448.58 298 L452.5 298 L456.42 298 L460.33 298 L464.25 298 L468.17 298 L472.08 298 L476 298 L479.92 298 L483.83 298 L487.75 298 L491.67 298 L495.58 298 L499.5 298 L503.42 298 L507.33 298 L511.25 298 L515.17 298 L519.08 298 L523 298 L526.92 298 L530.83 298 L534.75 298 L538.67 298 L542.58 298 L546.5 298 L550.42 298 L554.33 298 L558.25 298 L562.17 298 L566.08 298 L570 298"/>
+<path class="cv s3" d="M100 298 L103.92 298 L107.83 298 L111.75 298 L115.67 298 L119.58 298 L123.5 298 L127.42 298 L131.33 298 L135.25 298 L139.17 298 L143.08 298 L147 298 L150.92 298 L154.83 298 L158.75 298 L162.67 298 L166.58 298 L170.5 298 L174.42 298 L178.33 298 L182.25 298 L186.17 298 L190.08 298 L194 298 L197.92 298 L201.83 298 L205.75 298 L209.67 298 L213.58 298 L217.5 298 L221.42 298 L225.33 298 L229.25 298 L233.17 297.99 L237.08 297.99 L241 297.99 L244.92 297.98 L248.83 297.97 L252.75 297.95 L256.67 297.93 L260.58 297.9 L264.5 297.86 L268.42 297.81 L272.33 297.73 L276.25 297.62 L280.17 297.48 L284.08 297.29 L288 297.03 L291.92 296.7 L295.83 296.28 L299.75 295.73 L303.67 295.03 L307.58 294.15 L311.5 293.05 L315.42 291.69 L319.33 290.03 L323.25 288.03 L327.17 285.62 L331.08 282.77 L335 279.43 L338.92 275.55 L342.83 271.09 L346.75 266.03 L350.67 260.35 L354.58 254.04 L358.5 247.12 L362.42 239.62 L366.33 231.59 L370.25 223.12 L374.17 214.29 L378.08 205.24 L382 196.1 L385.92 187.04 L389.83 178.21 L393.75 169.81 L397.67 162 L401.58 154.97 L405.5 148.88 L409.42 143.88 L413.33 140.1 L417.25 137.62 L421.17 136.52 L425.08 136.82 L429 138.52 L432.92 141.56 L436.83 145.88 L440.75 151.37 L444.67 157.88 L448.58 165.26 L452.5 173.35 L456.42 181.95 L460.33 190.9 L464.25 200.02 L468.17 209.14 L472.08 218.11 L476 226.8 L479.92 235.09 L483.83 242.9 L487.75 250.16 L491.67 256.82 L495.58 262.86 L499.5 268.28 L503.42 273.08 L507.33 277.28 L511.25 280.93 L515.17 284.05 L519.08 286.7 L523 288.93 L526.92 290.78 L530.83 292.31 L534.75 293.55 L538.67 294.55 L542.58 295.35 L546.5 295.98 L550.42 296.47 L554.33 296.86 L558.25 297.15 L562.17 297.38 L566.08 297.54 L570 297.67"/>
+<text class="ink bold" x="241" y="120.38" text-anchor="middle">척박한 흙</text>
+<text class="ink bold" x="422.29" y="120.38" text-anchor="middle">기름진 흙</text>
+<path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M199.04 230.15 L282.96 230.15"/>
+<path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M282.96 230.15 L199.04 230.15"/>
+<text class="ink bold sm" x="241" y="218.15" text-anchor="middle">집단 안의 차이</text>
+<path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M241 323.85 L422.29 323.85"/>
+<path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M422.29 323.85 L241 323.85"/>
+<text class="ink bold sm" x="331.64" y="347.85" text-anchor="middle">집단 사이의 차이</text>
+<text class="ink bold sm" x="608" y="116" text-anchor="start">같은 씨앗 봉지에서</text>
+<text class="ink bold sm" x="608" y="136" text-anchor="start">한 줌씩 나눠 심었다</text>
+<text class="ink2 sm" x="608" y="170" text-anchor="start">한 화분 안에서 키가 다른 것은</text>
+<text class="ink2 sm" x="608" y="190" text-anchor="start">흙이 같으므로 씨앗의 차이다.</text>
+<text class="ink2 sm" x="608" y="210" text-anchor="start">즉 집단 안의 유전율이 1 이다.</text>
+<text class="ink2 sm" x="608" y="244" text-anchor="start">그런데 두 화분의 평균이 다른</text>
+<text class="ink2 sm" x="608" y="264" text-anchor="start">것은 전부 흙 때문이다. 씨앗은</text>
+<text class="ink2 sm" x="608" y="284" text-anchor="start">같은 봉지에서 나왔다.</text>
+<text class="ink bold sm" x="608" y="318" text-anchor="start">집단 안의 유전율이 아무리</text>
+<text class="ink bold sm" x="608" y="338" text-anchor="start">높아도 집단 사이의 차이에</text>
+<text class="ink bold sm" x="608" y="358" text-anchor="start">대해서는 아무 말도 하지 않는다.</text>
+</svg>

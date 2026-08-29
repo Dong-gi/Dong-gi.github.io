@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 410" width="840" height="410" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한 사람이 나설 확률과 누군가 나설 확률</title><desc id="d">사람이 많아지면 개인이 나설 확률은 내려가고 누군가 나설 확률은 올라간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="gr" d="M116 320 V60"/><path class="gr" d="M196 320 V60"/><path class="gr" d="M296 320 V60"/><path class="gr" d="M396 320 V60"/><path class="gr" d="M496 320 V60"/><path class="gr" d="M116 320 H496"/><path class="gr" d="M116 255 H496"/><path class="gr" d="M116 190 H496"/><path class="gr" d="M116 125 H496"/><path class="gr" d="M116 60 H496"/><path class="ax" marker-end="url(#ark)" d="M116 320 H506"/><path class="ax" marker-end="url(#ark)" d="M116 320 V50"/><text class="sm ink2" x="196" y="335" text-anchor="middle">5</text><text class="sm ink2" x="296" y="335" text-anchor="middle">10</text><text class="sm ink2" x="396" y="335" text-anchor="middle">15</text><text class="sm ink2" x="496" y="335" text-anchor="middle">20</text><text class="sm ink2" x="110" y="259" text-anchor="end">0.25</text><text class="sm ink2" x="110" y="194" text-anchor="end">0.5</text><text class="sm ink2" x="110" y="129" text-anchor="end">0.75</text><text class="sm ink2" x="110" y="64" text-anchor="end">1</text>
+<text class="ink2 sm" x="306" y="366" text-anchor="middle">그 자리에 함께 있는 사람 수</text>
+<text class="ink2 sm" x="46" y="46" text-anchor="start">확률</text>
+<path class="cv s2" d="M116 99 L119.17 113.14 L122.33 124.73 L125.5 134.46 L128.67 142.78 L131.83 150.01 L135 156.36 L138.17 162.01 L141.33 167.08 L144.5 171.66 L147.67 175.82 L150.83 179.63 L154 183.13 L157.17 186.36 L160.33 189.37 L163.5 192.16 L166.67 194.77 L169.83 197.22 L173 199.51 L176.17 201.68 L179.33 203.72 L182.5 205.66 L185.67 207.5 L188.83 209.24 L192 210.9 L195.17 212.48 L198.33 213.99 L201.5 215.43 L204.67 216.82 L207.83 218.14 L211 219.41 L214.17 220.64 L217.33 221.81 L220.5 222.94 L223.67 224.03 L226.83 225.09 L230 226.1 L233.17 227.08 L236.33 228.03 L239.5 228.95 L242.67 229.84 L245.83 230.7 L249 231.54 L252.17 232.35 L255.33 233.14 L258.5 233.91 L261.67 234.65 L264.83 235.37 L268 236.08 L271.17 236.77 L274.33 237.43 L277.5 238.09 L280.67 238.72 L283.83 239.34 L287 239.94 L290.17 240.53 L293.33 241.11 L296.5 241.67 L299.67 242.22 L302.83 242.76 L306 243.29 L309.17 243.8 L312.33 244.31 L315.5 244.8 L318.67 245.28 L321.83 245.76 L325 246.22 L328.17 246.68 L331.33 247.12 L334.5 247.56 L337.67 247.99 L340.83 248.41 L344 248.82 L347.17 249.23 L350.33 249.62 L353.5 250.01 L356.67 250.4 L359.83 250.78 L363 251.15 L366.17 251.51 L369.33 251.87 L372.5 252.22 L375.67 252.57 L378.83 252.91 L382 253.24 L385.17 253.57 L388.33 253.9 L391.5 254.22 L394.67 254.53 L397.83 254.84 L401 255.15 L404.17 255.45 L407.33 255.75 L410.5 256.04 L413.67 256.33 L416.83 256.61 L420 256.89 L423.17 257.16 L426.33 257.44 L429.5 257.7 L432.67 257.97 L435.83 258.23 L439 258.49 L442.17 258.74 L445.33 258.99 L448.5 259.24 L451.67 259.48 L454.83 259.72 L458 259.96 L461.17 260.2 L464.33 260.43 L467.5 260.66 L470.67 260.88 L473.83 261.11 L477 261.33 L480.17 261.54 L483.33 261.76 L486.5 261.97 L489.67 262.18 L492.83 262.39 L496 262.6"/>
+<path class="cv s1" d="M116 99 L119.17 101.33 L122.33 101.68 L125.5 101.11 L128.67 100.1 L131.83 98.87 L135 97.53 L138.17 96.17 L141.33 94.81 L144.5 93.48 L147.67 92.19 L150.83 90.95 L154 89.76 L157.17 88.62 L160.33 87.53 L163.5 86.49 L166.67 85.51 L169.83 84.56 L173 83.67 L176.17 82.81 L179.33 81.99 L182.5 81.22 L185.67 80.47 L188.83 79.77 L192 79.09 L195.17 78.44 L198.33 77.82 L201.5 77.23 L204.67 76.67 L207.83 76.13 L211 75.61 L214.17 75.11 L217.33 74.64 L220.5 74.18 L223.67 73.74 L226.83 73.32 L230 72.92 L233.17 72.53 L236.33 72.16 L239.5 71.8 L242.67 71.45 L245.83 71.12 L249 70.8 L252.17 70.49 L255.33 70.19 L258.5 69.91 L261.67 69.63 L264.83 69.36 L268 69.11 L271.17 68.86 L274.33 68.62 L277.5 68.39 L280.67 68.16 L283.83 67.95 L287 67.74 L290.17 67.53 L293.33 67.34 L296.5 67.15 L299.67 66.97 L302.83 66.79 L306 66.62 L309.17 66.45 L312.33 66.29 L315.5 66.13 L318.67 65.98 L321.83 65.84 L325 65.69 L328.17 65.56 L331.33 65.42 L334.5 65.29 L337.67 65.17 L340.83 65.04 L344 64.92 L347.17 64.81 L350.33 64.7 L353.5 64.59 L356.67 64.48 L359.83 64.38 L363 64.28 L366.17 64.18 L369.33 64.09 L372.5 64 L375.67 63.91 L378.83 63.82 L382 63.73 L385.17 63.65 L388.33 63.57 L391.5 63.49 L394.67 63.42 L397.83 63.34 L401 63.27 L404.17 63.2 L407.33 63.13 L410.5 63.07 L413.67 63 L416.83 62.94 L420 62.88 L423.17 62.82 L426.33 62.76 L429.5 62.7 L432.67 62.64 L435.83 62.59 L439 62.54 L442.17 62.48 L445.33 62.43 L448.5 62.39 L451.67 62.34 L454.83 62.29 L458 62.24 L461.17 62.2 L464.33 62.16 L467.5 62.11 L470.67 62.07 L473.83 62.03 L477 61.99 L480.17 61.95 L483.33 61.91 L486.5 61.88 L489.67 61.84 L492.83 61.81 L496 61.77"/>
+<rect x="544" y="88" width="14" height="3" rx="1.5" class="f1"/><text class="sm ink2" x="564" y="94">누군가 한 사람이라도 나설 확률</text><rect x="544" y="106" width="14" height="3" rx="1.5" class="f2"/><text class="sm ink2" x="564" y="112">지목된 한 사람이 나설 확률</text>
+<text class="ink bold sm" x="544" y="158" text-anchor="start">두 곡선이 반대 방향으로 간다</text>
+<text class="ink2 sm" x="544" y="186" text-anchor="start">아래 곡선이 내려가는 것이</text>
+<text class="ink2 sm" x="544" y="206" text-anchor="start">방관자 효과다. 사람이 많을수록</text>
+<text class="ink2 sm" x="544" y="226" text-anchor="start">한 사람이 나설 확률은 준다.</text>
+<text class="ink2 sm" x="544" y="258" text-anchor="start">그런데 사람 수가 함께 늘므로</text>
+<text class="ink2 sm" x="544" y="278" text-anchor="start">누군가는 나설 확률이 오른다.</text>
+<text class="ink2 sm" x="544" y="310" text-anchor="start">‘도움을 받을 확률’ 을 물었는지</text>
+<text class="ink2 sm" x="544" y="330" text-anchor="start">‘이 사람이 도울 확률’ 을 물었는지에</text>
+<text class="ink2 sm" x="544" y="350" text-anchor="start">따라 답이 반대가 된다.</text>
+<text class="ink2 sm" x="46" y="392" text-anchor="start">아래 곡선의 모양은 보기로 정한 것이고, 위 곡선은 그것에서 계산한 값이다. 자료가 아니다</text>
+</svg>

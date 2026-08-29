@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 420" width="840" height="420" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">계열끼리 견준 비교들의 차이와 그 구간</title><desc id="d">구간 대부분이 차이 없음을 감싸지만 전부는 아니다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path d="M340 340 L340 60" fill="none" stroke="var(--ink2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 4"/>
+<text class="ink2 sm" x="340" y="48" text-anchor="middle">차이가 없다</text>
+<text class="ink2 sm" x="247" y="372" text-anchor="middle">왼쪽 계열이 낫다</text>
+<text class="ink2 sm" x="433" y="372" text-anchor="middle">오른쪽 계열이 낫다</text>
+<path d="M190 340 L490 340" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M304 84.89 L394 84.89" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle class="f1" cx="349" cy="84.89" r="5"/>
+<text class="ink2 sm" x="180" y="88.89" text-anchor="end">비교 1</text>
+<path d="M286 116 L364 116" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle class="f1" cx="325" cy="116" r="5"/>
+<text class="ink2 sm" x="180" y="120" text-anchor="end">비교 2</text>
+<path d="M310 147.11 L412 147.11" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle class="f1" cx="361" cy="147.11" r="5"/>
+<text class="ink2 sm" x="180" y="151.11" text-anchor="end">비교 3</text>
+<path d="M313 178.22 L373 178.22" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle class="f1" cx="343" cy="178.22" r="5"/>
+<text class="ink2 sm" x="180" y="182.22" text-anchor="end">비교 4</text>
+<path d="M272.5 209.33 L392.5 209.33" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle class="f1" cx="332.5" cy="209.33" r="5"/>
+<text class="ink2 sm" x="180" y="213.33" text-anchor="end">비교 5</text>
+<path d="M353.5 240.44 L419.5 240.44" fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle class="f2" cx="386.5" cy="240.44" r="5"/>
+<text class="ink2 sm" x="180" y="244.44" text-anchor="end">비교 6</text>
+<path d="M262 271.56 L334 271.56" fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle class="f2" cx="298" cy="271.56" r="5"/>
+<text class="ink2 sm" x="180" y="275.56" text-anchor="end">비교 7</text>
+<path d="M311.5 302.67 L395.5 302.67" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle class="f1" cx="353.5" cy="302.67" r="5"/>
+<text class="ink2 sm" x="180" y="306.67" text-anchor="end">비교 8</text>
+<text class="ink bold sm" x="536" y="100" text-anchor="start">구간 대부분이 0 을 감싼다</text>
+<text class="ink2 sm" x="536" y="126" text-anchor="start">계열이 달라도 결과가 크게 다르지</text>
+<text class="ink2 sm" x="536" y="146" text-anchor="start">않다는 관찰이 이 모양이다.</text>
+<text class="ink2 sm" x="536" y="178" text-anchor="start">그런데 전부는 아니다. 주황으로</text>
+<text class="ink2 sm" x="536" y="198" text-anchor="start">표시한 두 비교는 0 을 감싸지</text>
+<text class="ink2 sm" x="536" y="218" text-anchor="start">않는다.</text>
+<text class="ink2 sm" x="536" y="250" text-anchor="start">그러므로 이 모양에서 나오는</text>
+<text class="ink2 sm" x="536" y="270" text-anchor="start">결론은 ‘모두 같다’ 가 아니라</text>
+<text class="ink2 sm" x="536" y="290" text-anchor="start">‘차이가 있어도 대체로 작다’ 이다.</text>
+<text class="ink2 sm" x="536" y="322" text-anchor="start">점과 구간은 눈금 없는 도식이다.</text>
+<text class="ink2 sm" x="536" y="342" text-anchor="start">어느 연구의 값도 아니다.</text>
+</svg>

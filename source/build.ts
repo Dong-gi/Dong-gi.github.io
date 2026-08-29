@@ -6,7 +6,6 @@
  * 빌드 **요소**들을 각각 자식 프로세스로 돌리고, 성공과 실패만 콘솔에 한 줄씩 보고한다.
  * 자세한 내용은 요소마다 자기 로그 파일에 남는다.
  *
- *     npm run build-dates     source/build/dates.ts      source/build/build-dates.log
  *     npm run build-js        source/build/js.ts         source/build/build-js.log
  *     npm run build-figure    source/build/figure.ts     source/build/build-figure.log
  *     npm run build-d2        source/build/d2.ts         source/build/build-d2.log
@@ -33,18 +32,12 @@
  *
  * ## 순서
  *
- * 요소 사이의 의존은 두 개뿐이고 `needs` 에 적혀 있다. 나머지는 모두 동시에 돈다.
+ * **없다. 다섯 요소가 모두 동시에 돈다.**
  *
- *   img   → pug   `source/img-map.json` (문서가 반응형 이미지를 쓰려면 원본 크기를 알아야 한다)
- *   dates → pug   `source/doc-dates.json` (문서의 갱신일)
- *
- * `needs` 는 **순서만** 뜻한다. 선행 요소가 실패해도 뒤 요소는 돈다. 사진 하나가
- * 깨졌다고 문서 250개의 렌더를 막을 이유는 없고, 그때 pug 가 읽는 것은 지난번의
- * 온전한 산출물이기 때문이다. 나중에 선행 요소가 성공하면 그 산출물의 해시가 바뀌므로
- * 뒤 요소가 스스로 다시 돈다 — 손으로 챙길 것이 없다.
- *
- * `dates` 는 사람에게 묻는 유일한 요소라 다른 요소보다 먼저, 혼자 돈다. 물음과 다른
- * 요소의 출력이 섞이면 무엇에 답하는지 알 수 없다.
+ * 예전에는 의존이 둘 있었다. `img → pug` 는 `source/img-map.json` 때문이었고,
+ * `dates → pug` 는 `source/doc-dates.json` 때문이었다. 둘 다 없앴다 — 그림의 크기는
+ * pug 가 `lib/image-size.ts` 로 원본에서 직접 읽고, 갱신일은 빌드 날짜와 git 이력으로
+ * 대신한다. 요소가 서로의 산출물을 읽지 않으니 순서를 정할 장치도 두지 않는다.
  */
 import fsp from 'node:fs/promises';
 import path from 'node:path';
@@ -56,22 +49,14 @@ interface Component {
     name: string;
     /** 저장소 기준 스크립트 경로. package.json 의 `build-<이름>` 이 부르는 것과 같다. */
     script: string;
-    /** 이 요소보다 먼저 성공해야 하는 요소들. */
-    needs: string[];
-    /**
-     * 사람에게 묻는가. 묻는 요소는 다른 요소가 하나도 돌지 않는 동안 혼자 돈다.
-     * 그래야 물음과 답이 다른 출력에 묻히지 않는다.
-     */
-    interactive?: boolean;
 }
 
 const COMPONENTS: Component[] = [
-    { name: 'dates', script: 'source/build/dates.ts', needs: [], interactive: true },
-    { name: 'js', script: 'source/build/js.ts', needs: [] },
-    { name: 'figure', script: 'source/build/figure.ts', needs: [] },
-    { name: 'd2', script: 'source/build/d2.ts', needs: [] },
-    { name: 'img', script: 'source/build/img.ts', needs: [] },
-    { name: 'pug', script: 'source/build/pug.ts', needs: ['img', 'dates'] },
+    { name: 'js', script: 'source/build/js.ts' },
+    { name: 'figure', script: 'source/build/figure.ts' },
+    { name: 'd2', script: 'source/build/d2.ts' },
+    { name: 'img', script: 'source/build/img.ts' },
+    { name: 'pug', script: 'source/build/pug.ts' },
 ];
 
 interface Result {
@@ -82,7 +67,6 @@ interface Result {
     elapsedMs: number;
 }
 
-const byName = new Map(COMPONENTS.map((c) => [c.name, c]));
 const NAME_WIDTH = Math.max(...COMPONENTS.map((c) => c.name.length));
 
 function logPath(name: string): string {
@@ -92,8 +76,8 @@ function logPath(name: string): string {
 /**
  * 요소가 남긴 `[요약] …` 줄을 로그에서 읽는다.
  *
- * 자식의 stdout 을 가로채지 않고 파일에서 읽는 이유는, 대화형 요소는 stdio 를
- * 그대로 물려받아 가로챌 수 없기 때문이다. 파일에서 읽으면 두 경우를 같게 다룬다.
+ * 자식의 stdout 을 가로채지 않고 파일에서 읽는다. 요소가 스스로 남긴 요약을 그대로
+ * 읽으면 되고, 프로세스 사이로 문자열을 흘려보낼 이유가 없다.
  */
 async function readSummary(name: string): Promise<string> {
     try {
@@ -137,15 +121,12 @@ async function readFailureDetail(name: string, lines: number): Promise<string[]>
 
 function spawnComponent(c: Component): Promise<{ code: number | null; stderr: string }> {
     return new Promise((settle) => {
-        // 요소의 진행 로그는 콘솔로 내보내지 않는다. 여섯 개가 뒤섞이면 요소를 나눈
+        // 요소의 진행 로그는 콘솔로 내보내지 않는다. 다섯 개가 뒤섞이면 요소를 나눈
         // 뜻이 없다. 각자 자기 source/build/build-<이름>.log 에 남긴다.
-        //
-        // 대화형 요소만 stdio 를 물려받는다. readline 의 물음은 BuildLog 를 거치지 않고
-        // stdout 으로 바로 나가므로, QUIET 를 켜도 질문은 화면에 그대로 보인다.
         const child = spawn(process.execPath, [path.join(ROOT, c.script)], {
             cwd: ROOT,
             env: { ...process.env, [QUIET_ENV]: '1' },
-            stdio: c.interactive ? 'inherit' : ['ignore', 'ignore', 'pipe'],
+            stdio: ['ignore', 'ignore', 'pipe'],
         });
         let stderr = '';
         child.stderr?.on('data', (chunk) => {
@@ -159,30 +140,13 @@ function spawnComponent(c: Component): Promise<{ code: number | null; stderr: st
     });
 }
 
-/**
- * 요소 하나를 돌린다. 선행 요소가 있으면 그것부터 돌린다.
- *
- * 같은 요소를 두 번 부르면 같은 약속을 돌려준다. 그래서 의존 그래프를 따로 정렬하지
- * 않아도 각 요소가 정확히 한 번 실행되고, 의존이 없는 요소들은 자연히 동시에 돈다.
- */
-const started = new Map<string, Promise<Result>>();
-function launch(c: Component): Promise<Result> {
-    const existing = started.get(c.name);
-    if (existing != null) return existing;
-
-    const promise = (async (): Promise<Result> => {
-        const deps = await Promise.all(c.needs.map((n) => launch(byName.get(n)!)));
-        const broken = deps.filter((d) => !d.ok).map((d) => d.name);
-        const t0 = Date.now();
-        const { code, stderr } = await spawnComponent(c);
-        const elapsedMs = Date.now() - t0;
-        const summary = (await readSummary(c.name)) || (code === 0 ? '완료' : stderr.trim().split('\n').at(-1) ?? `종료 코드 ${code}`);
-        const note = broken.length === 0 ? '' : ` — 선행 ${broken.join(', ')} 실패, 지난 산출물로 진행`;
-        return { name: c.name, ok: code === 0, summary: summary + note, elapsedMs };
-    })();
-
-    started.set(c.name, promise);
-    return promise;
+/** 요소 하나를 돌린다. */
+async function launch(c: Component): Promise<Result> {
+    const t0 = Date.now();
+    const { code, stderr } = await spawnComponent(c);
+    const elapsedMs = Date.now() - t0;
+    const summary = (await readSummary(c.name)) || (code === 0 ? '완료' : stderr.trim().split('\n').at(-1) ?? `종료 코드 ${code}`);
+    return { name: c.name, ok: code === 0, summary, elapsedMs };
 }
 
 function report(r: Result): void {
@@ -193,34 +157,26 @@ function report(r: Result): void {
 // ---------------------------------------------------------------- 실행
 
 const startedAt = Date.now();
-const interactive = COMPONENTS.filter((c) => c.interactive);
-const concurrent = COMPONENTS.filter((c) => !c.interactive);
 
 console.log(`빌드 시작 — 요소 ${COMPONENTS.length}개. 자세한 내용은 source/build/build-<요소>.log\n`);
 
-// 묻는 요소를 먼저, 하나씩. 결과가 started 에 남으므로 뒤의 의존이 그대로 쓴다.
-for (const c of interactive) report(await launch(c));
-
-// 나머지는 의존이 풀리는 대로 동시에. 끝나는 순서대로 보고한다.
-const done = await Promise.all(
-    concurrent.map((c) =>
+// 전부 동시에. 끝나는 순서대로 보고한다.
+const all = await Promise.all(
+    COMPONENTS.map((c) =>
         launch(c).then((r) => {
             report(r);
             return r;
         }),
     ),
 );
-const all = [...(await Promise.all(interactive.map((c) => launch(c)))), ...done];
 
 const failed = all.filter((r) => !r.ok);
+const elapsed = `${((Date.now() - startedAt) / 1000).toFixed(1)}초`;
 console.log('');
 if (failed.length === 0) {
-    console.log(`${all.length}개 요소 모두 성공 — ${((Date.now() - startedAt) / 1000).toFixed(1)}초`);
+    console.log(`${all.length}개 요소 모두 성공 — ${elapsed}`);
 } else {
-    console.log(
-        `${all.length - failed.length}개 성공, ${failed.length}개 실패: ${failed.map((r) => r.name).join(', ')}` +
-        ` — ${((Date.now() - startedAt) / 1000).toFixed(1)}초`,
-    );
+    console.log(`${all.length - failed.length}개 성공, ${failed.length}개 실패: ${failed.map((r) => r.name).join(', ')} — ${elapsed}`);
     for (const r of failed) {
         const detail = await readFailureDetail(r.name, 20);
         console.log(`\n--- source/build/build-${r.name}.log ---`);

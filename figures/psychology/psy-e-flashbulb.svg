@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 390" width="860" height="390" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">섬광기억의 확신과 일치도</title><desc id="d">확신은 거의 그대로인데 처음 기록과의 일치도는 떨어지는 두 곡선</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="gr" d="M108 300 V84"/><path class="gr" d="M158 300 V84"/><path class="gr" d="M258 300 V84"/><path class="gr" d="M358 300 V84"/><path class="gr" d="M608 300 V84"/><path class="ax" marker-end="url(#ark)" d="M108 300 H618"/><path class="ax" marker-end="url(#ark)" d="M108 300 V74"/><text class="sm ink2" x="158" y="315" text-anchor="middle">1</text><text class="sm ink2" x="258" y="315" text-anchor="middle">3</text><text class="sm ink2" x="358" y="315" text-anchor="middle">5</text><text class="sm ink2" x="608" y="315" text-anchor="middle">10</text><path class="cv s1" d="M108 101.28 L118 101.5 L128 101.71 L138 101.93 L148 102.14 L158 102.36 L168 102.58 L178 102.79 L188 103.01 L198 103.22 L208 103.44 L218 103.66 L228 103.87 L238 104.09 L248 104.3 L258 104.52 L268 104.74 L278 104.95 L288 105.17 L298 105.38 L308 105.6 L318 105.82 L328 106.03 L338 106.25 L348 106.46 L358 106.68 L368 106.9 L378 107.11 L388 107.33 L398 107.54 L408 107.76 L418 107.98 L428 108.19 L438 108.41 L448 108.62 L458 108.84 L468 109.06 L478 109.27 L488 109.49 L498 109.7 L508 109.92 L518 110.14 L528 110.35 L538 110.57 L548 110.78 L558 111 L568 111.22 L578 111.43 L588 111.65 L598 111.86 L608 112.08"/><path class="cv s2" d="M108 79.68 L118 91.46 L128 102.52 L138 112.92 L148 122.68 L158 131.85 L168 140.47 L178 148.57 L188 156.17 L198 163.31 L208 170.03 L218 176.33 L228 182.25 L238 187.82 L248 193.04 L258 197.95 L268 202.56 L278 206.9 L288 210.97 L298 214.79 L308 218.38 L318 221.76 L328 224.93 L338 227.91 L348 230.7 L358 233.33 L368 235.8 L378 238.12 L388 240.3 L398 242.35 L408 244.27 L418 246.07 L428 247.77 L438 249.36 L448 250.86 L458 252.27 L468 253.59 L478 254.83 L488 256 L498 257.09 L508 258.12 L518 259.09 L528 260 L538 260.85 L548 261.65 L558 262.41 L568 263.11 L578 263.78 L588 264.4 L598 264.99 L608 265.54"/><text class="ink bold sm" x="474" y="96.84" text-anchor="end">얼마나 생생하고 확신하는가</text><text class="ink bold sm" x="474" y="242.83" text-anchor="end">처음 적은 내용과 맞는 정도</text><text class="ink2 sm" x="358" y="332" text-anchor="middle">사건이 있고 나서 흐른 해 수</text><text class="ink2 sm" x="34" y="76" text-anchor="start">높음</text><rect x="630" y="96" width="212" height="128" rx="5" fill="none" fill-opacity="1" stroke="var(--s2)" stroke-width="1.6"/><text class="ink bold sm" x="646" y="122" text-anchor="start">어떻게 알 수 있나</text><text class="ink2 sm" x="646" y="146" text-anchor="start">사건 바로 다음 날 적어 둔</text><text class="ink2 sm" x="646" y="164" text-anchor="start">기록이 있어야 한다. 그것과</text><text class="ink2 sm" x="646" y="182" text-anchor="start">뒤의 보고를 맞춰 보는 것이</text><text class="ink2 sm" x="646" y="200" text-anchor="start">이 연구들의 설계다</text><text class="ink bold" x="430" y="36" text-anchor="middle">생생함은 정확함이 아니다 — 도식</text><text class="ink2 sm" x="430" y="366" text-anchor="middle">여러 추적 연구가 보고한 방향을 옮긴 도식이다. 값이 아니라 두 선이 갈라진다는 것만 읽는다</text>
+</svg>

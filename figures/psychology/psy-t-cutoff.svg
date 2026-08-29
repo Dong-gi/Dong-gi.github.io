@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" width="800" height="470" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">같은 검사를 두 번 잴 때 문턱 근처에서 뒤집히는 사람들</title><desc id="d">문턱 가까이에 있던 사람들이 다시 재면 반대쪽으로 넘어간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" marker-end="url(#ark)" d="M120 394 H460"/><path class="ax" marker-end="url(#ark)" d="M120 394 V54"/>
+<text class="ink2 sm" x="285" y="438" text-anchor="middle">처음 잰 점수</text>
+<text class="ink2 sm" x="46" y="50" text-anchor="start">다시 잰 점수</text>
+<path d="M324.6 394 L324.6 64" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4"/>
+<path d="M120 189.4 L450 189.4" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4"/>
+<text class="ink2 sm" x="330.6" y="68" text-anchor="start">문턱</text>
+<circle class="f1" cx="231.52" cy="290.67" r="3"/>
+<circle class="f1" cx="369.83" cy="150.58" r="3"/>
+<circle class="f1" cx="229.4" cy="229.9" r="3"/>
+<circle class="f1" cx="145.93" cy="374.94" r="3"/>
+<circle class="f1" cx="193.32" cy="276.63" r="3"/>
+<circle class="f2" cx="273.01" cy="162.39" r="4.2"/>
+<circle class="f1" cx="366.76" cy="143.52" r="3"/>
+<circle class="f2" cx="323.54" cy="186.02" r="4.2"/>
+<circle class="f1" cx="333.58" cy="175.51" r="3"/>
+<circle class="f1" cx="309.98" cy="218.65" r="3"/>
+<circle class="f1" cx="257.98" cy="207.63" r="3"/>
+<circle class="f1" cx="374.72" cy="131.35" r="3"/>
+<circle class="f1" cx="283.15" cy="238.15" r="3"/>
+<circle class="f2" cx="326.44" cy="194.82" r="4.2"/>
+<circle class="f1" cx="172.5" cy="303.44" r="3"/>
+<circle class="f1" cx="292.76" cy="224.63" r="3"/>
+<circle class="f1" cx="302.66" cy="229.25" r="3"/>
+<circle class="f1" cx="365.05" cy="159.65" r="3"/>
+<circle class="f1" cx="180.76" cy="349.6" r="3"/>
+<circle class="f1" cx="258.91" cy="244.07" r="3"/>
+<circle class="f1" cx="224.72" cy="266.75" r="3"/>
+<circle class="f1" cx="234.28" cy="280.83" r="3"/>
+<circle class="f1" cx="256.61" cy="277.77" r="3"/>
+<circle class="f1" cx="244.42" cy="281.19" r="3"/>
+<circle class="f1" cx="315.43" cy="204.29" r="3"/>
+<circle class="f1" cx="266.66" cy="221.58" r="3"/>
+<circle class="f1" cx="357.14" cy="117.13" r="3"/>
+<circle class="f1" cx="187.11" cy="287.01" r="3"/>
+<circle class="f2" cx="306.36" cy="135.14" r="4.2"/>
+<circle class="f2" cx="339.84" cy="218.3" r="4.2"/>
+<circle class="f1" cx="126.6" cy="387.4" r="3"/>
+<circle class="f1" cx="271.86" cy="230.31" r="3"/>
+<circle class="f1" cx="246.85" cy="268.29" r="3"/>
+<circle class="f2" cx="302.85" cy="180.25" r="4.2"/>
+<circle class="f1" cx="357.32" cy="171.87" r="3"/>
+<circle class="f1" cx="273.68" cy="244.12" r="3"/>
+<circle class="f1" cx="263.62" cy="209.15" r="3"/>
+<circle class="f1" cx="175.06" cy="378.21" r="3"/>
+<circle class="f1" cx="157.8" cy="327.01" r="3"/>
+<circle class="f1" cx="390.53" cy="144.15" r="3"/>
+<circle class="f1" cx="126.6" cy="316.35" r="3"/>
+<circle class="f1" cx="367.35" cy="138.54" r="3"/>
+<circle class="f1" cx="265.37" cy="229.72" r="3"/>
+<circle class="f1" cx="321.84" cy="211.11" r="3"/>
+<circle class="f1" cx="311.48" cy="227.83" r="3"/>
+<circle class="f1" cx="245.67" cy="259.52" r="3"/>
+<circle class="f1" cx="320.76" cy="217.22" r="3"/>
+<circle class="f1" cx="219.55" cy="303.36" r="3"/>
+<circle class="f1" cx="328.77" cy="184.49" r="3"/>
+<circle class="f1" cx="233.08" cy="261.8" r="3"/>
+<circle class="f1" cx="295.7" cy="261.12" r="3"/>
+<circle class="f2" cx="291.58" cy="186.85" r="4.2"/>
+<circle class="f1" cx="297.11" cy="234.27" r="3"/>
+<circle class="f1" cx="336.77" cy="185.42" r="3"/>
+<circle class="f1" cx="149.95" cy="304.94" r="3"/>
+<circle class="f2" cx="324.85" cy="206.48" r="4.2"/>
+<circle class="f1" cx="341.94" cy="176.89" r="3"/>
+<circle class="f1" cx="277.98" cy="219.65" r="3"/>
+<circle class="f1" cx="385.04" cy="165.36" r="3"/>
+<circle class="f1" cx="386.66" cy="162.39" r="3"/>
+<circle class="f2" cx="349.78" cy="190.77" r="4.2"/>
+<circle class="f1" cx="186.62" cy="299.91" r="3"/>
+<circle class="f1" cx="217.13" cy="309.83" r="3"/>
+<circle class="f1" cx="160.03" cy="368.65" r="3"/>
+<circle class="f1" cx="294.25" cy="218.72" r="3"/>
+<circle class="f1" cx="426.94" cy="83.87" r="3"/>
+<circle class="f1" cx="269.72" cy="242.31" r="3"/>
+<circle class="f1" cx="232.78" cy="268.46" r="3"/>
+<circle class="f1" cx="294.81" cy="189.77" r="3"/>
+<circle class="f1" cx="225.72" cy="269.4" r="3"/>
+<circle class="f1" cx="311.08" cy="228.13" r="3"/>
+<circle class="f1" cx="250.57" cy="279.51" r="3"/>
+<circle class="f1" cx="413.44" cy="73.36" r="3"/>
+<circle class="f1" cx="346.13" cy="166.13" r="3"/>
+<circle class="f1" cx="203.63" cy="304.8" r="3"/>
+<circle class="f1" cx="403.23" cy="136.26" r="3"/>
+<circle class="f1" cx="383.1" cy="132.35" r="3"/>
+<circle class="f1" cx="277.05" cy="211.35" r="3"/>
+<circle class="f2" cx="321.79" cy="134.86" r="4.2"/>
+<circle class="f1" cx="295.14" cy="246.53" r="3"/>
+<circle class="f1" cx="290.92" cy="192.25" r="3"/>
+<circle class="f2" cx="341.08" cy="229.14" r="4.2"/>
+<circle class="f1" cx="211.06" cy="355.65" r="3"/>
+<circle class="f1" cx="181.28" cy="309.4" r="3"/>
+<circle class="f2" cx="328.89" cy="268.26" r="4.2"/>
+<circle class="f1" cx="232.83" cy="303.33" r="3"/>
+<circle class="f1" cx="248.57" cy="273.54" r="3"/>
+<circle class="f2" cx="298.47" cy="169" r="4.2"/>
+<circle class="f1" cx="233.27" cy="272.04" r="3"/>
+<circle class="f1" cx="224.35" cy="349.97" r="3"/>
+<circle class="f2" cx="345.95" cy="212.14" r="4.2"/>
+<circle class="f1" cx="303.1" cy="230.95" r="3"/>
+<circle class="f1" cx="306.18" cy="223.54" r="3"/>
+<circle class="f1" cx="286.33" cy="235.96" r="3"/>
+<circle class="f2" cx="349.61" cy="219.23" r="4.2"/>
+<circle class="f1" cx="373.88" cy="166.56" r="3"/>
+<circle class="f1" cx="292.11" cy="198.66" r="3"/>
+<circle class="f1" cx="273.67" cy="210.34" r="3"/>
+<circle class="f1" cx="235.23" cy="233.95" r="3"/>
+<circle class="f1" cx="263.33" cy="276.11" r="3"/>
+<circle class="f1" cx="214.38" cy="272.14" r="3"/>
+<circle class="f1" cx="207.59" cy="337.04" r="3"/>
+<circle class="f1" cx="242.4" cy="244.75" r="3"/>
+<circle class="f1" cx="342.16" cy="170.71" r="3"/>
+<circle class="f1" cx="393.13" cy="133.29" r="3"/>
+<circle class="f1" cx="297.27" cy="209.02" r="3"/>
+<circle class="f1" cx="304.93" cy="192.87" r="3"/>
+<circle class="f1" cx="192.34" cy="380.11" r="3"/>
+<circle class="f1" cx="255.45" cy="332.31" r="3"/>
+<circle class="f1" cx="260.25" cy="236.13" r="3"/>
+<circle class="f1" cx="255.59" cy="309.9" r="3"/>
+<circle class="f1" cx="247.98" cy="216.17" r="3"/>
+<circle class="f1" cx="293.08" cy="194.41" r="3"/>
+<circle class="f1" cx="292.45" cy="198.59" r="3"/>
+<circle class="f1" cx="239.08" cy="265.27" r="3"/>
+<circle class="f1" cx="209.51" cy="311.12" r="3"/>
+<circle class="f1" cx="128.24" cy="374.94" r="3"/>
+<circle class="f1" cx="299.64" cy="202.67" r="3"/>
+<circle class="f2" cx="342.79" cy="210.22" r="4.2"/>
+<circle class="f1" cx="148.86" cy="360.01" r="3"/>
+<circle class="f1" cx="207.66" cy="265.64" r="3"/>
+<circle class="f1" cx="286.64" cy="279.49" r="3"/>
+<circle class="f1" cx="292.69" cy="282.78" r="3"/>
+<circle class="f1" cx="294.19" cy="198.72" r="3"/>
+<circle class="f1" cx="299.68" cy="238.35" r="3"/>
+<circle class="f1" cx="189.4" cy="251.22" r="3"/>
+<circle class="f1" cx="284.05" cy="242.67" r="3"/>
+<circle class="f1" cx="375.15" cy="166.94" r="3"/>
+<circle class="f1" cx="309.47" cy="244.43" r="3"/>
+<circle class="f1" cx="414.89" cy="176.29" r="3"/>
+<circle class="f1" cx="250.34" cy="248.79" r="3"/>
+<circle class="f1" cx="291.15" cy="234.24" r="3"/>
+<circle class="f1" cx="304.55" cy="223.18" r="3"/>
+<circle class="f1" cx="238.29" cy="277.07" r="3"/>
+<circle class="f1" cx="317.65" cy="245.98" r="3"/>
+<circle class="f1" cx="388.71" cy="153.91" r="3"/>
+<circle class="f2" cx="287.05" cy="160.78" r="4.2"/>
+<circle class="f2" cx="352.68" cy="196.68" r="4.2"/>
+<circle class="f1" cx="371.98" cy="169.76" r="3"/>
+<circle class="f1" cx="293.08" cy="222.75" r="3"/>
+<circle class="f2" cx="302.98" cy="176.12" r="4.2"/>
+<circle class="f1" cx="267.2" cy="260.93" r="3"/>
+<circle class="f1" cx="315.12" cy="222.33" r="3"/>
+<circle class="f1" cx="283.71" cy="235.38" r="3"/>
+<circle class="f2" cx="307.24" cy="188.87" r="4.2"/>
+<circle class="f1" cx="269.02" cy="244.66" r="3"/>
+<circle class="f2" cx="308.79" cy="177.87" r="4.2"/>
+<circle class="f1" cx="369.62" cy="150" r="3"/>
+<circle class="f2" cx="320.12" cy="165.66" r="4.2"/>
+<circle class="f1" cx="213.13" cy="317.19" r="3"/>
+<text class="ink bold sm" x="492" y="104" text-anchor="start">주황 점이 뒤집힌 사람이다</text>
+<text class="ink2 sm" x="492" y="130" text-anchor="start">한 번은 문턱을 넘고 한 번은</text>
+<text class="ink2 sm" x="492" y="150" text-anchor="start">못 넘었다. 전부 문턱 가까이에</text>
+<text class="ink2 sm" x="492" y="170" text-anchor="start">몰려 있다.</text>
+<text class="ink2 sm" x="492" y="204" text-anchor="start">검사가 나빠서가 아니다.</text>
+<text class="ink2 sm" x="492" y="224" text-anchor="start">어떤 검사에도 오차가 있고,</text>
+<text class="ink2 sm" x="492" y="244" text-anchor="start">한 점으로 자르면 오차가</text>
+<text class="ink2 sm" x="492" y="264" text-anchor="start">합격과 불합격을 가른다.</text>
+<text class="ink2 sm" x="492" y="298" text-anchor="start">이 그림에서 뒤집힌 사람은</text>
+<text class="ink2 sm" x="492" y="318" text-anchor="start">150명 가운데 22명이다.</text>
+<text class="ink2 sm" x="492" y="352" text-anchor="start">점은 씨앗 고정 난수로 만든</text>
+<text class="ink2 sm" x="492" y="372" text-anchor="start">도식이다. 실제 자료가 아니다.</text>
+</svg>
