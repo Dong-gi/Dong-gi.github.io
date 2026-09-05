@@ -6,8 +6,8 @@ Pug → 정적 HTML 개인 블로그. `pugs/**/*.pug` 가 `posts/**/*.html` 로 
 
 ```bash
 npm ci
-npm run build         # 요소 여섯 개를 병렬로. 콘솔에는 성패만
-npm run build-pug     # 요소 하나만. build-figure / build-d2 / build-img / build-js / build-dates 도 같은 꼴
+npm run build         # 요소 다섯 개를 병렬로. 콘솔에는 성패만
+npm run build-pug     # 요소 하나만. build-figure / build-d2 / build-img / build-js 도 같은 꼴
 ```
 
 빌드는 **요소별로 나뉘어 있고**, 요소 스크립트와 그 산출물이 모두 `source/build/` 에 있다.
@@ -20,13 +20,14 @@ source/build/build-pug-sha.json       그 요소의 내용 해시 기록 (커밋
 
 sha 는 (정규화 경로 → 내용 해시) 기록이고, 빌드는 이것과 견줘 **바뀐 것만** 다시 만든다.
 어떤 요소를 통째로 다시 만들고 싶으면 **`source/build/build-<요소>-sha.json` 을 지우면
-된다.** 요소 목록과 의존 관계는 `README.md` 첫머리에 있다.
+된다.** 요소 목록은 `README.md` 첫머리에 있다. **요소 사이에 순서는 없다** — 다섯이
+모두 동시에 돌고, 서로의 산출물을 읽지 않는다.
 
 Node 24 이상, 다이어그램 렌더에는 `d2` 바이너리가 필요하다 (없으면 그 요소를 통째로
 건너뛰고, 해시를 남기지 않아 설치 후 다시 돌리면 만들어진다).
 
 빌드 출력을 파일로 돌리지 마라(`npm run build > build.log`). 로그는 이미 요소마다
-따로 남고, 화면을 돌리면 `build-dates` 의 물음이 보이지 않는다.
+따로 남으므로 얻을 것이 없고, 요소가 실패했을 때 볼 곳은 `source/build/build-<요소>.log` 다.
 
 수식은 **빌드 시점에 미리 렌더**된다(MathJax 4 CHTML + assistive MathML). 브라우저에서
 MathJax 를 돌리지 않으므로 `tex-chtml.js` 는 없고, 폰트는 `fonts/mathjax-newcm/` 에서
@@ -59,8 +60,10 @@ MathJax 를 돌리지 않으므로 `tex-chtml.js` 는 없고, 폰트는 `fonts/m
   화면 낭독기가 태그를 읽게 되고, `식[...]식` 도 조판되지 않는다.
   `npm run check` 의 `이스케이프 사고 없음` 항목이 이것을 잡는다. 표 칸에는 평문과 `식[...]식` 만 넣고, 그 안의 역슬래시는
   두 번 쓴다: `+tds('규칙', '식[\\log(xy) = \\log x + \\log y]식')`
-- `+w3img` 는 `source/img-map.json` 에 등재된 이미지면 avif/webp 반응형 세트를 쓰고,
-  등재되지 않았으면 평범한 `<img>` 로 폴백한다. **생성 SVG 는 등록할 필요가 없다.**
+- `+w3img` 는 `imgSize(src)` 로 원본의 크기를 재서, 크기를 읽어낸 이미지면 avif/webp
+  반응형 세트(`/imgs-generated/…`)를 쓰고 못 읽으면 평범한 `<img>` 로 폴백한다.
+  **등재할 사전은 없다** — 예전의 `source/img-map.json` 은 없어졌고 지금은
+  `source/build/lib/image-size.ts` 가 파일 헤더를 직접 읽는다. 생성 SVG 도 그대로 참조하면 된다.
 - 믹스인을 산문 안에서 `#[+example(...)]` 처럼 부르면 예제 카운터가 올라간다.
   링크(`+goto`, `+asA`)와 앵커(`+pos`) 외에는 인라인으로 부르지 마라.
 
@@ -79,6 +82,15 @@ MathJax 를 돌리지 않으므로 `tex-chtml.js` 는 없고, 폰트는 `fonts/m
 | `+bookInfo(options)` | 참고 도서 카드 |
 | `+legacy(version, note?)` | 구버전 서술 접기 |
 | `+w3img(src, description?)` | 반응형 이미지 |
+| `+jp(text, reading?)` | 일본어. `reading` 을 주면 후리가나가 붙은 `ruby` 가 된다 |
+
+`+jp` 는 **본문에 일본어를 적는 유일한 방법이다.** 문서의 `lang` 이 `ko-KR` 이고 한자는
+한중일이 같은 코드포인트를 쓰면서 자형이 다르므로(한자 통합), 맨몸으로 적으면 그 자리만
+한국 자형으로 그려진다. `+jp` 가 `lang="ja"` 를 붙이고 `source/default.css` 의
+`[lang="ja"]` 가 `fonts/japanese/` 의 서브셋 폰트를 건다. 폰트에 없는 글자는 **경고 없이**
+폴백하므로 `npm run check` 가 `fonts/japanese/COVERAGE.txt` 와 견줘 잡는다.
+새 한자를 쓰면 `scripts/subset-japanese-font.py` 로 서브셋을 다시 만들어야 한다.
+자세한 것은 `docs/ledger/japanese.md` §7.
 
 `+example` 은 문서마다 1부터 자동 번호를 붙이고 `id="example-N"` 앵커를 남긴다.
 번호를 손으로 적지 말 것 — 예제를 중간에 끼워 넣어도 뒤 번호를 고칠 필요가 없게 한 장치다.
@@ -130,6 +142,10 @@ MathJax 를 돌리지 않으므로 `tex-chtml.js` 는 없고, 폰트는 `fonts/m
   환산표를 정리한다. 그 표 바깥에서는 비SI 단위를 언급하지 않는다.
   형식은 `pugs/fundamental/physics.pug` 의 같은 절을 따른다.
 
+**환산표는 단위가 붙은 수치를 다루는 문서만 둔다.** 물리·화학·생물이 그렇다. 논리학·
+철학·심리학·일본어처럼 그런 수치가 없는 문서는 두지 않는다 — 검사도 "환산표 0곳"을
+통과로 본다. 단위를 쓴다면 그 문서도 위 규칙을 그대로 지킨다.
+
 ## 자습서 재작성 작업
 
 기초 과목 문서를 자습서로 다시 쓰는 작업의 규격과 절차는 `docs/` 에 있다.
@@ -144,15 +160,22 @@ MathJax 를 돌리지 않으므로 `tex-chtml.js` 는 없고, 폰트는 `fonts/m
 여러 담당자가 동시에 장을 쓸 때는 **원장(ledger)이 유일한 계약**이다.
 장을 끝낸 사람은 "이 장이 새로 도입한 것"을 보고하고, 그것이 다음 원장이 된다.
 
-진행 상황(2026-08 기준): `pugs/fundamental/` 열 문서 **전부 자습서 규격**을 따른다.
+진행 상황(2026-09 기준): `pugs/fundamental/` **열두 문서 전부 자습서 규격**을 따른다.
 물리·화학·생물·기초수학·선형대수·통계학·알고리즘·mcs 여덟을 재작성했고,
-**논리학**(5,998줄)과 **철학**(6,335줄)을 새로 썼다.
-합계 약 5만 줄, 예제 2,200개, 그림 1,300개 남짓이다.
+**논리학**(5,997줄)·**철학**(6,335줄)·**심리학**(5,673줄)·**일본어**(6,148줄) 넷을 새로 썼다.
+합계 62,501줄, 예제 2,552개, 그림 참조 1,439건이다.
 mcs 는 원서(`files/mcs.pdf`, MIT 6.042) 22개 장 전부를 다루며 이 사이트에서 가장 큰 문서다.
 
 **철학 문서 때문에 규격이 v3 으로 올라갔다.** `SELF-STUDY-SPEC.md` 에 §3-2(예제의 네 유형),
 §3-3(합의되지 않은 내용을 쓰는 법), §3-4(출처)가 들어갔다. 전문가들 사이에 합의가 없는
-과목을 쓰려면 서술과 예제에 규칙이 더 필요했기 때문이다. 근거는 `docs/NEW-SUBJECTS.md`.
+과목을 쓰려면 서술과 예제에 규칙이 더 필요했기 때문이다. 그 뒤 v3.1 이 §3-5(외부에서
+가져온 사진)를 더했다.
+
+**일본어는 이 저장소의 첫 어학 문서이고 제약이 다르다.** 소리와 필순을 다루지 않고
+(음성 자료도 작성 도구의 검증 능력도 없다), 그림 안에 한자를 쓰지 않으며(생성 SVG 는
+`lang` 을 물려받지 못한다), 본문의 일본어는 전부 `+jp` 를 지난다. 이 셋이 문서의 범위를
+실제로 바꿨다. 규격 본문이 아니라 **`docs/ledger/japanese.md` §0·§5·§7** 이 담고 있으니
+어학 문서를 더 쓸 때는 그것부터 읽어라.
 
 ## 확인 명령
 
@@ -160,13 +183,21 @@ mcs 는 원서(`files/mcs.pdf`, MIT 6.042) 22개 장 전부를 다루며 이 사
 
 ```bash
 node scripts/check-chapter.mjs <장 조각.pug>   # 장 조각 9가지 검사
-npm run check                                   # 기초 과목 문서 11가지 검사
+npm run check                                   # 기초 과목 문서 13가지 검사
 npm run check-links                             # +goto 앵커가 실재하는가 (빌드 뒤에)
 npm run verify                                  # 실제 브라우저로 404·수식·그림·가로 넘침
 
-# 단일 파일 렌더 확인
-node -e "console.log(require('pug').renderFile('pugs/fundamental/physics.pug',{imgMap:{}}).length)"
+# 단일 파일 렌더 확인 (skeleton 이 imgSize 를 부르므로 반드시 넘겨야 한다)
+node --input-type=module -e "import pug from 'pug'; console.log(pug.renderFile('pugs/fundamental/physics.pug',{imgSize:()=>null}).length)"
 
 # 수식 구분자 짝 확인 (두 수가 같아야 한다)
 f=pugs/fundamental/physics.pug; grep -o '식\[' $f | wc -l; grep -o '\]식' $f | wc -l
 ```
+
+`npm run check` 의 13가지 중 마지막 둘(폰트 서브셋 덮기, `+jp` 밖의 일본어)은
+`+jp` 를 쓰는 문서에만 돈다. 나머지 열하나는 모든 문서에 돈다.
+
+**`npm run verify` 는 지금 이 저장소에서 바로 돌지 않는다.** `playwright` 가
+`devDependencies` 에 없고 `scripts/verify-pages.mjs` 가 크로미움 경로를
+`/opt/pw-browsers/chromium` 으로 박아 두었다. 쓰려면 `npm i -D playwright` 후
+`npx playwright install chromium` 하고 그 줄의 `executablePath` 를 지워야 한다.

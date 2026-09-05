@@ -5,8 +5,8 @@
  *
  * `figures/*.mjs` 가 정의한 그림을 `figures/<과목>/<이름>.svg` 로 쓴다. pug 에서는
  *   +w3img('/figures/physics/kinematics-atvx.svg', '캡션')
- * 처럼 참조한다. `source/img-map.json` 에 등록할 필요는 없다 — 등재되지 않은 경로는
- * `+w3img` 가 평범한 `<img>` 로 폴백한다.
+ * 처럼 참조한다. 어디에도 등록할 필요가 없다 — `+w3img` 는 `imgSize` 로 크기를 재고,
+ * 못 읽으면 크기 없는 평범한 `<img>` 로 폴백한다. SVG 는 그 폴백으로 충분하다.
  *
  * d2 와 달리 외부 바이너리가 필요 없어 어느 환경에서든 같은 결과가 나온다.
  *
