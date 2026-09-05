@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 304" width="760" height="304" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">조사가 낱말과 술어의 관계를 정한다</title><desc id="d">세 조사가 붙은 낱말이 각각 다른 구실로 술어에 이어진다. 화살표를 정하는 것은 자리가 아니라 조사다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="50" y="32" text-anchor="start">낱말 뒤에 붙은 조사가 그 낱말과 술어의 관계를 정한다</text><rect x="50" y="60" width="170" height="42" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="135" y="85" text-anchor="middle">낱말 + が</text><rect x="50" y="124" width="170" height="42" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="135" y="149" text-anchor="middle">낱말 + を</text><rect x="50" y="188" width="170" height="42" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="135" y="213" text-anchor="middle">낱말 + に</text><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M224 81 L516 140"/><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" d="M224 145 L516 152"/><path class="s3" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar3)" d="M224 209 L516 166"/><rect x="520" y="118" width="190" height="62" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text class="ink" x="615" y="153" text-anchor="middle">술어</text><text class="f1 sm" x="250" y="74" text-anchor="start">하는 쪽</text><text class="f2 sm" x="250" y="136" text-anchor="start">동작이 미치는 쪽</text><text class="f3 sm" x="250" y="226" text-anchor="start">도착하는 곳이나 상대</text><text class="ink2 sm" x="50" y="266" text-anchor="start">덩어리의 자리를 바꾸어도 이 화살표는 바뀌지 않는다</text><text class="ink" x="50" y="288" text-anchor="start">화살표를 정하는 것은 자리가 아니라 조사다</text></g>
+</svg>

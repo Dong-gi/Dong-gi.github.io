@@ -137,6 +137,50 @@ for (const file of process.argv.slice(2)) {
         ? ok('d2 도식 경로 정상')
         : fail(`d2 도식을 /figures/ 로 가리킨다: ${misrouted.join(', ')}`);
 
+    // 12) 일본어 웹폰트 서브셋이 낡았는지
+    //     fonts/japanese/*.woff2 는 이 문서가 쓰는 글자만 담고 있다. 새 글자를
+    //     쓰면 폰트에 없어 폴백되는데, 폴백은 아무 경고도 내지 않고 한국 자형으로
+    //     그려진 한자는 무심히 보면 알아채기 어렵다. 그래서 여기서 잡는다.
+    //     다시 만드는 법은 fonts/japanese/README.md.
+    const coverageFile = path.join(ROOT, 'fonts', 'japanese', 'COVERAGE.txt');
+    const jpCalls = [...src.matchAll(/\+jp\(\s*'([^']*)'(?:\s*,\s*'([^']*)')?\s*\)/g)];
+    if (jpCalls.length !== 0) {
+        if (!fs.existsSync(coverageFile)) {
+            fail(`+jp 를 ${jpCalls.length}번 쓰는데 ${path.relative(ROOT, coverageFile)} 가 없다`);
+        } else {
+            // 첫 줄들의 주석(#)을 뺀 나머지가 문자 목록이다.
+            const covered = new Set(
+                fs.readFileSync(coverageFile, 'utf8')
+                    .split('\n').filter((l) => !l.startsWith('#')).join(''),
+                // 줄바꿈만 없애야 한다. /\s/ 는 전각 공백(U+3000)까지 지우는데
+                // 그것은 이 문서가 실제로 쓰고 폰트에도 들어 있는 글자다.
+            );
+            const used = new Set();
+            for (const m of jpCalls) for (const ch of (m[1] ?? '') + (m[2] ?? '')) used.add(ch);
+            // 라틴·숫자·공백은 서브셋에 일부러 넣지 않았다. 사이트 기본 폰트가 그린다.
+            const missing = [...used].filter((c) => c.codePointAt(0) > 0x2000 && !covered.has(c));
+            missing.length === 0
+                ? ok(`일본어 폰트 서브셋이 문서를 덮는다 (쓰는 글자 ${used.size}종)`)
+                : fail(`폰트 서브셋에 없는 글자 ${missing.length}자 — 조용히 한국 자형으로 그려진다. `
+                    + `fonts/japanese/README.md 의 절차로 다시 만들어라: ${missing.join('')}`);
+        }
+    }
+
+    // 13) 일본어가 +jp 밖에 있는지
+    //     맨 span(lang='ja') 이나 그냥 적은 일본어는 lang 이 붙지 않아 한국 자형으로
+    //     그려진다. 옆 글자와 견주면 보이지만 혼자 있으면 안 보인다.
+    if (jpCalls.length !== 0) {
+        const JP = /[ぁ-ヿ一-鿿]/;
+        const naked = lines
+            .map((l, i) => [i + 1, l])
+            .filter(([, l]) => JP.test(l) && !/^\s*\/\/-?/.test(l))
+            .filter(([, l]) => JP.test(l.replace(/\+jp\(\s*'[^']*'(\s*,\s*'[^']*')?\s*\)/g, '')));
+        naked.length === 0
+            ? ok('일본어가 전부 +jp 안에 있다')
+            : fail(`+jp 밖의 일본어 ${naked.length}건 — 한국 자형으로 그려진다: `
+                + naked.slice(0, 5).map(([n]) => n + '행').join(', '));
+    }
+
     // 11) 생성된 HTML 안의 자원 참조
     const html = path.join(ROOT, 'posts', file.replace(/^pugs\//, '').replace(/\.pug$/, '.html'));
     if (fs.existsSync(html)) {

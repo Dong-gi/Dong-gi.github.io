@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 286" width="760" height="286" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">낱말에서 바뀌지 않는 부분과 바뀌는 부분</title><desc id="d">한국어와 일본어를 나란히 놓았다. 두 언어 모두 앞부분이 고정되고 꼬리만 갈린다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="46" y="32" text-anchor="start">한국어 — 가다</text><rect x="46" y="44" width="62" height="148" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="77" y="122" text-anchor="middle">가</text><rect x="120" y="44" width="168" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="204" y="65" text-anchor="middle">다</text><rect x="120" y="82" width="168" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="204" y="103" text-anchor="middle">고</text><rect x="120" y="120" width="168" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="204" y="141" text-anchor="middle">서</text><rect x="120" y="158" width="168" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="204" y="179" text-anchor="middle">지 않는다</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="4 4" d="M370 40 L370 200"/><text class="ink2 sm" x="452" y="32" text-anchor="start">일본어 — かく</text><rect x="452" y="44" width="62" height="148" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="483" y="122" text-anchor="middle">か</text><rect x="526" y="44" width="168" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="610" y="65" text-anchor="middle">く</text><rect x="526" y="82" width="168" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="610" y="103" text-anchor="middle">きます</text><rect x="526" y="120" width="168" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="610" y="141" text-anchor="middle">いて</text><rect x="526" y="158" width="168" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="610" y="179" text-anchor="middle">かない</text><text class="ink" x="46" y="226" text-anchor="start">초록 상자는 어느 꼴에서도 그대로다. 바뀌는 것은 오른쪽 꼬리뿐이다</text><text class="ink2 sm" x="46" y="252" text-anchor="start">개념은 두 언어에서 같다. 새로 배울 것은 꼬리의 목록과 만드는 법이다</text><text class="ink2 sm" x="46" y="274" text-anchor="start">가운데 두 줄이 서로 대응한다 — 문장을 잇는 자리다</text></g>
+</svg>

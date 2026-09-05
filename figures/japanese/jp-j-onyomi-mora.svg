@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 268" width="760" height="268" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한국 한자음 한 음절과 음독의 박 수</title><desc id="d">받침이 없으면 음독이 한 박, 받침이 있으면 두 박이 된다. 요음은 글자 둘에 한 박이다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="24" y="84" text-anchor="start">한국</text><text class="ink2 sm" x="24" y="100" text-anchor="start">한자음</text><text class="ink2 sm" x="24" y="156" text-anchor="start">음독의</text><text class="ink2 sm" x="24" y="172" text-anchor="start">박</text><rect x="155" y="62" width="64" height="40" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="187" y="86" text-anchor="middle">기</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M187 106 L187 130"/><rect x="157" y="134" width="60" height="40" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="187" y="158" text-anchor="middle">き</text><text class="ink2 sm" x="187" y="206" text-anchor="middle">1박</text><rect x="383" y="62" width="64" height="40" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="415" y="86" text-anchor="middle">학</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M415 106 L415 130"/><rect x="355" y="134" width="56" height="40" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="383" y="158" text-anchor="middle">が</text><rect x="419" y="134" width="56" height="40" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="447" y="158" text-anchor="middle">く</text><text class="ink2 sm" x="415" y="206" text-anchor="middle">2박</text><rect x="611" y="62" width="64" height="40" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="643" y="86" text-anchor="middle">강</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M643 106 L643 130"/><rect x="575" y="134" width="66" height="40" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="608" y="158" text-anchor="middle">きょ</text><rect x="647" y="134" width="56" height="40" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="675" y="158" text-anchor="middle">う</text><text class="ink2 sm" x="643" y="206" text-anchor="middle">2박 — 가나는 셋</text><text class="ink2 sm" x="150" y="244" text-anchor="start">요음은 가나 두 자를 써도 한 박이다. 받침이 있으면 음독은 두 박이 된다</text></g>
+</svg>

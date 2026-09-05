@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">ている 이 두 뜻으로 갈리는 짜임</title><desc id="d">꼴은 하나이고 갈래는 둘이다. 어느 쪽이 되는지는 앞에 오는 동사가 정한다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><rect x="268" y="108" width="200" height="68" rx="6" fill="none" stroke="var(--ink2)" stroke-width="2"/><text class="ink" x="300" y="150" text-anchor="start" style="font-size:24px">ている</text><rect x="40" y="216" width="228" height="46" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.8"/><text class="ink" x="154" y="243" text-anchor="middle">동사의 성질</text><path class="s3" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar3)" d="M154 216 L340 180"/><text class="f3 sm" x="180" y="200" text-anchor="start">갈래를 정하는 것</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M472 132 L536 76"/><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M472 152 L536 208"/><rect x="540" y="44" width="190" height="62" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="635" y="70" text-anchor="middle">진행</text><text class="ink" x="635" y="88" text-anchor="middle">하는 중이다</text><rect x="540" y="178" width="190" height="62" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="635" y="204" text-anchor="middle">결과 상태</text><text class="ink" x="635" y="222" text-anchor="middle">끝난 뒤의 모습이다</text><text class="ink" x="40" y="40" text-anchor="start">꼴은 하나다</text><text class="ink2 sm" x="40" y="64" text-anchor="start">무엇이 붙었는지를 보고는</text><text class="ink2 sm" x="40" y="82" text-anchor="start">어느 쪽인지 알 수 없다</text><text class="ink" x="40" y="292" text-anchor="start">한국어는 이 갈래를 형태로 갈라 적는다. 그것이 이 장에서 가장 크게 어긋나는 자리다</text></g>
+</svg>

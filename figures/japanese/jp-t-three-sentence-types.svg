@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 292" width="760" height="292" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">술어 자리에 오는 것이 문장의 갈래를 정한다</title><desc id="d">앞부분은 같고 술어 자리만 다른 세 문장이 명사문 · 형용사문 · 동사문으로 갈린다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="50" y="32" text-anchor="start">앞부분이 무엇이든 갈래는 끝의 술어가 정한다</text><rect x="50" y="58" width="190" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-dasharray="5 4"/><text class="ink" x="145" y="84" text-anchor="middle">앞부분</text><rect x="50" y="122" width="190" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-dasharray="5 4"/><text class="ink" x="145" y="148" text-anchor="middle">앞부분</text><rect x="50" y="186" width="190" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-dasharray="5 4"/><text class="ink" x="145" y="212" text-anchor="middle">앞부분</text><rect x="260" y="58" width="215" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="367.5" y="84" text-anchor="middle">がくせいです</text><rect x="260" y="122" width="215" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="367.5" y="148" text-anchor="middle">おもしろいです</text><rect x="260" y="186" width="215" height="44" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="367.5" y="212" text-anchor="middle">よみます</text><text class="f1" x="495" y="85" text-anchor="start">명사문 — 명사가 술어</text><text class="f2" x="495" y="149" text-anchor="start">형용사문 — 형용사가 술어</text><text class="f3" x="495" y="213" text-anchor="start">동사문 — 동사가 술어</text><text class="ink2 sm" x="50" y="266" text-anchor="start">위의 두 갈래는 끝 글자가 같다. 갈래를 가르는 것은 그 앞의 낱말이다</text></g>
+</svg>

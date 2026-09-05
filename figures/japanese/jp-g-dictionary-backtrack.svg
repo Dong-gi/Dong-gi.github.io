@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 364" width="760" height="364" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">활용된 꼴을 사전형으로 되돌리는 길</title><desc id="d">바깥쪽 층부터 하나씩 벗기면 사전에 실려 있는 꼴에 이른다. 벗기는 순서는 붙인 순서의 반대다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="60" y="32" text-anchor="start">글에 나온 꼴</text><text class="ink2 sm" x="420" y="32" text-anchor="start">글에 나온 꼴</text><rect x="60" y="50" width="280" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="200" y="79" text-anchor="middle" style="font-size:17px">かりられません</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M100 96 L100 138"/><text class="ink2 sm" x="116" y="122" text-anchor="start">ません 을 뗀다</text><rect x="60" y="142" width="280" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="200" y="171" text-anchor="middle" style="font-size:17px">かりられる</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M100 188 L100 230"/><text class="ink2 sm" x="116" y="214" text-anchor="start">られる 를 뗀다</text><rect x="60" y="234" width="280" height="44" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.9"/><text class="ink" x="200" y="263" text-anchor="middle" style="font-size:17px">かりる</text><text class="f3" x="200" y="300" text-anchor="middle">사전형 · 2류</text><rect x="420" y="50" width="280" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="560" y="79" text-anchor="middle" style="font-size:17px">よんだり</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M460 96 L460 138"/><text class="ink2 sm" x="476" y="122" text-anchor="start">たり 를 た 로 되돌린다</text><rect x="420" y="142" width="280" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="560" y="171" text-anchor="middle" style="font-size:17px">よんだ</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M460 188 L460 230"/><text class="ink2 sm" x="476" y="214" text-anchor="start">た형에서 사전형으로</text><rect x="420" y="234" width="280" height="44" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.9"/><text class="ink" x="560" y="263" text-anchor="middle" style="font-size:17px">よむ</text><text class="f3" x="560" y="300" text-anchor="middle">사전형 · 1류</text><text class="ink" x="60" y="332" text-anchor="start">사전에 실려 있는 것은 사전형뿐이다. 되돌리지 않으면 찾을 수 없다</text><text class="ink2 sm" x="60" y="356" text-anchor="start">되돌리는 방법은 11장의 활용표를 거꾸로 읽는 것이다</text></g>
+</svg>

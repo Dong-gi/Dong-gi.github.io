@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 352" width="760" height="352" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한국어의 두 대립과 일본어의 두 조사가 겹치는 범위</title><desc id="d">가운데 칸이 두 언어에 함께 있는 범위이고 양쪽 칸이 한쪽에만 있는 것이다. 가운데 칸이 넓다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="32" text-anchor="start">한국어의 대립과 일본어의 두 조사를 나란히 놓고 겹치는 만큼을 가운데에 모았다</text><path fill="none" stroke="var(--s2)" stroke-width="1.8" d="M40 78 V66 H502 V78"/><text class="ink2 sm" x="271" y="58" text-anchor="middle">한국어 — 은/는 대 이/가</text><rect x="40" y="86" width="200" height="150" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink sm" x="140" y="108" text-anchor="middle">한국어 쪽만</text><text class="ink sm" x="140" y="127" text-anchor="middle"> </text><text class="ink sm" x="140" y="146" text-anchor="middle">아님 앞에</text><text class="ink sm" x="140" y="165" text-anchor="middle">이/가 가 온다</text><text class="ink sm" x="140" y="184" text-anchor="middle"> </text><text class="ink sm" x="140" y="203" text-anchor="middle">좋아함을</text><text class="ink sm" x="140" y="222" text-anchor="middle">을/를 로 나타낸다</text><rect x="252" y="86" width="250" height="150" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="377" y="117.5" text-anchor="middle">겹치는 범위</text><text class="ink" x="377" y="136.5" text-anchor="middle"> </text><text class="ink" x="377" y="155.5" text-anchor="middle">주제 자리에 은/는 과 は</text><text class="ink" x="377" y="174.5" text-anchor="middle">주어 자리에 이/가 와 が</text><text class="ink" x="377" y="193.5" text-anchor="middle"> </text><text class="ink" x="377" y="212.5" text-anchor="middle">대비도 양쪽이 함께 한다</text><rect x="514" y="86" width="206" height="150" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink sm" x="617" y="108" text-anchor="middle">일본어 쪽만</text><text class="ink sm" x="617" y="127" text-anchor="middle"> </text><text class="ink sm" x="617" y="146" text-anchor="middle">절 안에서는</text><text class="ink sm" x="617" y="165" text-anchor="middle">が 만 온다</text><text class="ink sm" x="617" y="184" text-anchor="middle"> </text><text class="ink sm" x="617" y="203" text-anchor="middle">대상에도 が 가 온다</text><text class="ink sm" x="617" y="222" text-anchor="middle">아님을 말할 때 では</text><path fill="none" stroke="var(--s1)" stroke-width="1.8" d="M252 244 V256 H720 V244"/><text class="ink2 sm" x="486" y="276" text-anchor="middle">일본어 — は 대 が</text><text class="ink" x="40" y="312" text-anchor="start">겹치는 범위가 넓다는 것이 이득이고, 같은 이유로 함정이다</text><text class="ink2 sm" x="40" y="338" text-anchor="start">양쪽 칸이 좁아서 알아채지 못하고 지나가게 된다. 이 장은 그 두 칸에 지면을 쓴다</text></g>
+</svg>

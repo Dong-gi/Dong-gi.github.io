@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 280" width="760" height="280" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">짐작 표현을 확신의 세기로 늘어놓은 것</title><desc id="d">왼쪽이 약하고 오른쪽이 강하다. 자리는 재어 얻은 값이 아니고, 가운데 셋은 교재마다 자리가 다르다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="30" text-anchor="start">재어 얻은 값이 아니다. 교재가 대개 이 순서로 늘어놓는다</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M70 120 L715 120"/><text class="ink2 sm" x="70" y="146" text-anchor="start">약함</text><text class="ink2 sm" x="700" y="146" text-anchor="end">강함</text><path fill="none" stroke="var(--ink2)" stroke-width="1.2" d="M150 104 L150 120"/><text class="ink" x="150" y="96" text-anchor="middle">かもしれない</text><text class="ink2 sm" x="150" y="76" text-anchor="middle">가능성만 있다</text><path fill="none" stroke="var(--ink2)" stroke-width="1.2" d="M330 104 L330 120"/><text class="ink" x="330" y="96" text-anchor="middle">でしょう · だろう</text><text class="ink2 sm" x="330" y="76" text-anchor="middle">근거를 대지 않는다</text><path fill="none" stroke="var(--ink2)" stroke-width="1.2" d="M520 104 L520 120"/><text class="ink" x="520" y="96" text-anchor="middle">はずだ</text><text class="ink2 sm" x="520" y="76" text-anchor="middle">아는 사실에서 따라 나온다</text><path fill="none" stroke="var(--ink2)" stroke-width="1.2" d="M660 104 L660 120"/><text class="ink" x="660" y="96" text-anchor="middle">にちがいない</text><text class="ink2 sm" x="660" y="76" text-anchor="middle">단정에 가깝다</text><rect x="300" y="176" width="300" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-dasharray="5 4"/><text class="ink" x="450" y="202" text-anchor="middle">ようだ · らしい · みたいだ</text><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" stroke-dasharray="5 4" d="M450 176 L450 132"/><text class="f2 sm" x="620" y="202" text-anchor="start">이 셋의 자리는</text><text class="f2 sm" x="620" y="220" text-anchor="start">교재마다 다르다</text><text class="ink2 sm" x="40" y="258" text-anchor="start">이 축만으로는 고르지 못한다. 근거의 종류를 함께 보아야 한다</text></g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" width="760" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">기사 본문에서 표제로 가는 세 단계</title><desc id="d">정중함을 떼고, 조사를 빼고, 문장 끝을 명사로 바꾼다. 매 단계에서 사라지는 것이 다르다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="30" text-anchor="start">위에서 아래로 내려가면서 무엇이 사라지는지 오른쪽에 적었다</text><rect x="40" y="56" width="440" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="260" y="82" text-anchor="middle">たいふうが きゅうしゅうに じょうりくしました</text><text class="f2 sm" x="500" y="74" text-anchor="start">정중체로 쓴 문장</text><text class="ink2 sm" x="500" y="92" text-anchor="start">기사 본문에는 이 꼴이 안 나온다</text><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M120 104 L120 132"/><text class="ink2 sm" x="136" y="124" text-anchor="start">정중함을 뗀다</text><rect x="40" y="138" width="440" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="260" y="164" text-anchor="middle">たいふうが きゅうしゅうに じょうりくした</text><text class="f1 sm" x="500" y="164" text-anchor="start">기사 본문의 꼴</text><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M120 186 L120 214"/><text class="ink2 sm" x="136" y="206" text-anchor="start">조사를 빼고 문장 끝을 명사로 바꾼다</text><rect x="40" y="220" width="440" height="44" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="260" y="246" text-anchor="middle">たいふう、きゅうしゅうに じょうりく</text><text class="f3 sm" x="500" y="238" text-anchor="start">표제의 꼴</text><text class="ink2 sm" x="500" y="256" text-anchor="start">읽는 쪽이 빠진 것을 채운다</text><text class="ink2 sm" x="40" y="292" text-anchor="start">빠진 조사는 아무거나가 아니다. 사라진 것은 앞의 낱말에 붙어 있던 が 하나다</text><text class="f3 sm" x="40" y="312" text-anchor="start">に 는 남았다. 빼면 어느 곳인지가 정해지지 않기 때문이다</text></g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 262" width="700" height="262" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">로마자 표기가 두 갈래로 갈리는 자리</title><desc id="d">가나 여섯 칸에 두 로마자 표기 체계를 나란히 적어, 여섯 칸 가운데 다섯 칸이 서로 다르게 적힌다는 것을 보인 것</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink2 sm" x="40" y="46" text-anchor="start">같은 가나를 로마자로 적는 두 방식</text><text class="ink2 sm" x="190" y="100" text-anchor="end">가나</text><text class="ink2 sm" x="190" y="155" text-anchor="end">헵번식</text><text class="ink2 sm" x="190" y="200" text-anchor="end">훈령식</text><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="210" y="100" text-anchor="middle" font-size="28">か</text></g><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="290" y="100" text-anchor="middle" font-size="28">し</text></g><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="370" y="100" text-anchor="middle" font-size="28">つ</text></g><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="450" y="100" text-anchor="middle" font-size="28">ち</text></g><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="530" y="100" text-anchor="middle" font-size="28">ふ</text></g><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="610" y="100" text-anchor="middle" font-size="28">じ</text></g><text class="ink" x="210" y="155" text-anchor="middle">ka</text><text class="ink" x="290" y="155" text-anchor="middle">shi</text><text class="ink" x="370" y="155" text-anchor="middle">tsu</text><text class="ink" x="450" y="155" text-anchor="middle">chi</text><text class="ink" x="530" y="155" text-anchor="middle">fu</text><text class="ink" x="610" y="155" text-anchor="middle">ji</text><text class="ink" x="210" y="200" text-anchor="middle">ka</text><text class="ink" x="290" y="200" text-anchor="middle">si</text><text class="ink" x="370" y="200" text-anchor="middle">tu</text><text class="ink" x="450" y="200" text-anchor="middle">ti</text><text class="ink" x="530" y="200" text-anchor="middle">hu</text><text class="ink" x="610" y="200" text-anchor="middle">zi</text><rect x="255" y="130" width="395" height="88" rx="6" class="s2" fill="none" stroke-width="1.5" stroke-dasharray="5 4"/><text class="ink2 sm" x="452" y="240" text-anchor="middle">왼쪽 한 칸만 같고 나머지 다섯 칸은 갈린다</text>
+</svg>

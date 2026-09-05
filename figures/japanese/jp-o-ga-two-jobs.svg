@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 322" width="760" height="322" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">같은 조사가 서로 다른 두 자리를 표시한다</title><desc id="d">자동사 문장에서 が 는 변화를 겪는 것을 표시하고, 9장이 이름 붙인 대상의 が 는 상태가 향하는 대상을 표시한다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="f1" x="40" y="30" text-anchor="start">자동사의 が — 변화를 겪는 것 자체</text><rect x="40" y="44" width="170" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="125" y="70" text-anchor="middle">まどが</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M214 66 L268 66"/><rect x="272" y="44" width="150" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="347" y="70" text-anchor="middle">あく</text><text class="ink" x="444" y="62" text-anchor="start">사람이 들어갈 자리가 없다</text><text class="ink2 sm" x="444" y="82" text-anchor="start">넣으면 타동사 문장이 된다</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" d="M40 108 L720 108"/><text class="f2" x="40" y="136" text-anchor="start">대상의 が — 상태가 향하는 대상. 9장이 이름 붙였다</text><rect x="40" y="150" width="150" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-dasharray="5 4"/><text class="ink" x="115" y="176" text-anchor="middle">わたしは</text><rect x="200" y="150" width="180" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="290" y="176" text-anchor="middle">にほんごが</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M384 172 L438 172"/><rect x="442" y="150" width="150" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="517" y="176" text-anchor="middle">わかる</text><text class="ink" x="40" y="218" text-anchor="start">아는 것은 사람이고, が 가 표시한 것은 아는 대상이다</text><rect x="40" y="240" width="680" height="62" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="380" y="265" text-anchor="middle">가리는 시험 — は 자리에 사람을 넣어 보라</text><text class="ink" x="380" y="285" text-anchor="middle">넣을 자리가 있으면 대상의 が 이고, 없으면 자동사의 が 다</text></g>
+</svg>

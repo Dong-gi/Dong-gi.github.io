@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" width="760" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">주제가 걸치는 범위와 주격이 걸치는 범위</title><desc id="d">주제는 첫 문장에서 한 번 표시되고 뒤 문장까지 걸친다. 뒤 문장의 빈 자리는 그 주제가 채운다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="34" text-anchor="start">이어지는 세 문장</text><rect x="150" y="52" width="510" height="46" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-dasharray="4 3"/><rect x="162" y="62" width="160" height="26" rx="4" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink sm" x="242" y="79" text-anchor="middle">주제 + は</text><rect x="336" y="62" width="150" height="26" rx="4" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink sm" x="411" y="79" text-anchor="middle">무엇을 + を</text><rect x="500" y="62" width="148" height="26" rx="4" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink sm" x="574" y="79" text-anchor="middle">술어</text><rect x="150" y="116" width="510" height="46" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-dasharray="4 3"/><rect x="162" y="126" width="160" height="26" rx="4" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-dasharray="4 3"/><text class="ink sm" x="242" y="143" text-anchor="middle">빈 자리</text><rect x="336" y="126" width="150" height="26" rx="4" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink sm" x="411" y="143" text-anchor="middle">무엇을 + を</text><rect x="500" y="126" width="148" height="26" rx="4" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink sm" x="574" y="143" text-anchor="middle">술어</text><rect x="150" y="180" width="510" height="46" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-dasharray="4 3"/><rect x="162" y="190" width="160" height="26" rx="4" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-dasharray="4 3"/><text class="ink sm" x="242" y="207" text-anchor="middle">빈 자리</text><rect x="336" y="190" width="150" height="26" rx="4" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink sm" x="411" y="207" text-anchor="middle">무엇 + が</text><rect x="500" y="190" width="148" height="26" rx="4" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink sm" x="574" y="207" text-anchor="middle">술어</text><path fill="none" stroke="var(--s3)" stroke-width="1.8" d="M140 52 L128 52 L128 226 L140 226"/><text class="ink2 sm" x="30" y="130" text-anchor="start">주제가</text><text class="ink2 sm" x="30" y="148" text-anchor="start">걸치는</text><text class="ink2 sm" x="30" y="166" text-anchor="start">범위</text><path fill="none" stroke="var(--s1)" stroke-width="1.8" d="M670 180 L682 180 L682 226 L670 226"/><text class="ink2 sm" x="692" y="208" text-anchor="start">が 는</text><text class="ink2 sm" x="692" y="226" text-anchor="start">이 문장뿐</text><text class="ink" x="40" y="262" text-anchor="start">주제는 한 문장에 갇히지 않는다. 그래서 뒤 문장의 주어 자리가 빈다</text><text class="ink2 sm" x="40" y="288" text-anchor="start">빈 자리를 채우는 것은 앞 문장의 주제다. 새 주제가 나올 때까지 이어진다</text><text class="ink2 sm" x="40" y="312" text-anchor="start">주격 표시는 그 문장 하나에만 걸린다. 다음 문장으로 넘어가지 않는다</text></g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" width="760" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">꼬리를 잘못 붙이는 두 방향</title><desc id="d">왼쪽 두 몸통과 오른쪽 두 꼬리 묶음. 곧은 선이 옳은 결합이고 점선이 어긋난 결합이다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="26" text-anchor="start">꼬리를 어느 몸통에 붙이는가</text><rect x="40" y="66" width="160" height="48" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text x="120" y="88.5" text-anchor="middle" class="ink" style="font-size:18px">たか</text><text x="120" y="105.5" text-anchor="middle" class="ink2" style="font-size:11px">い형용사의 어간</text><rect x="40" y="196" width="160" height="48" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text x="120" y="218.5" text-anchor="middle" class="ink" style="font-size:18px">しずか</text><text x="120" y="235.5" text-anchor="middle" class="ink2" style="font-size:11px">な형용사</text><rect x="430" y="48" width="290" height="76" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text x="575" y="83.5" text-anchor="middle" class="f1" style="font-size:16px">かった · くない · く</text><text x="575" y="100.5" text-anchor="middle" class="ink2" style="font-size:11px">い형용사의 꼬리</text><rect x="430" y="188" width="290" height="76" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text x="575" y="223.5" text-anchor="middle" class="f2" style="font-size:16px">だった · ではない · に</text><text x="575" y="240.5" text-anchor="middle" class="ink2" style="font-size:11px">な형용사의 꼬리</text><path class="s3" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)" d="M204 86 L424 86"/><path class="s3" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)" d="M204 224 L424 224"/><path class="ax" fill="none" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ark)" stroke-dasharray="5 4" d="M204 100 L424 200"/><path class="ax" fill="none" stroke-width="1.2" stroke-linecap="round" marker-end="url(#ark)" stroke-dasharray="5 4" d="M204 212 L424 112"/><text x="272" y="137" text-anchor="middle" class="ink2" style="font-size:17px">×</text><text x="272" y="186" text-anchor="middle" class="ink2" style="font-size:17px">×</text><text class="ink2 sm" x="40" y="294" text-anchor="start">× たかいだ  × たかいな — い형용사에 な형용사 쪽의 꼬리를 붙인 것</text><text class="ink2 sm" x="40" y="316" text-anchor="start">× しずかくない — な형용사에 い형용사 쪽의 꼬리를 붙인 것</text></g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 344" width="760" height="344" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">명사를 꾸미는 절 안의 꼴은 무엇을 기준으로 정해지는가</title><desc id="d">두 줄에서 말하는 때의 자리가 서로 다르다. 그래도 절 안의 꼴은 같은 규칙으로 정해진다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="f1" x="40" y="30" text-anchor="start">절이 사전형일 때 — 절의 일이 주절의 일보다 뒤</text><path class="ax" fill="none" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ark)" d="M50 92 L726 92"/><path fill="none" stroke="var(--s1)" stroke-width="2.4" d="M300 74 V110"/><path fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-dasharray="4 3" d="M470 74 V110"/><path fill="none" stroke="var(--ink2)" stroke-width="2" d="M630 66 V118"/><text class="f1 sm" x="300" y="66" text-anchor="middle">주절의 일</text><text class="f2 sm" x="470" y="132" text-anchor="middle">절의 일</text><text class="ink2 sm" x="630" y="60" text-anchor="middle">말하는 때</text><text class="ink2 sm" x="300" y="132" text-anchor="middle">여기서 문장이 끝난다</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="5 4" d="M40 176 L720 176"/><text class="f2" x="40" y="210" text-anchor="start">절이 た형일 때 — 절의 일이 주절의 일보다 앞</text><path class="ax" fill="none" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ark)" d="M50 272 L726 272"/><path fill="none" stroke="var(--ink2)" stroke-width="2" d="M140 246 V298"/><path fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-dasharray="4 3" d="M360 254 V290"/><path fill="none" stroke="var(--s1)" stroke-width="2.4" d="M540 254 V290"/><text class="ink2 sm" x="140" y="240" text-anchor="middle">말하는 때</text><text class="f2 sm" x="360" y="240" text-anchor="middle">절의 일</text><text class="f1 sm" x="540" y="240" text-anchor="middle">주절의 일</text><text class="ink" x="40" y="334" text-anchor="start">위는 주절이 지난 일이고 아래는 앞일이다. 절 안의 꼴은 말하는 때와 무관하게 정해진다</text></g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 342" width="740" height="342" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">조사가 들어가는 두 자리</title><desc id="d">명사와 술어 사이에 격조사 자리와 부조사 자리가 차례로 있고, 각 자리에 들어가는 조사 목록이 아래에 있다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="34" text-anchor="start">조사가 들어가는 자리</text><rect x="40" y="46" width="120" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="100" y="72" text-anchor="middle">명사</text><rect x="172" y="46" width="120" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text class="ink" x="232" y="72" text-anchor="middle">격조사</text><rect x="304" y="46" width="120" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.8" stroke-dasharray="5 4"/><text class="ink" x="364" y="72" text-anchor="middle">부조사</text><rect x="436" y="46" width="120" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="496" y="72" text-anchor="middle">술어</text><text class="ink2 sm" x="364" y="108" text-anchor="middle">없어도 된다</text><rect x="40" y="138" width="330" height="162" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="60" y="164" text-anchor="start">격조사 — 관계를 정한다</text><text class="ink2 sm" x="60" y="184" text-anchor="start">갈아 끼우면 명사와 술어의 관계가 바뀐다</text><text class="ink" x="64" y="232" text-anchor="start" style="font-size:22px">が</text><text class="ink" x="122" y="232" text-anchor="start" style="font-size:22px">を</text><text class="ink" x="180" y="232" text-anchor="start" style="font-size:22px">に</text><text class="ink" x="238" y="232" text-anchor="start" style="font-size:22px">で</text><text class="ink" x="296" y="232" text-anchor="start" style="font-size:22px">へ</text><text class="ink" x="64" y="276" text-anchor="start" style="font-size:22px">と</text><text class="ink" x="142" y="276" text-anchor="start" style="font-size:22px">から</text><text class="ink" x="220" y="276" text-anchor="start" style="font-size:22px">まで</text><text class="ink" x="298" y="276" text-anchor="start" style="font-size:22px">より</text><rect x="396" y="138" width="316" height="162" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-dasharray="5 4"/><text class="ink" x="416" y="164" text-anchor="start">부조사 — 뜻을 더한다</text><text class="ink2 sm" x="416" y="184" text-anchor="start">갈아 끼워도 관계는 그대로다</text><text class="ink" x="420" y="232" text-anchor="start" style="font-size:22px">も</text><text class="ink" x="498" y="232" text-anchor="start" style="font-size:22px">だけ</text><text class="ink" x="420" y="276" text-anchor="start" style="font-size:22px">しか</text><text class="ink" x="516" y="276" text-anchor="start" style="font-size:22px">ばかり</text><text class="ink2 sm" x="40" y="330" text-anchor="start">문장 끝에 붙는 갈래가 따로 있고 이 장은 다루지 않는다</text></g>
+</svg>

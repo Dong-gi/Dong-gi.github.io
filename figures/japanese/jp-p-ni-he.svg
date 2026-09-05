@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 306" width="780" height="306" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">に 와 へ 가 겹치는 범위</title><desc id="d">가운데 칸에서만 두 조사를 바꿔 쓸 수 있고 양쪽 칸은 한쪽만 된다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="32" text-anchor="start">세 칸으로 나뉜다</text><rect x="40" y="46" width="226" height="232" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text class="ink" x="56" y="78" text-anchor="start" style="font-size:24px">に</text><text class="ink" x="88" y="74" text-anchor="start">만 되는 자리</text><text class="ink" x="56" y="116" text-anchor="start">있는 곳</text><text class="ink" x="56" y="140" text-anchor="start">상대</text><text class="ink" x="56" y="164" text-anchor="start">시각</text><text class="ink" x="56" y="188" text-anchor="start">변화의 결과</text><text class="ink" x="56" y="226" text-anchor="start" style="font-size:16px">とうきょう<tspan fill="var(--s2)" font-weight="700">に</tspan>います</text><text class="ink2 sm" x="56" y="252" text-anchor="start">방향만 남으면 있다는 뜻이 사라진다</text><rect x="278" y="46" width="226" height="232" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.8"/><text class="ink" x="294" y="74" text-anchor="start">둘 다 되는 자리</text><text class="ink" x="294" y="116" text-anchor="start">이동 동사의 도착점</text><text class="ink" x="294" y="156" text-anchor="start" style="font-size:16px">とうきょう<tspan fill="var(--s2)" font-weight="700">に</tspan>いきます</text><text class="ink" x="294" y="186" text-anchor="start" style="font-size:16px">とうきょう<tspan fill="var(--s2)" font-weight="700">へ</tspan>いきます</text><text class="ink2 sm" x="294" y="226" text-anchor="start">무게만 다르다</text><text class="ink2 sm" x="294" y="248" text-anchor="start">앞은 닿는 지점, 뒤는 향하는 방향</text><rect x="516" y="46" width="226" height="232" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text class="ink" x="532" y="78" text-anchor="start" style="font-size:24px">へ</text><text class="ink" x="564" y="74" text-anchor="start">만 되는 자리</text><text class="ink" x="532" y="116" text-anchor="start">명사를 꾸미는 자리</text><text class="ink" x="532" y="156" text-anchor="start" style="font-size:16px">はは<tspan fill="var(--s2)" font-weight="700">への</tspan>てがみ</text><text class="ink2 sm" x="532" y="194" text-anchor="start">어머니에게 보내는 편지</text><text class="ink2 sm" x="532" y="226" text-anchor="start">앞의 조사는 이 자리에</text><text class="ink2 sm" x="532" y="246" text-anchor="start">들어가지 못한다</text></g>
+</svg>

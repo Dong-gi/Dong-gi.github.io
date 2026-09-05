@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 288" width="760" height="288" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">음편이 나타나는 자리</title><desc id="d">한 동사의 여러 꼴 가운데 소리가 바뀌는 것은 두 꼴뿐이고 나머지는 꼬리만 갈아 붙는다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><rect x="40" y="106" width="130" height="54" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text class="ink" x="105" y="137" text-anchor="middle">かく</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M174 118 L328 78"/><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" d="M174 148 L328 200"/><rect x="332" y="40" width="388" height="78" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="526" y="71" text-anchor="middle">かかない · かきます · かけば</text><text class="ink" x="526" y="95" text-anchor="middle">かける · かこう · かけ</text><text class="ink2 sm" x="332" y="138" text-anchor="start">꼬리만 갈아 붙는다. 앞의 か 는 그대로다</text><rect x="332" y="170" width="388" height="58" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text class="ink" x="526" y="203" text-anchor="middle">かいて · かいた</text><text class="f2 sm" x="332" y="248" text-anchor="start">앞 소리까지 바뀌었다 — 이것이 음편이다</text><text class="ink" x="40" y="278" text-anchor="start">음편은 て형과 た형에서만 일어난다. 다른 꼴에서는 소리가 바뀌지 않는다</text></g>
+</svg>

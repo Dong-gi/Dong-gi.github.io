@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 352" width="760" height="352" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">문장 끝에 붙는 층의 순서와 그 층을 다루는 장</title><desc id="d">여덟 층이 안쪽에서 바깥쪽으로 정해진 순서로 붙고, 층마다 다루는 장이 다르다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="30" y="30" text-anchor="start">위가 뜻에 가까운 안쪽, 아래가 문장 끝이다</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M78 48 L78 320"/><text class="ink2 sm" x="30" y="52" text-anchor="start">안쪽</text><text class="ink2 sm" x="24" y="318" text-anchor="start">바깥쪽</text><rect x="110" y="44" width="500" height="28" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text class="ink" x="360" y="62" text-anchor="middle">뜻을 지는 부분</text><text class="ink2 sm" x="626" y="62" text-anchor="start">11장 · 12장</text><rect x="110" y="78" width="500" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink" x="360" y="96" text-anchor="middle">하는 쪽과 받는 쪽의 관계</text><text class="ink2 sm" x="626" y="96" text-anchor="start">14장</text><rect x="110" y="112" width="500" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink" x="360" y="130" text-anchor="middle">모습 — 진행 중인가, 끝난 뒤의 상태인가</text><text class="ink2 sm" x="626" y="130" text-anchor="start">13장</text><rect x="110" y="146" width="500" height="28" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="360" y="164" text-anchor="middle">정중함</text><text class="ink2 sm" x="626" y="164" text-anchor="start">16장 · 18장</text><rect x="110" y="180" width="500" height="28" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="360" y="198" text-anchor="middle">부정</text><text class="ink2 sm" x="626" y="198" text-anchor="start">11장 · 12장</text><rect x="110" y="214" width="500" height="28" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="360" y="232" text-anchor="middle">때 — 지난 일인가</text><text class="ink2 sm" x="626" y="232" text-anchor="start">13장</text><rect x="110" y="248" width="500" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink" x="360" y="266" text-anchor="middle">태도 — 단정인가, 추측인가</text><text class="ink2 sm" x="626" y="266" text-anchor="start">17장</text><rect x="110" y="282" width="500" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink" x="360" y="300" text-anchor="middle">문장 끝의 짧은 말 — 물음도 여기 든다</text><text class="ink2 sm" x="626" y="300" text-anchor="start">17장</text><text class="ink2 sm" x="110" y="340" text-anchor="start">이 순서는 정해져 있다. 층을 바꿔 붙일 수 없다</text></g>
+</svg>

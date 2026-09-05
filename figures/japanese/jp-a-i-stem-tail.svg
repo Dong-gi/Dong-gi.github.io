@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">い형용사의 어간과 꼬리</title><desc id="d">왼쪽 어간은 그대로 있고 오른쪽 꼬리 다섯 개가 갈아 붙는다. 꼬리마다 활용형의 이름이 붙어 있다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="26" text-anchor="start">い형용사 — 어간은 그대로 있고 꼬리만 갈린다</text><rect x="40" y="60" width="140" height="160" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="110" y="141" text-anchor="middle" class="ink" style="font-size:24px;font-weight:600">たか</text><text x="110" y="159" text-anchor="middle" class="ink2" style="font-size:12px">어간</text><path class="s1" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M184 140 L286 61"/><rect x="290" y="44" width="110" height="34" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text x="345" y="67.5" text-anchor="middle" class="f1" style="font-size:17px;font-weight:600">い</text><text class="ink2" x="418" y="66" text-anchor="start">사전형</text><text x="510" y="67" text-anchor="start" class="ink" style="font-size:16px">たかい</text><path class="s1" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M184 140 L286 103"/><rect x="290" y="86" width="110" height="34" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text x="345" y="109.5" text-anchor="middle" class="f1" style="font-size:17px;font-weight:600">かった</text><text class="ink2" x="418" y="108" text-anchor="start">た형</text><text x="510" y="109" text-anchor="start" class="ink" style="font-size:16px">たかかった</text><path class="s1" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M184 140 L286 145"/><rect x="290" y="128" width="110" height="34" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text x="345" y="151.5" text-anchor="middle" class="f1" style="font-size:17px;font-weight:600">くない</text><text class="ink2" x="418" y="150" text-anchor="start">ない형</text><text x="510" y="151" text-anchor="start" class="ink" style="font-size:16px">たかくない</text><path class="s1" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M184 140 L286 187"/><rect x="290" y="170" width="110" height="34" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text x="345" y="193.5" text-anchor="middle" class="f1" style="font-size:17px;font-weight:600">くて</text><text class="ink2" x="418" y="192" text-anchor="start">て형</text><text x="510" y="193" text-anchor="start" class="ink" style="font-size:16px">たかくて</text><path class="s1" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ar1)" d="M184 140 L286 229"/><rect x="290" y="212" width="110" height="34" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text x="345" y="235.5" text-anchor="middle" class="f1" style="font-size:17px;font-weight:600">く</text><text class="ink2" x="418" y="234" text-anchor="start">부사형</text><text x="510" y="235" text-anchor="start" class="ink" style="font-size:16px">たかく</text><text class="ink2 sm" x="40" y="268" text-anchor="start">ない형은 그 자체가 い 로 끝나므로 다시 같은 규칙으로 활용한다 — たかくなかった</text></g>
+</svg>

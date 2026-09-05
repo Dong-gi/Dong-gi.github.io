@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 338" width="760" height="338" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">절을 잇는 말의 갈래 넷</title><desc id="d">이유 · 뒤집기 · 조건 · 그 밖의 네 갈래와 각 갈래에 드는 말들. 넷 모두 앞 절의 술어 뒤에 붙는다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="20" y="30" text-anchor="start">잇는 말은 갈래가 넷이다</text><rect x="20" y="48" width="168" height="200" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="104" y="74" text-anchor="middle">이유</text><path fill="none" stroke="var(--s1)" stroke-width="1.2" d="M40 86 L168 86"/><text class="ink" x="104" y="116" text-anchor="middle" style="font-size:16px">から</text><text class="ink" x="104" y="142" text-anchor="middle" style="font-size:16px">ので</text><text class="ink2 sm" x="104" y="218" text-anchor="middle">앞 절이 뒤 절의</text><text class="ink2 sm" x="104" y="236" text-anchor="middle">이유가 된다</text><rect x="204" y="48" width="168" height="200" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="288" y="74" text-anchor="middle">뒤집기</text><path fill="none" stroke="var(--s2)" stroke-width="1.2" d="M224 86 L352 86"/><text class="ink" x="288" y="116" text-anchor="middle" style="font-size:16px">が</text><text class="ink" x="288" y="142" text-anchor="middle" style="font-size:16px">けど</text><text class="ink" x="288" y="168" text-anchor="middle" style="font-size:16px">のに</text><text class="ink2 sm" x="288" y="218" text-anchor="middle">앞에서 기대되는 것과</text><text class="ink2 sm" x="288" y="236" text-anchor="middle">뒤가 어긋난다</text><rect x="388" y="48" width="168" height="200" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="472" y="74" text-anchor="middle">조건</text><path fill="none" stroke="var(--s3)" stroke-width="1.2" d="M408 86 L536 86"/><text class="ink" x="472" y="116" text-anchor="middle" style="font-size:16px">と</text><text class="ink" x="472" y="142" text-anchor="middle" style="font-size:16px">ば</text><text class="ink" x="472" y="168" text-anchor="middle" style="font-size:16px">たら</text><text class="ink" x="472" y="194" text-anchor="middle" style="font-size:16px">なら</text><text class="ink2 sm" x="472" y="218" text-anchor="middle">앞이 성립하면</text><text class="ink2 sm" x="472" y="236" text-anchor="middle">뒤가 성립한다</text><rect x="572" y="48" width="168" height="200" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="656" y="74" text-anchor="middle">그 밖</text><path fill="none" stroke="var(--ink2)" stroke-width="1.2" d="M592 86 L720 86"/><text class="ink" x="656" y="116" text-anchor="middle" style="font-size:16px">ながら</text><text class="ink" x="656" y="142" text-anchor="middle" style="font-size:16px">たり</text><text class="ink2 sm" x="656" y="218" text-anchor="middle">동시에 함 · 여럿을</text><text class="ink2 sm" x="656" y="236" text-anchor="middle">늘어놓음</text><rect x="20" y="268" width="720" height="46" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-dasharray="6 4"/><text class="ink" x="380" y="295" text-anchor="middle">넷 다 앞 절의 술어 뒤에 붙는다 — 명사 뒤에 붙는 조사와 자리가 다르다</text></g>
+</svg>

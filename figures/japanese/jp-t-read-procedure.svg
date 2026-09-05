@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 350" width="760" height="350" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">일본어 문장을 읽는 순서</title><desc id="d">문장의 끝을 먼저 보고 술어를 잡은 뒤, 갈래와 층을 확인하고 앞의 덩어리로 되돌아온다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="26" text-anchor="start">앞에서부터 읽어 나가지 않는다. 끝을 먼저 본다</text><text class="ink2" x="92" y="62" text-anchor="middle">1</text><rect x="120" y="40" width="520" height="38" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="380" y="63" text-anchor="middle">문장의 끝을 본다 — 거기 있는 것이 술어다</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M380 82 L380 98"/><text class="ink2" x="92" y="122" text-anchor="middle">2</text><rect x="120" y="100" width="520" height="38" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="380" y="123" text-anchor="middle">술어가 무엇인지 보고 갈래를 정한다</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M380 142 L380 158"/><text class="ink2" x="92" y="182" text-anchor="middle">3</text><rect x="120" y="160" width="520" height="38" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="380" y="183" text-anchor="middle">술어에 붙은 층을 벗겨 읽는다 — 부정인가, 지난 일인가</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M380 202 L380 218"/><text class="ink2" x="92" y="242" text-anchor="middle">4</text><rect x="120" y="220" width="520" height="38" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="380" y="243" text-anchor="middle">앞으로 되돌아가 조사를 보고 덩어리의 구실을 짚는다</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M380 262 L380 278"/><text class="ink2" x="92" y="302" text-anchor="middle">5</text><rect x="120" y="280" width="520" height="38" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="380" y="303" text-anchor="middle">표시되지 않은 자리가 있으면 문맥으로 채운다</text><text class="ink2 sm" x="120" y="342" text-anchor="start">술어를 잡기 전에는 앞의 덩어리가 무엇에 대한 것인지 정해지지 않는다</text></g>
+</svg>

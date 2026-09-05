@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 268" width="760" height="268" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">지난 일에는 꼴이 따로 있고 앞일에는 없다</title><desc id="d">말하는 때 왼쪽만 따로 꼴을 가진다. 오른쪽은 지금과 앞일이 한 꼴을 함께 쓴다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><path class="ax" fill="none" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ark)" d="M50 96 L726 96"/><path fill="none" stroke="var(--ink2)" stroke-width="2" d="M330 76 V116"/><text class="ink2 sm" x="330" y="136" text-anchor="middle">말하는 때</text><text class="ink2" x="170" y="72" text-anchor="middle">지난 일</text><text class="ink2" x="430" y="72" text-anchor="middle">지금</text><text class="ink2" x="600" y="72" text-anchor="middle">앞일</text><rect x="60" y="158" width="240" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text class="ink" x="180" y="184" text-anchor="middle">た형</text><rect x="360" y="158" width="366" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text class="ink" x="543" y="184" text-anchor="middle">사전형 · ます형</text><path fill="none" stroke="var(--s1)" stroke-width="1.2" d="M180 116 L180 158"/><path fill="none" stroke="var(--s2)" stroke-width="1.2" d="M430 116 L430 158"/><path fill="none" stroke="var(--s2)" stroke-width="1.2" d="M600 116 L600 158"/><text class="ink" x="40" y="234" text-anchor="start">앞일만 가리키는 꼴이 따로 없다. 오른쪽 상자 하나가 지금과 앞일을 함께 맡는다</text><text class="ink2 sm" x="40" y="258" text-anchor="start">한국어도 이 자리는 같다 — ‘읽는다’ 가 지금과 앞일을 함께 맡는다</text></g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" width="760" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한국어 쪽에서는 넷으로 갈리는 것이 일본어에서는 한 꼴이다</title><desc id="d">왼쪽 네 가지가 오른쪽 한 꼴로 모인다. 그래서 형태가 갈래를 알려 주지 않는다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="30" text-anchor="start">한국어</text><text class="ink2 sm" x="560" y="30" text-anchor="start">일본어</text><rect x="40" y="44" width="300" height="40" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="190" y="68" text-anchor="middle">…고 있다 — 읽고 있다</text><rect x="40" y="96" width="300" height="40" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="190" y="120" text-anchor="middle">…어 있다 — 앉아 있다</text><rect x="40" y="148" width="300" height="40" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="190" y="172" text-anchor="middle">과거형 — 결혼했다</text><rect x="40" y="200" width="300" height="40" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="190" y="224" text-anchor="middle">현재형 — 안다</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M346 64 L528 140"/><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M346 116 L528 150"/><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M346 168 L528 160"/><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M346 220 L528 170"/><rect x="532" y="122" width="190" height="66" rx="6" fill="none" stroke="var(--ink2)" stroke-width="2"/><text class="ink" x="560" y="164" text-anchor="start" style="font-size:22px">ている</text><text class="ink" x="40" y="286" text-anchor="start">왼쪽에서 어느 칸을 골라야 하는지는 일본어 쪽 형태가 알려 주지 않는다</text><text class="ink2 sm" x="40" y="310" text-anchor="start">그래서 옮길 때 손이 먼저 가는 칸을 쓰게 되고, 그 칸이 첫째 줄이라 오류가 굳는다</text></g>
+</svg>

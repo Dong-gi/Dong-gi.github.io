@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" width="760" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">て형이 중심이 되는 짜임</title><desc id="d">て형 뒤의 빈 자리에 무엇이 붙느냐로 여러 표현이 만들어진다. 이 장은 자리를 만들고 뜻은 뒤 장들이 채운다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><rect x="40" y="118" width="150" height="50" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="115" y="147" text-anchor="middle">사전형</text><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M194 143 L268 143"/><text class="f1 sm" x="231" y="133" text-anchor="middle">음편 규칙</text><text class="ink2 sm" x="231" y="168" text-anchor="middle">이 장의 일</text><rect x="272" y="108" width="190" height="70" rx="6" fill="none" stroke="var(--s1)" stroke-width="2"/><text class="ink" x="300" y="152" text-anchor="start" style="font-size:22px">て형 +</text><text class="ink2" x="420" y="152" text-anchor="middle" style="font-size:22px">?</text><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M466 132 L528 60"/><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M466 138 L528 108"/><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M466 148 L528 156"/><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M466 154 L528 204"/><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M466 160 L528 252"/><rect x="532" y="36" width="200" height="40" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="632" y="60" text-anchor="middle">문장을 잇는다</text><rect x="532" y="86" width="200" height="40" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="632" y="110" text-anchor="middle">때와 모습 — 13장</text><rect x="532" y="136" width="200" height="40" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="632" y="160" text-anchor="middle">주고받기 — 15장</text><rect x="532" y="186" width="200" height="40" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="632" y="210" text-anchor="middle">허가 · 의뢰</text><rect x="532" y="236" width="200" height="40" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="632" y="260" text-anchor="middle">14 · 16 · 17장의 여러 표현</text><text class="ink2 sm" x="40" y="226" text-anchor="start">뒤의 다섯 장은</text><text class="ink2 sm" x="40" y="244" text-anchor="start">대부분 이 빈 자리를</text><text class="ink2 sm" x="40" y="262" text-anchor="start">채우는 이야기다</text><text class="ink2 sm" x="40" y="306" text-anchor="start">빈 자리를 정확히 만드는 것이 이 장의 목표다. 무엇이 붙어 무슨 뜻이 되는지는 뒤 장들의 것이다</text></g>
+</svg>

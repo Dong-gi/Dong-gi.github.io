@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" width="720" height="360" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">네 글자가 두 소리로 합쳐진 것과 지금의 표기</title><desc id="d">두 짝이 각각 한 소리로 합쳐졌고, 표기는 한쪽을 기본으로 삼고 다른 쪽을 두 자리에만 남겼다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="78" y="66" text-anchor="start">네 글자</text><rect x="96" y="84" width="74" height="52" rx="6" fill="none" class="gr" stroke-width="1.5"/><text class="ink bold" x="133" y="118" text-anchor="middle" font-size="22">じ</text><rect x="200" y="84" width="74" height="52" rx="6" fill="none" class="gr" stroke-width="1.5"/><text class="ink bold" x="237" y="118" text-anchor="middle" font-size="22">ぢ</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M133 142 L172 176"/><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M237 142 L198 176"/><rect x="110" y="180" width="150" height="40" rx="6" fill="none" class="s1" stroke-width="1.5"/><text class="f1" x="185" y="205" text-anchor="middle">한 소리</text><rect x="450" y="84" width="74" height="52" rx="6" fill="none" class="gr" stroke-width="1.5"/><text class="ink bold" x="487" y="118" text-anchor="middle" font-size="22">ず</text><rect x="554" y="84" width="74" height="52" rx="6" fill="none" class="gr" stroke-width="1.5"/><text class="ink bold" x="591" y="118" text-anchor="middle" font-size="22">づ</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M487 142 L526 176"/><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M591 142 L552 176"/><rect x="464" y="180" width="150" height="40" rx="6" fill="none" class="s1" stroke-width="1.5"/><text class="f1" x="539" y="205" text-anchor="middle">한 소리</text><path class="gr" fill="none" stroke-width="1.5" stroke-dasharray="4 3" d="M70 246 L650 246"/><text class="ink2 sm" x="78" y="272" text-anchor="start">지금의 표기</text><rect x="78" y="284" width="232" height="58" rx="6" fill="none" class="s3" stroke-width="1.5"/><text class="ink" x="194" y="318" text-anchor="middle">기본은 짝의 왼쪽 글자</text><rect x="352" y="284" width="300" height="58" rx="6" fill="none" class="s2" stroke-width="1.5"/><text class="ink sm" x="502" y="306" text-anchor="middle">짝의 오른쪽 글자는 두 자리에서만</text><text class="ink2 sm" x="502" y="328" text-anchor="middle">같은 소리가 잇달을 때 · 낱말이 합쳐질 때</text></g>
+</svg>

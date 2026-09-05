@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="720" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">목에 손을 대면 잡히는 것</title><desc id="d">무성 자음 자리에서는 떨림이 끊기고 유성 자음 자리에서는 이어진다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="196" y="62" text-anchor="start">손을 목에 대고 낱말을 끊지 않고 낸다</text><text class="ink sm" x="180" y="127" text-anchor="end">무성 자음이 든 낱말</text><rect x="196" y="107" width="146.66666666666666" height="30" rx="3" class="f1" fill-opacity="0.28" stroke="none"/><rect x="196" y="107" width="146.66666666666666" height="30" rx="3" fill="none" class="s1" stroke-width="1.5"/><text class="ink2 bold" x="269.3333333333333" y="170" text-anchor="middle" font-size="22">に</text><rect x="342.66666666666663" y="107" width="146.66666666666666" height="30" rx="3" fill="none" class="s2" stroke-width="1.5" stroke-dasharray="4 3"/><text class="f2 sm" x="416" y="127" text-anchor="middle">떨림 없음</text><text class="ink2 bold" x="415.99999999999994" y="170" text-anchor="middle" font-size="22">か</text><rect x="489.3333333333333" y="107" width="146.66666666666666" height="30" rx="3" class="f1" fill-opacity="0.28" stroke="none"/><rect x="489.3333333333333" y="107" width="146.66666666666666" height="30" rx="3" fill="none" class="s1" stroke-width="1.5"/><text class="ink2 bold" x="562.6666666666666" y="170" text-anchor="middle" font-size="22">い</text><text class="ink sm" x="180" y="233" text-anchor="end">유성 자음이 든 낱말</text><rect x="196" y="213" width="146.66666666666666" height="30" rx="3" class="f1" fill-opacity="0.28" stroke="none"/><rect x="196" y="213" width="146.66666666666666" height="30" rx="3" fill="none" class="s1" stroke-width="1.5"/><text class="ink2 bold" x="269.3333333333333" y="276" text-anchor="middle" font-size="22">に</text><rect x="342.66666666666663" y="213" width="146.66666666666666" height="30" rx="3" class="f1" fill-opacity="0.28" stroke="none"/><rect x="342.66666666666663" y="213" width="146.66666666666666" height="30" rx="3" fill="none" class="s1" stroke-width="1.5"/><text class="ink2 bold" x="415.99999999999994" y="276" text-anchor="middle" font-size="22">が</text><rect x="489.3333333333333" y="213" width="146.66666666666666" height="30" rx="3" class="f1" fill-opacity="0.28" stroke="none"/><rect x="489.3333333333333" y="213" width="146.66666666666666" height="30" rx="3" fill="none" class="s1" stroke-width="1.5"/><text class="ink2 bold" x="562.6666666666666" y="276" text-anchor="middle" font-size="22">い</text><text class="f2 sm" x="644" y="127" text-anchor="start">끊긴다</text><text class="f1 sm" x="644" y="233" text-anchor="start">이어진다</text><text class="ink2 sm" x="180" y="300" text-anchor="start">칠한 칸이 떨림이 잡히는 구간이다</text></g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 310" width="760" height="310" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">문체에 따라 묻는 꼴이 다르다</title><desc id="d">정중체는 문말에 짧은 말을 붙여 묻고, 보통체는 그것을 붙이지 않고 표기의 물음표가 그 자리를 맡는다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="30" text-anchor="start">무엇이 물음을 표시하는지가 문체에 따라 다르다</text><text class="ink2 sm" x="40" y="60" text-anchor="start">정중체</text><rect x="120" y="66" width="200" height="40" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="220" y="90" text-anchor="middle">いきます</text><rect x="324" y="66" width="60" height="40" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="354" y="90" text-anchor="middle">か</text><rect x="388" y="66" width="44" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink" x="410" y="90" text-anchor="middle">。</text><text class="ink2 sm" x="450" y="90" text-anchor="start">짧은 말이 물음을 표시한다</text><text class="ink2 sm" x="40" y="130" text-anchor="start">보통체</text><rect x="120" y="136" width="200" height="40" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="220" y="160" text-anchor="middle">いく</text><rect x="324" y="136" width="60" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4" stroke-dasharray="5 4"/><rect x="388" y="136" width="44" height="40" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="410" y="160" text-anchor="middle">？</text><text class="ink2 sm" x="450" y="160" text-anchor="start">짧은 말이 없고 표기가 표시한다</text><text class="ink2 sm" x="40" y="200" text-anchor="start">명사문</text><rect x="120" y="206" width="200" height="40" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="220" y="230" text-anchor="middle">がくせい</text><rect x="324" y="206" width="60" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4" stroke-dasharray="5 4"/><rect x="388" y="206" width="44" height="40" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="410" y="230" text-anchor="middle">？</text><text class="ink2 sm" x="450" y="230" text-anchor="start">だ 가 나타나지 않는다</text><text class="f2 sm" x="40" y="278" text-anchor="start">이 문서는 소리를 줄 수 없다. 억양이 하는 일은 표기의 물음표로만 보인다</text><text class="ink2 sm" x="40" y="300" text-anchor="start">점선 칸은 아무것도 오지 않는 자리다</text></g>
+</svg>

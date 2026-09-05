@@ -1,0 +1,40 @@
+이 폴더의 woff2 파일들에 적용되는 저작권·라이선스 표기.
+
+아래 두 문장은 각 폰트 파일의 name 테이블에 실제로 박혀 있는 문자열을 그대로
+옮긴 것이다. 두 파일 모두 확인했다.
+
+  nameID 0 (Copyright):
+    © 2014-2021 Adobe (http://www.adobe.com/).
+
+  nameID 13 (License Description):
+    This Font Software is licensed under the SIL Open Font License, Version 1.1. This Font Software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the SIL Open Font License for the specific language, permissions and limitations governing your use of this Font Software.
+
+  nameID 14 (License URL):
+    http://scripts.sil.org/OFL
+
+------------------------------------------------------------------------
+
+라이선스 : SIL Open Font License, Version 1.1
+           https://scripts.sil.org/OFL
+
+원본     : Noto Sans CJK JP (Noto Sans CJK 배포판의 JP 면)
+           https://github.com/notofonts/noto-cjk
+
+배포 패키지의 저작권 파일은 이렇게 적고 있다.
+
+    Files: *
+    Copyright: 2010-2012, Google Corporation
+    License: SIL-1.1
+
+------------------------------------------------------------------------
+
+이 폴더의 파일은 원본을 **잘라 낸 것**(subset)이다. OFL 은 개작과 재배포를
+허락하고, 이 배포판은 **예약 폰트 이름(Reserved Font Name)을 지정하지 않았다** —
+저작권 표시 뒤에 `with Reserved Font Name` 절이 없음을 문자열 검색으로 확인했다
+(0 건). 그래서 원래 이름을 그대로 두었고, CSS 에서 부르는 이름
+`Noto Sans JP Subset` 은 `@font-face` 가 붙이는 별도의 이름이다.
+
+OFL 은 개작본도 같은 라이선스로 두기를 요구한다. 이 폴더의 woff2 는
+SIL OFL 1.1 로 배포된다. 이 저장소의 MIT 라이선스는 이 폴더에 미치지 않는다.
+
+(저작권 판단은 법률 자문이 아니다.)

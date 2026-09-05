@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">문체 축과 경어 축이 만드는 네 칸</title><desc id="d">가로가 문체, 세로가 존경어를 쓰는가다. 네 칸이 모두 채워지므로 두 축은 따로 움직인다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="30" text-anchor="start">가로와 세로가 서로 다른 축이다. 네 칸이 모두 실제로 쓰이는 꼴이다</text><text class="f1" x="300" y="68" text-anchor="middle">보통체</text><text class="f2" x="560" y="68" text-anchor="middle">정중체</text><text class="ink2 sm" x="40" y="112" text-anchor="start">높이지 않는다</text><rect x="180" y="82" width="240" height="52" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink" x="300" y="112" text-anchor="middle">いく</text><rect x="440" y="82" width="240" height="52" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink" x="560" y="112" text-anchor="middle">いきます</text><text class="f3 sm" x="40" y="182" text-anchor="start">존경어를 쓴다</text><rect x="180" y="152" width="240" height="52" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="300" y="182" text-anchor="middle">いらっしゃる</text><rect x="440" y="152" width="240" height="52" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="560" y="182" text-anchor="middle">いらっしゃいます</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" d="M180 220 L680 220"/><text class="ink2 sm" x="180" y="246" text-anchor="start">왼쪽 아래 칸이 비어 있으리라고 생각하기 쉽지만 비어 있지 않다</text><text class="ink2 sm" x="180" y="268" text-anchor="start">문체는 문장 끝의 층에서 갈리고 존경어는 뜻을 지는 부분에서 갈린다</text><text class="f3 sm" x="180" y="290" text-anchor="start">층이 다르므로 어느 조합도 막히지 않는다</text></g>
+</svg>

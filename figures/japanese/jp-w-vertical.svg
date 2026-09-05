@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 320" width="620" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">세로쓰기의 진행 방향</title><desc id="d">글자는 위에서 아래로, 줄은 오른쪽에서 왼쪽으로 나아가는 것을 화살표로 보인 것</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M548 66 L316 66"/><text class="ink2 sm" x="432" y="52" text-anchor="middle">줄은 오른쪽에서 왼쪽으로 나아간다</text><rect x="484.9" y="94.2" width="24.200000000000003" height="24.200000000000003" rx="3" class="f1"/><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="497" y="148" text-anchor="middle" font-size="22">は</text></g><rect x="484.9" y="162.2" width="24.200000000000003" height="24.200000000000003" rx="3" class="f1"/><rect x="484.9" y="196.2" width="24.200000000000003" height="24.200000000000003" rx="3" class="f1"/><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M471 96 L471 226"/><text class="ink2" x="497" y="262" text-anchor="middle">①</text><rect x="404.9" y="94.2" width="24.200000000000003" height="24.200000000000003" rx="3" class="f1"/><rect x="404.9" y="128.2" width="24.200000000000003" height="24.200000000000003" rx="3" class="f1"/><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="417" y="182" text-anchor="middle" font-size="22">へ</text></g><rect x="404.9" y="196.2" width="24.200000000000003" height="24.200000000000003" rx="3" class="f1"/><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M391 96 L391 226"/><text class="ink2" x="417" y="262" text-anchor="middle">②</text><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="337" y="114" text-anchor="middle" font-size="22">き</text></g><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="337" y="148" text-anchor="middle" font-size="22">ま</text></g><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="337" y="182" text-anchor="middle" font-size="22">す</text></g><g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="337" y="216" text-anchor="middle" font-size="22">。</text></g><path class="ax" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ark)" d="M311 96 L311 226"/><text class="ink2" x="337" y="262" text-anchor="middle">③</text><text class="ink2 sm" x="250" y="262" text-anchor="end">읽는 순서</text><text class="ink2 sm" x="60" y="296" text-anchor="start">사각형 하나가 한자 한 자를 대신한다. 앞 그림의 문장을 세로로 옮겨 적은 것이다</text>
+</svg>

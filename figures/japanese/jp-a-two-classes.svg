@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">형용사의 갈래 — 한국어 하나, 일본어 둘</title><desc id="d">왼쪽은 갈래가 하나인 한국어, 오른쪽은 갈래가 둘인 일본어. 오른쪽 두 줄에서 바뀌는 자리가 서로 다르다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="36" y="28" text-anchor="start">한국어 — 갈래가 하나다</text><rect x="36" y="42" width="262" height="50" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text x="167" y="73" text-anchor="middle" class="ink" style="font-size:16px">높다 → 높았다</text><rect x="36" y="102" width="262" height="50" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text x="167" y="133" text-anchor="middle" class="ink" style="font-size:16px">높다 → 높지 않다</text><text class="ink2 sm" x="36" y="184" text-anchor="start">형용사가 동사와 같은 방식으로 활용한다</text><text class="ink2 sm" x="36" y="204" text-anchor="start">갈래를 고를 일이 없다</text><path fill="none" stroke="var(--ink2)" stroke-width="1" stroke-dasharray="4 4" d="M322 22 L322 262"/><text class="ink2 sm" x="352" y="28" text-anchor="start">일본어 — 갈래가 둘이다</text><rect x="352" y="42" width="372" height="92" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text x="538" y="71.5" text-anchor="middle" class="ink2" style="font-size:12px">い형용사</text><text x="538" y="94.5" text-anchor="middle" class="ink" style="font-size:17px">たかい → たかかった</text><text x="538" y="112.5" text-anchor="middle" class="ink2" style="font-size:12px">낱말이 스스로 바뀐다</text><rect x="352" y="152" width="372" height="92" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text x="538" y="181.5" text-anchor="middle" class="ink2" style="font-size:12px">な형용사</text><text x="538" y="204.5" text-anchor="middle" class="ink" style="font-size:17px">しずかだ → しずかだった</text><text x="538" y="222.5" text-anchor="middle" class="ink2" style="font-size:12px">だ 가 바뀌고 낱말은 그대로다</text><text class="ink2 sm" x="36" y="284" text-anchor="start">먼저 어느 갈래인지 알아야 활용을 만들 수 있다 — 한국어에는 없던 단계다</text></g>
+</svg>

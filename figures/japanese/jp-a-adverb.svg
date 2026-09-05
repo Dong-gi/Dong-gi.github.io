@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 292" width="760" height="292" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">부사로 바꾸는 두 갈래의 꼴</title><desc id="d">い형용사는 い 를 く 로, な형용사는 だ 를 に 로 바꾼다. 그 꼴에 なる 를 이은 결과를 오른쪽에 두었다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="26" text-anchor="start">부사로 바꾸는 꼴 — 갈래마다 다르다</text><rect x="40" y="50" width="170" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text x="125" y="79" text-anchor="middle" class="ink" style="font-size:18px">たかい</text><path class="s1" fill="none" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar1)" d="M214 72 L286 72"/><text class="ink2 sm" x="250" y="62" text-anchor="middle">い → く</text><rect x="290" y="50" width="170" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text x="375" y="79" text-anchor="middle" class="f1" style="font-size:18px;font-weight:600">たかく</text><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M464 72 L536 72"/><text class="ink2 sm" x="500" y="62" text-anchor="middle">+ なる</text><rect x="540" y="50" width="180" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-dasharray="4 3"/><text x="630" y="79" text-anchor="middle" class="ink" style="font-size:18px">たかくなる</text><rect x="40" y="128" width="170" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text x="125" y="157" text-anchor="middle" class="ink" style="font-size:18px">しずかだ</text><path class="s2" fill="none" stroke-width="1.8" stroke-linecap="round" marker-end="url(#ar2)" d="M214 150 L286 150"/><text class="ink2 sm" x="250" y="140" text-anchor="middle">だ → に</text><rect x="290" y="128" width="170" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text x="375" y="157" text-anchor="middle" class="f2" style="font-size:18px;font-weight:600">しずかに</text><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M464 150 L536 150"/><text class="ink2 sm" x="500" y="140" text-anchor="middle">+ なる</text><rect x="540" y="128" width="180" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-dasharray="4 3"/><text x="630" y="157" text-anchor="middle" class="ink" style="font-size:18px">しずかになる</text><text class="ink2 sm" x="40" y="224" text-anchor="start">부사가 된 꼴은 뒤에 오는 동사를 꾸민다 — はやく おきる · しずかに はなす</text><text class="ink2 sm" x="40" y="248" text-anchor="start">なる 를 이으면 ‘그렇게 되다’가 된다</text></g>
+</svg>

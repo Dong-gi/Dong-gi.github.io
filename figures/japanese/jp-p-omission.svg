@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 248" width="780" height="248" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">조사가 생략되는 조건</title><desc id="d">조사를 빼도 명사와 술어의 관계가 하나로 정해지는 줄에서만 생략이 일어난다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="32" text-anchor="start">생략이 되는 자리와 안 되는 자리</text><text class="ink" x="48" y="62" text-anchor="start">넣은 형태</text><text class="ink" x="334" y="62" text-anchor="start">뺀 형태</text><text class="ink" x="614" y="62" text-anchor="start">판정</text><path class="gr" d="M40 72 H756"/><text class="ink" x="48" y="112" text-anchor="start" style="font-size:17px">じかん<tspan fill="var(--s2)" font-weight="700">が</tspan>あります</text><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M288 106 L322 106"/><text class="ink" x="334" y="112" text-anchor="start" style="font-size:17px">じかんあります</text><text class="ink" x="614" y="104" text-anchor="start">뜻이 복원된다</text><text class="ink2 sm" x="614" y="124" text-anchor="start">관계가 하나로 정해진다</text><path class="gr" stroke-dasharray="4 3" d="M40 148 H756"/><text class="ink" x="48" y="190" text-anchor="start" style="font-size:17px">がっこう<tspan fill="var(--s1)" font-weight="700">で</tspan>べんきょうします</text><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M288 184 L322 184"/><text class="ink" x="334" y="190" text-anchor="start" style="font-size:17px">がっこうべんきょうします</text><text class="ink" x="596" y="196" text-anchor="start" fill="var(--s2)" style="font-size:24px">×</text><text class="ink" x="614" y="182" text-anchor="start">말이 되지 않는다</text><text class="ink2 sm" x="614" y="202" text-anchor="start">관계를 정해 줄 것이 없다</text><text class="ink2 sm" x="40" y="238" text-anchor="start">어느 조사인지가 아니라 관계가 정해지는지가 갈림의 기준이다</text></g>
+</svg>

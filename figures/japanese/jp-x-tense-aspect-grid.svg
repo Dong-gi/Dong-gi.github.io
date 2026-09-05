@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 314" width="760" height="314" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">때와 모습이 따로 붙는다</title><desc id="d">가로로 가면 때가 붙고 세로로 가면 모습이 붙는다. 네 칸이 두 축의 조합이다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="f1" x="300" y="44" text-anchor="middle">지금 · 앞일</text><text class="f1" x="540" y="44" text-anchor="middle">지난 일</text><text class="ink2 sm" x="60" y="44" text-anchor="start">때 →</text><text class="ink2 sm" x="40" y="104" text-anchor="start">모습을</text><text class="ink2 sm" x="40" y="122" text-anchor="start">갈라 적지</text><text class="ink2 sm" x="40" y="140" text-anchor="start">않음</text><text class="f2 sm" x="40" y="216" text-anchor="start">모습을</text><text class="f2 sm" x="40" y="234" text-anchor="start">갈라 적음</text><rect x="180" y="62" width="240" height="92" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text class="ink" x="300" y="112" text-anchor="middle">よむ</text><rect x="440" y="62" width="240" height="92" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text class="ink" x="560" y="112" text-anchor="middle">よんだ</text><rect x="180" y="174" width="240" height="92" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text class="ink" x="300" y="224" text-anchor="middle">よんでいる</text><rect x="440" y="174" width="240" height="92" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.8"/><text class="ink" x="560" y="224" text-anchor="middle">よんでいた</text><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M424 108 L436 108"/><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M424 220 L436 220"/><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" d="M300 158 L300 170"/><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" d="M560 158 L560 170"/><text class="ink" x="40" y="300" text-anchor="start">오른쪽 아래 칸에는 두 층이 함께 붙어 있다. 모습이 안쪽, 때가 바깥쪽이다</text></g>
+</svg>

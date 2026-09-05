@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="760" height="400" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">절이 여럿인 문장을 읽는 절차</title><desc id="d">8장의 다섯 단계 가운데에 절을 자르고 관계를 정하는 두 단계가 끼어든다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="28" text-anchor="start">8장의 절차에 두 단계가 끼어든다. 나머지는 그대로다</text><text class="ink2" x="120" y="68" text-anchor="middle">1</text><rect x="140" y="46" width="500" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="390" y="67" text-anchor="middle">문장의 끝을 본다 — 거기 있는 것이 문장 전체의 술어다</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M390 82 L390 88"/><text class="ink2" x="120" y="112" text-anchor="middle">2</text><rect x="140" y="90" width="500" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="390" y="111" text-anchor="middle">술어가 무엇인지 보고 갈래를 정한다</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M390 126 L390 132"/><text class="ink2" x="120" y="156" text-anchor="middle">3</text><rect x="140" y="134" width="500" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="390" y="155" text-anchor="middle">술어에 붙은 층을 벗긴다 — 정중함 · 부정 · 때 · 태도</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M390 170 L390 176"/><text class="ink2" x="120" y="200" text-anchor="middle">4</text><rect x="140" y="178" width="500" height="34" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.9"/><text class="ink" x="390" y="199" text-anchor="middle">절의 경계를 자른다 — 잇는 말이 놓인 자리가 경계다</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M390 214 L390 220"/><text class="ink2" x="120" y="244" text-anchor="middle">5</text><rect x="140" y="222" width="500" height="34" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.9"/><text class="ink" x="390" y="243" text-anchor="middle">절마다 술어를 찾고 잇는 말로 관계를 정한다</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M390 258 L390 264"/><text class="ink2" x="120" y="288" text-anchor="middle">6</text><rect x="140" y="266" width="500" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="390" y="287" text-anchor="middle">앞으로 돌아가 조사를 보고 덩어리의 구실을 짚는다</text><path class="ax" fill="none" stroke-width="1.4" stroke-linecap="round" marker-end="url(#ark)" d="M390 302 L390 308"/><text class="ink2" x="120" y="332" text-anchor="middle">7</text><rect x="140" y="310" width="500" height="34" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="390" y="331" text-anchor="middle">표시되지 않은 자리를 문맥으로 채운다</text><path fill="none" stroke="var(--s1)" stroke-width="1.4" d="M652 178 H662 V266 H652"/><text class="f1 sm" x="670" y="212" text-anchor="start">이 장이</text><text class="f1 sm" x="670" y="230" text-anchor="start">붙인 것</text><text class="ink" x="40" y="372" text-anchor="start">절을 자르기 전에 조사를 보면 어느 절의 조사인지 모르는 채로 관계를 정하게 된다</text></g>
+</svg>

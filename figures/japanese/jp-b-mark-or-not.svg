@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 268" width="760" height="268" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">은혜의 방향을 담는 자리가 비는 것</title><desc id="d">두 문장을 같은 칸으로 잘라 놓았다. 아래 문장은 셋째 칸이 비어 있고 그래도 문장이 성립한다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="131" y="48" text-anchor="middle">주어</text><text class="ink2 sm" x="311" y="48" text-anchor="middle">뜻을 지는 부분</text><text class="f2 sm" x="482" y="48" text-anchor="middle">은혜의 방향</text><text class="ink2 sm" x="633" y="48" text-anchor="middle">정중함</text><rect x="56" y="62" width="150" height="46" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="131" y="92" text-anchor="middle" style="font-size:16px">ともだちが</text><rect x="226" y="62" width="170" height="46" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="311" y="92" text-anchor="middle" style="font-size:16px">てつだって</text><rect x="412" y="62" width="140" height="46" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="f2" x="482" y="92" text-anchor="middle" style="font-size:16px">くれ</text><rect x="568" y="62" width="130" height="46" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="633" y="92" text-anchor="middle" style="font-size:16px">ました</text><text class="ink2 sm" x="56" y="130" text-anchor="start">도움이 나에게 왔다는 것이 칸 하나로 적혀 있다</text><rect x="56" y="150" width="150" height="46" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="131" y="180" text-anchor="middle" style="font-size:16px">ともだちが</text><rect x="226" y="150" width="170" height="46" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="311" y="180" text-anchor="middle" style="font-size:16px">てつだい</text><rect x="412" y="150" width="140" height="46" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-dasharray="5 4"/><text class="f2 sm" x="482" y="177" text-anchor="middle">비어 있다</text><rect x="568" y="150" width="130" height="46" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="633" y="180" text-anchor="middle" style="font-size:16px">ました</text><text class="ink2 sm" x="56" y="218" text-anchor="start">문장이 깨지지 않는다. 그래서 빈 칸을 알아채기 어렵다</text><text class="ink" x="56" y="248" text-anchor="start">칸을 비워 두는 것과 그 칸이 없는 것은 다르다</text></g>
+</svg>

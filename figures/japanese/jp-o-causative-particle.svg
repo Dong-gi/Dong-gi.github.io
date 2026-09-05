@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 306" width="760" height="306" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">사역에서 시킴을 받는 쪽에 붙는 조사</title><desc id="d">타동사의 사역에서는 に 만 되고, 자동사의 사역에서는 に 와 を 가 모두 된다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="f1" x="40" y="30" text-anchor="start">타동사의 사역 — 시킴을 받는 쪽은 に</text><rect x="40" y="46" width="160" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="120" y="72" text-anchor="middle">せんせいが</text><rect x="208" y="46" width="160" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text class="ink" x="288" y="72" text-anchor="middle">がくせいに</text><rect x="376" y="46" width="130" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text class="ink" x="441" y="72" text-anchor="middle">ほんを</text><rect x="514" y="46" width="160" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="594" y="72" text-anchor="middle">よませる</text><text class="ink" x="40" y="116" text-anchor="start">を 로 표시된 것이 한 문장에 둘 오는 꼴은 만들지 않는다. 그래서 이 자리는 に 다</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" d="M40 140 L720 140"/><text class="f2" x="40" y="168" text-anchor="start">자동사의 사역 — 둘 다 된다</text><rect x="40" y="184" width="240" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="160" y="210" text-anchor="middle">こどもを いかせる</text><rect x="300" y="184" width="240" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="420" y="210" text-anchor="middle">こどもに いかせる</text><text class="ink2 sm" x="566" y="210" text-anchor="start">を 자리가 비어 있다</text><text class="ink" x="40" y="256" text-anchor="start">を 쪽은 시키는 힘이 강한 쪽으로, に 쪽은 상대의 뜻을 인정하는 쪽으로</text><text class="ink" x="40" y="278" text-anchor="start">읽힌다고 적는 교재가 많다. 형태가 뜻을 하나로 정해 주지는 않는다</text></g>
+</svg>

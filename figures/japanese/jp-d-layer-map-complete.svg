@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 350" width="760" height="350" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">문장 끝의 층 지도가 완성된 모양</title><desc id="d">태도의 층이 붙지 않은 문장은 층이 한 줄로 늘어서고, 붙은 문장은 안쪽 한 줄을 통째로 받은 뒤 정중함을 다시 받는다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="30" text-anchor="start">위는 태도의 층이 없는 문장, 아래는 있는 문장이다</text><text class="ink2 sm" x="40" y="60" text-anchor="start">태도의 층이 없다 — 층이 한 줄이다</text><rect x="40" y="70" width="130" height="40" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="105" y="94" text-anchor="middle">よみ</text><rect x="174" y="70" width="100" height="40" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="224" y="94" text-anchor="middle">ませ</text><rect x="278" y="70" width="70" height="40" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="313" y="94" text-anchor="middle">ん</text><rect x="352" y="70" width="120" height="40" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="412" y="94" text-anchor="middle">でした</text><rect x="476" y="70" width="70" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink" x="511" y="94" text-anchor="middle">ね</text><text class="ink2 sm" x="105" y="128" text-anchor="middle">뜻</text><text class="ink2 sm" x="224" y="128" text-anchor="middle">정중함</text><text class="ink2 sm" x="313" y="128" text-anchor="middle">부정</text><text class="ink2 sm" x="412" y="128" text-anchor="middle">때</text><text class="ink2 sm" x="511" y="128" text-anchor="middle">종조사</text><text class="ink2 sm" x="40" y="186" text-anchor="start">태도의 층이 있다 — 안쪽 한 줄이 통째로 들어간다</text><rect x="40" y="196" width="308" height="40" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text class="ink" x="194" y="220" text-anchor="middle">よまなかった</text><rect x="352" y="196" width="60" height="40" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="382" y="220" text-anchor="middle">の</text><rect x="416" y="196" width="100" height="40" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="466" y="220" text-anchor="middle">です</text><rect x="520" y="196" width="60" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink" x="550" y="220" text-anchor="middle">よ</text><rect x="584" y="196" width="60" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink" x="614" y="220" text-anchor="middle">ね</text><text class="ink2 sm" x="194" y="254" text-anchor="middle">안쪽 — 보통체로 끝난 꼴</text><text class="ink2 sm" x="382" y="254" text-anchor="middle">태도</text><text class="ink2 sm" x="466" y="254" text-anchor="middle">정중함</text><text class="ink2 sm" x="582" y="254" text-anchor="middle">종조사 둘</text><text class="ink2 sm" x="40" y="300" text-anchor="start">태도의 층이 붙으면 정중함이 그 뒤로 간다. 이 순서는 바꿀 수 없다</text><text class="f2 sm" x="40" y="324" text-anchor="start">종조사는 어느 쪽에서나 맨 바깥이고, 둘이 겹칠 때의 순서도 정해져 있다</text></g>
+</svg>

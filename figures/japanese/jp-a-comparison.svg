@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 264" width="760" height="264" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">견주는 표현에서 두 조사가 붙는 자리</title><desc id="d">가로축의 왼쪽이 기준이고 오른쪽이 더하다고 말하는 쪽이다. 아래에 문장의 짜임을 적었다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="28" text-anchor="start">두 조사가 각각 어느 자리에 붙는가</text><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M60 116 L700 116"/><text class="ink2 sm" x="700" y="100" text-anchor="end">이쪽이 더 그렇다</text><circle cx="220" cy="116" r="6" class="f1"/><circle cx="560" cy="116" r="6" class="f2"/><text x="220" y="88" text-anchor="middle" class="ink" style="font-size:18px">バス</text><text x="560" y="88" text-anchor="middle" class="ink" style="font-size:18px">でんしゃ</text><text class="ink" x="220" y="144" text-anchor="middle">より 가 붙는다</text><text class="ink2 sm" x="220" y="164" text-anchor="middle">견주는 기준</text><text class="ink" x="560" y="144" text-anchor="middle">のほうが 가 붙는다</text><text class="ink2 sm" x="560" y="164" text-anchor="middle">더하다고 말하는 쪽</text><rect x="140" y="200" width="480" height="46" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text x="380" y="229" text-anchor="middle" class="ink" style="font-size:16px">バスより でんしゃ のほうが べんりだ</text></g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" width="760" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">같은 문말 표현이 붙는 자리로 갈리는 모양</title><desc id="d">왼쪽 칸이 무엇인지에 따라 뜻이 달라진다. 사전형에 붙으면 들은 것이고 어간에 붙으면 보이는 것이다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="30" text-anchor="start">오른쪽 칸은 같다. 갈리는 것은 왼쪽 칸이 무엇인가다</text><text class="ink2 sm" x="60" y="58" text-anchor="start">붙는 자리</text><text class="ink2 sm" x="300" y="58" text-anchor="middle">결과</text><text class="ink2 sm" x="560" y="58" text-anchor="middle">무슨 뜻인가</text><rect x="40" y="68" width="130" height="38" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="105" y="91" text-anchor="middle">ふる</text><rect x="174" y="68" width="60" height="38" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink sm" x="204" y="91" text-anchor="middle">そうだ</text><rect x="250" y="68" width="180" height="38" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="340" y="91" text-anchor="middle">ふるそうだ</text><text class="ink2 sm" x="450" y="92" text-anchor="start">사전형 — 들은 것</text><rect x="40" y="116" width="130" height="38" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="105" y="139" text-anchor="middle">ふり</text><rect x="174" y="116" width="60" height="38" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink sm" x="204" y="139" text-anchor="middle">そうだ</text><rect x="250" y="116" width="180" height="38" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="340" y="139" text-anchor="middle">ふりそうだ</text><text class="ink2 sm" x="450" y="140" text-anchor="start">어간 쪽 — 보이는 것</text><rect x="40" y="174" width="130" height="38" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="105" y="197" text-anchor="middle">たかい</text><rect x="174" y="174" width="60" height="38" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink sm" x="204" y="197" text-anchor="middle">そうだ</text><rect x="250" y="174" width="180" height="38" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="340" y="197" text-anchor="middle">たかいそうだ</text><text class="ink2 sm" x="450" y="198" text-anchor="start">사전형 — 들은 것</text><rect x="40" y="222" width="130" height="38" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="105" y="245" text-anchor="middle">たか</text><rect x="174" y="222" width="60" height="38" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.4"/><text class="ink sm" x="204" y="245" text-anchor="middle">そうだ</text><rect x="250" y="222" width="180" height="38" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="340" y="245" text-anchor="middle">たかそうだ</text><text class="ink2 sm" x="450" y="246" text-anchor="start">어간 — 보이는 것</text><text class="ink2 sm" x="40" y="288" text-anchor="start">주황이 들은 것, 초록이 보이는 것이다. 한 글자 차이로 갈린다</text><text class="f2 sm" x="40" y="312" text-anchor="start">들은 것인지 보이는 것인지를 정하는 것은 뜻이 아니라 붙는 자리다</text></g>
+</svg>

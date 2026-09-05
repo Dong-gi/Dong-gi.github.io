@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="720" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">두 언어가 자음을 가르는 데 쓰는 차원</title><desc id="d">일본어는 성대의 떨림 축으로 두 소리를 가르고, 한국어는 숨과 긴장 축으로 세 소리를 가른다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><path class="ax" fill="none" stroke-width="1.5" d="M100 268 L676 268"/><path class="ax" fill="none" stroke-width="1.5" d="M100 268 L100 62"/><text class="ink2 sm" x="92" y="42" text-anchor="start">성대의 떨림</text><text class="ink2 sm" x="672" y="290" text-anchor="end">숨의 세기와 긴장</text><path class="gr" fill="none" stroke-width="1.5" stroke-dasharray="4 3" d="M100 108 L656 108"/><path class="gr" fill="none" stroke-width="1.5" stroke-dasharray="4 3" d="M100 226 L656 226"/><text class="ink2 sm" x="92" y="112" text-anchor="end">있음</text><text class="ink2 sm" x="92" y="230" text-anchor="end">없음</text><text class="ink bold" x="168" y="234" text-anchor="middle" font-size="22">か</text><text class="ink bold" x="168" y="116" text-anchor="middle" font-size="22">が</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M196 220 L196 118"/><text class="f1 sm" x="208" y="156" text-anchor="start">일본어는</text><text class="f1 sm" x="208" y="172" text-anchor="start">이 차이로 갈린다</text><text class="ink bold" x="420" y="234" text-anchor="middle" font-size="22">ㄱ</text><text class="ink bold" x="520" y="234" text-anchor="middle" font-size="22">ㄲ</text><text class="ink bold" x="620" y="234" text-anchor="middle" font-size="22">ㅋ</text><path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M408 196 L632 196"/><text class="f2 sm" x="520" y="184" text-anchor="middle">한국어는 이 차이로 갈린다</text><text class="ink2 sm" x="520" y="266" text-anchor="middle">셋 다 어두에서는 떨림이 없다</text></g>
+</svg>

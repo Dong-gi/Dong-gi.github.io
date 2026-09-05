@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" width="760" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">갈래를 나누는 근거 — 꼬리가 몇 개의 단을 쓰는가</title><desc id="d">왼쪽은 꼬리의 첫 글자가 다섯 단을 다 옮겨 다니고, 오른쪽은 한 단에 머문다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="f1" x="40" y="30" text-anchor="start">1류 — 꼬리의 첫 글자가 다섯 단을 옮겨 다닌다</text><text class="ink2 sm" x="44" y="74" text-anchor="start">あ단</text><text class="ink2 sm" x="44" y="116" text-anchor="start">い단</text><text class="ink2 sm" x="44" y="158" text-anchor="start">う단</text><text class="ink2 sm" x="44" y="200" text-anchor="start">え단</text><text class="ink2 sm" x="44" y="242" text-anchor="start">お단</text><rect x="86" y="56" width="52" height="30" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="112" y="75" text-anchor="middle">か</text><text class="ink" x="154" y="76" text-anchor="start">かかない</text><rect x="86" y="98" width="52" height="30" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="112" y="117" text-anchor="middle">き</text><text class="ink" x="154" y="118" text-anchor="start">かきます</text><rect x="86" y="140" width="52" height="30" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="112" y="159" text-anchor="middle">く</text><text class="ink" x="154" y="160" text-anchor="start">かく</text><rect x="86" y="182" width="52" height="30" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="112" y="201" text-anchor="middle">け</text><text class="ink" x="154" y="202" text-anchor="start">かけば · かける</text><rect x="86" y="224" width="52" height="30" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="112" y="243" text-anchor="middle">こ</text><text class="ink" x="154" y="244" text-anchor="start">かこう</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="4 4" d="M370 24 L370 300"/><text class="f2" x="400" y="30" text-anchor="start">2류 — 어간이 한 단에 머문다</text><text class="ink2 sm" x="404" y="74" text-anchor="start">い단에 머무는 것</text><rect x="404" y="86" width="62" height="30" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="435" y="105" text-anchor="middle">み</text><text class="ink" x="478" y="106" text-anchor="start">みない · みます · みる</text><text class="ink" x="478" y="128" text-anchor="start">みれば · みよう</text><text class="ink2 sm" x="404" y="176" text-anchor="start">え단에 머무는 것</text><rect x="404" y="188" width="62" height="30" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="435" y="207" text-anchor="middle">たべ</text><text class="ink" x="478" y="208" text-anchor="start">たべない · たべます · たべる</text><text class="ink" x="478" y="230" text-anchor="start">たべれば · たべよう</text><text class="ink2 sm" x="40" y="320" text-anchor="start">학교문법이 이 둘을 ‘다섯 단’ 과 ‘한 단’ 으로 이름 붙인 까닭이 이 그림이다</text></g>
+</svg>

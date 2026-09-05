@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 306" width="760" height="306" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">표시되지 않은 자리를 무엇으로 되찾는가</title><desc id="d">문장에 빈 자리가 있고, 문맥과 문장의 다른 층이 그 자리를 채운다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="32" text-anchor="start">문장에 주어가 표시되지 않았다</text><text class="f2 sm" x="295" y="54" text-anchor="middle">표시되지 않은 자리</text><rect x="230" y="62" width="130" height="42" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4" stroke-dasharray="5 4"/><text class="ink" x="295" y="87" text-anchor="middle"></text><rect x="364" y="62" width="130" height="42" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="429" y="87" text-anchor="middle">ほんを</text><rect x="498" y="62" width="170" height="42" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="583" y="87" text-anchor="middle">よみました</text><path class="s3" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar3)" d="M120 166 L270 110"/><path class="s3" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar3)" d="M350 166 L300 110"/><path class="s3" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar3)" d="M570 166 L330 110"/><rect x="40" y="170" width="175" height="56" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="127.5" y="193.5" text-anchor="middle">앞뒤 문맥</text><text class="ink" x="127.5" y="210.5" text-anchor="middle">이미 나온 것</text><rect x="262" y="170" width="175" height="56" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="349.5" y="193.5" text-anchor="middle">높임의 표시</text><text class="ink" x="349.5" y="210.5" text-anchor="middle">16장</text><rect x="484" y="170" width="175" height="56" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="571.5" y="193.5" text-anchor="middle">주고받기 표현</text><text class="ink" x="571.5" y="210.5" text-anchor="middle">15장</text><text class="ink2 sm" x="40" y="268" text-anchor="start">빈 자리를 채우는 근거는 문장 밖과 문장의 다른 층에 있다</text><text class="f2" x="40" y="290" text-anchor="start">없는 것이 아니라 표시되지 않은 것이다</text></g>
+</svg>

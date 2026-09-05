@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 322" width="760" height="322" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">세 조사의 자리와 그 자리에 오는 사람</title><desc id="d">조사 세 개의 순서는 두 줄에서 같은데, 주는 쪽과 받는 쪽이 자리를 맞바꾼다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink" x="44" y="34" text-anchor="start">자리의 순서는 두 줄이 같다. 바뀌는 것은 그 자리에 오는 사람이다</text><rect x="56" y="76" width="150" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="f1" x="131" y="102" text-anchor="middle">주는 쪽</text><text class="ink2" x="216" y="105" text-anchor="start" style="font-size:17px">が</text><rect x="248" y="76" width="150" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="f1" x="323" y="102" text-anchor="middle">받는 쪽</text><text class="ink2" x="408" y="105" text-anchor="start" style="font-size:17px">に</text><rect x="438" y="76" width="106" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="491" y="102" text-anchor="middle">물건</text><text class="ink2" x="554" y="105" text-anchor="start" style="font-size:17px">を</text><text class="f1" x="586" y="105" text-anchor="start" style="font-size:15px">あげる · くれる</text><rect x="56" y="184" width="150" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="f2" x="131" y="210" text-anchor="middle">받는 쪽</text><text class="ink2" x="216" y="213" text-anchor="start" style="font-size:17px">が</text><rect x="248" y="184" width="150" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="f2" x="323" y="210" text-anchor="middle">주는 쪽</text><text class="ink2" x="408" y="213" text-anchor="start" style="font-size:17px">に</text><rect x="438" y="184" width="106" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="491" y="210" text-anchor="middle">물건</text><text class="ink2" x="554" y="213" text-anchor="start" style="font-size:17px">を</text><text class="f2" x="586" y="213" text-anchor="start" style="font-size:15px">もらう</text><path fill="none" stroke="var(--ink2)" stroke-width="1" d="M408 232 L408 242"/><text class="ink2 sm" x="408" y="256" text-anchor="middle">から 도 이 자리에 온다</text><path fill="none" stroke="var(--s2)" stroke-width="1.2" stroke-dasharray="5 4" d="M131 120 L323 184"/><path fill="none" stroke="var(--s2)" stroke-width="1.2" stroke-dasharray="5 4" d="M323 120 L131 184"/><text class="f2 sm" x="340" y="158" text-anchor="start">두 자리가 맞바뀐다</text><text class="ink" x="44" y="284" text-anchor="start">に 가 붙은 사람이 주는 쪽인지 받는 쪽인지는 동사가 정한다</text><text class="ink2 sm" x="44" y="306" text-anchor="start">물건에 붙는 を 는 세 동사에서 그대로다</text></g>
+</svg>

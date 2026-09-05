@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 318" width="760" height="318" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">주제 하나 안에 주격 자리가 따로 있는 구조</title><desc id="d">주제가 문장 전체를 덮고 그 안에서 주격 표시가 붙은 자리와 술어가 하나의 말이 된다. 두 자리의 관계는 문장마다 다르다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="32" text-anchor="start">두 자리가 겹쳐 보이지만 층이 다르다</text><rect x="40" y="50" width="390" height="130" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.8"/><text class="f3 sm" x="58" y="74" text-anchor="start">주제 + は</text><rect x="66" y="88" width="340" height="76" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4" stroke-dasharray="5 4"/><text class="ink2 sm" x="84" y="108" text-anchor="start">이 안에서 무엇이 그런지 말한다</text><rect x="86" y="120" width="140" height="34" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink sm" x="156" y="141" text-anchor="middle">무엇 + が</text><rect x="246" y="120" width="140" height="34" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink sm" x="316" y="141" text-anchor="middle">술어</text><text class="ink2 sm" x="456" y="62" text-anchor="start">두 자리의 관계는 문장마다 다르다</text><rect x="456" y="74" width="264" height="30" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink sm" x="588" y="93" text-anchor="middle">ぞう · はな — 가진 것</text><rect x="456" y="112" width="264" height="30" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink sm" x="588" y="131" text-anchor="middle">みせ · ケーキ — 있는 곳</text><rect x="456" y="150" width="264" height="30" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink sm" x="588" y="169" text-anchor="middle">わたし · あたま — 느끼는 사람</text><text class="ink" x="40" y="216" text-anchor="start">두 자리를 갈라 주는 것이 주제와 주격의 구별이다</text><text class="ink2 sm" x="40" y="242" text-anchor="start">그러나 두 자리 사이의 관계가 무엇인지는 이 구별이 말해 주지 않는다</text><text class="ink2 sm" x="40" y="266" text-anchor="start">관계는 낱말의 뜻과 문맥이 정한다. 세 줄이 서로 다른 관계다</text><text class="ink" x="40" y="300" text-anchor="start">주어가 둘인 문장이 아니다. 층이 둘인 문장이다</text></g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 344" width="760" height="344" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">술어 뒤에 층이 쌓이는 모양</title><desc id="d">네 문장에서 뜻을 지는 부분은 그대로이고 그 뒤에 정중함 · 부정 · 때의 칸이 차례로 쌓인다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="14" y="32" text-anchor="start">한국어</text><text class="ink2 sm" x="120" y="32" text-anchor="start">일본어 — 뜻을 지는 부분은 왼쪽에 한 번만 나온다</text><text class="ink2 sm" x="14" y="94" text-anchor="start">읽습니다</text><rect x="120" y="70" width="90" height="38" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="165" y="93" text-anchor="middle">よみ</text><rect x="210" y="70" width="74" height="38" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="247" y="93" text-anchor="middle">ます</text><text class="ink2 sm" x="480" y="94" text-anchor="start">정중함</text><text class="ink2 sm" x="14" y="154" text-anchor="start">읽지 않습니다</text><rect x="120" y="130" width="90" height="38" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="165" y="153" text-anchor="middle">よみ</text><rect x="210" y="130" width="74" height="38" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="247" y="153" text-anchor="middle">ませ</text><rect x="284" y="130" width="46" height="38" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="307" y="153" text-anchor="middle">ん</text><text class="ink2 sm" x="480" y="154" text-anchor="start">정중함 + 부정</text><text class="ink2 sm" x="14" y="214" text-anchor="start">읽었습니다</text><rect x="120" y="190" width="90" height="38" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="165" y="213" text-anchor="middle">よみ</text><rect x="210" y="190" width="74" height="38" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="247" y="213" text-anchor="middle">まし</text><rect x="284" y="190" width="46" height="38" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="307" y="213" text-anchor="middle">た</text><text class="ink2 sm" x="480" y="214" text-anchor="start">정중함 + 때</text><text class="ink2 sm" x="14" y="274" text-anchor="start">읽지 않았습니다</text><rect x="120" y="250" width="90" height="38" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="165" y="273" text-anchor="middle">よみ</text><rect x="210" y="250" width="74" height="38" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="247" y="273" text-anchor="middle">ませ</text><rect x="284" y="250" width="46" height="38" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="307" y="273" text-anchor="middle">ん</text><rect x="330" y="250" width="94" height="38" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="377" y="273" text-anchor="middle">でした</text><text class="ink2 sm" x="480" y="274" text-anchor="start">정중함 + 부정 + 때</text><text class="ink2 sm" x="120" y="322" text-anchor="start">파란 칸이 정중함, 주황 칸이 부정, 초록 칸이 때다. 왼쪽 끝은 바뀌지 않는다</text></g>
+</svg>

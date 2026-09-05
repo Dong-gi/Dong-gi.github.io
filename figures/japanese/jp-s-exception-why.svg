@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" width="720" height="360" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">네 칸이 벗어난 방향</title><desc id="d">벗어난 이유가 칸마다 다르다. 혀의 자리, 터짐 뒤의 마찰, 입술로의 이동이 섞여 있다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="178" y="66" text-anchor="start">자리가 예상하는 것</text><text class="ink2 sm" x="404" y="66" text-anchor="start">실제로 나는 것</text><text class="ink2 sm" x="600" y="66" text-anchor="start">무엇이 일어났나</text><text class="ink bold" x="128" y="115" text-anchor="middle" font-size="22">し</text><text class="ink sm" x="178" y="113" text-anchor="start">혀끝의 마찰</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M348 108 L388 108"/><text class="ink sm" x="404" y="113" text-anchor="start">혀가 뒤로 당겨진 마찰</text><rect x="578" y="92" width="128" height="32" rx="4" fill="none" class="s2" stroke-width="1.5"/><text class="f2 sm" x="642" y="113" text-anchor="middle">구개음화</text><text class="ink bold" x="128" y="171" text-anchor="middle" font-size="22">ち</text><text class="ink sm" x="178" y="169" text-anchor="start">혀끝의 터짐</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M348 164 L388 164"/><text class="ink sm" x="404" y="169" text-anchor="start">터진 뒤에 마찰이 붙는다</text><rect x="578" y="148" width="128" height="32" rx="4" fill="none" class="s2" stroke-width="1.5"/><text class="f2 sm" x="642" y="169" text-anchor="middle">파찰 + 구개음화</text><text class="ink bold" x="128" y="227" text-anchor="middle" font-size="22">つ</text><text class="ink sm" x="178" y="225" text-anchor="start">혀끝의 터짐</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M348 220 L388 220"/><text class="ink sm" x="404" y="225" text-anchor="start">터진 뒤에 마찰이 붙는다</text><rect x="578" y="204" width="128" height="32" rx="4" fill="none" class="s2" stroke-width="1.5"/><text class="f2 sm" x="642" y="225" text-anchor="middle">파찰</text><text class="ink bold" x="128" y="283" text-anchor="middle" font-size="22">ふ</text><text class="ink sm" x="178" y="281" text-anchor="start">목에서 나는 마찰</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M348 276 L388 276"/><text class="ink sm" x="404" y="281" text-anchor="start">두 입술 사이의 마찰</text><rect x="578" y="260" width="128" height="32" rx="4" fill="none" class="s2" stroke-width="1.5"/><text class="f2 sm" x="642" y="281" text-anchor="middle">입술로 자리를 옮김</text><text class="ink2 sm" x="128" y="340" text-anchor="start">네 칸 모두 같은 자리에서 벗어난 것이 아니다</text></g>
+</svg>

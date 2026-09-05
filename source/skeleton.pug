@@ -90,6 +90,32 @@ mixin hoverTemplate()
         if block
             block
 
+//-
+    일본어를 감싼다. 이것이 본문에 일본어를 적는 유일한 방법이다.
+
+    왜 필요한가 — 문서의 lang 은 ko-KR 이고, 한자는 한중일이 같은 코드포인트를
+    쓰면서 자형이 다르다(한자 통합). lang 이 ja 가 아니면 브라우저가 한국 자형을
+    고른다. Noto Sans CJK 에서 실제로 갈리는 것이 CJK 통합한자 20,976 자 중
+    630 자(3.0%)이고, 흔한 한자에 몰려 있다 — 者 社 海 具 半 化 類 漢 食 分.
+    어학 문서에서는 글자 모양이 곧 학습 내용이라 그냥 넘길 수 없다.
+
+    lang 만으로는 부족해서 source/default.css 가 [lang="ja"] 에 웹폰트를 건다.
+    자세한 것은 docs/ledger/japanese.md §7.
+
+    text    : 일본어. 인자는 이스케이프된다
+    reading : 후리가나(가나). 주면 ruby 로, 안 주면 span 으로 낸다
+
+    사용 예
+        +jp('東京', 'とうきょう')
+        p 도쿄는 #[+jp('東京', 'とうきょう')]이고 네 박이다.
+mixin jp(text, reading)
+    if reading
+        ruby(lang='ja')&attributes(attributes)
+            = text
+            rt= reading
+    else
+        span(lang='ja')&attributes(attributes)= text
+
 mixin pos(positionName)
     span(class='pos-span', id=`pos${positionName.hashCode()}`)
 

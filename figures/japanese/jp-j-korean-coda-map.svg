@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 344" width="760" height="344" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한글 받침과 음독 끝의 대응</title><desc id="d">받침 여섯 갈래가 음독의 끝 다섯 갈래로 이어진다. 두 받침이 한 곳으로 모인다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="150" y="32" text-anchor="middle">한국 한자음의 받침</text><text class="ink2 sm" x="575" y="32" text-anchor="middle">음독의 끝</text><rect x="90" y="46" width="120" height="32" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="150" y="66" text-anchor="middle">받침 없음</text><rect x="90" y="88" width="120" height="32" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="150" y="108" text-anchor="middle">ㄱ</text><rect x="90" y="130" width="120" height="32" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="150" y="150" text-anchor="middle">ㄴ</text><rect x="90" y="172" width="120" height="32" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="150" y="192" text-anchor="middle">ㅁ</text><rect x="90" y="214" width="120" height="32" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="150" y="234" text-anchor="middle">ㄹ</text><rect x="90" y="256" width="120" height="32" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="150" y="276" text-anchor="middle">ㅇ</text><rect x="470" y="46" width="210" height="32" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="575" y="66" text-anchor="middle">모음으로 끝난다</text><rect x="470" y="88" width="210" height="32" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="575" y="108" text-anchor="middle">く · き</text><rect x="470" y="151" width="210" height="32" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="575" y="171" text-anchor="middle">ん</text><rect x="470" y="214" width="210" height="32" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="575" y="234" text-anchor="middle">つ · ち</text><rect x="470" y="256" width="210" height="32" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="575" y="276" text-anchor="middle">う · い — 장음이 된다</text><path fill="none" stroke="var(--ink2)" stroke-width="1.2" d="M214 62 L466 62"/><path fill="none" stroke="var(--ink2)" stroke-width="1.2" d="M214 104 L466 104"/><path fill="none" stroke="var(--s2)" stroke-width="1.6" d="M214 146 L466 167"/><path fill="none" stroke="var(--s2)" stroke-width="1.6" d="M214 188 L466 167"/><path fill="none" stroke="var(--ink2)" stroke-width="1.2" d="M214 230 L466 230"/><path fill="none" stroke="var(--s3)" stroke-width="1.6" d="M214 272 L466 272"/><text class="ink2 sm" x="230" y="306" text-anchor="start">ㄴ 과 ㅁ 은 한곳으로 모이고, ㅇ 은 거기로 가지 않는다</text><text class="ink2 sm" x="230" y="326" text-anchor="start">ㅂ 은 갈래가 갈려서 이 그림에 넣지 않았다</text></g>
+</svg>

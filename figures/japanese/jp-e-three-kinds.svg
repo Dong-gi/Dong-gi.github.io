@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 318" width="760" height="318" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">세 갈래가 각각 무엇을 향하는가</title><desc id="d">정중어는 듣는 사람을 향하고, 존경어는 상대의 행동을 올리고, 겸양어는 자기 행동을 내린다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="30" text-anchor="start">세 갈래는 걸리는 자리가 다르다. 정중어만 화제의 인물과 무관하다</text><rect x="40" y="52" width="120" height="44" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="100" y="78" text-anchor="middle">정중어</text><rect x="196" y="52" width="130" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink sm" x="261" y="78" text-anchor="middle">나의 말투</text><path class="s3" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)" d="M332 74 L424 74"/><rect x="430" y="52" width="150" height="44" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="505" y="78" text-anchor="middle">듣는 사람</text><text class="ink2 sm" x="600" y="68" text-anchor="start">です・ます</text><text class="ink2 sm" x="600" y="86" text-anchor="start">화제와 무관하다</text><rect x="40" y="118" width="120" height="44" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="100" y="144" text-anchor="middle">존경어</text><rect x="196" y="118" width="130" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink sm" x="261" y="144" text-anchor="middle">상대의 행동</text><path class="s1" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)" d="M400 152 L400 116"/><text class="ink2 sm" x="414" y="138" text-anchor="start">올린다</text><text class="ink2 sm" x="600" y="134" text-anchor="start">いらっしゃる</text><text class="ink2 sm" x="600" y="152" text-anchor="start">おかきになる</text><rect x="40" y="184" width="120" height="44" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="100" y="210" text-anchor="middle">겸양어</text><rect x="196" y="184" width="130" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink sm" x="261" y="210" text-anchor="middle">나의 행동</text><path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M400 190 L400 226"/><text class="ink2 sm" x="414" y="212" text-anchor="start">내린다</text><text class="ink2 sm" x="600" y="200" text-anchor="start">うかがう</text><text class="ink2 sm" x="600" y="218" text-anchor="start">おもちする</text><text class="ink" x="40" y="264" text-anchor="start">아래 둘은 행동에 걸리므로 갈래를 가리려면 행동의 주인을 먼저 찾아야 한다</text><text class="ink" x="40" y="288" text-anchor="start">내 행동을 내리는 것과 상대를 올리는 것은 결과가 같다. 그래서 둘이 한 자리에 함께 온다</text><text class="ink2 sm" x="40" y="312" text-anchor="start">오른쪽 끝은 그 갈래에 드는 낱말의 보기다</text></g>
+</svg>

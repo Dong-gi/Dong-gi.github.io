@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 318" width="760" height="318" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한 꼴이 여러 갈래로 읽히는 것</title><desc id="d">수동과 같은 꼴을 존경어로 쓰면 한 형태가 여러 갈래로 읽히고, 형태만으로는 갈리지 않는다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="30" text-anchor="start">수동과 같은 꼴을 존경어로 쓰면 형태가 겹친다</text><rect x="40" y="52" width="160" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="120" y="78" text-anchor="middle">かかれる</text><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M206 68 L262 58"/><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M206 80 L262 100"/><rect x="268" y="40" width="110" height="36" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink sm" x="323" y="62" text-anchor="middle">수동</text><rect x="268" y="82" width="110" height="36" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink sm" x="323" y="104" text-anchor="middle">존경</text><text class="ink2 sm" x="396" y="74" text-anchor="start">두 갈래</text><rect x="40" y="138" width="160" height="44" rx="6" fill="none" stroke="var(--ink2)" stroke-width="1.4"/><text class="ink" x="120" y="164" text-anchor="middle">たべられる</text><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M206 150 L262 136"/><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M206 160 L262 178"/><path class="ax" fill="none" stroke-width="1.6" stroke-linecap="round" marker-end="url(#ark)" d="M206 170 L262 220"/><rect x="268" y="118" width="110" height="36" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink sm" x="323" y="140" text-anchor="middle">수동</text><rect x="268" y="160" width="110" height="36" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink sm" x="323" y="182" text-anchor="middle">가능</text><rect x="268" y="202" width="110" height="36" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink sm" x="323" y="224" text-anchor="middle">존경</text><text class="ink2 sm" x="396" y="160" text-anchor="start">세 갈래</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="4 4" d="M470 44 L470 244"/><text class="ink2 sm" x="492" y="60" text-anchor="start">무엇이 가르는가</text><text class="ink" x="492" y="84" text-anchor="start">주어가 누구인가</text><text class="ink" x="492" y="108" text-anchor="start">행동을 하는 쪽이 표시되어 있는가</text><text class="ink" x="492" y="132" text-anchor="start">앞뒤 문장</text><text class="ink2 sm" x="492" y="168" text-anchor="start">갈래를 뚜렷이 하려면</text><text class="ink" x="492" y="192" text-anchor="start">특별한 낱말 — めしあがる</text><text class="ink" x="492" y="216" text-anchor="start">틀 — おかきになる</text><text class="ink" x="40" y="272" text-anchor="start">형태가 겹치는 것은 결함이 아니라 이 꼴의 성질이다. 갈래는 문장 밖에서 정해진다</text><text class="ink2 sm" x="40" y="296" text-anchor="start">오른쪽 아래 두 줄이 겹침을 피하는 방법이다</text></g>
+</svg>

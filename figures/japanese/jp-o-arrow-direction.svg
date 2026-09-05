@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 310" width="760" height="310" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">자동사와 타동사에서 화살표가 어디로 가는가</title><desc id="d">자동사는 변화가 그 낱말 안에서 끝나고, 타동사는 화살표가 다른 것에 가 닿는다. 닿는 곳이 を 로 표시된다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="f1" x="40" y="32" text-anchor="start">자동사 — 화살표가 밖으로 나가지 않는다</text><path class="s1" fill="none" stroke-width="2.4" stroke-linecap="round" marker-end="url(#ar1)" d="M80 92 C80 48 170 48 170 88"/><text class="f1" x="125" y="84" text-anchor="middle">あく</text><rect x="60" y="94" width="130" height="50" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text class="ink" x="125" y="123" text-anchor="middle">まど</text><text class="ink" x="60" y="184" text-anchor="start" style="font-size:17px">まどが あく</text><text class="ink2 sm" x="60" y="212" text-anchor="start">변화를 겪는 것이 하나뿐이다</text><path fill="none" stroke="var(--grid)" stroke-width="1.2" stroke-dasharray="4 4" d="M370 24 L370 232"/><text class="f2" x="400" y="32" text-anchor="start">타동사 — 화살표가 다른 것에 가 닿는다</text><rect x="400" y="94" width="120" height="50" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text class="ink" x="460" y="123" text-anchor="middle">わたし</text><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" d="M524 119 L594 119"/><text class="f2 sm" x="559" y="108" text-anchor="middle">あける</text><rect x="598" y="94" width="120" height="50" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text class="ink" x="658" y="123" text-anchor="middle">まど</text><text class="ink" x="400" y="184" text-anchor="start" style="font-size:17px">わたしが まどを あける</text><text class="ink2 sm" x="400" y="212" text-anchor="start">화살표가 닿는 곳이 を 로 표시된다</text><rect x="40" y="240" width="680" height="56" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="380" y="262" text-anchor="middle">を 가 붙었다고 다 타동사인 것은 아니다</text><text class="ink" x="380" y="282" text-anchor="middle">みちを あるく 의 あるく 는 자동사다 — 9장이 경로의 を 라 이름 붙인 자리다</text></g>
+</svg>

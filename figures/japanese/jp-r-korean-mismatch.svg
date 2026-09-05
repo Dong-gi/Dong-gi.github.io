@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" width="760" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한국어 등급과 일본어 문체를 잇는 선</title><desc id="d">선이 하나씩 이어지지 않는다. 여럿이 하나로 모이는 자리와 하나가 둘로 갈라지는 자리가 함께 있다.</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="30" text-anchor="start">선이 하나씩 이어지지 않는다는 것이 이 그림에서 읽어낼 것이다</text><text class="ink2 sm" x="150" y="62" text-anchor="middle">한국어</text><text class="ink2 sm" x="610" y="62" text-anchor="middle">일본어</text><rect x="40" y="76" width="220" height="42" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="150" y="101" text-anchor="middle">합쇼체</text><rect x="40" y="128" width="220" height="42" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="150" y="153" text-anchor="middle">해요체</text><rect x="40" y="190" width="220" height="42" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="150" y="215" text-anchor="middle">해체</text><rect x="40" y="242" width="220" height="42" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="150" y="267" text-anchor="middle">해라체</text><rect x="500" y="102" width="180" height="42" rx="6" fill="none" stroke="var(--s2)" stroke-width="1.4"/><text class="ink" x="590" y="127" text-anchor="middle">です · ます</text><text class="f2 sm" x="692" y="127" text-anchor="start">정중체</text><rect x="500" y="190" width="180" height="42" rx="6" fill="none" stroke="var(--s1)" stroke-width="1.4"/><text class="ink" x="590" y="215" text-anchor="middle">だ</text><text class="f1 sm" x="692" y="215" text-anchor="start">보통체</text><rect x="500" y="250" width="180" height="42" rx="6" fill="none" stroke="var(--s3)" stroke-width="1.4"/><text class="ink" x="590" y="275" text-anchor="middle">である</text><text class="f3 sm" x="692" y="275" text-anchor="start">글말</text><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" d="M266 97 L494 120"/><path class="s2" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar2)" d="M266 149 L494 130"/><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M266 211 L494 209"/><path class="s1" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar1)" d="M266 258 L494 218"/><path class="s3" fill="none" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ar3)" d="M266 272 L494 271"/><text class="ink2 sm" x="40" y="312" text-anchor="start">위의 둘은 하나로 모이고, 맨 아래 하나는 둘로 갈라진다</text></g>
+</svg>

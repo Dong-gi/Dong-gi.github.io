@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 295" width="400" height="295" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">박으로는 넷, 음절로는 둘</title><desc id="d">같은 낱말을 박으로 세면 네 칸이고 음절로 묶으면 두 덩이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<g font-family="'Noto Sans CJK JP', 'Noto Sans JP', 'Yu Gothic', 'Hiragino Sans', Meiryo, 'MS Gothic', 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif"><text class="ink2 sm" x="40" y="32" text-anchor="start">일본어 — 가나 한 글자가 한 칸</text><rect x="40" y="44" width="56" height="52" rx="7" class="s1" fill="none" stroke-width="1.6"/><text class="ink" x="68" y="79.36" text-anchor="middle" font-size="28">が</text><rect x="104" y="44" width="56" height="52" rx="7" class="s1" fill="none" stroke-width="1.6"/><text class="ink" x="132" y="79.36" text-anchor="middle" font-size="28">っ</text><rect x="168" y="44" width="56" height="52" rx="7" class="s1" fill="none" stroke-width="1.6"/><text class="ink" x="196" y="79.36" text-anchor="middle" font-size="28">こ</text><rect x="232" y="44" width="56" height="52" rx="7" class="s1" fill="none" stroke-width="1.6"/><text class="ink" x="260" y="79.36" text-anchor="middle" font-size="28">う</text><text class="ink2 sm" x="68" y="114" text-anchor="middle">1</text><text class="ink2 sm" x="132" y="114" text-anchor="middle">2</text><text class="ink2 sm" x="196" y="114" text-anchor="middle">3</text><text class="ink2 sm" x="260" y="114" text-anchor="middle">4</text><text class="ink" x="312" y="75" text-anchor="start">박 넷</text><path class="ax" fill="none" d="M40 128 v6 H160 v-6"/><text class="ink2 sm" x="100" y="152" text-anchor="middle">한 음절</text><path class="ax" fill="none" d="M168 128 v6 H288 v-6"/><text class="ink2 sm" x="228" y="152" text-anchor="middle">한 음절</text><text class="ink2 sm" x="40" y="200" text-anchor="start">한국어 — 글자 한 칸이 한 음절</text><rect x="40" y="212" width="56" height="52" rx="7" class="s1" fill="none" stroke-width="1.6"/><text class="ink" x="68" y="247.36" text-anchor="middle" font-size="28">학</text><rect x="104" y="212" width="56" height="52" rx="7" class="s1" fill="none" stroke-width="1.6"/><text class="ink" x="132" y="247.36" text-anchor="middle" font-size="28">교</text><text class="ink" x="184" y="243" text-anchor="start">음절 둘</text></g>
+</svg>
