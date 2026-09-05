@@ -65,17 +65,16 @@ usb-tether/
 │           ├── assets/
 │           │   └── fileman.html          # 파일 서버 웹 UI (단일 파일, 외부 의존 없음)
 │           └── res/
-└── output/                    # 사전 빌드된 실행 파일 / 스크립트
-    ├── adb.exe                # Android Debug Bridge, Windows (APK 설치·진단용)
-    ├── adb                    # Android Debug Bridge, macOS universal
-    ├── tun2proxy.exe          # TUN → SOCKS5 브릿지 (Windows)
-    ├── tun2proxy              # TUN → SOCKS5 브릿지 (macOS, arm64 전용)
-    ├── wintun.dll             # WinTun 가상 NIC 드라이버 (Windows 전용)
+└── output/                    # 시작 스크립트. 실행 파일은 직접 받는다
+    ├── README.md              # 무엇을 어디서 받는지
     ├── windows-wifi.bat       # Windows 시작 스크립트
     └── macos-wifi.sh          # macOS 시작 스크립트
 ```
 
-> APK 는 저장소에 포함되어 있지 않습니다. 아래처럼 직접 빌드하세요.
+> **APK 도 실행 파일도 저장소에 없습니다.** APK 는 아래처럼 빌드하고,
+> `tun2proxy`·`wintun.dll`·`adb` 는 `output/README.md` 를 보고 직접 받으세요.
+> 남이 빌드한 바이너리라 재배포는 각자의 라이선스가 정하고, 이 저장소는
+> GitHub Pages 로 통째로 게시되므로 커밋하면 곧 웹에 공개됩니다.
 
 ## 셋업 순서
 
@@ -86,7 +85,7 @@ usb-tether/
    - APK를 폰으로 직접 옮겨 설치한다면 개발자 옵션은 필요 없습니다
 
 2. **PC**
-   - `output/` 폴더에 `tun2proxy.exe`, `wintun.dll`이 포함되어 있음 — 별도 설치 불필요
+   - `output/README.md` 를 보고 `tun2proxy.exe` 와 `wintun.dll` 을 받아 `output/` 에 둔다
    - 관리자 권한 필요 (WinTun 드라이버 로드)
 
 ### Android 앱 설치
@@ -177,16 +176,16 @@ output\windows-wifi.bat
 
 #### 사전 준비
 
-- **tun2proxy**: `output/tun2proxy` 가 이미 포함되어 있습니다. 단 **Apple Silicon(arm64) 전용**입니다.
-  - Intel Mac 이라면 [github.com/tun2proxy/tun2proxy/releases](https://github.com/tun2proxy/tun2proxy/releases) 에서 `tun2proxy-x86_64-apple-darwin.tar.gz` 를 받아 압축 해제 후 `output/tun2proxy` 를 덮어쓰세요.
+- **tun2proxy**: [github.com/tun2proxy/tun2proxy/releases](https://github.com/tun2proxy/tun2proxy/releases) 에서 받아 `output/tun2proxy` 로 둡니다.
+  - Apple Silicon 은 `tun2proxy-aarch64-apple-darwin`, Intel Mac 은 `tun2proxy-x86_64-apple-darwin`.
   - 확인 방법: `file output/tun2proxy` → `Mach-O 64-bit arm64 executable`
-- **adb**: `output/adb` 가 universal 바이너리로 포함되어 있습니다(APK 설치·진단용, 선택).
+- **adb**: [Android SDK Platform-Tools](https://developer.android.com/tools/releases/platform-tools) 의 universal 바이너리(APK 설치·진단용, 선택).
 - **wintun.dll 불필요**: macOS는 커널에 TUN/utun 인터페이스가 내장되어 있습니다.
 
 스크립트를 처음 실행하기 전에 실행 권한을 부여합니다:
 
 ```bash
-chmod +x output/macos-wifi.sh
+chmod +x output/macos-wifi.sh output/tun2proxy output/adb
 ```
 
 #### 실행

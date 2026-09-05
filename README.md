@@ -271,9 +271,13 @@ git 이력으로 대신하면서 둘 다 없앴다. 그래서 순서를 정하�
 
 **여기 성격이 다른 것 둘이 섞여 있다.** `iroiro-downloader/` 와 `usb-tether/` 는
 인용되는 코드 조각이 아니라 자체 `README.md`·`CLAUDE.md` 를 가진 **독립 애플리케이션**이고,
-어느 문서도 가리키지 않는다. `usb-tether/output/` 에는 서드파티 실행 파일이 들어 있어
-**`Repositories/` 전체 45.4 MB 중 39 MB 가 이 한 폴더다.** 배포 워크플로가 저장소를
-통째로 올리므로 그 파일들은 지금 공개 주소로 내려받아진다.
+어느 문서도 가리키지 않는다.
+
+**서드파티 바이너리를 여기 커밋하지 마라.** 배포 워크플로가 저장소를 통째로 올리므로
+커밋하는 순간 `https://dong-gi.github.io/Repositories/…` 로 공개된다. 남이 빌드한
+실행 파일은 재배포를 각자의 라이선스가 정한다. `usb-tether/output/` 에 이런 파일
+다섯 개(39 MB)가 들어가 한동안 공개되어 있었고, 지금은 받는 곳만 적어 두었다
+(`Repositories/usb-tether/output/README.md`).
 
 ### `posts/` — 서비스되는 HTML
 

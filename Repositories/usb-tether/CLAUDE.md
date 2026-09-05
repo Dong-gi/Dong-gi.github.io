@@ -30,10 +30,11 @@ Requires Android SDK API 37 (`compileSdk` = `targetSdk` = 37, `minSdk` = 26). AG
 **No Kotlin plugin is applied anywhere, on purpose.** AGP 9 has built-in Kotlin support and carries its own KGP, so `org.jetbrains.kotlin.android` must not be added back — it collides with the new DSL. The trade-off is that the Kotlin version is not pinned in this repo; it follows whatever AGP 9.2.1 bundles. Pin it explicitly if a build ever needs to be reproduced exactly.
 
 ### Running End-to-End
-1. `output/` is pre-populated — no separate download needed:
-   - Windows: `tun2proxy.exe`, `wintun.dll`, `adb.exe`
-   - macOS: `tun2proxy` (Mach-O **arm64** only — Intel Macs need their own build), `adb` (universal)
-   - launchers: `windows-wifi.bat`, `macos-wifi.sh`
+1. `output/` ships **only the launchers** (`windows-wifi.bat`, `macos-wifi.sh`) and `output/README.md`. Fetch the rest yourself:
+   - Windows: `tun2proxy.exe`, `wintun.dll`, and optionally `adb.exe`
+   - macOS: `tun2proxy` (match your arch — arm64 or x86_64) and optionally `adb` (universal)
+   - `output/README.md` lists where each comes from, plus the SHA-256 of the copies that used to be committed.
+   - **Nothing third-party is committed and nothing should be.** These are other people's builds, their licenses govern redistribution, and this repository is published wholesale as a GitHub Pages site — committing one publishes it. `.gitignore` now matches them by name.
    - There is **no committed APK.** Build it (`./gradlew installDebug`) or install a locally built one. `adb`/`adb.exe` exist only for installing the APK and for diagnostics — they are not part of any data path.
 2. **Windows (Administrator):** run `output/windows-wifi.bat` — it auto-elevates and launches tun2proxy against `socks5://192.168.49.1:1080` with `--setup`. It does **not** probe for a port: accepting whichever port answered a SOCKS5 greeting was the hijack primitive described above, so the port is now fixed and only overridable by an explicit argument (`windows-wifi.bat 1085`). `--dns over-tcp` is not needed because UDP ASSOCIATE works over Wi-Fi Direct.
 3. **macOS:** run `output/macos-wifi.sh` — same behaviour; it re-execs itself under `sudo` (forwarding arguments) and uses TUN interface `utun5` to avoid the `utun0`–`utun3` range VPN clients tend to occupy.
@@ -91,4 +92,4 @@ There is no custom PC binary. An early Rust bridge (`pc/`) was removed from the 
 
 **Android (`app/build.gradle.kts`):** `androidx.core:core-ktx`, `androidx.appcompat`, `com.google.android.material`. No Kotlin plugin — see Build Commands.
 
-**External tools (pre-built, in `output/`):** `tun2proxy.exe` + `wintun.dll` (Windows) and `tun2proxy` (macOS, **arm64**). `adb.exe` / `adb` (Android platform-tools) are retained for APK installation and diagnostics only — they are not part of any data path. No APK is committed.
+**External tools (fetched into `output/`, never committed):** `tun2proxy.exe` + `wintun.dll` (Windows) and `tun2proxy` (macOS). `adb.exe` / `adb` (Android platform-tools) are optional — APK installation and diagnostics only, not part of any data path. No APK is committed either. See `output/README.md`.
