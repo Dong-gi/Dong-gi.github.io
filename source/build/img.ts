@@ -25,7 +25,7 @@ async function transform(log: BuildLog, rel: string) {
     }
     const candidates: [Sharp, number][] = [[img, (await stat(resolve(rel))).size]];
     await Promise.all(
-        [copy.webp(), ...(animated ? [] : [copy.avif()])].map(x => x.toBuffer().then(y => candidates.push([x, y.length])))
+        [copy.webp(), ...(animated ? [] : [copy.clone().avif()])].map(x => x.toBuffer().then(y => candidates.push([x, y.length])))
     )
     const winner = candidates.sort((a, b) => a[1] - b[1])[0][0];
     const out = rel.replace(/\.\w+$/, '.webp');
