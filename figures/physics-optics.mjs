@@ -1080,8 +1080,8 @@ add((() => {
             + g.curve(x => env(x), { cls: 's2', dash: '5 4' })
             + g.curve(x => -env(x), { cls: 's2', dash: '5 4' })
             + g.curve(x => env(x) * Math.cos(70 * (x - 0.5)), { cls: 's1', steps: 480 })
-            + txt(462, top + 30, note1, { cls: 'ink', size: 'sm' })
-            + txt(462, top + 50, note2, { cls: 'ink2', size: 'sm' });
+            + txt(484, top + 30, note1, { cls: 'ink', size: 'sm' })
+            + txt(484, top + 50, note2, { cls: 'ink2', size: 'sm' });
     };
     b.push(panel(58, 0.33, '파장이 뚜렷하다', 'Δp 작다 / Δx 크다'));
     b.push(panel(190, 0.055, '위치가 뚜렷하다', 'Δp 크다 / Δx 작다'));

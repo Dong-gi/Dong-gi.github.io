@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 240" width="740" height="240" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">개입이 하나로 정해지는 경우와 그렇지 않은 경우</title><desc id="d">가격을 내리는 일, 교육을 늘리는 일, 타고난 특성을 바꾸는 일을 나란히 놓았다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="10" y="45" width="232" height="150" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="126" y="34" text-anchor="middle" class="sm bold ink">하나로 정해진다</text><ellipse cx="126" cy="100" rx="96.4" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="126" y="100" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="126" dy="4.5">가격을 100원 내린다</tspan></text><text x="126" y="152" text-anchor="middle" class="sm ink2">무엇을 하는 일인지</text><text x="126" y="174" text-anchor="middle" class="sm ink2">손으로 가리킬 수 있다</text><rect x="254" y="45" width="232" height="150" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="370" y="34" text-anchor="middle" class="sm bold ink">여러 가지다</text><ellipse cx="370" cy="100" rx="60.4" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="370" y="100" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="370" dy="4.5">교육을 늘린다</tspan></text><text x="370" y="152" text-anchor="middle" class="sm ink2">수업을 늘리는 것과</text><text x="370" y="174" text-anchor="middle" class="sm ink2">학교를 더 다니는 것이 다르다</text><rect x="498" y="45" width="232" height="150" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="614" y="34" text-anchor="middle" class="sm bold ink">상상하기 어렵다</text><ellipse cx="614" cy="100" rx="89.2" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="614" y="100" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="614" dy="4.5">타고난 특성을 바꾼다</tspan></text><text x="614" y="152" text-anchor="middle" class="sm ink2">무엇을 하는 일인지</text><text x="614" y="174" text-anchor="middle" class="sm ink2">정해지지 않는다</text><text x="370" y="222" text-anchor="middle" class="sm bold ink">오른쪽으로 갈수록 개입 물음이 흐려진다</text>
+</svg>

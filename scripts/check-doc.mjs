@@ -49,8 +49,13 @@ for (const file of process.argv.slice(2)) {
     ex === so ? ok(`예제 ${ex}개`) : fail(`예제 ${ex} / 풀이 ${so}`);
 
     // 5) 그림 파일 실재
+    //    `+w3img` 는 `/imgs/` 로 시작하는 경로의 확장자를 `.webp` 로 바꿔 건다
+    //    (source/skeleton.pug). build-img 가 `imgs/` 의 사진을 그 이름으로 바꿔 두기
+    //    때문이다. 그래서 문서에 적힌 원래 확장자로 찾으면 있는 파일도 없다고 나온다.
+    //    믹스인과 같은 규칙을 여기서도 적용한다. `/figures/`·`/d2/` 는 그대로 둔다.
+    const resolveImg = (u) => (u.startsWith('/imgs/') ? u.replace(/\.\w+$/, '.webp') : u);
     const imgs = [...src.matchAll(/\+w3img\('([^']+)'/g)].map(m => m[1]);
-    const missing = imgs.filter(u => !fs.existsSync(path.join(ROOT, u.replace(/^\//, ''))));
+    const missing = imgs.filter(u => !fs.existsSync(path.join(ROOT, resolveImg(u).replace(/^\//, ''))));
     missing.length === 0 ? ok(`그림 ${imgs.length}개 전부 존재`) : fail(`없는 그림: ${missing.join(', ')}`);
 
     // 6) 마크다운 잔재 / 탭 / 수동 번호

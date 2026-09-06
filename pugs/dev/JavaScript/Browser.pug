@@ -102,21 +102,72 @@ include ../../../source/skeleton.pug
     ul
         li HTTPS 응답 자체를 일시 보관하여 이후 동일 요청 발생 시 사용한다
         li 캐시를 사용하기에 앞서 먼저 서비스 워커를 설치해야 한다
-        ol
-            li 서비스 워커가 사용 가능한지 확인하고
-            +asCode('JavaScript') if ("serviceWorker" in navigator) {}
+            +asCode('JavaScript').
+                if (navigator.serviceWorker != null) {
+                    if (navigator.serviceWorker.controller) {
+                        console.log('Offline service worker working...')
+                    } else {
+                        navigator.serviceWorker
+                            .register("/offline-service-worker.js", {
+                                scope: '/'
+                            })
+                            .then(() => console.log("Offline service worker registered"));
+                    }
+                }
 
-            li 서비스 워커를 등록한다
-            +asCode('JavaScript') navigator.serviceWorker.register('path-to-js')
+                // offline-service-worker.js
+                const CACHE = 'offline-data-v2';
 
-            li 페이지를 다시 로드하면 서비스 워커가 페이지를 제어할 수 있다
-            +asCode('JavaScript', '워커 코드') self.addEventListener("install", (e) => {})
+                self.addEventListener('install', (ev) => {
+                    ev.waitUntil(caches.open(CACHE).then(cache => cache.addAll([
+                        '/source/default.min.js',
+                        '/source/default.css',
+                    ])));
+                });
 
-            li CacheStorage는 캐시 집합으로, 키를 이용해 각 캐시들을 구별한다
-            +codeBtn({
-                path: '/offline-service-worker.js',
-                lan: 'JavaScript'
-            })
+                self.addEventListener('activate', (ev) => {
+                    // 캐시 이름을 바꾸면 옛 캐시가 남는다
+                    ev.waitUntil(
+                        caches.keys()
+                            .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+                            .then(() => self.clients.claim()),
+                    );
+                });
+
+                self.addEventListener('fetch', (ev) => {
+                    if (ev.request.method !== 'GET') return;
+                    const url = new URL(ev.request.url);
+                    if (url.origin !== self.location.origin) return;
+
+                    ev.respondWith((async () => {
+                        const cache = await caches.open(CACHE);
+
+                        let response = null;
+                        try {
+                            response = await fetch(ev.request);
+                        } catch (e) {
+                            // 네트워크가 안 된다. 아래에서 캐시를 본다.
+                        }
+
+                        if (response != null) {
+                            /*
+                             * 200만 캐시한다
+                             */
+                            if (response.status === 200 && response.type === 'basic') {
+                                cache.put(ev.request, response.clone()).catch(e => console.warn('캐시 저장 실패', url.href, e));
+                            }
+                            return response;
+                        }
+
+                        const cached = await cache.match(ev.request);
+                        if (cached != null) return cached;
+
+                        return new Response('오프라인이고 캐시에도 없는 문서다.', {
+                            status: 503,
+                            headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+                        });
+                    })());
+                });
 
     h2 웹 저장소
     ul
@@ -165,7 +216,7 @@ include ../../../source/skeleton.pug
         li IDBObjectStore 객체를 이용해 연산을 수행한다
         ul
             li createIndex() 메서드로 레코드의 필드/컬럼을 정의한다
-            li add() 메서드로 신규 레코드 삽입 -- 이미 키가 존재하면 ConstraintError 이벤트 발생 
+            li add() 메서드로 신규 레코드 삽입 -- 이미 키가 존재하면 ConstraintError 이벤트 발생
             li put() 메서드로 upsert 수행
             li count(), get(), getAll(), openCursor() 등으로 키를 기반으로 한 조회 쿼리 수행
             p IDBIndex를 이용해 인덱스를 기반으로 한 조회 쿼리 수행 가능
@@ -355,7 +406,7 @@ include ../../../source/skeleton.pug
             +asCode('JavaScript').
                 fetch(
                     'https://mdn.github.io/dom-examples/abort-api/sintel.mp4',
-                    { 
+                    {
                         signal: AbortSignal.any([new AbortController().signal, AbortSignal.timeout(10)])
                     }
                 ).then(console.log).catch(console.log)

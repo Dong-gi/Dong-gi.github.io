@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 260" width="700" height="260" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">같은 상관과 들어맞는 세 개의 그래프</title><desc id="d">첫째 칸에는 처치에서 결과로 가는 화살표가, 둘째 칸에는 결과에서 처치로 가는 화살표가, 셋째 칸에는 갑에서 처치와 결과로 각각 나가는 화살표 둘이 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="12" y="52" width="220" height="152" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="122" y="42" text-anchor="middle" class="sm bold ink">첫째 이야기</text><ellipse cx="67" cy="132" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="67" y="132" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="67" dy="4.5">처치</tspan></text><ellipse cx="177" cy="132" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="177" y="132" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="177" dy="4.5">결과</tspan></text><path d="M93 132 L143 132" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="122" y="222" text-anchor="middle" class="sm ink2">처치가 결과를 바꾼다</text><rect x="240" y="52" width="220" height="152" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="350" y="42" text-anchor="middle" class="sm bold ink">둘째 이야기</text><ellipse cx="295" cy="132" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="295" y="132" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="295" dy="4.5">처치</tspan></text><ellipse cx="405" cy="132" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="405" y="132" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="405" dy="4.5">결과</tspan></text><path d="M379 132 L329 132" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="350" y="222" text-anchor="middle" class="sm ink2">결과 쪽이 처치를 정한다</text><rect x="468" y="52" width="220" height="152" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="578" y="42" text-anchor="middle" class="sm bold ink">셋째 이야기</text><ellipse cx="578" cy="96" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="578" y="96" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="578" dy="4.5">갑</tspan></text><ellipse cx="522" cy="166" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="522" y="166" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="522" dy="4.5">처치</tspan></text><ellipse cx="634" cy="166" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="634" y="166" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="634" dy="4.5">결과</tspan></text><path d="M561.76 116.3 L543.24 139.45" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M594.24 116.3 L612.76 139.45" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="578" y="222" text-anchor="middle" class="sm ink2">갑이 둘 다를 움직인다</text><text x="350" y="248" text-anchor="middle" class="sm bold ink">세 그래프가 같은 상관을 낳는다. 자료는 셋을 가려 주지 않는다</text>
+</svg>

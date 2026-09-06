@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 358" width="660" height="358" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">도구에서 처치로, 처치에서 결과로 이어지는 그래프와 세 조건</title><desc id="d">왼쪽부터 도구, 처치, 결과가 한 줄로 놓여 화살표로 이어진다. 아래쪽 점선 원인 못 잰 혼입에서 처치와 결과로 화살표가 간다. 도구로 들어오는 화살표와 도구에서 결과로 바로 가는 화살표는 그려져 있지 않다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="330" y="32" text-anchor="middle" class="sm bold ink">도구가 갖춰야 하는 세 조건</text><ellipse cx="95" cy="118" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="95" y="118" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="95" dy="4.5">도구</tspan></text><ellipse cx="310" cy="118" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="310" y="118" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="310" dy="4.5">처치</tspan></text><ellipse cx="545" cy="118" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="545" y="118" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="545" dy="4.5">결과</tspan></text><ellipse cx="430" cy="228" rx="54" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8" stroke-dasharray="5 4"/><text x="430" y="228" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="430" dy="4.5">못 잰 혼입</tspan></text><path d="M121 118 L276 118" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M336 118 L511 118" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M390.19 191.51 L335.06 140.97" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M469.02 190.67 L520.43 141.5" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><text x="202" y="100" text-anchor="middle" class="sm ink2">관련성</text><text x="428" y="100" text-anchor="middle" class="sm ink2">재려는 효과</text><text x="430" y="272" text-anchor="middle" class="sm ink2">못 잰 혼입은 남아 있어도 된다</text><text x="40" y="306" text-anchor="start" class="sm ink2">관련성 — 도구에서 처치로 가는 화살표가 있다</text><text x="40" y="326" text-anchor="start" class="sm ink2">배제 제약 — 도구에서 결과로 가는 다른 길이 없다</text><text x="40" y="346" text-anchor="start" class="sm ink2">도구의 무작위성 — 도구로 들어오는 화살표가 없다</text>
+</svg>

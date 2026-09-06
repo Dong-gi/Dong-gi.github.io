@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 320" width="660" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">숨은 혼입의 두 세기와 결론이 뒤집히는 경계</title><desc id="d">가로축은 처치와 이어진 세기, 세로축은 결과와 이어진 세기이고 두 영역을 가르는 곡선이 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="ax" fill="none" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ark)" d="M80 250 L615 250"/><path class="ax" fill="none" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ark)" d="M80 250 L80 48"/><path d="M140 80 C 230 190, 330 215, 560 226" fill="none" stroke="var(--s2)" stroke-width="2.2" stroke-linecap="round"/><circle cx="185" cy="175" r="5" fill="var(--s1)" fill-opacity="0.6" stroke="var(--s1)" stroke-width="1.4"/><text class="ink2 sm" x="196" y="179" text-anchor="start">잰 혼입</text><text class="ink2 sm" x="150" y="228" text-anchor="start">이만한 세기로는 결론이 그대로다</text><text class="ink2 sm" x="330" y="110" text-anchor="start">이만하면 결론이 뒤집힌다</text><text class="ink2 sm" x="88" y="38" text-anchor="start">숨은 혼입이 결과와 이어진 세기</text><text class="ink2 sm" x="348" y="274" text-anchor="middle">숨은 혼입이 처치와 이어진 세기</text><text class="ink2 sm" x="348" y="302" text-anchor="middle">점은 잰 혼입 가운데 가장 센 것이 어디쯤인지 찍은 것이다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 300" width="700" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">조정 변수를 늘렸을 때 층마다 남는 인원</title><desc id="d">왼쪽 칸은 층 둘에 각각 처치와 대조 인원이 모두 적혀 있다. 오른쪽 칸은 층 여덟의 대조군 인원을 격자로 늘어놓았고 그중 두 칸이 0 명이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="15" y="55" width="320" height="205" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="175" y="42" text-anchor="middle" class="sm bold ink">조정 변수 하나 — 층 둘</text><text class="ink2 sm" x="175" y="85" text-anchor="middle">층마다 처치와 대조의 인원</text><text class="ink" x="55" y="120" text-anchor="start">층 ㄱ</text><rect x="120" y="102" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="151" y="121" text-anchor="middle">켬 180</text><rect x="205" y="102" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="236" y="121" text-anchor="middle">끔 60</text><text class="ink" x="55" y="160" text-anchor="start">층 ㄴ</text><rect x="120" y="142" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="151" y="161" text-anchor="middle">켬 20</text><rect x="205" y="142" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="236" y="161" text-anchor="middle">끔 140</text><text x="175" y="215" text-anchor="middle" class="sm ink2">두 층 모두 양쪽이 다 있다</text><rect x="365" y="55" width="320" height="205" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="525" y="42" text-anchor="middle" class="sm bold ink">조정 변수 셋 — 층 여덟</text><text class="ink2 sm" x="525" y="85" text-anchor="middle">여덟 층에 남은 대조군 인원</text><rect x="385" y="100" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="416" y="119" text-anchor="middle">41명</text><rect x="457" y="100" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="488" y="119" text-anchor="middle">18명</text><rect x="529" y="100" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="560" y="119" text-anchor="middle">27명</text><rect x="601" y="100" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="632" y="119" text-anchor="middle">9명</text><rect x="385" y="140" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="416" y="159" text-anchor="middle">12명</text><rect x="457" y="140" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="488" y="159" text-anchor="middle">0명</text><rect x="529" y="140" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="560" y="159" text-anchor="middle">6명</text><rect x="601" y="140" width="62" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="632" y="159" text-anchor="middle">0명</text><text x="525" y="215" text-anchor="middle" class="sm ink2">0 인 칸에서는 견줄 상대가 없다</text><text x="350" y="285" text-anchor="middle" class="sm bold ink">층을 잘게 나눌수록 빈 칸이 생긴다</text>
+</svg>

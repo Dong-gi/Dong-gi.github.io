@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 290" width="640" height="290" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">부모가 둘인 마디와 그 위쪽 조상</title><desc id="d">갑에서 을로 화살표가 가고 을과 무에서 병으로 화살표가 들어온다. 을과 무에는 부모라는 딱지가, 갑에는 부모가 아닌 조상이라는 딱지가 붙어 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="320" y="38" text-anchor="middle" class="sm bold ink">마르코프 가정이 하는 말</text><ellipse cx="110" cy="120" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="110" y="120" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="110" dy="4.5">갑</tspan></text><ellipse cx="250" cy="120" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="250" y="120" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="250" dy="4.5">을</tspan></text><ellipse cx="250" cy="205" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="250" y="205" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="250" dy="4.5">무</tspan></text><ellipse cx="420" cy="160" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="420" y="160" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="420" dy="4.5">병</tspan></text><path d="M136 120 L216 120" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M275.31 125.96 L386.9 152.21" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M275.13 198.35 L387.13 168.7" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="110" y="86" text-anchor="middle" class="sm ink2">부모가 아닌 조상</text><text x="250" y="86" text-anchor="middle" class="sm ink2">부모</text><text x="250" y="243" text-anchor="middle" class="sm ink2">부모</text><text x="420" y="126" text-anchor="middle" class="sm ink2">이 마디</text><text x="320" y="274" text-anchor="middle" class="sm bold ink">을과 무의 값을 알고 나면 병은 갑과 무관해진다</text>
+</svg>

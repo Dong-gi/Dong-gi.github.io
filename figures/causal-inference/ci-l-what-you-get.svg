@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 306" width="720" height="306" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">도구를 배우기 전과 배운 뒤에 손에 쥐는 것</title><desc id="d">왼쪽 칸에는 값과 결론만 있고 오른쪽 칸에는 같은 값에 가정 목록과 대상과 검사 범위가 함께 적혀 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="20" y="65" width="300" height="175" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="170" y="52" text-anchor="middle" class="sm bold ink">도구를 배우기 전</text><text x="170" y="100" text-anchor="middle" class="sm ink2">값 하나</text><text x="170" y="135" text-anchor="middle" class="sm ink2">결론 하나</text><text x="170" y="170" text-anchor="middle" class="sm ink2">무엇에 기대고 있는지</text><text x="170" y="205" text-anchor="middle" class="sm ink2">적혀 있지 않다</text><rect x="400" y="65" width="300" height="175" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="550" y="52" text-anchor="middle" class="sm bold ink">배우고 난 뒤</text><text x="550" y="100" text-anchor="middle" class="sm ink2">같은 값 하나</text><text x="550" y="135" text-anchor="middle" class="sm ink2">기댄 가정의 목록</text><text x="550" y="170" text-anchor="middle" class="sm ink2">누구에 대한 답인지</text><text x="550" y="205" text-anchor="middle" class="sm ink2">어디까지 검사되었는지</text><text x="360" y="272" text-anchor="middle" class="sm bold ink">값은 그대로이고 그 값에 붙는 단서가 늘었다</text><text x="360" y="296" text-anchor="middle" class="sm bold ink">늘어난 것은 확실성이 아니라 적힌 것이다</text>
+</svg>

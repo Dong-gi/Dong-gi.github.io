@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">개입은 처치로 들어오던 화살표를 끊는다</title><desc id="d">왼쪽 칸에서는 처치를 정하던 것에서 처치와 결과 양쪽으로 화살표가 가고, 오른쪽 칸에서는 처치로 가는 화살표만 없다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="15" y="50" width="330" height="200" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="180" y="38" text-anchor="middle" class="sm bold ink">관찰 — 그대로 두고 본다</text><ellipse cx="180" cy="95" rx="70" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="180" y="95" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="180" dy="4.5">처치를 정하던 것</tspan></text><ellipse cx="85" cy="190" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="85" y="190" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="85" dy="4.5">처치</tspan></text><ellipse cx="275" cy="190" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="275" y="190" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="275" dy="4.5">결과</tspan></text><path d="M130.5 144.5 L109.04 165.96" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M229.5 144.5 L250.96 165.96" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M111 190 L241 190" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="180" y="236" text-anchor="middle" class="sm ink2">처치로 화살표가 들어온다</text><rect x="375" y="50" width="330" height="200" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="540" y="38" text-anchor="middle" class="sm bold ink">개입 — 우리가 정한다</text><ellipse cx="540" cy="95" rx="70" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="540" y="95" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="540" dy="4.5">처치를 정하던 것</tspan></text><ellipse cx="445" cy="190" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="445" y="190" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="445" dy="4.5">처치</tspan></text><ellipse cx="635" cy="190" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="635" y="190" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="635" dy="4.5">결과</tspan></text><path d="M589.5 144.5 L610.96 165.96" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M471 190 L601 190" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="452" y="148" text-anchor="middle" class="sm ink2">화살표가 없다</text><text x="540" y="236" text-anchor="middle" class="sm ink2">처치는 우리가 넣은 값이다</text><text x="360" y="288" text-anchor="middle" class="sm bold ink">두 그림의 차이는 처치로 들어오는 화살표 하나뿐이다</text>
+</svg>

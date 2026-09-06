@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 290" width="660" height="290" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">자료가 없는 구간까지 모형이 뻗어 나간 그림</title><desc id="d">대조군 점 넷은 가로축 왼쪽에만 있고 처치군 점 넷은 오른쪽에만 있다. 두 직선이 각각 자료가 없는 쪽으로 점선이 되어 뻗어 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="320" y="32" text-anchor="middle" class="sm bold ink">두 군이 조정 변수의 값에서 겹치지 않는 자료</text><path class="gr" d="M179 212 V62"/><path class="gr" d="M273 212 V62"/><path class="gr" d="M367 212 V62"/><path class="gr" d="M461 212 V62"/><path class="gr" d="M85 212 H555"/><path class="gr" d="M85 162 H555"/><path class="gr" d="M85 112 H555"/><path class="ax" marker-end="url(#ark)" d="M85 212 H565"/><path class="ax" marker-end="url(#ark)" d="M85 212 V52"/><text class="sm ink2" x="179" y="227" text-anchor="middle">2</text><text class="sm ink2" x="273" y="227" text-anchor="middle">4</text><text class="sm ink2" x="367" y="227" text-anchor="middle">6</text><text class="sm ink2" x="461" y="227" text-anchor="middle">8</text><text class="sm ink2" x="79" y="166" text-anchor="end">20</text><text class="sm ink2" x="79" y="116" text-anchor="end">40</text><text class="sm ink2" x="569" y="216">조정 변수</text><text class="sm ink2" x="77" y="54" text-anchor="end">결과의 평균</text><path class="cv s1" stroke-dasharray="6 5" d="M273 164.5 L555 119.5"/><path class="cv s1" d="M132 187 L273 164.5"/><path class="cv s2" stroke-dasharray="6 5" d="M85 182 L367 137"/><path class="cv s2" d="M367 137 L508 114.5"/><circle class="f1" cx="132" cy="187" r="4.5"/><circle class="f1" cx="179" cy="179.5" r="4.5"/><circle class="f1" cx="226" cy="172" r="4.5"/><circle class="f1" cx="273" cy="164.5" r="4.5"/><circle class="f2" cx="367" cy="137" r="4.5"/><circle class="f2" cx="414" cy="129.5" r="4.5"/><circle class="f2" cx="461" cy="122" r="4.5"/><circle class="f2" cx="508" cy="114.5" r="4.5"/><text class="ink2 sm" x="136.7" y="144.5" text-anchor="start">대조군이 있는 구간</text><text class="ink2 sm" x="376.4" y="169.5" text-anchor="start">처치군이 있는 구간</text><text x="320" y="252" text-anchor="middle" class="sm bold ink">점선 구간에는 잰 것이 없다</text><text x="320" y="276" text-anchor="middle" class="sm ink2">그 자리의 차이는 자료가 아니라 모형이 정한 것이다</text>
+</svg>

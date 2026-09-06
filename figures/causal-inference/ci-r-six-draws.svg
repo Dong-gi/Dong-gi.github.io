@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 250" width="660" height="250" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">넷 가운데 둘을 고르는 여섯 가지 배정과 각각에서 나온 순진한 비교</title><desc id="d">여섯 칸에 배정과 값이 하나씩 적혀 있고 값은 마이너스 0.5 에서 4.5 까지 흩어져 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="330" y="42" text-anchor="middle" class="sm bold ink">넷 가운데 둘을 고르는 여섯 가지 배정</text><rect x="40" y="68" width="180" height="64" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="130" y="94" text-anchor="middle" class="sm bold ink">가와 나</text><text x="130" y="118" text-anchor="middle" class="sm ink2">순진한 비교 4.5</text><rect x="240" y="68" width="180" height="64" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="330" y="94" text-anchor="middle" class="sm bold ink">가와 다</text><text x="330" y="118" text-anchor="middle" class="sm ink2">순진한 비교 2</text><rect x="440" y="68" width="180" height="64" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="530" y="94" text-anchor="middle" class="sm bold ink">가와 라</text><text x="530" y="118" text-anchor="middle" class="sm ink2">순진한 비교 2.5</text><rect x="40" y="148" width="180" height="64" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="130" y="174" text-anchor="middle" class="sm bold ink">나와 다</text><text x="130" y="198" text-anchor="middle" class="sm ink2">순진한 비교 1.5</text><rect x="240" y="148" width="180" height="64" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="330" y="174" text-anchor="middle" class="sm bold ink">나와 라</text><text x="330" y="198" text-anchor="middle" class="sm ink2">순진한 비교 2</text><rect x="440" y="148" width="180" height="64" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="530" y="174" text-anchor="middle" class="sm bold ink">다와 라</text><text x="530" y="198" text-anchor="middle" class="sm ink2">순진한 비교 -0.5</text><text x="330" y="238" text-anchor="middle" class="sm bold ink">하나하나는 2 가 아닌데 여섯의 평균이 2 다</text>
+</svg>

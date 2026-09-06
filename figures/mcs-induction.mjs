@@ -1125,7 +1125,7 @@ add((() => {
         g.push(txt(lx, yy + 5, names[i], { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
         g.push(txt(rx, yy + 5, rnames[i], { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     }
-    g.push(txt(36, py + 184, 'e(b) ::= a₀ ,   e(aₙ) ::= aₙ₊₁ ,   나머지는 그대로', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(36, py + 208, 'e(b) ::= a₀ ,   e(aₙ) ::= aₙ₊₁ ,   나머지는 그대로', { cls: 'ink2', size: 'sm' }));
 
     // 오른쪽 — 유한집합
     g.push(panel(424, py, 336, 200, '유한집합에서는 안 된다', '자리가 하나 모자란다'));

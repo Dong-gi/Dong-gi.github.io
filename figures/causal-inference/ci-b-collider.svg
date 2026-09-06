@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 320" width="700" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">충돌부를 통제하기 전과 후</title><desc id="d">처치와 결과에서 충돌로 화살표가 들어간다. 왼쪽은 충돌에 상자가 없어 두 화살표가 점선이고 오른쪽은 상자를 쳐서 두 화살표가 실선이 된다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="15" y="55" width="320" height="225" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="175" y="42" text-anchor="middle" class="sm bold ink">충돌부를 통제하지 않는다</text><ellipse cx="85" cy="120" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="85" y="120" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="85" dy="4.5">처치</tspan></text><ellipse cx="265" cy="120" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="265" y="120" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="265" dy="4.5">결과</tspan></text><ellipse cx="175" cy="225" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="175" y="225" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="175" dy="4.5">충돌</tspan></text><path d="M101.92 139.74 L152.87 199.19" fill="none" stroke="var(--grid)" stroke-width="1.6" stroke-dasharray="6 5" stroke-linecap="round" marker-end="url(#ark)"/><path d="M248.08 139.74 L197.13 199.19" fill="none" stroke="var(--grid)" stroke-width="1.6" stroke-dasharray="6 5" stroke-linecap="round" marker-end="url(#ark)"/><path d="M111 120 L231 120" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="175" y="272" text-anchor="middle" class="sm ink2">연관은 인과에서 온 몫뿐이다</text><rect x="365" y="55" width="320" height="225" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="525" y="42" text-anchor="middle" class="sm bold ink">충돌부를 통제한다</text><ellipse cx="435" cy="120" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="435" y="120" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="435" dy="4.5">처치</tspan></text><ellipse cx="615" cy="120" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="615" y="120" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="615" dy="4.5">결과</tspan></text><rect x="490" y="190" width="70" height="70" rx="4" fill="none" stroke="var(--ink2)" stroke-width="1.6"/><ellipse cx="525" cy="225" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="525" y="225" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="525" dy="4.5">충돌</tspan></text><path d="M451.92 139.74 L502.87 199.19" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M598.08 139.74 L547.13 199.19" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M461 120 L581 120" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="525" y="272" text-anchor="middle" class="sm ink2">없던 연관이 섞여 든다</text><text x="350" y="308" text-anchor="middle" class="sm bold ink">통제가 경로를 여는 자리는 충돌부와 그 후손뿐이다</text>
+</svg>

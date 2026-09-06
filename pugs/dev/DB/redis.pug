@@ -80,12 +80,12 @@ include ../../../source/skeleton.pug
         li Redis 8.8부터 지원
             ul
                 li string 배열. 희소(sparse) 표현을 이용해 0 ~ 2^64-1 범위의 인덱스를 지원한다
-                li 배열 길이에 더해, 값이 설정된 요소의 개수(#[+goto('ARCOUNT')])를 별도로 관리한다
-                li 배열 커서를 이용한 순차 삽입(#[+goto('ARINSERT')])을 지원한다
-                li 배열을 이용한 순환 버퍼(#[+goto('ARRING')])를 지원한다
-                li 요소를 삽입한 시각이 관리된다(#[+goto('ARLASTITEMS')])
-                li 인덱스 구간에 대한 집계(#[+goto('AROP')])를 지원한다
-                li 요소에 대한 정규식 검색(#[+goto('ARGREP')])을 지원한다
+                li 배열 길이에 더해, 값이 설정된 요소의 개수(#[+asA('https://redis.io/docs/latest/commands/arcount/', 'ARCOUNT')])를 별도로 관리한다
+                li 배열 커서를 이용한 순차 삽입(#[+asA('https://redis.io/docs/latest/commands/arinsert/', 'ARINSERT')])을 지원한다
+                li 배열을 이용한 순환 버퍼(#[+asA('https://redis.io/docs/latest/commands/arring/', 'ARRING')])를 지원한다
+                li 요소를 삽입한 시각이 관리된다(#[+asA('https://redis.io/docs/latest/commands/arlastitems/', 'ARLASTITEMS')])
+                li 인덱스 구간에 대한 집계(#[+asA('https://redis.io/docs/latest/commands/arop/', 'AROP')])를 지원한다
+                li 요소에 대한 정규식 검색(#[+asA('https://redis.io/docs/latest/commands/argrep/', 'ARGREP')])을 지원한다
                 li 실수를 방지하기 위해, 큰 범위 읽기에 1,000,000개 하드 제한이 적용된다
 
     h2 List
@@ -581,7 +581,7 @@ include ../../../source/skeleton.pug
     +asCode().
         # Valkey
         BF.INSERT key [CAPACITY capacity] [ERROR error] [EXPANSION expansion] [SEED seed] [TIGHTENING tightening] [VALIDATESCALETO validatescaleto] [NONSCALING] [NOCREATE] [ITEMS value] [[ITEMS value] ...]
-                
+
         # Redis
         BF.INSERT key [CAPACITY capacity] [ERROR error] [EXPANSION expansion] [NOCREATE] [NONSCALING] ITEMS item [item ...]
     ul

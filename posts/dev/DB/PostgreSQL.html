@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ko-KR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"><title>PostgreSQL 설명서</title><link rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js" async></script><script id="default-js" src="/source/default.min.js" defer></script></head><body><aside class="w3-animate-left w3-rightbar w3-medium" id="sidebar"><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details><summary>LICENSE</summary><ul><li>This Site: <a href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT</a></li><li><a href="https://www.w3schools.com/w3css">w3css</a>: No license</li><li><a href="https://highlightjs.org/">highlight.js 11.11.1</a>: <a href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause</a></li><li><a href="https://github.com/mathjax/MathJax">MathJax 4.1.3</a>: <a href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a> (수식은 빌드 시점에 조판)</li><li><a href="https://ctan.org/pkg/newcomputermodern">New Computer Modern</a> (C) 2019-2021 Antonis Tsolomitis: <a href="https://ctan.org/license/gfl">GUST Font License</a></li><li><a href="https://github.com/terrastruct/d2">D2 0.7.1</a>: <a href="https://github.com/terrastruct/d2/blob/master/LICENSE.txt">MPL-2.0</a></li></ul></details><hr></aside><main id="main"><nav class="w3-bar w3-blue" id="nav"><button class="w3-bar-item w3-button" id="nav-toggle-btn" type="button">&#9776;</button><a class="w3-bar-item w3-button" href="/">Home</a><form role="search"><input class="w3-bar-item" id="query" type="search" placeholder="search" style="max-width:35%"></form></nav><article id="contents"><p>빌드 날짜: 2026-09-05</p><h1><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/legalnotice.html">Legal Notice; 법적 고지</a></h1><p>PostgreSQL Database Management System (also known as Postgres, formerly known as Postgres95)</p><p>Portions Copyright © 1996-2025, PostgreSQL Global Development Group</p><p>Portions Copyright © 1994, The Regents of the University of California</p><p>Permission to use, copy, modify, and distribute this software and its documentation for any purpose, without fee, and without a written agreement is hereby granted, provided that the above copyright notice and this paragraph and the following two paragraphs appear in all copies.</p><p>IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p><p>THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE PROVIDED HEREUNDER IS ON AN “AS-IS” BASIS, AND THE UNIVERSITY OF CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.</p><h1>시작하기 전에</h1><ul><li>최신 공식 문서 : <a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/index.html">index</a></li><li>별도 표기가 없다면, 이 문서는 PostgreSQL 18 문서 내용임</li><li>출시 노트 : <a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/release/">release</a></li><li>PostgreSQL은 캘리포니아 대학교 버클리 컴퓨터과학부에서 개발한 POSTGRES 버전 4.2를 기반으로 개발되고, 오픈소스로 관리 중인 객체-관계형 데이터베이스 관리 시스템(ORDBMS)이다. 뛰어난 성능과 확장성으로 여러 분야에서 애용하고 있다</li></ul><h1>기타 토픽</h1><ul><li>PostgreSQL 19 예정 사항<p>현재 상태를 재생하기 위한 DDL 동적 생성 가능. pg_get_database_ddl(), pg_get_role_ddl(), pg_get_tablespace_ddl() 등</p></li></ul><h1>SQL</h1><h2>구문</h2><h3>어휘 구조</h3><ul><li>키워드 : 고정된 의미를 갖는 토큰</li><li>식별자 : 명령에 따라 테이블, 열, 객체 이름을 나타내는 토큰. 단순히 이름(name)이라고 부르기도 한다<ul><li>키워드로 예약된 토큰을 식별자로 사용하려면 ""로 감쌀 필요가 있다</li><li>식별자 크기 제한은 기본 63바이트</li><li>""로 감싼 식별자는 대소문자를 구별한다 -- 이 안에서 "를 나타내려면 ""를 사용</li></ul></li><li>주석 : 입력에 포함된 주석은 공백처럼 취급된다<ul><li>-- 한 줄 주석</li><li>/* 여러 줄 주석 */</li></ul></li><li>상수<ul><li>문자열 : '임의 문자열' -- 이 안에서 '를 나타내려면 ''를 사용</li><li>C 스타일 이스케이프 문자열 : e'임의 문자열' 또는 E'임의 문자열' -- 이 안에서 \를 나타내려면 \\를 사용<ul><li>\n : 줄바꿈</li><li>\t : 탭</li></ul></li><li>유니코드 이스케이프 문자열 : u&amp;'임의 문자열' 또는 U&amp;'임의 문자열'<ul><li>유니코드 지정 : \xxxx, \+xxxxxx</li><li>\ 외의 이스케이프 문자 지정 예 : U&amp;'d!0061t!+000061' UESCAPE '!'</li></ul></li><li>$로 감싼 문자열 : $$임의 문자열$$ 또는 $tag_name$임의 문자열$tag_name$</li><li>비트열 : b'0101' 또는 B'0101' 또는 x'xxxx' 또는 X'xxxx'</li><li>숫자 : 소수점이나 지수가 없는 정수는 크기가 맞는 경우 integer 또는 bigint로 간주된다. 그 외 모든 숫자는 numeric 타입으로 간주된다<ul><li>소수점 허용 : 123.456</li><li>지수 표기 허용 : 0.123e3</li><li>정수에 한하여 2, 8, 16진수 표기 허용 : 0b101, 0o101, 0x101</li><li>구분자 허용 : 123_456.123_456</li></ul></li><li>임의 유형 상수 : 이는 형 변환이 아니라, 문자열로 표현된 리터럴에 대해 처음으로 타입을 할당하는 것<ul><li>type 'string'</li><li>'string'::type</li><li>cast('string' as type)</li></ul></li></ul></li></ul><h3>값 표현식</h3><ul><li>열 참조 : table_name.column_name</li><li>위치 매개변수 : SQL 함수 또는 준비된 쿼리에서 $n으로 n번째 인자 참조</li><li>배열 원소 선택 : expression[i], expression[start:end]</li><li>필드 선택 : expression.field_name</li><li>연산자 호출 : expression operator expression 또는 operator expression</li><li>함수 호출 : function_name([expression [, expression ... ]])</li><li>형 변환 : cast(expression as type) 또는 expression::type</li><li>정렬 방식 지정 : expression COLLATE collation</li><li>스칼라 서브쿼리 : 괄호 안의 SELECT 쿼리로, 정확히 한 개 행, 한 개 열을 반환                </li></ul><h4>집계 표현식</h4><p><strong>↓ syntax</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">aggregate_name (expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
+<!DOCTYPE html><html lang="ko-KR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"><title>PostgreSQL 설명서</title><link rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js" async></script><script id="default-js" src="/source/default.min.js" defer></script></head><body><aside class="w3-rightbar w3-medium" id="sidebar"><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details><summary>LICENSE</summary><ul><li>This Site: <a href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT</a></li><li><a href="https://www.w3schools.com/w3css">w3css</a>: No license</li><li><a href="https://highlightjs.org/">highlight.js 11.11.1</a>: <a href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause</a></li><li><a href="https://github.com/mathjax/MathJax">MathJax 4.1.3</a>: <a href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a> (수식은 빌드 시점에 조판)</li><li><a href="https://ctan.org/pkg/newcomputermodern">New Computer Modern</a> (C) 2019-2021 Antonis Tsolomitis: <a href="https://ctan.org/license/gfl">GUST Font License</a></li><li><a href="https://github.com/terrastruct/d2">D2 0.7.1</a>: <a href="https://github.com/terrastruct/d2/blob/master/LICENSE.txt">MPL-2.0</a></li></ul></details><hr></aside><main id="main"><nav class="w3-bar w3-blue" id="nav"><button class="w3-bar-item w3-button" id="nav-toggle-btn" type="button">&#9776;</button><a class="w3-bar-item w3-button" href="/">Home</a><form role="search"><input class="w3-bar-item" id="query" type="search" placeholder="search" style="max-width:35%"></form></nav><article id="contents"><h1><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/legalnotice.html">Legal Notice; 법적 고지</a></h1><p>PostgreSQL Database Management System (also known as Postgres, formerly known as Postgres95)</p><p>Portions Copyright © 1996-2025, PostgreSQL Global Development Group</p><p>Portions Copyright © 1994, The Regents of the University of California</p><p>Permission to use, copy, modify, and distribute this software and its documentation for any purpose, without fee, and without a written agreement is hereby granted, provided that the above copyright notice and this paragraph and the following two paragraphs appear in all copies.</p><p>IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p><p>THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE PROVIDED HEREUNDER IS ON AN “AS-IS” BASIS, AND THE UNIVERSITY OF CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.</p><h1>시작하기 전에</h1><ul><li>최신 공식 문서 : <a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/index.html">index</a></li><li>별도 표기가 없다면, 이 문서는 PostgreSQL 18 문서 내용임</li><li>출시 노트 : <a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/release/">release</a></li><li>PostgreSQL은 캘리포니아 대학교 버클리 컴퓨터과학부에서 개발한 POSTGRES 버전 4.2를 기반으로 개발되고, 오픈소스로 관리 중인 객체-관계형 데이터베이스 관리 시스템(ORDBMS)이다. 뛰어난 성능과 확장성으로 여러 분야에서 애용하고 있다</li></ul><h1>기타 토픽</h1><ul><li>PostgreSQL 19 예정 사항<p>현재 상태를 재생하기 위한 DDL 동적 생성 가능. pg_get_database_ddl(), pg_get_role_ddl(), pg_get_tablespace_ddl() 등</p></li></ul><h1>SQL</h1><h2>구문</h2><h3>어휘 구조</h3><ul><li>키워드 : 고정된 의미를 갖는 토큰</li><li>식별자 : 명령에 따라 테이블, 열, 객체 이름을 나타내는 토큰. 단순히 이름(name)이라고 부르기도 한다<ul><li>키워드로 예약된 토큰을 식별자로 사용하려면 ""로 감쌀 필요가 있다</li><li>식별자 크기 제한은 기본 63바이트</li><li>""로 감싼 식별자는 대소문자를 구별한다 -- 이 안에서 "를 나타내려면 ""를 사용</li></ul></li><li>주석 : 입력에 포함된 주석은 공백처럼 취급된다<ul><li>-- 한 줄 주석</li><li>/* 여러 줄 주석 */</li></ul></li><li>상수<ul><li>문자열 : '임의 문자열' -- 이 안에서 '를 나타내려면 ''를 사용</li><li>C 스타일 이스케이프 문자열 : e'임의 문자열' 또는 E'임의 문자열' -- 이 안에서 \를 나타내려면 \\를 사용<ul><li>\n : 줄바꿈</li><li>\t : 탭</li></ul></li><li>유니코드 이스케이프 문자열 : u&amp;'임의 문자열' 또는 U&amp;'임의 문자열'<ul><li>유니코드 지정 : \xxxx, \+xxxxxx</li><li>\ 외의 이스케이프 문자 지정 예 : U&amp;'d!0061t!+000061' UESCAPE '!'</li></ul></li><li>$로 감싼 문자열 : $$임의 문자열$$ 또는 $tag_name$임의 문자열$tag_name$</li><li>비트열 : b'0101' 또는 B'0101' 또는 x'xxxx' 또는 X'xxxx'</li><li>숫자 : 소수점이나 지수가 없는 정수는 크기가 맞는 경우 integer 또는 bigint로 간주된다. 그 외 모든 숫자는 numeric 타입으로 간주된다<ul><li>소수점 허용 : 123.456</li><li>지수 표기 허용 : 0.123e3</li><li>정수에 한하여 2, 8, 16진수 표기 허용 : 0b101, 0o101, 0x101</li><li>구분자 허용 : 123_456.123_456</li></ul></li><li>임의 유형 상수 : 이는 형 변환이 아니라, 문자열로 표현된 리터럴에 대해 처음으로 타입을 할당하는 것<ul><li>type 'string'</li><li>'string'::type</li><li>cast('string' as type)</li></ul></li></ul></li></ul><h3>값 표현식</h3><ul><li>열 참조 : table_name.column_name</li><li>위치 매개변수 : SQL 함수 또는 준비된 쿼리에서 $n으로 n번째 인자 참조</li><li>배열 원소 선택 : expression[i], expression[start:end]</li><li>필드 선택 : expression.field_name</li><li>연산자 호출 : expression operator expression 또는 operator expression</li><li>함수 호출 : function_name([expression [, expression ... ]])</li><li>형 변환 : cast(expression as type) 또는 expression::type</li><li>정렬 방식 지정 : expression COLLATE collation</li><li>스칼라 서브쿼리 : 괄호 안의 SELECT 쿼리로, 정확히 한 개 행, 한 개 열을 반환</li></ul><h4>집계 표현식</h4><p><strong>↓ syntax</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">aggregate_name (expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
 aggregate_name (DISTINCT expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
 aggregate_name ( * ) [ FILTER ( WHERE filter_clause ) ]
 aggregate_name ( [ expression [ , ... ] ] ) WITHIN GROUP ( order_by_clause ) [ FILTER ( WHERE filter_clause ) ]</div><ul><li>집계 함수는 여러 입력 행들을 (그룹 당) 하나의 행으로 줄인다</li><li>별도 명시가 없는 한 집계 함수는 null을 집계에서 제외한다</li><li>입력 행 순서가 결과에 중요한 경우를 위해 선택적으로 order by 절을 지원한다</li><li>한편 최빈값, 중앙값을 찾는 것과 같은 ordered-set 집계는 order by 절이 필수다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># with guild_player (guild_id, coin) as ( values
@@ -14,7 +14,7 @@ select
 from guild_player
 group by 1;
 
- guild_id | median_coin 
+ guild_id | median_coin
 ----------+-------------
         1 |          20
         2 |          25
@@ -39,7 +39,7 @@ EXCLUDE GROUP       -- 현재 행 + 피어 행 제외
 EXCLUDE TIES        -- 피어 행들 제외
 </div><ul><li>윈도 함수는 집계 함수와 달리 입력 행들을 하나의 출력 행으로 축소하지 않는다. 각 행은 결과행에 유지되고, 지정한 파티션과 프레임에 한정한 집계 결과를 추가로 포함한다</li><li>윈도 함수는 다른 절들이 모두 처리된 후 실행되기 때문에 SELECT 또는 ORDER BY 절에서만 사용할 수 있다. 이로 인해 윈도 함수 안에 집계 함수를 포함하는 것이 가능하다 -- 그 반대는 불가능</li><li>OVER (window_name ...)은 정의를 복사하여 수정하는 것을 의미한다</li><li>PARTITION BY 절이 없는 경우, 모든 행을 포함하는 단일 파티션으로 처리된다</li><li>프레임을 지정해 각 입력 행마다 얼마큼의 행들을 집계에 이용할 지 지정할 수 있다<ul><li>피어 행 : 정렬키가 동일한 행</li><li>ROWS 모드<ul><li>프레임 크기는 정확히 행 단위로 계산</li><li>피어 행을 자동으로 포함하는 일은 없다</li><li>offset을 이용하는 경우 : 음이 아닌 정수로 행 개수를 지정</li></ul></li><li>RANGE 모드<ul><li>프레임 크기는 정렬키 구간에 따라 가변적</li><li>구간 내 피어 행 자동 포함</li><li>offset을 이용하는 경우 : ORDER BY 절이 지정한 단일 컬럼에 대하여, 음이 아닌 값으로 최대 차이를 지정</li></ul></li><li>GROUPS 모드<ul><li>프레임 크기는 피어 그룹 단위로 계산</li><li>피어 행 자동 포함</li><li>offset을 이용하는 경우 : 음이 아닌 정수로 피어 그룹 개수를 지정</li></ul></li><li>프레임 정의가 생략된 경우, RANGE UNBOUNDED PRECEDING이 이용된다</li><li>frame_end가 생략된 경우, CURRENT ROW로 설정된다</li><li>ORDER BY 절이 없는 경우, 파티션 내 모든 행들은 서로의 피어다</li></ul><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">create temp table nums (n) as
 values (1), (5), (10), (1), (5), (10);</div><p><strong>↓ order by 없음 + 프레임 정의 없음</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, sum(n) over () from nums;
- n  | sum 
+ n  | sum
 ----+-----
   1 |  32
   5 |  32
@@ -48,7 +48,7 @@ values (1), (5), (10), (1), (5), (10);</div><p><strong>↓ order by 없음 + 프
   5 |  32
  10 |  32
 (6 rows)</div><p><strong>↓ order by 있음 + 프레임 정의 없음</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, sum(n) over (order by n) from nums;
- n  | sum 
+ n  | sum
 ----+-----
   1 |   2
   1 |   2
@@ -57,7 +57,7 @@ values (1), (5), (10), (1), (5), (10);</div><p><strong>↓ order by 없음 + 프
  10 |  32
  10 |  32
 (6 rows)</div><p><strong>↓ ROWS 모드</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, sum(n) over (order by n rows 2 preceding) from nums;
- n  | sum 
+ n  | sum
 ----+-----
   1 |   1
   1 |   2
@@ -66,7 +66,7 @@ values (1), (5), (10), (1), (5), (10);</div><p><strong>↓ order by 없음 + 프
  10 |  20
  10 |  25
 (6 rows)</div><p><strong>↓ RANGE 모드</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, sum(n) over (order by n range 4 preceding) from nums;
- n  | sum 
+ n  | sum
 ----+-----
   1 |   2
   1 |   2
@@ -75,7 +75,7 @@ values (1), (5), (10), (1), (5), (10);</div><p><strong>↓ order by 없음 + 프
  10 |  20
  10 |  20
 (6 rows)</div><p><strong>↓ GROUPS 모드</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, sum(n) over (order by n groups 1 preceding) from nums;
- n  | sum 
+ n  | sum
 ----+-----
   1 |   2
   1 |   2
@@ -103,7 +103,7 @@ select get_f1((1, 'text')::my_row_type);
 
 # insert into order_history values (default, default) returning *;
 
- order_no |          created_at           
+ order_no |          created_at
 ----------+-------------------------------
         1 | 2026-01-02 13:53:42.781017+09
 (1 row)</div></li><li>ID 열은 자동적으로 not null</li><li>테이블 상속에서 자식 테이블의 ID 열은 부모의 것을 상속하지 않는다</li><li>개별 파티션은 파티션된 테이블의 ID 열을 상속한다</li></ul><h3>생성된 열</h3><ul><li>다른 열들로부터 파생되는 열. 단, 이미 파생된 열을 정의에 사용할 수는 없다</li><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># create temp table player (
@@ -118,7 +118,7 @@ select get_f1((1, 'text')::my_row_type);
 
 # insert into player values (5555, default) returning *;
 
- purchase_amount | vip_level 
+ purchase_amount | vip_level
 -----------------+-----------
             5555 |         2
 (1 row)
@@ -134,7 +134,7 @@ T1 natural { [inner] | { left | right | full } [outer] } join T2</div><ul><li>�
 # create temp table c ( c text );
 
 # select * from a cross join b;
- a  | b  
+ a  | b
 ----+----
  a1 | b1
  a1 | b2
@@ -145,14 +145,14 @@ T1 natural { [inner] | { left | right | full } [outer] } join T2</div><ul><li>�
 (6 rows)
 
 # select * from a, c;
- a | c 
+ a | c
 ---+---
 (0 rows)
 </div></li><li>(inner) join : 조인 조건을 만족하는 T1, T2의 행 조합<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># with
 a (a) as ( values ('a1'), ('a2'), ('a4') ),
 b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
 select * from a join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
- a  | b  
+ a  | b
 ----+----
  a1 | b1
  a1 | b1+
@@ -163,7 +163,7 @@ with
 a (a) as ( values ('a1'), ('a2'), ('a4') ),
 b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
 select * from a left join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
- a  |  b  
+ a  |  b
 ----+-----
  a1 | b1
  a1 | b1+
@@ -175,7 +175,7 @@ select * from a left join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$
 a (a) as ( values ('a1'), ('a2'), ('a4') ),
 b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
 select * from a right join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
-   a    |  b  
+   a    |  b
 --------+-----
  a1     | b1
  a1     | b1+
@@ -187,7 +187,7 @@ select * from a right join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+
 a (a) as ( values ('a1'), ('a2'), ('a4') ),
 b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
 select * from a full join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
-   a    |   b    
+   a    |   b
 --------+--------
  a1     | b1
  a1     | b1+
@@ -196,7 +196,7 @@ select * from a full join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$
  a4     | (null)
 (5 rows)
 </div></li></ul><h4>Table and column alias</h4><p>별칭 정의 후엔 쿼리에서 원래 이름으로 참조할 수 없다</p><h4>Subquery</h4><ul><li>파생 테이블을 지정하는 서브쿼리는 괄호로 감싸야 한다</li><li>select 명령 대신 values 목록으로 서브쿼리를 구성할 수도 있다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select * from (values ('a', 1), ('a', 2)) as x(a, b);
- a | b 
+ a | b
 ---+---
  a | 1
  a | 2
@@ -204,7 +204,7 @@ select * from a full join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$
 </div></li></ul><h4>Table function</h4><ul><li>테이블 함수는 행 집합을 생성하는 함수</li><li>구문<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">function_call                       [with ordinality] [[as] table_alias [(column_alias, [, ...])]]
 rows from( function_call [, ... ] ) [with ordinality] [[as] table_alias [(column_alias, [, ...])]]</div></li><li>with ordinality : 마지막에 bigint 타입의 ordinality 열이 추가되어 행 번호를 표시한다</li><li>특수 테이블 함수 unnest는 임의 개수의 배열 매개변수로 호출할 수 있는데, 개별 배열에 대해 unnest가 호출되고 rows from 구문으로 결합한 것처럼 동작한다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># \pset null '(null)'
 # select * from unnest('{1, 2, 3}'::int[], '{a, b}'::text[]) with ordinality as x (a, b);
- a |   b    | ordinality 
+ a |   b    | ordinality
 ---+--------+------------
  1 | a      |          1
  2 | b      |          2
@@ -215,7 +215,7 @@ rows from( function_call [, ... ] ) [with ordinality] [[as] table_alias [(column
     unnest('{1, 2, 3}'::int[]),
     unnest('{a, b}'::text[])
 ) with ordinality as x (a, b, c);
- a |   b    | c 
+ a |   b    | c
 ---+--------+---
  1 | a      | 1
  2 | b      | 2
@@ -232,7 +232,7 @@ from rows from (
     generate_series(1, 3)
 ) as x(x, y, z)
 order by 3;
-   x    |   y    | z 
+   x    |   y    | z
 --------+--------+---
      40 | foo    | 1
     100 | bar    | 2
@@ -243,7 +243,7 @@ order by 3;
 select a, b
 from tmp
 group by grouping sets (a, b);
-   a    |   b    
+   a    |   b
 --------+--------
  a      | (null)
  (null) | b
@@ -253,7 +253,7 @@ group by grouping sets (a, b);
 select a, b
 from tmp
 group by cube (a, b);
-   a    |   b    
+   a    |   b
 --------+--------
  (null) | (null)
  a      | b
@@ -265,7 +265,7 @@ group by cube (a, b);
 select a, b
 from tmp
 group by rollup (a, b);
-   a    |   b    
+   a    |   b
 --------+--------
  (null) | (null)
  a      | b
@@ -276,7 +276,7 @@ group by rollup (a, b);
 select a, b, c
 from tmp
 group by rollup (a, (b, c));
-   a    |   b    |   c    
+   a    |   b    |   c
 --------+--------+--------
  (null) | (null) | (null)
  a      | b      | c
@@ -287,7 +287,7 @@ select a, b, c
 from tmp
 group by distinct grouping sets (cube(a, b), rollup(b, c))
 order by 1, 2, 3;
-   a    |   b    |   c    
+   a    |   b    |   c
 --------+--------+--------
  a      | b      | (null)
  a      | (null) | (null)
@@ -300,7 +300,7 @@ select a, b, c, d
 from tmp
 group by cube (a, b), cube (c, d)
 order by 1, 2, 3, 4;
-   a    |   b    |   c    |   d    
+   a    |   b    |   c    |   d
 --------+--------+--------+--------
  a      | b      | c      | d
  a      | b      | c      | (null)
@@ -320,7 +320,7 @@ order by 1, 2, 3, 4;
  (null) | (null) | (null) | (null)
 (16 rows)
 </div></li></ul><h4>윈도 함수 처리</h4><ul><li>윈도 함수는 위 그룹화와 having 필터링이 모두 수행된 후 실행된다</li><li>쿼리 결과는 윈도 함수에 정의된 순서에 따라 정렬되긴 하지만, 이에 의존하는 것은 권장되지 않는다. 정렬된 결과가 필요한 경우 최상위 order by 절을 명시하는 것이 권장된다</li></ul><h3>Select list</h3><ul><li>컬럼 이름 대신 *를 이용해 모든 컬럼을 순서대로 선택 가능</li><li>열 이름에 지정한 별칭은 후속 처리 -- order by 절 포함 -- 에 사용 가능</li><li>select distinct를 이용해 중복 행 제거 가능. 이때 null도 하나의 고윳값으로 취급</li><li>(비표준) select distinct on (expression [, ...])를 이용해 사용자 정의 기준으로 중복 행 제거 가능</li></ul><h3>쿼리 결합</h3><ul><li>query1 union [all] query2 : 합집합</li><li>query1 intersect [all] query2 : 교집합</li><li>query1 except [all] query2 : 차집합</li><li>all을 지정하지 않는 경우 distinct와 마찬가지로 중복된 행을 제거한다</li><li>괄호 없이 나열되는 경우, intersect가 union/except보다 먼저 평가된다</li></ul><h3>order by</h3><p>null은 기본적으로 null이 아닌 값보다 큰 것처럼 정렬된다</p><h3>values list</h3><ul><li>디스크에 쓰지 않고 사용할 수 있는 상수 테이블을 생성한다</li><li>기본적으로 column1, column2, ... 이름을 할당하지만, 이는 SQL 표준이 아니므로 호환을 위해 재정의하는 것이 좋다</li><li>구문적으로 <span class="as-code code-span" lan="sql">values (expression [, ...]) [, ...]</span>는 <span class="as-code code-span" lan="sql">select select_list from table_expression</span>과 동일하게 취급된다<ul><li>select가 나타날 수 있는 모든 곳에 사용될 수 있다</li><li>뒤에 order by, limit 등을 붙일 수 있다</li></ul><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># values (1), (3), (2) order by 1 limit 2;
- column1 
+ column1
 ---------
        1
        2
@@ -333,7 +333,7 @@ SELECT 3
 INSERT 0 3
 
 # select * from (values (1), (3), (2)) as x(num);
- num 
+ num
 -----
    1
    3
@@ -343,7 +343,7 @@ INSERT 0 3
 # with tmp(num) as (values (1), (2), (3))
 (select * from tmp) union
 (values (1), (4));
- num 
+ num
 -----
    1
    3
@@ -369,30 +369,30 @@ ALTER TYPE enum_name ADD VALUE [ IF NOT EXISTS ] 'new value' [ { BEFORE | AFTER 
 ALTER TYPE enum_name RENAME VALUE 'old value' TO 'new value'
 
 # select * from pg_enum;
-  oid  | enumtypid | enumsortorder | enumlabel 
+  oid  | enumtypid | enumsortorder | enumlabel
 -------+-----------+---------------+-----------
  16566 |     16564 |             1 | value1
  16568 |     16564 |             2 | value2
  16569 |     16564 |           1.5 | value3
 (3 rows)
 </div><h3>텍스트 검색</h3><ul><li>tsvector : 정렬된 어휘소 목록. 정렬과 중복 제거는 자동으로 수행되지만, 정규화는 자동으로 수행되지 않는다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select 'SQL 표준의 BLOB과 유사한 타입을 bytea로 지원한다'::tsvector;
-                            tsvector                            
+                            tsvector
 ----------------------------------------------------------------
  'BLOB과' 'SQL' 'bytea로' '유사한' '지원한다' '타입을' '표준의'
 (1 row)
 
 # select to_tsvector('SQL 표준의 BLOB과 유사한 타입을 bytea로 지원한다');
-                                 to_tsvector                                  
+                                 to_tsvector
 ------------------------------------------------------------------------------
  'blob과':3 'bytea로':6 'sql':1 '유사한':4 '지원한다':7 '타입을':5 '표준의':2
 (1 row)</div></li><li>tsquery : 어휘소 검색 정보<ul><li>a &amp; b : a and b</li><li>a | b : a or b</li><li>!a : not a</li><li>a &lt;-&gt; b : a followed by b</li><li>a &lt;N&gt; b : a followed by b within N distance<p>N = 0인 경우 : 두 패턴이 동일한 단어에 매칭돼야함</p></li><li>접두어 매칭 : 'xxx:*'::tsquery</li><li>정규화 : to_tsquery('original query')<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># SELECT to_tsvector( 'postgraduate' ) @@ to_tsquery( 'postgres:*' );
- ?column? 
+ ?column?
 ----------
  t
 (1 row)
 
 # SELECT to_tsvector( 'postgraduate' ), to_tsquery( 'postgres:*' );
-  to_tsvector  | to_tsquery 
+  to_tsvector  | to_tsquery
 ---------------+------------
  'postgradu':1 | 'postgr':*
 (1 row)
@@ -400,20 +400,20 @@ ALTER TYPE enum_name RENAME VALUE 'old value' TO 'new value'
 SELECT 2
 
 # update test set x['a'][1]['b'] = '1' returning *;
-            x            
+            x
 -------------------------
  {"a": [null, {"b": 1}]}
  {"a": [null, {"b": 1}]}
 (2 rows)
 
 UPDATE 2</div></li><li>jsonpath (SQL/JSON path)<ul><li>variable<ul><li>$ : 쿼리 대상 객체</li><li>$varname : 함수 인자로 설정한 변수</li><li>@ : 경로 매칭 후 필터 표현식에서 참조하는 결과 객체</li></ul></li><li>accessor<ul><li>.key, ."$varname" : 특정 속성 접근</li><li>.* : 전체 멤버 접근</li><li>.** : 재귀적으로 전체 멤버 접근<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select jsonb_path_query('{"a":{"b":{"c":1}}}', '$.*');
- jsonb_path_query 
+ jsonb_path_query
 ------------------
  {"b": {"c": 1}}
 (1 row)
 
 # select jsonb_path_query('{"a":{"b":{"c":1}}}', '$.**');
-    jsonb_path_query    
+    jsonb_path_query
 ------------------------
  {"a": {"b": {"c": 1}}}
  {"b": {"c": 1}}
@@ -422,12 +422,12 @@ UPDATE 2</div></li><li>jsonpath (SQL/JSON path)<ul><li>variable<ul><li>$ : 쿼�
 (4 rows)
 
 # select jsonb_path_query('[1,[2,[3]]]', '$.*');
- jsonb_path_query 
+ jsonb_path_query
 ------------------
 (0 rows)
 
 # select jsonb_path_query('[1,[2,[3]]]', '$.**');
- jsonb_path_query 
+ jsonb_path_query
 ------------------
  [1, [2, [3]]]
  1
@@ -436,18 +436,18 @@ UPDATE 2</div></li><li>jsonpath (SQL/JSON path)<ul><li>variable<ul><li>$ : 쿼�
  [3]
  3
 (6 rows)</div></li><li>.**{level}, .**(start to end) : 지정 레벨(0부터 시작) 순회 결과만 반환</li><li>[subscript, ...] : 배열 요소 접근<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select jsonb_path_query('[1,2,3,4,5]', '$[0, last, 2 to last-1]');
- jsonb_path_query 
+ jsonb_path_query
 ------------------
  1
  5
  3
  4
 (4 rows)</div></li><li>[*] : 배열 모든 요소 접근</li></ul></li><li>operator and method<p>jsonpath 평가 결과에 대해 추가 연산을 수행할 수 있다</p><ul><li>JavaScript 산술 연산 : +, -, *, /, %</li><li>value.type() : JSON 타입 반환</li><li>value.size() : 배열이 아니어도 1 반환됨에 유의<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select jsonb_path_query('[]', '$.size()'), jsonb_path_query('[1,2,3]', '$.size()'), jsonb_path_query('{}', '$.size()');
- jsonb_path_query | jsonb_path_query | jsonb_path_query 
+ jsonb_path_query | jsonb_path_query | jsonb_path_query
 ------------------+------------------+------------------
  0                | 3                | 1
 (1 row)</div></li><li>value.boolean() : boolean, string, numeric에 한해 boolean 변환<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select jsonb_path_query('[0, 1, false, true, "FalsE", "TruE"]', '$[*].boolean()');
- jsonb_path_query 
+ jsonb_path_query
 ------------------
  false
  true
@@ -456,13 +456,13 @@ UPDATE 2</div></li><li>jsonpath (SQL/JSON path)<ul><li>variable<ul><li>$ : 쿼�
  false
  true
 (6 rows)</div></li><li>value.string() : boolean, number, string, datetime을 string으로 변환</li><li>value.double() : number, string을 number로 변환. 기타 bigint(), decimal(), integer(), numeric() 지원</li><li>number값 전용 함수 : ceiling(), floor(), abs()</li><li>string값 전용 함수 : date(), timestamp(), timestamp_tz() 등</li><li>object.keyvalue() : 키-값 쌍 해체<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select jsonb_path_query('[{"a":1},{"a":1},{"b":{"c":2}}]', '$[*].keyvalue()');
-             jsonb_path_query              
+             jsonb_path_query
 -------------------------------------------
  {"id": 16, "key": "a", "value": 1}
  {"id": 40, "key": "a", "value": 1}
  {"id": 64, "key": "b", "value": {"c": 2}}
 (3 rows)</div></li></ul></li><li>filter ::= ? (condition)<ul><li>SQL/JSON은 부울 대수로 3상태를 가진다 : true, false, unknown</li><li>동등 비교 : ==, !=, &lt;&gt;</li><li>대소 비교 : &lt;, &lt;=, &gt;, &gt;=</li><li>부울 대수 연산 : &amp;&amp;, ||, !, is unknown<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select jsonb_path_query('[-1,1,"a"]', '$[*] ? ((@ > 0) is unknown)');
- jsonb_path_query 
+ jsonb_path_query
 ------------------
  "a"
 (1 row)</div></li><li>패턴 매칭<ul><li>정규표현식 : string_value like_regex pattern_string [flag flag_string]</li><li>접두 문자열 검사 : string_value starts with prefix_string</li><li>jsonpath 검사 : exists(path_expression)</li></ul></li></ul></li><li>필터는 조건을 만족하는 항목들을 반환하며, 일반 표현식으로 연결될 수 있다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select jsonb_path_query('[
@@ -470,11 +470,11 @@ UPDATE 2</div></li><li>jsonpath (SQL/JSON path)<ul><li>variable<ul><li>$ : 쿼�
   { "ISBN": "ISBN2", "title": "title2", "authors": ["author3"], "publishAt": "2010-01-01T00:00:00Z"},
   { "ISBN": "ISBN3", "title": "title1", "authors": ["author2"], "publishAt": "2020-01-01T00:00:00Z"}
 ]', '$[*] ? (@.publishAt.timestamp_tz() > "2009-12-31 18:00:00+09".timestamp_tz()) ? (exists(@.authors[*] ? (@ == "author3"))).ISBN');
- jsonb_path_query 
+ jsonb_path_query
 ------------------
  "ISBN2"
 (1 row)</div></li><li>PostgreSQL은 필터에서만 predicate을 이용할 수 있는 SQL/JSON과 다르게, path 자체에서도 허용한다. 이 경우 path 매칭 결과는 단일 boolean 값이다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select jsonb_path_query('[1,2,3]', '$[*] > 2'), jsonb_path_query('[1,2,3]', '$[*] > 4'), jsonb_path_query('{}', '$[*] > 2');
- jsonb_path_query | jsonb_path_query | jsonb_path_query 
+ jsonb_path_query | jsonb_path_query | jsonb_path_query
 ------------------+------------------+------------------
  true             | false            | null
 (1 row)
@@ -482,7 +482,7 @@ UPDATE 2</div></li><li>jsonpath (SQL/JSON path)<ul><li>variable<ul><li>$ : 쿼�
 SELECT 3
 
 # update test set x[3:4] = '{3,4}'::int[] returning *, x[-3:4];
-                  x                   |               x               
+                  x                   |               x
 --------------------------------------+-------------------------------
  [3:4]={3,4}                          | {3,4}
  {1,2,3,4}                            | {1,2,3,4}
@@ -490,35 +490,35 @@ SELECT 3
 (3 rows)
 
 UPDATE 3</div></li><li>배열 연결<span class="pos-span" id="pos-1241758052"></span><ul><li>N차원 배열에 N-1차원 요소를 연결하는 경우, N차원 배열의 lower bound는 유지된다</li><li>N차원 배열 2개를 연결하는 경우, 왼쪽 배열의 lower bound가 유지된다</li></ul><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select 1 || '[0:1]={2,3}'::int[] || 4;
-    ?column?     
+    ?column?
 -----------------
  [0:3]={1,2,3,4}
 (1 row)
 
 # select '[3:4]={3,4}'::int[] || '[0:1]={0,1}'::int[];
-    ?column?     
+    ?column?
 -----------------
  [3:6]={3,4,0,1}
 (1 row)</div><p>미묘한 차이점</p><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select array_cat('[2:3]={1,2}'::int[], null);
-  array_cat  
+  array_cat
 -------------
  [2:3]={1,2}
 (1 row)
 
 # select array_append('[2:3]={1,2}'::int[], null);
-   array_append   
+   array_append
 ------------------
  [2:4]={1,2,NULL}
 (1 row)
 
 # select '[2:3]={1,2}'::int[] || null;
-  ?column?   
+  ?column?
 -------------
  [2:3]={1,2}
 (1 row)
 
 # select '[2:3]={1,2}'::int[] || null::int;
-     ?column?     
+     ?column?
 ------------------
  [2:4]={1,2,NULL}
 (1 row)
@@ -526,7 +526,7 @@ UPDATE 3</div></li><li>배열 연결<span class="pos-span" id="pos-1241758052"><
 CREATE TYPE
 
 # select (row(1, null)::complex).*;
- r |   i    
+ r |   i
 ---+--------
  1 | (null)
 (1 row)</div></li><li>테이블을 만들면 기본적으로 동일 이름의 복합 타입이 만들어진다. not null 같은 제약조건은 무시된다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># \pset null '(null)'
@@ -534,7 +534,7 @@ CREATE TYPE
 CREATE TABLE
 
 # select (row(null, null)::test).*;
-   a    |   b    
+   a    |   b
 --------+--------
  (null) | (null)
 (1 row)
@@ -543,7 +543,7 @@ CREATE TABLE
 INSERT 0 1
 
 # select test from test;
- test  
+ test
 -------
  (1,f)
 (1 row)</div></li><li>복합 타입 참조는 테이블 참조와의 모호함을 피하기 위해 항상 ()를 사용하는 것이 좋다<p>행 수정 시 set 뒤의 열 이름에서는 불필요하다(넣을 수도 없다)</p></li><li>비용이 비싼 함수는 쿼리 당 1번만 호출하도록 해야 한다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># \pset null '(null)'
@@ -568,19 +568,19 @@ CREATE FUNCTION
 -- 또는 select (test.func).* from test;
 NOTICE:  func called
 NOTICE:  func called
- a | b 
+ a | b
 ---+---
  2 | t
 (1 row)
 
 # select (x).* from test, lateral func(test) as x;
 NOTICE:  func called
- a | b 
+ a | b
 ---+---
  2 | t
 (1 row)
 </div></li></ul><h3>범위 타입</h3><ul><li>모든 범위 타입은 대응하는 다중 범위 타입이 있다 : 연속하지 않는 범위 목록</li><li>integer에 대한 범위 : int4range, int4multirange</li><li>bigint에 대한 범위 : int8range, int8multirange</li><li>numeric에 대한 범위 : numrange, nummultirange</li><li>timestamp에 대한 범위 : tsrange, tsmultirange</li><li>timestamptz에 대한 범위 : tstzrange, tstzmultirange</li><li>date에 대한 범위 : daterange, datemultirange</li><li>상/하한을 명시하지 않으면 +/-무한대를 의미한다</li><li>아무것도 포함하지 않는 빈 범위 예. 'empty'::int4range</li></ul><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select '[1, 4)'::int4range @> 1, '[1, 4)'::int4range @> 4;
- ?column? | ?column? 
+ ?column? | ?column?
 ----------+----------
  t        | f
 (1 row)</div><p><strong>↓ 범위에 대한 제약 조건</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">CREATE TABLE reservation (
@@ -598,7 +598,7 @@ CREATE TABLE room_reservation (
 tmp2 as ( select t1.x, t2.x y from tmp1 t1, tmp1 t2 )
 select x, y, x and y as "x and y", x or y as "x or y", not x as "not x"
 from tmp2 order by x desc nulls last, y desc nulls last;
-   x    |   y    | x and y | x or y | not x  
+   x    |   y    | x and y | x or y | not x
 --------+--------+---------+--------+--------
  t      | t      | t       | t      | f
  t      | f      | f       | t      | f
@@ -611,7 +611,7 @@ from tmp2 order by x desc nulls last, y desc nulls last;
  (null) | (null) | (null)  | (null) | (null)
 (9 rows)
 </div><h3>비교 함수 및 연산자</h3><ul><li>null을 비교 가능한 값으로 취급하지 않는 경우, 비교 연산자는 두 피연산자 중 하나라도 null이면 null을 반환</li><li>&lt;&gt;는 같지 않음을 비교하는 SQL 표준 표기로, !=는 구문 분석 단계에서 &lt;&gt;로 변환된다</li><li>비교 술어<ul><li>a between b and c : a &gt;= b and a &lt; c와 동일하다</li><li>a not between b and c</li><li>a between symmetric b and c : a가 b와 c 사이의 중간값인지? b와 c의 대소 관계는 결과와 무관하다</li><li>a not between symmetric b and c</li><li>a is distinct from b : a와 b가 같은지? null도 비교 가능한 값으로 처리</li><li>a is not distinct from b</li><li>a is [not] null</li><li>boolean is [not] true, is [not] false, is [not] unknown</li></ul></li></ul><h3>수학 함수 및 연산자</h3><ul><li>a / b, div(a, b) : 정수에 대한 나눗셈 결과는 0에 가깝게 소수점이 버려진다</li><li>a % b, mod(a, b) : 정수 modulo 연산</li><li>a ^ b, power(a, b) : a의 b 제곱</li><li>|/a, sqrt(a) : 제곱근</li><li>||/a, cbrt(a) : 세제곱근</li><li>@a, abs(a) : 절댓값</li><li>a &amp; b : 비트 and</li><li>a | b : 비트 or</li><li>a # b : 비트 xor</li><li>~a : 비트 not</li><li>a &lt;&lt; b : 비트 shift left</li><li>a &gt;&gt; b : 비트 shift right</li><li>ceil(a) : a 이상의 최소 정수</li><li>gcd(a, b) : 최대공약수</li><li>등등</li></ul><h3>문자열 함수 및 연산자</h3><ul><li>a || b : 문자열 연결</li><li>concat(val1[, val2 ...]) : null을 제외한 모든 인자의 텍스트 표현 연결</li><li>concat_ws(seperator, val1[, val2 ...]) : with seperator</li><li>a ^@ b, starts_with(a, b) : a는 b로 시작하는지?</li><li>a like pattern : 전체 a가 pattern과 일치하는지? 패턴에 %(임의 길이 문자열), _(임의 1개 문자) 사용 가능<ul><li>a ~~ b, a like b</li><li>a !~~ b, a not like b</li><li>a ~~* b, a ilike b</li><li>a !~~* b, a not ilike b</li></ul></li><li>regexp_like(a, pattern[, flags]) : POSIX 패턴이 매칭되는지?<ul><li>a ~ b, regexp_like(a, b)</li><li>a ~* b, regexp_like(a, b, 'i')</li><li>a !~ b, not(regexp_like(a, b))</li><li>a !~* b, not(regexp_like(a, b, 'i'))</li></ul></li><li>regexp_match, regexp_matches(a, pattern[, flags]) : 패턴 매칭 결과 반환</li><li>trim([leading | trailing | both] [characters] from string) : 공백(또는 지정 characters) 제거</li><li>string is [not] [NFC | NFD | NFKC | NFKD] normalized : UTF-8 유니코드 정규화 테스트</li><li>substring(string [from start] [for count]) : [시작 위치]와 [문자 개수]로 부분 문자열 추출</li><li>left(string, n), right(string, n) : n에 음수 사용 가능</li><li>substring(string from pattern) : POSIX 정규표현식에 일치하는 첫 번째 문자열 반환</li><li>등등</li></ul><h3>날짜/시간 함수 및 연산자</h3><ul><li>+, * 연산자는 교환 법칙이 성립한다<ul><li>date + integer → date</li><li>date - date → integer</li><li>date + interval → timestamp</li><li>date + time → timestamp</li><li>interval + interval → interval</li><li>timestamp + interval → timestamp</li><li>timestamp - timestamp → interval</li><li>time + interval → time</li><li>time - time → interval</li><li>-interval → interval</li><li>interval * double precision → interval</li></ul></li><li>isfinite( date | timestamp | interval )</li><li>make_date / interval / time / timestamp / timestamptz</li><li>to_timestamp(double) : 초 단위 Unix 타임스탬프를 timestamptz로 변환</li><li>일광 절약 시간제가 적용되는 시간대에 대해 '1 day'::interval, '24 hour'::interval을 더하고 뺀 결과는 다를 수 있다</li><li>extract(field from source)<ul><li>day : day of the month (1~31)</li><li>dow : day of the week 일요일(0) ~ 토요일(6)</li><li>isodow : 월요일(1) ~ 일요일(7)</li><li>doy : day of the year (1~366)</li><li>epoch : 초 단위 Unix timestamp</li><li>timezone : 초 단위 offset</li><li>등등</li></ul></li><li>date_trunc(field, source[, timezone]) : 지정한 정밀도 미만의 값 버림</li><li>at time zone<ul><li>timestamp at time zone x → timestamptz : 벽시계 값에 시간대 부여</li><li>timestamptz at time zone x → timestamp : 동일한 시각을 지정한 시간대에서 볼 때 읽히는 벽시계 값 반환</li></ul></li><li>현재 날짜/시간<ul><li>현재 트랜잭션 시작 시각 : current_date / time / time(precision) / timestamp /timestamp(precision)</li><li>current_timestamp = transaction_timestamp() = now()</li><li>statement_timestamp() : 명령 수신 시각</li><li>clock_timestamp() : 현재 시각</li></ul></li></ul><h3>enum 함수</h3><ul><li>enum_range(x) : 정의된 순서대로 값 배열 반환</li><li>enum_range(x, y) : 정의된 순서대로, x ~ y 사이 값 배열 반환. x/y에 null을 설정하면 lower/upper bound 없는 걸로 간주</li></ul><h3>기하 함수 및 연산자</h3><p>평행 이동, 충돌 감지, 특성값 추출 등</p><h3>네트워크 주소 함수 및 연산자</h3><p>서브넷 마스크 평가 등</p><h3>텍스트 검색 함수 및 연산자</h3><ul><li>tsvector @@ tsquery, tsquery @@ tsvector : 벡터가 쿼리에 매칭되는지?</li><li>text @@ tsquery : to_tsvector(text)가 쿼리에 매칭되는지?</li><li>ts_rank, ts_rank_cd(vector, query) : 벡터가 쿼리에 얼마나 매칭되는지?</li><li>tsvector || tsvector : 벡터 결합</li><li>tsquery &amp;&amp; tsquery : 쿼리 and</li><li>tsquery || tsquery : 쿼리 or</li><li>!!tsquery : 쿼리 not</li><li>tsquery &lt;-&gt; tsquery, tsquery_phrase(query1, query2) : query1 바로 뒤에 query2가 이어지는 쿼리 반환</li><li>tsquery_phrase(query1, query2, distance) : query1과 query2 거리가 distance인 쿼리 반환</li><li>tsquery @&gt; tsquery : 후자의 모든 어휘소가 전자에 존재하는지?</li><li>tsquery &lt;@ tsquery : 전자의 모든 어휘소가 후자에 존재하는지?</li><li>array_to_tsvector(text[]) : 입력 문자열을 별도 처리 없이 그대로 어휘소로 사용</li><li>to_tsquery([ config regconfig, ] query text) : 입력 문자열을 정규화하여 tsquery로 변환</li><li>to_tsvector([ config regconfig, ] document text) : 입력 문자열을 정규화하고 위치 정보를 포함한 tsvector로 변환</li><li>tsvector_to_array(tsvector) → text[] : 어휘소 배열 반환</li><li>unnest(tsvector) → setof record( lexeme text, positions smallint[], weights text )</li></ul><h3>JSON 함수 및 연산자</h3><ul><li>json/jsonb -> integer : 배열 요소 추출. 음수 인덱스 지원</li><li>json/jsonb ->> integer : text로 추출</li><li>json/jsonb -> text : 객체 필드 추출</li><li>json/jsonb ->> text : text로 추출</li><li>json/jsonb #> text[] : 지정 경로의 값 추출</li><li>json/jsonb #>> text[] : text로 추출</li><li>jsonb @> jsonb : 전자가 후자를 모두 포함하는지?</li><li>jsonb &lt;@ jsonb : 후자가 전자를 모두 포함하는지?<ul><li>스칼라 : 값이 같은지?</li><li>배열 : 모든 원소를 갖는지?</li><li>객체 : 모든 키-값 쌍을 가지는지?</li></ul></li><li>jsonb ? text : 해당 텍스트를 객체의 키 또는 배열 요소로 갖는지?</li><li>jsonb ?| text[] : 텍스트 배열 중 하나라도 객체의 키 또는 배열 요소로 존재하는지?</li><li>jsonb ?&amp; text[] : 텍스트 배열의 모든 텍스트가 객체의 키 또는 배열 요소로 존재하는지?</li><li>jsonb || jsonb : 객체의 경우 Object.assign(전자, 후자). 그 외의 경우 배열 접합으로 처리</li><li>jsonb - text : 객체의 경우 해당하는 키-값 쌍 삭제. 배열의 경우 일치하는 요소 전부 삭제</li><li>jsonb - text[] : 배열 각 텍스트에 대해 jsonb - text 수행한 것과 동일</li><li>jsonb - integer : 배열의 지정 인덱스(음수 가능) 요소 삭제</li><li>jsonb #- text[] : 지정 경로의 필드 또는 배열 요소 삭제</li><li>json/jsonb 생성<ul><li>to_json, to_jsonb(any) : 일부 타입에 대해선 에러가 발생하는 형변환과 달리, 타입이 정해진 모든 값에 대해 성공</li><li>json_array(any[, ...]) : JSON 배열 생성</li><li>json_array(query) : 단일 열을 반환하는 SELECT 쿼리 결과로부터 JSON 배열 생성</li><li>json_build_object, jsonb_build_object(key, value[, key, value ...]) : 키-값 쌍으로 객체 생성</li><li>json_object(key {value|:} value[, ...]) : 키-값 쌍으로 객체 생성<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">select json_object(1 value 2,3:4)</div></li><li>json_object, jsonb_object(text[]) : 키-값 쌍으로 객체 생성</li><li>json_object, jsonb_object(keys text[], values text[]) : 키-값 쌍으로 객체 생성</li></ul></li><li>json/jsonb 처리<ul><li>json[b]_typeof(json[b]) : JSON 값 유형 반환</li><li>jsonb_set(target jsonb, path text[], new_value jsonb[, create_if_missing boolean]) : jsonb 변경</li><li>json[b]_to_record(json[b]) as x(col type[, ...]) → record : 객체를 행으로 변환</li><li>json[b]_array_elements(json[b]) → setof json[b] : 배열을 행집합으로 확장</li><li>json[b]_array_elements_text(json[b]) → setof text : 배열을 text 행집합으로 확장</li><li>json[b]_array_length(json) : 배열 길이</li><li>json[b]_each(json) → setof record(key text, value json[b]) : 객체를 키-값 행집합으로 확장</li><li>json[b]_each_text(json) → setof record(key text, value text) : 객체를 키-값(text) 행집합으로 확장</li><li>등등</li></ul></li><li>jsonpath 관련<ul><li>jsonb_path_query(target jsonb, path jsonpath[, vars jsonb]) → setof jsonb : 경로 매칭 결과 행집합으로 반환</li><li>jsonb_path_query_array(target jsonb, path jsonpath[, vars jsonb]) → jsonb : 경로 매칭 결과 jsonb 배열로 반환</li><li>jsonb_path_query_first(target jsonb, path jsonpath[, vars jsonb]) → jsonb : 첫 번째 경로 매칭 결과 반환</li><li>json_query(json[b], jsonpath [passing value as varname [, ...]][ returning data_type ][생략]) : 경로 매칭 결과 jsonb 또는 지정 타입으로 반환</li><li>json_value(json[b], jsonpath [passing value as varname [, ...]][ returning data_type ][생략]) : 경로 매칭 결과가 단일 스칼라 값이라면 text 또는 지정 타입으로 반환<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select jsonb_path_query('[1,2,3,4,5]', '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)', '{"min":2, "max":4}');
- jsonb_path_query 
+ jsonb_path_query
 ------------------
  2
  3
@@ -619,29 +619,29 @@ from tmp2 order by x desc nulls last, y desc nulls last;
 (3 rows)
 
 # select jsonb_path_query_array('[1,2,3,4,5]', '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)', '{"min":2, "max":4}');
- jsonb_path_query_array 
+ jsonb_path_query_array
 ------------------------
  [2, 3, 4]
 (1 row)
 
 # select jsonb_path_query_first('[1,2,3,4,5]', '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)', '{"min":2, "max":4}');
- jsonb_path_query_first 
+ jsonb_path_query_first
 ------------------------
  2
 (1 row)
 
 # select json_query('[1,2,3,4,5]'::json, '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)' passing 2 as min, 4 as max with conditional wrapper);
- json_query 
+ json_query
 ------------
  [2, 3, 4]
 (1 row)
 
 # select json_value('[1,2,3,4,5]'::json, '$[2]');
- json_value 
+ json_value
 ------------
  3
 (1 row)</div></li><li>json_exists(json[b], jsonpath [passing value as varname [, ...]]) : 지정 경로에 해당하는 항목이 있는지?<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, json_exists('[1,2,3]'::json, '$[*] ? (@ >= $x)' passing n as x) from generate_series(1, 5) as tmp (n);
- n | json_exists 
+ n | json_exists
 ---+-------------
  1 | t
  2 | t
@@ -649,54 +649,54 @@ from tmp2 order by x desc nulls last, y desc nulls last;
  4 | f
  5 | f
 (5 rows)</div></li><li>jsonb @? jsonpath : 지정 경로에 해당하는 항목이 있는지? SQL/JSON 표준 jsonpath 이용</li><li>jsonb @@ jsonpath : 지정 경로에 해당하는 항목이 있는지? PostgreSQL 전용 predicate jsonpath 이용<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select '[1,2,3]'::jsonb @? '$[*] ? (@ > 0)', '[1,2,3]'::jsonb @? '$[*] ? (@ > 3)';
- ?column? | ?column? 
+ ?column? | ?column?
 ----------+----------
  t        | f
 (1 row)
 
 # select '[1,2,3]'::jsonb @@ '$[*] > 0', '[1,2,3]'::jsonb @@ '$[*] > 3';
- ?column? | ?column? 
+ ?column? | ?column?
 ----------+----------
  t        | f
 (1 row)</div></li><li>jsonb_path_exists(target jsonb, path jsonpath[, vars jsonb]) : 지정 경로에 해당하는 항목이 있는지? SQL/JSON 표준 jsonpath 이용</li><li>jsonb_path_match(target jsonb, path jsonpath[, vars jsonb]) : 지정 경로에 해당하는 항목이 있는지? PostgreSQL 전용 predicate jsonpath 이용</li></ul></li></ul><h3>시퀀스 함수</h3><ul><li>nextval(regclass) : 시퀀스를 진행시키고 값을 반환</li><li>currval(regclass) : 현재 세션에서 nextval을 호출한 적이 있는 경우, 마지막으로 획득한 값 반환</li><li>lastval() : 현재 세션에서 마지막으로 호출한 nextval 반환값 그대로 반환</li><li>setval(regclass, bigint) : 시퀀스 현재 값 변경</li></ul><h3>조건 표현문</h3><ul><li>case when condition then result [when ...] [else result] end</li><li>coalesce(value[, ...]) : null이 아닌 첫 번째 매개변수 반환</li><li>nullif(value1, value2) : value1 = value2면 null 반환. 아니면 value1 반환</li><li>greatest(value[, ...]) : 가장 큰 값 반환</li><li>least(value[, ...]) : 가장 작은 값 반환</li></ul><h3>배열 함수 및 연산자</h3><ul><li>unnest(arr[, arr [...]]) : 배열을 행 집합으로 확장</li><li>arr @> arr : 후자의 모든 원소가 전자에서도 등장하는지?</li><li>arr &lt;@ arr</li><li>arr &amp;&amp; arr : 두 배열 중 공통 원소가 하나라도 존재하는지?</li><li><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black goto" href="#pos-1241758052" id="goto--1241758052-1" target="_self">배열 연결</a> : x || x, array_cat(x, x), array_append(arr, x), array_prepend(x, arr)</li><li>array_fill(x, lengthArr[, lowerBoundArr]) : 주어진 상수로 채운 배열 생성</li><li>cardinality(arr) : 전체 요소 개수 반환</li><li>array_dims(arr) : 배열 차원에 대한 text 표기 반환</li><li>array_ndims(arr) : 차원 수 반환</li><li>array_length(arr, dim) : 지정 차원의 길이 반환. 지정 차원에 해당하는 원소가 없으면 null</li><li>array_lower(arr, dim) : 지정 차원의 lower bound 반환</li><li>array_upper(arr, dim)</li><li>array_position(arr, x[, start]) : 1차원 배열에서, 지정 값이 발견되는 최초 subscript 반환(비교는 is not distinct from으로 수행)</li><li>array_positions(arr, x) : 1차원 배열에서, 지정 값이 발견되는 모든 subscript 배열 반환(비교는 is not distinct from으로 수행)</li><li>array_remove(arr, x) : 1차원 배열에서, 지정 값 모두 제거(비교는 is not distinct from으로 수행)</li><li>array_replace(arr, x, y) : n차원 배열에서, 지정 값 모두 교체</li><li>array_reverse(arr) : 첫 번째 차원을 뒤집은 배열 반환</li><li>array_sample(arr, n) : 비복원 추출 수행</li><li>array_shuffle(arr)</li><li>array_to_string(arr, delimiter[, null_string])</li></ul><h3>range/multirange 함수 및 연산자</h3><ul><li>range @> range, range @> x : 전자가 후자를 포함하는지?</li><li>range &lt;@ range, x &lt;@ range</li><li>range &amp;&amp; range : 겹치는 원소가 하나라도 존재하는지?</li><li>range &lt;&lt; range : 전자가 엄격하게 후자의 왼쪽에 있는지?</li><li>range >> range</li><li>range &amp;&lt; range : 전자의 상한이 후자보다 크지 않으면 true</li><li>range &amp;> range : 전자의 하한이 후자보다 작지 않으면 true<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select '(1, 10]'::numrange &amp;> '[1, 10]'::numrange;
- ?column? 
+ ?column?
 ----------
  t
 (1 row)
 
 # select '[1, 10]'::numrange &amp;> '(1, 10]'::numrange;
- ?column? 
+ ?column?
 ----------
  f
 (1 row)</div></li><li>range -|- range : 두 범위가 빈틈없이 이어지는지?<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select '(3, 10]'::numrange -|- '[1, 3]'::numrange;
- ?column? 
+ ?column?
 ----------
  t
 (1 row)
 
 # select '[3, 10]'::numrange -|- '[1, 3]'::numrange;
- ?column? 
+ ?column?
 ----------
  f</div></li><li>range + range : 범위 합치기. 두 범위 사이에 간격이 있으면 에러 발생</li><li>range_merge(range, range) : 두 범위를 모두 포함하는 최소 범위 반환</li><li>range * range : 공통 범위 추출</li><li>range - range : 전자에서 공통 범위 제거</li><li>isempty(range) : 빈 범위인지?</li><li>lower(range) : 하한 반환</li><li>lower_inc(range) : lower(range)가 범위에 포함되는지?<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select lower('(1, 3)'::int4range), lower_inc('(1, 3)'::int4range);
- lower | lower_inc 
+ lower | lower_inc
 -------+-----------
      2 | t
 (1 row)
 
 # select lower('(1, 3)'::numrange), lower_inc('(1, 3)'::numrange);
- lower | lower_inc 
+ lower | lower_inc
 -------+-----------
      1 | f
 (1 row)</div></li><li>lower_inf(range) : 하한이 무한대인지?</li><li>unnest(multirange) : range 행집합으로 확산</li><li>등</li></ul><h3>집계 함수</h3><ul><li>any_value(x) : non-null인 값 하나</li><li>max(x) : 최댓값</li><li>min(x) : 최솟값</li><li>mode() within group (order by x) : 최빈값</li><li>avg(x) : 모든 non-null값에 대한 산술 평균</li><li>percentile_disc(percent or percent_agg) within group (order by x) : 지정 백분율의 자료 검색 -- 없으면 가장 가까운 자료</li><li>percentile_cont(percent or percent_agg) within group (order by x) : 지정 백분율의 자료 검색 -- 없으면 보간<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select percentile_disc('{0.3,0.6,0.9}'::float[]) within group (order by n)
 from (values (1), (3), (10), (100)) as x(n);
- percentile_disc 
+ percentile_disc
 -----------------
  {3,10,100}
 (1 row)
 
 # select percentile_cont('{0.3,0.6,0.9}'::float[]) within group (order by n)
 from (values (1), (3), (10), (100)) as x(n);
- percentile_cont 
+ percentile_cont
 -----------------
  {2.8,8.6,73}
 (1 row)</div></li><li>rank(y) within group (order by x) : y가 x들 중에선 몇 등인지? 동점이 존재하는 경우, 피어 그룹의 첫 번째 행 번호와 같다</li><li>dense_rank(y) within group (order by x) : y가 x들 중에선 몇 등인지? 피어 그룹 단위로 카운트</li><li>percent_rank(y) within group (order by x) : (rank() - 1) / (전체 행 개수 - 1)</li><li>cume_dist(y) within group (order by x) : (y이하 행 개수) / (전체 행 개수)<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select
@@ -709,7 +709,7 @@ from
   (values (0), (10), (20), (30)) as x1(n1),
   (values (10), (20), (10)) as x2(n2)
 group by n1;
- n1 | rank | dense_rank |    percent_rank    | cume_dist 
+ n1 | rank | dense_rank |    percent_rank    | cume_dist
 ----+------+------------+--------------------+-----------
   0 |    1 |          1 |                  0 |      0.25
  10 |    1 |          1 |                  0 |      0.75
@@ -719,20 +719,20 @@ group by n1;
 from (values ('a', 'b', 'c')) as x(a, b, c)
 group by cube (a, b, c)
 order by 1;
- grouping | a | b | c 
+ grouping | a | b | c
 ----------+---+---+---
         0 | a | b | c
-        1 | a | b | 
+        1 | a | b |
         2 | a |   | c
-        3 | a |   | 
+        3 | a |   |
         4 |   | b | c
-        5 |   | b | 
+        5 |   | b |
         6 |   |   | c
-        7 |   |   | 
+        7 |   |   |
 (8 rows)</div></li><li>등</li></ul><h3>윈도 함수</h3><ul><li>row_number() : 행 번호</li><li>rank() : 순위. 동점이 존재하는 경우, 피어 그룹의 첫 번째 행 번호</li><li>dense_rank() : 피어 그룹 단위 순위</li><li>percent_rank() : (rank - 1) / (전체 행 개수 - 1)</li><li>cume_dist() : (동점 이하의 모든 행 개수) / (전체 행 개수)</li><li>ntile(n) : 정렬된 파티션을 크기가 균일한 n개 버킷으로 나눌 때, 행이 할당된 버킷 번호</li><li>lag(value[, offset[, default]]) : offset 전의 행 참조</li><li>lead(value[, offset[, default]]) : offset 후의 행 참조<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select n, lag(n, 1, 0) over win, lead(n, 1, 0) over win
 from (values (1),(3),(2)) as t(n)
 window win as (order by n);
- n | lag | lead 
+ n | lag | lead
 ---+-----+------
  1 |   0 |    2
  2 |   1 |    3
@@ -743,7 +743,7 @@ window win as (order by n);
   '1 day'::interval,
   'America/Los_Angeles'
 ) with ordinality as tmp(t, n);
-           t            | n 
+           t            | n
 ------------------------+---
  2025-11-01 16:00:00+09 | 1
  2025-11-02 16:00:00+09 | 2
@@ -761,7 +761,7 @@ session1=*# update test set num = num + 1;
 UPDATE 2
 
 session2=# select * from test;
- num 
+ num
 -----
    1
    2
@@ -775,11 +775,11 @@ COMMIT
 DELETE 0
 
 session2=# select * from test;
- num 
+ num
 -----
    2
    3
-(2 rows)</div></li></ul><h4>Repeatable Read 격리 수준</h4><ul><li>모든 명령<ul><li>트랜잭션 실행 시점 -- 정확히는 트랜잭션 내의 첫 번째 비-트랜잭션-제어 명령의 시작 시점의 스냅샷을 참조한다</li><li>따라서 동일한 select는 자체 트랜잭션에서 데이터를 변경하지 않는 한 항상 동일한 데이터를 참조한다</li><li>다른 트랜잭션이 아직 커밋하지 않은 데이터, 트랜잭션 실행 중 다른 트랜잭션이 커밋한 사항은 절대 볼 수 없다</li></ul></li><li>트랜잭션 시작 후 다른 트랜잭션이 커밋한 행을 변경하거나 잠글 수 없다. 이 경우 직렬화 오류가 발생하므로, 호출자는 적절한 재시도 로직을 갖춰야 한다<p><strong>↓ text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">ERROR:  could not serialize access due to concurrent update</div></li><li>update, delete, merge, select for update/share<ul><li>타깃 행을 찾는 것까지는 select 쿼리와 동일하다</li><li>발견한 타깃 행이 변경/삭제/잠금 중인 경우 커밋이나 롤백되기를 기다린다<ul><li>롤백된 경우 : 기존 행에 대해 쿼리 실행</li><li>커밋된 경우 : 직렬화 에러 발생</li></ul></li></ul></li></ul><h4>Serializable 격리 수준</h4><ul><li>커밋된 모든 트랜잭션들을 하나씩 순차적으로 실행한다</li><li>이걸로 모든 이상 발생 가능성이 차단되는 것은 아니므로, 여전히 직렬화 실패에 대한 대응이 필요하다</li><li>성능을 위한 유의사항<ul><li>가능한 경우 READ ONLY 명시</li><li>쿼리가 빈번하게 실행되는 경우, 동시 연결 수 주의</li><li>명시적 잠금 사용 제거 -- 트랜잭션 격리로 인해 자동으로 보장됨</li><li>페이지 수준 predicate 잠금이 여러 개 필요하지만 메모리 부족으로 릴레이션 수준의 잠금이 걸리는 경우, 최대 잠금 수 설정 조정</li><li>순차적 스캔은 릴레이션 수준 잠금이 필요하므로, 되도록 인덱스 스캔을 이용하도록 조정</li></ul></li></ul><h3>명시적 잠금</h3><h4>테이블 수준 잠금</h4><ul><li>PostgreSQL에서 자동으로 사용되는 잠금 모드 목록. 이름에 "ROW"가 있어도 테이블 수준 잠금임<ul><li>ACCESS SHARE (AccessShareLock)<ul><li>테이블을 읽기만 하는 select 명령이 획득</li></ul></li><li>ROW SHARE (RowShareLock)<ul><li>select for update</li><li>select for no key update</li><li>select for share</li><li>select for key share</li></ul></li><li>ROW EXCLUSIVE (RowExclusiveLock)<ul><li>update</li><li>delete</li><li>insert</li><li>merge</li></ul></li><li>SHARE UPDATE EXCLUSIVE (ShareUpdateExclusiveLock)<ul><li>스키마 동시 변경, 동시 vacuum 실행으로부터 테이블 보호</li><li>vacuum (without full)</li><li>analyze</li><li>create index concurrently</li><li>create statistics</li><li>comment on</li><li>reindex concurrently</li><li>일부 alter index</li><li>일부 alter table</li></ul></li><li>SHARE (ShareLock)<ul><li>동시 데이터 변경으로부터 테이블 보호</li><li>create index (without concurrently)</li></ul></li><li>SHARE ROW EXCLUSIVE (ShareRowExclusiveLock)<ul><li>동시 데이터 변경으로부터 테이블 보호</li><li>create trigger</li><li>일부 alter table</li></ul></li><li>EXCLUSIVE (ExclusiveLock)<ul><li>refresh materialized view concurrently</li></ul></li><li>ACCESS EXCLUSIVE (AccessExclusiveLock)<ul><li>잠금 소유자를 제외한 모든 테이블 접근 차단</li><li>drop table</li><li>truncate</li><li>reindex</li><li>cluster</li><li>vacuum full</li><li>refresh materialized view (without concurrently)</li><li>일반 alter index</li><li>일반 alter table</li></ul></li></ul></li><li>LOCK 명령어로 명시적인 잠금을 획득할 수 있다</li><li>아래 표는 테이블에 이미 특정 수준의 잠금이 존재하는 상태에서, 신규 잠금을 동시에 획득할 수 없는 경우를 보여준다<table class="w3-table-all w3-card w3-small w3-centered"><tr><th rowspan="2">Requested Lock Mode</th><th colspan="8">Existing Lock Mode</th></tr><tr><th>ACCESS SHARE</th><th>ROW SHARE</th><th>ROW EXCLUSIVE</th><th>SHARE UPDATE EXCLUSIVE</th><th>SHARE</th><th>SHARE ROW EXCLUSIVE</th><th>EXCLUSIVE</th><th>ACCESS EXCLUSIVE</th></tr><tr><td>ACCESS SHARE</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td></tr><tr><td>ROW SHARE</td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td>X</td></tr><tr><td>ROW EXCLUSIVE</td><td></td><td></td><td></td><td></td><td>X</td><td>X</td><td>X</td><td>X</td></tr><tr><td>SHARE UPDATE EXCLUSIVE</td><td></td><td></td><td></td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td></tr><tr><td>SHARE</td><td></td><td></td><td>X</td><td>X</td><td></td><td>X</td><td>X</td><td>X</td></tr><tr><td>SHARE ROW EXCLUSIVE</td><td></td><td></td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td></tr><tr><td>EXCLUSIVE</td><td></td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td></tr><tr><td>ACCESS EXCLUSIVE</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td></tr></table></li></ul><h4>행 수준 잠금</h4><ul><li>한 트랜잭션 안에서는 동일한 행에 대해 충돌하는 잠금을 동시에 보유할 수 있다. 한 트랜잭션 안의 서로 다른 하위 트랜잭션들 사이에서도 가능하다</li><li>PostgreSQL에서 자동으로 사용되는 잠금 모드 목록<ul><li>FOR UPDATE<ul><li>행을 수정하기 위해 잠근다</li><li>다른 트랜잭션이 행을 잠그거나, 수정하거나, 삭제할 수 없다</li><li>select for update</li><li>delete</li><li>일부 update : 고유 인덱스가 있는 컬럼 수정 시</li></ul></li><li>FOR NO KEY UPDATE<ul><li>FOR UPDATE보다 좀 더 약하다 : 행의 고유성을 유지하는 변경을 위해 사용</li><li>FOR UPDATE 잠금을 획득하지 않는 모든 update는 이 잠금을 획득</li></ul></li><li>FOR SHARE<ul><li>행을 읽기 위해 + 그 동안 행이 변경되지 않도록 잠근다</li></ul></li><li>FOR KEY SHARE<ul><li>행을 읽기 위해 + 그 동안 행의 고유성은 변경되지 않도록 잠근다</li></ul></li></ul></li><li>아래 표는 행에 이미 특정 수준의 잠금이 존재하는 상태에서, 신규 잠금을 동시에 획득할 수 없는 경우를 보여준다<table class="w3-table-all w3-card w3-small w3-centered"><tr><th rowspan="2">Requested Lock Mode</th><th colspan="8">Existing Lock Mode</th></tr><tr><th>FOR KEY SHARE</th><th>FOR SHARE</th><th>FOR NO KEY UPDATE</th><th>FOR UPDATE</th></tr><tr><td>FOR KEY SHARE</td><td></td><td></td><td></td><td>X</td></tr><tr><td>FOR SHARE</td><td></td><td></td><td>X</td><td>X</td></tr><tr><td>FOR NO KEY UPDATE</td><td></td><td>X</td><td>X</td><td>X</td></tr><tr><td>FOR UPDATE</td><td>X</td><td>X</td><td>X</td><td>X</td></tr></table></li></ul><h4>Advisory Lock</h4><ul><li>세션 또는 트랜잭션 수준의 잠금을 지원한다. 잠금의 의미는 애플리케이션이 알아서 부여해 사용한다<ul><li>특정 컬럼을 물리적으로 조작하는 것보다 빠르다</li><li>테이블 크기를 증가시키지 않는다</li><li>세션/트랜잭션 종료 시 자동으로 정리된다</li></ul></li><li>세션 수준 배타적 잠금 획득 : pg_advisory_lock(key bigint) → void<p>필요하다면 획득할 때까지 대기한다</p></li><li>세션 수준 배타적 잠금 획득 시도 : pg_try_advisory_lock(key bigint) → boolean<p>대기하지 않는다</p></li><li>세션 수준 배타적 잠금 해제 : pg_advisory_unlock(key bigint) → boolean<p>잠금을 보유한 세션이 호출한 경우에만 true 반환</p></li><li>세션 수준 공유 잠금 획득 : pg_advisory_lock_shared(key bigint) → void<p>필요하다면 획득할 때까지 대기한다</p></li><li>세션 수준 공유 잠금 획득 시도 : pg_try_advisory_lock_shared(key bigint) → boolean<p>대기하지 않는다</p></li><li>세션 수준 공유 잠금 해제 : pg_advisory_unlock_shared(key bigint) → boolean<p>잠금을 보유한 세션이 호출한 경우에만 true 반환</p></li><li>모든 세션 수준 잠금 해제 : pg_advisory_unlock_all() → void<p>세션 종료 시 자동으로 호출된다</p></li><li>트랜잭션 수준 배타적 잠금 획득 : pg_advisory_xact_lock(key bigint) → void<p>필요하다면 획득할 때까지 대기한다</p></li><li>트랜잭션 수준 배타적 잠금 획득 시도 : pg_try_advisory_xact_lock(key bigint) → boolean<p>대기하지 않는다</p></li><li>트랜잭션 수준 공유 잠금 획득 : pg_advisory_xact_lock_shared(key bigint) → void<p>필요하다면 획득할 때까지 대기한다</p></li><li>트랜잭션 수준 공유 잠금 획득 시도 : pg_try_advisory_xact_lock_shared(key bigint) → boolean<p>대기하지 않는다</p></li></ul><h2>성능 팁</h2><h3>explain 사용</h3><ul><li>쿼리 실행 계획은 트리 구조로 표현된다. 말단 잎은 원시 행을 반환하는 스캔 노드다</li><li>비용은 쿼리 계획과 무관한 부분에 대해선 추정하지 않는다<ul><li>예. select는 쿼리 계획과 무관하게 최종적으로 동일한 행집합을 반환할 것이므로, 결과 크기에 따른 IO 비용에는 무관심</li><li>예. insert/update/delete 등은 쿼리 계획과 무관하게 동일한 행들을 수정할 것이므로, 변경을 위한 IO 비용에는 무관심</li></ul></li><li>explain 기본 출력은 각 노드에 대해 텍스트를 한 줄씩 포함한다<p>예: (cost=0.29..4143.45 rows=15906 width=475)</p><ul><li>0.29 : 예상 초기 비용. 출력 시작하기 전까지 소요된 시간. 예를 들어, 하위 노드의 출력을 정렬하는데 소요된 비용이 추가된다</li><li>4143.45 : 예상 총 비용. 사용 가능한 모든 행이 검색된다는 가정 하에 산출. 실제로는 limit 사용 등으로 더 빨리 중단될 수 있다</li><li>rows : 이 노드가 출력할 것으로 예상되는 행 수</li><li>width : 이 노드가 출력할 것으로 예상되는 행의 평균 바이트 크기</li></ul></li><li>analyze는 무작위 표본을 이용하므로, analyze 실행마다 explain의 추정치가 변경될 수 있다</li><li>순차 스캔은 기본적으로 랜덤 스캔보다 </li><li>limit 사용으로 계획이 달라지는 예시<ul><li>limit 없는 경우<p>두 인덱스 각각 조회한 뒤 조합하는 게 효율적이라고 판단</p><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">EXPLAIN SELECT * FROM tenk1 WHERE unique1 &lt; 100 AND unique2 > 9000;
+(2 rows)</div></li></ul><h4>Repeatable Read 격리 수준</h4><ul><li>모든 명령<ul><li>트랜잭션 실행 시점 -- 정확히는 트랜잭션 내의 첫 번째 비-트랜잭션-제어 명령의 시작 시점의 스냅샷을 참조한다</li><li>따라서 동일한 select는 자체 트랜잭션에서 데이터를 변경하지 않는 한 항상 동일한 데이터를 참조한다</li><li>다른 트랜잭션이 아직 커밋하지 않은 데이터, 트랜잭션 실행 중 다른 트랜잭션이 커밋한 사항은 절대 볼 수 없다</li></ul></li><li>트랜잭션 시작 후 다른 트랜잭션이 커밋한 행을 변경하거나 잠글 수 없다. 이 경우 직렬화 오류가 발생하므로, 호출자는 적절한 재시도 로직을 갖춰야 한다<p><strong>↓ text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text">ERROR:  could not serialize access due to concurrent update</div></li><li>update, delete, merge, select for update/share<ul><li>타깃 행을 찾는 것까지는 select 쿼리와 동일하다</li><li>발견한 타깃 행이 변경/삭제/잠금 중인 경우 커밋이나 롤백되기를 기다린다<ul><li>롤백된 경우 : 기존 행에 대해 쿼리 실행</li><li>커밋된 경우 : 직렬화 에러 발생</li></ul></li></ul></li></ul><h4>Serializable 격리 수준</h4><ul><li>커밋된 모든 트랜잭션들을 하나씩 순차적으로 실행한다</li><li>이걸로 모든 이상 발생 가능성이 차단되는 것은 아니므로, 여전히 직렬화 실패에 대한 대응이 필요하다</li><li>성능을 위한 유의사항<ul><li>가능한 경우 READ ONLY 명시</li><li>쿼리가 빈번하게 실행되는 경우, 동시 연결 수 주의</li><li>명시적 잠금 사용 제거 -- 트랜잭션 격리로 인해 자동으로 보장됨</li><li>페이지 수준 predicate 잠금이 여러 개 필요하지만 메모리 부족으로 릴레이션 수준의 잠금이 걸리는 경우, 최대 잠금 수 설정 조정</li><li>순차적 스캔은 릴레이션 수준 잠금이 필요하므로, 되도록 인덱스 스캔을 이용하도록 조정</li></ul></li></ul><h3>명시적 잠금</h3><h4>테이블 수준 잠금</h4><ul><li>PostgreSQL에서 자동으로 사용되는 잠금 모드 목록. 이름에 "ROW"가 있어도 테이블 수준 잠금임<ul><li>ACCESS SHARE (AccessShareLock)<ul><li>테이블을 읽기만 하는 select 명령이 획득</li></ul></li><li>ROW SHARE (RowShareLock)<ul><li>select for update</li><li>select for no key update</li><li>select for share</li><li>select for key share</li></ul></li><li>ROW EXCLUSIVE (RowExclusiveLock)<ul><li>update</li><li>delete</li><li>insert</li><li>merge</li></ul></li><li>SHARE UPDATE EXCLUSIVE (ShareUpdateExclusiveLock)<ul><li>스키마 동시 변경, 동시 vacuum 실행으로부터 테이블 보호</li><li>vacuum (without full)</li><li>analyze</li><li>create index concurrently</li><li>create statistics</li><li>comment on</li><li>reindex concurrently</li><li>일부 alter index</li><li>일부 alter table</li></ul></li><li>SHARE (ShareLock)<ul><li>동시 데이터 변경으로부터 테이블 보호</li><li>create index (without concurrently)</li></ul></li><li>SHARE ROW EXCLUSIVE (ShareRowExclusiveLock)<ul><li>동시 데이터 변경으로부터 테이블 보호</li><li>create trigger</li><li>일부 alter table</li></ul></li><li>EXCLUSIVE (ExclusiveLock)<ul><li>refresh materialized view concurrently</li></ul></li><li>ACCESS EXCLUSIVE (AccessExclusiveLock)<ul><li>잠금 소유자를 제외한 모든 테이블 접근 차단</li><li>drop table</li><li>truncate</li><li>reindex</li><li>cluster</li><li>vacuum full</li><li>refresh materialized view (without concurrently)</li><li>일반 alter index</li><li>일반 alter table</li></ul></li></ul></li><li>LOCK 명령어로 명시적인 잠금을 획득할 수 있다</li><li>아래 표는 테이블에 이미 특정 수준의 잠금이 존재하는 상태에서, 신규 잠금을 동시에 획득할 수 없는 경우를 보여준다<table class="w3-table-all w3-card w3-small w3-centered"><tr><th rowspan="2">Requested Lock Mode</th><th colspan="8">Existing Lock Mode</th></tr><tr><th>ACCESS SHARE</th><th>ROW SHARE</th><th>ROW EXCLUSIVE</th><th>SHARE UPDATE EXCLUSIVE</th><th>SHARE</th><th>SHARE ROW EXCLUSIVE</th><th>EXCLUSIVE</th><th>ACCESS EXCLUSIVE</th></tr><tr><td>ACCESS SHARE</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td></tr><tr><td>ROW SHARE</td><td></td><td></td><td></td><td></td><td></td><td></td><td>X</td><td>X</td></tr><tr><td>ROW EXCLUSIVE</td><td></td><td></td><td></td><td></td><td>X</td><td>X</td><td>X</td><td>X</td></tr><tr><td>SHARE UPDATE EXCLUSIVE</td><td></td><td></td><td></td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td></tr><tr><td>SHARE</td><td></td><td></td><td>X</td><td>X</td><td></td><td>X</td><td>X</td><td>X</td></tr><tr><td>SHARE ROW EXCLUSIVE</td><td></td><td></td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td></tr><tr><td>EXCLUSIVE</td><td></td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td></tr><tr><td>ACCESS EXCLUSIVE</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td></tr></table></li></ul><h4>행 수준 잠금</h4><ul><li>한 트랜잭션 안에서는 동일한 행에 대해 충돌하는 잠금을 동시에 보유할 수 있다. 한 트랜잭션 안의 서로 다른 하위 트랜잭션들 사이에서도 가능하다</li><li>PostgreSQL에서 자동으로 사용되는 잠금 모드 목록<ul><li>FOR UPDATE<ul><li>행을 수정하기 위해 잠근다</li><li>다른 트랜잭션이 행을 잠그거나, 수정하거나, 삭제할 수 없다</li><li>select for update</li><li>delete</li><li>일부 update : 고유 인덱스가 있는 컬럼 수정 시</li></ul></li><li>FOR NO KEY UPDATE<ul><li>FOR UPDATE보다 좀 더 약하다 : 행의 고유성을 유지하는 변경을 위해 사용</li><li>FOR UPDATE 잠금을 획득하지 않는 모든 update는 이 잠금을 획득</li></ul></li><li>FOR SHARE<ul><li>행을 읽기 위해 + 그 동안 행이 변경되지 않도록 잠근다</li></ul></li><li>FOR KEY SHARE<ul><li>행을 읽기 위해 + 그 동안 행의 고유성은 변경되지 않도록 잠근다</li></ul></li></ul></li><li>아래 표는 행에 이미 특정 수준의 잠금이 존재하는 상태에서, 신규 잠금을 동시에 획득할 수 없는 경우를 보여준다<table class="w3-table-all w3-card w3-small w3-centered"><tr><th rowspan="2">Requested Lock Mode</th><th colspan="8">Existing Lock Mode</th></tr><tr><th>FOR KEY SHARE</th><th>FOR SHARE</th><th>FOR NO KEY UPDATE</th><th>FOR UPDATE</th></tr><tr><td>FOR KEY SHARE</td><td></td><td></td><td></td><td>X</td></tr><tr><td>FOR SHARE</td><td></td><td></td><td>X</td><td>X</td></tr><tr><td>FOR NO KEY UPDATE</td><td></td><td>X</td><td>X</td><td>X</td></tr><tr><td>FOR UPDATE</td><td>X</td><td>X</td><td>X</td><td>X</td></tr></table></li></ul><h4>Advisory Lock</h4><ul><li>세션 또는 트랜잭션 수준의 잠금을 지원한다. 잠금의 의미는 애플리케이션이 알아서 부여해 사용한다<ul><li>특정 컬럼을 물리적으로 조작하는 것보다 빠르다</li><li>테이블 크기를 증가시키지 않는다</li><li>세션/트랜잭션 종료 시 자동으로 정리된다</li></ul></li><li>세션 수준 배타적 잠금 획득 : pg_advisory_lock(key bigint) → void<p>필요하다면 획득할 때까지 대기한다</p></li><li>세션 수준 배타적 잠금 획득 시도 : pg_try_advisory_lock(key bigint) → boolean<p>대기하지 않는다</p></li><li>세션 수준 배타적 잠금 해제 : pg_advisory_unlock(key bigint) → boolean<p>잠금을 보유한 세션이 호출한 경우에만 true 반환</p></li><li>세션 수준 공유 잠금 획득 : pg_advisory_lock_shared(key bigint) → void<p>필요하다면 획득할 때까지 대기한다</p></li><li>세션 수준 공유 잠금 획득 시도 : pg_try_advisory_lock_shared(key bigint) → boolean<p>대기하지 않는다</p></li><li>세션 수준 공유 잠금 해제 : pg_advisory_unlock_shared(key bigint) → boolean<p>잠금을 보유한 세션이 호출한 경우에만 true 반환</p></li><li>모든 세션 수준 잠금 해제 : pg_advisory_unlock_all() → void<p>세션 종료 시 자동으로 호출된다</p></li><li>트랜잭션 수준 배타적 잠금 획득 : pg_advisory_xact_lock(key bigint) → void<p>필요하다면 획득할 때까지 대기한다</p></li><li>트랜잭션 수준 배타적 잠금 획득 시도 : pg_try_advisory_xact_lock(key bigint) → boolean<p>대기하지 않는다</p></li><li>트랜잭션 수준 공유 잠금 획득 : pg_advisory_xact_lock_shared(key bigint) → void<p>필요하다면 획득할 때까지 대기한다</p></li><li>트랜잭션 수준 공유 잠금 획득 시도 : pg_try_advisory_xact_lock_shared(key bigint) → boolean<p>대기하지 않는다</p></li></ul><h2>성능 팁</h2><h3>explain 사용</h3><ul><li>쿼리 실행 계획은 트리 구조로 표현된다. 말단 잎은 원시 행을 반환하는 스캔 노드다</li><li>비용은 쿼리 계획과 무관한 부분에 대해선 추정하지 않는다<ul><li>예. select는 쿼리 계획과 무관하게 최종적으로 동일한 행집합을 반환할 것이므로, 결과 크기에 따른 IO 비용에는 무관심</li><li>예. insert/update/delete 등은 쿼리 계획과 무관하게 동일한 행들을 수정할 것이므로, 변경을 위한 IO 비용에는 무관심</li></ul></li><li>explain 기본 출력은 각 노드에 대해 텍스트를 한 줄씩 포함한다<p>예: (cost=0.29..4143.45 rows=15906 width=475)</p><ul><li>0.29 : 예상 초기 비용. 출력 시작하기 전까지 소요된 시간. 예를 들어, 하위 노드의 출력을 정렬하는데 소요된 비용이 추가된다</li><li>4143.45 : 예상 총 비용. 사용 가능한 모든 행이 검색된다는 가정 하에 산출. 실제로는 limit 사용 등으로 더 빨리 중단될 수 있다</li><li>rows : 이 노드가 출력할 것으로 예상되는 행 수</li><li>width : 이 노드가 출력할 것으로 예상되는 행의 평균 바이트 크기</li></ul></li><li>analyze는 무작위 표본을 이용하므로, analyze 실행마다 explain의 추정치가 변경될 수 있다</li><li>순차 스캔은 기본적으로 랜덤 스캔보다</li><li>limit 사용으로 계획이 달라지는 예시<ul><li>limit 없는 경우<p>두 인덱스 각각 조회한 뒤 조합하는 게 효율적이라고 판단</p><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">EXPLAIN SELECT * FROM tenk1 WHERE unique1 &lt; 100 AND unique2 > 9000;
 
                                      QUERY PLAN
 -------------------------------------------------------------------------------------
@@ -837,16 +837,16 @@ WHERE t1.unique1 &lt; 10 AND t1.unique2 = t2.unique2;
  Execution Time: 0.073 ms
 </div><h3>쿼리 플래너가 이용하는 통계 정보</h3><ul><li>pg_class : 테이블과 인덱스의 총 항목 수(reltuples), 디스크 페이지 수(relpages) 등</li><li>pg_stats : 컬럼 통계. 최빈값, 고윳값 비율(n_distinct), 물리적-논리적 배치 상관도(correlation) 등</li><li>쿼리 플래너는 일반적으로 각 컬럼은 독립이라고 가정한다. 다변량 통계를 수행하도록 할 수 있지만, 쿼리 계획이 실제와 크게 동떨어져 잘못된 계획이 실행되는 경우에만 생성함이 바람직하다<ul><li>create statistics stat_name (dependencies) on col1, col2 from table_name : 컬럼 간 상관계수 계산</li><li>create statistics stat_name (ndistinct) on col1, col2 from table_name : 다변량 고윳값 개수 계산</li><li>create statistics stat_name (mcv) on col1, col2 from table_name : 다변량 최빈값 계산</li></ul></li></ul><h1>서버 관리</h1><h2>정기적인 데이터베이스 관리 작업</h2><h3>청소</h3><ul><li>vacuum은 사용되지 않는 행 버전을 제거하고 해당 공간을 재사용 가능하다고 표시한다. 때문에 테이블이 차지하는 공간은 실행 전후 별 차이가 없다</li><li>반면 vacuum full은 적극적으로 용량을 압축하므로 테이블 크기가 최소화되지만, 시간이 오래 걸리고 테이블에 대해 다른 작업이 수행될 수 없다 (AccessExclusiveLock)</li><li>pg_repack 확장을 이용하면 배타적 잠금을 최소화하면서 bloat을 제거할 수 있다</li></ul><h3>재색인</h3><ul><li>B-트리 인덱스의 페이지가 완전히 빈 경우만 재사용을 위해 회수된다. 대부분의 키가 삭제된 경우 reindex 실행으로 공간 효율성을 높일 수 있다</li><li>B-트리 인덱스는 새로 구축한 경우, 논리적으로 인접한 페이지가 물리적으로도 인접한 경우가 많으므로 접근 속도도 좀 더 빠르다</li></ul><h2>누적 통계 시스템</h2><ul><li>pg_stat_activity : 서버 프로세스 당 한 줄</li><li>pg_stat_subscription : 구독 당 한 줄</li><li>pg_stat_subscription_stats : 구독 당 한 줄</li><li>pg_stat_replication_slots : 복제 슬롯 당 한 줄</li><li>pg_stat_progress_analyze : analyze 실행하는 백엔드 당 한 줄</li><li>pg_stat_progress_vacuum : vacuum 실행하는 백엔드 당 한 줄</li><li>pg_stat_progress_create_index : 인덱스 (재)생성하는 백엔드 당 한 줄</li><li>pg_stat_database : 데이터베이스 당 한 줄</li><li>pg_stat_all_tables : 테이블 당 한 줄</li><li>pg_stat_all_indexes : 인덱스 당 한 줄</li></ul><h2>WAL (Write-Ahead Logging)</h2><ul><li>데이터 무결성을 보장하는 표준 방법. 데이터 변경은 해당 변경 사항을 담은 WAL 레코드가 영구 저장소에 플러시된 후에만 기록한다</li><li>드라이브가 실제 영구 저장소에 쓰지 않고 캐시에만 기록했음에도 OS에 쓰기 성공 시그널을 보내는 경우엔 데이터 손실 가능성이 존재한다</li><li>극미량의 데이터 손실이 허용되는 경우, 트랜잭션에서 비동기 커밋을 활성화(synchronous_commit 조정)하여 WAL 레코드를 디스크에 기록하기 전에 성공을 반환할 수 있다</li></ul><h2>논리적 복제</h2><ul><li>논리적 복제는 복제 식별자(보통 기본키)를 이용해 변경 사항을 전파한다</li><li>pub/sub (게시/구독) 모델을 사용한다. 구독하는 테이블을 다시 게시할 수도 있다</li><li>논리적 복제의 전형적인 절차 : 게시자 테이블의 스냅샷을 구독자 데이터베이스로 복사 -&gt; 스냅샷 이후 변경 사항 지속적으로 적용</li></ul><h3>게시</h3><ul><li>하나의 게시는 하나의 데이터베이스 안에서 존재한다</li><li>게시는 테이블 (그룹)에서 발생한 변경 사항 집합이며, 트리거와 유사한 필터링으로 전파할 변경사항을 조정할 수 있다<ul><li>어떤 테이블들에 대해 추적할지?</li><li>어떤 작업 -- insert, update, delete, truncate -- 들을 추적할지?</li><li>어떤 행들을 추적할지? 단, truncate는 행 필터가 적용되지 않는다<p>update 작업에 대해,</p><ul><li>이전/신규 버전 행 모두가 필터를 만족하는 경우 : update로 전파</li><li>이전/신규 버전 행 모두가 필터를 만족하지 않는 경우 : 무시</li><li>이전/신규 버전 행 하나만 필터를 만족하는 경우 : insert 또는 delete로 전파</li></ul></li><li>어떤 컬럼들을 전파할지?</li></ul></li><li>삽입 연산만 전파한다면, 소스 테이블에 고유키가 없어도 된다</li><li>스키마 정의 변경은 전파되지 않는다</li><li>관련 설정<ul><li>wal_level = logical</li><li>max_replication_slots : 최대 동시 활성 구독 수 + 테이블 초기 복제를 위한 여유 개수</li><li>max_wal_senders : max_replication_slots + 동시 연결된 물리적 복제본 수</li></ul></li></ul><h3>구독</h3><ul><li>하나의 구독은 다른 데이터베이스 내 하나 이상의 게시와 연결된다</li><li>각 구독은 하나의 복제 슬롯을 이용해 변경 사항을 수신한다. 단, 초기 테이블 동기화에는 추가(임시) 슬롯이 이용될 수 있다</li><li>구독 삭제 후 동일한 정의로 다시 만들어도 동기화 정보는 손실된다</li><li>테이블 이름과 열 이름이 일치해야 복제가 수행된다</li><li>구독사항에 대해 충돌이 발생하는 경우, 사용자가 수동으로 충돌을 해결해야만 복제가 재개되는 경우가 있다<ul><li>데이터를 변경하여 수신한 변경사항과 충돌하지 않도록 하거나</li><li>충돌한 트랜잭션을 강제로 건너뛰게 할 수 있다</li></ul></li><li>기본적으로 구독자에서는 트리거와 규칙이 실행되지 않지만, 초기 테이블 동기화는 copy 명령처럼 구현되어 삽입 트리거가 실행된다</li><li>관련 설정<ul><li>max_active_replication_origins : 구독 개수 + 테이블 초기 복제를 위한 여유 개수</li><li>max_logical_replication_workers : 구독 개수 + 테이블 복제 작업자 수</li><li>max_worker_processes : 최소 max_logical_replication_workers + 1</li><li>max_sync_workers_per_subscription : 테이블 초기 복사의 병렬 처리량 제어</li><li>max_parallel_apply_workers_per_subscription : streaming = parallel을 이용한 구독의 병렬 처리량 제어</li></ul></li></ul><h3><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.MajorVersionUpgrade.html">AWS Aurora 인스턴스 복제 + 논리적 복제 예</a></h3><ol><li>테이블 데이터를 처음부터 논리적 복제로 동기화하는 대신, 좀 더 빠른 인스턴스 복제 기능을 이용해 특정 스냅샷부터의 변경사항만 논리적 복제로 동기화</li><li>아래의 모든 작업은 슈퍼유저(예. postgres)로 실행한다</li><li>블루 환경 &gt; 데이터베이스에 복제 슬롯 생성<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">create publication publication_name for all tables;
 select pg_create_logical_replication_slot('replication_slot_name', 'pgoutput');</div></li><li>그린 환경 &gt; 생성 완료 후 복제 슬롯 상태 기록<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">select aurora_volume_logical_start_lsn();
-aurora_volume_logical_start_lsn 
+aurora_volume_logical_start_lsn
 ---------------------------------
 0/CEDFF50
-(1 row)</div></li><li>그린 환경 &gt; 복제 슬롯 삭제<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">select pg_drop_replication_slot('replication_slot_name');</div></li><li>그린 환경 &gt;  원하는 작업(예. 메이저 버전 업그레이드: 약 15분) 적용</li><li>그린 환경 &gt; 구독 생성<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">create subscription subscription_name 
-connection 'postgres://postgres:xxx@dbms-url/db_name' publication publication_name 
+(1 row)</div></li><li>그린 환경 &gt; 복제 슬롯 삭제<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">select pg_drop_replication_slot('replication_slot_name');</div></li><li>그린 환경 &gt;  원하는 작업(예. 메이저 버전 업그레이드: 약 15분) 적용</li><li>그린 환경 &gt; 구독 생성<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">create subscription subscription_name
+connection 'postgres://postgres:xxx@dbms-url/db_name' publication publication_name
 with (copy_data = false, create_slot = false, enabled = false, connect = true, slot_name = 'replication_slot_name');
 
 -- 복제 소스 확인
 select * from pg_replication_origin;
- roident |  roname   
+ roident |  roname
 ---------+-----------
        1 | pg_274489
 (1 row)
@@ -871,7 +871,7 @@ select generate_series(2, 5);
 $$ language sql;
 
 # select func();
-  func  
+  func
 --------
  (null)
 (1 row)
@@ -883,7 +883,7 @@ select generate_series(2, 5);
 $$ language sql;
 
 # select func();
- func 
+ func
 ------
     2
 (1 row)
@@ -894,7 +894,7 @@ select *, * from generate_series(2, 5);
 $$ language sql;
 
 # select * from func() as t(num1 int, num2 int);
- num1 | num2 
+ num1 | num2
 ------+------
     2 |    2
     3 |    3
@@ -908,7 +908,7 @@ select *, * from generate_series(2, 5);
 $$ language sql;
 
 # select (func()).f1;
- f1 
+ f1
 ----
   2
   3
@@ -917,7 +917,7 @@ $$ language sql;
 (4 rows)
 
 # select * from func();
- f1 | f2 
+ f1 | f2
 ----+----
   2 |  2
   3 |  3
@@ -931,7 +931,7 @@ select generate_series(2, 1);
 $$ language sql;
 
 # select func();
-  func  
+  func
 --------
  (null)
 (1 row)
@@ -940,7 +940,7 @@ select num1 || ',' || $1 || ',' || $2
 $$ language sql;
 
 # select func(1, 2);
- func  
+ func
 -------
  1,1,2
 (1 row)
@@ -949,7 +949,7 @@ select $1 * 2
 $$ language sql;
 
 # select func(2);
- func 
+ func
 ------
     4
 (1 row)
@@ -959,7 +959,7 @@ select $1, $1 * 2
 $$ language sql;
 
 # select * from func(2);
- txt1 | column2 
+ txt1 | column2
 ------+---------
  2    | 4
 (1 row)
@@ -969,7 +969,7 @@ select x, $1 * x from generate_series(1, 3) x
 $$ language sql;
 
 # select * from func(2);
- column1 | column2 
+ column1 | column2
 ---------+---------
        1 |       2
        2 |       4
@@ -980,7 +980,7 @@ select min(num), max(num) from unnest($1) x(num)
 $$ language sql;
 
 # select * from func(1, 3, 2);
- min | max 
+ min | max
 -----+-----
    1 |   3
 (1 row)
@@ -992,7 +992,7 @@ LINE 1: select * from func(array[1, 3, 2]);
 HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 
 # select * from func(variadic array[1, 3, 2]);
- min | max 
+ min | max
 -----+-----
    1 |   3
 (1 row)
@@ -1001,7 +1001,7 @@ select $1 || ',' || $2 || ',' || $3
 $$ language sql;
 
 # select func(1);
- func  
+ func
 -------
  1,2,3
 (1 row)
@@ -1010,7 +1010,7 @@ select generate_series(1, $1)
 $$ language sql;
 
 # select n, func(n) from generate_series(0, 2) n;
- n | func 
+ n | func
 ---+------
  1 |    1
  2 |    1
@@ -1018,7 +1018,7 @@ $$ language sql;
 (3 rows)
 
 # select n, func(n), func(n+1) from generate_series(0, 2) n;
- n |  func  | func 
+ n |  func  | func
 ---+--------+------
  0 | (null) |    1
  1 |      1 |    1
@@ -1052,7 +1052,7 @@ NOTICE:  local num1 = 10
 NOTICE:  outer num1 = 1
 NOTICE:  local num2 = 20
 NOTICE:  outer num2 = 2
- func 
+ func
 ------
     3
 (1 row)
@@ -1158,7 +1158,7 @@ end loop;</div></li></ul><h4>예외 처리</h4><ul><li>exception 절로 예외�
     -- 에러가 발생한 경우에만 실행된다
     when condition [ or condition ... ] then
         ...
-    -- 에러를 잡지 못하면 다시 전파된다                    </div><h4>스택 트레이스</h4><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">GET DIAGNOSTICS stack = PG_CONTEXT;</div><h3>커서</h3><p>커서를 반환하여 대용량 데이터에 대한 순회를 효율적으로 할 수 있다</p><h3>트랜잭션 관리</h3><p>do 또는 call로 호출(중첩 가능)된 프로시저에 한해 트랜잭션 처리가 가능하다</p><h3>오류와 메시지</h3><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">-- 메시지 보고
+    -- 에러를 잡지 못하면 다시 전파된다</div><h4>스택 트레이스</h4><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">GET DIAGNOSTICS stack = PG_CONTEXT;</div><h3>커서</h3><p>커서를 반환하여 대용량 데이터에 대한 순회를 효율적으로 할 수 있다</p><h3>트랜잭션 관리</h3><p>do 또는 call로 호출(중첩 가능)된 프로시저에 한해 트랜잭션 처리가 가능하다</p><h3>오류와 메시지</h3><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">-- 메시지 보고
 raise [ level ] 'format string' [, expression [, ...]] [ using ... ];
 
 -- 예외 발생 : condition은 예외 처리의 것과 동일
@@ -1170,25 +1170,25 @@ num1 123 '123' "123"</div></li><li>:{?var_name} : psql 변수 정의 테스트 (
 total 53704
 drwxr-xr-x@  29 wiz  staff      928 Mar  5 17:41 .
 drwx------@  60 wiz  staff     1920 Mar  5 15:38 ..</div></li></ul></li><li>\bind parameter ... : 쿼리 매개변수 설정<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select $1::int, $2::text \bind 123 `whoami` \g
- int4 | text 
+ int4 | text
 ------+------
   123 | wiz
 (1 row)</div></li><li>\bind_named statement_name parameter ... : 쿼리 매개변수 설정<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select $1::int, $2::text \parse stmt1
 
 # \bind_named stmt1 123 `whoami` \g
- int4 | text 
+ int4 | text
 ------+------
   123 | wiz
 (1 row)</div></li><li>\cd directory : 작업 디렉터리 변경</li><li>\close_prepared statement_name : 준비된 문장 해제</li><li>\conninfo : 연결 정보</li><li>\copy table [(column_list)] from { 'file' | stdin } [ where condition ]</li><li>\copy { table [(column_list)] | (query) } to { 'file' | stdout }</li><li>\crosstabview : 현재 쿼리 버퍼를 실행하고 결과를 cross tabulation 표시<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># with tmp(n1, n2, n3) as (values (1, 'f1', '1-1'), (1, 'f2', '1-2'), (2, 'f1', '2-1'))
 # select * from tmp \crosstabview
- n1 | f1  | f2  
+ n1 | f1  | f2
 ----+-----+-----
   1 | 1-1 | 1-2
-  2 | 2-1 | 
+  2 | 2-1 |
 (2 rows)</div></li><li>\d...[S+] : 정의 탐색<ul><li>S : 시스템 객체 포함</li><li>+ : 추가 정보 포함</li><li>\d는 \dtvmsE와 동일 : 테이블 + 뷰 + 구체화된 뷰 + 시퀀스 + 외부 테이블</li><li>\df : 함수 목록</li><li>\di : 인덱스 목록</li><li>\du : 역할 목록</li><li>\dx : 설치된 확장</li></ul></li><li>\echo ... : 평가된 인수를 표준 출력</li><li>\errverbose : 가장 최근 서버 오류 메시지를 최대한 상세하게 반복</li><li>\g : 현재 쿼리 버퍼를 실행을 위해 전송. 현재 쿼리 버퍼가 비어 있다면 가장 최근 전송된 쿼리를 다시 실행</li><li>\gdesc : 현재 쿼리 버퍼 결과에 대해 설명. 쿼리가 실제로 실행되지는 않는다</li><li>\getenv psql_var env_var : 환경 변수 값이 존재하는 경우 psql 변수에 할당</li><li>\gexec : 현재 쿼리 버퍼를 실행을 위해 전송. 결과의 모든 null이 아닌 열을 SQL로 취급하고 실행</li><li>\gset [prefix] : 현재 쿼리 버퍼를 실행을 위해 전송. 결과를 psql 변수에 저장</li><li>\h [command], \help [command] : SQL 명령 구문 도움말</li><li>\i file, \include file : 지정 파일을 읽고 실행. 파일에 '-'를 지정한 경우 EOF 표시 또는 \q 메타 명령이 나타날 때까지 표준 입력을 받는다</li><li>\if ... \elif ... \else ... \endif</li><li>\l[+] : 데이터베이스 목록</li><li>\o file, \out file : 이후 쿼리 결과를 파일에 저장</li><li>\o |command, \out |command : 이후 쿼리 결과를 파이프</li><li>\p, \print : 현재 쿼리 버퍼를 출력</li><li>\parse statement_name : 현재 쿼리 버퍼로 준비된 문장 생성</li><li>\password [username] : 암호 변경</li><li>\prompt [text] name : 사용자 입력을 psql 변수 name 할당</li><li>\pset option [value] : value를 생략하는 경우 옵션에 따라 현재값 출력 | 토글 | 옵션 해제된다<ul><li>csv_fieldsep : CSV 출력 형식의 필드 구분자 설정</li><li>expanded 또는 x : on | off | auto 중 설정</li><li>format : aligned | asciidoc | csv | html | latex | latex-longtable | troff-ms | unaligned | wrapped<ul><li>aligned : 기본값. 사람이 읽기 좋게 공백으로 정렬</li><li>unaligned : 정렬하지 않음</li><li>wrapped : aligned + 열 너비를 초과하는 경우 줄바꿈 삽입</li></ul></li><li>null : null 대신 출력할 문자열 설정</li></ul></li><li>\q, \quit : psql 종료. 스크립트 파일 안에서는 해당 스크립트 실행만 종료</li><li>\r, \reset : 쿼리 버퍼 비우기</li><li>\s [file] : psql 히스토리 출력</li><li>\set [name [value [...]]]<ul><li>인자 없는 경우 : 변수 목록 표시</li><li>인자 있는 경우 : psql 변수 설정. value가 생략되면 빈 문자열</li><li>:'var_name' : 변수 값을 SQL 리터럴로 인용</li><li>:"var_name" : 변수 값을 SQL 식별자로 인용</li><li>:{?var_name} : 변수 존재 여부에 따라 TRUE 또는 FALSE로 치환</li></ul><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># \set table_name pg_tables
 # \set limit_count 10
-# select * from :"table_name" limit :limit_count;</div></li><li>\setenv name [value] : 환경 변수를 value로 설정하거나, value가 없으면 해제</li><li>\timing [on | off] : 쿼리 실행에 걸린 시간 표시</li><li>\unset name : psql 변수 삭제</li><li>\watch [ i[nterval]=seconds ] [ c[ount]=times ] [ m[in_rows]=rows ] [ seconds ] : 조건을 만족하는 동안 현재 쿼리 버퍼를 반복 실행</li><li>\; : 서버에 명령을 보내지 않고 쿼리 버퍼에 세미콜론 추가</li></ul><h1>내부 구조</h1><h2>시스템 뷰</h2><p>시스템 카탈로그에 대해 흔히 사용되는 쿼리를 제공하거나, 서버 내부 상태에 대한 접근 제공</p><ul><li>pg_available_extensions : 사용 가능한 확장</li><li>pg_file_settings : 구성 파일 요약</li><li>별도 <a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black goto" href="#pos893732902" id="goto-893732902-1" target="_self">누적 통계 시스템</a> 뷰도 존재</li></ul><h2>내장 인덱스</h2><h3>B-Tree</h3><h4 class="no-marker">개요</h4><ul><li>잘 정의된 선형 순서로 정렬할 수 있는 모든 데이터 타입은 B-트리 인덱싱 가능하다. 단, 개별 인덱스 항목이 페이지의 약 1/3을 초과하지 않아야 한다</li><li>B-트리 연산자 클래스는 해당 타입에 정렬 순서를 강제하므로, PostgreSQL 정렬에 대한 일반적인 표현 및 이해 수단으로 사용된다</li></ul><h4 class="no-marker">연산자 클래스</h4><ul><li>비교 연산자 &lt;, &lt;=, =, =&gt;, &gt;를 제공한다</li><li>= 연산자는 동치 관계여야 한다<ul><li>non-null 값들에 대해</li><li>A = A는 true여야 한다</li><li>A = B면 B = A여야 한다</li><li>A = B and B = C면 A = C여야 한다</li></ul></li><li>&lt; 비교는 강한 순서 관계여야 한다<ul><li>non-null 값들에 대해</li><li>A &lt; A는 false여야 한다</li><li>A &lt; B and B &lt; C면 A &lt; C여야 한다</li></ul></li><li>비교는 도메인 전체에 적용돼야 한다<ul><li>non-null 값들에 대해</li><li>A, B는 A &lt; B, A = B, B &lt; A 중 정확히 하나만 true여야 한다</li></ul></li></ul><h3>GiST</h3><h4 class="no-marker">개요</h4><p>일반화된 검색 트리(Generalized Search Tree)는 balanced tree를 이용한 임의의 인덱싱 방식을 구현하기 위한 기본 템플릿을 제공한다</p><h4 class="no-marker">내장 연산자 클래스</h4><p>inet_ops 연산자 클래스는 inet과 cidr 타입의 기본 클래스가 아니므로, 인덱스 정의 시 클래스 이름을 명시해야 한다</p><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">CREATE INDEX ON my_table USING GIST (my_inet_column inet_ops);</div><table class="w3-table w3-bordered"><thead><th>Name</th><th>Indexable Operators</th><th>Ordering Operators</th></thead><tbody><tr><td rowspan="12">box_ops</td><td>&lt;&lt; (box, box)</td><td rowspan="12">&lt;-&gt; (box, point)</td></tr><tr><td>&amp;&lt; (box, box)</td></tr><tr><td>&amp;&amp; (box, box)</td></tr><tr><td>&amp;&gt; (box, box)</td></tr><tr><td>&gt;&gt; (box, box)</td></tr><tr><td>~= (box, box)</td></tr><tr><td>@&gt; (box, box)</td></tr><tr><td>&lt;@ (box, box)</td></tr><tr><td>&amp;&lt;| (box, box)</td></tr><tr><td>&lt;&lt;| (box, box)</td></tr><tr><td>|&gt;&gt; (box, box)</td></tr><tr><td>|&amp;&gt; (box, box)</td></tr><tr><td rowspan="12">circle_ops</td><td>&lt;&lt; (circle, circle)</td><td rowspan="12">&lt;-&gt; (circle, point)</td></tr><tr><td>&amp;&lt; (circle, circle)</td></tr><tr><td>&amp;&gt; (circle, circle)</td></tr><tr><td>&gt;&gt; (circle, circle)</td></tr><tr><td>&lt;@ (circle, circle)</td></tr><tr><td>@&gt; (circle, circle)</td></tr><tr><td>~= (circle, circle)</td></tr><tr><td>&amp;&amp; (circle, circle)</td></tr><tr><td>|&gt;&gt; (circle, circle)</td></tr><tr><td>&lt;&lt;| (circle, circle)</td></tr><tr><td>&amp;&lt;| (circle, circle)</td></tr><tr><td>|&amp;&gt; (circle, circle)</td></tr><tr><td rowspan="11">inet_ops</td><td>&lt;&lt; (inet, inet)</td><td rowspan="11">&nbsp;</td></tr><tr><td>&lt;&lt;= (inet, inet)</td></tr><tr><td>&gt;&gt; (inet, inet)</td></tr><tr><td>&gt;&gt;= (inet, inet)</td></tr><tr><td>= (inet, inet)</td></tr><tr><td>&lt;&gt; (inet, inet)</td></tr><tr><td>&lt; (inet, inet)</td></tr><tr><td>&lt;= (inet, inet)</td></tr><tr><td>&gt; (inet, inet)</td></tr><tr><td>&gt;= (inet, inet)</td></tr><tr><td>&amp;&amp; (inet, inet)</td></tr><tr><td rowspan="18">multirange_ops</td><td>= (anymultirange, anymultirange)</td><td rowspan="18">&nbsp;</td></tr><tr><td>&amp;&amp; (anymultirange, anymultirange)</td></tr><tr><td>&amp;&amp; (anymultirange, anyrange)</td></tr><tr><td>@&gt; (anymultirange, anyelement)</td></tr><tr><td>@&gt; (anymultirange, anymultirange)</td></tr><tr><td>@&gt; (anymultirange, anyrange)</td></tr><tr><td>&lt;@ (anymultirange, anymultirange)</td></tr><tr><td>&lt;@ (anymultirange, anyrange)</td></tr><tr><td>&lt;&lt; (anymultirange, anymultirange)</td></tr><tr><td>&lt;&lt; (anymultirange, anyrange)</td></tr><tr><td>&gt;&gt; (anymultirange, anymultirange)</td></tr><tr><td>&gt;&gt; (anymultirange, anyrange)</td></tr><tr><td>&amp;&lt; (anymultirange, anymultirange)</td></tr><tr><td>&amp;&lt; (anymultirange, anyrange)</td></tr><tr><td>&amp;&gt; (anymultirange, anymultirange)</td></tr><tr><td>&amp;&gt; (anymultirange, anyrange)</td></tr><tr><td>-|- (anymultirange, anymultirange)</td></tr><tr><td>-|- (anymultirange, anyrange)</td></tr><tr><td rowspan="8">point_ops</td><td>|&gt;&gt; (point, point)</td><td rowspan="8">&lt;-&gt; (point, point)</td></tr><tr><td>&lt;&lt; (point, point)</td></tr><tr><td>&gt;&gt; (point, point)</td></tr><tr><td>&lt;&lt;| (point, point)</td></tr><tr><td>~= (point, point)</td></tr><tr><td>&lt;@ (point, box)</td></tr><tr><td>&lt;@ (point, polygon)</td></tr><tr><td>&lt;@ (point, circle)</td></tr><tr><td rowspan="12">poly_ops</td><td>&lt;&lt; (polygon, polygon)</td><td rowspan="12">&lt;-&gt; (polygon, point)</td></tr><tr><td>&amp;&lt; (polygon, polygon)</td></tr><tr><td>&amp;&gt; (polygon, polygon)</td></tr><tr><td>&gt;&gt; (polygon, polygon)</td></tr><tr><td>&lt;@ (polygon, polygon)</td></tr><tr><td>@&gt; (polygon, polygon)</td></tr><tr><td>~= (polygon, polygon)</td></tr><tr><td>&amp;&amp; (polygon, polygon)</td></tr><tr><td>&lt;&lt;| (polygon, polygon)</td></tr><tr><td>&amp;&lt;| (polygon, polygon)</td></tr><tr><td>|&amp;&gt; (polygon, polygon)</td></tr><tr><td>|&gt;&gt; (polygon, polygon)</td></tr><tr><td rowspan="18">range_ops</td><td>= (anyrange, anyrange)</td><td rowspan="18">&nbsp;</td></tr><tr><td>&amp;&amp; (anyrange, anyrange)</td></tr><tr><td>&amp;&amp; (anyrange, anymultirange)</td></tr><tr><td>@&gt; (anyrange, anyelement)</td></tr><tr><td>@&gt; (anyrange, anyrange)</td></tr><tr><td>@&gt; (anyrange, anymultirange)</td></tr><tr><td>&lt;@ (anyrange, anyrange)</td></tr><tr><td>&lt;@ (anyrange, anymultirange)</td></tr><tr><td>&lt;&lt; (anyrange, anyrange)</td></tr><tr><td>&lt;&lt; (anyrange, anymultirange)</td></tr><tr><td>&gt;&gt; (anyrange, anyrange)</td></tr><tr><td>&gt;&gt; (anyrange, anymultirange)</td></tr><tr><td>&amp;&lt; (anyrange, anyrange)</td></tr><tr><td>&amp;&lt; (anyrange, anymultirange)</td></tr><tr><td>&amp;&gt; (anyrange, anyrange)</td></tr><tr><td>&amp;&gt; (anyrange, anymultirange)</td></tr><tr><td>-|- (anyrange, anyrange)</td></tr><tr><td>-|- (anyrange, anymultirange)</td></tr><tr><td rowspan="2">tsquery_ops</td><td>&lt;@ (tsquery, tsquery)</td><td rowspan="2">&nbsp;</td></tr><tr><td>@&gt; (tsquery, tsquery)</td></tr><tr><td>tsvector_ops</td><td>@@ (tsvector, tsquery)</td><td>&nbsp;</td></tr></tbody></table><h3>SP-GiST</h3><h4 class="no-marker">개요</h4><p>공간 분할 GiST(space-partitioned GiST)는 분할 검색 트리로 비-균형 데이터에 대한 효율적인 검색을 지원한다</p><h4 class="no-marker">내장 연산자 클래스</h4><table class="w3-table w3-bordered"><thead><th>Name</th><th>Indexable Operators</th><th>Ordering Operators</th></thead><tbody><tr><td rowspan="12">box_ops</td><td>&lt;&lt; (box,box)</td><td rowspan="12">&lt;-&gt; (box,point)</td></tr><tr><td>&amp;&lt; (box,box)</td></tr><tr><td>&amp;&gt; (box,box)</td></tr><tr><td>&gt;&gt; (box,box)</td></tr><tr><td>&lt;@ (box,box)</td></tr><tr><td>@&gt; (box,box)</td></tr><tr><td>~= (box,box)</td></tr><tr><td>&amp;&amp; (box,box)</td></tr><tr><td>&lt;&lt;| (box,box)</td></tr><tr><td>&amp;&lt;| (box,box)</td></tr><tr><td>|&amp;&gt; (box,box)</td></tr><tr><td>|&gt;&gt; (box,box)</td></tr><tr><td rowspan="11">inet_ops</td><td>&lt;&lt; (inet,inet)</td><td rowspan="11">&nbsp;</td></tr><tr><td>&lt;&lt;= (inet,inet)</td></tr><tr><td>&gt;&gt; (inet,inet)</td></tr><tr><td>&gt;&gt;= (inet,inet)</td></tr><tr><td>= (inet,inet)</td></tr><tr><td>&lt;&gt; (inet,inet)</td></tr><tr><td>&lt; (inet,inet)</td></tr><tr><td>&lt;= (inet,inet)</td></tr><tr><td>&gt; (inet,inet)</td></tr><tr><td>&gt;= (inet,inet)</td></tr><tr><td>&amp;&amp; (inet,inet)</td></tr><tr><td rowspan="6">kd_point_ops</td><td>|&gt;&gt; (point,point)</td><td rowspan="6">&lt;-&gt; (point,point)</td></tr><tr><td>&lt;&lt; (point,point)</td></tr><tr><td>&gt;&gt; (point,point)</td></tr><tr><td>&lt;&lt;| (point,point)</td></tr><tr><td>~= (point,point)</td></tr><tr><td>&lt;@ (point,box)</td></tr><tr><td rowspan="12">poly_ops</td><td>&lt;&lt; (polygon,polygon)</td><td rowspan="12">&lt;-&gt; (polygon,point)</td></tr><tr><td>&amp;&lt; (polygon,polygon)</td></tr><tr><td>&amp;&gt; (polygon,polygon)</td></tr><tr><td>&gt;&gt; (polygon,polygon)</td></tr><tr><td>&lt;@ (polygon,polygon)</td></tr><tr><td>@&gt; (polygon,polygon)</td></tr><tr><td>~= (polygon,polygon)</td></tr><tr><td>&amp;&amp; (polygon,polygon)</td></tr><tr><td>&lt;&lt;| (polygon,polygon)</td></tr><tr><td>&amp;&lt;| (polygon,polygon)</td></tr><tr><td>|&gt;&gt; (polygon,polygon)</td></tr><tr><td>|&amp;&gt; (polygon,polygon)</td></tr><tr><td rowspan="6">quad_point_ops</td><td>|&gt;&gt; (point,point)</td><td rowspan="6">&lt;-&gt; (point,point)</td></tr><tr><td>&lt;&lt; (point,point)</td></tr><tr><td>&gt;&gt; (point,point)</td></tr><tr><td>&lt;&lt;| (point,point)</td></tr><tr><td>~= (point,point)</td></tr><tr><td>&lt;@ (point,box)</td></tr><tr><td rowspan="10">range_ops</td><td>= (anyrange,anyrange)</td><td rowspan="10">&nbsp;</td></tr><tr><td>&amp;&amp; (anyrange,anyrange)</td></tr><tr><td>@&gt; (anyrange,anyelement)</td></tr><tr><td>@&gt; (anyrange,anyrange)</td></tr><tr><td>&lt;@ (anyrange,anyrange)</td></tr><tr><td>&lt;&lt; (anyrange,anyrange)</td></tr><tr><td>&gt;&gt; (anyrange,anyrange)</td></tr><tr><td>&amp;&lt; (anyrange,anyrange)</td></tr><tr><td>&amp;&gt; (anyrange,anyrange)</td></tr><tr><td>-|- (anyrange,anyrange)</td></tr><tr><td rowspan="10">text_ops</td><td>= (text,text)</td><td rowspan="10">&nbsp;</td></tr><tr><td>&lt; (text,text)</td></tr><tr><td>&lt;= (text,text)</td></tr><tr><td>&gt; (text,text)</td></tr><tr><td>&gt;= (text,text)</td></tr><tr><td>~&lt;~ (text,text)</td></tr><tr><td>~&lt;=~ (text,text)</td></tr><tr><td>~&gt;=~ (text,text)</td></tr><tr><td>~&gt;~ (text,text)</td></tr><tr><td>^@ (text,text)</td></tr></tbody></table><h3>GIN</h3><h4 class="no-marker">개요</h4><ul><li>일반화된 역 인덱스(Generalized Inverted Index)는 인덱싱 대상이 복합 타입이고, 개별 요소를 이용해 검색하는 경우를 처리한다</li><li>인덱스 갱신 비용이 높으므로, 테이블에 대량 삽입이 발생하는 경우 인덱스를 삭제하고 나중에 재생성하는 게 나을 수 있다</li><li>GIN 인덱스 개발의 주요 목표는 PostgreSQL에 전문 검색 지원을 만드는 것이었다 -- 매우 빈번하게 등장하는 단어를 인덱스에 포함하는 것은 매우 큰 결과 집합을 생성하므로 유용하지 않다</li><li>null은 지원하지 않는다</li></ul><h4 class="no-marker">내장 연산자 클래스</h4><table class="w3-table w3-bordered"><thead><th>Name</th><th>Indexable Operators</th></thead><tbody><tr><td rowspan="4">array_ops</td><td>&amp;&amp; (anyarray,anyarray)</td></tr><tr><td>@&gt; (anyarray,anyarray)</td></tr><tr><td>&lt;@ (anyarray,anyarray)</td></tr><tr><td>= (anyarray,anyarray)</td></tr><tr><td rowspan="6">jsonb_ops</td><td>@&gt; (jsonb,jsonb)</td></tr><tr><td>@? (jsonb,jsonpath)</td></tr><tr><td>@@ (jsonb,jsonpath)</td></tr><tr><td>? (jsonb,text)</td></tr><tr><td>?| (jsonb,text[])</td></tr><tr><td>?&amp; (jsonb,text[])</td></tr><tr><td rowspan="3">jsonb_path_ops</td><td>@&gt; (jsonb,jsonb)</td></tr><tr><td>@? (jsonb,jsonpath)</td></tr><tr><td>@@ (jsonb,jsonpath)</td></tr><tr><td>tsvector_ops</td><td>@@ (tsvector,tsquery)</td></tr></tbody></table><h3>BRIN</h3><h4 class="no-marker">개요</h4><ul><li>블록 범위 인덱스(Block Range Index)는 특정 열이 테이블 내 물리적 위치와 상관관계를 가지는 매우 큰 테이블을 처리하게 위해 설계됐다</li><li>BRIN은 블록 범위 단위(=테이블에서 물리적으로 인접한 페이지 그룹)로 작동한다: 각 블록 범위에 대한 일부 요약 정보(예. 최대/최솟값)가 인덱스에 저장된다</li><li>BRIN 검색 시, 쿼리 조건을 일관되게 만족하는 블록 범위에 대해선 페이지의 모든 튜플을 반환한다: 쿼리 실행기가 각 튜플을 나머지 조건들에 대해 재검사한다<ul><li>테이블이 매우 크다면 이는 조건을 만족하지 않는 대부분의 스캔을 회피하므로 유용하다</li><li>pages_per_range 매개변수로 정밀도를 조정할 수 있다: 인덱스 항목 수 = 릴레이션 페이지 크기 / pages_per_range</li></ul></li><li>마지막 요약된 범위에 속하지 않는 새 페이지가 생성되면, 해당 튜플은 요약 실행이 호출되기 전까진 요약되지 않은 상태로 남는다<ul><li>vacuum 처리 시 모든 요약되지 않은 페이지 범위가 요약된다</li><li>autosummarize 매개변수를 활성화한 경우, 자동으로 페이지 요약이 실행된다</li><li>brin_summarize_new_values(), brin_summarize_range() 함수 호출로 요약할 수 있다</li><li>반대로 기존 튜플이 변경되어 요약이 좋은 표현이 아니게 되었다면 brin_desummarize_range() 함수로 해제할 수 있다</li></ul></li></ul><h4 class="no-marker"><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/18/brin.html#BRIN-BUILTIN-OPCLASSES">brin.html#BRIN-BUILTIN-OPCLASSES</a></h4><h3>Hash</h3><ul><li>단일 열 인덱스만 지원</li><li>unique 인덱스 미지원</li><li>= 연산자만 지원</li><li>각 해시 인덱스 튜플은 4바이트 해시 값만 저장</li></ul><h2>트랜잭션 처리</h2><h3>서브트랜잭션</h3><ul><li>서브트랜잭션은 트랜잭션 내부에서 시작해 트랜잭션을 더 작은 단위로 나눌 수 있게 해준다 -- 서브트랜잭션은 부모 트랜잭션에 영향을 주지 않고 커밋/롤백 가능</li><li>트랜잭션 내에서 savepoint 명령을 사용해 명시적으로 시작할 수 있다 -- PL/pgSQL의 exception 절을 이용해 시작할 수도 있다</li></ul><h3>2단계 트랜잭션</h3><p>가용성 문제가 생기면 2단계 트랜잭션이 장기간 준비 상태에 있을 수 있다</p><ul><li>prepare transaction : 변경사항을 디스크에 쓰고, 2단계 트랜잭션 커밋 또는 롤백을 대기 (pg_prepared_xacts에서 조회 가능)</li><li>commit prepared : 2단계 트랜잭션 커밋</li><li>rollback prepared : 2단계 트랜잭션 롤백</li></ul><h1>부록 &gt; 추가 모듈 및 확장 (contrib 디렉터리)</h1><p>이 선택적 구성 요소들은 빌드에 자동으로 포함되지 않으므로, 이미 빌드된 서버를 이용하는 경우 일부는 설치되지 않았을 수 있다</p><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/bloom.html">bloom</a></h2><ul><li><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black goto" href="/posts/fundamental/algorithm.html#pos-1921218475" id="goto--1921218475-1" target="_blank">/posts/fundamental/algorithm.html &gt; Bloom filter</a>를 이용한 인덱스 제공</li><li>인덱스 매개변수<ul><li>length : 각 인덱스 항목 비트 길이. 기본 80, 최대 4096<p>인덱스를 이용해 개별 행을 참조할 수 있어야 하므로, 개별 행마다 서명을 갖는다</p></li><li>col1 - col32 : 각 인덱스 열의 비트 수. 기본 2, 최대 4095</li></ul></li><li>컬럼이 여러 개인 테이블에서 col1 = val1 and col3 = val3 and col5 = val5를 만족하는 행을 찾는 것과 같은 문제에 대해 btree보다 뛰어난 공간 효율을 보인다</li><li>제한사항<ul><li>모듈에는 int4, text에 대한 연산자 클래스만 포함되어 있다</li><li>현재 = 연산자로만 검색 가능</li><li>null 검색 미지원</li></ul></li></ul><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/btree_gin.html">btree_gin</a></h2><ul><li>여러 타입에 대해 B-트리와 동등한 동작을 구현하는 GIN 연산자 클래스를 제공한다</li><li>GIN 인덱스 컬럼과 B-트리 인덱스 컬럼을 따로 검사해 비트맵 AND로 결합하는 것보다, 다중 컬럼 GIN 인덱스를 이용하는 게 효율적일 수 있다</li></ul><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/btree_gist.html">btree_gist</a></h2><ul><li>여러 타입에 대해 B-트리와 동등한 동작을 구현하는 GiST 연산자 클래스를 제공한다</li><li>일부 컬럼은 GiST로만 인덱싱 가능하지만 나머지는 단순한 데이터 타입인 다중 컬럼 GiST 인덱스가 필요한 경우 유용하다</li><li>자연스러운 거리가 존재하는 데이터 타입(크기가 고정된 숫자, 시간 및 날짜)에 대해 거리 연산자 &lt;-&gt;를 정의하고, 근접 이웃 검색을 제공</li></ul><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/citext.html">citext</a></h2><ul><li>대소문자 무관한 문자열 타입 제공<ul><li>문자열 저장 시 내부적으로 lower() 수행</li><li>다른 연산자 또는 함수와 함께 이용 시 자동으로 다른 피연산자도 lower() 변환</li><li>일부 연산자 또는 함수에 citext 전용 구현 이용. 예: ~와 ~*는 동일한 동작</li></ul></li><li>citext 컬럼이나 데이터에 COLLATE 명세를 부착할 수 있지만, 소문자 접기는 항상 LC_CTYPE 설정에 따라 수행되므로 일부 유니코드 특수 사례를 의도에 맞게 처리하지 못할 수 있다</li></ul><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/cube.html">cube</a></h2><ul><li>다차원 cube를 표현하기 위한 데이터 타입과 관련 연산자, 함수를 제공</li><li>큐브는 2개의 꼭짓점으로 정의된다<ul><li>두 꼭짓점이 동일하면 내부적으로 '점'이라고 플래그하고 하나만 저장한다</li><li>내부 표현에서는 연산 편의를 위해 두 꼭짓점 각 차원의 min/max를 분리하여 저장한다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select '(1, -2, 3), (-4, 5, -6)'::cube = '(-4, -2, -6), (1, 5, 3)'::cube;
- ?column? 
+# select * from :"table_name" limit :limit_count;</div></li><li>\setenv name [value] : 환경 변수를 value로 설정하거나, value가 없으면 해제</li><li>\timing [on | off] : 쿼리 실행에 걸린 시간 표시</li><li>\unset name : psql 변수 삭제</li><li>\watch [ i[nterval]=seconds ] [ c[ount]=times ] [ m[in_rows]=rows ] [ seconds ] : 조건을 만족하는 동안 현재 쿼리 버퍼를 반복 실행</li><li>\; : 서버에 명령을 보내지 않고 쿼리 버퍼에 세미콜론 추가</li></ul><h1>내부 구조</h1><h2>시스템 뷰</h2><p>시스템 카탈로그에 대해 흔히 사용되는 쿼리를 제공하거나, 서버 내부 상태에 대한 접근 제공</p><ul><li>pg_available_extensions : 사용 가능한 확장</li><li>pg_file_settings : 구성 파일 요약</li><li>별도 <a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black goto" href="#pos893732902" id="goto-893732902-1" target="_self">누적 통계 시스템</a> 뷰도 존재</li></ul><h2>내장 인덱스</h2><h3>B-Tree</h3><h4 class="no-marker">개요</h4><ul><li>잘 정의된 선형 순서로 정렬할 수 있는 모든 데이터 타입은 B-트리 인덱싱 가능하다. 단, 개별 인덱스 항목이 페이지의 약 1/3을 초과하지 않아야 한다</li><li>B-트리 연산자 클래스는 해당 타입에 정렬 순서를 강제하므로, PostgreSQL 정렬에 대한 일반적인 표현 및 이해 수단으로 사용된다</li></ul><h4 class="no-marker">연산자 클래스</h4><ul><li>비교 연산자 &lt;, &lt;=, =, =&gt;, &gt;를 제공한다</li><li>= 연산자는 동치 관계여야 한다<ul><li>non-null 값들에 대해</li><li>A = A는 true여야 한다</li><li>A = B면 B = A여야 한다</li><li>A = B and B = C면 A = C여야 한다</li></ul></li><li>&lt; 비교는 강한 순서 관계여야 한다<ul><li>non-null 값들에 대해</li><li>A &lt; A는 false여야 한다</li><li>A &lt; B and B &lt; C면 A &lt; C여야 한다</li></ul></li><li>비교는 도메인 전체에 적용돼야 한다<ul><li>non-null 값들에 대해</li><li>A, B는 A &lt; B, A = B, B &lt; A 중 정확히 하나만 true여야 한다</li></ul></li></ul><h3>GiST</h3><h4 class="no-marker">개요</h4><p>일반화된 검색 트리(Generalized Search Tree)는 balanced tree를 이용한 임의의 인덱싱 방식을 구현하기 위한 기본 템플릿을 제공한다</p><h4 class="no-marker">내장 연산자 클래스</h4><p>inet_ops 연산자 클래스는 inet과 cidr 타입의 기본 클래스가 아니므로, 인덱스 정의 시 클래스 이름을 명시해야 한다</p><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql">CREATE INDEX ON my_table USING GIST (my_inet_column inet_ops);</div><table class="w3-table w3-bordered"><thead><th>Name</th><th>Indexable Operators</th><th>Ordering Operators</th></thead><tbody><tr><td rowspan="12">box_ops</td><td>&lt;&lt; (box, box)</td><td rowspan="12">&lt;-&gt; (box, point)</td></tr><tr><td>&amp;&lt; (box, box)</td></tr><tr><td>&amp;&amp; (box, box)</td></tr><tr><td>&amp;&gt; (box, box)</td></tr><tr><td>&gt;&gt; (box, box)</td></tr><tr><td>~= (box, box)</td></tr><tr><td>@&gt; (box, box)</td></tr><tr><td>&lt;@ (box, box)</td></tr><tr><td>&amp;&lt;| (box, box)</td></tr><tr><td>&lt;&lt;| (box, box)</td></tr><tr><td>|&gt;&gt; (box, box)</td></tr><tr><td>|&amp;&gt; (box, box)</td></tr><tr><td rowspan="12">circle_ops</td><td>&lt;&lt; (circle, circle)</td><td rowspan="12">&lt;-&gt; (circle, point)</td></tr><tr><td>&amp;&lt; (circle, circle)</td></tr><tr><td>&amp;&gt; (circle, circle)</td></tr><tr><td>&gt;&gt; (circle, circle)</td></tr><tr><td>&lt;@ (circle, circle)</td></tr><tr><td>@&gt; (circle, circle)</td></tr><tr><td>~= (circle, circle)</td></tr><tr><td>&amp;&amp; (circle, circle)</td></tr><tr><td>|&gt;&gt; (circle, circle)</td></tr><tr><td>&lt;&lt;| (circle, circle)</td></tr><tr><td>&amp;&lt;| (circle, circle)</td></tr><tr><td>|&amp;&gt; (circle, circle)</td></tr><tr><td rowspan="11">inet_ops</td><td>&lt;&lt; (inet, inet)</td><td rowspan="11">&nbsp;</td></tr><tr><td>&lt;&lt;= (inet, inet)</td></tr><tr><td>&gt;&gt; (inet, inet)</td></tr><tr><td>&gt;&gt;= (inet, inet)</td></tr><tr><td>= (inet, inet)</td></tr><tr><td>&lt;&gt; (inet, inet)</td></tr><tr><td>&lt; (inet, inet)</td></tr><tr><td>&lt;= (inet, inet)</td></tr><tr><td>&gt; (inet, inet)</td></tr><tr><td>&gt;= (inet, inet)</td></tr><tr><td>&amp;&amp; (inet, inet)</td></tr><tr><td rowspan="18">multirange_ops</td><td>= (anymultirange, anymultirange)</td><td rowspan="18">&nbsp;</td></tr><tr><td>&amp;&amp; (anymultirange, anymultirange)</td></tr><tr><td>&amp;&amp; (anymultirange, anyrange)</td></tr><tr><td>@&gt; (anymultirange, anyelement)</td></tr><tr><td>@&gt; (anymultirange, anymultirange)</td></tr><tr><td>@&gt; (anymultirange, anyrange)</td></tr><tr><td>&lt;@ (anymultirange, anymultirange)</td></tr><tr><td>&lt;@ (anymultirange, anyrange)</td></tr><tr><td>&lt;&lt; (anymultirange, anymultirange)</td></tr><tr><td>&lt;&lt; (anymultirange, anyrange)</td></tr><tr><td>&gt;&gt; (anymultirange, anymultirange)</td></tr><tr><td>&gt;&gt; (anymultirange, anyrange)</td></tr><tr><td>&amp;&lt; (anymultirange, anymultirange)</td></tr><tr><td>&amp;&lt; (anymultirange, anyrange)</td></tr><tr><td>&amp;&gt; (anymultirange, anymultirange)</td></tr><tr><td>&amp;&gt; (anymultirange, anyrange)</td></tr><tr><td>-|- (anymultirange, anymultirange)</td></tr><tr><td>-|- (anymultirange, anyrange)</td></tr><tr><td rowspan="8">point_ops</td><td>|&gt;&gt; (point, point)</td><td rowspan="8">&lt;-&gt; (point, point)</td></tr><tr><td>&lt;&lt; (point, point)</td></tr><tr><td>&gt;&gt; (point, point)</td></tr><tr><td>&lt;&lt;| (point, point)</td></tr><tr><td>~= (point, point)</td></tr><tr><td>&lt;@ (point, box)</td></tr><tr><td>&lt;@ (point, polygon)</td></tr><tr><td>&lt;@ (point, circle)</td></tr><tr><td rowspan="12">poly_ops</td><td>&lt;&lt; (polygon, polygon)</td><td rowspan="12">&lt;-&gt; (polygon, point)</td></tr><tr><td>&amp;&lt; (polygon, polygon)</td></tr><tr><td>&amp;&gt; (polygon, polygon)</td></tr><tr><td>&gt;&gt; (polygon, polygon)</td></tr><tr><td>&lt;@ (polygon, polygon)</td></tr><tr><td>@&gt; (polygon, polygon)</td></tr><tr><td>~= (polygon, polygon)</td></tr><tr><td>&amp;&amp; (polygon, polygon)</td></tr><tr><td>&lt;&lt;| (polygon, polygon)</td></tr><tr><td>&amp;&lt;| (polygon, polygon)</td></tr><tr><td>|&amp;&gt; (polygon, polygon)</td></tr><tr><td>|&gt;&gt; (polygon, polygon)</td></tr><tr><td rowspan="18">range_ops</td><td>= (anyrange, anyrange)</td><td rowspan="18">&nbsp;</td></tr><tr><td>&amp;&amp; (anyrange, anyrange)</td></tr><tr><td>&amp;&amp; (anyrange, anymultirange)</td></tr><tr><td>@&gt; (anyrange, anyelement)</td></tr><tr><td>@&gt; (anyrange, anyrange)</td></tr><tr><td>@&gt; (anyrange, anymultirange)</td></tr><tr><td>&lt;@ (anyrange, anyrange)</td></tr><tr><td>&lt;@ (anyrange, anymultirange)</td></tr><tr><td>&lt;&lt; (anyrange, anyrange)</td></tr><tr><td>&lt;&lt; (anyrange, anymultirange)</td></tr><tr><td>&gt;&gt; (anyrange, anyrange)</td></tr><tr><td>&gt;&gt; (anyrange, anymultirange)</td></tr><tr><td>&amp;&lt; (anyrange, anyrange)</td></tr><tr><td>&amp;&lt; (anyrange, anymultirange)</td></tr><tr><td>&amp;&gt; (anyrange, anyrange)</td></tr><tr><td>&amp;&gt; (anyrange, anymultirange)</td></tr><tr><td>-|- (anyrange, anyrange)</td></tr><tr><td>-|- (anyrange, anymultirange)</td></tr><tr><td rowspan="2">tsquery_ops</td><td>&lt;@ (tsquery, tsquery)</td><td rowspan="2">&nbsp;</td></tr><tr><td>@&gt; (tsquery, tsquery)</td></tr><tr><td>tsvector_ops</td><td>@@ (tsvector, tsquery)</td><td>&nbsp;</td></tr></tbody></table><h3>SP-GiST</h3><h4 class="no-marker">개요</h4><p>공간 분할 GiST(space-partitioned GiST)는 분할 검색 트리로 비-균형 데이터에 대한 효율적인 검색을 지원한다</p><h4 class="no-marker">내장 연산자 클래스</h4><table class="w3-table w3-bordered"><thead><th>Name</th><th>Indexable Operators</th><th>Ordering Operators</th></thead><tbody><tr><td rowspan="12">box_ops</td><td>&lt;&lt; (box,box)</td><td rowspan="12">&lt;-&gt; (box,point)</td></tr><tr><td>&amp;&lt; (box,box)</td></tr><tr><td>&amp;&gt; (box,box)</td></tr><tr><td>&gt;&gt; (box,box)</td></tr><tr><td>&lt;@ (box,box)</td></tr><tr><td>@&gt; (box,box)</td></tr><tr><td>~= (box,box)</td></tr><tr><td>&amp;&amp; (box,box)</td></tr><tr><td>&lt;&lt;| (box,box)</td></tr><tr><td>&amp;&lt;| (box,box)</td></tr><tr><td>|&amp;&gt; (box,box)</td></tr><tr><td>|&gt;&gt; (box,box)</td></tr><tr><td rowspan="11">inet_ops</td><td>&lt;&lt; (inet,inet)</td><td rowspan="11">&nbsp;</td></tr><tr><td>&lt;&lt;= (inet,inet)</td></tr><tr><td>&gt;&gt; (inet,inet)</td></tr><tr><td>&gt;&gt;= (inet,inet)</td></tr><tr><td>= (inet,inet)</td></tr><tr><td>&lt;&gt; (inet,inet)</td></tr><tr><td>&lt; (inet,inet)</td></tr><tr><td>&lt;= (inet,inet)</td></tr><tr><td>&gt; (inet,inet)</td></tr><tr><td>&gt;= (inet,inet)</td></tr><tr><td>&amp;&amp; (inet,inet)</td></tr><tr><td rowspan="6">kd_point_ops</td><td>|&gt;&gt; (point,point)</td><td rowspan="6">&lt;-&gt; (point,point)</td></tr><tr><td>&lt;&lt; (point,point)</td></tr><tr><td>&gt;&gt; (point,point)</td></tr><tr><td>&lt;&lt;| (point,point)</td></tr><tr><td>~= (point,point)</td></tr><tr><td>&lt;@ (point,box)</td></tr><tr><td rowspan="12">poly_ops</td><td>&lt;&lt; (polygon,polygon)</td><td rowspan="12">&lt;-&gt; (polygon,point)</td></tr><tr><td>&amp;&lt; (polygon,polygon)</td></tr><tr><td>&amp;&gt; (polygon,polygon)</td></tr><tr><td>&gt;&gt; (polygon,polygon)</td></tr><tr><td>&lt;@ (polygon,polygon)</td></tr><tr><td>@&gt; (polygon,polygon)</td></tr><tr><td>~= (polygon,polygon)</td></tr><tr><td>&amp;&amp; (polygon,polygon)</td></tr><tr><td>&lt;&lt;| (polygon,polygon)</td></tr><tr><td>&amp;&lt;| (polygon,polygon)</td></tr><tr><td>|&gt;&gt; (polygon,polygon)</td></tr><tr><td>|&amp;&gt; (polygon,polygon)</td></tr><tr><td rowspan="6">quad_point_ops</td><td>|&gt;&gt; (point,point)</td><td rowspan="6">&lt;-&gt; (point,point)</td></tr><tr><td>&lt;&lt; (point,point)</td></tr><tr><td>&gt;&gt; (point,point)</td></tr><tr><td>&lt;&lt;| (point,point)</td></tr><tr><td>~= (point,point)</td></tr><tr><td>&lt;@ (point,box)</td></tr><tr><td rowspan="10">range_ops</td><td>= (anyrange,anyrange)</td><td rowspan="10">&nbsp;</td></tr><tr><td>&amp;&amp; (anyrange,anyrange)</td></tr><tr><td>@&gt; (anyrange,anyelement)</td></tr><tr><td>@&gt; (anyrange,anyrange)</td></tr><tr><td>&lt;@ (anyrange,anyrange)</td></tr><tr><td>&lt;&lt; (anyrange,anyrange)</td></tr><tr><td>&gt;&gt; (anyrange,anyrange)</td></tr><tr><td>&amp;&lt; (anyrange,anyrange)</td></tr><tr><td>&amp;&gt; (anyrange,anyrange)</td></tr><tr><td>-|- (anyrange,anyrange)</td></tr><tr><td rowspan="10">text_ops</td><td>= (text,text)</td><td rowspan="10">&nbsp;</td></tr><tr><td>&lt; (text,text)</td></tr><tr><td>&lt;= (text,text)</td></tr><tr><td>&gt; (text,text)</td></tr><tr><td>&gt;= (text,text)</td></tr><tr><td>~&lt;~ (text,text)</td></tr><tr><td>~&lt;=~ (text,text)</td></tr><tr><td>~&gt;=~ (text,text)</td></tr><tr><td>~&gt;~ (text,text)</td></tr><tr><td>^@ (text,text)</td></tr></tbody></table><h3>GIN</h3><h4 class="no-marker">개요</h4><ul><li>일반화된 역 인덱스(Generalized Inverted Index)는 인덱싱 대상이 복합 타입이고, 개별 요소를 이용해 검색하는 경우를 처리한다</li><li>인덱스 갱신 비용이 높으므로, 테이블에 대량 삽입이 발생하는 경우 인덱스를 삭제하고 나중에 재생성하는 게 나을 수 있다</li><li>GIN 인덱스 개발의 주요 목표는 PostgreSQL에 전문 검색 지원을 만드는 것이었다 -- 매우 빈번하게 등장하는 단어를 인덱스에 포함하는 것은 매우 큰 결과 집합을 생성하므로 유용하지 않다</li><li>null은 지원하지 않는다</li></ul><h4 class="no-marker">내장 연산자 클래스</h4><table class="w3-table w3-bordered"><thead><th>Name</th><th>Indexable Operators</th></thead><tbody><tr><td rowspan="4">array_ops</td><td>&amp;&amp; (anyarray,anyarray)</td></tr><tr><td>@&gt; (anyarray,anyarray)</td></tr><tr><td>&lt;@ (anyarray,anyarray)</td></tr><tr><td>= (anyarray,anyarray)</td></tr><tr><td rowspan="6">jsonb_ops</td><td>@&gt; (jsonb,jsonb)</td></tr><tr><td>@? (jsonb,jsonpath)</td></tr><tr><td>@@ (jsonb,jsonpath)</td></tr><tr><td>? (jsonb,text)</td></tr><tr><td>?| (jsonb,text[])</td></tr><tr><td>?&amp; (jsonb,text[])</td></tr><tr><td rowspan="3">jsonb_path_ops</td><td>@&gt; (jsonb,jsonb)</td></tr><tr><td>@? (jsonb,jsonpath)</td></tr><tr><td>@@ (jsonb,jsonpath)</td></tr><tr><td>tsvector_ops</td><td>@@ (tsvector,tsquery)</td></tr></tbody></table><h3>BRIN</h3><h4 class="no-marker">개요</h4><ul><li>블록 범위 인덱스(Block Range Index)는 특정 열이 테이블 내 물리적 위치와 상관관계를 가지는 매우 큰 테이블을 처리하게 위해 설계됐다</li><li>BRIN은 블록 범위 단위(=테이블에서 물리적으로 인접한 페이지 그룹)로 작동한다: 각 블록 범위에 대한 일부 요약 정보(예. 최대/최솟값)가 인덱스에 저장된다</li><li>BRIN 검색 시, 쿼리 조건을 일관되게 만족하는 블록 범위에 대해선 페이지의 모든 튜플을 반환한다: 쿼리 실행기가 각 튜플을 나머지 조건들에 대해 재검사한다<ul><li>테이블이 매우 크다면 이는 조건을 만족하지 않는 대부분의 스캔을 회피하므로 유용하다</li><li>pages_per_range 매개변수로 정밀도를 조정할 수 있다: 인덱스 항목 수 = 릴레이션 페이지 크기 / pages_per_range</li></ul></li><li>마지막 요약된 범위에 속하지 않는 새 페이지가 생성되면, 해당 튜플은 요약 실행이 호출되기 전까진 요약되지 않은 상태로 남는다<ul><li>vacuum 처리 시 모든 요약되지 않은 페이지 범위가 요약된다</li><li>autosummarize 매개변수를 활성화한 경우, 자동으로 페이지 요약이 실행된다</li><li>brin_summarize_new_values(), brin_summarize_range() 함수 호출로 요약할 수 있다</li><li>반대로 기존 튜플이 변경되어 요약이 좋은 표현이 아니게 되었다면 brin_desummarize_range() 함수로 해제할 수 있다</li></ul></li></ul><h4 class="no-marker"><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/18/brin.html#BRIN-BUILTIN-OPCLASSES">brin.html#BRIN-BUILTIN-OPCLASSES</a></h4><h3>Hash</h3><ul><li>단일 열 인덱스만 지원</li><li>unique 인덱스 미지원</li><li>= 연산자만 지원</li><li>각 해시 인덱스 튜플은 4바이트 해시 값만 저장</li></ul><h2>트랜잭션 처리</h2><h3>서브트랜잭션</h3><ul><li>서브트랜잭션은 트랜잭션 내부에서 시작해 트랜잭션을 더 작은 단위로 나눌 수 있게 해준다 -- 서브트랜잭션은 부모 트랜잭션에 영향을 주지 않고 커밋/롤백 가능</li><li>트랜잭션 내에서 savepoint 명령을 사용해 명시적으로 시작할 수 있다 -- PL/pgSQL의 exception 절을 이용해 시작할 수도 있다</li></ul><h3>2단계 트랜잭션</h3><p>가용성 문제가 생기면 2단계 트랜잭션이 장기간 준비 상태에 있을 수 있다</p><ul><li>prepare transaction : 변경사항을 디스크에 쓰고, 2단계 트랜잭션 커밋 또는 롤백을 대기 (pg_prepared_xacts에서 조회 가능)</li><li>commit prepared : 2단계 트랜잭션 커밋</li><li>rollback prepared : 2단계 트랜잭션 롤백</li></ul><h1>부록 &gt; 추가 모듈 및 확장 (contrib 디렉터리)</h1><p>이 선택적 구성 요소들은 빌드에 자동으로 포함되지 않으므로, 이미 빌드된 서버를 이용하는 경우 일부는 설치되지 않았을 수 있다</p><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/bloom.html">bloom</a></h2><ul><li><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black goto" href="/posts/fundamental/algorithm.html#pos-1921218475" id="goto--1921218475-1" target="_blank">/posts/fundamental/algorithm.html &gt; Bloom filter</a>를 이용한 인덱스 제공</li><li>인덱스 매개변수<ul><li>length : 각 인덱스 항목 비트 길이. 기본 80, 최대 4096<p>인덱스를 이용해 개별 행을 참조할 수 있어야 하므로, 개별 행마다 서명을 갖는다</p></li><li>col1 - col32 : 각 인덱스 열의 비트 수. 기본 2, 최대 4095</li></ul></li><li>컬럼이 여러 개인 테이블에서 col1 = val1 and col3 = val3 and col5 = val5를 만족하는 행을 찾는 것과 같은 문제에 대해 btree보다 뛰어난 공간 효율을 보인다</li><li>제한사항<ul><li>모듈에는 int4, text에 대한 연산자 클래스만 포함되어 있다</li><li>현재 = 연산자로만 검색 가능</li><li>null 검색 미지원</li></ul></li></ul><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/btree-gin.html">btree-gin</a></h2><ul><li>여러 타입에 대해 B-트리와 동등한 동작을 구현하는 GIN 연산자 클래스를 제공한다</li><li>GIN 인덱스 컬럼과 B-트리 인덱스 컬럼을 따로 검사해 비트맵 AND로 결합하는 것보다, 다중 컬럼 GIN 인덱스를 이용하는 게 효율적일 수 있다</li></ul><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/btree-gist.html">btree-gist</a></h2><ul><li>여러 타입에 대해 B-트리와 동등한 동작을 구현하는 GiST 연산자 클래스를 제공한다</li><li>일부 컬럼은 GiST로만 인덱싱 가능하지만 나머지는 단순한 데이터 타입인 다중 컬럼 GiST 인덱스가 필요한 경우 유용하다</li><li>자연스러운 거리가 존재하는 데이터 타입(크기가 고정된 숫자, 시간 및 날짜)에 대해 거리 연산자 &lt;-&gt;를 정의하고, 근접 이웃 검색을 제공</li></ul><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/citext.html">citext</a></h2><ul><li>대소문자 무관한 문자열 타입 제공<ul><li>문자열 저장 시 내부적으로 lower() 수행</li><li>다른 연산자 또는 함수와 함께 이용 시 자동으로 다른 피연산자도 lower() 변환</li><li>일부 연산자 또는 함수에 citext 전용 구현 이용. 예: ~와 ~*는 동일한 동작</li></ul></li><li>citext 컬럼이나 데이터에 COLLATE 명세를 부착할 수 있지만, 소문자 접기는 항상 LC_CTYPE 설정에 따라 수행되므로 일부 유니코드 특수 사례를 의도에 맞게 처리하지 못할 수 있다</li></ul><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/cube.html">cube</a></h2><ul><li>다차원 cube를 표현하기 위한 데이터 타입과 관련 연산자, 함수를 제공</li><li>큐브는 2개의 꼭짓점으로 정의된다<ul><li>두 꼭짓점이 동일하면 내부적으로 '점'이라고 플래그하고 하나만 저장한다</li><li>내부 표현에서는 연산 편의를 위해 두 꼭짓점 각 차원의 min/max를 분리하여 저장한다<p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># select '(1, -2, 3), (-4, 5, -6)'::cube = '(-4, -2, -6), (1, 5, 3)'::cube;
+ ?column?
 ----------
  t
 (1 row)
@@ -1198,7 +1198,7 @@ drwx------@  60 wiz  staff     1920 Mar  5 15:38 ..</div></li></ul></li><li>\bin
 #   n = 2k - 1 : k번째 차원의 하한
 #   n = 2k : k번째 차원의 상한
 # select c -> n, c ~> n from (values ('(1, -2, 3), (-4, 5, -6)'::cube)) x(c), generate_series(1, 6) n;
- ?column? | ?column? 
+ ?column? | ?column?
 ----------+----------
         1 |       -4
        -2 |        1
@@ -1207,7 +1207,7 @@ drwx------@  60 wiz  staff     1920 Mar  5 15:38 ..</div></li></ul></li><li>\bin
         5 |       -6
        -6 |        3
 (6 rows)</div></li><li>각 차원은 64비트 부동 소수로 저장된다</li><li>이하 생략</li></ul></li></ul><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/dblink.html">dblink</a></h2><ul><li>세션 내에서 재사용 가능한 추가 PostgreSQL 연결을 지원한다</li><li>dblink_connect() : 연결 생성</li><li>dblink_disconnect() : 연결 닫기</li><li>dblink() : 쿼리 실행</li><li>dblink_exec() : 명령 실행</li><li>dblink_send_query() : 비동기 쿼리 전송</li><li>dblink_get_result() : 비동기 쿼리 결과 획득(완료까지 대기)</li></ul><h2><a class="w3-padding-small w3-round-xlarge w3-small w3-border w3-hover-black" href="https://www.postgresql.org/docs/current/fuzzystrmatch.html">fuzzystrmatch</a></h2><ul><li>문자열 간 유사성(거리)를 결정하는 여러 함수 제공</li><li>멀티바이트 인코딩(예. UTF-8) 텍스트에는 soundex, metaphone, dmetaphone, dmetaphone_alt가 잘 작동하지 않는다</li></ul><h3 class="no-marker">Soundex</h3><ul><li>영어 <strong>단어 비교</strong>에 유용. 비슷하게 들리는 이름들을 동일한 코드로 변환하여 매칭</li><li>soundex(text) : 텍스트를 Soundex 코드로 변환</li><li>difference(text, text) : 0(일치 없음) ~ 4(완전 일치)</li></ul><p><strong>↓ sql</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="sql"># SELECT soundex('Anne'), soundex('Ann'), difference('Anne', 'Ann');
- soundex | soundex | difference 
+ soundex | soundex | difference
 ---------+---------+------------
  A500    | A500    |          4
 (1 row)

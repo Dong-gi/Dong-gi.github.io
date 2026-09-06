@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 310" width="700" height="310" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">이중차분과 회귀 불연속의 인과 그래프</title><desc id="d">왼쪽에서는 제도 변경에서 처치로 화살표가 오고 점선 원으로 그린 못 잰 것에서 결과로 화살표가 온다. 오른쪽에서는 기준변수에서 처치와 결과 양쪽으로 화살표가 온다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="180" y="44" text-anchor="middle" class="sm bold ink">이중차분</text><rect x="15" y="56" width="330" height="178" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><ellipse cx="180" cy="92" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="180" y="92" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="180" dy="4.5">제도 변경</tspan></text><ellipse cx="288" cy="92" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8" stroke-dasharray="5 4"/><text x="288" y="92" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="288" dy="4.5">못 잰 것</tspan></text><ellipse cx="80" cy="200" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="80" y="200" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="80" dy="4.5">처치</tspan></text><ellipse cx="270" cy="200" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="270" y="200" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="270" dy="4.5">결과</tspan></text><path d="M148.75 125.75 L103.1 175.05" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M280.44 137.37 L275.59 166.46" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M106 200 L236 200" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="180" y="250" text-anchor="middle" class="sm ink2">가정 — 못 잰 것이 두 집단에서 나란히 움직인다</text><text x="520" y="44" text-anchor="middle" class="sm bold ink">회귀 불연속</text><rect x="355" y="56" width="330" height="178" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><ellipse cx="520" cy="92" rx="40" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="520" y="92" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="520" dy="4.5">기준변수</tspan></text><ellipse cx="420" cy="200" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="420" y="200" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="420" dy="4.5">처치</tspan></text><ellipse cx="610" cy="200" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="610" y="200" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="610" dy="4.5">결과</tspan></text><path d="M492.82 121.35 L443.1 175.05" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M545.61 122.73 L588.23 173.88" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M446 200 L576 200" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="438" y="146" text-anchor="end" class="sm ink2">기준을 넘으면</text><text x="520" y="250" text-anchor="middle" class="sm ink2">가정 — 기준 둘레에서 결과가 매끄럽게 이어진다</text><text x="350" y="288" text-anchor="middle" class="sm bold ink">두 그림 어디에도 그 가정은 그려져 있지 않다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 710 300" width="710" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">자료에서 그래프를 찾아내려는 알고리즘의 입력과 출력</title><desc id="d">자료와 검사되지 않는 가정이 알고리즘으로 들어가고 그래프가 여럿 나온다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="20" y="80" width="175" height="62" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="107" y="105" text-anchor="middle" class="sm bold ink">자료</text><text x="107" y="128" text-anchor="middle" class="sm ink2">열과 숫자</text><rect x="20" y="178" width="175" height="62" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="107" y="203" text-anchor="middle" class="sm bold ink">검사되지 않는 가정</text><text x="107" y="226" text-anchor="middle" class="sm ink2">충실성 같은 것들</text><path d="M195 111 L277.6 144.96" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M195 209 L277.6 175.04" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><rect x="285" y="125" width="150" height="70" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="360" y="155" text-anchor="middle" class="sm bold ink">알고리즘</text><text x="360" y="178" text-anchor="middle" class="sm ink2">남는 것을 추린다</text><path d="M435 160 L513.97 91.25" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M435 160 L512 160.91" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M435 160 L514.04 230.67" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><rect x="520" y="55" width="170" height="62" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="605" y="92" text-anchor="middle" class="sm bold ink">그래프 가</text><rect x="520" y="130" width="170" height="62" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="605" y="167" text-anchor="middle" class="sm bold ink">그래프 나</text><rect x="520" y="205" width="170" height="62" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="605" y="242" text-anchor="middle" class="sm bold ink">그래프 다</text><text x="355" y="288" text-anchor="middle" class="sm bold ink">나오는 것이 하나가 아니고 들어가는 것에 검사되지 않는 가정이 섞인다</text>
+</svg>

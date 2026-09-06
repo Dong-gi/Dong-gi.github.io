@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 340" width="700" height="340" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">처치집단과 대조집단의 시간선과 처치집단의 반사실 점선</title><desc id="d">아래쪽 선은 조금 올라가고 위쪽 선은 많이 올라간다. 위쪽 선의 출발점에서 아래쪽 선과 같은 기울기로 그은 점선이 있고, 점선의 끝과 실제 끝 사이의 세로 간격에 이중차분이라는 딱지가 붙어 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="350" y="28" text-anchor="middle" class="sm bold ink">바뀌지 않은 집단을 함께 본다</text><rect x="25" y="44" width="650" height="200" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><path d="M60 222 L660 222" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="60" y="66" text-anchor="start" class="sm ink2">결과</text><path d="M200 60 L200 222" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 3" fill="none"/><path d="M500 60 L500 222" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 3" fill="none"/><text x="200" y="238" text-anchor="middle" class="sm ink2">바꾸기 전</text><text x="500" y="238" text-anchor="middle" class="sm ink2">바꾼 뒤</text><path d="M200 190 L500 160" fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round"/><circle cx="200" cy="190" r="4.5" fill="var(--s2)"/><circle cx="500" cy="160" r="4.5" fill="var(--s2)"/><text x="160" y="194" text-anchor="end" class="sm ink2">대조집단</text><path d="M200 150 L500 80" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round"/><circle cx="200" cy="150" r="4.5" fill="var(--s1)"/><circle cx="500" cy="80" r="4.5" fill="var(--s1)"/><text x="160" y="154" text-anchor="end" class="sm ink2">처치집단</text><path d="M200 150 L500 120" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="6 5"/><circle cx="500" cy="120" r="4.5" fill="var(--s1)"/><path d="M512 80 L512 120" stroke="var(--s3)" stroke-width="3.5" stroke-linecap="round" fill="none"/><text x="522" y="104" text-anchor="start" class="sm ink2">이중차분</text><text x="522" y="136" text-anchor="start" class="sm ink2">처치가 없었다면 여기</text><text x="350" y="272" text-anchor="middle" class="sm bold ink">점선은 자료에 없다. 대조집단이 움직인 만큼 처치집단도 움직였으리라 보고 그은 선이다</text><text x="350" y="296" text-anchor="middle" class="sm bold ink">그 점선과 실제로 본 점 사이의 세로 간격이 이중차분이다</text><text x="350" y="320" text-anchor="middle" class="sm bold ink">이 그림에서 가정에 해당하는 것은 점선의 기울기 하나뿐이다</text>
+</svg>

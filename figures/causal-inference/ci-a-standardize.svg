@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 300" width="660" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">층별 차이를 가중해 하나로 합치는 절차</title><desc id="d">세 줄이 있고 각 줄은 층의 차이와 층의 몫을 곱하기로 잇는다. 세 줄이 더하기로 이어지고 오른쪽 상자 하나로 화살표가 간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="330" y="30" text-anchor="middle" class="sm bold ink">층마다 잰 차이를 층의 몫으로 가중해 더한다</text><rect x="40" y="51" width="140" height="44" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink" x="110" y="79" text-anchor="middle">층 ㄱ 의 차이</text><text class="ink2 sm" x="200" y="79" text-anchor="middle">곱하기</text><rect x="230" y="51" width="140" height="44" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink" x="300" y="79" text-anchor="middle">층 ㄱ 의 몫</text><text class="ink2 sm" x="205" y="108" text-anchor="middle">더하기</text><rect x="40" y="111" width="140" height="44" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink" x="110" y="139" text-anchor="middle">층 ㄴ 의 차이</text><text class="ink2 sm" x="200" y="139" text-anchor="middle">곱하기</text><rect x="230" y="111" width="140" height="44" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink" x="300" y="139" text-anchor="middle">층 ㄴ 의 몫</text><text class="ink2 sm" x="205" y="168" text-anchor="middle">더하기</text><rect x="40" y="171" width="140" height="44" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink" x="110" y="199" text-anchor="middle">층 ㄷ 의 차이</text><text class="ink2 sm" x="200" y="199" text-anchor="middle">곱하기</text><rect x="230" y="171" width="140" height="44" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink" x="300" y="199" text-anchor="middle">층 ㄷ 의 몫</text><path d="M378 135 L452 135" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><rect x="470" y="105" width="160" height="60" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink" x="550" y="140" text-anchor="middle">조정한 효과</text><text x="330" y="255" text-anchor="middle" class="sm bold ink">층별 차이를 그냥 평균하면 안 된다</text><text x="330" y="281" text-anchor="middle" class="sm ink2">층마다 사람 수가 다르기 때문이다</text>
+</svg>

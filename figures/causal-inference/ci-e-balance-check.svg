@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 300" width="660" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">성질 다섯에 대해 묶기 전과 묶은 뒤 두 집단의 차이를 나란히 그린 막대</title><desc id="d">성질마다 위아래 막대 두 개가 있고 대부분은 아래 막대가 훨씬 짧은데 가입 시기만 두 막대의 길이가 비슷하다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="330" y="32" text-anchor="middle" class="sm bold ink">묶은 뒤에 각 성질의 차이가 얼마나 줄었는가</text><path d="M200 60 L200 248" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="200" y="52" text-anchor="middle" class="sm ink2">차이 0</text><text x="30" y="88" text-anchor="start" class="sm ink2">습관</text><rect x="200" y="72" width="220" height="9" rx="1" fill="var(--s2)" fill-opacity="0.5" stroke="var(--s2)" stroke-width="1.2"/><rect x="200" y="86" width="20" height="9" rx="1" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.2"/><text x="30" y="124" text-anchor="start" class="sm ink2">나이대</text><rect x="200" y="108" width="160" height="9" rx="1" fill="var(--s2)" fill-opacity="0.5" stroke="var(--s2)" stroke-width="1.2"/><rect x="200" y="122" width="30" height="9" rx="1" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.2"/><text x="30" y="160" text-anchor="start" class="sm ink2">가입 시기</text><rect x="200" y="144" width="120" height="9" rx="1" fill="var(--s2)" fill-opacity="0.5" stroke="var(--s2)" stroke-width="1.2"/><rect x="200" y="158" width="96" height="9" rx="1" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.2"/><text x="30" y="196" text-anchor="start" class="sm ink2">기기</text><rect x="200" y="180" width="62" height="9" rx="1" fill="var(--s2)" fill-opacity="0.5" stroke="var(--s2)" stroke-width="1.2"/><rect x="200" y="194" width="12" height="9" rx="1" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.2"/><text x="30" y="232" text-anchor="start" class="sm ink2">지난 수강</text><rect x="200" y="216" width="92" height="9" rx="1" fill="var(--s2)" fill-opacity="0.5" stroke="var(--s2)" stroke-width="1.2"/><rect x="200" y="230" width="24" height="9" rx="1" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.2"/><rect x="200" y="258" width="15" height="11" rx="2" fill="var(--s2)" fill-opacity="0.5" stroke="var(--s2)" stroke-width="1.2"/><text x="221" y="268" text-anchor="start" class="sm ink2">묶기 전</text><rect x="330" y="258" width="15" height="11" rx="2" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.2"/><text x="351" y="268" text-anchor="start" class="sm ink2">묶은 뒤</text><text x="330" y="290" text-anchor="middle" class="sm bold ink">이 확인은 점수에 넣은 성질에 대해서만 할 수 있다</text>
+</svg>

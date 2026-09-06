@@ -21,15 +21,22 @@ Thumbs.db
 *.swp
 *~
 
-# Third-party binaries — do not commit, do not redistribute.
+# Third-party binaries — fetch them, don't commit them.
 #
-# These are other people's builds. Their licenses govern redistribution, and
-# this repository is published as a GitHub Pages site, so anything committed
-# here is served to the public. Download them yourself; output/README.md says
-# where from.
+# Not a licensing prohibition. tun2proxy is MIT, and Wintun's signed DLL is
+# redistributable when it ships beside software that uses it via the Permitted
+# API — which is exactly what upstream tun2proxy does. Only adb is unclear:
+# Google's signed platform-tools build falls under the Android SDK agreement,
+# which forbids redistribution (3.4) yet exempts open-source components (3.5),
+# and adb itself is Apache 2.0 in AOSP.
 #
-# The earlier rule below only covered pc/, so output/wintun.dll slipped through
-# and was published for months. Match by name wherever they land.
+# The reasons are size and publication. These five were 39 MB of a 96 MB repo,
+# and this repository is served wholesale as a GitHub Pages site, so whatever
+# lands here is downloadable from the web. output/README.md says where to get
+# them, with the archive paths verified.
+#
+# Match by name, not by folder: the older rule below covered only pc/, so
+# output/wintun.dll slipped past it.
 wintun.dll
 tun2proxy
 tun2proxy.exe

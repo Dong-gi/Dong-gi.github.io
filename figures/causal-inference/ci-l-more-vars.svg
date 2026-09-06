@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 300" width="580" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">넣으면 예측은 좋아지고 조정은 나빠지는 마디</title><desc id="d">처치와 결과가 모두 앱 열기로 화살표를 보내고 앱 열기는 통제했다는 뜻의 상자에 둘러싸여 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path d="M166 130 L386 130" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M161.65 149.52 L237.44 185.05" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M398.35 149.52 L322.56 185.05" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><ellipse cx="120" cy="130" rx="46" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="120" y="130" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="120" dy="4.5">미리 주문</tspan></text><ellipse cx="440" cy="130" rx="46" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="440" y="130" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="440" dy="4.5">대기 시간</tspan></text><rect x="232" y="170" width="96" height="70" rx="4" fill="none" stroke="var(--ink2)" stroke-width="1.6"/><ellipse cx="280" cy="205" rx="39" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="280" y="205" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="280" dy="4.5">앱 열기</tspan></text><text x="120" y="88" text-anchor="middle" class="sm ink2">처치</text><text x="440" y="88" text-anchor="middle" class="sm ink2">결과</text><text x="280" y="262" text-anchor="middle" class="sm ink2">상자는 통제했다는 표시다</text><text x="280" y="288" text-anchor="middle" class="sm bold ink">결과와 상관이 커서 예측은 좋아지는데 통제하면 없던 길이 열린다</text>
+</svg>

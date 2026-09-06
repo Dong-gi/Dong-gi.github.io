@@ -1,6 +1,6 @@
 /**
- * @param {string[]} strings 
- * @param  {...any} values 
+ * @param {string[]} strings
+ * @param  {...any} values
  */
 function formatNumbers(strings, ...values) {
     const newValues = values.map(v => {

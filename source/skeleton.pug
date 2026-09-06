@@ -8,18 +8,6 @@
         return hash
     }
 
-    /**
-     * 경로를 URL 로 쓸 수 있게 조각마다 인코딩한다. 구분자 '/' 는 남긴다.
-     *
-     * 이미지 파일명에 공백이 흔한데(`2023-03-05 204648.png`), srcset 은 공백으로
-     * URL 과 크기 서술자를 가른다. 인코딩하지 않으면 브라우저가 `.../2023-03-05` 를
-     * URL 로, `204648-500.avif` 를 서술자로 읽고 후보를 통째로 버린다.
-     * encodeURI 로는 부족하다. '#', '?' 를 그대로 두기 때문이다.
-     */
-    function encodePath(path) {
-        return path.split('/').map(encodeURIComponent).join('/')
-    }
-
 mixin asA(href, text)
     -
         if (!text) {
@@ -144,20 +132,11 @@ mixin w3button(color)
                 block
 
 mixin w3img(src, description)
-    figure.w3-margin-bottom
-        -
-            size = imgSize(src)
-            description = description || (src.split('/').pop())
-            trimmedSrc = encodePath(src.replace('/imgs/', '/imgs-generated/').replace(/\.\w+$/, ''))
-            encodedSrc = src.startsWith('http') ? src : encodePath(src)
-            genExt = src.endsWith('.gif') ? 'webp' : 'avif'
-        if size != null
-            img.w3-round(srcset=(trimmedSrc + '-500.' + genExt + ' 500w, ' + trimmedSrc + '-1200.' + genExt + ' 1200w, ' + trimmedSrc + '-2000.' + genExt + ' 2000w'), src=(trimmedSrc + '-2000.' + genExt), alt=description, loading='lazy', sizes='auto', width=size.width, height=size.height)&attributes(attributes)
-        else
-            img.w3-round(src=encodedSrc, alt=description, loading='lazy')&attributes(attributes)
-        figcaption.w3-padding
-            | #{'<' + description + '>'}
-            +asA(encodedSrc, '[원본 보기]')&attributes({ target: '_blank' })
+    figure.w3-margin-bottom.w3-center
+        img.w3-round(src=src.startsWith('/imgs/') ? src.replace(/\.\w+$/, '.webp') : src, alt=description, loading='lazy')&attributes(attributes)
+        if description
+            figcaption.w3-padding
+                | #{'<' + description + '>'}
 
 //-
     options = {
@@ -182,7 +161,7 @@ mixin post(options)
                 meta(name='mathjax-prerender', content='1')
 
         body
-            aside.w3-animate-left.w3-rightbar.w3-medium#sidebar
+            aside.w3-rightbar.w3-medium#sidebar
                 hr
                 #marker-list
                 hr
@@ -206,12 +185,6 @@ mixin post(options)
                     form(role='search')
                         input.w3-bar-item#query(type='search',placeholder='search',style='max-width:35%')
                 article#contents
-                    //- 빌드 시각. 예전에는 default.js 가 posts-compressed.json 의 갱신일을
-                        읽어 여기에 끼워 넣었는데, 그 값을 만들려고 git 이력을 훑는 빌드
-                        요소를 따로 두어야 했다. 이제 이 문서가 렌더된 날을 그대로 적는다.
-                        날짜만 적는 이유는 시각까지 넣으면 같은 입력으로 다시 빌드해도
-                        산출물이 달라져, 빌드가 멱등한지 확인할 수 없기 때문이다.
-                    p 빌드 날짜: #{buildDate}
                     if block
                         block
 
@@ -224,33 +197,9 @@ mixin post(options)
         publisher: string,
         date: string
     }
-//-
-    구버전 서술을 접어두는 블록. 기존 내용을 지우지 않고 보존하면서
-    최신 내용을 위에 올릴 때 쓴다.
-
-    version : 접히는 내용의 기준 버전 (예: 'Python 3.8')
-    note    : EOL 날짜 등 부가 설명 (선택)
-
-    사용 예
-        h1 Python
-        p 이 문서는 Python 3.14 기준입니다.
-        //- ... 최신 내용 ...
-
-        +legacy('Python 3.8', '2024-10-07 지원 종료')
-            //- 기존 내용을 통째로 이 아래로 들여쓰기
-mixin legacy(version, note)
-    details.legacy
-        summary
-            = `구버전 기록 — ${version}`
-            if note
-                |  (
-                = note
-                |)
-        block
-
 mixin bookInfo(options)
     .book-info
-        div: +w3img(options.imgSrc, '도서 이미지')&attributes({style: 'max-height:210px'})
+        div: +w3img(options.imgSrc, '표지 이미지')&attributes({style: 'max-height:210px'})
         div: +table()
             +tds('표제', options.title)
             +tds('저자', options.author)

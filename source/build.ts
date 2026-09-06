@@ -33,11 +33,6 @@
  * ## 순서
  *
  * **없다. 다섯 요소가 모두 동시에 돈다.**
- *
- * 예전에는 의존이 둘 있었다. `img → pug` 는 `source/img-map.json` 때문이었고,
- * `dates → pug` 는 `source/doc-dates.json` 때문이었다. 둘 다 없앴다 — 그림의 크기는
- * pug 가 `lib/image-size.ts` 로 원본에서 직접 읽고, 갱신일은 빌드 날짜와 git 이력으로
- * 대신한다. 요소가 서로의 산출물을 읽지 않으니 순서를 정할 장치도 두지 않는다.
  */
 import fsp from 'node:fs/promises';
 import path from 'node:path';

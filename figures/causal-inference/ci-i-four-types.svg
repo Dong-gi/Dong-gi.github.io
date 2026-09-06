@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 325" width="660" height="325" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">도구가 0 일 때와 1 일 때 처치를 받는지로 사람을 넷으로 가른 표</title><desc id="d">가로 두 칸 세로 두 칸의 표이고 각 칸에 늘 안 받는 사람, 순응자, 거꾸로 하는 사람, 늘 받는 사람이 하나씩 들어 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="330" y="28" text-anchor="middle" class="sm bold ink">도구가 0 일 때와 1 일 때 무엇을 하는가로 가른다</text><text x="300" y="78" text-anchor="middle" class="sm bold ink">도구가 1 이면 받지 않는다</text><text x="500" y="78" text-anchor="middle" class="sm bold ink">도구가 1 이면 받는다</text><text x="110" y="138" text-anchor="middle" class="sm bold ink">도구가 0 이면 받지 않는다</text><rect x="200" y="100" width="200" height="70" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="300" y="130" text-anchor="middle" class="sm bold ink">늘 안 받는 사람</text><text x="300" y="152" text-anchor="middle" class="sm ink2">도구를 무시한다</text><rect x="400" y="100" width="200" height="70" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="500" y="130" text-anchor="middle" class="sm bold ink">순응자</text><text x="500" y="152" text-anchor="middle" class="sm ink2">도구를 따른다</text><text x="110" y="218" text-anchor="middle" class="sm bold ink">도구가 0 이면 받는다</text><rect x="200" y="180" width="200" height="70" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="300" y="210" text-anchor="middle" class="sm bold ink">거꾸로 하는 사람</text><text x="300" y="232" text-anchor="middle" class="sm ink2">도구를 거스른다</text><rect x="400" y="180" width="200" height="70" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="500" y="210" text-anchor="middle" class="sm bold ink">늘 받는 사람</text><text x="500" y="232" text-anchor="middle" class="sm ink2">도구를 무시한다</text><text x="330" y="282" text-anchor="middle" class="sm bold ink">도구가 실제로 움직인 사람은 순응자뿐이다</text><text x="330" y="306" text-anchor="middle" class="sm bold ink">단조성은 왼쪽 아래 칸이 비어 있다는 가정이다</text>
+</svg>

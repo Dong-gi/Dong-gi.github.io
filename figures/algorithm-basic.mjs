@@ -1095,7 +1095,7 @@ add((() => {
 
 /* ---- 6-4. 한 번으로 끝나는 회전 (LL · RR) ---- */
 add((() => {
-    const W = 780, H = 476;
+    const W = 820, H = 476;
     const g = [];
     g.push(txt(W / 2, 24, 'x · y · z 가 한 방향으로 늘어섰으면 한 번 돌리면 된다', { anchor: 'middle', cls: 'ink bold' }));
     const T = (x, y, s) => subtri(x, y, 42, 34, s, { stroke: CG });

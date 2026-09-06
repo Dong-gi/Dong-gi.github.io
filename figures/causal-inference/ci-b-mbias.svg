@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 330" width="680" height="330" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">처치의 원인도 결과의 원인도 아닌 변수를 통제한 그래프</title><desc id="d">점선 원으로 그린 지난 수강에서 처치와 설문 응답으로, 점선 원으로 그린 꼼꼼함에서 설문 응답과 결과로 화살표가 나간다. 상자는 가운데 설문 응답에만 쳐져 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="340" y="38" text-anchor="middle" class="sm bold ink">가운데 변수는 처치의 원인도 결과의 원인도 아니다</text><ellipse cx="155" cy="75" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8" stroke-dasharray="5 4"/><text x="155" y="75" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="155" dy="4.5">지난 수강</tspan></text><ellipse cx="510" cy="75" rx="31.6" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8" stroke-dasharray="5 4"/><text x="510" y="75" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="510" dy="4.5">꼼꼼함</tspan></text><rect x="275" y="130" width="110" height="70" rx="4" fill="none" stroke="var(--ink2)" stroke-width="1.6"/><ellipse cx="330" cy="165" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="330" y="165" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="330" dy="4.5">설문 응답</tspan></text><ellipse cx="105" cy="265" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="105" y="265" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="105" dy="4.5">처치</tspan></text><ellipse cx="575" cy="265" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="575" y="265" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="575" dy="4.5">결과</tspan></text><path d="M143.29 119.49 L113.65 232.12" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M195.91 96.04 L281.98 140.3" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M481.74 89.13 L378.3 140.85" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M520.23 104.9 L563.99 232.83" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M131 265 L541 265" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="340" y="232" text-anchor="middle" class="sm ink2">상자를 치면 여기서 양쪽이 이어진다</text><text x="340" y="312" text-anchor="middle" class="sm bold ink">통제하지 않았다면 이 경로는 충돌부에서 막혀 있었다</text>
+</svg>

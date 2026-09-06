@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 325" width="700" height="325" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">도구의 값과 처치 여부로 갈라지는 네 칸에 어느 부류가 들어 있는지 적은 그림</title><desc id="d">네 칸 가운데 둘에는 두 부류가 섞여 있다고 적혀 있고 나머지 둘에는 한 부류만 있다고 적혀 있다. 순응자만 들어 있는 칸은 없다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="350" y="28" text-anchor="middle" class="sm bold ink">자료에서 보이는 네 칸과 그 안에 섞여 있는 사람들</text><rect x="40" y="60" width="280" height="90" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="180" y="88" text-anchor="middle" class="sm bold ink">도구 1 · 처치를 받았다</text><text x="180" y="112" text-anchor="middle" class="sm ink2">순응자와 늘 받는 사람</text><text x="180" y="134" text-anchor="middle" class="sm ink2">둘이 섞여 있다</text><rect x="40" y="160" width="280" height="90" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="180" y="188" text-anchor="middle" class="sm bold ink">도구 1 · 처치를 받지 않았다</text><text x="180" y="212" text-anchor="middle" class="sm ink2">늘 안 받는 사람뿐이다</text><text x="180" y="234" text-anchor="middle" class="sm ink2">순응자는 들어 있지 않다</text><rect x="380" y="60" width="280" height="90" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="520" y="88" text-anchor="middle" class="sm bold ink">도구 0 · 처치를 받았다</text><text x="520" y="112" text-anchor="middle" class="sm ink2">늘 받는 사람뿐이다</text><text x="520" y="134" text-anchor="middle" class="sm ink2">순응자는 들어 있지 않다</text><rect x="380" y="160" width="280" height="90" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="520" y="188" text-anchor="middle" class="sm bold ink">도구 0 · 처치를 받지 않았다</text><text x="520" y="212" text-anchor="middle" class="sm ink2">순응자와 늘 안 받는 사람</text><text x="520" y="234" text-anchor="middle" class="sm ink2">둘이 섞여 있다</text><text x="350" y="285" text-anchor="middle" class="sm bold ink">순응자만 든 칸이 하나도 없다</text><text x="350" y="307" text-anchor="middle" class="sm bold ink">그래서 누가 순응자인지 사람 단위로는 알 수 없다</text>
+</svg>

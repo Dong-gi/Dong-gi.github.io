@@ -44,51 +44,6 @@ include ../../source/skeleton.pug
         # 삭제된 객체 복구
         $ aws s3api list-object-versions --bucket BUCKET_NAME --prefix tmp/ --output json --query 'DeleteMarkers[?IsLatest==`true`].[Key, VersionId]' | jq -r '.[] | "--key '\''" + .[0] + "'\'' --version-id " + .[1]' | xargs -L1 aws s3api delete-object --bucket BUCKET_NAME
 
-    h1 Claude Code
-    ul
-        li: +asA('https://x.com/trq212/status/2024574133011673516', '출처')
-
-        li 프롬프트 캐싱은 접두사 일치 방식으로 작동합니다. 가능한 한 많은 요청이 동일한 접두사를 공유하도록, 정적 콘텐츠를 먼저 만들고 동적 콘텐츠는 나중에 만듭니다. 클로드 코드의 경우 다음과 같습니다.
-            ol
-                li 정적 시스템 프롬프트 및 도구(전역 캐시됨)
-                li CLAUDE.md (프로젝트 내에 캐시됨)
-                li 세션 컨텍스트 (세션 내에 캐시됨)
-                li 대화 메시지
-
-        li 세션 도중 모델을 변경하지 마세요
-            p 만약 Opus와 10만 토큰 대화를 나눈 후 쉽게 답할 수 있는 질문을 하는 경우, Haiku로 전환하는 것이 Opus가 답변하는 것보다 비용이 더 많이 들 수 있습니다. Haiku로 전환하면 프롬프트 캐시를 다시 구축해야 하기 때문입니다.
-            p 모델을 전환해야 하는 경우, 가장 좋은 방법은 서브에이전트를 이용하는 것입니다. Opus는 다른 모델이 수행해야 할 작업에 대한 "인수인계" 메시지를 준비합니다.
-
-        li 세션 도중 도구를 추가하거나 제거하지 마십시오
-            p 직관적으로 생각하면 모델에게 지금 당장 필요하다고 생각되는 도구만 제공해야 할 것 같습니다. 하지만 도구는 캐시 접두사의 일부이기 때문에 도구를 추가하거나 제거하면 전체 대화의 캐시가 무효화됩니다.
-
-    h1 DNS
-    ul
-        li 1.1.1.1 : CloudFlare
-        li 8.8.8.8 : Google
-
-    h1 Eclipse 단축키
-    ul
-        li Ctrl + Shift + L : 전체 단축키 목록
-        li F3 : 정의로 이동
-        li F4 : Type hierarchy
-        li Ctrl + Shift + G : 참조 위치 검색
-        li Ctrl + E : 열린 파일 목록 팝업
-        li Ctrl + D : 라인 제거
-        li Ctrl + L : 라인 이동
-        li Ctrl + O : Outline 팝업
-        li Alt + ←/→ : 편집 위치 전/후이동
-        li Ctrl + (Shift) + K : 블록 지정 텍스트 (뒤로) 검색
-        li Ctrl + (Shift) + / : 블록 지정 텍스트 (/**/) 주석 토글
-        li Ctrl + (Shift) + W : (전체) 파일 닫기
-        li Ctrl + Shift + F, Ctrl + I : 블록 지정 텍스트에 포맷 적용
-        li Ctrl + 1 : Quick fix
-        li Ctrl + Shift + O : import 정돈
-        li Ctrl + Shift + T : 클래스 검색
-        li Ctrl + Shift + R : 리소스 검색
-
-    h1: +asA('https://ffmpegbyexample.com/', 'FFmpeg 길라잡이')
-
     h1 Google Play Store 인앱 결제 상품 변경 사항을 바로 적용
     ol
         li 변경할 부분들을 모두 변경한 다음 상품을 '비활성' 상태로 저장
@@ -253,7 +208,7 @@ include ../../source/skeleton.pug
               where t1.player_id = t2.player_id and t1.item_id = t2.item_id
               returning *;
 
-         player_id | item_id | amount | player_id | item_id | diff 
+         player_id | item_id | amount | player_id | item_id | diff
         -----------+---------+--------+-----------+---------+------
                123 |       1 |    124 |       123 |       1 |    1
                123 |       2 |    122 |       123 |       2 |   -1
@@ -279,7 +234,7 @@ include ../../source/skeleton.pug
             (t at time zone 'UTC') at time zone 'America/Los_Angeles'
         from tmp;
 
-                  t          |        timezone        |        timezone        |      timezone       |      timezone       
+                  t          |        timezone        |        timezone        |      timezone       |      timezone
         ---------------------+------------------------+------------------------+---------------------+---------------------
          2024-11-03 08:30:00 | 2024-11-02 23:30:00+00 | 2024-11-03 16:30:00+00 | 2024-11-03 17:30:00 | 2024-11-03 01:30:00
          2024-11-03 09:30:00 | 2024-11-03 00:30:00+00 | 2024-11-03 17:30:00+00 | 2024-11-03 18:30:00 | 2024-11-03 01:30:00
@@ -427,11 +382,8 @@ include ../../source/skeleton.pug
 
     h1 VS Code
     ul
-        li.marker 단축키로 날짜 입력
-        +asA('https://marketplace.visualstudio.com/items?itemName=jsynowiec.vscode-insertdatestring')
         p 를 설치하면, Ctrl + Shift + I를 이용해 곧바로 날짜 문자열을 입력할 수 있다
-        li.marker 파일 탐색 뷰에서 현재 문서 자동 추적 중지
-        +w3img('/imgs/201903/20190330_214623.png')
+        li.marker 파일 탐색 뷰에서 현재 문서 자동 추적 중지: 설정 &gt; Explorer: Auto Reveal
         li.marker 특정 언어 포매터 설정
         p Ctrl + Shift + P &gt; Preferences: Configure Language Specific Settings &gt; "editor.defaultFormatter": "redhat.java"
 
@@ -619,27 +571,16 @@ include ../../source/skeleton.pug
             li (코드 포인트 - '가'0xAC00) % 28 = 종성 인덱스
             li (코드 포인트 - 종성 인덱스 - '가'0xAC00) / 28 % 21 = 중성 인덱스
             li ((코드 포인트 - 종성 인덱스 - '가'0xAC00) / 28 - 중성 인덱스) / 21 = 초성 인덱스
-        li 조사 처리 예시 코드
-            +codeBtn('/Repositories/Eclipse/Basic/src/io/github/donggi/HangulUtility.java', 'java')
 
     h1 운전면허증 분실 시
     p 운전면허증 분실 신고가 따로 존재하지 않기 때문에, 재발급 신청으로 기존 면허증을 만료시켜야 한다
 
     h1 코드 조각
-    h2 C# &gt; Console Redirect
-    +codeBtn('/Repositories/VisualStudio/WpfApp8/Utility/ConsoleRedirectWriter.cs', 'cs')
-
-    h2 C# &gt; Naive HTTP Server
-    +codeBtn('/Repositories/VisualStudio/WpfApp8/Utility/NaiveHttpServer.cs', 'cs')
-
-    h2 JavaScript &gt; CSV 파서
-    +codeBtn('/Repositories/JavaScript/CSV/parseCSV.js', 'javascript')
-
     h2 JSDoc &gt; .d.ts 생성
     p 참고자료 : #[+asA('https://www.typescriptlang.org/ko/docs/handbook/declaration-files/dts-from-js.html')]
     +asCode('shell', 'CLI 실행 예시') npx typescript src/**/*.js --declaration --allowJs --emitDeclarationOnly --outDir dist/types
 
-    h2 JSDoc &gt; 마크다운 유사 구문 
+    h2 JSDoc &gt; 마크다운 유사 구문
     +codeBtn({ path: '/Repositories/Single/202509/22-1353.js', lan: 'javascript' })
 
     h2 JSDoc, TypeScript &gt; Pick&lt;Type, Keys&gt; 직접 정의하기
@@ -696,7 +637,7 @@ include ../../source/skeleton.pug
 
     h2 소수 찾기
     ul
-        li 에라토스테네스의 체 : 
+        li 에라토스테네스의 체 :
             +codeBtn('/Repositories/Single/202202/FindPrime.java', 'java')
         li Library 지원
             +asCode('java').

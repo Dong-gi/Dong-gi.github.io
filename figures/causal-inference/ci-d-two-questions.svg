@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 260" width="700" height="260" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">같은 자료 앞에서 물을 수 있는 두 물음</title><desc id="d">왼쪽 칸은 처치받은 쪽에서 결과로, 오른쪽 칸은 모두에게 처치한 상태에서 결과로 화살표가 간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="15" y="45" width="330" height="155" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="180" y="34" text-anchor="middle" class="sm bold ink">보는 물음</text><ellipse cx="110" cy="105" rx="53.2" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="110" y="105" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="110" dy="4.5">처치받은 쪽</tspan></text><ellipse cx="265" cy="105" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="265" y="105" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="265" dy="4.5">결과</tspan></text><path d="M163.2 105 L231 105" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="180" y="162" text-anchor="middle" class="sm ink2">이미 있는 자료에서 골라낸다</text><text x="180" y="184" text-anchor="middle" class="sm ink2">자료가 답해 준다</text><rect x="370" y="45" width="315" height="155" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="527" y="34" text-anchor="middle" class="sm bold ink">바꾸는 물음</text><ellipse cx="455" cy="105" rx="60.4" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="455" y="105" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="455" dy="4.5">모두에게 처치</tspan></text><ellipse cx="610" cy="105" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="610" y="105" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="610" dy="4.5">결과</tspan></text><path d="M515.4 105 L576 105" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/><text x="527" y="162" text-anchor="middle" class="sm ink2">그런 세상은 자료에 없다</text><text x="527" y="184" text-anchor="middle" class="sm ink2">가정이 있어야 답이 나온다</text><text x="350" y="232" text-anchor="middle" class="sm bold ink">같은 자료 앞에서 물을 수 있는 두 가지이고 답이 서로 다르다</text>
+</svg>

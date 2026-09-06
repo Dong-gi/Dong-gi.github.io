@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 250" width="640" height="250" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">갑의 처치에서 나온 화살표가 을의 결과로도 간다</title><desc id="d">두 사람의 처치와 결과가 나란히 놓이고 갑의 처치에서 을의 결과로 대각선 화살표가 하나 더 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<ellipse cx="105" cy="70" rx="52" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="105" y="70" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="105" dy="4.5">갑의 처치</tspan></text><ellipse cx="105" cy="180" rx="52" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="105" y="180" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="105" dy="4.5">을의 처치</tspan></text><ellipse cx="470" cy="70" rx="52" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="470" y="70" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="470" dy="4.5">갑의 결과</tspan></text><ellipse cx="470" cy="180" rx="52" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="470" y="180" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="470" dy="4.5">을의 결과</tspan></text><path d="M157 70 L410 70" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M157 180 L410 180" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M154.79 85 L412.55 162.69" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/><text x="300" y="106" text-anchor="middle" class="sm ink2">남의 처치가 넘어온다</text><text x="320" y="228" text-anchor="middle" class="sm bold ink">대각선 화살표가 있으면 자기 처치만으로 잠재결과를 적을 수 없다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320" width="680" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">도구가 처치를 크게 움직일 때와 조금밖에 못 움직일 때의 편향 크기 비교</title><desc id="d">두 칸 모두 위쪽에 같은 길이의 짧은 막대가 있고, 아래쪽 막대는 왼쪽 칸에서 아주 길고 오른쪽 칸에서 위쪽 막대와 비슷하게 짧다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="20" y="58" width="310" height="214" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="175" y="44" text-anchor="middle" class="sm bold ink">도구가 처치를 크게 움직일 때</text><text x="45" y="96" text-anchor="start" class="sm ink2">도구에서 결과로 새어 든 것</text><rect x="45" y="110" width="26" height="22" rx="1" fill="var(--s3)" fill-opacity="0.5" stroke="var(--s3)" stroke-width="1.2"/><text x="80" y="128" text-anchor="start" class="sm ink2">0.01</text><text x="45" y="172" text-anchor="start" class="sm ink2">도구가 처치를 움직인 만큼</text><rect x="45" y="186" width="240" height="22" rx="1" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.2"/><text x="295" y="202" text-anchor="start" class="sm ink2">0.40</text><text x="175" y="250" text-anchor="middle" class="sm bold ink">답이 0.025 만큼 어긋난다</text><rect x="350" y="58" width="310" height="214" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="505" y="44" text-anchor="middle" class="sm bold ink">도구가 처치를 조금밖에 못 움직일 때</text><text x="375" y="96" text-anchor="start" class="sm ink2">도구에서 결과로 새어 든 것</text><rect x="375" y="110" width="26" height="22" rx="1" fill="var(--s3)" fill-opacity="0.5" stroke="var(--s3)" stroke-width="1.2"/><text x="410" y="128" text-anchor="start" class="sm ink2">0.01</text><text x="375" y="172" text-anchor="start" class="sm ink2">도구가 처치를 움직인 만큼</text><rect x="375" y="186" width="26" height="22" rx="1" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.2"/><text x="410" y="202" text-anchor="start" class="sm ink2">0.04</text><text x="505" y="250" text-anchor="middle" class="sm bold ink">답이 0.25 만큼 어긋난다</text><text x="340" y="300" text-anchor="middle" class="sm bold ink">새어 든 것이 같아도 분모가 작으면 크게 부풀려진다</text>
+</svg>

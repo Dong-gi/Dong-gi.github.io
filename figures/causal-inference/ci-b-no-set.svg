@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">관측되지 않은 원인 때문에 어떤 집합도 뒷문 기준을 채우지 못하는 그래프</title><desc id="d">점선 원으로 그린 숨은 원인에서 처치와 결과로 실선 화살표가 나가고 상자를 친 나이에서 처치와 결과로 점선 화살표가 나간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="320" y="34" text-anchor="middle" class="sm bold ink">재지 못한 원인이 하나 남아 있다</text><ellipse cx="320" cy="80" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8" stroke-dasharray="5 4"/><text x="320" y="80" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="320" dy="4.5">숨은 원인</tspan></text><ellipse cx="110" cy="165" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="110" y="165" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="110" dy="4.5">처치</tspan></text><ellipse cx="530" cy="165" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="530" y="165" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="530" dy="4.5">결과</tspan></text><rect x="285" y="215" width="70" height="70" rx="4" fill="none" stroke="var(--ink2)" stroke-width="1.6"/><ellipse cx="320" cy="250" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="320" y="250" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="320" dy="4.5">나이</tspan></text><path d="M277.36 97.26 L141.52 152.24" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M362.64 97.26 L498.48 152.24" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M295.9 240.24 L141.52 177.76" fill="none" stroke="var(--grid)" stroke-width="1.6" stroke-dasharray="6 5" stroke-linecap="round" marker-end="url(#ark)"/><path d="M344.1 240.24 L498.48 177.76" fill="none" stroke="var(--grid)" stroke-width="1.6" stroke-dasharray="6 5" stroke-linecap="round" marker-end="url(#ark)"/><path d="M136 165 L496 165" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="175" y="108" text-anchor="middle" class="sm ink2">막을 수 없다</text><text x="470" y="108" text-anchor="middle" class="sm ink2">막을 수 없다</text><text x="320" y="312" text-anchor="middle" class="sm ink2">나이를 통제해도 위쪽 경로는 그대로 열려 있다</text><path d="M20 341 L46 341" stroke="var(--ink2)" stroke-width="2" fill="none" marker-end="url(#ark)"/><text x="54" y="345" class="sm ink2">열린 경로</text><path d="M175 341 L201 341" stroke="var(--grid)" stroke-width="1.6" stroke-dasharray="6 5" fill="none" marker-end="url(#ark)"/><text x="209" y="345" class="sm ink2">막힌 경로</text><rect x="334" y="334" width="18" height="14" rx="3" fill="none" stroke="var(--ink2)" stroke-width="1.6"/><text x="364" y="345" class="sm ink2">통제한 변수</text><ellipse cx="488" cy="341" rx="11" ry="8" fill="none" stroke="var(--ink2)" stroke-width="1.6" stroke-dasharray="5 4"/><text x="509" y="345" class="sm ink2">관측되지 않은 변수</text>
+</svg>

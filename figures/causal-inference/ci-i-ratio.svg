@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 345" width="660" height="345" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">도구가 0 일 때와 1 일 때의 처치 비율과 결과 비율을 나란히 그린 막대</title><desc id="d">왼쪽 칸의 두 막대는 0.40 과 0.80 이고 차이가 0.40 이다. 오른쪽 칸의 두 막대는 0.44 와 0.56 이고 차이가 0.12 다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="330" y="28" text-anchor="middle" class="sm bold ink">도구를 바꾸면 두 가지가 함께 움직인다</text><rect x="30" y="44" width="290" height="262" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="175" y="70" text-anchor="middle" class="sm bold ink">처치를 받은 비율</text><rect x="110" y="190" width="50" height="60" rx="1" fill="var(--s2)" fill-opacity="0.5" stroke="var(--s2)" stroke-width="1.2"/><rect x="200" y="130" width="50" height="120" rx="1" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.2"/><text x="135" y="182" text-anchor="middle" class="sm ink2">0.40</text><text x="225" y="122" text-anchor="middle" class="sm ink2">0.80</text><path d="M85 250 L275 250" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="135" y="268" text-anchor="middle" class="sm ink2">도구 0</text><text x="225" y="268" text-anchor="middle" class="sm ink2">도구 1</text><text x="175" y="292" text-anchor="middle" class="sm bold ink">차이 0.40</text><rect x="340" y="44" width="290" height="262" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="485" y="70" text-anchor="middle" class="sm bold ink">수료한 비율</text><rect x="420" y="184" width="50" height="66" rx="1" fill="var(--s2)" fill-opacity="0.5" stroke="var(--s2)" stroke-width="1.2"/><rect x="510" y="166" width="50" height="84" rx="1" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.2"/><text x="445" y="176" text-anchor="middle" class="sm ink2">0.44</text><text x="535" y="158" text-anchor="middle" class="sm ink2">0.56</text><path d="M395 250 L585 250" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="445" y="268" text-anchor="middle" class="sm ink2">도구 0</text><text x="535" y="268" text-anchor="middle" class="sm ink2">도구 1</text><text x="485" y="292" text-anchor="middle" class="sm bold ink">차이 0.12</text><text x="330" y="328" text-anchor="middle" class="sm bold ink">0.12 을 0.40 으로 나눈 0.30 이 도구가 내는 값이다</text>
+</svg>

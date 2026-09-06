@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 265" width="620" height="265" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">두 칸짜리 표에서 관측된 칸의 값을 비어 있는 칸으로 옮기는 화살표</title><desc id="d">처치를 받은 줄은 하지 않았을 때 칸이 물음표이고, 받지 않은 줄의 관측된 값에서 그 칸으로 화살표가 올라간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="310" y="36" text-anchor="middle" class="sm bold ink">한 줄에 한 칸씩 비어 있다</text><text x="200" y="72" text-anchor="middle" class="sm bold ink">처치했을 때</text><text x="430" y="72" text-anchor="middle" class="sm bold ink">하지 않았을 때</text><rect x="40" y="88" width="545" height="112" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="95" y="120" text-anchor="middle" class="sm ink2">처치를 받았다</text><text x="200" y="120" text-anchor="middle" class="sm bold ink">보인다</text><rect x="392" y="102" width="76" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="430" y="120" text-anchor="middle" class="sm ink2">?</text><text x="95" y="178" text-anchor="middle" class="sm ink2">받지 않았다</text><rect x="162" y="160" width="76" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="200" y="178" text-anchor="middle" class="sm ink2">?</text><text x="430" y="178" text-anchor="middle" class="sm bold ink">보인다</text><path d="M430 164 L430 132" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/><text x="510" y="148" text-anchor="middle" class="sm ink2">여기서 빌려온다</text><text x="310" y="232" text-anchor="middle" class="sm bold ink">이 화살표 하나가 이 장의 전부다</text>
+</svg>

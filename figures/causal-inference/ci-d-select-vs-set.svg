@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 250" width="700" height="250" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">자료에서 골라내는 일과 값을 정해 넣는 일</title><desc id="d">왼쪽은 모든 대상에서 처치받은 쪽을 골라내고 오른쪽은 모든 대상에게 처치를 넣는다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="15" y="45" width="320" height="150" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="175" y="34" text-anchor="middle" class="sm bold ink">고른다</text><ellipse cx="100" cy="110" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="100" y="110" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="100" dy="4.5">모든 대상</tspan></text><ellipse cx="255" cy="110" rx="53.2" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="255" y="110" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="255" dy="4.5">처치받은 쪽</tspan></text><path d="M146 110 L193.8 110" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><text x="175" y="165" text-anchor="middle" class="sm ink2">자료에서 일부만 남긴다</text><text x="175" y="187" text-anchor="middle" class="sm ink2">세상은 그대로다</text><rect x="365" y="45" width="320" height="150" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="525" y="34" text-anchor="middle" class="sm bold ink">정한다</text><ellipse cx="450" cy="110" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="450" y="110" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="450" dy="4.5">모든 대상</tspan></text><ellipse cx="605" cy="110" rx="46" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="605" y="110" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="605" dy="4.5">모두 처치</tspan></text><path d="M496 110 L551 110" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/><text x="525" y="165" text-anchor="middle" class="sm ink2">값을 우리가 넣는다</text><text x="525" y="187" text-anchor="middle" class="sm ink2">세상이 달라진다</text><text x="350" y="228" text-anchor="middle" class="sm bold ink">왼쪽은 자료를 나누는 일이고 오른쪽은 자료를 만드는 일이다</text>
+</svg>

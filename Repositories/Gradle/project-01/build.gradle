@@ -1,6 +1,0 @@
-apply plugin: test.hello.HelloPlugin
-
-hello {
-    message("hello", "world")
-    name = "world2"
-}

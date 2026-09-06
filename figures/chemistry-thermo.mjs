@@ -84,19 +84,19 @@ add((() => {
     // 왼쪽 — 열
     g.push(txt(221, 128, '열 q', { anchor: 'middle', cls: 'ink bold' }));
     g.push(px(148, 172, 292, 172, { cls: 's2', marker: 'ar2', width: 2.2 }));
-    g.push(txt(221, 164, 'q &gt; 0   흡열', { anchor: 'middle', cls: 'ink' }));
+    g.push(txt(221, 164, 'q > 0   흡열', { anchor: 'middle', cls: 'ink' }));
     g.push(txt(221, 192, '계가 열을 받았다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(px(292, 226, 148, 226, { cls: 's1', marker: 'ar1', width: 2.2 }));
-    g.push(txt(221, 218, 'q &lt; 0   발열', { anchor: 'middle', cls: 'ink' }));
+    g.push(txt(221, 218, 'q < 0   발열', { anchor: 'middle', cls: 'ink' }));
     g.push(txt(221, 246, '계가 열을 내놓았다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
     // 오른쪽 — 일
     g.push(txt(539, 128, '일 w', { anchor: 'middle', cls: 'ink bold' }));
     g.push(px(612, 172, 468, 172, { cls: 's2', marker: 'ar2', width: 2.2 }));
-    g.push(txt(539, 164, 'w &gt; 0   압축', { anchor: 'middle', cls: 'ink' }));
+    g.push(txt(539, 164, 'w > 0   압축', { anchor: 'middle', cls: 'ink' }));
     g.push(txt(539, 192, '주위가 계에 일을 했다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(px(468, 226, 612, 226, { cls: 's1', marker: 'ar1', width: 2.2 }));
-    g.push(txt(539, 218, 'w &lt; 0   팽창', { anchor: 'middle', cls: 'ink' }));
+    g.push(txt(539, 218, 'w < 0   팽창', { anchor: 'middle', cls: 'ink' }));
     g.push(txt(539, 246, '계가 주위에 일을 했다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
     g.push(txt(380, 302, '제1법칙   ΔU = q + w', { anchor: 'middle', cls: 'ink bold' }));
@@ -161,7 +161,7 @@ add((() => {
 add((() => {
     const W = 720, H = 380;
     const g = [];
-    g.push(txt(26, 34, 'ΔH 의 부호는 그림에서 &#34;내려가느냐 올라가느냐&#34;다', { cls: 'ink bold' }));
+    g.push(txt(26, 34, 'ΔH 의 부호는 그림에서 ‘내려가느냐 올라가느냐’다', { cls: 'ink bold' }));
 
     const drawPanel = (x, up, title, sub, note) => {
         const out = [panel(x, 56, 320, 244, title, { sub })];
@@ -173,7 +173,7 @@ add((() => {
         out.push(line([[x + 138, yR], [x + 162, yR]], { stroke: 'var(--grid)', sw: 1, dash: '4 3' }));
         out.push(line([[x + 162, yP], [x + 186, yP]], { stroke: 'var(--grid)', sw: 1, dash: '4 3' }));
         out.push(px(x + 162, yR, x + 162, yP, { cls: up ? 's2' : 's1', marker: up ? 'ar2' : 'ar1', width: 2.4 }));
-        out.push(txt(x + 172, (yHi + yLo) / 2 - 4, up ? 'ΔH &gt; 0' : 'ΔH &lt; 0', { cls: 'ink bold' }));
+        out.push(txt(x + 172, (yHi + yLo) / 2 - 4, up ? 'ΔH > 0' : 'ΔH < 0', { cls: 'ink bold' }));
         out.push(txt(x + 172, (yHi + yLo) / 2 + 16, up ? '흡열' : '발열', { cls: 'ink2', size: 'sm' }));
         out.push(arrowK(x + 20, 250, x + 20, 108, { width: 1.3 }));
         out.push(txt(x + 14, 100, 'H', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
@@ -182,7 +182,7 @@ add((() => {
     };
     g.push(drawPanel(30, false, '발열 반응', '계의 엔탈피가 줄어든다', '줄어든 만큼 주위로 나가 주위가 뜨거워진다'));
     g.push(drawPanel(370, true, '흡열 반응', '계의 엔탈피가 늘어난다', '늘어난 만큼 주위에서 빼앗아 주위가 차가워진다'));
-    g.push(txt(360, 336, '세로축은 엔탈피다. 가로축은 눈금이 아니라 &#34;반응 전 → 반응 후&#34;라는 순서일 뿐이다',
+    g.push(txt(360, 336, '세로축은 엔탈피다. 가로축은 눈금이 아니라 ‘반응 전 → 반응 후’라는 순서일 뿐이다',
         { anchor: 'middle', cls: 'ink' }));
     g.push(txt(360, 360, 'ΔH 는 두 준위의 높이 차이이고, 부호는 어느 쪽이 위인가가 정한다',
         { anchor: 'middle', cls: 'ink2', size: 'sm' }));
@@ -323,7 +323,7 @@ add((() => {
 add((() => {
     const W = 700, H = 380;
     const g = [];
-    g.push(txt(26, 34, '결합엔탈피 계산은 &#34;다 끊었다가 다시 붙이는&#34; 우회로다', { cls: 'ink bold' }));
+    g.push(txt(26, 34, '결합엔탈피 계산은 ‘다 끊었다가 다시 붙이는’ 우회로다', { cls: 'ink bold' }));
     g.push(arrowK(64, 300, 64, 84, { width: 1.3 }));
     g.push(txt(58, 76, 'H', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
@@ -482,7 +482,7 @@ add((() => {
     g.push(f.label([440, 196], '기체', { anchor: 'middle', cls: 'ink' }));
     g.push(f.label([283, 46], '녹으면서 뛴다', { cls: 'ink2', size: 'sm' }));
     g.push(f.label([368, 160], '끓으면서 훨씬 크게 뛴다', { anchor: 'end', cls: 'ink2', size: 'sm' }));
-    g.push(txt(340, 330, '엔탈피와 달리 엔트로피는 출발점이 정해져 있다. 그래서 &#34;변화량&#34;이 아닌 절대값을 표로 쓸 수 있다',
+    g.push(txt(340, 330, '엔탈피와 달리 엔트로피는 출발점이 정해져 있다. 그래서 ‘변화량’이 아닌 절대값을 표로 쓸 수 있다',
         { anchor: 'middle', cls: 'ink' }));
     g.push(txt(340, 354, '세로 눈금은 물질마다 다르므로 생략했다. 읽어야 할 것은 두 번의 도약과 그 크기 차이다',
         { anchor: 'middle', cls: 'ink2', size: 'sm' }));
@@ -548,10 +548,10 @@ add((() => {
         f.axes({ xLabel: 'T (K)', yLabel: 'ΔG (kJ/mol)', xTicks: [0, 250, 500, 750, 1000], yTicks: [-200, -100, 0, 100, 200] }),
     ];
     const cases = [
-        [-100, 0.1, 's1', 'ΔH &lt; 0,  ΔS &gt; 0', '어느 온도에서나 자발'],
-        [-100, -0.2, 's2', 'ΔH &lt; 0,  ΔS &lt; 0', '낮은 온도에서만 자발'],
-        [100, 0.2, 's3', 'ΔH &gt; 0,  ΔS &gt; 0', '높은 온도에서만 자발'],
-        [100, -0.1, 'ink-line', 'ΔH &gt; 0,  ΔS &lt; 0', '어느 온도에서도 비자발'],
+        [-100, 0.1, 's1', 'ΔH < 0,  ΔS > 0', '어느 온도에서나 자발'],
+        [-100, -0.2, 's2', 'ΔH < 0,  ΔS < 0', '낮은 온도에서만 자발'],
+        [100, 0.2, 's3', 'ΔH > 0,  ΔS > 0', '높은 온도에서만 자발'],
+        [100, -0.1, 'ink-line', 'ΔH > 0,  ΔS < 0', '어느 온도에서도 비자발'],
     ];
     g.push(f.line([[0, 0], [1000, 0]], { cls: 's1' }).replace('class="cv s1"', 'class="cv" stroke="var(--ink)" stroke-width="1.4" stroke-dasharray="7 4"'));
     for (const [dH, dS, cls] of cases) {
@@ -568,8 +568,8 @@ add((() => {
             g.push(f.label([Tc, 0], '전환 온도', { dy: -12, anchor: 'middle', cls: 'ink2', size: 'sm' }));
         }
     }
-    g.push(f.label([20, -190], 'ΔG &lt; 0 — 자발', { cls: 'ink bold' }));
-    g.push(f.label([20, 190], 'ΔG &gt; 0 — 비자발', { cls: 'ink2' }));
+    g.push(f.label([20, -190], 'ΔG < 0 — 자발', { cls: 'ink bold' }));
+    g.push(f.label([20, 190], 'ΔG > 0 — 비자발', { cls: 'ink2' }));
 
     let ly = 92;
     for (const [, , cls, name, note] of cases) {
@@ -612,7 +612,7 @@ add((() => {
     g.push(f.dot([0.004, G(0.004)], { cls: 'f1', r: 4 }));
     g.push(f.dot([0.996, G(0.996)], { cls: 'f1', r: 4 }));
     g.push(px(f.X(0.3), f.Y(4.6), f.X(0.55), f.Y(4.6), { cls: 's3', marker: 'ar3', width: 2.2 }));
-    g.push(f.label([0.3, 4.9], '정반응이 자발  (ΔG &lt; 0)', { cls: 'ink' }));
+    g.push(f.label([0.3, 4.9], '정반응이 자발  (ΔG < 0)', { cls: 'ink' }));
     g.push(px(f.X(0.97), f.Y(3.35), f.X(0.86), f.Y(3.35), { cls: 's3', marker: 'ar3', width: 2.2 }));
     g.push(f.label([0.965, 3.6], '역반응이 자발', { anchor: 'end', cls: 'ink' }));
     g.push(f.guide([0.004, G(0.004)], [0.996, G(0.004)]));
@@ -639,7 +639,7 @@ add((() => {
 
 /* 11-1. 용해를 에너지로 쪼개기 */
 add((() => {
-    const W = 720, H = 390;
+    const W = 750, H = 390;
     const g = [];
     g.push(txt(26, 34, '녹는다는 것은 두 큰 값의 줄다리기다', { cls: 'ink bold' }));
     g.push(arrowK(60, 300, 60, 84, { width: 1.3 }));
@@ -786,7 +786,7 @@ add((() => {
 
 /* 11-5. 라울 법칙과 증기압 내림 */
 add((() => {
-    const W = 740, H = 390;
+    const W = 770, H = 390;
     const g = [];
     g.push(txt(26, 34, '용질이 표면을 차지하면 빠져나가는 분자가 줄어든다', { cls: 'ink bold' }));
 
@@ -968,7 +968,7 @@ add((() => {
 
     g.push(txt(370, 330, '평형에서도 정반응과 역반응은 계속 일어난다. 같은 빠르기로 서로를 지울 뿐이다',
         { anchor: 'middle', cls: 'ink' }));
-    g.push(txt(370, 356, '그래서 &#34;동적&#34; 평형이라 부른다. 반응이 멈췄다고 생각하면 뒤의 르샤틀리에가 설명되지 않는다',
+    g.push(txt(370, 356, '그래서 ‘동적’ 평형이라 부른다. 반응이 멈췄다고 생각하면 뒤의 르샤틀리에가 설명되지 않는다',
         { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'chem-eq-dynamic',
@@ -1035,7 +1035,7 @@ add((() => {
     g.push(txt(x0 + 68, y0 - 13, '반응물', { cls: 'ink', size: 'sm' }));
     g.push(box(x0 + 130, y0 - 26, 60, 16, { fill: 'var(--s2)', op: 0.5, stroke: 'var(--s2)', sw: 1, rx: 2 }));
     g.push(txt(x0 + 198, y0 - 13, '생성물', { cls: 'ink', size: 'sm' }));
-    g.push(txt(350, 334, 'K 는 &#34;어디까지 가는가&#34;만 말한다. &#34;얼마나 빨리 가는가&#34;는 전혀 말하지 않는다',
+    g.push(txt(350, 334, 'K 는 ‘어디까지 가는가’만 말한다. ‘얼마나 빨리 가는가’는 전혀 말하지 않는다',
         { anchor: 'middle', cls: 'ink' }));
     return {
         name: 'chem-eq-k-magnitude',
@@ -1061,13 +1061,13 @@ add((() => {
     g.push(circ(190, y, 6, { fill: 'var(--s1)', op: 0.9, stroke: 'none', sw: 0 }));
     g.push(txt(190, y - 20, 'Q', { anchor: 'middle', cls: 'ink bold' }));
     g.push(px(200, y, 330, y, { cls: 's1', marker: 'ar1', width: 2.6 }));
-    g.push(txt(190, y + 56, 'Q &lt; K — 생성물이 모자란다', { anchor: 'middle', cls: 'ink' }));
+    g.push(txt(190, y + 56, 'Q < K — 생성물이 모자란다', { anchor: 'middle', cls: 'ink' }));
     g.push(txt(190, y + 78, '정반응으로 간다', { anchor: 'middle', cls: 'ink bold' }));
 
     g.push(circ(510, y, 6, { fill: 'var(--s2)', op: 0.9, stroke: 'none', sw: 0 }));
     g.push(txt(510, y - 20, 'Q', { anchor: 'middle', cls: 'ink bold' }));
     g.push(px(500, y, 370, y, { cls: 's2', marker: 'ar2', width: 2.6 }));
-    g.push(txt(510, y + 56, 'Q &gt; K — 생성물이 넘친다', { anchor: 'middle', cls: 'ink' }));
+    g.push(txt(510, y + 56, 'Q > K — 생성물이 넘친다', { anchor: 'middle', cls: 'ink' }));
     g.push(txt(510, y + 78, '역반응으로 간다', { anchor: 'middle', cls: 'ink bold' }));
 
     g.push(txt(x0 - 8, y + 5, '작다', { anchor: 'end', cls: 'ink2', size: 'sm' }));

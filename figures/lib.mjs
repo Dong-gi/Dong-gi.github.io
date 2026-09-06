@@ -48,6 +48,21 @@ const esc = s => escOnly(s)
     .replace(/~\{([^}]*)\}/g, (_, t) => `<tspan baseline-shift="-22%" font-size="76%">${t}</tspan>`)
     .replace(/~(.)/g, (_, t) => `<tspan baseline-shift="-22%" font-size="76%">${t}</tspan>`);
 
+/** 글자 하나의 폭을 em 단위로 어림한다. 한글·한자·가나는 한 칸, 라틴은 그 절반쯤. */
+const charW = c => {
+    const o = c.codePointAt(0);
+    if (o < 0x300) return 'ilj.,:;\'| '.includes(c) ? 0.3 : 0.56;
+    if ((o >= 0x1100 && o <= 0x11ff) || (o >= 0x3000 && o <= 0x9fff)
+        || (o >= 0xac00 && o <= 0xd7af)) return 1;
+    return 0.6;
+};
+
+/**
+ * 글자열의 폭을 픽셀로 어림한다. 정확한 값이 아니라 **자리가 있는지** 판단하는
+ * 데만 쓴다. 폰트가 무엇이든 어림이 크게 틀리지 않도록 넉넉한 쪽으로 잡았다.
+ */
+const textWidth = (s, fs) => [...String(s)].reduce((w, c) => w + charW(c), 0) * fs;
+
 /**
  * 완성된 SVG 문서를 만든다.
  * @param {{width:number,height:number,title:string,desc?:string,body:string}} o
@@ -116,7 +131,16 @@ export function frame({ xRange, yRange, box }) {
             out.push(`<text class="sm ink2" x="${X(ay) - 6}" y="${Y(t) + 4}" text-anchor="end">${esc(t)}</text>`);
         }
         if (xLabel) out.push(`<text class="sm ink2" x="${X(x1) + 14}" y="${Y(ax) + 4}">${esc(xLabel)}</text>`);
-        if (yLabel) out.push(`<text class="sm ink2" x="${X(ay)}" y="${Y(y1) - 18}" text-anchor="middle">${esc(yLabel)}</text>`);
+        if (yLabel) {
+            // 축 이름은 세로축 꼭대기의 <b>왼쪽</b>에 오른쪽 맞춤으로 둔다.
+            // 예전에는 축 바로 위 가운데였는데, 그 높이가 그림 제목이 지나는 띠라서
+            // 제목이 조금만 길어도 축 이름이 그 아래 깔려 보이지 않았다.
+            // 왼쪽 여백이 모자라면(한국어 축 이름은 폭이 크다) 예전 자리로 물러난다.
+            const room = X(ay) - 8;
+            out.push(textWidth(yLabel, 11) <= room
+                ? `<text class="sm ink2" x="${room}" y="${Y(y1) - 8}" text-anchor="end">${esc(yLabel)}</text>`
+                : `<text class="sm ink2" x="${X(ay)}" y="${Y(y1) - 18}" text-anchor="middle">${esc(yLabel)}</text>`);
+        }
         return out.join('');
     }
 

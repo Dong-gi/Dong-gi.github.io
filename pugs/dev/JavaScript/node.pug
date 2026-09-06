@@ -535,13 +535,6 @@ include ../../../source/skeleton.pug
         li 세션
         p cookie-parser, express-session 모듈 이용
 
-    h1 3rd/fastify : Web Framework
-    ul
-        li 보다 효율적으로 요청을 처리하는 웹 프레임워크
-        p 테스트 조건 하에서, 초당 5만건 이상의 Hello World 응답 처리
-        li CORS만 적용한 기본 프로젝트 예.
-            +codeBtn('/Repositories/Node/fastify-start/app.js', 'javascript')
-
     h1 3rd/forever : 종료 시 자동 재시작
     ul
         li 스크립트 영구 실행
@@ -571,75 +564,3 @@ include ../../../source/skeleton.pug
                     "args": ["--port", "8081"]
                 }
             ]
-
-    h1 3rd/Pug : 템플릿 엔진(구 Jade)
-    ul
-        li pug -P // Pretty
-        p 기본 옵션은 불필요한 공백 제거
-        li ↓ 아래 코드들은 1.11.0 버전 결과임
-        li 주석
-            +codeBtn('/Repositories/Node/pug-start/doc1.pug', 'text')
-            +codeBtn('/Repositories/Node/pug-start/doc1.html', 'text') 결과 »
-        li Plain Text
-            +codeBtn('/Repositories/Node/pug-start/doc2.pug', 'text')
-            +codeBtn('/Repositories/Node/pug-start/doc2.html', 'text') 결과 »
-        li 코드 실행
-            +codeBtn('/Repositories/Node/pug-start/doc3.pug', 'text')
-            +codeBtn('/Repositories/Node/pug-start/doc3.html', 'text') 결과 »
-        li 태그 속성
-            +codeBtn('/Repositories/Node/pug-start/doc4.pug', 'text')
-            +codeBtn('/Repositories/Node/pug-start/doc4.html', 'text') 결과 »
-        li 다른 문서 포함
-            +codeBtn('/Repositories/Node/pug-start/doc5.main.pug', 'text') main
-            +codeBtn('/Repositories/Node/pug-start/doc5.part.pug', 'text') part
-            +codeBtn('/Repositories/Node/pug-start/doc5.text.html', 'text') text
-            +codeBtn('/Repositories/Node/pug-start/doc5.main.html', 'text') 결과 »
-        li 템플릿 - mixin
-            +codeBtn('/Repositories/Node/pug-start/doc6.pug', 'text')
-            +codeBtn('/Repositories/Node/pug-start/doc6.html', 'text') 결과 »
-        li 템플릿 - extends
-            +codeBtn('/Repositories/Node/pug-start/doc7.template.pug', 'text') template
-            +codeBtn('/Repositories/Node/pug-start/doc7.main.pug', 'text') main 예시1 »
-            +codeBtn('/Repositories/Node/pug-start/doc7.main.html', 'text') 결과1 »
-            +codeBtn('/Repositories/Node/pug-start/doc7.main2.pug', 'text') main 예시1 »
-            +codeBtn('/Repositories/Node/pug-start/doc7.main2.html', 'text') 결과1 »
-
-    h1 3rd/mocha : 테스트 프레임워크
-    ul
-        li 설치
-        +asCode('shell').
-            npm install mocha --save-dev
-            mkdir test
-        +asCode('javascript').
-            // package.json
-            "scripts": {
-                "test": "mocha"
-            }
-        p: +codeBtn('/Repositories/Node/mocha-start/test/test1.js', 'javascript')
-        li 비동기 코드 테스트
-        ul
-            li 테스트 함수가 콜백을 인자로 받아 비동기 작업 완료 후 호출
-            li 예외 발생 시 예외 객체 그대로 전달하면 알아서 fail로 간주
-            li 콜백이 2회 이상 호출된 경우 fail로 간주
-            +codeBtn('/Repositories/Node/mocha-start/test/test2.js', 'javascript')
-            li 또는 그냥 Promise를 반환하면 알아서 성공/실패 판단
-            li 실행 환경이 지원한다면, 테스트 함수 자체를 async로 해도 무방
-        li Hooking
-        ul
-            +codeBtn('/Repositories/Node/mocha-start/test/test3.js', 'javascript')
-            li before : 첫 번째 테스트 실행 전 한 번만 실행
-            li beforeEach : 매 테스트 실행 전 한 번씩 실행
-            li after : 마지막 테스트 실행 후 한 번만 실행
-            li afterEach : 매 테스트 실행 후 한 번씩 실행
-            li 각 hook들은 비동기 테스트 코드처럼 done을 받는 비동기 작업을 해도 된다
-        li describe.only(), it.only() : only 붙은 것만 테스트
-        li describe.skip(), it.skip() : 스킵
-        p this.skip()으로 런타임 중 스킵 가능 ← 테스트 함수 및 'before' hook 안에서 사용 가능
-        li this.retries(n) : (행위) 테스트에서 재시도를 하도록 설정
-        li 시간 제한 : this.timeout(n), setTimeout(done, 300)
-
-    h1 3rd/mongodb : MongoDB 공식 드라이버
-    ul
-        li http://mongodb.github.io/node-mongodb-native/3.6/tutorials/
-        li http://mongodb.github.io/node-mongodb-native/3.6/api/
-        +codeBtn('/Repositories/Node/express-start/test/mongodb.test.js', 'javascript')

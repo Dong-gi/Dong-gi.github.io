@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 300" width="700" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">같은 층별 차이에 두 가지 가중치를 쓴 결과</title><desc id="d">왼쪽 칸과 오른쪽 칸에 층별 차이 20 과 10 이 똑같이 적혀 있고 몫만 다르다. 왼쪽은 0.6 과 0.4 로 합쳐 16, 오른쪽은 0.9 와 0.1 로 합쳐 19 가 된다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="15" y="50" width="320" height="205" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="175" y="38" text-anchor="middle" class="sm bold ink">전체에서 센 몫</text><text class="ink" x="50" y="90" text-anchor="start">층 ㄱ</text><text class="ink" x="135" y="90" text-anchor="start">차이 20</text><text class="ink" x="240" y="90" text-anchor="start">몫 0.6</text><text class="ink" x="50" y="128" text-anchor="start">층 ㄴ</text><text class="ink" x="135" y="128" text-anchor="start">차이 10</text><text class="ink" x="240" y="128" text-anchor="start">몫 0.4</text><rect x="45" y="145" width="260" height="1" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink" x="175" y="185" text-anchor="middle">합치면 16</text><text x="175" y="225" text-anchor="middle" class="sm ink2">이것이 평균처치효과다</text><rect x="365" y="50" width="320" height="205" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="525" y="38" text-anchor="middle" class="sm bold ink">처치받은 사람들에서 센 몫</text><text class="ink" x="400" y="90" text-anchor="start">층 ㄱ</text><text class="ink" x="485" y="90" text-anchor="start">차이 20</text><text class="ink" x="590" y="90" text-anchor="start">몫 0.9</text><text class="ink" x="400" y="128" text-anchor="start">층 ㄴ</text><text class="ink" x="485" y="128" text-anchor="start">차이 10</text><text class="ink" x="590" y="128" text-anchor="start">몫 0.1</text><rect x="395" y="145" width="260" height="1" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink" x="525" y="185" text-anchor="middle">합치면 19</text><text x="525" y="225" text-anchor="middle" class="sm ink2">이것이 처치집단 평균처치효과다</text><text x="350" y="285" text-anchor="middle" class="sm bold ink">층별 차이는 그대로인데 값이 다르다</text>
+</svg>

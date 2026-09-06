@@ -6,7 +6,7 @@ include ../../source/skeleton.pug
 })
 
     h1 이 문서를 읽는 방법
-    p 이 문서는 MIT 6.042 교재 #[+asA('/files/mcs.pdf', 'Mathematics for Computer Science')](Lehman·Leighton·Meyer, 2017년판, 1,006쪽)를 따라 정리한 자습서다. 컴퓨터과학에 쓰이는 수학을 <b>증명 가능한 형태로</b> 다시 세우는 것이 목표다.
+    p 이 문서는 MIT 6.042 교재 #[+asA('https://courses.csail.mit.edu/6.042/spring18/mcs.pdf', 'Mathematics for Computer Science')](Lehman·Leighton·Meyer, 2017년판, 1,006쪽)를 따라 정리한 자습서다. 컴퓨터과학에 쓰이는 수학을 <b>증명 가능한 형태로</b> 다시 세우는 것이 목표다.
     p 다른 기초 과목 문서와 이 문서의 차이는 한 문장으로 적을 수 있다. <b>다른 문서가 도구를 쓰는 법을 다룬다면, 이 문서는 그 도구가 왜 옳은지 증명하는 법을 다룬다.</b> 그래서 예제의 중심이 계산이 아니라 증명이다.
 
     h2 무엇을 알고 있어야 하는가
@@ -67,7 +67,7 @@ include ../../source/skeleton.pug
         +tds('24', '점화식', '★★★', '5시간', '16, 18')
     p 총 122시간 남짓이다. 하루 2시간이면 두 달이 넘는 분량이고, 이 사이트의 기초 과목 문서 가운데 가장 크다. MIT 에서는 한 학기 과목이다.
     p 가장 걸리는 곳을 미리 알려 둔다. <b>10장의 대각선 논법과 정지 문제</b>, <b>18장의 생성함수</b>, <b>22장의 체르노프 한계</b>다. 세 곳 모두 앞 장의 도구를 한꺼번에 쓰기 때문에 걸린다. 막히면 그 장을 붙들지 말고 앞 장의 해당 절로 돌아가는 편이 빠르다.
-    p 원서에는 각 장마다 연습문제가 수십 개씩 있다. 이 문서의 예제는 그중 대표적인 것을 골라 <b>풀이를 붙인 것</b>이다. 원서에는 풀이가 없으니, 더 풀고 싶으면 #[+asA('/files/mcs.pdf', '원서')]의 해당 장 뒤쪽을 보면 된다.
+    p 원서에는 각 장마다 연습문제가 수십 개씩 있다. 이 문서의 예제는 그중 대표적인 것을 골라 <b>풀이를 붙인 것</b>이다. 원서에는 풀이가 없으니, 더 풀고 싶으면 #[+asA('https://courses.csail.mit.edu/6.042/spring18/mcs.pdf', '원서')]의 해당 장 뒤쪽을 보면 된다.
 
     h2 이 문서의 표기 규약
     ul
@@ -81,13 +81,12 @@ include ../../source/skeleton.pug
     h1 참고문서
     h2 원서와 강의
     ul
-        li: +asA('/files/mcs.pdf', 'Mathematics for Computer Science (2017년판 PDF) — 이 문서의 원본 교재')
+        li: +asA('https://courses.csail.mit.edu/6.042/spring18/mcs.pdf', 'Mathematics for Computer Science (PDF) — 이 문서의 원본 교재. MIT 6.042 강의 페이지가 공개한 것')
         li: +asA('https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-fall-2010/', 'MIT OCW 6.042J — 강의 영상과 문제 풀이')
         li: +asA('https://ocw.mit.edu/courses/6-1200j-mathematics-for-computer-science-spring-2024/', 'MIT OCW 6.1200J (2024) — 개편된 최신판')
-        li: +asA('https://www.cs.cmu.edu/~./15859-f11/notes/discrete-math-notes.pdf', 'CMU 이산수학 강의 노트 — 다른 관점의 정리')
     h2 함께 보면 좋은 책
     ul
-        li: +asA('https://www.cs.cmu.edu/~adamchik/21-127/', 'Rosen, Discrete Mathematics and Its Applications — 가장 널리 쓰이는 교재')
+        li: +asA('https://www.mheducation.com/highered/product/discrete-mathematics-applications-rosen/M9781259676512.html', 'Rosen, Discrete Mathematics and Its Applications — 가장 널리 쓰이는 교재')
         li: +asA('https://www-cs-faculty.stanford.edu/~knuth/gkp.html', 'Graham·Knuth·Patashnik, Concrete Mathematics — 16·18·24장의 심화')
         li: +asA('https://www.math.upenn.edu/~wilf/DownldGF.html', 'Wilf, generatingfunctionology (무료) — 18장의 심화')
         li: +asA('https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/', 'Cormen 외, Introduction to Algorithms — 알고리즘 쪽 대응')
@@ -4568,7 +4567,7 @@ include ../../source/skeleton.pug
             p <b>(가)</b> 식[x = 1/1.08 = 0.925926]식 이고 식[1 - x = 0.074074]식 다. 식[x^{20} = 1.08^{-20} = 0.214548]식 이므로
             p 식[V = 5000 \times \frac{1 - 0.214548}{0.074074} = 5000 \times 10.6036 = 53018]식
             p 단위가 만 원이므로 약 <b>5.3억 원</b>이다.
-            p <b>(나)</b> 받는 돈의 총액은 식[5000 \times 20 = 10]식 억 원이지만 지금 값은 그 절반을 조금 넘는다. 그러므로 <b>10억 원을 지금 받는 것이 낫다.</b>
+            p <b>(나)</b> 받는 돈의 총액은 식[5000 \times 20 = 100\,000]식 만 원, 곧 10억 원이지만 지금 값은 그 절반을 조금 넘는다. 그러므로 <b>10억 원을 지금 받는 것이 낫다.</b>
             p 답이 말이 되는가. 총액이 같은데 값이 절반이라는 것이 놀랍게 들린다면 마지막 지급을 보면 된다. 스무째 해 지급은 지금부터 열아홉 해 뒤이므로 지금 값이 식[5000 \times 1.08^{-19} = 5000 \times 0.2317 = 1159]식 만 원뿐이다. <b>뒤쪽 지급이 기하급수적으로 깎이는 것</b>이 차이를 만든다. 복권 광고가 총액을 앞세우는 까닭이 이것이다.
 
     h3 무한히 많은 항

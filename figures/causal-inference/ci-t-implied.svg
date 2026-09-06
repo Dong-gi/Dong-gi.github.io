@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">그래프에서 뽑은 독립 주장을 자료와 견주는 일</title><desc id="d">왼쪽에 마디 넷짜리 그래프가 있고 오른쪽에 그 그래프가 함의하는 독립 주장 둘과 자료의 판정이 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="200" y="30" text-anchor="middle" class="sm bold ink">가상의 그래프</text><path d="M175.19 78.87 L124.81 113.13" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M224.81 78.87 L275.19 113.13" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M132 130 L260 130" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M225.6 185.8 L276.8 147.4" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><ellipse cx="200" cy="62" rx="32" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="200" y="62" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="200" dy="4.5">구독자</tspan></text><ellipse cx="100" cy="130" rx="32" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="100" y="130" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="100" dy="4.5">이미지</tspan></text><ellipse cx="300" cy="130" rx="32" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="300" y="130" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="300" dy="4.5">조회수</tspan></text><ellipse cx="200" cy="205" rx="39" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="200" y="205" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="200" dy="4.5">글 길이</tspan></text><text x="550" y="30" text-anchor="middle" class="sm bold ink">그래프가 함의하는 독립 주장</text><rect x="400" y="45" width="300" height="84" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="550" y="74" text-anchor="middle" class="sm ink2">글 길이와 이미지는 무관해야 한다</text><text x="550" y="104" text-anchor="middle" class="sm bold ink">자료에서 이어져 있었다 — 어긋난다</text><rect x="400" y="145" width="300" height="84" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="550" y="174" text-anchor="middle" class="sm ink2">글 길이와 구독자는 무관해야 한다</text><text x="550" y="204" text-anchor="middle" class="sm bold ink">자료에서도 무관했다 — 어긋나지 않는다</text><text x="360" y="268" text-anchor="middle" class="sm bold ink">어긋난 줄이 하나라도 있으면 그래프가 틀렸다. 다 맞아도 옳다는 뜻은 아니다</text>
+</svg>

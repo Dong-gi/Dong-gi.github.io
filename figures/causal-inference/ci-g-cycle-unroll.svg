@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 260" width="700" height="260" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">되먹임을 시간으로 펼쳐 다시 그린 그래프</title><desc id="d">왼쪽 칸에서는 재고와 판매 사이에 화살표가 양쪽으로 하나씩 있어 돌아온다. 오른쪽 칸에서는 오늘 재고에서 오늘 판매로, 오늘 판매에서 내일 재고로 화살표가 한 방향으로만 이어진다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="15" y="60" width="250" height="150" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="140" y="48" text-anchor="middle" class="sm bold ink">되먹임</text><ellipse cx="78" cy="130" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="78" y="130" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="78" dy="4.5">재고</tspan></text><ellipse cx="202" cy="130" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="202" y="130" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="202" dy="4.5">판매</tspan></text><path d="M104 130 Q136 100 168 130" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M176 130 Q144 160 112 130" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="140" y="190" text-anchor="middle" class="sm ink2">서로가 서로의 원인이다</text><rect x="290" y="60" width="395" height="150" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="487" y="48" text-anchor="middle" class="sm bold ink">시간을 펼쳐 그린다</text><ellipse cx="362" cy="130" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="362" y="130" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="362" dy="4.5">오늘 재고</tspan></text><ellipse cx="487" cy="130" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="487" y="130" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="487" dy="4.5">오늘 판매</tspan></text><ellipse cx="612" cy="130" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="612" y="130" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="612" dy="4.5">내일 재고</tspan></text><path d="M408 130 L433 130" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M533 130 L558 130" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="487" y="190" text-anchor="middle" class="sm ink2">같은 이야기인데 돌아오는 자리가 없다</text><text x="350" y="240" text-anchor="middle" class="sm bold ink">시각이 다르면 다른 마디다. 그래서 순환이 사라진다</text>
+</svg>

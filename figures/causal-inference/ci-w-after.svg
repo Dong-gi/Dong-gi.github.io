@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 250" width="620" height="250" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">나눈 기준이 처치의 결과로 생긴 경우</title><desc id="d">학습 방식에서 응시 과목으로, 응시 과목에서 합격으로 화살표가 가고 학습 방식에서 합격으로 가는 화살표가 따로 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<ellipse cx="105" cy="105" rx="52" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="105" y="105" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="105" dy="4.5">학습 방식</tspan></text><ellipse cx="305" cy="105" rx="52" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="305" y="105" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="305" dy="4.5">응시 과목</tspan></text><ellipse cx="500" cy="105" rx="34" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="500" y="105" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="500" dy="4.5">합격</tspan></text><path d="M157 105 L245 105" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M357 105 L458 105" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M157 105 Q307.5 215 458 105" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="205" y="88" text-anchor="middle" class="sm ink2">뒤에 정해진다</text><text x="403" y="88" text-anchor="middle" class="sm ink2">합격률을 바꾼다</text><text x="305" y="192" text-anchor="middle" class="sm ink2">방식이 곧바로 바꾸는 몫</text><text x="300" y="232" text-anchor="middle" class="sm bold ink">과목이 방식의 결과로 생긴 것이라면 나누지 않는다</text>
+</svg>

@@ -1479,7 +1479,7 @@ add((() => {
 
     g.push(panel(20, 56, 780, 168, '핵분열 — 무거운 핵이 쪼개진다'));
     g.push(neutron(70, 150));
-    g.push(px(80, 150, 118, 150, { cls: 'ark', marker: 'ark', width: 1.8 }));
+    g.push(px(80, 150, 118, 150, { cls: 'ax', marker: 'ark', width: 1.8 }));
     g.push(nucleus(160, 150, 32, '²³⁵U', 's1'));
     g.push(txt(212, 155, '→', { anchor: 'middle', cls: 'ink bold' }));
     g.push(nucleus(276, 118, 24, '¹⁴¹Ba', 's3'));
@@ -1491,7 +1491,7 @@ add((() => {
     for (let k = 0; k < 3; k += 1) {
         const y = 112 + k * 40;
         g.push(nucleus(516, y, 15, 'U', 's1'));
-        g.push(px(534, y, 560, y, { cls: 'ark', marker: 'ark', width: 1.4 }));
+        g.push(px(534, y, 560, y, { cls: 'ax', marker: 'ark', width: 1.4 }));
         for (let j = 0; j < 3; j += 1) g.push(neutron(578 + j * 16, y));
     }
     g.push(txt(644, 118, '중성자 하나가 셋을 만들면', { cls: 'ink2', size: 'sm' }));

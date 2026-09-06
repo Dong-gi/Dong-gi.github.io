@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 250" width="640" height="250" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">같은 두 무리에 처치 딱지를 서로 바꿔 붙인 두 배정</title><desc id="d">왼쪽에서는 무리 ㄱ 이 처치이고 오른쪽에서는 무리 ㄴ 이 처치다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="165" y="40" text-anchor="middle" class="sm bold ink">실제로 한 배정</text><rect x="35" y="52" width="260" height="130" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><ellipse cx="105" cy="92" rx="38.8" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="105" y="92" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="105" dy="4.5">무리 ㄱ</tspan></text><text x="105" y="140" text-anchor="middle" class="sm ink2">처치</text><ellipse cx="225" cy="92" rx="38.8" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="225" y="92" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="225" dy="4.5">무리 ㄴ</tspan></text><text x="225" y="140" text-anchor="middle" class="sm ink2">대조</text><text x="475" y="40" text-anchor="middle" class="sm bold ink">딱지를 맞바꾼 배정</text><rect x="345" y="52" width="260" height="130" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><ellipse cx="415" cy="92" rx="38.8" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="415" y="92" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="415" dy="4.5">무리 ㄱ</tspan></text><text x="415" y="140" text-anchor="middle" class="sm ink2">대조</text><ellipse cx="535" cy="92" rx="38.8" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="535" y="92" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="535" dy="4.5">무리 ㄴ</tspan></text><text x="535" y="140" text-anchor="middle" class="sm ink2">처치</text><path d="M300 117 L332 117" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><text x="320" y="212" text-anchor="middle" class="sm bold ink">딱지를 바꿔 붙여도 이야기가 달라지지 않는다면</text><text x="320" y="234" text-anchor="middle" class="sm bold ink">두 무리는 서로 바꿔 놓아도 되는 무리다</text>
+</svg>

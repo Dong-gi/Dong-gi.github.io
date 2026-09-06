@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 200" width="700" height="200" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">가정과 식별과 의심 세 조각</title><desc id="d">가정에서 식별로, 식별에서 의심으로 화살표가 이어진다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="350" y="45" text-anchor="middle" class="sm bold ink">이 문서는 모든 방법을 이 셋으로 적는다</text><ellipse cx="110" cy="95" rx="44" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="110" y="95" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="110" dy="4.5">가정</tspan></text><ellipse cx="350" cy="95" rx="44" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="350" y="95" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="350" dy="4.5">식별</tspan></text><ellipse cx="590" cy="95" rx="44" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="590" y="95" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="590" dy="4.5">의심</tspan></text><path d="M154 95 L298 95" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M394 95 L538 95" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/><text x="110" y="150" text-anchor="middle" class="sm ink2">무엇을 믿기로 하는가</text><text x="350" y="150" text-anchor="middle" class="sm ink2">그것이 참이면 무엇이 나오는가</text><text x="590" y="150" text-anchor="middle" class="sm ink2">어떻게 틀릴 수 있는가</text><text x="350" y="185" text-anchor="middle" class="sm bold ink">가운데만 적으면 그 방법을 다 적은 것이 아니다</text>
+</svg>

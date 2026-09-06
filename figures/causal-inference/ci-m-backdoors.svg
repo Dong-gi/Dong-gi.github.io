@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 400" width="680" height="400" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">매개분석이 막아야 하는 뒷문 세 자리</title><desc id="d">습관에서 처치와 결과로, 의욕에서 시간과 결과로, 여유에서 시간과 결과로 화살표가 나간다. 의욕은 처치에서 화살표를 받는다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<ellipse cx="300" cy="92" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="300" y="92" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="300" dy="4.5">습관</tspan></text><ellipse cx="110" cy="200" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="110" y="200" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="110" dy="4.5">처치</tspan></text><ellipse cx="340" cy="200" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="340" y="200" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="340" dy="4.5">시간</tspan></text><ellipse cx="570" cy="200" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="570" y="200" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="570" dy="4.5">결과</tspan></text><ellipse cx="480" cy="108" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="480" y="108" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="480" dy="4.5">여유</tspan></text><ellipse cx="250" cy="308" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="250" y="308" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="250" dy="4.5">의욕</tspan></text><path d="M277.4 104.85 L139.56 183.2" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M324.14 101.66 L538.43 187.37" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M136 200 L306 200" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M366 200 L536 200" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M136 200 Q336 300 536 200" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/><path d="M130.59 215.88 L223.08 287.23" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M266.64 288.03 L318.23 226.12" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M274.63 299.69 L537.79 210.87" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M458.27 122.28 L368.41 181.33" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M498.18 126.59 L546.22 175.7" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><text x="300" y="56" text-anchor="middle" class="sm ink2">처치와 결과의 공통 원인</text><text x="516" y="100" text-anchor="start" class="sm ink2">처치와 무관한 혼입</text><text x="250" y="352" text-anchor="middle" class="sm ink2">처치가 낳은 혼입</text><text x="340" y="384" text-anchor="middle" class="sm bold ink">9장은 맨 위 하나만 막으면 되었다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 290" width="660" height="290" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">층마다 따로 잰 값과 직선 하나가 어긋나는 그림</title><desc id="d">가로축이 조정 변수, 세로축이 결과의 평균이다. 점 다섯이 오른쪽으로 갈수록 가파르게 올라가고 직선 하나가 그 점들을 가로질러 지나간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="330" y="32" text-anchor="middle" class="sm bold ink">층마다 잰 값과 직선이 지나가는 자리</text><path class="gr" d="M163.33 225 V60"/><path class="gr" d="M241.67 225 V60"/><path class="gr" d="M320 225 V60"/><path class="gr" d="M398.33 225 V60"/><path class="gr" d="M476.67 225 V60"/><path class="gr" d="M85 225 H555"/><path class="gr" d="M85 177.86 H555"/><path class="gr" d="M85 130.71 H555"/><path class="gr" d="M85 83.57 H555"/><path class="ax" marker-end="url(#ark)" d="M85 225 H565"/><path class="ax" marker-end="url(#ark)" d="M85 225 V50"/><text class="sm ink2" x="163.33" y="240" text-anchor="middle">1</text><text class="sm ink2" x="241.67" y="240" text-anchor="middle">2</text><text class="sm ink2" x="320" y="240" text-anchor="middle">3</text><text class="sm ink2" x="398.33" y="240" text-anchor="middle">4</text><text class="sm ink2" x="476.67" y="240" text-anchor="middle">5</text><text class="sm ink2" x="79" y="181.86" text-anchor="end">20</text><text class="sm ink2" x="79" y="134.71" text-anchor="end">40</text><text class="sm ink2" x="79" y="87.57" text-anchor="end">60</text><text class="sm ink2" x="569" y="229">조정 변수</text><text class="sm ink2" x="77" y="52" text-anchor="end">결과의 평균</text><path class="cv s2" d="M163.33 220.29 L476.67 88.29"/><circle class="f1" cx="163.33" cy="201.43" r="5"/><circle class="f1" cx="241.67" cy="192" r="5"/><circle class="f1" cx="320" cy="177.86" r="5"/><circle class="f1" cx="398.33" cy="144.86" r="5"/><circle class="f1" cx="476.67" cy="78.86" r="5"/><text class="ink2 sm" x="175.08" y="130.71" text-anchor="start">직선을 가정하면 이렇게 지나간다</text><text class="ink2 sm" x="331.75" y="196.71" text-anchor="start">층마다 따로 잰 값</text><text x="330" y="262" text-anchor="middle" class="sm bold ink">두 자리가 어긋난 만큼이 처치 쪽으로 흘러든다</text>
+</svg>

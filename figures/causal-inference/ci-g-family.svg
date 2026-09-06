@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 290" width="640" height="290" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한 마디를 기준으로 본 부모와 자식과 조상과 후손</title><desc id="d">갑에서 을로, 을과 무에서 병으로, 병에서 정으로, 정에서 기로 화살표가 이어진다. 병 옆에는 기준 마디라는 딱지가, 을과 무 옆에는 부모라는 딱지가, 갑 옆에는 부모가 아닌 조상이라는 딱지가 붙어 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="320" y="36" text-anchor="middle" class="sm bold ink">가운데 병을 기준으로 자리에 이름을 붙인다</text><ellipse cx="90" cy="130" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="90" y="130" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="90" dy="4.5">갑</tspan></text><ellipse cx="200" cy="130" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="200" y="130" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="200" dy="4.5">을</tspan></text><ellipse cx="200" cy="215" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="200" y="215" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="200" dy="4.5">무</tspan></text><ellipse cx="320" cy="170" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="320" y="170" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="320" dy="4.5">병</tspan></text><ellipse cx="440" cy="170" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="440" y="170" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="440" dy="4.5">정</tspan></text><ellipse cx="550" cy="170" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="550" y="170" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="550" dy="4.5">기</tspan></text><path d="M116 130 L166 130" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M224.67 138.22 L287.74 159.25" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M224.34 205.87 L288.16 181.94" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M346 170 L406 170" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M466 170 L516 170" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><text x="90" y="96" text-anchor="middle" class="sm ink2">부모가 아닌 조상</text><text x="200" y="96" text-anchor="middle" class="sm ink2">부모이면서 조상</text><text x="200" y="253" text-anchor="middle" class="sm ink2">부모이면서 조상</text><text x="320" y="212" text-anchor="middle" class="sm ink2">기준 마디</text><text x="440" y="136" text-anchor="middle" class="sm ink2">자식이면서 후손</text><text x="550" y="136" text-anchor="middle" class="sm ink2">후손</text><text x="320" y="272" text-anchor="middle" class="sm bold ink">부모는 조상에 들어가고 자식은 후손에 들어간다</text>
+</svg>

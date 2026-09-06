@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 285" width="620" height="285" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">대상이 가진 성질 전부를 두르는 큰 칸과 그 안에 잰 성질을 두르는 작은 칸</title><desc id="d">아래에서 화살표 둘이 올라오는데 하나는 안쪽 칸에서 멈추고 하나는 바깥 칸까지 간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="310" y="36" text-anchor="middle" class="sm bold ink">무선배정이 닿는 범위는 어디까지인가</text><rect x="60" y="50" width="500" height="160" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="310" y="74" text-anchor="middle" class="sm bold ink">대상이 가진 성질 전부</text><rect x="105" y="92" width="210" height="100" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="210" y="134" text-anchor="middle" class="sm bold ink">연구자가 잰 성질</text><text x="440" y="145" text-anchor="middle" class="sm ink2">연구자가 재지 못한 성질</text><path d="M210 252 L210 192" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/><text x="210" y="268" text-anchor="middle" class="sm ink2">재서 맞추는 방법</text><path d="M470 252 L470 210" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="470" y="268" text-anchor="middle" class="sm ink2">무선배정</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 325" width="700" height="325" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">배정에서 실제 처치로, 실제 처치에서 결과로 이어지는 그래프</title><desc id="d">왼쪽 배정으로 들어오는 화살표는 하나도 없고, 점선 원으로 그린 못 잰 혼입에서는 실제 처치와 결과로만 화살표가 간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="350" y="28" text-anchor="middle" class="sm bold ink">배정과 실제 처치가 갈릴 때 배정을 도구로 쓴다</text><ellipse cx="80" cy="190" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="80" y="190" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="80" dy="4.5">배정</tspan></text><ellipse cx="300" cy="190" rx="46" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="300" y="190" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="300" dy="4.5">실제 처치</tspan></text><ellipse cx="560" cy="190" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="560" y="190" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="560" dy="4.5">결과</tspan></text><ellipse cx="430" cy="82" rx="54" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8" stroke-dasharray="5 4"/><text x="430" y="82" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="430" dy="4.5">못 잰 혼입</tspan></text><path d="M106 190 L246 190" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M346 190 L526 190" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M388.46 116.51 L341.54 155.49" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M471.54 116.51 L533.85 168.27" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><text x="190" y="172" text-anchor="middle" class="sm ink2">동전이 정했다</text><text x="80" y="240" text-anchor="middle" class="sm ink2">들어오는 화살표가 없다</text><text x="80" y="260" text-anchor="middle" class="sm ink2">무작위성은 설계가 준다</text><text x="430" y="240" text-anchor="middle" class="sm ink2">남은 물음은 배제 제약 하나다</text><text x="350" y="300" text-anchor="middle" class="sm bold ink">배정이 결과에 이르는 길이 처치를 거치는 것뿐이어야 한다</text>
+</svg>

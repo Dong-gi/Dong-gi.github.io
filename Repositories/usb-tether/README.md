@@ -85,7 +85,10 @@ usb-tether/
    - APK를 폰으로 직접 옮겨 설치한다면 개발자 옵션은 필요 없습니다
 
 2. **PC**
-   - `output/README.md` 를 보고 `tun2proxy.exe` 와 `wintun.dll` 을 받아 `output/` 에 둔다
+   - `output/README.md` 의 절차대로 tun2proxy 릴리스 zip 을 받아 `output/` 을 채웁니다.
+     **Windows zip 에는 `wintun.dll` 이 함께 들어 있어 따로 받지 않아도 됩니다.**
+   - 압축 안의 실행 파일 이름은 `tun2proxy-bin.exe` 이므로 **`tun2proxy.exe` 로 바꿔야**
+     스크립트가 찾습니다. 이름이 어긋나면 오류 없이 그냥 아무 일도 일어나지 않습니다.
    - 관리자 권한 필요 (WinTun 드라이버 로드)
 
 ### Android 앱 설치
@@ -176,8 +179,10 @@ output\windows-wifi.bat
 
 #### 사전 준비
 
-- **tun2proxy**: [github.com/tun2proxy/tun2proxy/releases](https://github.com/tun2proxy/tun2proxy/releases) 에서 받아 `output/tun2proxy` 로 둡니다.
-  - Apple Silicon 은 `tun2proxy-aarch64-apple-darwin`, Intel Mac 은 `tun2proxy-x86_64-apple-darwin`.
+- **tun2proxy**: [github.com/tun2proxy/tun2proxy/releases](https://github.com/tun2proxy/tun2proxy/releases) 에서 받습니다.
+  - Apple Silicon 은 `tun2proxy-aarch64-apple-darwin.zip`, Intel Mac 은 `tun2proxy-x86_64-apple-darwin.zip`.
+  - 압축 안의 실행 파일은 `tun2proxy-bin` 입니다. **`output/tun2proxy` 로 이름을 바꾸세요** —
+    스크립트가 그 이름을 부릅니다.
   - 확인 방법: `file output/tun2proxy` → `Mach-O 64-bit arm64 executable`
 - **adb**: [Android SDK Platform-Tools](https://developer.android.com/tools/releases/platform-tools) 의 universal 바이너리(APK 설치·진단용, 선택).
 - **wintun.dll 불필요**: macOS는 커널에 TUN/utun 인터페이스가 내장되어 있습니다.

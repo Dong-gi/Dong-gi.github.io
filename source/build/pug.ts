@@ -9,20 +9,9 @@
  * 곁들여 두 가지를 더 쓴다. 둘 다 `source/posts.json` 에서 나오므로 여기 있는 것이 맞다.
  *
  *   - `source/posts-compressed.json` — 브라우저가 받아 사이드바 목록을 만든다.
- *   - `files/sitemap.txt`
+ *   - `sitemap.txt`
  *
- * **이 요소는 다른 요소의 산출물을 하나도 읽지 않는다.** 그래서 모든 요소가 동시에 돈다.
- *
- * img 요소와도 독립이다. `+w3img` 가 쓰는 원본 크기는 `lib/image-size.ts` 가
- * 원본 파일 헤더에서 직접 읽는다. 예전에는 img 요소가 만든 `source/img-map.json` 을
- * 통째로 읽었는데, 그러면 그림 하나가 늘어도 **모든 문서가 다시 렌더되었다.**
- * `imgs-generated/` 의 변환본 경로는 규약으로 만들 뿐 존재를 확인하지 않으므로,
- * 두 요소는 같은 원본을 각자 보면 된다.
- *
- * 해시 검사의 입력에는 **그 문서가 include 하는 파일과 참조하는 그림까지** 넣는다.
- * 거의 모든 문서가 `source/skeleton.pug` 를 include 하므로 skeleton 을 고치면 전체가
- * 다시 렌더되고, 그림이 새로 들어오면 **그 그림을 쓰는 문서만** 다시 렌더된다.
- * 그 판단을 사람이 기억할 필요가 없게 하려는 것이다.
+ * 해시 검사의 입력에는 **그 문서가 include 하는 파일까지** 넣는다.
  */
 import { existsSync } from 'node:fs';
 import fsp from 'node:fs/promises';
@@ -33,7 +22,6 @@ import { createRequire } from 'node:module';
 import { runComponent, ToolError, type BuildLog } from './lib/log.ts';
 import { runIncremental, type Job } from './lib/manifest.ts';
 import { MATH_MARKER, prerenderMath, recycleMathJaxIfHeavy } from './lib/math.ts';
-import { imageSize } from './lib/image-size.ts';
 import { ensureDirFor, fileExists, normalize, resolve, walkFiles } from './lib/paths.ts';
 
 const require = createRequire(import.meta.url);
@@ -50,8 +38,8 @@ const REPO_URL = 'https://github.com/Dong-gi/Dong-gi.github.io';
 
 /** source/posts.json 의 항목. 파일 자체는 이 항목의 배열이다. */
 interface Post {
-    /** 소속 카테고리. 계층은 '/' 로, 다중 소속은 원소 여러 개로 표현한다. */
-    category: string[];
+    /** 소속 카테고리. 계층은 '/' 로 표현한다. */
+    category: string;
     file: string;
     title: string;
 }
@@ -95,41 +83,12 @@ async function includedFiles(rel: string, seen = new Set<string>()): Promise<str
     return found;
 }
 
-/**
- * 문서가 `+w3img` 로 참조하는 **원본 그림**을 모은다. 문서와 그 include 를 함께 훑는다.
- *
- * 이것이 문서의 진짜 입력이다. `+w3img` 는 `imageSize(src)` 로 원본 헤더를 읽어
- * `width`/`height` 를 박고, 크기를 못 읽으면 `<picture>` 대신 평범한 `<img>` 를 낸다.
- * 그러니 **그림이 없다가 생기는 것만으로 산출물이 달라진다.** 없는 파일도 목록에
- * 넣어야 그 변화가 해시에 잡힌다.
- *
- * 리터럴만 본다. `+w3img` 호출 1,365 개 가운데 첫 인자가 리터럴이 아닌 것은
- * `+bookInfo` 의 표지 하나뿐이고, 그 값은 모두 외부 URL 이라 `imageSize` 가 곧바로
- * null 을 돌려준다 — 파일 의존이 아니다.
- */
-async function referencedImages(rel: string, included: string[]): Promise<string[]> {
-    const found = new Set<string>();
-    for (const file of [rel, ...included]) {
-        const text = await fsp.readFile(resolve(file), 'utf8').catch(() => '');
-        for (const m of text.matchAll(/\+w3img\(\s*'(\/imgs\/[^']+)'/g)) {
-            found.add(normalize(m[1].replace(/^\//, '')));
-        }
-    }
-    // 해시는 순서에 딸리므로 정렬해서 넘긴다.
-    return [...found].sort();
-}
-
 /** `pugs/fundamental/physics.pug` → `posts/fundamental/physics.html`, `index.pug` → `index.html` */
 function outputOf(rel: string): string {
     return rel.replace(/^pugs\//, 'posts/').replace(/\.pug$/, '.html');
 }
 
 const run = promisify(execFile);
-
-/** KST 기준 `yyyy-MM-dd`. 시각을 넣지 않는 이유는 skeleton.pug 주석에 있다. */
-function kstDate(d: Date): string {
-    return d.toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
-}
 
 /** KST 기준 `yyyy-MM-dd HH:mm`. 커밋 시각은 고정된 자료라 시각까지 적는다. */
 function kstDateTime(iso: string): string {
@@ -234,7 +193,7 @@ await runComponent('pug', async (log) => {
     const posts: Post[] = JSON.parse(await fsp.readFile(resolve(POSTS_FILE), 'utf8'));
     const recentCommits = await recentCommitsOf(posts);
     if (recentCommits.length === 0) log.line('git 이력을 읽지 못해 홈의 최근 커밋 표를 비운다');
-    locals = { imgSize: imageSize, buildDate: kstDate(new Date()), recentCommits };
+    locals = { recentCommits };
 
     const sources = ['index.pug', ...(await walkFiles('pugs'))].filter((f) => f.endsWith('.pug'));
     // pugs/ 는 문서의 원본만 두는 곳이다. 그림은 figures/ 와 d2/ 에 있고 문서는 경로로
@@ -260,7 +219,7 @@ await runComponent('pug', async (log) => {
             always: source === 'index.pug',
             // 참조하는 그림도 입력이다. 없는 파일도 그대로 넣는다 — hashOf 가 '없음'
             // 으로 다루므로, 나중에 그림이 도착하면 해시가 달라져 이 문서만 다시 돈다.
-            inputs: [source, ...included, ...(await referencedImages(source, included))],
+            inputs: [source, ...included],
             outputs: [target],
             run: () => renderOne(log, source, target),
         });
@@ -285,12 +244,12 @@ await runComponent('pug', async (log) => {
     }
 
     await fsp.writeFile(resolve('source/posts-compressed.json'), JSON.stringify(posts));
-    await ensureDirFor('files/sitemap.txt');
+    await ensureDirFor('sitemap.txt');
     await fsp.writeFile(
-        resolve('files/sitemap.txt'),
+        resolve('sitemap.txt'),
         posts.map((p) => SITE_ORIGIN + POSTS_URL_PREFIX + p.file).sort().join('\n'),
     );
-    log.line(`source/posts-compressed.json, files/sitemap.txt 갱신 — 문서 ${posts.length}개`);
+    log.line(`source/posts-compressed.json, sitemap.txt 갱신 — 문서 ${posts.length}개`);
 
     if (report.failed.length !== 0) {
         throw new ToolError(`렌더 실패 ${report.failed.length}개: ${report.failed.join(', ')}`);

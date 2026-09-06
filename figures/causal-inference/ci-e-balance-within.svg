@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 245" width="680" height="245" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">전체에서 본 두 집단의 성질 구성과 점수가 같은 묶음 안에서 본 구성</title><desc id="d">왼쪽 칸에서는 처치군과 대조군의 습관 구성이 서로 뒤집혀 있고, 오른쪽 칸에서는 두 줄의 숫자가 같다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="170" y="34" text-anchor="middle" class="sm bold ink">전체를 한꺼번에 보면</text><rect x="25" y="48" width="290" height="148" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="78" y="88" text-anchor="middle" class="sm ink2">처치군</text><text x="215" y="88" text-anchor="middle" class="sm bold ink">습관 있음 45 · 없음 15</text><text x="78" y="128" text-anchor="middle" class="sm ink2">대조군</text><text x="215" y="128" text-anchor="middle" class="sm bold ink">습관 있음 15 · 없음 45</text><text x="170" y="174" text-anchor="middle" class="sm bold ink">구성이 다르다</text><text x="510" y="34" text-anchor="middle" class="sm bold ink">점수가 같은 사람끼리 묶고 보면</text><rect x="365" y="48" width="290" height="148" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="418" y="88" text-anchor="middle" class="sm ink2">처치군</text><text x="555" y="88" text-anchor="middle" class="sm bold ink">습관 있음 10 · 없음 10</text><text x="418" y="128" text-anchor="middle" class="sm ink2">대조군</text><text x="555" y="128" text-anchor="middle" class="sm bold ink">습관 있음 10 · 없음 10</text><text x="510" y="174" text-anchor="middle" class="sm bold ink">구성이 같다</text><text x="340" y="224" text-anchor="middle" class="sm bold ink">점수로 묶는 순간 잰 성질의 구성이 두 쪽에서 같아진다</text>
+</svg>

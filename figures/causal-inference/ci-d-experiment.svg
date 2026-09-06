@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 260" width="660" height="260" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">무작위 실험에서 처치를 정하는 것은 동전뿐이다</title><desc id="d">동전 던지기에서 처치로 화살표가 내려오고 처치를 정하던 것에서는 결과로만 화살표가 간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<ellipse cx="120" cy="80" rx="53.2" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="120" y="80" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="120" dy="4.5">동전 던지기</tspan></text><ellipse cx="330" cy="80" rx="70" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="330" y="80" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="330" dy="4.5">처치를 정하던 것</tspan></text><ellipse cx="120" cy="190" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="120" y="190" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="120" dy="4.5">처치</tspan></text><ellipse cx="490" cy="190" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="490" y="190" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="490" dy="4.5">결과</tspan></text><path d="M120 106 L120 156" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M387.68 119.66 L461.98 170.74" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M146 190 L456 190" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="196" y="140" text-anchor="middle" class="sm ink2">실험자가 정한다</text><text x="300" y="218" text-anchor="middle" class="sm ink2">처치로는 아무것도 들어오지 않는다</text><text x="330" y="248" text-anchor="middle" class="sm bold ink">무작위 실험은 개입을 실제로 해 놓고 자료를 얻는다</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 310" width="700" height="310" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">기준값 양옆의 자료와 기준에서 끊긴 결과</title><desc id="d">세로선을 사이에 두고 왼쪽 점 넷과 오른쪽 점 넷이 각각 같은 기울기로 올라간다. 양쪽 추세를 세로선까지 늘여 놓으면 두 끝이 서로 어긋나 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="350" y="28" text-anchor="middle" class="sm bold ink">기준을 넘느냐로 처치가 갈릴 때</text><rect x="25" y="44" width="650" height="200" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><path d="M60 224 L660 224" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="62" y="66" text-anchor="start" class="sm ink2">결과</text><text x="648" y="240" text-anchor="end" class="sm ink2">기준변수</text><path d="M320 60 L320 224" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="320" y="240" text-anchor="middle" class="sm ink2">기준값</text><path d="M112 160 L164 150 L216 140 L268 130" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="112" cy="160" r="4.5" fill="var(--s1)"/><circle cx="164" cy="150" r="4.5" fill="var(--s1)"/><circle cx="216" cy="140" r="4.5" fill="var(--s1)"/><circle cx="268" cy="130" r="4.5" fill="var(--s1)"/><path d="M372 150 L424 140 L476 130 L528 120" fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="372" cy="150" r="4.5" fill="var(--s2)"/><circle cx="424" cy="140" r="4.5" fill="var(--s2)"/><circle cx="476" cy="130" r="4.5" fill="var(--s2)"/><circle cx="528" cy="120" r="4.5" fill="var(--s2)"/><path d="M268 130 L320 120" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="5 4"/><circle cx="320" cy="120" r="4.5" fill="var(--s1)"/><path d="M372 150 L320 160" fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="5 4"/><circle cx="320" cy="160" r="4.5" fill="var(--s2)"/><path d="M320 120 L320 160" stroke="var(--s3)" stroke-width="3.5" stroke-linecap="round" fill="none"/><path d="M346 100 L326 130" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 3" fill="none"/><text x="350" y="96" text-anchor="start" class="sm ink2">여기서 끊긴다</text><path d="M80 268 L110 268" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round"/><text x="116" y="272" text-anchor="start" class="sm ink2">기준 아래 — 처치를 받는다</text><path d="M360 268 L390 268" fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round"/><text x="396" y="272" text-anchor="start" class="sm ink2">기준 위 — 받지 않는다</text><text x="350" y="296" text-anchor="middle" class="sm bold ink">양쪽 추세를 기준까지 밀어 견준 세로 간격이 이 설계가 재는 값이다</text>
+</svg>

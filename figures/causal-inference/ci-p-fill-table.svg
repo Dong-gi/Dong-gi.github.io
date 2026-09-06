@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" width="620" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">화분 넷의 두 잠재결과 칸 가운데 한 칸씩이 비어 있는 표</title><desc id="d">실제 처치를 받은 화분은 처치했을 때 칸만, 받지 않은 화분은 하지 않았을 때 칸만 채워져 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="290" y="30" width="300" height="228" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="85" y="52" text-anchor="middle" class="sm bold ink">화분</text><text x="200" y="52" text-anchor="middle" class="sm bold ink">실제 처치</text><text x="355" y="52" text-anchor="middle" class="sm bold ink">처치했을 때</text><text x="500" y="52" text-anchor="middle" class="sm bold ink">하지 않았을 때</text><text x="85" y="100" text-anchor="middle" class="sm ink2">가</text><text x="200" y="100" text-anchor="middle" class="sm ink2">받았다</text><text x="355" y="100" text-anchor="middle" class="sm bold ink">9</text><rect x="458" y="81" width="84" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="500" y="100" text-anchor="middle" class="sm ink2">?</text><text x="85" y="145" text-anchor="middle" class="sm ink2">나</text><text x="200" y="145" text-anchor="middle" class="sm ink2">받았다</text><text x="355" y="145" text-anchor="middle" class="sm bold ink">8</text><rect x="458" y="126" width="84" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="500" y="145" text-anchor="middle" class="sm ink2">?</text><text x="85" y="190" text-anchor="middle" class="sm ink2">다</text><text x="200" y="190" text-anchor="middle" class="sm ink2">받지 않았다</text><text x="500" y="190" text-anchor="middle" class="sm bold ink">4</text><rect x="313" y="171" width="84" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="355" y="190" text-anchor="middle" class="sm ink2">?</text><text x="85" y="235" text-anchor="middle" class="sm ink2">라</text><text x="200" y="235" text-anchor="middle" class="sm ink2">받지 않았다</text><text x="500" y="235" text-anchor="middle" class="sm bold ink">4</text><rect x="313" y="216" width="84" height="28" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="355" y="235" text-anchor="middle" class="sm ink2">?</text><text x="310" y="282" text-anchor="middle" class="sm bold ink">어느 화분이든 두 칸 가운데 한 칸은 채워지지 않는다</text>
+</svg>

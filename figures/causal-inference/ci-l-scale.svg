@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 300" width="700" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">규모를 키우면 그래프에 화살표가 하나 늘어난다</title><desc id="d">왼쪽 칸에는 처치에서 결과로 가는 화살표만 있고 오른쪽 칸에는 남들의 처치에서 결과로 가는 화살표가 더 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="20" y="55" width="310" height="180" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="175" y="42" text-anchor="middle" class="sm bold ink">작게 해 볼 때</text><path d="M141 150 L201 150" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><ellipse cx="95" cy="150" rx="46" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="95" y="150" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="95" dy="4.5">미리 주문</tspan></text><ellipse cx="255" cy="150" rx="46" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="255" y="150" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="255" dy="4.5">대기 시간</tspan></text><text x="175" y="212" text-anchor="middle" class="sm ink2">옆 사람의 주문은 내 대기에 닿지 않는다</text><rect x="370" y="55" width="310" height="180" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="525" y="42" text-anchor="middle" class="sm bold ink">전원에게 열 때</text><path d="M491 180 L551 180" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M524.16 123.09 L560.84 148.91" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><ellipse cx="480" cy="92" rx="54" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="480" y="92" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="480" dy="4.5">남들의 주문</tspan></text><ellipse cx="445" cy="180" rx="46" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="445" y="180" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="445" dy="4.5">미리 주문</tspan></text><ellipse cx="605" cy="180" rx="46" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="605" y="180" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="605" dy="4.5">대기 시간</tspan></text><text x="525" y="224" text-anchor="middle" class="sm ink2">남들이 함께 주문하면 내 대기가 달라진다</text><text x="350" y="264" text-anchor="middle" class="sm bold ink">오른쪽에 화살표가 하나 늘었다. 5장이 그것을 간섭이라 불렀다</text><text x="350" y="290" text-anchor="middle" class="sm bold ink">작게 잰 값이 크게 해도 그대로일 이유가 없다</text>
+</svg>

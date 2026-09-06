@@ -19,7 +19,7 @@ include ./source/skeleton.pug
                     td
                         each post, i in commit.posts
                             if i > 0
-                                |  · 
+                                |  ·
                             +asA(post.href, post.title)
 
     h1 Oracle Cloud에 블로그 띄우는 절차
@@ -33,7 +33,7 @@ include ./source/skeleton.pug
             +asCode('shell').
                 # https://github.com/nvm-sh/nvm
                 $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-                $ nvm install 24   # package.json 의 engines 가 24 이상을 요구한다
+                $ nvm install 24
 
                 # https://d2lang.com/
                 $ curl -fsSL https://d2lang.com/install.sh | sh -s --

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 320" width="700" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">네 칸의 값에서 가로로 빼는 것과 세로로 빼는 것</title><desc id="d">네 칸에 400, 430, 410, 420 이 놓여 있다. 가로로 빼면 30 과 10 이 나오고 세로로 빼면 -10 과 10 이 나오며, 어느 쪽을 다시 빼도 20 이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="350" y="28" text-anchor="middle" class="sm bold ink">같은 네 값에서 두 번 뺀다</text><text x="265" y="56" text-anchor="middle" class="sm bold ink">바꾸기 전</text><text x="425" y="56" text-anchor="middle" class="sm bold ink">바꾼 뒤</text><rect x="200" y="68" width="130" height="56" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="265" y="102" text-anchor="middle" class="sm bold ink">400</text><rect x="360" y="68" width="130" height="56" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="425" y="102" text-anchor="middle" class="sm bold ink">430</text><rect x="200" y="140" width="130" height="56" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="265" y="174" text-anchor="middle" class="sm bold ink">410</text><rect x="360" y="140" width="130" height="56" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="425" y="174" text-anchor="middle" class="sm bold ink">420</text><text x="190" y="100" text-anchor="end" class="sm ink2">처치집단</text><text x="190" y="172" text-anchor="end" class="sm ink2">대조집단</text><path d="M495 96 L525 96" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="560" y="100" text-anchor="middle" class="sm bold ink">차이 30</text><path d="M495 168 L525 168" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="560" y="172" text-anchor="middle" class="sm bold ink">차이 10</text><path d="M265 202 L265 226" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="265" y="244" text-anchor="middle" class="sm bold ink">차이 -10</text><path d="M425 202 L425 226" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="425" y="244" text-anchor="middle" class="sm bold ink">차이 10</text><text x="350" y="282" text-anchor="middle" class="sm bold ink">30 빼기 10 은 20 이고, 10 빼기 -10 도 20 이다</text><text x="350" y="306" text-anchor="middle" class="sm bold ink">어느 순서로 빼도 같은 값이 나온다</text>
+</svg>

@@ -344,7 +344,7 @@ add('mcs-g-bisection', (() => {
 
 /* 4. 2차원 배열망 — 혼잡도 2 */
 add('mcs-g-array-net', (() => {
-    const W = 720, H = 360;
+    const W = 755, H = 360;
     const g = [];
     g.push(txt(W / 2, 24, '2차원 배열망 — 오른쪽으로 가다 아래로 꺾는다. 그래서 한 스위치에 경로가 둘까지만 모인다',
         { anchor: 'middle', cls: 'ink bold', size: 'sm' }));

@@ -1,0 +1,15 @@
+# 빌드 산출물. 프로젝트마다 따로 적지 않고 여기서 한 번에 무시한다.
+# (예전에는 프로젝트마다 .gitignore 를 두어서, 없는 프로젝트에는 산출물이 새어 들어왔다.)
+build/
+target/
+.gradle/
+bin/
+out/
+
+# IDE. 이 저장소는 VS Code 를 쓰고 Eclipse/STS 메타데이터는 커밋하지 않는다.
+.classpath
+.project
+.factorypath
+.settings/
+*.iml
+.idea/

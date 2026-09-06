@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 318" width="720" height="318" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">가정을 검사 가능성에 따라 세 칸에 나눈 것</title><desc id="d">왼쪽 칸에 겹침과 균형 같은 항목이, 오른쪽 칸에 교환가능성과 일관성 같은 항목이 놓여 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="20" y="60" width="216" height="205" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="128" y="46" text-anchor="middle" class="sm bold ink">자료로 검사되는 것</text><text x="128" y="100" text-anchor="middle" class="sm ink2">겹침</text><text x="128" y="132" text-anchor="middle" class="sm ink2">균형</text><text x="128" y="164" text-anchor="middle" class="sm ink2">관련성</text><text x="128" y="196" text-anchor="middle" class="sm ink2">사전 추세</text><text x="128" y="228" text-anchor="middle" class="sm ink2">배정 기록</text><rect x="252" y="60" width="216" height="205" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="360" y="46" text-anchor="middle" class="sm bold ink">부분적으로만 검사되는 것</text><text x="360" y="100" text-anchor="middle" class="sm ink2">그래프가 함의하는</text><text x="360" y="132" text-anchor="middle" class="sm ink2">조건부독립</text><rect x="484" y="60" width="216" height="205" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="592" y="46" text-anchor="middle" class="sm bold ink">원리적으로 검사되지 않는 것</text><text x="592" y="100" text-anchor="middle" class="sm ink2">교환가능성</text><text x="592" y="132" text-anchor="middle" class="sm ink2">배제 제약</text><text x="592" y="164" text-anchor="middle" class="sm ink2">평행추세</text><text x="592" y="196" text-anchor="middle" class="sm ink2">일관성</text><text x="592" y="228" text-anchor="middle" class="sm ink2">충실성</text><text x="360" y="190" text-anchor="middle" class="sm ink2">어긋나면 떨어뜨린다</text><text x="360" y="220" text-anchor="middle" class="sm ink2">맞아도 고르지 못한다</text><text x="360" y="296" text-anchor="middle" class="sm bold ink">왼쪽 칸을 다 통과해도 오른쪽 칸은 그대로 남는다</text>
+</svg>

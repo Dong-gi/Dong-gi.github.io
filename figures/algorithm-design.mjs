@@ -388,7 +388,7 @@ add((() => {
     const g = [];
     g.push(txt(W / 2, 26, '분할정복이 옮겨 놓은 것은 계수가 아니라 지수다', { anchor: 'middle', cls: 'ink bold' }));
 
-    const x0 = 80, x1 = W - 60, ay = 150;
+    const x0 = 80, x1 = W - 80, ay = 150;
     const X = v => x0 + ((v - 1) / 2) * (x1 - x0);
     g.push(arw(x0 - 20, ay, x1 + 20, ay, { cls: 'ark', width: 1.5 }));
     for (let t = 1; t <= 3; t += 0.5) {
@@ -495,7 +495,7 @@ add((() => {
 
 /* ---- 10-7. 분할정복이 손해인 세 자리 ---- */
 add((() => {
-    const W = 820, H = 344;
+    const W = 900, H = 344;
     const g = [];
     g.push(txt(W / 2, 26, '분할정복이 손해인 세 자리', { anchor: 'middle', cls: 'ink bold' }));
 

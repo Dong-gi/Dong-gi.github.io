@@ -73,7 +73,7 @@ include ../../../source/skeleton.pug
         li 함수 호출 : function_name([expression [, expression ... ]])
         li 형 변환 : cast(expression as type) 또는 expression::type
         li 정렬 방식 지정 : expression COLLATE collation
-        li 스칼라 서브쿼리 : 괄호 안의 SELECT 쿼리로, 정확히 한 개 행, 한 개 열을 반환                
+        li 스칼라 서브쿼리 : 괄호 안의 SELECT 쿼리로, 정확히 한 개 행, 한 개 열을 반환
     h4 집계 표현식
     +asCode('sql', 'syntax').
         aggregate_name (expression [ , ... ] [ order_by_clause ] ) [ FILTER ( WHERE filter_clause ) ]
@@ -99,7 +99,7 @@ include ../../../source/skeleton.pug
                 from guild_player
                 group by 1;
 
-                 guild_id | median_coin 
+                 guild_id | median_coin
                 ----------+-------------
                         1 |          20
                         2 |          25
@@ -165,7 +165,7 @@ include ../../../source/skeleton.pug
                 values (1), (5), (10), (1), (5), (10);
             +asCode('sql', 'order by 없음 + 프레임 정의 없음').
                 # select n, sum(n) over () from nums;
-                 n  | sum 
+                 n  | sum
                 ----+-----
                   1 |  32
                   5 |  32
@@ -176,7 +176,7 @@ include ../../../source/skeleton.pug
                 (6 rows)
             +asCode('sql', 'order by 있음 + 프레임 정의 없음').
                 # select n, sum(n) over (order by n) from nums;
-                 n  | sum 
+                 n  | sum
                 ----+-----
                   1 |   2
                   1 |   2
@@ -187,7 +187,7 @@ include ../../../source/skeleton.pug
                 (6 rows)
             +asCode('sql', 'ROWS 모드').
                 # select n, sum(n) over (order by n rows 2 preceding) from nums;
-                 n  | sum 
+                 n  | sum
                 ----+-----
                   1 |   1
                   1 |   2
@@ -198,7 +198,7 @@ include ../../../source/skeleton.pug
                 (6 rows)
             +asCode('sql', 'RANGE 모드').
                 # select n, sum(n) over (order by n range 4 preceding) from nums;
-                 n  | sum 
+                 n  | sum
                 ----+-----
                   1 |   2
                   1 |   2
@@ -209,7 +209,7 @@ include ../../../source/skeleton.pug
                 (6 rows)
             +asCode('sql', 'GROUPS 모드').
                 # select n, sum(n) over (order by n groups 1 preceding) from nums;
-                 n  | sum 
+                 n  | sum
                 ----+-----
                   1 |   2
                   1 |   2
@@ -278,7 +278,7 @@ include ../../../source/skeleton.pug
 
                 # insert into order_history values (default, default) returning *;
 
-                 order_no |          created_at           
+                 order_no |          created_at
                 ----------+-------------------------------
                         1 | 2026-01-02 13:53:42.781017+09
                 (1 row)
@@ -302,7 +302,7 @@ include ../../../source/skeleton.pug
 
             # insert into player values (5555, default) returning *;
 
-             purchase_amount | vip_level 
+             purchase_amount | vip_level
             -----------------+-----------
                         5555 |         2
             (1 row)
@@ -405,7 +405,7 @@ include ../../../source/skeleton.pug
                 # create temp table c ( c text );
 
                 # select * from a cross join b;
-                 a  | b  
+                 a  | b
                 ----+----
                  a1 | b1
                  a1 | b2
@@ -416,7 +416,7 @@ include ../../../source/skeleton.pug
                 (6 rows)
 
                 # select * from a, c;
-                 a | c 
+                 a | c
                 ---+---
                 (0 rows)
 
@@ -426,7 +426,7 @@ include ../../../source/skeleton.pug
                 a (a) as ( values ('a1'), ('a2'), ('a4') ),
                 b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
                 select * from a join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
-                 a  | b  
+                 a  | b
                 ----+----
                  a1 | b1
                  a1 | b1+
@@ -440,7 +440,7 @@ include ../../../source/skeleton.pug
                 a (a) as ( values ('a1'), ('a2'), ('a4') ),
                 b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
                 select * from a left join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
-                 a  |  b  
+                 a  |  b
                 ----+-----
                  a1 | b1
                  a1 | b1+
@@ -455,7 +455,7 @@ include ../../../source/skeleton.pug
                 a (a) as ( values ('a1'), ('a2'), ('a4') ),
                 b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
                 select * from a right join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
-                   a    |  b  
+                   a    |  b
                 --------+-----
                  a1     | b1
                  a1     | b1+
@@ -470,7 +470,7 @@ include ../../../source/skeleton.pug
                 a (a) as ( values ('a1'), ('a2'), ('a4') ),
                 b (b) as ( values ('b1'), ('b1+'), ('b2'), ('b3') )
                 select * from a full join b on regexp_match(a, $$\d+$$) = regexp_match(b, $$\d+$$);
-                   a    |   b    
+                   a    |   b
                 --------+--------
                  a1     | b1
                  a1     | b1+
@@ -488,7 +488,7 @@ include ../../../source/skeleton.pug
         li select 명령 대신 values 목록으로 서브쿼리를 구성할 수도 있다
             +asCode('sql').
                 # select * from (values ('a', 1), ('a', 2)) as x(a, b);
-                 a | b 
+                 a | b
                 ---+---
                  a | 1
                  a | 2
@@ -506,7 +506,7 @@ include ../../../source/skeleton.pug
             +asCode('sql').
                 # \pset null '(null)'
                 # select * from unnest('{1, 2, 3}'::int[], '{a, b}'::text[]) with ordinality as x (a, b);
-                 a |   b    | ordinality 
+                 a |   b    | ordinality
                 ---+--------+------------
                  1 | a      |          1
                  2 | b      |          2
@@ -517,7 +517,7 @@ include ../../../source/skeleton.pug
                     unnest('{1, 2, 3}'::int[]),
                     unnest('{a, b}'::text[])
                 ) with ordinality as x (a, b, c);
-                 a |   b    | c 
+                 a |   b    | c
                 ---+--------+---
                  1 | a      | 1
                  2 | b      | 2
@@ -540,7 +540,7 @@ include ../../../source/skeleton.pug
                     generate_series(1, 3)
                 ) as x(x, y, z)
                 order by 3;
-                   x    |   y    | z 
+                   x    |   y    | z
                 --------+--------+---
                      40 | foo    | 1
                     100 | bar    | 2
@@ -568,7 +568,7 @@ include ../../../source/skeleton.pug
                 select a, b
                 from tmp
                 group by grouping sets (a, b);
-                   a    |   b    
+                   a    |   b
                 --------+--------
                  a      | (null)
                  (null) | b
@@ -581,7 +581,7 @@ include ../../../source/skeleton.pug
                 select a, b
                 from tmp
                 group by cube (a, b);
-                   a    |   b    
+                   a    |   b
                 --------+--------
                  (null) | (null)
                  a      | b
@@ -596,7 +596,7 @@ include ../../../source/skeleton.pug
                 select a, b
                 from tmp
                 group by rollup (a, b);
-                   a    |   b    
+                   a    |   b
                 --------+--------
                  (null) | (null)
                  a      | b
@@ -610,7 +610,7 @@ include ../../../source/skeleton.pug
                 select a, b, c
                 from tmp
                 group by rollup (a, (b, c));
-                   a    |   b    |   c    
+                   a    |   b    |   c
                 --------+--------+--------
                  (null) | (null) | (null)
                  a      | b      | c
@@ -625,7 +625,7 @@ include ../../../source/skeleton.pug
                 from tmp
                 group by distinct grouping sets (cube(a, b), rollup(b, c))
                 order by 1, 2, 3;
-                   a    |   b    |   c    
+                   a    |   b    |   c
                 --------+--------+--------
                  a      | b      | (null)
                  a      | (null) | (null)
@@ -641,7 +641,7 @@ include ../../../source/skeleton.pug
                 from tmp
                 group by cube (a, b), cube (c, d)
                 order by 1, 2, 3, 4;
-                   a    |   b    |   c    |   d    
+                   a    |   b    |   c    |   d
                 --------+--------+--------+--------
                  a      | b      | c      | d
                  a      | b      | c      | (null)
@@ -694,7 +694,7 @@ include ../../../source/skeleton.pug
                 li 뒤에 order by, limit 등을 붙일 수 있다
             +asCode('sql').
                 # values (1), (3), (2) order by 1 limit 2;
-                 column1 
+                 column1
                 ---------
                        1
                        2
@@ -707,7 +707,7 @@ include ../../../source/skeleton.pug
                 INSERT 0 3
 
                 # select * from (values (1), (3), (2)) as x(num);
-                 num 
+                 num
                 -----
                    1
                    3
@@ -717,7 +717,7 @@ include ../../../source/skeleton.pug
                 # with tmp(num) as (values (1), (2), (3))
                 (select * from tmp) union
                 (values (1), (4));
-                 num 
+                 num
                 -----
                    1
                    3
@@ -839,7 +839,7 @@ include ../../../source/skeleton.pug
         ALTER TYPE enum_name RENAME VALUE 'old value' TO 'new value'
 
         # select * from pg_enum;
-          oid  | enumtypid | enumsortorder | enumlabel 
+          oid  | enumtypid | enumsortorder | enumlabel
         -------+-----------+---------------+-----------
          16566 |     16564 |             1 | value1
          16568 |     16564 |             2 | value2
@@ -851,13 +851,13 @@ include ../../../source/skeleton.pug
         li tsvector : 정렬된 어휘소 목록. 정렬과 중복 제거는 자동으로 수행되지만, 정규화는 자동으로 수행되지 않는다
             +asCode('sql').
                 # select 'SQL 표준의 BLOB과 유사한 타입을 bytea로 지원한다'::tsvector;
-                                            tsvector                            
+                                            tsvector
                 ----------------------------------------------------------------
                  'BLOB과' 'SQL' 'bytea로' '유사한' '지원한다' '타입을' '표준의'
                 (1 row)
 
                 # select to_tsvector('SQL 표준의 BLOB과 유사한 타입을 bytea로 지원한다');
-                                                 to_tsvector                                  
+                                                 to_tsvector
                 ------------------------------------------------------------------------------
                  'blob과':3 'bytea로':6 'sql':1 '유사한':4 '지원한다':7 '타입을':5 '표준의':2
                 (1 row)
@@ -873,13 +873,13 @@ include ../../../source/skeleton.pug
                 li 정규화 : to_tsquery('original query')
                     +asCode('sql').
                         # SELECT to_tsvector( 'postgraduate' ) @@ to_tsquery( 'postgres:*' );
-                         ?column? 
+                         ?column?
                         ----------
                          t
                         (1 row)
 
                         # SELECT to_tsvector( 'postgraduate' ), to_tsquery( 'postgres:*' );
-                          to_tsvector  | to_tsquery 
+                          to_tsvector  | to_tsquery
                         ---------------+------------
                          'postgradu':1 | 'postgr':*
                         (1 row)
@@ -899,7 +899,7 @@ include ../../../source/skeleton.pug
                 SELECT 2
 
                 # update test set x['a'][1]['b'] = '1' returning *;
-                            x            
+                            x
                 -------------------------
                  {"a": [null, {"b": 1}]}
                  {"a": [null, {"b": 1}]}
@@ -920,13 +920,13 @@ include ../../../source/skeleton.pug
                         li .** : 재귀적으로 전체 멤버 접근
                             +asCode('sql').
                                 # select jsonb_path_query('{"a":{"b":{"c":1}}}', '$.*');
-                                 jsonb_path_query 
+                                 jsonb_path_query
                                 ------------------
                                  {"b": {"c": 1}}
                                 (1 row)
 
                                 # select jsonb_path_query('{"a":{"b":{"c":1}}}', '$.**');
-                                    jsonb_path_query    
+                                    jsonb_path_query
                                 ------------------------
                                  {"a": {"b": {"c": 1}}}
                                  {"b": {"c": 1}}
@@ -935,12 +935,12 @@ include ../../../source/skeleton.pug
                                 (4 rows)
 
                                 # select jsonb_path_query('[1,[2,[3]]]', '$.*');
-                                 jsonb_path_query 
+                                 jsonb_path_query
                                 ------------------
                                 (0 rows)
 
                                 # select jsonb_path_query('[1,[2,[3]]]', '$.**');
-                                 jsonb_path_query 
+                                 jsonb_path_query
                                 ------------------
                                  [1, [2, [3]]]
                                  1
@@ -953,7 +953,7 @@ include ../../../source/skeleton.pug
                         li [subscript, ...] : 배열 요소 접근
                             +asCode('sql').
                                 # select jsonb_path_query('[1,2,3,4,5]', '$[0, last, 2 to last-1]');
-                                 jsonb_path_query 
+                                 jsonb_path_query
                                 ------------------
                                  1
                                  5
@@ -969,14 +969,14 @@ include ../../../source/skeleton.pug
                         li value.size() : 배열이 아니어도 1 반환됨에 유의
                             +asCode('sql').
                                 # select jsonb_path_query('[]', '$.size()'), jsonb_path_query('[1,2,3]', '$.size()'), jsonb_path_query('{}', '$.size()');
-                                 jsonb_path_query | jsonb_path_query | jsonb_path_query 
+                                 jsonb_path_query | jsonb_path_query | jsonb_path_query
                                 ------------------+------------------+------------------
                                  0                | 3                | 1
                                 (1 row)
                         li value.boolean() : boolean, string, numeric에 한해 boolean 변환
                             +asCode('sql').
                                 # select jsonb_path_query('[0, 1, false, true, "FalsE", "TruE"]', '$[*].boolean()');
-                                 jsonb_path_query 
+                                 jsonb_path_query
                                 ------------------
                                  false
                                  true
@@ -992,7 +992,7 @@ include ../../../source/skeleton.pug
                         li object.keyvalue() : 키-값 쌍 해체
                             +asCode('sql').
                                 # select jsonb_path_query('[{"a":1},{"a":1},{"b":{"c":2}}]', '$[*].keyvalue()');
-                                             jsonb_path_query              
+                                             jsonb_path_query
                                 -------------------------------------------
                                  {"id": 16, "key": "a", "value": 1}
                                  {"id": 40, "key": "a", "value": 1}
@@ -1006,7 +1006,7 @@ include ../../../source/skeleton.pug
                         li 부울 대수 연산 : &amp;&amp;, ||, !, is unknown
                             +asCode('sql').
                                 # select jsonb_path_query('[-1,1,"a"]', '$[*] ? ((@ > 0) is unknown)');
-                                 jsonb_path_query 
+                                 jsonb_path_query
                                 ------------------
                                  "a"
                                 (1 row)
@@ -1022,14 +1022,14 @@ include ../../../source/skeleton.pug
                           { "ISBN": "ISBN2", "title": "title2", "authors": ["author3"], "publishAt": "2010-01-01T00:00:00Z"},
                           { "ISBN": "ISBN3", "title": "title1", "authors": ["author2"], "publishAt": "2020-01-01T00:00:00Z"}
                         ]', '$[*] ? (@.publishAt.timestamp_tz() > "2009-12-31 18:00:00+09".timestamp_tz()) ? (exists(@.authors[*] ? (@ == "author3"))).ISBN');
-                         jsonb_path_query 
+                         jsonb_path_query
                         ------------------
                          "ISBN2"
                         (1 row)
                 li PostgreSQL은 필터에서만 predicate을 이용할 수 있는 SQL/JSON과 다르게, path 자체에서도 허용한다. 이 경우 path 매칭 결과는 단일 boolean 값이다
                     +asCode('sql').
                         # select jsonb_path_query('[1,2,3]', '$[*] > 2'), jsonb_path_query('[1,2,3]', '$[*] > 4'), jsonb_path_query('{}', '$[*] > 2');
-                         jsonb_path_query | jsonb_path_query | jsonb_path_query 
+                         jsonb_path_query | jsonb_path_query | jsonb_path_query
                         ------------------+------------------+------------------
                          true             | false            | null
                         (1 row)
@@ -1053,7 +1053,7 @@ include ../../../source/skeleton.pug
                 SELECT 3
 
                 # update test set x[3:4] = '{3,4}'::int[] returning *, x[-3:4];
-                                  x                   |               x               
+                                  x                   |               x
                 --------------------------------------+-------------------------------
                  [3:4]={3,4}                          | {3,4}
                  {1,2,3,4}                            | {1,2,3,4}
@@ -1068,38 +1068,38 @@ include ../../../source/skeleton.pug
                 li N차원 배열 2개를 연결하는 경우, 왼쪽 배열의 lower bound가 유지된다
             +asCode('sql').
                 # select 1 || '[0:1]={2,3}'::int[] || 4;
-                    ?column?     
+                    ?column?
                 -----------------
                  [0:3]={1,2,3,4}
                 (1 row)
 
                 # select '[3:4]={3,4}'::int[] || '[0:1]={0,1}'::int[];
-                    ?column?     
+                    ?column?
                 -----------------
                  [3:6]={3,4,0,1}
                 (1 row)
             p 미묘한 차이점
             +asCode('sql').
                 # select array_cat('[2:3]={1,2}'::int[], null);
-                  array_cat  
+                  array_cat
                 -------------
                  [2:3]={1,2}
                 (1 row)
 
                 # select array_append('[2:3]={1,2}'::int[], null);
-                   array_append   
+                   array_append
                 ------------------
                  [2:4]={1,2,NULL}
                 (1 row)
 
                 # select '[2:3]={1,2}'::int[] || null;
-                  ?column?   
+                  ?column?
                 -------------
                  [2:3]={1,2}
                 (1 row)
 
                 # select '[2:3]={1,2}'::int[] || null::int;
-                     ?column?     
+                     ?column?
                 ------------------
                  [2:4]={1,2,NULL}
                 (1 row)
@@ -1112,7 +1112,7 @@ include ../../../source/skeleton.pug
                 CREATE TYPE
 
                 # select (row(1, null)::complex).*;
-                 r |   i    
+                 r |   i
                 ---+--------
                  1 | (null)
                 (1 row)
@@ -1123,7 +1123,7 @@ include ../../../source/skeleton.pug
                 CREATE TABLE
 
                 # select (row(null, null)::test).*;
-                   a    |   b    
+                   a    |   b
                 --------+--------
                  (null) | (null)
                 (1 row)
@@ -1132,7 +1132,7 @@ include ../../../source/skeleton.pug
                 INSERT 0 1
 
                 # select test from test;
-                 test  
+                 test
                 -------
                  (1,f)
                 (1 row)
@@ -1162,14 +1162,14 @@ include ../../../source/skeleton.pug
                 -- 또는 select (test.func).* from test;
                 NOTICE:  func called
                 NOTICE:  func called
-                 a | b 
+                 a | b
                 ---+---
                  2 | t
                 (1 row)
 
                 # select (x).* from test, lateral func(test) as x;
                 NOTICE:  func called
-                 a | b 
+                 a | b
                 ---+---
                  2 | t
                 (1 row)
@@ -1187,7 +1187,7 @@ include ../../../source/skeleton.pug
         li 아무것도 포함하지 않는 빈 범위 예. 'empty'::int4range
     +asCode('sql').
         # select '[1, 4)'::int4range @> 1, '[1, 4)'::int4range @> 4;
-         ?column? | ?column? 
+         ?column? | ?column?
         ----------+----------
          t        | f
         (1 row)
@@ -1226,7 +1226,7 @@ include ../../../source/skeleton.pug
         tmp2 as ( select t1.x, t2.x y from tmp1 t1, tmp1 t2 )
         select x, y, x and y as "x and y", x or y as "x or y", not x as "not x"
         from tmp2 order by x desc nulls last, y desc nulls last;
-           x    |   y    | x and y | x or y | not x  
+           x    |   y    | x and y | x or y | not x
         --------+--------+---------+--------+--------
          t      | t      | t       | t      | f
          t      | f      | f       | t      | f
@@ -1420,7 +1420,7 @@ include ../../../source/skeleton.pug
                 li json_value(json[b], jsonpath [passing value as varname [, ...]][ returning data_type ][생략]) : 경로 매칭 결과가 단일 스칼라 값이라면 text 또는 지정 타입으로 반환
                     +asCode('sql').
                         # select jsonb_path_query('[1,2,3,4,5]', '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)', '{"min":2, "max":4}');
-                         jsonb_path_query 
+                         jsonb_path_query
                         ------------------
                          2
                          3
@@ -1428,32 +1428,32 @@ include ../../../source/skeleton.pug
                         (3 rows)
 
                         # select jsonb_path_query_array('[1,2,3,4,5]', '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)', '{"min":2, "max":4}');
-                         jsonb_path_query_array 
+                         jsonb_path_query_array
                         ------------------------
                          [2, 3, 4]
                         (1 row)
 
                         # select jsonb_path_query_first('[1,2,3,4,5]', '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)', '{"min":2, "max":4}');
-                         jsonb_path_query_first 
+                         jsonb_path_query_first
                         ------------------------
                          2
                         (1 row)
 
                         # select json_query('[1,2,3,4,5]'::json, '$[*] ? ($min &lt;= @ &amp;&amp; @ &lt;= $max)' passing 2 as min, 4 as max with conditional wrapper);
-                         json_query 
+                         json_query
                         ------------
                          [2, 3, 4]
                         (1 row)
 
                         # select json_value('[1,2,3,4,5]'::json, '$[2]');
-                         json_value 
+                         json_value
                         ------------
                          3
                         (1 row)
                 li json_exists(json[b], jsonpath [passing value as varname [, ...]]) : 지정 경로에 해당하는 항목이 있는지?
                     +asCode('sql').
                         # select n, json_exists('[1,2,3]'::json, '$[*] ? (@ >= $x)' passing n as x) from generate_series(1, 5) as tmp (n);
-                         n | json_exists 
+                         n | json_exists
                         ---+-------------
                          1 | t
                          2 | t
@@ -1465,13 +1465,13 @@ include ../../../source/skeleton.pug
                 li jsonb @@ jsonpath : 지정 경로에 해당하는 항목이 있는지? PostgreSQL 전용 predicate jsonpath 이용
                     +asCode('sql').
                         # select '[1,2,3]'::jsonb @? '$[*] ? (@ > 0)', '[1,2,3]'::jsonb @? '$[*] ? (@ > 3)';
-                         ?column? | ?column? 
+                         ?column? | ?column?
                         ----------+----------
                          t        | f
                         (1 row)
 
                         # select '[1,2,3]'::jsonb @@ '$[*] > 0', '[1,2,3]'::jsonb @@ '$[*] > 3';
-                         ?column? | ?column? 
+                         ?column? | ?column?
                         ----------+----------
                          t        | f
                         (1 row)
@@ -1527,26 +1527,26 @@ include ../../../source/skeleton.pug
         li range &amp;> range : 전자의 하한이 후자보다 작지 않으면 true
             +asCode('sql').
                 # select '(1, 10]'::numrange &amp;> '[1, 10]'::numrange;
-                 ?column? 
+                 ?column?
                 ----------
                  t
                 (1 row)
 
                 # select '[1, 10]'::numrange &amp;> '(1, 10]'::numrange;
-                 ?column? 
+                 ?column?
                 ----------
                  f
                 (1 row)
         li range -|- range : 두 범위가 빈틈없이 이어지는지?
             +asCode('sql').
                 # select '(3, 10]'::numrange -|- '[1, 3]'::numrange;
-                 ?column? 
+                 ?column?
                 ----------
                  t
                 (1 row)
 
                 # select '[3, 10]'::numrange -|- '[1, 3]'::numrange;
-                 ?column? 
+                 ?column?
                 ----------
                  f
         li range + range : 범위 합치기. 두 범위 사이에 간격이 있으면 에러 발생
@@ -1558,13 +1558,13 @@ include ../../../source/skeleton.pug
         li lower_inc(range) : lower(range)가 범위에 포함되는지?
             +asCode('sql').
                 # select lower('(1, 3)'::int4range), lower_inc('(1, 3)'::int4range);
-                 lower | lower_inc 
+                 lower | lower_inc
                 -------+-----------
                      2 | t
                 (1 row)
 
                 # select lower('(1, 3)'::numrange), lower_inc('(1, 3)'::numrange);
-                 lower | lower_inc 
+                 lower | lower_inc
                 -------+-----------
                      1 | f
                 (1 row)
@@ -1584,14 +1584,14 @@ include ../../../source/skeleton.pug
             +asCode('sql').
                 # select percentile_disc('{0.3,0.6,0.9}'::float[]) within group (order by n)
                 from (values (1), (3), (10), (100)) as x(n);
-                 percentile_disc 
+                 percentile_disc
                 -----------------
                  {3,10,100}
                 (1 row)
 
                 # select percentile_cont('{0.3,0.6,0.9}'::float[]) within group (order by n)
                 from (values (1), (3), (10), (100)) as x(n);
-                 percentile_cont 
+                 percentile_cont
                 -----------------
                  {2.8,8.6,73}
                 (1 row)
@@ -1610,7 +1610,7 @@ include ../../../source/skeleton.pug
                   (values (0), (10), (20), (30)) as x1(n1),
                   (values (10), (20), (10)) as x2(n2)
                 group by n1;
-                 n1 | rank | dense_rank |    percent_rank    | cume_dist 
+                 n1 | rank | dense_rank |    percent_rank    | cume_dist
                 ----+------+------------+--------------------+-----------
                   0 |    1 |          1 |                  0 |      0.25
                  10 |    1 |          1 |                  0 |      0.75
@@ -1643,16 +1643,16 @@ include ../../../source/skeleton.pug
                 from (values ('a', 'b', 'c')) as x(a, b, c)
                 group by cube (a, b, c)
                 order by 1;
-                 grouping | a | b | c 
+                 grouping | a | b | c
                 ----------+---+---+---
                         0 | a | b | c
-                        1 | a | b | 
+                        1 | a | b |
                         2 | a |   | c
-                        3 | a |   | 
+                        3 | a |   |
                         4 |   | b | c
-                        5 |   | b | 
+                        5 |   | b |
                         6 |   |   | c
-                        7 |   |   | 
+                        7 |   |   |
                 (8 rows)
         li 등
 
@@ -1670,7 +1670,7 @@ include ../../../source/skeleton.pug
                 # select n, lag(n, 1, 0) over win, lead(n, 1, 0) over win
                 from (values (1),(3),(2)) as t(n)
                 window win as (order by n);
-                 n | lag | lead 
+                 n | lag | lead
                 ---+-----+------
                  1 |   0 |    2
                  2 |   1 |    3
@@ -1710,7 +1710,7 @@ include ../../../source/skeleton.pug
                   '1 day'::interval,
                   'America/Los_Angeles'
                 ) with ordinality as tmp(t, n);
-                           t            | n 
+                           t            | n
                 ------------------------+---
                  2025-11-01 16:00:00+09 | 1
                  2025-11-02 16:00:00+09 | 2
@@ -1919,7 +1919,7 @@ include ../../../source/skeleton.pug
                 UPDATE 2
 
                 session2=# select * from test;
-                 num 
+                 num
                 -----
                    1
                    2
@@ -1933,7 +1933,7 @@ include ../../../source/skeleton.pug
                 DELETE 0
 
                 session2=# select * from test;
-                 num 
+                 num
                 -----
                    2
                    3
@@ -2115,7 +2115,7 @@ include ../../../source/skeleton.pug
                 li rows : 이 노드가 출력할 것으로 예상되는 행 수
                 li width : 이 노드가 출력할 것으로 예상되는 행의 평균 바이트 크기
         li analyze는 무작위 표본을 이용하므로, analyze 실행마다 explain의 추정치가 변경될 수 있다
-        li 순차 스캔은 기본적으로 랜덤 스캔보다 
+        li 순차 스캔은 기본적으로 랜덤 스캔보다
         li limit 사용으로 계획이 달라지는 예시
             ul
                 li limit 없는 경우
@@ -2292,7 +2292,7 @@ include ../../../source/skeleton.pug
         li 그린 환경 &gt; 생성 완료 후 복제 슬롯 상태 기록
             +asCode('sql').
                 select aurora_volume_logical_start_lsn();
-                aurora_volume_logical_start_lsn 
+                aurora_volume_logical_start_lsn
                 ---------------------------------
                 0/CEDFF50
                 (1 row)
@@ -2301,13 +2301,13 @@ include ../../../source/skeleton.pug
         li 그린 환경 &gt;  원하는 작업(예. 메이저 버전 업그레이드: 약 15분) 적용
         li 그린 환경 &gt; 구독 생성
             +asCode('sql').
-                create subscription subscription_name 
-                connection 'postgres://postgres:xxx@dbms-url/db_name' publication publication_name 
+                create subscription subscription_name
+                connection 'postgres://postgres:xxx@dbms-url/db_name' publication publication_name
                 with (copy_data = false, create_slot = false, enabled = false, connect = true, slot_name = 'replication_slot_name');
 
                 -- 복제 소스 확인
                 select * from pg_replication_origin;
-                 roident |  roname   
+                 roident |  roname
                 ---------+-----------
                        1 | pg_274489
                 (1 row)
@@ -2394,7 +2394,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select func();
-                  func  
+                  func
                 --------
                  (null)
                 (1 row)
@@ -2406,7 +2406,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select func();
-                 func 
+                 func
                 ------
                     2
                 (1 row)
@@ -2417,7 +2417,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select * from func() as t(num1 int, num2 int);
-                 num1 | num2 
+                 num1 | num2
                 ------+------
                     2 |    2
                     3 |    3
@@ -2431,7 +2431,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select (func()).f1;
-                 f1 
+                 f1
                 ----
                   2
                   3
@@ -2440,7 +2440,7 @@ include ../../../source/skeleton.pug
                 (4 rows)
 
                 # select * from func();
-                 f1 | f2 
+                 f1 | f2
                 ----+----
                   2 |  2
                   3 |  3
@@ -2454,7 +2454,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select func();
-                  func  
+                  func
                 --------
                  (null)
                 (1 row)
@@ -2469,7 +2469,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select func(1, 2);
-                 func  
+                 func
                 -------
                  1,1,2
                 (1 row)
@@ -2481,7 +2481,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select func(2);
-                 func 
+                 func
                 ------
                     4
                 (1 row)
@@ -2491,7 +2491,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select * from func(2);
-                 txt1 | column2 
+                 txt1 | column2
                 ------+---------
                  2    | 4
                 (1 row)
@@ -2501,7 +2501,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select * from func(2);
-                 column1 | column2 
+                 column1 | column2
                 ---------+---------
                        1 |       2
                        2 |       4
@@ -2515,7 +2515,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select * from func(1, 3, 2);
-                 min | max 
+                 min | max
                 -----+-----
                    1 |   3
                 (1 row)
@@ -2527,7 +2527,7 @@ include ../../../source/skeleton.pug
                 HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 
                 # select * from func(variadic array[1, 3, 2]);
-                 min | max 
+                 min | max
                 -----+-----
                    1 |   3
                 (1 row)
@@ -2539,7 +2539,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select func(1);
-                 func  
+                 func
                 -------
                  1,2,3
                 (1 row)
@@ -2554,7 +2554,7 @@ include ../../../source/skeleton.pug
                 $$ language sql;
 
                 # select n, func(n) from generate_series(0, 2) n;
-                 n | func 
+                 n | func
                 ---+------
                  1 |    1
                  2 |    1
@@ -2562,7 +2562,7 @@ include ../../../source/skeleton.pug
                 (3 rows)
 
                 # select n, func(n), func(n+1) from generate_series(0, 2) n;
-                 n |  func  | func 
+                 n |  func  | func
                 ---+--------+------
                  0 | (null) |    1
                  1 |      1 |    1
@@ -2678,7 +2678,7 @@ include ../../../source/skeleton.pug
         NOTICE:  outer num1 = 1
         NOTICE:  local num2 = 20
         NOTICE:  outer num2 = 2
-         func 
+         func
         ------
             3
         (1 row)
@@ -2882,7 +2882,7 @@ include ../../../source/skeleton.pug
             -- 에러가 발생한 경우에만 실행된다
             when condition [ or condition ... ] then
                 ...
-            -- 에러를 잡지 못하면 다시 전파된다                    
+            -- 에러를 잡지 못하면 다시 전파된다
     h4 스택 트레이스
     +asCode('sql') GET DIAGNOSTICS stack = PG_CONTEXT;
 
@@ -2980,7 +2980,7 @@ include ../../../source/skeleton.pug
         li \bind parameter ... : 쿼리 매개변수 설정
             +asCode('sql').
                 # select $1::int, $2::text \bind 123 `whoami` \g
-                 int4 | text 
+                 int4 | text
                 ------+------
                   123 | wiz
                 (1 row)
@@ -2989,7 +2989,7 @@ include ../../../source/skeleton.pug
                 # select $1::int, $2::text \parse stmt1
 
                 # \bind_named stmt1 123 `whoami` \g
-                 int4 | text 
+                 int4 | text
                 ------+------
                   123 | wiz
                 (1 row)
@@ -3002,10 +3002,10 @@ include ../../../source/skeleton.pug
             +asCode('sql').
                 # with tmp(n1, n2, n3) as (values (1, 'f1', '1-1'), (1, 'f2', '1-2'), (2, 'f1', '2-1'))
                 # select * from tmp \crosstabview
-                 n1 | f1  | f2  
+                 n1 | f1  | f2
                 ----+-----+-----
                   1 | 1-1 | 1-2
-                  2 | 2-1 | 
+                  2 | 2-1 |
                 (2 rows)
         li \d...[S+] : 정의 탐색
             ul
@@ -3577,12 +3577,12 @@ include ../../../source/skeleton.pug
                 li 현재 = 연산자로만 검색 가능
                 li null 검색 미지원
 
-    h2: +asA('https://www.postgresql.org/docs/current/btree_gin.html')
+    h2: +asA('https://www.postgresql.org/docs/current/btree-gin.html')
     ul
         li 여러 타입에 대해 B-트리와 동등한 동작을 구현하는 GIN 연산자 클래스를 제공한다
         li GIN 인덱스 컬럼과 B-트리 인덱스 컬럼을 따로 검사해 비트맵 AND로 결합하는 것보다, 다중 컬럼 GIN 인덱스를 이용하는 게 효율적일 수 있다
 
-    h2: +asA('https://www.postgresql.org/docs/current/btree_gist.html')
+    h2: +asA('https://www.postgresql.org/docs/current/btree-gist.html')
     ul
         li 여러 타입에 대해 B-트리와 동등한 동작을 구현하는 GiST 연산자 클래스를 제공한다
         li 일부 컬럼은 GiST로만 인덱싱 가능하지만 나머지는 단순한 데이터 타입인 다중 컬럼 GiST 인덱스가 필요한 경우 유용하다
@@ -3606,7 +3606,7 @@ include ../../../source/skeleton.pug
                 li 내부 표현에서는 연산 편의를 위해 두 꼭짓점 각 차원의 min/max를 분리하여 저장한다
                     +asCode('sql').
                         # select '(1, -2, 3), (-4, 5, -6)'::cube = '(-4, -2, -6), (1, 5, 3)'::cube;
-                         ?column? 
+                         ?column?
                         ----------
                          t
                         (1 row)
@@ -3616,7 +3616,7 @@ include ../../../source/skeleton.pug
                         #   n = 2k - 1 : k번째 차원의 하한
                         #   n = 2k : k번째 차원의 상한
                         # select c -> n, c ~> n from (values ('(1, -2, 3), (-4, 5, -6)'::cube)) x(c), generate_series(1, 6) n;
-                         ?column? | ?column? 
+                         ?column? | ?column?
                         ----------+----------
                                 1 |       -4
                                -2 |        1
@@ -3649,7 +3649,7 @@ include ../../../source/skeleton.pug
         li difference(text, text) : 0(일치 없음) ~ 4(완전 일치)
     +asCode('sql').
         # SELECT soundex('Anne'), soundex('Ann'), difference('Anne', 'Ann');
-         soundex | soundex | difference 
+         soundex | soundex | difference
         ---------+---------+------------
          A500    | A500    |          4
         (1 row)

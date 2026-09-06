@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 300" width="660" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">한 집단의 처치 전과 후를 이은 선 하나</title><desc id="d">왼쪽 점에서 오른쪽 점으로 선이 올라가고 그 세로 간격에 전후 차이라는 딱지가 붙어 있다. 선 위쪽에는 그 사이에 함께 바뀐 것들이 적혀 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="330" y="28" text-anchor="middle" class="sm bold ink">한 집단을 전과 후로만 견줄 때</text><rect x="30" y="44" width="600" height="176" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><path d="M70 198 L610 198" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="70" y="66" text-anchor="start" class="sm ink2">결과</text><path d="M190 60 L190 198" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 3" fill="none"/><path d="M470 60 L470 198" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 3" fill="none"/><text x="190" y="214" text-anchor="middle" class="sm ink2">바꾸기 전</text><text x="470" y="214" text-anchor="middle" class="sm ink2">바꾼 뒤</text><path d="M190 150 L470 150" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 3" fill="none"/><path d="M190 150 L470 86" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round"/><circle cx="190" cy="150" r="4.5" fill="var(--s1)"/><circle cx="470" cy="86" r="4.5" fill="var(--s1)"/><text x="150" y="154" text-anchor="end" class="sm ink2">처치집단</text><path d="M496 86 L496 150" stroke="var(--s3)" stroke-width="3.5" stroke-linecap="round" fill="none"/><text x="506" y="122" text-anchor="start" class="sm ink2">전후 차이</text><text x="330" y="74" text-anchor="middle" class="sm ink2">그 사이에 계절도, 학년도, 다른 제도도 함께 바뀐다</text><text x="330" y="250" text-anchor="middle" class="sm bold ink">이 차이 안에 처치의 몫과 시간이 지나며 생긴 몫이 함께 들어 있다</text><text x="330" y="274" text-anchor="middle" class="sm bold ink">둘을 가를 수단이 이 그림 안에 없다</text>
+</svg>

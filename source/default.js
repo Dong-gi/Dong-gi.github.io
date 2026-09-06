@@ -6,7 +6,7 @@
 /**
  * posts-compressed.json 의 항목. category 는 다중 소속을 담는 배열이다.
  * @typedef {Object} Post
- * @property {string[]} category
+ * @property {string} category
  * @property {string} file
  * @property {string} title
  */
@@ -48,7 +48,7 @@ function stringHashCode(str) {
 }
 
 /**
- * @param {string} str 
+ * @param {string} str
  */
 function asNodes(str) {
     const template = document.createElement('template');
@@ -105,7 +105,7 @@ function observeIntersectionOnce(iter, callback) {
 }
 
 /**
- * @param {HTMLElement} element 
+ * @param {HTMLElement} element
  */
 function calcOffset(element) {
     let result = {
@@ -189,7 +189,7 @@ function onHoverElementMouseleave(e) {
 /**
  * * target 요소에 마우스가 들어가면, content를 표시
  * * [테스트 페이지](https://4joy.is-a.dev/posts/dev/python/standard.html#pos-1165156425)
- * @param {HTMLElement} target 
+ * @param {HTMLElement} target
  * @param {HTMLElement} content
  */
 function addHoverContent(target, content) {
@@ -212,7 +212,7 @@ function addHoverContent(target, content) {
 }
 
 /**
- * @param {string} text 
+ * @param {string} text
  * @param {string} [fileName] default 'text.txt'
  */
 function downloadText(text, fileName) {
@@ -494,10 +494,7 @@ window.addEventListener('load', async () => {
         fetch('/source/posts-compressed.json').then(res => {
             return res.json()
         }).then(async (/** @type {Post[]} */ list) => {
-            /* 다중 소속은 카테고리마다 한 항목으로 펼친다. 트리의 각 노드가 문서를 따로 갖는다. */
-            posts = list
-                .flatMap(post => post.category.map(category => ({ ...post, category })))
-                .sort((post1, post2) => post1.category.localeCompare(post2.category) || post1.title.localeCompare(post2.title));
+            posts = list.sort((post1, post2) => post1.category.localeCompare(post2.category) || post1.title.localeCompare(post2.title));
 
             await Promise.all([updatePostList(), updateMarkerList()]);
             // .pos-span 이 이제 생겼다. 읽기 앵커가 그것을 쓰므로 다시 잡아 준다.
@@ -507,24 +504,12 @@ window.addEventListener('load', async () => {
 
     window.onpopstate();
 
-    if (navigator.serviceWorker != null) {
-        if (navigator.serviceWorker.controller) {
-            console.log('Offline service worker working...')
-        } else {
-            navigator.serviceWorker
-                .register("/offline-service-worker.js", {
-                    scope: '/'
-                })
-                .then(() => console.log("Offline service worker registered"));
-        }
-    }
-
     /* 하이라이팅 지원 목록 */
     console.log(hljs.listLanguages())
 })
 
 /**
- * @param {HTMLElement} target 
+ * @param {HTMLElement} target
  */
 function goto(target) {
     console.log('goto > ', target)
@@ -651,7 +636,7 @@ async function updateMarkerList() {
 }
 
 /**
- * @param {HTMLElement} marker 
+ * @param {HTMLElement} marker
  */
 function makeMarkerName(marker) {
     switch (marker.tagName) {
@@ -668,9 +653,9 @@ function makeMarkerName(marker) {
 }
 
 /**
- * @param {HTMLDivElement} div 
- * @param {string} lan 
- * @param {string} text 
+ * @param {HTMLDivElement} div
+ * @param {string} lan
+ * @param {string} text
  * @param {string} [displayRange] 예. [1, 10, 21, 30] => 1 ~ 10라인, 21 ~ 30라인 표시
  */
 /**

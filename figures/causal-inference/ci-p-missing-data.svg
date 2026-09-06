@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 280" width="660" height="280" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">두 칸이 다 찬 표에서 한 칸씩 지우면 실제 자료가 된다</title><desc id="d">왼쪽은 두 잠재결과가 모두 적힌 가상의 표, 오른쪽은 화분마다 한 칸이 물음표인 표</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="155" y="40" text-anchor="middle" class="sm bold ink">있다고 치는 표</text><rect x="30" y="52" width="250" height="195" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="55" y="80" text-anchor="middle" class="sm bold ink">화분</text><text x="140" y="80" text-anchor="middle" class="sm ink2">처치했을 때</text><text x="232" y="80" text-anchor="middle" class="sm ink2">안 했을 때</text><text x="55" y="115" text-anchor="middle" class="sm ink2">가</text><text x="140" y="115" text-anchor="middle" class="sm bold ink">9</text><text x="232" y="115" text-anchor="middle" class="sm bold ink">6</text><text x="55" y="148" text-anchor="middle" class="sm ink2">나</text><text x="140" y="148" text-anchor="middle" class="sm bold ink">8</text><text x="232" y="148" text-anchor="middle" class="sm bold ink">6</text><text x="55" y="181" text-anchor="middle" class="sm ink2">다</text><text x="140" y="181" text-anchor="middle" class="sm bold ink">5</text><text x="232" y="181" text-anchor="middle" class="sm bold ink">4</text><text x="55" y="214" text-anchor="middle" class="sm ink2">라</text><text x="140" y="214" text-anchor="middle" class="sm bold ink">6</text><text x="232" y="214" text-anchor="middle" class="sm bold ink">4</text><path d="M292 140 L364 140" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><text x="332" y="122" text-anchor="middle" class="sm ink2">한 칸이 지워진다</text><text x="505" y="40" text-anchor="middle" class="sm bold ink">실제로 손에 쥔 표</text><rect x="380" y="52" width="250" height="195" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="405" y="80" text-anchor="middle" class="sm bold ink">화분</text><text x="490" y="80" text-anchor="middle" class="sm ink2">처치했을 때</text><text x="582" y="80" text-anchor="middle" class="sm ink2">안 했을 때</text><text x="405" y="115" text-anchor="middle" class="sm ink2">가</text><text x="490" y="115" text-anchor="middle" class="sm bold ink">9</text><text x="582" y="115" text-anchor="middle" class="sm ink2">?</text><text x="405" y="148" text-anchor="middle" class="sm ink2">나</text><text x="490" y="148" text-anchor="middle" class="sm bold ink">8</text><text x="582" y="148" text-anchor="middle" class="sm ink2">?</text><text x="405" y="181" text-anchor="middle" class="sm ink2">다</text><text x="490" y="181" text-anchor="middle" class="sm ink2">?</text><text x="582" y="181" text-anchor="middle" class="sm bold ink">4</text><text x="405" y="214" text-anchor="middle" class="sm ink2">라</text><text x="490" y="214" text-anchor="middle" class="sm ink2">?</text><text x="582" y="214" text-anchor="middle" class="sm bold ink">4</text><text x="330" y="267" text-anchor="middle" class="sm bold ink">인과추론은 지워진 칸을 두고 하는 일이다</text>
+</svg>

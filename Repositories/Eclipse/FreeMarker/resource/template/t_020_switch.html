@@ -1,3 +1,0 @@
-<#list ['r', 'w', 'x', 's'] as flag>
-  ${flag?switch('r', 'readable', 'w' 'writable', 'x', 'executable', 'unknown flag: ' + flag)}
-</#list>

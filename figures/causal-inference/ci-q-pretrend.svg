@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 320" width="700" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">처치 전 세 시점에서 나란하던 두 선과 처치 뒤의 갈래들</title><desc id="d">왼쪽 절반에서 두 선이 같은 기울기로 올라간다. 처치 시점 이후로는 실선 하나와 서로 다른 기울기의 점선 둘이 갈라져 나간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="350" y="28" text-anchor="middle" class="sm bold ink">사전 추세가 나란했다는 것</text><rect x="25" y="44" width="650" height="196" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><path d="M60 220 L660 220" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><text x="60" y="66" text-anchor="start" class="sm ink2">결과</text><path d="M350 58 L350 220" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 3" fill="none"/><text x="110" y="236" text-anchor="middle" class="sm ink2">세 해 전</text><text x="190" y="236" text-anchor="middle" class="sm ink2">두 해 전</text><text x="270" y="236" text-anchor="middle" class="sm ink2">한 해 전</text><text x="350" y="254" text-anchor="middle" class="sm ink2">처치가 시작된 시점</text><text x="470" y="236" text-anchor="middle" class="sm ink2">그 뒤</text><path d="M110 196 L190 186 L270 176 L350 166 L470 146" fill="none" stroke="var(--s2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="110" cy="196" r="4.5" fill="var(--s2)"/><circle cx="190" cy="186" r="4.5" fill="var(--s2)"/><circle cx="270" cy="176" r="4.5" fill="var(--s2)"/><circle cx="350" cy="166" r="4.5" fill="var(--s2)"/><circle cx="470" cy="146" r="4.5" fill="var(--s2)"/><text x="490" y="150" text-anchor="start" class="sm ink2">대조집단</text><path d="M110 166 L190 156 L270 146 L350 136 L470 76" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="110" cy="166" r="4.5" fill="var(--s1)"/><circle cx="190" cy="156" r="4.5" fill="var(--s1)"/><circle cx="270" cy="146" r="4.5" fill="var(--s1)"/><circle cx="350" cy="136" r="4.5" fill="var(--s1)"/><circle cx="470" cy="76" r="4.5" fill="var(--s1)"/><text x="96" y="160" text-anchor="end" class="sm ink2">처치집단</text><path d="M350 136 L470 116" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="6 5"/><circle cx="470" cy="116" r="4.5" fill="var(--s1)"/><path d="M350 136 L470 98" fill="none" stroke="var(--s3)" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="2 4"/><circle cx="470" cy="98" r="4.5" fill="var(--s3)"/><path d="M60 272 L90 272" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round"/><text x="96" y="276" text-anchor="start" class="sm ink2">처치집단이 실제로 간 길</text><path d="M300 272 L330 272" fill="none" stroke="var(--s1)" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="6 5"/><text x="336" y="276" text-anchor="start" class="sm ink2">대조와 나란했다면</text><path d="M520 272 L550 272" fill="none" stroke="var(--s3)" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="2 4"/><text x="556" y="276" text-anchor="start" class="sm ink2">더 가팔랐다면</text><text x="350" y="302" text-anchor="middle" class="sm bold ink">왼쪽 절반이 나란한 것은 자료가 보여 준다. 오른쪽 점선 가운데 어느 것인지는 보여 주지 않는다</text>
+</svg>

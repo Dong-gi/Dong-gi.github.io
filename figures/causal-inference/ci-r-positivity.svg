@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 250" width="660" height="250" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">두 자리 모두에서 양쪽이 나온 배정과 자리마다 한쪽만 있는 자료</title><desc id="d">왼쪽은 자리 ㄱ 과 자리 ㄴ 에 처치와 대조가 둘 다 있고, 오른쪽은 자리 ㄱ 이 전부 처치이고 자리 ㄴ 이 전부 대조다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="175" y="40" text-anchor="middle" class="sm bold ink">동전으로 정했을 때</text><rect x="30" y="52" width="290" height="148" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="100" y="88" text-anchor="middle" class="sm ink2">자리 ㄱ</text><text x="232" y="88" text-anchor="middle" class="sm bold ink">처치 2 · 대조 2</text><text x="100" y="124" text-anchor="middle" class="sm ink2">자리 ㄴ</text><text x="232" y="124" text-anchor="middle" class="sm bold ink">처치 2 · 대조 2</text><text x="175" y="176" text-anchor="middle" class="sm bold ink">어느 자리에서도 양쪽이 다 있다</text><text x="495" y="40" text-anchor="middle" class="sm bold ink">관찰한 자료였을 때</text><rect x="340" y="52" width="290" height="148" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="410" y="88" text-anchor="middle" class="sm ink2">자리 ㄱ</text><text x="542" y="88" text-anchor="middle" class="sm bold ink">처치 4 · 대조 0</text><text x="410" y="124" text-anchor="middle" class="sm ink2">자리 ㄴ</text><text x="542" y="124" text-anchor="middle" class="sm bold ink">처치 0 · 대조 4</text><text x="485" y="176" text-anchor="middle" class="sm bold ink">어느 자리에도 견줄 상대가 없다</text><text x="330" y="228" text-anchor="middle" class="sm bold ink">오른쪽에서는 자료를 늘려도 빈 칸이 채워지지 않는다</text>
+</svg>

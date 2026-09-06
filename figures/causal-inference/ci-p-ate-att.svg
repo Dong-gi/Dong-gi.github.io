@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 250" width="640" height="250" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">여섯 대상 가운데 셋만 처치를 받았고 평균을 어느 범위에서 내는지가 다르다</title><desc id="d">바깥 칸은 여섯 모두를, 안쪽 칸은 처치를 받은 셋만 둘러싼다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="40" y="66" width="545" height="142" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><rect x="52" y="78" width="262" height="118" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="312" y="56" text-anchor="middle" class="sm bold ink">평균처치효과는 이 여섯 모두의 평균</text><text x="183" y="98" text-anchor="middle" class="sm bold ink">처치를 받은 대상들</text><ellipse cx="105" cy="140" rx="22" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="105" y="140" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="105" dy="4.5">가</tspan></text><text x="105" y="182" text-anchor="middle" class="sm ink2">처치</text><ellipse cx="185" cy="140" rx="22" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="185" y="140" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="185" dy="4.5">나</tspan></text><text x="185" y="182" text-anchor="middle" class="sm ink2">처치</text><ellipse cx="265" cy="140" rx="22" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="265" y="140" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="265" dy="4.5">다</tspan></text><text x="265" y="182" text-anchor="middle" class="sm ink2">처치</text><ellipse cx="375" cy="140" rx="22" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="375" y="140" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="375" dy="4.5">라</tspan></text><text x="375" y="182" text-anchor="middle" class="sm ink2">대조</text><ellipse cx="455" cy="140" rx="22" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="455" y="140" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="455" dy="4.5">마</tspan></text><text x="455" y="182" text-anchor="middle" class="sm ink2">대조</text><ellipse cx="535" cy="140" rx="22" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="535" y="140" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="535" dy="4.5">바</tspan></text><text x="535" y="182" text-anchor="middle" class="sm ink2">대조</text><path d="M183 220 L183 204" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><text x="183" y="234" text-anchor="middle" class="sm bold ink">처치집단 평균처치효과는 이 셋의 평균</text>
+</svg>

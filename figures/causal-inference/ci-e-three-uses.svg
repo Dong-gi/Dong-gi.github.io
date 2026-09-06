@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 255" width="700" height="255" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">성향점수를 쓰는 세 가지 방법</title><desc id="d">왼쪽 칸은 구간 셋으로 나뉘어 있고, 가운데 칸은 위아래 점 셋씩이 선으로 이어져 있으며, 오른쪽 칸은 작은 원에서 큰 원으로 화살표가 간다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="20" y="55" width="200" height="140" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="120" y="44" text-anchor="middle" class="sm bold ink">층화</text><rect x="45" y="70" width="150" height="32" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="120" y="90" text-anchor="middle" class="sm bold ink">점수 낮은 구간</text><rect x="45" y="108" width="150" height="32" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="120" y="128" text-anchor="middle" class="sm bold ink">가운데 구간</text><rect x="45" y="146" width="150" height="32" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="120" y="166" text-anchor="middle" class="sm bold ink">점수 높은 구간</text><text x="120" y="212" text-anchor="middle" class="sm ink2">구간 안에서 견주고 합친다</text><rect x="250" y="55" width="200" height="140" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="350" y="44" text-anchor="middle" class="sm bold ink">매칭</text><text x="272" y="99" text-anchor="middle" class="sm ink2">처치</text><text x="272" y="159" text-anchor="middle" class="sm ink2">대조</text><path d="M305 95 L308 155" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><path d="M350 95 L347 155" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><path d="M398 95 L404 155" stroke="var(--ink2)" stroke-width="1.2" fill="none"/><circle cx="305" cy="95" r="7" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.4"/><circle cx="350" cy="95" r="7" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.4"/><circle cx="398" cy="95" r="7" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.4"/><circle cx="308" cy="155" r="7" fill="var(--s2)" fill-opacity="0.5" stroke="var(--s2)" stroke-width="1.4"/><circle cx="347" cy="155" r="7" fill="var(--s2)" fill-opacity="0.5" stroke="var(--s2)" stroke-width="1.4"/><circle cx="404" cy="155" r="7" fill="var(--s2)" fill-opacity="0.5" stroke="var(--s2)" stroke-width="1.4"/><text x="350" y="212" text-anchor="middle" class="sm ink2">점수가 가까운 짝을 짓는다</text><rect x="480" y="55" width="200" height="140" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="580" y="44" text-anchor="middle" class="sm bold ink">역확률 가중</text><circle cx="525" cy="125" r="9" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.4"/><path d="M545 125 L577 125" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/><circle cx="625" cy="125" r="26" fill="var(--s1)" fill-opacity="0.5" stroke="var(--s1)" stroke-width="1.4"/><text x="580" y="212" text-anchor="middle" class="sm ink2">한 사람을 여럿처럼 센다</text><text x="350" y="240" text-anchor="middle" class="sm bold ink">셋이 같은 물음에 답하지 않는다</text>
+</svg>

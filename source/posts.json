@@ -1,1807 +1,912 @@
 [
     {
-        "category": [
-            "개발 자료/운영"
-        ],
+        "category": "개발 자료/운영",
         "file": "dev/aws.html",
         "title": "AWS"
     },
     {
-        "category": [
-            "개발 자료/운영"
-        ],
+        "category": "개발 자료/운영",
         "file": "dev/docker.html",
         "title": "Container"
     },
     {
-        "category": [
-            "개발 자료/도구"
-        ],
-        "file": "dev/git.html",
-        "title": "Git"
-    },
-    {
-        "category": [
-            "개발 자료/도구"
-        ],
-        "file": "dev/gradle.html",
-        "title": "Gradle"
-    },
-    {
-        "category": [
-            "개발 자료/운영"
-        ],
+        "category": "개발 자료/운영",
         "file": "dev/linux.html",
         "title": "Linux"
     },
     {
-        "category": [
-            "개발 자료/운영"
-        ],
+        "category": "개발 자료/운영",
         "file": "dev/nginx.html",
         "title": "Nginx"
     },
     {
-        "category": [
-            "개발 자료/도구"
-        ],
-        "file": "dev/sdkman.html",
-        "title": "SDKMAN; The Software Development Kit Manager"
-    },
-    {
-        "category": [
-            "개발 자료/개념"
-        ],
+        "category": "개발 자료/개념",
         "file": "dev/secure-coding.html",
         "title": "개발 보안"
     },
     {
-        "category": [
-            "개발 자료/데이터"
-        ],
+        "category": "개발 자료/데이터",
         "file": "dev/DB/concept.html",
         "title": "DB 기초 개념"
     },
     {
-        "category": [
-            "개발 자료/데이터"
-        ],
-        "file": "dev/DB/mongodb.html",
-        "title": "MongoDB"
-    },
-    {
-        "category": [
-            "개발 자료/데이터"
-        ],
-        "file": "dev/DB/mysql.html",
-        "title": "MySQL"
-    },
-    {
-        "category": [
-            "개발 자료/데이터"
-        ],
+        "category": "개발 자료/데이터",
         "file": "dev/DB/PostgreSQL.html",
         "title": "PostgreSQL"
     },
     {
-        "category": [
-            "개발 자료/데이터"
-        ],
-        "file": "dev/DB/RabbitMQ.html",
-        "title": "RabbitMQ"
-    },
-    {
-        "category": [
-            "개발 자료/데이터"
-        ],
+        "category": "개발 자료/데이터",
         "file": "dev/DB/redis.html",
         "title": "Redis/Valkey"
     },
     {
-        "category": [
-            "개발 자료/웹"
-        ],
+        "category": "개발 자료/웹",
         "file": "dev/web/css.html",
         "title": "CSS"
     },
     {
-        "category": [
-            "개발 자료/웹"
-        ],
+        "category": "개발 자료/웹",
         "file": "dev/web/html.html",
         "title": "HTML"
     },
     {
-        "category": [
-            "개발 자료/웹"
-        ],
+        "category": "개발 자료/웹",
         "file": "dev/web/network.html",
         "title": "Network"
     },
     {
-        "category": [
-            "개발 자료/JavaScript/라이브러리"
-        ],
-        "file": "dev/web/capo.js.html",
-        "title": "capo.js"
-    },
-    {
-        "category": [
-            "개발 자료/C#"
-        ],
-        "file": "dev/dotnet/csharp.html",
-        "title": "C#.NET"
-    },
-    {
-        "category": [
-            "개발 자료/C#"
-        ],
-        "file": "dev/dotnet/wpf.html",
-        "title": "WPF"
-    },
-    {
-        "category": [
-            "개발 자료/JavaScript/언어"
-        ],
+        "category": "개발 자료/JavaScript/언어",
         "file": "dev/JavaScript/JavaScript.html",
         "title": "JavaScript"
     },
     {
-        "category": [
-            "개발 자료/JavaScript/언어"
-        ],
+        "category": "개발 자료/JavaScript/언어",
         "file": "dev/JavaScript/Base64.html",
         "title": "Base64"
     },
     {
-        "category": [
-            "개발 자료/JavaScript/언어"
-        ],
+        "category": "개발 자료/JavaScript/언어",
         "file": "dev/JavaScript/Browser.html",
         "title": "브라우저 JavaScript"
     },
     {
-        "category": [
-            "개발 자료/JavaScript/라이브러리"
-        ],
-        "file": "dev/JavaScript/jQuery.html",
-        "title": "jQuery"
-    },
-    {
-        "category": [
-            "개발 자료/JavaScript/Node"
-        ],
+        "category": "개발 자료/JavaScript/Node",
         "file": "dev/JavaScript/node.html",
         "title": "Node"
     },
     {
-        "category": [
-            "개발 자료/JavaScript/Node"
-        ],
+        "category": "개발 자료/JavaScript/Node",
         "file": "dev/JavaScript/node-test.html",
         "title": "node:test"
     },
     {
-        "category": [
-            "개발 자료/JavaScript/Node"
-        ],
+        "category": "개발 자료/JavaScript/Node",
         "file": "dev/JavaScript/node-globals.html",
         "title": "Node Globals"
     },
     {
-        "category": [
-            "개발 자료/JavaScript/Node"
-        ],
+        "category": "개발 자료/JavaScript/Node",
         "file": "dev/JavaScript/npm-zx.html",
         "title": "npm zx : bash 스크립트 실행 간편화"
     },
     {
-        "category": [
-            "개발 자료/JavaScript/Node"
-        ],
-        "file": "dev/JavaScript/npm-youtubei.js.html",
-        "title": "npm youtubei.js : YouTube 클라이언트"
-    },
-    {
-        "category": [
-            "개발 자료/Java/Android"
-        ],
-        "file": "dev/JVM/android.html",
-        "title": "Android"
-    },
-    {
-        "category": [
-            "개발 자료/Java/언어"
-        ],
-        "file": "dev/JVM/basic.html",
-        "title": "Java 시작하기"
-    },
-    {
-        "category": [
-            "개발 자료/Java/언어"
-        ],
-        "file": "dev/JVM/groovy.html",
-        "title": "Groovy"
-    },
-    {
-        "category": [
-            "개발 자료/Java/언어"
-        ],
-        "file": "dev/JVM/javax.annotation.processing.html",
-        "title": "Annotation Processing API"
-    },
-    {
-        "category": [
-            "개발 자료/Java/언어"
-        ],
-        "file": "dev/JVM/jni.html",
-        "title": "Java Native Interface"
-    },
-    {
-        "category": [
-            "개발 자료/Java/언어"
-        ],
-        "file": "dev/JVM/performance.html",
-        "title": "JVM 옵션 및 성능 관련사항"
-    },
-    {
-        "category": [
-            "개발 자료/Java/언어"
-        ],
-        "file": "dev/JVM/version.html",
-        "title": "Java 버전별 추가사항"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/apache.commons.collections.html",
-        "title": "Apache Commons Collections"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/apache.commons.lang.html",
-        "title": "Apache Commons Lang"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/apache.commons.math.html",
-        "title": "Apache Commons Math"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/apache.commons.rng.html",
-        "title": "Apache Commons RNG"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/com.sun.nio.sctp.html",
-        "title": "com.sun.nio.sctp"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/freemarker_built_in.html",
-        "title": "FreeMarker Built-in 목록"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/freemarker_programming_guide.html",
-        "title": "FreeMarker 프로그래밍 가이드"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/freemarker_template_guide.html",
-        "title": "FreeMarker 템플릿 작성 가이드"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/freemarker_xml_guide.html",
-        "title": "FreeMarker XML 처리 가이드"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/gson.html",
-        "title": "Gson"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/guava.html",
-        "title": "Guava"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/jackson.html",
-        "title": "Jackson"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/java.base.html",
-        "title": "java.base 모듈"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/java.net.http.html",
-        "title": "java.net.http 모듈"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/logback.html",
-        "title": "Logback with SLF4J"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/lombok.html",
-        "title": "lombok"
-    },
-    {
-        "category": [
-            "개발 자료/Java/웹"
-        ],
-        "file": "dev/JVM/java_ee.html",
-        "title": "Jakarta EE"
-    },
-    {
-        "category": [
-            "개발 자료/Java/라이브러리"
-        ],
-        "file": "dev/JVM/jpa.html",
-        "title": "JPA; Java Persistence API"
-    },
-    {
-        "category": [
-            "개발 자료/Java/웹"
-        ],
-        "file": "dev/JVM/netty.html",
-        "title": "Netty"
-    },
-    {
-        "category": [
-            "개발 자료/Java/웹"
-        ],
-        "file": "dev/JVM/spring_framework.html",
-        "title": "Spring Framework"
-    },
-    {
-        "category": [
-            "개발 자료/Java/웹"
-        ],
-        "file": "dev/JVM/spring_reactive.html",
-        "title": "Web Reactive"
-    },
-    {
-        "category": [
-            "개발 자료/Java/웹"
-        ],
-        "file": "dev/JVM/spring_servlet.html",
-        "title": "Web Servlet"
-    },
-    {
-        "category": [
-            "개발 자료/Python/언어"
-        ],
-        "file": "dev/python/basic.html",
-        "title": "Python"
-    },
-    {
-        "category": [
-            "개발 자료/Python/언어"
-        ],
-        "file": "dev/python/built_in_constant.html",
-        "title": "Python Built-in Constants"
-    },
-    {
-        "category": [
-            "개발 자료/Python/언어"
-        ],
-        "file": "dev/python/built_in_exception.html",
-        "title": "Python Built-in Exceptions"
-    },
-    {
-        "category": [
-            "개발 자료/Python/언어"
-        ],
-        "file": "dev/python/built_in_function.html",
-        "title": "Python Built-in Functions"
-    },
-    {
-        "category": [
-            "개발 자료/Python/언어"
-        ],
-        "file": "dev/python/built_in_type.html",
-        "title": "Python Built-in Types"
-    },
-    {
-        "category": [
-            "개발 자료/Python/언어"
-        ],
-        "file": "dev/python/data_model.html",
-        "title": "Python 데이터 모델"
-    },
-    {
-        "category": [
-            "개발 자료/Python/언어"
-        ],
-        "file": "dev/python/persistence.html",
-        "title": "Python Data Persistence"
-    },
-    {
-        "category": [
-            "개발 자료/Python/라이브러리"
-        ],
-        "file": "dev/python/pandas.html",
-        "title": "pandas : 데이터 처리"
-    },
-    {
-        "category": [
-            "개발 자료/Python/라이브러리"
-        ],
-        "file": "dev/python/standard.html",
-        "title": "표준 라이브러리"
-    },
-    {
-        "category": [
-            "프로젝트"
-        ],
+        "category": "프로젝트",
         "file": "project/error.html",
         "title": "예외/오류 해결"
     },
     {
-        "category": [
-            "프로젝트"
-        ],
+        "category": "프로젝트",
         "file": "project/tip.html",
         "title": "잡다한 팁"
     },
     {
-        "category": [
-            "개발 자료/운영"
-        ],
+        "category": "개발 자료/운영",
         "file": "dev/docker-mailserver.html",
         "title": "Docker Mailserver 설치"
     },
     {
-        "category": [
-            "개발 자료/개념"
-        ],
+        "category": "개발 자료/개념",
         "file": "dev/software-design.html",
         "title": "(소프트웨어) 설계"
     },
     {
-        "category": [
-            "개발 자료/운영"
-        ],
-        "file": "dev/rpi.html",
-        "title": "Raspberry Pi 3 + OpenCV(python)"
-    },
-    {
-        "category": [
-            "개발 자료/웹"
-        ],
-        "file": "dev/OpenAPI.html",
-        "title": "OpenAPI"
-    },
-    {
-        "category": [
-            "개발 자료/개념",
-            "책"
-        ],
-        "file": "book/0/010.html",
-        "title": "애자일 & 스크럼 프로젝트 관리"
-    },
-    {
-        "category": [
-            "개발 자료/개념",
-            "책"
-        ],
-        "file": "book/0/015.html",
-        "title": "컴퓨터 시스템"
-    },
-    {
-        "category": [
-            "개발 자료/Java/언어",
-            "책"
-        ],
-        "file": "dev/JVM/effective_java.html",
-        "title": "Effective Java"
-    },
-    {
-        "category": [
-            "프로젝트"
-        ],
-        "file": "project/acmicpc.html",
-        "title": "ACM-ICPC 문제"
-    },
-    {
-        "category": [
-            "기초 과목"
-        ],
+        "category": "기초 과목",
         "file": "fundamental/physics.html",
         "title": "일반물리학"
     },
     {
-        "category": [
-            "기초 과목"
-        ],
+        "category": "기초 과목",
         "file": "fundamental/chemistry.html",
         "title": "일반화학"
     },
     {
-        "category": [
-            "기초 과목"
-        ],
+        "category": "기초 과목",
         "file": "fundamental/biology.html",
         "title": "일반생물학"
     },
     {
-        "category": [
-            "기초 과목"
-        ],
+        "category": "기초 과목",
         "file": "fundamental/linear-algebra.html",
         "title": "선형대수"
     },
     {
-        "category": [
-            "기초 과목"
-        ],
+        "category": "기초 과목",
         "file": "fundamental/algorithm.html",
         "title": "알고리즘 개요"
     },
     {
-        "category": [
-            "기초 과목"
-        ],
+        "category": "기초 과목",
         "file": "fundamental/logic.html",
         "title": "논리학"
     },
     {
-        "category": [
-            "기초 과목"
-        ],
+        "category": "기초 과목",
         "file": "fundamental/philosophy.html",
         "title": "철학"
     },
     {
-        "category": [
-            "기초 과목"
-        ],
+        "category": "기초 과목",
         "file": "fundamental/psychology.html",
         "title": "심리학"
     },
     {
-        "category": [
-            "기초 과목"
-        ],
+        "category": "기초 과목",
+        "file": "fundamental/causal-inference.html",
+        "title": "인과추론"
+    },
+    {
+        "category": "기초 과목",
         "file": "fundamental/japanese.html",
         "title": "일본어"
     },
     {
-        "category": [
-            "기초 과목"
-        ],
+        "category": "기초 과목",
         "file": "fundamental/probability.html",
         "title": "확률"
     },
     {
-        "category": [
-            "개발 자료/웹"
-        ],
+        "category": "개발 자료/웹",
         "file": "dev/web/OAuth.html",
         "title": "OAuth"
     },
     {
-        "category": [
-            "기초 과목",
-            "책"
-        ],
+        "category": "기초 과목",
         "file": "book/0/041.html",
         "title": "Head First Data Analysis"
     },
     {
-        "category": [
-            "기초 과목",
-            "책"
-        ],
+        "category": "기초 과목",
         "file": "fundamental/elementary-mathematics.html",
         "title": "기초 수학"
     },
     {
-        "category": [
-            "기초 과목",
-            "책"
-        ],
+        "category": "기초 과목",
         "file": "fundamental/mcs.html",
         "title": "컴퓨터공학도를 위한 수학"
     },
     {
-        "category": [
-            "개발 자료/개념"
-        ],
+        "category": "일상",
         "file": "dev/interview.html",
-        "title": "개발자 경력 관리"
+        "title": "경력 관리"
     },
     {
-        "category": [
-            "일상"
-        ],
-        "file": "daily-life/business.html",
-        "title": "개인사업자"
-    },
-    {
-        "category": [
-            "일상"
-        ],
-        "file": "daily-life/car.html",
-        "title": "자동차"
-    },
-    {
-        "category": [
-            "일상"
-        ],
-        "file": "daily-life/death.html",
-        "title": "장례"
-    },
-    {
-        "category": [
-            "일상"
-        ],
+        "category": "일상",
         "file": "daily-life/house.html",
         "title": "부동산"
     },
     {
-        "category": [
-            "일상"
-        ],
-        "file": "daily-life/labor.html",
-        "title": "근로"
-    },
-    {
-        "category": [
-            "일상"
-        ],
-        "file": "daily-life/manual.html",
-        "title": "매뉴얼"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/001.html",
         "title": "1만 시간의 재발견"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/002.html",
         "title": "마음의 탄생"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/003.html",
         "title": "생각하는 삶을 위한 철학의 역사"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/004.html",
         "title": "쇼펜하우어, 돌이 별이 되는 철학"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/005.html",
         "title": "인생의 모든 의미"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/006.html",
         "title": "지식의 착각"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/007.html",
-        "title": "키르케고르 실존 극장"
-    },
-    {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/008.html",
-        "title": "Gamification by Design"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/009.html",
         "title": "인지편향사전"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/011.html",
-        "title": "나는 뇌가 아니다"
-    },
-    {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/012.html",
-        "title": "우리는 어떻게 바뀌고 있는가"
-    },
-    {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/013.html",
-        "title": "위험한 생각들"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/014.html",
         "title": "어이없는 진화"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/016.html",
         "title": "물 위를 걷고 벽을 기어오르는 법"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/018.html",
         "title": "쇠똥구리는 은하수를 따라 걷는다"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/019.html",
         "title": "아름다움의 진화"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/020.html",
         "title": "거의 모든 것의 기원"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/021.html",
         "title": "배드 사이언스"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/022.html",
         "title": "나를 나답게 만드는 것들"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/023.html",
         "title": "로스트 케어"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/024.html",
         "title": "안녕, 긴 잠이여"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/025.html",
         "title": "천사들의 탐정"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/026.html",
         "title": "지금부터의 내일"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/027.html",
         "title": "괴도 탐정 야마네코"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/028.html",
         "title": "제물의 야회"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/029.html",
         "title": "데드맨"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/030.html",
         "title": "단델라이언"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/031.html",
         "title": "내가 죽인 소녀"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/032.html",
-        "title": "그리고 밤은 되살아난다"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/033.html",
         "title": "저지먼트"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/034.html",
-        "title": "검은 집"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/035.html",
         "title": "연쇄 살인마 개구리 남자"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/036.html",
         "title": "도깨비불의 집"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/037.html",
         "title": "연쇄 살인마 개구리 남자의 귀환"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/038.html",
         "title": "국경"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/039.html",
         "title": "악당"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/040.html",
         "title": "보호받지 못한 사람들"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/042.html",
         "title": "시즈카 할머니와 은령 탐정사"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/043.html",
         "title": "옆방에 킬러가 산다"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/044.html",
         "title": "시즈카 할머니와 휠체어 탐정"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/045.html",
         "title": "시즈카 할머니에게 맡겨줘"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/046.html",
         "title": "비웃는 숙녀"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/047.html",
         "title": "웃어라, 샤일록"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/048.html",
         "title": "다시 비웃는 숙녀"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/049.html",
         "title": "테미스의 검"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/050.html",
-        "title": "작가 형사 부스지마"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/051.html",
         "title": "네메시스의 사자"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/052.html",
         "title": "일곱색의 독"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/053.html",
-        "title": "인면창 탐정"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/054.html",
         "title": "합창 - 미사키 요스케의 귀환"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/055.html",
         "title": "닥터 데스의 유산"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/056.html",
         "title": "출생지, 개미지옥"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/057.html",
         "title": "라이언 블루"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/058.html",
         "title": "히나구치 요리코의 최악의 낙하와 자포자기 캐논볼"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/059.html",
         "title": "하얀 충동"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/060.html",
-        "title": "스완"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/061.html",
         "title": "도덕의 시간"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/062.html",
         "title": "표정없는 검사의 분투"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/063.html",
         "title": "표류하는 세계"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/064.html",
-        "title": "오전 0시의 몸값"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/065.html",
         "title": "열린 어둠"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/066.html",
         "title": "바람아 우리의 앞머리를"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/067.html",
         "title": "폭탄"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/068.html",
         "title": "추리소설가의 살인사건"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/069.html",
         "title": "류"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/070.html",
-        "title": "블랙 쇼맨과 환상의 여자"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/071.html",
         "title": "미궁"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/072.html",
         "title": "살육에 이르는 병"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/073.html",
         "title": "샤일록의 아이들"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/074.html",
-        "title": "백은의 잭"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/075.html",
         "title": "용서받지 못한 밤"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/076.html",
         "title": "형사 변호인"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/077.html",
         "title": "내 것이 아닌 잘못"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/078.html",
         "title": "탄환의 심판"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/079.html",
         "title": "편의점 인간"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/080.html",
-        "title": "형사 부스지마 최후의 사건"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/081.html",
         "title": "13.67"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/082.html",
         "title": "동트기 힘든 긴 밤"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/083.html",
         "title": "잊혀진 소년"
     },
     {
-        "category": [
-            "책"
-        ],
-        "file": "book/0/084.html",
-        "title": "교도관의 눈"
-    },
-    {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/085.html",
         "title": "다만 부패에서 구하소서"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/086.html",
         "title": "암굴희"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/087.html",
         "title": "은폐수사"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/088.html",
         "title": "언덕 중간의 집"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/089.html",
         "title": "천사에게 버림받은 밤"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/090.html",
         "title": "교장"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/091.html",
         "title": "추억의 야상곡"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/092.html",
         "title": "은수의 레퀴엠"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/093.html",
         "title": "귀동냥"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/094.html",
         "title": "9월이 영원히 계속되면"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/097.html",
         "title": "그녀가 마지막에 본 것은"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/098.html",
         "title": "경관의 조건"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/0/099.html",
         "title": "열세 번째 배심원"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/100.html",
         "title": "형사의 분노"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/101.html",
         "title": "성녀의 구제"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/102.html",
         "title": "철학은 어떻게 삶의 무기가 되는가"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/103.html",
         "title": "이 모든 것은 무엇을 의미하는가?"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/104.html",
         "title": "진실의 조건"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/105.html",
         "title": "미드나잇 저널"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/106.html",
         "title": "카인의 오만"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/107.html",
         "title": "우리가 절대 알 수 없는 것들에 대해"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/108.html",
         "title": "의식의 수수께끼를 풀다"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/109.html",
         "title": "Tiger"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/110.html",
         "title": "미래중독자"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/111.html",
         "title": "용의자 X의 헌신"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/112.html",
         "title": "음식으로 보는 미래 과학"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/113.html",
         "title": "(새로 쓴) 원숭이도 이해하는 마르크스 철학"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/114.html",
         "title": "왜 똑똑한 사람들이 헛소리를 믿게 될까"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/115.html",
         "title": "심리학과의 만남"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/116.html",
         "title": "모든 논쟁에서 승리하는 법"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/117.html",
         "title": "착각의 심리학"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/118.html",
         "title": "1984"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/119.html",
         "title": "유혹하는 심리학"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/120.html",
         "title": "동물 농장"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/121.html",
         "title": "영매탐정 조즈카"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/122.html",
         "title": "퀀텀의 세계"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/123.html",
         "title": "슈퍼 괴짜 경제학"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/124.html",
         "title": "4일 간의 가족"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/125.html",
         "title": "호구의 심리학"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/126.html",
         "title": "(세상에서 가장 재미있는) 81가지 심리실험"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/127.html",
         "title": "브레인 트러스트"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/128.html",
         "title": "(세상에서 가장 재미있는) 63가지 심리실험"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/129.html",
         "title": "세상에서 가장 재미있는 61가지 심리실험 - 인간관계편"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/130.html",
         "title": "그런 건 과학이 아닙니다"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/131.html",
         "title": "아는 만큼 보이는 세상 : 물리편"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/132.html",
         "title": "AI 시대의 플랫폼 비즈니스"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/133.html",
         "title": "어떻게 살인자를 변호할 수 있을까?"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/134.html",
         "title": "정서적 학대에서 벗어나기"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/135.html",
         "title": "속임수의 심리학"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/136.html",
         "title": "희망의 끈"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/137.html",
         "title": "모던 타임스"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/138.html",
         "title": "종교에 관한 50가지 오해"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/139.html",
         "title": "지루할 틈 없는 경제학"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/140.html",
         "title": "자연의 예술가들"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/141.html",
         "title": "청춘이 사는 법"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/142.html",
         "title": "경제신문이 말하지 않는 경제 이야기"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/143.html",
         "title": "고소의 기술"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/144.html",
         "title": "왜 살인자에게 무죄를 선고했을까?"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/145.html",
         "title": "변론을 시작하겠습니다"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/146.html",
         "title": "중세의 뒷골목 풍경"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/147.html",
         "title": "녹슨 도르래"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/148.html",
         "title": "부자 나라는 어떻게 부자가 되었고 가난한 나라는 왜 여전히 가난한가"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/149.html",
         "title": "브레인 에너지"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/150.html",
         "title": "우리 몸 오류 보고서"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/151.html",
         "title": "이기적 유전자"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/152.html",
         "title": "생명의 경계"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/153.html",
         "title": "딜레마"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/154.html",
         "title": "세뇌의 역사"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/155.html",
         "title": "공감은 지능이다"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/156.html",
         "title": "왜곡하는 뇌"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/157.html",
         "title": "머니랩"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/158.html",
         "title": "진화의 배신"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/159.html",
         "title": "한낮의 방문객"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/160.html",
         "title": "내가 나를 버린 날"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/161.html",
         "title": "솔로몬의 개"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/162.html",
         "title": "용의 손은 붉게 물들고"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/163.html",
         "title": "형사의 아이"
     },
     {
-        "category": [
-            "책"
-        ],
+        "category": "책",
         "file": "book/1/164.html",
         "title": "루팡의 소식"
-    },
-    {
-        "category": [
-            "책"
-        ],
-        "file": "book/etc.html",
-        "title": "(그럴싸한) 글귀"
     }
 ]

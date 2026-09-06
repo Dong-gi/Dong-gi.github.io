@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 302" width="720" height="302" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">같은 자료를 여러 기준으로 나눠 본 값들</title><desc id="d">나누는 기준 넷마다 칸이 있고 마지막 기준의 한 칸에서 유독 큰 값이 나와 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="360" y="40" text-anchor="middle" class="sm bold ink">같은 자료를 여러 기준으로 나눠 본 값</text><text class="ink2 sm" x="30" y="89" text-anchor="start">나누지 않고 전체</text><rect x="250" y="65" width="320" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="410" y="89" text-anchor="middle" class="sm ink2">0.10</text><text class="ink2 sm" x="30" y="144" text-anchor="start">부서로 나눔</text><rect x="250" y="120" width="150" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="325" y="144" text-anchor="middle" class="sm ink2">0.12</text><rect x="420" y="120" width="150" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="495" y="144" text-anchor="middle" class="sm ink2">0.08</text><text class="ink2 sm" x="30" y="199" text-anchor="start">연차로 나눔</text><rect x="250" y="175" width="150" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="325" y="199" text-anchor="middle" class="sm ink2">0.09</text><rect x="420" y="175" width="150" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="495" y="199" text-anchor="middle" class="sm ink2">0.11</text><text class="ink2 sm" x="30" y="254" text-anchor="start">점심 시각으로 나눔</text><rect x="250" y="230" width="150" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="325" y="254" text-anchor="middle" class="sm ink2">0.02</text><rect x="420" y="230" width="150" height="40" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="495" y="254" text-anchor="middle" class="sm ink2">0.31</text><text x="648" y="254" text-anchor="middle" class="sm ink2">여기가 눈에 띈다</text><text x="360" y="292" text-anchor="middle" class="sm bold ink">나눌 방법이 늘어나면 크게 나온 칸이 하나쯤 생긴다</text>
+</svg>

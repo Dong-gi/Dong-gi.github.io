@@ -408,14 +408,14 @@ add((() => {
     // 1s
     let [x, y] = P(0, 0); let [mx, my] = mid(0, 0);
     g.push(panel(x, y, pw, ph, '1s', { sub: '공 모양. 방향이 없다' }));
-    g.push(axesCross(mx, my, 74, { labels: ['x', 'z'] }));
+    g.push(axesCross(mx, my, 60, { labels: ['x', 'z'] }));
     g.push(`<circle cx="${mx}" cy="${my}" r="62" fill="url(#sfade)"/>`);
     g.push(circ(mx, my, 62, { stroke: 'var(--s1)', sw: 1, dash: '4 3' }));
 
     // 2s
     [x, y] = P(1, 0); [mx, my] = mid(1, 0);
     g.push(panel(x, y, pw, ph, '2s', { sub: '가운데를 자르면 마디가 하나' }));
-    g.push(axesCross(mx, my, 74, { labels: ['x', 'z'] }));
+    g.push(axesCross(mx, my, 60, { labels: ['x', 'z'] }));
     g.push(`<circle cx="${mx}" cy="${my}" r="70" fill="url(#sring)"/>`);
     g.push(circ(mx, my, 70, { stroke: 'var(--s2)', sw: 1, dash: '4 3' }));
     g.push(circ(mx, my, 27, { stroke: 'var(--ink2)', sw: 1, dash: '3 3' }));
@@ -424,7 +424,7 @@ add((() => {
     // 2p_z
     [x, y] = P(2, 0); [mx, my] = mid(2, 0);
     g.push(panel(x, y, pw, ph, '2p(z)', { sub: 'z 축을 따라 아령 모양' }));
-    g.push(axesCross(mx, my, 74, { labels: ['x', 'z'] }));
+    g.push(axesCross(mx, my, 60, { labels: ['x', 'z'] }));
     g.push(lobe(mx, my, 66, 46, 90, { fill: 'var(--s1)', stroke: 'var(--s1)' }));
     g.push(lobe(mx, my, 66, 46, -90, { fill: 'var(--s2)', stroke: 'var(--s2)' }));
     g.push(txt(mx + 14, my - 46, '+', { cls: 'ink', size: 'sm' }));
@@ -433,21 +433,21 @@ add((() => {
     // 2p_x
     [x, y] = P(0, 1); [mx, my] = mid(0, 1);
     g.push(panel(x, y, pw, ph, '2p(x)', { sub: '같은 모양을 x 축으로 돌린 것' }));
-    g.push(axesCross(mx, my, 74, { labels: ['x', 'z'] }));
+    g.push(axesCross(mx, my, 60, { labels: ['x', 'z'] }));
     g.push(lobe(mx, my, 66, 46, 0, { fill: 'var(--s1)', stroke: 'var(--s1)' }));
     g.push(lobe(mx, my, 66, 46, 180, { fill: 'var(--s2)', stroke: 'var(--s2)' }));
 
     // 2p_y
     [x, y] = P(1, 1); [mx, my] = mid(1, 1);
     g.push(panel(x, y, pw, ph, '2p(y)', { sub: 'y 축은 화면 안쪽 방향' }));
-    g.push(axesCross(mx, my, 74, { labels: ['x', 'z', 'y'], depth: true }));
+    g.push(axesCross(mx, my, 60, { labels: ['x', 'z', 'y'], depth: true }));
     g.push(lobe(mx, my, 62, 40, 45, { fill: 'var(--s1)', stroke: 'var(--s1)' }));
     g.push(lobe(mx, my, 62, 40, 225, { fill: 'var(--s2)', stroke: 'var(--s2)' }));
 
     // 3d_xy
     [x, y] = P(2, 1); [mx, my] = mid(2, 1);
     g.push(panel(x, y, pw, ph, '3d(xy)', { sub: 'd 는 잎이 넷 (5장에서 쓴다)' }));
-    g.push(axesCross(mx, my, 74, { labels: ['x', 'y'] }));
+    g.push(axesCross(mx, my, 60, { labels: ['x', 'y'] }));
     for (const [a, c] of [[45, 's1'], [135, 's2'], [225, 's1'], [315, 's2']]) {
         g.push(lobe(mx, my, 58, 34, a, { fill: `var(--${c})`, stroke: `var(--${c})` }));
     }
@@ -715,7 +715,7 @@ add((() => {
 
 /* 5-5. 연속 이온화 에너지의 도약 */
 add((() => {
-    const W = 620, H = 340;
+    const W = 680, H = 340;
     const ie = [738, 1451, 7733, 10543, 13630, 18020];
     const g0 = frame({ xRange: [0.3, 6.7], yRange: [0, 20000], box: { x: 78, y: 50, w: 440, h: 216 } });
     const g = [g0.axes({ xLabel: '몇 번째 전자를 떼어내는가', yLabel: 'kJ/mol', xTicks: [1, 2, 3, 4, 5, 6], yTicks: [0, 5000, 10000, 15000, 20000] })];
@@ -1422,7 +1422,7 @@ add((() => {
 
 /* 8-3. 희석 */
 add((() => {
-    const W = 620, H = 300;
+    const W = 660, H = 300;
     const g = [];
     const beaker = (x, y, w, h, fill, dots, label, sub) => {
         const out = [box(x, y, w, h, { stroke: 'var(--ink2)', sw: 1.8, rx: 4 })];

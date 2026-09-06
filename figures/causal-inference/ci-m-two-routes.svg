@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 285" width="640" height="285" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">처치에서 결과로 가는 두 갈래</title><desc id="d">처치에서 학습 시간을 거쳐 결과로 가는 화살표 두 개와, 처치에서 결과로 곧바로 가는 화살표 하나가 그려져 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="320" y="38" text-anchor="middle" class="sm bold ink">처치가 결과를 바꾸는 길이 둘이다</text><ellipse cx="105" cy="175" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="105" y="175" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="105" dy="4.5">처치</tspan></text><ellipse cx="320" cy="95" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="320" y="95" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="320" dy="4.5">학습 시간</tspan></text><ellipse cx="535" cy="175" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="535" y="175" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="535" dy="4.5">결과</tspan></text><path d="M129.37 165.93 L269.39 113.83" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M363.11 111.04 L503.13 163.14" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M131 175 L501 175" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/><text x="180" y="112" text-anchor="middle" class="sm ink2">거쳐 가는 갈래</text><text x="320" y="162" text-anchor="middle" class="sm ink2">곧바로 가는 갈래</text><text x="320" y="232" text-anchor="middle" class="sm bold ink">9장의 총효과는 이 둘을 합친 것이다</text><text x="320" y="258" text-anchor="middle" class="sm ink2">이 장은 그 합을 갈래별로 쪼갤 수 있는지 묻는다</text>
+</svg>

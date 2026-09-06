@@ -11,18 +11,9 @@
     "build-img": "node source/build/img.ts",
     "build-pug": "node source/build/pug.ts",
     "local": "npx serve",
-    "check": "node scripts/check-doc.mjs pugs/fundamental/physics.pug pugs/fundamental/chemistry.pug pugs/fundamental/biology.pug pugs/fundamental/elementary-mathematics.pug pugs/fundamental/linear-algebra.pug pugs/fundamental/probability.pug pugs/fundamental/algorithm.pug pugs/fundamental/mcs.pug pugs/fundamental/logic.pug pugs/fundamental/philosophy.pug pugs/fundamental/psychology.pug pugs/fundamental/japanese.pug",
+    "check": "node scripts/check-doc.mjs pugs/fundamental/physics.pug pugs/fundamental/chemistry.pug pugs/fundamental/biology.pug pugs/fundamental/elementary-mathematics.pug pugs/fundamental/linear-algebra.pug pugs/fundamental/probability.pug pugs/fundamental/algorithm.pug pugs/fundamental/mcs.pug pugs/fundamental/logic.pug pugs/fundamental/philosophy.pug pugs/fundamental/psychology.pug pugs/fundamental/japanese.pug pugs/fundamental/causal-inference.pug",
     "check-links": "node scripts/check-links.mjs",
     "verify": "node scripts/verify-pages.mjs"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Dong-gi/Dong-gi.github.io.git"
-  },
-  "author": "Donggi Kim",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Dong-gi/Dong-gi.github.io/issues"
   },
   "homepage": "https://dong-gi.github.io",
   "engines": {

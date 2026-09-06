@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">같은 상관을 낳는 서로 다른 이야기 셋</title><desc id="d">처치가 결과를 바꾸는 경우, 결과가 처치를 바꾸는 경우, 다른 것이 둘 다를 바꾸는 경우</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="10" y="40" width="225" height="190" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="122" y="30" text-anchor="middle" class="sm bold ink">처치가 결과를 바꾼다</text><ellipse cx="70" cy="118" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="70" y="118" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="70" dy="4.5">처치</tspan></text><ellipse cx="175" cy="118" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="175" y="118" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="175" dy="4.5">결과</tspan></text><path d="M96 118 L141 118" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="122" y="190" text-anchor="middle" class="sm ink2">상관이 생긴다</text><rect x="247" y="40" width="225" height="190" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="359" y="30" text-anchor="middle" class="sm bold ink">결과가 처치를 바꾼다</text><ellipse cx="307" cy="118" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="307" y="118" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="307" dy="4.5">처치</tspan></text><ellipse cx="412" cy="118" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="412" y="118" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="412" dy="4.5">결과</tspan></text><path d="M386 118 L341 118" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/><text x="359" y="190" text-anchor="middle" class="sm ink2">같은 상관이 생긴다</text><rect x="484" y="40" width="225" height="190" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="596" y="30" text-anchor="middle" class="sm bold ink">다른 것이 둘 다를 바꾼다</text><ellipse cx="596" cy="72" rx="42" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="596" y="72" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="596" dy="4.5">다른 것</tspan></text><ellipse cx="544" cy="158" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="544" y="158" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="544" dy="4.5">처치</tspan></text><ellipse cx="649" cy="158" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="649" y="158" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="649" dy="4.5">결과</tspan></text><path d="M574.27 107.94 L561.59 128.91" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><path d="M618.04 107.76 L631.16 129.06" fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)"/><text x="596" y="212" text-anchor="middle" class="sm ink2">역시 같은 상관이 생긴다</text>
+</svg>

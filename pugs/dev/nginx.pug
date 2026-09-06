@@ -35,11 +35,12 @@ include ../../source/skeleton.pug
 
             ssl_certificate     "/.../fullchain.pem";
             ssl_certificate_key "/.../privkey.pem";
-            ssl_session_cache   shared:SSL:1m;
-            ssl_session_timeout 10m;
-            ssl_protocols       TLSv1.1 TLSv1.2;
-            ssl_ciphers         AES128-SHA:AES256-SHA:RC4-SHA:DES-CBC3-SHA:RC4-MD5;
-            ssl_prefer_server_ciphers on;
+            ssl_session_cache   shared:SSL:10m;
+            ssl_session_timeout 1d;
+            ssl_session_tickets off;
+            ssl_protocols       TLSv1.2 TLSv1.3;
+            ssl_ciphers         ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+            ssl_prefer_server_ciphers off;
 
             location / {
                 root   /.../;
@@ -54,6 +55,15 @@ include ../../source/skeleton.pug
                 root   /usr/share/nginx/html;
             }
         }
+    h2 TLS 설정에 관하여
+    ul
+        li 위 값은 #[+asA('https://ssl-config.mozilla.org/', 'Mozilla SSL Configuration Generator')]의 <b>intermediate</b> 프로파일을 따른 것이다. 직접 외우지 말고 그 생성기에서 받아 쓰는 편이 낫다
+        li <b>TLS 1.0/1.1은 쓰지 않는다.</b> #[+asA('https://www.rfc-editor.org/rfc/rfc8996', 'RFC 8996')](2021)이 둘을 폐기했고 주요 브라우저가 이미 막았다
+        li <b>RC4는 금지되어 있다.</b> #[+asA('https://www.rfc-editor.org/rfc/rfc7465', 'RFC 7465')](2015). 3DES(DES-CBC3)도 Sweet32 때문에 빼야 한다
+        li #[+asInlineCode('ECDHE')]로 시작하는 스위트를 쓰는 이유는 <b>전방향 보안(forward secrecy)</b>이다. 서버 개인키가 나중에 새더라도 지난 세션을 복호화할 수 없다
+        li TLS 1.3의 스위트는 #[+asInlineCode('ssl_ciphers')]로 고르지 않는다. 프로토콜이 정한 셋만 쓰므로 nginx가 알아서 한다
+        li #[+asInlineCode('ssl_prefer_server_ciphers off')]인 이유는, 요즘 클라이언트가 자기 하드웨어에 맞는 것(AES-NI가 있으면 AES-GCM, 없으면 ChaCha20)을 더 잘 고르기 때문이다
+
     h2 location 패턴
     p 경로 매치를 위한 여러 패턴을 지원하며, 쿼리 문자열은 당연히 경로 평가에 영향 없다
     ul

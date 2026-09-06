@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 300" width="660" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">겹치지 않는 양 끝을 잘라내고 가운데 구간만 남기는 그림</title><desc id="d">위쪽 띠가 세 칸으로 나뉘어 있고 양 끝 칸에는 한쪽만 있다고 적혀 있다. 아래로 내려온 화살표 끝에는 가운데 칸만 남아 있다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="330" y="34" text-anchor="middle" class="sm bold ink">겹치는 구간만 남기면 무엇이 달라지는가</text><rect x="40" y="58" width="140" height="46" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="110" y="86" text-anchor="middle" class="sm bold ink">대조군만 있다</text><rect x="180" y="58" width="300" height="46" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="330" y="86" text-anchor="middle" class="sm bold ink">양쪽이 다 있다</text><rect x="480" y="58" width="140" height="46" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="550" y="86" text-anchor="middle" class="sm bold ink">처치군만 있다</text><text x="110" y="124" text-anchor="middle" class="sm ink2">견줄 상대가 없다</text><text x="330" y="124" text-anchor="middle" class="sm ink2">왼쪽이 점수가 낮고 오른쪽이 높다</text><text x="550" y="124" text-anchor="middle" class="sm ink2">견줄 상대가 없다</text><path d="M330 140 L330 170" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)"/><text x="420" y="164" text-anchor="start" class="sm ink2">가운데만 남긴다</text><rect x="180" y="184" width="300" height="46" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="330" y="212" text-anchor="middle" class="sm bold ink">남긴 구간</text><text x="330" y="254" text-anchor="middle" class="sm bold ink">이 값은 남긴 구간에 있는 사람들에 대한 답이다</text><text x="330" y="278" text-anchor="middle" class="sm bold ink">자르기 전에 묻던 대상 전체에 대한 답이 아니다</text>
+</svg>

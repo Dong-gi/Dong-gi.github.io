@@ -31,10 +31,11 @@ Requires Android SDK API 37 (`compileSdk` = `targetSdk` = 37, `minSdk` = 26). AG
 
 ### Running End-to-End
 1. `output/` ships **only the launchers** (`windows-wifi.bat`, `macos-wifi.sh`) and `output/README.md`. Fetch the rest yourself:
-   - Windows: `tun2proxy.exe`, `wintun.dll`, and optionally `adb.exe`
+   - Windows: the tun2proxy release zip carries `wintun.dll` too, so one download covers both. `adb.exe` is optional.
    - macOS: `tun2proxy` (match your arch — arm64 or x86_64) and optionally `adb` (universal)
-   - `output/README.md` lists where each comes from, plus the SHA-256 of the copies that used to be committed.
-   - **Nothing third-party is committed and nothing should be.** These are other people's builds, their licenses govern redistribution, and this repository is published wholesale as a GitHub Pages site — committing one publishes it. `.gitignore` now matches them by name.
+   - **The binary inside the zip is named `tun2proxy-bin`.** The launchers call `tun2proxy` / `tun2proxy.exe`, and a mismatch fails silently — rename it.
+   - `output/README.md` has the URLs, archive paths and signature checks, all verified 2026-09-05.
+   - **Nothing third-party is committed.** Not a licensing prohibition: tun2proxy is MIT, and Wintun's signed DLL is redistributable when it ships beside software using it through the Permitted API (upstream tun2proxy does exactly that). Only `adb` is unclear — Google's signed platform-tools build sits under the Android SDK agreement, which forbids redistribution (3.4) but exempts open-source components (3.5), and adb is Apache 2.0 in AOSP. The reasons to keep them out are size (39 MB of a 96 MB repo) and the fact that this repository is served wholesale as a GitHub Pages site. `.gitignore` matches them by name, not by folder.
    - There is **no committed APK.** Build it (`./gradlew installDebug`) or install a locally built one. `adb`/`adb.exe` exist only for installing the APK and for diagnostics — they are not part of any data path.
 2. **Windows (Administrator):** run `output/windows-wifi.bat` — it auto-elevates and launches tun2proxy against `socks5://192.168.49.1:1080` with `--setup`. It does **not** probe for a port: accepting whichever port answered a SOCKS5 greeting was the hijack primitive described above, so the port is now fixed and only overridable by an explicit argument (`windows-wifi.bat 1085`). `--dns over-tcp` is not needed because UDP ASSOCIATE works over Wi-Fi Direct.
 3. **macOS:** run `output/macos-wifi.sh` — same behaviour; it re-execs itself under `sudo` (forwarding arguments) and uses TUN interface `utun5` to avoid the `utun0`–`utun3` range VPN clients tend to occupy.

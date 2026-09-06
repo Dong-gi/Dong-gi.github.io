@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 285" width="640" height="285" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">무선 배정에서 실제 처치를 거쳐 결과로 가는 길과 성질에서 들어오는 화살표</title><desc id="d">왼쪽 무선 배정에서 가운데 실제 처치로 화살표가 가고, 아래쪽 대상의 성질에서 실제 처치와 결과로 화살표가 둘 더 들어온다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<ellipse cx="88" cy="92" rx="46" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="88" y="92" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="88" dy="4.5">무선 배정</tspan></text><ellipse cx="320" cy="92" rx="46" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="320" y="92" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="320" dy="4.5">실제 처치</tspan></text><ellipse cx="556" cy="92" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="556" y="92" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="556" dy="4.5">결과</tspan></text><ellipse cx="150" cy="212" rx="52" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="150" y="212" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="150" dy="4.5">대상의 성질</tspan></text><path d="M134 92 L266 92" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M366 92 L522 92" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M192.48 182.01 L275.88 123.14" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M199.87 197.26 L523.39 101.64" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><text x="204" y="76" text-anchor="middle" class="sm ink2">일부만 따른다</text><text x="455" y="185" text-anchor="middle" class="sm ink2">성질이 결과도 바꾼다</text><text x="330" y="262" text-anchor="middle" class="sm bold ink">무선인 것은 배정이고 결과를 바꾸는 것은 실제 처치다</text>
+</svg>

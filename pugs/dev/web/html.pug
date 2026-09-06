@@ -204,13 +204,14 @@ include ../../../source/skeleton.pug
         p 웹 폰트(@font-face) 출처 제한
 
         li object-src
-        p #{'<object>, <embed>, <applet>'}과 같은 플러그인 출처 제한
+        p #{'<object>, <embed>'}의 출처 제한. #{'<applet>'}은 HTML 표준에서 빠졌으므로 더 이상 고려 대상이 아니다
 
         li media-src
         p #{'<audio>, <video>, <track>'}과 같은 미디어 출처 제한
 
         li frame-src
-        p 프레임 출처 제한. CSP Level 2에서 deprecated 상태로 변경됐고, 대신 child-src를 이용하라고 안내
+        p 프레임(#{'<frame>, <iframe>'})을 어디서 불러올 수 있는지 제한. <b>CSP Level 2에서 한 번 deprecated 되었다가 Level 3에서 되살아났고, 지금은 이쪽이 권장된다.</b> 이 지시어가 없으면 child-src를, 그것도 없으면 default-src를 본다
+        p 프레임을 <b>어디에 끼워 넣을 수 있는가</b>를 정하는 frame-ancestors와 방향이 반대다
 
         li sandbox
         p 페이지가 해당 #[+asA('https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox', 'sandbox 속성')]을 가진 iframe을 통해 로드된 것처럼 취급된다 -- 동일 출처 정책 적용, 팝업 제한, 플러그인 제한, 스크립트 실행 제한 등
@@ -227,11 +228,11 @@ include ../../../source/skeleton.pug
         p #{'<form>'} action으로 설정할 수 있는 출처 제한
 
         li frame-ancestors
-        p 임베딩되는 리소스들(#{'<frame>, <iframe>, <object>, <embed>, <applet>'})에 대한 출처 제한. 이 directive 값을 'none'으로 설정하면 #[+asInlineCode('X-Frame-Options: DENY')] 헤더를 설정한 것과 거의 동등한 효과.
+        p 이 페이지를 끼워 넣을 수 있는 쪽(#{'<frame>, <iframe>, <object>, <embed>'})의 출처 제한. 이 directive 값을 'none'으로 설정하면 #[+asInlineCode('X-Frame-Options: DENY')] 헤더를 설정한 것과 거의 동등한 효과.
         p 참고로 X-Frame-Options 헤더는 deprecated 상태이며, CSP 헤더를 이용할 것이 권장됨.
 
         li plugin-types
-        p #{'<object>, <embed>, <applet>'}과 같은 플러그인 MIME 타입 제한
+        p 플러그인의 MIME 타입 제한. <b>CSP Level 3에서 제거되었고 어느 브라우저도 지원하지 않는다.</b> 플러그인 자체가 사라졌으므로 쓸 일이 없다. 남은 #{'<object>, <embed>'}는 object-src로 막는다
 
         li manifest-src
         p 웹앱 매니페스트 파일 출처 제한
@@ -636,7 +637,6 @@ include ../../../source/skeleton.pug
     ul
         li canvas를 지원하지 않는 브라우저를 위해 태그 안에 fallback content(대체 텍스트 또는 DOM)를 적어주면 좋다
         li 스크립트에서 canvas의 지원을 확인하는 방법 : DOM이 HTMLCanvasElement 클래스인지 확인
-            +codeBtn('/Repositories/JavaScript/Browser/draw1.js', 'javascript')
         li 캔버스의 기본 그리기 요소는 직사각형과 path(일련의 점들을 선분으로 연결) 두 가지
         canvas#tutorial-canvas-1(width='100%', max-height='33%') 연습용 캔버스1
     h2 interface HTMLCanvasElement : HTMLElement
@@ -772,7 +772,6 @@ include ../../../source/skeleton.pug
     h3 이미지 그리기
     ul
         li drawImage(image, dx, dy);
-            +codeBtn('/Repositories/JavaScript/Browser/draw2.js', 'javascript')
         li drawImage(image, dx, dy, dWidth, dHeight);
         li drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
     canvas#tutorial-canvas-2(width='100%', max-height='33%') 연습용 캔버스2

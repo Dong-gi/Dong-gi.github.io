@@ -1977,45 +1977,6 @@ include ../../source/skeleton.pug
         li Origin Response : 원본(origin) 응답을 받은 이후, 캐시에 적재하기 전에 실행
         li Viewer Response : 응답을 엔드 유저에게 전달하기 전에 실행
 
-    h1 Proton
-    h2 개요
-    p 컨테이너 기반 서버리스 애플리케이션에 대한 2가지 자동화를 제공한다. 템플릿 생성, 게시, 관리에는 비용이 청구되지 않는다
-    ol
-        li 플랫폼 관리자가 정의한 IaC(infrastructure as code) 템플릿대로 인프라를 자동 구축
-            p 플랫폼 관리자는 버전 관리되는 환경 및 서비스 템플릿을 정의한다. 환경 템플릿은 서비스들이 공유하는 인프라 집합을 정의하고, 서비스 템플릿은 각 서비스가 필요로 하는 인프라 요소들을 정의한다
-        li 통합된 CI/CD 기능을 통해 코드 자동 배포
-
-    h2 시작하기
-    +w3img('/imgs/202204/20220428_1158.png', 'Proton service diagram')
-    ul
-        li 데모:
-            +asA('https://www.youtube.com/watch?v=uQDmHRjQpTU')
-        li 샘플 코드:
-            +asA('https://github.com/aws-samples/aws-proton-sample-templates/tree/main/loadbalanced-fargate-svc')
-    ol
-        li 환경 템플릿 생성 ~ 배포
-            ul
-                li 템플릿에 필요한
-                    +asA('https://docs.aws.amazon.com/proton/latest/adminguide/parameters.html', '인자')
-                    |들을 식별 후
-                    +asA('https://docs.aws.amazon.com/proton/latest/adminguide/ag-schema.html', '스키마 파일')
-                    |로 작성
-                li IaC 파일 작성
-                    ul
-                        li AWS 관리형으로 만드는 경우 : CloudFormation 템플릿 파일에,
-                            +asA('https://palletsprojects.com/p/jinja/', 'Jinja')
-                            |를 이용해 변수 사용
-                        li 고객 관리형으로 만드는 경우 :
-                            +asA('https://www.terraform.io/', 'Terraform')
-                            |템플릿 파일
-                li 스키마 + IaC + 매니페스트 파일들을 번들링
-                li 템플릿 번들을 참조하여 템플릿 생성(또는 업데이트) 후 템플릿 게시 및 배포
-        li 배포한 특정 버전의 환경 템플릿에 인자를 지정하여 환경 생성
-        li 서비스 템플릿 생성 ~ 배포
-        li 서비스 생성에 사용할 코드 저장소 - 브랜치 작성
-        li 배포한 특정 버전의 서비스 템플릿에 인자와 코드 저장소 및 브랜치를 지정하여 서비스 및 서비스 인스턴스 생성
-        li 최종적으로 개발자가 지정한 환경에 지정한 수량만큼의 서비스 인스턴스가 생성된다
-
     h1 WAF, Firewall Manager, Shield
     h2 개요
     ul
@@ -2305,7 +2266,6 @@ include ../../source/skeleton.pug
     p 퍼블릭 인터넷을 통해 트래픽을 보내지 않고 VPC에서 AWS API를 호출
 
     ol
-        +w3img('/imgs/no-date/security-diagram.png')
         li AWS 계정 생성시 VPC, 서브넷, 라우팅 테이블, 인터넷 게이트웨이, 네트워크 ACL 등은 가용 리전 및 AZ에 대해 기본적으로 생성된다
             p NAT 게이트웨이 등 사용자가 필요에 의해 직접 추가하는 리소스들은 추가 요금이 발생함에 유의
         li VPC; Virtual Private Cloud

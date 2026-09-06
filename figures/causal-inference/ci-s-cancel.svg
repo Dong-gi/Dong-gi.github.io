@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 268" width="560" height="268" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">열린 갈래가 둘이라 서로 상쇄될 수 있는 그래프</title><desc id="d">처치에서 매개를 거쳐 결과로 가는 갈래와 처치에서 결과로 곧바로 가는 갈래가 있고 세 화살표가 모두 실선이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text x="280" y="36" text-anchor="middle" class="sm bold ink">처치에서 결과로 가는 갈래가 둘이다</text><text x="280" y="68" text-anchor="middle" class="sm ink2">거쳐 가는 갈래</text><ellipse cx="280" cy="105" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="280" y="105" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="280" dy="4.5">매개</tspan></text><ellipse cx="110" cy="195" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="110" y="195" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="110" dy="4.5">처치</tspan></text><ellipse cx="450" cy="195" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="450" y="195" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="450" dy="4.5">결과</tspan></text><path d="M132.98 182.83 L249.95 120.91" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M302.98 117.17 L419.95 179.09" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><path d="M136 195 L416 195" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="280" y="225" text-anchor="middle" class="sm ink2">곧바로 가는 갈래</text><text x="280" y="252" text-anchor="middle" class="sm bold ink">두 갈래가 서로 반대로 움직이면 합이 0 이 될 수 있다</text>
+</svg>

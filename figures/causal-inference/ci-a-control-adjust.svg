@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 270" width="700" height="270" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">변수를 고르는 단계와 그 변수로 계산하는 단계</title><desc id="d">왼쪽은 습관에 상자를 친 그래프이고 뒷문 화살표 둘이 점선이다. 오른쪽은 층 셋을 나란히 놓고 화살표 셋이 합친다는 상자 하나로 모이는 그림이다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="15" y="45" width="320" height="195" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="175" y="33" text-anchor="middle" class="sm bold ink">통제 — 어느 변수를 넣는가</text><rect x="140" y="65" width="70" height="70" rx="4" fill="none" stroke="var(--ink2)" stroke-width="1.6"/><ellipse cx="175" cy="100" rx="26" ry="26" fill="none" stroke="var(--ink2)" stroke-width="1.8"/><text x="175" y="100" text-anchor="middle" fill="var(--ink)" style="font-size:13px"><tspan x="175" dy="4.5">습관</tspan></text><ellipse cx="90" cy="195" rx="26" ry="26" fill="none" stroke="var(--s1)" stroke-width="1.8"/><text x="90" y="195" text-anchor="middle" fill="var(--s1)" style="font-size:13px"><tspan x="90" dy="4.5">처치</tspan></text><ellipse cx="260" cy="195" rx="26" ry="26" fill="none" stroke="var(--s2)" stroke-width="1.8"/><text x="260" y="195" text-anchor="middle" fill="var(--s2)" style="font-size:13px"><tspan x="260" dy="4.5">결과</tspan></text><path d="M157.66 119.38 L112.67 169.66" fill="none" stroke="var(--grid)" stroke-width="1.6" stroke-dasharray="6 5" stroke-linecap="round" marker-end="url(#ark)"/><path d="M192.34 119.38 L237.33 169.66" fill="none" stroke="var(--grid)" stroke-width="1.6" stroke-dasharray="6 5" stroke-linecap="round" marker-end="url(#ark)"/><path d="M116 195 L226 195" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar1)"/><text x="175" y="232" text-anchor="middle" class="sm ink2">이 결정은 그래프가 정한다</text><rect x="365" y="45" width="320" height="195" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text x="525" y="33" text-anchor="middle" class="sm bold ink">조정 — 그 변수로 어떻게 계산하는가</text><rect x="385" y="57" width="130" height="36" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="450" y="79" text-anchor="middle">층 ㄱ 안에서 견준다</text><rect x="385" y="102" width="130" height="36" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="450" y="124" text-anchor="middle">층 ㄴ 안에서 견준다</text><rect x="385" y="147" width="130" height="36" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink2 sm" x="450" y="169" text-anchor="middle">층 ㄷ 안에서 견준다</text><path d="M520 75 L573.19 107.8" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M520 120 L572 120" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><path d="M520 165 L573.19 132.2" fill="none" stroke="var(--ink2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ark)"/><rect x="585" y="98" width="85" height="45" rx="6" fill="none" stroke="var(--grid)" stroke-width="1"/><text class="ink" x="627" y="126" text-anchor="middle">합친다</text><text x="525" y="232" text-anchor="middle" class="sm ink2">이 계산은 자료 위에서 한다</text><text x="350" y="262" text-anchor="middle" class="sm bold ink">변수를 고르는 일과 계산하는 일은 다른 단계다</text>
+</svg>
