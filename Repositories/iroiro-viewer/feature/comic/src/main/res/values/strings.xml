@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 만화 뷰어. 화면에 나가는 글자는 예외 없이 여기 둔다(저장소 규칙). -->
+
+    <string name="comic_close">닫기</string>
+    <string name="comic_loading">여는 중…</string>
+    <string name="comic_page_of">%1$d / %2$d</string>
+    <string name="comic_settings">읽기 설정</string>
+    <string name="comic_done">확인</string>
+
+    <string name="comic_direction">읽는 방향</string>
+    <string name="comic_direction_ltr">왼쪽에서 오른쪽</string>
+    <string name="comic_direction_rtl">오른쪽에서 왼쪽</string>
+    <string name="comic_direction_vertical">세로 스크롤</string>
+
+    <string name="comic_jump">쪽으로 가기</string>
+    <string name="comic_jump_hint">쪽 번호</string>
+    <string name="comic_cancel">취소</string>
+
+    <string name="comic_resumed">%d쪽부터 이어서 봅니다</string>
+    <string name="comic_restart">처음부터</string>
+
+    <string name="comic_page_failed">이 쪽을 열 수 없습니다</string>
+    <string name="comic_apng_notice">움직이는 PNG 입니다. 첫 장면만 보여 줍니다</string>
+    <string name="comic_first_page">첫 쪽입니다</string>
+    <string name="comic_last_page">마지막 쪽입니다</string>
+
+    <string name="comic_failed_unreadable">파일을 읽을 수 없습니다</string>
+    <string name="comic_failed_corrupt">깨진 파일이거나 이 앱이 읽지 못하는 구조입니다</string>
+    <string name="comic_failed_unsupported">이 앱이 다루지 않는 압축 형식입니다</string>
+    <string name="comic_failed_too_large">방어 상한을 넘어 열지 않았습니다</string>
+    <string name="comic_failed_encrypted">암호가 걸려 있어 열지 않습니다</string>
+    <string name="comic_failed_no_pages">그림이 한 장도 없습니다</string>
+
+    <string name="comic_solid_hint">순차 압축이라 되돌아갈 때 다시 풉니다</string>
+</resources>

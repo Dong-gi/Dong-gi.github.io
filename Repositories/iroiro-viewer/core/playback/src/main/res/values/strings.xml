@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playback_play">재생</string>
+    <string name="playback_pause">일시정지</string>
+    <string name="playback_next">다음</string>
+    <string name="playback_previous">이전</string>
+    <string name="playback_shuffle_on">섞기 켬</string>
+    <string name="playback_shuffle_off">섞기 끔</string>
+    <string name="playback_repeat_off">반복 끔</string>
+    <string name="playback_repeat_all">전체 반복</string>
+    <string name="playback_repeat_one">한 곡 반복</string>
+    <string name="playback_queue_position">%1$d / %2$d</string>
+    <string name="playback_playlist_show">재생목록 보기</string>
+    <string name="playback_playlist_hide">재생목록 닫기</string>
+    <string name="playback_playlist_empty">재생목록이 비었습니다</string>
+    <string name="playback_gesture_brightness">밝기 %1$d%%</string>
+    <string name="playback_gesture_volume">소리 %1$d / %2$d</string>
+    <string name="playback_gesture_seek">%1$s (%2$s)</string>
+    <string name="playback_stop">재생 끝내기</string>
+    <string name="playback_resume_offer">%1$s 부터 이어서 재생할까요?</string>
+    <string name="playback_resume_confirm">이어서 재생</string>
+
+    <string name="playback_error_no_decoder">이 기기에 코덱이 없습니다%1$s</string>
+    <string name="playback_error_decoder_failed">디코더를 시작하지 못했습니다%1$s</string>
+    <string name="playback_error_container">파일을 읽지 못했습니다 (%1$s)</string>
+    <string name="playback_error_not_readable">파일을 열 수 없습니다</string>
+    <string name="playback_error_unsupported_track">일부 트랙을 재생할 수 없습니다: %1$s</string>
+    <string name="playback_error_other">재생에 실패했습니다 (코드 %1$d)</string>
+</resources>

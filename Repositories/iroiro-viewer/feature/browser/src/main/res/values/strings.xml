@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  화면에 나가는 글자는 예외 없이 여기에 둔다. 이름은 모듈 접두어(browser_)를 붙인다 —
+  라이브러리 모듈의 리소스는 앱에서 하나로 합쳐지므로 접두어가 없으면 조용히 덮어쓴다.
+-->
+<resources>
+    <string name="browser_home_title">저장소</string>
+    <string name="browser_home_free">%1$s 남음 / %2$s</string>
+    <string name="browser_home_removable">분리 가능</string>
+    <string name="browser_home_shortcuts">바로가기</string>
+    <string name="browser_home_diagnostics">진단</string>
+    <string name="browser_home_diagnostics_desc">이 기기에서 잰 값</string>
+
+    <string name="browser_up">위로</string>
+    <string name="browser_search">이름으로 거르기</string>
+    <string name="browser_search_hint">이 폴더에서 이름 찾기</string>
+    <string name="browser_search_close">필터 끄기</string>
+    <string name="browser_view_mode">목록·격자 전환</string>
+    <string name="browser_more">더보기</string>
+    <string name="browser_read_as_comic">이 폴더를 만화로 보기</string>
+
+    <string name="browser_sort">정렬</string>
+    <string name="browser_sort_name">이름</string>
+    <string name="browser_sort_date">수정한 때</string>
+    <string name="browser_sort_size">크기</string>
+    <string name="browser_sort_kind">종류</string>
+    <string name="browser_sort_folders_first">폴더를 먼저</string>
+    <string name="browser_show_hidden">숨김 파일 보기</string>
+
+    <string name="browser_scanning">%1$d개 읽는 중</string>
+    <string name="browser_empty">빈 폴더</string>
+    <string name="browser_empty_filtered">이름이 맞는 것이 없다</string>
+    <string name="browser_count">%1$d개</string>
+    <string name="browser_count_filtered">%1$d / %2$d개</string>
+    <string name="browser_hidden_count">숨김 %1$d개</string>
+
+    <string name="browser_failed_locked_title">안드로이드가 막은 폴더입니다</string>
+    <string name="browser_failed_locked_body">Android 11 부터는 이 폴더를 어떤 파일 관리자도 열 수 없습니다. 모든 파일 접근 권한으로도, 문서 선택기로도 막혀 있습니다.\n\n앱을 지우면 그 앱의 폴더도 함께 사라집니다.</string>
+    <string name="browser_failed_not_found_title">사라졌습니다</string>
+    <string name="browser_failed_not_found_body">다른 앱이 지웠거나, SD 카드가 빠졌을 수 있습니다.</string>
+    <string name="browser_failed_io_title">읽을 수 없습니다</string>
+    <string name="browser_failed_io_body">입출력이 실패했습니다. 저장소를 다시 꽂아 보십시오.</string>
+    <string name="browser_failed_not_dir_title">폴더가 아닙니다</string>
+    <string name="browser_failed_not_dir_body">파일을 폴더로 열려고 했습니다.</string>
+
+    <string name="browser_locked_badge">잠김</string>
+    <string name="browser_symlink_badge">링크</string>
+
+    <string name="browser_detail_kind">종류</string>
+    <string name="browser_detail_size">크기</string>
+    <string name="browser_detail_modified">수정한 때</string>
+    <string name="browser_detail_path">경로</string>
+    <string name="browser_detail_close">닫기</string>
+
+    <string name="browser_kind_folder">폴더</string>
+    <string name="browser_kind_image">이미지</string>
+    <string name="browser_kind_audio">오디오</string>
+    <string name="browser_kind_video">비디오</string>
+    <string name="browser_kind_text">텍스트</string>
+    <string name="browser_kind_code">코드</string>
+    <string name="browser_kind_pdf">PDF</string>
+    <string name="browser_kind_ebook">전자책</string>
+    <string name="browser_kind_archive">압축</string>
+    <string name="browser_kind_comic">만화</string>
+    <string name="browser_kind_document">문서</string>
+    <string name="browser_kind_sheet">스프레드시트</string>
+    <string name="browser_kind_slide">프레젠테이션</string>
+    <string name="browser_kind_hwp">한글 문서</string>
+    <string name="browser_kind_apk">앱 설치 파일</string>
+    <string name="browser_kind_font">글꼴</string>
+    <string name="browser_kind_other">파일</string>
+
+    <!-- 4단계: 선택과 조작 -->
+    <string name="browser_selection_count">%1$d개 선택</string>
+    <string name="browser_selection_clear">선택 해제</string>
+    <string name="browser_select_all">전체 선택</string>
+    <string name="browser_action_copy">복사</string>
+    <string name="browser_action_move">이동</string>
+    <string name="browser_action_delete">삭제</string>
+    <string name="browser_action_rename">이름 바꾸기</string>
+    <string name="browser_action_share">공유</string>
+    <string name="browser_play_folder">이 폴더를 재생</string>
+    <string name="browser_action_new_folder">새 폴더</string>
+
+    <string name="browser_paste_here">여기에 붙여넣기</string>
+    <string name="browser_paste_copy">%1$d개 복사</string>
+    <string name="browser_paste_move">%1$d개 이동</string>
+    <string name="browser_paste_cancel">취소</string>
+
+    <string name="browser_dialog_new_folder">새 폴더</string>
+    <string name="browser_dialog_folder_name">폴더 이름</string>
+    <string name="browser_dialog_rename">이름 바꾸기</string>
+    <string name="browser_dialog_name">이름</string>
+    <string name="browser_dialog_create">만들기</string>
+    <string name="browser_dialog_ok">확인</string>
+    <string name="browser_dialog_cancel">취소</string>
+
+    <string name="browser_delete_title">휴지통으로 보낼까요?</string>
+    <string name="browser_delete_body">%1$d개를 휴지통으로 보냅니다. 휴지통에서 되돌릴 수 있고, %2$d일 뒤에 지워집니다.</string>
+    <string name="browser_delete_confirm">휴지통으로</string>
+
+    <string name="browser_conflict_title">같은 이름이 있습니다</string>
+    <string name="browser_conflict_body">%1$d개가 대상 폴더에 이미 있습니다. 예: %2$s</string>
+    <string name="browser_conflict_skip">건너뛰기</string>
+    <string name="browser_conflict_overwrite">덮어쓰기</string>
+    <string name="browser_conflict_keep_both">둘 다 보관</string>
+
+    <string name="browser_op_cancel">취소</string>
+    <string name="browser_op_copying">복사하는 중</string>
+    <string name="browser_op_moving">옮기는 중</string>
+    <string name="browser_op_trashing">휴지통으로 보내는 중</string>
+    <string name="browser_op_deleting">지우는 중</string>
+    <string name="browser_op_restoring">되돌리는 중</string>
+    <string name="browser_op_rotating">회전을 저장하는 중</string>
+    <string name="browser_op_extracting">압축을 푸는 중</string>
+    <string name="browser_op_done">%1$d개 완료</string>
+    <string name="browser_op_done_with_skips">%1$d개 완료 · %2$d개 건너뜀 · %3$d개 실패</string>
+    <string name="browser_undo">되돌리기</string>
+    <string name="browser_op_cancelled">취소했습니다</string>
+
+    <string name="browser_error_no_space">저장 공간이 모자랍니다</string>
+    <string name="browser_error_not_found">대상을 찾을 수 없습니다</string>
+    <string name="browser_error_permission">권한이 없습니다</string>
+    <string name="browser_error_io">입출력이 실패했습니다</string>
+    <string name="browser_error_invalid_name">쓸 수 없는 이름입니다</string>
+    <string name="browser_error_target_inside">폴더를 자기 안으로 옮길 수 없습니다</string>
+    <string name="browser_error_name_forbidden">이름에 쓸 수 없는 글자가 있습니다: / \ : * ? " &lt; &gt; |</string>
+    <string name="browser_error_name_too_long">이름이 너무 깁니다 (UTF-8 255바이트, 한글 85자쯤)</string>
+    <string name="browser_error_name_trailing">이름은 점이나 공백으로 끝날 수 없습니다</string>
+
+    <!-- 휴지통 -->
+    <string name="browser_trash">휴지통</string>
+    <string name="browser_trash_empty">휴지통이 비었습니다</string>
+    <string name="browser_trash_deleted_at">%1$s 에 삭제</string>
+    <string name="browser_trash_restore">되돌리기</string>
+    <string name="browser_trash_purge">완전히 삭제</string>
+    <string name="browser_trash_purge_all">휴지통 비우기</string>
+    <string name="browser_trash_unavailable">저장소가 연결되지 않음</string>
+    <string name="browser_trash_note">휴지통은 볼륨마다 숨김 폴더에 둡니다. 이 앱에서는 감추지만 다른 앱에는 보입니다.</string>
+
+    <!-- 5단계: 재생 -->
+    <!-- 되돌릴 수 없는 삭제. 문구를 '휴지통으로 보내기' 와 확실히 다르게 쓴다. -->
+    <string name="browser_purge_title">완전히 삭제할까요?</string>
+    <string name="browser_purge_body">%1$d개(%2$s)를 지웁니다. <b>되돌릴 수 없습니다.</b></string>
+    <string name="browser_purge_all_title">휴지통을 비울까요?</string>
+    <string name="browser_purge_all_body">%1$d개(%2$s)를 모두 지웁니다. <b>되돌릴 수 없습니다.</b></string>
+    <string name="browser_purge_confirm">완전히 삭제</string>
+    <string name="browser_purge_skipped">연결되지 않은 저장소의 %1$d개는 남깁니다.</string>
+
+    <string name="browser_conflict_blocked">종류가 다른 %1$d개는 덮어쓰지 않고 건너뜁니다(파일 자리에 폴더).</string>
+    <string name="browser_op_failed_partial">%1$s · %2$d개는 끝냈습니다</string>
+    <string name="browser_trash_unknown_origin">원래 위치를 모름 · 되돌리면 ‘%1$s’ 폴더로 꺼냅니다</string>
+    <!-- 갤러리와 즐겨찾기 -->
+    <string name="browser_gallery">갤러리</string>
+    <string name="browser_gallery_desc">DCIM · Pictures · Download 의 사진</string>
+    <string name="browser_gallery_count">갤러리 %1$d장</string>
+    <string name="browser_gallery_scanning">사진 %1$d장 찾는 중</string>
+    <string name="browser_gallery_empty">%1$s 폴더에서 사진을 찾지 못했습니다</string>
+
+    <!--
+        갤러리의 날짜 머리글. 오늘·어제는 이름으로 부르는 편이 날짜보다 빨리 읽힌다.
+        올해 안이면 해를 적지 않는다 — 같은 숫자가 머리글마다 되풀이될 뿐이다.
+    -->
+    <string name="browser_gallery_date_today">오늘</string>
+    <string name="browser_gallery_date_yesterday">어제</string>
+    <string name="browser_gallery_date_md">%1$d월 %2$d일</string>
+    <string name="browser_gallery_date_ymd">%1$d년 %2$d월 %3$d일</string>
+
+    <string name="browser_bookmarks">즐겨찾기</string>
+    <string name="browser_bookmark_add">즐겨찾기에 넣기</string>
+    <string name="browser_bookmark_remove">즐겨찾기에서 빼기</string>
+    <string name="browser_bookmark_none">폴더를 열고 별을 누르면 여기에 모입니다</string>
+    <string name="browser_bookmark_missing">지금은 없는 폴더</string>
+    <string name="browser_op_refused"> · %1$d개는 풀지 않았습니다</string>
+</resources>

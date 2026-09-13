@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  FileProvider 가 밖으로 내보낼 수 있는 범위.
+
+  root-path 를 "/" 로 열면 /data/data/<앱>/ 아래의 DB·크래시 로그·설정까지 content URI
+  로 만들 수 있게 된다. 이 앱은 사용자가 고른 임의의 경로로 URI 를 만들기 때문에,
+  그 범위가 곧 유출 범위다. 저장 볼륨과 우리 캐시 하위만 연다.
+-->
+<paths>
+    <root-path name="volumes" path="storage/" />
+    <cache-path name="share" path="share/" />
+</paths>

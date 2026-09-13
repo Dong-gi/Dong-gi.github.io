@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!--
+          재생 화면. 선언이 `core:playback` 에서 여기로 온 것은 10단계에서 화면 코드가
+          `feature:player` 로 옮겨 왔기 때문이다. **속성 넷은 글자 그대로 유지한다** —
+          5단계와 6단계가 실측으로 정한 값이라 하나라도 바뀌면 조용히 회귀한다.
+
+          - `exported="false"`: 밖에서 띄울 수 있는 화면이 아니다. 미니 바와 알림만이 입구다.
+          - `singleTask`: 목록에서 여러 번 눌러도 화면이 쌓이지 않는다.
+          - `configChanges`: 회전해도 액티비티가 다시 만들어지지 않는다 — 표면이 끊기지
+            않아야 재생이 이어진다. PiP 전환도 이 목록이 받아 낸다.
+          - `supportsPictureInPicture`: 5단계에서 미리 켜 두었다. 10단계가 코드를 채운다.
+
+          `android:theme` 를 적지 않는다. 적지 않으면 app 의 `application` 테마를 물려받는데,
+          라이브러리 매니페스트에서 그 스타일을 이름으로 적으면 app 의 리소스를 참조하게 되어
+          병합이 깨진다.
+        -->
+        <activity
+            android:name=".PlayerActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:supportsPictureInPicture="true" />
+    </application>
+</manifest>

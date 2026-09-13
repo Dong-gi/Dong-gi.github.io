@@ -1,0 +1,81 @@
+# 동적 버전(+, latest.release, 범위)을 쓰지 않는다. 빌드가 날마다 달라지면
+# '어제는 되던 것'을 추적할 수 없고, 공급망을 고정하는 의미도 사라진다.
+[versions]
+agp = "9.4.0"                  # 설치된 Android Studio 2026.1.4 가 이 프로젝트에 맞춘 버전
+kotlin = "2.3.20"              # KSP 2.3.12 의 POM 이 요구하는 짝. IDE 번들은 2.3.10 (같은 2.3 라인)
+ksp = "2.3.12"
+composeBom = "2026.09.00"
+coreKtx = "1.19.0"
+lifecycle = "2.11.0"
+activityCompose = "1.13.0"
+navigationCompose = "2.10.1"
+media3 = "1.11.1"
+room = "2.8.5"
+datastore = "1.2.1"
+exifinterface = "1.4.2"
+documentfile = "1.1.0"
+webkit = "1.17.0"
+annotation = "1.10.0"
+coroutines = "1.11.0"
+commonsCompress = "1.28.0"
+xz = "1.12"
+junrar = "8.1.1"
+xmlpull = "1.1.3.1"
+kxml2 = "2.3.0"
+androidxTest = "1.7.0"
+androidxTestJunit = "1.3.0"
+
+[libraries]
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+# 아이콘은 core 세트만 쓴다(약 40개). material-icons-extended 는 이 앱이 쓰는 몇 개를 위해
+# 수천 개를 끌고 온다.
+compose-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
+
+androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
+androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3" }
+androidx-media3-ui-compose = { module = "androidx.media3:media3-ui-compose", version.ref = "media3" }
+
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "exifinterface" }
+androidx-documentfile = { module = "androidx.documentfile:documentfile", version.ref = "documentfile" }
+androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
+
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }
+tukaani-xz = { module = "org.tukaani:xz", version.ref = "xz" }
+junrar = { module = "com.github.junrar:junrar", version.ref = "junrar" }
+
+# format:* 모듈은 순수 JVM 이다. 안드로이드가 런타임에 주는 XmlPullParser 를
+# compileOnly 로 컴파일만 하고, JVM 테스트에서는 kxml2 구현을 끼운다.
+xmlpull = { module = "xmlpull:xmlpull", version.ref = "xmlpull" }
+kxml2 = { module = "net.sf.kxml:kxml2", version.ref = "kxml2" }
+
+# 계측 테스트. 파일시스템 경계(EXDEV·원자적 쓰기·휴지통 왕복)는 실제 기기에서만
+# 확인되므로 JVM 테스트로 대신할 수 없다.
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTest" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidxTest" }
+androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

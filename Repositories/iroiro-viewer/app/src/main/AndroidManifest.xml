@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+      이 앱은 네트워크를 쓰지 않는다. 선언하지 않는 것으로 끝내지 않고 tools:node="remove"
+      까지 두는 것은, 나중에 붙는 라이브러리가 제 매니페스트에서 INTERNET 을 병합해
+      들여오는 것을 막기 위해서다. 이 한 줄이 EPUB 의 추적 픽셀, 문서의 외부 참조,
+      모든 서드파티의 소켓을 OS 수준에서 동시에 막는다.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+
+    <!-- 파일 관리자의 본체. 특별 접근 권한이라 설정 화면에서만 켤 수 있다. -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".IroiroApp"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.IroiroViewer">
+
+        <!--
+          회전으로 액티비티를 다시 만들지 않는다. 다시 만들면 뷰어에 넘긴 **메모리 참조**
+          목록이 사라져 사진을 보다 화면을 돌리면 한 장짜리로 떨어지고, 갤러리·휴지통을
+          보다 돌리면 파일 목록으로 튕긴다. 재생 화면(PlayerActivity)과 같은 값이다.
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

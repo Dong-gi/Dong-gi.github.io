@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  화면에 나가는 글자는 예외 없이 여기에 둔다. 코드에 문자열 리터럴을 적지 않는다 —
+  나중에 용어를 통일하려 할 때 코드 전체를 뒤져야 하는 상태가 되면 통일이 안 된다.
+-->
+<resources>
+    <string name="app_name">Files</string>
+
+    <string name="permission_title">모든 파일 접근 권한이 필요합니다</string>
+    <string name="permission_body">파일 관리자는 저장소 전체를 읽고 쓸 수 있어야 합니다. 안드로이드는 이 권한을 앱 안에서 물어볼 수 없고 설정 화면에서만 켤 수 있습니다.\n\n아래 버튼을 누르면 설정으로 갑니다. 켠 뒤 뒤로 돌아오면 됩니다.</string>
+    <string name="permission_button">설정 열기</string>
+    <string name="permission_unavailable">이 기기에는 해당 설정 화면이 없습니다.</string>
+
+    <string name="diag_title">저장소</string>
+    <string name="diag_entries">항목 %1$d개</string>
+    <string name="diag_unreadable">읽을 수 없음 (%1$s)</string>
+    <string name="notice_title">오픈소스 고지</string>
+    <!-- UnRAR 라이선스가 문서에 밝히라고 요구하는 문장이다. 빼면 라이선스 위반이다. -->
+    <string name="notice_unrar_restriction">이 앱은 RAR 파일을 읽는 데 junrar 를 씁니다. junrar 는 UnRAR 소스를 옮긴 것이고, 그 라이선스에 따라 이 코드는 RAR(WinRAR) 호환 압축기를 만드는 데 쓸 수 없습니다. RAR 압축 알고리즘은 Alexander Roshal 의 것입니다.</string>
+</resources>

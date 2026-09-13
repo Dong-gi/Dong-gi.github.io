@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 알림에 나가는 글자. 모듈 접두어(io_)를 붙여 다른 모듈과 부딪히지 않게 한다. -->
+<resources>
+    <string name="io_channel_file_ops">파일 작업</string>
+    <string name="io_op_preparing">준비하는 중</string>
+    <string name="io_op_copying">복사하는 중</string>
+    <string name="io_op_moving">옮기는 중</string>
+    <string name="io_op_trashing">휴지통으로 보내는 중</string>
+    <string name="io_op_deleting">지우는 중</string>
+    <string name="io_op_restoring">되돌리는 중</string>
+    <string name="io_op_cancel">취소</string>
+    <string name="io_op_rotating">회전하는 중</string>
+    <string name="io_op_extracting">압축을 푸는 중</string>
+
+    <!-- 기본 볼륨의 이름. 안드로이드가 주는 `Internal shared storage` 를 대신한다. -->
+    <string name="io_volume_internal">내부 저장소</string>
+</resources>

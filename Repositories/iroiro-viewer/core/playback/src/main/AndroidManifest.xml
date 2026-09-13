@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      재생이 도는 동안 프로세스를 붙잡는다. API 34 부터는 타입마다 대응 권한이 따로
+      필요하다 — mediaPlayback 에는 FOREGROUND_SERVICE_MEDIA_PLAYBACK 이 있어야 하고,
+      없으면 startForeground 가 SecurityException 으로 즉사한다.
+    -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <!-- 화면이 꺼져도 소리가 이어지게 한다(ExoPlayer 의 WAKE_MODE_LOCAL). -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application>
+        <!--
+          MediaSessionService 는 exported 가 강제다(시스템·잠금화면·블루투스가 붙어야
+          한다). 아무나 붙어 지금 보는 파일 이름을 읽지 못하게 막는 곳은 코드 한 곳뿐이다
+          — PlaybackService 의 onConnect.
+
+          intent-filter 에 MediaBrowserService 는 넣지 않는다. 우리는 라이브러리를
+          남에게 열어 주지 않는다.
+        -->
+        <service
+            android:name=".PlaybackService"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService" />
+            </intent-filter>
+        </service>
+    </application>
+</manifest>

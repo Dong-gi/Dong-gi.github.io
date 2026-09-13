@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Compose 가 색과 타이포그래피를 전부 맡으므로 플랫폼 테마는 창 껍데기만 준다.
+      DayNight 로 두어 시스템 다크 모드에서 첫 프레임이 흰색으로 번쩍이지 않게 한다.
+      (android:Theme.DeviceDefault.DayNight 에는 NoActionBar 변종이 없어 직접 끈다.)
+    -->
+    <style name="Theme.IroiroViewer" parent="android:Theme.DeviceDefault.DayNight">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

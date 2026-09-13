@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  화면에 나가는 글자는 예외 없이 여기에 둔다. 접두어는 모듈 이름(image_)이다 —
+  라이브러리 모듈의 리소스는 앱에서 하나로 합쳐지므로 접두어가 없으면 조용히 덮어쓴다.
+-->
+<resources>
+    <string name="image_close">닫기</string>
+    <string name="image_share">공유</string>
+    <string name="image_delete">삭제</string>
+    <string name="image_info">정보</string>
+    <string name="image_rotate">오른쪽으로 회전</string>
+    <string name="image_more">더보기</string>
+    <string name="image_loading">여는 중</string>
+    <string name="image_failed">이 이미지를 열 수 없습니다</string>
+    <string name="image_failed_reason">%1$s · 이 형식은 이 기기가 디코딩하지 못합니다</string>
+    <string name="image_position">%1$d / %2$d</string>
+
+    <string name="image_exif_size">크기</string>
+    <string name="image_exif_modified">수정한 때</string>
+    <string name="image_exif_pixels">해상도</string>
+    <string name="image_exif_pixels_value">%1$d × %2$d</string>
+    <string name="image_exif_taken">찍은 때</string>
+    <string name="image_exif_camera">카메라</string>
+    <string name="image_exif_lens">렌즈</string>
+    <string name="image_exif_exposure">노출</string>
+    <string name="image_exif_aperture">조리개</string>
+    <string name="image_exif_iso">ISO</string>
+    <string name="image_exif_focal">초점거리</string>
+    <string name="image_exif_path">폴더</string>
+    <!-- 위치·일련번호는 기본으로 감춘다. 화면을 남에게 보여 주는 일이 흔하다. -->
+    <string name="image_exif_reveal">위치·일련번호 보기</string>
+    <string name="image_exif_gps">위치</string>
+    <string name="image_exif_gps_value">%1$.5f, %2$.5f</string>
+    <string name="image_exif_serial">일련번호</string>
+    <string name="image_exif_owner">소유자</string>
+    <string name="image_share_sanitized">메타데이터 제거하고 공유</string>
+    <string name="image_rotate_unsupported">이 형식은 회전을 파일에 저장할 수 없습니다</string>
+    <string name="image_sanitize_failed">이 형식은 메타데이터를 제거할 수 없습니다</string>
+</resources>

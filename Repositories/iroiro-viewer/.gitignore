@@ -1,0 +1,28 @@
+# 상위 Repositories/.gitignore 가 build/ target/ .gradle/ bin/ out/ .idea/ *.iml 을
+# 이미 전역으로 막는다. 여기에는 그 바깥의 것만 적는다.
+#
+# 이 저장소는 GitHub Pages 로 통째로 서비스된다 — 여기 들어온 것은 웹에서 내려받을 수
+# 있다. 그래서 규칙은 '커밋해도 되는가'가 아니라 '공개해도 되는가'로 읽는다.
+# usb-tether 의 교훈대로 폴더가 아니라 이름으로 매칭한다.
+
+# 기계마다 다른 것. sdk.dir 에 사용자 이름이 박힌다.
+local.properties
+
+# 서명 자료. 한 번 새면 이력 재작성 말고는 되돌릴 방법이 없다.
+*.jks
+*.keystore
+*.p12
+keystore.properties
+
+# 빌드 산출물 가운데 상위 규칙이 못 잡는 것
+*.apk
+*.aab
+output-metadata.json
+.kotlin/
+.cxx/
+captures/
+*.hprof
+
+# 검증용 실세계 표본. 남의 문서를 공개 저장소에 올리지 않는다.
+# 저장소에 커밋하는 표본은 '이 테스트를 위해 새로 만든 20KB 이하' 파일뿐이다.
+samples-local/

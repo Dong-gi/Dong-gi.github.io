@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  화면에 나가는 글자는 예외 없이 여기에 둔다. 접두어는 모듈 이름(text_)이다 —
+  라이브러리 모듈의 리소스는 앱에서 하나로 합쳐지므로 접두어가 없으면 조용히 덮어쓴다.
+-->
+<resources>
+    <string name="text_close">닫기</string>
+    <string name="text_more">더보기</string>
+    <string name="text_cancel">취소</string>
+
+    <string name="text_indexing">줄을 세는 중 · %1$d행</string>
+    <string name="text_failed_unreadable">이 파일을 읽을 수 없습니다</string>
+    <string name="text_failed_binary">글이 아닌 파일로 보입니다</string>
+    <string name="text_failed_encoding">이 앱이 읽지 못하는 인코딩입니다</string>
+    <string name="text_open_anyway">인코딩을 골라 열어 보기</string>
+
+    <string name="text_search">찾기</string>
+    <string name="text_search_hint">찾을 말</string>
+    <string name="text_search_close">찾기 닫기</string>
+    <string name="text_search_case">Aa</string>
+    <string name="text_search_running">찾는 중…</string>
+    <string name="text_search_none">없습니다</string>
+    <string name="text_search_count">%1$d / %2$d</string>
+    <string name="text_search_prev">이전</string>
+    <string name="text_search_next">다음</string>
+
+    <string name="text_wrap">줄 접기</string>
+    <string name="text_line_numbers">줄 번호</string>
+    <string name="text_font_bigger">글자 키우기</string>
+    <string name="text_font_smaller">글자 줄이기</string>
+    <string name="text_goto_line">줄 번호로 가기</string>
+    <string name="text_goto_range">1 ~ %1$d</string>
+    <string name="text_goto_go">가기</string>
+
+    <string name="text_encoding">인코딩</string>
+    <string name="text_language">문법 강조</string>
+    <string name="text_no_highlight">칠하지 않음</string>
+    <!-- 언어는 알아냈지만 파일이 커서 강조를 켜지 못한 상태. 숨기지 않고 말한다. -->
+    <string name="text_highlight_off">%1$s · 강조 꺼짐</string>
+    <string name="text_lines">%1$d줄</string>
+
+    <string name="text_evidence_bom">파일 앞머리의 BOM 이 인코딩을 적어 두었습니다</string>
+    <string name="text_evidence_ascii">ASCII 문자만 있어 어느 인코딩으로 읽어도 같습니다</string>
+    <string name="text_evidence_only">이 인코딩으로만 끝까지 읽혔습니다</string>
+    <string name="text_evidence_script">글자 분포로 골랐습니다 (%1$d점, 다음 후보 %2$d점)</string>
+    <string name="text_evidence_korean">UTF-8 로도 읽히지만 한글로 읽는 편이 또렷했습니다 (%1$d%%)</string>
+    <string name="text_evidence_unsupported">알아본 인코딩이지만 이 앱이 읽지 못합니다</string>
+</resources>

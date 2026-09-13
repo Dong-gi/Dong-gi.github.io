@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      아이콘 배경. **밝은 파랑.** 어두운 남색이었는데 런처의 다른 아이콘들 사이에서
+      혼자 무겁게 가라앉아 보였다(사용자가 지적했다). 흰 폴더가 얹히므로 대비는 충분하다.
+    -->
+    <color name="ic_launcher_background">#4A8BF0</color>
+</resources>
