@@ -15,10 +15,9 @@ probe 단계와 다운로드 단계가 별도 인스턴스인 이유다.
     PROBE / _extra_opts / _format_spec / _dest_dir / _filename_template /
     _title / _stream_labels / _resolve_url / _translate_error
 """
-import atexit
+import io
 import os
 import re
-import tempfile
 import threading
 from pathlib import Path
 from typing import ClassVar
@@ -29,9 +28,9 @@ import yt_dlp
 from src.config import Config
 from src.extractors._util import (
     CancelDownload,
+    build_netscape_cookies,
     clean_message,
     escape_outtmpl,
-    write_netscape_cookies,
 )
 from src.extractors.base import BaseExtractor, CookieAuth, ProgressCallback
 from src.models.task import Task
@@ -248,11 +247,45 @@ class YtdlpExtractor(BaseExtractor):
             raise InterruptedError()
 
 
-class CookieFileAuthMixin(CookieAuth):
-    """쿠키 문자열을 임시 Netscape 파일로 기록해 yt-dlp `cookiefile`로 전달하는 믹스인.
+class _RewindingCookieStream(io.StringIO):
+    """yt-dlp `cookiefile`로 넘기는 인메모리 Netscape 쿠키 스트림.
 
-    인메모리 `ydl.cookiejar.set_cookie()` 주입은 사용하지 않는다 — 그 경로는
+    yt-dlp는 `cookiefile`이 경로가 아니면(`is_path_like`가 거짓) 그 객체를
+    `YoutubeDLCookieJar`에 그대로 넘긴다(`yt_dlp/cookies.py`의 `open()`).
+    덕분에 쿠키를 파일로 떨구지 않고도 공식 처리 경로를 그대로 탈 수 있다.
+
+    다만 맨 `StringIO`로는 두 곳에서 깨진다. 둘 다 실측으로 확인한 것이다.
+
+    - **두 번 읽힌다.** `download()`가 probe와 다운로드에 같은 옵션 dict를 넘기므로
+      같은 스트림이 두 번 적재된다. 두 번째는 EOF에서 시작해
+      `LoadError: does not look like a Netscape format cookies file` 가 난다.
+      → `__iter__`에서 되감는다.
+    - **yt-dlp가 되쓴다.** `YoutubeDL.__exit__` → `save_cookies()` 가 `cookiefile`이
+      None이 아니면 무조건 `jar.save()` 를 부르는데, 그 경로의 `open(write=True)` 는
+      `truncate(0)` 만 하고 위치는 되돌리지 않아 내용이 NUL로 채워진다.
+      → `truncate`에서 위치까지 되돌린다.
+    """
+
+    def __iter__(self):
+        self.seek(0)
+        return super().__iter__()
+
+    def truncate(self, size: int | None = None) -> int:
+        result = super().truncate(0 if size is None else size)
+        self.seek(0)
+        return result
+
+
+class CookieFileAuthMixin(CookieAuth):
+    """쿠키 문자열을 인메모리 Netscape 스트림으로 yt-dlp `cookiefile`에 넘기는 믹스인.
+
+    **쿠키를 디스크에 쓰지 않는다.** 예전에는 `%TEMP%`에 평문 Netscape 파일을 떨구고
+    `atexit`으로만 지웠는데, `atexit`은 강제 종료·크래시에서 돌지 않아 세션 쿠키가
+    그대로 남았다. 사용자에게는 "메모리에만 보관한다"고 안내하던 것과도 어긋났다.
+
+    인메모리 `ydl.cookiejar.set_cookie()` 주입과는 다른 이야기다 — 그 경로는
     `YoutubeDLCookieJar.load()`를 우회하므로 extractor의 로그인 판정이 동작하지 않는다.
+    여기서는 `load()`를 그대로 태우되 입력만 파일이 아니라 스트림으로 준다.
 
     영속 저장은 사이트마다 다르다(YouTube는 쿠키 회전이 잦아 세션 전용, bilibili는
     수명이 길어 자격 증명 관리자에 저장). `_load_saved_cookies` / `_save_cookies`
@@ -266,11 +299,7 @@ class CookieFileAuthMixin(CookieAuth):
 
     def __init__(self, config: Config):
         super().__init__(config)  # type: ignore[call-arg]  # 협력적 다중 상속 — YtdlpExtractor로 전달
-        self._cookies_file: Path | None = None
-        atexit.register(self._clear_cookies_file)
-        saved = self._load_saved_cookies()
-        if saved:
-            self._write_cookies_file(saved)
+        self._cookies: str = self._load_saved_cookies()
 
     # ------------------------------------------------------------ 영속 저장 훅
 
@@ -284,29 +313,22 @@ class CookieFileAuthMixin(CookieAuth):
     # ------------------------------------------------------------ CookieAuth
 
     def set_cookies(self, cookie_str: str) -> None:
-        self._clear_cookies_file()
         self._save_cookies(cookie_str)
-        if cookie_str:
-            self._write_cookies_file(cookie_str)
+        self._cookies = cookie_str
 
     def has_cookies(self) -> bool:
-        return self._cookies_file is not None
+        return bool(self._cookies)
 
     # ------------------------------------------------------------ 내부
 
     def _cookie_opts(self) -> dict:
-        """`_extra_opts`에 병합할 yt-dlp 쿠키 옵션."""
-        return {"cookiefile": str(self._cookies_file)} if self._cookies_file else {}
+        """`_extra_opts`에 병합할 yt-dlp 쿠키 옵션.
 
-    def _write_cookies_file(self, cookie_str: str) -> None:
-        # NamedTemporaryFile 대신 mkstemp + 즉시 닫기 — Windows에서 yt-dlp가 읽을 수 있도록
-        fd, name = tempfile.mkstemp(prefix=f"iroiro_{self.site_id}_cookies_", suffix=".txt")
-        os.close(fd)
-        path = Path(name)
-        write_netscape_cookies(cookie_str, path, self.COOKIE_DOMAIN)
-        self._cookies_file = path
-
-    def _clear_cookies_file(self) -> None:
-        if self._cookies_file:
-            self._cookies_file.unlink(missing_ok=True)
-            self._cookies_file = None
+        `download()` 호출마다 새 스트림을 만든다. 동시 다운로드는 익스트랙터
+        인스턴스를 공유하므로(레지스트리 싱글턴) 스트림을 재사용하면 워커끼리
+        같은 객체의 위치를 건드리게 된다.
+        """
+        if not self._cookies:
+            return {}
+        text = build_netscape_cookies(self._cookies, self.COOKIE_DOMAIN)
+        return {"cookiefile": _RewindingCookieStream(text)}

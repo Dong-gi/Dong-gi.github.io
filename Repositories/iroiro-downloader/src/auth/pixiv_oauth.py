@@ -4,7 +4,9 @@ Pixiv OAuth PKCE 흐름 구현.
 동작 원리:
 1. PKCE code_verifier / code_challenge 생성
 2. HKCU 레지스트리에 pixiv:// URI 스킴 핸들러 임시 등록
-   - 핸들러는 콜백 URL을 임시 파일에 기록하는 최소 Python 스크립트
+   - 핸들러는 `python -c` 인라인 한 줄. 콜백 URL을 임시 파일에 기록만 한다.
+     **핸들러 스크립트 파일을 만들지 않는다** — 예측 가능한 경로에 `.py`를 두면
+     거기에 쓸 수 있는 것이 다음 pixiv:// 이동에서 그대로 실행된다.
    - HKCU이므로 관리자 권한 불필요, HKLM(Pixiv 앱 설치 시)보다 우선 적용
 3. 기본 브라우저로 Pixiv 로그인 페이지 오픈
 4. 사용자 로그인 완료 → Pixiv가 pixiv://account/login?code=XXX 로 리다이렉트
@@ -14,6 +16,8 @@ Pixiv OAuth PKCE 흐름 구현.
      OAuth 서버에 등록된 값(https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback)을 사용해야 한다.
      두 값이 다른 것은 의도적이며, 잘못 변경하면 HTTP 400(code 1508)이 발생한다.
 7. 레지스트리 및 임시 파일 정리
+   - 정리는 `PixivLoginDialog.done()` 한 곳에서 한다(Esc·창 닫기·성공·실패 모두 경유).
+   - 크래시로 남은 것은 앱 기동 시 `cleanup_stale_scheme()`이 치운다.
 
 상수 노출:
     AUTH_URL, CLIENT_ID, CLIENT_SECRET, APP_HEADERS
@@ -22,6 +26,7 @@ Pixiv OAuth PKCE 흐름 구현.
 
 import hashlib
 import secrets
+import shutil
 import sys
 import tempfile
 import webbrowser
@@ -60,10 +65,22 @@ APP_HEADERS = {
 
 # ── 콜백 핸들러용 임시 파일/레지스트리 경로 ──────────────────────────────────
 
-_CALLBACK_FILE = Path(tempfile.gettempdir()) / "iroiro_pixiv_callback.txt"
-_HANDLER_SCRIPT = Path(tempfile.gettempdir()) / "iroiro_pixiv_handler.py"
 _REG_KEY = r"Software\Classes\pixiv"
 _REG_CMD_KEY = rf"{_REG_KEY}\shell\open\command"
+
+#: 등록할 때마다 새로 만드는 임시 디렉터리 접두어. 고정 경로를 쓰지 않는 것은
+#: 콜백 파일 경로를 미리 알 수 없게 하기 위한 것이다.
+_TMP_PREFIX = "iroiro_pixiv_"
+
+#: 핸들러가 실행할 코드. **리터럴 고정** — 경로도 URL도 argv로 받으므로
+#: 이 문자열에 외부 값이 끼어들 자리가 없다.
+_HANDLER_CODE = (
+    "import sys,pathlib;"
+    "pathlib.Path(sys.argv[1]).write_text(sys.argv[2],encoding='utf-8')"
+)
+
+_callback_dir: Path | None = None
+_callback_file: Path | None = None
 
 
 def _b64url(data: bytes) -> str:
@@ -78,16 +95,28 @@ def generate_pkce() -> tuple[str, str]:
 
 
 def register_scheme() -> None:
-    """pixiv:// URI 스킴 핸들러를 HKCU 레지스트리에 등록."""
-    _CALLBACK_FILE.unlink(missing_ok=True)
+    """pixiv:// URI 스킴 핸들러를 HKCU 레지스트리에 등록.
 
-    _HANDLER_SCRIPT.write_text(
-        "import sys, pathlib\n"
-        f'pathlib.Path(r"{_CALLBACK_FILE}").write_text(sys.argv[1], encoding="utf-8")\n',
-        encoding="utf-8",
-    )
+    핸들러는 `python -c` 인라인이며 콜백 경로와 URL을 모두 argv로 받는다.
+    디스크에 스크립트를 두지 않으므로 "그 파일에 쓸 수 있으면 실행된다"는
+    문제가 생기지 않는다.
+    """
+    global _callback_dir, _callback_file
 
-    cmd = f'"{sys.executable}" "{_HANDLER_SCRIPT}" "%1"'
+    if getattr(sys, "frozen", False):
+        # 프리즈 빌드에서는 sys.executable 이 앱 자신이라 `-c` 가 통하지 않는다.
+        # 조용히 망가진 핸들러를 심느니 여기서 멈춘다.
+        raise RuntimeError(
+            "프리즈된 빌드에서는 pixiv:// 핸들러를 등록할 수 없습니다. "
+            "소스에서 실행하거나, 앱 자신을 콜백 인자로 받도록 고쳐야 합니다."
+        )
+
+    _cleanup_callback_dir()
+    _callback_dir = Path(tempfile.mkdtemp(prefix=_TMP_PREFIX))
+    _callback_file = _callback_dir / "callback.txt"
+
+    # 경로에 큰따옴표가 들어갈 수 없으므로(Windows 경로 규칙) 이 인용으로 충분하다.
+    cmd = f'"{sys.executable}" -c "{_HANDLER_CODE}" "{_callback_file}" "%1"'
 
     with winreg.CreateKey(winreg.HKEY_CURRENT_USER, _REG_KEY) as k:
         winreg.SetValue(k, "", winreg.REG_SZ, "URL:pixiv Protocol")
@@ -97,14 +126,47 @@ def register_scheme() -> None:
 
 
 def unregister_scheme() -> None:
-    """등록한 pixiv:// 핸들러 및 임시 파일 정리."""
+    """등록한 pixiv:// 핸들러 및 임시 파일 정리. 여러 번 불러도 안전하다."""
+    _delete_reg_keys()
+    _cleanup_callback_dir()
+
+
+def cleanup_stale_scheme() -> None:
+    """앱 기동 시, 지난 실행이 크래시로 남긴 등록·임시 디렉터리를 치운다.
+
+    `done()`이 정상 종료를 모두 덮으므로 여기 걸리는 것은 강제 종료뿐이다.
+    등록이 남아 있으면 아무 웹 페이지나 pixiv:// 로 이동시켜 파이썬을 띄울 수
+    있으므로, 로그인 창을 다시 열지 않더라도 지워야 한다.
+    """
+    _delete_reg_keys()
+    for path in Path(tempfile.gettempdir()).glob(f"{_TMP_PREFIX}*"):
+        _remove_path(path)
+
+
+def _delete_reg_keys() -> None:
     for sub in [r"\shell\open\command", r"\shell\open", r"\shell", ""]:
         try:
             winreg.DeleteKey(winreg.HKEY_CURRENT_USER, _REG_KEY + sub)
         except OSError:
             pass
-    _CALLBACK_FILE.unlink(missing_ok=True)
-    _HANDLER_SCRIPT.unlink(missing_ok=True)
+
+
+def _cleanup_callback_dir() -> None:
+    global _callback_dir, _callback_file
+    if _callback_dir is not None:
+        _remove_path(_callback_dir)
+    _callback_dir = None
+    _callback_file = None
+
+
+def _remove_path(path: Path) -> None:
+    if path.is_dir():
+        shutil.rmtree(path, ignore_errors=True)
+    else:
+        try:
+            path.unlink(missing_ok=True)
+        except OSError:
+            pass
 
 
 def open_login_browser(code_challenge: str) -> None:
@@ -119,8 +181,8 @@ def open_login_browser(code_challenge: str) -> None:
 
 def poll_callback() -> str | None:
     """콜백 파일이 존재하면 pixiv:// URL 반환, 없으면 None."""
-    if _CALLBACK_FILE.exists():
-        return _CALLBACK_FILE.read_text(encoding="utf-8").strip()
+    if _callback_file is not None and _callback_file.exists():
+        return _callback_file.read_text(encoding="utf-8").strip()
     return None
 
 

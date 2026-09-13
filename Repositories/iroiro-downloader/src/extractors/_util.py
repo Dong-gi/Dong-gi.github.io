@@ -1,7 +1,6 @@
 """익스트랙터 공통 유틸리티."""
 import re
 import time
-from pathlib import Path
 
 _UNSAFE_CHARS = re.compile(r'[\\/*?:"<>|]')
 _ANSI_RE = re.compile(r"\x1b\[[0-9;]*[mGKHF]")
@@ -31,13 +30,16 @@ def escape_outtmpl(literal: str) -> str:
     return literal.replace("%", "%%")
 
 
-def write_netscape_cookies(cookie_str: str, path: Path, domain: str) -> None:
-    """'name=value; ...' 형태의 cookie 헤더 문자열을 Netscape 포맷 파일로 저장.
+def build_netscape_cookies(cookie_str: str, domain: str) -> str:
+    """'name=value; ...' 형태의 cookie 헤더 문자열을 Netscape 포맷 텍스트로 변환.
 
-    yt-dlp의 `cookiefile` 옵션이 이 파일을 `YoutubeDLCookieJar.load()`로 처리하며
+    yt-dlp의 `cookiefile` 옵션이 이 텍스트를 `YoutubeDLCookieJar.load()`로 처리하며
     `__Secure-3PAPISID` → `SAPISID` 자동 파생, `_HTTPONLY_PREFIX` 처리 등
     공식 처리 경로를 거치게 된다. 인메모리 `cookiejar.set_cookie()` 주입은
     이 경로를 우회해 extractor가 로그인 상태를 인식하지 못한다.
+
+    **파일로 쓰지 않는다.** 반환한 문자열은 호출자가 메모리 스트림에 담아
+    `cookiefile`로 넘긴다 — 세션 쿠키가 디스크에 남지 않게 하기 위한 것이다.
 
     :param domain: 쿠키를 적용할 도메인. 하위 도메인 포함을 위해 앞에 점을 붙인 형태
         (예: ``".youtube.com"``, ``".bilibili.com"``).
@@ -55,7 +57,7 @@ def write_netscape_cookies(cookie_str: str, path: Path, domain: str) -> None:
         secure = "TRUE" if name.startswith("__Secure-") else "FALSE"
         # 형식: domain<TAB>include_sub<TAB>path<TAB>secure<TAB>expires<TAB>name<TAB>value
         lines.append(f"{domain}\tTRUE\t/\t{secure}\t{expires}\t{name}\t{value.strip()}")
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return "\n".join(lines) + "\n"
 
 
 class CancelDownload(BaseException):

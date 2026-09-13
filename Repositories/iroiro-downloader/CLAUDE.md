@@ -106,7 +106,7 @@ src/
 │   └── pixiv_oauth.py      # PKCE 생성, 레지스트리 등록/해제, 코드 교환
 ├── extractors/
 │   ├── __init__.py         # ExtractorRegistry / init_registry() / get_extractor() / extractor_for_site()
-│   ├── _util.py            # safe_filename(), clean_message(), write_netscape_cookies(), CancelDownload
+│   ├── _util.py            # safe_filename(), clean_message(), build_netscape_cookies(), CancelDownload
 │   ├── _ytdlp.py           # YtdlpExtractor 베이스 + CookieFileAuthMixin
 │   ├── _stream.py          # StreamExtractor 베이스 (HLS/DASH 등 스트리밍 매니페스트)
 │   ├── base.py             # BaseExtractor ABC / CookieAuth / OptionsSchema / CookiePrompt
@@ -218,7 +218,26 @@ progress_hook에서 `stop_event` 확인 시 `CancelDownload(BaseException)`를 r
 
 ### 쿠키 인증 (`CookieFileAuthMixin`)
 
-쿠키 문자열을 임시 Netscape 파일로 기록하고 yt-dlp `cookiefile`로 넘긴다.
+쿠키 문자열을 **인메모리 Netscape 스트림**으로 만들어 yt-dlp `cookiefile`로 넘긴다.
+디스크에 파일을 만들지 않는다.
+
+yt-dlp는 `cookiefile`이 경로가 아니면(`is_path_like`가 거짓) 그 객체를 `YoutubeDLCookieJar`에
+그대로 넘긴다(`yt_dlp/cookies.py`의 `open()`). 이 성질을 이용해 파일 없이 공식 처리 경로를 탄다.
+
+**`_RewindingCookieStream`이 필요한 이유 (함정 둘, 둘 다 실측).** 맨 `StringIO`로는 깨진다.
+
+- **두 번 읽힌다.** `download()`가 probe와 다운로드에 같은 옵션 dict를 넘기므로 같은 스트림이
+  두 번 적재되고, 두 번째는 EOF에서 시작해
+  `LoadError: does not look like a Netscape format cookies file` 가 난다. → `__iter__`에서 되감는다.
+- **yt-dlp가 되쓴다.** `YoutubeDL.__exit__` → `save_cookies()` 가 `cookiefile`이 None이 아니면
+  무조건 `jar.save()` 를 부르고, 그 경로의 `open(write=True)` 는 `truncate(0)` 만 하고 위치는
+  되돌리지 않아 내용이 NUL로 채워진다. → `truncate`에서 위치까지 되돌린다.
+
+`_cookie_opts()`는 호출마다 새 스트림을 만든다. 익스트랙터는 레지스트리 싱글턴이라 동시
+다운로드가 인스턴스를 공유하므로, 스트림을 재사용하면 워커끼리 같은 객체의 위치를 건드린다.
+
+이 방식은 yt-dlp 내부 동작(file-like `cookiefile`)에 기대고 있고 `requirements.txt`의
+`yt-dlp`는 상한이 없다. yt-dlp를 올린 뒤 인증이 조용히 깨지면 여기를 먼저 볼 것.
 
 - **인메모리 `ydl.cookiejar.set_cookie()` 주입은 금지.** `YoutubeDLCookieJar.load()` 경로를 우회하면 extractor의 로그인 판정(`__Secure-3PAPISID` → `SAPISID` 파생, `_HTTPONLY_PREFIX` 처리 등)이 동작하지 않는다.
 - 영속 저장 여부는 `_load_saved_cookies()` / `_save_cookies()` 재정의로 표현. 기본은 세션 전용.
@@ -247,7 +266,7 @@ class ExampleExtractor(CookieFileAuthMixin, YtdlpExtractor):   # 믹스인을 �
   - `pixiv_refresh_token` — Pixiv OAuth refresh token
   - `bilibili_cookies` — bilibili cookie 헤더 문자열 (SESSDATA 등)
   - 접근은 `Config._get_secret()` / `Config._set_secret()` 한 쌍을 통해서만.
-- YouTube 쿠키는 저장하지 않음 — 임시 파일에만 기록하고 종료 시 삭제. 자세한 내용은 "YouTube 인증" 섹션 참고.
+- YouTube 쿠키는 저장하지 않음 — 프로세스 메모리에만 두고 디스크에 쓰지 않는다. 자세한 내용은 "YouTube 인증" 섹션 참고.
 - 나머지 설정(`save_dir`, `max_concurrent`)은 `%APPDATA%\iroiro-downloader\config.json`에 JSON으로 저장.
   - 프로젝트 디렉토리 바깥이므로 git 범위 외.
 
@@ -257,7 +276,13 @@ class ExampleExtractor(CookieFileAuthMixin, YtdlpExtractor):   # 믹스인을 �
 
 1. PKCE `code_verifier` / `code_challenge` 생성
 2. HKCU 레지스트리에 `pixiv://` URI 스킴 핸들러 등록 (관리자 권한 불필요)
-   - 핸들러: 콜백 URL을 `%TEMP%/iroiro_pixiv_callback.txt`에 기록하는 최소 Python 스크립트
+   - 핸들러: `python -c` 인라인 한 줄. 콜백 경로와 URL을 **둘 다 argv로** 받아 기록만 한다.
+   - **핸들러 스크립트 파일을 만들지 않는다.** 예전에는 `%TEMP%/iroiro_pixiv_handler.py`를
+     썼는데, 경로가 고정이라 거기에 쓸 수 있는 무엇이든 다음 `pixiv://` 이동에서 실행됐다.
+     실행 코드는 리터럴 상수(`_HANDLER_CODE`)로 고정해 외부 값이 끼어들 자리를 없앴다.
+   - 콜백 파일은 등록할 때마다 `mkdtemp()`로 새 디렉터리에 만든다 — 경로를 미리 알 수 없게.
+   - 프리즈 빌드에서는 `sys.executable`이 앱 자신이라 `-c`가 통하지 않는다. 조용히 망가진
+     핸들러를 심지 않도록 `register_scheme()`이 `sys.frozen`을 보고 즉시 예외를 던진다.
    - HKCU가 HKLM보다 우선 적용되므로 Pixiv 앱 설치 여부와 무관하게 동작
 3. 기본 브라우저로 Pixiv OAuth 로그인 페이지 오픈
 4. 사용자 로그인 → Pixiv가 `pixiv://account/login?code=XXX` 로 리다이렉트
@@ -265,6 +290,18 @@ class ExampleExtractor(CookieFileAuthMixin, YtdlpExtractor):   # 믹스인을 �
 6. `QTimer` (500ms 간격)가 파일 존재를 폴링 → 감지 시 `exchange_code()` 호출
 7. 레지스트리·임시 파일 정리 후 `accept()`
 8. 타임아웃(3분) 또는 취소 시 `unregister_scheme()` 후 `reject()`
+
+**정리는 `PixivLoginDialog.done()` 한 곳이 보증한다.** Qt는 `accept()` · `reject()` · Esc ·
+창 닫기를 전부 `done()`으로 모으므로, 어느 경로로 닫히든 `unregister_scheme()`이 돈다.
+개별 핸들러(콜백 도착 직후, 오류 표시 직후)에도 호출이 남아 있는데 그것은 등록이 살아 있는
+시간을 줄이려는 것이다 — 특히 `_show_error()`는 다이얼로그를 열어 둔 채 사용자를 기다리므로
+거기서 먼저 지워야 한다. `unregister_scheme()`은 멱등이라 두 번 불려도 무해하다.
+
+크래시·강제 종료는 `done()`도 지나지 않는다. 그것은 기동 시 `main()`이 부르는
+`cleanup_stale_scheme()`이 맡는다 — 레지스트리 키와 `%TEMP%/iroiro_pixiv_*`를 함께 치우며,
+예전 방식이 남긴 고정 이름 파일(`iroiro_pixiv_callback.txt` · `iroiro_pixiv_handler.py`)도
+같이 지운다. 등록이 남아 있으면 아무 웹 페이지나 `pixiv://`로 이동시켜 파이썬을 띄울 수
+있으므로, 로그인 창을 다시 열지 않더라도 반드시 지워야 한다.
 
 token exchange의 `redirect_uri`는 `https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback`. 실제 브라우저 콜백은 `pixiv://account/login`으로 오지만, 서버가 등록된 값으로 검증하는 것은 이 URL이다. `pixiv://account/login`이나 `https://app-api.pixiv.net/web/v1/meets`는 모두 1508을 반환한다.
 
@@ -277,7 +314,8 @@ token exchange의 `redirect_uri`는 `https://app-api.pixiv.net/web/v1/users/auth
 
 YouTube 쿠키는 실측상 **30분 이내**로 회전된다(SIDCC + 메인 세션 토큰 양쪽). 따라서 영속 저장은 무의미하며 **세션 전용 + 반응형(필요 시 입력 요청)** 방식을 채택.
 
-- 메커니즘은 `CookieFileAuthMixin` 공통 구현 사용 (`%TEMP%\iroiro_youtube_cookies_*.txt`). `COOKIES_PERSISTENT = False`이므로 `_save_cookies`를 재정의하지 않아 디스크에 남지 않고, `atexit`로 종료 시 파일 삭제.
+- 메커니즘은 `CookieFileAuthMixin` 공통 구현 사용. `COOKIES_PERSISTENT = False`이므로 `_save_cookies`를 재정의하지 않아 어디에도 저장되지 않고, 쿠키는 프로세스 메모리에만 존재한다. 사용자에게 안내하는 문구(`COOKIE_PROMPT.note`)와 실제 동작이 여기서 일치한다.
+  - 예전에는 `%TEMP%\iroiro_youtube_cookies_*.txt`에 평문으로 쓰고 `atexit`으로 지웠다. `atexit`은 강제 종료·크래시에서 돌지 않아 세션 쿠키가 그대로 남았고, 안내 문구와도 어긋났다. 되돌리지 말 것.
 - `COOKIES_PERSISTENT = False`라서 **설정 창에 YouTube 항목이 나타나지 않는다** — 사전 입력 UI 미제공.
 - 다운로드 흐름:
   1. 쿠키 없이 시도 → 인증 필요한 영상이면 `RuntimeError(AUTH_REQUIRED)`

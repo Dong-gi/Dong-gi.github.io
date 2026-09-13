@@ -42,9 +42,29 @@ class PixivLoginDialog(QDialog):
         self._refresh_token = ""
         self._verifier = ""
         self._elapsed_ms = 0
+        self._timer: QTimer | None = None
 
         self._build()
         self._start()
+
+    # ------------------------------------------------------------------ 정리
+
+    def done(self, result: int) -> None:
+        """모든 종료 경로가 지나는 지점.
+
+        Qt는 `accept()` · `reject()` · Esc · 창 닫기를 전부 여기로 모은다.
+        개별 핸들러에도 `unregister_scheme()` 호출이 남아 있는데(콜백 도착 직후,
+        오류 표시 직후) 그것은 등록이 살아 있는 시간을 줄이려는 것이고,
+        여기는 어느 경로로 닫히든 반드시 정리되게 하는 최후의 보루다.
+        `unregister_scheme()`은 멱등이라 두 번 불려도 무해하다.
+
+        크래시·강제 종료는 여기도 지나지 않는다 — 그것은 기동 시
+        `cleanup_stale_scheme()`이 맡는다.
+        """
+        if self._timer is not None:
+            self._timer.stop()
+        unregister_scheme()
+        super().done(result)
 
     # ------------------------------------------------------------------ build
 
