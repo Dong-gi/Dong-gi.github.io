@@ -22,6 +22,10 @@ import io.github.donggi.iroiroviewer.ui.CoverSupport
  *
  * **10단계가 세 번째를 더했다**(`PlayerSupport`). 미니 바는 `core:playback` 에 있고 큰
  * 재생 화면은 `feature:player` 에 있어 방향이 같은 문제다.
+ *
+ * **11단계가 네 번째를 더했다**(`DocumentSupport`). 문서 화면은 하나인데 여는 포맷은
+ * 12·13단계에 가면 일곱이 된다 — 화면이 직접 고르면 `feature:*` 이 포맷 모듈을 일곱
+ * 보게 되어 의존 표를 어긴다. 무엇을 무엇으로 여는지는 `FormatRegistry` 가 안다.
  */
 class IroiroApp : Application() {
     override fun onCreate() {
@@ -29,5 +33,8 @@ class IroiroApp : Application() {
         ExtractSupport.runner = ArchiveExtractEngine(this)
         CoverSupport.provider = ComicCover
         PlayerSupport.launcher = PlayerEntry
+        FormatRegistry.install()
+        // 아카이브 암호는 이번 세션 동안만 — 앱이 화면에서 사라지면 지운다.
+        io.github.donggi.iroiroviewer.io.SessionPasswords.install(this)
     }
 }

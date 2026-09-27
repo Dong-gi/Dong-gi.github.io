@@ -37,6 +37,23 @@ interface ComicProgressDao {
     suspend fun clear()
 }
 
+/** 문서에서 읽던 자리. 포맷을 가리지 않는다 — [DocProgressEntity] 의 주석 참고. */
+@Dao
+interface DocProgressDao {
+
+    @Query("SELECT * FROM doc_progress WHERE file_key = :fileKey")
+    suspend fun find(fileKey: String): DocProgressEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(entity: DocProgressEntity)
+
+    @Query("DELETE FROM doc_progress WHERE file_key = :fileKey")
+    suspend fun remove(fileKey: String)
+
+    @Query("DELETE FROM doc_progress")
+    suspend fun clear()
+}
+
 @Dao
 interface TrashDao {
 

@@ -72,5 +72,62 @@ class ByteArrayDocumentSource(
 
     override fun openStream(): InputStream = bytes.inputStream()
 
+    /**
+     * 무작위 접근도 된다 — **암호를 푼 OOXML 패키지**가 이 모양으로 ZIP 리더에 들어간다.
+     * 평문을 저장소에 쓰지 않는다는 규칙(CLAUDE.md '암호가 걸린 파일') 때문에 푼 바이트는
+     * 메모리에만 있고, ZIP 은 중앙 디렉터리를 끝에서 찾으므로 채널이 필요하다.
+     */
+    override fun openChannel(): SeekableByteChannel = ByteArrayChannel(bytes)
+
     override fun head(n: Int): ByteArray = bytes.copyOf(minOf(n, bytes.size))
+}
+
+/**
+ * 바이트 배열 위의 **읽기 전용** 채널. 배열을 복사하지 않는다 — 여러 채널이 같은 배열을
+ * 나눠 읽어도 된다(자리는 채널마다 따로다).
+ */
+class ByteArrayChannel(private val bytes: ByteArray) : SeekableByteChannel {
+
+    private var position = 0L
+    private var open = true
+
+    override fun read(dst: java.nio.ByteBuffer): Int {
+        check()
+        if (position >= bytes.size) return -1
+        val n = minOf(dst.remaining().toLong(), bytes.size - position).toInt()
+        dst.put(bytes, position.toInt(), n)
+        position += n
+        return n
+    }
+
+    override fun write(src: java.nio.ByteBuffer): Int = throw java.nio.channels.NonWritableChannelException()
+
+    override fun position(): Long {
+        check()
+        return position
+    }
+
+    override fun position(newPosition: Long): SeekableByteChannel {
+        check()
+        require(newPosition >= 0) { "음수 자리" }
+        position = newPosition
+        return this
+    }
+
+    override fun size(): Long {
+        check()
+        return bytes.size.toLong()
+    }
+
+    override fun truncate(size: Long): SeekableByteChannel = throw java.nio.channels.NonWritableChannelException()
+
+    override fun isOpen(): Boolean = open
+
+    override fun close() {
+        open = false
+    }
+
+    private fun check() {
+        if (!open) throw java.nio.channels.ClosedChannelException()
+    }
 }

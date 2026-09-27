@@ -7,10 +7,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.donggi.iroiroviewer.data.ComicProgressEntity
 import io.github.donggi.iroiroviewer.data.IroiroDatabase
+import io.github.donggi.iroiroviewer.format.FileDocumentSource
+import io.github.donggi.iroiroviewer.format.archive.ArchivePasswordException
+import io.github.donggi.iroiroviewer.format.archive.Archives
 import io.github.donggi.iroiroviewer.io.FileKey
 import io.github.donggi.iroiroviewer.io.Iro
+import io.github.donggi.iroiroviewer.io.SessionPasswords
+import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.ComicLimits
 import io.github.donggi.iroiroviewer.safety.ImageLimits
+import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -20,7 +26,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.io.File
+import kotlinx.coroutines.withContext
 
 /**
  * 만화 한 권을 읽는 화면의 상태.
@@ -132,6 +138,8 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
             if (startEntryIndex >= 0) jumpToEntry(startEntryIndex)
             return
         }
+        lastStartEntry = startEntryIndex
+        _asking.value = null
 
         loadJob?.cancel()
         closeSource()
@@ -151,10 +159,20 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
             // **아직 아무도 소유하지 않은 리더.** 여기까지 오는 도중에 취소되면
             // `finally` 가 닫는다 — 자세한 것은 `ComicOpen.openArchive` 의 주석.
             var orphan: ComicSource? = null
+            // 이번 세션에 이 파일의 암호를 넣었으면 그것으로 연다(사본 — 끝나면 지운다).
+            // 압축 목록에서 암호를 넣고 그림 항목을 누른 길이 이것이다.
+            val password = if (file.isFile) SessionPasswords.get(SessionPasswords.keyOf(file)) else null
             try {
-                val result = ComicOpen.open(path, ComicLimits.windowBytes(budget)) { orphan = it }
+                val result = ComicOpen.open(path, ComicLimits.windowBytes(budget), password = password) { orphan = it }
                 when (result) {
-                    is ComicOpen.Result.Failed -> _state.value = State.Failed(result.kind)
+                    is ComicOpen.Result.Failed -> {
+                        if (result.kind == ComicOpen.Kind.NEEDS_PASSWORD) {
+                            // 기억해 둔 암호가 있었는데도 묻는다면 그것이 낡았다.
+                            if (password != null) SessionPasswords.forget(SessionPasswords.keyOf(file))
+                            _asking.value = false
+                        }
+                        _state.value = State.Failed(result.kind)
+                    }
                     is ComicOpen.Result.Ready -> {
                         source = result.source
                         // 소유권이 [source] 로 넘어갔다. 이제 닫는 것은 closeSource 다.
@@ -185,6 +203,71 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
             } finally {
                 // 취소든 예외든, 주인 없는 리더를 남기지 않는다.
                 orphan?.let { runCatching { it.close() } }
+                password?.fill('\u0000')
+            }
+        }
+    }
+
+    /** 마지막으로 연 길의 시작 엔트리. 암호를 넣고 다시 열 때 같은 쪽으로 간다. */
+    private var lastStartEntry = -1
+
+    /** 암호를 묻는 중인가 — null 아님, false 처음, true 방금 넣은 것이 틀렸다. */
+    private val _asking = MutableStateFlow<Boolean?>(null)
+    val asking: StateFlow<Boolean?> = _asking.asStateFlow()
+
+    fun requestPassword() {
+        _asking.value = false
+    }
+
+    fun dismissPassword() {
+        _asking.value = null
+    }
+
+    /**
+     * 넣은 암호가 맞는지 확인하고, 맞으면 이번 세션에 기억한 뒤 다시 연다.
+     *
+     * 배열의 주인이 여기로 넘어온다. 확인이 끝나면 0 으로 덮는다.
+     */
+    fun submitPassword(password: CharArray) {
+        val path = opened?.path
+        if (path == null) {
+            password.fill('\u0000')
+            return
+        }
+        val file = File(path)
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
+            try {
+                val ok = withContext(IroDispatchers.parsing) {
+                    try {
+                        Archives.open(FileDocumentSource(file), password = password).use { Archives.verifyPassword(it) }
+                    } catch (e: ArchivePasswordException) {
+                        false
+                    }
+                }
+                if (ok) {
+                    SessionPasswords.put(SessionPasswords.keyOf(file), password)
+                    _asking.value = null
+                    opened = null
+                    open(path, lastStartEntry)
+                } else {
+                    _asking.value = true
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (t: Throwable) {
+                // 확인이 '틀렸다' 가 아닌 이유로 끝났다 — 상한·풀지 않는 방식. 원문은 화면에 보내지 않는다.
+                _asking.value = null
+                _state.value = State.Failed(
+                    when {
+                        t is io.github.donggi.iroiroviewer.safety.ParseLimitExceededException ||
+                            t.javaClass.simpleName.contains("MemoryLimit") -> ComicOpen.Kind.TOO_LARGE
+                        t.javaClass.simpleName.contains("Encrypt") -> ComicOpen.Kind.ENCRYPTED
+                        else -> ComicOpen.Kind.CORRUPT
+                    },
+                )
+            } finally {
+                password.fill('\u0000')
             }
         }
     }
@@ -327,6 +410,7 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
         key = null
         _page.value = 0
         _state.value = State.Loading
+        _asking.value = null
     }
 
     override fun onCleared() {

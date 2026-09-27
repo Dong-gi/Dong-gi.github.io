@@ -130,8 +130,20 @@ object FileOpManager {
             val destParent: String,
             val newFolderName: String?,
             val conflict: FileOpEngine.Conflict,
+            /**
+             * 아카이브 암호(없으면 null). **요청을 만들 때 붙든 사본**이다 — 큐가 밀려 앱이
+             * 화면에서 사라진 뒤에 돌아도 `SessionPasswords` 가 지워져 있어도 풀 수 있게.
+             * 푸는 쪽(`ExtractSupport.Runner`)이 다 쓰고 0 으로 덮는다. **돌지 않고 버려지는
+             * 길**(대기 중 '전부 취소', 작업 사이의 취소, 시작 전에 끊긴 작업)은 큐가 덮는다
+             * — [wipeSecrets].
+             */
+            val password: CharArray? = null,
         ) : Request {
             override val label get() = destParent
+
+            // 배열이 `toString`(로그·예외)에 실려 나가지 않게 한다. 데이터 클래스의 기본
+            // `toString` 은 배열의 주소만 찍지만, 판이 바뀌어 내용을 찍게 되는 날을 막아 둔다.
+            override fun toString(): String = "Extract(id=$id, entries=${entryIndices?.size ?: "all"})"
         }
 
         /**
@@ -259,9 +271,22 @@ object FileOpManager {
      * 계속 옮겨지면서 프로세스는 언제 죽어도 이상하지 않은 상태가 된다.
      */
     fun cancelAll() {
-        while (queue.tryReceive().isSuccess) queued.decrementAndGet()
+        while (true) {
+            val (request, _) = queue.tryReceive().getOrNull() ?: break
+            queued.decrementAndGet()
+            // 돌지 않을 요청이다. 붙든 암호를 여기서 지운다(돌았다면 푸는 쪽이 지웠다).
+            request.wipeSecrets()
+        }
         cancelRequested = true
         current?.cancel()
+    }
+
+    /**
+     * 요청이 붙든 비밀(아카이브 암호)을 0 으로 덮는다. 요청이 끝났거나 버려질 때 부른다.
+     * 두 번 불러도 된다 — 푸는 쪽이 이미 덮은 배열을 다시 덮을 뿐이다.
+     */
+    private fun Request.wipeSecrets() {
+        if (this is Request.Extract) password?.fill('\u0000')
     }
 
     /** [FileOpService] 가 `startForeground` 를 마치고 부른다. */
@@ -282,6 +307,7 @@ object FileOpManager {
                 if (cancelRequested) {
                     // 작업 사이에 눌린 취소. 시작하지 않고 결과만 남긴다.
                     cancelRequested = false
+                    request.wipeSecrets()
                     if (!request.silent) {
                         _results.trySend(Finished(request.id, kind, FileOpEngine.Outcome.Cancelled))
                     }
@@ -305,6 +331,9 @@ object FileOpManager {
                 }
 
                 job.join()
+                // 시작하기 전에 취소된 작업은 블록이 아예 돌지 않는다 — 푸는 쪽이 암호를 지울
+                // 기회가 없었다. 어느 길로 끝났든 여기서 한 번 더 덮는다.
+                request.wipeSecrets()
                 watchdog?.cancel()
                 current = null
                 if (queued.get() <= 0) {

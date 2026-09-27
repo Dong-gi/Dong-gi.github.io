@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -65,9 +66,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.donggi.iroiroviewer.ui.PasswordDialog
 import io.github.donggi.iroiroviewer.ui.gesture.ZoomState
 import io.github.donggi.iroiroviewer.ui.image.ZoomableImage
 import io.github.donggi.iroiroviewer.ui.image.rememberAnimatedPainter
+import io.github.donggi.iroiroviewer.ui.image.rememberRasterDetail
 
 /**
  * 만화 한 권을 읽는 화면.
@@ -101,6 +104,7 @@ fun ComicScreen(
     val vm: ComicViewModel = viewModel()
     val state by vm.state.collectAsStateWithLifecycle()
     val direction by vm.direction.collectAsStateWithLifecycle()
+    val asking by vm.asking.collectAsStateWithLifecycle()
 
     LaunchedEffect(path, startEntryIndex) { vm.open(path, startEntryIndex) }
 
@@ -160,12 +164,22 @@ fun ComicScreen(
                 Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(
-                    text = stringResource(failureText(s.kind)),
-                    color = Color.White,
-                    style = MaterialTheme.typography.bodyMedium,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(32.dp),
-                )
+                ) {
+                    Text(
+                        text = stringResource(failureText(s.kind)),
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                    // 암호가 필요하면 창을 닫아도 다시 열 길을 남긴다.
+                    if (s.kind == ComicOpen.Kind.NEEDS_PASSWORD) {
+                        Button(onClick = vm::requestPassword, modifier = Modifier.padding(top = 16.dp)) {
+                            Text(stringResource(R.string.comic_password_enter))
+                        }
+                    }
+                }
             }
 
             is ComicViewModel.State.Ready -> {
@@ -271,6 +285,16 @@ fun ComicScreen(
             },
         )
     }
+
+    asking?.let { wrong ->
+        PasswordDialog(
+            title = stringResource(R.string.comic_password_title),
+            message = stringResource(R.string.comic_password_body),
+            wrong = wrong,
+            onDismiss = vm::dismissPassword,
+            onSubmit = vm::submitPassword,
+        )
+    }
 }
 
 /**
@@ -370,11 +394,25 @@ private fun ComicPageView(
             )
 
             is PageState.Still -> {
+                // 확대하면 원본의 보이는 자리를 다시 떠 얹는다. 최대 배율이 원본의 2배라
+                // 바닥층(화면에 맞춰 줄여 뜬 것)만으로는 흐리다.
+                val detail = rememberRasterDetail(
+                    key = store to ordinal,
+                    state = zoomState,
+                    baseWidth = s.bitmap.width,
+                    originalWidth = if (s.info.canUseRegionDecoder) s.info.width else 0,
+                    originalHeight = if (s.info.canUseRegionDecoder) s.info.height else 0,
+                    capBytes = store.detailCap,
+                ) { want ->
+                    store.region(ordinal, intArrayOf(want.left, want.top, want.right, want.bottom), want.sample)
+                }
                 ZoomableImage(
                     bitmap = s.bitmap,
                     state = zoomState,
                     modifier = Modifier.fillMaxSize(),
                     onTap = onTap,
+                    detail = detail,
+                    originalWidth = s.info.displayWidth,
                 )
                 if (s.info.apng) ApngNotice()
             }
@@ -699,6 +737,7 @@ private fun failureText(kind: ComicOpen.Kind): Int = when (kind) {
     ComicOpen.Kind.CORRUPT -> R.string.comic_failed_corrupt
     ComicOpen.Kind.UNSUPPORTED -> R.string.comic_failed_unsupported
     ComicOpen.Kind.TOO_LARGE -> R.string.comic_failed_too_large
+    ComicOpen.Kind.NEEDS_PASSWORD -> R.string.comic_failed_password
     ComicOpen.Kind.ENCRYPTED -> R.string.comic_failed_encrypted
     ComicOpen.Kind.NO_PAGES -> R.string.comic_failed_no_pages
 }

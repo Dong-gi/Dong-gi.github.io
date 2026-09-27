@@ -50,6 +50,10 @@ class ArchiveTree private constructor(val root: Node) {
         val isEncrypted: Boolean,
         val isLink: Boolean,
         children: List<Node>,
+        /** 암호 항목이지만 리더가 받은 암호로 풀 수 있다([ArchiveEntry.decryptable]). */
+        val decryptable: Boolean = false,
+        /** 암호를 넣으면 읽히게 된다([ArchiveEntry.needsPassword]). 화면이 이것으로 암호를 묻는다. */
+        val needsPassword: Boolean = false,
     ) {
         val children: List<Node> = children
 
@@ -144,6 +148,8 @@ class ArchiveTree private constructor(val root: Node) {
                         isEncrypted = e.isEncrypted,
                         isLink = e.isLink,
                         children = emptyList(),
+                        decryptable = e.decryptable,
+                        needsPassword = e.needsPassword,
                     )
                 }
                 val looseNodes = loose.map { e ->
@@ -159,6 +165,8 @@ class ArchiveTree private constructor(val root: Node) {
                         isEncrypted = e.isEncrypted,
                         isLink = e.isLink,
                         children = emptyList(),
+                        decryptable = e.decryptable,
+                        needsPassword = e.needsPassword,
                     )
                 }
                 val all = (childDirs + childFiles + looseNodes).sortedWith(nodeOrder(collator))

@@ -16,14 +16,35 @@ import kotlinx.coroutines.withTimeout
  */
 object Documents {
 
+    /**
+     * @param onOpen 열린 문서를 **만든 자리에서** 받는다. 이 함수가 값을 돌려주기 전에
+     *   불리므로, 취소·시간 상한으로 반환값이 버려져도 호출자는 닫을 손잡이를 갖는다
+     *   ([OpenedDocument] 의 '값을 돌려주는 것과 소유권을 넘기는 것' 참고).
+     *
+     *   쓰는 모양은 이렇다.
+     *
+     *   ```
+     *   var opened: OpenedDocument? = null
+     *   try {
+     *       val outcome = Documents.open(opener, source) { opened = it }
+     *       if (outcome is OpenOutcome.Success) {
+     *           keep(outcome.document)
+     *           opened = null            // 주인이 바뀌었다
+     *       }
+     *   } finally {
+     *       opened?.close()              // 취소·실패로 버려진 것을 닫는다
+     *   }
+     *   ```
+     */
     suspend fun open(
         opener: DocumentOpener,
         source: DocumentSource,
         progress: ProgressSink = ProgressSink.NONE,
         limits: ParseLimits = ParseLimits.DEFAULT,
+        onOpen: (OpenedDocument) -> Unit = {},
     ): OpenOutcome = try {
         withTimeout(limits.openTimeoutMs) {
-            opener.open(source, progress)
+            opener.open(source, progress, onOpen)
         }
     } catch (e: TimeoutCancellationException) {
         // 시간 상한은 '취소' 로 오지만 사용자에게는 실패다. 다시 던지면 조용히 사라진다.

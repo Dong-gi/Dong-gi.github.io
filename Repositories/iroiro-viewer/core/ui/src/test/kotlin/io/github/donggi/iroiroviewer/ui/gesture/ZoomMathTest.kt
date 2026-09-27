@@ -82,17 +82,51 @@ class ZoomMathTest {
     }
 
     @Test
-    fun `최대 배율은 뷰포트가 아니라 그려진 폭으로 잰다`() {
+    fun `최대 배율은 원본의 두 배다`() {
         // 태블릿(2560x1600)에 4:3 사진(4000x3000). 높이가 먼저 차서 그려진 폭은 2133 이다.
         val (fittedW, _) = ZoomMath.fittedSize(4000, 3000, 2560f, 1600f)
         near(2133.33f, fittedW, tolerance = 1f)
-        // 뷰포트 폭(2560)으로 재면 4000/2560 = 1.56 → 하한 2 로 잘려 '상한까지 키워도 흐림'.
-        // 그려진 폭으로 재면 4000/2133 = 1.875 → 역시 하한이지만, 계산의 근거가 옳다.
-        near(2f, ZoomMath.maxScale(4000, fittedW))
-        // 화면보다 훨씬 큰 원본은 원본 화소까지만 키운다.
-        near(11.11f, ZoomMath.maxScale(12000, 1080f), tolerance = 0.1f)
-        // 그리고 상한을 넘지 않는다.
-        near(12f, ZoomMath.maxScale(99999, 1080f))
+        // 원본의 두 배 = 8000 화소 폭. 맞춤(2133) 기준으로 3.75배다.
+        // **뷰포트 폭(2560)으로 재면** 3.125배로 낮게 잡힌다 — 그려진 폭으로 재는 이유.
+        near(3.75f, ZoomMath.maxScale(4000, fittedW))
+        // 12MP 를 폰 폭에 맞추면 원본의 두 배는 맞춤의 22배다.
+        near(22.22f, ZoomMath.maxScale(12000, 1080f), tolerance = 0.05f)
+        // 퇴화한 경우만 막는다.
+        near(ZoomMath.MAX_MAX_SCALE, ZoomMath.maxScale(99999, 1080f))
+    }
+
+    @Test
+    fun `원본이 작은 그림도 맞춤의 두 배까지는 키운다`() {
+        // 300 화소 아이콘을 1080 폭에 맞추면 이미 원본의 3.6배다. 규칙대로면 확대가 0 이 되고,
+        // 두 번 두드려도 아무 일이 없으면 고장으로 읽힌다 — 하한이 그것을 막는다.
+        near(ZoomMath.MIN_MAX_SCALE, ZoomMath.maxScale(300, 1080f))
+        // 원본을 모르면(0) 하한.
+        near(ZoomMath.MIN_MAX_SCALE, ZoomMath.maxScale(0, 1080f))
+        near(ZoomMath.MIN_MAX_SCALE, ZoomMath.maxScale(4000, 0f))
+    }
+
+    @Test
+    fun `예전 식은 줄여 뜬 비트맵을 원본으로 잘못 알았다`() {
+        // 바닥층은 화면에 맞춰 줄여 뜬다(1080 폭). 그것을 원본 자리에 넣으면 12MP 사진도
+        // 맞춤의 2배에서 멈췄다 — 원본의 18%. 원본(4000)을 넣어야 원본의 2배가 된다.
+        near(2f, ZoomMath.maxScale(1080, 1080f))
+        near(7.41f, ZoomMath.maxScale(4000, 1080f), tolerance = 0.01f)
+    }
+
+    @Test
+    fun `보이는 자리는 바닥층 안의 비율이다`() {
+        // 배율 1: 폭은 뷰포트에 꽉 차고(0~1), 세로는 바닥층(540)이 가운데라 전부 보인다.
+        val whole = ZoomMath.visibleFraction(1f, 1080f, 2400f, 1080f, 540f, 0f, 0f)!!
+        near(0f, whole[0]); near(1f, whole[2]); near(0f, whole[1]); near(1f, whole[3])
+        // 2배로 가운데: 폭의 가운데 절반이 보인다.
+        val mid = ZoomMath.visibleFraction(2f, 1080f, 2400f, 1080f, 540f, 0f, 0f)!!
+        near(0.25f, mid[0]); near(0.75f, mid[2])
+        // 오른쪽 끝까지 밀면(offset = -540) 오른쪽 절반이 보인다.
+        val right = ZoomMath.visibleFraction(2f, 1080f, 2400f, 1080f, 540f, -540f, 0f)!!
+        near(0.5f, right[0]); near(1f, right[2])
+        // 잴 수 없으면 null.
+        kotlin.test.assertNull(ZoomMath.visibleFraction(2f, 1080f, 2400f, 0f, 0f, 0f, 0f))
+        kotlin.test.assertNull(ZoomMath.visibleFraction(Float.NaN, 1080f, 2400f, 1080f, 540f, 0f, 0f))
     }
 
     @Test

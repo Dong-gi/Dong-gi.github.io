@@ -7,6 +7,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -55,6 +60,13 @@ fun ZoomableImage(
     modifier: Modifier = Modifier,
     onTap: () -> Unit = {},
     onLongPress: () -> Unit = {},
+    detail: DetailLayer? = null,
+    /**
+     * 원본의 폭(화면 방향 기준, 화소). **최대 배율을 이것으로 잰다** — 원본의 2배까지
+     * ([ZoomMath.maxScale]). [bitmap] 은 화면에 맞춰 줄여 뜬 것이라 원본이 아니다.
+     * 주지 않으면 바닥층 폭으로 친다.
+     */
+    originalWidth: Int = bitmap?.width ?: 0,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -101,43 +113,98 @@ fun ZoomableImage(
                 .fillMaxSize()
                 .transformable(state = transformable, canPan = { state.canPan }),
         ) {
+            // **크기가 그대로여도 원본이 늦게 알려질 수 있다**(사진의 원본 치수를 재는 일이
+            // 바닥층 디코딩과 따로 돈다). `onSizeChanged` 는 크기가 바뀔 때만 오므로 그것만
+            // 믿으면 최대 배율이 옛 값에 머문다. 재구성마다 한 번 더 알리되, `onLayout` 이
+            // 같은 값이면 곧바로 돌아온다.
+            var canvasSize by remember { mutableStateOf(Size.Zero) }
+            SideEffect {
+                if (bitmap != null && canvasSize.width > 0f) {
+                    state.onLayout(
+                        canvasSize,
+                        bitmap.width,
+                        bitmap.height,
+                        originalWidth.takeIf { w -> w > 0 } ?: bitmap.width,
+                    )
+                }
+            }
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
                     .onSizeChanged {
+                        canvasSize = Size(it.width.toFloat(), it.height.toFloat())
                         if (bitmap != null) {
                             state.onLayout(
-                                Size(it.width.toFloat(), it.height.toFloat()),
+                                canvasSize,
                                 bitmap.width,
                                 bitmap.height,
+                                originalWidth.takeIf { w -> w > 0 } ?: bitmap.width,
                             )
                         }
                     },
             ) {
-                if (bitmap != null) drawFitted(bitmap, state)
+                if (bitmap != null) drawFitted(bitmap, detail, state)
             }
         }
     }
 }
 
 /**
+ * 바닥층 위에 얹는 **선명한 조각**.
+ *
+ * 좌표 넷은 전부 바닥층 안의 **비율**(0~1)이다 — 화소가 아니다. 바닥층은 뷰포트에
+ * 맞춰지므로 화면이 돌거나 예산이 바뀌면 그 화소 크기가 달라지는데, 비율로 적어 두면
+ * 얹는 자리가 그 변화를 따라간다.
+ *
+ * PDF 뷰어는 더 큰 배율로 **다시 그린** 타일을, 사진·만화 뷰어는 원본을 **영역 디코딩**한
+ * 조각을 얹는다([rememberRasterDetail]). 어느 쪽이든 바닥층은 흐린 채로 남아 조각이 오기
+ * 전과 조각이 덮지 못한 자리를 메운다.
+ */
+data class DetailLayer(
+    val image: ImageBitmap,
+    val left: Float,
+    val top: Float,
+    val width: Float,
+    val height: Float,
+)
+
+/**
  * 배율 1 에서 화면에 맞추고, 그 위에 확대·이동을 얹어 그린다.
  *
  * **변환을 [ZoomState] 한 곳에서만 읽는다.** 층(흐린 바닥 / 선명한 상세)이 늘어나도 같은
  * 변환을 쓰면 교체되는 프레임에 그림이 튀지 않는다. 층마다 자기 변환을 들면 반드시 어긋난다.
+ *
+ * 상세층은 **바닥층을 지우지 않고 덮는다.** 타일이 도착하기 전에도, 타일이 화면의 일부만
+ * 덮을 때도 나머지는 흐린 바닥이 메운다 — 비어 있는 흰 자리가 보이는 것보다 낫다.
  */
-private fun DrawScope.drawFitted(bitmap: ImageBitmap, state: ZoomState) {
+private fun DrawScope.drawFitted(bitmap: ImageBitmap, detail: DetailLayer?, state: ZoomState) {
     val (fw, fh) = ZoomMath.fittedSize(bitmap.width, bitmap.height, size.width, size.height)
     if (fw <= 0f || fh <= 0f) return
     translate(state.offset.x, state.offset.y) {
         scale(state.scale, pivot = center) {
             val left = (size.width - fw) / 2f
             val top = (size.height - fh) / 2f
-            drawImage(
-                image = bitmap,
-                dstOffset = androidx.compose.ui.unit.IntOffset(left.toInt(), top.toInt()),
-                dstSize = androidx.compose.ui.unit.IntSize(fw.toInt(), fh.toInt()),
-            )
+            // **두 층 다 부동소수로 놓는다.** 예전에는 자리와 크기를 `IntOffset`·`IntSize` 로
+            // 잘라 **확대 변환 안에서** 그렸다 — 잘린 1화소 미만의 어긋남이 배율만큼 커져,
+            // 원본 2배까지 확대하면 선명한 조각이 바닥층에서 수 ~ 수십 화소 떨어진 자리에 얹혀
+            // 조각이 올 때마다 그림이 튀었다(적대적 검토가 계산으로 잡았다: 12000 화소
+            // 파노라마에서 18 화소). 바닥층과 조각이 `ZoomMath` 가 가정하는 같은 사상을 쓴다.
+            translate(left, top) {
+                scale(fw / bitmap.width, fh / bitmap.height, pivot = Offset.Zero) {
+                    drawImage(bitmap)
+                }
+            }
+            if (detail != null && detail.image.width > 0 && detail.image.height > 0) {
+                translate(left + detail.left * fw, top + detail.top * fh) {
+                    scale(
+                        detail.width * fw / detail.image.width,
+                        detail.height * fh / detail.image.height,
+                        pivot = Offset.Zero,
+                    ) {
+                        drawImage(detail.image)
+                    }
+                }
+            }
         }
     }
 }

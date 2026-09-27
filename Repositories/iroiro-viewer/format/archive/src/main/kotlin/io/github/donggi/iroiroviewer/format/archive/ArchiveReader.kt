@@ -29,7 +29,7 @@ data class ArchiveEntry(
     val isDirectory: Boolean,
     /** 심볼릭 링크·하드링크·정션. 내용이 파일이 아니라 경로 문자열이다. */
     val isLink: Boolean,
-    /** 암호가 걸려 있다. 이 뷰어는 복호화하지 않는다. */
+    /** 암호가 걸려 있다. 목록에 자물쇠로 보인다. */
     val isEncrypted: Boolean,
     /** 없으면 -1. */
     val crc: Long,
@@ -45,15 +45,44 @@ data class ArchiveEntry(
      * 모르면 **지어내지 않는다.** 0 이면 푼 쪽이 시각을 건드리지 않는다.
      */
     val lastModified: Long = 0L,
+    /**
+     * 암호가 걸렸지만 **리더가 암호를 받아 풀 수 있다.** 리더를 암호 없이 열었거나 우리가
+     * 풀지 않는 방식(PKWARE 의 강한 암호화)이면 거짓이다.
+     */
+    val decryptable: Boolean = false,
+    /**
+     * 암호가 걸렸는데 **어떤 암호로도 이 앱이 풀 수 없다** — PKWARE 의 강한 암호화, 암호 안쪽의
+     * 압축 방식이 우리가 풀지 않는 것(LZMA·PPMd 등). 이것을 [needsPassword] 와 가르지 않으면
+     * 화면이 풀 수 없는 항목에 암호를 묻고, 무엇을 넣어도 '잠김' 이 남는 고리에 빠진다.
+     */
+    val lockedForGood: Boolean = false,
 ) {
-    /** 실제로 열어도 되는 항목인가. */
+    /** 실제로 열어도 되는 항목인가. 암호 항목은 리더가 암호를 받았을 때만이다. */
     val isReadable: Boolean
-        get() = !isDirectory && !isLink && !isEncrypted && safeName != null
+        get() = !isDirectory && !isLink && (!isEncrypted || decryptable) && safeName != null
+
+    /**
+     * **암호를 넣으면 읽히게 되는** 항목인가. 화면이 '암호 넣기' 를 띄우는 근거는 이것 하나다 —
+     * [isEncrypted] 만 보면 링크·위험한 이름·[lockedForGood] 처럼 암호와 무관하게 못 여는 항목에도
+     * 암호를 묻는다.
+     */
+    val needsPassword: Boolean
+        get() = isEncrypted && !decryptable && !lockedForGood && !isDirectory && !isLink && safeName != null
 
     companion object {
         fun sanitize(name: String): String? = ArchivePath.sanitize(name)
     }
 }
+
+/**
+ * 암호 때문에 읽지 못했다.
+ *
+ * [wrongPassword] 가 거짓이면 **암호가 필요하다**(헤더까지 잠긴 7z·RAR 는 목록조차 암호 없이
+ * 읽을 수 없다), 참이면 **넣은 암호가 틀렸다.** 메시지에 경로를 넣지 않는다 — 라이브러리의
+ * `PasswordRequiredException` 은 메시지에 **절대경로**를 싣는다(실측). 그것을 여기서 끊는다.
+ */
+class ArchivePasswordException(val wrongPassword: Boolean) :
+    java.io.IOException(if (wrongPassword) "암호가 맞지 않다" else "암호가 필요하다")
 
 /**
  * 아카이브를 읽는 공통 계약.
@@ -135,6 +164,17 @@ interface ArchiveReader : AutoCloseable {
      *   위로 던지는 것은 취소와 아카이브 전체를 무효로 만드는 오류뿐이다.
      */
     fun extractSequentially(sink: EntrySink)
+
+    /**
+     * 리더가 받은 암호가 맞는가. 암호 항목이 없으면 참이다(물을 것이 없다).
+     *
+     * 기본 구현은 **암호 항목 하나를 읽어 본다**([PasswordCheck]). 방식마다 틀린 암호가 드러나는
+     * 자리가 달라 구현이 덮어쓸 수 있다 — RAR 은 읽는 스트림이 실패를 삼키므로 반드시 덮어쓴다.
+     *
+     * @throws java.io.InterruptedIOException 취소.
+     * @throws ParseLimitExceededException 확인하려면 상한을 넘겨야 한다 — '틀렸다' 가 아니다.
+     */
+    fun verifyPassword(): Boolean = PasswordCheck.byReading(this)
 
     /**
      * solid 압축인가 — 엔트리 하나를 꺼내려면 앞엣것을 풀어야 하는가.

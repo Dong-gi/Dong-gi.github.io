@@ -24,6 +24,15 @@ android {
     }
 }
 
+// 암호 아카이브 표본(`archivecrypt/`)을 **JVM 시험과 한 벌로 나눠 쓴다** — 리더 시험은
+// `format:archive` 에 있고, 여기 계측 시험은 같은 표본으로 실제 파일시스템에 푼다.
+// 두 벌로 두면 한쪽만 다시 만들어지는 날이 온다(`feature:docview` 와 같은 장치).
+androidComponents {
+    onVariants { variant ->
+        variant.androidTest?.sources?.assets?.addStaticSourceDirectory("../../format/archive/src/test/resources")
+    }
+}
+
 dependencies {
     // feature 끼리는 참조하지 않는다. 잇는 곳은 app 하나다.
     implementation(project(":core:model"))

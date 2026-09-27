@@ -141,9 +141,13 @@ object ImageIo {
             orientation == ExifInterface.ORIENTATION_TRANSVERSE
         val swapped = displayW == storedH && displayH == storedW && storedW != storedH
         val applied: Boolean? = when {
-            // 치수가 안 바뀌는 방향(1·3·거울상)이나 정사각이면 잴 수 없다.
-            !wantsSwap && orientation != ExifInterface.ORIENTATION_NORMAL &&
-                orientation != ExifInterface.ORIENTATION_UNDEFINED -> null
+            // **정방향은 잴 것이 없다** — 어느 디코더도 돌리지 않는다. 정사각 검사보다 먼저 둔다:
+            // 뒤에 두면 정사각 정방향 사진이 '잴 수 없다' 가 되어 선명화 조각이 한 번도 오지 않는다
+            // (적대적 검토가 잡았다).
+            orientation == ExifInterface.ORIENTATION_NORMAL ||
+                orientation == ExifInterface.ORIENTATION_UNDEFINED -> true
+            // 치수가 안 바뀌는 방향(3·거울상)이나 정사각이면 잴 수 없다.
+            !wantsSwap -> null
             storedW == storedH -> null
             wantsSwap -> swapped
             else -> true
@@ -269,6 +273,100 @@ object ImageIo {
         BitmapFactory.decodeByteArray(bytes, offset, length, opts)
         if (opts.outWidth <= 0 || opts.outHeight <= 0) return null
         return intArrayOf(opts.outWidth, opts.outHeight)
+    }
+
+    /**
+     * 원본의 **한 자리**를 뜬다. 확대했을 때 바닥층 위에 얹는 선명한 조각이다.
+     *
+     * [rect] 는 **저장 방향**의 원본 화소 `[왼, 위, 오른, 아래]` 이고(`RegionMath.toStored`
+     * 로 옮긴 것), 잘라 온 조각을 [rotation] 도(시계 방향) 돌려 화면 방향으로 준다.
+     * `BitmapRegionDecoder` 가 EXIF 방향을 적용하지 않기 때문이다.
+     *
+     * 형식이 영역 디코딩을 지원하지 않으면(GIF 등) null 이다 — 그때는 흐린 바닥층이 남는다.
+     */
+    suspend fun decodeRegion(path: String, rect: IntArray, sample: Int, rotation: Int): Bitmap? =
+        withContext(IroDispatchers.image) {
+            if (!File(path).isFile) return@withContext null
+            region({ android.graphics.BitmapRegionDecoder.newInstance(path) }, rect, sample, rotation)
+        }
+
+    /** [decodeRegion] 의 바이트 판. 만화 쪽이 쓴다(아카이브 안의 쪽에는 경로가 없다). */
+    suspend fun decodeRegion(
+        bytes: ByteArray,
+        offset: Int = 0,
+        length: Int = bytes.size,
+        rect: IntArray,
+        sample: Int,
+        rotation: Int,
+    ): Bitmap? = withContext(IroDispatchers.image) {
+        if (length <= 0 || offset < 0 || offset + length > bytes.size) return@withContext null
+        region(
+            { android.graphics.BitmapRegionDecoder.newInstance(bytes, offset, length) },
+            rect, sample, rotation,
+        )
+    }
+
+    private suspend fun region(
+        open: () -> android.graphics.BitmapRegionDecoder?,
+        rect: IntArray,
+        sample: Int,
+        rotation: Int,
+    ): Bitmap? {
+        // 네이티브 디코딩이 시작되면 끼어들 수 없다. 여는 직전이 취소를 볼 마지막 자리다.
+        if (currentCoroutineContext()[Job]?.isActive == false) return null
+        var decoder: android.graphics.BitmapRegionDecoder? = null
+        return try {
+            val d = open() ?: return null
+            decoder = d
+            val l = rect[0].coerceIn(0, d.width - 1)
+            val t = rect[1].coerceIn(0, d.height - 1)
+            val r = rect[2].coerceIn(l + 1, d.width)
+            val b = rect[3].coerceIn(t + 1, d.height)
+            val opts = BitmapFactory.Options().apply {
+                inSampleSize = sample.coerceAtLeast(1)
+                inPreferredConfig = Bitmap.Config.ARGB_8888
+            }
+            val piece = d.decodeRegion(android.graphics.Rect(l, t, r, b), opts) ?: return null
+            if (rotation % 360 == 0) {
+                piece
+            } else {
+                val m = android.graphics.Matrix().apply { postRotate(rotation.toFloat()) }
+                val turned = Bitmap.createBitmap(piece, 0, 0, piece.width, piece.height, m, true)
+                // 아직 아무도 그리지 않은 조각이라 곧바로 돌려줘도 안전하다(축출된 비트맵과 다르다).
+                if (turned !== piece) piece.recycle()
+                turned
+            }
+        } catch (e: IOException) {
+            null
+        } catch (e: RuntimeException) {
+            null
+        } catch (e: OutOfMemoryError) {
+            null
+        } finally {
+            // **반드시 반납한다**(함정 표). 네이티브 쪽에 디코더 상태가 통째로 살아 있다.
+            decoder?.recycle()
+        }
+    }
+
+    /**
+     * 메모리 위 그림의 EXIF 방향. 없거나 읽지 못하면 [ExifInterface.ORIENTATION_NORMAL].
+     *
+     * 영역 디코딩(`BitmapRegionDecoder`)은 방향을 적용하지 않고 바닥층(`ImageDecoder`)은
+     * 적용한다. 방향 태그가 붙은 쪽에 조각을 얹으면 누운 조각이 얹히므로, 호출자가 먼저
+     * 이 값을 보고 정방향일 때만 영역 디코딩을 쓴다.
+     */
+    fun exifOrientation(bytes: ByteArray, offset: Int = 0, length: Int = bytes.size): Int {
+        if (length <= 0 || offset < 0 || offset + length > bytes.size) return ExifInterface.ORIENTATION_NORMAL
+        return try {
+            ExifInterface(java.io.ByteArrayInputStream(bytes, offset, length)).getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL,
+            )
+        } catch (e: IOException) {
+            ExifInterface.ORIENTATION_NORMAL
+        } catch (e: RuntimeException) {
+            ExifInterface.ORIENTATION_NORMAL
+        }
     }
 
     /**

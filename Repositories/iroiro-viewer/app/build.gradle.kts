@@ -70,6 +70,19 @@ dependencies {
     implementation(project(":feature:text"))
     implementation(project(":feature:archive"))
     implementation(project(":feature:comic"))
+    implementation(project(":feature:docview"))
+    // 판별기가 ZIP 엔트리 이름을 봐야 한다(`FormatRegistry`). 12·13단계에 가면
+    // docx·xlsx·pptx·hwpx 가 전부 ZIP 이라 이름 없이는 갈리지 않는다.
+    implementation(project(":format:archive"))
+    implementation(project(":format:epub"))
+    // 12단계. `FormatRegistry` 가 OOXML 여는이에 세 변환기를 이어 준다(조립은 `app` 의 일이다).
+    implementation(project(":format:opc"))
+    implementation(project(":format:docx"))
+    implementation(project(":format:xlsx"))
+    implementation(project(":format:pptx"))
+    // 13단계. 한글 둘 — HWPX(ZIP)와 HWP 5.0(CFB).
+    implementation(project(":format:hwpx"))
+    implementation(project(":format:hwp5"))
     implementation(project(":core:playback"))
     implementation(project(":feature:player"))
 
@@ -84,4 +97,13 @@ dependencies {
     implementation(libs.compose.material3)
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.ui.tooling.preview)
+
+    // 두 한글 변환기를 함께 여는 시험(`HancomPairTest`) — 포맷 모듈끼리는 서로를 볼 수 없어 조립하는 여기에만 둘 수 있다.
+    // 안드로이드 모듈의 JVM 시험이라 `kotlin("test-junit")` 이 있어야 러너가 붙는다(CLAUDE.md 함정 표).
+    testImplementation(kotlin("test-junit"))
+    testImplementation(libs.kotlinx.coroutines.core)
+    // HWPX 는 XML 풀 파서를 쓴다. 안드로이드 모듈의 JVM 시험에서는 android.jar 의 빈 껍데기(`XmlPullParserFactory`)가 던지므로
+    // 포맷 모듈의 시험과 같은 구현(kxml2)을 끼운다.
+    testImplementation(libs.xmlpull)
+    testImplementation(libs.kxml2)
 }

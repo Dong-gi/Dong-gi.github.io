@@ -33,10 +33,13 @@ object MimeResolver {
     )
     private val archive = setOf("zip", "7z", "rar", "tar", "gz", "bz2", "xz", "tgz", "jar", "iso")
     private val comic = setOf("cbz", "cbr", "cb7", "cbt")
-    private val document = setOf("doc", "docx", "odt", "rtf")
-    private val sheet = setOf("xls", "xlsx", "ods")
-    private val slide = setOf("ppt", "pptx", "odp")
-    private val hwp = setOf("hwp", "hwpx", "hwt")
+    // 매크로(`m`)·서식(`t`·`x`)·쇼(`pps`) 파일도 같은 종류다. 빠뜨리면 목록이 '기타' 로 그려 **뷰어에 닿지 않는다**
+    // — 여는이(`OoxmlProbe`)는 여는데 누를 길이 없었다(12단계 검토가 잡았다).
+    private val document = setOf("doc", "docx", "docm", "dot", "dotx", "dotm", "odt", "rtf")
+    private val sheet = setOf("xls", "xlsx", "xlsm", "xlt", "xltx", "xltm", "ods")
+    private val slide = setOf("ppt", "pptx", "pptm", "pot", "potx", "potm", "pps", "ppsx", "ppsm", "odp")
+    // `hwtx` 는 HWPX 서식, `owpml` 은 한글 2018 부터의 OWPML 이름이다(HWPX 와 같은 모양).
+    private val hwp = setOf("hwp", "hwpx", "hwt", "hwtx", "owpml")
     private val ebook = setOf("epub", "mobi", "azw", "azw3", "fb2")
     private val font = setOf("ttf", "otf", "woff", "woff2", "ttc")
 

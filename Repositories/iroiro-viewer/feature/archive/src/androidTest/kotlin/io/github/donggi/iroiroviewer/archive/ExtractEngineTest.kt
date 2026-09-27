@@ -60,6 +60,7 @@ class ExtractEngineTest {
         newFolder: String? = null,
         conflict: FileOpEngine.Conflict = FileOpEngine.Conflict.KEEP_BOTH,
         indices: List<Int>? = null,
+        password: CharArray? = null,
     ) = runBlocking {
         engine.run(
             FileOpManager.Request.Extract(
@@ -69,8 +70,17 @@ class ExtractEngineTest {
                 destParent = dest.absolutePath,
                 newFolderName = newFolder,
                 conflict = conflict,
+                password = password,
             ),
         ) { }
+    }
+
+    /** 계측 APK 의 자산으로 붙은 암호 표본(`format:archive` 의 JVM 시험과 같은 벌). */
+    private fun asset(name: String): File {
+        val ctx = InstrumentationRegistry.getInstrumentation().context
+        return File(work, name.substringAfterLast('/')).apply {
+            outputStream().use { out -> ctx.assets.open(name).use { it.copyTo(out) } }
+        }
     }
 
     /** 남은 임시 파일. **숨김 이름이라 목록에 안 뜨므로 시험이 대신 본다.** */
@@ -245,6 +255,66 @@ class ExtractEngineTest {
         assertEquals(listOf("b.txt"), dest.list()!!.toList())
         assertEquals("나", File(dest, "b.txt").readText())
         assertTrue(result.outcome is FileOpEngine.Outcome.Done)
+    }
+
+    // ---- 암호 ---------------------------------------------------------------------
+
+    /**
+     * **암호를 받으면 잠긴 항목이 원본 그대로 풀린다** — 전통 ZIP 암호(반디집)·WinZip AES
+     * (pyzipper)·헤더까지 잠긴 7z(py7zr). 셋 다 우리가 잠그지 않은 표본이다.
+     */
+    @Test
+    fun 암호를_받으면_잠긴_항목을_푼다() {
+        val hello = asset("archivecrypt/hello.txt").readBytes()
+        val pattern = asset("archivecrypt/pattern.bin").readBytes()
+        for (name in listOf("zipcrypto-bandizip.zip", "aes256-pyzipper.zip", "7z-aes-header-py7zr.7z")) {
+            val dest = File(work, "d-$name").apply { mkdirs() }
+            val result = run(asset("archivecrypt/$name"), dest, password = "iroiro".toCharArray())
+
+            assertTrue("$name: ${result.outcome}", result.outcome is FileOpEngine.Outcome.Done)
+            assertEquals(name, 0, result.report.refusedEncrypted)
+            assertTrue(name, File(dest, "hello.txt").readBytes().contentEquals(hello))
+            assertTrue(name, File(dest, "pattern.bin").readBytes().contentEquals(pattern))
+            assertEquals(name, emptyList<String>(), partials(dest))
+        }
+    }
+
+    /** 암호가 없으면 잠긴 항목은 **거절로 센다.** 빈 파일이나 깨진 파일을 만들지 않는다. */
+    @Test
+    fun 암호가_없으면_잠긴_항목을_거절하고_센다() {
+        val dest = File(work, "d").apply { mkdirs() }
+        val result = run(asset("archivecrypt/aes256-pyzipper.zip"), dest)
+
+        assertEquals(2, result.report.refusedEncrypted)
+        assertTrue("잠긴 항목이 풀렸다: ${dest.list()?.toList()}", dest.list().isNullOrEmpty())
+        assertEquals(emptyList<String>(), partials(dest))
+    }
+
+    /**
+     * **틀린 암호는 쓰레기 파일을 남기지 않는다.** WinZip AES 는 항목 머리의 확인값에서,
+     * 전통 ZIP 암호는 끝의 CRC 에서 걸린다 — 뒤의 것은 이미 쓴 뒤에 걸리므로 임시 파일을
+     * 지우는 길까지 확인해야 한다.
+     */
+    @Test
+    fun 틀린_암호는_파일을_남기지_않는다() {
+        for (name in listOf("zipcrypto-bandizip.zip", "aes256-pyzipper.zip")) {
+            val dest = File(work, "d-$name").apply { mkdirs() }
+            run(asset("archivecrypt/$name"), dest, password = "틀린암호".toCharArray())
+
+            assertTrue("$name: 틀린 암호로 파일이 생겼다 ${dest.list()?.toList()}", dest.list().isNullOrEmpty())
+            assertEquals(name, emptyList<String>(), partials(dest))
+        }
+    }
+
+    /**
+     * **요청이 붙든 암호는 작업이 끝나면 0 으로 덮인다.** 요청 객체는 큐에 남아 있을 수 있고
+     * (`FileOpManager.Request.Extract` 의 주석), 작업이 끝난 뒤의 사본은 쓸 곳이 없다.
+     */
+    @Test
+    fun 작업이_끝나면_요청의_암호가_지워진다() {
+        val pw = "iroiro".toCharArray()
+        run(asset("archivecrypt/zipcrypto-bandizip.zip"), File(work, "d").apply { mkdirs() }, password = pw)
+        assertTrue("암호가 남아 있다", pw.all { it == '\u0000' })
     }
 
     private companion object {

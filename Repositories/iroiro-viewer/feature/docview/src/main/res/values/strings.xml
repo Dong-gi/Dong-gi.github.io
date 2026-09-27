@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      문서 뷰어. 화면에 나가는 글자는 예외 없이 여기 둔다(저장소 규칙).
+
+      실패 문구가 `OpenFailure` 의 갈래를 그대로 따른다. 그쪽이 sealed 라 갈래가 늘면
+      화면의 `when` 이 컴파일 오류로 알려 주고, 그때 여기 한 줄이 함께 는다.
+      **`OpenFailure.detail` 은 절대 쓰지 않는다** — 절대경로와 공격자가 심은 문자열이
+      거기 들어 있다.
+    -->
+
+    <string name="doc_close">닫기</string>
+    <string name="doc_loading">문서를 여는 중…</string>
+    <string name="doc_page_of">%1$d / %2$d</string>
+
+    <string name="doc_jump">쪽으로 가기</string>
+    <string name="doc_jump_hint">쪽 번호</string>
+    <string name="doc_done">확인</string>
+    <string name="doc_cancel">취소</string>
+
+    <string name="doc_resumed">%d쪽부터 이어서 봅니다</string>
+    <string name="doc_resumed_chapter">%d장부터 이어서 봅니다</string>
+    <string name="doc_resumed_sheet">%d번째 시트부터 이어서 봅니다</string>
+    <string name="doc_resumed_slide">%d번째 슬라이드부터 이어서 봅니다</string>
+    <string name="doc_resumed_part">%d번째 부분부터 이어서 봅니다</string>
+    <string name="doc_restart">처음부터</string>
+
+    <string name="doc_page_failed">이 쪽을 그릴 수 없습니다</string>
+
+    <!-- EPUB. 쪽이 아니라 '장' 으로 센다 — 장을 화면 크기로 잘라 쪽을 만들면
+         글자 크기를 바꿀 때마다 이어보기가 가리키는 자리가 움직인다. -->
+    <string name="doc_chapter_of">%1$d / %2$d 장</string>
+    <string name="doc_previous_chapter">이전 장</string>
+    <string name="doc_next_chapter">다음 장</string>
+    <string name="doc_no_toc">목차가 없습니다</string>
+    <!-- 흐름 문서(docx·xlsx·pptx). 부분은 시트·슬라이드·긴 글의 조각이다. -->
+    <string name="doc_previous_part">이전</string>
+    <string name="doc_next_part">다음</string>
+    <string name="doc_sheet_of">시트 %1$d / %2$d</string>
+    <string name="doc_sheet_named">시트 %1$d / %2$d · %3$s</string>
+    <string name="doc_slide_of">슬라이드 %1$d / %2$d</string>
+    <string name="doc_part_of">%1$d / %2$d 부분 · 목차</string>
+    <string name="doc_outline">목차</string>
+    <!--
+      첫 진입 고지. 문서마다 처음 한 번 뜬다. 쪽 재현을 포기한 대가를 종류마다 한 문장으로 말한다.
+    -->
+    <string name="doc_flow_notice_document">쪽 나눔·머리말·단은 재현하지 않고 글을 흐름으로 보여 줍니다</string>
+    <string name="doc_flow_notice_sheets">저장된 값을 보여 줍니다. 수식을 다시 계산하지 않고 차트는 그리지 않습니다</string>
+    <string name="doc_flow_notice_slides">슬라이드를 화면 폭에 맞춰 그립니다. 글꼴과 줄바꿈이 원본과 다를 수 있습니다</string>
+    <string name="doc_untitled_chapter">이름 없는 장</string>
+
+    <!--
+      버린 것 알림. `UnsupportedFeatures` 가 2단계부터 적어 둔 계약이다 —
+      "사용자는 원문에 무엇이 있었는지 모르므로, 빠진 것이 있다는 사실 자체를
+      앱이 말해 주어야 한다".
+    -->
+    <string name="doc_notice">이 문서에서 버린 것</string>
+    <string name="doc_notice_title">이 문서에서 버린 것</string>
+    <string name="doc_notice_body">보이는 대로 읽히도록 아래 것들을 빼고 그렸습니다. 원문에는 있습니다.</string>
+    <string name="doc_notice_count">%d개</string>
+    <string name="doc_warn_mimetype">EPUB 명세와 다르게 만들어진 파일입니다. 읽는 데는 지장이 없습니다</string>
+    <string name="doc_warn_duplicate">%s이 같은 이름을 씁니다. 먼저 나온 것을 보여 줍니다</string>
+    <string name="doc_warn_obfuscated">내장 글꼴 일부를 풀 수 없어 기본 글꼴로 대신 보입니다</string>
+    <!-- 흐름 문서의 경고. %s 는 부분 이름(시트 이름·슬라이드 제목) 또는 '3번째 부분' 이다.
+         조사가 이름의 받침에 따라 갈리므로 이름을 문장 끝의 쌍점 뒤에 둔다. -->
+    <string name="doc_warn_truncated">너무 길어 뒷부분을 줄인 부분이 있습니다: %s</string>
+    <string name="doc_warn_truncated_document">문서가 너무 커서 일부를 보여 주지 않습니다</string>
+    <string name="doc_warn_part_failed">읽지 못한 부분이 있습니다(나머지는 보입니다): %s</string>
+    <string name="doc_warn_duplicate_part">같은 이름의 부분이 둘 이상이라 먼저 나온 것을 보여 줍니다: %s</string>
+    <string name="doc_warn_aux_failed">서식·번호 매기기·글자 일부를 읽지 못해 원래와 다를 수 있습니다</string>
+    <string name="doc_warn_no_content_types">문서의 형식표가 없어 이름으로 짐작해 열었습니다</string>
+    <string name="doc_warn_other">문서에 명세와 다른 곳이 있습니다. 읽는 데는 지장이 없습니다</string>
+    <string name="doc_part_number">%d번째 부분</string>
+    <string name="doc_warn_macros">매크로가 들어 있습니다. 이 앱은 매크로를 실행하지 않습니다</string>
+    <string name="doc_warn_broken_rels">문서 안의 연결 정보 일부가 깨져 그림이나 링크가 빠졌을 수 있습니다</string>
+
+    <!--
+      암호. 잠근 방식이 공개 명세면(PDF 표준 보안 처리기) 암호를 물어 연다. 공개되지 않은
+      방식이나 암호가 아닌 열쇠(인증서)를 요구하는 것은 물어도 소용이 없으므로
+      doc_failed_encrypted 로 끝낸다. 둘을 한 문구로 뭉뚱그리면 사용자가 암호를 알면서도
+      열 수 없다고 읽거나, 모르는 열쇠를 찾아 헤맨다.
+    -->
+    <string name="doc_password_title">암호가 걸린 문서</string>
+    <string name="doc_password_body">이 문서를 열려면 암호가 필요합니다.</string>
+    <string name="doc_password_enter">암호 넣기</string>
+
+    <string name="doc_failed_corrupt">이 문서를 열 수 없습니다</string>
+    <string name="doc_failed_password">암호를 넣어야 열 수 있는 문서입니다</string>
+    <string name="doc_failed_encrypted">암호로는 열 수 없는 방식으로 잠긴 문서입니다</string>
+    <string name="doc_failed_no_permission">읽을 권한이 없습니다</string>
+    <string name="doc_failed_too_large">너무 커서 열 수 없습니다</string>
+    <string name="doc_failed_timeout">시간 안에 열지 못했습니다</string>
+    <string name="doc_failed_unsupported">이 앱이 다루지 않는 문서입니다</string>
+    <string name="doc_failed_legacy">이전 형식(.doc·.xls·.ppt, 한글 97 이전의 .hwp)은 열지 않습니다. 새 형식(.docx·.xlsx·.pptx·.hwp·.hwpx)으로 저장하면 열립니다</string>
+    <string name="doc_failed_io">입출력이 실패했습니다</string>
+</resources>

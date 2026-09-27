@@ -114,7 +114,11 @@ internal class SolidComicSource(
     override val pages: List<ComicPage>,
     private val windowCap: Long,
     private val limits: ParseLimits = ParseLimits.DEFAULT,
+    password: CharArray? = null,
 ) : ComicSource {
+
+    /** 패스마다 아카이브를 새로 여므로 암호를 들고 있어야 한다. 우리 사본이고 [close] 에서 지운다. */
+    private val password: CharArray? = password?.copyOf()
 
     private val mutex = Mutex()
 
@@ -175,7 +179,7 @@ internal class SolidComicSource(
 
         readOrNull {
             try {
-                Archives.open(FileDocumentSource(file), limits, budget).use { reader ->
+                Archives.open(FileDocumentSource(file), limits, budget, password).use { reader ->
                     reader.extractSequentially(WindowSink(wanted, want))
                 }
             } catch (stop: StopPass) {
@@ -247,6 +251,7 @@ internal class SolidComicSource(
     override fun close() {
         window.clear()
         windowBytes = 0L
+        password?.fill('\u0000')
     }
 
     /**

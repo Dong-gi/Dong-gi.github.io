@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      암호 대화상자(PasswordDialog). 문서·압축 파일·만화가 같이 쓴다. 제목과 설명은 부르는 쪽이
+      자기 문구로 준다 - 무엇을 여는지는 그쪽이 안다.
+    -->
+    <string name="ui_password_label">암호</string>
+    <string name="ui_password_wrong">암호가 맞지 않습니다</string>
+    <string name="ui_password_open">열기</string>
+    <string name="ui_password_cancel">취소</string>
+</resources>

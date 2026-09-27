@@ -38,8 +38,11 @@ class ZoomState {
     var fitted by mutableStateOf(Size.Zero)
         private set
 
-    /** 원본 화소. 최대 배율을 재는 데 쓴다. */
+    /** 그려지는 바닥층의 화소 폭. 맞춤 크기를 재는 데 쓴다(가로세로 비). */
     private var sourceWidth = 0
+
+    /** 원본의 폭. 최대 배율을 재는 데 쓴다([ZoomMath.maxScale]). */
+    private var originalWidth = 0
 
     var maxScale by mutableFloatStateOf(ZoomMath.MIN_MAX_SCALE)
         private set
@@ -60,15 +63,23 @@ class ZoomState {
     /** 아직 밀 자리가 남았는가. 남지 않았으면 페이저가 손가락을 가져간다. */
     val canPan: Boolean get() = ZoomMath.canPan(maxOffsetX, maxOffsetY)
 
-    fun onLayout(viewportSize: Size, contentWidth: Int, contentHeight: Int) {
-        if (viewportSize == viewport && contentWidth == sourceWidth) return
+    /**
+     * @param contentWidth·[contentHeight] 그리는 바닥층 비트맵의 화소.
+     * @param original 원본의 폭(화면 방향 기준). 바닥층은 화면에 맞춰 줄여 뜬 것이라 원본이
+     *   아니다 — 최대 배율은 이 값으로 잰다. 모르면 바닥층 폭을 준다.
+     */
+    fun onLayout(viewportSize: Size, contentWidth: Int, contentHeight: Int, original: Int = contentWidth) {
+        if (viewportSize == viewport && contentWidth == sourceWidth && original == originalWidth) return
         viewport = viewportSize
         sourceWidth = contentWidth
+        originalWidth = original
         val (w, h) = ZoomMath.fittedSize(
             contentWidth, contentHeight, viewportSize.width, viewportSize.height
         )
         fitted = Size(w, h)
-        maxScale = ZoomMath.maxScale(contentWidth, w)
+        maxScale = ZoomMath.maxScale(original, w)
+        // 상한이 내려갔으면(다른 원본으로 바뀌었다) 지금 배율도 그 안으로 들인다.
+        if (scale > maxScale) scale = maxScale
         clampNow()
     }
 

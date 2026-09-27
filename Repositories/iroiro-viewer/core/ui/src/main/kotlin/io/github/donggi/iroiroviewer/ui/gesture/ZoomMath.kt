@@ -89,21 +89,72 @@ object ZoomMath {
     }
 
     /**
-     * 최대 배율. **원본이 가진 화소 이상으로는 키우지 않는다** — 그 위는 어차피 흐리다.
+     * 최대 배율 — **원본의 [ORIGINAL_ZOOM] 배까지.** 사용자가 정한 값이다.
      *
-     * 하한 [MIN_MAX_SCALE] 은 작은 그림에서도 두 배까지는 볼 수 있게 한다. 그래서
-     * "확대해도 흐려지지 않는다"고 약속할 수 없고, 우리도 그렇게 적지 않는다.
+     * 배율은 맞춤(배율 1) 기준이므로 원본 기준 상한을 맞춤 기준으로 옮긴다:
+     * `원본 폭 × 2 / 맞춤 폭`. 원본이 무엇인지는 부르는 쪽이 안다 — 사진·만화는 **디코딩하기
+     * 전 원본의 화소**(화면에 맞춰 줄여 뜬 비트맵이 아니다), PDF 는 **이 화면에서의 실제
+     * 크기**(`폭pt × dpi / 72`).
+     *
+     * 예전에는 줄여 뜬 비트맵의 폭을 원본 자리에 넣고 있어서, 12MP 사진도 사실상 맞춤의
+     * 2배(원본의 절반 남짓)에서 멈췄다.
+     *
+     * **하한 [MIN_MAX_SCALE] 은 남긴다.** 원본이 작은 그림(아이콘·작은 스캔)은 화면에 맞추는
+     * 것만으로 이미 원본의 2배를 넘어서, 규칙대로면 **전혀 확대할 수 없다** — 두 번 두드려도
+     * 아무 일이 없으면 고장으로 읽힌다. 그 그림들은 예전처럼 맞춤의 2배까지 허락한다.
+     *
+     * 상한 [MAX_MAX_SCALE] 은 맞춤 폭이 0 에 가까운 퇴화한 경우를 막을 뿐이다 — 20000화소
+     * 파노라마를 폰에 맞추면 37배가 필요하고, 그것은 막을 이유가 없다(바닥층은 변환으로
+     * 키울 뿐 비트맵을 다시 만들지 않는다).
      */
-    fun maxScale(sourceWidth: Int, fittedWidth: Float): Float {
-        if (fittedWidth <= 0f) return MIN_MAX_SCALE
-        return (sourceWidth / fittedWidth).coerceIn(MIN_MAX_SCALE, MAX_MAX_SCALE)
+    fun maxScale(originalWidth: Int, fittedWidth: Float): Float {
+        if (fittedWidth <= 0f || originalWidth <= 0) return MIN_MAX_SCALE
+        return (ORIGINAL_ZOOM * originalWidth / fittedWidth).coerceIn(MIN_MAX_SCALE, MAX_MAX_SCALE)
+    }
+
+    /**
+     * 지금 화면에 보이는 자리. **바닥층 안의 비율**(0~1) `[왼, 위, 오른, 아래]` 이다.
+     *
+     * 변환은 `translate(offset)` 뒤 `scale(배율, pivot = 뷰포트 중앙)` 이다. 화면 좌표 `x`
+     * 에 오는 바닥층 좌표는 `중앙 + (x - 중앙 - offset) / 배율` 이고, 화면의 두 끝(0, 뷰포트)
+     * 을 넣으면 보이는 범위가 나온다. 바닥층은 뷰포트 가운데 놓이므로 비율은
+     * `(좌표 - 여백) / 맞춤 크기` 다. 바닥층 밖(여백)은 잘라 낸다.
+     *
+     * @return 잴 수 없으면(크기 0·무한) null.
+     */
+    fun visibleFraction(
+        zoom: Float,
+        viewportWidth: Float,
+        viewportHeight: Float,
+        fittedWidth: Float,
+        fittedHeight: Float,
+        offsetX: Float,
+        offsetY: Float,
+    ): FloatArray? {
+        if (zoom <= 0f || !zoom.isFinite()) return null
+        if (viewportWidth <= 0f || viewportHeight <= 0f) return null
+        if (fittedWidth <= 0f || fittedHeight <= 0f) return null
+        if (!offsetX.isFinite() || !offsetY.isFinite()) return null
+        fun axis(screen: Float, viewport: Float, fitted: Float, offset: Float): Float {
+            val base = viewport / 2f + (screen - viewport / 2f - offset) / zoom
+            return ((base - (viewport - fitted) / 2f) / fitted).coerceIn(0f, 1f)
+        }
+        val l = axis(0f, viewportWidth, fittedWidth, offsetX)
+        val r = axis(viewportWidth, viewportWidth, fittedWidth, offsetX)
+        val t = axis(0f, viewportHeight, fittedHeight, offsetY)
+        val b = axis(viewportHeight, viewportHeight, fittedHeight, offsetY)
+        if (r <= l || b <= t) return null
+        return floatArrayOf(l, t, r, b)
     }
 
     /** 이 두 배율을 같은 것으로 볼 것인가. 부동소수 비교를 한 곳에 모은다. */
     fun sameScale(a: Float, b: Float): Boolean = abs(a - b) < 0.01f
 
+    /** 원본의 몇 배까지 키우는가. 사용자가 정했다 — '원본의 2배까지'. */
+    const val ORIGINAL_ZOOM = 2f
+
     const val MIN_MAX_SCALE = 2f
-    const val MAX_MAX_SCALE = 12f
+    const val MAX_MAX_SCALE = 64f
 
     /** 더블탭이 가는 배율. 화면을 꽉 채운 사진에서 글자가 읽히기 시작하는 정도다. */
     const val DOUBLE_TAP_SCALE = 2.5f

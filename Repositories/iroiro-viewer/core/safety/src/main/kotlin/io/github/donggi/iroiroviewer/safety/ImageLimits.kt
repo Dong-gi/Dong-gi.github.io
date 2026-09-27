@@ -160,11 +160,16 @@ object ImageLimits {
     private const val MAX_SAMPLE_STEPS = 16
 
     /**
-     * 만화 쪽 한 장에 허락하는 바이트.
+     * 쪽 한 장에 허락하는 바이트.
      *
      * 살아 있는 장수로 예산을 나눈 값이다 — 그래야 **네 장을 동시에 들어도** 예산 안이다.
+     *
+     * **이름에 포맷을 담지 않는다.** 만화 쪽과 PDF 쪽이 같은 상한을 쓴다 — 둘 다 화면
+     * 하나에 한 장이고 페이저가 최악 넷을 든다. 이름이 한 화면에 묶여 있으면 다음 사람이
+     * 같은 함수를 하나 더 만드는데, 이 저장소는 그 빚을 문구(5단계)와 인코딩 판정(7단계)
+     * 에서 이미 두 번 졌다.
      */
-    fun comicPageCap(budget: Budget): Long =
+    fun pageCap(budget: Budget): Long =
         (budget.liveCap / budget.livePages.coerceAtLeast(1)).coerceAtLeast(1L)
 
     /** 이 표본으로 디코딩하면 몇 바이트인가. */

@@ -1,18 +1,20 @@
 package io.github.donggi.iroiroviewer.comic
 
 import io.github.donggi.iroiroviewer.format.FileDocumentSource
+import io.github.donggi.iroiroviewer.format.archive.ArchivePasswordException
 import io.github.donggi.iroiroviewer.format.archive.Archives
+import io.github.donggi.iroiroviewer.format.archive.ComicPages
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.EntryBudget
 import io.github.donggi.iroiroviewer.safety.ParseLimitExceededException
 import io.github.donggi.iroiroviewer.safety.ParseLimits
+import java.io.File
+import java.io.IOException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
-import java.io.File
-import java.io.IOException
 
 /**
  * 경로 하나를 **만화 한 권으로** 연다.
@@ -43,7 +45,13 @@ object ComicOpen {
         /** 방어 상한을 넘었다. */
         TOO_LARGE,
 
-        /** 아카이브 전체에 암호가 걸려 있다. */
+        /**
+         * 암호가 필요하다 — 헤더까지 잠겼거나(7z·RAR), 쪽이 잠겼는데 암호를 받지 않았다.
+         * 화면이 암호를 묻는다(ZIP·7z·RAR 의 암호는 공개된 방식이다).
+         */
+        NEEDS_PASSWORD,
+
+        /** 암호를 받았는데도 풀 수 없는 방식으로 잠겼다(PKWARE 의 강한 암호화 등). */
         ENCRYPTED,
 
         /** 열리기는 했는데 **그림이 한 장도 없다.** */
@@ -60,6 +68,11 @@ object ComicOpen {
         path: String,
         windowCap: Long,
         limits: ParseLimits = ParseLimits.DEFAULT,
+        /**
+         * 이번 세션에 넣은 아카이브 암호(없으면 null). 여기서 만드는 소스가 **자기 사본**을 들고
+         * 닫을 때 지운다 — 넘긴 배열은 부른 쪽이 지운다.
+         */
+        password: CharArray? = null,
         onOpen: (ComicSource) -> Unit = {},
     ): Result = withContext(IroDispatchers.parsing) {
         val file = File(path)
@@ -71,12 +84,15 @@ object ComicOpen {
             // 무한 루프형 DoS 는 크기 상한에 걸리지 않는다 — 아무것도 만들어 내지
             // 않으면서 돌기 때문이다.
             withTimeout(limits.openTimeoutMs) {
-                runInterruptible { openArchive(file, windowCap, limits, onOpen) }
+                runInterruptible { openArchive(file, windowCap, limits, password, onOpen) }
             }
         } catch (e: TimeoutCancellationException) {
             Result.Failed(Kind.TOO_LARGE)
         } catch (e: CancellationException) {
             throw e
+        } catch (e: ArchivePasswordException) {
+            // 헤더까지 잠겼다. `IOException` 보다 먼저 잡는다 — 그쪽은 '깨졌다' 다.
+            Result.Failed(Kind.NEEDS_PASSWORD)
         } catch (e: ParseLimitExceededException) {
             Result.Failed(Kind.TOO_LARGE)
         } catch (e: IOException) {
@@ -106,6 +122,7 @@ object ComicOpen {
         file: File,
         windowCap: Long,
         limits: ParseLimits,
+        password: CharArray?,
         onOpen: (ComicSource) -> Unit,
     ): Result {
         val source = FileDocumentSource(file)
@@ -116,16 +133,26 @@ object ComicOpen {
         }
 
         val budget = EntryBudget(limits)
-        val reader = Archives.open(source, limits, budget)
+        val reader = Archives.open(source, limits, budget, password)
         var keep = false
         try {
             val pages = archivePagesOf(reader.entries)
             if (pages.isEmpty()) {
-                // 그림이 없는데 읽을 수 있는 항목도 없다면 암호일 가능성이 높다.
-                val allLocked = reader.entries.isNotEmpty() &&
-                    reader.entries.none { it.isDirectory } &&
-                    reader.entries.filterNot { it.isDirectory }.all { it.isEncrypted }
-                return Result.Failed(if (allLocked) Kind.ENCRYPTED else Kind.NO_PAGES)
+                // **잠긴 그림이 있으면 '그림이 없다' 가 아니다.** 예전 조건은 '폴더 항목이 하나도
+                // 없고 전부 잠겼다' 였는데, 쪽을 폴더에 담은 CBZ(흔하다)는 폴더 항목 때문에
+                // '그림이 한 장도 없습니다' 로 나갔다. 잠긴 **그림 이름**이 있는지를 본다.
+                val lockedPages = reader.entries.filter {
+                    it.isEncrypted && !it.isReadable && ComicPages.isPage(it.name)
+                }
+                return Result.Failed(
+                    when {
+                        lockedPages.isEmpty() -> Kind.NO_PAGES
+                        // 암호를 넣으면 풀리는 쪽이 있을 때만 묻는다. 암호를 받았는데도 남았거나
+                        // 암호로도 못 여는 방식이면(강한 암호화·안쪽 압축 방식) 물어도 소용이 없다.
+                        lockedPages.any { it.needsPassword } -> Kind.NEEDS_PASSWORD
+                        else -> Kind.ENCRYPTED
+                    }
+                )
             }
             val source = if (reader.randomAccess) {
                 keep = true
@@ -133,7 +160,7 @@ object ComicOpen {
             } else {
                 // solid 는 리더를 들고 있지 않는다 — 패스마다 새로 연다(SolidComicSource
                 // 의 주석 참고). 목록을 만든 이 리더는 여기서 닫는다.
-                SolidComicSource(file, pages, windowCap, limits)
+                SolidComicSource(file, pages, windowCap, limits, password)
             }
             onOpen(source)
             return Result.Ready(source)

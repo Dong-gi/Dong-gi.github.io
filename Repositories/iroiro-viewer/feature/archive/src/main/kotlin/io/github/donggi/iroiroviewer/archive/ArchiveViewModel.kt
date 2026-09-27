@@ -5,23 +5,26 @@ import androidx.lifecycle.viewModelScope
 import io.github.donggi.iroiroviewer.format.FileDocumentSource
 import io.github.donggi.iroiroviewer.format.FormatId
 import io.github.donggi.iroiroviewer.format.archive.ArchiveEntry
+import io.github.donggi.iroiroviewer.format.archive.ArchivePasswordException
 import io.github.donggi.iroiroviewer.format.archive.ArchiveTree
 import io.github.donggi.iroiroviewer.format.archive.Archives
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.Iro
+import io.github.donggi.iroiroviewer.io.SessionPasswords
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.EntryBudget
 import io.github.donggi.iroiroviewer.safety.ParseLimitExceededException
 import io.github.donggi.iroiroviewer.safety.ParseLimits
+import java.io.File
+import java.io.IOException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.IOException
 
 /**
  * 아카이브 한 개를 읽어 화면에 낼 것을 만든다.
@@ -44,7 +47,18 @@ class ArchiveViewModel : ViewModel() {
         val entries: List<ArchiveEntry>,
         /** solid 압축인가. 참이면 화면이 무작위 접근을 아예 시도하지 않는다. */
         val solid: Boolean,
+        /**
+         * 이번 세션의 암호로 읽었다. 그 암호가 지워지면([SessionPasswords.clears]) 이 목록은
+         * 낡은 것이 된다 — '풀렸다' 고 보여 주는데 실제로 풀 암호가 없다.
+         */
+        val unlocked: Boolean = false,
     ) {
+        /**
+         * 암호를 넣으면 읽히게 되는 항목이 있다. 화면이 '암호 넣기' 를 띄운다. 암호로도 못 여는
+         * 항목([ArchiveEntry.lockedForGood])만 있으면 거짓이다 — 물어도 소용이 없다.
+         */
+        val locked: Boolean get() = entries.any { it.needsPassword }
+
         /** 아카이브 전체의 압축률. 엔트리별로는 7z 에 값이 없어 적지 않는다. */
         val ratio: Int
             get() {
@@ -56,6 +70,10 @@ class ArchiveViewModel : ViewModel() {
     sealed interface State {
         data object Loading : State
         data class Ready(val doc: Doc) : State
+
+        /** 헤더까지 잠겨 목록조차 암호 없이 읽을 수 없다(7z·RAR). */
+        data object NeedsPassword : State
+
         data class Failed(val kind: Kind) : State {
             enum class Kind {
                 /** 파일이 없거나 읽을 수 없다. */
@@ -70,7 +88,7 @@ class ArchiveViewModel : ViewModel() {
                 /** 방어 상한을 넘었다. */
                 TOO_LARGE,
 
-                /** 아카이브 전체에 암호가 걸려 있다. */
+                /** 이 앱이 풀지 않는 방식으로 잠겼다(PKWARE 의 강한 암호화 등). */
                 ENCRYPTED,
             }
         }
@@ -136,10 +154,90 @@ class ArchiveViewModel : ViewModel() {
     private var opened: Opened? = null
     private var job: Job? = null
 
+    init {
+        // 앱이 화면에서 사라져 세션 암호가 지워지면, 암호로 풀어 둔 목록을 다시 읽어 **다시
+        // 잠근다.** 첫 값은 지금까지의 횟수라 건너뛴다.
+        viewModelScope.launch {
+            SessionPasswords.clears.drop(1).collect {
+                val doc = (_state.value as? State.Ready)?.doc ?: return@collect
+                if (!doc.unlocked) return@collect
+                _asking.value = null
+                // 풀린 목록으로 세운 풀기 계획도 낡았다 — 그대로 '풀기' 를 누르면 계획은 N개를
+                // 말하는데 실제로는 암호가 없어 전부 거절된다(검토가 잡았다).
+                _plan.value = null
+                job?.cancel()
+                job = viewModelScope.launch { load(doc.path) }
+            }
+        }
+    }
+
+    /**
+     * 암호를 묻는 중인가. null 이면 묻지 않는다, false 면 처음 묻는다, true 면 **방금 넣은 것이
+     * 틀려** 다시 묻는다. 헤더가 잠긴 것(목록 전체)과 일부 항목만 잠긴 것이 같은 창을 쓴다.
+     */
+    private val _asking = MutableStateFlow<Boolean?>(null)
+    val asking: StateFlow<Boolean?> = _asking.asStateFlow()
+
+    fun requestPassword() {
+        _asking.value = false
+    }
+
+    fun dismissPassword() {
+        _asking.value = null
+    }
+
+    /**
+     * 넣은 암호로 열어 **맞는지 확인하고**, 맞으면 이번 세션에 기억한 뒤 목록을 다시 읽는다.
+     *
+     * 배열의 주인이 여기로 넘어온다. 확인이 끝나면(맞든 틀리든) 0 으로 덮는다 — 기억하는 것은
+     * `SessionPasswords` 의 **사본**이다.
+     */
+    fun submitPassword(password: CharArray) {
+        val path = opened?.path
+        if (path == null) {
+            password.fill('\u0000')
+            return
+        }
+        val file = File(path)
+        job?.cancel()
+        job = viewModelScope.launch {
+            try {
+                val ok = withContext(IroDispatchers.parsing) {
+                    try {
+                        Archives.open(FileDocumentSource(file), password = password).use { Archives.verifyPassword(it) }
+                    } catch (e: ArchivePasswordException) {
+                        false
+                    }
+                }
+                if (ok) {
+                    // 확인하는 사이에 앱이 화면에서 사라졌으면 `put` 이 받지 않는다(그 약속을
+                    // 지키는 곳이 `SessionPasswords` 다). 그러면 아래 `load` 가 잠긴 목록을 세운다.
+                    SessionPasswords.put(SessionPasswords.keyOf(file), password)
+                    _asking.value = null
+                    load(path)
+                } else {
+                    _asking.value = true
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (t: Throwable) {
+                Iro.d { "암호 확인 실패: ${t::class.java.simpleName}" }
+                _asking.value = null
+                _state.value = State.Failed(kindOf(t))
+            } finally {
+                password.fill('\u0000')
+            }
+        }
+    }
+
     fun open(path: String) {
         val file = File(path)
         val now = Opened(path, file.length(), file.lastModified())
         if (opened == now) return
+        // 다른 파일이다. 앞 파일의 암호 창과 풀기 계획을 넘겨받지 않는다 — 이 ViewModel 은
+        // 액티비티에 묶여 파일을 바꿔도 같은 객체다(검토가 잡았다: 헤더가 잠긴 A 의 창이 B 위에 떴다).
+        _asking.value = null
+        _plan.value = null
         opened = now
         job?.cancel()
         job = viewModelScope.launch { load(path) }
@@ -154,10 +252,17 @@ class ArchiveViewModel : ViewModel() {
             _state.value = State.Failed(State.Failed.Kind.UNREADABLE)
             return
         }
+        // 이번 세션에 이 파일의 암호를 이미 넣었으면 그것으로 연다(사본 — 끝나면 지운다).
+        val key = SessionPasswords.keyOf(file)
+        // 읽는 동안 세션 암호가 지워지면(앱이 화면에서 사라졌다) 이 결과는 '풀렸다' 고 말하면
+        // 안 된다. 지운 횟수를 먼저 적어 두고 끝에서 견준다 — 지우는 쪽의 알림은 `Ready` 만 보므로
+        // 읽는 중이면 지나친다(검토가 잡았다).
+        val clearsBefore = SessionPasswords.clears.value
+        val password = SessionPasswords.get(key)
         try {
             val doc = withContext(IroDispatchers.parsing) {
                 val budget = EntryBudget(ParseLimits.DEFAULT)
-                Archives.open(FileDocumentSource(file), ParseLimits.DEFAULT, budget).use { reader ->
+                Archives.open(FileDocumentSource(file), ParseLimits.DEFAULT, budget, password).use { reader ->
                     Doc(
                         path = path,
                         name = file.name,
@@ -166,18 +271,32 @@ class ArchiveViewModel : ViewModel() {
                         tree = ArchiveTree.build(reader.entries),
                         entries = reader.entries,
                         solid = reader.solid,
+                        unlocked = password != null,
                     )
                 }
+            }
+            if (password != null && SessionPasswords.clears.value != clearsBefore) {
+                // 그 사이에 지워졌다. 암호 없이 다시 읽는다(다시 지워질 암호가 없으니 한 번이면 끝난다).
+                password.fill('\u0000')
+                load(path)
+                return
             }
             _state.value = State.Ready(doc)
             Iro.d { "아카이브 ${file.name}: ${doc.formatId.label} · ${doc.entries.size}개 · solid=${doc.solid}" }
         } catch (e: CancellationException) {
             throw e
+        } catch (e: ArchivePasswordException) {
+            // 헤더까지 잠겼다. 기억해 둔 암호가 있었다면 그것이 낡았다(파일이 바뀌었다).
+            if (password != null) SessionPasswords.forget(key)
+            _state.value = State.NeedsPassword
+            _asking.value = false
         } catch (e: ParseLimitExceededException) {
             _state.value = State.Failed(State.Failed.Kind.TOO_LARGE)
         } catch (t: Throwable) {
             Iro.d { "아카이브 열기 실패: ${t::class.java.simpleName}" }
             _state.value = State.Failed(kindOf(t))
+        } finally {
+            password?.fill('\u0000')
         }
     }
 
@@ -188,6 +307,7 @@ class ArchiveViewModel : ViewModel() {
     private fun kindOf(t: Throwable): State.Failed.Kind {
         val name = t::class.java.simpleName
         return when {
+            t is ParseLimitExceededException || name.contains("MemoryLimit") -> State.Failed.Kind.TOO_LARGE
             name.contains("Password", ignoreCase = true) ||
                 name.contains("Encrypt", ignoreCase = true) -> State.Failed.Kind.ENCRYPTED
             t is IllegalStateException -> State.Failed.Kind.UNSUPPORTED

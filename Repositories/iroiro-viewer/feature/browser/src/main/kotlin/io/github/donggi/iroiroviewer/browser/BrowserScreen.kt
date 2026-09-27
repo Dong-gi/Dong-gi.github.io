@@ -103,6 +103,8 @@ fun BrowserScreen(
     onOpenArchive: (FileEntry) -> Unit,
     /** 만화로 연다. 파일(cbz·cbr…)일 수도 **폴더**일 수도 있어 경로 하나를 받는다. */
     onOpenComic: (String) -> Unit,
+    /** 문서 뷰어로 연다. 11단계는 PDF 하나이고 EPUB 이 같은 자리로 들어온다. */
+    onOpenDocument: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val stack by vm.stack.collectAsStateWithLifecycle()
@@ -163,6 +165,7 @@ fun BrowserScreen(
             onOpenText = onOpenText,
             onOpenArchive = onOpenArchive,
             onOpenComic = onOpenComic,
+            onOpenDocument = onOpenDocument,
             modifier = modifier,
         )
     }
@@ -211,6 +214,7 @@ private fun FolderScreen(
     onOpenText: (FileEntry) -> Unit,
     onOpenArchive: (FileEntry) -> Unit,
     onOpenComic: (String) -> Unit,
+    onOpenDocument: (String) -> Unit,
     modifier: Modifier,
 ) {
     val context = LocalContext.current
@@ -472,6 +476,22 @@ private fun FolderScreen(
                                         // (압축 화면의 그림 항목을 탭하면 그때 만화로 연다.)
                                         e.kind == FileKind.COMIC -> onOpenComic(e.path)
                                         e.kind == FileKind.ARCHIVE -> onOpenArchive(e)
+                                        // 문서는 문서 뷰어로. PDF·EPUB(11단계), 오피스 문서
+                                        // (DOCUMENT·SHEET·SLIDE, 12단계), 한글(HWP, 13단계).
+                                        //
+                                        // 오피스 쪽도 통째로 보낸다 — `.doc`·`.odt` 처럼 우리가 못
+                                        // 여는 것이 섞여 있지만 뷰어가 '이전 형식입니다'·'다루지
+                                        // 않는 문서입니다' 로 정확히 말한다(아래 EBOOK 과 같은 판단).
+                                        //
+                                        // EBOOK 을 통째로 보내는 것은 그 안에 `.mobi` 처럼
+                                        // 우리가 못 여는 것이 섞여 있어도 **뷰어가 '이 앱이
+                                        // 다루지 않는 문서입니다' 로 정확히 말하기** 때문이다.
+                                        // 목록이 확장자로 미리 거르면 그 판정이 두 곳으로
+                                        // 갈리고, 그것은 이 저장소가 여러 번 겪은 형태다.
+                                        e.kind == FileKind.PDF || e.kind == FileKind.EBOOK ||
+                                            e.kind == FileKind.DOCUMENT || e.kind == FileKind.SHEET ||
+                                            e.kind == FileKind.SLIDE || e.kind == FileKind.HWP ->
+                                            onOpenDocument(e.path)
                                         else -> detail = e
                                     }
                                 },

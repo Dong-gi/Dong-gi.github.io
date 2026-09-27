@@ -427,6 +427,10 @@ class BrowserViewModel(
                 destParent = destParent,
                 newFolderName = newFolderName,
                 conflict = conflict,
+                // 압축 화면에서 넣은 암호가 있으면 **지금** 사본을 붙든다(`Request.Extract` 의 주석).
+                password = io.github.donggi.iroiroviewer.io.SessionPasswords.get(
+                    io.github.donggi.iroiroviewer.io.SessionPasswords.keyOf(java.io.File(archivePath)),
+                ),
             ),
         )
     }

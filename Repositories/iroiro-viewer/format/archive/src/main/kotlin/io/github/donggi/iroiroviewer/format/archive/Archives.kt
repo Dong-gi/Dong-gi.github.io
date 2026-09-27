@@ -53,16 +53,31 @@ object Archives {
         // 상한을 들고 있으면 어느 쪽이 도는지 알 수 없으므로, 예산을 만들 때 쓴 상한을
         // 그대로 쓰게 강제한다.
         budget: EntryBudget = EntryBudget(limits),
+        /**
+         * 사용자가 넣은 암호. 리더가 **자기 사본**을 들고 닫을 때 지운다 — 넘긴 배열은 부르는
+         * 쪽이 지운다. 암호가 없으면 암호 항목은 [ArchiveEntry.isReadable] 이 거짓이다.
+         */
+        password: CharArray? = null,
     ): ArchiveReader {
         val head = source.head(16)
         return when (probeContainer(head)) {
-            FormatId.ZIP -> ZipArchiveReader(source, budget)
-            FormatId.SEVEN_Z -> SevenZArchiveReader(source, budget, limits)
-            FormatId.RAR -> RarArchiveReader(source, budget)
+            FormatId.ZIP -> ZipArchiveReader(source, budget, password = password)
+            FormatId.SEVEN_Z -> SevenZArchiveReader(source, budget, limits, password = password)
+            FormatId.RAR -> RarArchiveReader(source, budget, password = password)
             // 예외 메시지에 파일 이름을 넣지 않는다. 이 값은 로그와 화면을 타고 나간다.
             else -> error("아카이브가 아니다")
         }
     }
+
+    /**
+     * 리더가 받은 암호가 맞는가. 방식마다 다르게 확인한다([ArchiveReader.verifyPassword]).
+     *
+     * **한계를 적어 둔다.** 맞는 암호인데 그 항목이 깨져 있으면 '틀렸다' 로 나온다 — 7z 가
+     * 틀린 암호를 '데이터가 깨졌다' 로만 알리기 때문에 둘을 가를 길이 없다.
+     *
+     * @throws ParseLimitExceededException 확인하려면 상한을 넘겨야 한다('틀렸다' 가 아니다).
+     */
+    fun verifyPassword(reader: ArchiveReader): Boolean = reader.verifyPassword()
 
     private fun ByteArray.startsWith(magic: IntArray): Boolean {
         if (size < magic.size) return false

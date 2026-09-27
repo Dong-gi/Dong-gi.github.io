@@ -38,6 +38,47 @@ data class ComicProgressEntity(
 )
 
 /**
+ * 문서에서 읽던 자리. **11~13단계의 모든 문서 포맷이 이 표 하나를 쓴다.**
+ *
+ * ## 왜 `comic_progress` 를 다시 쓰지 않는가
+ *
+ * 그 표에는 `read_direction` 이 있다. 문서에는 읽는 방향이 없으므로(쪽 차례를 문서가
+ * 정한다) 뜻이 없는 열을 공유하게 되고, 그러면 어느 화면이 그 열의 주인인지 모르게 된다.
+ *
+ * ## 왜 포맷마다 표를 나누지 않는가
+ *
+ * 나누면 마이그레이션이 포맷 수만큼 늘고, **두 사람이 각자 `version = 3` 을 만들면 합칠
+ * 수 없다.** 표 하나·마이그레이션 하나·스키마 json 하나로 못 박는다.
+ *
+ * ## 왜 쪽 번호가 nullable 인가
+ *
+ * 12·13단계의 흐름 렌더 포맷(docx·HWP)에는 **쪽이 없다.** 지금 `NOT NULL` 로 세우면
+ * 그때 표를 통째로 다시 만들어야 한다. 쪽이 있는 포맷(PDF)은 [page]·[pageCount] 를,
+ * 흐름 포맷은 [locator]·[progress] 를 쓴다 — 서로의 칸을 비워 둔다.
+ */
+@Entity(tableName = "doc_progress")
+data class DocProgressEntity(
+    /** `FileKey.of(이름, 크기, 수정시각)`. **경로를 담지 않는다** — 무엇을 읽었는지가 새지 않게. */
+    @PrimaryKey @ColumnInfo(name = "file_key") val fileKey: String,
+    /** 쪽이 있는 포맷의 읽던 쪽(0부터). 흐름 포맷은 null. */
+    @ColumnInfo(name = "page") val page: Int? = null,
+    /**
+     * 그때의 총 쪽 수. **되살린 값을 믿을지 판단하는 데 쓴다** — 파일이 바뀌어 쪽 수가
+     * 달라졌으면 저장된 번호가 다른 곳을 가리킨다.
+     */
+    @ColumnInfo(name = "page_count") val pageCount: Int? = null,
+    /**
+     * 흐름 포맷의 읽던 자리. 포맷이 뜻을 정한다(EPUB 은 스파인 자리, 13단계는 문단 번호).
+     * **여기에 경로나 원문을 담지 않는다.**
+     */
+    @ColumnInfo(name = "locator") val locator: String? = null,
+    /** 문서 안에서 얼마나 왔는가(0~1). 화면이 막대를 그리는 데 쓴다. */
+    @ColumnInfo(name = "progress") val progress: Double? = null,
+    @ColumnInfo(name = "display_name") val displayName: String,
+    @ColumnInfo(name = "updated_at") val updatedAt: Long,
+)
+
+/**
  * 휴지통 항목의 **정본**.
  *
  * 원래 경로를 여기(앱 전용 디렉터리)에 두고, 볼륨에 남기는 사이드카에는 넣지 않는다.

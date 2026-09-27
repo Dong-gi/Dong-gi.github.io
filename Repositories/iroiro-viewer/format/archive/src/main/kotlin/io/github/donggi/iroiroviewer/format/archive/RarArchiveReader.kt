@@ -1,12 +1,18 @@
 package io.github.donggi.iroiroviewer.format.archive
 
 import com.github.junrar.Archive
+import com.github.junrar.ArchiveOptions
+import com.github.junrar.exception.InitDeciphererFailedException
+import com.github.junrar.exception.RarException
+import com.github.junrar.exception.WrongPasswordException
 import com.github.junrar.rarfile.FileHeader
 import io.github.donggi.iroiroviewer.format.DocumentSource
 import io.github.donggi.iroiroviewer.format.FormatId
 import io.github.donggi.iroiroviewer.safety.EntryBudget
 import io.github.donggi.iroiroviewer.safety.ParseLimitExceededException
+import java.io.IOException
 import java.io.InputStream
+import java.io.InterruptedIOException
 
 /**
  * RAR 4·5 를 읽는다.
@@ -23,12 +29,60 @@ class RarArchiveReader(
     source: DocumentSource,
     private val budget: EntryBudget,
     override val formatId: FormatId = FormatId.RAR,
+    password: CharArray? = null,
 ) : ArchiveReader {
 
-    private val archive: Archive = run {
+    /**
+     * 우리 사본. junrar 에 `char[]` 로 건네고(`ArchiveOptions`) [close] 에서 지운다 — junrar 가 그
+     * 배열을 붙들고 항목마다 열쇠를 유도하므로 리더가 사는 동안 살아 있어야 한다. (junrar 는 안에서
+     * 열쇠를 유도할 때마다 `String` 을 만든다. 그것은 우리가 덮을 수 없다.)
+     *
+     * **암호 RAR 은 검증하지 못했다.** 표본을 만들 도구가 없다 — junrar 에는 쓰기 구현이 없고
+     * 이 기계에 WinRAR 이 없다(RAR5 압축 표본이 미검증인 것과 같은 사정). 아래의 예외 옮기기와
+     * [verifyPassword] 는 junrar 8.1.1 의 **소스를 읽고** 짰다 — 실제 표본을 탄 적이 없다.
+     */
+    private val pw: CharArray? = password?.copyOf()
+
+    /**
+     * junrar 의 예외를 우리 말로 옮긴다. **그대로 두면 앱이 죽는다** — `RarException` 은 `Exception`
+     * 을 바로 잇는 검사 예외라 `IOException`·`RuntimeException` 을 잡는 호출부(만화 뷰어)를 모두
+     * 지나 코루틴 밖으로 나간다(검토가 잡았다). 헤더까지 잠긴 RAR5(`rar -hp`)를 암호 없이 열면
+     * `WrongPasswordException("Missing password…")` 이다.
+     */
+    private val archive: Archive = try {
+        val options = ArchiveOptions.builder().apply { if (pw != null) password(pw) }.build()
         val file = source.asFile()
-        if (file != null) Archive(file) else Archive(source.openStream())
+        val a = if (file != null) Archive(file, options) else Archive(source.openStream(), options)
+        // RAR4 의 잠긴 헤더는 틀린 열쇠로도 '열린다' — 머리를 못 읽어 항목이 하나도 없다.
+        if (headerLocked(a) && a.fileHeaders.isEmpty()) {
+            a.close()
+            throw ArchivePasswordException(wrongPassword = pw != null)
+        }
+        a
+    } catch (e: WrongPasswordException) {
+        pw?.fill('\u0000')
+        throw ArchivePasswordException(wrongPassword = pw != null)
+    } catch (e: InitDeciphererFailedException) {
+        // RAR4 의 잠긴 헤더를 암호 없이 열면 열쇠를 못 만든다.
+        pw?.fill('\u0000')
+        if (pw == null) throw ArchivePasswordException(wrongPassword = false)
+        throw IOException("RAR 을 열 수 없다: InitDeciphererFailedException")
+    } catch (e: RarException) {
+        pw?.fill('\u0000')
+        // 메시지를 싣지 않는다 — 파일 이름이 들어 있다.
+        throw IOException("RAR 을 열 수 없다: ${e.javaClass.simpleName}")
+    } catch (t: Throwable) {
+        pw?.fill('\u0000')
+        throw t
     }
+
+    private fun headerLocked(a: Archive): Boolean = try {
+        a.isEncrypted
+    } catch (e: RarException) {
+        false
+    }
+
+    private val hasPassword = pw != null
 
     private val raw: List<FileHeader>
 
@@ -53,6 +107,7 @@ class RarArchiveReader(
                     isDirectory = h.isDirectory,
                     isLink = isLink(h),
                     isEncrypted = h.isEncrypted,
+                    decryptable = h.isEncrypted && hasPassword,
                     crc = if (h.hasFileCrc()) h.fileCRC.toLong() and 0xFFFF_FFFFL else -1L,
                     nameCharset = if (h.isUnicode) "UTF-16LE(헤더 표시)" else "CP437/로캘",
                     lastModified = runCatching { h.mTime?.time ?: 0L }.getOrDefault(0L),
@@ -62,6 +117,7 @@ class RarArchiveReader(
             entries = list
         } catch (t: Throwable) {
             archive.close()
+            pw?.fill('\u0000')
             throw t
         }
     }
@@ -91,7 +147,72 @@ class RarArchiveReader(
         require(entry.isReadable) { "읽을 수 없는 항목이다" }
         val header = raw.getOrNull(entry.index)
             ?: throw ParseLimitExceededException("index", "없는 엔트리")
-        return budget.guard(archive.getInputStream(header), header.fullPackSize)
+        val stream = archive.getInputStream(header)
+        // **junrar 의 읽는 스트림은 실패를 삼킨다.** 해제가 다른 스레드에서 돌다 `RarException`
+        // (틀린 암호·CRC)을 만나면 잡아 버리고 파이프만 닫는다 — 우리 쪽에는 멀쩡한 끝(EOF)으로
+        // 보인다(소스로 확인). 적힌 크기보다 먼저 끝나면 실패로 돌린다.
+        val exact = if (header.fullUnpackSize > 0) ExactLengthStream(stream, header.fullUnpackSize) else stream
+        return budget.guard(exact, header.fullPackSize)
+    }
+
+    /**
+     * 암호가 맞는가. **읽는 스트림으로 확인하지 않는다** — [open] 의 주석처럼 실패가 삼켜져 어떤
+     * 암호든 '맞다' 가 된다(검토가 잡았다: 틀린 암호가 세션에 기억되고 자물쇠가 사라졌다).
+     * `extractFile` 은 부르는 스레드에서 돌고 `RarException` 을 그대로 던진다. 맨 앞의 암호 항목을
+     * [VERIFY_CAP] 까지 풀어 본다.
+     */
+    override fun verifyPassword(): Boolean {
+        val target = entries.filter { it.isEncrypted && it.isReadable }.minByOrNull { it.index } ?: return true
+        val header = raw.getOrNull(target.index) ?: return true
+        return try {
+            archive.extractFile(header, CappedSink(VERIFY_CAP))
+            true
+        } catch (t: Throwable) {
+            val chain = generateSequence(t) { it.cause }.take(6).toList()
+            chain.firstOrNull { it is InterruptedIOException }?.let { throw it }
+            when {
+                chain.any { it is CappedSink.Enough } -> true
+                t is ParseLimitExceededException -> throw t
+                t is RarException || t is IOException -> false
+                else -> throw t
+            }
+        }
+    }
+
+    /** 적힌 크기보다 먼저 끝나면 던진다. */
+    private class ExactLengthStream(input: InputStream, private val expected: Long) : java.io.FilterInputStream(input) {
+        private var count = 0L
+
+        override fun read(): Int {
+            val c = super.read()
+            if (c < 0) end() else count++
+            return c
+        }
+
+        override fun read(b: ByteArray, off: Int, len: Int): Int {
+            val n = super.read(b, off, len)
+            if (n < 0) end() else count += n
+            return n
+        }
+
+        private fun end() {
+            if (count < expected) throw IOException("RAR 항목이 중간에 끝났다 — 암호가 틀렸거나 파일이 손상됐다")
+        }
+    }
+
+    /** 버리는 싱크. [cap] 바이트를 넘으면 그만 풀라고 던진다. */
+    private class CappedSink(private val cap: Long) : java.io.OutputStream() {
+        class Enough : IOException("확인에 충분하다")
+
+        private var count = 0L
+
+        override fun write(b: Int) = write(byteArrayOf(b.toByte()), 0, 1)
+
+        override fun write(b: ByteArray, off: Int, len: Int) {
+            if (Thread.currentThread().isInterrupted) throw InterruptedIOException("중단")
+            count += len
+            if (count >= cap) throw Enough()
+        }
     }
 
     /**
@@ -141,7 +262,18 @@ class RarArchiveReader(
         }
     }
 
-    override fun close() = archive.close()
+    override fun close() {
+        try {
+            archive.close()
+        } finally {
+            pw?.fill('\u0000')
+        }
+    }
+
+    private companion object {
+        /** 확인을 위해 풀 최대량. */
+        const val VERIFY_CAP = 16L shl 20
+    }
 
     /** 쓴 바이트를 세고, 쓸 때마다 인터럽트를 본다. 취소가 해제 루프 안으로 닿는 지점이다. */
     private class CountingInterruptibleStream(private val target: java.io.OutputStream) : java.io.OutputStream() {

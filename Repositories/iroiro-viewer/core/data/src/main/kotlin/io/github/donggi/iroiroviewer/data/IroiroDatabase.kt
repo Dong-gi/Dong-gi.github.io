@@ -24,8 +24,9 @@ import androidx.sqlite.execSQL
         FolderPrefEntity::class,
         RecentLocationEntity::class,
         BookmarkEntity::class,
+        DocProgressEntity::class,
     ],
-    version = 2,
+    version = 3,
     exportSchema = true,
 )
 abstract class IroiroDatabase : RoomDatabase() {
@@ -36,6 +37,7 @@ abstract class IroiroDatabase : RoomDatabase() {
     abstract fun folderPrefs(): FolderPrefDao
     abstract fun recentLocations(): RecentLocationDao
     abstract fun bookmarks(): BookmarkDao
+    abstract fun docProgress(): DocProgressDao
 
     companion object {
         private const val NAME = "iroiro.db"
@@ -60,13 +62,35 @@ abstract class IroiroDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * 3 — 문서에서 읽던 자리 표를 더한다(11단계).
+         *
+         * **쪽 번호가 nullable 이다.** 12·13단계의 흐름 렌더 포맷에는 쪽이 없다 —
+         * 지금 `NOT NULL` 로 세우면 그때 표를 통째로 다시 만들어야 한다
+         * ([DocProgressEntity] 주석).
+         *
+         * `execSQL` 은 **`androidx.sqlite.execSQL` 확장 함수**다. Room 2.8 이 주는 것은
+         * `SQLiteConnection` 이고 거기에는 멤버 `execSQL` 이 없다 — import 를 빠뜨리면
+         * "Unresolved reference" 만 뜬다(이 저장소가 두 번 밟은 함정).
+         */
+        private val MIGRATION_2_3 = object : androidx.room.migration.Migration(2, 3) {
+            override fun migrate(connection: androidx.sqlite.SQLiteConnection) {
+                connection.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `doc_progress` (" +
+                        "`file_key` TEXT NOT NULL, `page` INTEGER, `page_count` INTEGER, " +
+                        "`locator` TEXT, `progress` REAL, `display_name` TEXT NOT NULL, " +
+                        "`updated_at` INTEGER NOT NULL, PRIMARY KEY(`file_key`))"
+                )
+            }
+        }
+
         fun get(context: Context): IroiroDatabase =
             instance ?: synchronized(this) {
                 instance ?: Room.databaseBuilder(
                     context.applicationContext,
                     IroiroDatabase::class.java,
                     NAME,
-                ).addMigrations(MIGRATION_1_2).build().also { instance = it }
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3).build().also { instance = it }
             }
     }
 }

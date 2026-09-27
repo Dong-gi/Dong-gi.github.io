@@ -9,12 +9,18 @@ import androidx.compose.ui.unit.dp
 /**
  * 재생에 필요한데 **아이콘 코어 세트에 없는** 것들.
  *
- * 코어에 있는 것은 48개뿐이고(`Add`·`PlayArrow`·`Close` 등) 재생에 필요한
- * `Pause`·`SkipNext`·`SkipPrevious`·`Shuffle`·`Repeat` 는 하나도 없다. 그렇다고
+ * 코어에 있는 것은 49개뿐이고(`Add`·`PlayArrow`·`Close`·`Lock` 등) 재생에 필요한
+ * `Pause`·`SkipNext`·`SkipPrevious`·`Shuffle`·`Repeat`·자막·PiP 는 하나도 없다. 그렇다고
  * `material-icons-extended`(수천 개, APK 를 크게 불린다)를 들이지는 않는다 —
  * 5단계가 `Pause` 를 손으로 그린 이유가 그것이고 여기서도 같다.
  *
  * 모양은 Material 의 24×24 격자를 따른다. 색은 칠하는 쪽이 `tint` 로 준다.
+ *
+ * **여기 있는 것은 전부 `ImageVector` 라 PiP 창에는 쓸 수 없다.** `RemoteAction` 이
+ * 받는 것은 `android.graphics.drawable.Icon` 이고 변환 경로가 없다. 그래서 PiP 조작
+ * 아이콘만 `res/drawable/` 에 벡터 드로어블로 **한 벌 더** 그려 두었다(`ic_pip_*.xml`).
+ * **같은 그림을 두 형식으로 유지하는 빚**이라, 좌표를 글자 그대로 맞추고 양쪽 주석에
+ * 짝을 적어 둔다 — 5단계가 문구를 두 벌 두었다가 한쪽만 고쳐진 그 형태를 피하려는 것이다.
  */
 private fun icon(name: String, path: androidx.compose.ui.graphics.vector.PathBuilder.() -> Unit): ImageVector =
     ImageVector.Builder(
@@ -136,6 +142,43 @@ val VideoIcon: ImageVector by lazy {
         moveTo(3f, 6f); lineTo(16f, 6f); lineTo(16f, 18f); lineTo(3f, 18f); close()
         // 렌즈
         moveTo(16f, 10.5f); lineTo(21f, 6.5f); lineTo(21f, 17.5f); lineTo(16f, 13.5f); close()
+    }
+}
+
+/**
+ * 자막·트랙 고르기. 아래쪽에 글줄이 든 네모(관행의 'CC' 자리).
+ *
+ * 글자를 넣지 않는 이유는 'CC' 가 북미의 약자라 한국어 화면에서 뜻이 서지 않고,
+ * 24dp 안에서 두 글자는 어차피 읽히지 않기 때문이다. **아래쪽에 짧은 줄 둘**이면
+ * 자막이 붙는 자리가 그대로 그림이 된다.
+ */
+val SubtitleIcon: ImageVector by lazy {
+    icon("Subtitle") {
+        // 테두리 — 위·아래·좌·우 네 변을 각각 그린다(가운데를 비우려면 이 방법뿐이다.
+        // [icon] 은 채우기 하나여서 감기 방향으로 구멍을 뚫을 수 없다).
+        moveTo(2f, 4f); lineTo(22f, 4f); lineTo(22f, 6f); lineTo(2f, 6f); close()
+        moveTo(2f, 18f); lineTo(22f, 18f); lineTo(22f, 20f); lineTo(2f, 20f); close()
+        moveTo(2f, 4f); lineTo(4f, 4f); lineTo(4f, 20f); lineTo(2f, 20f); close()
+        moveTo(20f, 4f); lineTo(22f, 4f); lineTo(22f, 20f); lineTo(20f, 20f); close()
+        // 자막 두 줄. 아래쪽에 치우쳐 있어야 '자막' 으로 읽힌다.
+        moveTo(6f, 11f); lineTo(18f, 11f); lineTo(18f, 13f); lineTo(6f, 13f); close()
+        moveTo(6f, 14.5f); lineTo(13f, 14.5f); lineTo(13f, 16.5f); lineTo(6f, 16.5f); close()
+    }
+}
+
+/**
+ * 화면 속 화면. 큰 네모 안 오른쪽 아래에 작은 네모.
+ *
+ * 큰 네모는 테두리만, 작은 네모는 꽉 채운다 — 채운 쪽이 '지금 보는 것' 이라는 뜻이 되어
+ * 어느 것이 떠 있는 창인지 한눈에 갈린다(Material 의 `picture_in_picture_alt` 와 같은 뜻이다).
+ */
+val PipIcon: ImageVector by lazy {
+    icon("Pip") {
+        moveTo(2f, 4f); lineTo(22f, 4f); lineTo(22f, 6f); lineTo(2f, 6f); close()
+        moveTo(2f, 18f); lineTo(22f, 18f); lineTo(22f, 20f); lineTo(2f, 20f); close()
+        moveTo(2f, 4f); lineTo(4f, 4f); lineTo(4f, 20f); lineTo(2f, 20f); close()
+        moveTo(20f, 4f); lineTo(22f, 4f); lineTo(22f, 20f); lineTo(20f, 20f); close()
+        moveTo(12f, 11f); lineTo(19f, 11f); lineTo(19f, 17f); lineTo(12f, 17f); close()
     }
 }
 

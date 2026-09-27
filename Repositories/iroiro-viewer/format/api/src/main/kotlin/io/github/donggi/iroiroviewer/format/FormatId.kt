@@ -29,6 +29,12 @@ enum class FormatId(val label: String, val category: FormatCategory) {
     HWPX("HWPX", FormatCategory.DOCUMENT),
     HWP5("HWP", FormatCategory.DOCUMENT),
 
+    /**
+     * 오피스 확장자의 CFB(OLE2) — 이전 형식(`.doc`·`.xls`·`.ppt`)이거나 **암호가 걸린 OOXML** 이다.
+     * 속을 봐야 갈리므로 판별기는 이 이름으로 넘기고, 여는이가 CFB 를 읽어 정한다.
+     */
+    LEGACY_OFFICE("오피스(OLE2)", FormatCategory.DOCUMENT),
+
     IMAGE("이미지", FormatCategory.IMAGE),
     AUDIO("오디오", FormatCategory.MEDIA),
     VIDEO("비디오", FormatCategory.MEDIA),

@@ -7,7 +7,11 @@ import io.github.donggi.iroiroviewer.safety.ParseLimitExceededException
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.apache.commons.compress.archivers.zip.ZipFile
 import org.apache.commons.compress.utils.InputStreamStatistics
+import java.io.IOException
 import java.io.InputStream
+import java.io.InterruptedIOException
+import java.nio.ByteBuffer
+import java.nio.channels.SeekableByteChannel
 import java.nio.charset.StandardCharsets
 
 /**
@@ -21,9 +25,10 @@ import java.nio.charset.StandardCharsets
  * 어떤 바이트열에도 예외를 내지 않는다. 이름은 그 뒤에 [EntryNameDecoder] 가 정한다.
  */
 class ZipArchiveReader(
-    source: DocumentSource,
+    private val source: DocumentSource,
     private val budget: EntryBudget,
     override val formatId: FormatId = FormatId.ZIP,
+    password: CharArray? = null,
 ) : ArchiveReader {
 
     private val zip: ZipFile = run {
@@ -38,6 +43,14 @@ class ZipArchiveReader(
         )
         builder.get()
     }
+
+    /**
+     * 우리 사본. [close] 에서 지운다 — 넘겨받은 배열은 부른 쪽이 지운다.
+     *
+     * **[zip] 을 연 다음에 만든다.** 먼저 만들면 여는 데 실패했을 때(취소의 인터럽트, 옮겨진 파일)
+     * 지울 사람이 없다 — 아래 `init` 의 정리는 여기까지 온 뒤에만 돈다(검토가 잡았다).
+     */
+    private val password: CharArray? = password?.copyOf()
 
     /** 인덱스로 찾는다. 이름은 신원이 아니다 — [ArchiveEntry] 주석 참고. */
     private val raw: List<ZipArchiveEntry>
@@ -67,6 +80,9 @@ class ZipArchiveReader(
                     )
                 }
                 rawList += e
+                val encrypted = e.generalPurposeBit.usesEncryption()
+                // 강한 암호화·안쪽 압축 방식을 우리가 못 푸는 항목은 암호로도 열리지 않는다.
+                val forGood = encrypted && !ZipDecryption.canDecrypt(e)
                 list += ArchiveEntry(
                     index = rawList.size - 1,
                     name = decoded.name,
@@ -75,7 +91,9 @@ class ZipArchiveReader(
                     compressedSize = e.compressedSize,
                     isDirectory = e.isDirectory,
                     isLink = runCatching { e.isUnixSymlink }.getOrDefault(false),
-                    isEncrypted = e.generalPurposeBit.usesEncryption(),
+                    isEncrypted = encrypted,
+                    decryptable = encrypted && this.password != null && !forGood,
+                    lockedForGood = forGood,
                     crc = e.crc,
                     nameCharset = decoded.charsetLabel,
                     // `getTime` 은 값이 없으면 -1 을 준다. 0 이 우리의 '모름' 이다.
@@ -86,7 +104,95 @@ class ZipArchiveReader(
             entries = list
         } catch (t: Throwable) {
             zip.close()
+            this.password?.fill('\u0000')
             throw t
+        }
+    }
+
+    // ---- 암호의 바이트 -----------------------------------------------------------------
+
+    /** 암호의 바이트 후보(UTF-8·CP949·ISO-8859-1). 처음 쓸 때 만들고 [close] 에서 덮는다. */
+    private var candidates: List<ByteArray>? = null
+
+    /** 이 아카이브에서 **끝까지 맞은** 후보. 정해지면 이것만 쓴다. */
+    private var resolved: ByteArray? = null
+    private var resolveTried = false
+
+    /**
+     * 이번 항목에 대 볼 암호 바이트.
+     *
+     * ## 후보를 아카이브마다 한 번 정한다
+     *
+     * 전통 방식의 확인 바이트는 틀린 후보도 1/256 로 통과시킨다. 항목마다 첫 통과 후보를 쓰면
+     * 한글 암호(반디집은 CP949)의 UTF-8 후보가 우연히 통과한 항목이 **틀린 열쇠로 풀려 깨진다** —
+     * 300쪽 만화라면 69% 확률로 한 쪽 이상이다(검토가 셈했다). 그래서 후보가 둘 이상이면 가장 작은
+     * 암호 항목 하나를 **CRC·인증값까지** 풀어 보고 맞은 후보만 남긴다. 아무것도 맞지 않으면(그 항목이
+     * 깨졌다) 예전처럼 항목마다 대 본다.
+     */
+    @Synchronized
+    private fun keys(): List<ByteArray> {
+        resolved?.let { return listOf(it) }
+        val pw = password ?: return emptyList()
+        val all = candidates ?: ZipDecryption.candidates(pw).also { candidates = it }
+        if (all.size <= 1 || resolveTried) return all
+        resolveTried = true
+        val probe = entries.filter { it.isEncrypted && it.decryptable && !it.isDirectory }
+            .minByOrNull { it.declaredSize.coerceAtLeast(0L) } ?: return all
+        val e = raw[probe.index]
+        for (c in all) {
+            if (decryptsWhole(e, c)) {
+                resolved = c
+                return listOf(c)
+            }
+        }
+        return all
+    }
+
+    /** 후보 [c] 로 항목을 끝까지 풀어 본다. [RESOLVE_CAP] 을 넘도록 탈이 없으면 맞다고 본다. */
+    private fun decryptsWhole(e: ZipArchiveEntry, c: ByteArray): Boolean = try {
+        zip.getRawInputStream(e).use { rawStream ->
+            ZipDecryption.open(e, rawStream, listOf(c), timeHigh(e)).use { input ->
+                val buf = ByteArray(COPY_BUFFER)
+                var total = 0L
+                while (total < RESOLVE_CAP) {
+                    if (Thread.currentThread().isInterrupted) throw InterruptedIOException("중단")
+                    val n = input.read(buf)
+                    if (n < 0) break
+                    total += n
+                }
+            }
+        }
+        true
+    } catch (x: InterruptedIOException) {
+        throw x
+    } catch (x: IOException) {
+        false
+    }
+
+    /** 로컬 헤더를 읽는 채널. 데이터 기술자 항목이 있을 때만 연다. */
+    private var headerChannel: SeekableByteChannel? = null
+
+    /**
+     * 데이터 기술자(비트 3) 항목의 확인 바이트 — **로컬 헤더에 적힌 DOS 시각의 높은 바이트.**
+     * `entry.time` 에서 되만들지 않는 이유는 [ZipDecryption] 의 `zipCryptoStream` 주석.
+     * 못 읽으면 null(그때는 CRC 쪽 확인 바이트만 본다).
+     */
+    @Synchronized
+    private fun timeHigh(e: ZipArchiveEntry): Int? {
+        if (!e.generalPurposeBit.usesDataDescriptor()) return null
+        val offset = e.localHeaderOffset
+        if (offset < 0) return null
+        return try {
+            val ch = headerChannel ?: source.openChannel()?.also { headerChannel = it } ?: return null
+            val head = ByteBuffer.allocate(12)
+            ch.position(offset)
+            while (head.hasRemaining()) if (ch.read(head) < 0) return null
+            // 로컬 헤더 서명(50 4B 03 04)을 확인한다 — 오프셋이 틀렸으면 엉뚱한 바이트다.
+            // `getInt` 는 빅 엔디언으로 읽으므로 바이트 순서 그대로의 값과 견준다.
+            if (head.getInt(0) != 0x504B0304) return null
+            head.get(11).toInt() and 0xFF
+        } catch (x: IOException) {
+            null
         }
     }
 
@@ -116,6 +222,23 @@ class ZipArchiveReader(
     override fun open(entry: ArchiveEntry): InputStream {
         require(entry.isReadable) { "읽을 수 없는 항목이다" }
         val e = raw.getOrNull(entry.index) ?: throw ParseLimitExceededException("index", "없는 엔트리")
+        if (entry.isEncrypted) {
+            // commons-compress 는 암호 항목을 풀지 않는다. 날것을 받아 우리가 푼다.
+            if (password == null) throw ArchivePasswordException(wrongPassword = false)
+            val keys = keys()
+            val rawStream = zip.getRawInputStream(e)
+            val plain = try {
+                ZipDecryption.open(e, rawStream, keys, timeHigh(e))
+            } catch (x: ZipDecryption.WrongPasswordException) {
+                rawStream.close()
+                throw ArchivePasswordException(wrongPassword = true)
+            } catch (x: Throwable) {
+                rawStream.close()
+                throw x
+            }
+            // 압축비의 분모는 선언 압축 크기다 — 날것 스트림은 경계가 그 크기로 묶여 있다.
+            return budget.guard(plain, e.compressedSize)
+        }
         val stream = zip.getInputStream(e)
         // 압축비의 분모로 '실제로 소비한 입력 바이트' 를 쓴다. 헤더의 선언값은
         // 공격자가 적는 값이라 분모로 약하다.
@@ -158,9 +281,22 @@ class ZipArchiveReader(
         }
     }
 
-    override fun close() = zip.close()
+    override fun close() {
+        synchronized(this) {
+            candidates?.forEach { it.fill(0) }
+            candidates = null
+            resolved = null
+            runCatching { headerChannel?.close() }
+            headerChannel = null
+        }
+        password?.fill('\u0000')
+        zip.close()
+    }
 
     private companion object {
         const val COPY_BUFFER = 64 * 1024
+
+        /** 후보를 가릴 때 풀어 볼 최대량. 틀린 열쇠는 deflate 의 첫 블록에서 드러난다. */
+        const val RESOLVE_CAP = 64L shl 20
     }
 }

@@ -30,9 +30,16 @@ class SevenZArchiveReader(
     private val budget: EntryBudget,
     private val limits: ParseLimits = ParseLimits.DEFAULT,
     override val formatId: FormatId = FormatId.SEVEN_Z,
+    password: CharArray? = null,
 ) : ArchiveReader {
 
-    private fun openFile(): SevenZFile {
+    /**
+     * 우리 사본. [open] 이 파일을 새로 열 때마다 쓰므로 리더가 사는 동안 들고 있어야 한다.
+     * [close] 에서 지운다. 7z 는 명세가 암호를 UTF-16LE 로 못 박아 두어 후보를 대 볼 일이 없다.
+     */
+    private val password: CharArray? = password?.copyOf()
+
+    private fun openFile(withPassword: Boolean = true): SevenZFile {
         val builder = SevenZFile.builder()
             // 기본값이 Integer.MAX_VALUE 라 사실상 무제한이다. 헤더에 적힌 사전 크기
             // 하나로 힙을 넘길 수 있으므로 반드시 묶는다.
@@ -41,6 +48,7 @@ class SevenZArchiveReader(
             // 바이트를 받아** 1024로 나눈다 — 65536을 넘기면 64MiB 가 아니라 64KiB 가
             // 되어 정상 7z 도 MemoryLimitException 으로 죽는다(실측으로 밟았다).
             .setMaxMemoryLimitKiB(MAX_HEADER_MEMORY_KIB)
+        if (withPassword && password != null) builder.setPassword(password)
         val file = source.asFile()
         if (file != null) builder.setFile(file)
         else builder.setSeekableByteChannel(
@@ -49,7 +57,35 @@ class SevenZArchiveReader(
         return builder.get()
     }
 
-    private val handle: SevenZFile = openFile()
+    /**
+     * 헤더까지 잠긴 7z 는 **여는 순간** 암호를 요구한다(`PasswordRequiredException`, 실측).
+     * 틀린 암호로 열면 그냥 '헤더가 없다' 는 `IOException` 이 온다 — 그래서 그때는 암호 없이
+     * 한 번 더 열어 보고, 암호를 요구하면 '틀렸다' 로 옮긴다. 깨진 파일과 가르는 길이 그것뿐이다.
+     *
+     * **어떤 실패든 사본을 지운다.** 예전 판은 두 예외만 잡아, 라이브러리가 던지는
+     * `RuntimeException`(깨진 헤더)에서는 사본이 지워지지 않은 채 버려졌다(검토가 잡았다).
+     */
+    private val handle: SevenZFile = try {
+        openFile()
+    } catch (e: org.apache.commons.compress.PasswordRequiredException) {
+        this.password?.fill('\u0000')
+        throw ArchivePasswordException(wrongPassword = false)
+    } catch (e: java.io.IOException) {
+        val headerLocked = this.password != null && try {
+            openFile(withPassword = false).close()
+            false
+        } catch (x: org.apache.commons.compress.PasswordRequiredException) {
+            true
+        } catch (x: Throwable) {
+            false
+        }
+        this.password?.fill('\u0000')
+        if (headerLocked) throw ArchivePasswordException(wrongPassword = true)
+        throw e
+    } catch (t: Throwable) {
+        this.password?.fill('\u0000')
+        throw t
+    }
 
     override val entries: List<ArchiveEntry>
 
@@ -77,7 +113,7 @@ class SevenZArchiveReader(
                     // 없으므로 링크와 같은 취급으로 걸러 낸다.
                     isLink = e.isAntiItem ||
                         (e.hasWindowsAttributes && UnixMode.isSevenZSymlink(e.windowsAttributes)),
-                    isEncrypted = false, // 7z 는 헤더 자체가 암호화되면 여는 단계에서 실패한다
+                    isEncrypted = false, // 아래에서 `nextEntry` 로 가려 고친다
                     crc = if (e.hasCrc) e.crcValue else -1L,
                     nameCharset = "UTF-16LE(명세)",
                     lastModified = if (e.hasLastModifiedDate) {
@@ -87,11 +123,84 @@ class SevenZArchiveReader(
                     },
                 )
             }
-            entries = list
+            val locked = lockedPositions(handle.entries.count())
+            entries = if (locked.isEmpty()) list else list.map {
+                if (it.index in locked) it.copy(isEncrypted = true, decryptable = password != null) else it
+            }
         } catch (t: Throwable) {
             handle.close()
+            password?.fill('\u0000')
             throw t
         }
+    }
+
+    /**
+     * 잠긴 항목의 자리.
+     *
+     * ## 암호 없이, 따로 연 파일로 가린다
+     *
+     * commons-compress 는 항목의 암호 여부를 목록에 싣지 않는다 — `contentMethods` 는 `nextEntry`
+     * 가 그 폴더의 **해제기 사슬을 실제로 만들 때** 채워진다(함정 표). 그 사슬 만들기가 가볍지 않다:
+     *
+     * - LZMA(LZMA2 가 아니다)·BZip2 해제기는 **만들면서 바로 읽는다.** 암호를 준 파일이면 그 읽기가
+     *   AES 열쇠 유도(SHA-256 2^19 회)를 부른다 — 폴더마다. 틀린 암호면 `CorruptedInputException`.
+     * - BCJ2·PPMd·64 MiB 사전 같은 폴더는 **만드는 것 자체가 실패한다.**
+     *
+     * 예전 판은 암호를 준 핸들에서 그대로 돌고 예외를 잡지 않아, **암호와 상관없는 Ultra·BCJ2 7z 의
+     * 목록까지 '깨졌다' 로 나갔다**(검토가 잡은 회귀). 이제 암호 없이 연 파일로 돌고 항목마다 예외를
+     * 가른다 — 암호가 없으면 AES 는 첫 읽기에서 곧바로 `PasswordRequiredException` 을 던지므로 열쇠를
+     * 유도하지 않는다.
+     *
+     * | `nextEntry` 가 | 뜻 |
+     * |---|---|
+     * | 돌아왔고 `contentMethods` 가 있다 | 새 폴더. AES 가 있으면 잠겼다 |
+     * | 돌아왔고 `contentMethods` 가 없다 | 앞 항목과 같은 폴더 — 앞의 판정을 잇는다 |
+     * | `PasswordRequiredException` | 잠긴 새 폴더 |
+     * | 그 밖의 `IOException` | 우리가 못 푸는 새 폴더 — 잠겼는지 모른다(잠기지 않은 것으로 둔다) |
+     * | `RuntimeException` | 앞에서 실패한 폴더의 다음 항목(라이브러리가 빈 스트림을 감싸다 넘어진다) — 앞의 판정을 잇는다 |
+     *
+     * 헤더까지 잠긴 파일은 암호 없이 열리지 않는다 — 그때는 내용을 가진 항목이 **전부** 잠긴 것이다.
+     */
+    private fun lockedPositions(count: Int): Set<Int> {
+        val probe = try {
+            openFile(withPassword = false)
+        } catch (e: org.apache.commons.compress.PasswordRequiredException) {
+            // 헤더까지 잠겼다. 여기까지 왔으면 암호로 열린 것이다.
+            return handle.entries.withIndex().filter { it.value.hasStream() }.map { it.index }.toSet()
+        } catch (e: InterruptedIOException) {
+            throw e
+        } catch (e: java.io.IOException) {
+            // 가리지 못한다. 목록까지 막지 않는다 — 잠긴 항목은 읽을 때 암호를 요구하며 실패한다.
+            return emptySet()
+        }
+        val locked = HashSet<Int>()
+        probe.use { f ->
+            val all = f.entries.toList()
+            var lastLocked = false
+            for (at in 0 until minOf(count, all.size)) {
+                val hasStream = all[at].hasStream()
+                val isLocked = try {
+                    val e = f.nextEntry ?: break
+                    val methods = e.contentMethods
+                    when {
+                        !hasStream -> false
+                        methods == null -> lastLocked
+                        else -> methods.any { it.method == org.apache.commons.compress.archivers.sevenz.SevenZMethod.AES256SHA256 }
+                    }
+                } catch (e: org.apache.commons.compress.PasswordRequiredException) {
+                    true
+                } catch (e: InterruptedIOException) {
+                    throw e
+                } catch (e: java.io.IOException) {
+                    false
+                } catch (e: RuntimeException) {
+                    lastLocked
+                }
+                if (hasStream) lastLocked = isLocked
+                if (isLocked && hasStream) locked.add(at)
+            }
+        }
+        return locked
     }
 
     override val randomAccess: Boolean get() = false
@@ -206,7 +315,11 @@ class SevenZArchiveReader(
         }
     }
 
-    override fun close() = handle.close()
+    override fun close() {
+        // 계약상 [open] 이 준 스트림은 리더보다 먼저 닫힌다 — 그 뒤라 지워도 안전하다.
+        password?.fill('\u0000')
+        handle.close()
+    }
 
     /**
      * 현재 엔트리를 읽는 스트림. 닫으면 뒤에 있는 [SevenZFile] 도 닫는다.

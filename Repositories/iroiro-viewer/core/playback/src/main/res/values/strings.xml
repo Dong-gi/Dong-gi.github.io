@@ -20,6 +20,39 @@
     <string name="playback_resume_offer">%1$s 부터 이어서 재생할까요?</string>
     <string name="playback_resume_confirm">이어서 재생</string>
 
+    <string name="playback_speed">재생 속도</string>
+    <string name="playback_speed_current">재생 속도 %1$s</string>
+
+    <string name="playback_tracks">소리와 자막</string>
+    <string name="playback_track_audio">소리</string>
+    <string name="playback_track_text">자막</string>
+    <string name="playback_track_files">같은 폴더의 자막 파일</string>
+    <string name="playback_track_off">자막 끄기</string>
+    <string name="playback_track_unnamed_audio">소리 %1$d</string>
+    <string name="playback_track_unnamed_text">자막 %1$d</string>
+    <string name="playback_track_forced">강제</string>
+    <string name="playback_track_unsupported">이 기기에서 재생할 수 없습니다</string>
+    <string name="playback_track_none">고를 수 있는 트랙이 없습니다</string>
+    <string name="playback_channels_mono">모노</string>
+    <string name="playback_channels_stereo">스테레오</string>
+    <string name="playback_channels_many">%1$d채널</string>
+
+    <!-- 재생기에서 널리 쓰이는 표기. 번역하지 않는다. -->
+    <string name="playback_ab_symbol">A-B</string>
+    <string name="playback_ab_off">구간 반복</string>
+    <string name="playback_ab_waiting">구간 끝을 찍으세요</string>
+    <string name="playback_ab_on">구간 반복 중</string>
+    <string name="playback_ab_marked_a">%1$s 를 구간 시작으로 찍었습니다</string>
+    <string name="playback_ab_marked_b">%1$s ~ %2$s 를 되풀이합니다</string>
+    <string name="playback_ab_cleared">구간 반복을 껐습니다</string>
+    <string name="playback_ab_too_short">구간이 너무 짧습니다</string>
+
+    <string name="playback_orientation_lock">화면 방향 잠그기</string>
+    <string name="playback_orientation_unlock">화면 방향 잠금 풀기</string>
+
+    <string name="playback_pip">화면 속 화면</string>
+    <string name="playback_pip_failed">화면 속 화면을 열 수 없습니다</string>
+
     <string name="playback_error_no_decoder">이 기기에 코덱이 없습니다%1$s</string>
     <string name="playback_error_decoder_failed">디코더를 시작하지 못했습니다%1$s</string>
     <string name="playback_error_container">파일을 읽지 못했습니다 (%1$s)</string>

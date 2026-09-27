@@ -29,7 +29,11 @@
     <string name="comic_failed_corrupt">깨진 파일이거나 이 앱이 읽지 못하는 구조입니다</string>
     <string name="comic_failed_unsupported">이 앱이 다루지 않는 압축 형식입니다</string>
     <string name="comic_failed_too_large">방어 상한을 넘어 열지 않았습니다</string>
-    <string name="comic_failed_encrypted">암호가 걸려 있어 열지 않습니다</string>
+    <string name="comic_failed_encrypted">이 앱이 풀지 않는 방식으로 잠긴 만화입니다</string>
+    <string name="comic_failed_password">암호를 넣어야 열 수 있는 만화입니다</string>
+    <string name="comic_password_enter">암호 넣기</string>
+    <string name="comic_password_title">암호가 걸린 만화</string>
+    <string name="comic_password_body">이 만화를 열려면 암호가 필요합니다.</string>
     <string name="comic_failed_no_pages">그림이 한 장도 없습니다</string>
 
     <string name="comic_solid_hint">순차 압축이라 되돌아갈 때 다시 풉니다</string>

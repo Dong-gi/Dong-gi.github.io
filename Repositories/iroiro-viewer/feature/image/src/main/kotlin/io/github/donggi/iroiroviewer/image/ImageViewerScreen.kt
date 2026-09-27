@@ -290,11 +290,23 @@ private fun ImagePage(
         }
     }
 
+    // 선명화 조각 한 장의 상한. 만화·PDF 와 같은 예산표에서 나온다(화면 크기 + 힙 등급).
+    val detailCap = remember(config) {
+        val am = context.getSystemService(android.content.Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+        val m = context.resources.displayMetrics
+        io.github.donggi.iroiroviewer.safety.ImageLimits
+            .budgetOf(m.widthPixels, m.heightPixels, am.memoryClass).detailCap
+    }
+
     // 세 상태다 — 여는 중 / 열림 / 못 엶. 셋을 가르지 않으면 SVG·TIFF 처럼 우리가
     // 디코딩하지 못하는 파일에서 **영원히 도는 동그라미**가 남는다.
+    //
+    // **원본 치수를 함께 잰다**(`probe`). 최대 배율이 원본의 2배이고, 바닥층은 화면에
+    // 맞춰 줄여 뜬 것이라 원본이 아니다. `Ready` 전에 재 두어 첫 프레임부터 상한이 옳다.
     val state by androidx.compose.runtime.produceState<PageState>(PageState.Loading, path, generation) {
+        val probe = io.github.donggi.iroiroviewer.ui.image.ImageIo.probe(path)
         val bmp = io.github.donggi.iroiroviewer.ui.image.ImageIo.decodeFitted(path, targetLongest)
-        value = if (bmp != null) PageState.Ready(bmp) else PageState.Failed
+        value = if (bmp != null) PageState.Ready(bmp, probe) else PageState.Failed
     }
 
     // 디버그 빌드에서만 남는다. 제스처는 눈으로만 확인할 수 있는 것이 많아서, 배율만은
@@ -313,13 +325,56 @@ private fun ImagePage(
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(32.dp),
             )
-            is PageState.Ready -> io.github.donggi.iroiroviewer.ui.image.ZoomableImage(
-                bitmap = st.bitmap.asImageBitmap(),
-                state = zoomState,
-                // 저장이 끝나기 전까지의 **화면상 회전**. 파일이 다시 읽히면 0 으로 돌아간다.
-                modifier = Modifier.fillMaxSize().graphicsLayer { rotationZ = extraRotation.toFloat() },
-                onTap = onTap,
-            )
+            is PageState.Ready -> {
+                val probe = st.probe
+                // **방향을 확실히 아는 파일만 영역 디코딩한다**(`canUseRegionDecoder`). 180°·
+                // 거울상은 디코더가 방향을 적용했는지 잴 수 없어, 조각이 뒤집혀 얹힐 수 있다 —
+                // 그 파일은 흐린 채로 확대된다.
+                val regional = probe?.takeIf { it.canUseRegionDecoder }
+                // 바닥층이 방향을 적용해 떠 있을 때만 조각을 돌린다. 적용하지 않았다면 바닥층도
+                // 저장 방향 그대로라 조각도 그대로여야 한다.
+                val orientation = if (regional?.decoderAppliesOrientation == true) {
+                    regional.orientation
+                } else {
+                    io.github.donggi.iroiroviewer.ui.image.RegionMath.NORMAL
+                }
+                val detail = io.github.donggi.iroiroviewer.ui.image.rememberRasterDetail(
+                    key = path to generation,
+                    state = zoomState,
+                    baseWidth = st.bitmap.width,
+                    originalWidth = regional?.displayWidth ?: 0,
+                    originalHeight = regional?.displayHeight ?: 0,
+                    capBytes = detailCap,
+                ) { want ->
+                    val p = regional ?: return@rememberRasterDetail null
+                    val stored = io.github.donggi.iroiroviewer.ui.image.RegionMath.toStored(
+                        orientation, p.storedWidth, p.storedHeight,
+                        intArrayOf(want.left, want.top, want.right, want.bottom),
+                    )
+                    io.github.donggi.iroiroviewer.ui.image.ImageIo.decodeRegion(
+                        path, stored, want.sample,
+                        io.github.donggi.iroiroviewer.ui.image.RegionMath.rotationDegrees(orientation),
+                    )
+                }
+                LaunchedEffect(detail) {
+                    detail?.let {
+                        io.github.donggi.iroiroviewer.io.Iro.d {
+                            "조각 ${it.image.width}x${it.image.height} @(${it.left},${it.top}) " +
+                                "원본 ${probe?.displayWidth}x${probe?.displayHeight} 최대 ${zoomState.maxScale}"
+                        }
+                    }
+                }
+                io.github.donggi.iroiroviewer.ui.image.ZoomableImage(
+                    bitmap = st.bitmap.asImageBitmap(),
+                    state = zoomState,
+                    // 저장이 끝나기 전까지의 **화면상 회전**. 파일이 다시 읽히면 0 으로 돌아간다.
+                    modifier = Modifier.fillMaxSize().graphicsLayer { rotationZ = extraRotation.toFloat() },
+                    onTap = onTap,
+                    detail = detail,
+                    // 최대 배율은 **원본의 2배**다. 원본을 모르면 바닥층으로 친다.
+                    originalWidth = probe?.displayWidth ?: st.bitmap.width,
+                )
+            }
         }
     }
 }
@@ -328,5 +383,9 @@ private fun ImagePage(
 private sealed interface PageState {
     data object Loading : PageState
     data object Failed : PageState
-    data class Ready(val bitmap: android.graphics.Bitmap) : PageState
+    data class Ready(
+        val bitmap: android.graphics.Bitmap,
+        /** 원본 치수와 방향. 재지 못했으면 null — 그때는 바닥층 크기로 친다. */
+        val probe: io.github.donggi.iroiroviewer.ui.image.ImageProbe?,
+    ) : PageState
 }

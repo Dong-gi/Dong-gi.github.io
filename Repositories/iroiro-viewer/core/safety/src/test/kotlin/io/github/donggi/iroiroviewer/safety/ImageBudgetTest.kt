@@ -119,7 +119,7 @@ class ImageBudgetTest {
      */
     @Test
     fun `예산을 넘는 쪽은 더 줄여서 뜬다`() {
-        val cap = ImageLimits.comicPageCap(phone)
+        val cap = ImageLimits.pageCap(phone)
         // 4000x3000 은 목표만 보면 표본 1(45.8 MiB)이다.
         assertEquals(1, ImageLimits.sampleFor(4000, 3000, 2400))
         val s = ImageLimits.sampleForBudget(4000, 3000, 2400, cap)
@@ -129,7 +129,7 @@ class ImageBudgetTest {
 
     @Test
     fun `예산 안에 드는 쪽은 그대로 뜬다`() {
-        val cap = ImageLimits.comicPageCap(phone)
+        val cap = ImageLimits.pageCap(phone)
         // 1200x1800 만화 쪽은 예산 안이다.
         assertEquals(
             ImageLimits.sampleFor(1200, 1800, 2400),
@@ -139,7 +139,7 @@ class ImageBudgetTest {
 
     @Test
     fun `네 장을 동시에 들어도 예산 안이다`() {
-        val cap = ImageLimits.comicPageCap(phone)
+        val cap = ImageLimits.pageCap(phone)
         for ((w, h) in listOf(4000 to 3000, 2480 to 3508, 800 to 12000, 1200 to 1800)) {
             val s = ImageLimits.sampleForBudget(w, h, 2400, cap)
             val one = ImageLimits.bytesAt(w, h, s)

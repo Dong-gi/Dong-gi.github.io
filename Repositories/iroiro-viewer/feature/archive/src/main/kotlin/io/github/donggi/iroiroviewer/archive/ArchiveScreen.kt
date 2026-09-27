@@ -1,6 +1,7 @@
 package io.github.donggi.iroiroviewer.archive
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -65,6 +67,7 @@ import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.MimeResolver
 import io.github.donggi.iroiroviewer.model.FileKind
 import io.github.donggi.iroiroviewer.ui.KindBadge
+import io.github.donggi.iroiroviewer.ui.PasswordDialog
 
 /**
  * 압축 파일 안을 보는 화면. **읽기 전용이다** — 여기서 지우거나 이름을 바꾸지 않는다.
@@ -113,6 +116,7 @@ fun ArchiveScreen(
     val folder by vm.folder.collectAsStateWithLifecycle()
     val filter by vm.filter.collectAsStateWithLifecycle()
     val plan by vm.plan.collectAsStateWithLifecycle()
+    val asking by vm.asking.collectAsStateWithLifecycle()
 
     var searchOpen by remember { mutableStateOf(false) }
     var menuOpen by remember { mutableStateOf(false) }
@@ -215,6 +219,23 @@ fun ArchiveScreen(
             when (val s = state) {
                 is ArchiveViewModel.State.Loading -> Centered { CircularProgressIndicator() }
 
+                // 헤더까지 잠겨 목록조차 못 읽는다. 창을 닫아도 다시 열 길을 남긴다.
+                is ArchiveViewModel.State.NeedsPassword -> Centered {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(32.dp),
+                    ) {
+                        Text(
+                            stringResource(R.string.archive_needs_password),
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center,
+                        )
+                        Button(onClick = vm::requestPassword, modifier = Modifier.padding(top = 16.dp)) {
+                            Text(stringResource(R.string.archive_password_enter))
+                        }
+                    }
+                }
+
                 is ArchiveViewModel.State.Failed -> Centered {
                     Text(
                         text = stringResource(
@@ -232,29 +253,10 @@ fun ArchiveScreen(
                     )
                 }
 
-                is ArchiveViewModel.State.Ready -> {
-                    val rows = remember(s.doc, folder, filter) { vm.rows() }
-                    if (rows.isEmpty()) {
-                        Centered {
-                            Text(
-                                stringResource(
-                                    if (filter.isBlank()) R.string.archive_empty
-                                    else R.string.archive_empty_filtered,
-                                ),
-                                style = MaterialTheme.typography.bodyMedium,
-                            )
-                        }
-                    } else {
-                        EntryList(
-                            rows = rows,
-                            showPath = filter.isNotBlank(),
-                            onOpenFolder = vm::enter,
-                            onTapFile = { node ->
-                                // 그림은 만화 뷰어로. 나머지는 무엇을 못 하는지 말한다.
-                                if (canPreview(node)) onOpenImageEntry(node.entryIndex) else notice = node
-                            },
-                        )
-                    }
+                is ArchiveViewModel.State.Ready -> Column(Modifier.fillMaxSize()) {
+                    // 일부 항목만 잠겼다. 목록은 보이고, 잠긴 것을 풀려면 암호를 넣는다.
+                    if (s.doc.locked) LockedBanner(onEnter = vm::requestPassword)
+                    ReadyList(s.doc, folder, filter, vm, onOpenImageEntry, onLocked = vm::requestPassword) { notice = it }
                 }
             }
         }
@@ -271,46 +273,149 @@ fun ArchiveScreen(
         )
     }
 
-    notice?.let { node ->
-        // 그림이 아닌 항목은 **열지 않는다.** 글·문서·영상 미리보기는 각 뷰어가 경로를
-        // 요구하는데, 그것을 주려면 엔트리를 디스크로 뽑아야 한다 — 만화 뷰어가 하지
-        // 않기로 한 바로 그 일이다. 무엇을 못 하는지 말하는 것이 아무 반응도 없는 것보다 낫다.
-        AlertDialog(
-            onDismissRequest = { notice = null },
-            title = { Text(node.name, maxLines = 2, overflow = TextOverflow.MiddleEllipsis) },
-            text = {
-                Text(
-                    stringResource(
-                        when {
-                            node.unsafe -> R.string.archive_badge_unsafe
-                            node.isEncrypted -> R.string.archive_failed_encrypted
-                            // **만화 확장자도 중첩 아카이브다.** 9단계가 cbz·cbr·cb7·cbt 를
-                            // ARCHIVE 에서 COMIC 으로 옮기면서 이 검사가 그 넷을 놓쳤고,
-                            // 권별 cbz 를 zip 하나에 모아 둔 흔한 구성에서 '이 항목을 열 수
-                            // 없습니다' 만 나왔다 — 사용자는 파일이 깨진 줄로 읽는다.
-                            MimeResolver.kindOf(node.name, false) in NESTED_KINDS ->
-                                R.string.archive_preview_nested
-                            else -> R.string.archive_preview_failed
-                        },
-                    ),
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = { notice = null }) { Text(stringResource(R.string.archive_close)) }
-            },
+    asking?.let { wrong ->
+        PasswordDialog(
+            title = stringResource(R.string.archive_password_title),
+            message = stringResource(R.string.archive_password_body),
+            wrong = wrong,
+            onDismiss = vm::dismissPassword,
+            onSubmit = vm::submitPassword,
         )
     }
+
+    notice?.let { node -> EntryNotice(node) { notice = null } }
+}
+
+/** 목록 위의 한 줄 — 잠긴 항목이 있다는 것과 푸는 길. */
+@Composable
+private fun LockedBanner(onEnter: () -> Unit) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(start = 16.dp, end = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Icon(Icons.Filled.Lock, null, Modifier.size(18.dp), tint = MaterialTheme.colorScheme.outline)
+        Text(
+            stringResource(R.string.archive_locked_banner),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f),
+        )
+        TextButton(onClick = onEnter) { Text(stringResource(R.string.archive_password_enter)) }
+    }
+}
+
+@Composable
+private fun ReadyList(
+    doc: ArchiveViewModel.Doc,
+    folder: String,
+    filter: String,
+    vm: ArchiveViewModel,
+    onOpenImageEntry: (Int) -> Unit,
+    onLocked: () -> Unit,
+    onNotice: (ArchiveTree.Node) -> Unit,
+) {
+    val rows = remember(doc, folder, filter) { vm.rows() }
+    if (rows.isEmpty()) {
+        Centered {
+            Text(
+                stringResource(
+                    if (filter.isBlank()) R.string.archive_empty
+                    else R.string.archive_empty_filtered,
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+        return
+    }
+    EntryList(
+        rows = rows,
+        showPath = filter.isNotBlank(),
+        onOpenFolder = vm::enter,
+        onTapFile = { node ->
+            // 그림은 만화 뷰어로. 잠긴 것은 암호를 묻는다. 나머지는 무엇을 못 하는지 말한다.
+            when {
+                // 암호로 풀리는 것만 암호를 묻는다. 암호로도 못 여는 것(강한
+                // 암호화·안쪽 압축 방식)은 아래 안내로 간다 — 물으면 무엇을
+                // 넣어도 '잠김' 이 남는 고리가 된다.
+                node.needsPassword -> onLocked()
+                canPreview(node) -> onOpenImageEntry(node.entryIndex)
+                else -> onNotice(node)
+            }
+        },
+    )
+}
+
+/** 열 수 없는 항목을 눌렀을 때 — 무엇을 못 하는지 말한다. */
+@Composable
+private fun EntryNotice(node: ArchiveTree.Node, onDismiss: () -> Unit) {
+    // 그림이 아닌 항목은 **열지 않는다.** 글·문서·영상 미리보기는 각 뷰어가 경로를
+    // 요구하는데, 그것을 주려면 엔트리를 디스크로 뽑아야 한다 — 만화 뷰어가 하지
+    // 않기로 한 바로 그 일이다. 무엇을 못 하는지 말하는 것이 아무 반응도 없는 것보다 낫다.
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(node.name, maxLines = 2, overflow = TextOverflow.MiddleEllipsis) },
+        text = {
+            Text(
+                stringResource(
+                    when {
+                        node.unsafe -> R.string.archive_badge_unsafe
+                        // 암호로 풀린 항목은 잠긴 것이 아니다 — 아래의 종류별 안내로 간다.
+                        node.isEncrypted && !node.decryptable -> R.string.archive_failed_encrypted
+                        // **만화 확장자도 중첩 아카이브다.** 9단계가 cbz·cbr·cb7·cbt 를
+                        // ARCHIVE 에서 COMIC 으로 옮기면서 이 검사가 그 넷을 놓쳤고,
+                        // 권별 cbz 를 zip 하나에 모아 둔 흔한 구성에서 '이 항목을 열 수
+                        // 없습니다' 만 나왔다 — 사용자는 파일이 깨진 줄로 읽는다.
+                        MimeResolver.kindOf(node.name, false) in NESTED_KINDS ->
+                            R.string.archive_preview_nested
+                        // **문서도 풀어서 열어야 한다.** 11단계가 PDF 를 붙이면서
+                        // 이 자리가 생겼다 — pdfium 은 seekable 한 파일 서술자를
+                        // 요구하고 아카이브 엔트리에는 그런 것이 없다. 여는 유일한
+                        // 길은 문서를 통째로 임시 파일에 뽑는 것인데, 그것은 쪽 한
+                        // 장이 아니라 **문서 전체의 평문 사본**이라 만화 뷰어가
+                        // 하지 않기로 한 일보다 나쁘다(`PdfOpener` 의 주석).
+                        MimeResolver.kindOf(node.name, false) in DOCUMENT_KINDS ->
+                            R.string.archive_preview_document
+                        else -> R.string.archive_preview_failed
+                    },
+                ),
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.archive_close)) }
+        },
+    )
 }
 
 /**
  * 압축 안에 또 압축인 것 — 이름으로 판정한다. 만화 확장자도 여기 든다.
  *
- * 재귀를 막는 것이 [io.github.donggi.iroiroviewer.safety.ParseLimits.maxContainerDepth]
- * 라는 상수가 아니라 **구조**라는 점이 중요하다: 엔트리에는 경로가 없어 어느 뷰어에도
- * 넘길 수 없고, 이 목록은 엔트리를 디스크로 뽑지 않는다. 상한 값은 그 사실을 적어 둔
- * 것일 뿐 어디에서도 읽히지 않는다.
+ * 재귀를 막는 것이 상수가 아니라 **구조**라는 점이 중요하다: 엔트리에는 경로가 없어
+ * 어느 뷰어에도 넘길 수 없고, 이 목록은 엔트리를 디스크로 뽑지 않는다.
+ *
+ * `ParseLimits` 에 `maxContainerDepth` 라는 값이 오래 선언되어 있었지만 읽는 코드가
+ * 한 줄도 없었고, 11단계가 그것을 지웠다 — 아무것도 막지 못하면서 막는다고 적혀 있는
+ * 값이 가장 나쁘다(`ParseLimits` 의 클래스 주석).
  */
 private val NESTED_KINDS = setOf(FileKind.ARCHIVE, FileKind.COMIC)
+
+/**
+ * 뷰어가 **경로**를 요구하는 문서들. 아카이브 안에서는 경로를 줄 수 없으므로 열지 않는다.
+ *
+ * 12·13단계가 docx·hwpx 파서를 만들어도 이 목록은 그대로다. 그 파서들은 바이트 스트림을
+ * 받으므로 기술적으로는 열 수 있지만, 아카이브 안의 문서를 여는 길을 한 번 뚫으면
+ * '엔트리를 디스크로 뽑지 않는다' 는 이 화면의 불변식이 깨진다.
+ */
+private val DOCUMENT_KINDS = setOf(
+    FileKind.PDF,
+    FileKind.EBOOK,
+    FileKind.DOCUMENT,
+    FileKind.SHEET,
+    FileKind.SLIDE,
+    FileKind.HWP,
+)
 
 /**
  * 이 항목을 지금 열 수 있는가.
@@ -319,7 +424,7 @@ private val NESTED_KINDS = setOf(FileKind.ARCHIVE, FileKind.COMIC)
  * 중첩 아카이브는 [NESTED_KINDS] 로 갈라 '풀어서 여세요' 로 끝낸다.
  */
 private fun canPreview(node: ArchiveTree.Node): Boolean =
-    !node.isDirectory && !node.unsafe && !node.isEncrypted && !node.isLink &&
+    !node.isDirectory && !node.unsafe && (!node.isEncrypted || node.decryptable) && !node.isLink &&
         node.entryIndex >= 0 && ComicPages.isPage(node.name)
 
 @Composable
@@ -384,7 +489,9 @@ private fun EntryRow(
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        if (node.isEncrypted) {
+        // 자물쇠는 **지금 못 여는** 항목에만. 암호를 넣은 뒤에도 남아 있으면 풀린 것을
+        // 잠긴 것으로 읽는다(기기에서 봤다 — 배너는 사라지는데 자물쇠가 그대로였다).
+        if (node.isEncrypted && !node.decryptable) {
             Icon(
                 Icons.Filled.Lock,
                 stringResource(R.string.archive_badge_encrypted),

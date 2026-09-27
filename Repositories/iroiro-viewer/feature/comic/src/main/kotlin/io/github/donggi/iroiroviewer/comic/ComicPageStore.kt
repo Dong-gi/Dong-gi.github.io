@@ -36,7 +36,26 @@ data class PageInfo(
      * 6단계가 판별기(`ImageFormats.isApng`)를 미리 넣어 둔 것이 이 자리를 위해서다.
      */
     val apng: Boolean,
-)
+    /**
+     * EXIF 방향. [width]·[height] 는 **저장 방향**이다(`BitmapFactory` 는 방향을 적용하지
+     * 않는다) — 바닥층은 적용해서 뜨므로 90°·270° 쪽이면 가로세로가 바뀌어 보인다.
+     */
+    val orientation: Int = 1,
+) {
+    /** 90°·270° 로 눕혀 보여야 하는가. */
+    private val turned: Boolean get() = orientation in 5..8
+
+    /** 화면에 보이는 방향의 폭. 최대 배율(원본의 2배)은 이것으로 잰다. */
+    val displayWidth: Int get() = if (turned) height else width
+    val displayHeight: Int get() = if (turned) width else height
+
+    /**
+     * 확대했을 때 원본에서 조각을 떠 얹어도 되는가. **정방향 쪽만**이다 — 영역 디코딩은
+     * 방향을 적용하지 않으므로 방향 태그가 붙은 쪽에 얹으면 조각이 눕거나 뒤집힌다.
+     * 만화 쪽에 방향 태그가 붙는 일은 드물어 걸리는 자리가 거의 없다.
+     */
+    val canUseRegionDecoder: Boolean get() = !animated && (orientation == 0 || orientation == 1)
+}
 
 /**
  * 쪽을 디코딩해 주고, 최근 것을 **예산 안에서** 들고 있는다.
@@ -51,7 +70,7 @@ data class PageInfo(
  *
  * 그 값이 '동시에 살아 있어도 되는 바닥층 전체' 이고, 만화가 실제로 동시에 드는 것이
  * 정확히 그것(앞뒤 한 장씩 + 넘기는 도중 두 장)이다. 한 장의 바이트는
- * [ImageLimits.comicPageCap] 으로 따로 눌러 두었으므로 두 값이 함께 성립한다.
+ * [ImageLimits.pageCap] 으로 따로 눌러 두었으므로 두 값이 함께 성립한다.
  */
 class ComicPageStore(
     private val source: ComicSource,
@@ -80,7 +99,10 @@ class ComicPageStore(
     val pageCount: Int get() = source.pages.size
 
     /** 한 장에 허락하는 바이트. 화면이 표본을 정할 때 그대로 넘긴다. */
-    val pageCap: Long = ImageLimits.comicPageCap(budget)
+    val pageCap: Long = ImageLimits.pageCap(budget)
+
+    /** 선명화 조각 한 장의 상한. */
+    val detailCap: Long = budget.detailCap
 
     /** 이미 잰 것이 있으면 그것. 없으면 null — 디코딩하지 않는다. */
     fun knownInfo(ordinal: Int): PageInfo? = synchronized(infos) { infos[ordinal] }
@@ -103,6 +125,7 @@ class ComicPageStore(
                 animated = ImageFormats.playsAnimated(bytes) &&
                     AnimationLimits.canAnimate(size[0], size[1], budget),
                 apng = ImageFormats.isApng(bytes),
+                orientation = ImageIo.exifOrientation(bytes),
             )
             synchronized(infos) { infos[ordinal] = info }
             info
@@ -185,6 +208,18 @@ class ComicPageStore(
                 "-> ${image.width}x${image.height} ${ms}ms"
         }
         return image
+    }
+
+    /**
+     * 확대한 자리의 **선명한 조각**. [rect] 는 원본 화소 `[왼, 위, 오른, 아래]` 다
+     * (정방향 쪽만 오므로 저장 방향과 화면 방향이 같다 — [PageInfo.canUseRegionDecoder]).
+     *
+     * **캐시하지 않는다.** 확대는 지금 보는 쪽 하나에서만 일어나고, 화면이 새 자리를 청할
+     * 때마다 앞 조각은 쓸모가 없어진다. 바이트는 창 안이면 이미 힙에 있다(solid 아카이브).
+     */
+    suspend fun region(ordinal: Int, rect: IntArray, sample: Int): Bitmap? {
+        val bytes = source.bytes(ordinal) ?: return null
+        return ImageIo.decodeRegion(bytes, rect = rect, sample = sample, rotation = 0)
     }
 
     /** 이 쪽을 세로 모드에서 몇 개의 띠로 자를 것인가. 통짜로 들 쪽이면 1. */

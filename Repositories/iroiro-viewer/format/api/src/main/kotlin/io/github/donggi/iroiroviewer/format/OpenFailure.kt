@@ -18,7 +18,33 @@ sealed interface OpenFailure {
     /** 포맷은 알아봤지만 이 뷰어가 다루지 않는 갈래다. */
     data class Unsupported(override val detail: String) : OpenFailure
 
-    /** 암호가 걸려 있다. 이 뷰어는 복호화하지 않는다. */
+    /**
+     * **이전 형식**이다 — `.doc`·`.xls`·`.ppt`(OLE2 이진 형식). 1단계에서 제외했다.
+     *
+     * [Unsupported] 와 가르는 것은 사용자가 할 수 있는 일이 있기 때문이다 — 오피스에서
+     * 새 형식(docx·xlsx·pptx)으로 저장하면 열린다. '다루지 않는 문서' 로 끝내면 그 길을
+     * 알 방법이 없다.
+     */
+    data class LegacyFormat(override val detail: String) : OpenFailure
+
+    /**
+     * 암호를 넣으면 열 수 있다. 잠근 방식이 공개 명세라 우리가 풀 줄 안다.
+     *
+     * [wrongPassword] 는 **이번에 넣은 암호가 틀렸다**는 뜻이다. 암호 없이 처음 열었을 때는
+     * 거짓이다 — 화면이 '틀렸습니다' 를 띄울지 이것으로 가른다.
+     *
+     * [Encrypted] 와 가르는 이유는 사용자가 할 수 있는 일이 다르기 때문이다. 이쪽은
+     * 암호를 물어야 하고, 저쪽은 물어도 소용이 없다.
+     */
+    data class PasswordRequired(
+        override val detail: String,
+        val wrongPassword: Boolean = false,
+    ) : OpenFailure
+
+    /**
+     * 잠겨 있고 **우리가 풀 수 없다** — 잠근 방식이 공개되지 않았거나(상업 DRM),
+     * 암호가 아니라 다른 열쇠(인증서)를 요구한다. 암호를 물어도 소용이 없는 경우다.
+     */
     data class Encrypted(override val detail: String) : OpenFailure
 
     /** 읽을 권한이 없다. */

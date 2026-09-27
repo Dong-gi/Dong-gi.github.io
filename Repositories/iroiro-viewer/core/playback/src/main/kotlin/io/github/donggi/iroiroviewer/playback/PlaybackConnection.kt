@@ -5,7 +5,9 @@ import android.content.Context
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
+import androidx.media3.common.C
 import androidx.media3.common.Player
+import androidx.media3.common.TrackSelectionOverride
 import androidx.media3.common.Tracks
 import androidx.media3.common.text.Cue
 import androidx.media3.session.MediaController
@@ -13,6 +15,7 @@ import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.MoreExecutors
 import io.github.donggi.iroiroviewer.data.IroiroDatabase
 import io.github.donggi.iroiroviewer.io.FileKey
+import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.io.MimeResolver
 import io.github.donggi.iroiroviewer.model.FileEntry
 import io.github.donggi.iroiroviewer.model.FileKind
@@ -71,6 +74,33 @@ object PlaybackConnection {
         val shuffle: Boolean = false,
         /** [Player.REPEAT_MODE_OFF]·`REPEAT_MODE_ONE`·`REPEAT_MODE_ALL`. */
         val repeatMode: Int = Player.REPEAT_MODE_OFF,
+        /**
+         * 재생 배속. 언제나 [SpeedSteps.STEPS] 의 한 칸이다.
+         *
+         * 플레이어가 주는 날것을 그대로 싣지 않는 이유는 그 값이 부동소수라 우리가 넣은
+         * 1.25f 가 그대로 돌아온다는 보장이 없고, 다른 컨트롤러(잠금화면·블루투스)가
+         * 임의의 값을 넣었을 수도 있기 때문이다. 화면의 눈금이 정확히 하나만 켜지려면
+         * 들어오는 자리에서 한 번 떨어뜨려야 한다.
+         */
+        val speed: Float = SpeedSteps.NORMAL,
+        /** 찍어 둔 A-B 구간. null 이면 꺼져 있다. */
+        val abSpan: AbRepeat.Span? = null,
+        /**
+         * 고를 만한 트랙이 있는가. **화면이 컨트롤러를 만져 세지 않게** 여기서 실어 보낸다.
+         *
+         * 큐 항목의 종류(`QueueItem.kind`)를 커넥션이 정해 보내기로 한 것과 같은 판단이다 —
+         * 화면이 매 프레임 `getCurrentTracks()` 를 부르면 판정이 두 곳으로 갈린다.
+         */
+        val canChooseTracks: Boolean = false,
+        /**
+         * 지금 항목이 소리인가 영상인가. **큐가 정한 값**([QueueItem.kind])을 그대로 싣는다.
+         *
+         * 화면이 `queue` 와 `State.queueIndex` 를 **각각 다른 흐름에서** 받아 짝지으면,
+         * 둘이 한 프레임 어긋난 순간에 엉뚱한 줄의 종류를 읽는다 — 그 값으로 PiP 창을
+         * 닫기로 했으므로 어긋난 짝 하나가 **재생 화면을 끝내 버린다.** 한 흐름에서
+         * 함께 실어 보내면 그런 짝이 생기지 않는다.
+         */
+        val currentKind: FileKind? = null,
     ) {
         val hasItem: Boolean get() = fileKey != null
         val hasQueue: Boolean get() = queueSize > 1
@@ -116,6 +146,69 @@ object PlaybackConnection {
      */
     private val _queue = MutableStateFlow<List<QueueItem>>(emptyList())
     val queue: StateFlow<List<QueueItem>> = _queue.asStateFlow()
+
+    /**
+     * 고를 수 있는 트랙 하나.
+     *
+     * [id] 는 **우리가 붙인 것**이고 화면은 그것만 되돌려 준다. media3 의 `Tracks.Group` 을
+     * 화면까지 내보내지 않는 이유가 중요하다 — 세션은 컨트롤러로 나가는 모든 `TrackGroup`
+     * 에 **매번 새로 매긴 유일 id** 를 붙여 보내고(`MediaSessionStub` 의
+     * `generateAndCacheUniqueTrackGroupIds`), 돌아온 오버라이드를 그 표로 되돌린다.
+     * 그래서 예전 `Group` 으로 만든 오버라이드는 짝을 못 찾아 **조용히 무시된다.**
+     * 오버라이드는 언제나 **방금 받은** `getCurrentTracks()` 의 그룹으로 만들어야 한다.
+     */
+    data class TrackOption(
+        val id: String,
+        val descriptor: TrackLabels.Descriptor,
+        val selected: Boolean,
+        /** 이 기기가 풀 수 있는가. 못 푸는 것도 보여 주되 고를 수 없게 한다. */
+        val supported: Boolean,
+    )
+
+    /** 같은 폴더의 자막 파일 하나. */
+    data class SubtitleFile(val path: String, val name: String, val selected: Boolean)
+
+    /**
+     * 지금 고를 수 있는 것 전부.
+     *
+     * [State] 에 넣지 않는 이유는 [cues]·[queue] 와 같다 — 목록은 항목이 바뀔 때만
+     * 달라지는데 `State` 는 0.5초마다 복사된다.
+     */
+    data class TrackChoices(
+        val audio: List<TrackOption> = emptyList(),
+        val text: List<TrackOption> = emptyList(),
+        /** '자막 끄기' 가 켜져 있는가. 내장이든 사이드로드든 한 번에 꺼진다. */
+        val textDisabled: Boolean = false,
+        val files: List<SubtitleFile> = emptyList(),
+    ) {
+        /** 보여 줄 것이 있는가. 소리 트랙이 하나뿐이고 자막이 없으면 시트를 열 이유가 없다. */
+        val isEmpty: Boolean get() = audio.size < 2 && text.isEmpty() && files.isEmpty()
+    }
+
+    private val _tracks = MutableStateFlow(TrackChoices())
+    val tracks: StateFlow<TrackChoices> = _tracks.asStateFlow()
+
+    /**
+     * [TrackOption.id] → 방금 받은 `Tracks` 안의 자리. **메인 스레드에서만 만진다.**
+     *
+     * [refreshTracks] 가 통째로 갈아 끼운다. 오래된 그룹으로 오버라이드를 만들지 않기
+     * 위한 장치다(위 [TrackOption] 주석).
+     */
+    private val trackRefs = HashMap<String, Pair<Tracks.Group, Int>>()
+
+    /**
+     * 같은 폴더의 자막 파일들. 이름 추측이 틀렸을 때 손으로 고르는 후보다.
+     *
+     * 큐는 **한 폴더**에서 만들어지므로([FolderQueue]) 이 목록은 큐 전체에 유효하다.
+     * 항목이 바뀌어도 후보는 그대로고, '지금 붙어 있는 것'([attachedSubtitle])만 달라진다.
+     */
+    private var subtitleFiles: List<FileEntry> = emptyList()
+
+    /** 지금 손으로 붙여 둔 자막 파일의 경로. 이름 추측으로 붙은 것은 여기 들지 않는다. */
+    private var attachedSubtitle: String? = null
+
+    /** 트랙 선택을 되돌릴 기준이 되는 항목. **전환 이유가 아니라 이 값으로 가른다**([resetTracksIfItemChanged]). */
+    private var trackResetKey: String? = null
 
     private var controller: MediaController? = null
 
@@ -175,6 +268,7 @@ object PlaybackConnection {
                     _state.value = _state.value.copy(failure = PlaybackFailure.UnsupportedTrack(names))
                 }
             }
+            refreshTracks()
             push()
         }
     }
@@ -194,6 +288,7 @@ object PlaybackConnection {
                     _state.value = _state.value.copy(connected = true)
                     push()
                     refreshQueue()
+                    refreshTracks()
                     startTicker()
                 }
             },
@@ -216,6 +311,7 @@ object PlaybackConnection {
             }
             val c = awaitController() ?: return@launch
             c.shuffleModeEnabled = false
+            rememberSubtitleCandidates(subtitles)
             c.setMediaItem(itemOf(entry, subtitles), 0L)
             c.prepare()
             c.play()
@@ -261,6 +357,7 @@ object PlaybackConnection {
             val c = awaitController() ?: return@launch
             c.shuffleModeEnabled = false
             shuffleHistory.clear()
+            rememberSubtitleCandidates(subtitles)
             c.setMediaItems(items, plan.startIndex, 0L)
             c.prepare()
             c.play()
@@ -362,6 +459,117 @@ object PlaybackConnection {
         shuffleHistory.clear()
     }
 
+    /**
+     * 이 큐의 자막 후보를 기억해 둔다.
+     *
+     * 큐는 한 폴더에서 만들어지므로([FolderQueue]) 후보 목록은 큐 전체에 유효하다.
+     * 새로 틀 때마다 **손으로 붙여 둔 것을 잊는** 것이 요점이다 — 다른 폴더를 틀었는데
+     * 앞 폴더에서 고른 자막이 붙어 있으면 다른 영화의 대사가 흐른다.
+     */
+    private fun rememberSubtitleCandidates(subtitles: List<FileEntry>) {
+        subtitleFiles = subtitles.filter { !it.isDirectory && !it.isLocked && SubtitleNames.isSubtitle(it.name) }
+        attachedSubtitle = null
+        refreshTracks()
+    }
+
+    /**
+     * 지금 고를 수 있는 것을 다시 센다. **메인 스레드에서만 부른다**(컨트롤러를 만진다).
+     *
+     * `Tracks.Group` 을 [trackRefs] 에 **통째로 갈아 끼우는** 것이 핵심이다. 세션은
+     * 컨트롤러로 나가는 그룹마다 매번 새 id 를 매기므로, 예전 그룹으로 만든 오버라이드는
+     * 짝을 잃고 조용히 무시된다([TrackOption] 주석).
+     */
+    private fun refreshTracks() {
+        val c = controller
+        if (c == null) {
+            trackRefs.clear()
+            _tracks.value = TrackChoices()
+            return
+        }
+        trackRefs.clear()
+        val audio = ArrayList<TrackOption>()
+        val text = ArrayList<TrackOption>()
+        val groups = c.currentTracks.groups
+        for ((gi, g) in groups.withIndex()) {
+            val into = when (g.type) {
+                C.TRACK_TYPE_AUDIO -> audio
+                C.TRACK_TYPE_TEXT -> text
+                else -> continue
+            }
+            for (i in 0 until g.length) {
+                val f = g.getTrackFormat(i)
+                // **그림 자막은 목록에 올리지 않는다.** 우리 자막 층은 글만 그린다
+                // (`SubtitleLayer` 의 주석). 고를 수 있게 두면 표시만 옮겨 가고 화면에는
+                // 아무 글자도 뜨지 않는다.
+                //
+                // **`sampleMimeType` 을 그대로 보면 이 조건은 절대 참이 되지 않는다** —
+                // media3 가 자막을 뽑는 길에서 그 값을 `application/x-media3-cues` 로
+                // 갈아 끼우기 때문이다(PGS·VobSub 도 그 길을 지난다). 원래 형식은
+                // `codecs` 에 있다([TrackLabels.originalMimeOf]).
+                val mime = TrackLabels.originalMimeOf(f.sampleMimeType, f.codecs)
+                if (g.type == C.TRACK_TYPE_TEXT && TrackLabels.isPictureSubtitle(mime)) continue
+                val id = "${g.type}:$gi:$i"
+                trackRefs[id] = g to i
+                into += TrackOption(
+                    id = id,
+                    descriptor = TrackLabels.describe(
+                        TrackLabels.Info(
+                            label = f.label,
+                            language = f.language,
+                            channelCount = f.channelCount,
+                            sampleMimeType = f.sampleMimeType,
+                            codecs = f.codecs,
+                            forced = (f.selectionFlags and C.SELECTION_FLAG_FORCED) != 0,
+                        ),
+                        ordinal = into.size + 1,
+                    ),
+                    selected = g.isTrackSelected(i),
+                    supported = g.isTrackSupported(i),
+                )
+            }
+        }
+        val disabled = c.trackSelectionParameters.disabledTrackTypes.contains(C.TRACK_TYPE_TEXT)
+        val choices = TrackChoices(
+            audio = audio,
+            text = text,
+            textDisabled = disabled,
+            // **짝이 맞는 것을 앞에 둔다.** 목록 자체는 큐 단위(한 폴더)지만 '어느 것이
+            // 지금 항목의 짝인가' 는 항목마다 다르다. [SubtitleNames.candidatesFor] 가
+            // 그 차례를 아는 유일한 곳이라 여기서 거친다 — 거치지 않으면 그 함수가
+            // 부르는 곳 없이 시험만 통과하는 상태로 남는다.
+            files = SubtitleNames.candidatesFor(c.currentMediaItem?.mediaMetadata?.title?.toString().orEmpty(), subtitleFiles)
+                .map { SubtitleFile(path = it.path, name = it.name, selected = it.path == attachedSubtitle) },
+        )
+        _tracks.value = choices
+        _state.value = _state.value.copy(canChooseTracks = !choices.isEmpty)
+    }
+
+    /**
+     * 항목이 실제로 바뀌었으면 트랙 선택을 **기본으로 되돌린다.**
+     *
+     * 판정을 전환 이유(`onMediaItemTransition` 의 `reason`)로 하지 않는 것이 요점이다.
+     * 한 곡 반복(`REASON_REPEAT`)은 항목이 바뀌지 않았는데도 전환으로 오고, 자막 파일을
+     * 손으로 바꿔 큐를 다시 세우는 길(`PLAYLIST_CHANGED`)도 마찬가지다 — 이유로 가르면
+     * 한 바퀴마다, 그리고 자막을 고를 때마다 **사용자가 고른 소리 트랙이 지워진다.**
+     * 그래서 **`mediaId` 가 달라졌을 때만** 되돌린다.
+     */
+    private fun resetTracksIfItemChanged(key: String?) {
+        if (key == trackResetKey) return
+        trackResetKey = key
+        // 손으로 붙인 자막은 **그 항목의 것**이다. 다음 항목에는 이름 추측이 붙인 자막이
+        // 따로 걸려 있으므로, 표시만 남아 있으면 목록의 체크가 거짓말을 한다.
+        attachedSubtitle = null
+        val c = controller ?: return
+        val p = c.trackSelectionParameters
+        // 되돌릴 것이 없으면 건드리지 않는다 — 바인더 호출과 불필요한 이벤트를 아낀다.
+        if (p.overrides.isEmpty() && p.disabledTrackTypes.isEmpty()) return
+        c.trackSelectionParameters = p.buildUpon()
+            .clearOverrides()
+            .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, false)
+            .setTrackTypeDisabled(C.TRACK_TYPE_AUDIO, false)
+            .build()
+    }
+
     /** 끄기 → 전체 반복 → 한 곡 반복 → 끄기. */
     fun cycleRepeat() {
         val c = controller ?: return
@@ -409,25 +617,179 @@ object PlaybackConnection {
     /**
      * 지금 재생 중인 항목에 **자막 파일을 손으로 붙인다.** 이름 추측이 틀렸을 때의 출구다.
      *
-     * media3 는 항목을 세운 뒤에 자막을 더할 수 없어서 항목을 다시 세운다. 그래서
-     * **지금 위치를 그대로 들고** 다시 건다 — 그러지 않으면 자막을 고를 때마다 처음으로
-     * 돌아간다. 큐의 자리도 유지한다.
-     *
-     * @param sub null 이면 사이드로드 자막을 뗀다(내장 자막은 트랙 선택으로 끈다).
+     * @param path [TrackChoices.files] 의 경로. null 이면 사이드로드 자막을 뗀다
+     *   (내장 자막을 끄는 것은 [setTextEnabled] 다).
      */
-    fun attachSubtitle(sub: FileEntry?) {
+    fun selectSubtitleFile(path: String?) {
         val c = controller ?: return
-        val item = c.currentMediaItem ?: return
+        if (path == null) {
+            attachedSubtitle = null
+            rebuildCurrentItem(null)
+            return
+        }
         val at = c.currentMediaItemIndex
+        val key = c.currentMediaItem?.mediaId
+        val sub = subtitleFiles.firstOrNull { it.path == path } ?: return
+        scope.launch {
+            val exists = withContext(Dispatchers.IO) { File(sub.path).isFile }
+            if (!exists) {
+                // **없어진 파일은 목록에서 뺀다. 그것이 곧 안내다.**
+                //
+                // 새 실패 종류를 만들어 `State.failure` 에 실으면 그 값을 지우는 사람이
+                // 재생 화면에 없어 다음 곡 위에도 계속 남고, 뒤따르는 진짜 경고
+                // (`UnsupportedTrack`)를 통째로 막는다. 사라진 줄이 사라지는 것으로 족하다.
+                Iro.d { "자막 파일이 사라졌다: ${sub.name}" }
+                subtitleFiles = subtitleFiles.filterNot { it.path == path }
+                if (attachedSubtitle == path) attachedSubtitle = null
+                refreshTracks()
+                return@launch
+            }
+            // **되돌아오는 사이에 항목이 바뀌었으면 붙이지 않는다.** 붙이면 다른 영상에
+            // 엉뚱한 자막이 걸리고, 그 항목은 큐에 그대로 남는다.
+            val now = controller ?: return@launch
+            if (now.currentMediaItemIndex != at || now.currentMediaItem?.mediaId != key) {
+                Iro.d { "자막을 고르는 사이에 항목이 바뀌었다. 붙이지 않는다" }
+                return@launch
+            }
+            attachedSubtitle = path
+            // **고르면 자막이 켜진다.** 꺼 둔 채로 파일을 고르면 붙기는 하는데 아무것도
+            // 뜨지 않아 단추가 죽은 것처럼 보인다. 고르는 것은 '이것으로 보겠다' 는 뜻이다.
+            now.trackSelectionParameters = now.trackSelectionParameters.buildUpon()
+                .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, false)
+                .build()
+            rebuildCurrentItem(sub)
+        }
+    }
+
+    /**
+     * 지금 항목만 자막 구성을 바꿔 **다시 세운다.**
+     *
+     * ## `replaceMediaItem` 으로는 되지 않는다
+     *
+     * 예전 코드가 그것이었다. media3 의 `replaceMediaItem` 은 새 항목을 받으면
+     * `MediaSource.canUpdateMediaItem` 에 물어보고, 참이면 **소스를 다시 만들지 않고
+     * 메타데이터만 갈아 끼운다.** 로컬 파일의 `ProgressiveMediaSource` 는
+     * `uri`·`imageDurationMs`·`customCacheKey` 셋만 비교하므로 자막 구성이 통째로 바뀌어도
+     * 참을 준다(바이트코드로 확인했다). 게다가 사이드로드 자막은 `MergingMediaSource` 의
+     * **뒤쪽** 소스인데 그 클래스의 `canUpdateMediaItem` 은 **맨 앞 소스에만 위임한다.**
+     * 결과는 조용한 실패다 — `prepare()` 를 불러도 같은 소스를 다시 준비할 뿐이다.
+     *
+     * 그래서 **큐를 통째로 다시 세운다.** 위치와 자리를 우리가 들고 다시 넣는다.
+     *
+     * `playWhenReady` 를 그대로 옮기는 것이 중요하다. `isPlaying` 으로 재면 **버퍼링
+     * 중이거나 오디오 포커스를 잠깐 잃은 동안 거짓**이라, 그 순간 자막을 고른 사람은
+     * 재생이 멈춘 채 다시 시작되지 않는 것을 본다.
+     */
+    private fun rebuildCurrentItem(sub: FileEntry?) {
+        val c = controller ?: return
+        val at = c.currentMediaItemIndex
+        val n = c.mediaItemCount
+        if (at !in 0 until n) return
         val position = c.currentPosition
-        val rebuilt = item.buildUpon()
-            .setSubtitleConfigurations(
-                if (sub == null) emptyList() else listOf(subtitleConfigOf(sub, selected = true))
-            )
-            .build()
-        c.replaceMediaItem(at, rebuilt)
-        c.seekTo(at, position)
+        val wasReady = c.playWhenReady
+        val items = (0 until n).map { i ->
+            val item = c.getMediaItemAt(i)
+            if (i != at) {
+                item
+            } else {
+                item.buildUpon()
+                    .setSubtitleConfigurations(
+                        if (sub == null) emptyList() else listOf(subtitleConfigOf(sub, selected = true))
+                    )
+                    .build()
+            }
+        }
+        // **컨트롤러가 돌려주는 항목에 `localConfiguration` 이 살아 있다**(uri·자막 구성).
+        // 기기에서 찍어 확인했다 — 세션을 건너오면서 지워졌다면 여기서 uri 없는 항목을
+        // 다시 걸어 재생이 통째로 죽었을 것이다.
+        c.setMediaItems(items, at, position)
         c.prepare()
+        c.playWhenReady = wasReady
+        refreshQueue()
+        push()
+    }
+
+    /** 재생을 멈춘다. 항목과 큐는 그대로다 — 끝내는 것은 [stop] 이다. */
+    fun pause() {
+        controller?.pause()
+    }
+
+    /** 멈춘 것을 다시 튼다. */
+    fun resume() {
+        controller?.play()
+    }
+
+    /**
+     * 배속을 바꾼다. 들어온 값은 **반드시 눈금으로 떨어뜨린다**([SpeedSteps.nearest]) —
+     * `PlaybackParameters` 의 생성자가 0 이하를 예외로 막고, 그 예외는 메인 스레드에서 난다.
+     */
+    fun setSpeed(speed: Float) {
+        val c = controller ?: return
+        c.setPlaybackSpeed(SpeedSteps.nearest(speed))
+        push()
+    }
+
+    /**
+     * A-B 구간 단추를 눌렀다. A 찍기 → B 찍기 → 해제가 한 바퀴다.
+     *
+     * 결과를 그대로 돌려주는 것은 **거절(`TooShort`)을 화면이 말해야** 하기 때문이다.
+     * 여기서 A 를 슬쩍 옮겨 구간을 만들어 주면 그 옮김이 1초 미만이라 진행 바에서도
+     * 시간 문구에서도 보이지 않는다 — 사용자는 자기가 찍은 자리가 왜 달라졌는지 모른다.
+     */
+    fun markAb(): AbRepeat.Result {
+        val c = controller ?: return AbRepeat.Result.TooShort
+        val result = AbRepeat.mark(
+            current = _state.value.abSpan,
+            positionMs = c.currentPosition.coerceAtLeast(0),
+            durationMs = c.duration.takeIf { it > 0 } ?: 0,
+        )
+        when (result) {
+            is AbRepeat.Result.Marked -> _state.value = _state.value.copy(abSpan = result.span)
+            AbRepeat.Result.Cleared -> _state.value = _state.value.copy(abSpan = null)
+            AbRepeat.Result.TooShort -> Unit
+        }
+        return result
+    }
+
+    /** 구간을 푼다. 항목이 바뀌거나 사용자가 구간 밖으로 건너뛰면 저절로 불린다. */
+    fun clearAb() {
+        if (_state.value.abSpan != null) _state.value = _state.value.copy(abSpan = null)
+    }
+
+    /**
+     * 트랙 하나를 고른다. [TrackChoices] 가 방금 준 [TrackOption.id] 만 받는다.
+     *
+     * 자막을 고르면 **'자막 끄기' 도 함께 풀린다** — 끈 채로 고르면 아무 일도 일어나지
+     * 않아 단추가 죽은 것처럼 보인다.
+     */
+    fun selectTrack(id: String) {
+        val c = controller ?: return
+        val (group, index) = trackRefs[id] ?: return
+        val override = TrackSelectionOverride(group.mediaTrackGroup, index)
+        c.trackSelectionParameters = c.trackSelectionParameters.buildUpon()
+            // `setOverrideForType` 은 같은 종류의 기존 오버라이드를 먼저 지운다(바이트코드 확인).
+            .setOverrideForType(override)
+            .setTrackTypeDisabled(group.type, false)
+            .build()
+        refreshTracks()
+        push()
+    }
+
+    /**
+     * 자막을 켜고 끈다. **내장 자막과 사이드로드 자막이 함께** 걸린다 — 사이드로드 자막도
+     * 합쳐진 뒤에는 그냥 텍스트 트랙이라 타입을 끄면 같이 꺼진다.
+     *
+     * 이 값은 항목이 바뀌면 되돌아간다([resetTracksIfItemChanged]). media3 에서는
+     * `disabledTrackTypes` 가 플레이어에 그대로 남지만, 사용자는 '이 영상의 자막을 껐다'
+     * 고 믿지 '앞으로 여는 모든 영상' 을 껐다고 믿지 않는다.
+     */
+    fun setTextEnabled(enabled: Boolean) {
+        val c = controller ?: return
+        c.trackSelectionParameters = c.trackSelectionParameters.buildUpon()
+            .apply { if (!enabled) clearOverridesOfType(C.TRACK_TYPE_TEXT) }
+            .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, !enabled)
+            .build()
+        refreshTracks()
         push()
     }
 
@@ -461,6 +823,11 @@ object PlaybackConnection {
         controller?.let {
             it.pause()
             it.clearMediaItems()
+            // **배속을 보통으로 되돌린다.** 끝내는 것은 '이 재생을 그만둔다' 이고, 그
+            // 뒤에 다른 파일을 틀었을 때 앞에서 올려 둔 배속이 남아 있으면 사용자는
+            // 무엇이 이상한지 모른 채 소리가 틀어진 것만 듣는다. 화면에 늘 적혀 있기는
+            // 하지만, 재생 화면을 열지 않고 미니 바로만 듣는 길에서는 그 표시가 없다.
+            it.setPlaybackSpeed(SpeedSteps.NORMAL)
         }
         _state.value = _state.value.copy(
             fileKey = null,
@@ -471,9 +838,18 @@ object PlaybackConnection {
             // `clearMediaItems` 를 `PLAYLIST_CHANGED` 로 보므로 일부러 건너뛰고,
             // [push] 의 '위치가 지났는가' 도 빈 플레이어의 0 에서는 성립하지 않는다.
             resumeOfferMs = null,
+            // 구간도 트랙도 **그 파일에 매인 것**이라 함께 치운다.
+            abSpan = null,
+            canChooseTracks = false,
+            currentKind = null,
         )
         _queue.value = emptyList()
         _cues.value = emptyList()
+        _tracks.value = TrackChoices()
+        trackRefs.clear()
+        subtitleFiles = emptyList()
+        attachedSubtitle = null
+        trackResetKey = null
         shuffleHistory.clear()
     }
 
@@ -491,15 +867,64 @@ object PlaybackConnection {
         return controller
     }
 
+    /**
+     * 위치를 밀어 주는 시계. **A-B 구간을 되감는 것도 여기서 한다.**
+     *
+     * 되감기를 예약할 수단이 없다 — `ExoPlayer.createMessage(...).setPosition(b)` 는
+     * `ExoPlayer` 인터페이스에만 있고 화면이 쥔 `MediaController` 에는 없다. 그래서 B 를
+     * 지났는지 **직접 본다.**
+     *
+     * 간격은 [AbRepeat.tickDelayMs] 가 정한다. 기본 [TICK_MS] 로 두면 구간 끝이 반 박자
+     * 넘쳐 들리고, 그렇다고 전부 50ms 로 올리면 [push] 가 `State` 를 통째로 복사하며
+     * 재구성을 열 배로 늘린다. **B 근처에서만** 조인다.
+     *
+     * 조인 구간에서도 [push] 는 평소 간격으로만 한다 — 화면이 초당 스무 번 다시 그려질
+     * 이유가 없다. 되감은 직후에는 위치가 크게 튀므로 그때는 한 번 밀어 준다.
+     */
     private fun startTicker() {
         ticker?.cancel()
         ticker = scope.launch {
+            var sincePushMs = 0L
             while (true) {
-                delay(500)
-                if (controller?.isPlaying == true) push()
+                val s = _state.value
+                // **멈춰 있으면 조이지 않는다.** 위치가 더 이상 늘지 않으므로 B 근처에서
+                // 일시정지하면 조인 간격(50ms)이 영원히 유지된다 — 되감을 일도 없는데
+                // 초당 스무 번 깨어나는 꼴이다.
+                val wait = if (s.isPlaying) {
+                    AbRepeat.tickDelayMs(s.abSpan, s.positionMs, s.speed, TICK_MS)
+                } else {
+                    TICK_MS
+                }
+                delay(wait)
+                sincePushMs += wait
+                val c = controller ?: continue
+                val span = _state.value.abSpan
+                if (span != null) {
+                    val position = c.currentPosition.coerceAtLeast(0)
+                    if (AbRepeat.escaped(span, position)) {
+                        // 알림·잠금화면·블루투스의 탐색은 우리 함수를 지나지 않고 세션으로
+                        // 바로 들어온다. 그래서 '누가 불렀는가' 가 아니라 **위치 자체**로
+                        // 본다 — 그러지 않으면 구간 밖으로 나간 사용자를 곧바로 끌어와
+                        // 앱이 말을 안 듣는 것처럼 보인다.
+                        Iro.d { "A-B 구간 밖으로 건너뛰었다. 구간을 푼다" }
+                        clearAb()
+                    } else if (AbRepeat.shouldLoop(span, position)) {
+                        c.seekTo(span.aMs)
+                        push()
+                        sincePushMs = 0
+                        continue
+                    }
+                }
+                if (c.isPlaying && sincePushMs >= TICK_MS) {
+                    push()
+                    sincePushMs = 0
+                }
             }
         }
     }
+
+    /** 위치를 밀어 주는 기본 간격. */
+    private const val TICK_MS = 500L
 
     private fun push() {
         val c = controller ?: return
@@ -512,22 +937,57 @@ object PlaybackConnection {
         // 미니 바를 눌러 들어가면 "1:23 부터 이어서 재생할까요?" 가 뜨는데, 그때 이미
         // 5:00 을 듣고 있다면 그 단추는 **뒤로 가는** 단추다.
         val offer = _state.value.resumeOfferMs?.takeIf { position < it }
-        _state.value = _state.value.copy(
+        val previous = _state.value
+        val key = item?.mediaId
+        resetTracksIfItemChanged(key)
+        // **항목이 바뀌면 구간도 판다.** A-B 는 '이 파일의 이 구간' 이라, 다음 곡까지
+        // 따라가면 엉뚱한 자리를 되풀이한다.
+        val span = previous.abSpan?.takeIf { key != null && key == previous.fileKey }
+
+        // **트랙 목록이 잠깐 비는 것을 '영상이 없다' 로 읽지 않는다.**
+        //
+        // 자막을 손으로 바꾸면 그 항목을 다시 세우는데([rebuildCurrentItem]), 그 사이
+        // `currentTracks` 가 한 번 빈다. 그때 `hasVideo` 를 거짓으로 밀면 **표면이
+        // 컴포지션에서 빠졌다 붙고 액티비티의 방향 요청까지 흔들린다** — 10단계가
+        // '하단이 검게 보인다' 로 한 번 겪은 그 형태다. **같은 항목인 동안에는** 마지막
+        // 값을 들고 있는다. 항목이 바뀌면 앞 항목의 값은 쓸 수 없으므로 그대로 다시 센다.
+        val groups = c.currentTracks.groups
+        val sameItem = key != null && key == previous.fileKey
+        val index = c.currentMediaItemIndex
+        val kind = _queue.value.getOrNull(index)?.kind
+        val hasVideo = when {
+            groups.isNotEmpty() -> groups.any { g -> g.type == C.TRACK_TYPE_VIDEO && g.isSelected }
+            // 같은 항목인데 트랙만 잠깐 비었다(자막을 손으로 바꾸는 길). 마지막 값을 든다.
+            sameItem -> previous.hasVideo
+            // **항목이 막 바뀌어 아직 트랙을 모른다. 큐가 말하는 종류를 쓴다.**
+            //
+            // 여기서 거짓으로 떨어뜨리면 그 짧은 창 동안 화면이 통째로 흔들린다 — 테마가
+            // 밝은 쪽으로 뒤집히고, 표면이 컴포지션에서 빠졌다 붙고, 방향 요청이
+            // `UNSPECIFIED` 로 내려갔다 돌아오고(6단계가 '하단이 검게 보인다' 로 겪은 그
+            // 재도색 경로다), 손대지 않은 재생목록이 한 번 펼쳐진 것으로 판정된다.
+            // 큐의 종류는 확장자로 정해져 **항목이 실제로 바뀔 때만** 달라진다.
+            else -> kind == FileKind.VIDEO
+        }
+        val aspect = aspectOf(c.videoSize).takeIf { it > 0f }
+            ?: (previous.videoAspect.takeIf { sameItem && hasVideo } ?: 0f)
+
+        _state.value = previous.copy(
             connected = true,
             resumeOfferMs = offer,
-            fileKey = item?.mediaId,
+            fileKey = key,
             title = item?.mediaMetadata?.title?.toString().orEmpty(),
             isPlaying = c.isPlaying,
             positionMs = position,
             durationMs = c.duration.takeIf { it > 0 } ?: 0,
-            hasVideo = c.currentTracks.groups.any { g ->
-                g.type == androidx.media3.common.C.TRACK_TYPE_VIDEO && g.isSelected
-            },
-            videoAspect = aspectOf(c.videoSize),
+            hasVideo = hasVideo,
+            videoAspect = aspect,
             queueSize = c.mediaItemCount,
-            queueIndex = c.currentMediaItemIndex,
+            queueIndex = index,
+            currentKind = kind,
             shuffle = c.shuffleModeEnabled,
             repeatMode = c.repeatMode,
+            speed = SpeedSteps.nearest(c.playbackParameters.speed),
+            abSpan = span,
         )
     }
 

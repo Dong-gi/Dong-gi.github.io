@@ -53,6 +53,16 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
     override suspend fun run(
         request: FileOpManager.Request.Extract,
         onProgress: (FileOpEngine.Progress) -> Unit,
+    ): ExtractSupport.Result = try {
+        runWith(request, onProgress)
+    } finally {
+        // 요청이 붙든 암호의 주인은 이 작업이다. 성공·실패·취소 어느 쪽이든 여기서 지운다.
+        request.password?.fill('\u0000')
+    }
+
+    private suspend fun runWith(
+        request: FileOpManager.Request.Extract,
+        onProgress: (FileOpEngine.Progress) -> Unit,
     ): ExtractSupport.Result {
         val archive = File(request.archivePath)
         val parent = File(request.destParent)
@@ -78,7 +88,7 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
 
         var outcome: FileOpEngine.Outcome = FileOpEngine.Outcome.Done(0, 0, 0)
         try {
-            Archives.open(FileDocumentSource(archive), limits, budget).use { reader ->
+            Archives.open(FileDocumentSource(archive), limits, budget, request.password).use { reader ->
                 val selected = request.entryIndices?.toHashSet()
                 val plan = reader.entries.filter { selected == null || it.index in selected }
                 val sink = ExtractSink(
@@ -234,7 +244,8 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
                 counters.sample(entry.name)
                 return null
             }
-            if (entry.isEncrypted) {
+            // 암호를 받았으면 암호 항목도 읽힌다([ArchiveEntry.isReadable]). 못 읽는 것만 센다.
+            if (entry.isEncrypted && !entry.isReadable) {
                 counters.encrypted++
                 counters.sample(entry.name)
                 return null

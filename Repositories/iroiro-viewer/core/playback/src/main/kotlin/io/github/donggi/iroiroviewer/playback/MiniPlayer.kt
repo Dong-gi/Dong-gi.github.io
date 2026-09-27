@@ -93,6 +93,13 @@ fun MiniPlayer(modifier: Modifier = Modifier) {
  * 일시정지 아이콘. 아이콘 core 세트에 `Pause` 가 없어 직접 만든다 —
  * 이것 하나 때문에 수천 개짜리 확장 세트를 넣지 않는다.
  */
+/**
+ * 일시정지. **`res/drawable/ic_pip_pause.xml` 이 같은 좌표의 짝이다.**
+ *
+ * PiP 창의 조작은 `RemoteAction` 이고 그것은 `android.graphics.drawable.Icon` 만 받아
+ * `ImageVector` 에서 오는 변환 경로가 없다. 그래서 같은 그림을 두 형식으로 든다 —
+ * **한쪽만 고치면 PiP 창과 본화면의 같은 단추가 다른 모양이 된다.**
+ */
 val PauseIcon: ImageVector by lazy {
     androidx.compose.ui.graphics.vector.ImageVector.Builder(
         name = "Pause",

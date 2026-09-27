@@ -43,6 +43,7 @@ import io.github.donggi.iroiroviewer.comic.ComicScreen
 import io.github.donggi.iroiroviewer.browser.BrowserViewModel
 import io.github.donggi.iroiroviewer.browser.opResultMessage
 import io.github.donggi.iroiroviewer.diag.DiagScreen
+import io.github.donggi.iroiroviewer.docview.DocViewScreen
 import io.github.donggi.iroiroviewer.image.ImageViewerScreen
 import io.github.donggi.iroiroviewer.io.FileOpManager
 import io.github.donggi.iroiroviewer.io.Iro
@@ -273,6 +274,17 @@ private fun Root(modifier: Modifier = Modifier) {
             )
         }
 
+        is AppScreen.Doc -> {
+            // 만화 뷰어와 같은 이유로 **바깥 Scaffold 를 씌우지 않는다** — 인셋이
+            // 프레임마다 변하면 확대·이동의 기준 상자가 함께 움직인다.
+            DocViewScreen(
+                path = s.path,
+                snackbar = vm.snackbar,
+                onClose = { screen = AppScreen.Browser },
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+
         is AppScreen.Browser -> {
             // **인셋을 소비까지 해야 한다.** `padding(inner)` 만 걸면 안쪽 화면의
             // Scaffold·TopAppBar 가 시스템 바 인셋을 한 번 더 더해, 상태표시줄
@@ -288,6 +300,7 @@ private fun Root(modifier: Modifier = Modifier) {
                     onOpenText = { entry -> screen = AppScreen.Text(entry.path) },
                     onOpenArchive = { entry -> screen = AppScreen.Archive(entry.path) },
                     onOpenComic = { path -> screen = AppScreen.Comic(path, -1) },
+                    onOpenDocument = { path -> screen = AppScreen.Doc(path) },
                     modifier = Modifier.padding(inner).consumeWindowInsets(inner),
                 )
             }
@@ -330,6 +343,14 @@ private sealed interface AppScreen {
      */
     data class Comic(val path: String, val entryIndex: Int) : AppScreen
 
+    /**
+     * 문서 뷰어. 경로 하나가 전부다.
+     *
+     * 쪽 수도 읽던 쪽도 담지 않는다 — 쪽 수는 문서를 열면 곧 알고, 읽던 쪽은
+     * `doc_progress` 가 안다. 만화 뷰어가 쪽 목록을 담지 않기로 한 것과 같은 판단이다.
+     */
+    data class Doc(val path: String) : AppScreen
+
     /** 오픈소스 고지. 라이선스가 요구하는 화면이라 어디서든 닿아야 한다. */
     data object Notice : AppScreen
 
@@ -344,6 +365,7 @@ private sealed interface AppScreen {
                         is Text -> "t:" + it.path
                         is Archive -> "a:" + it.path
                         is Comic -> "c:" + it.entryIndex + ":" + it.path
+                        is Doc -> "p:" + it.path
                         is Notice -> "n"
                     }
                 },
@@ -359,6 +381,7 @@ private sealed interface AppScreen {
                             val at = rest.indexOf(':')
                             Comic(rest.substring(at + 1), rest.substring(0, at).toIntOrNull() ?: -1)
                         }
+                        v.startsWith("p:") -> Doc(v.removePrefix("p:"))
                         v == "n" -> Notice
                         else -> Browser
                     }
