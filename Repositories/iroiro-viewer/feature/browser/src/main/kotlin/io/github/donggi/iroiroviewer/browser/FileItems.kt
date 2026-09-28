@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,6 +64,8 @@ fun FileRow(
     modifier: Modifier = Modifier,
     /** 지금 썸네일을 새로 만들어도 되는가. 스크롤 중에는 false 다. */
     allowLoad: Boolean = true,
+    /** 읽던 쪽 배지. 만화·문서에 이어보기 기록이 있을 때만 있다. */
+    badge: ReadingBadge? = null,
 ) {
     Row(
         modifier = modifier
@@ -96,12 +99,21 @@ fun FileRow(
             )
             Spacer(Modifier.height(2.dp))
             Text(
-                text = subtitleOf(entry),
+                text = subtitleOf(entry, badge),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
+            // 읽는 중이면 가는 막대. 글자('12/30쪽')만으로는 한눈에 얼마나 왔는지 읽히지 않는다. 다 읽은 것은
+            // 막대 대신 글자('다 읽음')가 말한다 — 가득 찬 막대 열 개가 늘어서면 목록이 무거워 보인다.
+            if (badge != null && !badge.finished) {
+                Spacer(Modifier.height(4.dp))
+                LinearProgressIndicator(
+                    progress = { badge.fraction },
+                    modifier = Modifier.fillMaxWidth(0.5f).height(3.dp),
+                )
+            }
         }
     }
 }
@@ -117,6 +129,8 @@ fun FileGridItem(
     modifier: Modifier = Modifier,
     /** 지금 썸네일을 새로 만들어도 되는가. 스크롤 중에는 false 다. */
     allowLoad: Boolean = true,
+    /** 읽던 쪽 배지. 만화·문서에 이어보기 기록이 있을 때만 있다. */
+    badge: ReadingBadge? = null,
 ) {
     Column(
         modifier = modifier
@@ -140,6 +154,13 @@ fun FileGridItem(
             )
             if (selected) SelectedMark(Modifier.align(Alignment.BottomEnd))
         }
+        if (badge != null && !badge.finished) {
+            // 그림 바로 아래, 그림 폭만큼. 칸의 글자와 겹치지 않게 그림에 붙인다.
+            LinearProgressIndicator(
+                progress = { badge.fraction },
+                modifier = Modifier.width(56.dp).height(3.dp),
+            )
+        }
         Text(
             text = entry.name,
             style = MaterialTheme.typography.bodySmall,
@@ -147,6 +168,15 @@ fun FileGridItem(
             overflow = TextOverflow.MiddleEllipsis,
             textAlign = TextAlign.Center,
         )
+        if (badge != null) {
+            // 막대만 두면 색으로만 말하는 셈이다(화면 낭독기와 색을 가리기 어려운 사람에게는 없는 것과 같다).
+            Text(
+                text = badgeText(badge),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.primary,
+                maxLines = 1,
+            )
+        }
     }
 }
 
@@ -155,15 +185,40 @@ fun FileGridItem(
  * 바이트일 뿐 안에 든 것의 합이 아니어서, 적으면 거짓말이 된다.
  */
 @Composable
-private fun subtitleOf(entry: FileEntry): String {
+private fun subtitleOf(entry: FileEntry, reading: ReadingBadge?): String {
     val time = Format.timestamp(entry.lastModified)
     val badges = buildList {
         if (entry.isLocked) add(stringResource(R.string.browser_locked_badge))
         if (entry.isSymlink) add(stringResource(R.string.browser_symlink_badge))
+        if (reading != null) add(badgeText(reading))
     }
     val head = if (entry.isDirectory) "" else Format.size(entry.size) + " · "
     val tail = if (badges.isEmpty()) "" else " · " + badges.joinToString(" · ")
     return head + time + tail
+}
+
+/**
+ * 읽던 쪽 배지의 글자. '12/30쪽'·'3/12장'·'37%'·'다 읽음'. 단위는 문서 뷰어의 이어보기 안내와 같은 갈래다
+ * (그 문구는 `feature:docview` 에 있어 여기서 볼 수 없다 — feature 끼리는 서로를 보지 않는다).
+ */
+@Composable
+fun badgeText(badge: ReadingBadge): String = when {
+    badge.finished -> stringResource(R.string.browser_badge_finished)
+    // 백분율 문구는 인자가 하나다. 쪽 문구와 한 호출에 태우면 인자 수가 문구와 어긋난다 — 문구를 `when` 으로
+    // 고르는 자리라 lint 의 형식 검사도 닿지 않는다.
+    badge.unit == BadgeUnit.PERCENT -> stringResource(R.string.browser_badge_percent, badge.current)
+    else -> stringResource(
+        when (badge.unit) {
+            BadgeUnit.CHAPTER -> R.string.browser_badge_chapter
+            BadgeUnit.SHEET -> R.string.browser_badge_sheet
+            BadgeUnit.SLIDE -> R.string.browser_badge_slide
+            BadgeUnit.PART -> R.string.browser_badge_part
+            // 백분율은 위에서 갈랐다. `else` 로 두지 않는 것은 단위가 늘 때 컴파일러가 이 자리를 가리키게 하려는 것이다.
+            BadgeUnit.PAGE, BadgeUnit.PERCENT -> R.string.browser_badge_page
+        },
+        badge.current,
+        badge.total,
+    )
 }
 
 @Composable

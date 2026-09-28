@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.os.ParcelFileDescriptor
+import androidx.core.graphics.scale
 import androidx.exifinterface.media.ExifInterface
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.ImageLimits
@@ -65,6 +66,12 @@ data class ImageProbe(
      * 적용하지 않는다. 모르는 채 섞으면 확대하는 순간 그림이 90° 돌아간다.
      */
     val decoderAppliesOrientation: Boolean?,
+    /**
+     * 플랫폼이 **움직이는 그림으로 여는가**(`ImageDecoder.ImageInfo.isAnimated`). 헤더를 읽는 김에
+     * 함께 받는다 — 따로 훑을 필요가 없고, '틀 수 있는가' 를 플랫폼 자신에게 묻는 것이라 표를 만들지
+     * 않는다. 한 장짜리 GIF 는 거짓이고, APNG 도 거짓이다(플랫폼이 첫 장면만 준다).
+     */
+    val isAnimated: Boolean = false,
 ) {
     val isRotated90: Boolean
         get() = orientation == ExifInterface.ORIENTATION_ROTATE_90 ||
@@ -73,18 +80,18 @@ data class ImageProbe(
             orientation == ExifInterface.ORIENTATION_TRANSVERSE
 
     /**
-     * 영역 디코딩(상세층)을 써도 되는가.
+     * 영역 디코딩(상세층)을 **곧바로** 써도 되는가 — 바닥층이 방향을 적용했는지 치수로 이미 안다.
      *
-     * **방향을 확실히 아는 파일에만 쓴다.** 180°·거울상은 가로세로가 바뀌지 않아
-     * '디코더가 적용했는지' 를 잴 방법이 없다. 추측해서 돌리느니 그 파일은 통짜 재디코딩
-     * 경로로 보낸다 — 그쪽은 바닥층과 같은 디코더를 타므로 방향이 구조적으로 일치한다.
+     * 여덟 방향 모두 좌표를 옮길 수 있다(`RegionMath`). 모르는 것은 '바닥층이 적용했는가' 하나이고,
+     * 그것이 거짓이 되는 파일(180°·거울상·정사각)은 [needsPixelCheck] 로 화소를 재 본 뒤에야 조각을
+     * 뜬다(`ImageIo.appliedOrientationByPixels`). 6단계는 그 파일들을 흐린 채로 두었다.
      */
     val canUseRegionDecoder: Boolean
-        get() = decoderAppliesOrientation != null &&
-            (orientation == ExifInterface.ORIENTATION_NORMAL ||
-                orientation == ExifInterface.ORIENTATION_UNDEFINED ||
-                orientation == ExifInterface.ORIENTATION_ROTATE_90 ||
-                orientation == ExifInterface.ORIENTATION_ROTATE_270)
+        get() = decoderAppliesOrientation != null
+
+    /** 치수로 답이 나지 않아 **화소로 재 봐야** 방향을 아는가. */
+    val needsPixelCheck: Boolean
+        get() = decoderAppliesOrientation == null
 }
 
 object ImageIo {
@@ -102,7 +109,9 @@ object ImageIo {
      *
      * 둘을 견주면 "이 디코더가 이 파일의 방향을 적용했는가" 가 나온다.
      * **잴 수 없는 경우도 정직하게 적는다** — 180°·거울상·정사각은 치수가 안 바뀌어
-     * 판별되지 않고, 그때 [ImageProbe.decoderAppliesOrientation] 은 `null` 이다.
+     * 판별되지 않고, 그때 [ImageProbe.decoderAppliesOrientation] 은 `null` 이다. 그 파일은
+     * 확대해서 조각이 필요해지는 순간 [appliedOrientationByPixels] 가 화소로 잰다 — 여기서 미리
+     * 재지 않는 것은 확대하지 않을 사진에까지 디코딩을 한 번 더 치르지 않으려는 것이다.
      */
     suspend fun probe(path: String): ImageProbe? = withContext(IroDispatchers.image) {
         val file = File(path)
@@ -123,11 +132,13 @@ object ImageIo {
         var displayW = storedW
         var displayH = storedH
         var mime = bounds.outMimeType
+        var animated = false
         runCatching {
             ImageDecoder.decodeDrawable(ImageDecoder.createSource(file)) { _, info, _ ->
                 displayW = info.size.width
                 displayH = info.size.height
                 mime = info.mimeType
+                animated = info.isAnimated
                 // 헤더만 보려는 것이므로 가장 작게 뜨고 버린다.
                 throw HeaderOnly()
             }
@@ -161,6 +172,7 @@ object ImageIo {
             mimeType = mime,
             orientation = orientation,
             decoderAppliesOrientation = applied,
+            isAnimated = animated,
         )
     }
 
@@ -279,18 +291,28 @@ object ImageIo {
      * 원본의 **한 자리**를 뜬다. 확대했을 때 바닥층 위에 얹는 선명한 조각이다.
      *
      * [rect] 는 **저장 방향**의 원본 화소 `[왼, 위, 오른, 아래]` 이고(`RegionMath.toStored`
-     * 로 옮긴 것), 잘라 온 조각을 [rotation] 도(시계 방향) 돌려 화면 방향으로 준다.
-     * `BitmapRegionDecoder` 가 EXIF 방향을 적용하지 않기 때문이다.
+     * 로 옮긴 것), 잘라 온 조각을 [orientation] 대로 돌리고 뒤집어 화면 방향으로 준다.
+     * `BitmapRegionDecoder` 가 EXIF 방향을 적용하지 않기 때문이다. 바닥층이 방향을 적용하지 않은
+     * 파일이면 부르는 쪽이 [RegionMath.NORMAL] 을 준다 — 조각도 바닥층처럼 저장 방향 그대로여야 한다.
+     *
+     * 여덟 방향을 전부 받는다. 예전 판(`decodeRegion(path, …, rotation)`)은 돌리기만 했고 90°·270°
+     * 에서만 불렸다.
      *
      * 형식이 영역 디코딩을 지원하지 않으면(GIF 등) null 이다 — 그때는 흐린 바닥층이 남는다.
      */
-    suspend fun decodeRegion(path: String, rect: IntArray, sample: Int, rotation: Int): Bitmap? =
+    suspend fun decodeRegionOriented(path: String, rect: IntArray, sample: Int, orientation: Int): Bitmap? =
         withContext(IroDispatchers.image) {
             if (!File(path).isFile) return@withContext null
-            region({ android.graphics.BitmapRegionDecoder.newInstance(path) }, rect, sample, rotation)
+            region(
+                { android.graphics.BitmapRegionDecoder.newInstance(path) },
+                rect, sample, RegionMath.rotationDegrees(orientation), RegionMath.mirrorOf(orientation),
+            )
         }
 
-    /** [decodeRegion] 의 바이트 판. 만화 쪽이 쓴다(아카이브 안의 쪽에는 경로가 없다). */
+    /**
+     * 원본의 한 자리를 뜬다 — **바이트 판.** 만화 쪽이 쓴다(아카이브 안의 쪽에는 경로가 없다).
+     * [rotation] 도(시계 방향) 돌리기만 한다.
+     */
     suspend fun decodeRegion(
         bytes: ByteArray,
         offset: Int = 0,
@@ -302,8 +324,104 @@ object ImageIo {
         if (length <= 0 || offset < 0 || offset + length > bytes.size) return@withContext null
         region(
             { android.graphics.BitmapRegionDecoder.newInstance(bytes, offset, length) },
-            rect, sample, rotation,
+            rect, sample, rotation, RegionMath.Mirror.NONE,
         )
+    }
+
+    /**
+     * 바닥층의 디코더가 이 파일의 방향을 **적용하는가를 화소로** 잰다. 치수로 답이 나지 않는 파일
+     * ([ImageProbe.needsPixelCheck] — 180°·거울상·정사각)만 실제로 잰다. 판정 자체는 [OrientationMatch].
+     *
+     * ## 무엇과 무엇을 견주는가 — 같은 표본의 작은 그림 둘
+     *
+     * 하나는 **바닥층과 같은 디코더**(`ImageDecoder`)로, 하나는 **조각과 같은 디코더**
+     * (`BitmapRegionDecoder`)로 원본 전체를 같은 표본으로 뜬다. 같은 형식의 코덱이 같은 표본으로 줄이므로
+     * 두 그림의 차이는 **방향**이 거의 전부다(남는 잡음은 [OrientationMatch.MAX_MATCH] 가 받아 준다 —
+     * 두 디코더의 줄이는 방식이 화소 단위로 같다는 것은 확인하지 않았다). 방향을 적용하는가는 파일과
+     * 디코더가 정하는 것이지 표본이 정하는 것이 아니라, 작게 뜬 그림의 답이 화면의 바닥층에도 그대로 맞는다.
+     *
+     * 화면에 떠 있는 바닥층을 줄여 쓰지 않는 까닭: 바닥층은 수천 화소라 수십 화소로 한 번에 줄이면
+     * 이중선형 보간이 화소를 건너뛰어(에일리어싱) 잎사귀 같은 자리에서 차이가 수십으로 뛴다 — 맞는
+     * 가설도 '닮지 않았다' 가 되어 판정을 포기한다. 작은 그림 둘은 합쳐 수십 KB 이고 **확대해서 조각이
+     * 처음 필요해질 때 한 번만** 돈다([RegionOrientation]).
+     *
+     * @return 적용한다 true, 안 한다 false, 가를 수 없거나 뜨지 못했다 null — null 이면 조각을 뜨지
+     *   않는다(흐린 채로 확대된다). 틀린 조각을 얹는 것보다 흐린 편이 낫다.
+     */
+    suspend fun appliedOrientationByPixels(path: String, probe: ImageProbe): Boolean? =
+        withContext(IroDispatchers.image) {
+            if (!probe.needsPixelCheck) return@withContext probe.decoderAppliesOrientation
+            val file = File(path)
+            if (!file.isFile) return@withContext null
+            val w = probe.storedWidth
+            val h = probe.storedHeight
+            val (tw, th) = OrientationMatch.thumbSize(w, h)
+            val bw = tw * OrientationMatch.BOX
+            val bh = th * OrientationMatch.BOX
+            val sample = ImageLimits.sampleFor(w, h, maxOf(bw, bh))
+            val raw = region(
+                { android.graphics.BitmapRegionDecoder.newInstance(path) },
+                intArrayOf(0, 0, w, h), sample, 0, RegionMath.Mirror.NONE,
+            ) ?: return@withContext null
+            try {
+                val shown = decodeAtSample(file, sample, currentCoroutineContext()[Job])
+                    ?: return@withContext null
+                try {
+                    val rawPx = pixelsAt(raw, bw, bh) ?: return@withContext null
+                    val shownPx = pixelsAt(shown, bw, bh) ?: return@withContext null
+                    OrientationMatch.decide(
+                        probe.orientation,
+                        OrientationMatch.boxDownsample(shownPx, bw, bh, OrientationMatch.BOX),
+                        OrientationMatch.boxDownsample(rawPx, bw, bh, OrientationMatch.BOX),
+                        tw, th,
+                    )
+                } finally {
+                    shown.recycle()
+                }
+            } finally {
+                // 둘 다 우리가 방금 뜬, 아무도 그리지 않은 비트맵이다(축출된 비트맵과 다르다).
+                raw.recycle()
+            }
+        }
+
+    /**
+     * 바닥층과 **같은 디코더**로, 표본만 [sample] 로 못 박아 뜬다. [decode] 는 목표 크기에서 표본을
+     * 스스로 고르므로 조각 쪽과 표본이 어긋날 수 있다 — 여기서는 둘이 같아야 한다.
+     */
+    private fun decodeAtSample(file: File, sample: Int, job: Job?): Bitmap? = try {
+        ImageDecoder.decodeBitmap(ImageDecoder.createSource(file)) { decoder, _, _ ->
+            decoder.setTargetSampleSize(sample.coerceAtLeast(1))
+            decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+            decoder.isMutableRequired = false
+            if (job?.isActive == false) throw CancellationException("방향 판정이 취소됐다")
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: IOException) {
+        null
+    } catch (e: RuntimeException) {
+        null
+    } catch (e: OutOfMemoryError) {
+        null
+    }
+
+    /**
+     * [src] 를 [w]×[h] 로 줄여 화소를 읽는다. 줄인 사본은 읽고 곧바로 버린다 — [src] 는 건드리지
+     * 않는다.
+     */
+    private fun pixelsAt(src: Bitmap, w: Int, h: Int): IntArray? = try {
+        val scaled = src.scale(w, h, filter = true)
+        try {
+            IntArray(w * h).also { scaled.getPixels(it, 0, w, 0, 0, w, h) }
+        } finally {
+            if (scaled !== src) scaled.recycle()
+        }
+    } catch (e: RuntimeException) {
+        // 하드웨어 비트맵이면 화소를 읽을 수 없다(`IllegalStateException`). 바닥층은 소프트웨어로
+        // 뜨므로 올 일이 없지만, 오면 판정을 포기할 뿐이다.
+        null
+    } catch (e: OutOfMemoryError) {
+        null
     }
 
     private suspend fun region(
@@ -311,6 +429,7 @@ object ImageIo {
         rect: IntArray,
         sample: Int,
         rotation: Int,
+        mirror: RegionMath.Mirror,
     ): Bitmap? {
         // 네이티브 디코딩이 시작되면 끼어들 수 없다. 여는 직전이 취소를 볼 마지막 자리다.
         if (currentCoroutineContext()[Job]?.isActive == false) return null
@@ -327,10 +446,20 @@ object ImageIo {
                 inPreferredConfig = Bitmap.Config.ARGB_8888
             }
             val piece = d.decodeRegion(android.graphics.Rect(l, t, r, b), opts) ?: return null
-            if (rotation % 360 == 0) {
+            if (rotation % 360 == 0 && mirror == RegionMath.Mirror.NONE) {
                 piece
             } else {
-                val m = android.graphics.Matrix().apply { postRotate(rotation.toFloat()) }
+                // **돌린 다음에 뒤집는다**(`RegionMath.rotationDegrees` 의 약속). 음수 배율로
+                // 뒤집으면 결과가 원점 밖으로 나가지만 `createBitmap` 이 사상된 경계를 원점으로
+                // 당겨 준다 — 그 사상이 `RegionMath.displayOf` 와 같다는 것은 JVM 시험이 확인한다.
+                val m = android.graphics.Matrix().apply {
+                    postRotate(rotation.toFloat())
+                    when (mirror) {
+                        RegionMath.Mirror.HORIZONTAL -> postScale(-1f, 1f)
+                        RegionMath.Mirror.VERTICAL -> postScale(1f, -1f)
+                        RegionMath.Mirror.NONE -> Unit
+                    }
+                }
                 val turned = Bitmap.createBitmap(piece, 0, 0, piece.width, piece.height, m, true)
                 // 아직 아무도 그리지 않은 조각이라 곧바로 돌려줘도 안전하다(축출된 비트맵과 다르다).
                 if (turned !== piece) piece.recycle()

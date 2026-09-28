@@ -3,18 +3,15 @@ package io.github.donggi.iroiroviewer.format.opc
 import io.github.donggi.iroiroviewer.format.ByteArrayChannel
 import io.github.donggi.iroiroviewer.format.ByteArrayDocumentSource
 import io.github.donggi.iroiroviewer.format.DocumentSource
-import io.github.donggi.iroiroviewer.format.FileDocumentSource
 import io.github.donggi.iroiroviewer.format.OpenFailure
 import io.github.donggi.iroiroviewer.format.cfb.CfbFile
 import io.github.donggi.iroiroviewer.safety.ParseLimits
-import org.junit.Assume.assumeTrue
 import java.io.File
 import java.io.InputStream
 import java.io.InterruptedIOException
 import java.nio.ByteBuffer
 import java.nio.channels.ClosedByInterruptException
 import java.nio.channels.SeekableByteChannel
-import java.security.MessageDigest
 import java.util.concurrent.CancellationException
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -40,6 +37,11 @@ import kotlin.test.fail
  * * `agile-spin-huge`·`agile-cert-only` — msoffcrypto 의 조각과 CFB 짜개로, 설명자만 고쳐 만들었다.
  * * `irm-drm*`·`legacy-*`·`hwp-like`·`rc4-cryptoapi`·`extensible` — 모양만 흉내 낸 합성 CFB(내용은 난수).
  *   모든 CFB 는 olefile 로 다시 열어 확인했다.
+ *
+ * 실세계의 암호 문서(오피스·extenXLS 가 잠근 15건)는 `OoxmlCorpusCryptoTest` 가 풀어 오라클과 바이트로 견준다. 예전에 여기 있던
+ * '`samples-local/cfb/big-agile.docx`(msoffcrypto 가 잠근 9 MB)는 DIFAT 을 지나 풀린다' 는 그 파일이 없어 늘 건너뛰었다 —
+ * 남이 쓴 DIFAT 체인은 이제 `CfbRealWorldTest` 가 한글 문서(K04·K05)로 지나고, DIFAT 너머의 패키지를 흘려 읽으며 푸는 것과
+ * 푸는 동안의 취소 확인(1 MiB 마다)은 `OfficeCfbAgileTest` 가 명세대로 잠근 7 MB 표본으로 늘 본다.
  */
 class OfficeCfbTest {
 
@@ -289,30 +291,6 @@ class OfficeCfbTest {
         }
         assertFailsWith<CancellationException> {
             open("standard-aes128.docx", null) { throw CancellationException("취소") }
-        }
-    }
-
-    /**
-     * `samples-local/cfb/big-agile.docx`(커밋하지 않는다, 생성 스크립트 `big_samples.py`) — msoffcrypto 가 잠근
-     * 9 MB 패키지. 그 도구의 CFB 짜개가 FAT 섹터 146개를 쓰므로 **남이 쓴 DIFAT 체인**을 지난다. 평문은 두지 않고
-     * SHA-256 만 옆에 둔다. 파일 채널(`FileDocumentSource`)로 연다. 없으면 건너뛴다.
-     */
-    @Test
-    fun 로컬의_큰_표본은_DIFAT_을_지나_풀린다() {
-        val local = generateSequence(dir) { it.parentFile }
-            .map { File(it, "samples-local/cfb/big-agile.docx") }
-            .firstOrNull { it.isFile }
-        assumeTrue("samples-local/cfb/big-agile.docx 가 없다", local != null)
-        val expected = File(local!!.path + ".sha256").readText().trim()
-        var calls = 0
-        val plain = plainOf(OfficeCfb.open(FileDocumentSource(local), "big-secret".toCharArray(), ParseLimits.DEFAULT) { calls++ })
-        try {
-            val sha = MessageDigest.getInstance("SHA-256").digest(plain).joinToString("") { "%02x".format(it) }
-            assertEquals(expected, sha)
-            // 열쇠 유도 10번 + 푸는 동안 1 MiB 마다.
-            assertTrue(calls >= 10 + 8, "calls=$calls")
-        } finally {
-            plain.fill(0)
         }
     }
 

@@ -13,11 +13,35 @@
     <!-- 파일 관리자의 본체. 특별 접근 권한이라 설정 화면에서만 켤 수 있다. -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
+    <!--
+      APK 를 누르면 시스템 설치 관리자에 넘긴다(core:io 의 ExternalOpen). 설치 관리자는 보낸 앱의 targetSdk 가 26
+      이상이면 이 권한을 **선언했는지** 보고, 선언하지 않았으면 아무 화면도 없이 닫힌다(RESULT_CANCELED). 우리 쪽
+      startActivity 는 성공으로 끝나므로 선언이 빠진 것을 앱이 알아챌 길이 없다. 이 줄을 지우지 마라.
+      선언한다고 설치가 되는 것은 아니다. 처음에는 설치 관리자가 '출처를 알 수 없는 앱' 안내(설정으로 가는 단추)를
+      띄우고, 사용자가 이 앱을 허용한 뒤에도 설치할 때마다 설치 관리자의 확인 화면을 거친다.
+      확인한 범위: API 31 에뮬레이터 이미지의 설치 관리자(com.google.android.packageinstaller, 판 12)를 바이트코드와
+      매니페스트로 읽었다. InstallStart.onCreate 의 선언 검사, PackageInstallerActivity.handleUnknownSources 의 허용
+      처리, InstallStart 의 VIEW 필터(content 스킴 + application/vnd.android.package-archive)가 그것이다.
+      API 35 이미지는 압축된 EROFS 라 읽지 못했고, 거동은 에뮬레이터에서 쟀다(릴리스): 눌러 열면(VIEW) InstallStart 에서
+      InstallStaging 을 거쳐 출처 안내가 뜨고(API 31 도 안내까지 같다), 선택 메뉴의 다른 앱으로 열기(CHOOSE)는 받는 앱이
+      하나라 고르는 창이 곧바로 넘기는데 설치 관리자가 그것을 우리가 보낸 것으로 받는다.
+      이 앱은 스스로 무엇도 설치하지 않는다(PackageInstaller 세션을 열지 않는다).
+    -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <!--
+      병합된 매니페스트에는 이 파일에 없는 선언이 하나 더 있다 - core:io 의 queries(패키지 공개 범위). 다른 앱으로 열기가
+      '이 형식을 받을 앱이 있는가' 를 물으려면 content URI 를 VIEW 로 받는 앱이 우리에게 보여야 한다. 없으면 모든 앱에서
+      고르는 창으로 넓힌다(ExternalOpen 의 ALL_APPS). 그 선언과, 무엇이 보이게 되는지와, 사생활에 대한 판단은 core:io 의
+      매니페스트 주석에 있다. 여기에는 적지 않는다 - 묻는 코드가 그 모듈에 있다.
+    -->
+
     <application
         android:name=".IroiroApp"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.IroiroViewer">
@@ -30,8 +54,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
-            android:label="@string/app_name">
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

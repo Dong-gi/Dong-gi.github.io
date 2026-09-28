@@ -39,6 +39,36 @@ object ExtractSupport {
 }
 
 /**
+ * 풀기 결과에서 '열기' 로 갈 곳을 고른다(8단계가 미룬 '풀린 폴더로 바로 가기').
+ *
+ * 순수 함수라 JVM 시험이 지킨다 — 단추가 뜨는지 안 뜨는지는 화면에서 눈으로만 보이고, 틀려도 오류가 없다.
+ */
+object ExtractResults {
+
+    /**
+     * @return 갈 폴더. 없으면 null.
+     *
+     * **하나도 풀지 못하고 실패했으면 단추를 보이지 않는다.** 그때 결과에 실린 곳은 목적지를 정하기도 전의
+     * 부모 폴더일 수 있고(아카이브가 없어졌다·폴더를 만들지 못했다), '열기' 가 '푼 것을 본다' 로 읽히는데
+     * 거기에는 푼 것이 없다. 조금이라도 풀었으면(부분 실패·취소 포함) 보인다 — 사용자가 어디까지 됐는지
+     * 확인할 자리가 바로 그 폴더다.
+     */
+    fun folderToOpen(
+        kind: FileOpManager.Kind,
+        outcome: FileOpEngine.Outcome,
+        extra: FileOpManager.Extra?,
+    ): String? {
+        if (kind != FileOpManager.Kind.EXTRACT) return null
+        val dest = (extra as? FileOpManager.Extra.Extracted)?.report?.destDir
+        if (dest.isNullOrBlank()) return null
+        return when (outcome) {
+            is FileOpEngine.Outcome.Done, is FileOpEngine.Outcome.Cancelled -> dest
+            is FileOpEngine.Outcome.Failed -> dest.takeIf { outcome.done > 0 }
+        }
+    }
+}
+
+/**
  * 풀기가 **거부한 것**들의 집계.
  *
  * 거부를 조용히 삼키면 사용자는 아카이브 안의 파일 수와 푼 파일 수가 다른 것을 보고도

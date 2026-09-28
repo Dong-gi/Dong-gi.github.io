@@ -30,17 +30,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import io.github.donggi.iroiroviewer.data.ReaderAppearance
 import io.github.donggi.iroiroviewer.format.epub.EpubBook
+import io.github.donggi.iroiroviewer.format.epub.ReaderStyle
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.webhost.LockedWebView
 import io.github.donggi.iroiroviewer.webhost.ResourceProvider
 import io.github.donggi.iroiroviewer.webhost.WebHost
 import io.github.donggi.iroiroviewer.webhost.WebResource
 import java.io.ByteArrayInputStream
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * EPUB 한 권을 읽는 층.
@@ -51,7 +56,12 @@ import java.io.ByteArrayInputStream
  * 장 하나의 길이는 글의 길이가 정하고, 그것을 우리가 화면 크기로 잘라 쪽을 만들면
  * 글꼴 크기가 바뀔 때마다 쪽 번호가 달라진다 — 이어보기가 가리키는 자리가 그때마다
  * 움직인다는 뜻이다. **차례(spine)의 번호가 우리가 세는 유일한 자리**이고, 장 안에서는
- * 세로로 스크롤한다.
+ * 세로로 스크롤한다. 장 안의 자리는 스크롤의 **비율**로 따로 기억한다(14단계 — `DocLocator`).
+ *
+ * ## 읽는 모양(14단계)
+ *
+ * 글자 크기는 `textZoom`, 여백·바탕은 장에 얹는 CSS 다([ReaderLooks.forEpub]). **고정 레이아웃 쪽에는 셋 다 걸지 않고**
+ * 쪽을 화면에 통째로 맞춘다 — 그러려면 화면의 크기(CSS 화소)를 알아야 하므로, 크기를 잰 뒤에 WebView 를 세운다.
  *
  * ## 자원을 통째로 읽어서 넘긴다
  *
@@ -70,17 +80,55 @@ fun EpubReader(
     onChapter: (chapter: Int, anchor: String?) -> Unit,
     /** 장 하나를 읽어 위생기를 지났다. 버린 것의 집계가 늘었을 수 있다. */
     onRead: () -> Unit,
+    /** 읽는 모양(설정). */
+    appearance: ReaderAppearance,
+    /** 기기가 밤 모드인가. 바탕이 '시스템' 일 때 쓴다. */
+    systemDark: Boolean,
+    /** 장을 열 때 옮겨 갈 자리(0~1)를 그때 묻는다(`LockedWebView.startFraction`). */
+    startFraction: () -> Float,
+    /** '같은 장 안에서 옮겨라' 의 일련번호(처음부터). */
+    jump: Int,
+    /** 사용자가 옮긴 장 안의 자리. */
+    onFraction: (chapter: Int, fraction: Float) -> Unit,
+    /** 장 안에서 본 몫(화면 끝 가장자리까지 — `LockedWebView.onSeen`). 진행이 쓴다. */
+    onSeen: (chapter: Int, seen: Float) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val book = doc.book
     // 콜백을 키로 쓰지 않는다(`LockedWebView` 의 같은 주석). 공급기는 책이 바뀔 때만 새로 만든다.
     val latestRead by rememberUpdatedState(onRead)
-    val provider = remember(book) { providerFor(book) { latestRead() } }
+    // 공급기는 WebView 의 **다른 스레드**에서 모양을 읽는다 — 컴포즈 상태가 아니라 원자 참조로 건넨다.
+    val lookRef = remember(book) { AtomicReference(ReaderStyle.Look()) }
+    val provider = remember(book) { providerFor(book, lookRef) { latestRead() } }
     var loading by remember(book, chapter) { mutableStateOf(true) }
+    val density = LocalDensity.current
+    // 화면의 크기(CSS 화소). 고정 레이아웃 쪽을 맞추는 데 쓴다. 재기 전에는 WebView 를 세우지 않는다 — 크기 없이 한 번
+    // 그렸다가 다시 읽으면 쪽이 두 번 뜬다.
+    var viewSize by remember { mutableStateOf<Pair<Double, Double>?>(null) }
 
-    val path = book.spine.getOrNull(chapter)?.path
-    Box(modifier.fillMaxSize().background(Color.White)) {
-        if (path != null) {
+    val entry = book.spine.getOrNull(chapter)
+    val look = ReaderLooks.forEpub(
+        fixed = entry?.fixedLayout == true,
+        a = appearance,
+        systemDark = systemDark,
+        viewWidth = viewSize?.first ?: 0.0,
+        viewHeight = viewSize?.second ?: 0.0,
+    )
+    lookRef.set(look.style)
+    val latestChapter by rememberUpdatedState(chapter)
+
+    val path = entry?.path
+    Box(
+        modifier
+            .fillMaxSize()
+            .background(Color(look.background))
+            .onSizeChanged {
+                if (it.width > 0 && it.height > 0) {
+                    viewSize = (it.width / density.density.toDouble()) to (it.height / density.density.toDouble())
+                }
+            },
+    ) {
+        if (path != null && viewSize != null) {
             LockedWebView(
                 url = WebHost.urlFor(path) + (anchor?.let { "#$it" } ?: ""),
                 provider = provider,
@@ -99,6 +147,18 @@ fun EpubReader(
                     }
                 },
                 onReady = { loading = false },
+                // 모든 쪽이 고정 레이아웃인 책(만화·그림책)은 손가락으로 키워 본다 — 쪽을 화면에 통째로 줄여 맞췄으므로 작은
+                // 글자를 읽을 길이 그것뿐이다. 흐름 장이 섞인 책은 끈다(글은 흘러서 폭에 맞는다 — `LockedWebView` 의 주석).
+                zoomable = book.allFixedLayout,
+                textZoom = look.textZoom,
+                backgroundColor = look.background,
+                // 고정 레이아웃 쪽은 화면에 맞춰 스크롤할 것이 없다. 세로쓰기는 흐름 장의 일이다.
+                rightToLeft = book.rightToLeft && entry?.fixedLayout != true,
+                startFraction = startFraction,
+                jump = jump,
+                contentKey = look.contentKey,
+                onFraction = { onFraction(latestChapter, it) },
+                onSeen = { onSeen(latestChapter, it) },
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -222,14 +282,19 @@ private fun Modifier.clickableRow(onClick: () -> Unit): Modifier = clickable(onC
  * `<link rel="stylesheet" href="book.css">` 로 걸린 파일은 이 길로 들어오므로
  * [EpubBook.styleSheet] 을 지나게 한다. 위생의 구멍은 한 군데면 충분히 뚫린다.
  */
-private fun providerFor(book: EpubBook, onRead: () -> Unit): ResourceProvider = ResourceProvider { path ->
+private fun providerFor(
+    book: EpubBook,
+    look: AtomicReference<ReaderStyle.Look>,
+    onRead: () -> Unit,
+): ResourceProvider = ResourceProvider { path ->
     try {
         val index = book.spineIndexOf(path)
         // 매니페스트의 형식은 책이 적은 값이다 — `text/css; charset=utf-8`·대문자·틀린 형식이 온다. 글자 그대로 견주면
         // 그런 스타일시트가 위생 없이 나가고, 매개변수가 붙은 것은 WebView 가 그대로 적용한다(실세계 말뭉치 검토).
         val declared = book.mediaTypeOf(path)?.substringBefore(';')?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }
         if (index >= 0) {
-            val html = synchronized(book) { book.chapterHtml(index) } ?: return@ResourceProvider null
+            // 읽는 모양은 **읽는 그 순간의** 것이다 — 여백·바탕을 바꾸면 화면이 같은 장을 다시 청한다(`contentKey`).
+            val html = synchronized(book) { book.chapterHtml(index, look.get()) } ?: return@ResourceProvider null
             onRead()
             WebResource("text/html", "utf-8", ByteArrayInputStream(html.toByteArray()))
         } else if (declared == "text/css" || guessType(path) == "text/css") {

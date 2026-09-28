@@ -55,7 +55,9 @@
 
     <string name="playback_error_no_decoder">이 기기에 코덱이 없습니다%1$s</string>
     <string name="playback_error_decoder_failed">디코더를 시작하지 못했습니다%1$s</string>
-    <string name="playback_error_container">파일을 읽지 못했습니다 (%1$s)</string>
+    <!-- 컨테이너를 못 읽었다. 형식을 모르면(추출기가 없다) 다른 앱이 열 수 있다 — 재생 화면이 곁에 '다른 앱으로 열기' 를 둔다. -->
+    <string name="playback_error_container_unsupported">이 앱이 재생하지 못하는 형식입니다</string>
+    <string name="playback_error_container_malformed">파일이 깨졌거나 읽을 수 없는 모양입니다</string>
     <string name="playback_error_not_readable">파일을 열 수 없습니다</string>
     <string name="playback_error_unsupported_track">일부 트랙을 재생할 수 없습니다: %1$s</string>
     <string name="playback_error_other">재생에 실패했습니다 (코드 %1$d)</string>

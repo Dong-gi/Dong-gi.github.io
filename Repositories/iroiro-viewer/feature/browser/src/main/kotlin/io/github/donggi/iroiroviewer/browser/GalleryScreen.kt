@@ -52,6 +52,9 @@ import java.time.ZoneId
  *
  * 썸네일은 [ThumbnailStore] 가 만들고 다시 쓴다. 원본이 사라지면 썸네일도 사라진다
  * (`BrowserViewModel` 의 갤러리 정리 참고).
+ *
+ * **당기면 다시 훑는다**(`BrowserViewModel.pullGallery`). 훑는 동안 격자는 앞의 것을 그대로 보인다 — 다른 앱이
+ * 방금 찍은 사진을 넣었을 때 갤러리를 나갔다 들어오지 않아도 되는 길이다.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,6 +66,7 @@ fun GalleryScreen(
     modifier: Modifier = Modifier,
 ) {
     val scan by vm.gallery.collectAsStateWithLifecycle()
+    val refreshing by vm.galleryRefreshing.collectAsStateWithLifecycle()
     val gridState = rememberLazyGridState()
 
     // **'오늘' 의 기준을 훑기마다 한 번만 잡는다.** 머리글마다 `currentTimeMillis` 를
@@ -95,62 +99,66 @@ fun GalleryScreen(
             )
         },
     ) { inner ->
-        when (val s = scan) {
-            is GalleryScanner.Scan.Scanning -> Box(
-                Modifier.padding(inner).fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    stringResource(R.string.browser_gallery_scanning, s.found),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+        RefreshableBox(
+            refreshing = refreshing,
+            onRefresh = vm::pullGallery,
+            modifier = Modifier.padding(inner).fillMaxSize(),
+        ) {
+            when (val s = scan) {
+                is GalleryScanner.Scan.Scanning -> Box(
+                    Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        stringResource(R.string.browser_gallery_scanning, s.found),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
 
-            is GalleryScanner.Scan.Ready -> {
-                if (s.images.isEmpty()) {
-                    Box(
-                        Modifier.padding(inner).fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            stringResource(
-                                R.string.browser_gallery_empty,
-                                GalleryScanner.DEFAULT_FOLDERS.joinToString(" · "),
-                            ),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                } else {
-                    LazyVerticalGrid(
-                        // 칸 수를 고정하지 않는다. 태블릿 가로에서 3열이면 칸 하나가
-                        // 손바닥만 해진다.
-                        columns = GridCells.Adaptive(minSize = 110.dp),
-                        state = gridState,
-                        modifier = Modifier.padding(inner).fillMaxSize(),
-                    ) {
-                        for (section in s.sections) {
-                            item(
-                                key = "day:${section.day.startMillis}",
-                                // 머리글은 한 줄을 통째로 쓴다. 칸 하나로 두면 사진
-                                // 사이에 글자가 끼어 어느 날의 것인지 읽히지 않는다.
-                                span = { GridItemSpan(maxLineSpan) },
-                            ) {
-                                DayHeader(section.day, today, yesterday)
-                            }
-                            itemsIndexed(
-                                items = s.images.subList(
-                                    section.firstIndex,
-                                    section.firstIndex + section.count,
+                is GalleryScanner.Scan.Ready -> {
+                    if (s.images.isEmpty()) {
+                        // 사진이 없다는 안내도 당길 수 있어야 한다 — 사진을 넣고 다시 훑는 자리가 바로 여기다.
+                        ScrollableNote {
+                            Text(
+                                stringResource(
+                                    R.string.browser_gallery_empty,
+                                    GalleryScanner.DEFAULT_FOLDERS.joinToString(" · "),
                                 ),
-                                key = { _, e -> e.path },
-                            ) { i, entry ->
-                                // **구간 안의 자리를 원래 목록의 자리로 되돌린다.**
-                                // 이것을 빠뜨리면 두 번째 날짜부터 누른 것과 다른
-                                // 사진이 열린다 — 화면에는 아무 오류도 나지 않는다.
-                                val flat = section.firstIndex + i
-                                GalleryCell(entry = entry, onClick = { onOpen(s.images, flat) })
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    } else {
+                        LazyVerticalGrid(
+                            // 칸 수를 고정하지 않는다. 태블릿 가로에서 3열이면 칸 하나가
+                            // 손바닥만 해진다.
+                            columns = GridCells.Adaptive(minSize = 110.dp),
+                            state = gridState,
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            for (section in s.sections) {
+                                item(
+                                    key = "day:${section.day.startMillis}",
+                                    // 머리글은 한 줄을 통째로 쓴다. 칸 하나로 두면 사진
+                                    // 사이에 글자가 끼어 어느 날의 것인지 읽히지 않는다.
+                                    span = { GridItemSpan(maxLineSpan) },
+                                ) {
+                                    DayHeader(section.day, today, yesterday)
+                                }
+                                itemsIndexed(
+                                    items = s.images.subList(
+                                        section.firstIndex,
+                                        section.firstIndex + section.count,
+                                    ),
+                                    key = { _, e -> e.path },
+                                ) { i, entry ->
+                                    // **구간 안의 자리를 원래 목록의 자리로 되돌린다.**
+                                    // 이것을 빠뜨리면 두 번째 날짜부터 누른 것과 다른
+                                    // 사진이 열린다 — 화면에는 아무 오류도 나지 않는다.
+                                    val flat = section.firstIndex + i
+                                    GalleryCell(entry = entry, onClick = { onOpen(s.images, flat) })
+                                }
                             }
                         }
                     }

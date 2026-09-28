@@ -5,6 +5,7 @@ import io.github.donggi.iroiroviewer.format.html.BulletGlyphs
 import io.github.donggi.iroiroviewer.format.html.CssValues
 import io.github.donggi.iroiroviewer.format.html.FlowDocumentBase
 import io.github.donggi.iroiroviewer.format.html.FlowUrls
+import io.github.donggi.iroiroviewer.format.html.HancomAlt
 import io.github.donggi.iroiroviewer.format.html.HancomChars
 import io.github.donggi.iroiroviewer.format.html.HancomFonts
 import io.github.donggi.iroiroviewer.format.html.HancomNumbers
@@ -35,6 +36,8 @@ internal class WalkConfig(
     val partIndex: Int = 0,
     val bookmarkParts: Map<String, Int> = emptyMap(),
     val tables: Map<Long, IntArray> = emptyMap(),
+    /** 훑기가 읽어 둔 그림의 설명문([HwpxLayout.alts]). 그리기만 읽는다. */
+    val alts: Map<Long, String> = emptyMap(),
     val partHref: (Int) -> String = { "" },
     val onTruncated: () -> Unit = {},
     val checkCancel: () -> Unit = {},
@@ -159,6 +162,12 @@ internal class HwpxWalker(
     private var currentNote: NoteCtx? = null
     private var noteSeq = 0
     private val fields = ArrayList<FieldFrame>()
+
+    /**
+     * 둘러싼 묶음 개체의 설명문 — 제 설명문이 없는 그림이 물려받는다. HWP 5.0 은 설명문이 개체 공통 속성에 있어 묶음 하나에
+     * 하나뿐이고, 그것이 묶음 안의 모든 그림의 대체 글이 된다(`Hwp5Walker.gso`). 같은 문서가 포맷에 따라 달리 읽히지 않게 한다.
+     */
+    private var inheritedAlt: String? = null
 
     /** 이 걷기가 본 최상위 문단의 수. 훑기가 '구역 하나가 통째로 실패했다' 를 가를 때 쓴다. */
     val topBlocks: Int get() = topNext
@@ -626,12 +635,13 @@ internal class HwpxWalker(
                 "footNote" -> note(p, endnote = false)
                 "endNote" -> note(p, endnote = true)
                 "autoNum" -> autoNum(p, rc)
+                "newNum" -> newNumber(p)
                 // 숨은 설명 — 본문과 따로 보일 자리가 없다(12단계의 메모와 같은 판단).
                 "hiddenComment" -> {
                     record(UnsupportedFeatures.COMMENT)
                     skip(p)
                 }
-                // 단 정의·쪽 번호 위치·감추기·새 번호·찾아보기 표시 — 흐름 렌더에 뜻이 없다.
+                // 단 정의·쪽 번호 위치·감추기·찾아보기 표시 — 흐름 렌더에 뜻이 없다.
                 else -> skip(p)
             }
         }
@@ -716,6 +726,26 @@ internal class HwpxWalker(
                 end("sup")
             }
             else -> emit((fmt ?: AutoNumFormat.DEFAULT).label(num ?: 1), rc)
+        }
+    }
+
+    /**
+     * 새 번호 지정(`hp:newNum` — `@num`, `@numType`). 각주·미주면 **다음** 주석이 그 번호를 보이도록 우리 셈을 옮긴다 — HWP 5.0 의
+     * `newNumber`(`nwno`)와 같은 셈이다(`번호 - 시작 번호`, 보이는 번호는 시작 번호에서 센다 — [note]).
+     *
+     * 이어 세는 문서의 주석은 한글이 저장한 번호(`@number`)를 쓰고 그 번호가 이것을 이미 담고 있어 달라지지 않는다. 갈리는 것은
+     * **우리 셈을 쓰는 주석** — 쪽마다 새로 세는 문서(`ON_PAGE`)와 저장한 번호가 없는 주석이다. 처음에는 이 요소를 버려 그런
+     * 주석이 같은 문서의 HWP 판과 다른 번호를 보였다(13단계에서 미룬 것). 쪽·그림·표·수식 번호는 옮길 셈이 없다 — 자동 번호가
+     * 저장된 `num` 을 쓴다([autoNum]). 표본의 `hp:newNum` 은 전부 쪽 번호였다(K25·K26·K27·K33).
+     */
+    private fun newNumber(p: XmlPullParser) {
+        val num = HwpxXml.int(p, "num")?.takeIf { it in 0..MAX_NUMBER }
+        val type = HwpxXml.attr(p, "numType")?.uppercase()
+        skip(p)
+        if (num == null) return
+        when (type) {
+            "FOOTNOTE" -> state.footnoteNo = num - sectionInfo.footnote.newNum
+            "ENDNOTE" -> state.endnoteNo = num - sectionInfo.endnote.newNum
         }
     }
 
@@ -1137,8 +1167,16 @@ internal class HwpxWalker(
 
     // ---- 그림·도형·수식 -------------------------------------------------------------------
 
-    /** 그림(`hp:pic`). 크기는 그림보다 앞에 오는 `hp:curSz`(HWPUNIT)에서 — `hp:sz` 는 그림 뒤에 온다. */
+    /**
+     * 그림(`hp:pic`). 크기는 그림보다 앞에 오는 `hp:curSz`(HWPUNIT)에서 — `hp:sz` 는 그림 뒤에 온다.
+     *
+     * **대체 글은 설명문(`hp:shapeComment`)이다** — HWP 5.0 의 개체 설명문과 같은 글이고 같은 규칙(`HancomAlt`)으로 가린다.
+     * 설명문은 스키마의 차례상 `hc:img` **뒤에** 오므로 훑기가 개체 번호([WalkState.objectOrdinal])로 적어 두고 그리기가
+     * 읽는다(표의 칸 정보 `TableScan` 과 같은 장치). 처음에는 HWPX 만 대체 글을 늘 비웠다(13단계에서 미룬 것).
+     */
     private fun picture(p: XmlPullParser) {
+        val key = HwpxLayout.objectKey(cfg.section, state.objectOrdinal++)
+        val alt = cfg.alts[key] ?: inheritedAlt.orEmpty()
         var width: Double? = null
         var after: HtmlWriter? = null
         children(p) { name ->
@@ -1154,13 +1192,27 @@ internal class HwpxWalker(
                 "img" -> {
                     val id = HwpxXml.attr(p, "binaryItemIDRef")
                     skip(p)
-                    image(id, width)
+                    image(id, width, alt)
                 }
                 "caption" -> after = joinCaptions(after, caption(p))
+                "shapeComment" -> shapeComment(p, key)
                 else -> skip(p)
             }
         }
         placeCaption(after)
+    }
+
+    /**
+     * 설명문(`hp:shapeComment`) — 훑기가 읽어 사람이 쓴 것만 개체 번호로 적어 둔다. 그리기는 건너뛴다(이미 적어 둔 값을
+     * 쓴다). 두 모드 모두 이 요소를 끝까지 소비한다([HwpxWalker] 의 약속).
+     */
+    private fun shapeComment(p: XmlPullParser, key: Long) {
+        val scan = cfg.scan
+        if (scan == null) {
+            skip(p)
+            return
+        }
+        scan.alt(key, HancomAlt.of(HwpxXml.collectText(p, limits, HancomAlt.MAX_READ_CHARS)))
     }
 
     /**
@@ -1172,7 +1224,7 @@ internal class HwpxWalker(
      * 내주지 않으므로 `img` 를 쓰면 깨진 그림 표시만 뜨고 배지에는 아무것도 없다. 한글은 붙여 넣은 그림을 BMP 로
      * 두어 이것이 흔하다 — K28 의 BMP 셋이 67~70 MB 다.
      */
-    private fun image(id: String?, width: Double?) {
+    private fun image(id: String?, width: Double?, alt: String) {
         if (id.isNullOrEmpty()) {
             record(UnsupportedFeatures.UNSUPPORTED_IMAGE)
             return
@@ -1197,24 +1249,32 @@ internal class HwpxWalker(
         ensureOpen(pc)
         pc.visible = true
         val style = width?.let { StyleBuilder().add("width", CssValues.pt(it, 1.0, MAX_IMAGE_PT)).build() }
-        void("img", "src" to FlowUrls.encode(name), "alt" to "", "style" to style)
+        void("img", "src" to FlowUrls.encode(name), "alt" to alt, "style" to style)
     }
 
-    /** 묶음 개체 — 안의 그림·도형·수식을 차례로. 묶음 자신의 캡션도 쓴다(처음에는 건너뛰어 그 글을 잃었다). */
+    /**
+     * 묶음 개체 — 안의 그림·도형·수식을 차례로. 묶음 자신의 캡션도 쓴다(처음에는 건너뛰어 그 글을 잃었다). 묶음의 설명문은
+     * 제 설명문이 없는 안의 그림이 물려받는다([inheritedAlt]) — 설명문이 안의 개체들 **뒤에** 오므로 훑기가 적어 둔 값이다.
+     */
     private fun container(p: XmlPullParser, rc: RunCtx) {
         if (graphicDepth >= HwpxLimits.MAX_GRAPHIC_DEPTH) {
             skip(p)
             return
         }
         graphicDepth++
+        val key = HwpxLayout.objectKey(cfg.section, state.objectOrdinal++)
+        val savedAlt = inheritedAlt
+        cfg.alts[key]?.let { inheritedAlt = it }
         var after: HtmlWriter? = null
         children(p) { name ->
             when (name) {
                 in OBJECTS -> runChild(p, name, rc)
                 "caption" -> after = joinCaptions(after, caption(p))
+                "shapeComment" -> shapeComment(p, key)
                 else -> skip(p)
             }
         }
+        inheritedAlt = savedAlt
         graphicDepth--
         placeCaption(after)
     }

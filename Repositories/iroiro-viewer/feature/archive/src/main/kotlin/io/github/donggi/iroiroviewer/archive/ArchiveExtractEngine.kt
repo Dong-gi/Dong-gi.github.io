@@ -81,6 +81,10 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
         val budget = EntryBudget(limits)
         val counters = Counters()
         val touched = ArrayList<String>(64)
+        val dirTimes = DirTimes()
+        // 새 폴더는 이번 풀기가 만든 것이다. 대개 아카이브에 그 폴더의 시각이 없어 '지금' 으로 남는다 — 맨 위 폴더
+        // 자신을 적은 항목(`./`)이 있는 tar 에서만 그 시각을 받는다(`ExtractSink.begin`).
+        if (request.newFolderName != null) dirTimes.created(dest)
 
         // 앞선 작업이 프로세스 사망으로 남긴 임시 파일을 걷는다. 숨김 이름이라 목록에도
         // 안 뜨고, 2 GB 풀기가 죽으면 2 GB 가 보이지 않는 채 남는다.
@@ -88,25 +92,41 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
 
         var outcome: FileOpEngine.Outcome = FileOpEngine.Outcome.Done(0, 0, 0)
         try {
-            Archives.open(FileDocumentSource(archive), limits, budget, request.password).use { reader ->
-                val selected = request.entryIndices?.toHashSet()
-                val plan = reader.entries.filter { selected == null || it.index in selected }
-                val sink = ExtractSink(
-                    dest = dest,
-                    archive = archive,
-                    conflict = request.conflict,
-                    selected = selected,
-                    counters = counters,
-                    touched = touched,
-                    totalFiles = plan.count { it.isReadable },
-                    totalBytes = plan.sumOf { it.declaredSize.coerceAtLeast(0L) },
-                    onProgress = onProgress,
-                )
-                // **여기 한 줄이 취소의 유일한 경계다.** 해제는 블로킹이라 협조적 취소가
-                // 닿지 않는다 — 인터럽트로 바꿔 리더의 스트림 안에서 보게 한다.
-                runInterruptible(IroDispatchers.io) { reader.extractSequentially(sink) }
-                outcome = FileOpEngine.Outcome.Done(counters.done, counters.skipped, counters.failed)
+            // **여는 것부터 푸는 것까지 한 경계 안이다.** 해제는 블로킹이라 협조적 취소가 닿지 않는다 — 인터럽트로
+            // 바꿔 리더의 스트림 안에서 보게 한다. 예전에는 푸는 한 줄만 이 안에 있었는데, 압축한 tar 는 **목록을
+            // 읽는 것 자체가** 스트림을 끝까지 푸는 일이라(아래) 그동안 취소가 몇십 초씩 듣지 않았다.
+            runInterruptible(IroDispatchers.io) {
+                Archives.open(FileDocumentSource(archive), limits, budget, request.password).use { reader ->
+                    val selected = request.entryIndices?.toHashSet()
+                    // **압축한 tar 는 여기서 한 번 끝까지 푼다** — 목록을 보려면 그래야 한다(`TarArchiveReader`). 풀기가
+                    // 한 번 더 풀므로 목록 한 번 + 풀기 한 번이다. 진행 바와 알림의 파일 수(`filesTotal`)를 알려면
+                    // 목록이 먼저라 치르는 값이다 — 그 수가 0 이면 알림이 진행을 아예 그리지 않는다(`FileOpService`).
+                    val plan = reader.entries.filter { selected == null || it.index in selected }
+                    val sink = ExtractSink(
+                        dest = dest,
+                        archive = archive,
+                        conflict = request.conflict,
+                        selected = selected,
+                        counters = counters,
+                        touched = touched,
+                        dirTimes = dirTimes,
+                        totalFiles = plan.count { it.isReadable },
+                        meter = ExtractMeter(
+                            inputTotal = reader.inputBytesFor(selected),
+                            declaredTotal = plan.sumOf { it.declaredSize.coerceAtLeast(0L) },
+                        ),
+                        onProgress = onProgress,
+                    )
+                    try {
+                        reader.extractSequentially(sink)
+                    } finally {
+                        // 취소와 아카이브 전체를 끝내는 상한은 리더가 [EntrySink.finish] 없이 위로 던진다 — 쓰던 항목의
+                        // 임시 파일이 숨은 이름으로 남는다(한 시간 뒤에야 `sweepPartials` 가 걷는다). 여기서 지운다.
+                        sink.abandon()
+                    }
+                }
             }
+            outcome = FileOpEngine.Outcome.Done(counters.done, counters.skipped, counters.failed)
         } catch (e: InterruptedIOException) {
             // 인터럽트는 취소다. **`runInterruptible` 은 `InterruptedException` 만 취소로
             // 바꾼다** — 우리 스트림이 던지는 `InterruptedIOException` 은 그대로 올라오므로
@@ -125,6 +145,9 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
         } catch (e: kotlinx.coroutines.CancellationException) {
             throw e
         } catch (t: Throwable) {
+            // 취소가 파일 채널을 닫아 `ClosedByInterruptException`(입출력 예외)으로 올라왔을 수 있다 — 그러면 사용자의
+            // 취소가 '입출력 실패' 로 보고된다. 잡이 취소됐으면 취소로 끝낸다(아래 finally 는 그래도 돈다).
+            currentCoroutineContext().ensureActive()
             Iro.e(message = "풀기 실패: ${t::class.java.simpleName}")
             outcome = FileOpEngine.Outcome.Failed(
                 reasonOf(t),
@@ -133,6 +156,11 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
                 counters.skipped,
                 counters.failed,
             )
+        } finally {
+            // 폴더 시각은 **모든 쓰기가 끝난 뒤** 한 번에 건다(`DirTimes`). 취소·실패로 끝났어도 거기까지 만든 폴더는
+            // 사용자의 저장소에 남으므로 똑같이 건다 — 취소는 위의 `ensureActive` 가 예외로 올려보내므로 `finally`
+            // 여야 닿는다. 실패는 무시한다.
+            dirTimes.restore()
         }
 
         // 미디어 색인은 **마지막에 한 번.** 파일마다 부르면 1만 개에서 바인더 호출이
@@ -208,8 +236,9 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
         private val selected: Set<Int>?,
         private val counters: Counters,
         private val touched: MutableList<String>,
+        private val dirTimes: DirTimes,
         private val totalFiles: Int,
-        private val totalBytes: Long,
+        private val meter: ExtractMeter,
         private val onProgress: (FileOpEngine.Progress) -> Unit,
     ) : EntrySink {
 
@@ -220,8 +249,10 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
 
         private var pending: AtomicFileWriter.Pending? = null
         private var pendingTarget: File? = null
-        private var bytesDone = 0L
         private var lastReport = 0L
+
+        /** 진행 바가 적는 지금 항목의 이름. 입력으로 세면 항목 한가운데에서도 알리므로 따로 든다. */
+        private var currentName = ""
 
         /** 아카이브 자신의 canonical 경로. 자기를 덮어쓰는 것을 막는 기준이다. */
         private val archiveCanonical = runCatching { archive.canonicalPath }.getOrNull()
@@ -230,7 +261,20 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
             if (selected != null && entry.index !in selected) return null
             if (entry.isDirectory) {
                 // 진짜 디렉터리 엔트리는 미리 만들어 둔다. 빈 폴더도 아카이브의 내용이다.
-                entry.safeName?.let { ensureDir(it) }
+                //
+                // **파일과 같은 이름 계산을 지난다**([ExtractNames.relPathOf]). 예전에는 다듬지 않은 `safeName` 으로
+                // 만들어, `a?b/` 같은 폴더 엔트리는 `a?b` 로, 그 안의 파일은 `a_b/` 로 갔다 — 빈 폴더가 하나 더 생기고
+                // 폴더 시각이 엉뚱한 곳에 걸린다.
+                val rel = ExtractNames.relPathOf(entry)
+                if (rel == null) {
+                    // 맨 위 폴더 자신(`tar -czf x.tgz .` 의 `./`)의 시각은 풀어 넣는 폴더의 것이다. 그 폴더가 이번 풀기가
+                    // 만든 새 폴더일 때만 실제로 걸린다(`DirTimes` 는 만든 폴더만 건드린다).
+                    if (entry.isRootDirectory) dirTimes.entryTime(dest, entry.lastModified)
+                    return null
+                }
+                if (ensureDir(rel)) {
+                    ArchivePath.resolveInside(dest, rel)?.let { dirTimes.entryTime(it, entry.lastModified) }
+                }
                 return null
             }
             val safeName = entry.safeName
@@ -285,6 +329,7 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
 
             return try {
                 pendingTarget = finalTarget
+                currentName = entry.safeName?.substringAfterLast('/') ?: entry.name
                 AtomicFileWriter.begin(finalTarget, entry.lastModified).also { pending = it }.stream
             } catch (t: Throwable) {
                 pendingTarget = null
@@ -302,7 +347,7 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
                 try {
                     p.commit()
                     counters.done++
-                    bytesDone += written
+                    meter.finished(written)
                     // **절대경로를 싣는다.** MediaIndex 는 실제 경로로 스캔한다.
                     target?.let { touched += it.absolutePath }
                 } catch (t: Throwable) {
@@ -313,21 +358,41 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
                 p.abort()
                 counters.failed++
             }
-            report(entry)
+            report()
         }
 
-        private fun report(entry: ArchiveEntry) {
+        /**
+         * 쓰다 만 항목의 임시 파일을 지운다. 리더가 [finish] 없이 끝났을 때(취소·아카이브 전체를 끝내는 상한) 부른다.
+         * 대상 파일은 건드리지 않는다 — [AtomicFileWriter] 는 `commit` 전까지 대상을 만지지 않는다.
+         */
+        fun abandon() {
+            val p = pending ?: return
+            pending = null
+            pendingTarget = null
+            p.abort()
+            // 쓰던 항목은 끝내지 못했다 — 상한으로 끝난 작업의 결과에 '실패 n개' 로 함께 싣는다(취소면 수를 보이지 않는다).
+            counters.failed++
+        }
+
+        /** 리더가 알리는 입력 소비량. 큰 항목 하나를 푸는 동안에도 바가 움직인다. */
+        override fun consumed(inputBytes: Long) {
+            if (!meter.byInput) return
+            meter.consumed(inputBytes)
+            report()
+        }
+
+        private fun report() {
             val now = System.nanoTime()
             // 100ms 보다 자주 알리지 않는다. 파일마다 UI 를 깨우면 그것이 병목이 된다.
             if (now - lastReport < PROGRESS_INTERVAL_NS) return
             lastReport = now
             onProgress(
                 FileOpEngine.Progress(
-                    bytesDone = bytesDone,
-                    bytesTotal = totalBytes,
+                    bytesDone = meter.bytesDone,
+                    bytesTotal = meter.bytesTotal,
                     filesDone = counters.done,
                     filesTotal = totalFiles,
-                    currentName = entry.safeName?.substringAfterLast('/') ?: entry.name,
+                    currentName = currentName,
                 ),
             )
         }
@@ -378,7 +443,16 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
                     counters.sample(relativeDir)
                     false
                 }
-                else -> dir.mkdirs() || dir.isDirectory
+                else -> {
+                    // `mkdirs` 가 한 번에 여러 겹을 만든다. **무엇을 새로 만들었는지** 알아야 끝에서 그 폴더들만
+                    // 시각을 되살린다(이미 있던 폴더는 사용자의 것이다) — 만들기 전에 없던 조상을 적어 둔다.
+                    val missing = generateSequence(dir) { it.parentFile }
+                        .takeWhile { it != dest && !it.exists() }
+                        .toList()
+                    val made = dir.mkdirs() || dir.isDirectory
+                    if (made) missing.filter { it.isDirectory }.forEach { dirTimes.created(it) }
+                    made
+                }
             }
             dirs[relativeDir] = if (ok) DirState.OK else DirState.BLOCKED
             return ok

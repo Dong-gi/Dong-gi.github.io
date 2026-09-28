@@ -5,6 +5,9 @@ import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 import org.apache.commons.compress.archivers.sevenz.SevenZMethod
 import org.apache.commons.compress.archivers.sevenz.SevenZMethodConfiguration
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
 import java.io.File
@@ -63,6 +66,23 @@ class ComicSourceTest {
                 e.name = n
                 e.size = b.size.toLong()
                 e.setHasStream(true)
+                out.putArchiveEntry(e)
+                out.write(b)
+                out.closeArchiveEntry()
+            }
+            out.finish()
+        }
+        return f
+    }
+
+    private fun writeTar(name: String, entries: List<Pair<String, ByteArray>>, gzip: Boolean = false): File {
+        val f = File(tmp, name)
+        val raw = f.outputStream().buffered()
+        val sink = if (gzip) GzipCompressorOutputStream(raw) else raw
+        TarArchiveOutputStream(sink).use { out ->
+            for ((n, b) in entries) {
+                val e = TarArchiveEntry(n)
+                e.size = b.size.toLong()
                 out.putArchiveEntry(e)
                 out.write(b)
                 out.closeArchiveEntry()
@@ -226,6 +246,50 @@ class ComicSourceTest {
         }
     }
 
+    // ---- tar(.cbt) ------------------------------------------------------------------
+
+    /**
+     * **`.cbt` 가 열린다**(14단계). 여는 문이 예전에는 앞 16바이트의 매직(`probeContainer`)이라 tar 는 언제나
+     * '다루지 않는 형식' 이었다 — tar 의 표지는 257바이트 자리에 있다. 압축 안 한 tar 는 번호로 여는 리더다.
+     */
+    @Test
+    fun `cbt 가 자연 정렬로 열리고 번호로 읽힌다`() = runTest {
+        val f = writeTar(
+            "book.cbt",
+            listOf("10.png" to body("j"), "2.png" to body("b"), "notes.txt" to body("x"), "1.png" to body("a")),
+        )
+        open(f).use { src ->
+            assertEquals(listOf("1.png", "2.png", "10.png"), src.pages.map { it.name })
+            assertContentEquals(body("b"), src.bytes(1))
+            assertContentEquals(body("j"), src.bytes(2))
+            assertContentEquals(body("a"), src.bytes(0))
+            assertEquals(false, src.solid)
+        }
+    }
+
+    /** 압축 tar 는 흐름이라 앞에서부터 풀어야 한다 — solid 7z 와 같은 창의 길로 연다. */
+    @Test
+    fun `gzip 으로 싼 cbt 는 solid 길로 열린다`() = runTest {
+        val f = writeTar("book.cbt", listOf("1.png" to body("a"), "2.png" to body("b"), "3.png" to body("c")), gzip = true)
+        open(f).use { src ->
+            assertEquals(3, src.pages.size)
+            assertEquals(true, src.solid)
+            assertContentEquals(body("c"), src.bytes(2))
+            assertContentEquals(body("a"), src.bytes(0))
+        }
+    }
+
+    /** gzip 으로 싼 것이 tar 가 아니면(파일 하나를 `gzip` 한 것) 여전히 다루지 않는다고 말한다. */
+    @Test
+    fun `tar 가 아닌 gz 는 다루지 않는다고 말한다`() = runTest {
+        val f = File(tmp, "single.cbt")
+        GzipCompressorOutputStream(f.outputStream()).use { it.write(body("just one file", 4096)) }
+        assertEquals(
+            ComicOpen.Kind.UNSUPPORTED,
+            (ComicOpen.open(f.path, 1 shl 20) as ComicOpen.Result.Failed).kind,
+        )
+    }
+
     // ---- 열지 못하는 것 --------------------------------------------------------------
 
     @Test
@@ -307,5 +371,48 @@ class ComicSourceTest {
             for (i in 0 until 30) assertNotNull(src.bytes(i), "쪽 $i")
             assertEquals(1, src.passCount, "창이 전부 담을 수 있는데 패스가 여러 번 돌았다")
         }
+    }
+
+    /**
+     * **두 쪽 보기로 뛰어들어도 패스가 한 번이다**(14단계). 페이저가 지금 펼침 `[15,16]` 과 앞뒤 펼침 `[13,14]`·`[17,18]` 을
+     * 함께 띄운다. 오른쪽에서 왼쪽이면 화면 왼쪽(뒤 쪽 16)을 먼저 청하고, 창이 거기서 한 쪽만 물러서면 앞 칸의 13 이 창
+     * 밖이라 패스가 한 번 더 돈다 — 9단계가 한 쪽 보기에서 고친 것과 같은 모양이다.
+     */
+    @Test
+    fun `두 쪽 보기로 뛰어들어도 앞 칸 때문에 패스가 더 돌지 않는다`() = runTest {
+        val entries = (1..30).map { "%02d.png".format(it) to body("x$it", 1024) }
+        val f = writeSevenZ("spread-jump.cb7", entries)
+        val src = open(f, windowCap = 1L shl 20) as SolidComicSource
+        src.use {
+            src.setLookBehind(Spreads.lookBehind(twoUp = true))
+            // 화면이 청하는 차례: 지금 펼침(왼쪽 = 뒤 쪽 먼저) → 다음 펼침 → 앞 펼침.
+            for (page in listOf(16, 15, 17, 18, 13, 14)) {
+                assertContentEquals(body("x${page + 1}", 1024), src.bytes(page), "쪽 $page")
+            }
+            assertEquals(1, src.passCount, "앞 칸을 뜨느라 패스가 더 돌았다")
+        }
+    }
+
+    /**
+     * 두 쪽 보기로 **이어 읽을 때는** 앞 칸이 이미 떠 있으므로 창이 세 쪽씩 물러서지 않는다 — 물러서면 앞으로 담을 자리만
+     * 줄어 패스가 한 쪽 보기보다 자주 돈다. 페이저의 차례대로 청하면(가게가 뜬 쪽을 들고 있어 같은 쪽은 두 번 청하지 않는다)
+     * 두 보기의 패스 수가 같아야 한다.
+     */
+    @Test
+    fun `두 쪽 보기로 이어 읽으면 패스가 한 쪽 보기보다 많지 않다`() = runTest {
+        val entries = (1..30).map { "%02d.png".format(it) to body("y$it", 1024) }
+        val f = writeSevenZ("spread-seq.cb7", entries)
+        suspend fun passesReading(twoUp: Boolean): Int {
+            val src = open(f, windowCap = 8L * 1024) as SolidComicSource
+            src.use {
+                src.setLookBehind(Spreads.lookBehind(twoUp))
+                for (page in 0 until 30) assertContentEquals(body("y${page + 1}", 1024), src.bytes(page), "쪽 $page")
+                return src.passCount
+            }
+        }
+        val single = passesReading(twoUp = false)
+        val spread = passesReading(twoUp = true)
+        assertTrue(single > 1, "창이 작아야 이 시험이 뜻을 가진다: $single")
+        assertEquals(single, spread, "두 쪽 보기로 이어 읽는데 패스가 더 돌았다")
     }
 }

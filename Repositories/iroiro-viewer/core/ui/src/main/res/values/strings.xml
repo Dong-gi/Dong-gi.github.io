@@ -8,4 +8,13 @@
     <string name="ui_password_wrong">암호가 맞지 않습니다</string>
     <string name="ui_password_open">열기</string>
     <string name="ui_password_cancel">취소</string>
+
+    <!--
+      움직이는 그림을 첫 장면만 보여 주는 까닭(AnimationPlan.StillReason, 뜻은 StillReasonText).
+      까닭을 만드는 타입이 여기 있으므로 문구도 여기 둔다 - 화면마다 한 벌씩 두면 한쪽만 고쳐진다.
+      APNG 문구는 만화 뷰어도 이것을 쓴다(한 벌).
+    -->
+    <string name="ui_still_apng">움직이는 PNG 입니다. 첫 장면만 보여 줍니다</string>
+    <string name="ui_still_too_large">움직이는 그림이지만 너무 커서 첫 장면만 보여 줍니다</string>
+    <string name="ui_still_decode_failed">움직이는 그림을 열지 못해 첫 장면만 보여 줍니다</string>
 </resources>

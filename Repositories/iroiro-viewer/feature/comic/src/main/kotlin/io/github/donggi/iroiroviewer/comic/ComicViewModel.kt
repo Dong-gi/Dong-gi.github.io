@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.donggi.iroiroviewer.data.AppPreferences
 import io.github.donggi.iroiroviewer.data.ComicProgressEntity
 import io.github.donggi.iroiroviewer.data.IroiroDatabase
 import io.github.donggi.iroiroviewer.format.FileDocumentSource
@@ -19,12 +20,11 @@ import io.github.donggi.iroiroviewer.safety.ImageLimits
 import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -46,12 +46,12 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
     /**
      * 어떤 차례로 읽는가. 값은 DB 의 `read_direction` 에 그대로 들어간다.
      *
-     * **새 책의 기본은 언제나 [LTR] 이다.** [open] 이 첫머리에서 기본값으로 되돌리고,
-     * [restore] 가 저장된 값이 있을 때만 그 위에 얹는다 — 앞 책의 방향이 새 책으로
-     * 옮겨 가던 9단계의 결함이 그 순서로 고쳐졌다.
+     * **새 책은 설정의 기본 방향으로 연다**(14단계, `AppPreferences.comicDefaultDirection` — 설정이 없으면 [LTR]).
+     * [open] 이 첫머리에서 [LTR] 로 되돌리고, [restore] 가 저장된 값이 있으면 그것을, 없으면 설정의 기본값을
+     * `Ready` 전에 얹는다([ReadingStart]) — 앞 책의 방향이 새 책으로 옮겨 가던 9단계의 결함이 그 순서로 고쳐졌다.
      */
     enum class Direction(val code: Int) {
-        /** 왼쪽에서 오른쪽. 서양 만화·일반 이미지 묶음. **새 책의 기본값이다.** */
+        /** 왼쪽에서 오른쪽. 서양 만화·일반 이미지 묶음. 설정이 없을 때의 기본값이다. */
         LTR(0),
 
         /** 오른쪽에서 왼쪽. 일본 만화의 기본이다. */
@@ -72,19 +72,44 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
         val pageCount: Int,
         val solid: Boolean,
         val store: ComicPageStore,
+        /**
+         * 책이 **보통 파일**이면 그 경로, 폴더면 null. '다른 앱으로 열기' 가 넘길 것이다([ComicOpenWith]) — 폴더는 다른
+         * 앱에 넘길 파일이 아니다. 상태에 함께 싣는 것은 화면이 경로와 종류를 **다른 곳에서** 받아 짝짓지 않게 하려는 것이다.
+         */
+        val file: String?,
     )
 
     sealed interface State {
         data object Loading : State
         data class Ready(val book: Book) : State
-        data class Failed(val kind: ComicOpen.Kind) : State
+
+        /** @param file [Book.file] 과 같다 — 못 연 책이 보통 파일이면 그 경로, 폴더거나 파일이 없으면 null. */
+        data class Failed(val kind: ComicOpen.Kind, val file: String?) : State
     }
 
-    /** 화면에 한 번만 전하는 것. 상태로 두면 회전할 때마다 다시 뜬다. */
+    /**
+     * 화면에 한 번만 전하는 것. 상태로 두면 회전할 때마다 다시 뜬다.
+     *
+     * **둘 다 어느 책에서 낸 것인지 싣는다**(14단계). 다음 권은 뷰어를 닫지 않고 책을 바꾸므로, 앞 책의 알림이 새 책
+     * 위에 남거나 늦게 배달될 수 있다 — 화면이 [isCurrent] 로 걸러 내고, 책이 바뀌면 떠 있는 알림을 걷는다
+     * (`showWhileCurrent`). 경로로는 **같은 책을 닫았다 다시 연 것**이 가려지지 않으므로, 열고 닫을 때 아직 받지 않은
+     * 것을 버린다([BookEvents.discardPending]).
+     */
     sealed interface Event {
         /** 저장된 쪽에서 이어 열었다. 화면이 '처음부터' 를 권한다. */
-        data class Resumed(val page: Int) : Event
+        data class Resumed(val fromPath: String, val page: Int) : Event
+
+        /**
+         * 책의 끝에 닿았고 같은 폴더에 다음 권이 있다(14단계). 화면이 '열기' 를 권한다.
+         *
+         * 채널은 버퍼를 들고 있어 늦게 배달될 수 있다 — 그 사이 책이 바뀌었으면 화면이 [isCurrent] 로 걸러 버린다
+         * (9단계 뒤 감사의 '다음 문서의 화면에 배달한다' 와 같은 자리).
+         */
+        data class NextOffer(val fromPath: String, val name: String) : Event
     }
+
+    /** 같은 폴더의 다음 권. 이름은 목록의 책 이름과 같은 규칙(폴더는 그대로, 파일은 확장자를 뗀다)이다. */
+    data class NextBook(val path: String, val name: String)
 
     private val _state = MutableStateFlow<State>(State.Loading)
     val state: StateFlow<State> = _state.asStateFlow()
@@ -95,14 +120,49 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
     private val _direction = MutableStateFlow(Direction.LTR)
     val direction: StateFlow<Direction> = _direction.asStateFlow()
 
-    private val events = Channel<Event>(Channel.BUFFERED)
-    val eventFlow = events.receiveAsFlow()
+    /**
+     * 한 쪽 / 두 쪽 / 자동(14단계). **책을 바꿔도 남긴다** — 방향과 달리 책의 성질이 아니라 읽는 사람의 자세
+     * (기기를 눕혔는가)에 따른 선택이라, 책마다 되돌리면 권을 넘길 때마다 다시 골라야 한다. 앱 전체의 설정으로 남긴다
+     * (`AppPreferences.comicPageLayout` — 처음에는 세션 동안만 남아 앱을 다시 켜면 자동으로 돌아갔다).
+     */
+    private val _layout = MutableStateFlow(PageLayout.AUTO)
+    val layout: StateFlow<PageLayout> = _layout.asStateFlow()
+
+    private val _next = MutableStateFlow<NextBook?>(null)
+
+    /** 같은 폴더의 다음 권. 없거나 아직 모르면 null — 화면이 메뉴를 감춘다. */
+    val next: StateFlow<NextBook?> = _next.asStateFlow()
+
+    private val events = BookEvents<Event>()
+    val eventFlow = events.flow
+
+    private val prefs = AppPreferences(app)
+
+    /** 사용자가 이 화면에서 배치를 골랐다 — 늦게 끝난 설정 읽기가 그것을 덮지 않게. */
+    private var layoutChosen = false
+
+    init {
+        viewModelScope.launch {
+            val saved = try {
+                prefs.comicPageLayout.first()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                null
+            }
+            if (saved != null && !layoutChosen) _layout.value = PageLayout.entries.getOrElse(saved) { PageLayout.AUTO }
+        }
+    }
 
     private var opened: Opened? = null
     private var source: ComicSource? = null
     private var loadJob: Job? = null
     private var saveJob: Job? = null
+    private var nextJob: Job? = null
     private var key: String? = null
+
+    /** 다음 권을 언제 권하는가 — 끝에 닿았고 찾았을 때, 책마다 한 번([NextOfferGate]). */
+    private val offerGate = NextOfferGate()
     private var pageIndex: List<io.github.donggi.iroiroviewer.format.archive.ComicPage> = emptyList()
 
     /**
@@ -141,18 +201,31 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
         lastStartEntry = startEntryIndex
         _asking.value = null
 
+        // **앞 책의 마지막 쪽을 여기서 쓴다.** 다음 권으로 곧바로 넘어가는 길은 [close] 를 거치지 않는다 — 모아 쓰기
+        // ([scheduleSave])가 아직 기다리는 중이면 아래에서 `key` 를 지우는 순간 그 쓰기는 아무것도 쓰지 않게 되고,
+        // 앞 책의 이어보기가 끝에서 몇 쪽 앞으로 남는다. [close] 뒤라면 상태가 이미 비어 있어 아무것도 쓰지 않는다.
+        saveJob?.cancel()
+        snapshot()?.let { pending -> viewModelScope.launch { save(pending) } }
+        // 앞 책이 낸 알림 가운데 화면이 아직 받지 않은 것(이어보기·다음 권)은 새 책의 것이 아니다.
+        events.discardPending()
+
         loadJob?.cancel()
+        nextJob?.cancel()
         closeSource()
         opened = want
         _state.value = State.Loading
         // **새 책은 기본값에서 시작한다.** ViewModel 은 액티비티에 묶여 있어 책을 바꿔도
         // 같은 객체가 남는다. 되돌리지 않으면 **앞 책의 읽던 쪽과 읽는 방향이 새 책에
         // 그대로 옮겨 간다** — 실제로 세로 스크롤로 보던 웹툰을 닫고 연 만화가 세로
-        // 모드로 열려서 좌우로 밀리지 않았다(기기에서 잡았다).
+        // 모드로 열려서 좌우로 밀리지 않았다(기기에서 잡았다). 설정의 기본 방향은 코루틴에서
+        // 읽어 `Ready` 전에 얹는다([restore]) — 그동안 화면은 '여는 중' 이라 방향을 그리지 않는다.
         _page.value = 0
         _direction.value = Direction.LTR
         key = null
         pageIndex = emptyList()
+        // 다음 권도 앞 책의 것이다.
+        _next.value = null
+        offerGate.reset()
 
         loadJob = viewModelScope.launch {
             val budget = budget ?: defaultBudget()
@@ -161,7 +234,8 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
             var orphan: ComicSource? = null
             // 이번 세션에 이 파일의 암호를 넣었으면 그것으로 연다(사본 — 끝나면 지운다).
             // 압축 목록에서 암호를 넣고 그림 항목을 누른 길이 이것이다.
-            val password = if (file.isFile) SessionPasswords.get(SessionPasswords.keyOf(file)) else null
+            val isFile = file.isFile
+            val password = if (isFile) SessionPasswords.get(SessionPasswords.keyOf(file)) else null
             try {
                 val result = ComicOpen.open(path, ComicLimits.windowBytes(budget), password = password) { orphan = it }
                 when (result) {
@@ -171,7 +245,7 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
                             if (password != null) SessionPasswords.forget(SessionPasswords.keyOf(file))
                             _asking.value = false
                         }
-                        _state.value = State.Failed(result.kind)
+                        _state.value = State.Failed(result.kind, file = path.takeIf { isFile })
                     }
                     is ComicOpen.Result.Ready -> {
                         source = result.source
@@ -184,6 +258,8 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
                             pageCount = store.pageCount,
                             solid = result.source.solid,
                             store = store,
+                            // 폴더가 아니면 아카이브 파일로 열린 것이다(`ComicOpen.open` 이 `isFile` 을 확인했다).
+                            file = if (file.isDirectory) null else path,
                         )
                         pageIndex = result.source.pages
                         // **읽는 방향은 어느 길로 들어오든 되살린다.** 쪽만 갈린다 —
@@ -198,6 +274,7 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
                         // 이기고 지는 것이 DB 읽기와 첫 컴포지션의 경주라 재현이 들쭉날쭉하다.
                         // 순서를 뒤집으면 페이저가 처음부터 옳은 쪽에 서므로 경주 자체가 없다.
                         _state.value = State.Ready(book)
+                        findNext(path)
                     }
                 }
             } finally {
@@ -265,6 +342,8 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
                         t.javaClass.simpleName.contains("Encrypt") -> ComicOpen.Kind.ENCRYPTED
                         else -> ComicOpen.Kind.CORRUPT
                     },
+                    // 암호는 파일에만 걸린다. 그새 지워졌으면 넘길 것이 없다.
+                    file = path.takeIf { file.isFile },
                 )
             } finally {
                 password.fill('\u0000')
@@ -302,12 +381,101 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
             Iro.d(TAG) { "이어보기를 읽지 못했다: ${e.javaClass.simpleName}" }
             null
         }
-        if (saved != null) {
-            // 저장된 값이 있으면 그것이 이긴다. 없으면 위에서 넣어 둔 기본값 그대로다.
-            _direction.value = Direction.of(saved.readDirection)
-            if (resumePage && saved.pageCount == book.pageCount && saved.page in 1 until book.pageCount) {
-                _page.value = saved.page
-                events.trySend(Event.Resumed(saved.page))
+        // 저장된 값이 있으면 그것이 이긴다. 없으면 **설정의 기본 방향**이다(14단계). 설정은 기록이 없을 때만 읽는다 —
+        // 기록이 있는 책에는 쓰이지 않는 값이다.
+        val start = ReadingStart.decide(
+            saved = saved?.let { ReadingStart.Saved(it.page, it.pageCount, it.readDirection) },
+            pageCount = book.pageCount,
+            resumePage = resumePage,
+            defaultDirection = if (saved == null) defaultDirection() else Direction.LTR.code,
+        )
+        _direction.value = start.direction
+        if (start.resumed) {
+            _page.value = start.page
+            events.offer(Event.Resumed(book.path, start.page))
+        }
+    }
+
+    /**
+     * 설정의 기본 방향. **읽지 못하면 왼쪽에서 오른쪽**이다 — 설정 파일이 깨졌다고 책이 안 열리면 안 된다.
+     * [restore] 의 DB 읽기와 같은 이유로 `runCatching` 을 쓰지 않는다(취소를 삼킨다).
+     */
+    private suspend fun defaultDirection(): Int = try {
+        prefs.comicDefaultDirection.first()
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Iro.d(TAG) { "기본 방향을 읽지 못했다: ${e.javaClass.simpleName}" }
+        Direction.LTR.code
+    }
+
+    /**
+     * 같은 폴더의 다음 권을 찾는다(14단계). 책이 열린 **뒤에** 따로 돈다 — 폴더를 나열하는 값이 책을 여는 시간에
+     * 더해지지 않게 한다. 찾는 동안 책이 바뀌었으면 결과를 버린다.
+     */
+    private fun findNext(path: String) {
+        nextJob?.cancel()
+        // 경로 글자를 그대로 든다 — [opened] 와 견줄 값이다(`File.path` 는 끝의 `/` 를 떼어 글자가 달라질 수 있다).
+        val book = File(path)
+        nextJob = viewModelScope.launch {
+            val showHidden = try {
+                prefs.showHidden.first()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                false
+            }
+            val found = withContext(IroDispatchers.io) {
+                try {
+                    NextVolume.find(book, showHidden)
+                } catch (e: SecurityException) {
+                    null
+                } catch (e: java.io.IOException) {
+                    null
+                }
+            }
+            if (opened?.path != path) return@launch
+            val next = found?.let { NextBook(it.path, if (it.isDirectory) it.name else it.nameWithoutExtension) }
+            _next.value = next
+            if (offerGate.onFound(next != null)) offerNext()
+        }
+    }
+
+    /**
+     * 화면이 책의 끝(마지막 쪽이 든 펼침, 세로 모드는 더 내릴 곳이 없을 때)에 닿았다고 알린다.
+     * 다음 권이 있으면 **한 번** 권한다. 아직 찾는 중이면 찾은 뒤에 권한다([NextOfferGate]).
+     */
+    fun onReachedEnd() {
+        if (_state.value !is State.Ready) return
+        if (offerGate.onReachedEnd()) offerNext()
+    }
+
+    private fun offerNext() {
+        val next = _next.value ?: return
+        val from = opened?.path ?: return
+        events.offer(Event.NextOffer(from, next.name))
+    }
+
+    /** 이 경로가 지금 열린 책인가. 늦게 배달된 알림을 화면이 거른다. */
+    fun isCurrent(path: String): Boolean = opened?.path == path
+
+    /**
+     * [fromPath] 가 아직 지금 책이면 그 다음 권의 경로. 화면이 그 경로로 **여느 책과 같은 길**([open])을 탄다 —
+     * 상태를 되돌리고 이어보기를 되살리는 일이 그 길에만 있다.
+     */
+    fun nextPathFrom(fromPath: String): String? =
+        if (opened?.path == fromPath) _next.value?.path else null
+
+    fun setLayout(value: PageLayout) {
+        layoutChosen = true
+        _layout.value = value
+        viewModelScope.launch {
+            try {
+                prefs.setComicPageLayout(value.ordinal)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // 남기지 못해도 이 세션의 배치는 그대로다.
             }
         }
     }
@@ -405,12 +573,17 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
         // onCleared 까지 미루면 다음 책을 여는 사이에 취소될 수 있어 여기서 쓴다.
         viewModelScope.launch { save(pending) }
         loadJob?.cancel()
+        nextJob?.cancel()
         closeSource()
         opened = null
         key = null
         _page.value = 0
         _state.value = State.Loading
         _asking.value = null
+        _next.value = null
+        offerGate.reset()
+        // 줄에 남은 알림은 수집기(화면)와 함께 사라지지 않는다 — 버리지 않으면 다음에 뷰어를 열 때 배달된다.
+        events.discardPending()
     }
 
     override fun onCleared() {

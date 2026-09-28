@@ -18,11 +18,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +58,7 @@ import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.io.ShareHelper
 import io.github.donggi.iroiroviewer.io.StorageAccess
 import io.github.donggi.iroiroviewer.model.FileEntry
+import io.github.donggi.iroiroviewer.settings.SettingsScreen
 import io.github.donggi.iroiroviewer.text.TextViewerScreen
 import io.github.donggi.iroiroviewer.ui.IroiroTheme
 import kotlinx.coroutines.withTimeoutOrNull
@@ -154,6 +163,9 @@ private fun Root(modifier: Modifier = Modifier) {
     // `showSnackbar` 가 영영 돌아오지 않아 그 뒤 모든 결과가 막힌다. 그 하나에 기대지
     // 않으려고 시간 상한도 함께 건다 — 보험이 싸다.
     val undoLabel = stringResource(io.github.donggi.iroiroviewer.browser.R.string.browser_undo)
+    // 풀기가 끝나면 푼 폴더로 가는 단추(8단계가 14단계로 미룬 것). 갈 곳이 있는지는 결과가 정한다
+    // (`FileOpManager.Finished.folderToOpen` — 하나도 못 풀고 실패했으면 없다).
+    val openFolderLabel = stringResource(io.github.donggi.iroiroviewer.browser.R.string.browser_open_folder)
     // **`context.getString` 을 컴포저블 안에서 부르지 않는다.** 그 값은 구성 변경을
     // 따라가지 않아 언어를 바꿔도 옛 문자열이 남는다(lint `LocalContextGetResourceValueCall`).
     val appName = stringResource(R.string.app_name)
@@ -161,13 +173,30 @@ private fun Root(modifier: Modifier = Modifier) {
         vm.opResults.collect { finished ->
             vm.onOperationFinished(finished)
             val trashed = (finished.extra as? FileOpManager.Extra.Trashed)?.uuids
+            val openable = vm.folderToOpen(finished)
+            val action = when {
+                !trashed.isNullOrEmpty() -> undoLabel
+                openable != null -> openFolderLabel
+                else -> null
+            }
             val result = withTimeoutOrNull(10_000) {
                 vm.snackbar.showSnackbar(
                     message = opResultMessage(context, finished),
-                    actionLabel = if (!trashed.isNullOrEmpty()) undoLabel else null,
+                    actionLabel = action,
+                    // 동작 단추를 붙이면 기본 기간이 무기한이 된다(CLAUDE.md 함정 표) — 손으로 적는다.
+                    duration = if (action != null) SnackbarDuration.Long else SnackbarDuration.Short,
                 )
             }
-            if (result == SnackbarResult.ActionPerformed && trashed != null) vm.undoTrash(trashed)
+            if (result == SnackbarResult.ActionPerformed) {
+                when {
+                    !trashed.isNullOrEmpty() -> vm.undoTrash(trashed)
+                    openable != null -> {
+                        // 압축 화면에서 풀었을 수 있다 — 브라우저로 돌아가 그 폴더를 연다.
+                        vm.openFolder(openable)
+                        screen = AppScreen.Browser
+                    }
+                }
+            }
         }
     }
 
@@ -186,9 +215,36 @@ private fun Root(modifier: Modifier = Modifier) {
 
     when (val s = screen) {
         is AppScreen.Diag -> {
-            BackHandler { screen = AppScreen.Browser }
-            Scaffold(modifier = Modifier.fillMaxSize()) { inner ->
+            // 돌아갈 곳은 연 자리가 정한다 — 첫 화면이면 첫 화면, 설정이면 설정(`AppScreen.Diag.back`).
+            BackHandler { screen = s.back }
+            // 진단 화면은 제목 막대가 없다(`feature:diag` 는 목록만 그린다). 설정에서 들어온 사람이 돌아갈 길을 눈으로
+            // 찾을 수 있게 여기서 막대를 씌운다. **스낵바는 여기 하나** — Root 불변식(위 `vm.opResults` 주석).
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                snackbarHost = { SnackbarHost(vm.snackbar) },
+                topBar = { BackTopBar(stringResource(R.string.diag_screen_title)) { screen = s.back } },
+            ) { inner ->
                 DiagScreen(Modifier.padding(inner).consumeWindowInsets(inner))
+            }
+        }
+
+        is AppScreen.Settings -> {
+            BackHandler { screen = AppScreen.Browser }
+            // 첫 화면과 같은 모양 — 바깥 Scaffold 는 인셋만 소비하고, 제목 막대와 **스낵바는 설정 화면의 Scaffold 가**
+            // 든다. 둘 다 `vm.snackbar` 에 붙이면 같은 알림이 두 번 그려진다.
+            Scaffold(modifier = Modifier.fillMaxSize()) { inner ->
+                SettingsScreen(
+                    appVersion = stringResource(
+                        R.string.app_version_value,
+                        BuildConfig.VERSION_NAME,
+                        BuildConfig.VERSION_CODE,
+                    ),
+                    snackbar = vm.snackbar,
+                    onBack = { screen = AppScreen.Browser },
+                    onOpenNotice = { screen = AppScreen.Notice(back = AppScreen.Settings) },
+                    onOpenDiagnostics = { screen = AppScreen.Diag(back = AppScreen.Settings) },
+                    modifier = Modifier.padding(inner).consumeWindowInsets(inner),
+                )
             }
         }
 
@@ -230,7 +286,8 @@ private fun Root(modifier: Modifier = Modifier) {
                             conflict = conflict,
                         )
                     },
-                    onOpenNotice = { screen = AppScreen.Notice },
+                    // 고지에서 뒤로 가면 이 압축 목록으로 돌아온다(예전에는 첫 화면으로 떨어졌다).
+                    onOpenNotice = { screen = AppScreen.Notice(back = s) },
                     // 압축 목록의 그림을 탭하면 만화 뷰어가 그 쪽에서 열린다.
                     onOpenImageEntry = { index -> screen = AppScreen.Comic(s.path, index) },
                     modifier = Modifier.padding(inner).consumeWindowInsets(inner),
@@ -239,8 +296,13 @@ private fun Root(modifier: Modifier = Modifier) {
         }
 
         is AppScreen.Notice -> {
-            BackHandler { screen = AppScreen.Browser }
-            Scaffold(modifier = Modifier.fillMaxSize()) { inner ->
+            BackHandler { screen = s.back }
+            // 스낵바는 여기 하나 — 고지 화면 자신은 알림을 띄울 일이 없지만 Root 불변식은 모든 화면에 걸린다.
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                snackbarHost = { SnackbarHost(vm.snackbar) },
+                topBar = { BackTopBar(stringResource(R.string.notice_title)) { screen = s.back } },
+            ) { inner ->
                 NoticeScreen(Modifier.padding(inner).consumeWindowInsets(inner))
             }
         }
@@ -270,6 +332,8 @@ private fun Root(modifier: Modifier = Modifier) {
                 snackbar = vm.snackbar,
                 onClose = { screen = AppScreen.Browser },
                 startEntryIndex = s.entryIndex,
+                // 다음 권으로 넘어가면 앱의 화면 상태도 그 책을 가리키게 — 프로세스가 죽었다 살아나도 보던 책으로 돌아온다.
+                onOpenBook = { next -> screen = AppScreen.Comic(next, -1) },
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -292,7 +356,8 @@ private fun Root(modifier: Modifier = Modifier) {
             Scaffold(modifier = Modifier.fillMaxSize()) { inner ->
                 BrowserScreen(
                     vm = vm,
-                    onOpenDiagnostics = { screen = AppScreen.Diag },
+                    onOpenDiagnostics = { screen = AppScreen.Diag() },
+                    onOpenSettings = { screen = AppScreen.Settings },
                     onOpenImage = { entries, start ->
                         viewerEntries = entries
                         screen = AppScreen.Viewer(entries[start].path)
@@ -309,85 +374,20 @@ private fun Root(modifier: Modifier = Modifier) {
 }
 
 /**
- * 지금 보고 있는 화면.
- *
- * **`navigation-compose` 를 들이지 않는다.** 화면이 셋이고 백스택이 한 겹인데, 그 라이브러리의
- * 지금 권장 형태인 타입 안전 라우트는 `kotlin.plugin.serialization` 과
- * `kotlinx-serialization-json` 을 요구한다 — 둘 다 이 저장소의 버전 카탈로그에 없다.
- * 경로를 라우트 문자열에 넣으려면 임의의 유니코드와 `/` 를 인코딩해야 하는 문제도 그대로다.
+ * 뒤로 가는 화살표가 있는 제목 막대 — 스스로 막대를 그리지 않는 화면(고지·진단)에 `app` 이 씌운다.
+ * 시스템 뒤로가기와 **같은 곳**으로 간다(부르는 쪽이 같은 람다를 넘긴다).
  */
-private sealed interface AppScreen {
-    data object Browser : AppScreen
-    data object Diag : AppScreen
-
-    /**
-     * 이미지 뷰어. **저장 상태에는 시작 경로 하나만** 남긴다.
-     *
-     * 목록 전체를 담으면 사진이 많은 폴더에서 번들이 MB 단위가 되고
-     * `TransactionTooLargeException` 으로 죽는다.
-     */
-    data class Viewer(val startPath: String) : AppScreen
-
-    /** 텍스트 뷰어. 목록이 필요 없어 경로 하나가 전부다. */
-    data class Text(val path: String) : AppScreen
-
-    /** 압축 파일 탐색. 아카이브 안 폴더 위치는 화면이 들고 있으므로 여기에는 경로만 남는다. */
-    data class Archive(val path: String) : AppScreen
-
-    /**
-     * 만화 뷰어. 경로와 **엔트리 번호**뿐이다.
-     *
-     * 쪽 목록을 저장 상태에 담지 않는다 — 300쪽짜리 이름 목록이 번들에 들어가고,
-     * 그것은 뷰어에 사진 목록을 담았을 때와 같은 형태의 `TransactionTooLargeException`
-     * 이다. 프로세스가 죽었다 살아나면 목록은 다시 만들고, 읽던 쪽은 이어보기가 안다.
-     */
-    data class Comic(val path: String, val entryIndex: Int) : AppScreen
-
-    /**
-     * 문서 뷰어. 경로 하나가 전부다.
-     *
-     * 쪽 수도 읽던 쪽도 담지 않는다 — 쪽 수는 문서를 열면 곧 알고, 읽던 쪽은
-     * `doc_progress` 가 안다. 만화 뷰어가 쪽 목록을 담지 않기로 한 것과 같은 판단이다.
-     */
-    data class Doc(val path: String) : AppScreen
-
-    /** 오픈소스 고지. 라이선스가 요구하는 화면이라 어디서든 닿아야 한다. */
-    data object Notice : AppScreen
-
-    companion object {
-        val Saver: androidx.compose.runtime.saveable.Saver<AppScreen, Any> =
-            androidx.compose.runtime.saveable.Saver(
-                save = {
-                    when (it) {
-                        is Browser -> "b"
-                        is Diag -> "d"
-                        is Viewer -> "v:" + it.startPath
-                        is Text -> "t:" + it.path
-                        is Archive -> "a:" + it.path
-                        is Comic -> "c:" + it.entryIndex + ":" + it.path
-                        is Doc -> "p:" + it.path
-                        is Notice -> "n"
-                    }
-                },
-                restore = {
-                    val v = it as String
-                    when {
-                        v == "d" -> Diag
-                        v.startsWith("v:") -> Viewer(v.removePrefix("v:"))
-                        v.startsWith("t:") -> Text(v.removePrefix("t:"))
-                        v.startsWith("a:") -> Archive(v.removePrefix("a:"))
-                        v.startsWith("c:") -> {
-                            val rest = v.removePrefix("c:")
-                            val at = rest.indexOf(':')
-                            Comic(rest.substring(at + 1), rest.substring(0, at).toIntOrNull() ?: -1)
-                        }
-                        v.startsWith("p:") -> Doc(v.removePrefix("p:"))
-                        v == "n" -> Notice
-                        else -> Browser
-                    }
-                },
-            )
-    }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BackTopBar(title: String, onBack: () -> Unit) {
+    TopAppBar(
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.app_back))
+            }
+        },
+        title = { Text(title) },
+    )
 }
 
 /** 프로세스가 죽었다 살아났을 때 쓰는 한 장짜리 폴백. */

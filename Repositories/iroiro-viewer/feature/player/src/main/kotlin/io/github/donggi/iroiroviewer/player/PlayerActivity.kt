@@ -40,7 +40,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -63,6 +66,7 @@ import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -79,6 +83,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import androidx.media3.common.Player
+import io.github.donggi.iroiroviewer.io.ExternalOpen
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.model.FileKind
 import io.github.donggi.iroiroviewer.playback.AbRepeat
@@ -139,6 +144,15 @@ import io.github.donggi.iroiroviewer.ui.IroiroTheme
  * 4. **화면과 PiP 판정이 같은 값을 읽는다.** 재생목록의 여닫음은 컴포지션이 아니라
  *    액티비티가 들고([playlistChoice]) [playlistShown] 한 함수가 답한다 — 갈라 놓으면
  *    '목록이 펼쳐져 있으면 PiP 에 들어가지 않는다' 가 코드로 성립하지 않는다.
+ *
+ * ## 이 앱이 못 트는 파일 — 다른 앱으로 넘긴다
+ *
+ * 재생이 '이 기기·이 앱이 못 튼다' 로 끝나면(코덱·추출기가 없다, 잠겼다) 실패 문구 곁에 '다른 앱으로 열기' 를 단다.
+ * 조작부 둘째 줄 끝의 ⋮ 에도 지금 항목을 넘기는 줄이 있다. 둘 다 고르는 창이고, 띄웠으면 우리 재생은 **멈춘다**(끝내지는
+ * 않는다). 무엇에 다는가·언제 멈추는가는 [PlayerOpenWith], 경로를 찾는 것은 [ItemPaths], 넘기는 것은 [openWithOtherApp] 이다.
+ * 곡이 바뀌면 앞 곡의 실패는 커넥션이 버린다(`PlaybackConnection.State.carriedFailure`) — 이 화면이 보는 실패는 언제나
+ * 지금 곡의 것이다. **PiP 에서는 서지 않는다** — 불변식 1 의 예외(창을 닫으면 멈춘다)와 같은 이유로, 작은 창에는 영상 말고
+ * 아무것도 없다.
  */
 class PlayerActivity : ComponentActivity() {
 
@@ -247,6 +261,9 @@ class PlayerActivity : ComponentActivity() {
      */
     private var stoppedWhileInPip = false
 
+    /** 큐 항목의 파일 경로를 찾는 읽기 전용 컨트롤러. [onCreate] 에서 붙고 [onDestroy] 에서 놓는다. */
+    private lateinit var itemPaths: ItemPaths
+
     /**
      * PiP 파라미터 한 벌. **`data class` 인 것이 요점이다** — 값이 실제로 바뀔 때만
      * 시스템을 부른다. 레이아웃마다 부르면 조작부가 나타났다 사라질 때마다 바인더 호출이 난다.
@@ -290,6 +307,8 @@ class PlayerActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PlaybackConnection.connect(this)
+        // 누르는 순간 경로가 있어야 한다(`ExternalOpen.open` 은 동기다). 붙는 데 걸리는 시간을 여기서 미리 쓴다.
+        itemPaths = ItemPaths(this)
         receive(intent)
         followDeviceRotationWhileVideo()
         keepPipParamsFresh()
@@ -324,9 +343,55 @@ class PlayerActivity : ComponentActivity() {
                     orientationLocked = locked != null,
                     onToggleOrientationLock = ::toggleOrientationLock,
                     onVideoBounds = { videoBounds.value = it },
+                    onOpenWith = ::openWithOtherApp,
                 )
             }
         }
+    }
+
+    override fun onDestroy() {
+        itemPaths.close()
+        super.onDestroy()
+    }
+
+    /**
+     * 큐 항목 하나([mediaId])를 **다른 앱으로** 넘긴다. 언제나 고르는 창이다 — 누른 사람이 '다른 앱으로' 라고 말했다.
+     *
+     * 메인 스레드에서 이 액티비티를 컨텍스트로 부른다(컴포지션의 `LocalContext` 가 곧 이 액티비티다) — 받는 앱의 화면이 우리
+     * 태스크 위에 쌓여 뒤로 가면 이 재생 화면으로 돌아온다. 결과는 화면이 우리 문장으로 알린다.
+     *
+     * ## 넘기는 동안 PiP 자동 진입을 끈다
+     *
+     * 영상을 트는 중이면 PiP 계획의 자동 진입이 켜져 있고, 그 판정은 **우리가 멈추는 모든 길**에 걸린다([keepPipParamsFresh]
+     * 의 주석 — 다른 앱 실행도 그 길이다). 그대로 두면 VLC 가 뜨는 순간 우리 영상이 작은 창으로 떠 **두 재생기가 한 화면에**
+     * 선다. 고르는 창은 반투명이라 그것만으로는 걸리지 않을 것이지만(플랫폼 소스로 읽은 추측이다 — 기기에서 확인하지 않았다),
+     * 고른 앱이 곧장 뜨는 길(받는 앱이 하나면 고르는 창이 스스로 넘긴다)과 기기마다의 차이를 다 읽을 수는 없다. 그래서 띄우기
+     * **전에** 끄고, 띄우지 못했으면 되돌린다. 띄웠으면 곧 멈추므로 흐름이 새로 낸 계획도 자동 진입이 꺼져 있다. 같은 까닭으로
+     * [onUserLeaveHint] 가 화면을 미리 접지도 않는다(그것은 [lastPipPlan] 을 읽는다).
+     *
+     * 파라미터 갱신과 액티비티 시작이 시스템에 **이 차례로 닿는다는 보장은 없다**(서로 다른 바인더다). 이것은 두 번째 방어다.
+     */
+    private fun openWithOtherApp(mediaId: String): ExternalOpen.Result {
+        // PiP 창에서는 우리 UI 를 누를 수 없다. 그래도 넘기는 길 자체가 PiP 를 모르지 않게 한 번 더 막는다.
+        if (pipActive.value || isInPictureInPictureMode) return ExternalOpen.Result.FAILED
+        val path = itemPaths.pathOf(mediaId) ?: return ExternalOpen.Result.FAILED
+        val plan = lastPipPlan
+        val holdPip = pipSupported && plan.autoEnter
+        if (holdPip) {
+            lastPipPlan = plan.copy(autoEnter = false)
+            setPictureInPictureParams(paramsOf(lastPipPlan))
+        }
+        val result = ExternalOpen.open(this, path, ExternalOpen.Mode.CHOOSE)
+        if (PlayerOpenWith.pausesAfter(result)) {
+            // 같은 파일을 저쪽에서 본다 — 둘이 함께 소리를 내지 않게. 끝내지 않는다(큐·위치·미니 바가 남는다).
+            PlaybackConnection.pause()
+        } else if (holdPip) {
+            // 띄우지 못했다. 흐름은 계획이 바뀔 때만 다시 거므로(`distinctUntilChanged`) 여기서 되돌리지 않으면 자동
+            // 진입이 꺼진 채로 남는다.
+            lastPipPlan = plan
+            setPictureInPictureParams(paramsOf(plan))
+        }
+        return result
     }
 
     override fun onNewIntent(intent: android.content.Intent) {
@@ -704,6 +769,8 @@ private fun PlayerScreen(
     orientationLocked: Boolean,
     onToggleOrientationLock: () -> Unit,
     onVideoBounds: (Rect) -> Unit,
+    /** 큐 항목(`mediaId`)을 다른 앱으로 넘긴다. 결과를 이 화면이 알린다. */
+    onOpenWith: (String) -> ExternalOpen.Result,
 ) {
     val state by PlaybackConnection.state.collectAsStateWithLifecycle()
     var scrubbing by remember { mutableStateOf<Float?>(null) }
@@ -719,6 +786,9 @@ private fun PlayerScreen(
     var abNote by remember { mutableStateOf<AbRepeat.Result?>(null) }
     // 화면 속 화면에 들어가지 못했다(사용자가 껐거나 다른 PiP 가 떠 있다).
     var pipFailed by remember { mutableStateOf(false) }
+    // 다른 앱으로 넘기지 못했다 — 알릴 **우리 문장**(`ExternalOpen.messageOf`). 이 화면에는 스낵바가 없고(앱의 것은 다른
+    // 액티비티에 있다) 방금 누른 것의 답은 아래 '잠깐 뜨는 안내' 자리가 말한다 — PiP 실패와 같은 자리다.
+    var handoffNote by remember { mutableStateOf<Int?>(null) }
     // **안내에 번호를 붙인다.** 같은 결과를 두 번 내면(`구간이 너무 짧습니다` 를 두 번)
     // 값이 같아 `LaunchedEffect` 의 키가 바뀌지 않고, 그러면 **첫 번째 타이머가 그대로
     // 흘러 두 번째 안내가 곧바로 사라진다.** 10단계가 `MutableStateFlow` 에서 같은 형태를
@@ -747,6 +817,14 @@ private fun PlayerScreen(
     val abText = abSymbol()
     val background = if (showingVideo) Color.Black else MaterialTheme.colorScheme.background
     val onBackground = if (showingVideo) Color.White else MaterialTheme.colorScheme.onSurface
+
+    // 다른 앱으로 넘긴다. 띄웠으면 말할 것이 없고(STARTED), 못 띄웠으면 우리 문장을 잠깐 띄운다.
+    val openWith: (String) -> Unit = { key ->
+        ExternalOpen.messageOf(onOpenWith(key))?.let {
+            handoffNote = it
+            noteSeq++
+        }
+    }
 
     // **조작부를 Column 의 한 칸이 아니라 위에 겹친다.**
     //
@@ -853,22 +931,53 @@ private fun PlayerScreen(
 
         // **여기서 죽으면 여기서 말한다.** 실패 문구는 5단계부터 있었지만 읽는 곳이
         // 파일 목록뿐이라, 재생 화면에 들어와 있는 동안 디코더가 죽으면 빈 화면만 남았다.
-        // 소비(`consumeFailure`)는 하지 않는다 — 나가면 목록이 한 번 더 말해 주고, 다음
-        // 곡을 걸면 `PlaybackConnection` 이 스스로 지운다.
+        // 소비(`consumeFailure`)는 하지 않는다 — 나가면 목록이 한 번 더 말해 주고, 새로
+        // 틀면 `PlaybackConnection` 이 스스로 지운다. 큐 안에서 다음 곡으로 넘어가면 커넥션이
+        // 앞 곡의 실패를 버린다(`State.carriedFailure`) — 여기 뜨는 실패는 언제나 지금 곡의 것이다.
         if (inPip) return@Box
         state.failure?.let { failure ->
-            Text(
-                text = playbackFailureText(failure),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.White,
+            // **이 앱이 못 트는 것이면 곁에 '다른 앱으로 열기'.** 넘기는 것은 지금 항목이다 — 실패와 항목을 같은 상태 한
+            // 벌에서 읽으므로 둘이 어긋나지 않는다([PlayerOpenWith.failureTarget]).
+            val handoff = PlayerOpenWith.failureTarget(failure, state.fileKey)
+            // **글과 단추를 한 줄에 놓는다.** 세로로 쌓으면 판이 단추 높이만큼 위로 자라, 가로 폰에서 조작부 판 +
+            // 이어보기 자리 위에 얹힌 이 판의 윗부분이 화면 밖으로 밀린다.
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     // 조작부 판 위로, 그리고 이어보기 제안보다 한 칸 더 위로.
                     // 둘이 동시에 뜨는 일은 드물지만 겹쳐 읽히면 둘 다 못 읽는다.
                     .padding(bottom = aboveControls + OFFER_HEIGHT)
                     .background(Color(0xC0000000))
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-            )
+                    .padding(
+                        start = 16.dp,
+                        end = if (handoff != null) 8.dp else 16.dp,
+                        top = if (handoff != null) 4.dp else 12.dp,
+                        bottom = if (handoff != null) 4.dp else 12.dp,
+                    ),
+            ) {
+                Text(
+                    text = playbackFailureText(failure),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White,
+                    modifier = Modifier.weight(1f, fill = false),
+                )
+                if (handoff != null) {
+                    // 판은 테마와 상관없이 늘 검다 — 단추 색도 테마에서 가져오지 않는다. 목록을 펼친 밝은 테마에서
+                    // `primary` 는 어둡고, 영상의 어두운 테마에서 `inversePrimary` 는 어둡다. 흰 글자면 둘 다에서 읽힌다.
+                    TextButton(
+                        onClick = { openWith(handoff) },
+                        colors = androidx.compose.material3.ButtonDefaults.textButtonColors(contentColor = Color.White),
+                        modifier = Modifier.padding(start = 8.dp),
+                    ) {
+                        Text(
+                            text = stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with),
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                }
+            }
         }
 
         // **이어보기 제안 — 여기서만, 3초만.**
@@ -884,24 +993,34 @@ private fun PlayerScreen(
         // 이어보기 알약과 **같은 자리**를 쓰므로 둘이 겹치지 않게 갈라 둔다. 방금 누른
         // 것에 대한 답이 먼저다 — 이어보기 제안은 3초 뒤 저절로 사라지고, 사라진 뒤에도
         // 같은 자리에서 다시 볼 일이 없다.
+        // 다른 앱으로 넘기지 못한 것도 여기로 온다 — 방금 누른 것에 대한 답이다.
         val noteText = when {
+            handoffNote != null -> stringResource(handoffNote!!)
             pipFailed -> pipFailedText()
             abNote != null -> abResultText(abNote!!)
             else -> null
         }
         if (controlsMeasured && noteText != null) {
             LaunchedEffect(noteSeq) {
-                delay(NOTE_HOLD_MS)
+                // 넘기지 못한 까닭은 문장이라 읽을 시간을 스낵바만큼 준다([PlayerOpenWith.HANDOFF_NOTE_HOLD_MS]).
+                delay(if (handoffNote != null) PlayerOpenWith.HANDOFF_NOTE_HOLD_MS else NOTE_HOLD_MS)
                 abNote = null
                 pipFailed = false
+                handoffNote = null
             }
             Text(
                 text = noteText,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.inverseOnSurface,
-                maxLines = 1,
+                // **두 줄까지 접는다.** 넘기지 못한 까닭('파일이 없거나, 다른 앱에 넘길 수 없는 위치에 있습니다')은 360dp
+                // 폰에서 보통 글꼴로도 한 줄을 넘는다. 한 줄로 못 박으면 문장의 끝이 말없이 잘린다.
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+                    // 알약이 화면 끝에 붙지 않게. 접힌 두 줄이 가장자리까지 번지면 알약으로 읽히지 않는다.
+                    .padding(horizontal = 16.dp)
                     .padding(bottom = aboveControls)
                     .background(MaterialTheme.colorScheme.inverseSurface, RoundedCornerShape(20.dp))
                     .padding(horizontal = 20.dp, vertical = 10.dp),
@@ -1269,7 +1388,41 @@ private fun PlayerScreen(
                         Icon(PipIcon, pipLabel(), tint = onBackground)
                     }
                 }
+
+                // **⋮ — 이 재생에 대한 드문 조작.** 지금은 '다른 앱으로 열기' 하나다. 줄 끝에 둔다: 자주 누르는 것이
+                // 앞에 있어야 좁은 폰에서 가로 스크롤 없이 닿는다. 단추와 메뉴는 **한 상자에** 담는다 — `Popup` 은
+                // 감싼 부모를 앵커로 삼아, 형제로 두면 메뉴가 줄의 맨 앞에서 열린다(함정 표).
+                // 지금 항목이 파일에 닿지 못해 실패했으면 서지 않는다 — 받는 앱도 그 파일에 닿지 못한다.
+                PlayerOpenWith.menuTarget(state.fileKey, inPip, state.failure)?.let { key ->
+                    PlayerMoreMenu(tint = onBackground, onOpenWith = { openWith(key) })
+                }
             }
+        }
+    }
+}
+
+/**
+ * 조작부 ⋮ 단추와 그 메뉴. **펼침 상태를 이 안에 든다** — 단추가 사라지면(지금 항목이 파일에 닿지 못해 실패했다·PiP·조작부를
+ * 감췄다) 상태도 함께 사라진다. 화면 쪽에 두었더니 메뉴를 펼친 채 단추가 사라진 뒤 다시 설 때 메뉴가 **저 혼자 펼쳐졌다** —
+ * 그 사이 항목이 바뀌었으면 누르지도 않은 메뉴가 다른 파일을 넘기는 줄을 들이민다. 만화 뷰어의 ⋮ 와 같은 모양이다.
+ *
+ * 단추와 메뉴는 **한 상자에** 담는다(함정 표의 `Popup` 앵커).
+ */
+@Composable
+private fun PlayerMoreMenu(tint: Color, onOpenWith: () -> Unit) {
+    var open by remember { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { open = true }) {
+            Icon(Icons.Filled.MoreVert, stringResource(R.string.player_more), tint = tint)
+        }
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+            DropdownMenuItem(
+                text = { Text(stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with)) },
+                onClick = {
+                    open = false
+                    onOpenWith()
+                },
+            )
         }
     }
 }
@@ -1324,6 +1477,7 @@ private val OFFER_GAP = 16.dp
  *
  * 이어보기 제안(3초)보다 짧다 — 그쪽은 **답을 기다리는** 물음이고 이쪽은 방금 누른 것에
  * 대한 **답**이라, 읽을 만큼만 있으면 된다. 끝이 없는 안내를 만들지 않는다는 규칙은 같다.
+ * 다른 앱으로 넘기지 못한 까닭은 같은 자리에 뜨지만 문장이라 더 오래 둔다([PlayerOpenWith.HANDOFF_NOTE_HOLD_MS]).
  */
 private const val NOTE_HOLD_MS = 1_800L
 

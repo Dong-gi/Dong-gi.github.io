@@ -233,6 +233,9 @@ class RarArchiveReader(
      * 그래서 이 구현은 순서를 절대 뒤집지 않는다.
      */
     override fun extractSequentially(sink: EntrySink) {
+        // junrar 는 항목마다 소비한 입력을 주지 않는다. 끝난 항목의 **선언 압축 크기**를 더한다 — 분모도 같은 값의
+        // 합이라([inputBytesFor]) 진행 바는 항목 단위로 뛰지만 끝에서 맞는다.
+        var consumedBefore = 0L
         for (entry in entries) {
             val header = raw.getOrNull(entry.index) ?: continue
             val out = sink.begin(entry) ?: continue
@@ -259,8 +262,15 @@ class RarArchiveReader(
                 failure = t
             }
             sink.finish(entry, counting.written, failure)
+            consumedBefore += header.fullPackSize.coerceAtLeast(0L)
+            sink.consumed(consumedBefore)
         }
     }
+
+    /** 고른 항목의 선언 압축 크기 합. 실측이 아니다 — 위 [extractSequentially] 의 주석. */
+    override fun inputBytesFor(selected: Set<Int>?): Long =
+        entries.filter { it.isReadable && (selected == null || it.index in selected) }
+            .sumOf { raw.getOrNull(it.index)?.fullPackSize?.coerceAtLeast(0L) ?: 0L }
 
     override fun close() {
         try {

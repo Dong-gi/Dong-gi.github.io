@@ -1,19 +1,26 @@
 package io.github.donggi.iroiroviewer.comic
 
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.graphics.drawable.Drawable
 import android.util.LruCache
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import io.github.donggi.iroiroviewer.io.Iro
+import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.AnimationLimits
 import io.github.donggi.iroiroviewer.safety.ComicLimits
 import io.github.donggi.iroiroviewer.safety.ImageLimits
 import io.github.donggi.iroiroviewer.ui.image.ImageFormats
 import io.github.donggi.iroiroviewer.ui.image.ImageIo
 import io.github.donggi.iroiroviewer.ui.image.decodeAnimated
+import java.io.IOException
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 /**
  * 쪽 하나에 대해 **그리기 전에 알아야 하는 것.**
@@ -77,10 +84,11 @@ class ComicPageStore(
     private val budget: ImageLimits.Budget,
 ) {
 
-    private val stills = object : LruCache<StillKey, ImageBitmap>(
+    /** 한 쪽 보기의 쪽([StillKey])과 두 쪽 보기의 반쪽([HalfKey])이 **한 상한**을 나눠 쓴다 — 둘 다 바닥층이다. */
+    private val stills = object : LruCache<Any, ImageBitmap>(
         budget.liveCap.coerceIn(1L, Int.MAX_VALUE.toLong()).toInt(),
     ) {
-        override fun sizeOf(key: StillKey, value: ImageBitmap): Int =
+        override fun sizeOf(key: Any, value: ImageBitmap): Int =
             (value.width.toLong() * value.height * ImageLimits.BYTES_PER_PIXEL)
                 .coerceIn(1L, Int.MAX_VALUE.toLong()).toInt()
     }
@@ -103,6 +111,27 @@ class ComicPageStore(
 
     /** 선명화 조각 한 장의 상한. */
     val detailCap: Long = budget.detailCap
+
+    /**
+     * 두 쪽 보기에서 **쪽 하나**에 허락하는 바이트 — [pageCap] 의 절반(14단계).
+     *
+     * 두 쪽이 **화면 한 장의 몫을 나눠 쓴다.** 페이저는 펼침 넷을 들므로(앞뒤 한 장씩 + 넘기는 도중 둘) 반쪽 여덟 장이
+     * 한 장짜리 넷과 같은 바이트다 — [ImageLimits.Budget.liveCap] 이 그대로 성립하고 [stills] 의 상한도 그대로다.
+     * 한 쪽이 차지하는 화면이 절반이라 **맞춘 크기 그대로 뜨면**([half]) 흐려지지 않는다 — 2의 거듭제곱 표본으로 뜨면
+     * 흔한 쪽 크기에서 흐려진다([SpreadMath.halfSize] 의 주석).
+     */
+    val spreadPageCap: Long = (pageCap / 2).coerceAtLeast(1L)
+
+    /**
+     * 쪽 목록(격자)의 썸네일 전체에 허락하는 바이트(14단계).
+     *
+     * **선명화 몫([ImageLimits.Budget.detailCap])을 빌린다.** `budgetOf` 가 '살아 있는 쪽 말고 더 써도 되는 양' 으로
+     * 계산해 둔 수이고, 격자가 떠 있는 동안에는 새 선명화 조각도 세로 모드의 띠도 뜨지 않는다 — 격자를 열 때 띠 캐시를
+     * 비운다([clearBands]). **정확히 0 은 아니다**: 격자를 열기 전에 확대해 둔 쪽의 조각 한 장과 화면에 걸린 띠 한두
+     * 장은 그 쪽이 컴포지션에 남아 있는 동안 산다. 힙이 작은 기기에서 이 몫이 0 이 되면 썸네일을 뜨지 않고 칸에 쪽 번호만
+     * 보인다 — `budgetOf` 의 '흐린 것이 죽는 것보다 낫다' 그대로다.
+     */
+    val thumbCap: Long = budget.detailCap
 
     /** 이미 잰 것이 있으면 그것. 없으면 null — 디코딩하지 않는다. */
     fun knownInfo(ordinal: Int): PageInfo? = synchronized(infos) { infos[ordinal] }
@@ -163,15 +192,46 @@ class ComicPageStore(
     }
 
     /**
+     * 두 쪽 보기의 정지 쪽 하나 — 반쪽 자리([slotWidth]×[slotHeight])에 **맞춘 크기 그대로** 뜬다(14단계).
+     *
+     * [still] 과 길이 다른 까닭은 [SpreadMath.halfSize] 에 있다: 2의 거듭제곱 표본은 반쪽 몫([spreadPageCap])에 들려면
+     * 흔한 쪽 크기에서 자리보다 작게 떠서 늘어나 보인다. 그래서 `setTargetSize` 로 자리 크기에 맞춰 뜨고, 그 크기가
+     * 몫을 넘으면(힙이 작은 기기) 비를 지켜 줄인다 — 바이트가 먼저인 것은 [still] 과 같다.
+     */
+    suspend fun half(ordinal: Int, slotWidth: Int, slotHeight: Int): ImageBitmap? {
+        if (slotWidth <= 0 || slotHeight <= 0) return null
+        val key = HalfKey(ordinal, slotWidth, slotHeight)
+        stills.get(key)?.let { return it }
+        val began = System.nanoTime()
+        val bytes = source.bytes(ordinal) ?: return null
+        val read = System.nanoTime()
+        val bitmap = decodeToSlot(bytes, slotWidth, slotHeight, spreadPageCap) ?: return null
+        val image = bitmap.asImageBitmap()
+        stills.put(key, image)
+        Iro.d(TAG) {
+            val readMs = (read - began) / 1_000_000
+            val decodeMs = (System.nanoTime() - read) / 1_000_000
+            "반쪽 $ordinal ${bytes.size}B 읽기 ${readMs}ms 디코딩 ${decodeMs}ms -> ${image.width}x${image.height}"
+        }
+        return image
+    }
+
+    /**
+     * 화면이 두 쪽을 펼치는가를 소스에 알린다 — solid 의 창이 뛰어든 자리에서 앞 펼침까지 담게 한다
+     * ([Spreads.lookBehind]). 무작위 접근 소스에는 아무 일도 없다.
+     */
+    fun setTwoUp(twoUp: Boolean) = source.setLookBehind(Spreads.lookBehind(twoUp))
+
+    /**
      * 움직이는 쪽 하나.
      *
      * **캐시하지 않는다.** `AnimatedImageDrawable` 은 상태(지금 몇 번째 프레임인가)를
      * 들고 있어서 두 곳에서 동시에 그리면 서로의 프레임을 밀어낸다. 만화책 안의 GIF 는
      * 드물어 다시 여는 값도 작다.
      */
-    suspend fun moving(ordinal: Int, targetLongest: Int): Drawable? {
+    suspend fun moving(ordinal: Int, targetLongest: Int, capBytes: Long = pageCap): Drawable? {
         val bytes = source.bytes(ordinal) ?: return null
-        return decodeAnimated(bytes, targetLongest = targetLongest, capBytes = pageCap)
+        return decodeAnimated(bytes, targetLongest = targetLongest, capBytes = capBytes)
     }
 
     /**
@@ -235,11 +295,31 @@ class ComicPageStore(
         bands.evictAll()
     }
 
+    /** 띠 캐시를 비운다. 격자가 그 몫([thumbCap])을 빌리는 동안이다. */
+    fun clearBands() {
+        bands.evictAll()
+    }
+
+    /**
+     * 못 연 쪽의 '다른 앱으로 열기' 가 넘길 경로. 폴더 만화의 쪽이고 그 파일이 열릴 때만이다([ComicOpenWith.pageFailureTarget]).
+     * 여는 탐침이 디스크를 만지므로 입출력 디스패처에서 돈다.
+     */
+    suspend fun failedPageTarget(ordinal: Int): String? {
+        val file = source.pageFile(ordinal) ?: return null
+        return withContext(IroDispatchers.io) { ComicOpenWith.pageFailureTarget(file) }
+    }
+
+    /** 쪽 목록의 훑기. 소스의 것을 그대로 부른다([ComicSource.scan]). */
+    suspend fun scan(demand: ScanDemand, onPage: (ordinal: Int, bytes: ByteArray?) -> Unit) =
+        source.scan(demand, onPage)
+
     private companion object {
         const val TAG = "Comic"
     }
 
     private data class StillKey(val ordinal: Int, val targetLongest: Int)
+
+    private data class HalfKey(val ordinal: Int, val slotWidth: Int, val slotHeight: Int)
 
     private data class BandKey(val ordinal: Int, val band: Int, val viewportWidth: Int)
 }
@@ -256,3 +336,33 @@ internal fun targetLongestFor(width: Int, height: Int, viewportWidth: Int): Int 
     val longest = maxOf(width, height)
     return (viewportWidth.toLong() * longest / width).coerceIn(1L, Int.MAX_VALUE.toLong()).toInt()
 }
+
+/**
+ * 쪽 바이트 → 반쪽 자리에 맞춘 비트맵([SpreadMath.halfSize] 의 크기 그대로).
+ *
+ * 규칙은 `ImageIo.decodeFitted` 의 헤더 콜백과 맞춘다 — 소프트웨어 할당(확대하면 원본을 다시 읽고, 하드웨어 비트맵은
+ * 소프트웨어 합성을 막는다), 헤더에서 취소 확인(그 뒤는 네이티브 디코딩이라 끼어들 수 없다), 같은 디스패처(한 번에 하나
+ * — 디코딩 임시본이 둘 이상 겹치지 않게). 크기는 헤더의 치수(디코더가 방향을 적용한 뒤의 값)로 잰다.
+ */
+private suspend fun decodeToSlot(bytes: ByteArray, slotWidth: Int, slotHeight: Int, capBytes: Long): Bitmap? =
+    withContext(IroDispatchers.image) {
+        val job = currentCoroutineContext()[Job]
+        try {
+            ImageDecoder.decodeBitmap(ImageDecoder.createSource(bytes, 0, bytes.size)) { decoder, info, _ ->
+                val size = SpreadMath.halfSize(info.size.width, info.size.height, slotWidth, slotHeight, capBytes)
+                    ?: throw IOException("크기를 모른다")
+                decoder.setTargetSize(size[0], size[1])
+                decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+                decoder.isMutableRequired = false
+                if (job?.isActive == false) throw CancellationException("이미지 요청이 취소됐다")
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: IOException) {
+            null
+        } catch (e: RuntimeException) {
+            null
+        } catch (e: OutOfMemoryError) {
+            null
+        }
+    }

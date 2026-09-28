@@ -4,6 +4,7 @@ import io.github.donggi.iroiroviewer.model.IroDispatchers
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -92,6 +94,20 @@ object FileOpManager {
             override val label get() = uuid
         }
 
+        /**
+         * 휴지통 항목을 **사용자가 고른 폴더로** 되돌린다(`TrashStore.restoreTo`). 원래 자리를 모르는
+         * 항목이나 다른 곳에 두고 싶은 항목을 위한 길이다. 옮기는 일은 복사·이동의 엔진이 한다 —
+         * 볼륨을 넘을 수 있고, 이름 충돌을 사용자가 고른 규칙으로 풀어야 하기 때문이다.
+         */
+        data class RestoreTo(
+            override val id: String,
+            val uuids: List<String>,
+            val dest: String,
+            val conflict: FileOpEngine.Conflict,
+        ) : Request {
+            override val label get() = dest
+        }
+
         data class Purge(override val id: String, val uuids: List<String>) : Request {
             override val label get() = uuids.firstOrNull().orEmpty()
         }
@@ -149,11 +165,24 @@ object FileOpManager {
         /**
          * 휴지통의 기록과 실제 파일을 맞춘다. **이 큐에서 도는 것이 핵심이다** — 밖에서
          * 돌리면 `rename` 과 기록 쓰기 사이의 파일을 고아로 보고 손댈 수 있다.
+         *
+         * 앱을 켤 때와, 앱이 꺼져 있어도 하루에 한 번([TrashPurgeJobService]) 돈다. 예약 작업은 끝을
+         * 기다려야 하므로 [done] 을 싣고, 시스템이 '그만' 을 말하면 [stop] 을 켠다.
+         *
+         * @param done 끝나면 완료된다. 값은 '끝까지 돌았는가'(취소·건너뜀이면 false). **어느 길로
+         *   끝나든 반드시 완료된다** — 대기 중 전부 취소, 작업 사이의 취소, 시작 전에 끊긴 작업까지
+         *   [settle] 이 맡는다. 완료되지 않으면 예약 작업이 시스템의 시간 상한까지 매달린다.
+         * @param stop 켜지면 항목 경계에서 멈춘다. 큐의 [cancelCurrent] 를 쓰지 않는 까닭은
+         *   `TrashStore.reconcileAndPurgeExpired` 의 같은 인자 주석에 있다.
          */
-        data object Reconcile : Request {
+        class Reconcile(
+            val done: CompletableDeferred<Boolean>? = null,
+            val stop: AtomicBoolean? = null,
+        ) : Request {
             override val id get() = "reconcile"
             override val label get() = ""
             override val silent get() = true
+            override fun toString(): String = "Reconcile"
         }
     }
 
@@ -178,7 +207,17 @@ object FileOpManager {
         val kind: Kind,
         val outcome: FileOpEngine.Outcome,
         val extra: Extra? = null,
-    )
+    ) {
+        /**
+         * 풀기가 끝난 뒤 사용자가 '열기' 로 갈 폴더. 풀기가 아니거나 갈 곳이 없으면 null.
+         *
+         * 목적지는 이미 결과에 실려 있다(`Extra.Extracted` 의 `ExtractReport.destDir`). 여기서 정하는
+         * 것은 **단추를 보일 것인가** 하나다 — 판단이 화면(`app`)으로 새지 않게 이 타입 곁에 둔다.
+         * 규칙은 [ExtractResults.folderToOpen].
+         */
+        val folderToOpen: String?
+            get() = ExtractResults.folderToOpen(kind, outcome, extra)
+    }
 
     /** 결과에 딸려 나오는 값. 되돌리기처럼 **그 작업이 아니면 알 수 없는** 것만 싣는다. */
     sealed interface Extra {
@@ -275,18 +314,22 @@ object FileOpManager {
             val (request, _) = queue.tryReceive().getOrNull() ?: break
             queued.decrementAndGet()
             // 돌지 않을 요청이다. 붙든 암호를 여기서 지운다(돌았다면 푸는 쪽이 지웠다).
-            request.wipeSecrets()
+            request.settle(ran = false)
         }
         cancelRequested = true
         current?.cancel()
     }
 
     /**
-     * 요청이 붙든 비밀(아카이브 암호)을 0 으로 덮는다. 요청이 끝났거나 버려질 때 부른다.
-     * 두 번 불러도 된다 — 푸는 쪽이 이미 덮은 배열을 다시 덮을 뿐이다.
+     * 요청이 끝났거나 버려질 때 부른다. 붙든 비밀(아카이브 암호)을 0 으로 덮고, 끝을 기다리는 쪽
+     * (예약된 휴지통 비우기)에 알린다. 두 번 불러도 된다 — 덮은 배열을 다시 덮고, 완료된 신호는
+     * 다시 완료되지 않는다.
+     *
+     * @param ran 끝까지 돌았는가. 돌지 않고 버려진 길이면 false.
      */
-    private fun Request.wipeSecrets() {
+    private fun Request.settle(ran: Boolean) {
         if (this is Request.Extract) password?.fill('\u0000')
+        if (this is Request.Reconcile) done?.complete(ran)
     }
 
     /** [FileOpService] 가 `startForeground` 를 마치고 부른다. */
@@ -307,7 +350,7 @@ object FileOpManager {
                 if (cancelRequested) {
                     // 작업 사이에 눌린 취소. 시작하지 않고 결과만 남긴다.
                     cancelRequested = false
-                    request.wipeSecrets()
+                    request.settle(ran = false)
                     if (!request.silent) {
                         _results.trySend(Finished(request.id, kind, FileOpEngine.Outcome.Cancelled))
                     }
@@ -315,11 +358,14 @@ object FileOpManager {
                 }
 
                 if (!request.silent) _state.value = State.Running(kind, empty(), queued.get())
+                // 끝까지 돌았는가. 블록이 아예 시작하지 못하고 취소되면 false 그대로다.
+                var ran = false
                 val job = scope.launch {
                     var extra: Extra? = null
                     val outcome = execute(app, request, engine, trash, { extra = it }) { p ->
                         if (!request.silent) _state.value = State.Running(kind, p, queued.get())
                     }
+                    ran = outcome !is FileOpEngine.Outcome.Cancelled
                     if (!request.silent) _results.trySend(Finished(request.id, kind, outcome, extra))
                 }
                 current = job
@@ -332,8 +378,8 @@ object FileOpManager {
 
                 job.join()
                 // 시작하기 전에 취소된 작업은 블록이 아예 돌지 않는다 — 푸는 쪽이 암호를 지울
-                // 기회가 없었다. 어느 길로 끝났든 여기서 한 번 더 덮는다.
-                request.wipeSecrets()
+                // 기회가 없었다. 어느 길로 끝났든 여기서 한 번 더 덮는다(기다리는 쪽에도 알린다).
+                request.settle(ran)
                 watchdog?.cancel()
                 current = null
                 if (queued.get() <= 0) {
@@ -366,6 +412,8 @@ object FileOpManager {
                 .also { if (it is TrashStore.Result.Done) onExtra(Extra.Trashed(it.uuids)) }
                 .toOutcome()
             is Request.Restore -> trash.restore(request.uuid, volumes).toOutcome()
+            is Request.RestoreTo ->
+                trash.restoreTo(request.uuids, request.dest, request.conflict, volumes, engine, onProgress)
             is Request.Purge -> trash.purge(request.uuids, volumes, engine).toOutcome()
             is Request.RotateExif -> engine.rotateExif(request.path, request.degrees)
             is Request.Extract -> {
@@ -382,8 +430,10 @@ object FileOpManager {
                 }
             }
             is Request.Reconcile -> {
-                trash.reconcileAndPurgeExpired(volumes, engine)
-                FileOpEngine.Outcome.Done(0, 0, 0)
+                val stop = request.stop
+                trash.reconcileAndPurgeExpired(volumes, engine, isStopped = { stop?.get() == true })
+                // 멈춤 신호로 끝난 것은 '끝까지 돌았다' 가 아니다. 기다리는 쪽이 그것을 가른다.
+                if (stop?.get() == true) FileOpEngine.Outcome.Cancelled else FileOpEngine.Outcome.Done(0, 0, 0)
             }
         }
     } catch (e: kotlinx.coroutines.CancellationException) {
@@ -406,7 +456,7 @@ object FileOpManager {
         is Request.Move -> Kind.MOVE
         is Request.Trash -> Kind.TRASH
         is Request.DeleteForever -> Kind.DELETE
-        is Request.Restore -> Kind.RESTORE
+        is Request.Restore, is Request.RestoreTo -> Kind.RESTORE
         is Request.Purge -> Kind.PURGE
         is Request.RotateExif -> Kind.ROTATE
         is Request.Extract -> Kind.EXTRACT

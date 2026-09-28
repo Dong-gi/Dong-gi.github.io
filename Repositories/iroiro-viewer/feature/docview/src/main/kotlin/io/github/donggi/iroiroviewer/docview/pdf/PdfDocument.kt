@@ -2,6 +2,7 @@ package io.github.donggi.iroiroviewer.docview.pdf
 
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
+import androidx.annotation.RequiresApi
 import io.github.donggi.iroiroviewer.format.FormatId
 import io.github.donggi.iroiroviewer.format.OpenedDocument
 import io.github.donggi.iroiroviewer.format.ParseWarning
@@ -83,9 +84,31 @@ class PdfDocument internal constructor(
 
     /** 쪽 하나를 그린다. 닫혔거나 범위 밖이면 null — **예외로 끝내지 않는다.** */
     internal suspend fun render(ordinal: Int, spec: PdfEngine.Spec): Bitmap? {
+        val size = sizeOf(ordinal) ?: return null
+        return render(PdfSpreads.Layout(size[0], size[1], listOf(PdfSpreads.Placement(ordinal, 0, 0, size[0], size[1]))), spec)
+    }
+
+    /**
+     * 가상 쪽 하나(쪽 하나, 또는 두 쪽 보기의 펼침)를 그린다. 닫혔거나 범위 밖의 쪽이 있으면 null — **예외로 끝내지 않는다.**
+     */
+    internal suspend fun render(layout: PdfSpreads.Layout, spec: PdfEngine.Spec): Bitmap? {
+        if (closed.get() || layout.parts.any { it.page !in 0 until pageCount }) return null
+        return lock.withLock {
+            if (closed.get()) null else PdfEngine.render(renderer, layout, spec)
+        }
+    }
+
+    /**
+     * 쪽 하나에서 글을 찾는다(API 35 이상). 닫혔거나 범위 밖이면 null.
+     *
+     * 그리기와 **같은 잠금**을 지난다 — 찾기도 쪽을 연다('한 번에 한 쪽'). 문서 전체를 훑는 동안 그리기가 쪽마다 끼어들 수
+     * 있게, 잠금은 쪽 하나를 찾는 동안만 쥔다.
+     */
+    @RequiresApi(35)
+    internal suspend fun search(ordinal: Int, query: String): List<PdfSearch.Match>? {
         if (closed.get() || ordinal !in 0 until pageCount) return null
         return lock.withLock {
-            if (closed.get()) null else PdfEngine.render(renderer, ordinal, spec)
+            if (closed.get()) null else PdfEngine.searchPage(renderer, ordinal, query)
         }
     }
 

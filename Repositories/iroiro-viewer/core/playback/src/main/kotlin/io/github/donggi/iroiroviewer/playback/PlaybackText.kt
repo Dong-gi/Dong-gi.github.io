@@ -25,8 +25,9 @@ fun playbackFailureText(failure: PlaybackFailure): String = when (failure) {
         stringResource(R.string.playback_error_no_decoder, failure.codecs?.let { " ($it)" } ?: "")
     is PlaybackFailure.DecoderFailed ->
         stringResource(R.string.playback_error_decoder_failed, failure.codecs?.let { " ($it)" } ?: "")
-    is PlaybackFailure.BadContainer ->
-        stringResource(R.string.playback_error_container, failure.detail)
+    is PlaybackFailure.BadContainer -> stringResource(
+        if (failure.unsupported) R.string.playback_error_container_unsupported else R.string.playback_error_container_malformed,
+    )
     PlaybackFailure.NotReadable ->
         stringResource(R.string.playback_error_not_readable)
     is PlaybackFailure.UnsupportedTrack ->

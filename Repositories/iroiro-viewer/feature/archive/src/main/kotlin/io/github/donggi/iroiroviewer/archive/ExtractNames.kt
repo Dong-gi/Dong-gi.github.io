@@ -57,4 +57,24 @@ object ExtractNames {
      */
     fun topLevelNames(entries: List<ArchiveEntry>): List<String> =
         entries.mapNotNull { relPathOf(it)?.substringBefore('/') }.distinct()
+
+    /**
+     * '새 폴더에 풀기' 의 이름 후보 — 아카이브 이름에서 **확장자를 뗀** 것.
+     *
+     * 확장자가 두 겹인 것(`.tar.gz`)은 두 겹을 뗀다. 마지막 점만 떼면 `backup.tar.gz` 가 `backup.tar` 라는 **폴더**가
+     * 되어, 사용자는 그것을 tar 파일로 읽는다. 줄인 이름(`.tgz`)은 한 겹이다. 점이 없거나 이름 전체가 확장자면
+     * 이름을 그대로 둔다(`.hidden` 을 빈 이름으로 만들지 않는다).
+     */
+    fun folderNameOf(archiveName: String): String {
+        val lower = archiveName.lowercase()
+        for (double in DOUBLE_EXTENSIONS) {
+            if (!lower.endsWith(double)) continue
+            return if (archiveName.length > double.length) archiveName.substring(0, archiveName.length - double.length)
+            else archiveName
+        }
+        val dot = archiveName.lastIndexOf('.')
+        return if (dot > 0) archiveName.substring(0, dot) else archiveName
+    }
+
+    private val DOUBLE_EXTENSIONS = listOf(".tar.gz", ".tar.bz2", ".tar.xz")
 }

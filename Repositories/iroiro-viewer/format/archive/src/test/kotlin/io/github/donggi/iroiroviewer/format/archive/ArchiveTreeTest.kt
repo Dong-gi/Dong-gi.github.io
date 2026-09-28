@@ -96,6 +96,30 @@ class ArchiveTreeTest {
         assertEquals(listOf(0), indices)
     }
 
+    /**
+     * **맨 위 폴더 자신(`./`)은 경고로 세우지 않는다.** `tar -czf x.tgz .` 가 맨 앞에 두는 항목이다 — 풀 수 없는
+     * 이름이 아니라 풀어 넣을 자리 그 자체다. 같은 모양이라도 파일이거나 `..` 이 섞였으면 그대로 경고다.
+     */
+    @Test
+    fun `맨 위 폴더 자신은 경고가 아니다`() {
+        val tree = ArchiveTree.build(
+            listOf(
+                entry(0, "./", dir = true),
+                entry(1, "./a.txt"),
+                entry(2, ".", dir = true),
+                entry(3, "./../", dir = true),
+                entry(4, "./", dir = false),
+            ),
+        )
+        assertEquals(listOf("a.txt"), tree.root.children.filter { !it.unsafe }.map { it.name })
+        assertEquals(listOf(3, 4), tree.root.children.filter { it.unsafe }.map { it.entryIndex }.sorted())
+        assertTrue(ArchiveEntry.isRootName("./"))
+        assertTrue(ArchiveEntry.isRootName("/"))
+        assertTrue(ArchiveEntry.isRootName(".\\"))
+        assertTrue(!ArchiveEntry.isRootName("../"))
+        assertTrue(!ArchiveEntry.isRootName("..."))
+    }
+
     /** 절대경로는 다듬어 트리에 넣되 **원래 이름을 함께 든다.** */
     @Test
     fun `절대경로는 다듬어지고 원래 이름이 남는다`() {

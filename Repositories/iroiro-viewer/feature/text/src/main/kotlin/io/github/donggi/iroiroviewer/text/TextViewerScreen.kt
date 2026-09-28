@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -59,8 +60,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -73,10 +73,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.donggi.iroiroviewer.charset.CharsetDetector
 import io.github.donggi.iroiroviewer.charset.TextEncoding
+import io.github.donggi.iroiroviewer.data.TextViewerDefaults
 import io.github.donggi.iroiroviewer.format.text.PlainHighlighter
 import io.github.donggi.iroiroviewer.format.text.RowHighlighter
 import io.github.donggi.iroiroviewer.format.text.TextLanguage
-import io.github.donggi.iroiroviewer.format.text.TextRow
 
 /**
  * 텍스트·코드 뷰어. **읽기 전용이다.**
@@ -117,17 +117,23 @@ fun TextViewerScreen(
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val vm: TextViewModel = viewModel()
-    LaunchedEffect(path) { vm.open(path) }
+    val context = LocalContext.current
+    val vm: TextViewModel = viewModel { TextViewModel(AppPreferencesTextStore(context.applicationContext)) }
+    // **입장 표.** 회전·프로세스 재생성에는 같은 값이 살아남고, 화면을 떠났다 돌아오면 새 값이 된다 — 뷰모델이 이것으로
+    // '새로 열었다(저장된 설정을 다시 읽는다)' 와 '돌렸다(지금 설정 그대로)' 를 가른다(`ViewerSettings`).
+    val entry = rememberSaveable { System.nanoTime() }
+    LaunchedEffect(path, entry) { vm.open(path, entry) }
+    // '다른 앱으로 열기'. 넘기는 것은 언제나 화면이 받은 원문 파일이다 — 미리보기 중에도([TextOpenWith]).
+    val openWith = rememberOpenWith(path, snackbar)
 
     val state by vm.state.collectAsStateWithLifecycle()
     val window by vm.window.collectAsStateWithLifecycle()
     val search by vm.search.collectAsStateWithLifecycle()
     val scrollTo by vm.scrollTo.collectAsStateWithLifecycle()
+    val settings by vm.settings.collectAsStateWithLifecycle()
+    val preview by vm.preview.collectAsStateWithLifecycle()
+    val previewOn = preview !is TextViewModel.Preview.Off
 
-    var wrap by rememberSaveable { mutableStateOf(false) }
-    var showLineNumbers by rememberSaveable { mutableStateOf(true) }
-    var fontSize by rememberSaveable { mutableIntStateOf(DEFAULT_FONT_SP) }
     var searchOpen by rememberSaveable { mutableStateOf(false) }
     var menuOpen by remember { mutableStateOf(false) }
     var sheet by remember { mutableStateOf<Sheet?>(null) }
@@ -146,6 +152,7 @@ fun TextViewerScreen(
     // 가로 스크롤은 **모든 행이 함께** 움직여야 한다. 행마다 따로 두면 한 줄만 밀린다.
     val hScroll = rememberScrollState()
     val colors = rememberCodeColors()
+    val lineEndMarks = rememberLineEndMarks()
 
     // 보이는 구간을 뷰모델에 알려 창을 옮기게 한다.
     LaunchedEffect(listState, state) {
@@ -188,15 +195,27 @@ fun TextViewerScreen(
                     },
                     title = {
                         Text(
-                            text = (state as? TextViewModel.State.Ready)?.doc?.name.orEmpty(),
+                            // 다 읽기 전·실패 화면에도 무엇을 열었는지 적는다(파일 이름만 — [TextTitle]).
+                            text = TextTitle.of(state, path),
                             maxLines = 1,
                             overflow = TextOverflow.MiddleEllipsis,
                         )
                     },
                     actions = {
+                        // 마크다운이면 원문 ↔ 미리보기. 메뉴 속에 숨기지 않는다 — 이 파일을 연 사람이 가장 먼저 찾는 것이다.
+                        if ((state as? TextViewModel.State.Ready)?.doc?.markdown == true) {
+                            TextButton(onClick = vm::togglePreview) {
+                                Text(
+                                    stringResource(
+                                        if (previewOn) R.string.text_preview_source else R.string.text_preview,
+                                    ),
+                                )
+                            }
+                        }
+                        // 찾기는 원문의 행을 훑는다. 미리보기에서는 찾은 자리를 보여 줄 곳이 없다.
                         IconButton(
                             onClick = { searchOpen = true },
-                            enabled = state is TextViewModel.State.Ready,
+                            enabled = state is TextViewModel.State.Ready && !previewOn,
                         ) {
                             Icon(Icons.Filled.Search, stringResource(R.string.text_search))
                         }
@@ -210,16 +229,19 @@ fun TextViewerScreen(
                             }
                             ViewerMenu(
                                 expanded = menuOpen,
-                                wrap = wrap,
-                                showLineNumbers = showLineNumbers,
+                                settings = settings,
+                                canGoToLine = !previewOn,
                                 onDismiss = { menuOpen = false },
-                                onWrap = { wrap = !wrap },
-                                onLineNumbers = { showLineNumbers = !showLineNumbers },
-                                onFontBigger = { fontSize = (fontSize + 1).coerceAtMost(MAX_FONT_SP) },
-                                onFontSmaller = { fontSize = (fontSize - 1).coerceAtLeast(MIN_FONT_SP) },
+                                onWrap = { vm.updateSettings { it.copy(wrap = !it.wrap) } },
+                                onLineNumbers = { vm.updateSettings { it.copy(lineNumbers = !it.lineNumbers) } },
+                                onLineEnds = { vm.updateSettings { it.copy(showLineEnds = !it.showLineEnds) } },
+                                onFontBigger = { vm.updateSettings { it.copy(fontSp = it.fontSp + 1) } },
+                                onFontSmaller = { vm.updateSettings { it.copy(fontSp = it.fontSp - 1) } },
                                 onEncoding = { sheet = Sheet.ENCODING },
                                 onLanguage = { sheet = Sheet.LANGUAGE },
                                 onGoToLine = { goToLine = true },
+                                canOpenWith = TextOpenWith.inMenu(state),
+                                onOpenWith = openWith,
                             )
                         }
                     },
@@ -280,6 +302,13 @@ fun TextViewerScreen(
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
                         )
+                        // 글이 아니거나 우리가 못 읽는 인코딩이다 — 파일은 멀쩡하니 그것을 여는 앱으로 넘길 길을 먼저 둔다.
+                        // 파일에 닿지 못한 것에는 없다(받는 앱도 닿지 못한다 — [TextOpenWith.onFailure]).
+                        if (TextOpenWith.onFailure(s.kind)) {
+                            Button(onClick = openWith) {
+                                Text(stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with))
+                            }
+                        }
                         // **바이너리라도 억지로 열 수 있게 둔다.** 우리 판정이 틀릴 수 있고,
                         // 틀렸을 때 사용자에게 길이 없으면 그것이 더 나쁘다.
                         if (s.kind != TextViewModel.State.Failed.Kind.UNREADABLE) {
@@ -290,19 +319,32 @@ fun TextViewerScreen(
                     }
                 }
 
-                is TextViewModel.State.Ready -> RowList(
-                    doc = s.doc,
-                    window = window,
-                    listState = listState,
-                    hScroll = hScroll,
-                    wrap = wrap,
-                    showLineNumbers = showLineNumbers,
-                    fontSize = fontSize,
-                    colors = colors,
-                    query = if (searchOpen) search.query else "",
-                    ignoreCase = search.ignoreCase,
-                    currentHitRow = search.currentRow,
-                )
+                is TextViewModel.State.Ready -> {
+                    val current = settings
+                    when {
+                        // 저장된 설정을 읽는 중이다(한두 프레임). 기본값으로 한 번 그렸다가 바뀌지 않게 기다린다.
+                        current == null -> Centered { CircularProgressIndicator() }
+                        previewOn -> PreviewArea(
+                            preview = preview,
+                            fontSp = settings?.fontSp ?: TextViewerDefaults.DEFAULT_FONT_SP,
+                            onShowSource = vm::togglePreview,
+                        )
+                        else -> RowList(
+                            doc = s.doc,
+                            window = window,
+                            listState = listState,
+                            hScroll = hScroll,
+                            wrap = current.wrap,
+                            showLineNumbers = current.lineNumbers,
+                            fontSize = current.fontSp,
+                            colors = colors,
+                            query = if (searchOpen) search.query else "",
+                            ignoreCase = search.ignoreCase,
+                            currentHitRow = search.currentRow,
+                            marks = if (current.showLineEnds) lineEndMarks else null,
+                        )
+                    }
+                }
             }
         }
     }
@@ -367,6 +409,8 @@ private fun RowList(
     query: String,
     ignoreCase: Boolean,
     currentHitRow: Int?,
+    /** 줄 끝 표시. null 이면 그리지 않는다. */
+    marks: LineEndMarks?,
 ) {
     val lineDigits = remember(doc.index.lineCount) {
         maxOf(2, doc.index.lineCount.toString().length)
@@ -396,8 +440,8 @@ private fun RowList(
                     // 아직 안 읽힌 행. 높이만 맞춰 두면 스크롤 막대가 튀지 않는다.
                     Box(Modifier.height(rowHeight).fillMaxWidth())
                 } else {
-                    val text = remember(row, query, ignoreCase, currentHitRow, rowNo, colors) {
-                        annotate(row, colors, query, ignoreCase, rowNo == currentHitRow)
+                    val text = remember(row, query, ignoreCase, currentHitRow, rowNo, colors, marks) {
+                        annotateRow(row, colors, query, ignoreCase, rowNo == currentHitRow, marks)
                     }
                     Text(
                         text = text,
@@ -416,34 +460,6 @@ private fun RowList(
                     )
                 }
             }
-        }
-    }
-}
-
-/** 조각과 찾은 자리를 하나의 [AnnotatedString] 으로 합친다. */
-private fun annotate(
-    row: TextRow,
-    colors: CodeColors,
-    query: String,
-    ignoreCase: Boolean,
-    isCurrentHit: Boolean,
-): AnnotatedString = androidx.compose.ui.text.buildAnnotatedString {
-    append(row.text)
-    for (s in row.spans) {
-        // 조각이 행 길이를 넘는 일은 없어야 하지만, 넘으면 예외가 나므로 잘라 넣는다.
-        val end = minOf(s.end, row.text.length)
-        if (s.start >= end) continue
-        addStyle(SpanStyle(color = colors.of(s.kind)), s.start, end)
-    }
-    if (query.isNotEmpty()) {
-        var at = row.text.indexOf(query, 0, ignoreCase)
-        while (at >= 0) {
-            addStyle(
-                SpanStyle(background = if (isCurrentHit) colors.currentHit else colors.hit),
-                at,
-                at + query.length,
-            )
-            at = row.text.indexOf(query, at + query.length, ignoreCase)
         }
     }
 }
@@ -499,29 +515,39 @@ private fun SearchBar(
 @Composable
 private fun SearchFooter(search: TextViewModel.SearchState, onStep: (Int) -> Unit) {
     Surface(tonalElevation = 3.dp) {
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = when {
-                    search.running -> stringResource(R.string.text_search_running)
-                    search.query.isEmpty() -> ""
-                    search.hits.isEmpty() -> stringResource(R.string.text_search_none)
-                    else -> stringResource(
-                        R.string.text_search_count,
-                        search.cursor + 1,
-                        search.hits.size,
-                    )
-                },
-                style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.weight(1f),
-            )
-            IconButton(onClick = { onStep(-1) }, enabled = search.hits.isNotEmpty()) {
-                Icon(Icons.Filled.KeyboardArrowUp, stringResource(R.string.text_search_prev))
+        Box {
+            Row(
+                Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = when {
+                        search.running -> stringResource(R.string.text_search_progress, search.percent)
+                        search.query.isEmpty() -> ""
+                        search.hits.isEmpty() -> stringResource(R.string.text_search_none)
+                        else -> stringResource(
+                            R.string.text_search_count,
+                            search.cursor + 1,
+                            search.hits.size,
+                        )
+                    },
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.weight(1f),
+                )
+                IconButton(onClick = { onStep(-1) }, enabled = search.hits.isNotEmpty()) {
+                    Icon(Icons.Filled.KeyboardArrowUp, stringResource(R.string.text_search_prev))
+                }
+                IconButton(onClick = { onStep(1) }, enabled = search.hits.isNotEmpty()) {
+                    Icon(Icons.Filled.KeyboardArrowDown, stringResource(R.string.text_search_next))
+                }
             }
-            IconButton(onClick = { onStep(1) }, enabled = search.hits.isNotEmpty()) {
-                Icon(Icons.Filled.KeyboardArrowDown, stringResource(R.string.text_search_next))
+            // 파일 전체를 훑는 동안 얼마나 왔는지 보인다. 멈추는 길은 위 막대의 닫기(찾기 취소)다.
+            // **막대 위에 겹친다.** 칸으로 두면 찾기가 시작하고 끝날 때마다 아래 막대가 4dp 늘었다 줄어 본문이 위아래로 흔들린다.
+            if (search.running) {
+                LinearProgressIndicator(
+                    progress = { search.percent / 100f },
+                    modifier = Modifier.fillMaxWidth().align(Alignment.TopCenter),
+                )
             }
         }
     }
@@ -579,37 +605,56 @@ private fun confidenceMark(d: CharsetDetector.Detection?): String = when (d?.con
     else -> ""
 }
 
+/**
+ * 보기 메뉴. **여기서 바꾼 것은 저장된다** — 다음에 여는 파일도 이 모양이다(14단계). 설정을 읽는 동안([settings] 가
+ * null)은 고를 것을 흐리게 둔다.
+ */
 @Composable
 private fun ViewerMenu(
     expanded: Boolean,
-    wrap: Boolean,
-    showLineNumbers: Boolean,
+    settings: TextViewerDefaults?,
+    canGoToLine: Boolean,
     onDismiss: () -> Unit,
     onWrap: () -> Unit,
     onLineNumbers: () -> Unit,
+    onLineEnds: () -> Unit,
     onFontBigger: () -> Unit,
     onFontSmaller: () -> Unit,
     onEncoding: () -> Unit,
     onLanguage: () -> Unit,
     onGoToLine: () -> Unit,
+    /** 파일에 닿을 수 있는가([TextOpenWith.inMenu]). 거짓이면 '다른 앱으로 열기' 를 흐리게 둔다. */
+    canOpenWith: Boolean,
+    onOpenWith: () -> Unit,
 ) {
+    val ready = settings != null
     DropdownMenu(expanded = expanded, onDismissRequest = onDismiss) {
-        CheckItem(stringResource(R.string.text_wrap), wrap) { onWrap() }
-        CheckItem(stringResource(R.string.text_line_numbers), showLineNumbers) { onLineNumbers() }
+        CheckItem(stringResource(R.string.text_wrap), settings?.wrap == true, ready) { onWrap() }
+        CheckItem(stringResource(R.string.text_line_numbers), settings?.lineNumbers == true, ready) { onLineNumbers() }
+        CheckItem(
+            label = stringResource(R.string.text_line_ends),
+            checked = settings?.showLineEnds == true,
+            enabled = ready,
+            supporting = stringResource(R.string.text_line_ends_legend),
+        ) { onLineEnds() }
         HorizontalDivider()
         DropdownMenuItem(
             text = { Text(stringResource(R.string.text_font_bigger)) },
             onClick = onFontBigger,
+            enabled = settings != null && settings.fontSp < TextViewerDefaults.MAX_FONT_SP,
         )
         DropdownMenuItem(
             text = { Text(stringResource(R.string.text_font_smaller)) },
             onClick = onFontSmaller,
+            enabled = settings != null && settings.fontSp > TextViewerDefaults.MIN_FONT_SP,
         )
         HorizontalDivider()
-        DropdownMenuItem(
-            text = { Text(stringResource(R.string.text_goto_line)) },
-            onClick = { onDismiss(); onGoToLine() },
-        )
+        if (canGoToLine) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.text_goto_line)) },
+                onClick = { onDismiss(); onGoToLine() },
+            )
+        }
         DropdownMenuItem(
             text = { Text(stringResource(R.string.text_encoding)) },
             onClick = { onDismiss(); onEncoding() },
@@ -618,18 +663,113 @@ private fun ViewerMenu(
             text = { Text(stringResource(R.string.text_language)) },
             onClick = { onDismiss(); onLanguage() },
         )
+        // 보기 설정과 갈라 맨 아래에 둔다 — 이것만 이 화면을 떠난다. 문구는 `core:io` 의 것 한 벌이다.
+        HorizontalDivider()
+        DropdownMenuItem(
+            text = { Text(stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with)) },
+            onClick = { onDismiss(); onOpenWith() },
+            enabled = canOpenWith,
+        )
     }
 }
 
 @Composable
-private fun CheckItem(label: String, checked: Boolean, onClick: () -> Unit) {
+private fun CheckItem(
+    label: String,
+    checked: Boolean,
+    enabled: Boolean = true,
+    supporting: String? = null,
+    onClick: () -> Unit,
+) {
     DropdownMenuItem(
-        text = { Text(label) },
+        text = {
+            if (supporting == null) {
+                Text(label)
+            } else {
+                Column {
+                    Text(label)
+                    Text(
+                        text = supporting,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.outline,
+                    )
+                }
+            }
+        },
         trailingIcon = {
             if (checked) Icon(Icons.Filled.Check, null)
         },
         onClick = onClick,
+        enabled = enabled,
     )
+}
+
+/** 줄 끝 표시의 글자. 문구처럼 `strings.xml` 에서 온다. */
+@Composable
+private fun rememberLineEndMarks(): LineEndMarks {
+    val lf = stringResource(R.string.text_eol_lf)
+    val crlf = stringResource(R.string.text_eol_crlf)
+    val cr = stringResource(R.string.text_eol_cr)
+    return remember(lf, crlf, cr) { LineEndMarks(lf = lf, crlf = crlf, cr = cr) }
+}
+
+// ---- 미리보기 ------------------------------------------------------------------
+
+/**
+ * 마크다운 미리보기의 자리. 만드는 중·너무 큼·실패는 **말로** 알리고 원문으로 돌아가는 단추를 둔다 — 미리보기가
+ * 안 되는 파일에서 사용자가 갇히지 않게.
+ */
+@Composable
+private fun PreviewArea(preview: TextViewModel.Preview, fontSp: Int, onShowSource: () -> Unit) {
+    when (preview) {
+        TextViewModel.Preview.Off -> Unit
+        TextViewModel.Preview.Building -> Centered {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                CircularProgressIndicator()
+                Text(stringResource(R.string.text_preview_building), style = MaterialTheme.typography.bodyMedium)
+            }
+        }
+        is TextViewModel.Preview.TooLarge -> PreviewMessage(
+            text = stringResource(
+                R.string.text_preview_too_large,
+                (preview.limitBytes / (1024 * 1024)).toInt(),
+            ),
+            onShowSource = onShowSource,
+        )
+        TextViewModel.Preview.Failed -> PreviewMessage(
+            text = stringResource(R.string.text_preview_failed),
+            onShowSource = onShowSource,
+        )
+        is TextViewModel.Preview.Ready -> Column(Modifier.fillMaxSize()) {
+            if (preview.truncated) {
+                Surface(tonalElevation = 2.dp, modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = stringResource(R.string.text_preview_truncated),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
+                    )
+                }
+            }
+            MarkdownPane(preview, textZoom = fontSp * 100 / TextViewerDefaults.DEFAULT_FONT_SP, modifier = Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+private fun PreviewMessage(text: String, onShowSource: () -> Unit) {
+    Centered {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(32.dp),
+        ) {
+            Text(text, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
+            TextButton(onClick = onShowSource) { Text(stringResource(R.string.text_preview_show_source)) }
+        }
+    }
 }
 
 // ---- 시트와 대화상자 ---------------------------------------------------------------
@@ -762,6 +902,3 @@ private fun GoToLineDialog(lineCount: Int, onGo: (Int) -> Unit, onDismiss: () ->
     )
 }
 
-private const val DEFAULT_FONT_SP = 13
-private const val MIN_FONT_SP = 9
-private const val MAX_FONT_SP = 22

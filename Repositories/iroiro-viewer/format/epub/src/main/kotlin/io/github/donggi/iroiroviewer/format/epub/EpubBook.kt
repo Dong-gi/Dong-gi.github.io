@@ -44,8 +44,13 @@ class EpubBook internal constructor(
     private val masks: Map<String, FontObfuscation.Mask> = emptyMap(),
 ) : OpenedDocument {
 
-    /** 읽는 차례의 한 장. */
-    data class Chapter(val path: String, val mediaType: String)
+    /**
+     * 읽는 차례의 한 장.
+     *
+     * @param fixedLayout **고정 레이아웃** 쪽인가(EPUB 3.3 — 책 전체의 `rendition:layout` 이나 차례 항목의
+     *   `rendition:layout-pre-paginated`·`-reflowable` 이 정한다). 화면이 흘리지 않고 통째로 맞춰 그린다.
+     */
+    data class Chapter(val path: String, val mediaType: String, val fixedLayout: Boolean = false)
 
     override val formatId: FormatId = FormatId.EPUB
 
@@ -67,6 +72,18 @@ class EpubBook internal constructor(
     /** 목차. 없으면 비어 있다. */
     val toc: List<Toc>
 
+    /** 고정 레이아웃 쪽이 하나라도 있는가. 화면이 처음 열 때 한 번 알린다. */
+    val hasFixedLayout: Boolean get() = spine.any { it.fixedLayout }
+
+    /** 모든 쪽이 고정 레이아웃인가. 그러면 글자 크기·여백·바탕을 고를 것이 없다. */
+    val allFixedLayout: Boolean get() = spine.isNotEmpty() && spine.all { it.fixedLayout }
+
+    /**
+     * 오른쪽에서 왼쪽으로 넘기는 책인가(`page-progression-direction="rtl"`). 세로쓰기 일본어 책이 대개 그렇다 — 화면이 장의
+     * 처음을 **오른쪽 끝**으로 보고, 읽은 자리를 가로로 잰다.
+     */
+    val rightToLeft: Boolean get() = pkg.pageProgressionRtl
+
     /** 목차 한 줄. [spineIndex] 가 -1 이면 차례 밖을 가리킨다. */
     data class Toc(val title: String, val path: String, val depth: Int, val spineIndex: Int)
 
@@ -77,10 +94,10 @@ class EpubBook internal constructor(
 
     init {
         val byId = pkg.items.associateBy { it.id }
-        spine = pkg.spine.mapNotNull { id ->
-            val item = byId[id] ?: return@mapNotNull null
-            if (item.path !in byPath) return@mapNotNull null
-            Chapter(item.path, item.mediaType)
+        spine = pkg.spine.mapIndexedNotNull { i, id ->
+            val item = byId[id] ?: return@mapIndexedNotNull null
+            if (item.path !in byPath) return@mapIndexedNotNull null
+            Chapter(item.path, item.mediaType, isFixed(pkg.spineProperties.getOrElse(i) { "" }))
         }
         val order = spine.withIndex().associate { (i, c) -> c.path to i }
         toc = readToc(byId).map { Toc(it.title, it.href, it.depth, order[it.href] ?: -1) }
@@ -119,13 +136,37 @@ class EpubBook internal constructor(
      * 대신 위생기에게 **'이 주소가 책 안에 있는가' 를 묻게** 한다. 없는 것을 가리키는
      * 주소는 지워지므로, WebView 가 우리 호스트에 없는 것을 요청하는 일 자체가 줄어든다.
      */
-    fun chapterHtml(index: Int, extraCss: String = ""): String? {
+    fun chapterHtml(index: Int, extraCss: String = ""): String? = render(index) { extraCss }
+
+    /**
+     * 장 하나를 **읽는 모양([look])대로**. 흐름 장이면 여백·바탕을([ReaderStyle.flow]), 고정 레이아웃 장이면 쪽을 화면에 통째로
+     * 맞추는 CSS 를([ReaderStyle.fixedPage]) 얹는다.
+     *
+     * 고정 레이아웃 쪽의 화폭은 **위생 전의 글**에서 읽는다 — 위생기가 `<meta>` 를 지우기 때문이다([FixedLayout]). 이 함수가
+     * 장을 한 번 읽는 김에 함께 본다(화면이 크기를 알려고 장을 따로 읽으면 주 스레드에서 ZIP 을 읽게 된다).
+     */
+    fun chapterHtml(index: Int, look: ReaderStyle.Look): String? {
+        val chapter = spine.getOrNull(index) ?: return null
+        return render(index) { raw ->
+            if (chapter.fixedLayout) {
+                ReaderStyle.fixedPage(viewportOf(chapter, raw), look.viewWidth, look.viewHeight)
+            } else {
+                ReaderStyle.flow(look.margin, look.tone)
+            }
+        }
+    }
+
+    /**
+     * 장 하나를 위생을 거친 문서로. [cssFor] 는 장의 날것 글(글이 아닌 장이면 null)을 받아 얹을 CSS 를 준다 —
+     * **이미 위생을 거친 CSS** 여야 한다(`HtmlShell.wrap` 의 계약).
+     */
+    private inline fun render(index: Int, cssFor: (raw: String?) -> String): String? {
         val chapter = spine.getOrNull(index) ?: return null
         // **차례에 글이 아닌 것이 올 수 있다.** 만화형 EPUB 은 JPEG 를 곧바로 차례에 넣는다(IDPF 의
         // haruko-jpeg·page-blanche-bitmaps-in-spine). 그것을 글로 읽으면 JPEG 바이트가 UTF-8 로 풀려
         // 뜻 없는 글자와 가짜 태그가 화면을 채웠다(실세계 말뭉치가 잡았다).
         val type = contentTypeOf(chapter)
-        if (isBinary(type)) return binaryChapter(chapter, type, extraCss)
+        if (isBinary(type)) return binaryChapter(chapter, type, cssFor(null))
         val raw = readText(chapter.path) ?: return null
         val base = EpubHref.dirOf(chapter.path)
         val result = HtmlSanitizer.sanitize(
@@ -139,7 +180,31 @@ class EpubBook internal constructor(
         // 12·13단계의 문서와도 같은 것이라 포맷 쪽에 두는 편이 맞다.
         // 장이 언어를 적지 않았으면 책의 `dc:language` 를 쓴다 — 줄 나눔 규칙(`keep-all`)이 언어를 보고, 한자의 자형도
         // 언어를 따른다(적지 않으면 기기의 언어로 그린다).
-        return HtmlShell.wrap(result.html, extraCss, pkg.language)
+        return HtmlShell.wrap(result.html, cssFor(raw), pkg.language)
+    }
+
+    /**
+     * 고정 레이아웃 쪽의 화폭. 쪽의 뷰포트 → (SVG 쪽이면) 뿌리 `<svg>` → 책 전체의 `rendition:viewport` 차례다([FixedLayout]).
+     * SVG 가 아닌 쪽에서 `<svg>` 를 보지 않는 것은 본문 안의 작은 그림 하나를 화폭으로 읽지 않으려는 것이다.
+     *
+     * **차례에 곧바로 든 그림([raw] 가 null)에는 화폭을 주지 않는다** — 그 그림이 책 전체의 화폭과 같은 크기라는 보장이 없고,
+     * 우리가 만든 쪽(그림 한 장)은 화면에 맞추기만 하면 된다([ReaderStyle.fixedPage] 의 null 갈래).
+     */
+    private fun viewportOf(chapter: Chapter, raw: String?): FixedLayout.Viewport? {
+        if (raw == null) return null
+        FixedLayout.fromHtml(raw)?.let { return it }
+        if (chapter.mediaType == SVG_TYPE) FixedLayout.fromSvg(raw)?.let { return it }
+        return FixedLayout.parseViewport(pkg.viewport)
+    }
+
+    /** 차례 항목의 `properties` 와 책 전체의 설정으로 이 장이 고정 레이아웃인지 정한다(항목의 것이 이긴다). */
+    private fun isFixed(properties: String): Boolean {
+        val props = properties.split(' ', '\t', '\n', '\r')
+        return when {
+            "rendition:layout-pre-paginated" in props -> true
+            "rendition:layout-reflowable" in props -> false
+            else -> pkg.fixedLayout
+        }
     }
 
     /**
@@ -299,6 +364,8 @@ class EpubBook internal constructor(
     }
 
     private companion object {
+        const val SVG_TYPE = "image/svg+xml"
+
         /**
          * 차례에 올라와도 그대로 그리는 그림 → `data:` 에 적을 MIME. **표에 있는 값만 쓴다** — 매니페스트의
          * `media-type` 은 책이 적은 글자라 그대로 이어 붙이면 속성을 빠져나갈 수 있다.

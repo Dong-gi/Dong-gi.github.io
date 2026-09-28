@@ -3,9 +3,13 @@ package io.github.donggi.iroiroviewer.archive
 import androidx.test.platform.app.InstrumentationRegistry
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.FileOpManager
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -61,6 +65,7 @@ class ExtractEngineTest {
         conflict: FileOpEngine.Conflict = FileOpEngine.Conflict.KEEP_BOTH,
         indices: List<Int>? = null,
         password: CharArray? = null,
+        onProgress: (FileOpEngine.Progress) -> Unit = { },
     ) = runBlocking {
         engine.run(
             FileOpManager.Request.Extract(
@@ -72,7 +77,52 @@ class ExtractEngineTest {
                 conflict = conflict,
                 password = password,
             ),
-        ) { }
+            onProgress,
+        )
+    }
+
+    /** 폴더 엔트리까지 시각을 박은 ZIP. 폴더 이름은 `/` 로 끝난다. */
+    private fun zipWithDirs(name: String, dirs: List<String>, files: List<Pair<String, String>>): File {
+        val f = File(work, name)
+        ZipArchiveOutputStream(f).use { out ->
+            for (d in dirs) {
+                val e = ZipArchiveEntry(d)
+                e.time = FIXED_TIME
+                out.putArchiveEntry(e)
+                out.closeArchiveEntry()
+            }
+            for ((entryName, body) in files) {
+                val e = ZipArchiveEntry(entryName)
+                e.time = FIXED_TIME
+                out.putArchiveEntry(e)
+                out.write(body.toByteArray())
+                out.closeArchiveEntry()
+            }
+        }
+        return f
+    }
+
+    /** tar.gz — 파일·폴더(시각)·심볼릭 링크. commons-compress 의 작성기가 만든다. */
+    private fun tarGz(name: String): File {
+        val f = File(work, name)
+        TarArchiveOutputStream(GzipCompressorOutputStream(f.outputStream())).use { out ->
+            val dir = TarArchiveEntry("책/")
+            dir.setModTime(FIXED_TIME)
+            out.putArchiveEntry(dir)
+            out.closeArchiveEntry()
+            val body = "쪽 하나".toByteArray()
+            val file = TarArchiveEntry("책/쪽.txt")
+            file.size = body.size.toLong()
+            file.setModTime(FIXED_TIME)
+            out.putArchiveEntry(file)
+            out.write(body)
+            out.closeArchiveEntry()
+            val link = TarArchiveEntry("책/바로가기", TarArchiveEntry.LF_SYMLINK)
+            link.linkName = "쪽.txt"
+            out.putArchiveEntry(link)
+            out.closeArchiveEntry()
+        }
+        return f
     }
 
     /** 계측 APK 의 자산으로 붙은 암호 표본(`format:archive` 의 JVM 시험과 같은 벌). */
@@ -197,6 +247,152 @@ class ExtractEngineTest {
         val got = File(dest, "a.txt").lastModified()
         // ZIP 의 시각 해상도는 2초다. 그 안이면 보존된 것으로 본다.
         assertTrue("시각이 $got 인데 $FIXED_TIME 이어야 한다", kotlin.math.abs(got - FIXED_TIME) <= 2000)
+    }
+
+    /**
+     * **폴더의 수정시각도 되살린다** — 풀기가 만든 폴더만, 아카이브에 시각이 적힌 것만, 모든 쓰기가 끝난 뒤에.
+     * 이미 있던 폴더('여기에 풀기' 의 목적지)는 사용자의 것이라 건드리지 않는다.
+     */
+    @Test
+    fun 폴더의_수정시각을_되살린다() {
+        val dest = File(work, "d")
+        dest.mkdirs()
+        val archive = zipWithDirs("dirs.zip", listOf("a/", "a/b/"), listOf("a/b/c.txt" to "내용", "a/d.txt" to "둘"))
+        run(archive, dest)
+
+        for (p in listOf("a", "a/b")) {
+            val got = File(dest, p).lastModified()
+            assertTrue("$p 의 시각이 $got 인데 $FIXED_TIME 이어야 한다", kotlin.math.abs(got - FIXED_TIME) <= 2000)
+        }
+        assertTrue("이미 있던 목적지가 아카이브의 시각을 받았다", kotlin.math.abs(dest.lastModified() - FIXED_TIME) > 2000)
+    }
+
+    /** tar.gz 를 순차로 풀고, 링크는 풀지 않고 세고, 폴더 시각을 되살리고, 진행 바는 **아카이브 크기**로 끝난다. */
+    @Test
+    fun tar_gz_를_풀고_링크는_센다() {
+        val dest = File(work, "d")
+        dest.mkdirs()
+        val archive = tarGz("책.tar.gz")
+        val progress = ArrayList<FileOpEngine.Progress>()
+        val result = run(archive, dest, onProgress = { progress += it })
+
+        assertTrue("${result.outcome}", result.outcome is FileOpEngine.Outcome.Done)
+        assertEquals("쪽 하나", File(dest, "책/쪽.txt").readText())
+        assertFalse("링크가 풀렸다", File(dest, "책/바로가기").exists())
+        assertEquals(1, result.report.refusedLink)
+        val dirTime = File(dest, "책").lastModified()
+        assertTrue("폴더 시각이 $dirTime", kotlin.math.abs(dirTime - FIXED_TIME) <= 2000)
+        assertTrue("진행 보고가 없다", progress.isNotEmpty())
+        assertTrue("분모가 아카이브 크기가 아니다: ${progress.last()}", progress.all { it.bytesTotal == archive.length() })
+        assertEquals(emptyList<String>(), partials(dest))
+    }
+
+    /**
+     * **7z 의 폴더도 되살린다.** 예전에는 7z 리더가 폴더 항목을 소비자에게 주지 않아 빈 폴더조차 생기지 않았다.
+     * 만든 것은 commons-compress 의 작성기다(폴더 항목에 시각을 적는다).
+     */
+    @Test
+    fun 칠z_의_빈_폴더를_만들고_시각을_되살린다() {
+        val dest = File(work, "d").apply { mkdirs() }
+        val f = File(work, "dirs.7z")
+        org.apache.commons.compress.archivers.sevenz.SevenZOutputFile(f).use { out ->
+            for (name in listOf("빈폴더", "찬폴더")) {
+                val d = org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry()
+                d.name = name
+                d.isDirectory = true
+                d.lastModifiedDate = java.util.Date(FIXED_TIME)
+                out.putArchiveEntry(d)
+                out.closeArchiveEntry()
+            }
+            val e = org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry()
+            e.name = "찬폴더/글.txt"
+            e.lastModifiedDate = java.util.Date(FIXED_TIME)
+            out.putArchiveEntry(e)
+            out.write("내용".toByteArray())
+            out.closeArchiveEntry()
+        }
+        val result = run(f, dest)
+
+        assertTrue("${result.outcome}", result.outcome is FileOpEngine.Outcome.Done)
+        assertTrue("빈 폴더가 생기지 않았다", File(dest, "빈폴더").isDirectory)
+        for (p in listOf("빈폴더", "찬폴더")) {
+            val got = File(dest, p).lastModified()
+            assertTrue("$p 의 시각이 $got 인데 $FIXED_TIME 이어야 한다", kotlin.math.abs(got - FIXED_TIME) <= 2000)
+        }
+    }
+
+    /**
+     * `tar -czf x.tgz .` 가 맨 앞에 두는 `./` 항목은 **풀어 넣는 새 폴더의 시각**이다. '여기에 풀기' 라면 그 폴더는
+     * 이미 있던 사용자의 것이라 건드리지 않는다.
+     */
+    @Test
+    fun 맨_위_폴더_항목의_시각은_새_폴더가_받는다() {
+        val f = File(work, "dot.tar")
+        TarArchiveOutputStream(f.outputStream()).use { out ->
+            val root = TarArchiveEntry("./")
+            root.setModTime(FIXED_TIME)
+            out.putArchiveEntry(root)
+            out.closeArchiveEntry()
+            val body = "쪽".toByteArray()
+            val file = TarArchiveEntry("./a.txt")
+            file.size = body.size.toLong()
+            file.setModTime(FIXED_TIME)
+            out.putArchiveEntry(file)
+            out.write(body)
+            out.closeArchiveEntry()
+        }
+        val parent = File(work, "p").apply { mkdirs() }
+        val result = run(f, parent, newFolder = "dot")
+        assertTrue("${result.outcome}", result.outcome is FileOpEngine.Outcome.Done)
+        assertEquals(0, result.report.refusedUnsafe)
+        val made = File(parent, "dot")
+        assertEquals("쪽", File(made, "a.txt").readText())
+        assertTrue("새 폴더의 시각이 ${made.lastModified()}", kotlin.math.abs(made.lastModified() - FIXED_TIME) <= 2000)
+
+        val here = File(work, "here").apply { mkdirs() }
+        run(f, here)
+        assertTrue("이미 있던 폴더가 아카이브의 시각을 받았다", kotlin.math.abs(here.lastModified() - FIXED_TIME) > 2000)
+    }
+
+    /**
+     * **취소하면 쓰던 항목의 임시 파일이 남지 않는다.** 리더는 취소를 `finish` 없이 위로 던진다 — 예전에는 그 항목의
+     * 숨은 임시 파일이 한 시간(`sweepPartials` 의 유예) 동안 남았다. 첫 진행 보고가 온 뒤 취소한다.
+     */
+    @Test
+    fun 취소하면_임시_파일이_남지_않는다() = runBlocking {
+        val dest = File(work, "d").apply { mkdirs() }
+        val f = File(work, "big.zip")
+        val random = java.util.Random(7)
+        ZipArchiveOutputStream(f).use { out ->
+            val chunk = ByteArray(1 shl 20)
+            for (i in 0 until 4) {
+                out.putArchiveEntry(ZipArchiveEntry("큰$i.bin"))
+                repeat(12) {
+                    random.nextBytes(chunk)
+                    out.write(chunk)
+                }
+                out.closeArchiveEntry()
+            }
+        }
+        val started = kotlinx.coroutines.CompletableDeferred<Unit>()
+        val job = launch(kotlinx.coroutines.Dispatchers.Default) {
+            engine.run(
+                FileOpManager.Request.Extract(
+                    id = "cancel",
+                    archivePath = f.absolutePath,
+                    entryIndices = null,
+                    destParent = dest.absolutePath,
+                    newFolderName = null,
+                    conflict = FileOpEngine.Conflict.KEEP_BOTH,
+                    password = null,
+                ),
+            ) { if (it.bytesDone > 0) started.complete(Unit) }
+        }
+        started.await()
+        job.cancel()
+        job.join()
+        assertEquals(emptyList<String>(), partials(dest))
+        assertFalse("취소했는데 네 항목이 다 풀렸다", (0 until 4).all { File(dest, "큰$it.bin").isFile })
     }
 
     // ---- 임시 파일 ---------------------------------------------------------------

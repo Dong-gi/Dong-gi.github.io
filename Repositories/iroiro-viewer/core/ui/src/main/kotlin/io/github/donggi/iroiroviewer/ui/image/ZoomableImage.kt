@@ -16,9 +16,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.isSpecified
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import io.github.donggi.iroiroviewer.ui.gesture.ZoomMath
@@ -68,6 +70,85 @@ fun ZoomableImage(
      */
     originalWidth: Int = bitmap?.width ?: 0,
 ) {
+    ZoomableSurface(
+        contentWidth = bitmap?.width ?: 0,
+        contentHeight = bitmap?.height ?: 0,
+        state = state,
+        modifier = modifier,
+        onTap = onTap,
+        onLongPress = onLongPress,
+        originalWidth = originalWidth,
+    ) { fw, fh ->
+        if (bitmap != null) drawBitmapLayers(bitmap, detail, fw, fh)
+    }
+}
+
+/**
+ * 확대·이동되는 **움직이는 그림** 한 장. 이미지 뷰어가 GIF·애니WebP 에 쓴다(14단계).
+ *
+ * ## 정지 그림과 같은 제스처로 확대한다 — 만화 뷰어와 갈리는 곳
+ *
+ * 만화 뷰어는 '움직이는 쪽은 확대하지 않는다' 로 갈랐다. 근거로 적은 것은 '프레임마다 다시 합성해야
+ * 해서 재생이 끊긴다' 였는데, **hwui 소스로 보면 그 길은 이렇지 않다** — 하드웨어 캔버스에서
+ * `AnimatedImageDrawable` 은 표시 목록에 drawable 하나로 **기록**되고(`SkiaRecordingCanvas::
+ * drawAnimatedImage` 가 0 을 돌려준다), 프레임은 RenderThread 가 넘긴다(`isDirty`). 확대 변환은 그
+ * 기록을 감싼 행렬일 뿐이라 UI 스레드는 배율이 **바뀔 때만** 다시 기록한다. 프레임마다 합성하는 것은
+ * 확대하지 않아도 똑같다. (기기에서 잰 것이 아니다 — 소스를 읽은 결론이다.)
+ *
+ * 이미지 뷰어에서 GIF 를 연 사람은 그것을 **보려고** 연 것이고, 사진과 섞인 폴더에서 어떤 장은
+ * 두 번 두드려도 아무 일이 없으면 고장으로 읽힌다(`ZoomMath` 가 작은 그림에 맞춤의 2배를 하한으로 둔
+ * 까닭과 같다). 그래서 제스처 계약을 정지 그림과 하나로 둔다 — 탭·더블탭·핀치·팬·배율 1 의 페이저.
+ *
+ * **선명화 조각은 없다.** 프레임이 바뀌는 그림이라 한 자리를 원본에서 다시 뜰 수 없다
+ * (`BitmapRegionDecoder` 는 GIF 를 못 읽고, 애니WebP 는 첫 장면만 준다). 확대하면 프레임 화소가
+ * 그대로 커진다. 최대 배율은 정지 그림과 같은 규칙이다(원본 폭의 2배, [ZoomMath.maxScale]).
+ *
+ * @param originalWidth 원본의 폭(화소). 프레임은 예산에 맞춰 줄여 떴을 수 있어(`AnimationPlan`)
+ *   [painter] 의 크기가 원본이 아니다. 주지 않으면 프레임 폭으로 친다.
+ */
+@Composable
+fun ZoomablePainter(
+    painter: Painter,
+    state: ZoomState,
+    modifier: Modifier = Modifier,
+    onTap: () -> Unit = {},
+    onLongPress: () -> Unit = {},
+    originalWidth: Int = 0,
+) {
+    val intrinsic = painter.intrinsicSize
+    val w = if (intrinsic.isSpecified) intrinsic.width.toInt() else 0
+    val h = if (intrinsic.isSpecified) intrinsic.height.toInt() else 0
+    ZoomableSurface(
+        contentWidth = w,
+        contentHeight = h,
+        state = state,
+        modifier = modifier,
+        onTap = onTap,
+        onLongPress = onLongPress,
+        originalWidth = originalWidth,
+    ) { fw, fh ->
+        with(painter) { draw(Size(fw, fh)) }
+    }
+}
+
+/**
+ * 두 입구([ZoomableImage]·[ZoomablePainter])가 **같은 인식기와 같은 변환**을 쓰게 모은 곳. 그리는 것만
+ * 다르다 — [drawContent] 는 맞춤 크기(`fw`×`fh`)의 상자 안에 그린다(원점이 그림의 왼쪽 위).
+ *
+ * @param contentWidth·[contentHeight] 그리는 것의 화소. 0 이면 아직 없다 — 재지도 그리지도 않는다.
+ */
+@Composable
+private fun ZoomableSurface(
+    contentWidth: Int,
+    contentHeight: Int,
+    state: ZoomState,
+    modifier: Modifier,
+    onTap: () -> Unit,
+    onLongPress: () -> Unit,
+    originalWidth: Int,
+    drawContent: DrawScope.(fw: Float, fh: Float) -> Unit,
+) {
+    val hasContent = contentWidth > 0 && contentHeight > 0
     val scope = rememberCoroutineScope()
 
     // **중심점(centroid)을 받는 쪽을 쓴다.** 받지 않는 오버로드는 deprecated 이고,
@@ -119,12 +200,12 @@ fun ZoomableImage(
             // 같은 값이면 곧바로 돌아온다.
             var canvasSize by remember { mutableStateOf(Size.Zero) }
             SideEffect {
-                if (bitmap != null && canvasSize.width > 0f) {
+                if (hasContent && canvasSize.width > 0f) {
                     state.onLayout(
                         canvasSize,
-                        bitmap.width,
-                        bitmap.height,
-                        originalWidth.takeIf { w -> w > 0 } ?: bitmap.width,
+                        contentWidth,
+                        contentHeight,
+                        originalWidth.takeIf { w -> w > 0 } ?: contentWidth,
                     )
                 }
             }
@@ -133,17 +214,17 @@ fun ZoomableImage(
                     .fillMaxSize()
                     .onSizeChanged {
                         canvasSize = Size(it.width.toFloat(), it.height.toFloat())
-                        if (bitmap != null) {
+                        if (hasContent) {
                             state.onLayout(
                                 canvasSize,
-                                bitmap.width,
-                                bitmap.height,
-                                originalWidth.takeIf { w -> w > 0 } ?: bitmap.width,
+                                contentWidth,
+                                contentHeight,
+                                originalWidth.takeIf { w -> w > 0 } ?: contentWidth,
                             )
                         }
                     },
             ) {
-                if (bitmap != null) drawFitted(bitmap, detail, state)
+                if (hasContent) drawFitted(contentWidth, contentHeight, state, drawContent)
             }
         }
     }
@@ -177,33 +258,43 @@ data class DetailLayer(
  * 상세층은 **바닥층을 지우지 않고 덮는다.** 타일이 도착하기 전에도, 타일이 화면의 일부만
  * 덮을 때도 나머지는 흐린 바닥이 메운다 — 비어 있는 흰 자리가 보이는 것보다 낫다.
  */
-private fun DrawScope.drawFitted(bitmap: ImageBitmap, detail: DetailLayer?, state: ZoomState) {
-    val (fw, fh) = ZoomMath.fittedSize(bitmap.width, bitmap.height, size.width, size.height)
+private fun DrawScope.drawFitted(
+    contentWidth: Int,
+    contentHeight: Int,
+    state: ZoomState,
+    drawContent: DrawScope.(fw: Float, fh: Float) -> Unit,
+) {
+    val (fw, fh) = ZoomMath.fittedSize(contentWidth, contentHeight, size.width, size.height)
     if (fw <= 0f || fh <= 0f) return
     translate(state.offset.x, state.offset.y) {
         scale(state.scale, pivot = center) {
             val left = (size.width - fw) / 2f
             val top = (size.height - fh) / 2f
-            // **두 층 다 부동소수로 놓는다.** 예전에는 자리와 크기를 `IntOffset`·`IntSize` 로
-            // 잘라 **확대 변환 안에서** 그렸다 — 잘린 1화소 미만의 어긋남이 배율만큼 커져,
-            // 원본 2배까지 확대하면 선명한 조각이 바닥층에서 수 ~ 수십 화소 떨어진 자리에 얹혀
-            // 조각이 올 때마다 그림이 튀었다(적대적 검토가 계산으로 잡았다: 12000 화소
-            // 파노라마에서 18 화소). 바닥층과 조각이 `ZoomMath` 가 가정하는 같은 사상을 쓴다.
-            translate(left, top) {
-                scale(fw / bitmap.width, fh / bitmap.height, pivot = Offset.Zero) {
-                    drawImage(bitmap)
-                }
-            }
-            if (detail != null && detail.image.width > 0 && detail.image.height > 0) {
-                translate(left + detail.left * fw, top + detail.top * fh) {
-                    scale(
-                        detail.width * fw / detail.image.width,
-                        detail.height * fh / detail.image.height,
-                        pivot = Offset.Zero,
-                    ) {
-                        drawImage(detail.image)
-                    }
-                }
+            translate(left, top) { drawContent(fw, fh) }
+        }
+    }
+}
+
+/**
+ * 정지 그림의 두 층. 원점이 맞춤 상자의 왼쪽 위다([drawFitted] 가 옮겨 둔다).
+ *
+ * **두 층 다 부동소수로 놓는다.** 예전에는 자리와 크기를 `IntOffset`·`IntSize` 로 잘라 **확대 변환
+ * 안에서** 그렸다 — 잘린 1화소 미만의 어긋남이 배율만큼 커져, 원본 2배까지 확대하면 선명한 조각이
+ * 바닥층에서 수 ~ 수십 화소 떨어진 자리에 얹혀 조각이 올 때마다 그림이 튀었다(적대적 검토가 계산으로
+ * 잡았다: 12000 화소 파노라마에서 18 화소). 바닥층과 조각이 `ZoomMath` 가 가정하는 같은 사상을 쓴다.
+ */
+private fun DrawScope.drawBitmapLayers(bitmap: ImageBitmap, detail: DetailLayer?, fw: Float, fh: Float) {
+    scale(fw / bitmap.width, fh / bitmap.height, pivot = Offset.Zero) {
+        drawImage(bitmap)
+    }
+    if (detail != null && detail.image.width > 0 && detail.image.height > 0) {
+        translate(detail.left * fw, detail.top * fh) {
+            scale(
+                detail.width * fw / detail.image.width,
+                detail.height * fh / detail.image.height,
+                pivot = Offset.Zero,
+            ) {
+                drawImage(detail.image)
             }
         }
     }

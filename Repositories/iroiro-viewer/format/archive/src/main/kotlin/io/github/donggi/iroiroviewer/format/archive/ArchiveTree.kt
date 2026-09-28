@@ -90,6 +90,8 @@ class ArchiveTree private constructor(val root: Node) {
             for (e in entries) {
                 val safe = e.safeName
                 if (safe == null) {
+                    // 맨 위 폴더 자신(`./`)은 위험한 이름이 아니다 — 루트가 곧 그것이다. 목록에 경고로 세우지 않는다.
+                    if (e.isRootDirectory) continue
                     // 풀 수 없는 이름. 경로로 쪼갤 수 없으므로 루트에 그대로 둔다 —
                     // 이름 안의 `..` 을 폴더로 해석하면 그 순간 우리가 탈출을 재현한다.
                     loose += e

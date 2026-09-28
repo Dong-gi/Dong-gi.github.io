@@ -31,6 +31,11 @@ dependencies {
     implementation(libs.androidx.exifinterface)
     implementation(libs.kotlinx.coroutines.core)
 
+    // 순수 규칙(폴더 알림 거르기·묶기·수정 시각 대조·예약 판단·풀기 결과)을 JVM 에서 지킨다. 파일시스템 경계는
+    // 여전히 계측 시험(androidTest)의 일이다. 안드로이드 라이브러리 모듈이라 `test-junit` 이어야 한다(함정 표).
+    testImplementation(kotlin("test-junit"))
+    testImplementation(libs.kotlinx.coroutines.test)
+
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.ext.junit)

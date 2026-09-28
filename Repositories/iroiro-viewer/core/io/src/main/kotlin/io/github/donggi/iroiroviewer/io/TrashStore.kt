@@ -184,12 +184,7 @@ class TrashStore(
 
         val target = runCatching {
             // 원래 이름 → (그 이름을 쓸 수 없으면) 다듬은 이름 → (겹치면) 번호.
-            val wanted = if (canCreate(parent, record.originalName)) {
-                record.originalName
-            } else {
-                PathRules.sanitize(record.originalName)
-            }
-            File(parent, PathRules.nextAvailable(parent, wanted))
+            File(parent, PathRules.nextAvailable(parent, restoreNameIn(parent, record.originalName)))
         }.getOrElse { return@withContext Result.Failed(1) }
 
         withContext(NonCancellable) {
@@ -205,18 +200,111 @@ class TrashStore(
     }
 
     /**
-     * 그 폴더에 그 이름으로 만들 수 있는가. 원래 이름을 그대로 쓸 수 있는지 보는 데만 쓴다.
+     * **사용자가 고른 폴더로** 되돌린다(원래 자리를 모르거나, 다른 곳에 두고 싶을 때).
      *
-     * 실제로 만들어 보고 지우는 것 말고 확실한 방법이 없다 — 파일시스템마다 받는 이름이
-     * 다르고(FAT 은 `?` 를 거부한다), 그 목록을 우리가 다시 적으면 언젠가 어긋난다.
+     * ## 원래 자리로 되돌리기([restore])와 무엇이 다른가
+     *
+     * 원래 자리는 같은 볼륨이라 `rename` 한 번이면 되지만, 고른 폴더는 **다른 볼륨일 수 있다.**
+     * 그래서 옮기는 일은 복사·이동과 같은 길([FileOpEngine.moveAs])에 맡긴다 — 같은 볼륨이면
+     * 원자적 `rename`, 볼륨을 넘으면 임시본 → fsync → `rename` 뒤에 원본 삭제, 이름 충돌은
+     * 사용자가 고른 규칙(건너뛰기·덮어쓰기·둘 다 보관), 종류가 다른 충돌은 거절. 원본을 파괴할 수
+     * 있는 다섯 길 가운데 '휴지통 복원 충돌' 이 이 규칙을 따른다.
+     *
+     * ## 기록을 언제 지우는가
+     *
+     * **휴지통 안의 것이 실제로 사라졌을 때만.** 볼륨을 넘는 폴더를 옮기다 몇 개가 실패하면 엔진은
+     * 옮긴 것만 지우고 나머지를 휴지통 안에 남긴다 — 그때 기록을 지우면 남은 것이 uuid 덩어리가 되어
+     * 앱에서 되살릴 수 없다(4단계 치명의 형태). 남아 있으면 기록도 남긴다. 취소도 같다.
+     *
+     * @return 엔진의 셈 그대로(옮긴 파일 수 · 건너뛴 수 · 실패한 수). 저장 공간 부족만 전체를 끝낸다.
      */
-    private fun canCreate(parent: File, name: String): Boolean = runCatching {
-        val probe = File(parent, name)
-        if (probe.exists()) return@runCatching true
-        if (!probe.createNewFile()) return@runCatching false
-        probe.delete()
-        true
-    }.getOrDefault(false)
+    suspend fun restoreTo(
+        uuids: List<String>,
+        destDir: String,
+        conflict: FileOpEngine.Conflict,
+        volumes: List<VolumeRegistry.Volume>,
+        engine: FileOpEngine,
+        onProgress: (FileOpEngine.Progress) -> Unit,
+    ): FileOpEngine.Outcome = withContext(IroDispatchers.io) {
+        val dest = File(destDir)
+        if (!dest.isDirectory) return@withContext FileOpEngine.Outcome.Failed(FileOpEngine.Reason.NOT_FOUND, dest.name)
+        // 휴지통 안으로 되돌리는 것은 되돌리기가 아니다. 목록이 휴지통 폴더를 보여 주지 않으므로 화면에서는
+        // 닿을 수 없는 자리지만, 이 함수가 받는 것은 문자열이라 여기서 한 번 더 막는다.
+        if (isTrashPath(dest.absolutePath)) {
+            return@withContext FileOpEngine.Outcome.Failed(FileOpEngine.Reason.TARGET_INSIDE_SOURCE, dest.name)
+        }
+        var moved = 0
+        var skipped = 0
+        var failed = 0
+        for (uuid in uuids) {
+            currentCoroutineContext().ensureActive()
+            val record = dao.find(uuid)
+            val volume = record?.let { r -> volumes.firstOrNull { it.id == r.volumeId } }
+            if (record == null || volume == null) {
+                failed++
+                continue
+            }
+            val trashDir = File(volume.path, DIR_NAME)
+            val stored = File(trashDir, uuid)
+            if (!stored.exists()) {
+                // 파일이 없는 기록은 남겨 둘 이유가 없다([restore] 와 같다).
+                dao.delete(record)
+                failed++
+                continue
+            }
+            val name = restoreNameIn(dest, record.originalName)
+            val outcome = engine.moveAs(stored.absolutePath, name, dest.absolutePath, conflict, onProgress)
+            withContext(NonCancellable) {
+                if (!stored.exists()) {
+                    File(trashDir, "$uuid$SIDECAR_EXT").delete()
+                    dao.delete(record)
+                }
+            }
+            when (outcome) {
+                is FileOpEngine.Outcome.Done -> {
+                    moved += outcome.moved
+                    skipped += outcome.skipped
+                    failed += outcome.failed
+                }
+                is FileOpEngine.Outcome.Cancelled -> return@withContext outcome
+                is FileOpEngine.Outcome.Failed -> {
+                    if (outcome.reason == FileOpEngine.Reason.NO_SPACE) {
+                        return@withContext outcome.copy(
+                            done = moved + outcome.done,
+                            skipped = skipped + outcome.skipped,
+                            failed = failed + outcome.failed,
+                        )
+                    }
+                    moved += outcome.done
+                    skipped += outcome.skipped
+                    failed += outcome.failed + 1
+                }
+            }
+        }
+        FileOpEngine.Outcome.Done(moved, skipped, failed)
+    }
+
+    /**
+     * [restoreTo] 전에 화면이 묻는 이름 충돌. **엔진과 같은 이름으로**([restoreNameIn]) 본다 —
+     * 화면과 엔진이 다른 이름을 보면 경고 없이 다른 파일이 덮어써진다(3·4단계가 고친 형태).
+     *
+     * @return (덮어쓸 수 있는 이름들, 종류가 달라 덮어쓰지 않을 이름들).
+     */
+    suspend fun restoreConflicts(
+        uuids: List<String>,
+        destDir: String,
+    ): Pair<List<String>, List<String>> = withContext(IroDispatchers.io) {
+        val dest = File(destDir)
+        val over = ArrayList<String>()
+        val blocked = ArrayList<String>()
+        for (uuid in uuids) {
+            val record = dao.find(uuid) ?: continue
+            val target = File(dest, restoreNameIn(dest, record.originalName))
+            if (!target.exists()) continue
+            if (target.isDirectory != record.isDirectory) blocked += target.name else over += target.name
+        }
+        over to blocked
+    }
 
     /**
      * 영구 삭제. 휴지통에서 빼고 실제로 지운다.
@@ -229,11 +317,14 @@ class TrashStore(
         uuids: List<String>,
         volumes: List<VolumeRegistry.Volume>,
         engine: FileOpEngine,
+        isStopped: () -> Boolean = { false },
     ): Result = withContext(IroDispatchers.io) {
         var done = 0
         var failed = 0
         for (uuid in uuids) {
             currentCoroutineContext().ensureActive()
+            // 멈춤도 **항목 경계에서만** 본다 — 아래 블록은 쪼개지지 않는다.
+            if (isStopped()) break
             val record = dao.find(uuid) ?: continue
             val volume = volumes.firstOrNull { it.id == record.volumeId }
             if (volume == null) {
@@ -279,20 +370,29 @@ class TrashStore(
         volumes: List<VolumeRegistry.Volume>,
         engine: FileOpEngine,
         retentionDays: Int = DEFAULT_RETENTION_DAYS,
+        /**
+         * 멈춰 달라는 신호. 예약 작업([TrashPurgeJobService])이 시스템에게 '그만' 을 받으면 켠다.
+         * **코루틴 취소를 쓰지 않는 까닭** — 이 일은 파일 작업 큐 안에서 돌고, 큐의 취소
+         * (`cancelCurrent`)는 '지금 도는 것' 을 끊으므로 사용자의 복사를 끊을 수 있다. 신호는 이 일만 본다.
+         * 보는 자리는 항목 경계뿐이다 — 한 항목 안의 쓰기는 쪼개지지 않는다.
+         */
+        isStopped: () -> Boolean = { false },
     ): Int = withContext(IroDispatchers.io) {
         val now = System.currentTimeMillis()
         val cutoff = now - retentionDays * 24L * 3600 * 1000
         var purged = 0
+        if (isStopped()) return@withContext 0
 
         // 1) 기간이 지난 기록. 볼륨이 붙어 있는 것만 실제로 지워진다(purge 가 판단한다).
         val expired = dao.olderThan(cutoff)
         if (expired.isNotEmpty()) {
-            val r = purge(expired.map { it.uuid }, volumes, engine)
+            val r = purge(expired.map { it.uuid }, volumes, engine, isStopped)
             if (r is Result.Done) purged += r.done
         }
 
         for (v in volumes) {
             currentCoroutineContext().ensureActive()
+            if (isStopped()) break
             val dir = File(v.path, DIR_NAME)
             if (!dir.isDirectory) continue
             val present = dir.list()?.toHashSet() ?: continue
@@ -412,5 +512,33 @@ class TrashStore(
         /** 이 경로가 휴지통 폴더(또는 그 안)인가. 목록에서 감추는 데 쓴다. */
         fun isTrashPath(path: String): Boolean =
             path.endsWith("/$DIR_NAME") || path.contains("/$DIR_NAME/")
+
+        /**
+         * 되돌릴 때 쓸 이름. **원래 이름을 먼저 그대로 시도한다** — `sanitize` 를 무조건 걸면 `...` 이나
+         * 끝에 공백이 붙은 이름(리눅스에서는 합법이고 실제로 만들어진다)이 `이름없음` 으로 돌아온다.
+         * 복원은 이름을 지어내는 자리가 아니라 쓰던 이름을 되돌리는 자리다. 그 폴더가 그 이름을 받지
+         * 않으면(FAT 의 `?`) 다듬은 이름을 쓴다.
+         *
+         * 원래 자리로 되돌리기와 고른 폴더로 되돌리기, 그리고 그 앞의 충돌 검사가 **이 함수 하나**를 쓴다.
+         */
+        fun restoreNameIn(parent: File, originalName: String): String =
+            if (canCreate(parent, originalName)) originalName else PathRules.sanitize(originalName)
+
+        /**
+         * 그 폴더에 그 이름으로 만들 수 있는가. 원래 이름을 그대로 쓸 수 있는지 보는 데만 쓴다.
+         *
+         * 실제로 만들어 보고 지우는 것 말고 확실한 방법이 없다 — 파일시스템마다 받는 이름이
+         * 다르고(FAT 은 `?` 를 거부한다), 그 목록을 우리가 다시 적으면 언젠가 어긋난다.
+         * 이미 있으면 참이다(쓸 수 있는 이름이고, 겹침은 부르는 쪽이 따로 본다).
+         */
+        internal fun canCreate(parent: File, name: String): Boolean = runCatching {
+            // 이름에 구분자가 들어 있으면 **다른 폴더에** 만들어 보게 된다. 기록이 적은 이름은 믿지 않는다.
+            if (name.isEmpty() || name.contains('/') || name == "." || name == "..") return@runCatching false
+            val probe = File(parent, name)
+            if (probe.exists()) return@runCatching true
+            if (!probe.createNewFile()) return@runCatching false
+            probe.delete()
+            true
+        }.getOrDefault(false)
     }
 }

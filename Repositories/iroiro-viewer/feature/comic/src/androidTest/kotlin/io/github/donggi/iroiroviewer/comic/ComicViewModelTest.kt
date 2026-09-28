@@ -7,6 +7,7 @@ import io.github.donggi.iroiroviewer.data.IroiroDatabase
 import io.github.donggi.iroiroviewer.io.FileKey
 import io.github.donggi.iroiroviewer.safety.ComicLimits
 import io.github.donggi.iroiroviewer.safety.ImageLimits
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
@@ -182,9 +183,94 @@ class ComicViewModelTest {
         jumped.close()
     }
 
-    /** 책을 바꾸면 앞 책의 방향이 따라오지 않는다(9단계가 기기에서 잡은 결함). */
+    /**
+     * **새 책은 설정의 기본 방향으로 연다**(14단계). 기록이 있는 책은 기록이 이긴다.
+     *
+     * 설정 파일은 앱의 것을 그대로 쓰므로 끝나면 되돌린다.
+     */
+    @Test
+    fun 새_책은_설정의_기본_방향으로_열고_기록이_있으면_기록이_이긴다() {
+        val prefs = io.github.donggi.iroiroviewer.data.AppPreferences(app)
+        val before = runBlocking { prefs.comicDefaultDirection.first() }
+        try {
+            runBlocking { prefs.setComicDefaultDirection(ComicViewModel.Direction.RTL.code) }
+            val fresh = zipOf("기본방향.zip", pages = 3)
+            val vm = newVm()
+            vm.open(fresh.path)
+            awaitReady(vm)
+            assertEquals("기록이 없으면 설정의 기본 방향", ComicViewModel.Direction.RTL, vm.direction.value)
+
+            // 이 책에서 세로로 바꾸고 나간 뒤에는 기본값이 무엇이든 세로다.
+            vm.setDirection(ComicViewModel.Direction.VERTICAL)
+            vm.close()
+            awaitSaved(fresh, ComicViewModel.Direction.VERTICAL)
+            vm.open(fresh.path)
+            awaitReady(vm)
+            assertEquals("기록이 설정을 이긴다", ComicViewModel.Direction.VERTICAL, vm.direction.value)
+            vm.close()
+        } finally {
+            runBlocking { prefs.setComicDefaultDirection(before) }
+        }
+    }
+
+    /**
+     * **다음 권으로 곧바로 넘어가도 앞 책의 마지막 쪽이 남는다**(14단계).
+     *
+     * 다음 권은 `close()` 를 거치지 않고 `open()` 을 다시 부른다. 쪽 저장은 700 ms 모아 쓰므로, 여는 함수가 앞 책의 값을
+     * 먼저 쓰지 않으면 `key` 가 지워진 뒤에 도는 저장이 아무것도 쓰지 않는다 — 끝까지 읽은 책의 이어보기가 몇 쪽 앞에 남는다.
+     */
+    @Test
+    fun 다음_권으로_넘어가도_앞_책의_마지막_쪽을_쓴다() {
+        val first = zipOf("권1.zip", pages = 5)
+        val second = zipOf("권2.zip", pages = 4)
+
+        val vm = newVm()
+        vm.open(first.path)
+        awaitReady(vm)
+        // 같은 폴더의 같은 확장자 압축이 다음 권이다.
+        val deadline = System.currentTimeMillis() + 15_000
+        while (vm.next.value == null && System.currentTimeMillis() < deadline) Thread.sleep(20)
+        assertEquals(second.path, vm.next.value?.path)
+
+        vm.onPageChanged(4)
+        // 모아 쓰기가 돌기 전에 곧바로 다음 권을 연다.
+        vm.open(second.path)
+        awaitReady(vm)
+        assertEquals("다음 권은 처음부터", 0, vm.page.value)
+
+        val saveDeadline = System.currentTimeMillis() + 15_000
+        var saved: Int? = null
+        while (System.currentTimeMillis() < saveDeadline) {
+            saved = runBlocking {
+                val key = FileKey.of(first.name, first.length(), first.lastModified())
+                IroiroDatabase.get(app).comicProgress().find(key)?.page
+            }
+            if (saved == 4) break
+            Thread.sleep(20)
+        }
+        assertEquals("앞 책의 마지막 쪽이 남아야 한다", 4, saved)
+        vm.close()
+    }
+
+    /**
+     * 책을 바꾸면 앞 책의 방향이 따라오지 않는다(9단계가 기기에서 잡은 결함).
+     *
+     * 14단계부터 '기록이 없는 책' 의 방향은 설정의 기본값이다 — 기기의 설정이 무엇이든 이 시험이 서도록 왼쪽에서
+     * 오른쪽으로 맞추고 끝나면 되돌린다.
+     */
     @Test
     fun 책을_바꾸면_앞_책의_방향이_따라오지_않는다() {
+        val prefs = io.github.donggi.iroiroviewer.data.AppPreferences(app)
+        val before = runBlocking { prefs.comicDefaultDirection.first() }
+        runBlocking { prefs.setComicDefaultDirection(ComicViewModel.Direction.LTR.code) }
+        try {
+            directionDoesNotFollow()
+        } finally {
+            runBlocking { prefs.setComicDefaultDirection(before) }
+        }
+    }
+
+    private fun directionDoesNotFollow() {
         val webtoon = zipOf("웹툰.zip", pages = 3)
         val manga = zipOf("만화2.zip", pages = 3)
 

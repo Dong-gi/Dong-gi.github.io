@@ -10,6 +10,11 @@
     -->
 
     <string name="doc_close">닫기</string>
+    <!--
+      위쪽 막대의 ⋮ (화면 낭독기가 읽는 이름). 그 안의 '다른 앱으로 열기' 는 여기 두지 않는다 — 문구는 그것을 만드는
+      `core:io` 의 ExternalOpen 곁에 한 벌만 있다(io_open_with).
+    -->
+    <string name="doc_more">더보기</string>
     <string name="doc_loading">문서를 여는 중…</string>
     <string name="doc_page_of">%1$d / %2$d</string>
 
@@ -24,6 +29,8 @@
     <string name="doc_resumed_slide">%d번째 슬라이드부터 이어서 봅니다</string>
     <string name="doc_resumed_part">%d번째 부분부터 이어서 봅니다</string>
     <string name="doc_restart">처음부터</string>
+    <!-- 첫 장·부분 안에서 이어 볼 때. '1장부터' 는 틀린 말이 아니지만 사용자가 본 것은 장이 아니라 자리다. -->
+    <string name="doc_resumed_here">읽던 자리부터 이어서 봅니다</string>
 
     <string name="doc_page_failed">이 쪽을 그릴 수 없습니다</string>
 
@@ -48,6 +55,50 @@
     <string name="doc_flow_notice_sheets">저장된 값을 보여 줍니다. 수식을 다시 계산하지 않고 차트는 그리지 않습니다</string>
     <string name="doc_flow_notice_slides">슬라이드를 화면 폭에 맞춰 그립니다. 글꼴과 줄바꿈이 원본과 다를 수 있습니다</string>
     <string name="doc_untitled_chapter">이름 없는 장</string>
+    <!--
+      고정 레이아웃 쪽이 있는 EPUB 을 처음 열 때 한 번. 글자 크기·여백·바탕이 그 쪽에 걸리지 않는 까닭을 함께 말한다.
+      흐름 장이 섞인 책도 있어(흐름 장에는 모양이 걸린다) '책 전체' 가 아니라 '그런 쪽' 이라고 말한다.
+    -->
+    <string name="doc_fixed_layout_notice">쪽 모양이 고정된 책입니다. 그런 쪽은 화면에 통째로 맞춰 보여 주고 글자 크기·여백·바탕을 걸지 않습니다</string>
+
+    <!--
+      읽는 모양(14단계). 설정 화면과 같은 값을 쓴다 — 여기서 바꾸면 다음 문서도 그 모양으로 열린다.
+      시트에는 글자 크기만, 슬라이드에는 아무것도 걸리지 않는다(ReaderLooks 의 표).
+    -->
+    <string name="doc_appearance">보기</string>
+    <string name="doc_appearance_title">읽는 모양</string>
+    <string name="doc_appearance_note">여기서 고른 모양은 설정에 남아 다음에 여는 문서에도 걸립니다</string>
+    <string name="doc_font_size">글자 크기</string>
+    <string name="doc_font_smaller">작게</string>
+    <string name="doc_font_larger">크게</string>
+    <string name="doc_font_percent">%d%%</string>
+    <string name="doc_margin">여백</string>
+    <string name="doc_margin_narrow">좁게</string>
+    <string name="doc_margin_normal">보통</string>
+    <string name="doc_margin_wide">넓게</string>
+    <string name="doc_theme">바탕</string>
+    <string name="doc_theme_system">시스템</string>
+    <string name="doc_theme_light">밝게</string>
+    <string name="doc_theme_dark">어둡게</string>
+    <string name="doc_theme_sepia">세피아</string>
+
+    <!-- PDF 두 쪽 보기·쪽 목록(14단계). 두 쪽 보기는 가로 화면에서만 단추가 뜬다. -->
+    <string name="doc_spread_on">두 쪽</string>
+    <string name="doc_spread_off">한 쪽</string>
+    <string name="doc_spread_of">%1$d–%2$d / %3$d</string>
+    <string name="doc_grid">쪽 목록</string>
+    <string name="doc_grid_page">%d</string>
+
+    <!-- PDF 찾기. 안드로이드 15 이상에서만 단추가 뜬다(플랫폼이 글자를 주는 것이 그 판부터다). -->
+    <string name="doc_search">찾기</string>
+    <string name="doc_search_hint">문서에서 찾기</string>
+    <string name="doc_search_count">%1$d / %2$d</string>
+    <string name="doc_search_count_capped">%1$d / %2$d+</string>
+    <string name="doc_search_running">찾는 중…</string>
+    <string name="doc_search_none">찾지 못했습니다</string>
+    <string name="doc_search_previous">이전 결과</string>
+    <string name="doc_search_next">다음 결과</string>
+    <string name="doc_search_close">찾기 닫기</string>
 
     <!--
       버린 것 알림. `UnsupportedFeatures` 가 2단계부터 적어 둔 계약이다 —
@@ -93,4 +144,9 @@
     <string name="doc_failed_unsupported">이 앱이 다루지 않는 문서입니다</string>
     <string name="doc_failed_legacy">이전 형식(.doc·.xls·.ppt, 한글 97 이전의 .hwp)은 열지 않습니다. 새 형식(.docx·.xlsx·.pptx·.hwp·.hwpx)으로 저장하면 열립니다</string>
     <string name="doc_failed_io">입출력이 실패했습니다</string>
+    <!--
+      파일에 닿지 못했다(없어졌거나 열리지 않는다). 위의 doc_failed_io 로 알리면 디스크가 고장 난 것처럼 읽힌다.
+      텍스트·압축 화면이 같은 자리에 쓰는 문장과 같게 둔다.
+    -->
+    <string name="doc_failed_unreadable">이 파일을 읽을 수 없습니다</string>
 </resources>

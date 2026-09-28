@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  화면에 나가는 글자는 예외 없이 여기에 둔다. 이름은 모듈 접두어(settings_)를 붙인다 —
+  라이브러리 모듈의 리소스는 앱에서 하나로 합쳐지므로 접두어가 없으면 조용히 덮어쓴다.
+
+  만화의 읽는 방향 이름은 feature:comic 에도 있다. feature 끼리는 서로를 보지 않으므로 여기에 한 벌 더 둔다 —
+  값의 뜻(0 왼쪽에서 오른쪽, 1 오른쪽에서 왼쪽, 2 세로)은 core:data 의 ComicProgressEntity.readDirection 이 정한다.
+-->
+<resources>
+    <string name="settings_title">설정</string>
+    <string name="settings_back">뒤로</string>
+    <string name="settings_save_failed">설정을 저장하지 못했습니다</string>
+
+    <string name="settings_section_files">파일 목록</string>
+    <string name="settings_show_hidden">숨김 파일 보기</string>
+    <string name="settings_show_hidden_desc">이름이 점(.)으로 시작하는 파일과 폴더도 목록에 보입니다</string>
+    <string name="settings_folders_first">폴더 먼저</string>
+    <string name="settings_folders_first_desc">어떤 기준으로 정렬하든 폴더를 파일보다 위에 둡니다</string>
+
+    <string name="settings_section_text">텍스트 뷰어 기본값</string>
+    <string name="settings_text_wrap">줄 접기</string>
+    <string name="settings_text_wrap_desc">긴 줄을 화면 폭에서 접습니다</string>
+    <string name="settings_text_line_numbers">줄 번호</string>
+    <string name="settings_text_font">글자 크기</string>
+    <string name="settings_text_font_value">%1$d sp</string>
+    <string name="settings_text_line_ends">줄 끝 문자 보기</string>
+    <string name="settings_text_line_ends_desc">줄이 끝나는 자리에 그 종류를 보입니다(↓ LF · ⏎ CRLF · ← CR)</string>
+
+    <string name="settings_section_comic">만화</string>
+    <string name="settings_comic_direction">새 책의 읽는 방향</string>
+    <string name="settings_comic_direction_note">처음 여는 책에만 씁니다. 읽던 책은 그 책에서 고른 방향으로 열립니다.</string>
+    <string name="settings_direction_ltr">왼쪽에서 오른쪽</string>
+    <string name="settings_direction_rtl">오른쪽에서 왼쪽</string>
+    <string name="settings_direction_vertical">세로 스크롤</string>
+
+    <string name="settings_section_reader">문서 보기</string>
+    <string name="settings_reader_note">EPUB·오피스·한글 문서를 그릴 때 씁니다. PDF 는 쪽 모양 그대로 보입니다.</string>
+    <string name="settings_reader_font">글자 크기</string>
+    <string name="settings_reader_font_value">%1$d%%</string>
+    <string name="settings_reader_margin">여백</string>
+    <string name="settings_margin_narrow">좁게</string>
+    <string name="settings_margin_normal">보통</string>
+    <string name="settings_margin_wide">넓게</string>
+    <string name="settings_reader_theme">바탕</string>
+    <string name="settings_theme_system">시스템 설정 따르기</string>
+    <string name="settings_theme_light">밝게</string>
+    <string name="settings_theme_dark">어둡게</string>
+    <string name="settings_theme_sepia">세피아</string>
+
+    <string name="settings_section_history">기록</string>
+    <string name="settings_clear_playback">이어보기 기록 지우기</string>
+    <string name="settings_clear_playback_desc">영상·소리를 이어서 틀 재생 위치</string>
+    <string name="settings_clear_reading">읽던 쪽 지우기</string>
+    <string name="settings_clear_reading_desc">만화·문서에서 읽던 자리와 책마다 고른 읽는 방향</string>
+
+    <string name="settings_confirm_playback_title">이어보기 기록을 지울까요?</string>
+    <string name="settings_confirm_playback_body">모든 영상·소리의 재생 위치가 지워집니다. 다음에 열면 처음부터 재생됩니다. 되돌릴 수 없습니다.</string>
+    <string name="settings_confirm_reading_title">읽던 쪽을 지울까요?</string>
+    <string name="settings_confirm_reading_body">만화와 문서에서 읽던 자리가 모두 지워지고, 만화책마다 고른 읽는 방향도 기본값으로 돌아갑니다. 되돌릴 수 없습니다.</string>
+    <string name="settings_confirm_clear">지우기</string>
+    <string name="settings_cancel">취소</string>
+
+    <string name="settings_cleared_playback">이어보기 기록을 지웠습니다</string>
+    <string name="settings_cleared_reading">읽던 쪽을 지웠습니다</string>
+    <string name="settings_clear_failed">지우지 못했습니다</string>
+
+    <string name="settings_section_crash">크래시 기록</string>
+    <string name="settings_crash_none">남은 기록이 없습니다</string>
+    <string name="settings_crash_summary">%1$d건 · 마지막 %2$s</string>
+    <string name="settings_crash_desc">앱이 비정상으로 끝나면 그 원인을 이 기기 안에만 남깁니다(최근 5건). 내용은 화면에 보이지 않고, 공유를 누를 때만 사본이 앱 밖으로 나갑니다. 파일 경로는 지우고 남깁니다.</string>
+    <string name="settings_crash_share">공유</string>
+    <string name="settings_crash_clear">지우기</string>
+    <string name="settings_crash_share_title">크래시 기록 보내기</string>
+    <string name="settings_crash_share_failed">공유할 수 없습니다</string>
+    <string name="settings_confirm_crash_title">크래시 기록을 지울까요?</string>
+    <string name="settings_confirm_crash_body">남아 있는 기록 %1$d건이 지워집니다. 되돌릴 수 없습니다.</string>
+    <string name="settings_crash_cleared">크래시 기록을 지웠습니다</string>
+
+    <string name="settings_section_about">정보</string>
+    <string name="settings_version">앱 버전</string>
+    <string name="settings_notice">오픈소스 고지</string>
+    <string name="settings_notice_desc">이 앱이 쓰는 오픈소스와 그 라이선스, 문서 형식 명세의 고지</string>
+    <string name="settings_diag">진단</string>
+    <string name="settings_diag_desc">이 기기에서 잰 값 — 저장소·코덱·문자셋·압축 경로</string>
+</resources>

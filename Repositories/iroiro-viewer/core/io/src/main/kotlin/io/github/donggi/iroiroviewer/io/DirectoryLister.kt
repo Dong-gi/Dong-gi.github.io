@@ -50,9 +50,23 @@ object DirectoryLister {
             /** 숨김 파일을 빼기 전의 총 개수. '숨김 N개' 를 보여주는 데 쓴다. */
             val hiddenCount: Int,
             val scanMillis: Long,
+            /**
+             * 읽기를 **시작하기 직전**의 폴더 수정 시각. 화면으로 돌아왔을 때 이것과 지금 값을 견줘
+             * 다시 읽을지 정한다([ForegroundRelist]). 시작하기 전에 재는 것이 요점이다 — 읽는 도중에
+             * 생긴 파일은 목록에 없을 수 있는데, 끝난 뒤에 재면 그 변화까지 '본 것' 으로 쳐 버린다.
+             */
+            val stamp: DirStamp? = null,
         ) : Listing
 
-        data class Failed(val reason: Reason) : Listing
+        data class Failed(
+            val reason: Reason,
+            /**
+             * 읽기를 시작하기 직전의 폴더 수정 시각([Ready.stamp] 와 같다). **못 읽은 것도 시각을 남긴다** —
+             * 막힌 폴더(`Android/data`)는 stat 은 되고 나열만 막히므로, 이것이 없으면 화면으로 돌아올 때마다
+             * 바뀐 것이 없는데도 다시 읽는다([ForegroundRelist.lastListedOf]). 없는 폴더면 null 이다.
+             */
+            val stamp: DirStamp? = null,
+        ) : Listing
     }
 
     enum class Reason {
@@ -78,6 +92,7 @@ object DirectoryLister {
     fun list(path: String, showHidden: Boolean): Flow<Listing> = flow {
         emit(Listing.Scanning(0))
         val scanStart = System.nanoTime()
+        val stamp = DirStamp.of(path)
 
         val raw = ArrayList<FileEntry>(256)
         var hidden = 0
@@ -98,27 +113,27 @@ object DirectoryLister {
                 }
             }
         } catch (e: AccessDeniedException) {
-            emit(Listing.Failed(Reason.LOCKED)); return@flow
+            emit(Listing.Failed(Reason.LOCKED, stamp)); return@flow
         } catch (e: NoSuchFileException) {
-            emit(Listing.Failed(Reason.NOT_FOUND)); return@flow
+            emit(Listing.Failed(Reason.NOT_FOUND, stamp)); return@flow
         } catch (e: NotDirectoryException) {
-            emit(Listing.Failed(Reason.NOT_A_DIRECTORY)); return@flow
+            emit(Listing.Failed(Reason.NOT_A_DIRECTORY, stamp)); return@flow
         } catch (e: java.io.IOException) {
             // 막힌 폴더가 AccessDenied 가 아니라 일반 IOException 으로 오는 경우가 있다.
-            emit(Listing.Failed(if (LockedPaths.isLocked(path)) Reason.LOCKED else Reason.IO))
+            emit(Listing.Failed(if (LockedPaths.isLocked(path)) Reason.LOCKED else Reason.IO, stamp))
             return@flow
         } catch (e: CancellationException) {
             throw e
         } catch (e: RuntimeException) {
             // **DirectoryStream 의 반복자는 검사 예외를 던질 수 없어 감싸서 던진다**
             // (`DirectoryIteratorException`, RuntimeException). 위 catch 넷이 그것을
-            // 모두 놓치면 flow 밖으로 나가 stateIn 의 공유 코루틴이 죽고, 그 자리에서
+            // 모두 놓치면 flow 밖으로 나가 목록을 모으는 코루틴(`viewModelScope`)이 죽고, 그 자리에서
             // 앱이 통째로 내려간다. 폴더 하나를 못 읽은 것이 앱을 죽일 이유는 없다.
-            emit(Listing.Failed(if (LockedPaths.isLocked(path)) Reason.LOCKED else Reason.IO))
+            emit(Listing.Failed(if (LockedPaths.isLocked(path)) Reason.LOCKED else Reason.IO, stamp))
             return@flow
         }
         val scanMillis = (System.nanoTime() - scanStart) / 1_000_000
-        emit(Listing.Ready(raw, hidden, scanMillis))
+        emit(Listing.Ready(raw, hidden, scanMillis, stamp))
     }.flowOn(IroDispatchers.io)
 
     /**

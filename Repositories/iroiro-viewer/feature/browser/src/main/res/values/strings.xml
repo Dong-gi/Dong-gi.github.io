@@ -8,6 +8,8 @@
     <string name="browser_home_free">%1$s 남음 / %2$s</string>
     <string name="browser_home_removable">분리 가능</string>
     <string name="browser_home_shortcuts">바로가기</string>
+    <string name="browser_home_settings">설정</string>
+    <string name="browser_home_settings_desc">뷰어의 기본값 · 기록 · 고지</string>
     <string name="browser_home_diagnostics">진단</string>
     <string name="browser_home_diagnostics_desc">이 기기에서 잰 값</string>
 
@@ -79,6 +81,11 @@
     <string name="browser_action_delete">삭제</string>
     <string name="browser_action_rename">이름 바꾸기</string>
     <string name="browser_action_share">공유</string>
+    <!--
+        선택 메뉴의 정보 시트. 누르면 다른 앱으로 가는 파일(APK·모르는 형식)은 이 길로만 정보를 본다.
+        같은 메뉴의 '다른 앱으로 열기' 는 core:io 의 io_open_with 한 벌을 쓴다 - 여기 사본을 두지 않는다.
+    -->
+    <string name="browser_action_info">정보</string>
     <string name="browser_play_folder">이 폴더를 재생</string>
     <string name="browser_action_new_folder">새 폴더</string>
 
@@ -172,4 +179,31 @@
     <string name="browser_bookmark_none">폴더를 열고 별을 누르면 여기에 모입니다</string>
     <string name="browser_bookmark_missing">지금은 없는 폴더</string>
     <string name="browser_op_refused"> · %1$d개는 풀지 않았습니다</string>
+
+    <!--
+        풀기가 끝난 스낵바의 단추. 누르면 푼 폴더로 간다(8단계가 미룬 '풀린 폴더로 바로 가기').
+        스낵바는 app 이 띄우므로 문구는 그것을 만들어 내는 결과(FileOpManager.Finished.folderToOpen)를 쓰는 이 모듈에 둔다.
+    -->
+    <string name="browser_open_folder">열기</string>
+
+    <!-- 폴더 메뉴의 새로고침. 당겨서 새로고침과 같은 일이다(몸짓을 쓸 수 없는 사람의 길). -->
+    <string name="browser_refresh">새로고침</string>
+
+    <!--
+        목록의 읽던 쪽 배지. 단위는 문서 뷰어의 이어보기 안내(doc_resumed_*)와 같은 갈래다 -
+        쪽(PDF·만화) · 장(EPUB) · 시트 · 슬라이드 · 부분(흐름 문서). 마지막 자리에 닿았으면 '다 읽음'.
+    -->
+    <string name="browser_badge_page">%1$d/%2$d쪽</string>
+    <string name="browser_badge_chapter">%1$d/%2$d장</string>
+    <string name="browser_badge_sheet">%1$d/%2$d 시트</string>
+    <string name="browser_badge_slide">%1$d/%2$d 슬라이드</string>
+    <string name="browser_badge_part">%1$d/%2$d 부분</string>
+    <string name="browser_badge_percent">%1$d%%</string>
+    <string name="browser_badge_finished">다 읽음</string>
+
+    <!-- 휴지통 항목을 고른 폴더로 되돌리기. 붙여넣기 바와 같은 모양이다. -->
+    <string name="browser_trash_restore_elsewhere">다른 곳에 복원</string>
+    <string name="browser_restore_here">여기에 복원</string>
+    <string name="browser_restore_pick_one">‘%1$s’ · 되돌릴 폴더로 가세요</string>
+    <string name="browser_restore_pick_many">%1$d개 · 되돌릴 폴더로 가세요</string>
 </resources>

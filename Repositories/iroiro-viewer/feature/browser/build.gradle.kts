@@ -38,4 +38,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
+
+    // 순수 규칙(나열 붙들기·선택 줄이기·백스택·배지·키 묶음)을 JVM 에서 지킨다. 안드로이드 라이브러리
+    // 모듈이라 러너가 붙는 `test-junit` 이어야 한다(함정 표). 둘 다 다른 모듈이 이미 쓰는 것이다.
+    testImplementation(kotlin("test-junit"))
+    testImplementation(libs.kotlinx.coroutines.test)
 }

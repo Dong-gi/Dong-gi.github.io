@@ -56,9 +56,14 @@ object DocxDocument {
  *
  * ## 여는 동안 한 번 훑는다
  *
- * 스타일·번호·각주 설정을 읽고, 본문을 **한 번 끝까지 훑어** 조각의 경계·목차·책갈피·표의 행 합치기를
- * 얻는다([DocxWalker] 의 주석). 버린 것(그릴 수 없는 그림·차트·수식…)도 이때 센다 — 열자마자 배지가
+ * 스타일·번호·각주 설정·메모 목록을 읽고, 본문을 **한 번 끝까지 훑어** 조각의 경계·목차·책갈피·표의 행 합치기·
+ * SmartArt 의 글을 얻는다([DocxWalker] 의 주석). 버린 것(그릴 수 없는 그림·차트·수식…)도 이때 센다 — 열자마자 배지가
  * 정확하고, 조각을 다시 그려도 두 번 세지 않는다.
+ *
+ * ## 각주와 메모는 조각의 끝에
+ *
+ * 조각이 가리킨 각주·미주를 먼저, 그다음 메모를 모아 그린다. 메모는 본문과 따로 보일 자리가 필요해 12단계는 세기만
+ * 했다 — 이제 각주처럼 본문의 작은 표지와 조각 끝의 본문을 링크로 잇는다([DocxComments]).
  *
  * ## 조각은 그때그때 그린다
  *
@@ -92,7 +97,7 @@ internal class DocxFlowDocument(
     override val outline: List<FlowOutline> get() = layout.outline
     override val css: String = DOCX_CSS
 
-    /** 여는 동안 한 번. 스타일·번호·설정을 읽고 본문과 각주를 훑는다. */
+    /** 여는 동안 한 번. 스타일·번호·설정·메모 목록을 읽고 본문과 각주(와 가리킨 메모)를 훑는다. */
     fun prepare(context: CoroutineContext) = locked {
         val main = pkg.mainDocument ?: pkg.canonical("word/document.xml") ?: return@locked
         val checkCancel = { context.ensureActive() }
@@ -106,6 +111,10 @@ internal class DocxFlowDocument(
         val notes = auxiliary(pkg.relationshipsOfType(main, "settings").firstOrNull()?.target) { p ->
             readNoteFormats(p)
         } ?: (NoteFormat("decimal", 1) to NoteFormat("lowerRoman", 1))
+        // 메모 — 목록(번호·머리글자·지은이)만 읽는다. 본문은 그리는 조각이 가리킨 것만 그때 읽는다(각주와 같다).
+        // 깨졌으면 알리고(보조 부분의 실패) 메모 표지는 보일 글이 없으므로 버린 것으로 센다.
+        val commentsPart = pkg.relationshipsOfType(main, "comments").firstOrNull()?.target?.let { pkg.canonical(it) }
+        val comments = commentsPart?.let { part -> auxiliary(part) { p -> DocxComments.read(p, limits, part) } } ?: DocxComments.NONE
         // 문서 속성은 제목 하나뿐이라 깨져도 알리지 않는다 — 화면이 파일 이름으로 채운다.
         val title = auxiliary(pkg.relationshipsOfType(null, "core-properties").firstOrNull()?.target, quiet = true) { p ->
             readTitle(p)
@@ -124,6 +133,7 @@ internal class DocxFlowDocument(
             endnoteFormat = notes.second,
             features = unsupported,
             isDisplayableImage = { isDisplayableImage(it) },
+            comments = comments,
         )
 
         val initial = WalkState()
@@ -138,6 +148,8 @@ internal class DocxFlowDocument(
         for (part in listOfNotNull(environment.footnotesPart, environment.endnotesPart)) {
             tolerant { scanNotes(environment, part, checkCancel) }
         }
+        // 메모의 본문도 버린 것을 센다 — 본문·각주가 가리킨 것만(가리키지 않은 메모는 워드도 보이지 않는다).
+        comments.part?.let { part -> if (environment.referencedComments.isNotEmpty()) tolerant { scanComments(environment, part, checkCancel) } }
 
         val lay = collector.build(title)
         env = environment
@@ -152,6 +164,8 @@ internal class DocxFlowDocument(
         val label = partName(index)
         val w = HtmlWriter(options.maxChars)
         val cancel = { if (Thread.currentThread().isInterrupted) throw InterruptedIOException("취소") }
+        // 본문과 각주가 가리킨 메모를 함께 모은다 — 조각의 끝에서 그것들만 그린다.
+        val commentSink = CommentSink()
         val walker = DocxWalker(
             environment,
             sink = w,
@@ -166,11 +180,16 @@ internal class DocxFlowDocument(
                 partHref = { partPath(it) },
                 onTruncated = { warn(FlowWarnings.TRUNCATED, label) },
                 checkCancel = cancel,
+                smartArts = lay.smartArts,
+                comments = commentSink,
             ),
         )
         guarded(label) { pkg.parser(environment.main)?.let { (p, stream) -> stream.use { walker.document(p) } } }
         if (!w.full && walker.noteRefs.isNotEmpty()) {
-            guarded(label) { renderNotes(environment, w, walker.noteRefs, lay, index) }
+            guarded(label) { renderNotes(environment, w, walker.noteRefs, lay, index, commentSink) }
+        }
+        if (!w.full && commentSink.ordinals.isNotEmpty()) {
+            guarded(label) { renderComments(environment, w, commentSink, lay, index) }
         }
         if (w.full) warn(FlowWarnings.TRUNCATED, label)
         w.closeAll()
@@ -181,7 +200,7 @@ internal class DocxFlowDocument(
      * 조각의 끝에 그 조각이 가리킨 각주·미주를 모아 그린다. 각주 부분을 한 번 흘려 읽으며 가리킨 것만
      * 그린다(차례는 부분에 적힌 차례 — 워드가 번호 차례대로 적는다).
      */
-    private fun renderNotes(environment: DocxEnv, w: HtmlWriter, refs: List<NoteRef>, lay: DocxLayout, index: Int) {
+    private fun renderNotes(environment: DocxEnv, w: HtmlWriter, refs: List<NoteRef>, lay: DocxLayout, index: Int, comments: CommentSink) {
         w.start("section", "class" to "notes")
         w.void("hr")
         try {
@@ -211,6 +230,8 @@ internal class DocxFlowDocument(
                                     chunkIndex = index,
                                     bookmarkChunks = lay.bookmarks,
                                     partHref = { partPath(it) },
+                                    // 각주 안의 메모도 이 조각의 메모 쪽에 든다.
+                                    comments = comments,
                                 ),
                             )
                             walker.note(p, ref)
@@ -223,6 +244,94 @@ internal class DocxFlowDocument(
             // 쓰기 상한 — 부르는 쪽이 `w.full` 을 보고 알린다.
         }
         w.end("section")
+    }
+
+    /**
+     * 조각의 끝(각주 뒤)에 그 조각이 가리킨 메모를 모아 그린다. 메모 부분을 한 번 흘려 읽으며 가리킨 것만 그린다 — 차례는
+     * 부분에 적힌 차례(워드가 문서 차례로 적는다, [CommentInfo.ordinal]). 메모마다 머리(표지 + 지은이)를 두고, 머리의 표지를
+     * 누르면 본문의 표지로 돌아간다. 메모 본문의 `w:annotationRef`(메모 쪽의 표지 자리)는 머리가 대신한다.
+     */
+    private fun renderComments(environment: DocxEnv, w: HtmlWriter, sink: CommentSink, lay: DocxLayout, index: Int) {
+        val part = environment.comments.part ?: return
+        w.start("section", "class" to "comments")
+        w.void("hr")
+        // 같은 `w:id` 가 둘 적힌 부분 — 목록은 먼저 나온 것을 쓴다([DocxComments.read]). 뒤의 것까지 그리면 같은 `id` 의 상자가
+        // 둘이 되고 뒤의 본문이 앞의 번호를 단다.
+        val drawn = HashSet<Int>()
+        try {
+            val (p, stream) = pkg.parser(part) ?: return
+            stream.use {
+                eachComment(p) { id ->
+                    val info = environment.comments.find(id)
+                    if (info == null || info.ordinal !in sink.ordinals || !drawn.add(info.ordinal)) {
+                        OoxmlXml.skip(p, limits)
+                    } else {
+                        // 상한에 닿은 뒤에 연 태그는 닫는 태그만 쓰인다(걷기의 `start` 주석).
+                        if (w.full) throw StopWalk
+                        w.start("div", "id" to info.noteId, "class" to "cmt")
+                        w.start("p", "class" to "cmh")
+                        w.start("sup", "class" to "cmnum")
+                        w.start("a", "href" to "#" + info.backId)
+                        w.text(info.label)
+                        w.end("sup")
+                        if (info.author.isNotEmpty()) w.text(" " + info.author)
+                        w.end("p")
+                        val walker = DocxWalker(
+                            environment,
+                            sink = w,
+                            state = WalkState(),
+                            cfg = WalkConfig(
+                                sourcePart = part,
+                                notes = true,
+                                inComment = true,
+                                chunkIndex = index,
+                                bookmarkChunks = lay.bookmarks,
+                                partHref = { partPath(it) },
+                            ),
+                        )
+                        walker.note(p, null)
+                        w.end("div")
+                    }
+                }
+            }
+        } catch (e: StopWalk) {
+            // 쓰기 상한 — 부르는 쪽이 `w.full` 을 보고 알린다.
+        } finally {
+            w.end("section")
+        }
+    }
+
+    /** 메모 부분을 훑는다 — 가리킨 메모의 본문에서 버린 것을 세려고. */
+    private fun scanComments(environment: DocxEnv, part: String, checkCancel: () -> Unit) {
+        val (p, stream) = pkg.parser(part) ?: return
+        stream.use {
+            val walker = DocxWalker(
+                environment,
+                sink = null,
+                state = WalkState(),
+                cfg = WalkConfig(sourcePart = part, recordFeatures = true, notes = true, inComment = true, checkCancel = checkCancel),
+            )
+            var n = 0
+            // 같은 `w:id` 의 둘째 항목은 그려지지 않으므로(목록이 첫째를 쓴다) 세지도 않는다.
+            val walked = HashSet<Int>()
+            eachComment(p) { id ->
+                if (id in environment.referencedComments && walked.add(id)) walker.note(p, null) else OoxmlXml.skip(p, limits)
+                if (++n and 63 == 0) checkCancel()
+            }
+        }
+    }
+
+    /** `w:comments` 의 각 `w:comment`. [onComment] 는 항목을 끝까지 소비해야 한다. */
+    private inline fun eachComment(p: XmlPullParser, onComment: (id: Int) -> Unit) {
+        var ev = p.eventType
+        while (ev != XmlPullParser.START_TAG) {
+            if (ev == XmlPullParser.END_DOCUMENT) return
+            ev = p.nextGuarded(limits)
+        }
+        DocxProps.eachChild(p, limits) { name ->
+            val id = OoxmlXml.int(p, "id")
+            if (name == "comment" && id != null) onComment(id) else OoxmlXml.skip(p, limits)
+        }
     }
 
     /** 각주 부분을 훑는다 — 버린 것을 세려고. 번호·조각과는 관계가 없다. */
@@ -362,7 +471,8 @@ internal class DocxFlowDocument(
         /**
          * 글의 기본 모양. 문단은 `pre-wrap` 이다 — 워드는 공백 여럿과 탭을 글자로 다루는데 HTML 은
          * 합쳐 버린다. 표는 칸마다 가는 선을 두르고(워드 표의 테두리를 읽지 않는다), 목록 표지는
-         * 내어쓰기 자리에 놓는다.
+         * 내어쓰기 자리에 놓는다. 메모(`.cmt`)는 왼쪽 줄로 각주와 가르고, SmartArt 의 글(`.sa`)은 점선 상자로
+         * 글상자(`.tb`)와 가른다 — 도형의 모양은 그리지 않았다는 표시다.
          */
         private const val DOCX_CSS = """
 p,h1,h2,h3,h4,h5,h6{white-space:pre-wrap;tab-size:4;}
@@ -378,10 +488,14 @@ td>:last-child{margin-bottom:0;}
 .ext{text-decoration:underline dotted;}
 a{color:#1a56c4;}
 .math{font-family:monospace;}
-sup.fnref a,sup.fnnum a{text-decoration:none;}
-.notes{font-size:.88em;margin-top:2em;}
-.notes hr{border:none;border-top:1px solid #bdbdbd;width:30%;margin:0 0 .6em;}
+sup.fnref a,sup.fnnum a,sup.cmref a,sup.cmnum a{text-decoration:none;}
+sup.cmref a,sup.cmnum a{color:#b26a00;}
+.notes,.comments{font-size:.88em;margin-top:2em;}
+.notes hr,.comments hr{border:none;border-top:1px solid #bdbdbd;width:30%;margin:0 0 .6em;}
 .note{margin:.2em 0;}
+.cmt{margin:.4em 0;padding-left:.5em;border-left:2px solid #d7b36a;}
+.cmh{font-weight:bold;margin:0 0 .2em;}
+.sa{border:1px dashed #bdbdbd;border-radius:3px;padding:4pt 8pt;margin:.5em 0;}
 img{vertical-align:text-bottom;}
 """
     }

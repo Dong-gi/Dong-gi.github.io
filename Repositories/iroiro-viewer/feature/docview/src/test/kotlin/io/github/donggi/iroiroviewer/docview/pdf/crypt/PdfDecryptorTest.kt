@@ -290,6 +290,72 @@ class PdfDecryptorTest {
     }
 
     @Test
+    fun V4_RC4_에_Length_가_없으면_40비트가_아니라_128비트다() {
+        // 위 시험은 AESV2 라 **판별력이 없었다** — AESV2 는 적힌 값과 무관하게 128 로 가므로, `/Length` 가 없을 때의 기본값을
+        // 40 으로 되돌려도 통과했다(11단계 뒤 반증조가 '시험의 빈틈' 으로 적은 것). 기본값이 실제로 쓰이는 것은 RC4(`/V2`)
+        // 필터다. qpdf 12.3 가 이 변형을 같은 암호로 연다(스크래치패드의 `mkcrypt_ko.py`·`verify_ko.py` — pypdf 6.17 은
+        // 40 으로 쳐서 열지 못한다. 두 오라클이 갈리는 자리이고, 우리는 pdfium·qpdf 쪽이다).
+        var b = bytes("qpdf-r4-rc4.pdf")
+        b = sameLength(b, "/CFM /V2 /Length 16", "/CFM /V2           ")
+        b = sameLength(b, "/Filter /Standard /Length 128", "/Filter /Standard            ")
+        val (r, out) = decryptBytes(b)
+        assertEquals(PdfDecryptor.Result.Ok, r)
+        assertSameAsPlain("V4 RC4 /Length 없음", out)
+    }
+
+    @Test
+    fun V4_RC4_의_필터가_바이트로_적은_Length_를_읽는다() {
+        // 필터의 `/Length 16` 은 **바이트**다(비트로 적는 도구와 섞여 있다 — 40 보다 작으면 바이트). 최상위 `/Length` 를 지워도
+        // 필터의 값으로 128비트가 된다.
+        val b = sameLength(bytes("qpdf-r4-rc4.pdf"), "/Filter /Standard /Length 128", "/Filter /Standard            ")
+        val (r, out) = decryptBytes(b)
+        assertEquals(PdfDecryptor.Result.Ok, r)
+        assertSameAsPlain("V4 RC4 필터 Length", out)
+    }
+
+    // ---- R2~R4 의 한글 암호 ----------------------------------------------------------
+    //
+    // R2~R4 의 암호는 명세상 PDFDocEncoding 이라 한글을 담을 수 없고, 도구마다 제 인코딩으로 넣는다. 그래서 후보를 여럿
+    // 시도한다(`PdfSecurity.legacyCandidates`: latin-1 → UTF-8 → CP949). 11단계 뒤에는 이 후보에 **표본이 하나도 없었다** —
+    // 후보 하나를 지워도 시험이 통과했다. 표본 셋은 pypdf 6.17 이 암호의 **바이트**를 그대로 받아 잠갔고(qpdf 12.3 는
+    // R3·R4 에서 PDFDocEncoding 밖의 암호로 잠그기를 거절한다), 잠근 뒤 qpdf·pypdf 가 **그 인코딩으로만** 열고 다른 인코딩
+    // 으로는 열지 못하는 것을 확인했다(`verify_ko.py`). 그래서 인코딩마다 판별력이 있다.
+
+    @Test
+    fun R2_의_CP949_한글_암호가_풀린다() {
+        // 반디집·한국 도구들이 흔히 쓰는 모양(ZIP 암호와 같은 사정 — 함정 표).
+        val (r, out) = decrypt("pypdf-rc4-40-ko-cp949.pdf", "비밀번호")
+        assertIs<PdfDecryptor.Result.Ok>(r, r.toString())
+        assertSameAsPlain("R2 CP949", out)
+    }
+
+    @Test
+    fun R3_의_UTF8_한글_암호가_풀린다() {
+        val (r, out) = decrypt("pypdf-rc4-128-ko-utf8.pdf", "비밀번호")
+        assertIs<PdfDecryptor.Result.Ok>(r, r.toString())
+        assertSameAsPlain("R3 UTF-8", out)
+    }
+
+    @Test
+    fun R4_AES_의_CP949_한글_암호가_풀린다() {
+        val (r, out) = decrypt("pypdf-aes-128-ko-cp949.pdf", "비밀번호")
+        assertIs<PdfDecryptor.Result.Ok>(r, r.toString())
+        assertSameAsPlain("R4 CP949", out)
+    }
+
+    @Test
+    fun 한글_표본도_소유자_암호로_풀리고_틀린_한글_암호는_틀렸다고_말한다() {
+        for (name in listOf("pypdf-rc4-40-ko-cp949.pdf", "pypdf-rc4-128-ko-utf8.pdf", "pypdf-aes-128-ko-cp949.pdf")) {
+            val (r, out) = decrypt(name, "owner-pw")
+            assertIs<PdfDecryptor.Result.Ok>(r, "$name: $r")
+            assertSameAsPlain("$name 소유자", out)
+            // 앞 두 글자가 같은 틀린 암호. 32바이트 채움 뒤에 우연히 맞는 일이 없어야 한다.
+            assertIs<PdfDecryptor.Result.WrongPassword>(decrypt(name, "비밀").first, name)
+            assertIs<PdfDecryptor.Result.WrongPassword>(decrypt(name, "비밀번호1").first, name)
+        }
+    }
+
+    @Test
     fun stream_뒤의_공백을_데이터로_읽지_않는다() {
         // `stream \n` — 명세 위반이지만 pdfium·pdf.js·qpdf 가 다 받는다. 공백을 데이터로 읽으면
         // AES 의 IV 가 어긋나 모든 쪽이 깨진다.

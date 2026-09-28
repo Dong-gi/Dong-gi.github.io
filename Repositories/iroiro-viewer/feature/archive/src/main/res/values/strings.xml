@@ -16,6 +16,8 @@
     <string name="archive_failed_corrupt">압축 파일이 깨졌거나 알 수 없는 형식입니다</string>
     <string name="archive_failed_unsupported">이 앱이 다루지 않는 압축 형식입니다</string>
     <string name="archive_failed_too_large">항목이 너무 많아 열지 않았습니다</string>
+    <!-- 압축한 tar 의 목록은 처음부터 끝까지 풀어야 한다. 그 양이 상한을 넘었거나, 사전이 메모리 상한을 넘었다. -->
+    <string name="archive_failed_too_big">풀어야 할 양이 너무 커서 열지 않았습니다</string>
     <string name="archive_failed_encrypted">이 앱이 풀지 않는 방식으로 잠긴 압축 파일입니다</string>
     <!-- 암호. ZIP(전통·WinZip AES)·7z·RAR 의 암호는 공개된 방식이라 받아서 푼다. -->
     <string name="archive_needs_password">암호를 넣어야 열 수 있는 압축 파일입니다</string>

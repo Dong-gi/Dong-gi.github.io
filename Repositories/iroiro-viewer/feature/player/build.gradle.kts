@@ -44,4 +44,9 @@ dependencies {
     implementation(libs.compose.material.icons.core)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.activity.compose)
+
+    // '다른 앱으로 열기' 를 언제·무엇에 다는가(`PlayerOpenWith`)를 JVM 에서 박는다.
+    // **`kotlin("test-junit")` 이 필요하다.** 안드로이드 라이브러리 모듈에서는
+    // `kotlin("test")` 만으로 러너가 붙지 않아 `Unresolved reference 'Test'` 가 난다.
+    testImplementation(kotlin("test-junit"))
 }

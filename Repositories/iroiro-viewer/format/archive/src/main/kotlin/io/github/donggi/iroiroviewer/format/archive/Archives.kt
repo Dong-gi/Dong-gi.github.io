@@ -21,6 +21,21 @@ object Archives {
     private val RAR4 = intArrayOf(0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x00)
     private val RAR5 = intArrayOf(0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x01, 0x00)
 
+    /** gzip — `1F 8B` 에 압축 방식 8(deflate). 명세(RFC 1952)가 정한 방식은 그것 하나다. */
+    private val GZIP = intArrayOf(0x1F, 0x8B, 0x08)
+
+    /** bzip2 — `BZh` 뒤에 블록 크기 `1`~`9`. */
+    private val BZIP2 = intArrayOf(0x42, 0x5A, 0x68)
+
+    /** xz — `FD 37 7A 58 5A 00`. */
+    private val XZ = intArrayOf(0xFD, 0x37, 0x7A, 0x58, 0x5A, 0x00)
+
+    /**
+     * 판별에 읽는 앞머리. tar 는 매직이 257번째 바이트에 있고(그마저 옛 V7 tar 에는 없다) 검사합이 머리 한 칸
+     * 전체에 걸리므로 512바이트가 있어야 한다. 빈 tar(끝 표시 두 칸)를 알아보려면 1,024바이트다.
+     */
+    private const val HEAD_BYTES = 2 * 512
+
     /**
      * 아카이브 계열인가. 아니면 null. 여기서는 ZIP 안을 들여다보지 않는다.
      *
@@ -34,6 +49,60 @@ object Archives {
         head.startsWith(SEVEN_Z) -> FormatId.SEVEN_Z
         head.startsWith(RAR5) || head.startsWith(RAR4) -> FormatId.RAR
         else -> null
+    }
+
+    /**
+     * 컨테이너의 모양. [probeContainer] 에 tar 계열을 더한 것이다.
+     *
+     * **압축 스트림(gzip·bzip2·xz)은 안이 tar 인지까지 보지 않는다** — 그러려면 풀어 봐야 한다. 그 확인은
+     * [detect] 와 [open] 이 한다. 압축하지 않은 tar 는 머리 한 칸의 **검사합**으로 알아본다(매직이 없는 옛 V7
+     * tar 도 검사합은 있다). [head] 가 512바이트보다 짧으면 tar 로 보지 않는다.
+     */
+    fun probeKind(head: ByteArray): ArchiveKind? {
+        when (probeContainer(head)) {
+            FormatId.ZIP -> return ArchiveKind.ZIP
+            FormatId.SEVEN_Z -> return ArchiveKind.SEVEN_Z
+            FormatId.RAR -> return ArchiveKind.RAR
+            else -> Unit
+        }
+        if (head.startsWith(ZIP_SPANNED)) return null
+        return when {
+            head.startsWith(GZIP) -> ArchiveKind.TAR_GZ
+            head.startsWith(BZIP2) && head.size > 3 && head[3] in '1'.code.toByte()..'9'.code.toByte() -> ArchiveKind.TAR_BZIP2
+            head.startsWith(XZ) -> ArchiveKind.TAR_XZ
+            head.size >= TarFormat.RECORD && TarFormat.looksLikeHeader(head.copyOf(TarFormat.RECORD)) -> ArchiveKind.TAR
+            // 빈 tar — 끝 표시(0 으로 찬 칸)뿐이다. GNU tar 가 빈 목록으로 만들면 이 모양이다. **앞머리만으로는
+            // 확정되지 않는다**(ISO 이미지도 앞이 0 이다) — 리더가 끝까지 0 인지 보고, 아니면 '다루지 않는 형식' 이다.
+            head.size >= 2 * TarFormat.RECORD && TarFormat.isZero(head.copyOf(2 * TarFormat.RECORD)) -> ArchiveKind.TAR
+            else -> null
+        }
+    }
+
+    /**
+     * 이 원본이 **우리가 여는** 아카이브인가. 압축 스트림은 풀어서 안의 첫 머리까지 본다 — `.gz` 로 싼 로그 하나는
+     * null 이다. 목록을 만들지는 않는다(압축 tar 의 목록은 처음부터 끝까지 풀어야 한다).
+     *
+     * 확장자가 압축이라 열려고 하는 화면(만화 뷰어 등)이 '다루지 않는 형식' 을 정확히 말하는 데 쓴다.
+     */
+    fun detect(source: DocumentSource): ArchiveKind? {
+        val kind = probeKind(source.head(HEAD_BYTES)) ?: return null
+        if (!kind.isTar) return kind
+        // 첫 머리만 본다. 리더를 만들면 압축 안 한 tar 는 목록을 곧바로 세우는데, 판별의 좁은 상한(`PROBE` 의 항목
+        // 1,000개)에서는 항목이 많은 tar 가 '아카이브가 아니다' 로 떨어진다.
+        return try {
+            if (TarArchiveReader.startsLikeTar(source, compressionOf(kind))) kind else null
+        } catch (e: java.io.InterruptedIOException) {
+            throw e
+        } catch (e: java.io.IOException) {
+            null
+        }
+    }
+
+    private fun compressionOf(kind: ArchiveKind): TarArchiveReader.Compression = when (kind) {
+        ArchiveKind.TAR_GZ -> TarArchiveReader.Compression.GZIP
+        ArchiveKind.TAR_BZIP2 -> TarArchiveReader.Compression.BZIP2
+        ArchiveKind.TAR_XZ -> TarArchiveReader.Compression.XZ
+        else -> TarArchiveReader.Compression.NONE
     }
 
     /** [ProbeContext] 를 받는 판별기. 레지스트리에 등록해 쓴다. */
@@ -59,13 +128,16 @@ object Archives {
          */
         password: CharArray? = null,
     ): ArchiveReader {
-        val head = source.head(16)
-        return when (probeContainer(head)) {
-            FormatId.ZIP -> ZipArchiveReader(source, budget, password = password)
-            FormatId.SEVEN_Z -> SevenZArchiveReader(source, budget, limits, password = password)
-            FormatId.RAR -> RarArchiveReader(source, budget, password = password)
+        val head = source.head(HEAD_BYTES)
+        return when (val kind = probeKind(head)) {
+            ArchiveKind.ZIP -> ZipArchiveReader(source, budget, password = password)
+            ArchiveKind.SEVEN_Z -> SevenZArchiveReader(source, budget, limits, password = password)
+            ArchiveKind.RAR -> RarArchiveReader(source, budget, password = password)
+            // tar 에는 암호가 없다. 받은 암호는 쓰지 않는다(지우는 것은 넘긴 쪽의 일이다).
+            ArchiveKind.TAR, ArchiveKind.TAR_GZ, ArchiveKind.TAR_BZIP2, ArchiveKind.TAR_XZ ->
+                TarArchiveReader(source, budget, limits, compressionOf(kind))
             // 예외 메시지에 파일 이름을 넣지 않는다. 이 값은 로그와 화면을 타고 나간다.
-            else -> error("아카이브가 아니다")
+            null -> error("아카이브가 아니다")
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
 import java.io.File
+import java.io.IOException
 
 /**
  * 다른 앱으로 파일을 보낸다.
@@ -39,16 +40,34 @@ object ShareHelper {
 
     /**
      * 공유할 수 있는 URI. 범위 밖이면 null 이고, 그때는 화면이 '공유할 수 없음' 을 말한다.
+     *
+     * 없는 파일·폴더·저장 볼륨 밖으로 이어지는 심볼릭 링크는 모두 null 이다 — 링크는 `canonicalFile` 이 따라가
+     * **도착한 자리**로 판정한다(FileProvider 도 URI 를 열 때 도착한 자리를 루트와 한 번 더 견준다).
+     *
+     * 파일을 누르는 손에서 불리므로 **던지지 않는다.** `canonicalFile` 은 경로가 망가졌거나 너무 길면
+     * `IOException`, `getUriForFile` 은 루트 밖이면 `IllegalArgumentException` 이다. 그 둘만 잡는다 — 예전의
+     * `runCatching` 은 오류(`Error`)까지 삼켰고, 정작 앞의 `IOException` 은 그 바깥에서 났다.
      */
-    fun uriOf(context: Context, path: String): Uri? {
+    fun uriOf(context: Context, path: String): Uri? = try {
         val file = File(path).canonicalFile
-        if (!file.isFile) return null
-        val canonical = file.path
-        if (allowedRoots(context).none { canonical.startsWith(it) }) return null
-        return runCatching {
+        if (file.isFile && isUnderRoots(file.path, allowedRoots(context))) {
             FileProvider.getUriForFile(context, "${context.packageName}.files", file)
-        }.getOrNull()
+        } else {
+            null
+        }
+    } catch (e: IOException) {
+        null
+    } catch (e: IllegalArgumentException) {
+        null
     }
+
+    /**
+     * 정규화한 경로가 허용 루트 아래인가. 루트는 **빗금으로 끝나야 한다**(`/storage/`) — 빗금 없이 앞부분만 견주면
+     * `/storagex/…` 같은 이웃 경로가 통과하므로, 빗금으로 끝나지 않는 루트는 아무것도 허락하지 않는다.
+     * (안드로이드의 구분자는 언제나 `/` 다. `File.separator` 로 적지 않는 것은 윈도에서 도는 JVM 시험 때문이다.)
+     */
+    internal fun isUnderRoots(canonicalPath: String, roots: List<String>): Boolean =
+        roots.any { it.endsWith('/') && canonicalPath.startsWith(it) }
 
     /**
      * 공유 창을 띄운다.

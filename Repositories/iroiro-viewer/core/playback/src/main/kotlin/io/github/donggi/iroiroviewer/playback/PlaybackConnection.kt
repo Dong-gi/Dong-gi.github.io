@@ -53,7 +53,10 @@ object PlaybackConnection {
         val hasVideo: Boolean = false,
         /** 영상의 실제 화면 비율(가로/세로). 0 이면 아직 모른다. */
         val videoAspect: Float = 0f,
-        /** 재생 실패. 화면이 한 번 읽고 [consumeFailure] 로 지운다. */
+        /**
+         * 재생 실패. **언제나 지금 항목([fileKey])의 것이다** — 항목이 바뀌면 [push] 가 버린다([carriedFailure]).
+         * 화면이 한 번 읽고 [consumeFailure] 로 지운다.
+         */
         val failure: PlaybackFailure? = null,
         /**
          * **이어서 볼 수 있는 위치가 있다는 제안.** 실제로 건너뛰지는 않았다.
@@ -104,6 +107,99 @@ object PlaybackConnection {
     ) {
         val hasItem: Boolean get() = fileKey != null
         val hasQueue: Boolean get() = queueSize > 1
+
+        /**
+         * 지금 항목이 [key] 가 된 뒤에도 들고 갈 실패. **같은 항목일 때만** 들고 가고, 항목이 바뀌었거나 없어졌으면
+         * 버린다([push] 가 새 상태를 만들 때 — [advancedTo] — 부른다).
+         *
+         * ## 왜 여기서 버리는가
+         *
+         * 예전에는 새로 틀 때([play]·[playQueue])만 지우고 큐 안에서 넘길 때(다음·이전·목록의 줄·알림·저절로 넘어감)는
+         * 남겼다. 그러면 둘이 틀렸다.
+         *
+         * * **다른 파일의 실패가 지금 곡 위에 선다.** 앞 곡의 문구와, 그 곁의 '다른 앱으로 열기' 가 지금 곡 위에 남는다.
+         * * **지금 곡의 실패가 흐르지 않는다.** `State` 는 `data class` 이고 [state] 는 같은 값을 합친다(함정 표). WMA 가 든
+         *   폴더에서 앞 곡의 `BadContainer` 가 남은 채 다음 곡도 같은 값으로 실패하면 새 상태가 앞 상태와 **같아서** 아무것도
+         *   흐르지 않는다. 항목이 바뀌는 순간 비워 두면 다음 실패는 빈 자리에 들어오므로 반드시 흐른다. 지금 곡에 트랙
+         *   경고(`UnsupportedTrack`)를 싣는 조건(`failure == null`)도 앞 곡의 실패에 막히지 않는다.
+         *
+         * 재생 화면이 이것을 대신하던 장치(앞 항목의 실패를 지우는 수집, 실패의 주인을 적는 객체)는 이것으로 대체됐다.
+         * 실패와 항목을 **한 상태**에서 함께 싣고 그 둘이 어긋나지 않게 만드는 곳이 커넥션 하나다 — 화면은 `failure` 가 있으면
+         * 그것이 지금 `fileKey` 의 것이라고 읽는다(함정 표의 '서로 다른 흐름에서 받은 값을 짝지어 판단하지 마라').
+         *
+         * ## 같은 묶음의 '항목 전환 → 오류' 에서 새 항목의 실패를 잃지 않는다
+         *
+         * 컨트롤러는 한 번에 받은 변화를 **항목 전환 → 오류 → 트랙** 차례로 알린다(media3 1.11.1
+         * `MediaControllerImplBase.notifyPlayerInfoListenersWithReasons` 의 바이트코드로 확인). 전환이 [push] 를 불러 여기서
+         * 앞 실패를 버리고 항목을 새 것으로 적은 **뒤에** 오류가 실린다. 그 뒤의 [push] 는 같은 항목이라 그 실패를 들고 간다.
+         * 플레이어도 오류를 **지금 항목의 것으로** 낸다(1.11.1 `ExoPlayerImplInternal` 의 바이트코드): 항목의 준비 오류를 던지는
+         * 자리는 지금 재생 중인 항목이 아직 준비되지 않았을 때뿐이고(`doSomeWork`), 미리 읽는 다음 항목의 준비 오류는
+         * `MediaPeriodHolder.hasLoadingError` 가 삼켜 읽기만 멈춘다. 미리 읽던 항목의 렌더러 오류는 그 항목을 지금 항목으로
+         * 올린 뒤(위치 불연속) 싣는다. 그래서 오류는 제 항목의 전환과 **같은 묶음이거나 그 뒤에** 온다. 폴더를 이어 틀다 난
+         * 실패를 기기에서 재 보지는 않았다 — 바이트코드로 읽은 것이다.
+         *
+         * **같은 항목이면 들고 간다** — 한 곡 반복(`REPEAT`)과 자막을 바꿔 큐를 다시 세우는 길(`PLAYLIST_CHANGED`)은 항목이
+         * 그대로라 그 곡의 실패·트랙 경고가 남는다. 같은 파일을 새로 틀면 [play]·[playQueue] 가 따로 지운다.
+         */
+        internal fun carriedFailure(key: String?): PlaybackFailure? = failure?.takeIf { key != null && key == fileKey }
+
+        /**
+         * 이 상태에 [push] 가 읽은 [frame] 을 얹은 새 상태. **항목에 매인 것**(이어보기 제안·A-B 구간·실패·영상 여부와
+         * 비율)을 들고 갈지 여기서 가른다. 컨트롤러를 만지지 않으므로 JVM 시험이 그대로 부른다(`PlaybackFailureCarryTest`).
+         */
+        internal fun advancedTo(frame: Frame): State {
+            val key = frame.key
+            val sameItem = key != null && key == fileKey
+            // **트랙 목록이 잠깐 비는 것을 '영상이 없다' 로 읽지 않는다.**
+            //
+            // 자막을 손으로 바꾸면 그 항목을 다시 세우는데([rebuildCurrentItem]), 그 사이
+            // `currentTracks` 가 한 번 빈다. 그때 `hasVideo` 를 거짓으로 밀면 **표면이
+            // 컴포지션에서 빠졌다 붙고 액티비티의 방향 요청까지 흔들린다** — 10단계가
+            // '하단이 검게 보인다' 로 한 번 겪은 그 형태다. **같은 항목인 동안에는** 마지막
+            // 값을 들고 있는다. 항목이 바뀌면 앞 항목의 값은 쓸 수 없으므로 그대로 다시 센다.
+            val video = when {
+                frame.videoSelected != null -> frame.videoSelected
+                // 같은 항목인데 트랙만 잠깐 비었다(자막을 손으로 바꾸는 길). 마지막 값을 든다.
+                sameItem -> hasVideo
+                // **항목이 막 바뀌어 아직 트랙을 모른다. 큐가 말하는 종류를 쓴다.**
+                //
+                // 여기서 거짓으로 떨어뜨리면 그 짧은 창 동안 화면이 통째로 흔들린다 — 테마가
+                // 밝은 쪽으로 뒤집히고, 표면이 컴포지션에서 빠졌다 붙고, 방향 요청이
+                // `UNSPECIFIED` 로 내려갔다 돌아오고(6단계가 '하단이 검게 보인다' 로 겪은 그
+                // 재도색 경로다), 손대지 않은 재생목록이 한 번 펼쳐진 것으로 판정된다.
+                // 큐의 종류는 확장자로 정해져 **항목이 실제로 바뀔 때만** 달라진다.
+                else -> frame.kind == FileKind.VIDEO
+            }
+            return copy(
+                connected = true,
+                // **이미 지나온 제안은 버린다.**
+                //
+                // 소리 파일을 탭한 길에서는 재생 화면이 열리지 않아(`BrowserScreen` 이 영상일
+                // 때만 연다) 제안이 아무에게도 보이지 않은 채 상태에 남는다. 그 상태로 한참 뒤
+                // 미니 바를 눌러 들어가면 "1:23 부터 이어서 재생할까요?" 가 뜨는데, 그때 이미
+                // 5:00 을 듣고 있다면 그 단추는 **뒤로 가는** 단추다.
+                resumeOfferMs = resumeOfferMs?.takeIf { frame.positionMs < it },
+                fileKey = key,
+                title = frame.title,
+                isPlaying = frame.isPlaying,
+                positionMs = frame.positionMs,
+                durationMs = frame.durationMs.takeIf { it > 0 } ?: 0,
+                hasVideo = video,
+                videoAspect = frame.videoAspect.takeIf { it > 0f } ?: (videoAspect.takeIf { sameItem && video } ?: 0f),
+                queueSize = frame.queueSize,
+                queueIndex = frame.queueIndex,
+                currentKind = frame.kind,
+                shuffle = frame.shuffle,
+                repeatMode = frame.repeatMode,
+                speed = SpeedSteps.nearest(frame.speed),
+                // **항목이 바뀌면 구간도 판다.** A-B 는 '이 파일의 이 구간' 이라, 다음 곡까지
+                // 따라가면 엉뚱한 자리를 되풀이한다.
+                abSpan = abSpan?.takeIf { sameItem },
+                // **다른 항목의 실패는 들고 가지 않는다**([carriedFailure]). 구간을 파는 것과 같은 까닭이다 —
+                // 실패도 '이 파일의 것' 이다.
+                failure = carriedFailure(key),
+            )
+        }
     }
 
     private val _state = MutableStateFlow(State())
@@ -226,7 +322,14 @@ object PlaybackConnection {
     private val listener = object : Player.Listener {
         override fun onEvents(player: Player, events: Player.Events) = push()
 
+        /**
+         * 실패를 싣기 **전에** 상태의 항목을 지금 것으로 맞춘다([push]). 컨트롤러는 알림을 부르기 전에 자기 상태를 이미 새
+         * 것으로 갈아 두므로 여기서 읽는 항목이 이 오류의 항목이다. 전환 알림이 먼저 온다는 차례([State.carriedFailure]
+         * 의 주석)에 기대지 않는 두 번째 방어다 — 앞 항목의 이름표를 단 채 새 항목의 실패가 실리면, 다음 [push] 가 그것을
+         * '다른 항목의 실패' 로 알고 버린다.
+         */
         override fun onPlayerError(error: PlaybackException) {
+            push()
             _state.value = _state.value.copy(failure = PlaybackFailure.of(error, currentFormatHint()))
         }
 
@@ -257,6 +360,9 @@ object PlaybackConnection {
         }
 
         override fun onTracksChanged(tracks: Tracks) {
+            // 경고를 싣기 전에 상태의 항목을 지금 것으로 맞춘다 — [onPlayerError] 와 같은 까닭이다. 맞추지 않으면 아래
+            // `failure == null` 이 **앞 항목의** 실패를 보고 지금 항목의 경고를 건너뛸 수 있다.
+            push()
             // '영상은 나오는데 무음' 을 재생 실패로 오해하지 않도록, 지원되지 않는
             // 트랙이 있으면 재생이 되더라도 알려 준다.
             val unsupported = tracks.groups.filter { !it.isSupported }
@@ -636,7 +742,7 @@ object PlaybackConnection {
                 // **없어진 파일은 목록에서 뺀다. 그것이 곧 안내다.**
                 //
                 // 새 실패 종류를 만들어 `State.failure` 에 실으면 그 값을 지우는 사람이
-                // 재생 화면에 없어 다음 곡 위에도 계속 남고, 뒤따르는 진짜 경고
+                // 재생 화면에 없어 이 곡이 끝날 때까지 남고, 뒤따르는 진짜 경고
                 // (`UnsupportedTrack`)를 통째로 막는다. 사라진 줄이 사라지는 것으로 족하다.
                 Iro.d { "자막 파일이 사라졌다: ${sub.name}" }
                 subtitleFiles = subtitleFiles.filterNot { it.path == path }
@@ -814,6 +920,11 @@ object PlaybackConnection {
         _state.value = _state.value.copy(resumeOfferMs = null)
     }
 
+    /**
+     * 화면이 실패를 알렸다. **보인 뒤에만** 부른다 — 파일 목록은 스낵바를 띄운 뒤에 부르고, 재생 화면은 부르지 않는다(나가면
+     * 목록이 한 번 더 말한다). 부르지 않아도 실패는 항목이 바뀌면 사라지고([State.carriedFailure]), 새로 틀면 [play]·
+     * [playQueue] 가 지운다.
+     */
     fun consumeFailure() {
         _state.value = _state.value.copy(failure = null)
     }
@@ -838,10 +949,12 @@ object PlaybackConnection {
             // `clearMediaItems` 를 `PLAYLIST_CHANGED` 로 보므로 일부러 건너뛰고,
             // [push] 의 '위치가 지났는가' 도 빈 플레이어의 0 에서는 성립하지 않는다.
             resumeOfferMs = null,
-            // 구간도 트랙도 **그 파일에 매인 것**이라 함께 치운다.
+            // 구간도 트랙도 실패도 **그 파일에 매인 것**이라 함께 치운다. 실패는 항목이 없어지면 [push] 도 버리지만
+            // ([State.carriedFailure]) 그 [push] 가 이 줄보다 먼저 올지 나중에 올지는 컨트롤러의 알림 차례에 달렸다.
             abSpan = null,
             canChooseTracks = false,
             currentKind = null,
+            failure = null,
         )
         _queue.value = emptyList()
         _cues.value = emptyList()
@@ -926,70 +1039,66 @@ object PlaybackConnection {
     /** 위치를 밀어 주는 기본 간격. */
     private const val TICK_MS = 500L
 
+    /**
+     * 컨트롤러를 한 번 읽어 상태를 새로 민다. **읽는 일만 여기서 하고, 무엇을 들고 갈지는 [State.advancedTo] 가 정한다** — 그
+     * 판단(이어보기 제안·구간·실패를 버리는가, 영상 여부를 무엇으로 정하는가)은 컨트롤러 없이 JVM 시험이 박는다
+     * (`PlaybackFailureCarryTest`).
+     */
     private fun push() {
         val c = controller ?: return
         val item = c.currentMediaItem
-        val position = c.currentPosition.coerceAtLeast(0)
-        // **이미 지나온 제안은 버린다.**
-        //
-        // 소리 파일을 탭한 길에서는 재생 화면이 열리지 않아(`BrowserScreen` 이 영상일
-        // 때만 연다) 제안이 아무에게도 보이지 않은 채 상태에 남는다. 그 상태로 한참 뒤
-        // 미니 바를 눌러 들어가면 "1:23 부터 이어서 재생할까요?" 가 뜨는데, 그때 이미
-        // 5:00 을 듣고 있다면 그 단추는 **뒤로 가는** 단추다.
-        val offer = _state.value.resumeOfferMs?.takeIf { position < it }
         val previous = _state.value
         val key = item?.mediaId
         resetTracksIfItemChanged(key)
-        // **항목이 바뀌면 구간도 판다.** A-B 는 '이 파일의 이 구간' 이라, 다음 곡까지
-        // 따라가면 엉뚱한 자리를 되풀이한다.
-        val span = previous.abSpan?.takeIf { key != null && key == previous.fileKey }
-
-        // **트랙 목록이 잠깐 비는 것을 '영상이 없다' 로 읽지 않는다.**
-        //
-        // 자막을 손으로 바꾸면 그 항목을 다시 세우는데([rebuildCurrentItem]), 그 사이
-        // `currentTracks` 가 한 번 빈다. 그때 `hasVideo` 를 거짓으로 밀면 **표면이
-        // 컴포지션에서 빠졌다 붙고 액티비티의 방향 요청까지 흔들린다** — 10단계가
-        // '하단이 검게 보인다' 로 한 번 겪은 그 형태다. **같은 항목인 동안에는** 마지막
-        // 값을 들고 있는다. 항목이 바뀌면 앞 항목의 값은 쓸 수 없으므로 그대로 다시 센다.
         val groups = c.currentTracks.groups
-        val sameItem = key != null && key == previous.fileKey
         val index = c.currentMediaItemIndex
-        val kind = _queue.value.getOrNull(index)?.kind
-        val hasVideo = when {
-            groups.isNotEmpty() -> groups.any { g -> g.type == C.TRACK_TYPE_VIDEO && g.isSelected }
-            // 같은 항목인데 트랙만 잠깐 비었다(자막을 손으로 바꾸는 길). 마지막 값을 든다.
-            sameItem -> previous.hasVideo
-            // **항목이 막 바뀌어 아직 트랙을 모른다. 큐가 말하는 종류를 쓴다.**
-            //
-            // 여기서 거짓으로 떨어뜨리면 그 짧은 창 동안 화면이 통째로 흔들린다 — 테마가
-            // 밝은 쪽으로 뒤집히고, 표면이 컴포지션에서 빠졌다 붙고, 방향 요청이
-            // `UNSPECIFIED` 로 내려갔다 돌아오고(6단계가 '하단이 검게 보인다' 로 겪은 그
-            // 재도색 경로다), 손대지 않은 재생목록이 한 번 펼쳐진 것으로 판정된다.
-            // 큐의 종류는 확장자로 정해져 **항목이 실제로 바뀔 때만** 달라진다.
-            else -> kind == FileKind.VIDEO
-        }
-        val aspect = aspectOf(c.videoSize).takeIf { it > 0f }
-            ?: (previous.videoAspect.takeIf { sameItem && hasVideo } ?: 0f)
-
-        _state.value = previous.copy(
-            connected = true,
-            resumeOfferMs = offer,
-            fileKey = key,
-            title = item?.mediaMetadata?.title?.toString().orEmpty(),
-            isPlaying = c.isPlaying,
-            positionMs = position,
-            durationMs = c.duration.takeIf { it > 0 } ?: 0,
-            hasVideo = hasVideo,
-            videoAspect = aspect,
-            queueSize = c.mediaItemCount,
-            queueIndex = index,
-            currentKind = kind,
-            shuffle = c.shuffleModeEnabled,
-            repeatMode = c.repeatMode,
-            speed = SpeedSteps.nearest(c.playbackParameters.speed),
-            abSpan = span,
+        _state.value = previous.advancedTo(
+            Frame(
+                key = key,
+                title = item?.mediaMetadata?.title?.toString().orEmpty(),
+                isPlaying = c.isPlaying,
+                positionMs = c.currentPosition.coerceAtLeast(0),
+                durationMs = c.duration,
+                videoSelected = if (groups.isEmpty()) {
+                    null
+                } else {
+                    groups.any { g -> g.type == C.TRACK_TYPE_VIDEO && g.isSelected }
+                },
+                videoAspect = aspectOf(c.videoSize),
+                queueSize = c.mediaItemCount,
+                queueIndex = index,
+                kind = _queue.value.getOrNull(index)?.kind,
+                shuffle = c.shuffleModeEnabled,
+                repeatMode = c.repeatMode,
+                speed = c.playbackParameters.speed,
+            )
         )
     }
+
+    /**
+     * [push] 가 컨트롤러에서 **한 번에** 읽은 값. media3 타입을 담지 않는다 — [State.advancedTo] 가 JVM 시험에서 돌아야 한다.
+     *
+     * @param durationMs 컨트롤러가 준 그대로(모르면 `C.TIME_UNSET` 같은 음수).
+     * @param videoSelected 트랙 목록이 비었으면 null, 아니면 선택된 영상 트랙이 있는가.
+     * @param videoAspect 지금 영상 크기로 잰 비율([aspectOf]). 모르면 0.
+     * @param kind 큐가 정한 지금 항목의 종류([QueueItem.kind]).
+     * @param speed 플레이어가 준 날것의 배속.
+     */
+    internal data class Frame(
+        val key: String?,
+        val title: String,
+        val isPlaying: Boolean,
+        val positionMs: Long,
+        val durationMs: Long,
+        val videoSelected: Boolean?,
+        val videoAspect: Float,
+        val queueSize: Int,
+        val queueIndex: Int,
+        val kind: FileKind?,
+        val shuffle: Boolean,
+        val repeatMode: Int,
+        val speed: Float,
+    )
 
     /**
      * 영상의 **보여야 할** 비율.

@@ -9,14 +9,11 @@ import android.os.CancellationSignal
 import android.util.LruCache
 import android.util.Size
 import io.github.donggi.iroiroviewer.model.IroDispatchers
-import io.github.donggi.iroiroviewer.ui.image.ImageIo
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
@@ -97,25 +94,38 @@ object ThumbnailStore {
     }
 
     /**
-     * 만들어 봤지만 안 되는 것.
+     * 만들어 봤지만 안 되는 것 — **부정 캐시.**
      *
      * 이것이 없으면 SVG·TIFF 처럼 플랫폼이 못 읽는 파일이 든 폴더를 스크롤할 때마다
      * 네이티브 디코더를 다시 태운다 — 실패하는 데도 비용이 든다.
      *
      * **파일이 없어서 실패한 것은 넣지 않는다.** 그것은 '이 파일로는 안 된다' 가 아니라
      * '지금 없다' 이고, 휴지통에서 되돌아오면 다시 만들 수 있어야 한다. 9단계가 '일시적
-     * 실패와 영구 실패를 가르지 않는다' 로 미뤄 두었던 것을 여기서 갈랐다.
+     * 실패와 영구 실패를 가르지 않는다' 로 미뤄 두었던 것을 10단계가 여기서 갈랐다.
+     *
+     * **메모리 부족·입출력 실패도 영구로 넣지 않는다**(14단계). 그것은 파일이 아니라 그 순간의
+     * 사정이라 물러났다가 다시 한다 — 갈래와 물러나는 시간은 [ThumbnailFailures] 에 있다.
      */
-    private val failed = java.util.Collections.synchronizedSet(HashSet<String>())
+    private val failures = ThumbnailFailures()
+
+    /** 한 장을 만들어 본 결과. 실패도 **왜** 실패했는지를 싣는다 — 부정 캐시가 그것으로 갈린다. */
+    private sealed interface Outcome {
+        class Made(val bitmap: Bitmap) : Outcome
+
+        /** 원본이 지금 없다. 기억하지 않는다. */
+        data object Missing : Outcome
+
+        class Failed(val cause: ThumbnailFailures.Cause) : Outcome
+    }
 
     /**
      * 지금 만들고 있는 것.
      *
      * 같은 칸이 메모리에서 밀려난 직후 다시 보이면 요청이 여러 번 겹친다. 병합하지 않으면
-     * 같은 사진을 동시에 두세 번 디코딩한다.
+     * 같은 사진을 동시에 두세 번 디코딩한다. 일하던 칸이 스크롤로 취소되면 기다리던 칸이 이어받는다
+     * — 예전에는 null 을 받아 방금 만든 썸네일 대신 배지를 그렸다([SingleFlight] 주석).
      */
-    private val inFlight = HashMap<String, CompletableDeferred<Bitmap?>>()
-    private val inFlightLock = Mutex()
+    private val inFlight = SingleFlight<Bitmap>()
 
     fun keyOf(file: File): String = keyOf(file.absolutePath, file.length(), file.lastModified())
 
@@ -173,6 +183,13 @@ object ThumbnailStore {
      * 실패하면 null 이다 — 깨진 파일, 우리가 못 읽는 형식, 지워진 파일이 모두 여기로
      * 온다. 격자에서 그것은 '빈 칸' 이지 오류 화면이 아니다.
      *
+     * ## 일시 실패는 부르는 쪽이 기다리는 동안 다시 한다
+     *
+     * 메모리 부족·입출력 실패([ThumbnailFailures.Cause.TRANSIENT])면 물러났다가(2초, 4초 … 10분)
+     * **이 호출 안에서** 다시 한다. 부르는 쪽(격자의 칸)은 칸이 보이는 동안만 기다리고, 칸이 화면을
+     * 벗어나면 취소되어 멈춘다 — 그래서 '다시 하기' 에 따로 타이머도 화면 쪽 고침도 필요 없다.
+     * 기다리는 중에 떠났다가 돌아온 칸은 남은 시간만큼 기다린 뒤 한다(물러나기는 호출을 건너 산다).
+     *
      * @param persist 디스크에 남길 것인가. `.nomedia` 폴더와 휴지통에서는 false 다 —
      *   **`core:ui` 는 `core:io` 를 볼 수 없어** 그 판정을 스스로 할 수 없으므로 호출자가 넘긴다.
      */
@@ -184,56 +201,80 @@ object ThumbnailStore {
         persist: Boolean = true,
     ): Bitmap? {
         memory.get(key)?.let { return it }
-        if (key in failed) return null
+        if (failures.isPermanent(key)) return null
 
-        // 같은 키를 동시에 여럿이 부르면 하나만 일한다.
-        val (deferred, mine) = inFlightLock.withLock {
-            val existing = inFlight[key]
-            if (existing != null) existing to false
-            else CompletableDeferred<Bitmap?>().also { inFlight[key] = it } to true
-        }
-        if (!mine) return deferred.await()
-
-        return try {
-            val bitmap = withContext(IroDispatchers.thumbnail) {
-                currentCoroutineContext().ensureActive()
-                val cached = if (persist) File(bucketDir(context, bucketOf(path)), key + EXT) else null
-                if (cached != null && cached.isFile) {
-                    // 마지막으로 쓴 시각을 남긴다. trim 이 이것으로 오래된 것을 고른다.
-                    cached.setLastModified(System.currentTimeMillis())
-                    BitmapFactory.decodeFile(cached.absolutePath)
-                } else {
-                    val made = when (kind) {
-                        Kind.IMAGE -> decodeImage(File(path))
-                        Kind.VIDEO -> decodeVideoFrame(File(path))
-                        Kind.COMIC -> decodeCover(path)
+        // 같은 키를 동시에 여럿이 부르면 하나만 일한다. 취소는 실패가 아니다 — 부정 캐시에 넣지
+        // 않는다(넣으면 스크롤로 취소된 사진이 **다시는** 썸네일을 갖지 못한다). 아래 고리는 취소를
+        // 잡지 않으므로 그대로 빠져나간다.
+        return inFlight.run(key) {
+            // 기다리는 사이에 앞선 요청이 만들어 두었을 수 있다(이어받은 경우).
+            memory.get(key)?.let { return@run it }
+            var bitmap: Bitmap? = null
+            while (true) {
+                val wait = failures.waitMs(key)
+                if (wait == ThumbnailFailures.PERMANENT_WAIT) break
+                if (wait > 0) delay(wait)
+                when (val made = attempt(context, path, key, kind, persist)) {
+                    is Outcome.Made -> {
+                        failures.clear(key)
+                        memory.put(key, made.bitmap)
+                        bitmap = made.bitmap
+                        break
                     }
-                    if (made != null && cached != null) write(cached, made)
-                    made
+                    // 파일이 **없어서** 실패한 것을 기억하면, 사진을 휴지통에 보냈다가 되돌린 뒤
+                    // 그 썸네일이 **다시는** 만들어지지 않는다(앱을 껐다 켜야 한다). 사용자가 실제로
+                    // 그렇게 잃었다(10단계). 실패하고 보니 파일이 사라진 것도 여기로 온다(`attempt`).
+                    Outcome.Missing -> break
+                    // 영구가 되면 다음 바퀴의 waitMs 가 멈춘다. 일시·불확실이면 물러났다가 다시 한다.
+                    is Outcome.Failed -> failures.record(key, made.cause)
                 }
             }
-            if (bitmap != null) {
-                memory.put(key, bitmap)
-            } else if (File(path).exists()) {
-                // **파일이 있는데 못 만들었을 때만** 영구 실패로 센다 — SVG·TIFF 처럼
-                // 플랫폼 디코더가 못 읽는 것들이다.
-                //
-                // 파일이 **없어서** 실패한 것을 여기 넣으면, 사진을 휴지통에 보냈다가
-                // 되돌린 뒤 그 썸네일이 **다시는** 만들어지지 않는다(앱을 껐다 켜야 한다).
-                // 사용자가 실제로 그렇게 잃었다. 없는 파일은 목록에서도 사라지므로
-                // 다시 시도할 일 자체가 드물고, 남아 있다면 그것은 재시도할 가치가 있다.
-                failed.add(key)
-            }
-            deferred.complete(bitmap)
             bitmap
-        } catch (t: Throwable) {
-            // 취소는 실패가 아니다. 부정 캐시에 넣지 않는다 — 넣으면 스크롤로 취소된
-            // 사진이 **다시는** 썸네일을 갖지 못한다.
-            deferred.complete(null)
-            throw t
-        } finally {
-            inFlightLock.withLock { inFlight.remove(key) }
         }
+    }
+
+    /**
+     * 한 번 만들어 본다. 디스크 캐시가 있으면 그것을 읽는다.
+     *
+     * **파일이 있는지는 여기서 본다** — 썸네일 디스패처 위다. 부르는 쪽(격자의 칸)은 주 스레드라
+     * 거기서 `exists()` 를 부르면 FUSE 위의 블로킹 호출이 스크롤 프레임을 먹는다.
+     */
+    private suspend fun attempt(
+        context: Context,
+        path: String,
+        key: String,
+        kind: Kind,
+        persist: Boolean,
+    ): Outcome = withContext(IroDispatchers.thumbnail) {
+        currentCoroutineContext().ensureActive()
+        val cached = if (persist) File(bucketDir(context, bucketOf(path)), key + EXT) else null
+        if (cached != null && cached.isFile) {
+            // 마지막으로 쓴 시각을 남긴다. trim 이 이것으로 오래된 것을 고른다.
+            cached.setLastModified(System.currentTimeMillis())
+            val fromDisk = try {
+                BitmapFactory.decodeFile(cached.absolutePath)
+            } catch (e: OutOfMemoryError) {
+                // 예전에는 이 한 자리가 `OutOfMemoryError` 를 부르는 쪽까지 올려 보냈다(다른
+                // 디코딩 길은 전부 잡는데 여기만 비어 있었다). 캐시가 멀쩡하니 일시 실패다.
+                return@withContext Outcome.Failed(ThumbnailFailures.Cause.TRANSIENT)
+            }
+            if (fromDisk != null) return@withContext Outcome.Made(fromDisk)
+            // 캐시 파일이 깨졌다(쓰다 만 것은 원자적 쓰기가 막으므로 저장소 쪽 손상이다). 키가 같아
+            // 스스로 낫지 않는다 — 지우고 원본에서 다시 만든다.
+            cached.delete()
+        }
+        if (!File(path).exists()) return@withContext Outcome.Missing
+        val made = when (kind) {
+            Kind.IMAGE -> decodeImage(File(path))
+            Kind.VIDEO -> decodeVideoFrame(File(path))
+            Kind.COMIC -> decodeCover(path)
+        }
+        when {
+            made is Outcome.Made && cached != null -> write(cached, made.bitmap)
+            // 실패하고 보니 파일이 사라졌다 — 읽는 도중에 휴지통으로 갔다. '지금 없다' 다.
+            made is Outcome.Failed && !File(path).exists() -> return@withContext Outcome.Missing
+        }
+        made
     }
 
     /**
@@ -243,13 +284,22 @@ object ThumbnailStore {
      * `BitmapFactory` 로 읽으면 세로로 찍은 사진이 격자에서 전부 눕는다. 표본을 헤더
      * 단계에서 정하므로 4000×3000 사진을 통째로 메모리에 올리지도 않는다.
      */
-    private suspend fun decodeImage(src: File): Bitmap? {
-        if (!src.isFile) return null
+    private suspend fun decodeImage(src: File): Outcome {
+        if (!src.isFile) return Outcome.Missing
+        return decodeSmall(ImageDecoder.createSource(src))
+    }
+
+    /**
+     * 사진과 표지가 **같은 헤더 콜백과 같은 실패 갈래**를 쓰게 모은 곳. 예전에는 표지가
+     * `ImageIo.decodeFitted` 를 거쳤는데 그것은 실패를 전부 null 로 접어 메모리 부족과 깨진 그림을
+     * 가를 수 없었다.
+     */
+    private suspend fun decodeSmall(source: ImageDecoder.Source): Outcome {
         // 호출자의 Job 을 **미리** 붙잡는다. 아래 콜백은 네이티브가 부르는 자리라
         // 코루틴 컨텍스트가 없다(runBlocking 으로 감싸면 새 컨텍스트가 생겨 무의미하다).
         val job = currentCoroutineContext()[Job]
         return try {
-            ImageDecoder.decodeBitmap(ImageDecoder.createSource(src)) { decoder, info, _ ->
+            val bitmap = ImageDecoder.decodeBitmap(source) { decoder, info, _ ->
                 val longest = maxOf(info.size.width, info.size.height)
                 var sample = 1
                 while (longest / (sample * 2) >= SIZE_PX) sample *= 2
@@ -261,18 +311,22 @@ object ThumbnailStore {
                 // 스크롤로 화면을 벗어난 칸의 작업을 여기서 끊는다.
                 if (job?.isActive == false) throw CancellationException("썸네일 요청이 취소됐다")
             }
+            Outcome.Made(bitmap)
         } catch (e: CancellationException) {
             // 경계에서 취소를 삼키지 않는다. 삼키면 스크롤 취소가 '디코딩 실패' 로 둔갑해
             // 부정 캐시에 들어가고, 그 사진은 다시는 썸네일이 생기지 않는다.
             throw e
+        } catch (e: ImageDecoder.DecodeException) {
+            // 깨진 파일·못 읽는 형식(SVG·TIFF)이 여기로 온다. **`IOException` 보다 먼저 잡는다** —
+            // 그것의 하위 형이라 뒤에 두면 입출력 실패로 섞인다.
+            Outcome.Failed(ThumbnailFailures.causeOfDecodeError(e.error))
         } catch (e: IOException) {
-            null
+            Outcome.Failed(ThumbnailFailures.causeOf(e))
         } catch (e: RuntimeException) {
-            // 플랫폼 디코더는 깨진 파일에 ImageDecoder.DecodeException(RuntimeException) 을
-            // 던진다. 목록에서 그것은 '빈 칸' 이지 오류 화면이 아니다.
-            null
+            Outcome.Failed(ThumbnailFailures.causeOf(e))
         } catch (e: OutOfMemoryError) {
-            null
+            // 여러 장을 빠르게 훑는 동안 한 번 빠듯했던 것이다. 파일 탓이 아니다.
+            Outcome.Failed(ThumbnailFailures.causeOf(e))
         }
     }
 
@@ -284,12 +338,28 @@ object ThumbnailStore {
      * 있으므로 7z 표지 셋이 동시에 열리지 않는다.
      *
      * **읽기와 디코딩이 한 관문 안에 있지 않다**는 점을 적어 둔다. 바이트를 받고 나면
-     * 리더는 이미 닫혔으므로, 디코딩이 관문 밖에서 도는 것은 정점 메모리를 늘리지
-     * 않는다 — 늘리는 것은 아카이브 리더 쪽이다.
+     * 리더는 이미 닫혔으므로, 디코딩이 관문 밖에서 도는 것은 정점 메모리를
+     * 늘리지 않는다 — 늘리는 것은 아카이브 리더 쪽이다.
+     *
+     * 이음매가 null 을 주면 **왜인지 모른다** — 그림이 없는 책·잠긴 책(영구)과 읽기 실패·시간 초과
+     * (일시)가 같은 null 이다. 그래서 [ThumbnailFailures.Cause.UNCERTAIN] 으로 적어 몇 번은 다시 한다.
      */
-    private suspend fun decodeCover(path: String): Bitmap? {
-        val bytes = CoverSupport.cover(path) ?: return null
-        return ImageIo.decodeFitted(bytes, targetLongest = SIZE_PX)
+    private suspend fun decodeCover(path: String): Outcome {
+        // 이음매가 꽂히지 않았으면 이 세션에서는 끝내 표지가 없다.
+        if (CoverSupport.provider == null) return Outcome.Failed(ThumbnailFailures.Cause.PERMANENT)
+        val bytes = try {
+            CoverSupport.cover(path)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: IOException) {
+            return Outcome.Failed(ThumbnailFailures.causeOf(e))
+        } catch (e: RuntimeException) {
+            return Outcome.Failed(ThumbnailFailures.causeOf(e))
+        } catch (e: OutOfMemoryError) {
+            return Outcome.Failed(ThumbnailFailures.causeOf(e))
+        } ?: return Outcome.Failed(ThumbnailFailures.Cause.UNCERTAIN)
+        if (bytes.isEmpty()) return Outcome.Failed(ThumbnailFailures.Cause.PERMANENT)
+        return decodeSmall(ImageDecoder.createSource(bytes))
     }
 
     /**
@@ -301,22 +371,27 @@ object ThumbnailStore {
      *
      * 디스패처가 [IroDispatchers.videoFrame] 인 것이 중요하다 — 프레임 추출은 FUSE 위의
      * 블로킹 호출이라 `Default` 에 얹으면 파싱·PDF 렌더가 함께 굶는다.
+     *
+     * **실패가 무엇인지 알 수 없다.** 이 함수는 코덱이 없는 것도, 추출기가 잠깐 거절한 것도 같은
+     * `IOException` 으로 준다. 그래서 입출력 실패를 일시로 치는 사진과 달리 여기서는
+     * [ThumbnailFailures.Cause.UNCERTAIN] 이다 — 몇 번 다시 하고, 거듭 안 되면 파일 탓으로 본다.
+     * 메모리 부족만은 분명히 일시다.
      */
-    private suspend fun decodeVideoFrame(src: File): Bitmap? = withContext(IroDispatchers.videoFrame) {
-        if (!src.isFile) return@withContext null
+    private suspend fun decodeVideoFrame(src: File): Outcome = withContext(IroDispatchers.videoFrame) {
+        if (!src.isFile) return@withContext Outcome.Missing
         val job = currentCoroutineContext()[Job]
         val signal = CancellationSignal()
         val handle = job?.invokeOnCompletion { if (it != null) signal.cancel() }
         try {
-            ThumbnailUtils.createVideoThumbnail(src, Size(SIZE_PX, SIZE_PX), signal)
+            Outcome.Made(ThumbnailUtils.createVideoThumbnail(src, Size(SIZE_PX, SIZE_PX), signal))
         } catch (e: CancellationException) {
             throw e
         } catch (e: IOException) {
-            null
+            Outcome.Failed(ThumbnailFailures.Cause.UNCERTAIN)
         } catch (e: RuntimeException) {
-            null
+            Outcome.Failed(ThumbnailFailures.Cause.UNCERTAIN)
         } catch (e: OutOfMemoryError) {
-            null
+            Outcome.Failed(ThumbnailFailures.Cause.TRANSIENT)
         } finally {
             handle?.dispose()
         }
@@ -368,7 +443,7 @@ object ThumbnailStore {
             if (f.name.endsWith(EXT) && key !in liveKeys) {
                 if (f.delete()) {
                     memory.remove(key)
-                    failed.remove(key)
+                    failures.clear(key)
                     removed++
                 }
             } else if (f.name.endsWith(".part")) {
@@ -392,7 +467,7 @@ object ThumbnailStore {
         if (entries.isEmpty()) return
         for ((path, key) in entries) {
             memory.remove(key)
-            failed.remove(key)
+            failures.clear(key)
             runCatching { File(bucketDir(context, bucketOf(path)), key + EXT).delete() }
         }
     }

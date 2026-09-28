@@ -111,6 +111,8 @@ fun ArchiveScreen(
 ) {
     val vm: ArchiveViewModel = viewModel()
     LaunchedEffect(path) { vm.open(path) }
+    // '다른 앱으로 열기' — **압축 파일 자신**을 넘긴다. 안의 항목에는 없다([ArchiveOpenWith]).
+    val openWith = rememberOpenWith(path, snackbar)
 
     val state by vm.state.collectAsStateWithLifecycle()
     val folder by vm.folder.collectAsStateWithLifecycle()
@@ -157,9 +159,8 @@ fun ArchiveScreen(
                     },
                     title = {
                         Text(
-                            text = folder.substringAfterLast('/').ifEmpty {
-                                (state as? ArchiveViewModel.State.Ready)?.doc?.name.orEmpty()
-                            },
+                            // 목록이 열려 있으면 안의 폴더 이름(맨 위면 압축 파일 이름), 아니면 받은 경로의 파일 이름([ArchiveTitle]).
+                            text = ArchiveTitle.of(state, folder, path),
                             maxLines = 1,
                             overflow = TextOverflow.MiddleEllipsis,
                         )
@@ -195,6 +196,16 @@ fun ArchiveScreen(
                                         menuOpen = false
                                         val doc = (state as? ArchiveViewModel.State.Ready)?.doc
                                         vm.preparePlan(doc?.tree?.folderAt(folder))
+                                    },
+                                )
+                                // 풀기 곁에 둔다 — 둘 다 이 압축 파일을 어떻게 할지다. 보고 있는 폴더가 아니라 **파일 전체**를
+                                // 넘긴다(항목에는 경로가 없다). 문구는 `core:io` 의 것 한 벌이다.
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with)) },
+                                    enabled = ArchiveOpenWith.inMenu(state),
+                                    onClick = {
+                                        menuOpen = false
+                                        openWith()
                                     },
                                 )
                                 HorizontalDivider()
@@ -237,20 +248,32 @@ fun ArchiveScreen(
                 }
 
                 is ArchiveViewModel.State.Failed -> Centered {
-                    Text(
-                        text = stringResource(
-                            when (s.kind) {
-                                ArchiveViewModel.State.Failed.Kind.UNREADABLE -> R.string.archive_failed_unreadable
-                                ArchiveViewModel.State.Failed.Kind.CORRUPT -> R.string.archive_failed_corrupt
-                                ArchiveViewModel.State.Failed.Kind.UNSUPPORTED -> R.string.archive_failed_unsupported
-                                ArchiveViewModel.State.Failed.Kind.TOO_LARGE -> R.string.archive_failed_too_large
-                                ArchiveViewModel.State.Failed.Kind.ENCRYPTED -> R.string.archive_failed_encrypted
-                            },
-                        ),
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.padding(32.dp),
-                    )
+                    ) {
+                        Text(
+                            text = stringResource(
+                                when (s.kind) {
+                                    ArchiveViewModel.State.Failed.Kind.UNREADABLE -> R.string.archive_failed_unreadable
+                                    ArchiveViewModel.State.Failed.Kind.CORRUPT -> R.string.archive_failed_corrupt
+                                    ArchiveViewModel.State.Failed.Kind.UNSUPPORTED -> R.string.archive_failed_unsupported
+                                    ArchiveViewModel.State.Failed.Kind.TOO_LARGE -> R.string.archive_failed_too_large
+                                    ArchiveViewModel.State.Failed.Kind.TOO_BIG -> R.string.archive_failed_too_big
+                                    ArchiveViewModel.State.Failed.Kind.ENCRYPTED -> R.string.archive_failed_encrypted
+                                },
+                            ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center,
+                        )
+                        // 이 앱이 목록을 보여 줄 수 없을 뿐 파일은 다른 압축 앱이 열 수 있다 — 그 길을 여기 둔다.
+                        // 파일에 닿지 못한 것에는 없다([ArchiveOpenWith.onFailure]). '암호 넣기' 화면과 같은 채운 단추다.
+                        if (ArchiveOpenWith.onFailure(s.kind)) {
+                            Button(onClick = openWith, modifier = Modifier.padding(top = 16.dp)) {
+                                Text(stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with))
+                            }
+                        }
+                    }
                 }
 
                 is ArchiveViewModel.State.Ready -> Column(Modifier.fillMaxSize()) {
@@ -530,7 +553,7 @@ private fun StatusBar(doc: ArchiveViewModel.Doc) {
         Text(
             text = stringResource(
                 R.string.archive_summary_header,
-                doc.formatId.label,
+                doc.kind.label,
                 doc.entries.size,
                 formatBytes(doc.fileBytes),
             ) + if (doc.solid) " · " + stringResource(R.string.archive_summary_solid) else "",

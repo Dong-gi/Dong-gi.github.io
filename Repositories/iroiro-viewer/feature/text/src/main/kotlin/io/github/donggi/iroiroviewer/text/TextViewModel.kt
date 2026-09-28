@@ -6,6 +6,8 @@ import io.github.donggi.iroiroviewer.charset.BinarySniffer
 import io.github.donggi.iroiroviewer.charset.Bom
 import io.github.donggi.iroiroviewer.charset.CharsetDetector
 import io.github.donggi.iroiroviewer.charset.TextEncoding
+import io.github.donggi.iroiroviewer.data.TextViewerDefaults
+import io.github.donggi.iroiroviewer.format.text.MarkdownPreview
 import io.github.donggi.iroiroviewer.format.text.RowHighlighter
 import io.github.donggi.iroiroviewer.format.text.RowIndex
 import io.github.donggi.iroiroviewer.format.text.RowReader
@@ -18,9 +20,12 @@ import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.TextLimits
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -41,8 +46,13 @@ import java.io.InputStream
  * 행 목록을 통째로 들면 파일 크기가 그대로 힙이 된다. 화면에 보이는 앞뒤로
  * [WINDOW_ROWS] 행만 들고, 목록이 창 가장자리에 닿으면 다시 읽는다. 되읽기는 앵커가
  * 64 KiB 간격이라 한 번에 그만큼이다.
+ *
+ * ## 설정은 저장소에서 온다(14단계)
+ *
+ * 줄 접기·줄 번호·글자 크기·줄 끝 표시는 [ViewerSettings] 가 든다 — 바꾸면 곧바로 저장되고 다음 파일도 그 모양으로
+ * 열린다. 저장소는 생성자로 받는다([TextViewerStore]) — 화면은 `AppPreferencesTextStore` 를, 시험은 가짜를 꽂는다.
  */
-class TextViewModel : ViewModel() {
+class TextViewModel(store: TextViewerStore) : ViewModel() {
 
     /** 다 읽어 낸 파일 하나. 화면이 이것만 보면 된다. */
     data class Doc(
@@ -57,13 +67,20 @@ class TextViewModel : ViewModel() {
         /** null 이면 강조가 꺼져 있다. [highlightOff] 가 이유를 말한다. */
         val highlight: TextHighlight?,
     ) {
+        /** 마크다운 파일인가. 미리보기 단추를 이 파일에만 띄운다. */
+        val markdown: Boolean get() = MarkdownPreview.isMarkdownName(name)
+
         /** 언어는 정했는데 강조를 못 켠 상태인가(파일이 상한보다 크다). */
         val highlightOff: Boolean
             get() = highlight == null && language !== io.github.donggi.iroiroviewer.format.text.PlainHighlighter
     }
 
     sealed interface State {
-        data object Loading : State
+        /**
+         * 여는 중. [reached] 는 **이번 열기에서 파일에 닿았다**(앞머리를 실제로 읽었다)는 표시다. 닿기 전에는 없거나
+         * 못 읽는 파일일 수 있어 ⋮ 의 '다른 앱으로 열기' 를 흐리게 둔다([TextOpenWith.inMenu]).
+         */
+        data class Loading(val reached: Boolean = false) : State
 
         /** 색인 중. [rows] 는 지금까지 센 행, [scanned] 는 읽은 바이트. */
         data class Indexing(val rows: Int, val scanned: Long, val total: Long) : State
@@ -96,11 +113,66 @@ class TextViewModel : ViewModel() {
         val hits: List<Int> = emptyList(),
         val cursor: Int = -1,
         val running: Boolean = false,
+        /** 훑은 행과 전체 행. 진행률은 [percent]. */
+        val scannedRows: Int = 0,
+        val totalRows: Int = 0,
+        /**
+         * 이 찾기의 번호. 진행 알림은 **찾기를 돌리는 스레드에서** 오므로, 취소하거나 새로 찾은 뒤에 늦게 도착한
+         * 알림이 새 상태를 고치지 않게 번호로 가린다.
+         */
+        val generation: Int = 0,
     ) {
         val currentRow: Int? get() = hits.getOrNull(cursor)
+        val percent: Int get() = searchPercent(scannedRows, totalRows)
+
+        /** 진행 알림을 얹는다. **다른 찾기의 것이거나 이미 끝났으면 그대로** — 알림은 늦게 올 수 있다. */
+        fun withProgress(gen: Int, scanned: Int): SearchState =
+            if (generation == gen && running) copy(scannedRows = scanned) else this
+
+        /** 결과를 얹는다. 그 사이에 닫았거나 새로 찾았으면(번호가 다르면) 버린다. */
+        fun withResult(gen: Int, found: List<Int>): SearchState =
+            if (generation != gen) {
+                this
+            } else {
+                copy(hits = found, cursor = if (found.isEmpty()) -1 else 0, running = false, scannedRows = totalRows)
+            }
+
+        /**
+         * 찾을 말을 비우고 찾았다 — 결과와 진행을 비우고 **번호를 새로 받는다.** 번호를 그대로 두면 돌고 있던 찾기의 결과가
+         * 나중에 도착해 빈 찾기 칸 아래에 '1 / 3' 을 띄우고 목록을 그 자리로 옮긴다.
+         */
+        fun withoutQuery(gen: Int): SearchState =
+            copy(hits = emptyList(), cursor = -1, running = false, scannedRows = 0, totalRows = 0, generation = gen)
     }
 
-    private val _state = MutableStateFlow<State>(State.Loading)
+    /**
+     * 마크다운 미리보기(14단계). [Off] 가 아니면 화면은 본문 대신 이것을 그린다.
+     */
+    sealed interface Preview {
+        data object Off : Preview
+
+        data object Building : Preview
+
+        /**
+         * @param pagePath 쪽의 경로. 다시 만들 때마다 바뀐다 — 같은 주소면 WebView 가 다시 읽지 않는다.
+         * @param html 껍데기까지 씌운 문서(UTF-8). WebView 의 스레드에서 매번 인코딩하지 않게 미리 바꿔 둔다.
+         * @param images `img/N` 이 가리키는 상대 경로. [baseDir] 기준이다.
+         */
+        class Ready(
+            val pagePath: String,
+            val html: ByteArray,
+            val images: List<String>,
+            val baseDir: File,
+            val truncated: Boolean,
+        ) : Preview
+
+        /** 원문이 상한보다 크다. 화면이 상한을 말한다. */
+        data class TooLarge(val limitBytes: Long) : Preview
+
+        data object Failed : Preview
+    }
+
+    private val _state = MutableStateFlow<State>(State.Loading())
     val state: StateFlow<State> = _state.asStateFlow()
 
     private val _window = MutableStateFlow(Window(0, emptyList()))
@@ -123,20 +195,44 @@ class TextViewModel : ViewModel() {
     private val _previews = MutableStateFlow<Map<TextEncoding, String>>(emptyMap())
     val previews: StateFlow<Map<TextEncoding, String>> = _previews.asStateFlow()
 
+    private val viewerSettings = ViewerSettings(viewModelScope, store)
+
+    /** 뷰어 설정. 읽어 오는 동안(파일을 막 열었을 때)은 null 이다. */
+    val settings: StateFlow<TextViewerDefaults?> = viewerSettings.value
+
+    private val _preview = MutableStateFlow<Preview>(Preview.Off)
+    val preview: StateFlow<Preview> = _preview.asStateFlow()
+
     private var openedPath: String? = null
     private var head: ByteArray = ByteArray(0)
     private var headLength = 0
     private var indexJob: Job? = null
     private var windowJob: Job? = null
     private var searchJob: Job? = null
+    private var previewJob: Job? = null
+    private var searchGeneration = 0
+    private var previewGeneration = 0
 
     // ---- 열기 ------------------------------------------------------------------
 
-    fun open(path: String) {
+    /**
+     * @param entry 화면의 입장 표([ViewerSettings.enter]). 회전하면 같은 값이 오고, 화면을 떠났다 돌아오면 새 값이 온다.
+     */
+    fun open(path: String, entry: Long) {
+        // 새로 들어왔으면 설정을 저장된 값으로 다시 읽고 미리보기를 끈다 — 같은 파일을 다시 열어도 원문부터 보인다.
+        if (viewerSettings.enter(entry)) closePreview()
         if (openedPath == path) return
         openedPath = path
+        closePreview()
         indexJob?.cancel()
         indexJob = viewModelScope.launch { load(path, forced = null) }
+    }
+
+    /** 설정을 바꾼다. 저장소에도 쓴다 — 다음 파일이 이 모양으로 열린다. */
+    fun updateSettings(transform: (TextViewerDefaults) -> TextViewerDefaults) {
+        // 미리보기의 글자 크기도 이 설정을 따르지만 다시 만들지 않는다 — 화면이 `textZoom` 으로 그 자리에서 건다
+        // ([MarkdownPane]). 다시 만들면 WebView 가 쪽을 새로 읽어 읽던 자리가 맨 위로 돌아간다.
+        viewerSettings.update(transform)
     }
 
     /** 사용자가 인코딩을 손으로 골랐다. **색인을 다시 만든다** — 줄이 다르게 갈릴 수 있다. */
@@ -160,9 +256,16 @@ class TextViewModel : ViewModel() {
     }
 
     private suspend fun load(path: String, forced: TextEncoding?) {
-        _state.value = State.Loading
+        _state.value = State.Loading()
         _window.value = Window(0, emptyList())
+        searchJob?.cancel()
+        searchGeneration++
         _search.value = SearchState()
+        // 인코딩을 바꿔 다시 읽는 동안 앞 판정으로 만든 미리보기를 띄우지 않는다. 다 읽으면 다시 만든다.
+        if (_preview.value !is Preview.Off) {
+            previewJob?.cancel()
+            _preview.value = Preview.Building
+        }
 
         val file = File(path)
         val size = runCatching { file.length() }.getOrDefault(0L)
@@ -180,6 +283,9 @@ class TextViewModel : ViewModel() {
             headLength = withContext(IroDispatchers.io) {
                 FileInputStream(file).use { readFully(it, head, want) }
             }
+            // 앞머리를 읽었다 — 파일에 닿았다. 여기부터 ⋮ 의 '다른 앱으로 열기' 를 누를 수 있다([State.Loading.reached]).
+            // 판정·색인이 끝나기를 기다리지 않는다(200 MB 로그의 색인은 몇 초다).
+            _state.value = State.Loading(reached = true)
 
             // **미리보기를 실패보다 먼저 만든다.** 바이너리로 판정해 되돌아가는 길에서도
             // 사용자는 '인코딩을 골라 열어 보기' 를 누를 수 있고, 그때 앞 파일의
@@ -248,11 +354,73 @@ class TextViewModel : ViewModel() {
                     (if (highlight == null) " (꺼짐)" else "")
             }
             reloadWindow(force = true)
+            if (_preview.value !is Preview.Off) buildPreview()
         } catch (e: CancellationException) {
             throw e
         } catch (e: IOException) {
             Iro.d { "텍스트 열기 실패: ${e.javaClass.simpleName}" }
             _state.value = State.Failed(State.Failed.Kind.UNREADABLE)
+        }
+    }
+
+    // ---- 미리보기 -----------------------------------------------------------------
+
+    fun togglePreview() {
+        if (_preview.value is Preview.Off) buildPreview() else closePreview()
+    }
+
+    private fun closePreview() {
+        previewJob?.cancel()
+        previewJob = null
+        _preview.value = Preview.Off
+    }
+
+    /**
+     * 원문을 읽어 HTML 로 바꾼다. **원문 전체를 한 번 더 읽는다** — 창만 들고 있는 뷰어와 달리 마크다운은 문서
+     * 전체를 봐야 뜻이 정해진다(참조 정의는 뒤에 올 수 있다). 그래서 크기 상한([MarkdownPreview.MAX_SOURCE_BYTES])
+     * 이 있다.
+     */
+    private fun buildPreview() {
+        val doc = (_state.value as? State.Ready)?.doc ?: return
+        if (!doc.markdown) return
+        previewJob?.cancel()
+        if (doc.sizeBytes > MarkdownPreview.MAX_SOURCE_BYTES) {
+            _preview.value = Preview.TooLarge(MarkdownPreview.MAX_SOURCE_BYTES)
+            return
+        }
+        _preview.value = Preview.Building
+        previewJob = viewModelScope.launch {
+            try {
+                // 글자 크기는 쪽에 적지 않는다(기본 100%) — 화면이 `textZoom` 으로 곱한다. 그래서 설정을 읽는 중에
+                // 만들어도 크기가 굳지 않는다.
+                val file = File(doc.path)
+                val source = withContext(IroDispatchers.io) {
+                    MarkdownPreview.readSource(opener(file), doc.encoding, doc.bomLength)
+                }
+                val (result, bytes) = withContext(IroDispatchers.parsing) {
+                    val job = coroutineContext.job
+                    val r = MarkdownPreview.render(source) { job.ensureActive() }
+                    r to r.html.toByteArray(Charsets.UTF_8)
+                }
+                previewGeneration++
+                _preview.value = Preview.Ready(
+                    pagePath = MarkdownPreview.pagePath(previewGeneration),
+                    html = bytes,
+                    images = result.images,
+                    baseDir = file.absoluteFile.parentFile ?: file.absoluteFile,
+                    truncated = result.truncated,
+                )
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                // 예외 문구는 화면에 내보내지 않는다. 종류만 남긴다.
+                Iro.d { "마크다운 미리보기 실패: ${e.javaClass.simpleName}" }
+                _preview.value = Preview.Failed
+            } catch (e: OutOfMemoryError) {
+                // 결과는 상한(글자 400만)으로 묶었지만 만드는 동안 몇 벌이 겹친다. 미리보기 하나 때문에 앱을 내리지
+                // 않는다 — 원문 보기는 창만 들고 있어 그대로 돈다(이미지 디코딩이 같은 판단을 한다).
+                Iro.d { "마크다운 미리보기 메모리 부족" }
+                _preview.value = Preview.Failed
+            }
         }
     }
 
@@ -306,23 +474,43 @@ class TextViewModel : ViewModel() {
         val doc = (_state.value as? State.Ready)?.doc ?: return
         val s = _search.value
         if (s.query.isEmpty()) {
-            _search.value = s.copy(hits = emptyList(), cursor = -1, running = false)
+            // 돌고 있던 찾기를 멈춘다. 멈추지 않으면 그 결과가 나중에 빈 찾기 위에 얹힌다.
+            searchJob?.cancel()
+            _search.value = s.withoutQuery(++searchGeneration)
             return
         }
         searchJob?.cancel()
-        _search.value = s.copy(running = true, hits = emptyList(), cursor = -1)
+        val gen = ++searchGeneration
+        val total = doc.index.rowCount
+        _search.value = s.copy(
+            running = true,
+            hits = emptyList(),
+            cursor = -1,
+            scannedRows = 0,
+            totalRows = total,
+            generation = gen,
+        )
         searchJob = viewModelScope.launch {
             val hits = withContext(IroDispatchers.parsing) {
+                var lastPercent = -1
                 RowReader.search(
                     opener(File(doc.path)),
                     doc.encoding,
                     doc.index,
                     s.query,
                     s.ignoreCase,
-                )
+                ) { scanned ->
+                    // 퍼센트가 바뀔 때만 알린다. **`update` 로 고친다** — 이 콜백은 찾기 스레드에서 돌고, 그 사이에
+                    // 사용자가 찾기를 닫거나 새로 찾을 수 있다. 번호가 다르면 늦게 온 알림이다.
+                    val p = searchPercent(scanned, total)
+                    if (p != lastPercent) {
+                        lastPercent = p
+                        _search.update { it.withProgress(gen, scanned) }
+                    }
+                }
             }
-            _search.value = _search.value.copy(hits = hits, cursor = if (hits.isEmpty()) -1 else 0, running = false)
-            hits.firstOrNull()?.let { _scrollTo.value = it }
+            _search.update { it.withResult(gen, hits) }
+            if (_search.value.generation == gen) hits.firstOrNull()?.let { _scrollTo.value = it }
         }
     }
 
@@ -336,6 +524,8 @@ class TextViewModel : ViewModel() {
 
     fun clearSearch() {
         searchJob?.cancel()
+        // 번호를 올려 두어 취소 직후에 도착하는 알림이 빈 상태를 고치지 않게 한다.
+        searchGeneration++
         _search.value = SearchState()
     }
 

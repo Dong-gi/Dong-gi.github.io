@@ -49,6 +49,14 @@ import java.io.ByteArrayInputStream
  *
  * WebView 는 스스로 스크롤한다. 그래서 이 컴포저블을 **스크롤 컨테이너 안에 넣지 마라** —
  * 높이가 무한이 되어 측정에서 죽거나, 두 스크롤이 서로 손가락을 빼앗는다.
+ *
+ * ## 읽는 모양과 읽던 자리(14단계)
+ *
+ * 글자 크기는 **`WebSettings.textZoom`** 으로 건다 — 책의 CSS 가 글자 크기를 몇 겹으로 적어 두어도 그 위에서 곱해지므로
+ * 책의 조판과 다투지 않고, 쪽을 다시 읽지 않는다. 여백·바탕은 CSS 라 문서를 다시 읽어야 한다([contentKey]). 둘 다 바뀌면
+ * 글이 다시 흘러 같은 화소가 다른 곳을 가리키므로 **보던 자리(비율)로 돌아온다**([ReaderWebView]).
+ *
+ * 스크립트가 꺼져 있어 자리는 Kotlin 이 잰다 — 스크롤 범위와 위치를 비율로 바꾼다([ReadingScroll]).
  */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -72,6 +80,31 @@ fun LockedWebView(
      * 슬라이드의 그림은 흐르지 않는다.
      */
     zoomable: Boolean = false,
+    /** 글자 크기(%). `WebSettings.textZoom` 이다. 바뀌면 다시 읽지 않고 그 자리에서 적용한다. */
+    textZoom: Int = 100,
+    /** WebView 의 바탕색(ARGB). 쪽이 그려지기 전 한 프레임이 이 색이다 — 문서의 바탕과 맞춘다. */
+    backgroundColor: Int = Color.WHITE,
+    /** 오른쪽에서 왼쪽으로 넘기는 책인가. 세로쓰기 장의 처음을 오른쪽 끝으로 보고, 자리를 오른쪽에서 잰다. */
+    rightToLeft: Boolean = false,
+    /**
+     * 새 쪽을 열 때 옮겨 갈 자리(0~1)를 **그때** 묻는다. null 이면 WebView 에 맡긴다. 값이 아니라 함수인 것은, 화면이 다시
+     * 만들어져(구성 변경) 새 WebView 가 열 때 **처음 연 때의 자리가 아니라 지금 자리**가 필요하기 때문이다.
+     */
+    startFraction: () -> Float? = { null },
+    /**
+     * 같은 쪽 안에서 옮겨 가라는 요청의 **일련번호**. 바뀔 때마다 [startFraction] 의 자리로 한 번 옮긴다('처음부터').
+     * 값을 요청으로 쓰지 않는다 — 같은 자리를 두 번 청하면 두 번째가 사라진다(함정 표의 `MutableStateFlow`).
+     */
+    jump: Int = 0,
+    /** 바뀌면 같은 쪽을 **다시 읽는다**(여백·바탕처럼 CSS 로 거는 모양). 보던 자리로 돌아온다. */
+    contentKey: Any? = null,
+    /** 사용자가 옮긴 자리(0~1). 스크롤할 때마다 오므로 받는 쪽이 모아서 쓴다. */
+    onFraction: ((Float) -> Unit)? = null,
+    /**
+     * 화면 끝 가장자리까지 본 몫(0~1) — 진행(`progress`)에 쓴다. 한 화면에 드는 쪽은 1 이다([ReadingScroll.seenOf]).
+     * 쪽이 다 읽힌 뒤에만 온다.
+     */
+    onSeen: ((Float) -> Unit)? = null,
 ) {
     // **콜백을 `remember` 의 키로 쓰지 않는다.** 람다는 재구성마다 새 객체라 키로 쓰면
     // 클라이언트가 매번 다시 만들어지고, 그때마다 `webViewClient` 가 갈린다.
@@ -80,6 +113,8 @@ fun LockedWebView(
     val latestProvider by rememberUpdatedState(provider)
     val latestNavigate by rememberUpdatedState(onNavigate)
     val latestReady by rememberUpdatedState(onReady)
+    val latestFraction by rememberUpdatedState(onFraction)
+    val latestSeen by rememberUpdatedState(onSeen)
     val client = remember {
         object : WebViewClient() {
 
@@ -112,23 +147,32 @@ fun LockedWebView(
             // **처음 그려진 때** 알린다. `onPageFinished` 는 문서 전체의 배치가 끝나야 오는데, 큰 시트는
             // 표가 3초에 보이고도 45초 뒤에야 그것이 왔다(12단계 태블릿 에뮬레이터 실측) — 그동안 '여는 중'
             // 동그라미가 다 그려진 표를 덮고 있었다. 뒤의 것은 남겨 둔다(첫 그림 신호가 오지 않는 쪽 대비).
-            override fun onPageCommitVisible(view: WebView, url: String) = latestReady()
+            override fun onPageCommitVisible(view: WebView, url: String) {
+                (view as? ReaderWebView)?.onVisible()
+                latestReady()
+            }
 
-            override fun onPageFinished(view: WebView, url: String) = latestReady()
+            override fun onPageFinished(view: WebView, url: String) {
+                (view as? ReaderWebView)?.onFinished()
+                latestReady()
+            }
         }
     }
 
     AndroidView(
         modifier = modifier,
         factory = { context ->
-            WebView(context).apply {
+            ReaderWebView(context).apply {
                 layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT,
                 )
-                // 책은 흰 종이다. 기본 흰 배경이 그대로 맞고, 이 한 줄이 없으면
-                // 쪽이 그려지기 전 한 프레임이 검게 번쩍인다.
-                setBackgroundColor(Color.WHITE)
+                // 책은 흰 종이다(어두운·세피아 바탕을 고르면 그 색). 이 한 줄이 없으면 쪽이 그려지기 전 한 프레임이
+                // 검게 번쩍인다.
+                setBackgroundColor(backgroundColor)
+                settings.textZoom = textZoom
+                this.rightToLeft = rightToLeft
+                appliedJump = jump
                 isVerticalScrollBarEnabled = true
                 isHorizontalScrollBarEnabled = false
                 overScrollMode = WebView.OVER_SCROLL_IF_CONTENT_SCROLLS
@@ -148,11 +192,42 @@ fun LockedWebView(
         },
         update = { view ->
             view.webViewClient = client
-            if (view.url != url) view.loadUrl(url)
+            view.onFraction = { latestFraction?.invoke(it) }
+            view.onSeen = { latestSeen?.invoke(it) }
+            view.rightToLeft = rightToLeft
+            view.setBackgroundColor(backgroundColor)
+            if (view.settings.textZoom != textZoom) {
+                // 글자 크기가 바뀌면 글이 다시 흐른다. 보던 자리를 잡아 두고 배치가 끝난 뒤 되돌아온다.
+                view.keepPlace()
+                view.settings.textZoom = textZoom
+            }
+            val fragment = url.substringAfter('#', "").isNotEmpty()
+            // **`view.url` 과 견주지 않는다.** 그것은 WebView 가 지금 보이는 쪽의 주소라 ① 한글·일본어 경로를 퍼센트
+            // 인코딩한 모양으로 돌려주고(`七.xhtml` → `%E4%B8%83.xhtml`), ② 장 안의 앵커를 누르면 `#note3` 가 붙는다.
+            // 둘 다 '다른 쪽' 으로 보여, 재구성될 때마다 같은 장을 다시 읽고 앵커를 누른 뒤에는 장의 처음으로 튈 수 있다
+            // (14단계에 코드를 읽어 본 것이다 — 기기에서 그 증상을 확인하지는 않았다). 우리가 마지막으로 청한 주소와 견준다.
+            when {
+                view.requestedUrl != url -> {
+                    view.appliedJump = jump
+                    view.contentKey = contentKey
+                    view.open(url, ReadingScroll.startOf(startFraction(), fragment, rightToLeft))
+                }
+                view.contentKey != contentKey -> {
+                    view.contentKey = contentKey
+                    view.reloadKeepingPlace()
+                }
+                view.appliedJump != jump -> {
+                    view.appliedJump = jump
+                    view.moveTo(ReadingScroll.startOf(startFraction(), fragment, rightToLeft) ?: 0f)
+                }
+            }
         },
         onRelease = { view ->
             // **컴포지션을 떠날 때 반드시 부순다.** WebView 는 자기 스레드와 네이티브
             // 자원을 쥐고 있어서, 놓아두면 책을 여닫을 때마다 하나씩 쌓인다.
+            view.cancelRestore()
+            view.onFraction = null
+            view.onSeen = null
             view.stopLoading()
             view.webViewClient = WebViewClient()
             view.loadUrl("about:blank")

@@ -466,7 +466,7 @@ internal class PdfSecurity private constructor(
                     // '아무것도 아닌 것으로 바꾸는' 글자(RFC 3454 B.1)
                     c == '­' || c == '͏' || c == '᠆' || c in '᠋'..'᠍' ||
                         c in '​'..'‍' || c == '⁠' || c in '︀'..'️' ||
-                        c == '﻿' -> Unit
+                        c == '\uFEFF' -> Unit
                     // 공백 계열(RFC 3454 C.1.2) → 보통 공백
                     c == ' ' || c == ' ' || c in ' '..' ' || c == ' ' ||
                         c == ' ' || c == '　' -> mapped.append(' ')

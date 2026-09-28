@@ -36,6 +36,8 @@ dependencies {
     testFixturesImplementation(project(":format:api"))
     // 실세계 표본 시험 틀(`OoxmlCorpus`)이 앱처럼 판별하려면 8단계의 ZIP 리더로 이름을 읽어야 한다.
     testFixturesImplementation(project(":format:archive"))
+    // 잠긴 패키지를 CFB 에 담아 보는 시험(`OfficeCfbAgileTest`)이 `format:cfb` 의 짜개(`TinyCfb`)를 쓴다.
+    testImplementation(testFixtures(project(":format:cfb")))
     testImplementation(libs.xmlpull)
     testImplementation(libs.kxml2)
     testImplementation(kotlin("test"))

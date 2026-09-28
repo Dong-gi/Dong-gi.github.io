@@ -21,7 +21,6 @@
     <string name="comic_restart">처음부터</string>
 
     <string name="comic_page_failed">이 쪽을 열 수 없습니다</string>
-    <string name="comic_apng_notice">움직이는 PNG 입니다. 첫 장면만 보여 줍니다</string>
     <string name="comic_first_page">첫 쪽입니다</string>
     <string name="comic_last_page">마지막 쪽입니다</string>
 
@@ -37,4 +36,26 @@
     <string name="comic_failed_no_pages">그림이 한 장도 없습니다</string>
 
     <string name="comic_solid_hint">순차 압축이라 되돌아갈 때 다시 풉니다</string>
+
+    <!-- 14단계: 두 쪽 보기. 두 쪽을 함께 보일 때의 쪽 표시는 앞 쪽과 뒤 쪽을 함께 적는다. -->
+    <string name="comic_page_range">%1$d–%2$d / %3$d</string>
+    <string name="comic_layout">한 화면에</string>
+    <string name="comic_layout_single">한 쪽</string>
+    <string name="comic_layout_double">두 쪽</string>
+    <string name="comic_layout_auto">자동 (가로 화면이면 두 쪽)</string>
+    <string name="comic_layout_cover_hint">두 쪽으로 볼 때 첫 쪽(표지)은 혼자 보입니다</string>
+    <string name="comic_layout_vertical_hint">세로 스크롤에서는 한 쪽씩 봅니다</string>
+
+    <!-- 14단계: 쪽 목록 -->
+    <string name="comic_grid">쪽 목록</string>
+    <string name="comic_grid_close">쪽 목록 닫기</string>
+    <string name="comic_grid_page">%d쪽</string>
+    <string name="comic_grid_no_thumbs">메모리가 넉넉하지 않아 쪽 번호만 보입니다</string>
+    <string name="comic_grid_solid_hint">순차 압축이라 앞에서부터 풀며 채웁니다. 뒤쪽일수록 늦게 보입니다</string>
+
+    <!-- 14단계: 다음 권 -->
+    <string name="comic_more">더보기</string>
+    <string name="comic_next_volume">다음 권: %s</string>
+    <string name="comic_next_offer">끝까지 읽었습니다. 다음 권: %s</string>
+    <string name="comic_next_open">열기</string>
 </resources>

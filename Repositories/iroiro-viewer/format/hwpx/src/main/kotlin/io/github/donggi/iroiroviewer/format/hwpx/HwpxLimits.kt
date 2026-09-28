@@ -37,6 +37,13 @@ internal object HwpxLimits {
     /** 훑기가 기억해 두는 표 칸 정보의 총수(문서 전체). 넘으면 뒤의 표는 합치지 않고 그린다. */
     const val MAX_STORED_SPAN_CELLS = 2_000_000
 
+    /**
+     * 훑기가 기억해 두는 그림 설명문의 수(문서 전체, 사람이 쓴 것만 — `HancomAlt`). 하나가 300자까지라 꽉 차면 십수 MB 다
+     * (300자 × 2만 × UTF-16 에 항목의 머리) — 표 칸 정보의 상한([MAX_STORED_SPAN_CELLS], 8 MB)과 같은 자릿수다. 실물 표본에는
+     * 사람이 쓴 설명문이 하나도 없었다. 넘으면 뒤의 그림은 대체 글 없이 그린다.
+     */
+    const val MAX_STORED_ALTS = 20_000
+
     /** 글상자·캡션·각주 안의 글상자… 가 겹치는 깊이. */
     const val MAX_SUBLIST_DEPTH = 4
 

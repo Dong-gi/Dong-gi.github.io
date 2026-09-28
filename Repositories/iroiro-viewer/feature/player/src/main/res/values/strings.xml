@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  재생 화면이 **스스로 만드는** 글자만 여기 둔다. 재생의 문구(단추 이름·실패·PiP 조작)는 그것을 만들어 내는 타입 곁인
+  core:playback 에 있다(PlaybackText·PlaybackStrings). PiP 조작처럼 컴포지션 밖에서도 필요한 것이 거기 있기 때문이다.
+  '다른 앱으로 열기' 와 그 결과 문장은 core:io 의 것(io_open_with*)을 그대로 쓴다. 여기에 한 벌 더 두지 않는다.
+  접두어는 모듈 이름(player_)이다. 라이브러리 모듈의 리소스는 앱에서 하나로 합쳐지므로 접두어가 없으면 조용히 덮어쓴다.
+-->
+<resources>
+    <!-- 조작부 둘째 줄 끝의 ⋮ 단추. 화면 낭독기가 읽는다. -->
+    <string name="player_more">더보기</string>
+</resources>

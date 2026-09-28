@@ -1,6 +1,7 @@
 package io.github.donggi.iroiroviewer.browser
 
 import androidx.activity.compose.BackHandler
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -55,6 +57,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -64,8 +70,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.donggi.iroiroviewer.io.DirectoryLister
+import io.github.donggi.iroiroviewer.io.ExternalOpen
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.FileOpManager
 import io.github.donggi.iroiroviewer.io.ShareHelper
@@ -81,6 +90,7 @@ import io.github.donggi.iroiroviewer.model.FileKind
 import io.github.donggi.iroiroviewer.model.SortKey
 import io.github.donggi.iroiroviewer.model.ViewMode
 import java.io.File
+import io.github.donggi.iroiroviewer.io.R as IoR
 
 /**
  * 파일 브라우저.
@@ -98,6 +108,8 @@ import java.io.File
 fun BrowserScreen(
     vm: BrowserViewModel,
     onOpenDiagnostics: () -> Unit,
+    /** 설정 화면(14단계). `app` 이 연다 — 설정은 `feature:settings` 에 있고 feature 끼리는 서로를 보지 않는다. */
+    onOpenSettings: () -> Unit = {},
     onOpenImage: (List<FileEntry>, Int) -> Unit,
     onOpenText: (FileEntry) -> Unit,
     onOpenArchive: (FileEntry) -> Unit,
@@ -152,6 +164,7 @@ fun BrowserScreen(
             vm = vm,
             snackbar = snackbar,
             onOpenDiagnostics = onOpenDiagnostics,
+            onOpenSettings = onOpenSettings,
             onOpenTrash = { vm.openTrash() },
             onOpenGallery = { vm.openGallery() },
             modifier = modifier,
@@ -231,11 +244,35 @@ private fun FolderScreen(
     val conflicts by vm.pendingConflicts.collectAsStateWithLifecycle()
     val lastError by vm.lastError.collectAsStateWithLifecycle()
     val bookmarked by vm.currentBookmarked.collectAsStateWithLifecycle()
+    val pullRefreshing by vm.pullRefreshing.collectAsStateWithLifecycle()
+    val badges by vm.badges.collectAsStateWithLifecycle()
+    val restorePick by vm.restorePick.collectAsStateWithLifecycle()
+    val restoreConflicts by vm.pendingRestoreConflicts.collectAsStateWithLifecycle()
 
-    var detail by remember { mutableStateOf<FileEntry?>(null) }
+    // **보이는 동안만 폴더를 듣는다**(B2). 이 효과는 컴포지션이 아니라 수명 주기의 알림으로 돈다 — 화면이 멈추면
+    // 재구성이 멎어도(함정 표) `onStop` 은 온다. 뷰어가 이 화면을 대신하면 컴포지션에서 빠지면서 똑같이 꺼지고,
+    // 돌아오면 켜지면서 떠나 있던 동안의 변화를 수정 시각으로 한 번 본다. 폴더가 바뀌는 것은 VM 이 따라간다.
+    LifecycleStartEffect(Unit) {
+        vm.onFolderShown()
+        onStopOrDispose { vm.onFolderHidden() }
+    }
+
+    // **`context.getString` 을 컴포저블 안에서 부르지 않는다.** 그 값은 구성 변경을 따라가지 않는다
+    // (lint `LocalContextGetResourceValueCall` 이 오류로 잡는다 — `app` 의 Root 가 같은 까닭으로 고쳤다).
+    val shareTitle = stringResource(R.string.browser_action_share)
+
+    var detail by remember { mutableStateOf<DetailRequest?>(null) }
     var newFolder by remember { mutableStateOf(false) }
     var renaming by remember { mutableStateOf<String?>(null) }
     var confirmDelete by remember { mutableStateOf(false) }
+
+    // 이 앱이 뷰어를 갖지 않은 파일은 다른 앱으로 연다. 못 열었으면 우리 문장을 이 화면의 스낵바로 알린다.
+    val openWith = rememberOpenWith(snackbar)
+    // 선택 메뉴의 '다른 앱으로 열기'·'정보' 가 겨눌 것 — 파일 하나를 골랐을 때만 있다. 한 개 고른 동안 1만 줄을
+    // 재구성마다 훑지 않도록 선택과 목록이 바뀔 때만 다시 찾는다.
+    val singleFile = remember(selection, visible) {
+        OpenWithRules.singleFile(selection, (visible as? VisibleState.Ready)?.entries.orEmpty())
+    }
 
     // 작업 결과는 BrowserScreen 이 한 곳에서 받는다. 여기서는 이 화면에서만 나는
     // 오류(이름 바꾸기·새 폴더)만 다룬다.
@@ -250,13 +287,22 @@ private fun FolderScreen(
         }
     }
 
-    // **재생 실패만 여기서 말한다.** 이어보기 제안의 자리는 아래 주석 참고.
-    val playback by PlaybackConnection.state.collectAsStateWithLifecycle()
-    val playbackMessage = playback.failure?.let { playbackFailureText(it) }
-    LaunchedEffect(playbackMessage) {
-        if (playbackMessage != null) {
-            snackbar.showSnackbar(playbackMessage)
-            PlaybackConnection.consumeFailure()
+    // **재생 실패만 여기서 말한다 — 목록이 맨 앞일 때만.** 재생 화면이 위에 떠 있는 동안 말하고 지우면 그 화면의 문구와
+    // '다른 앱으로 열기' 가 몇 초 뒤 사라진다(`PlaybackNotice`). 이어보기 제안의 자리는 아래 주석 참고.
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val playback by PlaybackConnection.state.collectAsStateWithLifecycle(minActiveState = PlaybackNotice.IN_FRONT)
+    val playbackFailure = playback.failure
+    val playbackMessage = playbackFailure?.let { playbackFailureText(it) }
+    LaunchedEffect(playbackFailure, playbackMessage, lifecycle) {
+        if (playbackFailure != null && playbackMessage != null) {
+            PlaybackNotice.tellOnce(
+                lifecycle,
+                // 떠나 있는 동안 지워졌으면(재생 화면에서 다른 곡을 틀었다) 옛 문구를 띄우지 않고, 그새 다른 실패로 바뀌었으면
+                // 그것을 지우지 않는다. 말하기 전과 지우기 전에 커넥션의 지금 값을 본다.
+                pending = { PlaybackConnection.state.value.failure == playbackFailure },
+                show = { snackbar.showSnackbar(playbackMessage) },
+                consume = PlaybackConnection::consumeFailure,
+            )
         }
     }
     // **이어보기 안내를 여기서 그리지 않는다.**
@@ -283,6 +329,18 @@ private fun FolderScreen(
                                 vm.selectAll(ready.entries.map { it.path })
                             }
                         },
+                        // **'다른 앱으로 열기' 는 언제나 고르게 한다**(Mode.CHOOSE) — 사용자가 고르겠다고 말한 자리다.
+                        // 띄웠으면 공유처럼 선택을 끝낸다. 못 띄웠으면 선택을 남긴다(공유 같은 다른 길을 고를 수 있게).
+                        onOpenWith = singleFile?.let { entry ->
+                            {
+                                if (openWith(entry, ExternalOpen.Mode.CHOOSE) == ExternalOpen.Result.STARTED) {
+                                    vm.clearSelection()
+                                }
+                            }
+                        },
+                        // 누르면 다른 앱으로 가는 파일(APK·모르는 형식)은 이 길이 아니면 정보를 볼 수 없다.
+                        // 선택은 남긴다 — 시트는 위에 잠깐 뜨는 것이고, 닫으면 고르던 자리로 돌아온다.
+                        onInfo = singleFile?.let { entry -> { detail = DetailRequest(entry) } },
                     )
                 } else {
                     BrowserAppBar(
@@ -306,6 +364,7 @@ private fun FolderScreen(
                         canReadAsComic = (visible as? VisibleState.Ready)
                             ?.entries?.any { it.kind == FileKind.IMAGE } == true,
                         onReadAsComic = { onOpenComic(path) },
+                        onRefresh = vm::pullToRefresh,
                     )
                 }
                 StatusLine(visible = visible, filtering = filtering)
@@ -337,12 +396,19 @@ private fun FolderScreen(
                             ShareHelper.share(
                                 context,
                                 selection.toList(),
-                                context.getString(R.string.browser_action_share),
+                                shareTitle,
                             )
                             vm.clearSelection()
                         },
                     )
                 } else {
+                    restorePick?.let {
+                        RestorePickBar(
+                            pick = it,
+                            onRestoreHere = vm::requestRestoreHere,
+                            onCancel = vm::cancelRestorePick,
+                        )
+                    }
                     clipboard?.let {
                         PasteBar(
                             clipboard = it,
@@ -354,7 +420,7 @@ private fun FolderScreen(
             }
         },
         floatingActionButton = {
-            if (selection.isEmpty() && clipboard == null) {
+            if (selection.isEmpty() && clipboard == null && restorePick == null) {
                 // **단추 둘을 세로로 쌓는다.** 자리를 다투는 대신 쌓는 것이 Material 의
                 // 관행이고, 무엇보다 **둘 다 언제나 보인다** — 자리를 교대하면 사용자가
                 // 방금 있던 단추를 찾아 헤맨다.
@@ -395,20 +461,30 @@ private fun FolderScreen(
             }
         },
     ) { inner ->
-        Box(Modifier.padding(inner).fillMaxSize()) {
+        // **당겨서 새로고침**(사용자 요청). 목록을 비우지 않는다 — 다시 읽는 동안 옛 목록이 그대로 있고
+        // (`ListingHold`) 표시만 위에 뜬다. **고르는 중에는 끈다** — 다시 읽혀 줄이 움직이면 다른 줄을 누르게 된다.
+        RefreshableBox(
+            refreshing = pullRefreshing,
+            onRefresh = vm::pullToRefresh,
+            enabled = selection.isEmpty(),
+            modifier = Modifier.padding(inner).fillMaxSize(),
+        ) {
             when (val s = visible) {
                 is VisibleState.Scanning -> CenteredNote(stringResource(R.string.browser_scanning, s.count))
 
-                is VisibleState.Failed -> FailureNote(s.reason)
+                // 안내 화면도 당길 수 있어야 한다 — SD 를 다시 꽂았거나 다른 앱이 폴더를 되살렸을 때 다시 읽는 길이다.
+                is VisibleState.Failed -> ScrollableNote { FailureNote(s.reason) }
 
                 is VisibleState.Ready -> {
                     if (s.entries.isEmpty()) {
-                        CenteredNote(
-                            stringResource(
-                                if (filter.isBlank()) R.string.browser_empty
-                                else R.string.browser_empty_filtered
+                        ScrollableNote {
+                            CenteredNote(
+                                stringResource(
+                                    if (filter.isBlank()) R.string.browser_empty
+                                    else R.string.browser_empty_filtered
+                                )
                             )
-                        )
+                        }
                     } else {
                         key(path, viewMode) {
                             FileListing(
@@ -416,11 +492,19 @@ private fun FolderScreen(
                                 entries = s.entries,
                                 viewMode = viewMode,
                                 selection = selection,
+                                badges = badges,
                                 vm = vm,
                                 onOpen = { e ->
-                                    when {
-                                        selection.isNotEmpty() -> vm.toggleSelection(e.path)
-                                        e.isDirectory -> vm.open(e.path)
+                                    // 어디로 가는지는 `TapRoute` 가 종류마다 정한다 — `else` 로 떨어지는 값이 없어서,
+                                    // 종류가 늘면 컴파일이 멈추고 시험이 모든 종류를 표로 지킨다.
+                                    //
+                                    // **방금 다른 앱을 띄웠으면 그 창이 뜨기 전에 온 누름은 흘려보낸다**
+                                    // (`OpenWithRules.SETTLE_MS`) — 두 번 누른 APK 가 설치 관리자를 두 겹 띄우거나,
+                                    // 시트·메뉴의 '다른 앱으로 열기' 를 두 번 누른 것이 그 아래 줄을 여는 일을 막는다.
+                                    if (openWith.settling()) Unit
+                                    else if (selection.isNotEmpty()) vm.toggleSelection(e.path)
+                                    else when (TapRoute.of(e)) {
+                                        TapRoute.FOLDER -> vm.open(e.path)
                                         // 미디어는 곧바로 튼다. 재생은 서비스에서 도므로
                                         // 이 화면을 떠나도 이어진다.
                                         //
@@ -432,7 +516,7 @@ private fun FolderScreen(
                                         // 영상은 재생 화면까지 연다. 소리만 나는 파일은 미니
                                         // 바로 충분하지만, 영상을 탭해 놓고 목록에 남아 소리만
                                         // 나는 것은 아무도 기대하지 않는다.
-                                        e.kind == FileKind.AUDIO || e.kind == FileKind.VIDEO -> {
+                                        TapRoute.PLAYER -> {
                                             PlaybackConnection.playQueue(
                                                 context,
                                                 FolderQueue.plan(s.entries, e.path),
@@ -460,22 +544,21 @@ private fun FolderScreen(
                                         }
                                         // 사진은 뷰어로. 좌우로 넘길 목록은 **지금 보고 있는
                                         // 이 폴더의 이미지들**이다 — 눈에 보이는 순서 그대로.
-                                        e.kind == FileKind.IMAGE -> {
+                                        TapRoute.IMAGE -> {
                                             val images = s.entries.filter { it.kind == FileKind.IMAGE }
                                             val at = images.indexOfFirst { it.path == e.path }
-                                            if (at >= 0) onOpenImage(images, at) else detail = e
+                                            if (at >= 0) onOpenImage(images, at) else detail = DetailRequest(e)
                                         }
                                         // 글은 뷰어로. 판정이 틀리면(바이너리를 .txt 로
                                         // 둔 파일) 뷰어가 그 자리에서 말한다 — 목록이
                                         // 파일을 열어 보고 정하는 일은 하지 않는다.
-                                        e.kind == FileKind.TEXT || e.kind == FileKind.CODE ->
-                                            onOpenText(e)
+                                        TapRoute.TEXT -> onOpenText(e)
                                         // **확장자로 만화라고 말한 것만** 만화로 연다.
                                         // 일반 압축은 목록 화면으로 간다 — 그 안에 그림이
                                         // 있어도 사용자가 '이것은 만화다' 라고 말한 적이 없다.
                                         // (압축 화면의 그림 항목을 탭하면 그때 만화로 연다.)
-                                        e.kind == FileKind.COMIC -> onOpenComic(e.path)
-                                        e.kind == FileKind.ARCHIVE -> onOpenArchive(e)
+                                        TapRoute.COMIC -> onOpenComic(e.path)
+                                        TapRoute.ARCHIVE -> onOpenArchive(e)
                                         // 문서는 문서 뷰어로. PDF·EPUB(11단계), 오피스 문서
                                         // (DOCUMENT·SHEET·SLIDE, 12단계), 한글(HWP, 13단계).
                                         //
@@ -488,11 +571,16 @@ private fun FolderScreen(
                                         // 다루지 않는 문서입니다' 로 정확히 말하기** 때문이다.
                                         // 목록이 확장자로 미리 거르면 그 판정이 두 곳으로
                                         // 갈리고, 그것은 이 저장소가 여러 번 겪은 형태다.
-                                        e.kind == FileKind.PDF || e.kind == FileKind.EBOOK ||
-                                            e.kind == FileKind.DOCUMENT || e.kind == FileKind.SHEET ||
-                                            e.kind == FileKind.SLIDE || e.kind == FileKind.HWP ->
-                                            onOpenDocument(e.path)
-                                        else -> detail = e
+                                        TapRoute.DOCUMENT -> onOpenDocument(e.path)
+                                        // **이 앱에 뷰어가 없는 파일은 다른 앱으로 연다**(APK 는 설치 관리자).
+                                        // 누른 그대로 여는 길이라 Mode.VIEW 다 — 기본 앱이 있으면 묻지 않는다.
+                                        // 못 열었으면(이 형식을 아는 앱이 없다·넘길 수 없는 자리) 예전처럼 정보
+                                        // 시트를 띄우고 까닭을 거기에도 적는다(`DetailRequest.notice`). 앞의 것이면
+                                        // 시트의 '다른 앱으로 열기' 가 모든 앱에서 고르는 창으로 간다.
+                                        TapRoute.EXTERNAL ->
+                                            OpenWithRules.afterTap(e, openWith(e, ExternalOpen.Mode.VIEW))
+                                                ?.let { detail = it }
+                                        TapRoute.DETAIL -> detail = DetailRequest(e)
                                     }
                                 },
                                 onLongPress = { vm.toggleSelection(it.path) },
@@ -504,8 +592,29 @@ private fun FolderScreen(
         }
     }
 
-    detail?.let { entry ->
-        ModalBottomSheet(onDismissRequest = { detail = null }) { DetailSheet(entry) }
+    detail?.let { shown ->
+        ModalBottomSheet(onDismissRequest = { detail = null }) {
+            DetailSheet(
+                entry = shown.entry,
+                notice = shown.notice,
+                // **언제나 고르게 한다**(Mode.CHOOSE). 기본 앱이 정해져 있어도 묻는다 — '다른 앱으로' 를 누른 사람은
+                // 방금 기본 앱이 아닌 것을 원한다고 말했다. 폴더·휴지통 안의 것에는 단추가 없다.
+                // 눌러서 '이 형식을 아는 앱이 없습니다' 로 뜬 시트라면 이 단추가 **그래도 열어 보는 길**이다(길게 눌러 고른
+                // 뒤의 ⋮ 말고는 없다) — 받는 앱이 없는 형식이라 `ExternalOpen` 이 모든 앱에서 고르는 창으로 넓힌다. 그래서
+                // 눌러서 다른 앱으로 가는 종류는 모두 이 단추를 갖는다(`OpenWithTest` 가 박는다).
+                onOpenWith = if (OpenWithRules.canHandOff(shown.entry)) {
+                    {
+                        val result = openWith(shown.entry, ExternalOpen.Mode.CHOOSE)
+                        // 선택 메뉴의 '정보' 에서 왔으면 선택 메뉴의 '다른 앱으로 열기' 와 똑같이 끝낸다 — 띄웠으면
+                        // 선택도 끝난다. 눌러서 뜬 시트라면 고른 것이 없어 아무 일도 없다.
+                        if (result == ExternalOpen.Result.STARTED) vm.clearSelection()
+                        detail = OpenWithRules.afterChoose(shown, result)
+                    }
+                } else {
+                    null
+                },
+            )
+        }
     }
 
     if (newFolder) {
@@ -543,6 +652,11 @@ private fun FolderScreen(
     if (!conflicts.isEmpty) {
         ConflictDialog(conflicts = conflicts, onPick = vm::paste, onDismiss = vm::cancelPaste)
     }
+
+    // '여기에 복원' 의 이름 충돌. 붙여넣기와 같은 대화상자·같은 규칙이다(덮어쓰기는 종류가 같을 때만).
+    if (!restoreConflicts.isEmpty) {
+        ConflictDialog(conflicts = restoreConflicts, onPick = vm::restoreHere, onDismiss = vm::cancelRestoreConflicts)
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -565,6 +679,7 @@ private fun BrowserAppBar(
     onToggleHidden: () -> Unit,
     canReadAsComic: Boolean,
     onReadAsComic: () -> Unit,
+    onRefresh: () -> Unit,
 ) {
     var menuOpen by remember { mutableStateOf(false) }
 
@@ -621,7 +736,12 @@ private fun BrowserAppBar(
                 IconButton(onClick = { onFilteringChange(true) }) {
                     Icon(Icons.Filled.Search, stringResource(R.string.browser_search))
                 }
-                IconButton(onClick = onToggleViewMode) { ViewModeGlyph(viewMode) }
+                // 글리프는 손으로 그린 캔버스라 설명이 따로 없다 — 화면 낭독기가 이름 없는 단추로 읽지 않게 단추에 준다.
+                val viewModeLabel = stringResource(R.string.browser_view_mode)
+                IconButton(
+                    onClick = onToggleViewMode,
+                    modifier = Modifier.semantics { contentDescription = viewModeLabel },
+                ) { ViewModeGlyph(viewMode) }
                 // **⋮ 단추와 메뉴를 한 상자에 담는다.** Compose 의 Popup 은 자기를 감싼 **부모
                 // 레이아웃 노드**를 앵커로 삼는다. `actions` 에 형제로 두면 앵커가 아이콘 줄
                 // 전체가 되어 메뉴가 맨 왼쪽 아이콘 아래에서 시작한다(사용자가 지적했다).
@@ -644,6 +764,17 @@ private fun BrowserAppBar(
                         HorizontalDivider()
                         CheckItem(R.string.browser_sort_folders_first, sortSpec.foldersFirst) { onToggleFoldersFirst() }
                         CheckItem(R.string.browser_show_hidden, showHidden) { onToggleHidden() }
+                        HorizontalDivider()
+                        // **당겨서 새로고침과 같은 일을 메뉴에도 둔다.** 당기기는 몸짓뿐이라 화면 낭독기로는 찾을
+                        // 길이 없고(목록 줄에 초점이 있으면 목록을 감싼 상자의 동작은 읽히지 않는다), 손가락을
+                        // 쓰기 어려운 사람에게도 없는 것과 같다. 고르는 중에는 이 앱바가 선택 앱바로 바뀌어 닿지 않는다.
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.browser_refresh)) },
+                            onClick = {
+                                menuOpen = false
+                                onRefresh()
+                            },
+                        )
                         if (canReadAsComic) {
                             HorizontalDivider()
                             DropdownMenuItem(
@@ -815,6 +946,7 @@ private fun FileListing(
     entries: List<FileEntry>,
     viewMode: ViewMode,
     selection: Set<String>,
+    badges: Map<String, ReadingBadge>,
     vm: BrowserViewModel,
     onOpen: (FileEntry) -> Unit,
     onLongPress: (FileEntry) -> Unit,
@@ -844,6 +976,7 @@ private fun FileListing(
                     onClick = { onOpen(entry) },
                     onLongClick = { onLongPress(entry) },
                     allowLoad = !state.isScrollInProgress,
+                    badge = badges[entry.path],
                 )
             }
         }
@@ -877,6 +1010,7 @@ private fun FileListing(
                     // 줄 앞을 차지해 정작 멈춘 자리가 늦게 온다. 취소를 잘 거는 것보다
                     // 애초에 줄을 세우지 않는 편이 싸다.
                     allowLoad = !state.isScrollInProgress,
+                    badge = badges[entry.path],
                 )
             }
         }
@@ -932,11 +1066,30 @@ private fun FailureNote(reason: DirectoryLister.Reason) {
     }
 }
 
-/** 파일을 탭하면 나오는 정보. 뷰어가 붙는 6단계부터는 여기서 열기로 이어진다. */
+/**
+ * 파일의 정보. 뷰어가 없는 파일을 눌렀는데 다른 앱으로 넘기지 못했을 때와 선택 메뉴의 '정보' 에서 뜬다. 드물게는 누른
+ * 것만으로도 뜬다 — 목록에서 사라진 사진, 폴더라고 적혔는데 폴더가 아닌 항목, 휴지통 안의 뷰어 없는 파일(`TapRoute.DETAIL`).
+ *
+ * @param notice 다른 앱으로 넘기지 못한 까닭(`ExternalOpen.messageOf`). 이 시트가 화면 아래를 덮어 같은 순간의 스낵바가
+ *   가려지므로 여기에도 적는다. 문장은 `core:io` 의 것을 그대로 쓴다 — 한 벌만 둔다(함정 표 '문구는 그것을 만들어 내는
+ *   타입 곁에'). **화면 낭독기가 바뀐 까닭을 읽도록 알림 영역으로 둔다** — 시트의 단추를 눌러 실패하면 초점은 단추에 남고
+ *   글만 바뀌므로, 알림 영역이 아니면 듣는 사람은 무엇이 일어났는지 모른다.
+ * @param onOpenWith '다른 앱으로 열기'. null 이면 단추가 없다(폴더·휴지통 안).
+ */
 @Composable
-private fun DetailSheet(entry: FileEntry) {
+private fun DetailSheet(entry: FileEntry, @StringRes notice: Int?, onOpenWith: (() -> Unit)?) {
     Column(Modifier.padding(start = 24.dp, end = 24.dp, bottom = 32.dp)) {
         Text(entry.name, style = MaterialTheme.typography.titleMedium)
+        if (notice != null) {
+            Text(
+                stringResource(notice),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .semantics { liveRegion = LiveRegionMode.Polite },
+            )
+        }
         HorizontalDivider(Modifier.padding(vertical = 12.dp))
         DetailRow(stringResource(R.string.browser_detail_kind), kindLabel(entry.kind))
         if (!entry.isDirectory) {
@@ -950,6 +1103,11 @@ private fun DetailSheet(entry: FileEntry) {
             io.github.donggi.iroiroviewer.io.Format.timestamp(entry.lastModified),
         )
         DetailRow(stringResource(R.string.browser_detail_path), entry.path)
+        if (onOpenWith != null) {
+            Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.End) {
+                FilledTonalButton(onClick = onOpenWith) { Text(stringResource(IoR.string.io_open_with)) }
+            }
+        }
     }
 }
 

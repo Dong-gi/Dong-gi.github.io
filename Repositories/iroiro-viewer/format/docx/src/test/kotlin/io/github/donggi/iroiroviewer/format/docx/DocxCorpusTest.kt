@@ -62,13 +62,42 @@ class DocxCorpusTest {
                     expect(want in flat, "확인란 '$want' 이 없다")
                 }
             }
-            // LO testCommentDoneModel — 메모 둘(하나는 해결됨). 그리지 않고 센다.
-            "DX14" -> expect(unsup[UnsupportedFeatures.COMMENT] == 2, "메모를 둘로 세지 않았다: $unsup")
+            // LO testCommentDoneModel — 메모 둘(둘째 문단 둘·셋). 12단계는 그리지 않고 셌다. 이제 범위 끝에 표지를 두고
+            // 부분 끝에 본문을 그린다 — **보인 메모는 세지 않는다.**
+            "DX14" -> {
+                expect(unsup[UnsupportedFeatures.COMMENT] == null, "보인 메모를 버린 것으로 셌다: $unsup")
+                val comments = html.substringAfter("<section class=\"comments\">", "")
+                expect(comments.isNotEmpty(), "메모 쪽이 없다")
+                val bodies = listOf(
+                    "A two-paragraph comment.", "This is the second paragraph, and it is done.",
+                    "A three-paragraph comment.", "The second paragraph.", "The third paragraph.",
+                )
+                expect(bodies.all { it in comments }, "메모 본문이 빠졌다: ${comments.take(800)}")
+                // 머리글자(MK) + 문서 차례. 표지는 본문 쪽에, 누르면 메모로 — 메모의 머리는 표지로 돌아간다.
+                val body = html.substringBefore("<section class=\"comments\">")
+                for (n in 1..2) {
+                    expect("<sup class=\"cmref\" id=\"cmref-$n\"><a href=\"#cm-$n\">[MK$n]</a></sup>" in body, "본문에 메모 표지 $n 이 없다")
+                    expect("<div id=\"cm-$n\" class=\"cmt\"><p class=\"cmh\"><sup class=\"cmnum\"><a href=\"#cmref-$n\">[MK$n]</a></sup> Mike Kaganski</p>" in comments, "메모 $n 의 머리가 다르다")
+                }
+                // 메모가 달린 낱말 바로 뒤에 표지가 온다(`w:commentReference` 는 범위 끝에 있다).
+                expect(Regex("eget(</span>)?<sup class=\"cmref\"").containsMatchIn(body), "표지가 범위 끝에 있지 않다")
+            }
             // python-docx shp-inline-shape-access.feature — 넣은 그림·연결 그림·연결+넣은 그림·SmartArt·차트.
-            // 연결만 된 그림은 **가져오지 않는다**(세기만 한다).
+            // 연결만 된 그림은 **가져오지 않는다**(세기만 한다). SmartArt 는 캐시된 그림의 글(foo·bar·baz)을 그리고, 글 없는
+            // 화살표 둘은 도형으로 센다 — 보인 SmartArt 는 SmartArt 로 세지 않는다(pptx 와 같은 판단).
             "DX19" -> {
                 expect(r.images == 2 && r.imagesServed == 2, "그림 둘이 보여야 한다: ${r.imagesServed}/${r.images}")
-                expect(unsup[UnsupportedFeatures.LINKED_FILE] == 1 && unsup[UnsupportedFeatures.SMART_ART] == 1 && unsup[UnsupportedFeatures.CHART] == 1, "셈이 다르다: $unsup")
+                expect(
+                    unsup[UnsupportedFeatures.LINKED_FILE] == 1 && unsup[UnsupportedFeatures.SMART_ART] == null &&
+                        unsup[UnsupportedFeatures.SHAPE] == 2 && unsup[UnsupportedFeatures.CHART] == 1,
+                    "셈이 다르다: $unsup",
+                )
+                expect(smartArtTexts(html) == listOf(listOf("foo", "bar", "baz")), "SmartArt 의 글이 다르다: ${smartArtTexts(html)}")
+            }
+            // LO 의 SmartArt 시험 표본 — 목록형 셋. 캐시된 그림의 도형 차례대로, 뒤의 큰 화살표 하나는 도형으로.
+            "DX13" -> {
+                expect(smartArtTexts(html) == listOf(listOf("Sample", "SmartArt", "LibreOffice?")), "SmartArt 의 글이 다르다: ${smartArtTexts(html)}")
+                expect(unsup[UnsupportedFeatures.SMART_ART] == null && unsup[UnsupportedFeatures.SHAPE] == 1, "셈이 다르다: $unsup")
             }
             // 수식(OMML) 아홉 — 문서에 `m:oMathPara` 가 아홉이다(LO testMathMso2k7 은 그중 여섯을 본다).
             // 오라클(python-docx)은 수식의 글을 보지 않아 정밀도가 0 이다 — 글 대조가 아무것도 말해 주지 않으므로 뜻이
@@ -82,14 +111,23 @@ class DocxCorpusTest {
             "DM02" -> expect(!r.warned(FlowWarnings.MACROS), "매크로가 없는데 알렸다")
             // 빈 워드 문서 — '보여 줄 것이 없다' 가 아니라 빈 부분 하나.
             "DX18" -> expect(r.parts.size == 1, "빈 문서가 부분 하나가 아니다")
-            // Strict — 그림·차트·SmartArt·수식·머리말이 다 있다(LO testStrict).
-            "DX11" -> expect(r.imagesServed == 1 && listOf(UnsupportedFeatures.CHART, UnsupportedFeatures.SMART_ART, UnsupportedFeatures.EQUATION).all { (unsup[it] ?: 0) >= 1 }, "Strict 의 개체를 놓쳤다: $unsup")
+            // Strict — 그림·차트·SmartArt·수식·머리말이 다 있다(LO testStrict). SmartArt 는 순환형 a·b·c — 자리로 늘어놓으면
+            // a·c·b 가 되므로 그림 부분의 도형 차례(데이터의 노드 차례)를 따르는지 본다. 화살표 셋은 도형으로 센다.
+            "DX11" -> {
+                expect(r.imagesServed == 1 && listOf(UnsupportedFeatures.CHART, UnsupportedFeatures.EQUATION).all { (unsup[it] ?: 0) >= 1 }, "Strict 의 개체를 놓쳤다: $unsup")
+                expect(smartArtTexts(html) == listOf(listOf("a", "b", "c")), "SmartArt 의 글이 다르다: ${smartArtTexts(html)}")
+                expect(unsup[UnsupportedFeatures.SMART_ART] == null && unsup[UnsupportedFeatures.SHAPE] == 3, "셈이 다르다: $unsup")
+            }
             // 번호 문단 열아홉 가운데 둘은 문단 표시까지 지웠다(lxml 로 셌다) — 표지는 열일곱이어야 한다.
             // 지운 문단의 빈 글머리표가 남던 결함을 이 표본이 잡았다.
             "DX05" -> expect(markers(html).size == 17, "표지가 열일곱이 아니다: ${markers(html).size}")
         }
         return out
     }
+
+    /** SmartArt 상자(`div.sa`)마다 그 안 문단의 글. */
+    private fun smartArtTexts(html: String): List<List<String>> =
+        Regex("<div class=\"sa\">(.*?)</div>", RegexOption.DOT_MATCHES_ALL).findAll(html).map { paragraphs(it.groupValues[1]) }.toList()
 
     companion object {
         /**

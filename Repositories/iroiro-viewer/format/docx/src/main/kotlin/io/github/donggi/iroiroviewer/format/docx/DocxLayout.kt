@@ -57,9 +57,17 @@ internal class DocxEnv(
     val endnoteFormat: NoteFormat,
     val features: UnsupportedFeatures,
     val isDisplayableImage: (String) -> Boolean,
+    /** 메모 부분에서 읽은 것([DocxComments]). 없거나 읽지 못했으면 [DocxComments.NONE]. */
+    val comments: DocxComments = DocxComments.NONE,
 ) {
     /** 머리글·바닥글은 문서에 한 번만 센다. */
     var headerFooterRecorded = false
+
+    /**
+     * 훑기가 만난(본문·각주에서 가리킨) 메모의 `w:id`. 훑기는 **이것들의 본문만** 걸어 버린 것을 센다 — 가리키지 않은 메모는
+     * 워드도 보이지 않는다.
+     */
+    val referencedComments = HashSet<Int>()
 
     private val relationshipMaps = HashMap<String, Map<String, OpcRelationship>>()
 
@@ -99,10 +107,12 @@ internal class WalkState(
     val fields: ArrayList<FieldFrame> = ArrayList(),
     /** 깊이 상한 때문에 받지 않은 필드 시작의 수. 짝이 되는 끝도 받지 않는다. */
     var ignoredFieldBegins: Int = 0,
+    /** 문서 순서로 센 본문의 SmartArt 번호. 훑기가 읽어 둔 글([ScanCollector.smartArt])을 찾는 열쇠다. */
+    var smartArtOrdinal: Int = 0,
 ) {
     fun copy(): WalkState = WalkState(
         lists.copy(), footnoteNo, endnoteNo, tableOrdinal,
-        ArrayList(fields.map { it.copy() }), ignoredFieldBegins,
+        ArrayList(fields.map { it.copy() }), ignoredFieldBegins, smartArtOrdinal,
     )
 
     /**
@@ -127,6 +137,8 @@ internal class DocxLayout(
     /** 책갈피 이름 → 조각 번호. 문서 안 링크(`w:anchor`)가 다른 조각을 가리킬 때 쓴다. */
     val bookmarks: Map<String, Int>,
     val tableSpans: Map<Int, IntArray>,
+    /** SmartArt 번호([WalkState.smartArtOrdinal]) → 캐시된 그림에서 읽은 글. 읽지 못한 것은 없다(SmartArt 로 셌다). */
+    val smartArts: Map<Int, SmartArtText> = emptyMap(),
 ) {
     companion object {
         val EMPTY = DocxLayout("", emptyList(), emptyList(), emptyMap(), emptyMap())
@@ -134,7 +146,7 @@ internal class DocxLayout(
 }
 
 /**
- * 훑기가 모으는 것 — 조각의 경계, 제목, 책갈피, 표의 행 합치기.
+ * 훑기가 모으는 것 — 조각의 경계, 제목, 책갈피, 표의 행 합치기, SmartArt 의 글.
  *
  * 경계는 최상위 블록 하나를 **시작하기 직전**(문단이면 속성을 읽은 뒤, 번호를 세기 전)에 정한다.
  * 그 자리에서 찍은 상태가 그 조각을 그릴 때의 출발점이 된다.
@@ -156,6 +168,8 @@ internal class ScanCollector(
     private val bookmarkBlocks = HashMap<String, Int>()
     private val spans = HashMap<Int, IntArray>()
     private var storedSpanCells = 0
+    private val smartArts = HashMap<Int, SmartArtText>()
+    private var storedSmartArtBytes = 0L
 
     fun onTopBlock(index: Int, heading: Boolean, state: WalkState) {
         val cut = !saturated && blocks > 0 && (
@@ -200,6 +214,19 @@ internal class ScanCollector(
         spans[ordinal] = cellSpans
     }
 
+    /**
+     * SmartArt 하나의 글을 적어 둔다. 문서 전체의 **무게**([SmartArtText.approxBytes])에 상한을 둔다 — 넘으면 적지 않고
+     * 거짓(부르는 쪽이 SmartArt 로 센다). 글자 수가 아니라 무게로 재는 까닭은 그 함수의 주석. 같은 그림을 여러 번 가리키면
+     * 그때마다 센다(넉넉한 쪽으로 틀린다). 그리기는 여기 적힌 것만 그리므로 훑기의 셈과 그리기의 모양이 어긋나지 않는다.
+     */
+    fun smartArt(ordinal: Int, art: SmartArtText): Boolean {
+        val cost = art.approxBytes()
+        if (storedSmartArtBytes + cost > MAX_SMART_ART_BYTES) return false
+        storedSmartArtBytes += cost
+        smartArts[ordinal] = art
+        return true
+    }
+
     fun build(title: String): DocxLayout {
         val chunkOf = { block: Int ->
             var lo = 0
@@ -223,7 +250,7 @@ internal class ScanCollector(
         }
         val bookmarks = HashMap<String, Int>(bookmarkBlocks.size)
         for ((name, block) in bookmarkBlocks) bookmarks[name] = chunkOf(block)
-        return DocxLayout(title, chunks, outline, bookmarks, spans)
+        return DocxLayout(title, chunks, outline, bookmarks, spans, smartArts)
     }
 
     companion object {
@@ -231,6 +258,12 @@ internal class ScanCollector(
         private const val MAX_TITLE = 200
         private const val MAX_BOOKMARKS = 20_000
         private const val MAX_SPAN_CELLS = 2_000_000
+
+        /**
+         * 적어 두는 SmartArt 글의 무게 합(바이트, [SmartArtText.approxBytes]). 글이 꽉 찬 것([DocxSmartArt.MAX_CHARS])도 200개쯤
+         * 들고, 사람이 만든 수백 자짜리는 문서당 개수 상한(`DocxWalker.MAX_SMART_ARTS`)까지 다 든다.
+         */
+        const val MAX_SMART_ART_BYTES = 8L * 1024 * 1024
         private val SPACES = Regex("\\s{2,}")
     }
 }

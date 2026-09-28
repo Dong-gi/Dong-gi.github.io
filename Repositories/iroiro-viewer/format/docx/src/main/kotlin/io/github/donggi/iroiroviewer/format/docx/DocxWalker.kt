@@ -28,7 +28,10 @@ internal class NoteRef(val endnote: Boolean, val id: Int, val label: String, val
  * @param recordFeatures 버린 것을 센다. 훑기만 켠다([DocxEnv.features] 의 주석).
  * @param start 그리기에서 이 조각의 첫 최상위 블록. 앞의 블록은 들여다보지 않고 건너뛴다.
  * @param end 그리기에서 이 조각이 끝나는 블록(포함하지 않는다).
- * @param notes 각주·미주의 본문을 걷는 중이다.
+ * @param notes 각주·미주(와 메모)의 본문을 걷는 중이다.
+ * @param smartArts 훑기가 읽어 둔 SmartArt 의 글([DocxLayout.smartArts]). 그리기만 읽는다.
+ * @param comments 그리기에서 이 조각이 가리킨 메모를 모으는 곳. 본문과 각주의 걷기가 함께 쓴다.
+ * @param inComment 메모의 본문을 걷는 중이다 — 메모 안의 메모 표지는 따르지 않는다(워드가 만들지 않는다).
  */
 internal class WalkConfig(
     val sourcePart: String,
@@ -43,6 +46,9 @@ internal class WalkConfig(
     val onTruncated: () -> Unit = {},
     val notes: Boolean = false,
     val checkCancel: () -> Unit = {},
+    val smartArts: Map<Int, SmartArtText> = emptyMap(),
+    val comments: CommentSink? = null,
+    val inComment: Boolean = false,
 )
 
 /** 걷기를 멈춘다 — 조각의 끝에 닿았거나 쓰기 상한에 닿았다. 제어 흐름이라 스택을 담지 않는다. */
@@ -101,6 +107,9 @@ internal class DocxWalker(
     private var emptyRun = 0
     private var ticks = 0
     private var noteLinkPending: String? = null
+
+    /** 훑기가 읽은 SmartArt — 데이터 부분의 이름 → 읽은 글(못 읽었으면 null). [readSmartArt] 의 주석. */
+    private val smartArtReads = HashMap<String, SmartArtText?>()
 
     /** 그리기에서 본문을 걷는 중 — 조각 밖의 최상위 블록을 건너뛴다. */
     private val bodyRange: Boolean = cfg.scan == null && !cfg.notes
@@ -162,8 +171,8 @@ internal class DocxWalker(
         if (writing) sink!!.text(s)
     }
 
-    private fun record(kind: String) {
-        if (cfg.recordFeatures) env.features.record(kind)
+    private fun record(kind: String, n: Int = 1) {
+        if (cfg.recordFeatures) env.features.record(kind, n)
     }
 
     private fun headerFooter() {
@@ -471,7 +480,8 @@ internal class DocxWalker(
             "bookmarkStart" -> bookmark(p)
             "oMath", "oMathPara" -> math(p)
             "AlternateContent" -> alternate(p) { inline(p, it) }
-            // 지운 글(`w:del`·`w:moveFrom`)은 보이지 않는다. 메모 범위는 `w:commentReference` 가 센다.
+            // 지운 글(`w:del`·`w:moveFrom`)은 보이지 않는다. 메모 범위(`w:commentRangeStart`…)는 칠하지 않는다 — 표지는
+            // 범위 끝의 `w:commentReference` 가 적는다.
             else -> skip(p)
         }
     }
@@ -530,10 +540,7 @@ internal class DocxWalker(
             "footnoteReference" -> noteReference(p, rc, endnote = false)
             "endnoteReference" -> noteReference(p, rc, endnote = true)
             "footnoteRef", "endnoteRef" -> noteMark(p, rc)
-            "commentReference" -> {
-                record(UnsupportedFeatures.COMMENT)
-                skip(p)
-            }
+            "commentReference" -> commentReference(p, rc)
             "fldChar" -> fieldChar(p, rc)
             "instrText" -> instrText(p)
             "ruby" -> ruby(p, rc)
@@ -872,6 +879,114 @@ internal class DocxWalker(
         end("sup")
     }
 
+    // ---- 메모 -------------------------------------------------------------------
+
+    /**
+     * 메모 표지(`w:commentReference`) — 메모가 달린 범위의 끝에 온다. 그 자리에 작은 표지(`[머리글자 번호]`)를 두고, 메모의 본문은
+     * 조각의 끝에 각주처럼 모아 그린다([CommentSink]). 표지를 누르면 본문으로, 본문의 머리를 누르면 표지로 간다.
+     *
+     * **배지는 보이지 않는 것만 센다** — 메모 부분이 없거나 읽지 못했거나(보조 부분의 실패는 따로 알렸다) 가리키는 메모가 없으면
+     * 보일 글이 없으므로 [UnsupportedFeatures.COMMENT] 로 센다. 보인 메모는 세지 않는다(12단계는 그리지 않고 셌다).
+     * 숨긴 글·필드 명령 안의 표지는 워드도 보이지 않으므로 표지도 본문도 없다.
+     */
+    private fun commentReference(p: XmlPullParser, rc: RunCtx) {
+        val id = OoxmlXml.int(p, "id")
+        skip(p)
+        if (cfg.inComment || id == null || !visible(rc)) return
+        val info = env.comments.find(id)
+        if (info == null) {
+            record(UnsupportedFeatures.COMMENT)
+            return
+        }
+        // 훑기(본문·각주)가 가리킨 메모만 그 본문을 걸어 버린 것을 센다(`DocxEnv.referencedComments`).
+        if (cfg.recordFeatures) env.referencedComments.add(id)
+        val pc = para ?: return
+        cfg.scan?.addChars(info.label.length)
+        ensureOpen(pc)
+        pc.visible = true
+        if (!writing) return
+        val (listed, backId) = cfg.comments?.add(info) ?: (false to null)
+        start("sup", "class" to "cmref", "id" to backId)
+        if (listed && pc.linkDepth == 0) start("a", "href" to "#${info.noteId}")
+        text(info.label)
+        end("sup")
+    }
+
+    // ---- SmartArt -------------------------------------------------------------------
+
+    /**
+     * SmartArt(`dgm:relIds`) — **캐시된 그림의 글**을 블록으로 그린다([DocxSmartArt]). 도형의 모양은 그리지 않으므로 글이 없는
+     * 도형(화살표·바탕)은 도형으로 센다 — 글상자가 없는 도형을 세는 것과 같은 판단이다. 그림을 찾지 못하거나 못 읽으면
+     * 예전처럼 SmartArt 로 센다(pptx 와 같다). 보인 SmartArt 는 SmartArt 로 세지 않는다.
+     *
+     * 글은 **훑기가 읽어** 번호([WalkState.smartArtOrdinal])로 적어 두고 그리기는 그것을 쓴다 — 두 모드의 셈과 모양이 한 번
+     * 읽은 값에서 나온다. 번호는 본문의 걷기 상태에 있어 조각이 중간에서 시작해도 같다. 각주·메모 안의 SmartArt 는 그 걷기가
+     * 따로 세므로(각주마다 새 상태) 적어 둘 열쇠가 없다 — 드물어서 예전처럼 센다.
+     */
+    private fun smartArt(dataRelId: String?, g: GraphicCtx) {
+        if (cfg.notes) {
+            record(UnsupportedFeatures.SMART_ART)
+            return
+        }
+        val ordinal = state.smartArtOrdinal++
+        val scan = cfg.scan
+        if (scan != null) {
+            val art = if (ordinal < MAX_SMART_ARTS) readSmartArt(dataRelId) else null
+            if (art == null || !scan.smartArt(ordinal, art)) {
+                record(UnsupportedFeatures.SMART_ART)
+                return
+            }
+            record(UnsupportedFeatures.SHAPE, art.textless)
+            scan.addChars(art.chars)
+            return
+        }
+        val art = cfg.smartArts[ordinal] ?: return
+        if (!g.visible || art.shapes.isEmpty()) return
+        para?.let { breakParagraph(it) }
+        start("div", "class" to "sa")
+        for (shape in art.shapes) {
+            for (sp in shape) {
+                val style = if (sp.level > 0) StyleBuilder().add("margin-left", CssValues.pt(sp.level * SMART_ART_INDENT_PT, 0.0, MAX_INDENT_PT)).build() else null
+                start("p", "style" to style)
+                for ((i, line) in sp.text.split('\n').withIndex()) {
+                    if (i > 0) void("br")
+                    text(line)
+                }
+                end("p")
+            }
+        }
+        end("div")
+        // 글이 보였다 — 앞의 빈 문단 셈을 잇지 않는다. 이으면 상자 바로 뒤의 빈 줄이 '빈 문단이 넷째' 로 사라진다
+        // (상자를 담은 문단은 끊긴 채 닫혀 [finishParagraph] 가 셈을 되돌리지 않는다).
+        emptyRun = 0
+        if (art.truncated) cfg.onTruncated()
+    }
+
+    /**
+     * 훑기에서 SmartArt 하나의 캐시된 그림을 읽는다. 없거나 깨졌으면 null(부르는 쪽이 SmartArt 로 센다). 취소만 위로 올린다.
+     *
+     * **같은 데이터 부분은 한 번만 읽는다**([smartArtReads]) — 수백 개의 SmartArt 가 32 MB 짜리 부분 하나를 가리키게 만든 파일은
+     * 그만큼을 되풀이해 풀게 한다(pptx 의 `diagramDrawing` 캐시와 같은 까닭).
+     */
+    private fun readSmartArt(dataRelId: String?): SmartArtText? {
+        val data = dataRelId?.let { rels[it] }?.takeIf { !it.external } ?: return null
+        val key = OpcNames.key(data.target)
+        if (smartArtReads.containsKey(key)) return smartArtReads[key]
+        val art = try {
+            DocxSmartArt.drawingPart(env.pkg, limits, cfg.sourcePart, data, cfg.checkCancel)?.let { name ->
+                env.pkg.parser(name)?.let { (p, stream) -> stream.use { DocxSmartArt.read(p, limits, checkCancel = cfg.checkCancel) } }
+            }
+        } catch (e: java.util.concurrent.CancellationException) {
+            throw e
+        } catch (e: java.io.InterruptedIOException) {
+            throw e
+        } catch (e: Exception) {
+            null
+        }
+        smartArtReads[key] = art
+        return art
+    }
+
     // ---- 표 -------------------------------------------------------------------
 
     private class TableCtx(val spans: IntArray?, val merge: MergeTracker?) {
@@ -1097,9 +1212,10 @@ internal class DocxWalker(
                 skip(p)
             }
             "relIds" -> {
-                record(UnsupportedFeatures.SMART_ART)
                 g.content++
+                val data = OoxmlXml.rel(p, "dm")
                 skip(p)
+                smartArt(data, g)
             }
             "OLEObject" -> {
                 record(UnsupportedFeatures.EMBEDDED_OBJECT)
@@ -1273,6 +1389,12 @@ internal class DocxWalker(
         const val MAX_ROWS = 5_000
         const val MAX_CELLS = 100_000
         private const val MAX_TEXTBOX_DEPTH = 3
+
+        /** 문서 하나에서 글을 읽는 SmartArt 의 수. 넘는 것은 읽지 않고 센다 — 부분 하나가 32 MB 까지 들어온다. */
+        const val MAX_SMART_ARTS = 500
+
+        /** SmartArt 글의 목록 수준 하나의 들여쓰기(pt). */
+        private const val SMART_ART_INDENT_PT = 12.0
         private const val MAX_GRAPHIC_DEPTH = 32
         private const val MAX_GRID_SPAN = 64
         private const val MAX_FIELD_DEPTH = 16

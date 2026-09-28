@@ -35,8 +35,7 @@ internal object Hwp5Limits {
     /** 문서가 적는 이름·명령 문자열 하나(글꼴 이름·스타일 이름·필드 명령). */
     const val MAX_STRING_CHARS = 4_096
 
-    /** 그림의 대체 글. 12단계가 상한 없는 `descr` 에 한 번 데었다. */
-    const val MAX_ALT_CHARS = 300
+    // 그림의 대체 글의 상한은 HWPX 변환기와 한 벌이다 — `format:html` 의 `HancomAlt.MAX_CHARS`.
 
     /** 수식 스크립트 하나. */
     const val MAX_EQUATION_CHARS = 8_192

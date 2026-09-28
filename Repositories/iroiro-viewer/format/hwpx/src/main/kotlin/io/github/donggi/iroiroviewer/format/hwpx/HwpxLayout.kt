@@ -51,8 +51,13 @@ internal class WalkState(
     var tableOrdinal: Int = 0,
     /** 변경 추적의 '지운 글' 안에 있다(`hp:deleteBegin` … `hp:deleteEnd`). 0 보다 크면 글을 보이지 않는다. */
     var deleting: Int = 0,
+    /**
+     * 문서 차례로 센 그림·묶음 개체의 번호. 훑기가 읽어 둔 설명문(`HwpxLayout.alts`)을 찾는 열쇠다 — `hp:shapeComment` 는
+     * 그림(`hc:img`)보다 **뒤에** 적혀 있어 그리기가 `img` 를 쓸 때는 아직 모른다(표의 칸 정보와 같은 장치).
+     */
+    var objectOrdinal: Int = 0,
 ) {
-    fun copy(): WalkState = WalkState(numbers.copy(), footnoteNo, endnoteNo, tableOrdinal, deleting)
+    fun copy(): WalkState = WalkState(numbers.copy(), footnoteNo, endnoteNo, tableOrdinal, deleting, objectOrdinal)
 
     fun approxBytes(): Long = 64L + numbers.approxBytes()
 }
@@ -69,11 +74,16 @@ internal class HwpxLayout(
     /** (구역, 표 번호) → 칸마다의 정보([TableScan.result] 의 모양). 합치기·빈칸·겹친 칸이 없는 표는 없다. */
     val tables: Map<Long, IntArray>,
     val sections: List<SectionInfo>,
+    /** (구역, 개체 번호 — [WalkState.objectOrdinal]) → 그림의 대체 글. 사람이 쓴 설명문만 있다(`HancomAlt`). */
+    val alts: Map<Long, String> = emptyMap(),
 ) {
     companion object {
         val EMPTY = HwpxLayout(emptyList(), emptyList(), emptyMap(), emptyMap(), emptyList())
 
         fun tableKey(section: Int, ordinal: Int): Long = (section.toLong() shl 32) or (ordinal.toLong() and 0xFFFFFFFFL)
+
+        /** 그림·묶음 개체의 열쇠. 모양은 [tableKey] 와 같다(번호가 따로 센 것일 뿐이다). */
+        fun objectKey(section: Int, ordinal: Int): Long = tableKey(section, ordinal)
     }
 }
 
@@ -142,7 +152,7 @@ internal class HwpxEnv(
 }
 
 /**
- * 훑기가 모으는 것 — 조각의 경계, 제목, 책갈피, 표의 칸 정보, 구역 설정.
+ * 훑기가 모으는 것 — 조각의 경계, 제목, 책갈피, 표의 칸 정보, 그림의 설명문, 구역 설정.
  *
  * 경계는 최상위 문단 하나를 **시작하기 직전**(문단 모양을 읽은 뒤, 번호를 세기 전)에 정한다. 그 자리에서 찍은
  * 상태가 그 조각을 그릴 때의 출발점이다.
@@ -163,6 +173,7 @@ internal class ScanCollector(
     private val bookmarkAt = HashMap<String, Pair<Int, Int>>()
     private val tables = HashMap<Long, IntArray>()
     private var storedCells = 0
+    private val alts = HashMap<Long, String>()
     private val sectionInfos = ArrayList<SectionInfo>()
 
     /** 구역 하나를 시작한다 — 언제나 새 조각이다(찍어 둘 상태의 예산과 관계없이). */
@@ -213,6 +224,12 @@ internal class ScanCollector(
         tables[key] = cells
     }
 
+    /** 그림·묶음 개체의 설명문([alt] 는 이미 `HancomAlt.of` 를 지난 것). 문서 전체의 수에 상한을 둔다. */
+    fun alt(key: Long, alt: String) {
+        if (alt.isEmpty() || alts.size >= HwpxLimits.MAX_STORED_ALTS) return
+        alts[key] = alt
+    }
+
     fun build(): HwpxLayout {
         // 조각 찾기: (구역, 문단) 이 속하는 마지막 시작.
         fun chunkOf(s: Int, block: Int): Int {
@@ -246,7 +263,7 @@ internal class ScanCollector(
         }
         val bookmarks = HashMap<String, Int>(bookmarkAt.size)
         for ((name, at) in bookmarkAt) bookmarks[name] = chunkOf(at.first, at.second)
-        return HwpxLayout(chunks, outline, bookmarks, tables, sectionInfos.toList())
+        return HwpxLayout(chunks, outline, bookmarks, tables, sectionInfos.toList(), alts)
     }
 
     companion object {

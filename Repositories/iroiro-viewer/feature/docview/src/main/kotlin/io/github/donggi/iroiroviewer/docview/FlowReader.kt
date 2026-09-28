@@ -34,14 +34,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import io.github.donggi.iroiroviewer.data.ReaderAppearance
 import io.github.donggi.iroiroviewer.format.FlowDocument
 import io.github.donggi.iroiroviewer.format.FlowKind
+import io.github.donggi.iroiroviewer.format.epub.ReaderStyle
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.webhost.LockedWebView
 import io.github.donggi.iroiroviewer.webhost.ResourceProvider
 import io.github.donggi.iroiroviewer.webhost.WebHost
 import io.github.donggi.iroiroviewer.webhost.WebResource
 import java.io.ByteArrayInputStream
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * 흐름 문서(docx·xlsx·pptx — 12단계, HWPX — 13단계)를 읽는 층. `EpubReader` 와 같은 모양이다.
@@ -55,7 +58,13 @@ import java.io.ByteArrayInputStream
  *
  * 부분 안의 스크롤은 WebView 가 한다(시트는 가로로도 민다). 부분을 넘기는 것은 아래 막대와
  * 목차다. 목차의 자리(`anchor`)는 URL 의 조각(`#id`)으로 건넨다 — 같은 부분이면 WebView 가
- * 그 자리로 옮기기만 한다.
+ * 그 자리로 옮기기만 한다. 부분 안의 자리는 스크롤의 비율로 기억한다(14단계 — EPUB 과 같다).
+ *
+ * ## 읽는 모양(14단계)
+ *
+ * 글(docx·HWP·HWPX)에는 글자 크기·여백·바탕을 모두, 시트에는 글자 크기만, 슬라이드에는 아무것도 걸지 않는다 — 까닭은
+ * [ReaderLooks] 의 표. 여백·바탕은 부분의 HTML 에 CSS 를 한 겹 더 얹는다(`ReaderStyle.apply`) — 흐름 문서의 계약
+ * (`FlowDocument.partHtml`)이 CSS 를 받지 않기 때문이다.
  */
 @Composable
 fun FlowReader(
@@ -67,15 +76,32 @@ fun FlowReader(
     onPart: (part: Int, anchor: String?) -> Unit,
     /** 부분 하나를 그렸다. 버린 것의 집계가 늘었을 수 있다. */
     onRead: () -> Unit,
+    /** 읽는 모양(설정). */
+    appearance: ReaderAppearance,
+    /** 기기가 밤 모드인가. 바탕이 '시스템' 일 때 쓴다. */
+    systemDark: Boolean,
+    /** 부분을 열 때 옮겨 갈 자리(0~1)를 그때 묻는다. */
+    startFraction: () -> Float,
+    /** '같은 부분 안에서 옮겨라' 의 일련번호(처음부터). */
+    jump: Int,
+    /** 사용자가 옮긴 부분 안의 자리. */
+    onFraction: (part: Int, fraction: Float) -> Unit,
+    /** 부분 안에서 본 몫(화면 끝 가장자리까지 — `LockedWebView.onSeen`). 진행이 쓴다. */
+    onSeen: (part: Int, seen: Float) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val flow = doc.flow
     val latestRead by rememberUpdatedState(onRead)
-    val provider = remember(flow) { providerFor(flow) { latestRead() } }
+    val look = ReaderLooks.forFlow(flow.kind, appearance, systemDark)
+    // 공급기는 WebView 의 다른 스레드에서 CSS 를 읽는다 — 원자 참조로 건넨다.
+    val cssRef = remember(flow) { AtomicReference("") }
+    cssRef.set(look.css)
+    val provider = remember(flow) { providerFor(flow, cssRef) { latestRead() } }
     var loading by remember(flow, part) { mutableStateOf(true) }
+    val latestPart by rememberUpdatedState(part)
 
     val path = flow.parts.getOrNull(part)?.path
-    Box(modifier.fillMaxSize().background(Color.White)) {
+    Box(modifier.fillMaxSize().background(Color(look.background))) {
         if (path != null) {
             val url = WebHost.urlFor(path) + (anchor?.let { "#$it" } ?: "")
             LockedWebView(
@@ -95,6 +121,13 @@ fun FlowReader(
                 },
                 onReady = { loading = false },
                 zoomable = flow.kind != FlowKind.DOCUMENT,
+                textZoom = look.textZoom,
+                backgroundColor = look.background,
+                startFraction = startFraction,
+                jump = jump,
+                contentKey = look.contentKey,
+                onFraction = { onFraction(latestPart, it) },
+                onSeen = { onSeen(latestPart, it) },
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -216,11 +249,17 @@ private fun untitled(kind: FlowKind, part: Int, count: Int): String = when (kind
  * 문서 안의 것을 내주는 이음매. 부분은 위생을 거친 HTML, 그 밖은 그림 바이트다
  * (`FlowDocument.openResource` 가 화면이 그릴 수 있는 그림만 준다).
  */
-private fun providerFor(flow: FlowDocument, onRead: () -> Unit): ResourceProvider = ResourceProvider { path ->
+private fun providerFor(
+    flow: FlowDocument,
+    css: AtomicReference<String>,
+    onRead: () -> Unit,
+): ResourceProvider = ResourceProvider { path ->
     try {
         val index = flow.partIndexOf(path)
         if (index >= 0) {
-            val html = flow.partHtml(index) ?: return@ResourceProvider null
+            // 부분의 HTML 은 문서가 캐시한다(`FlowDocumentBase`). 모양은 그 위에 **읽는 그 순간** 얹는다 — 캐시한 것을 고치지
+            // 않으므로 모양을 바꿔도 부분을 다시 변환하지 않는다.
+            val html = flow.partHtml(index)?.let { ReaderStyle.apply(it, css.get()) } ?: return@ResourceProvider null
             onRead()
             WebResource("text/html", "utf-8", ByteArrayInputStream(html.toByteArray()))
         } else {

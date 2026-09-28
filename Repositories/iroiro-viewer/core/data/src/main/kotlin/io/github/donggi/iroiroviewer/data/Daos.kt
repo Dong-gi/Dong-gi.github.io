@@ -30,6 +30,13 @@ interface ComicProgressDao {
     @Query("SELECT * FROM comic_progress WHERE file_key = :fileKey")
     suspend fun find(fileKey: String): ComicProgressEntity?
 
+    /**
+     * 여럿을 한 번에(파일 목록의 읽던 쪽 배지). SQLite 의 매개변수 상한(999)을 넘기지 않게 부르는 쪽이 나눠서 부른다
+     * ([ProgressLookup.MAX_KEYS]).
+     */
+    @Query("SELECT * FROM comic_progress WHERE file_key IN (:fileKeys)")
+    suspend fun findAll(fileKeys: List<String>): List<ComicProgressEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(entity: ComicProgressEntity)
 
@@ -43,6 +50,10 @@ interface DocProgressDao {
 
     @Query("SELECT * FROM doc_progress WHERE file_key = :fileKey")
     suspend fun find(fileKey: String): DocProgressEntity?
+
+    /** 여럿을 한 번에(파일 목록의 배지). [ComicProgressDao.findAll] 과 같다. */
+    @Query("SELECT * FROM doc_progress WHERE file_key IN (:fileKeys)")
+    suspend fun findAll(fileKeys: List<String>): List<DocProgressEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(entity: DocProgressEntity)
@@ -119,4 +130,9 @@ interface BookmarkDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM bookmark WHERE path = :path)")
     suspend fun has(path: String): Boolean
+}
+
+/** 읽던 쪽을 여럿 찾을 때의 한 번 묶음. SQLite 의 매개변수 상한(`SQLITE_MAX_VARIABLE_NUMBER` 의 옛 기본값 999)보다 작게. */
+object ProgressLookup {
+    const val MAX_KEYS = 500
 }

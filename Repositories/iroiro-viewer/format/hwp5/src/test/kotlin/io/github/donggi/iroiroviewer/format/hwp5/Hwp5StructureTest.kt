@@ -154,6 +154,30 @@ class Hwp5StructureTest {
     }
 
     @Test
+    fun 긴_자동_설명문도_끝_줄까지_보고_버린다() {
+        // 설명문을 300자에서 잘라 읽고 가렸더니, 잘린 끝 줄에 `:` 가 없어 저절로 넣은 설명이 사람이 쓴 것으로 남았다 —
+        // 사진의 EXIF 줄이 여럿 붙으면 300자를 넘는다. 이제 넉넉히 읽고 가린 뒤에 자른다(`HancomAlt`, HWPX 와 같은 규칙).
+        val exif = (1..12).joinToString("") { "\r\n사진 속성 $it 번째 항목(카메라 제조사가 정한 이름): 값 $it" }
+        val auto = "그림입니다.\r\n원본 그림의 이름: CLP000043080017.bmp$exif"
+        assertTrue(auto.length > 300 && ':' !in auto.take(300).lines().last(), "끝 줄이 `:` 앞에서 잘리는 표본이어야 한다")
+        val human = "사람이 쓴 긴 설명 " + "가".repeat(400)
+        val file = HwpFile().apply {
+            docInfo.bins.add(Bin(storageId = 1, ext = "PNG", data = png))
+            section(
+                P().ctrl(11, "gso ", Ctrl.picture(binItem = 1, alt = auto)),
+                P().ctrl(11, "gso ", Ctrl.picture(binItem = 1, alt = human)),
+            )
+        }
+        Hwp5.open(file).use { doc ->
+            val body = doc.body()
+            assertFalse("CLP000043080017" in body, body)
+            // 사람이 쓴 설명은 남기되 대체 글의 상한(300자)으로 자른다.
+            val alts = Regex("alt=\"([^\"]*)\"").findAll(body).map { it.groupValues[1] }.toList()
+            assertEquals(listOf("", human.take(300)), alts)
+        }
+    }
+
+    @Test
     fun 그림은_BIN_DATA_의_차례로_찾아_풀어서_내준다() {
         val file = HwpFile().apply {
             // 저장소 번호와 차례가 다르다(실물 K05 처럼) — 차례 2 가 저장소 5 다.

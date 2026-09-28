@@ -41,6 +41,7 @@ fun HomeScreen(
     vm: BrowserViewModel,
     snackbar: SnackbarHostState,
     onOpenDiagnostics: () -> Unit,
+    onOpenSettings: () -> Unit,
     onOpenTrash: () -> Unit,
     onOpenGallery: () -> Unit,
     modifier: Modifier = Modifier,
@@ -100,6 +101,13 @@ fun HomeScreen(
                     subtitle = if (trash.isEmpty()) stringResource(R.string.browser_trash_empty)
                     else stringResource(R.string.browser_count, trash.size),
                     onClick = onOpenTrash,
+                )
+            }
+            item(key = "settings") {
+                ShortcutRow(
+                    title = stringResource(R.string.browser_home_settings),
+                    subtitle = stringResource(R.string.browser_home_settings_desc),
+                    onClick = onOpenSettings,
                 )
             }
             item(key = "diag") {

@@ -111,19 +111,30 @@ class SequentialExtractTest {
      *
      * 같은 아카이브를 [ArchiveReader.open] 으로 하나씩 뽑으면 3.85배였다
      * ([SequentialCostTest] 참고). 잡음을 감안해 2.6배를 넘으면 실패로 본다.
+     *
+     * **두 크기를 번갈아 다섯 번 재고 가장 빠른 값을 쓴다**([SequentialCostTest] 의 `fastestPair` 와 같은 까닭). 한 번씩
+     * 따로 재던 판은 여러 모듈의 시험이 병렬로 도는 동안 2.68배로 깨졌다(검토 중 실측 — 30 ms 대의 작은 쪽이 붐비는
+     * 구간에 떨어지면 배율이 흔들린다). 번갈아 재면 붐빔이 두 쪽에 같게 걸린다.
      */
     @Test
     fun `7z 순차 추출은 선형이다`() {
-        fun time(count: Int): Long {
-            val f = ArchiveSamples.sevenZ(File(dir, "t$count.7z"), count, bytesEach = 4096)
-            repeat(2) { open(f).use { r -> r.extractSequentially(Collector()) } }
-            val t0 = System.nanoTime()
-            open(f).use { r -> r.extractSequentially(Collector()) }
-            return System.nanoTime() - t0
+        val smallFile = ArchiveSamples.sevenZ(File(dir, "t60.7z"), 60, bytesEach = 4096)
+        val bigFile = ArchiveSamples.sevenZ(File(dir, "t120.7z"), 120, bytesEach = 4096)
+        fun pass(f: File) = open(f).use { r -> r.extractSequentially(Collector()) }
+        repeat(2) {
+            pass(smallFile)
+            pass(bigFile)
         }
-
-        val small = time(60)
-        val big = time(120)
+        var small = Long.MAX_VALUE
+        var big = Long.MAX_VALUE
+        repeat(5) {
+            val t0 = System.nanoTime()
+            pass(smallFile)
+            small = minOf(small, System.nanoTime() - t0)
+            val t1 = System.nanoTime()
+            pass(bigFile)
+            big = minOf(big, System.nanoTime() - t1)
+        }
         val ratio = big.toDouble() / small.toDouble()
         println("7z 순차: 60개 ${small / 1_000_000}ms, 120개 ${big / 1_000_000}ms, 배율 ${"%.2f".format(ratio)}")
         assertTrue(ratio < 2.6, "순차인데 ${"%.2f".format(ratio)}배다 — 제곱 경로로 돌아갔다")
@@ -199,6 +210,48 @@ class SequentialExtractTest {
             // 지어낸 값이 들어오면 푼 파일의 시각이 거짓이 된다.
             assertTrue(r.entries.all { it.lastModified >= 0 })
         }
+    }
+
+    /**
+     * **7z 의 폴더 항목도 순차 추출의 소비자에게 간다**(ZIP·RAR·tar 와 같은 계약). 예전에는 7z 만 폴더를 건너뛰어
+     * 빈 폴더가 생기지 않았고 폴더 시각을 되살릴 길이 없었다. 폴더 뒤의 파일은 번호대로 옳은 바이트가 나온다.
+     */
+    @Test
+    fun `7z 의 폴더 항목도 소비자에게 간다`() {
+        val f = File(dir, "dirs.7z")
+        val stamp = java.util.Date(1_767_323_040_000L)
+        org.apache.commons.compress.archivers.sevenz.SevenZOutputFile(f).use { out ->
+            val d = org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry()
+            d.name = "빈폴더"
+            d.isDirectory = true
+            d.lastModifiedDate = stamp
+            out.putArchiveEntry(d)
+            out.closeArchiveEntry()
+            val e = org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry()
+            e.name = "빈폴더/뒤.bin"
+            out.putArchiveEntry(e)
+            out.write(ArchiveSamples.payload(1, 256))
+            out.closeArchiveEntry()
+        }
+        val seen = ArrayList<Pair<Int, Boolean>>()
+        val collector = Collector()
+        val sink = object : EntrySink {
+            override fun begin(entry: ArchiveEntry): OutputStream? {
+                seen += entry.index to entry.isDirectory
+                return collector.begin(entry)
+            }
+
+            override fun finish(entry: ArchiveEntry, written: Long, failure: Throwable?) =
+                collector.finish(entry, written, failure)
+        }
+        open(f).use { r ->
+            val dirEntry = r.entries.single { it.isDirectory }
+            assertEquals(stamp.time, dirEntry.lastModified)
+            r.extractSequentially(sink)
+        }
+        assertEquals(listOf(0 to true, 1 to false), seen)
+        assertContentEquals(ArchiveSamples.payload(1, 256), collector.got[1])
+        assertTrue(collector.failures.isEmpty(), "${collector.failures}")
     }
 
     /** 이름 없는 엔트리가 있어도 번호와 실제 위치가 어긋나지 않는다(7z 색인 회귀). */

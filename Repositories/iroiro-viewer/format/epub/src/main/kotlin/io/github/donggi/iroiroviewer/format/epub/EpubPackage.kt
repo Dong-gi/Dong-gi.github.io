@@ -50,6 +50,24 @@ internal object EpubPackage {
         val uniqueIdentifier: String? = null,
         /** 모든 `dc:identifier` 의 값(문서 순서). Adobe 난독화가 UUID 를 여기서 찾는다. */
         val identifiers: List<String> = emptyList(),
+        /**
+         * 책 전체가 **고정 레이아웃**인가 — `<meta property="rendition:layout">pre-paginated</meta>`(EPUB 3.3 의
+         * 고정 레이아웃 명세). 그것이 없으면 EPUB2 시절의 `<meta name="fixed-layout" content="true"/>` 를 본다.
+         * 차례 항목마다 [spineProperties] 가 이것을 뒤집을 수 있다.
+         */
+        val fixedLayout: Boolean = false,
+        /**
+         * `rendition:viewport` 의 글(`width=1200, height=1600`). 명세가 '쓰지 말라' 로 돌린 옛 방식이지만 실물에
+         * 남아 있다 — 장이 스스로 뷰포트를 적지 않았을 때만 쓴다([FixedLayout]).
+         */
+        val viewport: String? = null,
+        /** 차례 항목마다의 `properties`([spine] 과 같은 차례·같은 길이). 없으면 빈 글. */
+        val spineProperties: List<String> = emptyList(),
+        /**
+         * `<spine page-progression-direction="rtl">` — 오른쪽에서 왼쪽으로 넘기는 책(세로쓰기 일본어 책이 대개
+         * 그렇다). 화면이 첫 줄을 **오른쪽 끝**에 맞추고 읽은 자리를 가로로 잰다.
+         */
+        val pageProgressionRtl: Boolean = false,
     ) {
         // 식별자가 로그·예외에 실려 나가지 않게 한다(위 머리말).
         override fun toString(): String = "Package(title=$title, items=${items.size}, spine=${spine.size})"
@@ -97,6 +115,11 @@ internal object EpubPackage {
         var pendingId: String? = null
         val identifiers = ArrayList<String>()
         val identifierById = HashMap<String, String>()
+        var layout: String? = null
+        var viewport: String? = null
+        var legacyFixed = false
+        val spineProps = ArrayList<String>()
+        var rtl = false
 
         var event = parser.eventType
         while (event != XmlPullParser.END_DOCUMENT) {
@@ -129,7 +152,11 @@ internal object EpubPackage {
                         }
                     }
 
-                    "spine" -> ncxId = parser.getAttributeValue(null, "toc")
+                    "spine" -> {
+                        ncxId = parser.getAttributeValue(null, "toc")
+                        rtl = parser.getAttributeValue(null, "page-progression-direction")
+                            ?.trim().equals("rtl", ignoreCase = true)
+                    }
 
                     "itemref" -> {
                         val idref = parser.getAttributeValue(null, "idref")
@@ -138,6 +165,23 @@ internal object EpubPackage {
                         val linear = parser.getAttributeValue(null, "linear")
                         if (!idref.isNullOrBlank() && !linear.equals("no", ignoreCase = true)) {
                             spine.add(idref)
+                            spineProps.add(parser.getAttributeValue(null, "properties").orEmpty().take(MAX_PROPERTIES))
+                        }
+                    }
+
+                    // EPUB3 의 `<meta property="…">값</meta>`. **다른 것을 꾸미는(`refines`) 것은 책 전체의 값이
+                    // 아니다** — 고정 레이아웃 설정은 꾸밈 없이 적힌 것만 읽는다(명세 4.2).
+                    "meta" -> if (parser.getAttributeValue(null, "refines") == null) {
+                        when (parser.getAttributeValue(null, "property")?.trim()) {
+                            "rendition:layout" -> pending = "layout"
+                            "rendition:viewport" -> pending = "viewport"
+                        }
+                        // EPUB2 시절의 표시(`<meta name="fixed-layout" content="true"/>` — 킨들·아이북스가 읽는다).
+                        // 명세 밖이지만 실물 만화책에 남아 있다. EPUB3 의 `rendition:layout` 이 있으면 그쪽이 이긴다.
+                        if (parser.getAttributeValue(null, "name")?.trim() == "fixed-layout" &&
+                            parser.getAttributeValue(null, "content")?.trim().equals("true", ignoreCase = true)
+                        ) {
+                            legacyFixed = true
                         }
                     }
                 }
@@ -158,6 +202,8 @@ internal object EpubPackage {
                         // 뒤엣것으로 덮으면 화면에 부제만 뜬다.
                         if (pending == "title" && title.isEmpty()) title = text
                         if (pending == "language" && language == null) language = text
+                        if (pending == "layout" && layout == null) layout = text
+                        if (pending == "viewport" && viewport == null) viewport = text.take(MAX_PROPERTIES)
                         if (pending == "identifier" && identifiers.size < MAX_IDENTIFIERS) {
                             identifiers.add(text)
                             pendingId?.let { identifierById.putIfAbsent(it, text) }
@@ -176,9 +222,16 @@ internal object EpubPackage {
             title, language, items, spine, ncxId,
             uniqueIdentifier = uniqueId?.let { identifierById[it] },
             identifiers = identifiers,
+            fixedLayout = if (layout != null) layout == "pre-paginated" else legacyFixed,
+            viewport = viewport,
+            spineProperties = spineProps,
+            pageProgressionRtl = rtl,
         )
     }
 
     /** 식별자를 이만큼만 모은다. 수만 개를 적은 악성 OPF 가 메모리를 채우지 못하게. */
     private const val MAX_IDENTIFIERS = 64
+
+    /** `properties`·`rendition:viewport` 한 값의 길이 상한. 차례가 수천 항목이어도 들고 있는 글이 작게. */
+    private const val MAX_PROPERTIES = 256
 }

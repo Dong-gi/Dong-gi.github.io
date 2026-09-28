@@ -16,9 +16,10 @@ import kotlin.test.assertTrue
 /**
  * CFB 리더 — 정상 구조(v3·v4·작은 스트림·DIFAT)와, CLAUDE.md '안전' 의 CFB 불변식을 하나씩 깨뜨린 파일.
  *
- * 표본은 [TinyCfb] 가 메모리에서 짠다. 그 짜개가 만든 파일이 명세에 맞는지는 `olefile`(독립 구현)로
- * 확인했다 — [TinyCfbOracleDump] 가 파일로 내보내고 생성 스크립트가 olefile 로 열어 스트림마다 SHA-256 을
- * 견준다. 실제 구현이 만든 CFB 는 [CfbRealWorldTest] 가 본다(msoffcrypto-tool 이 잠근 docx).
+ * 표본은 [TinyCfb] 가 메모리에서 짠다. 그 짜개가 만든 파일이 명세에 맞는지는 12단계에 `olefile`(독립 구현)로
+ * 한 번 확인했다 — v3·v4·DIFAT 표본 셋을 파일로 내보내 olefile 로 열어 스트림마다 SHA-256 을 견줬다(내보내던 시험
+ * `TinyCfbOracleDump` 는 환경 변수가 있을 때만 돌고 받는 스크립트가 저장소 밖이라 지웠다 — 짜개를 고치면 다시 확인해야 한다).
+ * 실제 구현이 만든 CFB 는 [CfbRealWorldTest](msoffcrypto-tool 이 잠근 docx, 한글 문서)와 `CfbCorpusTest`(olefile 목록)가 본다.
  */
 class CfbFileTest {
 
@@ -91,6 +92,30 @@ class CfbFileTest {
                 assertContentEquals(exact, cfb.readStream(cfb.find("exact")!!, 1 shl 20), "v$version")
                 assertContentEquals(below, cfb.readStream(cfb.find("below")!!, 1 shl 20), "v$version")
                 assertContentEquals(exact, readAll(cfb.openStream(cfb.find("exact")!!)), "v$version")
+            }
+        }
+    }
+
+    @Test
+    fun 작은_스트림_경계의_양쪽을_두_읽기_길로_같게_읽는다() {
+        // 12단계 검토가 남긴 빈틈 — 경계 **바로 양쪽**(4095·4096·4097)을 통째 읽기와 흘려 읽기가 같게 읽고, 길이도 맞는가.
+        // 작은 스트림 쪽은 앞에 100바이트를 두어 그릇(뿌리의 체인)의 섹터 경계를 건너게 한다 — 4095바이트는 작은 섹터
+        // 64개(4096바이트)라 v3 에서 그릇의 512바이트 섹터 여덟을 지난다. 일반 쪽의 4097바이트는 섹터 하나를 1바이트 넘긴다.
+        val sizes = listOf(1, 63, 64, 65, 4095, 4096, 4097)
+        for (version in listOf(3, 4)) {
+            val t = TinyCfb(version).stream("lead", data(100, 20))
+            for (n in sizes) t.stream("s$n", data(n, n))
+            open(t.source()).use { cfb ->
+                for (n in sizes) {
+                    val e = cfb.find("s$n")!!
+                    assertEquals(n.toLong(), cfb.streamLength(e), "v$version $n")
+                    assertContentEquals(data(n, n), cfb.readStream(e, 1 shl 20), "v$version $n")
+                    assertContentEquals(data(n, n), readAll(cfb.openStream(e)), "v$version $n")
+                }
+                // 부른 쪽의 상한은 경계와 관계없이 바이트로 건다.
+                assertFailsWith<ParseLimitExceededException> { cfb.readStream(cfb.find("s4095")!!, 4094) }
+                assertFailsWith<ParseLimitExceededException> { cfb.readStream(cfb.find("s4096")!!, 4095) }
+                assertEquals(4096, cfb.readStream(cfb.find("s4096")!!, 4096).size)
             }
         }
     }

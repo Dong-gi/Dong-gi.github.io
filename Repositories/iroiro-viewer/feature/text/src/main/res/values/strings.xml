@@ -18,7 +18,8 @@
     <string name="text_search_hint">찾을 말</string>
     <string name="text_search_close">찾기 닫기</string>
     <string name="text_search_case">Aa</string>
-    <string name="text_search_running">찾는 중…</string>
+    <!-- 파일 전체를 훑는 동안의 진행률. 멈추려면 찾기를 닫는다. -->
+    <string name="text_search_progress">찾는 중… %1$d%%</string>
     <string name="text_search_none">없습니다</string>
     <string name="text_search_count">%1$d / %2$d</string>
     <string name="text_search_prev">이전</string>
@@ -26,6 +27,15 @@
 
     <string name="text_wrap">줄 접기</string>
     <string name="text_line_numbers">줄 번호</string>
+    <!--
+      줄 끝 표시(14단계). 세 모양은 움직임을 그린다 — LF 는 한 줄 내림, CR 은 줄 머리로, CRLF 는 둘을 이은 모양.
+      한 글자여야 한다(코드의 세로 정렬). 고칠 때는 아래 설명 줄도 함께 고친다.
+    -->
+    <string name="text_line_ends">줄 끝 표시</string>
+    <string name="text_line_ends_legend">↓ LF · ⏎ CRLF · ← CR</string>
+    <string name="text_eol_lf">↓</string>
+    <string name="text_eol_crlf">⏎</string>
+    <string name="text_eol_cr">←</string>
     <string name="text_font_bigger">글자 키우기</string>
     <string name="text_font_smaller">글자 줄이기</string>
     <string name="text_goto_line">줄 번호로 가기</string>
@@ -38,6 +48,15 @@
     <!-- 언어는 알아냈지만 파일이 커서 강조를 켜지 못한 상태. 숨기지 않고 말한다. -->
     <string name="text_highlight_off">%1$s · 강조 꺼짐</string>
     <string name="text_lines">%1$d줄</string>
+
+    <!-- 마크다운 미리보기(14단계). -->
+    <string name="text_preview">미리보기</string>
+    <string name="text_preview_source">원문</string>
+    <string name="text_preview_show_source">원문 보기</string>
+    <string name="text_preview_building">미리보기를 만드는 중…</string>
+    <string name="text_preview_too_large">미리보기는 %1$d MiB 까지의 파일만 만듭니다</string>
+    <string name="text_preview_failed">미리보기를 만들지 못했습니다</string>
+    <string name="text_preview_truncated">문서가 커서 앞부분만 미리 봅니다</string>
 
     <string name="text_evidence_bom">파일 앞머리의 BOM 이 인코딩을 적어 두었습니다</string>
     <string name="text_evidence_ascii">ASCII 문자만 있어 어느 인코딩으로 읽어도 같습니다</string>

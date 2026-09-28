@@ -449,7 +449,9 @@ internal object PdfDecryptor {
                     out.writeAscii("${run.first} ${run.last - run.first + 1}\n")
                     for (n in run) {
                         val o = offsets.getValue(n)
-                        out.writeAscii(String.format("%010d %05d n \n", o.first, o.second))
+                        // 로캘을 박는다 — 기기의 로캘을 따르면 아랍어·페르시아어 등에서 `%d` 가 그 문자의 숫자를 써서
+                        // xref 가 깨진다(lint `DefaultLocale`).
+                        out.writeAscii(String.format(java.util.Locale.ROOT, "%010d %05d n \n", o.first, o.second))
                     }
                     if (out.size() > 1 shl 20) {
                         emit(out.toByteArray())

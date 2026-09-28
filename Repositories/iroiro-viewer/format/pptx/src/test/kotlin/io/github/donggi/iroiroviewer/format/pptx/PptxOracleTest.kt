@@ -1,15 +1,12 @@
 package io.github.donggi.iroiroviewer.format.pptx
 
 import io.github.donggi.iroiroviewer.format.ByteArrayDocumentSource
-import io.github.donggi.iroiroviewer.format.FileDocumentSource
 import io.github.donggi.iroiroviewer.format.FlowWarnings
 import io.github.donggi.iroiroviewer.format.ProgressSink
 import io.github.donggi.iroiroviewer.format.UnsupportedFeatures
 import io.github.donggi.iroiroviewer.format.opc.OpcPackage
 import io.github.donggi.iroiroviewer.safety.ParseLimits
 import kotlinx.coroutines.runBlocking
-import org.junit.Assume.assumeTrue
-import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -21,6 +18,10 @@ import kotlin.test.assertTrue
  * 쓰지 않는 레이아웃과 템플릿의 이진 조각(인쇄기 설정·썸네일)을 걷어 18KB 로 줄였다. 만든 스크립트는
  * 저장소에 두지 않는다(CLAUDE.md '표본'). `oracle.golden.txt` 는 python-pptx 가 그 파일을 다시 열어
  * 슬라이드마다 도형 순서대로 문단 글자를 적은 것이다.
+ *
+ * 실세계 발표 자료는 `PptxCorpusTest` 가 연다(`samples-local/corpus/` 의 pptx 무리를 앱과 같은 길로, python-pptx 가 다시 읽은 글과
+ * 견주며 — 부분 실패도 거기서 본다). 예전에 여기 있던 '`samples-local/pptx/` 의 표본을 모두 그린다' 는 그 폴더가 없어 늘
+ * 건너뛰었고 하는 일이 말뭉치 시험에 다 들어 있어 지웠다.
  */
 class PptxOracleTest {
 
@@ -86,34 +87,6 @@ class PptxOracleTest {
             val src = Regex("<img src=\"([^\"]+)\"").find(fourth)!!.groupValues[1]
             assertTrue(doc.openResource(src) != null, src)
             assertTrue(doc.unsupported.snapshot()[UnsupportedFeatures.UNSUPPORTED_IMAGE] == null)
-        }
-    }
-
-    /**
-     * 실세계에 가까운 큰 표본(`samples-local/pptx/`, 커밋하지 않는다)이 있으면 전부 그려 본다.
-     * 옆에 `이름.golden.txt` 가 있으면(python-pptx 가 다시 읽은 글자) 글자까지 견준다.
-     */
-    @Test
-    fun 로컬_표본을_모두_그린다() {
-        val dir = generateSequence(File("").absoluteFile) { it.parentFile }
-            .map { File(it, "samples-local/pptx") }
-            .firstOrNull { it.isDirectory }
-        val files = dir?.listFiles { f -> f.name.endsWith(".pptx", ignoreCase = true) }.orEmpty()
-        assumeTrue("samples-local/pptx 가 없다", files.isNotEmpty())
-        for (f in files) {
-            runBlocking {
-                val pkg = OpcPackage.open(FileDocumentSource(f), ParseLimits.DEFAULT)
-                (PptxDocument.open(pkg, ParseLimits.DEFAULT, ProgressSink.NONE) as PptxFlowDocument).use { doc ->
-                    val htmls = doc.parts.indices.map { doc.partHtml(it)!! }
-                    assertTrue(doc.warnings.none { it.code == FlowWarnings.PART_FAILED }, "${f.name}: ${doc.warnings}")
-                    val goldenFile = File(f.parentFile, f.name.substringBeforeLast('.') + ".golden.txt")
-                    if (goldenFile.isFile) {
-                        val expected = golden(goldenFile.readText())
-                        assertEquals(expected.size, htmls.size, f.name)
-                        for ((i, lines) in expected.withIndex()) assertEquals(lines, textOf(htmls[i]).lines(), "${f.name} 슬라이드 ${i + 1}")
-                    }
-                }
-            }
         }
     }
 }

@@ -15,6 +15,7 @@ import io.github.donggi.iroiroviewer.safety.ParseLimits
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
@@ -56,6 +57,65 @@ interface ComicSource : AutoCloseable {
      * 본다 — solid 아카이브에서 한 번의 읽기가 몇 초씩 걸릴 수 있어서 필요한 장치다.
      */
     suspend fun bytes(ordinal: Int): ByteArray?
+
+    /**
+     * 화면이 **뛰어든 자리**에서 앞쪽을 몇 쪽 함께 띄우는가(14단계, [Spreads.lookBehind]) — 한 쪽 보기면 1, 두 쪽
+     * 보기면 3. solid 의 창이 그만큼 앞에서 시작해야 앞 칸을 뜨느라 패스가 한 번 더 돌지 않는다. 무작위 접근 소스는
+     * 할 일이 없다.
+     */
+    fun setLookBehind(pages: Int) = Unit
+
+    /**
+     * 쪽 하나가 **디스크 위의 파일**이면 그 파일. 폴더 만화의 쪽이 그렇다([FolderComicSource]). 아카이브 안의 쪽에는 경로가
+     * 없으므로 null 이다 — 경로를 만들려면 쪽을 디스크에 뽑아야 하고, 그것은 이 인터페이스가 하지 않기로 한 일이다(위
+     * '왜 바이트인가'). 못 연 쪽을 다른 앱으로 넘기는 단추가 쓴다([ComicOpenWith.pageFailureTarget]).
+     */
+    fun pageFile(ordinal: Int): File? = null
+
+    /**
+     * 쪽 **여럿을** 받는다 — 쪽 목록(격자)의 썸네일이 쓴다(14단계). 무엇을 받을지·언제 그만둘지는 [demand] 가 정한다.
+     *
+     * [onPage] 는 **블로킹 함수**이고(썸네일 디코딩이 그 안에서 돈다) 해제를 돌리는 스레드에서 불린다. 바이트는 그
+     * 호출이 끝나면 버려진다 — **디스크에도 창에도 남기지 않는다.** 읽지 못한 쪽은 null 로 알린다. 받고 싶다고 한
+     * 쪽마다 한 번씩 불린다.
+     *
+     * 기본 구현은 무작위 접근이 싼 소스(ZIP·폴더)의 것이다: [ScanDemand.next] 가 고른 쪽을 하나씩 [bytes] 로 읽는다.
+     * solid 는 이 길이 쪽마다 패스가 되므로 [SolidComicSource] 가 덮어쓴다.
+     */
+    suspend fun scan(demand: ScanDemand, onPage: (ordinal: Int, bytes: ByteArray?) -> Unit) {
+        // 같은 쪽을 두 번 청하면 멈춘다. [demand] 가 받은 쪽을 기록하지 않으면 영원히 같은 쪽을 읽게 되는데, 그것은
+        // 부르는 쪽의 결함이지만 그 대가(끝나지 않는 읽기)는 여기서 치른다 — 싼 보험이다.
+        val seen = HashSet<Int>()
+        while (true) {
+            val ordinal = demand.next() ?: return
+            if (!seen.add(ordinal)) return
+            val bytes = bytes(ordinal)
+            withContext(IroDispatchers.parsing) { onPage(ordinal, bytes) }
+        }
+    }
+}
+
+/**
+ * 쪽 여럿을 받는 쪽이 **무엇을 원하는가**. 쪽 목록의 썸네일(`PageThumbs`)이 구현한다.
+ *
+ * 무작위 접근 소스는 [next] 만, solid 소스는 [wants]·[wantsAnyExcept] 만 본다 — solid 는 아카이브에 적힌 차례로만
+ * 훑을 수 있어 '다음에 이것' 을 고를 수 없고, 무작위 접근 소스는 차례에 매일 이유가 없다.
+ *
+ * **여러 스레드에서 불린다**(solid 는 해제 스레드에서). 구현은 스스로 잠근다.
+ */
+interface ScanDemand {
+
+    /** 다음에 받을 쪽. 없으면 null. */
+    fun next(): Int?
+
+    /** 지금 이 쪽을 받고 싶은가. */
+    fun wants(ordinal: Int): Boolean
+
+    /**
+     * [passed] 가 참인 쪽(이번 훑기에서 이미 지나간 쪽)을 빼고도 받고 싶은 쪽이 남았는가. 없으면 훑기를 거기서
+     * 끝낸다 — solid 아카이브에서 남은 엔트리를 마저 푸는 것은 버릴 바이트를 만드는 일이다.
+     */
+    fun wantsAnyExcept(passed: (Int) -> Boolean): Boolean
 }
 
 /**
@@ -134,6 +194,14 @@ internal class SolidComicSource(
     var passCount: Int = 0
         private set
 
+    /** 뛰어든 자리에서 창을 몇 쪽 앞에서 시작하는가([setLookBehind]). 화면 스레드가 쓰고 해제 스레드가 읽는다. */
+    @Volatile
+    private var jumpLookBehind: Int = LOOK_BEHIND
+
+    override fun setLookBehind(pages: Int) {
+        jumpLookBehind = pages.coerceIn(LOOK_BEHIND, MAX_LOOK_BEHIND)
+    }
+
     override val solid: Boolean get() = true
 
     override suspend fun bytes(ordinal: Int): ByteArray? {
@@ -157,10 +225,17 @@ internal class SolidComicSource(
         //
         // 되돌아가는 중이면 더 앞에서 시작한다. 한 쪽씩 뒤로 넘기는 사람에게는 창이
         // 언제나 '방금 지나온 쪽' 바깥에 있어서, 넘길 때마다 패스가 도는 것을 막는다.
-        val lookBehind = if (want < windowStart) {
-            (window.size / 2).coerceAtLeast(LOOK_BEHIND)
-        } else {
-            LOOK_BEHIND
+        //
+        // **두 쪽 보기(14단계)는 뛰어든 자리에서 앞 칸이 두 쪽이다**([jumpLookBehind] = 3). 그런데 창 끝에서 **이어
+        // 읽는** 중이면 앞 칸은 이미 떠 있다(화면이 들고 있다) — 거기서도 세 쪽을 물러서면 앞으로 담을 자리만 줄어
+        // 패스가 더 자주 돈다. 그래서 창 끝 바로 뒤의 요청은 한 쪽 보기처럼 한 쪽만 물러선다. 한 쪽 보기는 셋 다 1이라
+        // 9단계 그대로다.
+        val base = jumpLookBehind
+        val windowEnd = window.keys.maxOrNull() ?: -1
+        val lookBehind = when {
+            want < windowStart -> (window.size / 2).coerceAtLeast(base)
+            windowEnd >= 0 && want > windowEnd && want - windowEnd <= base -> LOOK_BEHIND
+            else -> base
         }
         val from = (want - lookBehind).coerceAtLeast(0)
 
@@ -248,6 +323,95 @@ internal class SolidComicSource(
         }
     }
 
+    /** 쪽 목록을 위해 훑은 횟수. 창의 패스([passCount])와 따로 센다 — 시험이 둘을 가려 단언한다. */
+    var scanCount: Int = 0
+        private set
+
+    /**
+     * 쪽 목록을 위한 훑기. **아카이브에 적힌 차례로 한 번** 지나가며 원하는 쪽만 [onPage] 에 넘긴다.
+     *
+     * ## 창과 따로 돈다
+     *
+     * 창은 '읽는 자리 근처' 를 들고 있는 장치다. 격자가 창을 채우면 격자를 닫는 순간 읽던 자리의 창이 없어 패스가
+     * 한 번 더 돈다. 그래서 창은 건드리지 않고, 받은 바이트는 [onPage] 가 썸네일로 줄이는 즉시 버린다 — 힙에는 쪽
+     * 하나의 원본만 잠깐 산다.
+     *
+     * ## 잠금을 함께 쓴다
+     *
+     * 창의 패스와 같은 [mutex] 를 잡는다. 7z 리더 둘이 동시에 열리면 사전 메모리가 두 배다(`CoverSupport` 의 관문이
+     * 같은 이유로 섰다). 격자가 떠 있는 동안 읽던 쪽은 이미 떠 있으므로 기다릴 일이 거의 없고, 격자를 닫으면 취소가
+     * 인터럽트로 닿아 해제 루프가 곧바로 멈춘다(`SevenZArchiveReader` 가 읽을 때마다 본다).
+     *
+     * ## 되돌아간 쪽은 다음 훑기가 받는다
+     *
+     * 훑는 도중에 사용자가 격자를 **뒤로** 밀면, 원하는 쪽이 이미 지나간 자리에 있다. 그 쪽들은 이번 훑기에서 받을 수
+     * 없으므로([ScanDemand.wantsAnyExcept]) 훑기가 끝나고 부른 쪽(`PageThumbs.run`)이 새로 연다.
+     */
+    override suspend fun scan(demand: ScanDemand, onPage: (ordinal: Int, bytes: ByteArray?) -> Unit) {
+        if (pages.isEmpty()) return
+        mutex.withLock {
+            runInterruptible(IroDispatchers.parsing) {
+                if (!demand.wantsAnyExcept { false }) return@runInterruptible
+                scanCount++
+                val began = System.nanoTime()
+                val byEntry = HashMap<Int, Int>(pages.size)
+                for (p in pages) byEntry[p.entryIndex] = p.ordinal
+                val sink = ScanSink(byEntry, BooleanArray(pages.size), demand, onPage)
+                // 창의 패스와 같은 이유로 **훑기마다 예산을 새로 만든다**(엔트리 수가 단조 증가한다).
+                val budget = EntryBudget(limits)
+                readOrNull {
+                    try {
+                        Archives.open(FileDocumentSource(file), limits, budget, password).use { reader ->
+                            reader.extractSequentially(sink)
+                        }
+                    } catch (stop: StopPass) {
+                        // 원하는 쪽을 다 받았다. 정상 종료다.
+                    }
+                }
+                Iro.d(TAG) {
+                    val ms = (System.nanoTime() - began) / 1_000_000
+                    "쪽 목록 훑기 ${sink.delivered}쪽 ${ms}ms"
+                }
+                Unit
+            }
+        }
+    }
+
+    /** 훑기가 엔트리마다 부르는 것. 원하는 쪽만 담고, 더 받을 것이 없으면 그 자리에서 끝낸다. */
+    private class ScanSink(
+        private val byEntry: Map<Int, Int>,
+        private val passed: BooleanArray,
+        private val demand: ScanDemand,
+        private val onPage: (Int, ByteArray?) -> Unit,
+    ) : EntrySink {
+
+        private var buffer: ByteArrayOutputStream? = null
+        var delivered = 0
+            private set
+
+        override fun begin(entry: ArchiveEntry): OutputStream? {
+            val ordinal = byEntry[entry.index] ?: return null
+            passed[ordinal] = true
+            if (!demand.wants(ordinal)) {
+                // 받지 않는 쪽을 지나며 **그만둘 때인지** 본다. 원하는 쪽이 전부 지나간 자리에 있으면 이 뒤는 버릴
+                // 바이트뿐이다.
+                if (!demand.wantsAnyExcept { passed[it] }) throw StopPass()
+                return null
+            }
+            return ByteArrayOutputStream(INITIAL_BUFFER).also { buffer = it }
+        }
+
+        override fun finish(entry: ArchiveEntry, written: Long, failure: Throwable?) {
+            val ordinal = byEntry[entry.index] ?: return
+            val sink = buffer
+            buffer = null
+            val bytes = if (failure == null && written > 0L && sink != null) sink.toByteArray() else null
+            delivered++
+            onPage(ordinal, bytes)
+            if (!demand.wantsAnyExcept { passed[it] }) throw StopPass()
+        }
+    }
+
     override fun close() {
         window.clear()
         windowBytes = 0L
@@ -274,6 +438,9 @@ internal class SolidComicSource(
          * 필요하다. 그보다 키우면 앞으로 가는 쪽의 창이 그만큼 줄어든다.
          */
         const val LOOK_BEHIND = 1
+
+        /** [setLookBehind] 의 상한. 창을 앞으로 담을 자리가 남아야 한다 — 펼침 하나 반이면 충분하다. */
+        const val MAX_LOOK_BEHIND = 3
     }
 }
 
@@ -292,11 +459,16 @@ internal class FolderComicSource(
     override val solid: Boolean get() = false
 
     override suspend fun bytes(ordinal: Int): ByteArray? {
-        val page = pages.getOrNull(ordinal) ?: return null
-        val file = files.getOrNull(page.entryIndex) ?: return null
+        val file = pageFile(ordinal) ?: return null
         return runInterruptible(IroDispatchers.io) {
             readOrNull { file.inputStream().use { it.readAllBounded() } }
         }
+    }
+
+    /** 쪽 번호 → 그 쪽의 파일. [folderPagesOf] 가 파일 목록의 **자리**를 [ComicPage.entryIndex] 로 적었다. */
+    override fun pageFile(ordinal: Int): File? {
+        val page = pages.getOrNull(ordinal) ?: return null
+        return files.getOrNull(page.entryIndex)
     }
 
     override fun close() = Unit

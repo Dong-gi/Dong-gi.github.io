@@ -17,6 +17,8 @@ dependencies {
     api(project(":format:api"))
     implementation(project(":core:model"))
     implementation(project(":core:safety"))
+    // 파일 이름의 인코딩 판정. 글 뷰어와 **같은 판정**을 지나게 한다 — 두 벌이면 한쪽만 고쳐진다(CLAUDE.md).
+    implementation(project(":core:charset"))
     implementation(libs.kotlinx.coroutines.core)
 
     implementation(libs.commons.compress)

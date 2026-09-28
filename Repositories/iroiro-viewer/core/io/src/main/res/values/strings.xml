@@ -14,4 +14,21 @@
 
     <!-- 기본 볼륨의 이름. 안드로이드가 주는 `Internal shared storage` 를 대신한다. -->
     <string name="io_volume_internal">내부 저장소</string>
+
+    <!-- 다른 앱으로 열기(ExternalOpen). 문구는 결과 타입 곁에 한 벌 — 목록과 뷰어 여섯이 같은 문장을 쓴다. -->
+    <string name="io_open_with">다른 앱으로 열기</string>
+    <!--
+      모든 것(*/*)으로 넘기는 고르는 창의 제목(ExternalOpen 의 ALL_APPS). 이 형식을 선언한 앱이 없어 넓혔을 때와, 처음부터
+      형식을 모르는 파일일 때 둘 다다 - 목록이 같은 앱들이라 이름도 하나다. 거기 선 앱들은 이 형식을 안다고 한 적이
+      없다 - 그래서 평소의 '다른 앱으로 열기' 와 다른 이름을 준다.
+    -->
+    <string name="io_open_with_any">모든 앱에서 고르기</string>
+    <!--
+      NO_APP 은 곧바로 여는 길(파일을 눌렀을 때)에서만 나온다. 그 형식을 선언한 앱이 없다는 뜻이지 열 길이 없다는 뜻이
+      아니다 - 목록의 정보 시트가 이 문장 아래에 '다른 앱으로 열기' 를 두고, 그것이 모든 앱에서 고르는 창으로 간다.
+    -->
+    <string name="io_open_with_no_app">이 형식을 아는 앱이 없습니다</string>
+    <!-- NOT_SHAREABLE 은 '파일이 사라졌다' 와 '넘길 수 없는 자리다' 를 함께 뜻한다(ShareHelper.uriOf 가 null). 둘 다 말한다. -->
+    <string name="io_open_with_not_shareable">파일이 없거나, 다른 앱에 넘길 수 없는 위치에 있습니다</string>
+    <string name="io_open_with_failed">다른 앱을 열지 못했습니다</string>
 </resources>

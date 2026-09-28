@@ -219,14 +219,20 @@ class ZipArchiveReader(
 
     override val randomAccess: Boolean get() = true
 
-    override fun open(entry: ArchiveEntry): InputStream {
+    override fun open(entry: ArchiveEntry): InputStream = openCounted(entry).first
+
+    /**
+     * 항목 스트림과, 그 항목에서 **지금까지 소비한 압축 입력**을 알려 주는 함수. 순차 추출의 진행률이 뒤의 것을 쓴다.
+     */
+    private fun openCounted(entry: ArchiveEntry): Pair<InputStream, () -> Long> {
         require(entry.isReadable) { "읽을 수 없는 항목이다" }
         val e = raw.getOrNull(entry.index) ?: throw ParseLimitExceededException("index", "없는 엔트리")
         if (entry.isEncrypted) {
             // commons-compress 는 암호 항목을 풀지 않는다. 날것을 받아 우리가 푼다.
             if (password == null) throw ArchivePasswordException(wrongPassword = false)
             val keys = keys()
-            val rawStream = zip.getRawInputStream(e)
+            // 날것을 센다 — 암호 머리(12바이트·솔트)까지 입력이다.
+            val rawStream = CountingInputStream(zip.getRawInputStream(e))
             val plain = try {
                 ZipDecryption.open(e, rawStream, keys, timeHigh(e))
             } catch (x: ZipDecryption.WrongPasswordException) {
@@ -237,14 +243,25 @@ class ZipArchiveReader(
                 throw x
             }
             // 압축비의 분모는 선언 압축 크기다 — 날것 스트림은 경계가 그 크기로 묶여 있다.
-            return budget.guard(plain, e.compressedSize)
+            return budget.guard(plain, e.compressedSize) to { rawStream.count }
         }
         val stream = zip.getInputStream(e)
         // 압축비의 분모로 '실제로 소비한 입력 바이트' 를 쓴다. 헤더의 선언값은
         // 공격자가 적는 값이라 분모로 약하다.
         val stats = stream as? InputStreamStatistics
-        return if (stats != null) budget.guard(stream) { stats.compressedCount }
-        else budget.guard(stream, e.compressedSize)
+        return if (stats != null) budget.guard(stream) { stats.compressedCount } to { stats.compressedCount }
+        else budget.guard(stream, e.compressedSize) to { -1L }
+    }
+
+    /** 고른 항목의 압축 크기 합(중앙 디렉터리). 하나라도 모르면(-1) 진행률을 입력으로 세지 않는다. */
+    override fun inputBytesFor(selected: Set<Int>?): Long {
+        var total = 0L
+        for (e in entries) {
+            if (!e.isReadable || (selected != null && e.index !in selected)) continue
+            if (e.compressedSize < 0) return -1L
+            total += e.compressedSize
+        }
+        return total
     }
 
     /**
@@ -252,12 +269,17 @@ class ZipArchiveReader(
      * 지키는 가장 단순한 구현이 곧 가장 빠른 구현이다(실측 배율 1.25~1.42 — 선형 이하).
      */
     override fun extractSequentially(sink: EntrySink) {
+        // 끝난 항목들이 소비한 압축 입력. 지금 항목의 몫은 읽는 동안 더해 알린다.
+        var consumedBefore = 0L
         for (entry in entries) {
             val out = sink.begin(entry) ?: continue
             var written = 0L
             var failure: Throwable? = null
+            var consumedNow: () -> Long = { 0L }
             try {
-                open(entry).use { input ->
+                val (input, counter) = openCounted(entry)
+                consumedNow = counter
+                input.use {
                     val buf = ByteArray(COPY_BUFFER)
                     while (true) {
                         if (Thread.currentThread().isInterrupted) {
@@ -267,6 +289,7 @@ class ZipArchiveReader(
                         if (n < 0) break
                         out.write(buf, 0, n)
                         written += n
+                        sink.consumed(consumedBefore + counter().coerceAtLeast(0L))
                     }
                 }
             } catch (t: Throwable) {
@@ -278,6 +301,10 @@ class ZipArchiveReader(
                 failure = t
             }
             sink.finish(entry, written, failure)
+            // 통계를 못 주는 항목(-1)은 끝났을 때 적힌 압축 크기로 센다 — 분모가 그 합이다.
+            val spent = consumedNow()
+            consumedBefore += if (spent >= 0 && failure == null) spent else entry.compressedSize.coerceAtLeast(0L)
+            sink.consumed(consumedBefore)
         }
     }
 

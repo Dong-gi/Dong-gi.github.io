@@ -4,6 +4,7 @@ import io.github.donggi.iroiroviewer.format.FileDocumentSource
 import io.github.donggi.iroiroviewer.format.archive.ArchivePasswordException
 import io.github.donggi.iroiroviewer.format.archive.Archives
 import io.github.donggi.iroiroviewer.format.archive.ComicPages
+import io.github.donggi.iroiroviewer.io.FileProbe
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.EntryBudget
 import io.github.donggi.iroiroviewer.safety.ParseLimitExceededException
@@ -73,13 +74,21 @@ object ComicOpen {
          * 닫을 때 지운다 — 넘긴 배열은 부른 쪽이 지운다.
          */
         password: CharArray? = null,
+        /**
+         * 파일이 실제로 열리는가([isReachable]). 시험이 '여는 사이에 없어진 파일' 을 흉내 내는 자리다. [onOpen] **앞에** 둔다 —
+         * 부르는 쪽이 [onOpen] 을 뒤따르는 람다로 넘긴다.
+         */
+        reachable: (File) -> Boolean = ::isReachable,
         onOpen: (ComicSource) -> Unit = {},
     ): Result = withContext(IroDispatchers.parsing) {
         val file = File(path)
         if (file.isDirectory) return@withContext openFolder(file, onOpen)
-        if (!file.isFile || !file.canRead()) return@withContext Result.Failed(Kind.UNREADABLE)
+        // **실제로 열어 본다**([isReachable]). `canRead()` 로 물으면 그 답과 여는 답이 어긋나는 파일(FUSE 위의 권한 거부)이
+        // 아래에서 `IOException` 으로 떨어져 '깨진 파일'(CORRUPT)이 되고, 열리지 않는 파일에 '다른 앱으로 열기' 가 선다.
+        // 여는 것은 디스크 입출력이라 입출력 디스패처로 넘긴다.
+        if (!withContext(IroDispatchers.io) { reachable(file) }) return@withContext Result.Failed(Kind.UNREADABLE)
 
-        try {
+        val result = try {
             // **상한이 선언만 되고 아무 데서도 걸리지 않는 일**을 2단계 검토가 잡았다.
             // 무한 루프형 DoS 는 크기 상한에 걸리지 않는다 — 아무것도 만들어 내지
             // 않으면서 돌기 때문이다.
@@ -104,6 +113,17 @@ object ComicOpen {
         } catch (e: OutOfMemoryError) {
             Result.Failed(Kind.TOO_LARGE)
         }
+
+        // 여는 **사이에** 없어졌을 수도 있다 — solid RAR·7z 를 훑는 몇 초 동안 파일을 지우거나 SD 카드를 뽑으면 리더가
+        // `IOException` 을 내고, 압축 판별(`Archives.detect`)은 두 번째 읽기의 실패를 삼켜 '다루지 않는 형식' 으로 돌려준다.
+        // 그대로 두면 없는 파일에 '다른 앱으로 열기' 가 선다. 그래서 **단추를 세울 실패**([ComicOpenWith.failureTarget])는
+        // 무엇으로 끝났든 한 번 더 열어 본다 — 문서 뷰어의 `failedAfter`, 압축 화면의 `failureKindOf(t, reachable)` 와 같은
+        // 판단이다. 성공과 단추가 없는 실패(암호를 묻는다·그림이 없다)는 다시 열지 않는다.
+        if (result is Result.Failed && ComicOpenWith.failureTarget(result.kind, path) != null) {
+            Result.Failed(failedKind(result.kind, withContext(IroDispatchers.io) { reachable(file) }))
+        } else {
+            result
+        }
     }
 
     /**
@@ -126,9 +146,11 @@ object ComicOpen {
         onOpen: (ComicSource) -> Unit,
     ): Result {
         val source = FileDocumentSource(file)
-        if (Archives.probeContainer(source.head(16)) == null) {
-            // 확장자가 압축이어도 매직이 아니면 열지 않는다. tar·gz·iso·분할 아카이브가
-            // 여기로 온다 — '이 앱이 다루지 않는 압축 형식입니다' 로 정확히 끝낸다.
+        if (Archives.detect(source) == null) {
+            // 확장자가 압축이어도 우리가 여는 아카이브가 아니면 열지 않는다. 판별은 tar 계열(.cbt·압축 tar)까지 보고
+            // 압축 스트림은 안의 첫 머리까지 풀어 본다 — `.gz` 로 싼 파일 하나·iso·분할 아카이브가 여기로 와
+            // '이 앱이 다루지 않는 압축 형식입니다' 로 끝난다. 판별은 목록을 세우지 않는다(항목이 많은 tar 도 tar 다).
+            // 압축 안 한 tar 는 번호로 여는 리더(`randomAccess`), 압축 tar 는 흐름이라 solid 7z 와 같은 길이다.
             return Result.Failed(Kind.UNSUPPORTED)
         }
 
@@ -177,3 +199,19 @@ object ComicOpen {
         return Result.Ready(source)
     }
 }
+
+/** 여는 데 실패한 뒤의 종류. 이제 열리지 않으면 무엇이 났든 [ComicOpen.Kind.UNREADABLE] 이다 — 없는 파일은 깨진 파일이 아니다. */
+internal fun failedKind(kind: ComicOpen.Kind, reachable: Boolean): ComicOpen.Kind =
+    if (reachable) kind else ComicOpen.Kind.UNREADABLE
+
+/**
+ * [file] 이 읽으러 갈 수 있는 파일인가 — 보통 파일이고 **실제로 열린다.** 디스크 입출력이다(부르는 쪽이 입출력 디스패처에서
+ * 부른다).
+ *
+ * `canRead()` 로 묻지 않는다 — 묻는 답과 여는 답이 FUSE 위에서 같다는 것을 확인한 적이 없다. 탐침은 [FileProbe] 한 벌이다
+ * (문서·압축·이미지 뷰어가 같은 답을 낸다). 책을 여는 문([ComicOpen.open]),
+ * 못 연 쪽의 단추([ComicOpenWith.pageFailureTarget]), 다음 권 찾기([NextVolume.find])가 이것을 쓴다 — 셋이 한 답을 내야 권해
+ * 준 책이 열리고 단추가 선 파일이 넘어간다. 여는 일은 [open] 이 한다 — 시험이 열리지 않는 파일을
+ * 흉내 내는 자리다(JVM 에서는 있는데 열리지 않는 파일을 만들 수 없다).
+ */
+internal fun isReachable(file: File, open: (File) -> Unit = FileProbe.openAndClose): Boolean = FileProbe.opens(file, open)

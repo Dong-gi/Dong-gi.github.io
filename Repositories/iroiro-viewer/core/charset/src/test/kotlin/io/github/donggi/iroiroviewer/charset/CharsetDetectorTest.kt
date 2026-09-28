@@ -153,6 +153,80 @@ class CharsetDetectorTest {
         )
     }
 
+    // ---- ZIP 파일명 판정과 합치며 고친 것 ------------------------------------------------------
+    //
+    // 판정이 두 벌(여기와 `EntryNameDecoder`)이던 것을 하나로 합쳤다. 이름은 짧아서, 긴 글에 맞춘 규칙이 짧은
+    // 입력에서 틀리던 자리가 드러났다 — 아래는 **예전 글 판정이 틀리던** 것들이다(괄호 안이 예전 답).
+
+    /** (Shift_JIS) — `한글` 의 CP949 두 바이트는 Shift_JIS 로 반각 가나 둘이다. 반각 가나를 일본어의 표지로 세지 않는다. */
+    @Test
+    fun `짧은 CP949 글을 반각 가나로 읽지 않는다`() {
+        val d = CharsetDetector.detect(encoded("한글이름", TextEncoding.CP949))
+        assertEquals(TextEncoding.CP949, d.encoding, "근거: ${d.evidence}")
+    }
+
+    /** (GB18030) — 받침 있는 글자가 대부분인 제목. 16자가 안 되면 받침 검사로 가짜라 하지 않는다. */
+    @Test
+    fun `받침이 많은 짧은 한국어를 중국어로 읽지 않는다`() {
+        val d = CharsetDetector.detect(encoded("월간 경영 전략 분석 결과", TextEncoding.CP949))
+        assertEquals(TextEncoding.CP949, d.encoding, "근거: ${d.evidence}")
+    }
+
+    /** (CP949) — `é`(C3 A9)는 CP949 로 `챕` 이다. 악센트 글자만 든 UTF-8 글이 통째로 한글이 됐다. */
+    @Test
+    fun `악센트가 붙은 라틴 글을 한글로 읽지 않는다`() {
+        val french = "Le café était très réputé à Genève. Voilà où ça s'arrête: déjà vu, naïve.\n"
+        val d = CharsetDetector.detect(encoded(french, TextEncoding.UTF_8))
+        assertEquals(TextEncoding.UTF_8, d.encoding, "근거: ${d.evidence}")
+    }
+
+    /** (ISO-8859-1) — 깨진 바이트 하나가 64 KiB 창의 엄격 디코드를 전부 떨어뜨려 문서 전체가 `ÇÑ±Û` 로 나왔다. */
+    @Test
+    fun `깨진 바이트가 하나 섞인 CP949 글은 CP949 로 읽되 확실하지 않다고 한다`() {
+        val raw = encoded(KOREAN.repeat(4), TextEncoding.CP949)
+        raw[raw.size / 2] = 0xFF.toByte()
+        val d = CharsetDetector.detect(raw)
+        assertEquals(TextEncoding.CP949, d.encoding, "근거: ${d.evidence}")
+        assertEquals(CharsetDetector.Detection.Confidence.LOW, d.confidence)
+    }
+
+    /**
+     * 위 `악센트가 붙은 라틴 글` 의 규칙이 **흔한 한국어 낱말을 라틴 글자로 만들지 않는다.** 이 낱말들의 CP949 바이트는
+     * 그대로 유효한 UTF-8 이다 — `캡처` = `ĸó`, `체크` = `üũ`, `치킨` = `ġŲ`, `호환` = `ȣȯ`. 비ASCII 글자끼리 붙은
+     * 것까지 낱말로 셌더니 넷 다 UTF-8 로 넘어갔다(검토가 잡았다. 옛 이름 판정은 넷 다 한글로 읽었다).
+     */
+    @Test
+    fun `UTF-8 로도 읽히는 한국어 낱말을 라틴 글자로 읽지 않는다`() {
+        for (word in listOf("캡처", "체크", "치킨", "호환", "청크", "캡처 (1).png", "체크_2024.txt")) {
+            val raw = encoded(word, TextEncoding.CP949)
+            assertTrue(!String(raw, TextEncoding.UTF_8.charset!!).contains('�'), "시험 전제가 깨졌다: $word")
+            val d = CharsetDetector.detect(raw)
+            assertEquals(TextEncoding.CP949, d.encoding, "$word — 근거: ${d.evidence}")
+        }
+        // 라틴 낱말은 그대로 UTF-8 이다(ASCII 글자 바로 옆의 서유럽 글자).
+        for (word in listOf("café", "Größe", "naïve", "São Paulo", "Zürich")) {
+            assertEquals(TextEncoding.UTF_8, CharsetDetector.detect(encoded(word, TextEncoding.UTF_8)).encoding, word)
+        }
+    }
+
+    /**
+     * **기호만 든 CP949 글.** `·`(A1 A4)는 Shift_JIS 로 반각 문장 부호 `｡､` 다. 그것을 일본어의 본토 글자로 세어
+     * `DCIM · Pictures` 같은 이름이 Shift_JIS 로 이겼다. 어느 후보도 글자를 내놓지 않으면 목록의 차례(CP949 가 앞)다.
+     */
+    @Test
+    fun `기호만 든 CP949 글을 반각 문장 부호로 읽지 않는다`() {
+        val d = CharsetDetector.detect(encoded("DCIM · Pictures · 2024", TextEncoding.CP949))
+        assertEquals(TextEncoding.CP949, d.encoding, "근거: ${d.evidence}")
+        assertEquals(CharsetDetector.Detection.Confidence.LOW, d.confidence)
+    }
+
+    /** 합치며 바뀌지 않아야 하는 것 — 짧은 일본어, Latin-1 로 적은 서유럽 글. */
+    @Test
+    fun `짧은 일본어와 Latin-1 글은 그대로다`() {
+        assertEquals(TextEncoding.SHIFT_JIS, CharsetDetector.detect(encoded("テスト資料", TextEncoding.SHIFT_JIS)).encoding)
+        assertEquals(TextEncoding.LATIN1, CharsetDetector.detect(encoded("café crème", TextEncoding.LATIN1)).encoding)
+    }
+
     private companion object {
         const val KOREAN = "한글 텍스트 파일입니다. 인코딩을 자동으로 판정해야 합니다. " +
             "둘째 줄과 셋째 줄이 있고 줄바꿈은 LF 입니다.\n"

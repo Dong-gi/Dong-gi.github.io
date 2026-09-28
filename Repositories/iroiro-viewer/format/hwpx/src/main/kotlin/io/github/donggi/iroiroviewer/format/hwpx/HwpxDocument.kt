@@ -199,6 +199,7 @@ internal class HwpxFlowDocument(
                 partIndex = index,
                 bookmarkParts = lay.bookmarks,
                 tables = lay.tables,
+                alts = lay.alts,
                 partHref = { partPath(it) },
                 onTruncated = { warn(FlowWarnings.TRUNCATED, label) },
                 checkCancel = cancel,

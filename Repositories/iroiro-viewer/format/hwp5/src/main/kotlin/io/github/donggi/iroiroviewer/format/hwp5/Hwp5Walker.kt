@@ -4,6 +4,7 @@ import io.github.donggi.iroiroviewer.format.UnsupportedFeatures
 import io.github.donggi.iroiroviewer.format.html.BulletGlyphs
 import io.github.donggi.iroiroviewer.format.html.CssValues
 import io.github.donggi.iroiroviewer.format.html.FlowUrls
+import io.github.donggi.iroiroviewer.format.html.HancomAlt
 import io.github.donggi.iroiroviewer.format.html.HancomChars
 import io.github.donggi.iroiroviewer.format.html.HancomNumbers
 import io.github.donggi.iroiroviewer.format.html.HtmlWriter
@@ -965,23 +966,6 @@ internal class Hwp5Walker(
         end("td")
     }
 
-    /**
-     * 한글이 개체마다 저절로 넣는 설명문인가 — 첫 줄이 개체 종류의 이름 + `입니다.`([AUTO_COMMENT_HEADS]·클립아트)이고
-     * 뒤 줄이 전부 `열쇠: 값`(`원본 그림의 이름`·`원본 그림의 크기`, 사진이면 EXIF 줄)인 것. 대체 글로 쓰지 않는다: 화면 낭독기가 '원본 그림의 이름
-     * CLP000043080017.bmp' 를 읽고, 그림이 깨지면 그 글이 화면에 뜬다. HWPX 변환기는 설명문을 쓰지 않으므로 이것으로 두
-     * 변환기의 결과도 같아진다(13단계 짝 대조 — K19 의 그림 25개 중 20개, 표본 전체의 설명문 205개가 전부 이 틀이었다). 사람이 쓴 설명은 남긴다.
-     * 모양으로 짐작한 규칙이다 — 한컴이 설명문의 틀을 적은 공개 자료는 찾지 못했다.
-     */
-    private fun isAutoComment(s: String): Boolean {
-        val lines = s.trim().lines()
-        val first = lines.first().trim()
-        if (first.isEmpty()) return true
-        if (first !in AUTO_COMMENT_HEADS && !CLIP_ART_HEAD.matches(first)) return false
-        // 뒤 줄은 전부 `열쇠: 값` 이다 — `원본 그림의 이름`·`원본 그림의 크기`, 사진이면 `사진 찍은 날짜`·`프로그램 이름`·
-        // `색 대표`·`EXIF 버전`(표본 205개). 사람이 이어 쓴 설명이 있으면 남긴다.
-        return lines.drop(1).all { it.isBlank() || ':' in it }
-    }
-
     /** 캡션의 자리(목록 머리 자리 8 의 속성 비트 0–1): 0 왼쪽, 1 오른쪽, 2 위, 3 아래. 왼쪽·위면 개체 앞에 둔다. */
     private fun captionOnTop(list: ListRef): Boolean {
         val attr = if (list.headerSize >= 12) data.u32(list.header + 8) else 3L
@@ -1016,13 +1000,17 @@ internal class Hwp5Walker(
         val size = cur.size
         registerInstance(cur)
         val widthHu = if (size >= 20) data.i32(p + 16) else 0
-        val alt = (if (size >= 46) PayloadReader(data, p + 44, size - 44).let { r ->
-            try {
-                r.wstr(Hwp5Limits.MAX_ALT_CHARS)
-            } catch (e: HwpFormatException) {
-                ""
-            }
-        } else "").takeUnless(::isAutoComment).orEmpty()
+        // 개체 설명문 — 한글이 저절로 넣은 것은 버린다. 규칙은 HWPX 변환기와 한 벌이다(`HancomAlt`). 가린 뒤에 자르므로
+        // 넉넉히 읽는다(`HancomAlt.MAX_READ_CHARS` 의 주석).
+        val alt = HancomAlt.of(
+            if (size >= 46) PayloadReader(data, p + 44, size - 44).let { r ->
+                try {
+                    r.wstr(HancomAlt.MAX_READ_CHARS)
+                } catch (e: HwpFormatException) {
+                    ""
+                }
+            } else "",
+        )
         cur.advance()
         // 캡션 목록이 개체보다 **앞에** 적혀 있다. 위·왼쪽 캡션이면 개체 앞에, 아니면 뒤에 쓴다.
         var caption: ListRef? = null
@@ -1285,6 +1273,8 @@ internal class Hwp5Walker(
      * 새 번호 지정(`nwno`, 표 144 — `UINT32 속성`(비트 0–3 이 번호 종류: 1 각주, 2 미주, 3 그림, 4 표, 5 수식), `UINT16 번호`).
      * 각주·미주면 **다음** 주석이 그 번호를 보이게 셈을 옮긴다. HWPX 는 한글이 저장한 각주 번호(`@number`)가 이것을 이미 담고
      * 있어 같은 번호가 된다 — 처음에는 이 컨트롤을 버려 같은 문서의 각주 번호가 HWP 로만 1부터 이어졌다(13단계 짝 대조).
+     * 저장한 번호를 쓰지 않는 HWPX 주석(쪽마다 새로 세는 문서, 번호 없는 주석)은 `hp:newNum` 으로 같은 셈을 한다
+     * (`HwpxWalker.newNumber` — 두 변환기가 같은 식이다).
      * 그림·표·수식 번호는 자동 번호가 적힌 번호를 쓰므로([autoNumber]) 옮길 셈이 없다.
      *
      * 셈은 걷기 상태([WalkState])에 들어 있어 훑기와 그리기가 같은 자리에서 같은 값을 얻는다. 보이는 번호는 시작 번호에서
@@ -1488,19 +1478,6 @@ internal class Hwp5Walker(
         /** 자동 번호·새 번호 지정의 번호 종류(속성의 비트 0–3) — 각주·미주. */
         private const val NUMBER_FOOTNOTE = 1
         private const val NUMBER_ENDNOTE = 2
-
-        /**
-         * 한글이 저절로 넣는 설명문의 첫 줄 — 개체 종류의 이름 + `입니다.`. 표본에서 본 것은 그림·사각형·묶음 개체·개체
-         * 연결선·다각형·클립아트(`장식11-4입니다.`)이고, 나머지는 같은 틀의 개체 종류다. **아무 `…입니다.` 나 받지 않는다** —
-         * '조직도입니다.' 는 사람이 쓴 설명일 수 있다(검토가 잡았다).
-         */
-        private val AUTO_COMMENT_HEADS = setOf(
-            "그림", "사각형", "타원", "선", "호", "다각형", "곡선", "묶음 개체", "개체 연결선", "글맵시", "글상자",
-            "OLE 개체", "차트", "동영상", "수식", "표",
-        ).map { "${it}입니다." }.toSet()
-
-        /** 클립아트의 설명문 첫 줄(`장식11-4입니다.`). */
-        private val CLIP_ART_HEAD = Regex("장식[0-9]+(-[0-9]+)*입니다\\.")
 
         /** 문단 모양의 여백·간격은 HWPUNIT 의 두 배로 적혀 있다([ParaShape]). 1 pt = 100 HWPUNIT. */
         private const val UNITS_PER_PT = 200.0

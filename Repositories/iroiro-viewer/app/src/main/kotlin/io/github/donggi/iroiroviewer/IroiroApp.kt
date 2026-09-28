@@ -1,8 +1,10 @@
 package io.github.donggi.iroiroviewer
 
 import android.app.Application
+import android.content.Context
 import io.github.donggi.iroiroviewer.archive.ArchiveExtractEngine
 import io.github.donggi.iroiroviewer.comic.ComicCover
+import io.github.donggi.iroiroviewer.data.CrashLog
 import io.github.donggi.iroiroviewer.io.ExtractSupport
 import io.github.donggi.iroiroviewer.playback.PlayerSupport
 import io.github.donggi.iroiroviewer.player.PlayerEntry
@@ -28,6 +30,17 @@ import io.github.donggi.iroiroviewer.ui.CoverSupport
  * 보게 되어 의존 표를 어긴다. 무엇을 무엇으로 여는지는 `FormatRegistry` 가 안다.
  */
 class IroiroApp : Application() {
+
+    /**
+     * 크래시 기록기(14단계)를 **여기서** 건다 — `onCreate` 보다 앞이라 콘텐츠 제공자(androidx.startup·
+     * profileinstaller)의 초기화에서 나는 죽음도 잡힌다. 쓸 수 있는 것은 넘겨받은 [base] 뿐이다. 판 이름은
+     * `BuildConfig` 가 `app` 에만 있어 여기서 넘긴다. 기록기는 앞의 처리기(안드로이드의 '앱이 멈췄습니다')를 반드시 잇는다.
+     */
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        CrashLog.install(base, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toLong())
+    }
+
     override fun onCreate() {
         super.onCreate()
         ExtractSupport.runner = ArchiveExtractEngine(this)

@@ -375,6 +375,111 @@ class HwpxPairReviewTest {
     }
 
     @Test
+    fun 새_번호_지정은_다음_각주가_그_번호를_받게_셈을_옮긴다() {
+        // HWP 5.0 의 `nwno` 와 같은 셈(`번호 - 시작 번호`). 우리 셈을 쓰는 주석 — 쪽마다 새로 세는 문서와 저장한 번호가 없는 주석 —
+        // 에서만 갈린다. 처음에는 `hp:newNum` 을 버려 그런 주석이 HWP 판과 다른 번호를 보였다(13단계에서 미룬 것).
+        val renumber = { type: String, num: Int -> """<hp:ctrl><hp:newNum num="$num" numType="$type"/></hp:ctrl>""" }
+        val body = pRaw(
+            run(
+                t("가") + footnote(1, "하나") + renumber("FOOTNOTE", 7) + t("나") + footnote(1, "둘") +
+                    footnote(1, "셋") + renumber("PAGE", 30) + renumber("ENDNOTE", 4) + footnote(1, "넷"),
+            ),
+        )
+        doc(secPr("ON_PAGE"), body).use { d ->
+            val h = d.body()
+            // 쪽 번호·미주의 새 번호는 각주 셈을 옮기지 않는다.
+            assertEquals(listOf("1)", "7)", "8)", "9)"), refs(h), h)
+            // 주석 쪽의 번호도 주석의 번호다(자동 번호의 저장된 `num` 이 아니다).
+            assertEquals(listOf("1)", "7)", "8)", "9)"), noteNumbers(h), h)
+        }
+        // 시작 번호가 5 여도 새 번호는 적힌 번호 그대로 보인다(HWP 는 `번호 - 시작 번호` 로 셈을 둔다).
+        doc(secPr("ON_PAGE", newNum = 5), body).use { d -> assertEquals(listOf("5)", "7)", "8)", "9)"), refs(d.body()), d.body()) }
+        // 저장한 번호가 없는 주석도 우리 셈이다 — 이어 세는 문서에서도 새 번호를 따른다.
+        val unsaved = pRaw(run(t("가") + footnote(null, "하나", autoNum = null) + renumber("FOOTNOTE", 3) + footnote(null, "둘", autoNum = null)))
+        doc(secPr("CONTINUOUS"), unsaved).use { d -> assertEquals(listOf("1)", "3)"), refs(d.body()), d.body()) }
+    }
+
+    @Test
+    fun 미주의_새_번호_지정은_미주_셈만_옮긴다() {
+        // 각주와 같은 식이다(`번호 - 시작 번호`). 저장한 번호가 없는 미주가 새 번호를 받고, 각주 셈은 그대로다 — 위 시험은
+        // 미주의 새 번호가 각주를 건드리지 않는 것만 보아 미주 쪽 셈이 빠져도 깨지지 않았다(검토가 더했다).
+        val en = { body: String ->
+            """<hp:ctrl><hp:endNote><hp:subList><hp:p paraPrIDRef="0" styleIDRef="0"><hp:run charPrIDRef="0"><hp:t>${esc(body)}</hp:t>""" +
+                """</hp:run></hp:p></hp:subList></hp:endNote></hp:ctrl>"""
+        }
+        val body = pRaw(
+            run(t("가") + en("미주 하나") + """<hp:ctrl><hp:newNum num="5" numType="ENDNOTE"/></hp:ctrl>""" + en("미주 둘") + footnote(null, "각주", autoNum = null)),
+        )
+        doc(secPr("CONTINUOUS"), body).use { d -> assertEquals(listOf("1)", "5)", "1)"), refs(d.body()), d.body()) }
+    }
+
+    @Test
+    fun 새_번호_지정은_조각의_경계를_건너_이어진다() {
+        // 셈은 걷기 상태에 있다 — 훑기가 조각의 시작마다 찍는 상태에도 옮긴 셈이 들어가야 뒤 조각이 같은 번호를 본다.
+        val renumber = """<hp:ctrl><hp:newNum num="20" numType="FOOTNOTE"/></hp:ctrl>"""
+        val policy = HancomChunkPolicy(softChars = 1_000_000, softBlocks = 2, hardChars = 1_000_000, hardBlocks = 2)
+        doc(
+            secPr("ON_PAGE"),
+            pRaw(run(t("가") + renumber + footnote(1, "앞 조각"))),
+            p("사이"),
+            pRaw(run(t("나") + footnote(1, "뒤 조각"))),
+            options = HwpxOptions(chunk = policy),
+        ).use { d ->
+            assertEquals(2, d.parts.size)
+            assertEquals(listOf("20)"), refs(d.body(0)), d.body(0))
+            assertEquals(listOf("21)"), refs(d.body(1)), d.body(1))
+        }
+    }
+
+    // ---- 그림 설명문 ----
+
+    private val png = byteArrayOf(0x89.toByte(), 'P'.code.toByte(), 'N'.code.toByte(), 'G'.code.toByte())
+
+    /** 설명문은 스키마의 차례상 그림 **뒤에** 온다(실물 K25·K27 과 같은 자리). */
+    private fun pic(comment: String?) =
+        """<hp:pic><hp:curSz width="7200" height="3600"/><hc:img binaryItemIDRef="image1"/><hp:sz width="7200" height="3600"/>""" +
+            (comment?.let { "<hp:shapeComment>${esc(it)}</hp:shapeComment>" } ?: "") + "</hp:pic>"
+
+    private fun alts(h: String): List<String> = Regex("<img [^>]*alt=\"([^\"]*)\"").findAll(h).map { it.groupValues[1] }.toList()
+
+    @Test
+    fun 그림의_설명문은_HWP_와_같은_규칙으로_대체_글이_된다() {
+        // HWP 5.0 은 개체 설명문을 대체 글로 쓰고(한글이 저절로 넣은 것은 버린다) HWPX 는 늘 비웠다(13단계에서 미룬 것).
+        val auto = "그림입니다.\n원본 그림의 이름: CLP000043080017.bmp\n원본 그림의 크기: 가로 94pixel, 세로 33pixel"
+        val t = TinyHwpx().section(
+            sec(pRaw(run(pic("2024년 일자리 증감 그래프") + pic(auto) + pic(null) + pic("조직도입니다.") + pic("장식11-4입니다.")))),
+        ).binary("image1", "BinData/a.png", "image/png", png)
+        Hwpx.doc(t).use { d ->
+            val h = d.body()
+            assertEquals(listOf("2024년 일자리 증감 그래프", "", "", "조직도입니다.", ""), alts(h), h)
+            assertFalse("CLP000043080017" in h, h)
+        }
+    }
+
+    @Test
+    fun 묶음의_설명문은_제_설명이_없는_안의_그림이_물려받는다() {
+        // HWP 5.0 은 설명문이 개체 공통 속성에 있어 묶음 하나에 하나이고 안의 모든 그림의 대체 글이 된다. 묶음의 설명문은
+        // 안의 개체들 **뒤에** 온다 — 훑기가 적어 둔 값이어야 그리기가 안의 그림을 쓸 때 안다.
+        val group = """<hp:container>${pic(null)}${pic("제 설명")}<hp:sz width="1"/><hp:shapeComment>분기별 매출 묶음</hp:shapeComment></hp:container>"""
+        val t = TinyHwpx().section(sec(pRaw(run(group + pic(null))))).binary("image1", "BinData/a.png", "image/png", png)
+        Hwpx.doc(t).use { d -> assertEquals(listOf("분기별 매출 묶음", "제 설명", ""), alts(d.body()), d.body()) }
+    }
+
+    @Test
+    fun 뒤_조각의_그림도_제_설명문을_받는다() {
+        // 개체 번호는 걷기 상태에 있다 — 조각이 중간에서 시작해도 훑기가 적어 둔 번호와 같은 번호를 센다.
+        val policy = HancomChunkPolicy(softChars = 1_000_000, softBlocks = 2, hardChars = 1_000_000, hardBlocks = 2)
+        val t = TinyHwpx().section(
+            sec(pRaw(run(pic("첫 그림"))), p("사이"), pRaw(run(pic(null) + pic("셋째 그림")))),
+        ).binary("image1", "BinData/a.png", "image/png", png)
+        Hwpx.doc(t, HwpxOptions(chunk = policy)).use { d ->
+            assertEquals(2, d.parts.size)
+            assertEquals(listOf("첫 그림"), alts(d.body(0)), d.body(0))
+            assertEquals(listOf("", "셋째 그림"), alts(d.body(1)), d.body(1))
+        }
+    }
+
+    @Test
     fun 사용자_글자_각주는_그_글자를_표지로_쓴다() {
         val h = html(secPr("ON_PAGE", format = """type="USER_CHAR" userChar="*" prefixChar="" suffixChar="""""), pRaw(run(t("가") + footnote(1, "별표 주석", autoNum = null))))
         assertEquals(listOf("*"), refs(h), h)

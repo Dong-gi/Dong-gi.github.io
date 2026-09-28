@@ -14,15 +14,17 @@ android {
         // 조용히 compileSdk(37)로 채우고, 그러면 검증할 수 없는 Android 17 동작변화를
         // 떠안는다. 검증 기기는 Android 12 와 15 다.
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.1.0"
+        // 14단계 마감 — 첫 1.0. 코드는 설치 순서를 가르는 값이라 1 에서 하나만 올린다(0.1.0 을 깔아 둔 기기에 덮어 깔린다).
+        versionCode = 2
+        versionName = "1.0.0"
     }
 
     buildTypes {
         release {
-            // 14단계 전까지는 release 도 debug 키로 서명한다. 서명이 바뀌면 기존 앱을
-            // 지워야 설치되고 그때 앱 데이터(이어보기·읽던 쪽·휴지통 인덱스)가 날아가므로,
-            // 키 전환은 마지막에 한 번만 한다. 이 기계의 debug.keystore 는 2056년까지 유효하다.
+            // release 도 debug 키로 서명한다 — **14단계 마감(1.0.0)에서도 그대로 두었다.** 서명이 바뀌면 기존 앱을
+            // 지워야 설치되고 그때 앱 데이터(이어보기·읽던 쪽·휴지통 인덱스)가 날아가므로, 키 전환은 사용자가 정할 때
+            // 한 번만 한다(키스토어는 `.gitignore` 가 막는 자료라 이 저장소에 둘 수도 없다). 이 기계의 debug.keystore 는
+            // 2056년까지 유효하다.
             signingConfig = signingConfigs.getByName("debug")
             // R8 을 1단계부터 켠다. 12단계에 가서 처음 켜면 파서들의 리플렉션과
             // 디코더 제거가 한꺼번에 터진다. 매 단계 끝에 release 를 설치해 훑는다.
@@ -57,6 +59,19 @@ android {
     }
 }
 
+// 고지 시험(`NoticeCatalogTest`)은 컴파일되지 않는 파일을 읽는다 — 문구(strings.xml)·전문(res/raw)·버전 카탈로그·
+// 한컴 문장의 원본(Hwp5Opener 의 KDoc). **입력으로 적지 않으면 그 파일만 바꾼 빌드에서 Gradle 이 시험을 '최신' 으로
+// 건너뛰고 옛 결과를 보여 준다** — 되돌림 확인에서 실제로 그렇게 통과했다(14단계).
+tasks.withType<Test>().configureEach {
+    inputs.files(
+        "src/main/res/values/strings.xml",
+        "src/main/res/raw",
+        "src/main/kotlin/io/github/donggi/iroiroviewer/NoticeScreen.kt",
+        "../gradle/libs.versions.toml",
+        "../format/hwp5/src/main/kotlin/io/github/donggi/iroiroviewer/format/hwp5/Hwp5Opener.kt",
+    ).withPropertyName("noticeSources").withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
 
 dependencies {
     implementation(project(":core:model"))
@@ -85,6 +100,8 @@ dependencies {
     implementation(project(":format:hwp5"))
     implementation(project(":core:playback"))
     implementation(project(":feature:player"))
+    // 14단계. 설정 화면 — 고지(`NoticeScreen`)와 진단으로 가는 길은 여기서 잇는다(feature 끼리는 서로를 보지 않는다).
+    implementation(project(":feature:settings"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
@@ -95,6 +112,8 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.material3)
+    // 고지·진단에 씌우는 제목 막대의 뒤로 화살표. 다른 모듈이 이미 들인 코어 세트라 APK 에 새로 드는 것이 없다.
+    implementation(libs.compose.material.icons.core)
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.ui.tooling.preview)
 

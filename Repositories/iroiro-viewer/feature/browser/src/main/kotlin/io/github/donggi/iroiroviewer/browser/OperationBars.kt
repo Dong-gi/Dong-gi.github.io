@@ -1,6 +1,7 @@
 package io.github.donggi.iroiroviewer.browser
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,6 +23,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,12 +35,20 @@ import androidx.compose.ui.unit.dp
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.FileOpManager
 import io.github.donggi.iroiroviewer.io.Format
+import io.github.donggi.iroiroviewer.io.R as IoR
 
 /**
  * 선택 모드의 상단 바.
  *
  * 색을 바꾸는 것이 중요하다 — 선택 모드는 **파일을 지울 수 있는 상태**라서, 평소와
  * 같아 보이면 사용자가 자기가 어느 모드에 있는지 모른 채 누른다.
+ *
+ * **파일 하나에만 뜻이 있는 조작('다른 앱으로 열기'·'정보')은 ⋮ 에 둔다.** 아래 조작 바에 더 넣으면 360dp 폰에서
+ * 글꼴을 키웠을 때 줄이 넘친다(지금 다섯 단추로 거의 찬다). ⋮ 는 언제나 보이고, 하나를 고르지 않았으면 항목이
+ * 꺼진다 — '이름 바꾸기' 가 하나일 때만 켜지는 것과 같은 모양이라 단추가 나타났다 사라지며 자리를 바꾸지 않는다.
+ *
+ * @param onOpenWith 하나만 고른 파일을 다른 앱으로. null 이면 항목이 꺼진다.
+ * @param onInfo 하나만 고른 파일의 정보 시트. null 이면 항목이 꺼진다.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +56,10 @@ fun SelectionTopAppBar(
     count: Int,
     onClear: () -> Unit,
     onSelectAll: () -> Unit,
+    onOpenWith: (() -> Unit)?,
+    onInfo: (() -> Unit)?,
 ) {
+    var menuOpen by remember { mutableStateOf(false) }
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -57,6 +76,31 @@ fun SelectionTopAppBar(
         actions = {
             IconButton(onClick = onSelectAll) {
                 Icon(Icons.Filled.Check, stringResource(R.string.browser_select_all))
+            }
+            // **⋮ 단추와 메뉴를 한 상자에 담는다**(함정 표 — Popup 은 자기를 감싼 부모 레이아웃을 앵커로 삼는다.
+            // `actions` 에 형제로 두면 메뉴가 아이콘 줄의 맨 왼쪽에서 시작한다).
+            Box {
+                IconButton(onClick = { menuOpen = true }) {
+                    Icon(Icons.Filled.MoreVert, stringResource(R.string.browser_more))
+                }
+                DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(IoR.string.io_open_with)) },
+                        enabled = onOpenWith != null,
+                        onClick = {
+                            menuOpen = false
+                            onOpenWith?.invoke()
+                        },
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.browser_action_info)) },
+                        enabled = onInfo != null,
+                        onClick = {
+                            menuOpen = false
+                            onInfo?.invoke()
+                        },
+                    )
+                }
             }
         },
     )
@@ -130,6 +174,48 @@ fun PasteBar(
             )
             TextButton(onClick = onCancel) { Text(stringResource(R.string.browser_paste_cancel)) }
             TextButton(onClick = onPaste) { Text(stringResource(R.string.browser_paste_here)) }
+        }
+    }
+}
+
+/**
+ * '다른 곳에 복원' 바. 휴지통에서 '다른 곳에 복원' 을 누르면 [PasteBar] 처럼 떠 있고, 사용자는 원하는 폴더로
+ * 가서 '여기에 복원' 을 누른다.
+ *
+ * **붙여넣기 바와 색을 다르게 한다**(tertiary). 둘이 함께 떠 있을 수 있는데, 같은 색이면 '여기에' 가 둘 중
+ * 무엇을 가리키는지 글자를 끝까지 읽어야 안다.
+ */
+@Composable
+fun RestorePickBar(
+    pick: BrowserViewModel.RestorePick,
+    onRestoreHere: () -> Unit,
+    onCancel: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.tertiaryContainer,
+        tonalElevation = 3.dp,
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                // 이름을 앞에 따옴표로 둔다. 조사(을·를)를 이름에 맞출 수 없어 문장 안에 녹이지 않는다.
+                text = if (pick.uuids.size == 1) {
+                    stringResource(R.string.browser_restore_pick_one, pick.firstName)
+                } else {
+                    stringResource(R.string.browser_restore_pick_many, pick.uuids.size)
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                modifier = Modifier.weight(1f),
+                maxLines = 1,
+                overflow = TextOverflow.MiddleEllipsis,
+            )
+            TextButton(onClick = onCancel) { Text(stringResource(R.string.browser_paste_cancel)) }
+            TextButton(onClick = onRestoreHere) { Text(stringResource(R.string.browser_restore_here)) }
         }
     }
 }

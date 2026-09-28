@@ -17,8 +17,8 @@ import java.util.zip.ZipOutputStream
  */
 internal object TinyEpub {
 
-    /** 한 장. [body] 는 `<body>` 안에 그대로 들어간다. */
-    data class Chapter(val path: String, val title: String, val body: String)
+    /** 한 장. [body] 는 `<body>` 안에, [head] 는 `<head>` 안(`<title>` 뒤)에 그대로 들어간다. */
+    data class Chapter(val path: String, val title: String, val body: String, val head: String = "")
 
     fun bytes(
         chapters: List<Chapter>,
@@ -44,6 +44,12 @@ internal object TinyEpub {
          * 아니다). 만화형 책은 그림을 곧바로 차례에 둔다.
          */
         spineExtras: List<String> = emptyList(),
+        /** `<metadata>` 에 그대로 더하는 것(`<meta property="rendition:layout">…`). */
+        packageMeta: String = "",
+        /** `<spine>` 에 더하는 속성(`page-progression-direction="rtl"`). */
+        spineAttributes: String = "",
+        /** 장 번호 → 그 `itemref` 의 `properties`. */
+        itemrefProperties: Map<Int, String> = emptyMap(),
     ): ByteArray {
         val out = ByteArrayOutputStream()
         ZipOutputStream(out).use { zip ->
@@ -74,8 +80,9 @@ internal object TinyEpub {
                 manifest.append(
                     """<item id="c$i" href="${c.path}" media-type="application/xhtml+xml"/>"""
                 )
-                spine.append("""<itemref idref="c$i"/>""")
-                put(zip, "$opfDir/${c.path}", page(c.title, c.body).toByteArray())
+                val props = itemrefProperties[i]?.let { """ properties="$it"""" }.orEmpty()
+                spine.append("""<itemref idref="c$i"$props/>""")
+                put(zip, "$opfDir/${c.path}", page(c.title, c.body, c.head).toByteArray())
             }
             for ((path, data) in extras) {
                 val id = path.filter { it.isLetterOrDigit() }
@@ -105,9 +112,10 @@ internal object TinyEpub {
                 |    <dc:language>$language</dc:language>
                 |    ${identifier?.let { "<dc:identifier id='id'>$it</dc:identifier>" } ?: ""}
                 |    ${otherIdentifiers.joinToString("") { "<dc:identifier>$it</dc:identifier>" }}
+                |    $packageMeta
                 |  </metadata>
                 |  <manifest>$manifest</manifest>
-                |  <spine${if (nav) "" else """ toc="ncx""""}>$spine</spine>
+                |  <spine${if (nav) "" else """ toc="ncx""""}${if (spineAttributes.isEmpty()) "" else " $spineAttributes"}>$spine</spine>
                 |</package>
                 """.trimMargin().toByteArray(),
             )
@@ -115,10 +123,10 @@ internal object TinyEpub {
         return out.toByteArray()
     }
 
-    fun page(title: String, body: String): String =
+    fun page(title: String, body: String, head: String = ""): String =
         """<?xml version="1.0" encoding="UTF-8"?>
         |<!DOCTYPE html>
-        |<html xmlns="http://www.w3.org/1999/xhtml"><head><title>$title</title></head>
+        |<html xmlns="http://www.w3.org/1999/xhtml"><head><title>$title</title>$head</head>
         |<body>$body</body></html>
         """.trimMargin()
 

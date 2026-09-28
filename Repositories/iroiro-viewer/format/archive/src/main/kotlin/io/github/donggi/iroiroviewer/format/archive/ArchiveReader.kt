@@ -27,7 +27,12 @@ data class ArchiveEntry(
     val declaredSize: Long,
     val compressedSize: Long,
     val isDirectory: Boolean,
-    /** 심볼릭 링크·하드링크·정션. 내용이 파일이 아니라 경로 문자열이다. */
+    /**
+     * 심볼릭 링크·하드링크·정션. 내용이 파일이 아니라 경로 문자열이다.
+     *
+     * tar 의 **장치·FIFO·희소 파일**도 여기 든다 — 앞의 둘은 내용이 없고, 희소 파일은 구멍을 뺀 조각이라
+     * 그대로 풀면 다른 파일이 된다. 셋 다 링크처럼 건너뛰고 링크로 센다.
+     */
     val isLink: Boolean,
     /** 암호가 걸려 있다. 목록에 자물쇠로 보인다. */
     val isEncrypted: Boolean,
@@ -69,8 +74,22 @@ data class ArchiveEntry(
     val needsPassword: Boolean
         get() = isEncrypted && !decryptable && !lockedForGood && !isDirectory && !isLink && safeName != null
 
+    /**
+     * **아카이브의 맨 위 폴더 자신**을 가리키는 폴더 항목인가(`./`·`.`·`/`).
+     *
+     * `tar -czf x.tgz .` 로 만든 tar 는 맨 앞에 `./` 항목을 둔다 — 흔하다. 그 이름은 [ArchivePath.sanitize] 가
+     * 쓸 수 없는 이름(null)으로 돌려주므로(조각이 하나도 남지 않는다), 그대로 두면 목록 맨 위에 **'풀 수 없는 이름'
+     * 경고**가 선다. 위험한 이름이 아니라 풀어 넣을 자리 그 자체다. `..` 이 섞였으면 거짓이다.
+     */
+    val isRootDirectory: Boolean
+        get() = isDirectory && isRootName(name)
+
     companion object {
         fun sanitize(name: String): String? = ArchivePath.sanitize(name)
+
+        /** [isRootDirectory] 의 이름 판정. 조각이 전부 비었거나 `.` 이다. */
+        fun isRootName(name: String): Boolean =
+            name.replace('\\', '/').split('/').all { it.isEmpty() || it == "." }
     }
 }
 
@@ -102,16 +121,30 @@ class ArchivePasswordException(val wrongPassword: Boolean) :
  */
 interface ArchiveReader : AutoCloseable {
 
-    val formatId: FormatId
+    /**
+     * 등록소가 쓰는 신원. **tar 계열에는 없다(null)** — `format:api` 의 [FormatId] 에 자리가 없다.
+     * 형식의 이름은 [kind] 가 말한다. ZIP 리더는 EPUB·OOXML·HWPX 여는이가 자기 신원을 넣어 만든다.
+     */
+    val formatId: FormatId?
 
+    /** 컨테이너의 실제 모양. 화면이 형식 이름을 이것으로 적는다. */
+    val kind: ArchiveKind get() = ArchiveKind.of(formatId)
+
+    /**
+     * 엔트리 목록.
+     *
+     * **압축한 tar 에서는 처음 읽을 때 비싸다** — 스트림을 처음부터 끝까지 풀어야 머리가 다 나온다
+     * ([TarArchiveReader]). 그래서 거기서는 게으르게 만들고, [extractSequentially] 는 목록 없이도 돈다.
+     */
     val entries: List<ArchiveEntry>
 
     /**
      * 무작위 접근이 싼가.
      *
-     * ZIP 은 true — 엔트리마다 독립 압축이라 필요한 것만 푼다.
-     * 7z(solid)와 RAR(solid)은 false — 앞엣것을 다 풀어야 뒤엣것이 나온다. 만화 뷰어는
-     * 이 값이 false 면 "열 때 한 번에 다 풀어 캐시" 전략으로 바꾼다.
+     * ZIP 은 true — 엔트리마다 독립 압축이라 필요한 것만 푼다. 압축하지 않은 tar 도 true 다(자료의 자리를
+     * 목록이 안다).
+     * 7z(solid)와 RAR(solid)은 false — 앞엣것을 다 풀어야 뒤엣것이 나온다. 압축한 tar 도 false 다(스트림이다).
+     * 만화 뷰어는 이 값이 false 면 창(`SolidComicSource`)으로 읽는다.
      */
     val randomAccess: Boolean
 
@@ -162,8 +195,30 @@ interface ArchiveReader : AutoCloseable {
      *   실제로는 풀린다** — 그것이 solid 의 뜻이다. 상한 계산이 그 사실을 알아야 한다.
      * - 엔트리 하나의 실패는 [EntrySink.finish] 에 실어 보고하고 **다음으로 간다.**
      *   위로 던지는 것은 취소와 아카이브 전체를 무효로 만드는 오류뿐이다.
+     * - 아카이브에서 **실제로 소비한 입력 바이트**를 [EntrySink.consumed] 로 알린다(형식마다 뜻은
+     *   [inputBytesFor] 의 표).
      */
     fun extractSequentially(sink: EntrySink)
+
+    /**
+     * [extractSequentially] 가 [selected] 를 풀 때 [EntrySink.consumed] 가 닿게 될 값 — **진행률의 분모.**
+     * 모르면 -1 이고, 그러면 푸는 쪽이 예전처럼 선언 크기 합과 쓴 바이트로 센다.
+     *
+     * 8단계는 분모로 **선언 크기 합**을 썼다. 공격자가 적는 값이고, solid 아카이브에서는 건너뛰는 해제가 진행 바에
+     * 전혀 잡히지 않는다(고르지 않은 앞 항목을 푸는 동안 바가 멎어 있다). 입력을 세면 두 문제가 함께 풀린다 —
+     * 다만 형식마다 셀 수 있는 것이 다르다.
+     *
+     * | 형식 | 분자(소비한 입력) | 분모 |
+     * |---|---|---|
+     * | ZIP | 항목 스트림이 실제로 읽은 압축 바이트(`InputStreamStatistics`, 암호 항목은 날것을 센다) | 고른 항목의 압축 크기 합(중앙 디렉터리) |
+     * | 7z | 항목마다 `statisticsForCurrentEntry.compressedCount` 의 합 — 건너뛰며 푸는 앞 항목까지 | 파일 크기(패스가 끝까지 푼다) |
+     * | RAR | **실측 불가** — junrar 가 통계를 주지 않는다. 끝난 항목의 선언 압축 크기를 더한다(항목 단위로 뛴다) | 고른 항목의 선언 압축 크기 합 |
+     * | tar | 고른 항목의 자료를 읽은 바이트(건너뛰기는 자리만 옮긴다) | 고른 항목의 크기 합 |
+     * | tar.gz·bz2·xz | 파일에서 읽어 들인 압축 바이트 | 파일 크기 |
+     *
+     * @param selected 고른 항목 번호. null 이면 전부.
+     */
+    fun inputBytesFor(selected: Set<Int>?): Long = -1L
 
     /**
      * 리더가 받은 암호가 맞는가. 암호 항목이 없으면 참이다(물을 것이 없다).
@@ -204,6 +259,58 @@ interface EntrySink {
      * @param failure 이 엔트리만의 실패. null 이면 성공이다.
      */
     fun finish(entry: ArchiveEntry, written: Long, failure: Throwable?)
+
+    /**
+     * 지금까지 아카이브에서 **실제로 소비한 입력 바이트**(누적, 줄지 않는다). 리더가 자료를 흘려보낼 때마다
+     * 부른다 — 자주 불리므로 받는 쪽이 솎는다. 뜻은 [ArchiveReader.inputBytesFor] 의 표. 기본은 무시한다.
+     */
+    fun consumed(inputBytes: Long) = Unit
+}
+
+/**
+ * 읽은 바이트를 세는 스트림. 압축 스트림 **아래**에 두면 파일에서 실제로 소비한 입력이 나온다
+ * (위에 두면 풀린 양이다). 진행률과 압축비의 분모가 이것을 쓴다.
+ *
+ * **`mark`·`reset` 을 센다.** gzip 해제기는 멤버가 끝날 때마다 너무 많이 읽은 입력을 `reset` 으로 되돌린다 —
+ * 그것을 세지 않으면 되돌린 만큼이 두 번 더해진다.
+ */
+internal class CountingInputStream(input: InputStream) : java.io.FilterInputStream(input) {
+
+    @Volatile
+    var count: Long = 0L
+        private set
+
+    private var marked = 0L
+
+    @Synchronized
+    override fun mark(readlimit: Int) {
+        `in`.mark(readlimit)
+        marked = count
+    }
+
+    @Synchronized
+    override fun reset() {
+        `in`.reset()
+        count = marked
+    }
+
+    override fun read(): Int {
+        val b = `in`.read()
+        if (b >= 0) count++
+        return b
+    }
+
+    override fun read(b: ByteArray, off: Int, len: Int): Int {
+        val n = `in`.read(b, off, len)
+        if (n > 0) count += n
+        return n
+    }
+
+    override fun skip(n: Long): Long {
+        val s = `in`.skip(n)
+        if (s > 0) count += s
+        return s
+    }
 }
 
 /**

@@ -257,15 +257,25 @@ class SevenZArchiveReader(
             var position = -1
             val byIndex = entries.associateBy { it.index }
             val drain = ByteArray(COPY_BUFFER)
+            // 끝난 항목들이 소비한 압축 입력. 라이브러리의 통계는 **항목마다 0 에서 다시** 센다(`getNextEntry`
+            // 가 되돌린다) — 그래서 끝날 때마다 더한다. 건너뛰며 푸는 항목도 우리가 읽어 버리므로 여기 잡힌다.
+            var consumedBefore = 0L
+            fun spentNow(): Long = runCatching { file.statisticsForCurrentEntry.compressedCount }.getOrDefault(0L)
             while (true) {
                 val raw = file.nextEntry ?: break
                 position++
-                if (raw.isDirectory) continue
                 val entry = byIndex[position] ?: continue
-
-                val guarded = budget.guard(SevenZEntryStream(file, owned = false)) {
-                    runCatching { file.statisticsForCurrentEntry.compressedCount }.getOrDefault(0L)
+                if (raw.isDirectory) {
+                    // **폴더 항목도 소비자에게 보인다** — ZIP·RAR·tar 와 같은 계약이다. 예전에는 여기서 건너뛰어,
+                    // 7z 를 풀면 빈 폴더가 생기지 않았고 폴더의 수정시각도 되살릴 길이 없었다. 폴더에는 자료가 없으므로
+                    // 받을 곳을 주더라도 tar 가 읽을 수 없는 항목에 하는 것처럼 그 항목만 실패로 돌린다.
+                    if (sink.begin(entry) != null) {
+                        sink.finish(entry, 0L, IllegalArgumentException("읽을 수 없는 항목이다"))
+                    }
+                    continue
                 }
+
+                val guarded = budget.guard(SevenZEntryStream(file, owned = false)) { spentNow() }
                 val out = sink.begin(entry)
                 if (out == null) {
                     // 고르지 않은 엔트리. solid 라 **어차피 풀린다** — 우리가 읽어 버려야
@@ -282,6 +292,7 @@ class SevenZArchiveReader(
                                 throw java.io.InterruptedIOException("푸는 중에 중단되었다")
                             }
                             if (guarded.read(drain) < 0) break
+                            sink.consumed(consumedBefore + spentNow())
                         }
                     } catch (t: Throwable) {
                         if (t is java.io.InterruptedIOException) throw t
@@ -289,6 +300,8 @@ class SevenZArchiveReader(
                         // 건너뛰는 중의 실패는 보고할 곳이 없다 — sink 는 [EntrySink.begin]
                         // 이 스트림을 준 엔트리만 [EntrySink.finish] 로 받는다는 계약이다.
                     }
+                    consumedBefore += spentNow()
+                    sink.consumed(consumedBefore)
                     continue
                 }
 
@@ -303,6 +316,7 @@ class SevenZArchiveReader(
                         if (n < 0) break
                         out.write(drain, 0, n)
                         written += n
+                        sink.consumed(consumedBefore + spentNow())
                     }
                 } catch (t: Throwable) {
                     if (t is java.io.InterruptedIOException) throw t
@@ -311,9 +325,17 @@ class SevenZArchiveReader(
                     failure = t
                 }
                 sink.finish(entry, written, failure)
+                consumedBefore += spentNow()
+                sink.consumed(consumedBefore)
             }
         }
     }
+
+    /**
+     * 파일 크기. 순차 추출은 고른 것과 상관없이 **끝까지 푼다**(solid 라 건너뛰는 것도 풀어서 버린다) — 소비한
+     * 압축 입력의 합은 팩 스트림의 합이고, 그것은 파일 크기에서 머리만큼 모자란다. 진행 바는 99% 언저리에서 끝난다.
+     */
+    override fun inputBytesFor(selected: Set<Int>?): Long = source.length.takeIf { it > 0 } ?: -1L
 
     override fun close() {
         // 계약상 [open] 이 준 스트림은 리더보다 먼저 닫힌다 — 그 뒤라 지워도 안전하다.

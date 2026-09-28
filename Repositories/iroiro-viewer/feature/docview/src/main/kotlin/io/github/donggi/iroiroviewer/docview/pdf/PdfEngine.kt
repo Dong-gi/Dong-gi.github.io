@@ -1,8 +1,11 @@
 package io.github.donggi.iroiroviewer.docview.pdf
 
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.pdf.LoadParams
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
@@ -56,6 +59,12 @@ import java.io.File
  * 나중에 텍스트 선택·검색을 넣는 사람에게: `PdfRendererPreV` 의 인자 순서를 **javadoc 이
  * 아니라 javap 로** 확인하라. android-36.1 의 javadoc 예제가 `page.render(bitmap, params,
  * null, null)` 인데 실제 시그니처는 `render(Bitmap, Rect, Matrix, RenderParams)` 다.
+ *
+ * ## 찾기도 API 35 의 프레임워크에만 있다(14단계)
+ *
+ * `PdfRenderer.Page.searchText(String)` 은 `api-versions.xml` 에 `since="35"` 이고 그 메서드에는 `sdks` 가 없다 — 확장 13
+ * 이 아니라 **프레임워크 35** 다(암호 생성자와 같은 사정). 그래서 [searchPage] 에 `@RequiresApi(35)` 를 달고, 부르는 쪽은
+ * `SDK_INT` 로 가른다. 34 이하 기기에서는 찾기 단추가 없다(`PdfSearch` 의 주석).
  */
 internal object PdfEngine {
 
@@ -179,7 +188,7 @@ internal object PdfEngine {
         }
 
     /**
-     * 쪽 하나를 비트맵에 그린다.
+     * 가상 쪽([layout] — 쪽 하나, 또는 나란히 놓은 두 쪽)을 비트맵 **한 장**에 그린다.
      *
      * 지키는 것 넷.
      *
@@ -200,35 +209,97 @@ internal object PdfEngine {
      *    취소가 닿지 않는다** — 렌더 도중 `Thread.interrupt()` 를 걸어도 끝까지 돌고
      *    예외도 나지 않는다(실측). `Documents.open` 의 시간 상한도 기다리기를 그만두는
      *    것일 뿐이고 그동안 전역 잠금은 물려 있다.
+     *
+     * **두 쪽이어도 '한 번에 한 쪽' 이다** — 쪽마다 열고 그리고 닫은 뒤 다음 쪽을 연다. 두 쪽 사이·둘레는 바닥 색
+     * ([SPREAD_BACKDROP])으로 칠하고 쪽의 자리만 희게 칠한다(`render` 가 지우지 않으므로 종이의 흰색은 우리 몫이다).
+     * 쪽 하나가 가상 쪽 전체를 덮으면(두 쪽 보기가 아닐 때) 옛 길 그대로 통째로 희게 지운다.
      */
-    suspend fun render(renderer: PdfRenderer, ordinal: Int, spec: Spec): Bitmap? =
+    suspend fun render(renderer: PdfRenderer, layout: PdfSpreads.Layout, spec: Spec): Bitmap? =
         withContext(IroDispatchers.pdfRender) {
             try {
-                renderer.openPage(ordinal).use { page ->
-                    val bitmap = Bitmap.createBitmap(
-                        spec.bitmapWidth.coerceAtLeast(1),
-                        spec.bitmapHeight.coerceAtLeast(1),
-                        // `RGB_565` 는 `Unsupported pixel format` 이다. 고를 수 있는 것이 아니다.
-                        Bitmap.Config.ARGB_8888,
-                    )
+                val bitmap = Bitmap.createBitmap(
+                    spec.bitmapWidth.coerceAtLeast(1),
+                    spec.bitmapHeight.coerceAtLeast(1),
+                    // `RGB_565` 는 `Unsupported pixel format` 이다. 고를 수 있는 것이 아니다.
+                    Bitmap.Config.ARGB_8888,
+                )
+                val s = spec.scale.toFloat()
+                if (layout.coversWhole) {
                     bitmap.eraseColor(Color.WHITE)
-                    val matrix = Matrix().apply {
-                        setScale(spec.scale.toFloat(), spec.scale.toFloat())
-                        postTranslate(-spec.srcLeft.toFloat(), -spec.srcTop.toFloat())
+                } else {
+                    bitmap.eraseColor(SPREAD_BACKDROP)
+                    val canvas = Canvas(bitmap)
+                    val paper = Paint().apply { color = Color.WHITE }
+                    for (part in layout.parts) {
+                        canvas.drawRect(
+                            part.left * s - spec.srcLeft,
+                            part.top * s - spec.srcTop,
+                            (part.left + part.width) * s - spec.srcLeft,
+                            (part.top + part.height) * s - spec.srcTop,
+                            paper,
+                        )
                     }
-                    currentCoroutineContext().ensureActive()
-                    // `destClip` 은 null 이다. 그것만 주면 타일이 아니라 **클립 안에 쪽
-                    // 전체를 축소**한다(실측). 잘라 보여 주는 일은 `Matrix` 가 한다.
-                    page.render(bitmap, null, matrix, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                    bitmap
                 }
+                for (part in layout.parts) {
+                    // 펼침이면 쪽마다 **그 쪽의 자리로 자른다**(`PdfSpreads.clipOf` — 자르기 상자 밖의 재단 여백이 쪽 사이와
+                    // 옆 쪽에 번지지 않게). 타일이 그 쪽에 닿지 않으면 쪽을 열지도 않는다.
+                    val clip = if (layout.coversWhole) {
+                        null
+                    } else {
+                        val c = PdfSpreads.clipOf(
+                            part, spec.scale, spec.srcLeft, spec.srcTop, bitmap.width, bitmap.height,
+                        ) ?: continue
+                        Rect(c[0], c[1], c[2], c[3])
+                    }
+                    renderer.openPage(part.page).use { page ->
+                        val matrix = Matrix().apply {
+                            setScale(s, s)
+                            postTranslate(part.left * s - spec.srcLeft, part.top * s - spec.srcTop)
+                        }
+                        currentCoroutineContext().ensureActive()
+                        // 쪽 하나면 `destClip` 은 null 이다. **행렬 없이** 그것만 주면 타일이 아니라 클립 안에 쪽
+                        // 전체를 축소한다(실측). 행렬을 함께 주면 클립은 자르기만 한다 — 잘라 보여 주는 일은 `Matrix` 가 한다.
+                        page.render(bitmap, clip, matrix, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                    }
+                }
+                bitmap
             } catch (e: CancellationException) {
                 throw e
             } catch (t: Throwable) {
                 // 닫힌 문서에 그리면 문서가 약속한 `IllegalStateException` 이 아니라 **NPE**
                 // 가 온다(실측). 그 예외에 기대지 않고 부르는 쪽이 닫힘 표시를 들고 있다.
-                Iro.d { "쪽을 그리지 못했다 #$ordinal: ${t::class.java.simpleName}" }
+                Iro.d { "쪽을 그리지 못했다 #${layout.parts.map { it.page }}: ${t::class.java.simpleName}" }
                 null
             }
         }
+
+    /**
+     * 쪽 하나에서 [query] 를 찾는다. 결과의 사각형은 **쪽 좌표(포인트)** 다.
+     *
+     * 결과가 [PdfSearch.MAX_PER_PAGE] 를 넘으면 앞의 것만 싣는다. 실패(닫힌 문서·깨진 쪽)는 빈 목록이 아니라 null —
+     * 부르는 쪽이 '없다' 와 '못 읽었다' 를 가를 수 있게.
+     */
+    @RequiresApi(35)
+    suspend fun searchPage(renderer: PdfRenderer, ordinal: Int, query: String): List<PdfSearch.Match>? =
+        withContext(IroDispatchers.pdfRender) {
+            try {
+                currentCoroutineContext().ensureActive()
+                renderer.openPage(ordinal).use { page ->
+                    page.searchText(query).take(PdfSearch.MAX_PER_PAGE).map { m ->
+                        PdfSearch.Match(
+                            page = ordinal,
+                            boxes = m.bounds.map { r -> PdfSearch.Box(r.left, r.top, r.right, r.bottom) },
+                        )
+                    }
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (t: Throwable) {
+                Iro.d { "쪽에서 찾지 못했다 #$ordinal: ${t::class.java.simpleName}" }
+                null
+            }
+        }
+
+    /** 두 쪽 보기의 쪽 사이·둘레. 문서 화면의 바닥(`DocViewScreen` 의 `PAPER_BACKDROP`)과 같은 회색이다. */
+    private const val SPREAD_BACKDROP = 0xFF303030.toInt()
 }

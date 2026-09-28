@@ -11,11 +11,52 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!--
+      휴지통 자동 비우기(TrashPurgeJob)를 재부팅 뒤에도 남기려면 JobInfo.setPersisted(true) 가
+      필요하고, 시스템은 그것을 이 권한이 있는 앱에만 허락한다(없으면 schedule 이
+      IllegalArgumentException 이다). 우리가 부팅 방송을 받는 수신기를 두는 것은 아니다 -
+      시스템의 JobScheduler 가 예약을 되살리는 데 이 권한을 본다.
+    -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!--
+      다른 앱으로 열기(ExternalOpen)가 고르는 창을 띄우기 전에 '이 형식을 받을 앱이 있는가' 를 묻는다
+      (queryIntentActivities). API 30 부터 그 질의는 우리에게 보이는 앱만 답하므로, 묻는 대상을 여기서 보이게 한다.
+      묻는 코드가 이 모듈에 있으므로 선언도 이 모듈에 둔다 - 병합이 앱에 싣고, 이 모듈을 빼면 함께 빠진다.
+
+      무엇이 보이나: content URI 를 VIEW 로 받는 필터에 MIME 을 하나라도 적은 앱. 파서는 이 intent 를
+      content 데이터(호스트 없음) + 모든 형식(*/*)의 인텐트로 읽고, 그것은 형식을 적은 필터라면 스킴을 적지 않았거나
+      content 를 적은 것에 다 맞는다(IntentFilter.matchData). content 에 남의 호스트를 적은 필터는 맞지 않는데, 그런
+      필터는 우리 FileProvider 의 URI 도 받지 않는다. 그래서 우리가 넘기는 인텐트를 받을 수 있는 필터는 전부 여기에도
+      맞는다. 둘 다 SDK 소스(android-36.1)로 읽었고, 그 인텐트로 남의 앱을 실제로 보이게 하는 AppsFilter 는 여기에
+      소스가 없다. 에뮬레이터 둘(API 31, 35)에서 들었다 - 이진 .txt 의 고르는 창이 넓혀지지 않고 Chrome 과
+      HTML Viewer 로 떴다(보이지 않았다면 모든 앱으로 넓혔을 것이다).
+
+      사생활: 이 앱은 이제 '파일을 보는 앱' 이 설치돼 있는지 알 수 있다. 알 뿐이다 - 질의의 답은 고르는 창을 넓힐지
+      정하는 데 한 번 쓰고 버린다. 목록으로 보여 주지도, 저장하지도 않으며, INTERNET 이 없어 밖으로 나갈 길도 없다.
+      QUERY_ALL_PACKAGES(모든 앱)를 쓰지 않는 것도 그래서다.
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="content" android:mimeType="*/*" />
+        </intent>
+    </queries>
+
     <application>
         <service
             android:name=".FileOpService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
+
+        <!--
+          예약된 휴지통 비우기. JobScheduler 만 묶을 수 있게 BIND_JOB_SERVICE 로 막는다 -
+          이 권한은 시스템만 가지므로 다른 앱이 이 서비스를 깨울 수 없다.
+        -->
+        <service
+            android:name=".TrashPurgeJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <!--
           다른 앱으로 파일을 보낼 때만 쓴다. exported=false 이고 권한은 인텐트마다

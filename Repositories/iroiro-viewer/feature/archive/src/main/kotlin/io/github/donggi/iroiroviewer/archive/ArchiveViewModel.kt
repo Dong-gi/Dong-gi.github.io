@@ -3,12 +3,13 @@ package io.github.donggi.iroiroviewer.archive
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.donggi.iroiroviewer.format.FileDocumentSource
-import io.github.donggi.iroiroviewer.format.FormatId
 import io.github.donggi.iroiroviewer.format.archive.ArchiveEntry
+import io.github.donggi.iroiroviewer.format.archive.ArchiveKind
 import io.github.donggi.iroiroviewer.format.archive.ArchivePasswordException
 import io.github.donggi.iroiroviewer.format.archive.ArchiveTree
 import io.github.donggi.iroiroviewer.format.archive.Archives
 import io.github.donggi.iroiroviewer.io.FileOpEngine
+import io.github.donggi.iroiroviewer.io.FileProbe
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.io.SessionPasswords
 import io.github.donggi.iroiroviewer.model.IroDispatchers
@@ -24,6 +25,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
 
 /**
@@ -42,7 +46,8 @@ class ArchiveViewModel : ViewModel() {
         val path: String,
         val name: String,
         val fileBytes: Long,
-        val formatId: FormatId,
+        /** 컨테이너의 모양. 화면이 형식 이름(ZIP·7z·RAR·TAR.GZ…)을 이것으로 적는다. */
+        val kind: ArchiveKind,
         val tree: ArchiveTree,
         val entries: List<ArchiveEntry>,
         /** solid 압축인가. 참이면 화면이 무작위 접근을 아예 시도하지 않는다. */
@@ -68,7 +73,12 @@ class ArchiveViewModel : ViewModel() {
     }
 
     sealed interface State {
-        data object Loading : State
+        /**
+         * 목록을 읽는 중. [reached] 는 **이번 열기에서 파일에 닿았다**(실제로 열어 봤다 — [reachState])는 표시다. 닿기
+         * 전에는 없거나 열리지 않는 파일일 수 있어 ⋮ 의 '다른 앱으로 열기' 를 흐리게 둔다([ArchiveOpenWith.inMenu]).
+         * 닿은 뒤의 목록 읽기(압축한 tar 는 몇 초)는 기다리지 않고 넘길 수 있다.
+         */
+        data class Loading(val reached: Boolean = false) : State
         data class Ready(val doc: Doc) : State
 
         /** 헤더까지 잠겨 목록조차 암호 없이 읽을 수 없다(7z·RAR). */
@@ -85,8 +95,14 @@ class ArchiveViewModel : ViewModel() {
                 /** 우리가 다루지 않는 갈래(분할 아카이브 등). */
                 UNSUPPORTED,
 
-                /** 방어 상한을 넘었다. */
+                /** 항목이 너무 많다(`maxEntries`). */
                 TOO_LARGE,
+
+                /**
+                 * 풀어야 할 양이 너무 크다 — 압축한 tar 의 목록은 처음부터 끝까지 풀어야 하고 그 양이 총량 상한에
+                 * 묶인다. xz·7z 의 사전이 메모리 상한을 넘는 것도 여기다.
+                 */
+                TOO_BIG,
 
                 /** 이 앱이 풀지 않는 방식으로 잠겼다(PKWARE 의 강한 암호화 등). */
                 ENCRYPTED,
@@ -131,7 +147,7 @@ class ArchiveViewModel : ViewModel() {
             get() = topLevelCount != 1 || existingTopLevel.isNotEmpty() || conflicts > 0
     }
 
-    private val _state = MutableStateFlow<State>(State.Loading)
+    private val _state = MutableStateFlow<State>(State.Loading())
     val state: StateFlow<State> = _state.asStateFlow()
 
     /** 지금 보고 있는 아카이브 안 폴더 경로. 빈 문자열이 루트. */
@@ -202,7 +218,7 @@ class ArchiveViewModel : ViewModel() {
         job?.cancel()
         job = viewModelScope.launch {
             try {
-                val ok = withContext(IroDispatchers.parsing) {
+                val ok = runInterruptible(IroDispatchers.parsing) {
                     try {
                         Archives.open(FileDocumentSource(file), password = password).use { Archives.verifyPassword(it) }
                     } catch (e: ArchivePasswordException) {
@@ -221,9 +237,14 @@ class ArchiveViewModel : ViewModel() {
             } catch (e: CancellationException) {
                 throw e
             } catch (t: Throwable) {
+                // 취소가 리더 안에서 `InterruptedIOException` 으로 올라왔다면 실패가 아니다 — 다음 파일의 화면에
+                // 앞 파일의 '깨졌다' 를 쓰지 않게 여기서 멈춘다.
+                currentCoroutineContext().ensureActive()
                 Iro.d { "암호 확인 실패: ${t::class.java.simpleName}" }
                 _asking.value = null
-                _state.value = State.Failed(kindOf(t))
+                // 암호 창이 떠 있는 사이에 파일이 없어졌을 수 있다 — 그 입출력 예외는 '깨졌다' 가 아니다([failureKindOf]).
+                val reachable = withContext(IroDispatchers.io) { isReachable(file) }
+                _state.value = State.Failed(failureKindOf(t, reachable))
             } finally {
                 password.fill('\u0000')
             }
@@ -244,14 +265,18 @@ class ArchiveViewModel : ViewModel() {
     }
 
     private suspend fun load(path: String) {
-        _state.value = State.Loading
+        _state.value = State.Loading()
         _folder.value = ""
         _filter.value = ""
         val file = File(path)
-        if (!file.isFile) {
-            _state.value = State.Failed(State.Failed.Kind.UNREADABLE)
-            return
-        }
+        // **있는지만이 아니라 열리는지까지 본다.** 열리지 않는 파일을 리더에 넘기면 그 예외(`FileNotFoundException` —
+        // 안드로이드는 권한 거부도 이것으로 알린다)가 `IOException` 이라 [failureKindOf] 가 '깨졌다' 로 옮기고, 그 갈래는
+        // '다른 앱으로 열기' 까지 권한다([ArchiveOpenWith]) — 받는 앱도 같은 파일에 닿지 못한다. 문서 뷰어가 같은 까닭으로
+        // 같은 검사를 한다(`DocViewModel` 의 `openErrorOf`). 치르는 값은 서술자 하나를 열고 닫는 것이다.
+        // 닿았으면 '닿은 채로 읽는 중' 을 낸다 — 그때부터 ⋮ 의 '다른 앱으로 열기' 를 누를 수 있다([State.Loading.reached]).
+        val reach = reachState(withContext(IroDispatchers.io) { isReachable(file) })
+        _state.value = reach
+        if (reach is State.Failed) return
         // 이번 세션에 이 파일의 암호를 이미 넣었으면 그것으로 연다(사본 — 끝나면 지운다).
         val key = SessionPasswords.keyOf(file)
         // 읽는 동안 세션 암호가 지워지면(앱이 화면에서 사라졌다) 이 결과는 '풀렸다' 고 말하면
@@ -260,14 +285,16 @@ class ArchiveViewModel : ViewModel() {
         val clearsBefore = SessionPasswords.clears.value
         val password = SessionPasswords.get(key)
         try {
-            val doc = withContext(IroDispatchers.parsing) {
+            // **인터럽트로 끊을 수 있게 읽는다.** 압축한 tar 의 목록은 스트림을 끝까지 풀어야 해서 몇 초씩 걸린다 —
+            // 화면을 떠나 잡이 취소되어도 `withContext` 는 블로킹 해제에 닿지 못해 끝까지 달린다.
+            val doc = runInterruptible(IroDispatchers.parsing) {
                 val budget = EntryBudget(ParseLimits.DEFAULT)
                 Archives.open(FileDocumentSource(file), ParseLimits.DEFAULT, budget, password).use { reader ->
                     Doc(
                         path = path,
                         name = file.name,
                         fileBytes = file.length(),
-                        formatId = reader.formatId,
+                        kind = reader.kind,
                         tree = ArchiveTree.build(reader.entries),
                         entries = reader.entries,
                         solid = reader.solid,
@@ -282,7 +309,7 @@ class ArchiveViewModel : ViewModel() {
                 return
             }
             _state.value = State.Ready(doc)
-            Iro.d { "아카이브 ${file.name}: ${doc.formatId.label} · ${doc.entries.size}개 · solid=${doc.solid}" }
+            Iro.d { "아카이브 ${file.name}: ${doc.kind.label} · ${doc.entries.size}개 · solid=${doc.solid}" }
         } catch (e: CancellationException) {
             throw e
         } catch (e: ArchivePasswordException) {
@@ -290,29 +317,17 @@ class ArchiveViewModel : ViewModel() {
             if (password != null) SessionPasswords.forget(key)
             _state.value = State.NeedsPassword
             _asking.value = false
-        } catch (e: ParseLimitExceededException) {
-            _state.value = State.Failed(State.Failed.Kind.TOO_LARGE)
         } catch (t: Throwable) {
+            // 읽는 도중 취소되면 리더가 `InterruptedIOException` 을 던진다(`runInterruptible` 은 그것을 취소로
+            // 옮기지 않는다). 그대로 '깨졌다' 를 쓰면 **새로 연 파일의 화면**에 앞 파일의 실패가 덮인다.
+            currentCoroutineContext().ensureActive()
             Iro.d { "아카이브 열기 실패: ${t::class.java.simpleName}" }
-            _state.value = State.Failed(kindOf(t))
+            // 목록을 읽는 사이에 파일이 없어졌을 수 있다(압축한 tar 는 몇십 초를 읽는다 — 그동안 SD 를 빼거나 다른 앱이
+            // 지운다). 실패한 길에서만 한 번 더 열어 본다([failureKindOf]).
+            val reachable = withContext(IroDispatchers.io) { isReachable(file) }
+            _state.value = State.Failed(failureKindOf(t, reachable))
         } finally {
             password?.fill('\u0000')
-        }
-    }
-
-    /**
-     * 예외를 화면이 읽을 종류로 옮긴다. **원문 메시지를 화면에 보내지 않는다** —
-     * 거기에는 절대경로와 아카이브가 심은 문자열이 들어 있다.
-     */
-    private fun kindOf(t: Throwable): State.Failed.Kind {
-        val name = t::class.java.simpleName
-        return when {
-            t is ParseLimitExceededException || name.contains("MemoryLimit") -> State.Failed.Kind.TOO_LARGE
-            name.contains("Password", ignoreCase = true) ||
-                name.contains("Encrypt", ignoreCase = true) -> State.Failed.Kind.ENCRYPTED
-            t is IllegalStateException -> State.Failed.Kind.UNSUPPORTED
-            t is IOException -> State.Failed.Kind.CORRUPT
-            else -> State.Failed.Kind.CORRUPT
         }
     }
 
@@ -402,7 +417,7 @@ class ArchiveViewModel : ViewModel() {
             fileCount = chosen.count { it.isReadable },
             declaredBytes = chosen.sumOf { it.declaredSize.coerceAtLeast(0L) },
             destParent = parent.absolutePath,
-            folderName = File(doc.path).name.substringBeforeLast('.'),
+            folderName = ExtractNames.folderNameOf(File(doc.path).name),
             topLevelCount = topLevel.size,
             existingTopLevel = topLevel.filter { File(parent, it).isDirectory },
             conflicts = conflicts,
@@ -413,5 +428,54 @@ class ArchiveViewModel : ViewModel() {
 
     private companion object {
         const val CONFLICT_SAMPLES = 5
+    }
+}
+
+/**
+ * [file] 이 목록을 읽으러 갈 수 있는 파일인가 — 보통 파일이고 **실제로 열린다.**
+ *
+ * `canRead()` 로 묻지 않는다 — 묻는 답과 여는 답이 FUSE 위에서 같다는 것을 확인한 적이 없고, 틀리면 멀쩡한 압축 파일이
+ * 전부 '읽을 수 없다' 가 된다. 탐침은 [FileProbe] 한 벌이다(문서·만화·이미지 뷰어가 같은 답을 낸다). [open] 은 시험이 열리지
+ * 않는 파일을 흉내 내는 자리다(JVM 에서는 있는데 열리지 않는 파일을 만들 수 없다).
+ */
+internal fun isReachable(file: File, open: (File) -> Unit = FileProbe.openAndClose): Boolean = FileProbe.opens(file, open)
+
+/**
+ * 파일에 닿아 본 뒤의 상태 — 닿지 못했으면 단추 없는 실패 화면, 닿았으면 **닿은 채로 읽는 중**이다. 읽는 중의 ⋮ 가
+ * '다른 앱으로 열기' 를 누를 수 있게 하는 것은 이 함수가 닿았다고 답한 뒤뿐이다([ArchiveOpenWith.inMenu]).
+ */
+internal fun reachState(reachable: Boolean): ArchiveViewModel.State =
+    if (reachable) {
+        ArchiveViewModel.State.Loading(reached = true)
+    } else {
+        ArchiveViewModel.State.Failed(ArchiveViewModel.State.Failed.Kind.UNREADABLE)
+    }
+
+/**
+ * 읽다 실패한 종류 — 실패한 **뒤에** 파일에 닿는지([reachable])를 함께 본다. 닿지 못하면 무엇이 던져졌든 '읽을 수 없다'
+ * (UNREADABLE)다. 열어 볼 때([reachState])는 닿았는데 읽는 사이에 없어진 파일(지웠다·SD 를 뺐다)은 리더가 맨
+ * `IOException` 으로 알리고, 그것을 [failureKindOf] 가 '깨졌다' 로 옮기면 실패 화면이 **없는 파일에** '다른 앱으로 열기' 를
+ * 권한다([ArchiveOpenWith.onFailure]). 닿으면 예외의 종류 그대로다.
+ */
+internal fun failureKindOf(t: Throwable, reachable: Boolean): ArchiveViewModel.State.Failed.Kind =
+    if (reachable) failureKindOf(t) else ArchiveViewModel.State.Failed.Kind.UNREADABLE
+
+/**
+ * 예외를 화면이 읽을 종류로 옮긴다. **원문 메시지를 화면에 보내지 않는다** —
+ * 거기에는 절대경로와 아카이브가 심은 문자열이 들어 있다.
+ *
+ * 상한은 **어느 상한인가**로 가른다. 항목 수는 '너무 많다', 풀어야 할 양(압축한 tar 의 목록·사전 메모리)은
+ * '너무 크다' 다 — 둘을 한 문장으로 말하면 1 GiB 넘는 `.tar.gz` 에 '항목이 너무 많다' 가 뜬다.
+ */
+internal fun failureKindOf(t: Throwable): ArchiveViewModel.State.Failed.Kind {
+    val name = t::class.java.simpleName
+    return when {
+        t is ParseLimitExceededException && t.limitName == "maxEntries" -> ArchiveViewModel.State.Failed.Kind.TOO_LARGE
+        t is ParseLimitExceededException || name.contains("MemoryLimit") -> ArchiveViewModel.State.Failed.Kind.TOO_BIG
+        name.contains("Password", ignoreCase = true) ||
+            name.contains("Encrypt", ignoreCase = true) -> ArchiveViewModel.State.Failed.Kind.ENCRYPTED
+        t is IllegalStateException -> ArchiveViewModel.State.Failed.Kind.UNSUPPORTED
+        t is IOException -> ArchiveViewModel.State.Failed.Kind.CORRUPT
+        else -> ArchiveViewModel.State.Failed.Kind.CORRUPT
     }
 }

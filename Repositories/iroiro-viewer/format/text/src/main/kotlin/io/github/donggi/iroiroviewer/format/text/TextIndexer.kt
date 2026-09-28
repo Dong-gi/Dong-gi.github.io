@@ -233,11 +233,14 @@ object TextIndexer {
                             charsInRow = 0
                         }
                         else -> {
-                            charsInRow++
+                            // **4,097번째 글자가 올 때** 행을 넘긴다([RowReader] 와 같은 규칙). 4,096자째에서
+                            // 넘기면 길이가 정확히 4,096의 배수인 줄이 빈 행을 하나 더 세어, 바이트로 세는
+                            // 길(`ceil(글자 수 / 4,096)`)과 행 수가 어긋난다.
                             if (charsInRow >= TextLimits.SEGMENT_CHARS) {
                                 row++
                                 charsInRow = 0
                             }
+                            charsInRow++
                         }
                     }
                 }

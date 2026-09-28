@@ -31,4 +31,9 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.core)
+
+    // 14단계 — 크래시 기록(경로 지우기·크기 상한·보존 건수)과 설정의 값 누르기를 JVM 에서 본다.
+    // **`kotlin("test-junit")` 이 필요하다.** 안드로이드 라이브러리 모듈에서는 `kotlin("test")` 만으로 러너가 붙지 않는다.
+    testImplementation(kotlin("test-junit"))
+    testImplementation(libs.kotlinx.coroutines.test)
 }

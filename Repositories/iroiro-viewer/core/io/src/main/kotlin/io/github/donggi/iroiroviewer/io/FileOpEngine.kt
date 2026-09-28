@@ -150,12 +150,36 @@ class FileOpEngine(private val media: MediaIndex) {
         onProgress: (Progress) -> Unit,
     ): Outcome = run(sources, destDir, move = true, conflict, onProgress)
 
+    /**
+     * 하나를 **정한 이름으로** 옮긴다. 휴지통 항목을 사용자가 고른 폴더로 되돌릴 때 쓴다.
+     *
+     * 휴지통 안의 이름은 uuid 라 [move] 에 그대로 넘기면 uuid 이름으로 나온다. 그렇다고 휴지통
+     * 안에서 먼저 원래 이름으로 바꾸면 **그 사이에 죽었을 때** 정합성 검사가 '기록은 있는데 파일이
+     * 없다' 로 보고 기록을 지운다 — 파일은 숨김 폴더 안에 남고 앱에서는 되살릴 길이 없어진다.
+     * 그래서 이름만 바꿔 끼우고 나머지(같은 볼륨이면 원자적 `rename`, 볼륨을 넘으면 임시본 →
+     * fsync → `rename` 복사 뒤 삭제, 충돌 규칙, 종류가 다른 충돌의 거절)는 [move] 와 **같은 길**을 탄다.
+     *
+     * @param targetName 이미 쓸 수 있는지 확인한 이름이다. 여기서 다시 다듬지 않는다 — 다듬으면
+     *   화면이 충돌을 검사한 이름과 엔진이 쓰는 이름이 갈린다(3·4단계가 치명으로 고친 형태).
+     */
+    suspend fun moveAs(
+        source: String,
+        targetName: String,
+        destDir: String,
+        conflict: Conflict,
+        onProgress: (Progress) -> Unit,
+    ): Outcome = run(listOf(source), destDir, move = true, conflict, onProgress, mapOf(source to targetName))
+
+    /**
+     * @param names 소스마다 쓸 이름. 없으면 소스 이름을 다듬어 쓴다(`PathRules.sanitize`).
+     */
     private suspend fun run(
         sources: List<String>,
         destDir: String,
         move: Boolean,
         conflict: Conflict,
         onProgress: (Progress) -> Unit,
+        names: Map<String, String>? = null,
     ): Outcome = withContext(IroDispatchers.io) {
         val dest = File(destDir)
         if (!dest.isDirectory) return@withContext Outcome.Failed(Reason.NOT_FOUND, dest.name)
@@ -220,12 +244,13 @@ class FileOpEngine(private val media: MediaIndex) {
             for (s in sources) {
                 currentCoroutineContext().ensureActive()
                 val src = File(s)
+                val name = names?.get(s)
                 val c = when {
                     s in inPlace -> Conflict.KEEP_BOTH
-                    !usedNames.add(PathRules.sanitize(src.name)) -> Conflict.KEEP_BOTH
+                    !usedNames.add(name ?: PathRules.sanitize(src.name)) -> Conflict.KEEP_BOTH
                     else -> conflict
                 }
-                val result = transfer(src, dest, move, c, maxDepth, onUnit)
+                val result = transfer(src, dest, move, c, maxDepth, onUnit, name)
                 skipped += result.first
                 failed += result.second
             }
@@ -249,6 +274,7 @@ class FileOpEngine(private val media: MediaIndex) {
      * 파일 하나의 실패는 여기서 잡아 세고 넘어간다. 위로 던지는 것은 취소와 [FatalOp] 뿐이다.
      *
      * @param onUnit (경로, 바이트, 파일하나가통째로끝났는가)
+     * @param targetNameOverride 맨 위 항목에만 쓰는 이름([moveAs]). 안쪽 항목은 언제나 자기 이름이다.
      */
     private suspend fun transfer(
         src: File,
@@ -257,6 +283,7 @@ class FileOpEngine(private val media: MediaIndex) {
         conflict: Conflict,
         depth: Int,
         onUnit: (String, Long, Boolean) -> Unit,
+        targetNameOverride: String? = null,
     ): Pair<Int, Int> {
         currentCoroutineContext().ensureActive()
         if (depth <= 0) return 0 to 1
@@ -270,7 +297,7 @@ class FileOpEngine(private val media: MediaIndex) {
         if (OsConstants.S_ISLNK(st.st_mode)) return 1 to 0
 
         val srcIsDir = OsConstants.S_ISDIR(st.st_mode)
-        val targetName = PathRules.sanitize(src.name)
+        val targetName = targetNameOverride ?: PathRules.sanitize(src.name)
         var target = File(destDir, targetName)
 
         if (target.exists()) {
