@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
  * | 상태 | ⋮ | 까닭 |
  * |---|---|---|
  * | 여는 중, 닿기 전 | 없다 | 없거나 열리지 않는 파일일 수 있다 — 받는 앱도 같은 벽에 부딪힌다. 파일을 열어 보는 한 번(수 ms)이다 |
- * | 여는 중, 닿은 뒤 | 있다 | docx·HWPX 는 몇 초, 상한은 30초다. 다른 앱으로 넘기려는 사람이 그만큼 기다리지 않게 |
+ * | 여는 중, 닿은 뒤 | 있다 | 큰 책은 몇 초, 상한은 30초다. 다른 앱으로 넘기려는 사람이 그만큼 기다리지 않게 |
  * | 열렸다 | 있다 | '지금 보는 파일을 다른 앱으로' |
  * | 암호를 묻는다 | 있다 | 이 앱이 묻고 풀지만, 암호를 모르는 사람도 있고 다른 앱에 맡기려는 사람도 있다. 압축·만화의 암호 화면과 같다 — 실패 화면의 단추는 없다(암호 넣기와 다투지 않게) |
  * | 실패 화면에 단추가 있는 갈래 | 있다 | **단추와 겹쳐도 둔다.** ⋮ 는 모든 뷰어에서 '다른 앱으로 열기' 를 찾는 고정된 자리라, 갈래에 따라 ⋮ 가 났다 없어졌다 하면 사용자가 볼 수 없는 구분이 드러난다. 형제 화면(텍스트·압축·만화)도 겹쳐 둔다 |
@@ -56,22 +56,45 @@ internal object DocOpenWith {
 
     /** 이 실패 종류에 '다른 앱으로 열기' 단추를 둘 것인가. */
     fun onFailure(failure: OpenFailure): Boolean = when (failure) {
-        // 이 앱이 다루지 않는 갈래(.mobi·.odt·.xlsb …)와 이전 형식(.doc·.xls·.ppt·한글 97 이전) — 그것을 여는 앱이 따로 있다.
+        // 이 뷰어가 다루지 않는 갈래(.mobi·.fb2·.rtf·.xlsb …, 편집기 묶음 없이 지은 빌드의 오피스·한글) — 그것을 여는 앱이 따로 있다.
         is OpenFailure.Unsupported -> true
-        is OpenFailure.LegacyFormat -> true
-        // 우리가 풀 수 없는 잠금 — 상업 DRM·인증서로 잠근 PDF·HWP 5.0 의 암호. 열쇠를 가진 앱(발행처의 뷰어)은 연다.
+        // 우리가 풀 수 없는 잠금 — 상업 DRM·인증서로 잠근 PDF. 열쇠를 가진 앱(발행처의 뷰어)은 연다.
         is OpenFailure.Encrypted -> true
         // 우리 파서가 명세에 어긋난다고 본 것. 더 너그러운 앱은 고쳐 가며 연다(오피스가 그렇다).
         is OpenFailure.Corrupt -> true
         // 우리 방어 상한(크기·시간)에 걸렸다. 상한은 이 앱의 약속이지 파일의 결함이 아니다.
         is OpenFailure.TooLarge -> true
         is OpenFailure.Timeout -> true
-        // 암호는 이 앱이 묻는다(표준 보안 처리기·암호 OOXML·HWPX). 여기서 다른 앱을 권하면 '이 앱은 못 연다' 로 읽힌다.
+        // 암호는 이 앱이 묻는다(PDF 표준 보안 처리기). 여기서 다른 앱을 권하면 '이 앱은 못 연다' 로 읽힌다.
         is OpenFailure.PasswordRequired -> false
         // 파일에 닿지 못했다(권한·입출력·없는 파일 — 없는 파일은 `Io` 로 온다). 다른 앱도 같은 벽에 부딪힌다.
         is OpenFailure.NoPermission -> false
         is OpenFailure.Io -> false
     }
+
+    /**
+     * 실패 화면에 **'편집기로 열기'** 를 둘 것인가 — 편집기가 그 형식을 다루고([editorKind] — `EditorApp.kindFor`, 없으면 null)
+     * 편집기라면 그 파일을 볼 수 있는 갈래일 때만. 누르면 ⋮ 의 '편집' 과 같다(편집 모드로 연다). '다른 앱으로 열기' 단추가 서는 갈래
+     * ([onFailure])에서만 부른다.
+     *
+     * - **PDF** — 깨진 파일([OpenFailure.Corrupt])에서만. 편집기(ONLYOFFICE)는 PDF 를 고칠 수 있는 문서로 바꿔 연다 — pdfium 이 못 읽은 것을
+     *   그 변환기가 읽을 수는 있다. 다른 갈래에서는 소용이 없다: 인증서·DRM 으로 잠긴 것(`Encrypted`)은 변환기가 `/Encrypt` 를 보고 **있지도
+     *   않은 암호를 묻고**, 너무 큼·시간 초과(`TooLarge`·`Timeout`)는 웹어셈블리 변환이 더 무겁다. 깨진 파일에서도 첫 단추는
+     *   '다른 앱으로 열기' 다([editorFirst]) — 그 파일을 쪽 모양 그대로 보일 길이 그쪽이다.
+     * - **오피스·한글·ODF·이전 오피스 형식** — 이 앱의 뷰어가 편집기의 보기 모드라, 이 뷰어에는 편집기를 띄우지 못했을 때만 온다(`app` 이
+     *   물러난 길). 이 뷰어에 그 형식의 여는이가 없으니 실패는 '다루지 않는 문서'([OpenFailure.Unsupported]) 하나다 — 그때 편집기가 먼저다.
+     */
+    fun editorOnFailure(failure: OpenFailure, editorKind: String?): Boolean = when (editorKind) {
+        null -> false
+        PDF -> failure is OpenFailure.Corrupt
+        else -> failure is OpenFailure.Unsupported
+    }
+
+    /** 실패 화면에서 '편집기로 열기' 가 '다른 앱으로 열기' 보다 먼저인가 — PDF 는 아니다([editorOnFailure]). */
+    fun editorFirst(editorKind: String): Boolean = editorKind != PDF
+
+    /** 편집기의 형식 글자 가운데 PDF(`EditorApp` 의 형식 글자는 확장자와 같다). */
+    private const val PDF = "pdf"
 
     /** 위쪽 막대의 ⋮ 에 '다른 앱으로 열기' 를 둘 것인가. 파일에 닿은 뒤로는 언제나다(이 객체의 표). */
     fun inMenu(state: DocViewModel.State): Boolean = when (state) {
@@ -86,7 +109,7 @@ internal object DocOpenWith {
     /**
      * ⋮ 를 든 위쪽 막대를 그릴 것인가. [tapVisible] 은 PDF 쪽을 두드려 여닫는 값이다. 그 두드림은 **쪽이 떠 있을 때**
      * (열린 문서)에만 있으므로, 여는 중·실패 화면에서는 두드림의 값과 상관없이 그린다 — 숨은 채로 남으면 닫기·⋮ 에
-     * 닿을 길이 뒤로가기 말고는 없다. (EPUB·흐름 문서는 이 막대를 쓰지 않고 칸으로 나눈 막대를 늘 그린다.)
+     * 닿을 길이 뒤로가기 말고는 없다. (EPUB 은 이 막대를 쓰지 않고 칸으로 나눈 막대를 늘 그린다.)
      */
     fun barVisible(tapVisible: Boolean, state: DocViewModel.State): Boolean =
         tapVisible || state !is DocViewModel.State.Ready

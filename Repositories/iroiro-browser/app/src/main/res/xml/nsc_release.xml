@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  릴리스의 네트워크 보안 설정. 시스템 인증서만 믿는다. 평문(http) 쪽을 허락한다 — 사용자 결정(2026-10-04: '구현에 문제 없다면 허용').
+  프록시를 켜면 요청은 앱 안 중계를 거쳐 프록시까지 TLS 로 간다(예외 규칙에 든 주소는 바로). 평문인 구간은 프록시에서 그 사이트까지와, 기기 안(WebView → 127.0.0.1 의 중계)뿐이다.
+  매니페스트 자리표시자(app/build.gradle.kts)로 고르므로 lint 는 쓰이지 않는다고 본다.
+-->
+<network-security-config xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <base-config cleartextTrafficPermitted="true" tools:ignore="InsecureBaseConfiguration">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

@@ -20,25 +20,20 @@ class NoticeCatalogTest {
     }
 
     /**
-     * **한컴 명세가 요구한 문장이 글자 그대로다.** 문장은 명세의 사용 조건에서 왔고, 그것을 옮겨 적은 곳은
-     * `Hwp5Opener` 의 KDoc 이다(13단계). 두 곳이 어긋나면 어느 쪽이 맞는지 아무도 모른다 — 한 곳을 고치면 시험이 깨진다.
+     * **한컴 명세가 요구한 문장이 글자 그대로다.** 문장은 명세의 사용 조건에서 왔다(한글 문서는 편집기에 실린
+     * rhwp 가 연다 — rhwp 도 같은 공개 문서를 참고했다). 문장 전체를 여기 박는다.
      */
     @Test
-    fun `한컴 고지 문장이 Hwp5Opener 의 KDoc 과 글자 그대로 같다`() {
-        val kdoc = File("../format/hwp5/src/main/kotlin/io/github/donggi/iroiroviewer/format/hwp5/Hwp5Opener.kt")
-            .readLines(Charsets.UTF_8)
-            .map { it.trim().removePrefix("*").trim() }
-            .single { it.startsWith("본 제품은") }
-        assertEquals(kdoc, string("notice_hancom"))
-        // 두 곳이 같아도 둘 다 틀릴 수 있다 — 처음 옮길 때 '한글' 의 옛한글 첫 음절(조합형 자모 셋)이 두 곳 모두에서 빠져
-        // '한글과컴퓨터의 글 문서 파일' 이었다. 명세 원문(S01, 사용 조건 절)에서 읽은 글자를 박아 둔다.
-        assertTrue(kdoc.contains("한글과컴퓨터의 ᄒᆞᆫ글 문서 파일(.hwp)"), kdoc)
+    fun `한컴 고지 문장이 명세가 요구한 글자 그대로다`() {
+        // 처음 옮길 때 '한글' 의 옛한글 첫 음절(조합형 자모 셋 U+1112 U+119E U+11AB)이 빠져 '한글과컴퓨터의 글 문서 파일' 이었다.
+        // 명세 원문(S01, 사용 조건 절)에서 읽은 글자다.
+        assertEquals("본 제품은 한글과컴퓨터의 \u1112\u119E\u11AB글 문서 파일(.hwp) 공개 문서를 참고하여 개발하였습니다.", string("notice_hancom"))
     }
 
     @Test
     fun `고지 화면이 한컴 문장과 명세 문장과 UnRAR 제한을 실제로 그린다`() {
         val screen = File("src/main/kotlin/io/github/donggi/iroiroviewer/NoticeScreen.kt").readText(Charsets.UTF_8)
-        for (name in listOf("notice_hancom", "notice_specs", "notice_unrar_restriction")) {
+        for (name in listOf("notice_hancom", "notice_specs", "notice_trademarks", "notice_unrar_restriction")) {
             assertTrue(screen.contains("R.string.$name"), "NoticeScreen 이 $name 을 그리지 않는다")
         }
     }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 손으로 그린 재생 아이콘(24x24, 흰 면). 뒤에서 재생 잇기의 알림(작은 아이콘·'재생' 단추). 색은 시스템 UI 가 칠한다. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M8,5L19,12L8,19Z" />
+</vector>

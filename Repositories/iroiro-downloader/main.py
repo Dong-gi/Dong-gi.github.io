@@ -2,16 +2,16 @@ import sys
 
 from PySide6.QtWidgets import QApplication
 
-from src.auth.pixiv_oauth import cleanup_stale_scheme
 from src.config import Config
 from src.extractors import init_registry
 from src.gui.main_window import MainWindow
+from src.legacy_cleanup import cleanup_legacy_traces
 
 
 def main():
-    # 지난 실행이 크래시로 남긴 pixiv:// 핸들러 등록을 먼저 치운다.
-    # 남아 있으면 아무 웹 페이지나 pixiv:// 로 이동시켜 파이썬을 띄울 수 있다.
-    cleanup_stale_scheme()
+    # 지운 기능(pixiv·bilibili 등)이 기기에 남긴 것을 먼저 치운다. 특히 pixiv://
+    # 핸들러 등록이 남아 있으면 아무 웹 페이지나 파이썬을 띄울 수 있다.
+    cleanup_legacy_traces()
 
     config = Config()
     init_registry(config)

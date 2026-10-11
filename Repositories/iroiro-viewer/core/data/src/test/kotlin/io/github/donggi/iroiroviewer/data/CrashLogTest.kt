@@ -40,6 +40,9 @@ class CrashLogTest {
         assertEquals("<경로>", CrashReport.redact("/data/user/0/io.github.donggi.iroiroviewer/files/crash"))
         assertEquals("열기 실패 <경로>", CrashReport.redact("열기 실패 /storage/0000-0000/사진/여름.jpg"))
         assertEquals("uri=<경로>", CrashReport.redact("uri=file:///storage/emulated/0/a b.jpg"))
+        // 네트워크 저장소의 주소 — 서버의 경로를 싣는다.
+        assertEquals("열기 실패 <경로>: 끊김", CrashReport.redact("열기 실패 sftp://3/home/opc/Don't%20Stop.mp3: 끊김"))
+        assertEquals("'<경로>' 못 읽음", CrashReport.redact("'sftp://3/home/opc/a b.mkv' 못 읽음"))
         assertEquals(
             "<경로>: 거부",
             CrashReport.redact("content://com.android.externalstorage.documents/document/primary%3ADownload%2Fx.pdf: 거부"),
@@ -49,7 +52,7 @@ class CrashLogTest {
     }
 
     /**
-     * 이름 안의 따옴표(아포스트로피)에서 멈추면 **그 뒤의 이름 조각이 기록에 남는다**(14단계 검토). 영어 음악 파일 이름에
+     * 이름 안의 따옴표(아포스트로피)에서 멈추면 **그 뒤의 이름 조각이 기록에 남는다**. 영어 음악 파일 이름에
      * 흔하다. `Uri.encode` 는 `'` 를 바꾸지 않아 문서 제공자 주소에도 날것으로 온다.
      */
     @Test

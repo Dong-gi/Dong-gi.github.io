@@ -44,6 +44,24 @@ _STATUS_ORDER = {
     TaskStatus.DONE: 5,
 }
 
+#: 처리할 익스트랙터가 없는 URL. 입력할 때와 옛 세션을 복원할 때 같은 문구를 쓴다.
+_UNSUPPORTED_URL = "지원하지 않는 URL입니다."
+
+
+def _mark_unsupported(task: Task) -> bool:
+    """처리할 익스트랙터가 없는 작업을 '실패'로 둔다. 상태가 바뀌었으면 True.
+
+    지운 사이트(pixiv·hitomi·bilibili·M3U8·MPD)의 작업이 옛 세션에 남아 있을 때
+    쓴다. 지우지 않는 것은 주소를 보고 다른 곳에서 받을 수 있게 하려는 것이다.
+    """
+    changed = (
+        task.status != TaskStatus.FAILED or task.error != _UNSUPPORTED_URL
+    )
+    task.status = TaskStatus.FAILED
+    task.error = _UNSUPPORTED_URL
+    task.progress_text = ""
+    return changed
+
 
 class MainWindow(QMainWindow):
     def __init__(self, config: Config):
@@ -76,7 +94,7 @@ class MainWindow(QMainWindow):
 
         row = QHBoxLayout()
         self._url_input = QLineEdit()
-        self._url_input.setPlaceholderText("Pixiv / YouTube / bilibili URL을 입력하세요")
+        self._url_input.setPlaceholderText("YouTube URL을 입력하세요")
         self._url_input.returnPressed.connect(self._add_task)
         add_btn = QPushButton("추가")
         add_btn.setFixedWidth(60)
@@ -113,7 +131,7 @@ class MainWindow(QMainWindow):
 
         extractor = get_extractor(url)
         if extractor is None:
-            self._status.showMessage("지원하지 않는 URL입니다.", 3000)
+            self._status.showMessage(_UNSUPPORTED_URL, 3000)
             return
 
         # 추적·정렬·플레이리스트 등 부수 쿼리 파라미터 제거 (사이트별 규칙)
@@ -162,11 +180,18 @@ class MainWindow(QMainWindow):
             if running >= max_concurrent:
                 return
             if task.status == TaskStatus.PENDING and task.id not in self._workers:
-                self._start(task)
-                running += 1
+                if self._start(task):
+                    running += 1
 
-    def _start(self, task: Task):
+    def _start(self, task: Task) -> bool:
+        """워커를 띄운다. 처리할 익스트랙터가 없으면 '실패'로 두고 False."""
         extractor = get_extractor(task.url)
+        if extractor is None:
+            # 지운 사이트의 작업을 재시작한 경우 — 워커를 띄우지 않는다
+            _mark_unsupported(task)
+            self._widgets[task.id].update_task(task)
+            self._sort_tasks()
+            return False
         worker = DownloadWorker(task, extractor, self._config.save_dir)
         worker.progress_updated.connect(self._on_progress)
         worker.task_done.connect(self._on_done)
@@ -180,6 +205,7 @@ class MainWindow(QMainWindow):
         self._widgets[task.id].update_task(task)
         self._sort_tasks()
         worker.start()
+        return True
 
     # ─────────────────────────────────────────── task-level operations
 
@@ -307,13 +333,12 @@ class MainWindow(QMainWindow):
         self._sort_tasks()
         self._refresh_status()
 
-    def _open_settings(self, highlight: set[str] | None = None):
+    def _open_settings(self):
         if self._settings_dialog is not None:
             self._settings_dialog.raise_()
             self._settings_dialog.activateWindow()
             return
-        dlg = SettingsDialog(self._config, self, highlight=highlight)
-        dlg.credentials_updated.connect(self._on_credentials_updated)
+        dlg = SettingsDialog(self._config, self)
         self._settings_dialog = dlg
         dlg.exec()
         self._settings_dialog = None
@@ -390,21 +415,11 @@ class MainWindow(QMainWindow):
         if already_handled or cookies_just_failed:
             return
 
-        if site == "pixiv":
-            # Pixiv는 OAuth — 설정 창의 브라우저 로그인으로 유도
-            self._config.pixiv_refresh_token = ""
-            self._open_settings(highlight={site})
-            return
-
         ext = self._cookie_extractor(site)
         if ext is None:
             return
-        if not ext.COOKIES_PERSISTENT:
-            # 세션 전용 쿠키(YouTube)는 어차피 회전으로 만료된 것 — 즉시 폐기
-            ext.set_cookies("")
-        # 영속 저장 쿠키(bilibili)는 지우지 않는다. "권한 없음"과 "만료"를 메시지로
-        # 구분할 수 없어, 멀쩡한 자격 증명을 삭제하는 부작용이 더 크다.
-        # 사용자가 새 쿠키를 입력하면 그때 덮어쓰고, 취소하면 기존 값이 유지된다.
+        # 쿠키는 세션 전용이다(YouTube) — 어차피 회전으로 만료된 것이니 즉시 폐기
+        ext.set_cookies("")
         self._prompt_cookies(site)
 
     # ─────────────────────────────────────────── 쿠키 인증
@@ -481,18 +496,32 @@ class MainWindow(QMainWindow):
         except (OSError, json.JSONDecodeError):
             # 손상된 세션 파일은 무시 — 빈 상태로 시작
             return
+        if not isinstance(data, list):
+            return
 
+        moved = 0
         for task_data in data:
             try:
                 task = Task.from_dict(task_data)
-            except (KeyError, ValueError):
-                # 누락된 필드 / 부적합한 status 값 — 해당 작업 건너뜀
+                supported = get_extractor(task.url) is not None
+            except (KeyError, TypeError, ValueError):
+                # 누락된 필드 / 부적합한 값 — 해당 작업 건너뜀
                 continue
+            # 지운 사이트의 작업: 완료는 그대로 두고, 나머지는 '실패'로 옮긴다
+            if not supported and task.status != TaskStatus.DONE:
+                if _mark_unsupported(task):
+                    moved += 1
             self._register_task(task)
 
         self._sort_tasks()
         self._try_start_next()
         self._refresh_status()
+        if moved:
+            # 한 번만 알린다 — 이미 옮겨 둔 작업은 다음 기동 때 세지 않는다.
+            # 시간 제한 없이 띄워 두고, 다음 상태 갱신이 덮어쓴다.
+            self._status.showMessage(
+                f"지원하지 않는 URL의 작업 {moved}개를 '실패'로 옮겼습니다."
+            )
 
     def closeEvent(self, event):
         for worker in self._workers.values():

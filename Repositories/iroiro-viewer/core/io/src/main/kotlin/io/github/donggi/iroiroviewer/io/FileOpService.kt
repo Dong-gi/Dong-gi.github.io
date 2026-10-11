@@ -132,6 +132,15 @@ class FileOpService : Service() {
                 FileOpManager.Kind.RESTORE -> R.string.io_op_restoring
                 FileOpManager.Kind.ROTATE -> R.string.io_op_rotating
                 FileOpManager.Kind.EXTRACT -> R.string.io_op_extracting
+                FileOpManager.Kind.COMPRESS -> R.string.io_op_compressing
+                FileOpManager.Kind.CROP -> R.string.io_op_cropping
+                FileOpManager.Kind.MARKUP -> R.string.io_op_markup
+                FileOpManager.Kind.CLIP -> R.string.io_op_clipping
+                FileOpManager.Kind.AUDIO -> R.string.io_op_audio
+                FileOpManager.Kind.SAVE_TEXT -> R.string.io_op_saving_text
+                FileOpManager.Kind.NEW_TEXT -> R.string.io_op_creating_text
+                FileOpManager.Kind.SAVE_DOC -> R.string.io_op_saving_doc
+                FileOpManager.Kind.NEW_DOC -> R.string.io_op_creating_doc
                 // 정합성 검사는 알림을 띄우는 작업이 아니다. 여기 오면 준비 문구로 둔다.
                 FileOpManager.Kind.RECONCILE, null -> R.string.io_op_preparing
             }

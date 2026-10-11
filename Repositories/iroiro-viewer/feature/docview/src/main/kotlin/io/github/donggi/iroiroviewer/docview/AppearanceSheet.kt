@@ -29,8 +29,8 @@ import io.github.donggi.iroiroviewer.data.ReaderAppearance
  * '읽기 설정이 책마다 저장된다' 를 한계로 적어 둔 것과 반대 방향의 판단이다 — 글을 읽는 모양은 사람의 것이지 책의 것이
  * 아니다.
  *
- * 보여 주는 손잡이는 문서의 종류가 정한다([ReaderLooks.controlsForEpub]·[ReaderLooks.controlsForFlow]) — 시트에 바탕을
- * 걸면 칸의 채움 색(값의 뜻)이 지워지고, 슬라이드에 글자 크기를 걸면 상자를 넘는다.
+ * 보여 주는 손잡이는 문서의 종류가 정한다([ReaderLooks.controlsForEpub]) — 고정 레이아웃 쪽은 좌표로 얹은 쪽이라
+ * 글자를 키우면 칸을 넘고, 원본의 색이 곧 쪽이다.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

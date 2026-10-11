@@ -106,7 +106,7 @@ internal object PlayerOpenWith {
      *
      * `Other` 는 **입출력 코드(2xxx)** 일 때만이다. media3 는 오류 코드를 천 단위로 묶는다 — 2xxx 가 입출력, 3xxx 가 파싱,
      * 4xxx 가 디코딩, 6xxx 가 잠금이다(`PlaybackException` 의 상수). 커넥션이 따로 가르지 않은 입출력 코드(`IO_UNSPECIFIED` 따위)가
-     * 여기로 온다. 네트워크 코드도 그 묶음이지만 이 앱의 큐는 언제나 로컬 파일이라 오지 않는다.
+     * 여기로 온다.
      */
     fun isUnreachable(failure: PlaybackFailure?): Boolean = when (failure) {
         PlaybackFailure.NotReadable -> true
@@ -131,8 +131,8 @@ internal object PlayerOpenWith {
         currentKey?.takeUnless { inPip || isUnreachable(failure) }
 
     /**
-     * 큐 항목의 URI 에서 **파일 경로**를 꺼낸다. 이 앱의 큐는 언제나 `file:` 이지만(`PlaybackConnection.itemOf`), 다른
-     * 모양이 오면 넘기지 않는다 — `ExternalOpen` 은 경로를 받고, 경로가 아닌 것을 경로로 읽으면 엉뚱한 파일이 된다.
+     * 큐 항목의 URI 에서 **파일 경로**를 꺼낸다. 이 앱의 큐는 `file:` 이다(`PlaybackConnection.itemOf` — 예전에는 네트워크 저장소의 `sftp:` 도 있었다).
+     * `file:` 이 아니면 넘기지 않는다 — `ExternalOpen` 은 경로를 받고, 경로가 아닌 것을 경로로 읽으면 엉뚱한 파일이 된다.
      */
     fun fileOf(scheme: String?, path: String?): String? = path?.takeIf { scheme == "file" && it.isNotEmpty() }
 

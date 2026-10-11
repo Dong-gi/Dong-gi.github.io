@@ -74,16 +74,24 @@ class ArchiveOpenWithTest {
     /**
      * **실제 실패의 길을 끝까지 탄다** — 리더가 던진 것 → [failureKindOf] → 단추. 종류를 옮기면(`failureKindOf` 를 고치면)
      * '다른 앱으로 열기' 가 조용히 사라지는 자리를 여기서 잡는다.
+     *
+     * **tar 가 아닌 것을 싼 gz 는 이제 여기 없다** — 항목 하나짜리로 열린다(아래 [tar가_아닌_gz는_항목_하나로_열려_단추가_필요_없다]).
+     * 그 자리에 지금도 다루지 않는 것 둘을 둔다: 압축 확장자를 단 zstd(해제기가 네이티브라 정책 밖)와 `.tlz` 를 함께 쓰는
+     * lzip(commons-compress 에 없다 — LZMA 의 머리 판단이 걸러 낸다).
      */
     @Test
-    fun iso와_tar가_아닌_gz와_깨진_zip에는_단추가_뜬다() {
+    fun iso와_zstd와_lzip과_깨진_zip에는_단추가_뜬다() {
         val dir = createTempDir()
         try {
             // iso — 우리가 아는 서명이 없다(ISO 9660 의 표지는 32 KiB 뒤에 있다).
             val iso = File(dir, "disc.iso").apply { writeBytes(ByteArray(4096) { (it % 251).toByte() }) }
-            // tar 가 아닌 것을 싼 gz 하나.
-            val gz = File(dir, "note.txt.gz").apply {
-                GZIPOutputStream(outputStream()).use { it.write("그냥 글 한 줄\n".toByteArray()) }
+            // zstd 프레임(`28 B5 2F FD`) — 확장자는 gz 라고 한다(내용이 이긴다).
+            val zstd = File(dir, "backup.tar.gz").apply {
+                writeBytes(byteArrayOf(0x28, 0xB5.toByte(), 0x2F, 0xFD.toByte()) + ByteArray(600) { 3 })
+            }
+            // lzip(`LZIP` + 판 + 사전 코드) — `.tlz` 는 LZMA 와 lzip 이 함께 쓰는 이름이다.
+            val lzip = File(dir, "backup.tlz").apply {
+                writeBytes("LZIP".toByteArray() + byteArrayOf(1, 0x0C) + ByteArray(600) { 5 })
             }
             // ZIP 서명 뒤가 쓰레기다.
             val zip = File(dir, "broken.zip").apply {
@@ -91,13 +99,36 @@ class ArchiveOpenWithTest {
             }
             val cases = mapOf(
                 iso to ArchiveViewModel.State.Failed.Kind.UNSUPPORTED,
-                gz to ArchiveViewModel.State.Failed.Kind.UNSUPPORTED,
+                zstd to ArchiveViewModel.State.Failed.Kind.UNSUPPORTED,
+                lzip to ArchiveViewModel.State.Failed.Kind.UNSUPPORTED,
                 zip to ArchiveViewModel.State.Failed.Kind.CORRUPT,
             )
             for ((file, want) in cases) {
                 val kind = kindOfOpening(file)
                 assertEquals(want, kind, file.name)
                 assertTrue(ArchiveOpenWith.onFailure(kind), file.name)
+            }
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
+
+    /**
+     * 14단계까지 '다루지 않는 형식' 이던 것 — tar 가 아닌 것을 싼 gz·bz2·xz — 이 **열린다.** 실패 화면이 없으니 단추도 없다
+     * (⋮ 의 '다른 앱으로 열기' 는 열린 목록에도 있다). 목록의 형식 이름은 `GZ` 다.
+     */
+    @Test
+    fun tar가_아닌_gz는_항목_하나로_열려_단추가_필요_없다() {
+        val dir = createTempDir()
+        try {
+            val gz = File(dir, "note.txt.gz").apply {
+                GZIPOutputStream(outputStream()).use { it.write("그냥 글 한 줄\n".toByteArray()) }
+            }
+            Archives.open(FileDocumentSource(gz)).use { r ->
+                assertEquals(ArchiveKind.GZ, r.kind)
+                assertEquals("GZ", r.kind.label)
+                assertEquals(listOf("note.txt"), r.entries.map { it.name })
+                assertTrue(ArchiveOpenWith.inMenu(ArchiveViewModel.State.Ready(doc().copy(kind = r.kind, entries = r.entries))))
             }
         } finally {
             dir.deleteRecursively()

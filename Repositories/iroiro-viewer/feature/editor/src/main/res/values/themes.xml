@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      편집기 화면(EditorActivity - 플랫폼 뷰)의 모양. 플랫폼의 기기 기본 모양을 그대로 쓴다(새 의존 없이). 화면의 대부분은 편집기(WebView)다.
+      Files 의 다른 화면(Compose 의 Theme.IroiroViewer)과 이름이 겹치지 않게 IroiroEditor 다.
+    -->
+    <style name="Theme.IroiroEditor" parent="android:Theme.DeviceDefault.DayNight">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

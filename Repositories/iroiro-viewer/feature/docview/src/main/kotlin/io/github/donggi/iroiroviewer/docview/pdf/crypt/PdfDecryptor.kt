@@ -80,7 +80,7 @@ internal object PdfDecryptor {
      *
      * **PDF 머리가 없으면 곧바로 '잠기지 않았다' 다.** 플랫폼이 '깨졌다' 고 한 파일마다 여기로
      * 오므로(확장자만 `.pdf` 인 동영상도), 그런 파일을 통째로 훑으면 '깨졌다' 가 몇십 초 늦게
-     * 나올 뿐이다(적대적 검토가 잡았다). 명세는 머리를 첫 1024 바이트 안에 두게 한다.
+     * 나올 뿐이다. 명세는 머리를 첫 1024 바이트 안에 두게 한다.
      *
      * @throws PdfSyntaxException 파일이 PDF 로 읽히지 않는다.
      */
@@ -340,7 +340,7 @@ internal object PdfDecryptor {
 
             // 객체 스트림이면 안의 번호를 챙긴다 — xref 가 무너져 다시 세운 경우 그 번호들은
             // xref 어디에도 없다. **xref 가 아는 번호는 건드리지 않는다** — 새 판이 지운(Free)
-            // 번호를 옛 객체 스트림에서 되살리면 지운 주석·양식이 다시 살아난다(적대적 검토).
+            // 번호를 옛 객체 스트림에서 되살리면 지운 주석·양식이 다시 살아난다.
             if (keep != null) {
                 val stm = ObjStm.parse(dict, keep.toByteArray())
                 stm?.numbers()?.forEachIndexed { i, n ->
@@ -427,7 +427,7 @@ internal object PdfDecryptor {
         /**
          * xref 를 쓴다. **쓴 번호만 소구역으로 적는다** — 0 부터 가장 큰 번호까지 빽빽하게 쓰면
          * 번호 하나를 8,388,600 으로 적은 몇 KB 짜리 파일이 168 MB 의 표를 메모리 파일에
-         * 만든다(적대적 검토가 잡았다). 빈 번호는 적지 않으면 읽는 쪽이 '없는 객체' 로 본다
+         * 만든다. 빈 번호는 적지 않으면 읽는 쪽이 '없는 객체' 로 본다
          * (명세 7.5.4 — 소구역 사이의 번호는 정의되지 않은 객체다). `/Size` 는 숫자일 뿐이다.
          */
         private fun writeXref(streamEntries: Map<Int, PdfFile.InStream>) {

@@ -254,8 +254,8 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
         /** 진행 바가 적는 지금 항목의 이름. 입력으로 세면 항목 한가운데에서도 알리므로 따로 든다. */
         private var currentName = ""
 
-        /** 아카이브 자신의 canonical 경로. 자기를 덮어쓰는 것을 막는 기준이다. */
-        private val archiveCanonical = runCatching { archive.canonicalPath }.getOrNull()
+        /** 자기를 덮어쓰는 것을 막는 기준. 문자열이 아니라 파일의 정체로 견준다([SelfOverwriteGuard]). */
+        private val selfGuard = SelfOverwriteGuard(archive)
 
         override fun begin(entry: ArchiveEntry): OutputStream? {
             if (selected != null && entry.index !in selected) return null
@@ -273,7 +273,7 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
                     return null
                 }
                 if (ensureDir(rel)) {
-                    ArchivePath.resolveInside(dest, rel)?.let { dirTimes.entryTime(it, entry.lastModified) }
+                    ExtractNames.inside(dest, rel)?.let { dirTimes.entryTime(it, entry.lastModified) }
                 }
                 return null
             }
@@ -298,10 +298,19 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
             val target = resolveTarget(entry) ?: return null
             // 자기 자신을 덮어쓰는 것은 **정책과 무관하게** 막는다. '여기에 풀기' 로
             // 같은 폴더에 풀 때 아카이브와 같은 이름의 엔트리가 있으면 원본이 사라진다.
-            if (archiveCanonical != null && runCatching { target.canonicalPath }.getOrNull() == archiveCanonical) {
-                counters.selfOverwrite++
-                counters.sample(entry.name)
-                return null
+            // 대소문자를 가리지 않는 볼륨에서는 이름이 달라 보여도 같은 파일이다([SelfOverwriteGuard]).
+            when (selfGuard.check(target)) {
+                SelfOverwriteGuard.Verdict.SELF -> {
+                    counters.selfOverwrite++
+                    counters.sample(entry.name)
+                    return null
+                }
+                // 아카이브인지 모르는 자리는 덮어쓰지 않는다 — 그 항목만 실패다.
+                SelfOverwriteGuard.Verdict.UNKNOWN -> {
+                    counters.failed++
+                    return null
+                }
+                SelfOverwriteGuard.Verdict.OTHER -> Unit
             }
 
             val finalTarget = when {
@@ -414,7 +423,7 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
 
             // **마지막 봉쇄 검사.** 문자열만 보면 목적지 안의 심볼릭 링크를 타고 밖으로
             // 나갈 수 있다 — canonical 로 비교해야 막힌다.
-            return ArchivePath.resolveInside(dest, relative) ?: run {
+            return ExtractNames.inside(dest, relative) ?: run {
                 counters.unsafe++
                 counters.sample(entry.name)
                 null
@@ -429,7 +438,7 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
          */
         private fun ensureDir(relativeDir: String): Boolean {
             dirs[relativeDir]?.let { return it == DirState.OK }
-            val dir = ArchivePath.resolveInside(dest, relativeDir)
+            val dir = ExtractNames.inside(dest, relativeDir)
             if (dir == null) {
                 dirs[relativeDir] = DirState.BLOCKED
                 counters.unsafe++

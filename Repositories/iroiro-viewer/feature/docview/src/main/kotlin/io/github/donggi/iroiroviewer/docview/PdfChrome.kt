@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,7 +15,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsIgnoringVisibility
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -143,6 +144,7 @@ private fun GridCell(store: PdfPageStore, page: Int, selected: Boolean, onClick:
  * 입력칸은 **저장하지 않는 상태**로 든다(`remember`) — 찾을 글은 암호가 아니지만, 회전해도 남길 까닭도 없다. 결과는 VM 이
  * 들고 있어 회전을 견딘다.
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun PdfSearchBar(
     state: PdfSearch.State,
@@ -157,7 +159,8 @@ internal fun PdfSearchBar(
         modifier
             .fillMaxWidth()
             .background(Color.Black.copy(alpha = 0.55f))
-            .windowInsetsPadding(WindowInsets.statusBars)
+            // 시스템 바가 숨어도 변하지 않는 인셋 — 막대와 함께 바가 숨는 동안 입력칸이 위로 미끄러지지 않게.
+            .windowInsetsPadding(WindowInsets.statusBarsIgnoringVisibility)
             .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),

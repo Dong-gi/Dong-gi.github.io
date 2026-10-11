@@ -185,7 +185,7 @@ internal class PdfSecurity private constructor(
                 // **V4 의 키 길이는 `/StmF` 가 가리키는 필터가 정하고, 없으면 128비트다.**
                 // 명세는 V4 의 최상위 `/Length` 를 요구하지 않고(표 20) 필터의 `/Length` 도
                 // 선택이다(표 25). 기본값을 40 으로 두면 `/Length` 를 안 적은 정상 파일에서 맞는
-                // 암호가 '틀렸다' 가 된다(적대적 검토가 잡았다). AESV2 는 명세상 128비트뿐이라
+                // 암호가 '틀렸다' 가 된다. AESV2 는 명세상 128비트뿐이라
                 // 적힌 값과 무관하게 128 이다. pdfium·pdf.js·qpdf 가 모두 128 을 기본으로 쓴다.
                 if (v == 4) {
                     val named = encrypt.name("StmF")?.takeIf { it != "Identity" }

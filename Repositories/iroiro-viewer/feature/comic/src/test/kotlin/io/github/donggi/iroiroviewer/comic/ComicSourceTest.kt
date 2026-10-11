@@ -279,15 +279,85 @@ class ComicSourceTest {
         }
     }
 
-    /** gzip 으로 싼 것이 tar 가 아니면(파일 하나를 `gzip` 한 것) 여전히 다루지 않는다고 말한다. */
+    /**
+     * gzip 으로 싼 것이 tar 가 아니면(파일 하나를 `gzip` 한 것) **항목 하나짜리 아카이브**다 — 14단계까지는 '다루지 않는 형식'
+     * 이었다. 머리에 이름이 없으면 항목의 이름은 파일 이름에서 확장자를 뗀 것(`single`)이라 그림이 아니다 — 그림이 없다고
+     * 정확히 말한다(깨졌다·다루지 않는다가 아니다).
+     */
     @Test
-    fun `tar 가 아닌 gz 는 다루지 않는다고 말한다`() = runTest {
+    fun `tar 가 아닌 gz 의 하나뿐인 항목이 그림이 아니면 그림이 없다고 말한다`() = runTest {
         val f = File(tmp, "single.cbt")
         GzipCompressorOutputStream(f.outputStream()).use { it.write(body("just one file", 4096)) }
         assertEquals(
-            ComicOpen.Kind.UNSUPPORTED,
+            ComicOpen.Kind.NO_PAGES,
             (ComicOpen.open(f.path, 1 shl 20) as ComicOpen.Result.Failed).kind,
         )
+    }
+
+    /**
+     * **압축 목록에서 `.gz` 하나의 그림 항목을 누른 길.** 화면은 이 파일과 엔트리 번호 0 을 만화 뷰어에 넘기고, 뷰어는 그것을
+     * 한 쪽짜리 책으로 연다 — 항목이 하나라 번호로 여는 리더다(solid 가 아니다). 이름은 머리의 FNAME 이다.
+     */
+    @Test
+    fun `파일 하나를 싼 gz 의 그림은 한 쪽짜리 책이다`() = runTest {
+        val png = body("png-bytes", 2048)
+        for ((name, fname) in listOf("photo.png.gz" to null, "x.gz" to "photo.png")) {
+            val f = File(tmp, name)
+            val params = org.apache.commons.compress.compressors.gzip.GzipParameters().apply { if (fname != null) fileName = fname }
+            GzipCompressorOutputStream(f.outputStream(), params).use { it.write(png) }
+            open(f).use { src ->
+                assertEquals(listOf("photo.png"), src.pages.map { it.name }, name)
+                assertEquals(0, src.pages.single().entryIndex, "$name: 압축 목록이 넘기는 번호")
+                assertEquals(false, src.solid, name)
+                assertContentEquals(png, src.bytes(0), name)
+            }
+        }
+    }
+
+    /** cpio·ar 로 묶은 그림 — 압축하지 않은 파일이라 번호로 여는 리더다(tar 와 같다). */
+    @Test
+    fun `cpio 와 ar 로 묶은 그림도 책이다`() = runTest {
+        val pages = listOf("10.png" to body("j"), "2.png" to body("b"), "notes.txt" to body("x"), "1.png" to body("a"))
+        val cpio = File(tmp, "book.cpio")
+        org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream(cpio.outputStream()).use { out ->
+            for ((n, b) in pages) {
+                val e = org.apache.commons.compress.archivers.cpio.CpioArchiveEntry(n, b.size.toLong())
+                e.mode = 0x81A4
+                out.putArchiveEntry(e)
+                out.write(b)
+                out.closeArchiveEntry()
+            }
+        }
+        val ar = File(tmp, "book.ar")
+        org.apache.commons.compress.archivers.ar.ArArchiveOutputStream(ar.outputStream()).use { out ->
+            for ((n, b) in pages) {
+                out.putArchiveEntry(org.apache.commons.compress.archivers.ar.ArArchiveEntry(n, b.size.toLong()))
+                out.write(b)
+                out.closeArchiveEntry()
+            }
+        }
+        for (f in listOf(cpio, ar)) {
+            open(f).use { src ->
+                assertEquals(listOf("1.png", "2.png", "10.png"), src.pages.map { it.name }, f.name)
+                assertEquals(false, src.solid, f.name)
+                assertContentEquals(body("b"), src.bytes(1), f.name)
+                assertContentEquals(body("a"), src.bytes(0), f.name)
+            }
+        }
+    }
+
+    /** LZ4 로 싼 tar(새로 여는 압축 tar) — gzip 으로 싼 것과 같은 solid 의 창으로 연다. */
+    @Test
+    fun `LZ4 로 싼 cbt 도 solid 길로 열린다`() = runTest {
+        val tar = File(tmp, "plain.tar").let { writeTar(it.name, listOf("1.png" to body("a"), "2.png" to body("b"), "3.png" to body("c"))) }
+        val f = File(tmp, "book.cbt")
+        org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStream(f.outputStream()).use { it.write(tar.readBytes()) }
+        open(f).use { src ->
+            assertEquals(3, src.pages.size)
+            assertEquals(true, src.solid)
+            assertContentEquals(body("c"), src.bytes(2))
+            assertContentEquals(body("a"), src.bytes(0))
+        }
     }
 
     // ---- 열지 못하는 것 --------------------------------------------------------------

@@ -24,7 +24,7 @@ object HtmlShell {
      *
      * `word-break:keep-all` 은 낱말 사이를 띄어 쓰는 **한국어의 규칙**이다(낱말 가운데서 줄을 나누지 않는다). 띄어 쓰지
      * 않는 일본어·중국어에 걸면 문장 부호에서만 줄이 나뉘어 줄 끝이 들쭉날쭉하고, 긴 구절은 `overflow-wrap` 이 아무
-     * 데서나 자른다(크롬에서 실측 — 실세계 말뭉치 검토). 그래서 그 둘은 되돌린다. 문서의 언어는 `lang` 으로 안다([wrap]).
+     * 데서나 자른다(크롬에서 실측). 그래서 그 둘은 되돌린다. 문서의 언어는 `lang` 으로 안다([wrap]).
      */
     private const val READER_CSS = """
 html{-webkit-text-size-adjust:100%;}
@@ -54,7 +54,7 @@ pre{white-space:pre-wrap;}
             }
         }
 
-        // `<head>` 가 없는 조각이 들어올 수 있다(12·13단계의 파서는 본문만 만든다).
+        // `<head>` 가 없는 조각이 들어올 수 있다(마크다운 미리보기는 본문만 넘긴다).
         // 그때는 문서 하나를 통째로 만든다.
         val langAttr = tagLang?.let { " lang=\"$it\"" } ?: ""
         return "<!DOCTYPE html><html$langAttr><head><meta charset=\"utf-8\"/>" +
@@ -69,7 +69,7 @@ pre{white-space:pre-wrap;}
      * 선언이 섞인다), 제 `<head>` 를 가진 문서(EPUB 의 장)는 위의 두 갈래로 오므로 DOCTYPE 없이 나가
      * 왔다. 원본 XHTML 은 XML 이라 어느 읽기 프로그램에서도 표준 모드인데, 우리만 `text/html` 로 내주며
      * 쿼크 모드가 됐다 — 쿼크 모드의 표는 본문의 글자 크기를 물려받지 않는다(크롬에서 실측: 본문
-     * 30px, 표 칸 16px). 글 대조로는 보이지 않는 결함이라 말뭉치 검토가 뒤늦게 잡았다.
+     * 30px, 표 칸 16px). 글 대조로는 보이지 않는 결함이라 뒤늦게 잡혔다.
      */
     private fun standards(doc: String): String =
         if (doc.trimStart().startsWith("<!DOCTYPE", ignoreCase = true)) doc else "<!DOCTYPE html>$doc"
@@ -78,7 +78,7 @@ pre{white-space:pre-wrap;}
      * `<html>` 에 언어가 없으면 [lang] 을 단다. 뿌리 요소가 없거나 이미 적혀 있으면 그대로.
      *
      * 언어를 **속성으로 읽는다** — 태그 글자에서 `lang=` 을 찾으면 다른 속성의 값(`title=" lang=x"`)에 속고, 빈 `lang=""`
-     * (위생기가 빈 `xml:lang` 을 옮긴 것)도 '적혀 있다' 로 읽어 책의 언어를 버렸다(검토가 잡았다). 빈 `lang` 은 바꾼다.
+     * (위생기가 빈 `xml:lang` 을 옮긴 것)도 '적혀 있다' 로 읽어 책의 언어를 버렸다. 빈 `lang` 은 바꾼다.
      */
     private fun withLang(doc: String, lang: String?): String {
         if (lang == null) return doc
@@ -108,7 +108,7 @@ pre{white-space:pre-wrap;}
     /**
      * 내용이 **날것의 글**인 요소(HTML 파서가 그 안의 `<` 를 태그로 읽지 않는다). 그 안의 `</head`·`<html` 은 태그가
      * 아니므로 [indexOfTag] 가 건너뛴다 — `<title>` 안의 `</head>` 에 우리 스타일을 끼우면 스타일이 제목 글자가 되고,
-     * `<xmp>` 안이면 CSS 가 화면에 찍힌다(검토가 잡았다).
+     * `<xmp>` 안이면 CSS 가 화면에 찍힌다.
      */
     private val RAW_TEXT = listOf("style", "title", "textarea", "xmp", "noembed", "script")
 

@@ -86,7 +86,7 @@ class CrashLog(private val dirProvider: () -> File, private val clock: () -> Lon
      * 남는다.
      *
      * **잠근다** — '공유' 를 두 번 빨리 누르면 두 쓰기가 같은 임시 파일을 동시에 열어(하나가 자르고 하나가 쓰는 중) 섞인
-     * 사본이 나간다(14단계 검토).
+     * 사본이 나간다.
      */
     fun exportTo(target: File): File? = try {
         synchronized(lock) {
@@ -236,16 +236,18 @@ object CrashReport {
      *
      * **어디서 끝나는지는 알 수 없다** — 파일 이름에는 공백도 괄호도 **따옴표도** 들어간다(`Don't Stop.mp3`,
      * `Guns N' Roses`). 그래서 줄 끝이나 `": "` 까지를 통째로 지운다(`FileNotFoundException` 은 `경로: open failed: …`
-     * 모양이라 뒤의 까닭은 남는다). **따옴표에서 멈추지 않는다** — 멈추면 아포스트로피 뒤의 이름 조각이 기록에 남는다
-     * (14단계 검토가 잡았다). 따옴표로 싼 경로는 [QUOTED] 가 먼저 맡는다. 덜 지우는 것보다 더 지우는 편이 낫다.
+     * 모양이라 뒤의 까닭은 남는다). **따옴표에서 멈추지 않는다** — 멈추면 아포스트로피 뒤의 이름 조각이 기록에 남는다.
+     * 따옴표로 싼 경로는 [QUOTED] 가 먼저 맡는다. 덜 지우는 것보다 더 지우는 편이 낫다.
      */
     private val ABSOLUTE_PATH = Regex("""(?<![\w.])/[^\s/'"`:]+/[^\r\n]*?(?=: |[\r\n]|$)""")
 
     /**
      * 문서 제공자·파일 주소도 경로를 싣는다(`content://…/document/primary%3ADownload%2F…`). 주소째 지운다 — 끝을 정하는
-     * 규칙은 경로와 같다(날것의 공백이 든 `file://` 주소가 실제로 오고, `Uri.encode` 는 `'` 를 바꾸지 않는다).
+     * 규칙은 경로와 같다(날것의 공백이 든 `file://` 주소가 실제로 오고, `Uri.encode` 는 `'` 를 바꾸지 않는다). 네트워크 저장소의
+     * 주소(`sftp://<서버 번호>/<원격 경로>`)도 지운다 — 그 기능(재생기의 오류가 그 주소를 실었다)은 2026-10-09 에 걷었지만, 옛
+     * 판이 남긴 상태(되살리는 재생 큐 따위)가 그 주소를 실을 수 있다고 보아 그대로 둔다(확인하지 않았다 — 더 지우는 쪽으로 틀리는 편이 낫다).
      */
-    private val URI_WITH_PATH = Regex("""\b(?:content|file)://[^\r\n]*?(?=: |[\r\n]|$)""")
+    private val URI_WITH_PATH = Regex("""\b(?:content|file|sftp)://[^\r\n]*?(?=: |[\r\n]|$)""")
 
     /**
      * 따옴표로 싼 경로·주소(`'/storage/…/a.7z' is locked`, SQLite 의 `'/data/…/x.db'`). **여는 따옴표와 같은 따옴표가 그
@@ -253,7 +255,7 @@ object CrashReport {
      * 따옴표로 치는 것은 뒤에 글자·숫자가 붙지 않은 것뿐이다(`Tom's` 의 `'` 는 닫는 따옴표가 아니다). 따옴표 자체는
      * 남긴다(뒤의 까닭이 읽히게). 닫는 따옴표가 없으면 이 규칙은 비켜 서고 위의 두 규칙이 줄 끝까지 지운다.
      */
-    private val QUOTED = Regex("""(['"`])(?:/[^\s/'"`:]+/|(?:content|file)://)[^\r\n]*(?=\1(?!\w))""")
+    private val QUOTED = Regex("""(['"`])(?:/[^\s/'"`:]+/|(?:content|file|sftp)://)[^\r\n]*(?=\1(?!\w))""")
 
     fun redact(text: String): String {
         val quoted = QUOTED.replace(text) { m -> m.groupValues[1] + REDACTED }

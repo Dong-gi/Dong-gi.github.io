@@ -10,7 +10,7 @@
     <string name="app_version_value">%1$s (%2$d)</string>
 
     <string name="permission_title">모든 파일 접근 권한이 필요합니다</string>
-    <string name="permission_body">파일 관리자는 저장소 전체를 읽고 쓸 수 있어야 합니다. 안드로이드는 이 권한을 앱 안에서 물어볼 수 없고 설정 화면에서만 켤 수 있습니다.\n\n아래 버튼을 누르면 설정으로 갑니다. 켠 뒤 뒤로 돌아오면 됩니다.</string>
+    <string name="permission_body">저장소 전체의 파일을 읽고 쓰는 데 필요합니다. 설정에서 켠 뒤 돌아오세요.</string>
     <string name="permission_button">설정 열기</string>
     <string name="permission_unavailable">이 기기에는 해당 설정 화면이 없습니다.</string>
 
@@ -18,17 +18,23 @@
 
     <string name="notice_title">오픈소스 고지</string>
     <!--
-      한컴의 '한글 문서 파일 형식 5.0' 사용 조건이 제품의 화면·설명서·도움말·소스에 적으라고 요구하는 문장이다.
-      글자 그대로 format/hwp5 의 Hwp5Opener KDoc 과 같아야 한다(NoticeCatalogTest 가 견준다). 고치지 마라.
+      한컴의 '한글 문서 파일 형식 5.0' 사용 조건이 제품의 화면·설명서·도움말·소스에 적으라고 요구하는 문장이다. 편집기에 실린
+      rhwp 가 그 공개 문서를 참고해 만들어졌다(rhwp 도 제 화면에 같은 문장을
+      적는다). 명세 원문의 글자 그대로다 - 첫 음절은 옛한글 조합형 자모 셋이다(NoticeCatalogTest 가 박는다). 고치지 마라.
     -->
     <string name="notice_hancom">본 제품은 한글과컴퓨터의 ᄒᆞᆫ글 문서 파일(.hwp) 공개 문서를 참고하여 개발하였습니다.</string>
-    <string name="notice_specs">HWP 5.0 문서는 한글과컴퓨터가 공개한 문서 형식을, 오피스 문서(docx·xlsx·pptx)는 ECMA-376 을, CFB 그릇(HWP 5.0 과 암호가 걸린 오피스 문서가 쓴다)과 오피스 문서의 암호는 Microsoft 의 공개 명세(MS-CFB·MS-OFFCRYPTO)를 참고해, 이 앱에서 새로 작성한 코드로 엽니다. HWPX 는 공개된 문서 구조와, 한글과컴퓨터가 Apache License 2.0 으로 공개한 OWPML 모델을 참고했습니다(암호가 걸린 HWPX 를 푸는 차례도 그 모델에서 알았습니다). 그 모델의 코드도, 명세에 실린 코드도 이 앱에는 들어 있지 않습니다.</string>
+    <!--
+      편집기 엔진의 묶음이 든 빌드에만 보인다(NoticeScreen - 아래 '편집기 엔진' 절과 같은 조건). 묶음 없이 지은 빌드에는 rhwp 도
+      ONLYOFFICE 도 그 절도 없다.
+    -->
+    <string name="notice_specs">한글 문서(HWP·HWPX)는 편집기에 함께 실린 rhwp가 엽니다 — 위 문장은 rhwp가 참고한 한글과컴퓨터의 공개 문서가 요구하는 고지입니다. 오피스 문서는 ONLYOFFICE가 엽니다. 두 엔진의 라이선스는 아래 \'편집기 엔진\'에 있습니다.</string>
+    <string name="notice_trademarks">\'한글\'·\'한컴\'·\'HWP\'·\'HWPX\'는 주식회사 한글과컴퓨터의 등록 상표입니다.</string>
     <!-- UnRAR 라이선스가 문서에 밝히라고 요구하는 문장이다. 빼면 라이선스 위반이다. -->
-    <string name="notice_unrar_restriction">이 앱은 RAR 파일을 읽는 데 junrar 를 씁니다. junrar 는 UnRAR 소스를 옮긴 것이고, 그 라이선스에 따라 이 코드는 RAR(WinRAR) 호환 압축기를 만드는 데 쓸 수 없습니다. RAR 압축 알고리즘은 Alexander Roshal 의 것입니다.</string>
+    <string name="notice_unrar_restriction">이 앱은 RAR 파일을 읽는 데 junrar를 씁니다. junrar는 UnRAR 소스를 옮긴 것이고, 그 라이선스에 따라 이 코드는 RAR(WinRAR) 호환 압축기를 만드는 데 쓸 수 없습니다. RAR 압축 알고리즘은 Alexander Roshal의 것입니다.</string>
 
     <string name="notice_apache_title">Apache License 2.0</string>
     <string name="notice_apache_subtitle">아래 구성 요소가 이 라이선스로 배포됩니다. 전문은 맨 아래에 있습니다</string>
-    <string name="notice_apache_components">• AndroidX(Jetpack) — Activity · Annotation · Arch Core · Autofill · Collection · Compose(Animation · Foundation · Material 3 · Material Icons · Material Ripple · Runtime · UI) · Concurrent · Core · CustomView · DataStore · Emoji2 · ExifInterface · Graphics · Interpolator · Lifecycle · Media · Media3(Common · Container · Database · DataSource · Decoder · ExoPlayer · Extractor · Session) · NavigationEvent · ProfileInstaller · Room · SavedState · SQLite · Startup · Tracing · VersionedParcelable · Window. Copyright The Android Open Source Project\n• Kotlin 표준 라이브러리. Copyright JetBrains s.r.o. and Kotlin Programming Language contributors\n• kotlinx.coroutines · kotlinx.serialization. JetBrains\n• JetBrains Java Annotations. Copyright JetBrains s.r.o.\n• Guava · failureaccess (Media3 가 씁니다). Copyright The Guava Authors\n• Okio (DataStore 가 씁니다). Copyright Square, Inc.\n• JSpecify. Copyright The JSpecify Authors\n• Apache Commons Compress · Codec · IO · Lang. Copyright The Apache Software Foundation — 각 NOTICE 가 아래에 있습니다</string>
+    <string name="notice_apache_components">• AndroidX(Jetpack) — Activity · Annotation · Arch Core · Autofill · Collection · Compose(Animation · Foundation · Material 3 · Material Icons · Material Ripple · Runtime · UI) · Concurrent · Core · CustomView · DataStore · Emoji2 · ExifInterface · Graphics · Interpolator · Lifecycle · Media · Media3(Common · Container · Database · DataSource · Decoder · ExoPlayer · Extractor · Session) · NavigationEvent · ProfileInstaller · Room · SavedState · SQLite · Startup · Tracing · VersionedParcelable · WebKit · Window. Copyright The Android Open Source Project\n• Kotlin 표준 라이브러리. Copyright JetBrains s.r.o. and Kotlin Programming Language contributors\n• kotlinx.coroutines · kotlinx.serialization. JetBrains\n• JetBrains Java Annotations. Copyright JetBrains s.r.o.\n• Guava · failureaccess (Media3가 씁니다). Copyright The Guava Authors\n• Okio (DataStore가 씁니다). Copyright Square, Inc.\n• JSpecify. Copyright The JSpecify Authors\n• Apache Commons Compress · Codec · IO · Lang. Copyright The Apache Software Foundation — 각 NOTICE가 아래에 있습니다</string>
 
     <string name="notice_commons_subtitle">Apache License 2.0 · 라이선스가 함께 싣도록 요구하는 NOTICE</string>
     <string name="notice_commons_compress_title">Apache Commons Compress</string>
@@ -37,13 +43,39 @@
     <string name="notice_commons_lang_title">Apache Commons Lang</string>
 
     <string name="notice_xz_title">XZ for Java</string>
-    <string name="notice_xz_subtitle">0BSD · 7z 의 LZMA·LZMA2 해제</string>
+    <string name="notice_xz_subtitle">0BSD · 7z의 LZMA·LZMA2 해제</string>
     <string name="notice_junrar_title">junrar</string>
     <string name="notice_junrar_subtitle">UnRAR License · RAR 읽기</string>
     <string name="notice_slf4j_title">SLF4J API</string>
-    <string name="notice_slf4j_subtitle">MIT License · junrar 가 씁니다</string>
+    <string name="notice_slf4j_subtitle">MIT License · junrar가 씁니다</string>
     <string name="notice_protobuf_title">Protocol Buffers</string>
-    <string name="notice_protobuf_subtitle">BSD 3-Clause License · DataStore 가 설정 파일 형식으로 옮겨 담은 것</string>
+    <string name="notice_protobuf_subtitle">BSD 3-Clause License · DataStore가 설정 파일 형식으로 옮겨 담은 것</string>
+    <!--
+      편집기 엔진(feature:editor). Maven 좌표가 아니라 엔진 묶음으로 실린다 - 라이선스 글은 묶음의 licenses/ 에서 그대로 펼친다
+      (NoticeScreen). 묶음 없이 지은 빌드에는 이 절이 없다.
+    -->
+    <string name="notice_editor_title">편집기 엔진</string>
+    <string name="notice_editor_subtitle">rhwp · ONLYOFFICE · 글꼴 — 편집기와 함께 실렸습니다</string>
+    <string name="notice_editor_components">• rhwp — HWP·HWPX 편집기(MIT License)\n• ONLYOFFICE 문서 편집기(sdkjs·web-apps)와 변환기 x2t — CryptPad가 문서 서버 없이 쓰게 고친 빌드 v9.3.2+3(GNU AGPL 3.0). 소스: github.com/cryptpad/onlyoffice-editor · github.com/cryptpad/onlyoffice-x2t-wasm\n• 글꼴 — SIL Open Font License 1.1 · Apache License 2.0 · GUST Font License\n\n아래의 이름을 누르면 그 글을 펼칩니다</string>
+    <!-- 라이선스 글 하나의 이름 - %1$s 는 엔진(rhwp·onlyoffice), %2$s 는 파일 이름. -->
+    <string name="notice_editor_file">%1$s · %2$s</string>
     <string name="notice_apache_full_title">Apache License 2.0 전문</string>
-    <string name="notice_apache_full_subtitle">AndroidX·Kotlin·kotlinx·Guava·Okio·JSpecify·Apache Commons 가 이 라이선스입니다</string>
+    <string name="notice_apache_full_subtitle">AndroidX·Kotlin·kotlinx·Guava·Okio·JSpecify·Apache Commons가 이 라이선스입니다</string>
+
+    <!-- 다른 앱이 넘긴 파일을 여는 화면(OpenActivity). -->
+    <string name="open_receiving">받는 중</string>
+    <string name="open_receiving_of">%1$s / %2$s</string>
+    <string name="open_cancel">취소</string>
+    <string name="open_close">닫기</string>
+    <!-- 넘긴 것에 파일이 없다 - 글만 실은 공유, URI 가 없는 열기. -->
+    <string name="open_nothing">열 파일이 없습니다</string>
+    <!-- 이름이 알려 주는 종류에 이 앱의 뷰어가 없다(APK·글꼴·기타). 아래에 '다른 앱으로 열기' 가 선다. -->
+    <string name="open_no_viewer">이 앱에는 이 파일을 보여 줄 화면이 없습니다</string>
+
+    <!-- 편집기(feature:editor)로 고치기. -->
+    <string name="editor_open_failed">편집기를 열지 못했습니다</string>
+    <!-- 편집기에서 형식·이름을 바꿔 저장했다 — 원본 곁의 새 파일. %1$s 는 그 이름. -->
+    <string name="editor_saved_new">새 파일로 저장했습니다: %1$s</string>
+    <!-- 편집기에서 돌아와 한 번 - 새 파일도 만들었고 고치기 전 판도 휴지통에 남겼다. 휴지통만이면 core:io 의 io_saved_doc_kept. -->
+    <string name="editor_saved_new_kept">새 파일로 저장했습니다: %1$s · 고치기 전의 문서는 휴지통에 남겼습니다</string>
 </resources>

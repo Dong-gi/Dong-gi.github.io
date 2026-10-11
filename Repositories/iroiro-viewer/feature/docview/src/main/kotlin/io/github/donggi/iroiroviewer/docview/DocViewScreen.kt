@@ -1,6 +1,7 @@
 package io.github.donggi.iroiroviewer.docview
 
 import androidx.activity.compose.BackHandler
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,12 +12,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -28,6 +33,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -37,7 +43,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Slider
+import io.github.donggi.iroiroviewer.ui.IroSlider
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -50,10 +56,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -68,7 +74,13 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -77,29 +89,39 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.donggi.iroiroviewer.docview.pdf.PdfPageStore
 import io.github.donggi.iroiroviewer.docview.pdf.PdfSearch
 import io.github.donggi.iroiroviewer.docview.pdf.PdfSpreads
-import io.github.donggi.iroiroviewer.format.FlowKind
 import io.github.donggi.iroiroviewer.format.OpenFailure
 import io.github.donggi.iroiroviewer.safety.PdfLimits
 import io.github.donggi.iroiroviewer.ui.PasswordDialog
+import io.github.donggi.iroiroviewer.ui.SystemBarsHidden
 import io.github.donggi.iroiroviewer.ui.gesture.ZoomMath
 import io.github.donggi.iroiroviewer.ui.gesture.ZoomState
 import io.github.donggi.iroiroviewer.ui.image.DetailLayer
 import io.github.donggi.iroiroviewer.ui.image.ZoomableImage
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
- * 문서 한 편을 읽는 화면 — PDF(쪽), EPUB(장), 흐름 문서 docx·xlsx·pptx(부분). 아래 구조 설명은 PDF 의 것이고,
- * EPUB 과 흐름 문서는 WebView 를 칸으로 나눠 띄운다(아래 `Doc.Epub`·`Doc.Flow` 가지의 주석).
+ * 문서 한 편을 읽는 화면 — PDF(쪽)·EPUB(장). 아래 구조 설명은 PDF 의 것이고, EPUB 은 WebView 를 칸으로 나눠 띄운다(아래
+ * `Doc.Epub` 가지의 주석). 오피스·한글 문서(docx·xlsx·pptx·HWPX·HWP)는 이 화면이 아니라 편집기의 보기 모드가 연다 —
+ * 쪽을 PC 처럼 그린다(`app` 이 가른다).
  *
- * ## 구조는 만화의 `PagedReader` 와 같다
+ * ## PDF 의 보기는 둘이다
+ *
+ * **기본은 세로로 이어 보기**([ScrollDocument]) — 쪽을 화면 폭에 맞춰 이어 붙이고 배율이 문서 전체에 걸린다.
+ * 예전의 **한 쪽씩 넘기기**([PagedDocument])는 위쪽 막대 ⋮ 의 보기 방식으로 남고, 고른
+ * 것은 설정에 남는다(`AppPreferences.pdfContinuous`). 두 보기가 VM 의 같은 **쪽**을 세므로 쪽 번호·슬라이더·이어보기·쪽 목록·쪽으로
+ * 가기·찾기가 한 벌이다.
+ *
+ * ## 한 쪽씩 넘기기의 구조는 만화의 `PagedReader` 와 같다
  *
  * `HorizontalPager(beyondViewportPageCount = 1, key = { it })`, 쪽마다 [ZoomState] 를
  * 두고 정착하지 않은 쪽의 확대를 되돌린다, **바깥 `Scaffold` 를 씌우지 않는다**.
- * 마지막 것이 6·9단계가 같은 이유로 정한 규칙이다 — `Scaffold` 의 기본 인셋은 막대가
- * 숨고 나타나는 애니메이션 내내 프레임마다 변하고, 그 패딩을 받으면 확대·이동의 기준
- * 상자가 함께 움직여 경계 계산이 어긋난다.
+ * 마지막 것이 6·9단계가 같은 이유로 정한 규칙이다 — 막대를 감추면 시스템 바도 함께 숨는데
+ * (`SystemBarsHidden` — 거는 것은 액티비티다) `Scaffold` 의 기본 인셋은 바가 숨고 나타나는 애니메이션 내내 프레임마다
+ * 변하고, 그 패딩을 받으면 확대·이동의 기준 상자가 함께 움직여 경계 계산이 어긋난다. 겹치는 막대는 바가 숨어도 변하지
+ * 않는 인셋(`…IgnoringVisibility`)을 쓴다. 확대한 채 가장자리에 닿은 뒤 새로 밀면 다음 쪽이다(`ZoomState.claimsDrag`).
  *
  * ## 만화와 다른 것 셋
  *
@@ -120,10 +142,15 @@ import kotlinx.coroutines.flow.distinctUntilChanged
  *
  * ## 14단계가 더한 것
  *
- * * **읽는 모양**('보기' 판 — [AppearanceSheet]). EPUB·흐름 문서에만 있고, 설정 화면과 같은 값을 쓴다.
+ * * **읽는 모양**('보기' 판 — [AppearanceSheet]). EPUB 에만 있고, 설정 화면과 같은 값을 쓴다.
  * * **장 안의 자리**. 스크롤의 비율로 기억하고 되살린다([DocLocator]·`LockedWebView`). 장 번호의 이어보기 안내는 그대로다.
  * * **PDF 두 쪽 보기**(가로 화면에서만, `PdfSpreads`)와 **쪽 목록**([PdfGridSheet]).
  * * **PDF 찾기**(안드로이드 15 이상에서만 — `PdfSearch`). 그 아래 기기에는 단추가 없다.
+ *
+ * ## 장을 손가락으로 넘긴다
+ *
+ * EPUB 은 아래 막대의 화살표 말고도 넘긴다 — 흐르는 글은 장의 끝에서 한 번 더 당겨(처음에서 거꾸로 당기면 앞 장의 끝으로),
+ * 고정 레이아웃 쪽은 좌우로 밀거나 가장자리를 두드려(`ReadingTurn`).
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,17 +159,30 @@ fun DocViewScreen(
     snackbar: SnackbarHostState,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
+    /**
+     * ⋮ 의 '편집' — 편집기(`feature:editor`)로 넘긴다. 인자는 편집기의 형식 글자(지금은 PDF — 편집기가 고칠 수 있는
+     * 문서로 바꿔 열고, 저장하면 원본 곁에 새 파일). 읽기 전용 사본이면 null — 줄이 없다(`DocEdit.kt`).
+     */
+    onEditor: ((String) -> Unit)? = null,
+    /** 바뀌면 문서를 다시 연다 — 편집기에서 돌아와 같은 경로를 새로 읽을 때(`app` 이 올린다). */
+    reopen: Int = 0,
 ) {
     val vm: DocViewModel = viewModel()
     val state by vm.state.collectAsStateWithLifecycle()
+    // PDF 글 고르기의 알림(복사했다·고를 글이 없다)을 띄운다.
+    val messageScope = rememberCoroutineScope()
 
-    LaunchedEffect(path) { vm.open(path) }
+    LaunchedEffect(path, reopen) { vm.open(path) }
 
     // '다른 앱으로 열기'. 막대의 ⋮ 에는 파일에 닿은 뒤로 언제나(여는 중·암호를 묻는 중 포함 — 읽지 못한 실패는 빼고), 실패
     // 화면에는 이 앱이 보여 줄 수 없는 갈래에만 둔다([DocOpenWith]). 여는 것은 언제나 화면이 받은 경로다 — 실패했으면 문서
     // (`Doc`)가 없다.
     val openWith = rememberOpenWith(path, snackbar)
     val menuOpenWith = if (DocOpenWith.inMenu(state)) openWith else null
+    // '편집' — 막대가 있는 모든 상태에서(열기 전·실패여도 파일의 종류로 정한다 — 편집기가 다루는 형식이면).
+    val edit = rememberEditAction(path, closeViewer = { vm.close() }, onEditor = onEditor)
+    // 편집기가 이 형식을 다루는가 — 이 뷰어가 열지 못한 문서의 실패 화면에 '편집기로 열기' 를 둔다.
+    val editorKind = rememberEditorKind(path, onEditor)
 
     var chromeVisible by remember { mutableStateOf(true) }
     var showJump by remember { mutableStateOf(false) }
@@ -153,11 +193,11 @@ fun DocViewScreen(
     var showGrid by remember(path) { mutableStateOf(false) }
     // 찾기 막대는 **VM 의 찾기가 살아 있으면 열린 채로** 선다. 액티비티가 다시 만들어지면(밤 모드를 바꿨다 — 회전은
     // `configChanges` 라 다시 만들지 않는다) 결과의 칠은 VM 에 남는데 막대만 사라져, 칠을 걷을 길도 뒤로가 막대를 닫는
-    // 처리기도 없어졌다(검토가 잡았다).
+    // 처리기도 없어졌다.
     var searching by remember(path) { mutableStateOf(vm.isSearching(path)) }
     var viewport by remember { mutableStateOf(0 to 0) }
-    // 링크·목차가 가리킨 자리(EPUB 의 `#note3`, 흐름 문서의 제목). **여기 둔다** — '처음부터' 는 위의
-    // 사건 수집에서 오므로, 가지 안에 두면 비울 손이 닿지 않아 옛 자리로 떨어졌다(12단계 검토).
+    // 링크·목차가 가리킨 자리(EPUB 의 `#note3`). **여기 둔다** — '처음부터' 는 위의
+    // 사건 수집에서 오므로, 가지 안에 두면 비울 손이 닿지 않아 옛 자리로 떨어졌다.
     var linkAnchor by remember(path) { mutableStateOf<String?>(null) }
 
     BackHandler {
@@ -172,28 +212,19 @@ fun DocViewScreen(
 
     val resumedFormat = stringResource(R.string.doc_resumed)
     val resumedChapterFormat = stringResource(R.string.doc_resumed_chapter)
-    val resumedSheetFormat = stringResource(R.string.doc_resumed_sheet)
-    val resumedSlideFormat = stringResource(R.string.doc_resumed_slide)
-    val resumedPartFormat = stringResource(R.string.doc_resumed_part)
     val restartLabel = stringResource(R.string.doc_restart)
     val resumedHere = stringResource(R.string.doc_resumed_here)
     val fixedLayoutNotice = stringResource(R.string.doc_fixed_layout_notice)
-    val flowNoticeDocument = stringResource(R.string.doc_flow_notice_document)
-    val flowNoticeSheets = stringResource(R.string.doc_flow_notice_sheets)
-    val flowNoticeSlides = stringResource(R.string.doc_flow_notice_slides)
     LaunchedEffect(vm) {
         vm.events.collect { event ->
             when (event) {
                 is DocViewModel.Event.Resumed -> {
                     val result = snackbar.showSnackbar(
-                        // 첫 장·부분 **안에서** 잇는 것이면 '1장부터' 가 아니라 '읽던 자리부터' 다.
+                        // 첫 장 **안에서** 잇는 것이면 '1장부터' 가 아니라 '읽던 자리부터' 다.
                         message = if (event.inPlace) resumedHere else String.format(
                             when (event.unit) {
                                 DocViewModel.ResumeUnit.PAGE -> resumedFormat
                                 DocViewModel.ResumeUnit.CHAPTER -> resumedChapterFormat
-                                DocViewModel.ResumeUnit.SHEET -> resumedSheetFormat
-                                DocViewModel.ResumeUnit.SLIDE -> resumedSlideFormat
-                                DocViewModel.ResumeUnit.PART -> resumedPartFormat
                             },
                             event.page + 1,
                         ),
@@ -209,15 +240,6 @@ fun DocViewScreen(
                     }
                 }
 
-                is DocViewModel.Event.FirstFlowEntry -> snackbar.showSnackbar(
-                    message = when (event.kind) {
-                        FlowKind.DOCUMENT -> flowNoticeDocument
-                        FlowKind.SHEETS -> flowNoticeSheets
-                        FlowKind.SLIDES -> flowNoticeSlides
-                    },
-                    duration = SnackbarDuration.Long,
-                )
-
                 is DocViewModel.Event.FixedLayoutEntry -> snackbar.showSnackbar(
                     message = fixedLayoutNotice,
                     duration = SnackbarDuration.Long,
@@ -227,6 +249,8 @@ fun DocViewScreen(
     }
 
     val doc = (state as? DocViewModel.State.Ready)?.doc
+    // PDF 의 막대를 감추면 시스템 바도 감춘다(거는 것은 액티비티다). EPUB 은 막대가 늘 보인다 — 칸으로 나눈 화면이다.
+    SystemBarsHidden(hidden = doc is DocViewModel.Doc.Pdf && !DocOpenWith.barVisible(chromeVisible, state))
     val current by vm.page.collectAsStateWithLifecycle()
     val notice by vm.notice.collectAsStateWithLifecycle()
     val appearance by vm.appearance.collectAsStateWithLifecycle()
@@ -245,8 +269,8 @@ fun DocViewScreen(
             ReaderLooks.forEpub(doc.book.allFixedLayout, it, systemDark, 0.0, 0.0).background
         } ?: WHITE_PAPER
         // **알림은 아래 막대 위에 뜬다.** 칸으로 나눈 화면은 `Column` 이라 `SnackbarHost` 를 그 옆에
-        // 두면 부모가 정렬을 모르고 **맨 위**에 그려져 제목 막대를 가렸다(12단계 기기 확인에서 잡았다 —
-        // 11단계의 EPUB 도 같았다). 상자로 감싸 아래에 붙인다.
+        // 두면 부모가 정렬을 모르고 **맨 위**에 그려져 제목 막대를 가렸다(기기에서
+        // 확인했다). 상자로 감싸 아래에 붙인다.
         Box(modifier.fillMaxSize()) {
         Column(Modifier.fillMaxSize().background(Color(paper))) {
             DocTopBar(
@@ -259,6 +283,7 @@ fun DocViewScreen(
                 // 고칠 것이 없으면(모든 쪽이 고정 레이아웃) '보기' 단추를 띄우지 않는다.
                 onAppearance = if (controls.isEmpty()) null else ({ showAppearance = true }),
                 onOpenWith = menuOpenWith,
+                onEdit = edit,
                 modifier = Modifier.fillMaxWidth(),
             )
             val look = appearance
@@ -281,6 +306,11 @@ fun DocViewScreen(
                     jump = jump,
                     onFraction = vm::onFraction,
                     onSeen = vm::onSeen,
+                    onTurn = { target, fromEnd ->
+                        // 손가락으로 넘겼다. 앞 장으로 당겨 갔으면 그 장의 끝에서 연다(읽던 흐름이 이어지게).
+                        linkAnchor = null
+                        if (fromEnd) vm.openAtEnd(target) else vm.onPageChanged(target)
+                    },
                     modifier = Modifier.weight(1f).fillMaxWidth(),
                 )
             }
@@ -292,6 +322,8 @@ fun DocViewScreen(
                     vm.onPageChanged(it)
                 },
                 onToc = { showToc = true },
+                // 모든 장이 고정 레이아웃인 책(그림책·만화)은 장 하나가 쪽 하나다 — '쪽' 으로 센다.
+                fixedPages = doc.book.allFixedLayout,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
@@ -309,89 +341,8 @@ fun DocViewScreen(
         return
     }
 
-    // **흐름 문서(docx·xlsx·pptx)도 칸으로 나눈다** — 글을 읽는 화면이라 EPUB 과 같은 판단이다.
-    if (doc is DocViewModel.Doc.Flow) {
-        // 목차에서 고른 자리([linkAnchor])에 **일련번호를 함께 든다** — 같은 자리를 두 번 골라도 다시 가야
-        // 하는데, 값만 들면 두 번째는 바뀐 것이 없어 WebView 가 움직이지 않는다(함정 표의 `MutableStateFlow`
-        // 와 같은 모양이다). 번호가 바뀌면 층을 새로 세운다 — 부분을 다시 읽고 배치하는 값을 치른다.
-        var jumpSeq by remember(doc) { mutableIntStateOf(0) }
-        val controls = ReaderLooks.controlsForFlow(doc.flow.kind)
-        val paper = appearance?.let { ReaderLooks.forFlow(doc.flow.kind, it, systemDark).background } ?: WHITE_PAPER
-        // **알림은 아래 막대 위에 뜬다.** 칸으로 나눈 화면은 `Column` 이라 `SnackbarHost` 를 그 옆에
-        // 두면 부모가 정렬을 모르고 **맨 위**에 그려져 제목 막대를 가렸다(12단계 기기 확인에서 잡았다 —
-        // 11단계의 EPUB 도 같았다). 상자로 감싸 아래에 붙인다.
-        Box(modifier.fillMaxSize()) {
-        Column(Modifier.fillMaxSize().background(Color(paper))) {
-            DocTopBar(
-                title = doc.name,
-                onClose = { vm.close(); onClose() },
-                notice = !notice.isEmpty,
-                onNotice = { showNotice = true },
-                // 슬라이드에는 걸 것이 없다(`ReaderLooks` 의 표).
-                onAppearance = if (controls.isEmpty()) null else ({ showAppearance = true }),
-                onOpenWith = menuOpenWith,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            val look = appearance
-            if (look == null) {
-                Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
-            } else {
-                key(jumpSeq) {
-                    FlowReader(
-                        doc = doc,
-                        part = current,
-                        anchor = linkAnchor,
-                        onPart = { part, anchor ->
-                            // 부분 사이 링크는 조각까지 싣고 온다(각주·책갈피). 경로가 바뀌므로 일련번호는
-                            // 올리지 않는다 — URL 이 달라 WebView 가 스스로 새로 연다.
-                            linkAnchor = anchor
-                            vm.onPageChanged(part)
-                        },
-                        onRead = { vm.noteRead() },
-                        appearance = look,
-                        systemDark = systemDark,
-                        startFraction = vm::fractionNow,
-                        jump = jump,
-                        onFraction = vm::onFraction,
-                        onSeen = vm::onSeen,
-                        modifier = Modifier.weight(1f).fillMaxWidth(),
-                    )
-                }
-            }
-            FlowBottomBar(
-                doc = doc,
-                part = current,
-                onPart = {
-                    linkAnchor = null
-                    vm.onPageChanged(it)
-                },
-                onOutline = { showToc = true },
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
-        SnackbarHost(
-            snackbar,
-            Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = BOTTOM_BAR_CLEARANCE),
-        )
-        }
-        if (showToc) {
-            FlowOutlineSheet(doc, current, onDismiss = { showToc = false }) { part, anchor ->
-                showToc = false
-                linkAnchor = anchor
-                jumpSeq++
-                // 고른 부분의 **처음**(또는 그 조각)이다 — 지금 부분을 골랐어도 보던 자리로 돌아가지 않는다.
-                vm.startAt(part)
-            }
-        }
-        NoticeSheet(notice, showNotice) { showNotice = false }
-        val look = appearance
-        if (showAppearance && look != null) {
-            AppearanceSheet(look, controls, vm::setAppearance) { showAppearance = false }
-        }
-        return
-    }
-
     val spreadWanted by vm.spread.collectAsStateWithLifecycle()
+    val continuous by vm.continuous.collectAsStateWithLifecycle()
     val search by vm.search.collectAsStateWithLifecycle()
     val landscape = viewport.first > viewport.second
     val pdfSpread = spreadWanted && landscape
@@ -441,16 +392,37 @@ fun DocViewScreen(
                                 Text(stringResource(R.string.doc_password_enter))
                             }
                         }
-                        // **이 앱이 보여 줄 수 없는 갈래에만** — 다루지 않는 형식·이전 형식·풀 수 없는 잠금·깨짐·상한.
-                        // 암호(위 단추)와 파일에 닿지 못한 실패에는 없다([DocOpenWith.onFailure]). 두 단추가 함께 뜨는
-                        // 갈래는 없으므로 여기서도 누를 것은 하나다 — 같은 까닭으로 채운 단추다. 암호 화면에서 다른 앱으로
-                        // 넘기는 길은 막대의 ⋮ 다(암호 창을 닫으면 닿는다).
+                        // **이 앱이 보여 줄 수 없는 갈래에만** — 다루지 않는 형식·풀 수 없는 잠금·깨짐·상한.
+                        // 암호(위 단추)와 파일에 닿지 못한 실패에는 없다([DocOpenWith.onFailure]). 암호 단추와 함께 뜨는
+                        // 갈래는 없다. 채운 단추로 둔다(글자 단추는 어두운 바탕에서 흐리다). 암호 화면에서 다른 앱으로 넘기는
+                        // 길은 막대의 ⋮ 다(암호 창을 닫으면 닿는다).
                         if (DocOpenWith.onFailure(s)) {
+                            // '편집기로 열기'(⋮ 의 '편집' 과 같다)는 편집기라면 그 파일을 볼 수 있는 갈래에만 — PDF 는 깨진 파일뿐이고 그때도
+                            // '다른 앱으로 열기' 가 첫 단추다. 오피스·한글은 편집기가 먼저다([DocOpenWith.editorOnFailure]·[DocOpenWith.editorFirst]).
+                            val toEditor = editorKind?.takeIf { DocOpenWith.editorOnFailure(s.failure, it) }?.let { edit }
+                            val editorFirst = toEditor != null && editorKind != null && DocOpenWith.editorFirst(editorKind)
+                            val openWithLabel = stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with)
+                            val editorLabel = stringResource(R.string.doc_open_in_editor)
+                            // 첫 단추는 채운 단추, 둘째는 옅은 단추다.
+                            val first = if (toEditor != null && editorFirst) editorLabel to toEditor else openWithLabel to openWith
+                            val second = when {
+                                toEditor == null -> null
+                                editorFirst -> openWithLabel to openWith
+                                else -> editorLabel to toEditor
+                            }
                             Button(
-                                onClick = openWith,
+                                onClick = first.second,
                                 modifier = Modifier.padding(top = 16.dp),
                             ) {
-                                Text(stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with))
+                                Text(first.first)
+                            }
+                            if (second != null) {
+                                FilledTonalButton(
+                                    onClick = second.second,
+                                    modifier = Modifier.padding(top = 8.dp),
+                                ) {
+                                    Text(second.first)
+                                }
                             }
                         }
                     }
@@ -469,17 +441,31 @@ fun DocViewScreen(
             is DocViewModel.State.Ready -> {
                 val pdf = s.doc as? DocViewModel.Doc.Pdf
                 if (pdf != null && viewport.first > 0) {
-                    // 새 모양(한 쪽 ↔ 두 쪽)이면 페이저를 새로 세운다 — 칸의 수와 뜻이 바뀐다.
-                    key(pdfSpread) {
-                        PagedDocument(
-                            doc = pdf,
-                            vm = vm,
-                            spread = pdfSpread,
-                            search = search,
-                            viewportWidth = viewport.first,
-                            viewportHeight = viewport.second,
-                            onTap = { chromeVisible = !chromeVisible },
-                        )
+                    // 새 모양(한 쪽 ↔ 두 쪽, 이어 보기 ↔ 넘기기)이면 새로 세운다 — 칸의 수와 뜻이 바뀐다. 보던 쪽은 VM 이 든다.
+                    key(pdfSpread, continuous) {
+                        if (continuous) {
+                            ScrollDocument(
+                                doc = pdf,
+                                vm = vm,
+                                spread = pdfSpread,
+                                search = search,
+                                viewportWidth = viewport.first,
+                                viewportHeight = viewport.second,
+                                onTap = { chromeVisible = !chromeVisible },
+                                onMessage = { msg -> messageScope.launch { snackbar.showSnackbar(msg) } },
+                            )
+                        } else {
+                            PagedDocument(
+                                doc = pdf,
+                                vm = vm,
+                                spread = pdfSpread,
+                                search = search,
+                                viewportWidth = viewport.first,
+                                viewportHeight = viewport.second,
+                                onTap = { chromeVisible = !chromeVisible },
+                                onMessage = { msg -> messageScope.launch { snackbar.showSnackbar(msg) } },
+                            )
+                        }
                     }
                 }
             }
@@ -514,6 +500,14 @@ fun DocViewScreen(
                     // 찾기는 안드로이드 15 이상에서만 — 그 아래에서는 단추가 없다(`PdfSearch` 의 주석).
                     onSearch = if (doc is DocViewModel.Doc.Pdf && vm.canSearchPdf) ({ searching = true }) else null,
                     onOpenWith = menuOpenWith,
+                    onEdit = edit,
+                    // 보기 방식 — 지금 모양이 아니라 **누르면 될 모양**을 적는다(두 쪽 단추와 같다).
+                    viewMode = if (doc is DocViewModel.Doc.Pdf) {
+                        if (continuous) R.string.doc_view_paged else R.string.doc_view_continuous
+                    } else {
+                        null
+                    },
+                    onViewMode = { vm.setContinuous(!continuous) },
                 )
             }
         }
@@ -575,7 +569,7 @@ fun DocViewScreen(
  * 둘 다 이 색에서 글자가 읽힌다. 테마를 따르게 하면 다이나믹 배색에서 `surface` 와
  * 배경이 같은 색이 되어 막대가 보이지 않는 판이 생긴다(10단계가 겪었다).
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun DocTopBar(
     title: String,
@@ -587,11 +581,18 @@ private fun DocTopBar(
     onAppearance: (() -> Unit)? = null,
     /** 찾기(PDF, API 35 이상). null 이면 단추가 없다. */
     onSearch: (() -> Unit)? = null,
-    /** '다른 앱으로 열기'(⋮ 안). null 이면 ⋮ 도 없다 — 그 안에 든 것이 이것 하나다. */
+    /** '다른 앱으로 열기'(⋮ 안). null 이고 [viewMode]·[onEdit] 도 null 이면 ⋮ 도 없다. */
     onOpenWith: (() -> Unit)? = null,
+    /** PDF 의 보기 방식(⋮ 안). 누르면 될 모양의 이름이고, null 이면 그 줄이 없다. */
+    @StringRes viewMode: Int? = null,
+    onViewMode: () -> Unit = {},
+    /** '편집'(⋮ 의 첫 줄 — 편집기로 넘긴다). null 이면 그 줄이 없다(`DocEdit.kt`). */
+    onEdit: (() -> Unit)? = null,
 ) {
     TopAppBar(
         modifier = modifier,
+        // 시스템 바가 숨어도 변하지 않는 인셋 — PDF 의 막대가 사라지는 동안 바가 함께 숨어 제목이 위로 미끄러지지 않게.
+        windowInsets = WindowInsets.systemBarsIgnoringVisibility.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Black.copy(alpha = 0.55f),
             titleContentColor = Color.White,
@@ -624,7 +625,7 @@ private fun DocTopBar(
                     Icon(Icons.Filled.Info, stringResource(R.string.doc_notice))
                 }
             }
-            if (onOpenWith != null) {
+            if (onOpenWith != null || viewMode != null || onEdit != null) {
                 // **⋮ 단추와 메뉴를 한 상자에 담는다.** Compose 의 Popup 은 자기를 감싼 부모 레이아웃 노드를 앵커로 삼아,
                 // `actions` 에 형제로 두면 메뉴가 맨 왼쪽 아이콘 아래에서 시작한다(함정 표). 텍스트·압축 화면과 같은 모양이다.
                 // 항목이 하나뿐인데도 메뉴로 두는 것은 코어 아이콘 세트(49개)에 이 뜻의 그림이 없고(`ExitToApp` 은 '나가기' 로
@@ -635,13 +636,33 @@ private fun DocTopBar(
                         Icon(Icons.Filled.MoreVert, stringResource(R.string.doc_more))
                     }
                     DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with)) },
-                            onClick = {
-                                menuOpen = false
-                                onOpenWith()
-                            },
-                        )
+                        if (onEdit != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.doc_edit)) },
+                                onClick = {
+                                    menuOpen = false
+                                    onEdit()
+                                },
+                            )
+                        }
+                        if (viewMode != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(viewMode)) },
+                                onClick = {
+                                    menuOpen = false
+                                    onViewMode()
+                                },
+                            )
+                        }
+                        if (onOpenWith != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with)) },
+                                onClick = {
+                                    menuOpen = false
+                                    onOpenWith()
+                                },
+                            )
+                        }
                     }
                 }
             }
@@ -660,20 +681,6 @@ private fun NoticeSheet(
     if (!shown || notice.isEmpty) return
     ModalBottomSheet(onDismissRequest = onDismiss) {
         DocNoticeList(notice.warnings, notice.dropped)
-    }
-}
-
-/** 흐름 문서의 목차. */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun FlowOutlineSheet(
-    doc: DocViewModel.Doc.Flow,
-    current: Int,
-    onDismiss: () -> Unit,
-    onPick: (part: Int, anchor: String?) -> Unit,
-) {
-    ModalBottomSheet(onDismissRequest = onDismiss) {
-        FlowOutlineList(flow = doc.flow, current = current, onPick = onPick)
     }
 }
 
@@ -725,8 +732,12 @@ private fun PagedDocument(
     viewportWidth: Int,
     viewportHeight: Int,
     onTap: () -> Unit,
+    onMessage: (String) -> Unit,
 ) {
     val current by vm.page.collectAsStateWithLifecycle()
+    // 고른 글. 쪽 하나에 매인다 — 칸이 바뀌면 푼다(아래). 뒤로 가기는 고른 것부터 푼다.
+    val selection = remember(doc.path) { PdfSelection() }
+    BackHandler(enabled = selection.active) { selection.clear() }
     val slots = if (spread) PdfSpreads.count(doc.count) else doc.count
     fun slotOf(page: Int): Int =
         if (spread) PdfSpreads.spreadOf(page, doc.count) else page.coerceIn(0, (doc.count - 1).coerceAtLeast(0))
@@ -758,6 +769,7 @@ private fun PagedDocument(
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.settledPage }.collect { settled ->
             zooms.forEach { (ordinal, st) -> if (ordinal != settled) st.reset() }
+            if (selection.page >= 0 && selection.page !in viewOf(settled).pages) selection.clear()
         }
     }
 
@@ -778,6 +790,10 @@ private fun PagedDocument(
             onTap = onTap,
             highlights = search.on(view.pages),
             currentMatch = search.currentMatch,
+            selection = selection,
+            onMessage = onMessage,
+            // 글을 꺼내는 사이 쪽을 넘겼으면 그 쪽의 선택을 세우지 않는다(보이지 않는 선택이 뒤로 가기를 먹었다).
+            isCurrent = { pagerState.settledPage == slot },
         )
     }
 }
@@ -800,7 +816,46 @@ private fun DocPageView(
     highlights: List<PdfSearch.Match> = emptyList(),
     /** 지금 보고 있는 결과. 더 짙게 칠한다. */
     currentMatch: PdfSearch.Match? = null,
+    /** 고른 글(문서 전체에 하나 — 이 칸의 쪽에 있을 때만 그린다). */
+    selection: PdfSelection? = null,
+    onMessage: (String) -> Unit = {},
+    /** 이 칸이 지금 자리 잡은 칸인가. */
+    isCurrent: () -> Boolean = { true },
 ) {
+    // ---- 글 고르기 ----
+    val selectScope = rememberCoroutineScope()
+    val haptics = LocalHapticFeedback.current
+    val unavailable = stringResource(R.string.doc_text_unavailable)
+    val noText = stringResource(R.string.doc_text_none)
+    val fingerPx = with(LocalDensity.current) { FINGER_SLOP.toPx() }
+
+    /**
+     * 길게 누른 자리의 낱말을 고른다. 쪽의 글은 그때 처음 꺼낸다(쪽마다 수십~수백 ms — 입출력 스레드에서). 이 문서에서 글을
+     * 고를 수 없거나 그 쪽에 글이 하나도 없으면 말한다. 글이 있는 쪽의 빈 자리는 조용히 넘어간다.
+     */
+    fun selectWordAt(p: Offset, image: ImageBitmap, layout: PdfSpreads.Layout, zoom: ZoomState, sel: PdfSelection) {
+        if (!store.canSelectText) {
+            onMessage(unavailable)
+            return
+        }
+        val frac = PdfSelectionMath.toFraction(p.x, p.y, image.width, image.height, zoom.viewport, zoom.scale, zoom.offset)
+            ?: return
+        val (page, local) = PdfSelectionMath.fractionToPage(layout, frac.x, frac.y) ?: return
+        if (local.x !in -0.02f..1.02f || local.y !in -0.02f..1.02f) return
+        val (fw, _) = ZoomMath.fittedSize(image.width, image.height, zoom.viewport.width, zoom.viewport.height)
+        // 손가락의 반지름을 쪽 포인트로 — 화면 화소 하나가 쪽의 몇 포인트인가.
+        val ptPerPx = if (fw > 0f && zoom.scale > 0f) layout.width / (fw * zoom.scale) else 1f
+        selectScope.launch {
+            // 이어 보기와 같은 길로 고른다(`pickWord`).
+            when (pickWord(store, sel, page, local, fingerPx * ptPerPx, isCurrent)) {
+                WordPick.SELECTED -> haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                WordPick.UNAVAILABLE -> onMessage(unavailable)
+                WordPick.NO_TEXT -> onMessage(noText)
+                WordPick.MISSED -> Unit
+            }
+        }
+    }
+
     val fit by produceState<Fit>(Fit.Loading, store, view, viewportWidth, viewportHeight) {
         val image = store.fitted(view, viewportWidth, viewportHeight)
         value = if (image == null) Fit.Failed else Fit.Ready(image)
@@ -880,7 +935,15 @@ private fun DocPageView(
                     bitmap = f.image,
                     state = zoomState,
                     modifier = Modifier.fillMaxSize(),
-                    onTap = onTap,
+                    // 고른 글이 이 칸에 있으면 두드림은 그것을 푼다(막대를 여닫지 않는다 — 글 고르기의 관행이다).
+                    onTap = {
+                        if (selection != null && selection.active && selection.page in view.pages) selection.clear() else onTap()
+                    },
+                    onLongPressAt = if (selection != null && layout != null) {
+                        { p -> selectWordAt(p, f.image, layout, zoomState, selection) }
+                    } else {
+                        null
+                    },
                     detail = detail,
                     // **원본의 2배까지.** PDF 의 원본은 종이의 실제 크기다(`PdfLimits.originalWidthPx`).
                     // 맞춤 층을 뜨면서 쪽 크기를 이미 쟀으므로 여기서 문서를 다시 만지지 않는다.
@@ -890,6 +953,17 @@ private fun DocPageView(
                 )
                 if (layout != null && highlights.isNotEmpty()) {
                     SearchHighlights(f.image, layout, highlights, currentMatch, zoomState)
+                }
+                if (layout != null && selection != null) {
+                    val frame = remember(f.image, zoomState) { ZoomFrame(f.image, zoomState) }
+                    PdfSelectionOverlay(
+                        layout = layout,
+                        selection = selection,
+                        frame = frame,
+                        // 확대·이동이 바뀌면 떠 있는 도구 막대를 새 자리로 옮긴다.
+                        frameKey = zoomState.scale to zoomState.offset,
+                        onMessage = onMessage,
+                    )
                 }
             }
         }
@@ -934,6 +1008,9 @@ private fun SearchHighlights(
     }
 }
 
+/** 길게 누른 손가락이 닿은 것으로 치는 거리. 글자는 손가락보다 작다. */
+private val FINGER_SLOP = 14.dp
+
 private sealed interface Fit {
     data object Loading : Fit
     data object Failed : Fit
@@ -945,6 +1022,7 @@ private fun Centered(content: @Composable () -> Unit) {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { content() }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BottomBar(
     page: Int,
@@ -960,18 +1038,28 @@ private fun BottomBar(
         Modifier
             .fillMaxWidth()
             .background(Color.Black.copy(alpha = 0.55f))
-            .windowInsetsPadding(WindowInsets.navigationBars)
+            // 시스템 바가 숨어도 변하지 않는 인셋 — 막대가 나타나는 동안 바가 함께 나타나 글이 위로 밀려 오르지 않게.
+            .windowInsetsPadding(WindowInsets.navigationBarsIgnoringVisibility)
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (pageCount > 1) {
-            Slider(
+            // 화면 낭독기는 슬라이더를 범위의 백분율로 읽는다(함정 표) — 무엇을 고르는지와 지금 쪽을 우리 말로 준다.
+            val sliderName = stringResource(R.string.doc_slider)
+            val sliderValue = stringResource(R.string.doc_slider_value, page + 1, pageCount)
+            // 재생 막대와 같은 모양(`IroSlider` — 얇은 트랙 + 둥근 점).
+            IroSlider(
+                modifier = Modifier.semantics {
+                    contentDescription = sliderName
+                    stateDescription = sliderValue
+                },
                 value = page.toFloat(),
                 onValueChange = { onSeek(it.toInt().coerceIn(0, pageCount - 1)) },
                 valueRange = 0f..(pageCount - 1).toFloat(),
                 // **눈금을 두지 않는다.** 만화는 쪽이 수십이지만 문서는 2,000쪽이 드물지
                 // 않고, 그만큼의 눈금 표시는 트랙을 회색 띠로 만든다.
                 steps = 0,
+                inactiveColor = Color.White.copy(alpha = 0.28f),
             )
         }
         Row(
@@ -1040,14 +1128,13 @@ private fun failureText(failure: OpenFailure): Int = when (failure) {
     is OpenFailure.TooLarge -> R.string.doc_failed_too_large
     is OpenFailure.Timeout -> R.string.doc_failed_timeout
     is OpenFailure.Unsupported -> R.string.doc_failed_unsupported
-    is OpenFailure.LegacyFormat -> R.string.doc_failed_legacy
     is OpenFailure.Io -> R.string.doc_failed_io
 }
 
 /** 종이를 얹는 바닥. 검정은 흰 쪽과 대비가 너무 세다. */
 private val PAPER_BACKDROP = Color(0xFF303030)
 
-/** 읽는 모양을 아직 모를 때의 종이 색(11~13단계의 흰 종이). */
+/** 읽는 모양을 아직 모를 때의 종이 색(흰 종이). */
 private const val WHITE_PAPER = 0xFFFFFFFF.toInt()
 
 /** 확대가 멎었다고 보는 시간. */

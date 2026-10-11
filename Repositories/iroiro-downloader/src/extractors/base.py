@@ -107,15 +107,15 @@ class CookieAuth(ABC):
 
     GUI는 개별 사이트 클래스가 아니라 이 인터페이스로 분기한다
     (`isinstance(extractor, CookieAuth)`) — 사이트가 늘어도 GUI 코드는 그대로.
+
+    쿠키는 세션 전용이다 — 이번 실행 동안 메모리에만 두고, 인증이 실패하면
+    GUI가 폐기한 뒤 다시 묻는다.
     """
 
     #: 구현체는 항상 BaseExtractor와 함께 상속되므로 site_id를 갖는다 (타입 힌트용 선언).
     site_id: ClassVar[str]
     #: 쿠키 입력 다이얼로그에 표시할 안내 문구.
     COOKIE_PROMPT: ClassVar[CookiePrompt]
-    #: 쿠키를 디스크(자격 증명 관리자)에 영속 저장하는지 여부.
-    #: True인 사이트만 설정 창에 인증 관리 항목이 노출된다.
-    COOKIES_PERSISTENT: ClassVar[bool] = False
 
     @abstractmethod
     def set_cookies(self, cookie_str: str) -> None:

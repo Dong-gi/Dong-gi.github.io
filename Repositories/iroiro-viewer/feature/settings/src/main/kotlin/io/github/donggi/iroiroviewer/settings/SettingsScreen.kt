@@ -26,7 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
+import io.github.donggi.iroiroviewer.ui.IroSlider
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
@@ -66,6 +66,8 @@ import kotlinx.coroutines.launch
 private enum class SettingsDialog {
     COMIC_DIRECTION, READER_MARGIN, READER_THEME,
     CLEAR_PLAYBACK, CLEAR_READING, CLEAR_CRASHES,
+    TAP_SEEK,
+    KEEP_SCREEN,
 }
 
 /**
@@ -162,7 +164,8 @@ fun SettingsScreen(
             }
 
             // ---- 텍스트 뷰어 ----
-            item(key = "h-text") { SectionHeader(R.string.settings_section_text) }
+            // 아래 넷은 코드 파일의 것이다 — 글 파일은 그 뒤의 묶음.
+            item(key = "h-text") { SectionHeader(R.string.settings_section_text, R.string.settings_text_code_note) }
             item(key = "text-wrap") {
                 SwitchRow(R.string.settings_text_wrap, R.string.settings_text_wrap_desc, v.text.wrap) {
                     write(vm.setTextWrap(it))
@@ -180,7 +183,7 @@ fun SettingsScreen(
                     min = TextViewerDefaults.MIN_FONT_SP,
                     max = TextViewerDefaults.MAX_FONT_SP,
                     step = 1,
-                    label = { stringResource(R.string.settings_text_font_value, it) },
+                    label = { textFontLabel(it) },
                     onCommit = vm::setTextFontSp,
                     onFailed = { scope.launch { snackbar.showSnackbar(saveFailed) } },
                 )
@@ -188,6 +191,36 @@ fun SettingsScreen(
             item(key = "text-ends") {
                 SwitchRow(R.string.settings_text_line_ends, R.string.settings_text_line_ends_desc, v.text.showLineEnds) {
                     write(vm.setTextLineEnds(it))
+                }
+            }
+
+            // ---- 텍스트 뷰어 — 글 파일 ----
+            item(key = "h-prose") { SectionHeader(R.string.settings_section_prose, R.string.settings_prose_note) }
+            item(key = "prose-wrap") {
+                SwitchRow(R.string.settings_text_wrap, R.string.settings_text_wrap_desc, v.prose.wrap) {
+                    write(vm.setProseWrap(it))
+                }
+            }
+            item(key = "prose-lines") {
+                SwitchRow(R.string.settings_text_line_numbers, null, v.prose.lineNumbers) {
+                    write(vm.setProseLineNumbers(it))
+                }
+            }
+            item(key = "prose-font") {
+                SliderRow(
+                    title = R.string.settings_text_font,
+                    value = v.prose.fontSp,
+                    min = TextViewerDefaults.MIN_FONT_SP,
+                    max = TextViewerDefaults.MAX_FONT_SP,
+                    step = 1,
+                    label = { textFontLabel(it) },
+                    onCommit = vm::setProseFontSp,
+                    onFailed = { scope.launch { snackbar.showSnackbar(saveFailed) } },
+                )
+            }
+            item(key = "prose-ends") {
+                SwitchRow(R.string.settings_text_line_ends, R.string.settings_text_line_ends_desc, v.prose.showLineEnds) {
+                    write(vm.setProseLineEnds(it))
                 }
             }
 
@@ -199,6 +232,11 @@ fun SettingsScreen(
                     value = SettingsOptions.labelOf(SettingsOptions.comicDirections, v.comicDirection),
                     note = R.string.settings_comic_direction_note,
                 ) { dialog = SettingsDialog.COMIC_DIRECTION }
+            }
+            item(key = "comic-volume-keys") {
+                SwitchRow(R.string.settings_comic_volume_keys, R.string.settings_comic_volume_keys_desc, v.comicVolumeKeys) {
+                    write(vm.setComicVolumeKeys(it))
+                }
             }
 
             // ---- 문서 보기 ----
@@ -226,6 +264,31 @@ fun SettingsScreen(
                     title = R.string.settings_reader_theme,
                     value = SettingsOptions.labelOf(SettingsOptions.readerThemes, v.reader.theme),
                 ) { dialog = SettingsDialog.READER_THEME }
+            }
+
+            // ---- 읽는 동안 — 만화·문서·글에 함께 걸린다 ----
+            item(key = "h-reading") { SectionHeader(R.string.settings_section_reading) }
+            item(key = "keep-screen") {
+                ChoiceRow(
+                    title = R.string.settings_keep_screen,
+                    value = SettingsOptions.labelOf(SettingsOptions.keepScreenMinutes, v.keepScreenMinutes),
+                    note = R.string.settings_keep_screen_note,
+                ) { dialog = SettingsDialog.KEEP_SCREEN }
+            }
+
+            // ---- 재생 ----
+            item(key = "h-playback") { SectionHeader(R.string.settings_section_playback) }
+            item(key = "resume-bluetooth") {
+                SwitchRow(R.string.settings_resume_bluetooth, R.string.settings_resume_bluetooth_desc, v.resumeOnBluetooth) {
+                    write(vm.setResumeOnBluetooth(it))
+                }
+            }
+            item(key = "tap-seek") {
+                ChoiceRow(
+                    title = R.string.settings_tap_seek,
+                    value = SettingsOptions.labelOf(SettingsOptions.tapSeekChoices, v.tapSeekSeconds),
+                    note = R.string.settings_tap_seek_note,
+                ) { dialog = SettingsDialog.TAP_SEEK }
             }
 
             // ---- 기록 ----
@@ -349,6 +412,20 @@ fun SettingsScreen(
             },
             onDismiss = { dialog = null },
         )
+        SettingsDialog.TAP_SEEK -> ChoiceDialog(
+            title = R.string.settings_tap_seek,
+            options = SettingsOptions.tapSeekChoices,
+            selected = v.tapSeekSeconds,
+            onSelect = { dialog = null; write(vm.setTapSeekSeconds(it)) },
+            onDismiss = { dialog = null },
+        )
+        SettingsDialog.KEEP_SCREEN -> ChoiceDialog(
+            title = R.string.settings_keep_screen,
+            options = SettingsOptions.keepScreenMinutes,
+            selected = v.keepScreenMinutes,
+            onSelect = { dialog = null; write(vm.setKeepScreenMinutes(it)) },
+            onDismiss = { dialog = null },
+        )
         SettingsDialog.CLEAR_CRASHES -> ConfirmClearDialog(
             title = R.string.settings_confirm_crash_title,
             body = stringResource(R.string.settings_confirm_crash_body, crash?.count ?: 0),
@@ -418,6 +495,18 @@ private fun SwitchRow(@StringRes title: Int, @StringRes desc: Int?, checked: Boo
  * 말라는 함정과 같은 뿌리다). 그래서 [pending] 이 손가락의 값을 들고, 저장된 값이 그것을 따라잡거나(성공) 쓰기가
  * 실패하면 놓는다. 끝낸 자리가 원래 값이면 쓰지 않는다.
  */
+/**
+ * 텍스트 뷰어의 글자 크기 — 코드 파일과 글 파일의 두 줄이 같이 쓴다(따로 두었더니 글 파일 줄만 '(기본)' 을 빠뜨렸다).
+ * 단위(sp)를 적지 않는다 — 사람에게는 뜻이 없는 말이다. 기본값이 어디인지를 함께 보인다.
+ */
+@Composable
+private fun textFontLabel(sp: Int): String =
+    if (sp == TextViewerDefaults.DEFAULT_FONT_SP) {
+        stringResource(R.string.settings_text_font_value_default, sp)
+    } else {
+        stringResource(R.string.settings_text_font_value, sp)
+    }
+
 @Composable
 private fun SliderRow(
     @StringRes title: Int,
@@ -442,7 +531,8 @@ private fun SliderRow(
             Text(titleText, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
             Text(shownText, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
         }
-        Slider(
+        // 재생 막대와 같은 모양(`IroSlider` — 얇은 트랙 + 둥근 점, 2026-10-03 사용자 요청으로 통일).
+        IroSlider(
             // 화면 낭독기는 슬라이더를 **범위의 백분율**로 읽는다(글자 크기 13sp 가 '30%'). 무엇을 고르는지와 지금 값을
             // 우리 말로 준다 — 위 줄의 글과 같은 것.
             modifier = Modifier.semantics {

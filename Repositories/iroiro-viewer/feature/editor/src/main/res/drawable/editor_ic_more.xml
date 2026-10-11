@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  더보기(세로 점 셋) - 보기 모드·열지 못한 문서의 단추(EditorActivity 의 떠 있는 단추 묶음). 모양은 Material 아이콘의 more_vert 와 같다
+  (Apache-2.0 - 앱이 이미 싣는 material-icons-core 의 Icons.Filled.MoreVert 와 같은 좌표). 빛깔은 단추가 입힌다(setTint).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,10c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2zM12,16c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2z" />
+</vector>

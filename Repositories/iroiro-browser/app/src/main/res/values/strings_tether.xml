@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  테더링의 글(CLAUDE.md '테더링'). :tether 모듈은 기계 말(StartError·PeerRejection·Passphrases.Problem)만 내고 앱이 여기서 글을 고른다(TetherTexts).
+  화면의 설명은 짧게 둔다(사용자: '설명이 너무 장황합니다' — 2026-10-11).
+-->
+<resources>
+    <string name="tether_title">테더링</string>
+    <!-- 브라우저의 ⋮ 메뉴와 연결 상태 창 -->
+    <string name="tether_menu">테더링</string>
+    <string name="status_tether_note">테더링도 예외입니다 — 핫스팟에 붙은 다른 기기의 트래픽은 프록시를 거치지 않고 이 폰의 회선으로 나갑니다.</string>
+    <!-- 퀵 설정 타일 — 누르면 테더링을 켜고 끈다, 길게 누르면 테더 화면 -->
+    <string name="tether_tile">테더링</string>
+    <string name="tether_tile_off">꺼짐</string>
+    <string name="tether_tile_starting">켜는 중</string>
+    <string name="tether_tile_needs_permission">권한이 필요합니다 — 테더링 화면에서 켜세요</string>
+    <!-- 알림 — 테더링이 켜진 동안만 -->
+    <string name="tether_channel">테더링</string>
+    <string name="tether_notice_ports">SOCKS5 %1$s · HTTP %2$s · 파일 %3$s</string>
+    <string name="tether_notice_on">테더링 켜짐 · %1$s</string>
+    <string name="tether_notice_starting">테더링 켜는 중 — 핫스팟을 기다립니다</string>
+
+    <!-- 화면 — 상태(라이브 영역 — 상태가 실제로 바뀔 때만 다시 쓴다) -->
+    <string name="tether_section_status">상태</string>
+    <string name="tether_status_off">테더링 꺼짐</string>
+    <string name="tether_status_denied">테더링 꺼짐 — 시스템이 뒤에서 켜지 못하게 했습니다. 다시 켜세요</string>
+    <string name="tether_status_ports">서버 켜짐 · SOCKS5 %1$s · HTTP %2$s · 파일 %3$s</string>
+    <string name="tether_status_hotspot_on">핫스팟 켜짐 · %1$s · 이 폰은 192.168.49.1(%2$s)</string>
+    <string name="tether_status_hotspot_starting">핫스팟 켜는 중</string>
+    <string name="tether_status_hotspot_off">핫스팟 꺼짐</string>
+    <string name="tether_status_hotspot_problem">핫스팟 — %1$s</string>
+    <!-- 화면 — 오가는 양과 센 수(라이브 영역 밖 — 1초마다 다시 쓴다) -->
+    <string name="tether_status_bytes">손님에게서 받음 %1$s · 손님에게 보냄 %2$s</string>
+    <string name="tether_status_rejected">거절한 연결 %1$d개 — 마지막: %2$s</string>
+    <string name="tether_status_refused">상한으로 닫은 연결 %1$d개 — 스레드 예산 %2$d · 동시 연결 %3$d · UDP 묶음 %4$d</string>
+    <!-- 화면 — 하나뿐인 켜기·끄기(서버 셋과 핫스팟을 함께) -->
+    <string name="tether_toggle_start">테더링 켜기</string>
+    <string name="tether_toggle_stop">테더링 끄기</string>
+    <string name="tether_toggle_note">핫스팟과 서버(SOCKS5·HTTP·파일)를 함께 켜고 끕니다. 핫스팟이 내려가면 모두 꺼집니다.</string>
+    <string name="tether_server_note">SOCKS5 는 1080 고정, HTTP(8282)·파일(8080)은 차 있으면 다음 포트로 섭니다 — 실제 포트는 위 상태 줄에 보입니다.</string>
+
+    <!-- 서버를 세우지 못한(또는 내려간) 까닭 — SOCKS5 는 옮기지 않고, HTTP·파일은 열 개를 다 해 본 뒤에만 -->
+    <string name="tether_err_socks_port">SOCKS5 포트 %1$d번을 다른 앱(옛 usb-tether 등)이 쓰고 있습니다 — 그 앱을 멈추고 테더링을 껐다 켜세요. PC 가 이 포트만 쓰므로 옮기지 않습니다</string>
+    <string name="tether_err_http_port">HTTP 프록시 포트 %1$d–%2$d번을 모두 다른 앱이 쓰고 있습니다 — 그 앱을 멈추고 테더링을 껐다 켜세요</string>
+    <string name="tether_err_file_port">파일 서버 포트 %1$d–%2$d번을 모두 다른 앱이 쓰고 있습니다 — 그 앱을 멈추고 테더링을 껐다 켜세요</string>
+    <string name="tether_err_terminated">서버를 다시 세우지 못했습니다 — 테더링을 껐다 켜세요</string>
+    <string name="tether_err_died">%1$s 가 멈췄습니다 — 테더링을 껐다 켜세요</string>
+    <string name="tether_server_name_socks">SOCKS5 서버</string>
+    <string name="tether_server_name_http">HTTP 프록시</string>
+    <string name="tether_server_name_files">파일 서버</string>
+
+    <!-- 화면 — 핫스팟 -->
+    <string name="tether_section_hotspot">핫스팟(Wi-Fi Direct)</string>
+    <string name="tether_hotspot_note">붙은 기기는 인증 없이 프록시와 공유 폴더를 씁니다 — 패스프레이즈가 유일한 잠금입니다.</string>
+    <string name="tether_ssid">SSID(네트워크 이름)</string>
+    <string name="tether_ssid_effective">실제 이름: %1$s</string>
+    <string name="tether_passphrase">패스프레이즈(영문·숫자·기호 8–63자)</string>
+    <string name="tether_passphrase_unreadable">저장한 패스프레이즈를 열지 못했습니다(지우지 않았습니다) — 새 값을 넣고 켜면 그 값을 씁니다. PC 의 Wi-Fi 프로필도 바꾸세요.</string>
+    <string name="tether_passphrase_not_saved">패스프레이즈를 저장하지 못했습니다 — 앱이 다시 뜰 때까지만 씁니다</string>
+    <string name="tether_show_passphrase">패스프레이즈 보이기</string>
+    <string name="tether_open_location_settings">위치 설정 열기</string>
+    <string name="tether_open_app_settings">앱 설정 열기(권한)</string>
+    <string name="tether_permission_note">권한(위치·근처 기기)은 Wi-Fi Direct 에 필요해서 묻습니다 — 위치는 읽지 않습니다.</string>
+    <string name="tether_permission_precise">‘대략적인 위치’ 만 받았습니다 — Wi-Fi Direct 에는 ‘정확한 위치’ 가 필요합니다. 앱 설정 › 권한 › 위치에서 켜세요.</string>
+    <string name="tether_permission_denied">권한이 없어 켤 수 없습니다 — 앱 설정 › 권한에서 위치(13 이상은 근처 기기)를 허용하세요.</string>
+
+    <!-- 핫스팟을 켜거나 끄지 못한 까닭 — 켜지 못했거나 내려갔으면 테더링이 통째로 꺼진다 -->
+    <string name="tether_hotspot_p2p_unavailable">이 기기에서는 Wi-Fi Direct 를 쓸 수 없습니다</string>
+    <string name="tether_credential_ascii">패스프레이즈는 영문·숫자·기호·공백만 됩니다(한글·이모지 안 됨)</string>
+    <string name="tether_credential_length">패스프레이즈는 8–63자여야 합니다</string>
+    <string name="tether_credential_weak">짐작하기 쉬운 패스프레이즈입니다 — 더 길고 섞인 값을 넣으세요</string>
+    <string name="tether_credential_ssid_long">SSID 가 너무 깁니다 — DIRECT-UT- 를 포함해 32바이트(한글 한 자는 3바이트) 안이어야 합니다</string>
+    <string name="tether_hotspot_secret_unreadable">저장한 패스프레이즈를 열지 못했습니다 — 테더링 화면에서 다시 넣고 켜세요</string>
+    <string name="tether_hotspot_wifi_off">Wi-Fi 가 꺼져 있습니다 — 켜 주세요(어느 망에 붙을 필요는 없습니다)</string>
+    <string name="tether_hotspot_location_off">위치 서비스가 꺼져 있습니다 — Wi-Fi Direct 에 필요합니다</string>
+    <string name="tether_hotspot_p2p_disabled">Wi-Fi Direct 가 꺼져 있습니다 — 모바일 핫스팟 등 Wi-Fi Direct 를 쓰는 앱을 끄고 다시 해 보세요</string>
+    <string name="tether_hotspot_invalid">SSID 나 패스프레이즈를 시스템이 받지 않았습니다(%1$s)</string>
+    <string name="tether_hotspot_permission">권한이 없습니다 — 테더링 화면에서 켜세요</string>
+    <string name="tether_hotspot_create_error">핫스팟을 만들지 못했습니다 — 모바일 핫스팟 등 Wi-Fi Direct 를 쓰는 앱을 끄고 다시 해 보세요</string>
+    <string name="tether_hotspot_unsupported">이 기기는 Wi-Fi Direct 를 지원하지 않습니다</string>
+    <string name="tether_hotspot_create_failed">핫스팟을 만들지 못했습니다(코드 %1$s)</string>
+    <string name="tether_hotspot_busy_no_group">핫스팟을 만들지 못했습니다(시스템이 바쁨) — 잠시 뒤 다시 해 보세요</string>
+    <string name="tether_hotspot_busy_other_group">다른 Wi-Fi Direct 그룹이 떠 있습니다 — 그 앱(옛 usb-tether 등)을 멈추거나 Wi-Fi 를 껐다 켜세요</string>
+    <string name="tether_hotspot_create_threw">핫스팟을 만들지 못했습니다(%1$s)</string>
+    <string name="tether_hotspot_not_formed">핫스팟이 서지 않았습니다 — 잠시 뒤 다시 해 보세요</string>
+    <string name="tether_hotspot_group_lost">핫스팟이 내려갔습니다(Wi-Fi 꺼짐 등) — 테더링을 다시 켜세요</string>
+    <string name="tether_hotspot_remove_failed">핫스팟을 내리지 못했습니다(%1$s) — Wi-Fi 를 껐다 켜면 내려갑니다</string>
+
+    <!-- 거절한 연결의 까닭(손님의 주소는 적지 않는다) -->
+    <string name="tether_rejected_not_group">핫스팟 밖에서 온 연결</string>
+    <string name="tether_rejected_not_client">이 폰 안에서 온 연결(다른 앱 등)</string>
+    <string name="tether_rejected_no_group">핫스팟이 꺼져 있을 때 온 연결</string>
+    <string name="tether_rejected_interface">그룹 주소가 ‘%2$s’ 가 아닌 ‘%1$s’ 에 있습니다 — 손님이 모두 막히면 알려 주세요</string>
+    <string name="tether_rejected_interface_unknown">그룹 주소가 붙은 인터페이스를 알 수 없습니다(우리 그룹 ‘%1$s’)</string>
+    <string name="tether_rejected_network">다른 망으로 들어온 연결(netId %1$d — 그룹은 %2$d) — 손님이 모두 막히면 알려 주세요</string>
+    <string name="tether_rejected_network_unknown">연결이 들어온 망을 읽지 못했습니다(%1$s)</string>
+
+    <!-- 화면 — 공유 폴더 -->
+    <string name="tether_section_folder">공유 폴더</string>
+    <string name="tether_folder_note">붙은 기기의 브라우저에서 http://192.168.49.1:8080 으로 엽니다(포트는 위 상태 줄의 ‘파일’ 값).</string>
+    <string name="tether_folder_current">공유 중: %1$s</string>
+    <string name="tether_folder_none">공유 폴더를 고르지 않았습니다</string>
+    <string name="tether_pick_folder">공유 폴더 고르기</string>
+    <string name="tether_forget_folder">공유 그만두기</string>
+    <string name="tether_forget_question">이 폴더의 공유를 그만둘까요? 파일은 그대로 둡니다.</string>
+    <string name="tether_folder_picker_missing">폴더를 고를 앱이 없습니다</string>
+    <string name="tether_folder_failed">그 폴더의 권한을 받지 못했습니다</string>
+
+    <!-- 화면 — PC·알아 둘 것 -->
+    <string name="tether_section_pc">다른 기기에서</string>
+    <string name="tether_pc_note">PC 에서 쓰는 법은 아래 단추로 받는 zip 의 README.txt 에 있습니다.</string>
+    <string name="tether_section_notes">알아 둘 것</string>
+    <string name="tether_direct_note">붙은 기기의 트래픽은 브라우저의 프록시를 거치지 않고 이 폰의 회선으로 바로 나갑니다.</string>
+    <string name="tether_battery_exempt">배터리 최적화: 빠져 있습니다</string>
+    <string name="tether_battery_optimized">배터리 최적화: 최적화 중 — 화면이 꺼지면 테더링이 느려지거나 멈출 수 있습니다</string>
+    <string name="tether_open_battery_settings">배터리 최적화 설정 열기</string>
+    <string name="tether_service_refused">시스템이 서비스를 세우지 못하게 했습니다 — 다시 해 보세요</string>
+</resources>

@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
 /**
  * ZIP 파일명 판정의 **회귀 표본**.
  *
- * 판정을 `core:charset` 과 합치기 전에(CLAUDE.md '판정 규칙을 손볼 때는 두 곳을 함께 봐라') 지금의
+ * 판정을 `core:charset` 과 합치기 전에(CLAUDE.md '판정 규칙을 손볼 때는 소비자의 시험을 함께 돌려라') 지금의
  * 답을 먼저 박는다. 표본마다 이름 칸의 **바이트**와 UTF-8 표시를 정하고, 나온 이름과 근거 표지를 본다.
  */
 class EntryNameRegressionTest {
@@ -80,8 +80,8 @@ class EntryNameRegressionTest {
         if (cp949 == null) return
         check("짱짱.txt", "$cpLabel(한글 우선)", "짱짱.txt".toByteArray(cp949))
         check("징짖짙짚짜짝짠.txt", "$cpLabel(한글 우선)", "징짖짙짚짜짝짠.txt".toByteArray(cp949))
-        // UTF-8 로는 라틴 **글자**가 되는 것들(`ĸó`·`ġŲ`·`ȣȯ`). 합친 판정의 첫 판이 이것을 라틴 낱말로 읽었다(검토가
-        // 잡은 회귀 — 윈도우의 '캡처' 폴더가 그 모양이다). 합치기 전의 답을 그대로 지킨다.
+        // UTF-8 로는 라틴 **글자**가 되는 것들(`ĸó`·`ġŲ`·`ȣȯ`). 합친 판정의 첫 판이 이것을 라틴 낱말로 읽었다(윈도우의
+        // '캡처' 폴더가 그 모양이다). 합치기 전의 답을 그대로 지킨다.
         check("캡처.png", "$cpLabel(한글 우선)", "캡처.png".toByteArray(cp949))
         check("치킨.jpg", "$cpLabel(한글 우선)", "치킨.jpg".toByteArray(cp949))
         check("호환.txt", "$cpLabel(한글 우선)", "호환.txt".toByteArray(cp949))
@@ -165,7 +165,7 @@ class EntryNameRegressionTest {
     /**
      * 번체 Big5 이름. 예전에는 한글 찌꺼기였고, 합친 판정의 첫 판은 **Shift_JIS 찌꺼기**였다 — Big5 의 앞 바이트 `A1`~`A5`
      * 가 Shift_JIS 로는 반각 문장 부호(`｡｢｣､･`)라 그것을 일본어의 본토 글자로 셌기 때문이다. 문장 부호를 글자로 세지 않게
-     * 고치자(검토) 한자 비율로 Big5 가 이긴다. 글 판정도 같은 답이다.
+     * 고치자 한자 비율로 Big5 가 이긴다. 글 판정도 같은 답이다.
      */
     @Test
     fun `번체 중국어 이름`() {

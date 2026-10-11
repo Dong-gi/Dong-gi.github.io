@@ -9,14 +9,8 @@ import java.nio.charset.StandardCharsets
  */
 internal object TarLimits {
 
-    /**
-     * GNU 긴 이름(`L`)·긴 링크(`K`) 머리 하나의 자료 상한.
-     *
-     * 이름은 **메모리에 통째로 올라간다** — commons-compress 의 `TarArchiveInputStream` 을 쓰지 않은
-     * 까닭 하나가 이것이다(그쪽은 머리에 적힌 크기만큼 끝까지 모은다. 1 GiB 라고 적으면 1 GiB 다).
-     * 리눅스의 경로 상한(PATH_MAX)이 4,096바이트라 64 KiB 는 넉넉하다.
-     */
-    const val MAX_LONG_NAME_BYTES = 64 * 1024
+    // 이름의 두 상한(하나 64 KiB, 합 16 MiB)은 `EntryNameLimits` 로 옮겼다 — cpio·ar 의 머리도 같은 바탕에서 같은 값을 쓴다.
+    // xz 사전의 메모리 상한은 `StreamLimits.DICTIONARY_MEMORY_KIB` 로 옮겼다 — 단독 `.xz`·`.lzma` 도 같은 해제기를 쓴다.
 
     /**
      * PAX 확장 머리(`x`·`g`) 하나의 상한. 확장 속성(ACL·xattr)이 실리면 이름보다 길다 — 1 MiB.
@@ -25,27 +19,17 @@ internal object TarLimits {
     const val MAX_PAX_BYTES = 1024 * 1024
 
     /**
-     * 한 번 훑는 동안 **모든 항목 이름의 바이트 합** 상한. 목록은 이름을 전부 들고 있다.
-     *
-     * 머리 하나의 상한만으로는 모자란다 — 압축한 tar 는 같은 긴 이름을 되풀이하면 몇 MB 파일이 수천 개의 64 KiB
-     * 이름(PAX 경로라면 1 MiB)으로 풀리고, 항목 상한(1만 개)까지 곱하면 기가바이트가 힙에 올라 앱이 죽는다(검토가
-     * 잡았다 — 해제량의 상한은 목록 화면에서 1 GiB 라 그 전에 메모리가 먼저 끝난다). 정상 tar 는 1만 개 × 수백
-     * 바이트라 수 MB 다. 16 MiB 는 항목 1만 개가 평균 1.6 KiB 경로를 써도 들어간다.
-     */
-    const val MAX_NAME_BYTES_TOTAL = 16 * 1024 * 1024
-
-    /**
-     * xz 해제에 허용하는 메모리(KiB). `xz -9`(사전 64 MiB)의 해제에 65 MiB 쯤이 든다 — 표준 사전 값을
-     * 전부 받으면서, 머리에 1.5 GiB 사전을 적은 파일은 거절하는 자리다. 7z 의 64 MiB 와 같은 까닭의 상한이고
-     * 조금 넉넉한 것은 `xz -9` 가 그 경계를 살짝 넘기 때문이다(7z 는 64 MiB 사전 표본이 실제로 거절된다).
-     */
-    const val XZ_MEMORY_LIMIT_KIB = 72 * 1024
-
-    /**
      * 빈 tar(0 으로만 된 파일)로 받아 줄 최대 길이. GNU tar 는 빈 목록도 막(기본 20칸 = 10,240바이트)으로 채워 쓰고
      * 막 크기를 키워도 1 MiB 를 넘기는 일은 없다시피 하다. 그보다 긴 0 은 tar 가 아니다(디스크 이미지 따위).
      */
     const val MAX_EMPTY_TAR_BYTES = 1024 * 1024
+
+    /**
+     * 항목 하나의 크기로 받아 줄 상한(2^62 = 4 EiB). 그보다 크다고 적힌 머리는 **깨진 것**이다 — 어떤 파일 시스템도 그런 파일을 담지
+     * 못하고, 받아 주면 자리 셈(크기 + 채움 + 지금 자리)이 `Long` 을 넘어 상한 검사가 꺼진다(PAX `size` 와 256진 칸은
+     * `Long` 의 끝까지 적을 수 있다). 2^62 아래면 그 셈들이 넘치지 않는다.
+     */
+    const val MAX_ENTRY_BYTES = 1L shl 62
 }
 
 /**
@@ -110,10 +94,13 @@ internal object TarFormat {
 
     fun type(rec: ByteArray): Char = (rec[TYPE].toInt() and 0xFF).toChar()
 
-    /** 머리에 적힌 크기. 음수·깨진 숫자면 던진다 — 그 뒤의 머리 자리를 알 수 없게 된다. */
+    /**
+     * 머리에 적힌 크기. 음수·깨진 숫자·[TarLimits.MAX_ENTRY_BYTES] 를 넘는 값이면 던진다 — 그 뒤의 머리 자리를 알 수 없게 된다.
+     */
     fun size(rec: ByteArray): Long {
         val v = parseNumber(rec, SIZE, SIZE_LEN) ?: throw IOException("tar 크기 칸이 깨졌다")
         if (v < 0) throw IOException("tar 크기가 음수다")
+        if (v > TarLimits.MAX_ENTRY_BYTES) throw IOException("tar 크기가 너무 크다")
         return v
     }
 
@@ -206,7 +193,7 @@ internal object TarFormat {
  *
  * **남기는 것은 [KEEP] 의 넷과 '희소 파일인가' 한 비트뿐이다.** GNU 희소 파일의 열쇠(`GNU.sparse.*`)를 값째 모아
  * 두면, PAX 머리를 이어 붙인 파일 하나가 머리마다 1 MiB 씩 서로 다른 열쇠를 채워 맵이 한없이 자란다(머리 하나가
- * 열쇠 4만 개, 합치면 머리 수만큼 곱해진다 — 검토가 잡았다). 희소 여부는 열쇠의 **이름**만으로 정해지므로 값을 들고
+ * 열쇠 4만 개, 합치면 머리 수만큼 곱해진다). 희소 여부는 열쇠의 **이름**만으로 정해지므로 값을 들고
  * 있을 이유가 없다.
  */
 internal class PaxHeaders private constructor(
@@ -223,9 +210,10 @@ internal class PaxHeaders private constructor(
     /** `hdrcharset=BINARY` 면 경로가 UTF-8 이라는 약속이 없다. */
     val binaryNames: Boolean get() = values["hdrcharset"]?.let { String(it, StandardCharsets.UTF_8) == "BINARY" } == true
 
+    /** 크기. 음수·숫자가 아님·[TarLimits.MAX_ENTRY_BYTES] 를 넘는 값은 깨진 머리다(`TarFormat.size` 와 같은 경계). */
     val size: Long?
         get() = values["size"]?.let {
-            String(it, StandardCharsets.US_ASCII).toLongOrNull()?.takeIf { v -> v >= 0 }
+            String(it, StandardCharsets.US_ASCII).toLongOrNull()?.takeIf { v -> v >= 0 && v <= TarLimits.MAX_ENTRY_BYTES }
                 ?: throw IOException("PAX 크기가 깨졌다")
         }
 

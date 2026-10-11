@@ -55,6 +55,18 @@ object TextLimits {
     const val MAX_SEARCH_HITS = 10_000
 
     /**
+     * **고칠 수 있는** 파일 크기 상한(글·코드 파일 편집). 뷰어와 달리 편집기는 글 전체를 메모리에 들고 **글 전체를
+     * 배치한다** — Compose 의 `BasicTextField` 는 글자 하나를 칠 때마다 글을 통째로 다시 잰다(compose-foundation 1.12.1 소스:
+     * `TextFieldLayoutStateCache.computeLayout` → `TextMeasurer.measure`. 단락 스타일이 하나라 `StaticLayout` 도 하나다). 그래서 이
+     * 값은 메모리가 아니라 **타자 한 번의 지연**으로 정했다 — 글자당 1 µs 안팎으로 어림하면 256 KiB(ASCII 26만 자)에서 한 번에
+     * 0.1~0.3초, 쓸 수는 있지만 느껴지는 끝이다. **기기에서 재지 않은 값이다** — 128 KiB·256 KiB·512 KiB 파일에 타자를 쳐 보고 고친다.
+     *
+     * 넘으면 편집 단추가 까닭('이 파일은 커서 … — 256 KB까지')을 말한다. 판정은 디스크의 바이트 수다 — 사용자가 목록에서 보는 크기와
+     * 같은 단위라야 '얼마까지' 가 읽힌다.
+     */
+    const val EDIT_MAX_BYTES = 256L * 1024
+
+    /**
      * 이 행 수마다 색인 진행을 알린다. 너무 잦으면 알리는 것이 일이 된다.
      */
     const val PROGRESS_EVERY_ROWS = 20_000

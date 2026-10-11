@@ -74,7 +74,60 @@ class FileOpEngine(private val media: MediaIndex) {
         ) : Outcome
     }
 
-    enum class Reason { NO_SPACE, NOT_FOUND, PERMISSION, IO, INVALID_NAME, TARGET_INSIDE_SOURCE }
+    enum class Reason {
+        NO_SPACE, NOT_FOUND, PERMISSION, IO, INVALID_NAME, TARGET_INSIDE_SOURCE,
+
+        /** 항목이 너무 많다(ZIP 만들기의 상한 — [ZipMaker.MAX_ENTRIES], 이 앱이 다시 열 수 있는 수). */
+        TOO_MANY_ITEMS,
+
+        /** 이 형식은 별도로 저장할 수 없다(그림 잘라 저장·구간 저장·소리만 뽑기 — 플랫폼이 쓰지 못하는 코덱·컨테이너, 잠긴 미디어). */
+        UNSUPPORTED,
+
+        /** 고른 뒤에 파일이 바뀌었다 — 고른 자리가 지금 파일의 자리가 아니다(그림 잘라 저장). */
+        CHANGED,
+
+        /** 고른 구간에 담을 것이 없다(구간 저장 — 미디어의 끝 너머를 골랐다). */
+        EMPTY_RANGE,
+
+        /**
+         * 고른 구간에 소리가 없다(구간 저장 — 영상은 있는데 첫 소리 트랙이 그 구간 전에 끝났거나 뒤에 시작한다). 소리 없는 영상을 말없이
+         * 만들지 않는다. [EMPTY_RANGE] 와 가른다 — 예전에는 둘 다 '담을 것이 없다' 여서 무엇이 빈 것인지 말하지 못했다.
+         */
+        NO_AUDIO_IN_RANGE,
+
+        /** 고른 구간이 너무 길다(구간 저장 — 우리가 자르는 소리의 프레임 수 상한, 또는 그것을 셈하다 메모리가 모자랐다). */
+        RANGE_TOO_LONG,
+
+        /** 소리 트랙이 없다(소리만 뽑기 — 소리 없는 화면 녹화 등). */
+        NO_AUDIO,
+
+        /**
+         * 그 이름이 이미 있다(이름 바꾸기·새 폴더). 예전에는 [INVALID_NAME] 으로 냈다 — 사용자는 '쓸 수 없는 이름' 을
+         * 글자가 틀린 것으로 읽고 처음부터 다시 쳤다. 이름 칸은 이것이면 닫지 않고 칸 안에서 말한다(`feature:browser` 의 `NameAttempt`).
+         */
+        EXISTS,
+
+        /**
+         * 글을 연 뒤에 파일이 **다른 곳에서** 바뀌었거나 사라졌다(글 편집의 저장). 덮어쓰지 않고 멈춘다 — 편집 화면이
+         * '덮어쓰기 / 취소' 를 묻는다([CHANGED] 는 잘라 저장의 '고른 자리가 어긋났다' 라 문장이 다르다).
+         */
+        CHANGED_ELSEWHERE,
+
+        /** 고치기 전 판을 휴지통에 남기지 못해 저장하지 않았다(공간·권한 — 글 편집의 첫 저장). 편집 화면이 '그래도 저장' 을 묻는다. */
+        PREVIOUS_NOT_KEPT,
+
+        /**
+         * 이 문서는 이 앱에서 고칠 수 없다 — 쓰지 않았다. 지금은 새 문서에서만 난다 — 그 종류의 서식이 없어
+         * '그 종류를 만들 줄 모른다' 다(`NewDocuments`).
+         */
+        NOT_EDITABLE,
+
+        /**
+         * 쓴 것이 형식과 맞지 않아 놓지 않았다 — **원본은 그대로다**(새 문서는 다시 읽어 보고, 편집기의 저장은 받은 바이트의 앞머리를 본다 —
+         * `NewDocuments`·`EditorSaver`). 우리 쓰기의 결함이다 — 사용자의 파일이 아니다.
+         */
+        VERIFY_FAILED,
+    }
 
     /** 무엇을 얼마나 옮길 것인가. 진행률의 분모를 얻는다. */
     data class Plan(val files: Int, val bytes: Long)
@@ -433,31 +486,6 @@ class FileOpEngine(private val media: MediaIndex) {
     /** 프로세스가 죽어 남은 임시 파일을 걷는다. 구현은 [AtomicFileWriter] 에 있다. */
     private fun sweepPartials(dir: File) = AtomicFileWriter.sweepPartials(dir)
 
-    /**
-     * 예외를 이유로 옮긴다.
-     *
-     * `FileUtils.copy` 는 `ErrnoException` 을 `rethrowAsIOException()` 으로 바꿔 던지므로,
-     * **원인을 한 겹 벗겨야** `ENOSPC` 가 보인다. 벗기지 않으면 저장공간 부족이 언제나
-     * '입출력 오류' 가 되어, 사용자는 공간을 비우면 된다는 것을 알 수 없다.
-     */
-    private fun reasonOf(t: Throwable): Reason {
-        var e: Throwable? = t
-        var hop = 0
-        while (e != null && hop < 4) {
-            if (e is ErrnoException) return reasonOf(e)
-            e = e.cause
-            hop++
-        }
-        return Reason.IO
-    }
-
-    private fun reasonOf(e: ErrnoException): Reason = when (e.errno) {
-        OsConstants.ENOSPC, OsConstants.EDQUOT -> Reason.NO_SPACE
-        OsConstants.ENOENT -> Reason.NOT_FOUND
-        OsConstants.EACCES, OsConstants.EPERM, OsConstants.EROFS -> Reason.PERMISSION
-        else -> Reason.IO
-    }
-
     // ---- 삭제·이름·폴더 ---------------------------------------------------
 
     /** 되돌릴 수 없는 삭제. 휴지통을 거치는 삭제는 [TrashStore] 가 한다. */
@@ -513,7 +541,9 @@ class FileOpEngine(private val media: MediaIndex) {
         val src = File(path)
         val target = File(src.parentFile, name)
         if (src.absolutePath == target.absolutePath) return Outcome.Done(1, 0, 0)
-        if (!reserveName(target, src.isDirectory)) return Outcome.Failed(Reason.INVALID_NAME, name)
+        // 맡지 못한 까닭을 가른다 — 이미 있으면 [Reason.EXISTS], 그 밖(권한·공간·입출력)은 그 까닭 그대로. 예전에는 모두
+        // '쓸 수 없는 이름' 이었다.
+        reserveName(target, src.isDirectory)?.let { return Outcome.Failed(it, name) }
         return try {
             Os.rename(src.absolutePath, target.absolutePath)
             media.scanAll(listOf(path, target.absolutePath))
@@ -523,28 +553,6 @@ class FileOpEngine(private val media: MediaIndex) {
             target.delete()
             Outcome.Failed(reasonOf(e), name)
         }
-    }
-
-    /**
-     * 이 이름을 우리 것으로 만든다. 이미 있으면 false.
-     *
-     * 폴더는 빈 폴더로, 파일은 빈 파일로 맡는다 — `rename(2)` 는 빈 폴더 위로 폴더를,
-     * 파일 위로 파일을 원자적으로 덮어쓸 수 있다.
-     */
-    private fun reserveName(target: File, isDirectory: Boolean): Boolean = try {
-        if (isDirectory) {
-            target.mkdir()
-        } else {
-            val fd = Os.open(
-                target.absolutePath,
-                OsConstants.O_CREAT or OsConstants.O_EXCL or OsConstants.O_WRONLY,
-                OsConstants.S_IRUSR or OsConstants.S_IWUSR or OsConstants.S_IRGRP or OsConstants.S_IROTH,
-            )
-            Os.close(fd)
-            true
-        }
-    } catch (e: ErrnoException) {
-        false
     }
 
     /**
@@ -649,7 +657,8 @@ class FileOpEngine(private val media: MediaIndex) {
      */
     private fun canRotateFile(file: File): Boolean =
         when (file.name.substringAfterLast('.', "").lowercase()) {
-            "jpg", "jpeg" -> true
+            // `jfif`·`jpe` 는 JPEG 의 다른 이름이다(목록이 그림으로 보는 이름과 맞춘다).
+            "jpg", "jpeg", "jfif", "jpe" -> true
             "webp" -> !isAnimatedWebp(file)
             else -> false
         }
@@ -711,12 +720,16 @@ class FileOpEngine(private val media: MediaIndex) {
         return back[(angle + turns * 90) % 360 to mirrored] ?: ExifInterface.ORIENTATION_NORMAL
     }
 
+    /**
+     * 새 폴더. 이름을 맡는 것과 만드는 것이 한 번의 `mkdir(2)` 다([reserveName]) — 그 답의 까닭을 그대로 말한다. 이미 있으면
+     * [Reason.EXISTS](예전에는 '쓸 수 없는 이름' 이었다), 못 만들면 권한·공간·입출력 가운데 실제 까닭이다(예전에는 늘
+     * '권한이 없다' 였다).
+     */
     fun createFolder(parent: String, name: String): Outcome {
         val verdict = PathRules.validate(name)
         if (verdict is PathRules.Verdict.Rejected) return Outcome.Failed(Reason.INVALID_NAME, name)
         val dir = File(parent, (verdict as PathRules.Verdict.Ok).name)
-        if (dir.exists()) return Outcome.Failed(Reason.INVALID_NAME, name)
-        return if (dir.mkdir()) Outcome.Done(1, 0, 0) else Outcome.Failed(Reason.PERMISSION, name)
+        return reserveName(dir, isDirectory = true)?.let { Outcome.Failed(it, name) } ?: Outcome.Done(1, 0, 0)
     }
 
     internal companion object {
@@ -736,5 +749,60 @@ class FileOpEngine(private val media: MediaIndex) {
          */
         val PART_PREFIX = AtomicFileWriter.PART_PREFIX
         val PART_SUFFIX = AtomicFileWriter.PART_SUFFIX
+
+        /**
+         * 예외를 이유로 옮긴다. ZIP 만들기([ZipMaker])도 같은 판단을 쓴다.
+         *
+         * `FileUtils.copy` 는 `ErrnoException` 을 `rethrowAsIOException()` 으로 바꿔 던지므로,
+         * **원인을 한 겹 벗겨야** `ENOSPC` 가 보인다. 벗기지 않으면 저장공간 부족이 언제나
+         * '입출력 오류' 가 되어, 사용자는 공간을 비우면 된다는 것을 알 수 없다.
+         */
+        internal fun reasonOf(t: Throwable): Reason {
+            var e: Throwable? = t
+            var hop = 0
+            while (e != null && hop < 4) {
+                if (e is ErrnoException) return reasonOf(e)
+                e = e.cause
+                hop++
+            }
+            return Reason.IO
+        }
+
+        internal fun reasonOf(e: ErrnoException): Reason = when (e.errno) {
+            OsConstants.ENOSPC, OsConstants.EDQUOT -> Reason.NO_SPACE
+            OsConstants.ENOENT -> Reason.NOT_FOUND
+            OsConstants.EACCES, OsConstants.EPERM, OsConstants.EROFS -> Reason.PERMISSION
+            else -> Reason.IO
+        }
+
+        /**
+         * 이 이름을 우리 것으로 만든다. 맡았으면 null, 못 맡았으면 **그 까닭** — 이미 있으면 [Reason.EXISTS], 볼륨이 그 이름을
+         * 받지 않으면 [Reason.INVALID_NAME], 그 밖은 [reasonOf] 의 갈래(권한·공간·없음·입출력).
+         *
+         * 폴더는 빈 폴더로, 파일은 빈 파일로 맡는다 — `rename(2)` 는 빈 폴더 위로 폴더를,
+         * 파일 위로 파일을 원자적으로 덮어쓸 수 있다. 폴더를 `File.mkdir()` 로 만들지 않는 것은 그것이 까닭을 버리기 때문이다
+         * (참·거짓뿐이다). FAT(SD 카드)처럼 대소문자를 가르지 않는 볼륨에서는 대소문자만 다른 이름도 '이미 있다' 다.
+         */
+        internal fun reserveName(target: File, isDirectory: Boolean): Reason? = try {
+            if (isDirectory) {
+                Os.mkdir(target.absolutePath, OsConstants.S_IRWXU or OsConstants.S_IRWXG or OsConstants.S_IRWXO)
+            } else {
+                val fd = Os.open(
+                    target.absolutePath,
+                    OsConstants.O_CREAT or OsConstants.O_EXCL or OsConstants.O_WRONLY,
+                    OsConstants.S_IRUSR or OsConstants.S_IWUSR or OsConstants.S_IRGRP or OsConstants.S_IROTH,
+                )
+                Os.close(fd)
+            }
+            null
+        } catch (e: ErrnoException) {
+            when (e.errno) {
+                OsConstants.EEXIST -> Reason.EXISTS
+                // 파일시스템이 그 이름을 받지 않는다(FAT 의 금지 글자·길이) — 이것은 정말 '쓸 수 없는 이름' 이다. 앞의 `PathRules` 가
+                // 대개 먼저 거르지만, 볼륨마다 받는 이름이 달라 다 거르지는 못한다.
+                OsConstants.EINVAL, OsConstants.ENAMETOOLONG -> Reason.INVALID_NAME
+                else -> reasonOf(e)
+            }
+        }
     }
 }

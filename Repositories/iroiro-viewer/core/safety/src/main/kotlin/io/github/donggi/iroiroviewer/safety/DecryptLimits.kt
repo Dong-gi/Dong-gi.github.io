@@ -4,8 +4,7 @@ package io.github.donggi.iroiroviewer.safety
  * 암호를 풀어 낸 **평문 한 벌을 RAM 에 들 때**의 상한. 포맷과 상관없는 하나의 예산이다.
  *
  * 평문은 저장소에 쓰지 않는다(CLAUDE.md '암호가 걸린 파일') — 그래서 문서 크기만큼 메모리를 쓴다.
- * 암호 PDF(API 34 이하, memfd 로 넘긴다)와 암호 OOXML(MS-OFFCRYPTO, 풀린 ZIP 을 바이트로 든다)이
- * 같은 값을 쓴다. 한때 OOXML 이 `PdfLimits` 의 상수를 빌려 썼는데, 이름이 뜻을 속였다.
+ * 지금 쓰는 것은 암호 PDF(API 34 이하, memfd 로 넘긴다 — `PdfLimits.MAX_DECRYPTED_BYTES`) 하나다.
  */
 object DecryptLimits {
 

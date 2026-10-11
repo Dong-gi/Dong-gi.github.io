@@ -98,9 +98,9 @@ object ExifReader {
         }
     }
 
-    /** 이 확장자에서 메타데이터를 지울 수 있는가. */
+    /** 이 확장자에서 메타데이터를 지울 수 있는가. `jfif`·`jpe` 는 JPEG 의 다른 이름이다(목록이 그림으로 보는 이름과 맞춘다). */
     fun canSanitize(name: String): Boolean =
-        name.substringAfterLast('.', "").lowercase() in setOf("jpg", "jpeg", "png", "webp")
+        name.substringAfterLast('.', "").lowercase() in setOf("jpg", "jpeg", "jfif", "jpe", "png", "webp")
 
     /**
      * 이 파일에 **회전을 저장할 수 있는가.**
@@ -119,7 +119,8 @@ object ExifReader {
      */
     fun canRotate(file: File): Boolean {
         return when (file.name.substringAfterLast('.', "").lowercase()) {
-            "jpg", "jpeg" -> true
+            // `jfif`·`jpe` 는 JPEG 의 다른 이름이다. 엔진(`FileOpEngine.canRotateFile`)과 같은 표여야 한다.
+            "jpg", "jpeg", "jfif", "jpe" -> true
             "webp" -> !ImageFormats.isAnimatedWebp(file)
             else -> false
         }

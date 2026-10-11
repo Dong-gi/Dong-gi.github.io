@@ -4,6 +4,7 @@ import io.github.donggi.iroiroviewer.model.IroDispatchers
 import android.content.Context
 import io.github.donggi.iroiroviewer.data.IroiroDatabase
 import io.github.donggi.iroiroviewer.data.TrashEntryEntity
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
+import java.io.FileInputStream
 import java.util.UUID
 
 /**
@@ -151,6 +153,88 @@ class TrashStore(
     }
 
     /**
+     * 파일 하나의 **사본**을 휴지통에 넣는다(글 편집이 저장하기 전에 고치기 전 판을 남긴다). 원본은 그대로 둔다.
+     *
+     * [moveToTrash] 와 같은 볼륨의 휴지통에, 같은 차례로 넣는다 — 사이드카 → 내용 → 기록. 다른 것은 내용을 **옮기지 않고 쓴다**는
+     * 것 하나다. 그래서 내용은 임시 이름에 다 쓰고 fsync 한 뒤 uuid 이름으로 놓는다([AtomicFileWriter]) — uuid 이름에 반쯤 쓴 파일이
+     * 보이면 정합성 검사가 그것을 '기록 없는 고아' 로 되살린다. 수정 시각은 원본의 것을 옮긴다(되살린 판이 그 시각으로 보이게).
+     *
+     * 되살리면 원래 자리의 지금 파일과 이름이 겹친다 — [restore] 가 번호를 붙인다(`메모 (2).txt`). 고치기 전 판이 지금 파일을 덮지 않는다.
+     *
+     * **기록까지 남겨야 성공이다.** 기록 없이 휴지통에 남은 사본은 원래 자리를 모르는 고아로만 되살아난다 — 그러면 '되돌릴 수 있다' 는
+     * 약속이 반쯤 깨지므로 사본을 거두고 실패로 돌려준다(부르는 쪽이 사용자에게 묻는다).
+     *
+     * @return 넣은 항목의 uuid. 넣지 못했으면 null(볼륨을 모른다·휴지통을 만들 수 없다·공간·권한).
+     */
+    suspend fun copyToTrash(path: String, volumes: List<VolumeRegistry.Volume>): String? = withContext(IroDispatchers.io) {
+        val src = File(path)
+        if (!src.isFile) return@withContext null
+        val volume = VolumeRegistry.volumeOf(volumes, path) ?: return@withContext null
+        val dir = trashDirOf(volume.path) ?: return@withContext null
+        val uuid = UUID.randomUUID().toString()
+        val size = src.length()
+        // 셋(사이드카·내용·기록)은 쪼개지지 않는다 — [moveToTrash] 와 같은 규칙. 사본 하나라 길지 않다.
+        withContext(NonCancellable) {
+            // 죽은 쓰기가 남긴 임시본을 걷는다 — 휴지통 폴더는 복사의 대상이 아니라 다른 길로는 걷히지 않는다.
+            AtomicFileWriter.sweepPartials(dir)
+            val sidecar = File(dir, "$uuid$SIDECAR_EXT")
+            writeSidecar(sidecar, uuid, false, size, src.name.substringAfterLast('.', ""))
+            val stored = File(dir, uuid)
+            val copied = try {
+                AtomicFileWriter.write(stored, src.lastModified()) { out ->
+                    FileInputStream(src).use { input -> input.copyTo(out, COPY_BUFFER) }
+                }
+                true
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                Iro.d { "휴지통에 사본을 넣지 못했다: ${e.javaClass.simpleName}" }
+                false
+            }
+            if (!copied) {
+                sidecar.delete()
+                return@withContext null
+            }
+            val recorded = try {
+                dao.insert(
+                    TrashEntryEntity(
+                        uuid = uuid,
+                        volumeId = volume.id,
+                        originalParent = src.parent.orEmpty(),
+                        originalName = src.name,
+                        isDirectory = false,
+                        size = size,
+                        deletedAt = System.currentTimeMillis(),
+                    )
+                )
+                true
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                Iro.d { "휴지통 사본의 기록을 쓰지 못했다: ${e.javaClass.simpleName}" }
+                false
+            }
+            if (!recorded) {
+                stored.delete()
+                sidecar.delete()
+                return@withContext null
+            }
+            uuid
+        }
+    }
+
+    /**
+     * [copyToTrash] 로 넣은 사본을 거둔다 — 그 뒤의 쓰기가 실패해 원본이 그대로 남았을 때. 그 사본은 지금 파일과 같은 내용이라
+     * 휴지통에 '고치기 전 판' 으로 남으면 사용자를 헷갈리게 한다. 우리가 방금 만든 것만 지운다(uuid 로 찾는다).
+     */
+    suspend fun dropCopy(uuid: String, volumes: List<VolumeRegistry.Volume>) = withContext(IroDispatchers.io + NonCancellable) {
+        val record = dao.find(uuid) ?: return@withContext
+        val volume = volumes.firstOrNull { it.id == record.volumeId } ?: return@withContext
+        val dir = File(volume.path, DIR_NAME)
+        File(dir, uuid).delete()
+        File(dir, "$uuid$SIDECAR_EXT").delete()
+        dao.delete(record)
+    }
+
+    /**
      * 되돌린다. 원래 부모가 사라졌으면 다시 만들고, 같은 이름이 있으면 번호를 붙인다.
      *
      * **원래 이름을 먼저 그대로 시도한다.** `sanitize` 를 무조건 걸면 `...` 이나 끝에
@@ -196,6 +280,42 @@ class TrashStore(
                 media.scanAll(listOf(target.absolutePath))
                 Result.Done(1, 0)
             }
+        }
+    }
+
+    /**
+     * 여럿을 원래 자리로 되돌린다 — 휴지통에서 고른 것들, 그리고 스낵바의 '되돌리기'. 요청 하나·결과 한 줄이다(하나씩 넣으면
+     * 결과 스낵바가 항목 수만큼 뜬다). 항목마다 [restore] 이고 취소는 **항목 경계에서만** 받는다 — 그 안의 rename 과 기록 지우기는
+     * 쪼개지지 않는다([restore] 의 `NonCancellable`).
+     *
+     * 셈은 [moveToTrash] 와 같은 모양이다 — 하나도 못 했는데 모두 '저장소가 없다' 면 [Result.Unavailable](그 까닭을 말한다), 그 밖은
+     * 한 것과 못 한 것의 수다.
+     */
+    suspend fun restoreAll(
+        uuids: List<String>,
+        volumes: List<VolumeRegistry.Volume>,
+    ): Result = withContext(IroDispatchers.io) {
+        var done = 0
+        var failed = 0
+        var unavailable = 0
+        var firstUnavailable: String? = null
+        for (uuid in uuids) {
+            currentCoroutineContext().ensureActive()
+            when (val r = restore(uuid, volumes)) {
+                is Result.Done -> {
+                    done += r.done
+                    failed += r.failed
+                }
+                is Result.Failed -> failed += r.failed
+                is Result.Unavailable -> {
+                    unavailable++
+                    if (firstUnavailable == null) firstUnavailable = r.name
+                }
+            }
+        }
+        when {
+            done == 0 && failed == 0 && unavailable > 0 -> Result.Unavailable(firstUnavailable.orEmpty())
+            else -> Result.Done(done, failed + unavailable)
         }
     }
 
@@ -504,10 +624,19 @@ class TrashStore(
 
         private const val MAX_EXT_LEN = 16
 
+        /** 사본을 넣을 때의 버퍼. 글 파일이라 크지 않다. */
+        private const val COPY_BUFFER = 64 * 1024
+
         /** 짝 없는 사이드카를 지우기 전에 두는 유예. 쓰기와 rename 사이의 창보다 넉넉하다. */
         private const val STRAY_GRACE_MS = 60 * 60 * 1000L
 
         const val DEFAULT_RETENTION_DAYS = 30
+
+        /**
+         * 휴지통에 든 항목의 실제 파일 — 볼륨 루트의 휴지통 폴더 아래 uuid 이름(확장자가 없다). 휴지통 화면이 썸네일을 그리는 데 쓴다
+         * (디스크에 남기지 않는다 — `PathRules.isNoMediaOrTrash`). 휴지통의 짜임은 이 클래스만 안다.
+         */
+        fun storedFileOf(volumeRoot: String, uuid: String): File = File(File(volumeRoot, DIR_NAME), uuid)
 
         /** 이 경로가 휴지통 폴더(또는 그 안)인가. 목록에서 감추는 데 쓴다. */
         fun isTrashPath(path: String): Boolean =

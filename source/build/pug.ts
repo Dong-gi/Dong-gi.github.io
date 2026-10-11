@@ -217,8 +217,7 @@ await runComponent('pug', async (log) => {
             // 홈의 최근 커밋 표는 git 이력에서 나온다. 커밋을 해도 index.pug 자체는
             // 바뀌지 않으므로 해시로는 낡음을 알 수 없다. 한 장이라 매번 렌더한다.
             always: source === 'index.pug',
-            // 참조하는 그림도 입력이다. 없는 파일도 그대로 넣는다 — hashOf 가 '없음'
-            // 으로 다루므로, 나중에 그림이 도착하면 해시가 달라져 이 문서만 다시 돈다.
+            // include·extends 로 끌어온 pug 도 입력이다 — 그것이 바뀌면 그것을 쓰는 문서만 다시 돈다.
             inputs: [source, ...included],
             outputs: [target],
             run: () => renderOne(log, source, target),

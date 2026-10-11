@@ -63,7 +63,7 @@ class SevenZArchiveReader(
      * 한 번 더 열어 보고, 암호를 요구하면 '틀렸다' 로 옮긴다. 깨진 파일과 가르는 길이 그것뿐이다.
      *
      * **어떤 실패든 사본을 지운다.** 예전 판은 두 예외만 잡아, 라이브러리가 던지는
-     * `RuntimeException`(깨진 헤더)에서는 사본이 지워지지 않은 채 버려졌다(검토가 잡았다).
+     * `RuntimeException`(깨진 헤더)에서는 사본이 지워지지 않은 채 버려졌다.
      */
     private val handle: SevenZFile = try {
         openFile()
@@ -147,7 +147,7 @@ class SevenZArchiveReader(
      * - BCJ2·PPMd·64 MiB 사전 같은 폴더는 **만드는 것 자체가 실패한다.**
      *
      * 예전 판은 암호를 준 핸들에서 그대로 돌고 예외를 잡지 않아, **암호와 상관없는 Ultra·BCJ2 7z 의
-     * 목록까지 '깨졌다' 로 나갔다**(검토가 잡은 회귀). 이제 암호 없이 연 파일로 돌고 항목마다 예외를
+     * 목록까지 '깨졌다' 로 나갔다**. 이제 암호 없이 연 파일로 돌고 항목마다 예외를
      * 가른다 — 암호가 없으면 AES 는 첫 읽기에서 곧바로 `PasswordRequiredException` 을 던지므로 열쇠를
      * 유도하지 않는다.
      *

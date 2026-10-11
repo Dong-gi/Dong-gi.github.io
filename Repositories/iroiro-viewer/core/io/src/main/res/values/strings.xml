@@ -11,12 +11,53 @@
     <string name="io_op_cancel">취소</string>
     <string name="io_op_rotating">회전하는 중</string>
     <string name="io_op_extracting">압축을 푸는 중</string>
+    <string name="io_op_compressing">압축하는 중</string>
+    <string name="io_op_cropping">잘라 낸 그림을 저장하는 중</string>
+    <string name="io_op_clipping">구간을 저장하는 중</string>
+    <string name="io_op_audio">소리를 저장하는 중</string>
+
+    <!--
+      파일 작업이 실패한 까닭(FileOpText.reasonRes). 그것을 만드는 FileOpEngine.Reason 곁에 한 벌 - 파일 목록과 재생 화면(구간 저장)이
+      같은 문장을 쓴다.
+    -->
+    <string name="io_error_no_space">저장 공간이 모자랍니다</string>
+    <string name="io_error_not_found">대상을 찾을 수 없습니다</string>
+    <string name="io_error_permission">권한이 없습니다</string>
+    <string name="io_error_io">입출력이 실패했습니다</string>
+    <string name="io_error_invalid_name">쓸 수 없는 이름입니다</string>
+    <string name="io_error_target_inside">폴더를 자기 안으로 옮길 수 없습니다</string>
+    <string name="io_error_too_many_items">항목이 너무 많아 압축하지 않았습니다</string>
+    <string name="io_error_unsupported">이 형식은 별도로 저장할 수 없습니다</string>
+    <string name="io_error_changed">파일이 그사이 바뀌었습니다 — 다시 열어 고르세요</string>
+    <string name="io_error_empty_range">고른 구간에 담을 것이 없습니다</string>
+    <!-- 영상은 있는데 그 구간에 소리가 없다 - 소리 없는 영상은 만들지 않는다(구간 저장의 결정). 빈 것이 영상인지 소리인지 가른다. -->
+    <string name="io_error_no_audio_in_range">고른 구간에는 소리가 없습니다 — 소리 없는 영상은 만들지 않습니다</string>
+    <string name="io_error_range_too_long">고른 구간이 너무 길어 저장할 수 없습니다 — 더 짧게 고르세요</string>
+    <string name="io_error_no_audio">소리 트랙이 없는 영상입니다</string>
+    <!-- 이름 바꾸기·새 폴더에서 그 이름이 이미 있다. 이름 칸은 이것이면 닫지 않고 칸 안에 띄운다. -->
+    <string name="io_error_exists">같은 이름이 이미 있습니다</string>
+
+    <!-- 잘라 저장·구간 저장의 결과(FileOpText.savedMessage). 이름은 실제로 만든 파일의 것이다 - 같은 이름이 있었으면 (2) 가 붙었다. -->
+    <string name="io_saved_crop">잘라 낸 그림을 저장했습니다: %1$s</string>
+    <string name="io_saved_crop_downscaled">잘라 낸 그림을 저장했습니다: %1$s · 원본이 커서 %2$d×%3$d 크기로 줄였습니다</string>
+    <!-- 실제로 담은 구간을 함께 말한다 - 영상은 키프레임에서만 자를 수 있어 시작이 고른 곳보다 앞일 수 있다. -->
+    <string name="io_saved_clip">구간을 저장했습니다: %1$s (%2$s ~ %3$s)</string>
+    <string name="io_saved_clip_dropped">" · 자막 등 트랙 %1$d개는 담지 않았습니다"</string>
+    <string name="io_saved_audio">소리를 저장했습니다: %1$s (%2$s ~ %3$s)</string>
+    <string name="io_saved_audio_dropped">" · 다른 소리 트랙 %1$d개는 담지 않았습니다"</string>
+    <string name="io_saved_plain">저장했습니다: %1$s</string>
+    <string name="io_save_cancelled">저장을 취소했습니다</string>
 
     <!-- 기본 볼륨의 이름. 안드로이드가 주는 `Internal shared storage` 를 대신한다. -->
     <string name="io_volume_internal">내부 저장소</string>
 
     <!-- 다른 앱으로 열기(ExternalOpen). 문구는 결과 타입 곁에 한 벌 — 목록과 뷰어 여섯이 같은 문장을 쓴다. -->
     <string name="io_open_with">다른 앱으로 열기</string>
+    <!--
+      HTML 을 웹 쪽(text/html)으로 넘기는 고르는 창과 그 메뉴 줄(ExternalOpen 의 WEB_PAGE). 이 앱은 인터넷에 닿지 않는다 -
+      HTML 미리보기에 없는 바깥 자원까지 보려면 이것으로 브라우저에 넘긴다. '다른 앱으로 열기' 는 HTML 을 글로 넘겨 편집기가 앞에 선다.
+    -->
+    <string name="io_open_in_browser">브라우저로 열기</string>
     <!--
       모든 것(*/*)으로 넘기는 고르는 창의 제목(ExternalOpen 의 ALL_APPS). 이 형식을 선언한 앱이 없어 넓혔을 때와, 처음부터
       형식을 모르는 파일일 때 둘 다다 - 목록이 같은 앱들이라 이름도 하나다. 거기 선 앱들은 이 형식을 안다고 한 적이
@@ -31,4 +72,46 @@
     <!-- NOT_SHAREABLE 은 '파일이 사라졌다' 와 '넘길 수 없는 자리다' 를 함께 뜻한다(ShareHelper.uriOf 가 null). 둘 다 말한다. -->
     <string name="io_open_with_not_shareable">파일이 없거나, 다른 앱에 넘길 수 없는 위치에 있습니다</string>
     <string name="io_open_with_failed">다른 앱을 열지 못했습니다</string>
+
+    <!--
+      다른 앱이 넘긴 파일을 받지 못했을 때(IncomingFiles.Failure). 읽지 못한 것은 까닭을 가르지 않는다 - 보낸 앱의 권한이
+      끝났거나, 파일이 사라졌거나, 보낸 앱의 제공자가 오류를 냈다. 어느 쪽이든 사용자가 할 일은 보낸 앱에서 다시 여는 것이다.
+    -->
+    <string name="io_incoming_unreadable">받은 파일을 읽지 못했습니다</string>
+    <string name="io_incoming_no_space">저장 공간이 모자라 받은 파일을 열 수 없습니다</string>
+
+    <!--
+      글·코드 파일 편집과 새 글 파일. 고친 글의 저장(TextSaver.save)과 빈 글 파일 만들기(TextSaver.create)가 파일 작업 큐를
+      지난다 - 진행 알림·막대의 이름, 실패 까닭 둘(FileOpText.reasonRes), 결과 한 줄(FileOpText.textMessage). 보통은 편집 화면이 결과를
+      직접 받아 묻고, 결과 한 줄은 편집 화면과 앱의 결과 줄(그 화면이 사라진 뒤에 끝난 것)이 함께 쓴다. 두 번째 저장부터는 io_saved_plain.
+    -->
+    <string name="io_op_saving_text">글을 저장하는 중</string>
+    <string name="io_op_creating_text">새 글 파일을 만드는 중</string>
+    <string name="io_error_changed_elsewhere">파일이 다른 곳에서 바뀌어 저장하지 않았습니다</string>
+    <string name="io_error_previous_not_kept">고치기 전의 글을 휴지통에 남기지 못해 저장하지 않았습니다</string>
+    <string name="io_saved_text_kept">저장했습니다: %1$s · 고치기 전의 글은 휴지통에 남겼습니다</string>
+    <string name="io_created_text">새 글 파일을 만들었습니다: %1$s</string>
+
+    <!--
+      그리기·메모 - 그림 위에 그린 것을 원본 곁의 새 파일로(잘라 저장과 같은 요청 SaveCrop 에 그릴 것을 싣는다).
+      진행 문구는 알림과 목록의 진행 막대가, 결과 문구는 FileOpText.savedMessage 가 쓴다. 이름은 실제로 만든 파일의 것이다 -
+      같은 이름이 있었으면 (2) 가 붙었다. 줄였을 때의 꼴은 잘라 저장의 것과 같다.
+    -->
+    <string name="io_op_markup">그린 그림을 저장하는 중</string>
+    <string name="io_saved_markup">그린 그림을 저장했습니다: %1$s</string>
+    <string name="io_saved_markup_downscaled">그린 그림을 저장했습니다: %1$s · 원본이 커서 %2$d×%3$d 크기로 줄였습니다</string>
+
+    <!--
+      오피스 문서의 저장과 새 문서. 편집기가 저장한 문서의 쓰기(EditorSaver)와 빈 문서 만들기
+      (NewDocuments - 서식 옮겨 적기)가 파일 작업 큐를 지난다 - 진행 알림·막대의 이름, 실패 까닭 둘(FileOpText.reasonRes), 문서의 말로
+      바꾼 까닭 둘과 결과 한 줄(FileOpText.docMessage). 두 번째 저장부터는 io_saved_plain.
+    -->
+    <string name="io_op_saving_doc">문서를 저장하는 중</string>
+    <string name="io_op_creating_doc">새 문서를 만드는 중</string>
+    <string name="io_error_not_editable">이 앱에서 고칠 수 없는 문서라 저장하지 않았습니다</string>
+    <string name="io_error_verify_failed">저장한 것을 다시 읽어 보니 맞지 않아 원본을 그대로 두었습니다</string>
+    <string name="io_error_previous_doc_not_kept">고치기 전의 문서를 휴지통에 남기지 못해 저장하지 않았습니다</string>
+    <string name="io_error_new_doc_unsupported">이 종류의 새 문서는 아직 만들 수 없습니다</string>
+    <string name="io_saved_doc_kept">저장했습니다: %1$s · 고치기 전의 문서는 휴지통에 남겼습니다</string>
+    <string name="io_created_doc">새 문서를 만들었습니다: %1$s</string>
 </resources>

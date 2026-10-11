@@ -83,7 +83,7 @@ class PdfOpener(private val password: CharArray? = null) : DocumentOpener {
         return when (attempt) {
             is Attempt.Failed -> OpenOutcome.Failed(attempt.failure)
             is Attempt.Ok -> {
-                val doc = PdfDocument(attempt.opened.renderer, attempt.opened.pageCount)
+                val doc = PdfDocument(attempt.opened.renderer, attempt.opened.pageCount, attempt.textOrigin)
                 // **만들자마자 건넨다.** 아래에서 실패로 끝내더라도 이미 건넸으므로
                 // 호출자의 `finally` 가 닫는다 — 여기서 우리도 닫지만 두 번 닫아도 안전하다.
                 onOpen(doc)
@@ -99,12 +99,13 @@ class PdfOpener(private val password: CharArray? = null) : DocumentOpener {
     }
 
     private sealed interface Attempt {
-        data class Ok(val opened: PdfEngine.Opened.Ok) : Attempt
+        /** @param textOrigin 글 고르기가 읽을 원본(pdfium 이 그리는 것과 같은 바이트). 없으면 고르기가 꺼진다. */
+        data class Ok(val opened: PdfEngine.Opened.Ok, val textOrigin: PdfTextOrigin?) : Attempt
         data class Failed(val failure: OpenFailure) : Attempt
     }
 
-    private fun PdfEngine.Opened.toAttempt(): Attempt = when (this) {
-        is PdfEngine.Opened.Ok -> Attempt.Ok(this)
+    private fun PdfEngine.Opened.toAttempt(textOrigin: PdfTextOrigin?): Attempt = when (this) {
+        is PdfEngine.Opened.Ok -> Attempt.Ok(this, textOrigin)
         is PdfEngine.Opened.Error -> Attempt.Failed(PdfFailures.of(cause))
     }
 
@@ -119,9 +120,10 @@ class PdfOpener(private val password: CharArray? = null) : DocumentOpener {
      */
     private suspend fun openPlain(file: File): Attempt {
         val opened = PdfEngine.open(file)
-        if (opened !is PdfEngine.Opened.Error) return opened.toAttempt()
+        // 소유자 암호만 걸린 문서도 이 길로 열린다 — 그 파일은 암호문이지만 글 꺼내기가 빈 암호로 푼다.
+        if (opened !is PdfEngine.Opened.Error) return opened.toAttempt(PdfTextOrigin.OfFile(file))
         val platformSaysLocked = opened.cause is SecurityException
-        if (!platformSaysLocked && opened.cause !is IOException) return opened.toAttempt()
+        if (!platformSaysLocked && opened.cause !is IOException) return opened.toAttempt(null)
         val job = currentCoroutineContext()[Job]
         val inspection = try {
             withContext(IroDispatchers.parsing) {
@@ -133,7 +135,7 @@ class PdfOpener(private val password: CharArray? = null) : DocumentOpener {
             throw e
         } catch (e: IOException) {
             // 플랫폼이 '깨졌다' 고 했고 우리도 못 읽는다 — 그 판정이 맞다.
-            if (!platformSaysLocked) return opened.toAttempt()
+            if (!platformSaysLocked) return opened.toAttempt(null)
             // pdfium 은 잠겼다고 하는데 우리는 구조를 못 읽는다. 35 이상이면 플랫폼이
             // 암호를 받아 줄 수 있으니 묻고, 그 아래는 받아도 풀 길이 없으니 여기서 끝낸다.
             Iro.d(TAG) { "잠긴 PDF 의 구조를 읽지 못했다: ${e::class.java.simpleName}" }
@@ -163,7 +165,7 @@ class PdfOpener(private val password: CharArray? = null) : DocumentOpener {
                 if (platformSaysLocked) {
                     Attempt.Failed(OpenFailure.Encrypted("알 수 없는 방식으로 잠긴 문서"))
                 } else {
-                    opened.toAttempt()
+                    opened.toAttempt(null)
                 }
         }
     }
@@ -173,12 +175,13 @@ class PdfOpener(private val password: CharArray? = null) : DocumentOpener {
         if (Build.VERSION.SDK_INT >= 35) {
             val opened = PdfEngine.openWithPassword(file, password)
             if (opened !is PdfEngine.Opened.Error || opened.cause !is SecurityException) {
-                return opened.toAttempt()
+                // 플랫폼이 직접 풀었다 — 평문이 우리 손에 없어 글을 꺼낼 수 없다(암호는 여는 대로 지운다).
+                return opened.toAttempt(null)
             }
             Iro.d(TAG) { "플랫폼이 암호를 거절했다. 우리 후보로 한 번 더" }
             // **플랫폼이 거절한 뒤의 실패는 '틀렸다' 다.** 우리 길은 한 번 더 해 보는 것일 뿐이라,
             // 거기서 난 '너무 크다'·'구조를 못 읽는다' 로 끝내면 오타 하나에 암호 창이 사라지고
-            // 맞는 암호로는 플랫폼이 열었을 문서가 막다른 실패로 남는다(적대적 검토가 잡았다).
+            // 맞는 암호로는 플랫폼이 열었을 문서가 막다른 실패로 남는다.
             val ours = decryptAndOpen(file, password)
             return if (ours is Attempt.Ok) {
                 ours
@@ -223,13 +226,27 @@ class PdfOpener(private val password: CharArray? = null) : DocumentOpener {
             return when (result) {
                 PdfDecryptor.Result.Ok -> {
                     val descriptor = pending!!
+                    // 글 고르기가 같은 평문을 읽는다 — 복제 서술자를 따로 든다(메모리는 둘 다 닫혀야 풀린다).
+                    var forText: ParcelFileDescriptor? = try {
+                        descriptor.dup()
+                    } catch (e: IOException) {
+                        null
+                    }
                     pending = null // 주인이 바뀐다. 이제 닫는 것은 PdfEngine 이다
-                    PdfEngine.open(descriptor).toAttempt()
+                    // **복제본도 주인이 바뀌기 전까지는 여기서 닫는다** — 여는 사이 취소·시간 초과로 던지면 아무도 닫지 않아 평문
+                    // 한 벌(최대 256 MiB)이 GC 를 기다렸다(원본 서술자에서 이미 고친 모양이다).
+                    try {
+                        val attempt = PdfEngine.open(descriptor).toAttempt(forText?.let { PdfTextOrigin.OfDescriptor(it) })
+                        if (attempt is Attempt.Ok) forText = null // 이제 문서가 주인이다
+                        attempt
+                    } finally {
+                        forText?.let { runCatching { it.close() } }
+                    }
                 }
                 PdfDecryptor.Result.WrongPassword ->
                     Attempt.Failed(OpenFailure.PasswordRequired("암호가 맞지 않다", wrongPassword = true))
                 // 암호를 받았는데 잠겨 있지 않다 — 그냥 연다.
-                PdfDecryptor.Result.NotEncrypted -> PdfEngine.open(file).toAttempt()
+                PdfDecryptor.Result.NotEncrypted -> PdfEngine.open(file).toAttempt(PdfTextOrigin.OfFile(file))
                 is PdfDecryptor.Result.Unsupported ->
                     Attempt.Failed(OpenFailure.Encrypted("풀 수 없는 보안 처리기"))
             }

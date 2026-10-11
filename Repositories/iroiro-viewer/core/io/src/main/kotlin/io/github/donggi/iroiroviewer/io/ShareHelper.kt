@@ -61,6 +61,14 @@ object ShareHelper {
         null
     }
 
+    /** 우리 앱 안에서 [intent] 를 받겠다는 화면. 우리 꾸러미로 좁혀 묻는다(`ExternalOpen` 의 같은 이름과 같다). */
+    @Suppress("DEPRECATION") // `ResolveInfoFlags` 를 받는 판은 API 33 부터다(minSdk 31).
+    private fun ownHandlers(context: Context, intent: Intent): Array<android.content.ComponentName> =
+        context.packageManager
+            .queryIntentActivities(Intent(intent).setPackage(context.packageName), android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
+            .mapNotNull { info -> info.activityInfo?.let { android.content.ComponentName(it.packageName, it.name) } }
+            .toTypedArray()
+
     /**
      * 정규화한 경로가 허용 루트 아래인가. 루트는 **빗금으로 끝나야 한다**(`/storage/`) — 빗금 없이 앞부분만 견주면
      * `/storagex/…` 같은 이웃 경로가 통과하므로, 빗금으로 끝나지 않는 루트는 아무것도 허락하지 않는다.
@@ -78,8 +86,7 @@ object ShareHelper {
     fun share(context: Context, paths: List<String>, chooserTitle: String): Boolean {
         val uris = paths.mapNotNull { uriOf(context, it) }
         if (uris.isEmpty()) return false
-        val mime = paths.map { MimeResolver.mimeOf(File(it).name) }.distinct()
-            .let { if (it.size == 1) it.first() else "*/*" }
+        val mime = mimeOf(paths)
 
         val intent = if (uris.size == 1) {
             Intent(Intent.ACTION_SEND).apply {
@@ -95,6 +102,26 @@ object ShareHelper {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         val chooser = Intent.createChooser(intent, chooserTitle)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        // **우리 자신은 뺀다.** 이 앱도 문서·압축의 공유를 받는다(`OpenActivity`). 목록에 서면 우리가 우리에게 보내게 되고, 받는 쪽은
+        // 우리 제공자의 URI 를 받지 않으므로(`IncomingFiles`) '읽지 못했다' 로 끝난다.
+        val own = ownHandlers(context, intent)
+        if (own.isNotEmpty()) chooser.putExtra(Intent.EXTRA_EXCLUDE_COMPONENTS, own)
         return runCatching { context.startActivity(chooser); true }.getOrDefault(false)
+    }
+
+    /**
+     * 공유에 실을 MIME — 이름의 MIME([MimeResolver.mimeOf]), 여럿이 다르면 모든 것. **`.ts`·`.mts` 는 내용이 정한다** — TypeScript 를
+     * `video/mp2t` 로 실으면 받는 앱이 영상으로 다룬다('다른 앱으로 열기' 와 같은 판정, `ExternalOpen.mimeFor`). 하나를 실을 때만
+     * 앞머리를 읽는다(주 스레드의 읽기 한 번). 여럿 가운데 갈리는 이름이 있으면 읽지 않고 모든 것으로 둔다 — 수백 개를 고른 공유가
+     * 주 스레드에서 수백 번 읽게 할 수는 없다.
+     */
+    internal fun mimeOf(paths: List<String>): String {
+        if (paths.size == 1) {
+            val file = File(paths[0])
+            return if (ContentSniff.isTextNamedLikeStream(file)) "text/plain" else MimeResolver.mimeOf(file.name)
+        }
+        return paths.map { if (ContentSniff.isAmbiguousStream(File(it).name)) "*/*" else MimeResolver.mimeOf(File(it).name) }
+            .distinct()
+            .let { if (it.size == 1) it.first() else "*/*" }
     }
 }

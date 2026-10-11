@@ -27,7 +27,8 @@
     <string name="comic_failed_unreadable">파일을 읽을 수 없습니다</string>
     <string name="comic_failed_corrupt">깨진 파일이거나 이 앱이 읽지 못하는 구조입니다</string>
     <string name="comic_failed_unsupported">이 앱이 다루지 않는 압축 형식입니다</string>
-    <string name="comic_failed_too_large">방어 상한을 넘어 열지 않았습니다</string>
+    <!-- 항목 수·크기·시간의 상한에 걸렸다(ComicOpen 의 TOO_LARGE). '방어 상한' 은 사람에게 뜻이 없는 말이다. -->
+    <string name="comic_failed_too_large">항목이 너무 많거나 너무 커서 열지 않았습니다</string>
     <string name="comic_failed_encrypted">이 앱이 풀지 않는 방식으로 잠긴 만화입니다</string>
     <string name="comic_failed_password">암호를 넣어야 열 수 있는 만화입니다</string>
     <string name="comic_password_enter">암호 넣기</string>
@@ -35,7 +36,8 @@
     <string name="comic_password_body">이 만화를 열려면 암호가 필요합니다.</string>
     <string name="comic_failed_no_pages">그림이 한 장도 없습니다</string>
 
-    <string name="comic_solid_hint">순차 압축이라 되돌아갈 때 다시 풉니다</string>
+    <!-- 'solid' 압축 - 압축 화면(archive_summary_solid)과 같은 말 '연속 압축' 을 쓴다. -->
+    <string name="comic_solid_hint">연속 압축이라 되돌아갈 때 다시 풉니다</string>
 
     <!-- 14단계: 두 쪽 보기. 두 쪽을 함께 보일 때의 쪽 표시는 앞 쪽과 뒤 쪽을 함께 적는다. -->
     <string name="comic_page_range">%1$d–%2$d / %3$d</string>
@@ -51,11 +53,15 @@
     <string name="comic_grid_close">쪽 목록 닫기</string>
     <string name="comic_grid_page">%d쪽</string>
     <string name="comic_grid_no_thumbs">메모리가 넉넉하지 않아 쪽 번호만 보입니다</string>
-    <string name="comic_grid_solid_hint">순차 압축이라 앞에서부터 풀며 채웁니다. 뒤쪽일수록 늦게 보입니다</string>
+    <string name="comic_grid_solid_hint">연속 압축이라 뒤쪽일수록 늦게 보입니다</string>
 
     <!-- 14단계: 다음 권 -->
     <string name="comic_more">더보기</string>
     <string name="comic_next_volume">다음 권: %s</string>
     <string name="comic_next_offer">끝까지 읽었습니다. 다음 권: %s</string>
     <string name="comic_next_open">열기</string>
+
+    <!-- 쪽 슬라이더를 화면 낭독기가 읽는 이름과 값(백분율로 읽히지 않게). -->
+    <string name="comic_slider">쪽</string>
+    <string name="comic_slider_value">%1$d쪽 / %2$d쪽</string>
 </resources>

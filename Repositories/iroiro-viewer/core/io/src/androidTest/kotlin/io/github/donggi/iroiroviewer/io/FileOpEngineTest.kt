@@ -268,6 +268,49 @@ class FileOpEngineTest {
         assertTrue(originalBytes.contentEquals(victim.readBytes()))
     }
 
+    /**
+     * 여럿을 한 번에 되돌린다 — 휴지통에서 고른 것들과 스낵바의 '되돌리기'. 결과는 한 줄이다(요청 하나). 그사이 기록만
+     * 남고 파일이 사라진 항목은 실패로 세고 나머지는 되돌린다.
+     */
+    @Test
+    fun 휴지통에서_여럿을_한_번에_되돌린다() = runBlocking {
+        val store = TrashStore(context, MediaIndex(context))
+        val volumes = fakeVolumes()
+        val victims = (1..3).map { file(work, "여럿$it.txt", 10 * it) }
+        val moved = store.moveToTrash(victims.map { it.absolutePath }, volumes)
+        val uuids = (moved as TrashStore.Result.Done).uuids
+        assertEquals(3, uuids.size)
+        // 하나는 파일이 그사이 사라졌다(다른 앱이 휴지통 폴더를 건드렸다).
+        assertTrue(TrashStore.storedFileOf(primaryRoot.absolutePath, uuids[1]).delete())
+
+        val restored = store.restoreAll(uuids, volumes)
+        assertEquals(TrashStore.Result.Done(2, 1), restored)
+        assertTrue(victims[0].exists())
+        assertFalse(victims[1].exists())
+        assertTrue(victims[2].exists())
+    }
+
+    /**
+     * 이미 있는 이름은 '쓸 수 없는 이름' 이 아니라 **'이미 있다'** 다(이름 칸이 닫히고 글자가 틀린 줄 알게 했다).
+     * 새 폴더도 같다. 둘 다 원래 것을 건드리지 않는다.
+     */
+    @Test
+    fun 이미_있는_이름은_EXISTS_다() {
+        val a = file(work, "가.txt", 5)
+        val b = file(work, "나.txt", 7)
+        val renamed = engine.rename(a.absolutePath, "나.txt")
+        assertEquals(FileOpEngine.Reason.EXISTS, (renamed as FileOpEngine.Outcome.Failed).reason)
+        assertTrue("원래 파일이 그대로여야 한다", a.exists() && a.length() == 5L)
+        assertEquals(7L, b.length())
+
+        File(work, "있는폴더").mkdir()
+        val made = engine.createFolder(work.absolutePath, "있는폴더")
+        assertEquals(FileOpEngine.Reason.EXISTS, (made as FileOpEngine.Outcome.Failed).reason)
+        // 없는 이름이면 그대로 된다.
+        assertEquals(FileOpEngine.Outcome.Done(1, 0, 0), engine.createFolder(work.absolutePath, "새폴더"))
+        assertTrue(File(work, "새폴더").isDirectory)
+    }
+
     @Test
     fun 휴지통_사이드카에는_경로를_적지_않는다() = runBlocking {
         val store = TrashStore(context, MediaIndex(context))

@@ -1,6 +1,7 @@
 package io.github.donggi.iroiroviewer.archive
 
 import java.io.File
+import java.nio.file.Files
 
 /**
  * 풀기의 진행 바가 무엇을 세는가.
@@ -99,4 +100,37 @@ internal class DirTimes {
     private fun key(dir: File): String = dir.absoluteFile.normalize().path
 
     private fun depthOf(path: String): Int = path.count { it == File.separatorChar }
+}
+
+/**
+ * 풀어 쓸 자리가 **아카이브 자신**인가. '여기에 풀기' 가 아카이브와 같은 이름의 항목을 만나면 원본이 그 항목의 내용으로 바뀐다
+ * — 엔진(`ArchiveExtractEngine`)은 정책(덮어쓰기·건너뛰기·둘 다 보관)과 상관없이 막는다.
+ *
+ * ## 문자열로는 모자란다
+ *
+ * canonical 경로가 다르다고 다른 파일이 아니다. **대소문자를 가리지 않는 볼륨**에서는 `a_b.gz` 와 `A_B.GZ` 가 한 파일이다 —
+ * FAT·exFAT SD 카드가 그렇다(안드로이드의 공유 저장소도 대소문자를 가리지 않는다고 알려져 있다 — 기기에서 확인하지 못했다).
+ * canonical 경로는 심볼릭 링크와 `..` 만 푼다(`realpath`). 대소문자는 적힌 그대로라 문자열이 달라진다. 예: gzip 의
+ * FNAME `a?b.gz` 가 풀기의 관문(`PathRules.sanitize`)에서 `a_b.gz` 가 되어, 덮어쓰기로 '여기에 풀기' 하면 `A_B.GZ` 가 제
+ * 내용으로 바뀌었다. 유니코드 정규화(NFC·NFD)가 다른 같은 이름도 같은 모양일 수 있다.
+ *
+ * 그래서 대상이 **이미 있으면** 파일의 정체로 견준다 — `Files.isSameFile`(유닉스에서는 장치 번호와 inode). 없는 대상은 아카이브일
+ * 수 없다(아카이브는 지금 있다). 하드링크도 같은 파일로 본다 — 원자적 쓰기(rename)는 링크 하나만 바꾸므로 원본이 사라지지는
+ * 않지만, 그런 자리를 덮어쓰라는 아카이브는 없다시피 하고 막는 쪽이 싸다.
+ *
+ * 정체를 읽지 못하면(권한·그 사이에 지워짐) [Verdict.UNKNOWN] 이다 — 엔진은 그 항목을 실패로 센다. **모르면 덮어쓰지 않는다.**
+ */
+internal class SelfOverwriteGuard(private val archive: File) {
+
+    enum class Verdict { SELF, OTHER, UNKNOWN }
+
+    /** 아카이브 자신의 canonical 경로. 대상이 아직 없을 때(가장 흔한 경우)는 이 문자열만 견준다. */
+    private val archiveCanonical: String? = runCatching { archive.canonicalPath }.getOrNull()
+
+    fun check(target: File): Verdict {
+        if (archiveCanonical != null && runCatching { target.canonicalPath }.getOrNull() == archiveCanonical) return Verdict.SELF
+        if (!target.exists()) return Verdict.OTHER
+        val same = runCatching { Files.isSameFile(target.toPath(), archive.toPath()) }.getOrNull() ?: return Verdict.UNKNOWN
+        return if (same) Verdict.SELF else Verdict.OTHER
+    }
 }

@@ -115,6 +115,10 @@ class ArchiveViewModel : ViewModel() {
         /** 풀 엔트리 번호. null 이면 전부. */
         val indices: List<Int>?,
         val fileCount: Int,
+        /**
+         * 고른 파일의 적힌 크기 합. **-1 이면 모른다** — 파일 하나를 싼 `.gz` 처럼 형식이 크기를 적지 않거나 정직하게 적을 수
+         * 없는 것이 섞였다([knownSizeOf]). 대화상자가 '0 B' 대신 '크기 모름' 이라고 말한다.
+         */
         val declaredBytes: Long,
         /** 아카이브가 있는 폴더. '여기에 풀기' 의 목적지다. */
         val destParent: String,
@@ -179,7 +183,7 @@ class ArchiveViewModel : ViewModel() {
                 if (!doc.unlocked) return@collect
                 _asking.value = null
                 // 풀린 목록으로 세운 풀기 계획도 낡았다 — 그대로 '풀기' 를 누르면 계획은 N개를
-                // 말하는데 실제로는 암호가 없어 전부 거절된다(검토가 잡았다).
+                // 말하는데 실제로는 암호가 없어 전부 거절된다.
                 _plan.value = null
                 job?.cancel()
                 job = viewModelScope.launch { load(doc.path) }
@@ -256,7 +260,7 @@ class ArchiveViewModel : ViewModel() {
         val now = Opened(path, file.length(), file.lastModified())
         if (opened == now) return
         // 다른 파일이다. 앞 파일의 암호 창과 풀기 계획을 넘겨받지 않는다 — 이 ViewModel 은
-        // 액티비티에 묶여 파일을 바꿔도 같은 객체다(검토가 잡았다: 헤더가 잠긴 A 의 창이 B 위에 떴다).
+        // 액티비티에 묶여 파일을 바꿔도 같은 객체다(헤더가 잠긴 A 의 창이 B 위에 떴다).
         _asking.value = null
         _plan.value = null
         opened = now
@@ -281,7 +285,7 @@ class ArchiveViewModel : ViewModel() {
         val key = SessionPasswords.keyOf(file)
         // 읽는 동안 세션 암호가 지워지면(앱이 화면에서 사라졌다) 이 결과는 '풀렸다' 고 말하면
         // 안 된다. 지운 횟수를 먼저 적어 두고 끝에서 견준다 — 지우는 쪽의 알림은 `Ready` 만 보므로
-        // 읽는 중이면 지나친다(검토가 잡았다).
+        // 읽는 중이면 지나친다.
         val clearsBefore = SessionPasswords.clears.value
         val password = SessionPasswords.get(key)
         try {
@@ -357,10 +361,20 @@ class ArchiveViewModel : ViewModel() {
         return doc.tree.folderAt(_folder.value)?.children ?: emptyList()
     }
 
+    /**
+     * [node] 아래에서 이름이 맞는 파일 — 위에서 아래로, 형제는 화면의 차례. **재귀하지 않는다** — 이름 하나가 3만 겹의 폴더(`a/a/…`)일
+     * 수 있어 깊이만큼 재귀하면 주 스레드의 스택이 넘친다(`ArchiveTree` 의 '깊이에 비례하는 일만 한다').
+     */
     private fun collectMatching(node: ArchiveTree.Node, query: String, out: MutableList<ArchiveTree.Node>) {
-        for (c in node.children) {
-            if (!c.isDirectory && c.name.contains(query, ignoreCase = true)) out += c
-            if (c.isDirectory) collectMatching(c, query, out)
+        val stack = ArrayDeque<ArchiveTree.Node>()
+        for (i in node.children.indices.reversed()) stack.addLast(node.children[i])
+        while (stack.isNotEmpty()) {
+            val c = stack.removeLast()
+            if (c.isDirectory) {
+                for (i in c.children.indices.reversed()) stack.addLast(c.children[i])
+            } else if (c.name.contains(query, ignoreCase = true)) {
+                out += c
+            }
         }
     }
 
@@ -373,8 +387,18 @@ class ArchiveViewModel : ViewModel() {
     fun preparePlan(node: ArchiveTree.Node?) {
         val doc = (_state.value as? State.Ready)?.doc ?: return
         viewModelScope.launch {
-            val plan = withContext(IroDispatchers.io) { buildPlan(doc, node) }
-            _plan.value = plan
+            try {
+                val plan = withContext(IroDispatchers.io) { buildPlan(doc, node) }
+                _plan.value = plan
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // **잡지 않으면 앱이 죽는다** — `viewModelScope` 의 예외는 프로세스를 끝낸다. 계획은 저장소를 묻는다(이미 있는지·
+                // canonical 경로) — 입출력이 실패하면 계획을 세우지 못한 것이다. 대화상자를 띄우지 않는다(무엇을 덮어쓸지 말하지 못하는
+                // 계획으로 풀게 두지 않는다). 쓸 수 없는 이름의 봉쇄 확인 실패는 [ExtractNames.inside] 가 이미 '쓸 수 없는 이름' 으로 센다.
+                Iro.d { "풀기 계획 실패: ${e.javaClass.simpleName}" }
+                _plan.value = null
+            }
         }
     }
 
@@ -415,7 +439,7 @@ class ArchiveViewModel : ViewModel() {
         return ExtractPlan(
             indices = indices,
             fileCount = chosen.count { it.isReadable },
-            declaredBytes = chosen.sumOf { it.declaredSize.coerceAtLeast(0L) },
+            declaredBytes = knownSizeOf(chosen) ?: -1L,
             destParent = parent.absolutePath,
             folderName = ExtractNames.folderNameOf(File(doc.path).name),
             topLevelCount = topLevel.size,
@@ -429,6 +453,21 @@ class ArchiveViewModel : ViewModel() {
     private companion object {
         const val CONFLICT_SAMPLES = 5
     }
+}
+
+/**
+ * 풀 파일들의 적힌 크기 합. **하나라도 크기를 모르면 null** 이다 — 파일 하나를 싼 `.gz`·`.bz2`·`.lz4`·`.Z` 는 크기를 적지
+ * 않거나 정직하게 적을 수 없다(`SingleStreamReader` 의 표). 모르는 것을 0 으로 더하면 대화상자가 '파일 1개 · 0 B' 라고 말한다.
+ * 폴더와 풀 수 없는 항목은 세지 않는다(대화상자의 '파일 n개' 와 같은 것을 센다).
+ */
+internal fun knownSizeOf(entries: List<ArchiveEntry>): Long? {
+    var total = 0L
+    for (e in entries) {
+        if (e.isDirectory || !e.isReadable) continue
+        if (e.declaredSize < 0) return null
+        total += e.declaredSize
+    }
+    return total
 }
 
 /**

@@ -8,7 +8,7 @@ import io.github.donggi.iroiroviewer.format.UnsupportedFeatures
  * ## 스킴 판정을 [HtmlSanitizer.Resolver] 에게 맡기지 않는다
  *
  * 처음에는 "바깥인지 아닌지는 리졸버가 안다" 고 두었는데, 그러면 리졸버를 쓰는 쪽마다
- * (11단계의 EPUB, 12·13단계의 docx·HWPX) **스킴 검사를 한 벌씩 다시 써야 한다.**
+ * (EPUB, HTML·마크다운 미리보기) **스킴 검사를 한 벌씩 다시 써야 한다.**
  * 한 곳이 `data:text/html` 을 빠뜨리는 날 그 문서는 창 안에서 새 문서를 연다.
  *
  * 그래서 규칙을 여기 못 박는다. 리졸버가 답하는 것은 **'이 상대경로를 내줄 수 있는가'**

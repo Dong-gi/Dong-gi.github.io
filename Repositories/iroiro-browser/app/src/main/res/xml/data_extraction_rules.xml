@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  allowBackup 을 끈 상태라 이 규칙이 쓰이는 길은 기기 간 이전뿐이다. 브라우저의 쿠키·기록·프록시 계정을 내보내지 않는다. 테더링의 설정
+  (SharedPreferences `tether` — SSID·잠근 패스프레이즈·공유 폴더의 트리 URI)도 sharedpref 를 통째로 빼는 것으로 빠진다. 잠근 패스프레이즈는
+  기기 키(AndroidKeyStore)로 잠겨 있어 옮겨도 다른 기기에서 열리지 않는다.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="file" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" />
+        <exclude domain="database" />
+        <exclude domain="sharedpref" />
+        <exclude domain="file" />
+    </device-transfer>
+</data-extraction-rules>

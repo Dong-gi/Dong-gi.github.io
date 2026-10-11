@@ -1,13 +1,6 @@
 package io.github.donggi.iroiroviewer.docview
 
-import io.github.donggi.iroiroviewer.format.FlowDocument
-import io.github.donggi.iroiroviewer.format.FlowKind
-import io.github.donggi.iroiroviewer.format.FlowOutline
-import io.github.donggi.iroiroviewer.format.FlowPart
-import io.github.donggi.iroiroviewer.format.FormatId
 import io.github.donggi.iroiroviewer.format.OpenFailure
-import io.github.donggi.iroiroviewer.format.ParseWarning
-import io.github.donggi.iroiroviewer.format.UnsupportedFeatures
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -32,7 +25,6 @@ class DocOpenWithTest {
     private val expected: List<Pair<OpenFailure, Boolean>> = listOf(
         // 이 앱이 다루지 않는다 — 다른 앱은 연다.
         OpenFailure.Unsupported("여는이가 없다") to true,
-        OpenFailure.LegacyFormat("OLE2") to true,
         OpenFailure.Encrypted("공개 키 처리기") to true,
         OpenFailure.Corrupt("형식이 깨졌다") to true,
         OpenFailure.TooLarge("maxEntries") to true,
@@ -50,7 +42,7 @@ class DocOpenWithTest {
         // sealed 가 아니면 null 이다 — 그때는 아래 개수 검사가 '읽지 못했다' 로 멈춘다(조용히 통과하지 않게).
         val declared = OpenFailure::class.java.permittedSubclasses.orEmpty().map { it.name }.toSortedSet()
         val covered = expected.map { it.first.javaClass.name }.toSortedSet()
-        assertTrue(declared.size >= 9, "갈래를 읽지 못했다: $declared")
+        assertTrue(declared.size >= 8, "갈래를 읽지 못했다: $declared")
         assertEquals(declared, covered, "새 갈래는 DocOpenWith.onFailure 와 이 표에서 함께 정한다")
     }
 
@@ -59,6 +51,29 @@ class DocOpenWithTest {
         for ((failure, want) in expected) {
             assertEquals(want, DocOpenWith.onFailure(failure), failure::class.java.simpleName)
         }
+    }
+
+    /**
+     * 실패 화면의 '편집기로 열기'. PDF 는 깨진 파일에서만 — 인증서·DRM 잠금이면 편집기가 있지도 않은 암호를 묻고, 너무 큼·시간
+     * 초과는 변환이 더 무겁다. 그때도 첫 단추는 '다른 앱으로 열기' 다. 오피스·한글(편집기가 뷰어인 형식)은 '다루지 않는 문서' 에서 편집기가
+     * 먼저다 — 이 뷰어에는 편집기를 띄우지 못했을 때만 온다. 편집기가 그 형식을 다루지 않으면(EPUB·.mobi·묶음 없는 빌드) 늘 없다.
+     */
+    @Test
+    fun 편집기로_열기는_편집기라면_볼_수_있는_갈래에만_둔다() {
+        val pdf = expected.filter { it.second }.associate { (failure, _) -> failure::class.java.simpleName to DocOpenWith.editorOnFailure(failure, "pdf") }
+        assertEquals(
+            mapOf("Unsupported" to false, "Encrypted" to false, "Corrupt" to true, "TooLarge" to false, "Timeout" to false),
+            pdf,
+        )
+        assertFalse(DocOpenWith.editorFirst("pdf"))
+
+        for (kind in listOf("docx", "doc", "odt", "hwp", "hwpx", "xls")) {
+            for ((failure, button) in expected) {
+                assertEquals(button && failure is OpenFailure.Unsupported, button && DocOpenWith.editorOnFailure(failure, kind), "$kind ${failure::class.java.simpleName}")
+            }
+            assertTrue(DocOpenWith.editorFirst(kind), kind)
+        }
+        for ((failure, _) in expected) assertFalse(DocOpenWith.editorOnFailure(failure, null), failure::class.java.simpleName)
     }
 
     @Test
@@ -135,15 +150,14 @@ class DocOpenWithTest {
         assertFalse(DocOpenWith.inMenu(DocViewModel.State.Failed(OpenFailure.NoPermission("읽을 권한이 없다"))))
         assertFalse(DocOpenWith.inMenu(DocViewModel.State.Failed(OpenFailure.Io("입출력이 실패했다"))))
 
-        val ready = DocViewModel.State.Ready(DocViewModel.Doc.Flow("/storage/emulated/0/a.docx", "a", FakeFlow))
-        assertTrue(DocOpenWith.inMenu(ready))
+        withReady { ready -> assertTrue(DocOpenWith.inMenu(ready)) }
     }
 
     @Test
     fun 여는_중에는_파일에_닿은_뒤부터_있다() {
         // 닿기 전 — 없거나 열리지 않는 파일일 수 있다.
         assertFalse(DocOpenWith.inMenu(DocViewModel.State.Loading()))
-        // 닿은 뒤 — docx·HWPX 를 여는 몇 초를 기다리지 않고 넘긴다.
+        // 닿은 뒤 — 큰 책을 여는 몇 초를 기다리지 않고 넘긴다.
         assertTrue(DocOpenWith.inMenu(DocViewModel.State.Loading(reached = true)))
     }
 
@@ -204,10 +218,11 @@ class DocOpenWithTest {
 
     @Test
     fun 막대를_숨길_수_있는_것은_열린_문서뿐이다() {
-        val ready = DocViewModel.State.Ready(DocViewModel.Doc.Flow("/storage/emulated/0/a.docx", "a", FakeFlow))
-        // 쪽을 두드려 숨겼다 — 다시 두드리면 돌아온다.
-        assertFalse(DocOpenWith.barVisible(tapVisible = false, state = ready))
-        assertTrue(DocOpenWith.barVisible(tapVisible = true, state = ready))
+        withReady { ready ->
+            // 쪽을 두드려 숨겼다 — 다시 두드리면 돌아온다.
+            assertFalse(DocOpenWith.barVisible(tapVisible = false, state = ready))
+            assertTrue(DocOpenWith.barVisible(tapVisible = true, state = ready))
+        }
         // 여는 중·실패 화면에는 두드릴 쪽이 없다. 숨긴 값이 남아 있어도 닫기와 ⋮ 가 보여야 한다.
         val others = listOf(
             DocViewModel.State.Loading(),
@@ -219,18 +234,14 @@ class DocOpenWithTest {
         for (state in others) assertTrue(DocOpenWith.barVisible(tapVisible = false, state = state), state.toString())
     }
 
-    /** 부분 하나짜리 흐름 문서. 이 시험은 문서를 읽지 않는다 — 상태의 모양만 본다. */
-    private object FakeFlow : FlowDocument {
-        override val formatId = FormatId.DOCX
-        override val warnings = emptyList<ParseWarning>()
-        override val unsupported = UnsupportedFeatures()
-        override val title = ""
-        override val kind = FlowKind.DOCUMENT
-        override val parts = listOf(FlowPart("word/document.xml", "본문"))
-        override val outline = emptyList<FlowOutline>()
-        override fun partHtml(index: Int): String? = null
-        override fun openResource(path: String): InputStream? = null
-        override fun mediaTypeOf(path: String): String? = null
-        override fun close() = Unit
+    /** 열린 문서 하나(장 하나짜리 EPUB — [TestEpub]). 이 시험은 문서를 읽지 않는다 — 상태의 모양만 본다. */
+    private fun withReady(block: (DocViewModel.State.Ready) -> Unit) {
+        val dir = File(System.getProperty("java.io.tmpdir") ?: ".")
+        val book = TestEpub.open("a", dir)
+        try {
+            block(DocViewModel.State.Ready(DocViewModel.Doc.Epub("/storage/emulated/0/a.epub", "a", book)))
+        } finally {
+            book.close()
+        }
     }
 }

@@ -29,4 +29,15 @@ class PlaybackFailureTest {
         assertEquals(PlaybackFailure.NotReadable, PlaybackFailure.ofCode(PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND, null))
         assertEquals(PlaybackFailure.Other(PlaybackException.ERROR_CODE_TIMEOUT), PlaybackFailure.ofCode(PlaybackException.ERROR_CODE_TIMEOUT, null))
     }
+
+    /** 재생기는 기기 안의 것만 연다(`LocalOnlyDataSource`) — 네트워크 코드가 와도 따로 가르지 않는다. */
+    @Test
+    fun `네트워크 코드는 따로 가르지 않는다`() {
+        for (code in listOf(
+            PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
+            PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT,
+        )) {
+            assertEquals(PlaybackFailure.Other(code), PlaybackFailure.ofCode(code, null), "$code")
+        }
+    }
 }

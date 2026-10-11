@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  디버그 빌드에만 있는 실험 화면 둘. 런처에 나오지 않고 adb 로만 연다 — 둘 다 android.permission.DUMP 를 요구하는데 그것은 adb 의 셸은
+  가졌고 보통 앱은 가질 수 없다(시스템 서명 권한). 그래서 같은 기기의 다른 앱이 이 화면으로 프록시 설정을 바꾸지 못한다.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <activity
+            android:name=".lab.LabActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode|density"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:permission="android.permission.DUMP" />
+        <activity
+            android:name=".lab.LabSetupActivity"
+            android:exported="true"
+            android:permission="android.permission.DUMP"
+            android:theme="@android:style/Theme.NoDisplay" />
+    </application>
+</manifest>

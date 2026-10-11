@@ -1,0 +1,139 @@
+/* ONLYOFFICE 편집기 틀 안의 우리 손질(우리 코드) — tools/build_onlyoffice.py 가 세 편집기의 main/index.html 에 넣는다(iroiro-oo-inner.js 와 함께).
+   폰의 좁은 화면에서 쓰지 않는 것을 숨기고, 자판 단추의 모양을 정한다. 편집기의 빛깔은 테마 변수(--background-toolbar 따위)로 따른다. */
+
+/* 머리의 사람 단추 — 혼자 쓴다. */
+.btn-current-user,
+.slot-btn-user-name {
+    display: none !important;
+}
+
+/* 상태 표시줄·왼쪽 메뉴 — 글의 언어·맞춤법은 쓰지 않는다(사전을 싣지 않는다). 여러 쪽 보기·확대·축소 단추는 두 손가락이 대신한다(배율 숫자와
+   쪽 맞춤·폭 맞춤은 남긴다). 숨기지 않으면 폰 폭에서 배율 단추들이 화면 밖으로 밀려난다. */
+#btn-cnt-lang,
+#btn-doc-lang,
+#btn-doc-spell,
+#left-btn-spellcheck,
+#statusbar .separator.el-edit.space,
+#statusbar .separator.el-lang,
+#status-btn-multiple-pages,
+#btn-zoom-down,
+#btn-zoom-up {
+    display: none !important;
+}
+
+/* 상태 표시줄의 '모든 변경 사항이 저장되었습니다'·'… 저장 중' — 가짜 서버(어댑터)가 바뀐 것을 받았다는 뜻일 뿐 파일에 저장된 것이 아니다.
+   그대로 두면 저장하지 않은 문서를 저장된 줄로 읽는다. 파일 저장은 어댑터의 덮개('저장하는 중…')와 앱의 닫기 물음이 말한다. 발표 편집기만
+   이름이 다르다(status-label-action). */
+#label-action,
+#status-label-action {
+    display: none !important;
+}
+
+/* 편집기의 창(asc-window)은 데스크톱 폭(경고 창 466px 따위)을 style 로 박는다 — 폰(411px)에서 오른쪽이 잘려 글도 닫기 단추도 보이지 않았다
+   (2026-10-09 기기 — '다운로드 → TXT' 의 경고). 화면 폭을 넘지 않게 하고, 경고 창은 높이를 내용에 맞추고 글의 줄바꿈을 허락한다. 안쪽 칸의
+   폭까지 박은 복잡한 창(표·문단 설정)은 넘친 채로 남는다 — 넘는 쪽이 화면 밖이던 것과 같다. */
+.asc-window {
+    max-width: calc(100vw - 16px) !important;
+}
+
+.asc-window.alert,
+.asc-window.alert .body {
+    height: auto !important;
+}
+
+.asc-window.alert .info-box .text {
+    width: auto !important;
+}
+
+.asc-window.alert .info-box .text span {
+    white-space: normal !important;
+}
+
+/* 파일 → '다운로드 방법' 의 형식 가운데 이 앱이 짓지 못하는 것 — MD(92 — x2t 가 '쓰지 않는 형식' 80 을 돌려준다), PDF/A(521), 그림(JPG 1025·
+   PNG 1029 — 서버가 쪽을 그림으로 굽는다), XLSB(264). 눌러도 '내보내지 못했습니다' 로 끝나므로 보이지 않게 한다(어댑터의 EXPORTS 와 짝). */
+.btn-doc-format[format="92"],
+.btn-doc-format[format="521"],
+.btn-doc-format[format="1025"],
+.btn-doc-format[format="1029"],
+.btn-doc-format[format="264"] {
+    display: none !important;
+}
+
+/* 자판 단추(iroiro-oo-inner.js 의 1) — 상태 표시줄의 오른쪽 끝. 자판이 올라와 있으면 강조 빛깔(파랑)로 — 터치 뒤에 남는 회색과 헷갈리지 않게.
+   상태 표시줄은 25px 이라 누르는 자리를 위로 넓힌다(::before — 48×48). 표시줄 바로 위 문서의 몇 px 를 덮는다. */
+#iroiro-kbd {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-toolbar, #f7f7f7);
+    color: var(--icon-normal, #444);
+    border-left: 1px solid var(--border-toolbar, #cbcbcb);
+    z-index: 20;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#iroiro-kbd::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 48px;
+}
+
+#iroiro-kbd[aria-pressed="true"] {
+    background: var(--background-accent-button, #446995);
+    color: #fff;
+}
+
+body.iroiro-has-kbd #statusbar > .statusbar {
+    padding-right: 48px;
+    box-sizing: border-box;
+}
+
+/* 고지(iroiro-oo-inner.js 의 0) — (i) 칸의 아래. */
+#iroiro-notice {
+    margin: 16px 0;
+    padding: 0 16px;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+#iroiro-notice p {
+    margin: 0 0 8px;
+}
+
+#iroiro-notice .iroiro-notice-item {
+    display: block;
+    width: 100%;
+    margin: 4px 0;
+    padding: 6px 8px;
+    border: 1px solid var(--border-regular-control, #c0c0c0);
+    border-radius: 4px;
+    background: var(--background-normal, #fff);
+    color: var(--text-normal, #444);
+    text-align: left;
+    font-size: 13px;
+}
+
+#iroiro-notice pre {
+    max-height: 50vh;
+    overflow: auto;
+    margin: 4px 0 8px;
+    padding: 8px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 11px;
+    background: var(--background-toolbar, #f7f7f7);
+    color: var(--text-normal, #444);
+}

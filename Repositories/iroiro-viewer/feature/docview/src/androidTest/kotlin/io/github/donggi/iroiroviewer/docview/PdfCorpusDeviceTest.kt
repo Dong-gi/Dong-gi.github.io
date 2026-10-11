@@ -128,8 +128,8 @@ class PdfCorpusDeviceTest {
             val oracle = if (oracleText.isBlank()) null else JSONObject(oracleText)
             seen++
             val before = problems.size
-            // **오라클 없이 통과시키지 않는다.** 없으면 쪽 수도 잉크도 견주지 못한 채 '열렸다' 만으로 통과한다
-            // (검토가 잡았다) — `oracle/` 을 함께 올리지 않은 것이다.
+            // **오라클 없이 통과시키지 않는다.** 없으면 쪽 수도 잉크도 견주지 못한 채 '열렸다' 만으로 통과한다 —
+            // `oracle/` 을 함께 올리지 않은 것이다.
             if (oracle == null) problems.add("$id: $ROOT/oracle/$id.json 이 없다 — 쪽 수·잉크를 견줄 수 없다")
             try {
                 check(id, expect, local, oracle, problems)

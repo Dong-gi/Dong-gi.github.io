@@ -88,8 +88,9 @@ object PathRules {
     /**
      * UTF-8 바이트 상한까지만 남긴다. **글자 단위가 아니라 코드포인트 단위로 센다** —
      * `Char` 로 돌면 이모지(서러게이트 쌍)가 반으로 잘려 깨진 글자가 남는다.
+     * (공개다 — 편집기가 댄 이름을 다듬는 `app` 의 `EditorSlots.cleanName` 이 같은 자름을 쓴다.)
      */
-    private fun cutToBytes(s: String, maxBytes: Int): String {
+    fun cutToBytes(s: String, maxBytes: Int): String {
         if (s.toByteArray().size <= maxBytes) return s
         val sb = StringBuilder()
         var used = 0

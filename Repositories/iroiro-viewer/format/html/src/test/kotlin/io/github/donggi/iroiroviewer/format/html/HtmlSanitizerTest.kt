@@ -198,7 +198,7 @@ class HtmlSanitizerTest {
     @Test
     fun 짝_없는_요소의_닫는_태그를_쓰지_않는다() {
         // XHTML 의 `<br></br>` 은 줄바꿈 하나다. `</br>` 을 그대로 내면 HTML 파서가 그것을 `<br>` 로 읽어
-        // 줄바꿈이 둘이 된다(검토가 잡았다 — `<div/>` 와 같은 갈래).
+        // 줄바꿈이 둘이 된다(`<div/>` 와 같은 갈래).
         assertEquals("""<p>가<br/>나</p>""", clean("""<p>가<br></br>나</p>""").html)
         assertEquals("""<img alt="x"/><hr/>""", clean("""<img alt="x"></img><hr></hr>""").html)
         // 짝이 있는 요소의 닫는 태그는 그대로다.
@@ -236,7 +236,7 @@ class HtmlSanitizerTest {
 
     @Test
     fun 책의_style_안의_head_닫기로_껍데기를_속여_위생을_건너뛰지_못한다() {
-        // 검토가 크롬에서 재현했다: 우리 `<style>` 이 책의 CSS 한가운데 끼면 우리 `</style>` 이 책의 것을 먼저 닫아
+        // 크롬에서 재현했다: 우리 `<style>` 이 책의 CSS 한가운데 끼면 우리 `</style>` 이 책의 것을 먼저 닫아
         // 뒤의 CSS 글자가 위생을 거치지 않은 마크업(`<img onerror>`·`<iframe>`)이 됐다.
         val raw = "<html><head><style>p{color:#333}</head><img src=\"pic.png\" onerror=\"x()\"/><iframe srcdoc=\"a\"></iframe>" +
             "</style></head><body><p>글</p></body></html>"
@@ -250,7 +250,7 @@ class HtmlSanitizerTest {
 
     @Test
     fun svg_안의_style_은_마크업으로_읽히지_않는다() {
-        // `<svg>`·`<math>` 안의 `<style>` 은 HTML 파서에게 보통 요소다 — 그 안의 글이 태그로 읽혔다(검토가 재현).
+        // `<svg>`·`<math>` 안의 `<style>` 은 HTML 파서에게 보통 요소다 — 그 안의 글이 태그로 읽혔다.
         for (root in listOf("svg", "math")) {
             val out = clean("<$root><style><img src=\"/px.png\" onerror=\"x()\"><form action=\"/steal\"><input name=\"pw\"></form></style></$root>").html
             assertFalse("<img" in out || "<form" in out || "<input" in out, out)
@@ -260,7 +260,7 @@ class HtmlSanitizerTest {
 
     @Test
     fun 되풀이된_DOCTYPE_이_제곱_시간을_만들지_않는다() {
-        // 검토가 잰 값: 0.5 MB 에 22초(정규식 판). 부분집합의 끝은 첫 DOCTYPE 에서만, 정해진 폭 안에서만 찾는다.
+        // 잰 값: 0.5 MB 에 22초(정규식 판). 부분집합의 끝은 첫 DOCTYPE 에서만, 정해진 폭 안에서만 찾는다.
         // 입력을 2.2 MB 로 둔다 — 제곱인 옛 판은 이 기계에서 0.56 MB 에 1.5초였으므로 여기서 20초를 넘고, 선형인 지금 판은
         // 수십 ms 다. 0.56 MB 로는 옛 판도 3초 안에 들어와 시험이 결함을 보지 못했다(되돌려 확인했다).
         val input = "<!DOCTYPE a [>".repeat(160_000) + "<p>끝</p>"

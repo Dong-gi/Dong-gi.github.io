@@ -1,0 +1,47 @@
+# 상위 Repositories/.gitignore 가 build/ .gradle/ 등을 이미 막는다. 여기에는 그 바깥의 것만 적는다.
+#
+# 이 저장소는 GitHub Pages 로 통째로 공개된다 — 여기 들어온 것은 웹에서 내려받을 수 있다. 그래서 규칙은 '커밋해도 되는가' 가 아니라
+# '공개해도 되는가' 다. **프록시의 주소·계정은 어떤 파일에도 적지 않는다** — 앱이 실행 중에 사용자에게서 받는다.
+
+# 기계마다 다른 것. sdk.dir 에 사용자 이름이 박힌다.
+local.properties
+
+# 서명 자료.
+*.jks
+*.keystore
+*.p12
+keystore.properties
+
+# 빌드 산출물 가운데 상위 규칙이 못 잡는 것
+*.apk
+*.aab
+output-metadata.json
+.kotlin/
+captures/
+*.hprof
+# 실험 도구(tools/lab)를 python 으로 돌리면 생기는 바이트코드 캐시 — 2026-10-10 에 두 개가 커밋될 뻔했다.
+__pycache__/
+*.pyc
+
+# 실험 도구가 만드는 것 — 실험용 인증 기관의 열쇠·시험 계정·서버 기록·결과. 열쇠가 새면 그 인증 기관을 믿는 디버그 빌드가 속는다.
+local/
+# 위 인증 기관을 디버그 빌드에 싣는 사본과 그것을 믿게 하는 설정(tools/lab/make_certs.py 가 만든다).
+app/src/debug/res/raw/lab_ca.pem
+app/src/debug/res/xml/nsc_lab.xml
+
+# 테더링의 PC 쪽에서 쓰는 **남의 실행 파일**(tun2proxy·wintun·adb) — PC 연결 파일 zip 에도 저장소에도 넣지 않는다(CLAUDE.md '설정 파일 zip').
+# 라이선스가 막아서가 아니라(tun2proxy 는 MIT, Wintun 의 서명된 DLL 은 그것을 쓰는 프로그램과 함께면 재배포가 된다, adb 만 판단이 갈린다)
+# 크기와 공개 때문이다 — 커밋하면 곧 웹에서 내려받을 수 있다. 어느 폴더에 두든 **이름으로** 막는다(폴더로 막으면 놓친다 — 옛 usb-tether 가
+# output/wintun.dll 을 놓쳤다). 릴리스 zip 을 통째로 풀면 나오는 나머지(udpgw-server·라이브러리 꼴·머리 파일)도 막는다.
+wintun.dll
+tun2proxy
+tun2proxy.exe
+tun2proxy-bin
+tun2proxy-bin.exe
+tun2proxy.dll
+libtun2proxy.dylib
+tun2proxy.h
+udpgw-server
+udpgw-server.exe
+adb
+adb.exe

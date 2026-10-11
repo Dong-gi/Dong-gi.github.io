@@ -214,6 +214,77 @@ object PdfLimits {
     }
 
     /**
+     * 쪽의 **보이는 직사각형만** 선명하게 다시 그릴 타일(PDF 이어 보기).
+     *
+     * [tileFor] 는 쪽 하나가 화면을 차지하는 쪽 넘김의 것이다 — 화면 크기만큼 뜨고, 다시 그릴지를 쪽을 화면에 맞춘 배율로 잰다. 이어
+     * 보기는 둘 다 맞지 않는다. 화면에 쪽이 둘 셋 걸리고, 바닥층은 화면 **폭**에 맞춰(상한에 걸리면 그보다 낮게) 그려져 있다. 그래서
+     * 여기서는 **보이는 자리**(쪽 안의 비율)만 뜨고, 바닥층이 실제로 그려진 배율([baseScale])과 견준다. 부르는 쪽이 [capBytes] 를
+     * 쪽마다 화면에 보이는 넓이대로 나눠 주면 합이 선명화층 하나의 예산을 넘지 않는다. 예산보다 큰 자리는 **가운데를 남기고** 줄인다
+     * — 남은 가장자리는 흐린 바닥층이 메운다(쪽 넘김의 타일과 같다).
+     *
+     * @param scale 지금 화면의 포인트 → 화소 배율.
+     * @param baseScale 바닥층이 그려진 포인트 → 화소 배율. 이보다 [DETAIL_THRESHOLD] 배 넘게 키웠을 때만 다시 그린다([needsDetail]).
+     * @param left·[top]·[right]·[bottom] 보이는 자리 — 쪽 안의 비율(0~1). 범위 밖은 잘라 준다.
+     * @param maxScale [tileFor] 의 것과 같다 — 화면이 허락하는 최대 확대(포인트 → 화소).
+     * @return 다시 그릴 필요가 없거나, 보이는 자리가 없거나, 예산이 없으면 null.
+     */
+    fun regionTile(
+        widthPt: Int,
+        heightPt: Int,
+        scale: Double,
+        baseScale: Double,
+        left: Double,
+        top: Double,
+        right: Double,
+        bottom: Double,
+        capBytes: Long,
+        maxScale: Double,
+    ): Tile? {
+        if (!isDrawablePage(widthPt, heightPt)) return null
+        if (capBytes <= 0) return null
+        if (!maxScale.isFinite() || maxScale <= 0.0) return null
+        if (!needsDetail(scale, baseScale)) return null
+        if (!left.isFinite() || !top.isFinite() || !right.isFinite() || !bottom.isFinite()) return null
+
+        // [tileFor] 와 같은 두 상한 — 화면이 허락하는 최대 확대, 그리고 좌표가 `Int` 를 넘지 않게.
+        val absolute = MAX_PAGE_PIXELS / maxOf(widthPt, heightPt).toDouble()
+        val capped = minOf(scale, maxScale, absolute)
+        if (!needsDetail(capped, baseScale)) return null
+        val pageW = floor(widthPt * capped).toInt().coerceAtLeast(1)
+        val pageH = floor(heightPt * capped).toInt().coerceAtLeast(1)
+
+        // 보이는 자리를 화소로 — 바깥으로 연다(왼·위 내림, 오른·아래 올림). 끝의 반 화소가 흐린 띠로 남지 않게.
+        val l = floor(left.coerceIn(0.0, 1.0) * pageW).toInt()
+        val t = floor(top.coerceIn(0.0, 1.0) * pageH).toInt()
+        val r = kotlin.math.ceil(right.coerceIn(0.0, 1.0) * pageW).toInt().coerceAtMost(pageW)
+        val b = kotlin.math.ceil(bottom.coerceIn(0.0, 1.0) * pageH).toInt().coerceAtMost(pageH)
+        var w = r - l
+        var h = b - t
+        if (w <= 0 || h <= 0) return null
+        var x = l
+        var y = t
+        if (w.toLong() * h * ImageLimits.BYTES_PER_PIXEL > capBytes) {
+            // 넓이가 줄인 비율의 제곱으로 줄므로 제곱근만큼 줄인다. 내림이라 `floor(w·k)·floor(h·k) ≤ w·h·k²` — 상한을 넘지 않는다.
+            val k = kotlin.math.sqrt(capBytes.toDouble() / ImageLimits.BYTES_PER_PIXEL / (w.toDouble() * h))
+            val nw = floor(w * k).toInt().coerceAtLeast(1)
+            val nh = floor(h * k).toInt().coerceAtLeast(1)
+            x = l + (w - nw) / 2
+            y = t + (h - nh) / 2
+            w = nw
+            h = nh
+        }
+        return Tile(
+            srcLeft = x,
+            srcTop = y,
+            width = w,
+            height = h,
+            scale = capped,
+            pageWidth = pageW,
+            pageHeight = pageH,
+        )
+    }
+
+    /**
      * 타일 좌표계(배율로 그린 쪽 전체)의 한 변 상한. 비트맵이 아니라 **좌표**의 상한이다 —
      * 실제로 만드는 타일은 뷰포트와 예산이 누른다. `Int` 를 넘지 않게 하려는 것뿐이다.
      */

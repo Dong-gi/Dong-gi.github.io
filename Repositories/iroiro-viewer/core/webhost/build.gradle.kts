@@ -26,8 +26,8 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:safety"))
     // 포맷을 모른다. 자원은 `ResourceProvider` 로 들어온다 — 의존 표가 허락하는 것이
-    // core:model·safety·charset 뿐이라서만이 아니라, 호스트가 EPUB 을 알면 12·13단계의
-    // docx·HWPX 가 같은 호스트를 못 쓰게 되기 때문이다.
+    // core:model·safety·charset 뿐이고, 같은 호스트를 EPUB·SVG·HTML·마크다운 미리보기가
+    // 함께 쓴다.
 
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)

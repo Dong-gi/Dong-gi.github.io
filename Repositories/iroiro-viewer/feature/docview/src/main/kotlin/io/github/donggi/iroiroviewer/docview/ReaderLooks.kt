@@ -1,7 +1,6 @@
 package io.github.donggi.iroiroviewer.docview
 
 import io.github.donggi.iroiroviewer.data.ReaderAppearance
-import io.github.donggi.iroiroviewer.format.FlowKind
 import io.github.donggi.iroiroviewer.format.epub.ReaderStyle
 
 /**
@@ -11,10 +10,8 @@ import io.github.donggi.iroiroviewer.format.epub.ReaderStyle
  *
  * | 종류 | 글자 크기 | 여백 | 바탕 | 왜 |
  * |---|---|---|---|---|
- * | EPUB 흐름 장 · 글(docx·HWP·HWPX) | ○ | ○ | ○ | 흘러서 읽는 글이다 |
+ * | EPUB 흐름 장 | ○ | ○ | ○ | 흘러서 읽는 글이다 |
  * | EPUB 고정 레이아웃 쪽 | × | × | × | 좌표로 얹은 쪽이라 글자를 키우면 칸을 넘고, 원본의 색이 곧 쪽이다 |
- * | 시트(xlsx) | ○ | × | × | 작은 칸의 글자를 키우는 것은 뜻이 있다(열 폭이 em 이라 함께 는다). 칸의 채움 색은 **값의 뜻**이라 덮지 않고, 여백은 표에 뜻이 없다 |
- * | 슬라이드(pptx) | × | × | × | 슬라이드 한 장이 한 화면에 들도록 길이를 화면 단위로 적었다 — 글자만 키우면 상자를 넘는다 |
  *
  * 글자 크기는 `WebSettings.textZoom` 이 한다(`LockedWebView`). 여백·바탕은 CSS 이고 그것을 만드는 곳은 [ReaderStyle] 하나다.
  */
@@ -57,34 +54,6 @@ internal object ReaderLooks {
     fun controlsForEpub(allFixed: Boolean): Set<Control> =
         if (allFixed) emptySet() else setOf(Control.FONT, Control.MARGIN, Control.THEME)
 
-    fun controlsForFlow(kind: FlowKind): Set<Control> = when (kind) {
-        FlowKind.DOCUMENT -> setOf(Control.FONT, Control.MARGIN, Control.THEME)
-        FlowKind.SHEETS -> setOf(Control.FONT)
-        FlowKind.SLIDES -> emptySet()
-    }
-
-    /** 한 장·부분을 그리는 모양. */
-    data class Look(
-        /** `WebSettings.textZoom`. */
-        val textZoom: Int,
-        /** 얹을 CSS(위생을 거칠 필요 없는 우리 글). 빈 글이면 얹지 않는다. */
-        val css: String,
-        /** WebView 와 그 둘레의 바탕(ARGB). */
-        val background: Int,
-        /** 이 값이 바뀌면 쪽을 다시 읽는다(CSS 가 바뀌었다). 글자 크기는 들지 않는다 — 다시 읽지 않고 건다. */
-        val contentKey: Any,
-    )
-
-    /** 흐름 문서 부분 하나의 모양. */
-    fun forFlow(kind: FlowKind, a: ReaderAppearance, systemDark: Boolean): Look {
-        val controls = controlsForFlow(kind)
-        val zoom = if (Control.FONT in controls) textZoom(a.fontPercent) else 100
-        if (Control.THEME !in controls) return Look(zoom, "", WHITE, kind)
-        val tone = tone(a.theme, systemDark)
-        val margin = margin(a.margin)
-        return Look(zoom, ReaderStyle.flow(margin, tone), ReaderStyle.background(tone), margin to tone)
-    }
-
     /**
      * EPUB 장 하나의 모양. 고정 레이아웃 쪽은 책의 모양 그대로 화면에 맞춘다 — [viewWidth]·[viewHeight] 는 그때만 쓴다
      * (CSS 화소 — 화면 화소 ÷ 밀도).
@@ -117,5 +86,4 @@ internal object ReaderLooks {
         val contentKey: Any,
     )
 
-    private const val WHITE = 0xFFFFFFFF.toInt()
 }

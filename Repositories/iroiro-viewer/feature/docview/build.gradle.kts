@@ -64,6 +64,10 @@ dependencies {
     // `kotlin("test")` 만으로 러너가 붙지 않아 `Unresolved reference 'Test'` 가 난다.
     testImplementation(kotlin("test-junit"))
     testImplementation(libs.kotlinx.coroutines.test)
+    // 상태의 모양을 보는 시험이 진짜 EPUB 을 연다(`TestEpub` — 책의 생성자는 그 모듈 안의 것이다). XML 은 안드로이드가 런타임에
+    // 주는 API 라 JVM 시험에는 구현이 없다 — 포맷 모듈의 시험과 같은 구현(kxml2)을 끼운다.
+    testImplementation(libs.xmlpull)
+    testImplementation(libs.kxml2)
 
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)

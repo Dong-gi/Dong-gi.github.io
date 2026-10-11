@@ -1,5 +1,6 @@
 package io.github.donggi.iroiroviewer.playback
 
+import io.github.donggi.iroiroviewer.ui.IroProgress
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +12,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -80,9 +80,16 @@ fun MiniPlayer(modifier: Modifier = Modifier) {
                 }
             }
             if (state.durationMs > 0) {
-                LinearProgressIndicator(
-                    progress = { (state.positionMs.toFloat() / state.durationMs).coerceIn(0f, 1f) },
-                    modifier = Modifier.fillMaxWidth().height(2.dp),
+                IroProgress(
+                    // **람다 안에서 길이를 다시 본다.** `state` 는 위임 속성이라 이 람다는 부를 때마다 **지금의** 값을 읽는다 — 바깥의
+                    // `if` 는 구성할 때의 판단이고, 다른 곡을 누르면 길이가 0 이 된 상태를 의미 갱신이 재구성보다 먼저 읽는다.
+                    // 위치와 길이를 한 번 읽은 같은 값에서 꺼내야 짝이 맞는다(2026-10-05 크래시 — `IroProgress` 도 NaN 을 막는다).
+                    progress = {
+                        val now = state
+                        if (now.durationMs > 0) now.positionMs.toFloat() / now.durationMs else 0f
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    height = 2.dp,
                 )
             }
         }

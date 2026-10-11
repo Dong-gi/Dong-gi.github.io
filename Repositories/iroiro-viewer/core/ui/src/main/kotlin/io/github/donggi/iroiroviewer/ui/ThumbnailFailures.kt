@@ -129,6 +129,8 @@ class ThumbnailFailures(private val clock: () -> Long = { System.nanoTime() / 1_
         fun causeOf(t: Throwable): Cause = when (t) {
             is OutOfMemoryError -> Cause.TRANSIENT
             is IOException -> Cause.TRANSIENT
+            // 스택이 넘친 것은 그 파일이 만든 깊이다(라이브러리 해제기의 재귀 — 표지가 여는 압축) — 다시 해도 같은 자리에서 넘친다.
+            is StackOverflowError -> Cause.PERMANENT
             else -> Cause.UNCERTAIN
         }
     }

@@ -35,19 +35,24 @@
     <string name="archive_badge_link">바로가기</string>
     <string name="archive_badge_unsafe">풀 수 없는 이름</string>
     <string name="archive_summary_header">%1$s · 항목 %2$d개 · %3$s</string>
+    <!-- 'solid' 압축의 이름. 만화 뷰어(comic_solid_hint)와 같은 말을 쓴다 - 예전에는 거기서만 '순차 압축' 이었다. -->
     <string name="archive_summary_solid">연속 압축</string>
+    <!-- 형식이 풀린 크기를 적지 않았다(파일 하나를 싼 gz·bz2·lz4·Z). 목록 한 줄의 크기 자리에 쓴다. -->
+    <string name="archive_size_unknown">크기 모름</string>
 
     <!-- 풀기 -->
     <string name="archive_extract_all">전부 풀기</string>
     <string name="archive_extract_folder">이 폴더만 풀기</string>
     <string name="archive_extract_title">압축 풀기</string>
     <string name="archive_extract_count">파일 %1$d개 · %2$s</string>
+    <string name="archive_extract_count_unknown">파일 %1$d개 · 크기 모름</string>
     <string name="archive_extract_new_folder">새 폴더에 풀기</string>
     <string name="archive_extract_here">여기에 풀기</string>
-    <string name="archive_extract_dest">%1$s 에 풉니다</string>
+    <string name="archive_extract_dest">%1$s에 풉니다</string>
     <!-- 최상위 항목이 여럿이면 같은 폴더에 풀었을 때 흩어진다. 숫자로 말한다. -->
     <string name="archive_extract_scatter">여기에 풀면 이 폴더에 항목 %1$d개가 흩어집니다</string>
-    <string name="archive_extract_merge">%1$s 이(가) 이미 있습니다. 여기에 풀면 그 안에 섞입니다</string>
+    <!-- 이름 뒤의 조사는 받침에 맞출 수 없다 - 이름을 따옴표로 앞에 두고 문장과 가른다(앱의 규칙 - OperationBars 의 RestorePickBar). -->
+    <string name="archive_extract_merge">‘%1$s’ · 이미 있는 이름입니다. 여기에 풀면 그 안에 섞입니다</string>
     <string name="archive_extract_conflicts">같은 이름의 파일 %1$d개를 덮어쓰게 됩니다</string>
     <string name="archive_extract_refused">항목 %1$d개는 풀 수 없습니다(위험한 이름·바로가기·암호를 넣지 않은 항목)</string>
     <string name="archive_extract_go">풀기</string>

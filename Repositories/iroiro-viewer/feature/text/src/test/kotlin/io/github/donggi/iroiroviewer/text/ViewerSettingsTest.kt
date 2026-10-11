@@ -1,6 +1,7 @@
 package io.github.donggi.iroiroviewer.text
 
 import io.github.donggi.iroiroviewer.data.TextViewerDefaults
+import io.github.donggi.iroiroviewer.data.TextViewerKind
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
@@ -19,6 +20,7 @@ import kotlin.test.assertTrue
  */
 class ViewerSettingsTest {
 
+    /** 갈래마다 한 칸. 예전 시험들은 코드 갈래 하나만 쓴다([stored] 가 그 칸이다). */
     private class FakeStore(
         var stored: TextViewerDefaults = TextViewerDefaults(),
         var loadDelay: Long = 0,
@@ -28,21 +30,24 @@ class ViewerSettingsTest {
         var loads = 0
         var failLoad = false
         var failSave = false
+        var prose: TextViewerDefaults = TextViewerDefaults.defaultsFor(TextViewerKind.TEXT)
+        val savedKinds = ArrayList<TextViewerKind>()
 
         /** 읽기를 시작한 순간의 값을 준다 — 느린 디스크에서 읽는 것처럼. */
-        override suspend fun load(): TextViewerDefaults {
-            val snapshot = stored
+        override suspend fun load(kind: TextViewerKind): TextViewerDefaults {
+            val snapshot = if (kind == TextViewerKind.TEXT) prose else stored
             delay(loadDelay)
             loads++
             if (failLoad) throw IOException("망가진 파일")
             return snapshot
         }
 
-        override suspend fun save(value: TextViewerDefaults) {
+        override suspend fun save(kind: TextViewerKind, value: TextViewerDefaults) {
             delay(saveDelay)
             if (failSave) throw IOException("디스크")
-            stored = value
+            if (kind == TextViewerKind.TEXT) prose = value else stored = value
             saves += value
+            savedKinds += kind
         }
     }
 
@@ -186,5 +191,39 @@ class ViewerSettingsTest {
         s.update { it.copy(fontSp = it.fontSp + 1) }
         advanceUntilIdle()
         assertEquals(1, store.saves.size)
+    }
+
+    /**
+     * 글 파일과 코드 파일은 설정을 **따로** 든다. 같은 입장에서 갈래가 바뀌면 그 갈래의 값을 다시 읽고(새로 들어온 것은
+     * 아니다 — 미리보기를 되돌리지 않는다), 바꾼 것은 지금 갈래에 쓴다.
+     */
+    @Test
+    fun `갈래마다 따로 읽고 지금 갈래에 쓴다`() = runTest {
+        val store = FakeStore(stored = TextViewerDefaults(fontSp = 15))
+        val s = settings(store)
+        assertTrue(s.enter(1L, TextViewerKind.TEXT))
+        advanceUntilIdle()
+        assertEquals(TextViewerDefaults(wrap = true, lineNumbers = false), s.value.value, "글은 접고 번호를 숨긴다")
+        s.update { it.copy(fontSp = 17) }
+        advanceUntilIdle()
+        assertEquals(listOf(TextViewerKind.TEXT), store.savedKinds)
+        assertEquals(17, store.prose.fontSp)
+        assertEquals(15, store.stored.fontSp, "코드의 값은 그대로")
+
+        assertFalse(s.enter(1L, TextViewerKind.CODE), "갈래만 바뀐 것은 새로 들어온 것이 아니다")
+        assertNull(s.value.value)
+        advanceUntilIdle()
+        assertEquals(TextViewerDefaults(fontSp = 15), s.value.value)
+        assertFalse(s.enter(1L, TextViewerKind.CODE), "같은 입장·같은 갈래는 다시 읽지 않는다")
+    }
+
+    @Test
+    fun `글 파일과 코드 파일은 파일 목록의 표로 가른다`() {
+        for (name in listOf("소설.txt", "/storage/emulated/0/Download/README.md", "app.log", "자막.srt", "설정.ini", "이름없음", "data.bin")) {
+            assertEquals(TextViewerKind.TEXT, viewerKindOf(name), name)
+        }
+        for (name in listOf("Main.kt", "/sdcard/x/app.js", "page.html", "a.json", "Makefile", ".gitignore")) {
+            assertEquals(TextViewerKind.CODE, viewerKindOf(name), name)
+        }
     }
 }

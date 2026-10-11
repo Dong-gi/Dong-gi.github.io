@@ -1,25 +1,16 @@
 from src.config import Config
 from src.extractors.base import BaseExtractor
-from src.extractors.bilibili import BilibiliExtractor
-from src.extractors.hitomi import HitomiExtractor
-from src.extractors.m3u8 import M3u8Extractor
-from src.extractors.mpd import MpdExtractor
-from src.extractors.pixiv import PixivExtractor
 from src.extractors.youtube import YoutubeExtractor
 
 
 class ExtractorRegistry:
-    """익스트랙터 인스턴스 모음. URL · 클래스 · site_id로 조회."""
+    """익스트랙터 인스턴스 모음. URL · site_id로 조회."""
 
     def __init__(self, config: Config) -> None:
-        # 등록 순서가 매칭 우선순위 — 더 구체적인 사이트를 앞에 두고 generic은 뒤로.
+        # 등록 순서가 매칭 우선순위 — 사이트를 다시 붙일 때는 더 구체적인 사이트를
+        # 앞에, generic은 뒤에 둔다. 지금은 YouTube 하나뿐이다.
         self._extractors: list[BaseExtractor] = [
-            PixivExtractor(config),
             YoutubeExtractor(config),
-            BilibiliExtractor(config),
-            HitomiExtractor(config),
-            M3u8Extractor(config),
-            MpdExtractor(config),
         ]
 
     def get(self, url: str) -> BaseExtractor | None:
@@ -35,9 +26,6 @@ class ExtractorRegistry:
             if ext.site_id == site_id:
                 return ext
         return None
-
-    def all(self) -> list[BaseExtractor]:
-        return list(self._extractors)
 
 
 # 모듈-레벨 단일 인스턴스 (앱 시작 시 init_registry로 생성)
@@ -56,7 +44,3 @@ def get_extractor(url: str) -> BaseExtractor | None:
 
 def extractor_for_site(site_id: str) -> BaseExtractor | None:
     return _registry.by_site_id(site_id) if _registry else None
-
-
-def all_extractors() -> list[BaseExtractor]:
-    return _registry.all() if _registry else []

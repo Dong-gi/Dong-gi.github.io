@@ -1,5 +1,6 @@
 PySide6>=6.7.0
-httpx>=0.27.0
-keyring>=25.0.0
-yt-dlp[default]>=2025.1.0  # [default]는 yt-dlp-ejs(JS 챌린지 솔버 스크립트) 포함
+httpx>=0.27.0  # PO Token 서버 소스 내려받기(src/pot_provider.py). youtube.py 가 그 모듈을 import 하므로 앱 실행에도 필요
+keyring>=25.0.0  # 옛 Pixiv·bilibili 비밀을 지우는 데에만 쓴다(src/legacy_cleanup.py). CLAUDE.md '옛 흔적 정리' 참고
+yt-dlp[default]>=2026.8.19  # [default]는 yt-dlp-ejs(JS 챌린지 솔버 스크립트) 포함. 그 전 판은 android_vr 포맷이 1 MiB 뒤 403
+bgutil-ytdlp-pot-provider==2.0.1  # PO Token 공급자 플러그인. 버전을 바꾸면 `python -m src.pot_provider`로 서버도 다시 빌드
 imageio-ffmpeg>=0.5.0

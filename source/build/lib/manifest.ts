@@ -7,7 +7,7 @@
  *
  *     {
  *         "pugs/fundamental/physics.pug": "9f2c…",
- *         "source/img-map.json": "1ab7…"
+ *         "source/skeleton.pug": "1ab7…"
  *     }
  *
  * 빌드는 지금 계산한 해시와 파일에 적힌 해시를 견줘, 같으면 그 항목의 작업을 건너뛴다.
@@ -115,7 +115,7 @@ export interface IncrementalOptions {
     jobs: Job[];
     /**
      * 모든 작업이 함께 의존하는 파일들. 하나라도 바뀌면 전체를 다시 만든다.
-     * pug 의 `source/img-map.json` 처럼 어느 한 작업의 입력이라고 하기 어려운 것들이다.
+     * 어느 한 작업의 입력이라고 하기 어려운 것들을 위한 자리다(지금 쓰는 요소는 없다).
      */
     shared?: string[];
     /**

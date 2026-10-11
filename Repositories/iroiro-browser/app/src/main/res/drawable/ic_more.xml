@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 손으로 그린 선 아이콘(24x24, 흰 선). 색은 쓰는 쪽이 칠한다(imageTintList) — 테마 속성을 그림에 박지 않는다(알림 아이콘은 시스템 UI 가 다른 테마로 그린다). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M10,5a2,2 0,1 0,4 0a2,2 0,1 0,-4 0M10,12a2,2 0,1 0,4 0a2,2 0,1 0,-4 0M10,19a2,2 0,1 0,4 0a2,2 0,1 0,-4 0"
+        android:fillColor="#FFFFFFFF" />
+</vector>

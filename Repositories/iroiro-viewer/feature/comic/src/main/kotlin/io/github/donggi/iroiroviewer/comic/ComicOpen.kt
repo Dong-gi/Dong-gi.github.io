@@ -40,7 +40,7 @@ object ComicOpen {
         /** 아카이브가 깨졌다. */
         CORRUPT,
 
-        /** 우리가 열지 않기로 한 갈래(tar·iso·분할 아카이브). */
+        /** 우리가 열지 않는 갈래(iso·분할 아카이브·zstd 처럼 지금 라이브러리가 읽지 못하는 압축). */
         UNSUPPORTED,
 
         /** 방어 상한을 넘었다. */
@@ -99,19 +99,9 @@ object ComicOpen {
             Result.Failed(Kind.TOO_LARGE)
         } catch (e: CancellationException) {
             throw e
-        } catch (e: ArchivePasswordException) {
-            // 헤더까지 잠겼다. `IOException` 보다 먼저 잡는다 — 그쪽은 '깨졌다' 다.
-            Result.Failed(Kind.NEEDS_PASSWORD)
-        } catch (e: ParseLimitExceededException) {
-            Result.Failed(Kind.TOO_LARGE)
-        } catch (e: IOException) {
-            Result.Failed(Kind.CORRUPT)
-        } catch (e: IllegalStateException) {
-            Result.Failed(Kind.UNSUPPORTED)
-        } catch (e: RuntimeException) {
-            Result.Failed(Kind.CORRUPT)
-        } catch (e: OutOfMemoryError) {
-            Result.Failed(Kind.TOO_LARGE)
+        } catch (t: Throwable) {
+            // 종류를 모르는 것(우리 결함)은 그대로 던진다([openFailureKind]).
+            Result.Failed(openFailureKind(t) ?: throw t)
         }
 
         // 여는 **사이에** 없어졌을 수도 있다 — solid RAR·7z 를 훑는 몇 초 동안 파일을 지우거나 SD 카드를 뽑으면 리더가
@@ -148,9 +138,11 @@ object ComicOpen {
         val source = FileDocumentSource(file)
         if (Archives.detect(source) == null) {
             // 확장자가 압축이어도 우리가 여는 아카이브가 아니면 열지 않는다. 판별은 tar 계열(.cbt·압축 tar)까지 보고
-            // 압축 스트림은 안의 첫 머리까지 풀어 본다 — `.gz` 로 싼 파일 하나·iso·분할 아카이브가 여기로 와
+            // 압축 스트림은 안의 첫 머리까지 풀어 본다 — iso·분할 아카이브·zstd 처럼 우리가 읽지 못하는 것이 여기로 와
             // '이 앱이 다루지 않는 압축 형식입니다' 로 끝난다. 판별은 목록을 세우지 않는다(항목이 많은 tar 도 tar 다).
-            // 압축 안 한 tar 는 번호로 여는 리더(`randomAccess`), 압축 tar 는 흐름이라 solid 7z 와 같은 길이다.
+            // 압축 안 한 tar·cpio·ar 은 번호로 여는 리더(`randomAccess`), 압축 tar 는 흐름이라 solid 7z 와 같은 길이다.
+            // **파일 하나를 싼 `.gz` 등은 항목 하나짜리 아카이브다**(번호로 여는 리더) — 안의 것이 그림이면 한 쪽짜리 책이고,
+            // 아니면 '그림이 한 장도 없습니다' 다. 압축 목록에서 그 그림 항목을 누르면 이 길로 온다.
             return Result.Failed(Kind.UNSUPPORTED)
         }
 
@@ -198,6 +190,28 @@ object ComicOpen {
         onOpen(source)
         return Result.Ready(source)
     }
+}
+
+/**
+ * 여는 동안 던져진 것 → 실패의 종류. 모르는 것은 null 이고 부르는 쪽이 그대로 던진다. **차례가 뜻을 가진다** — 암호 예외와 상한 예외는
+ * `IOException` 이고(먼저 가른다), 취소는 `IllegalStateException` 이다(부르는 쪽이 이 함수보다 먼저 거른다).
+ *
+ * `Error` 가운데 받는 것은 둘이다. 메모리 부족은 '너무 크다' 다. **스택이 넘친 것은 그 파일이 깨진 것이다** — 입력이 깊이를 정하는
+ * 재귀가 라이브러리 해제기에 남아 있으면 넘친다: 빈 LZ4 프레임 20만 개짜리 `.cbt` 를 둔 폴더를 열기만 했는데 표지 썸네일이 여기를
+ * 지나 프로세스가 죽었다(기기에서 재현). 해제기는 `CompressedStreams` 가 이미 '깨졌다' 로 옮기지만 그 그물 밖에서도(목록·이름·쪽
+ * 정렬) 같은 파일이 재귀를 만들 수 있다. 넘친 스택은 여기 왔을 때 이미 풀려 있다. 나머지 `Error`(`InternalError` 따위)는 우리
+ * 결함이라 받지 않는다.
+ */
+internal fun openFailureKind(t: Throwable): ComicOpen.Kind? = when (t) {
+    // 헤더까지 잠겼다. `IOException` 보다 먼저 본다 — 그쪽은 '깨졌다' 다.
+    is ArchivePasswordException -> ComicOpen.Kind.NEEDS_PASSWORD
+    is ParseLimitExceededException -> ComicOpen.Kind.TOO_LARGE
+    is IOException -> ComicOpen.Kind.CORRUPT
+    is IllegalStateException -> ComicOpen.Kind.UNSUPPORTED
+    is RuntimeException -> ComicOpen.Kind.CORRUPT
+    is OutOfMemoryError -> ComicOpen.Kind.TOO_LARGE
+    is StackOverflowError -> ComicOpen.Kind.CORRUPT
+    else -> null
 }
 
 /** 여는 데 실패한 뒤의 종류. 이제 열리지 않으면 무엇이 났든 [ComicOpen.Kind.UNREADABLE] 이다 — 없는 파일은 깨진 파일이 아니다. */

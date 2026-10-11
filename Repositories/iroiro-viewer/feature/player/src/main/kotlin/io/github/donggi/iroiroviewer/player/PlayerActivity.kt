@@ -10,7 +10,12 @@ import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Rational
 import android.view.SurfaceView
+import android.view.WindowManager
+import android.view.accessibility.AccessibilityManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,20 +30,29 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
@@ -47,13 +61,14 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,29 +77,54 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import androidx.media3.common.Player
+import io.github.donggi.iroiroviewer.data.AppPreferences
 import io.github.donggi.iroiroviewer.io.ExternalOpen
+import io.github.donggi.iroiroviewer.io.FileOpEngine
+import io.github.donggi.iroiroviewer.io.FileOpManager
+import io.github.donggi.iroiroviewer.io.FileOpText
+import io.github.donggi.iroiroviewer.io.IncomingFiles
 import io.github.donggi.iroiroviewer.io.Iro
+import io.github.donggi.iroiroviewer.io.MediaClipper
+import io.github.donggi.iroiroviewer.io.ShareHelper
 import io.github.donggi.iroiroviewer.model.FileKind
 import io.github.donggi.iroiroviewer.playback.AbRepeat
 import io.github.donggi.iroiroviewer.playback.PauseIcon
@@ -107,12 +147,16 @@ import io.github.donggi.iroiroviewer.playback.queuePosition
 import io.github.donggi.iroiroviewer.playback.repeatLabel
 import io.github.donggi.iroiroviewer.playback.shuffleLabel
 import io.github.donggi.iroiroviewer.playback.PlaybackConnection
+import io.github.donggi.iroiroviewer.playback.PlayerSupport
+import io.github.donggi.iroiroviewer.ui.IroSlider
 import io.github.donggi.iroiroviewer.playback.formatTime
 import io.github.donggi.iroiroviewer.playback.pauseLabel
 import io.github.donggi.iroiroviewer.playback.playLabel
 import io.github.donggi.iroiroviewer.playback.playbackFailureText
 import io.github.donggi.iroiroviewer.playback.resumeConfirmLabel
 import io.github.donggi.iroiroviewer.playback.resumeOfferText
+import io.github.donggi.iroiroviewer.playback.seekBarLabel
+import io.github.donggi.iroiroviewer.playback.seekBarState
 import io.github.donggi.iroiroviewer.playback.abLabel
 import io.github.donggi.iroiroviewer.playback.abResultText
 import io.github.donggi.iroiroviewer.playback.abSymbol
@@ -128,7 +172,9 @@ import io.github.donggi.iroiroviewer.ui.IroiroTheme
  * 큰 화면 재생기.
  *
  * 쥐고 있는 것: 영상 표면과 자막, 제스처, 조작부 **두 줄**(위는 큐 조작, 아래는 이 재생에
- * 대한 조작 — 배속·A-B·트랙 시트·방향 잠금·PiP), 이어보기 제안, 재생목록 층.
+ * 대한 조작 — 배속·A-B·트랙 시트·방향 잠금·터치 잠금·PiP), 가운데 큰 재생 단추, 뒤로 단추,
+ * 이어보기 제안, 재생목록 층. 조작부는 재생 중이면 저절로 거두고, 그동안 시스템 바도 거둔다
+ * ([PlayerChrome]).
  *
  * ## 이 화면이 지키는 불변식 넷
  *
@@ -139,6 +185,8 @@ import io.github.donggi.iroiroviewer.ui.IroiroTheme
  * 2. **액티비티의 설정은 컴포저블이 쥐지 않는다.** 방향 요청은 컴포지션이 아니라
  *    [followDeviceRotationWhileVideo] 가 수명에 묶어 건다 — 정지한 화면은 다시 그려지지
  *    않아, 컴포저블이 쥐면 보이지도 않는 화면이 옛 요청을 붙들고 있게 된다(함정 표).
+ *    화면 켜 둠([keepScreenOnWhileVideoPlays])과 시스템 바([holdSystemBars])도 같다 — 그래서
+ *    바가 따르는 '조작부가 떠 있는가' 도 컴포지션이 아니라 이 액티비티가 든다([controlsShown]).
  * 3. **겹치는 층의 자리를 상수로 맞히지 않는다.** 조작부 판의 높이는 `onSizeChanged` 로
  *    재고, 위에 뜨는 것들(이어보기 알약·실패 문구·안내)은 잰 값을 따라 올라간다.
  * 4. **화면과 PiP 판정이 같은 값을 읽는다.** 재생목록의 여닫음은 컴포지션이 아니라
@@ -183,7 +231,7 @@ class PlayerActivity : ComponentActivity() {
      * **컴포지션이 아니라 액티비티가 든다.** 예전에는 `remember` 였는데, 그러면 이 값이
      * 컴포지션 안에만 있어 **PiP 판정이 그것을 볼 수 없었다.** 목록이 펼쳐진 채 PiP 로
      * 들어가면 표면이 컴포지션에 없어 **영상 없는 창**이 뜨는데, 그것을 막을 조건을
-     * 세울 자리가 없었던 것이다(설계 검토가 치명으로 잡았다). 지금은 화면과 PiP 판정이
+     * 세울 자리가 없었던 것이다. 지금은 화면과 PiP 판정이
      * **같은 흐름**을 읽는다.
      */
     private val playlistChoice = MutableStateFlow<Boolean?>(null)
@@ -220,6 +268,32 @@ class PlayerActivity : ComponentActivity() {
 
     /** 영상 상자가 창 안에서 차지한 자리. PiP 진입 애니메이션의 출발 사각형이다. */
     private val videoBounds = MutableStateFlow<Rect?>(null)
+
+    /**
+     * 조작부가 떠 있는가. **컴포저블이 아니라 액티비티가 든다**(불변식 2) — 시스템 바를 함께 거두는 판정([holdSystemBars])이 이 값을
+     * 읽는데, 그것은 수명에 묶여야 한다. 화면은 이 값을 그리고, 두드림과 저절로 거두기([PlayerChrome.AUTO_HIDE_MS])가 바꾼다. 새로
+     * 들어오면([receive]) 다시 띄운다 — 무엇을 틀었는지 한 번은 보여야 한다.
+     */
+    private val controlsShown = MutableStateFlow(true)
+
+    /**
+     * 터치 잠금(큰 재생기의 관행). 켜면 조작부와 몸짓이 모두 멎고, 화면을 두드리면 잠금 풀기 단추만 잠깐 뜬다 — 누워서
+     * 보다가 손바닥이 닿아 건너뛰거나 소리가 바뀌는 일을 막는다. **뒤로 가기도 막는다**([backRouter]) — 가장자리를 스친 손이 화면을
+     * 닫지 않게(잠금 풀기 단추를 띄운다). 액티비티가 드는 까닭은 [controlsShown] 과 같고, 뒤로 가기를 가르는 것도 여기다.
+     */
+    private val touchLocked = MutableStateFlow(false)
+
+    /** 잠금 풀기 단추를 띄우라는 요청의 번호 — 값이 아니라 **도착**이다(함정 표의 '`MutableStateFlow` 는 같은 값을 합친다'). */
+    private val unlockHint = MutableStateFlow(0L)
+
+    /** 마지막으로 건 시스템 바([applyBars]). PiP 에서 전체 화면으로 돌아올 때 같은 것을 다시 건다. */
+    private var lastBars: BarsPlan? = null
+
+    /**
+     * 프로세스가 죽은 뒤 되살아난 화면이 다시 세울 큐([PlayerRestore]). 다시 세우기 전에 또 저장 상태를 적게 되면(그사이 다시
+     * 떠났다) 이것을 그대로 적는다 — 그때는 플레이어가 아직 비어 있어 큐에서 읽을 것이 없다.
+     */
+    private var pendingRestore: PlayerRestore.Snapshot? = null
 
     /** 이 기기가 PiP 를 할 수 있는가. 못 하면 단추를 아예 띄우지 않는다. */
     private val pipSupported: Boolean by lazy {
@@ -275,7 +349,88 @@ class PlayerActivity : ComponentActivity() {
         val sourceRect: Rect? = null,
     )
 
+    /**
+     * 다른 앱이 넘긴 파일로 **막** 들어왔다(`PlayerEntry.EXTRA_FROM_OUTSIDE`). 그러면 뒤로 가기가 이 화면을 끝내지 않고 **태스크를
+     * 뒤로 보낸다** — 이 화면은 우리 태스크에 얹히므로 끝내면 그 밑의 파일 목록이 드러나는데, 그 사람은 보낸 앱에서 왔다. 재생은
+     * 여느 뒤로 가기처럼 서비스에서 이어진다. 우리 앱 안에서 다시 열면(미니 바·알림·목록) 그 인텐트가 이것을 거둔다.
+     *
+     * **한 번뿐이다**([forgetSender]) — 뒤로 가기로 보낸 앱에 돌아갔거나 홈·최근 앱으로 떠났으면 거둔다. 그 뒤 런처로 돌아온 사람은
+     * 보낸 앱에서 오지 않았다. 처음에는 거두지 않아, 내려받은 영상을 뷰어로 연 사람이 그 뒤 몇 번을 돌아와도 뒤로 가기가 파일
+     * 목록 대신 홈으로 튕겼다(사용자가 짚었다).
+     */
+    private var fromOutside = false
+
+    /**
+     * 다른 앱으로 넘기는 중이다([openWithOtherApp]). 우리가 띄운 앱도 [onUserLeaveHint] 를 부르는데, 그 앱은 우리 태스크에 얹혀
+     * 뒤로 가면 이 화면으로 돌아온다 — 떠난 것이 아니므로 [fromOutside] 를 거두지 않는다. 다시 서면([onResume]) 내린다.
+     */
+    private var handingOff = false
+
+    /**
+     * 시스템의 뒤로 가기를 [goBack] 으로 보낸다. 거기서 할 일이 '끝내기' 뿐이면 꺼 둔다([routeBack]) — 여느 뒤로 가기가 그대로
+     * 돈다(13 이상의 미리 보는 뒤로 가기도). 터치 잠금 중에는 닫지 않고 잠금 풀기 단추를 띄운다([touchLocked]).
+     */
+    private val backRouter = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            if (touchLocked.value) revealUnlock() else goBack()
+        }
+    }
+
+    /**
+     * 뒤로 가기가 가는 곳.
+     *
+     * * 다른 앱이 막 넘긴 파일이면([fromOutside]) 그 앱으로 — 태스크를 뒤로 보낸다. 한 번뿐이다.
+     * * 밑에 파일 목록이 있으면 끝낸다 — 그것이 드러난다. PiP 를 거쳐도 같다: PiP 에 들어가면 이 화면이 제 태스크로 옮겨 가지만
+     *   전체 화면으로 되돌리면 원래 태스크로 돌아온다(API 31 실측).
+     * * **이 화면이 태스크의 뿌리면**(밑에 아무것도 없다 — 다른 앱이 넘긴 파일로 우리 앱이 처음 떴거나, 파일 목록을 닫은 뒤 알림으로
+     *   다시 떴다) 지금 트는 파일의 폴더로 파일 목록을 열고 끝낸다([PlayerSupport.openFileList]). 그냥 끝내면 홈으로 떨어진다.
+     */
+    private fun goBack() {
+        when {
+            fromOutside -> {
+                forgetSender()
+                moveTaskToBack(true)
+            }
+            isTaskRoot -> {
+                PlayerSupport.openFileList(this, playingFolder())
+                finish()
+            }
+            else -> finish()
+        }
+    }
+
+    /** 보낸 앱으로 돌아가는 길을 거둔다([fromOutside]). */
+    private fun forgetSender() {
+        if (fromOutside) Iro.d { "보낸 앱으로 돌아가는 길을 거둔다" }
+        fromOutside = false
+        routeBack()
+    }
+
+    /**
+     * [backRouter] 를 켤지 — [goBack] 이 '끝내기' 말고 할 일이 있을 때, 그리고 터치 잠금 중일 때만. 뿌리인지는 PiP 를 오가며
+     * 바뀌므로 다시 설 때마다 본다.
+     */
+    private fun routeBack() {
+        backRouter.isEnabled = fromOutside || isTaskRoot || touchLocked.value
+    }
+
+    /**
+     * 지금 트는 파일의 폴더 — 기기 저장소(`/storage/`)의 파일일 때만. 앱 캐시의 사본(다른 앱이 넘긴 것 — 사용자가 찾아갈 수 없는
+     * 자리다)은 null 이고, 그때 파일 목록은 첫 화면이다.
+     * 폴더가 그사이 사라졌어도 그대로 넘긴다 — 주 스레드라 디스크를 묻지 않고, 파일 목록이 그 자리에서 말한다.
+     */
+    private fun playingFolder(): String? {
+        val key = PlaybackConnection.state.value.fileKey ?: return null
+        val path = itemPaths.pathOf(key) ?: return null
+        return java.io.File(path).parent?.takeIf { it.startsWith("/storage/") }
+    }
+
     private fun receive(intent: android.content.Intent?) {
+        fromOutside = intent?.getBooleanExtra(PlayerEntry.EXTRA_FROM_OUTSIDE, false) == true
+        // 새로 들어왔다 — 잠가 둔 손을 풀고 조작부를 띄운다. 목록·미니 바·알림에서 들어온 사람은 방금 무엇을 하겠다고 말했다.
+        touchLocked.value = false
+        controlsShown.value = true
+        routeBack()
         playlistRequest.value = PlaylistRequest(
             seq = ++requestSeq,
             expand = intent?.getBooleanExtra(PlayerEntry.EXTRA_SHOW_PLAYLIST, false) == true,
@@ -283,6 +438,23 @@ class PlayerActivity : ComponentActivity() {
         // 새 요청이 도착하면 **사용자가 앞서 고른 여닫음을 잊는다** — 그때는 방금 새로
         // 요구한 것이기 때문이다(알림을 다시 누르면 목록이 다시 펼쳐져야 한다).
         playlistChoice.value = null
+    }
+
+    /** 조작부를 여닫는다(한 번 두드림). 함수인 까닭은 몸짓 인식기가 처음 붙을 때 람다를 잡기 때문이다 — 값을 넘기면 낡는다. */
+    private fun toggleControls() {
+        controlsShown.value = !controlsShown.value
+    }
+
+    /** 터치 잠금을 켜고 끈다. 켜면 조작부를 거두고, 풀면 띄운다 — 풀자마자 무엇을 할 수 있는지 보여야 한다. */
+    private fun setTouchLocked(on: Boolean) {
+        touchLocked.value = on
+        controlsShown.value = !on
+        routeBack()
+    }
+
+    /** 잠금 풀기 단추를 잠깐 띄운다(터치 잠금 중의 두드림·뒤로 가기). */
+    private fun revealUnlock() {
+        unlockHint.value = unlockHint.value + 1
     }
 
     /**
@@ -306,14 +478,27 @@ class PlayerActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onBackPressedDispatcher.addCallback(this, backRouter)
         PlaybackConnection.connect(this)
         // 누르는 순간 경로가 있어야 한다(`ExternalOpen.open` 은 동기다). 붙는 데 걸리는 시간을 여기서 미리 쓴다.
         itemPaths = ItemPaths(this)
         receive(intent)
+        // 다시 선 화면(밤 모드를 바꿨다·프로세스가 죽었다 살아났다)은 처음 인텐트를 그대로 받는다 — 거둔 [fromOutside] 가 되살아나지
+        // 않게 저장해 둔 값을 따른다.
+        if (savedInstanceState != null) {
+            fromOutside = savedInstanceState.getBoolean(KEY_FROM_OUTSIDE, false)
+            Iro.d { "재생 화면이 다시 섰다 — 보낸 앱으로 돌아가는 길=$fromOutside" }
+            routeBack()
+            // 프로세스가 죽었다 살아났으면 플레이어가 비어 있다 — 적어 둔 큐로 다시 세운다([restoreIfEmpty]).
+            pendingRestore = PlayerRestore.read(savedInstanceState)
+            restoreIfEmpty()
+        }
         followDeviceRotationWhileVideo()
+        keepScreenOnWhileVideoPlays()
         keepPipParamsFresh()
         leavePipWhenQueueTurnsToAudio()
         enableEdgeToEdge()
+        holdSystemBars()
         setContent {
             val playback by PlaybackConnection.state.collectAsStateWithLifecycle()
             val request = playlistRequest.collectAsStateWithLifecycle().value
@@ -324,6 +509,9 @@ class PlayerActivity : ComponentActivity() {
             val collapsing by pipCollapsing.collectAsStateWithLifecycle()
             val inPip = confirmed || collapsing
             val locked by orientationLocked.collectAsStateWithLifecycle()
+            val shown by controlsShown.collectAsStateWithLifecycle()
+            val touchLock by touchLocked.collectAsStateWithLifecycle()
+            val hint by unlockHint.collectAsStateWithLifecycle()
 
             val playlistVisible = playlistShown(playback, request, choice)
             // 영상이 실제로 **보이고 있을 때만** 어둡게 못 박는다. 영상은 밝은 배경에서
@@ -334,7 +522,7 @@ class PlayerActivity : ComponentActivity() {
             // 어두운 그림이 나온다(한 번 겪었다). 그래서 여기서 한 번 정해 내려보낸다.
             IroiroTheme(forceDark = playback.hasVideo && !playlistVisible) {
                 PlayerScreen(
-                    onBack = { finish() },
+                    onBack = ::goBack,
                     playlistOpen = playlistVisible,
                     onPlaylistOpenChange = { playlistChoice.value = it },
                     inPip = inPip,
@@ -342,16 +530,69 @@ class PlayerActivity : ComponentActivity() {
                     onEnterPip = ::enterPip,
                     orientationLocked = locked != null,
                     onToggleOrientationLock = ::toggleOrientationLock,
+                    controlsVisible = shown,
+                    onToggleControls = ::toggleControls,
+                    onHideControls = { controlsShown.value = false },
+                    touchLocked = touchLock,
+                    onTouchLockChange = ::setTouchLocked,
+                    unlockHint = hint,
+                    onRevealUnlock = ::revealUnlock,
                     onVideoBounds = { videoBounds.value = it },
                     onOpenWith = ::openWithOtherApp,
+                    onClip = ::startClip,
+                    onClipPreview = ::previewClip,
                 )
             }
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_FROM_OUTSIDE, fromOutside)
+        // 프로세스가 죽은 뒤 다시 설 때를 위해 큐를 적는다([PlayerRestore]). 아직 다시 세우지 못한 것이 있으면 그것을 그대로 —
+        // 그때는 플레이어가 비어 있어 큐에서 읽을 것이 없다.
+        val key = PlaybackConnection.state.value.fileKey
+        if (key != null) pendingRestore = null // 큐가 섰다 — 이제부터는 지금 큐를 적는다.
+        val snapshot = if (key != null) {
+            itemPaths.queueOf(key)?.let { q -> PlayerRestore.snapshotOf(q.paths, q.index, PlaybackConnection.positionNow()) }
+        } else {
+            pendingRestore
+        }
+        snapshot?.let { PlayerRestore.write(outState, it) }
+    }
+
     override fun onDestroy() {
         itemPaths.close()
         super.onDestroy()
+    }
+
+    /**
+     * 큐 항목 하나([mediaId])의 [startMs, endMs) 를 새 파일로 저장하라고 큐에 넣는다(구간 저장 — [ClipControls]). [audioOnly] 면
+     * 소리 트랙만, [endMs] 가 null 이면 끝까지다(⋮ 의 '소리만 저장'). 결과는 [ClipJobs] 가 받아 이 화면이 말한다.
+     *
+     * @return 넣었으면 그 요청의 신원, 못 넣었으면 그 까닭.
+     */
+    private fun startClip(mediaId: String, startMs: Long, endMs: Long?, audioOnly: Boolean): ClipStart {
+        val path = itemPaths.pathOf(mediaId) ?: return ClipStart.Refused(R.string.player_clip_no_path)
+        // 다른 앱이 넘겨 앱 캐시에 둔 사본은 그 곁에 저장해도 사용자가 찾아갈 수 없다(읽기 전용 사본 — `IncomingFiles`).
+        if (IncomingFiles.isCopy(this, path)) return ClipStart.Refused(R.string.player_clip_copy)
+        // 앱 캐시의 공유 폴더 아래는 **모두** 같다 — 받은 사본이 아닌 것(예전의 네트워크 저장소 사본 `share/remote`)이 위의 검사를
+        // 빠져 '저장했습니다' 가 뜨고 파일은 캐시에 남았다. 까닭을 말한다([ClipSource]).
+        if (ClipSource.isAppCopy(path, ShareHelper.shareDir(this))) return ClipStart.Refused(R.string.player_clip_app_copy)
+        val id = java.util.UUID.randomUUID().toString()
+        // 넣기 **전에** 신원을 적는다 — 곧바로 끝난 결과가 먼저 오면 신원이 영영 '기다리는 중' 에 남는다.
+        ClipJobs.started(id)
+        FileOpManager.enqueue(this, FileOpManager.Request.SaveClip(id, path, startMs, endMs, audioOnly, ClipJobs.sink))
+        return ClipStart.Started(id)
+    }
+
+    /**
+     * 구간 칸이 누르기 전에 말할 것 — 담을 수 있는가, 영상이면 실제로 시작할 키프레임([MediaClipper.preview]). 경로를 찾는 일은 메인
+     * 스레드의 컨트롤러가 하고([itemPaths]), 파일을 여는 일은 입출력 스레드에서 한다.
+     */
+    private suspend fun previewClip(mediaId: String, startMs: Long): MediaClipper.Preview? {
+        val path = itemPaths.pathOf(mediaId) ?: return null
+        return MediaClipper.preview(path, startMs)
     }
 
     /**
@@ -381,7 +622,10 @@ class PlayerActivity : ComponentActivity() {
             lastPipPlan = plan.copy(autoEnter = false)
             setPictureInPictureParams(paramsOf(lastPipPlan))
         }
+        // 우리가 띄우는 앱도 [onUserLeaveHint] 를 부른다 — 떠난 것이 아니다([handingOff]).
+        handingOff = true
         val result = ExternalOpen.open(this, path, ExternalOpen.Mode.CHOOSE)
+        if (result != ExternalOpen.Result.STARTED) handingOff = false
         if (PlayerOpenWith.pausesAfter(result)) {
             // 같은 파일을 저쪽에서 본다 — 둘이 함께 소리를 내지 않게. 끝내지 않는다(큐·위치·미니 바가 남는다).
             PlaybackConnection.pause()
@@ -451,6 +695,8 @@ class PlayerActivity : ComponentActivity() {
         // 창이 사라졌으니 접어 둔 것도 푼다. 다시 서면 [onStart] 가 실제 상태로 채운다.
         pipCollapsing.value = false
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        // 거둬 둔 시스템 바도 놓는다 — 방향 요청과 같다. 다시 서면 [holdSystemBars] 의 수집이 지금 값으로 다시 건다.
+        WindowCompat.getInsetsController(window, window.decorView).show(WindowInsetsCompat.Type.systemBars())
         runCatching { unregisterReceiver(pipReceiver) }
     }
 
@@ -459,8 +705,8 @@ class PlayerActivity : ComponentActivity() {
      *
      * **진입이 실패한 길도 여기서 낫는다.** PiP 는 사용자가 설정에서 막아 두었을 때
      * 예외 없이 그냥 들어가지 않는데, 우리는 첫 프레임을 깨끗하게 만들려고 **부르기 전에**
-     * 화면을 접는다. 되돌리는 코드가 없으면 조작부도 제스처도 없는 화면이 남는다
-     * (설계 검토가 잡은 결함이다). 'PiP 가 아니면 펴 둔다' 는 이 한 줄이 그 모든 길을 덮는다.
+     * 화면을 접는다. 되돌리는 코드가 없으면 조작부도 제스처도 없는 화면이 남는다.
+     * 'PiP 가 아니면 펴 둔다' 는 이 한 줄이 그 모든 길을 덮는다.
      */
     override fun onResume() {
         super.onResume()
@@ -470,21 +716,30 @@ class PlayerActivity : ComponentActivity() {
         pipCollapsing.value = false
         // 전체화면으로 되돌아왔다 — 창을 닫은 것이 아니다.
         stoppedWhileInPip = false
+        handingOff = false
+        // PiP 를 오가면 태스크가 바뀐다(들어가면 제 태스크, 되돌리면 원래 태스크) — 뒤로 가기가 할 일을 다시 본다.
+        routeBack()
     }
 
     /**
-     * **저절로 들어가는 길에서는 여기서 미리 접는다.**
+     * 사용자가 이 화면을 떠난다 — 홈·최근 앱, 그리고 우리가 띄운 앱.
      *
-     * `onPictureInPictureModeChanged` 는 애니메이션이 **끝난 뒤** 오고, 시작 시점을 알려
-     * 주는 `PictureInPictureUiState.isTransitioningToPip()` 는 API 35 다. minSdk 31 에서
-     * 첫 프레임에 조작부가 찍히는 것을 막을 방법은 우리가 먼저 접는 것뿐이다.
+     * **보낸 앱으로 돌아가는 길을 거둔다**([fromOutside]) — 다음에 런처로 돌아온 사람에게 뒤로 가기는 파일 목록이다. 우리가 다른
+     * 앱을 띄운 길([handingOff])은 빼고, 화면이 꺼진 것은 여기 오지 않는다.
      *
-     * 계획이 자동 진입이 아닐 때는 접지 않는다 — 소리 파일이나 목록을 펼친 상태에서
-     * 홈을 눌러도 화면이 공연히 접히면 돌아왔을 때 한 프레임이 비어 보인다.
+     * **API 31 의 자동 PiP(영상을 트는 중에 홈)는 이 콜백을 부르지 않는다** — 모드 콜백만 온다(2026-10-05, 로그로 실측). 그래서
+     * PiP 에 들어가는 길은 [onPictureInPictureModeChanged] 가 따로 거둔다. 같은 까닭으로 아래의 '미리 접기' 는 그 길에서 돌지
+     * 않는다 — 그 길을 위해 둔 것이었다: 모드 콜백은 애니메이션이 **끝난 뒤** 오고 시작 시점을 알려 주는
+     * `PictureInPictureUiState.isTransitioningToPip()` 는 API 35 라, 첫 프레임에 조작부가 찍히지 않게 하려면 우리가 먼저 접어야
+     * 했다. 계획이 자동 진입인데 이 콜백이 오는 길이 API 31 에 남아 있는지는 확인하지 않았다(오면 접고, 다시 서면 [onResume] 이
+     * 편다). 계획이 자동 진입이 아닐 때는 접지 않는다 — 소리 파일이나 목록을 펼친 상태에서 홈을 눌러도 화면이 공연히 접히면
+     * 돌아왔을 때 한 프레임이 비어 보인다.
      */
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
+        Iro.d { "사용자가 떠난다 — 자동PiP=${lastPipPlan.autoEnter} 넘기는중=$handingOff" }
         if (lastPipPlan.autoEnter) pipCollapsing.value = true
+        if (!handingOff) forgetSender()
     }
 
     override fun onPictureInPictureModeChanged(
@@ -495,6 +750,9 @@ class PlayerActivity : ComponentActivity() {
         pipActive.value = isInPictureInPictureMode
         if (!isInPictureInPictureMode) pipCollapsing.value = false
         Iro.d { "PiP=$isInPictureInPictureMode 멈춘뒤=$stoppedWhileInPip" }
+        // **PiP 에 들어갔다 = 전체 화면을 떠났다** — 보낸 앱으로 돌아가는 길을 거둔다([fromOutside]). 홈으로 들어가는 자동 PiP 는
+        // [onUserLeaveHint] 를 부르지 않는다(API 31 실측). 단추로 들어간 길도 같게 본다 — 작은 창을 띄워 둔 채 다른 데를 다녀온 사람이다.
+        if (isInPictureInPictureMode) forgetSender()
         // **멈춘 뒤에 모드가 꺼졌다 = 창을 닫았다.** 전체화면으로 되돌리는 길은 멈추지
         // 않고 곧바로 리줌되므로 이 표시가 서 있지 않다.
         //
@@ -510,6 +768,9 @@ class PlayerActivity : ComponentActivity() {
             PlaybackConnection.pause()
         }
         if (!isInPictureInPictureMode) stoppedWhileInPip = false
+        // **전체 화면으로 돌아왔으면 시스템 바를 다시 건다.** 계획은 PiP 를 오가며 바뀌지 않아(`distinctUntilChanged`) 흐름이
+        // 다시 걸어 주지 않는데, 창이 작은 창에서 전체 화면으로 갈리는 사이 시스템이 바를 다시 보일 수 있다(기기에서 볼 것).
+        if (!isInPictureInPictureMode) lastBars?.let(::applyBars)
     }
 
     /**
@@ -649,7 +910,7 @@ class PlayerActivity : ComponentActivity() {
      *
      * **판정을 `state.hasVideo` 로 하지 않는다.** 그 값은 항목을 건너뛰는 동안 잠깐
      * 거짓이 되므로, 그것으로 닫으면 PiP 창의 '다음' 을 눌러 영상 → 영상으로 넘기기만
-     * 해도 창이 사라진다(설계 검토가 잡았다). 큐가 실어 보내는 종류(`QueueItem.kind`)는
+     * 해도 창이 사라진다. 큐가 실어 보내는 종류(`QueueItem.kind`)는
      * 확장자로 정해져 **항목이 실제로 바뀔 때만** 달라진다.
      */
     private fun leavePipWhenQueueTurnsToAudio() {
@@ -687,8 +948,8 @@ class PlayerActivity : ComponentActivity() {
      * 돌면, 그것은 사용자가 세로 고정을 켜 둔 뜻을 정면으로 거스르는 것이다.
      *
      * **잠금이 그 위에 선다.** 누워서 볼 때 화면이 따라 도는 것을 멈추는 단추이고,
-     * [ActivityInfo.SCREEN_ORIENTATION_LOCKED] 는 **지금 방향 그대로** 묶는다 — 어느
-     * 방향인지 우리가 계산하지 않아도 된다. 잠금은 영상이 아니게 되어도 **풀리지 않는다**:
+     * 누른 순간의 방향을 구체값(`LANDSCAPE`·`PORTRAIT`)으로 묶는다(`toggleOrientationLock`).
+     * 잠금은 영상이 아니게 되어도 **풀리지 않는다**:
      * `hasVideo` 는 항목을 건너뛰는 동안 잠깐 거짓이 되므로 그것으로 풀면 영상 → 영상으로
      * 넘길 때마다 사용자가 건 잠금이 조용히 사라진다.
      *
@@ -713,7 +974,7 @@ class PlayerActivity : ComponentActivity() {
      * 들어 있지 않아 그 정책의 대상이 아니다. 진짜 조건은 **그 디스플레이의
      * `ignoreOrientationRequest`** 다 — 폰 AVD 는 `false` 라 요청이 먹는 것을 실측했고
      * (`adb shell dumpsys window | grep ignoreOrientationRequest`), 태블릿 AVD 는 아직 재지 않았다.
-     * `SCREEN_ORIENTATION_LOCKED` 는 **고정 방향에 든다** — 태블릿에서 잠금이 안 들으면
+     * 잠금의 `LANDSCAPE`·`PORTRAIT` 는 **고정 방향이다** — 태블릿에서 잠금이 안 들으면
      * 그 값이 원인이고, 그때도 opt-out 속성으로 억지로 되돌리지 않는다.
      */
     /**
@@ -749,7 +1010,139 @@ class PlayerActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * **영상이 도는 동안 화면을 끄지 않는다**(기기에서 화면 꺼짐 시간을 15초로 두고 영상을 틀자 32초 뒤
+     * 화면이 꺼진 채 소리만 이어졌다. 에뮬레이터의 기본값은 '끄지 않음' 이라 10단계부터 아무도 보지 못했다). 재생은 서비스가 하고
+     * 표면은 우리가 직접 붙이므로 `PlayerView` 가 해 주던 `keepScreenOn` 이 없다 — 창의 [WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON]
+     * 을 우리가 건다.
+     *
+     * **소리에는 걸지 않는다** — 화면을 끄고 듣는 것이 정상이다. **멈추면 곧바로 풀지 않는다**([KEEP_SCREEN_GRACE_MS]). `isPlaying`
+     * 은 버퍼링하는 동안(큐가 다음 영상으로 넘어갈 때) 잠깐 거짓이 되는데, 그 순간 풀면 마지막으로 손댄 지 오래된 화면이 바로 어두워진다.
+     * 방향과 같은 까닭으로 액티비티가 `repeatOnLifecycle(STARTED)` 로 쥔다(함정 표 — 컴포지션은 정지 중에 다시 그려지지 않는다).
+     * 창이 보이지 않을 때는 깃발이 뜻이 없어 정지 중에 남아 있어도 해가 없다.
+     */
+    private fun keepScreenOnWhileVideoPlays() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                PlaybackConnection.state
+                    .map { it.hasVideo && it.isPlaying }
+                    .distinctUntilChanged()
+                    .collectLatest { playingVideo ->
+                        if (playingVideo) {
+                            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                        } else {
+                            delay(KEEP_SCREEN_GRACE_MS)
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                        }
+                    }
+            }
+        }
+    }
+
+    /**
+     * **영상을 보는 동안 시스템 바를 거둔다**(기기에서 잡았다: 1080×2400 에뮬레이터를 가로로 눕히고 조작부를 감춰도
+     * 상태 표시줄이 영상 위에 겹쳤고 내비게이션 바가 밝은 회색 띠로 남았다). 언제 거두는지는 [PlayerChrome.barsHidden] 이고, 거는 일은
+     * 이 액티비티가 수명에 묶어 한다 — 방향 잠금과 같은 까닭이다(불변식 2: 정지한 화면은 다시 그려지지 않아 컴포저블이 쥐면 보이지 않는
+     * 화면이 바를 붙든다). 놓는 것은 [onStop], PiP 에서 돌아올 때 다시 거는 것은 [onPictureInPictureModeChanged] 다.
+     *
+     * 영상이 보이는 동안에는 **바의 색도 어둡게** 둔다 — 상태 표시줄 아이콘은 테마(`IroiroTheme(forceDark)`)가 밝게 두지만, 3버튼
+     * 내비게이션의 바탕은 시스템이 밝은 모드를 따라 흰 띠를 깐다(`enableEdgeToEdge` 의 기본은 '시스템을 따른다'). 두 값 모두 테마와
+     * **같은 식**(영상이 보이고 목록이 닫혔다)을 쓴다 — 어긋나면 목록은 밝은데 바만 검거나 그 반대가 된다(10단계가 조작부로 겪은 모양).
+     *
+     * 조작부의 판은 바가 드나들어도 출렁이지 않게 `…IgnoringVisibility` 인셋을 쓴다([PlayerScreen]).
+     */
+    private fun holdSystemBars() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                combine(
+                    PlaybackConnection.state,
+                    playlistRequest,
+                    playlistChoice,
+                    controlsShown,
+                    touchLocked,
+                ) { s, req, choice, shown, locked ->
+                    val showingVideo = s.hasVideo && !playlistShown(s, req, choice)
+                    BarsPlan(dark = showingVideo, hidden = PlayerChrome.barsHidden(showingVideo, shown, locked))
+                }.distinctUntilChanged().collect(::applyBars)
+            }
+        }
+    }
+
+    private fun applyBars(plan: BarsPlan) {
+        lastBars = plan
+        if (plan.dark) {
+            enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+                navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            )
+        } else {
+            enableEdgeToEdge()
+        }
+        val bars = WindowCompat.getInsetsController(window, window.decorView)
+        if (plan.hidden) {
+            // 가장자리를 밀면 잠깐 보였다가 저절로 들어간다 — 큰 재생기들의 가로 전체 화면과 같다.
+            bars.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            bars.hide(WindowInsetsCompat.Type.systemBars())
+        } else {
+            bars.show(WindowInsetsCompat.Type.systemBars())
+        }
+    }
+
+    /** 시스템 바의 계획 한 벌 — 값이 실제로 바뀔 때만 시스템을 부르게 `data class` 다([PipPlan] 과 같다). */
+    private data class BarsPlan(val dark: Boolean, val hidden: Boolean)
+
+    /**
+     * **되살아난 화면이 빈 채로 남지 않게 한다**(기기에서 잡았다: 재생하던 앱이 죽은 뒤 안드로이드가 이 화면을 저장
+     * 상태로 되살리면 '0:00 / 0:00' 에 제목도 없고 재생 단추가 듣지 않았다. 뒤로 가기만 파일 목록으로 갔다).
+     *
+     * 재생은 서비스에 있고 서비스는 프로세스와 함께 죽어 큐가 없다. 붙고 나서 플레이어가 비어 있으면 — 프로세스가 새로 섰다 — 적어 둔
+     * 큐([PlayerRestore])를 **멈춘 채, 그 자리에서** 다시 세운다(`PlaybackConnection.restore`). 비어 있지 않으면 프로세스가 살아 있던
+     * 것(밤 모드를 바꿔 다시 섰다)이라 아무것도 하지 않는다. 다시 세울 것이 없으면 — 적어 둔 것이 없다·지금 항목이 사라졌다·네트워크
+     * 저장소에서 흘려 읽던 것이라 연결이 없다 — 알리고 파일 목록(그 폴더)으로 간다([leaveEmptyScreen]).
+     */
+    private fun restoreIfEmpty() {
+        lifecycleScope.launch {
+            val connected = withTimeoutOrNull(RESTORE_CONNECT_TIMEOUT_MS) {
+                PlaybackConnection.state.first { it.connected }
+            }
+            if (connected?.hasItem == true) {
+                pendingRestore = null
+                return@launch
+            }
+            val saved = pendingRestore
+            val restored = saved?.let { s -> withContext(Dispatchers.IO) { PlayerRestore.load(s) } }
+            if (saved == null || restored == null) {
+                leaveEmptyScreen(saved?.folder)
+                return@launch
+            }
+            Iro.d { "되살아난 재생 화면 — 큐 ${restored.plan.items.size}개를 멈춘 채 다시 세운다" }
+            PlaybackConnection.restore(this@PlayerActivity, restored.plan, saved.positionMs, restored.subtitles)
+        }
+    }
+
+    /**
+     * 다시 세울 큐가 없다 — 빈 재생 화면을 남기지 않는다. 알리고, 뒤로 가기와 같은 길로 파일 목록에 간다(밑에 파일 목록이 있으면 끝내기만,
+     * 뿌리면 그 폴더로 연다 — [goBack]). 폴더는 기기 저장소의 것일 때만이다(앱 캐시의 사본이면 첫 화면 — [playingFolder] 와 같은 규칙).
+     *
+     * 알림은 **토스트**다 — 이 화면은 곧 사라지고 파일 목록은 다른 액티비티라, 이 화면 안의 안내 자리는 아무도 보지 못한다.
+     */
+    private fun leaveEmptyScreen(folder: String?) {
+        Iro.d { "되살아난 재생 화면에 다시 세울 큐가 없다 — 파일 목록으로" }
+        Toast.makeText(this, R.string.player_restore_failed, Toast.LENGTH_LONG).show()
+        if (isTaskRoot) PlayerSupport.openFileList(this, folder?.takeIf { it.startsWith("/storage/") })
+        finish()
+    }
+
     private companion object {
+        /** 되살아난 화면이 재생 서비스에 붙기를 기다리는 시간. 넘으면 다시 세우지 못한 것으로 본다([restoreIfEmpty]). */
+        const val RESTORE_CONNECT_TIMEOUT_MS = 5_000L
+
+        /** 영상이 멈춘 뒤 화면 켜 둠을 풀기까지(위 [keepScreenOnWhileVideoPlays]). 큐가 다음 영상을 준비하는 틈보다 넉넉하다. */
+        const val KEEP_SCREEN_GRACE_MS = 3_000L
+
+        /** 저장 상태에 든 [fromOutside] — 거둔 뒤에 다시 선 화면이 처음 인텐트로 그것을 되살리지 않게. */
+        const val KEY_FROM_OUTSIDE = "player.fromOutside"
+
         const val ACTION_PIP_PLAY = "io.github.donggi.iroiroviewer.player.PIP_PLAY"
         const val ACTION_PIP_PAUSE = "io.github.donggi.iroiroviewer.player.PIP_PAUSE"
         const val ACTION_PIP_NEXT = "io.github.donggi.iroiroviewer.player.PIP_NEXT"
@@ -768,15 +1161,35 @@ private fun PlayerScreen(
     onEnterPip: () -> Boolean,
     orientationLocked: Boolean,
     onToggleOrientationLock: () -> Unit,
+    /**
+     * 조작부가 떠 있는가 — **액티비티가 든다**(시스템 바가 같은 값을 따른다 — 불변식 2). **조작부는 영상일 때만 숨긴다**(아래
+     * `showControls`) — 소리만 나는 화면에서 막대까지 감추면 아무것도 없는 빈 화면이 되고, 그때 다시 꺼내는 방법을 알 길이 없다.
+     */
+    controlsVisible: Boolean,
+    /** 두드림이 조작부를 여닫는다. 값이 아니라 함수인 것은 몸짓 인식기가 처음 붙을 때 람다를 잡기 때문이다 — 값을 잡으면 낡는다. */
+    onToggleControls: () -> Unit,
+    /** 조작부를 거둔다 — 저절로 거두기([PlayerChrome.AUTO_HIDE_MS]). */
+    onHideControls: () -> Unit,
+    /** 터치 잠금 중인가. 그동안은 조작부도 몸짓도 없고, 두드리면 잠금 풀기 단추만 뜬다([TouchLockLayer]). */
+    touchLocked: Boolean,
+    onTouchLockChange: (Boolean) -> Unit,
+    /** 잠금 풀기 단추를 띄우라는 요청의 번호(두드림·뒤로 가기 — 액티비티가 센다). */
+    unlockHint: Long,
+    onRevealUnlock: () -> Unit,
     onVideoBounds: (Rect) -> Unit,
     /** 큐 항목(`mediaId`)을 다른 앱으로 넘긴다. 결과를 이 화면이 알린다. */
     onOpenWith: (String) -> ExternalOpen.Result,
+    /**
+     * 큐 항목(`mediaId`)의 구간을 새 파일로 저장하라고 넣는다 — (항목, 시작, 끝 — null 이면 끝까지, 소리만인가). 넣었으면 그 요청의
+     * 신원, 못 넣었으면 그 까닭.
+     */
+    onClip: (String, Long, Long?, Boolean) -> ClipStart,
+    /** 큐 항목의 구간을 미리 잰다(담을 수 있는가, 영상이면 실제 시작). 경로를 못 찾으면 null. */
+    onClipPreview: suspend (String, Long) -> MediaClipper.Preview?,
 ) {
     val state by PlaybackConnection.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     var scrubbing by remember { mutableStateOf<Float?>(null) }
-    // **조작부는 영상일 때만 숨긴다.** 소리만 나는 화면에서 막대까지 감추면 아무것도 없는
-    // 빈 화면이 되고, 그때 다시 꺼내는 방법을 알 길이 없다.
-    var controlsVisible by remember { mutableStateOf(true) }
     var feedback by remember { mutableStateOf<GestureFeedback?>(null) }
     // 배속 눈금을 펼쳤는가. **조작부 안에서** 펼친다 — 판이 그만큼 높아지고, 위에 뜨는
     // 안내들은 잰 높이를 따라 저절로 올라간다([controlsHeight]).
@@ -789,6 +1202,25 @@ private fun PlayerScreen(
     // 다른 앱으로 넘기지 못했다 — 알릴 **우리 문장**(`ExternalOpen.messageOf`). 이 화면에는 스낵바가 없고(앱의 것은 다른
     // 액티비티에 있다) 방금 누른 것의 답은 아래 '잠깐 뜨는 안내' 자리가 말한다 — PiP 실패와 같은 자리다.
     var handoffNote by remember { mutableStateOf<Int?>(null) }
+    // 구간 저장의 결과 한 줄(`FileOpText` — 그 작업을 만든 `core:io` 의 문장). 같은 자리('잠깐 뜨는 안내')에 뜬다.
+    var clipNote by remember { mutableStateOf<String?>(null) }
+    // 펼친 구간 칸. null 이면 닫혀 있다. 항목이 바뀌면 닫는다 — 다른 파일의 시각으로 저장하지 않게.
+    var clip by remember { mutableStateOf<ClipRange?>(null) }
+    LaunchedEffect(state.fileKey) { if (clip?.key != state.fileKey) clip = null }
+    // 이 화면이 넣은 저장 가운데 아직 끝나지 않은 것(줄 서 있는 것 포함) — 진행 줄을 보이고 저장 단추를 끈다. 큐의 진행은 진행 줄이
+    // 스스로 읽는다([ClipProgress]) — 여기서 들면 다른 작업의 진행마다 화면 전체가 다시 그려진다.
+    val clipPending by ClipJobs.pending.collectAsStateWithLifecycle()
+    // 고른 시작이 바뀌면 다시 잰다 — 끌어 옮기는 동안 여러 번 열지 않게 잠깐 기다린다.
+    var clipPreview by remember { mutableStateOf<MediaClipper.Preview?>(null) }
+    LaunchedEffect(clip?.key, clip?.startMs) {
+        val c = clip
+        if (c == null) {
+            clipPreview = null
+            return@LaunchedEffect
+        }
+        delay(CLIP_PREVIEW_DELAY_MS)
+        clipPreview = onClipPreview(c.key, c.startMs)
+    }
     // **안내에 번호를 붙인다.** 같은 결과를 두 번 내면(`구간이 너무 짧습니다` 를 두 번)
     // 값이 같아 `LaunchedEffect` 의 키가 바뀌지 않고, 그러면 **첫 번째 타이머가 그대로
     // 흘러 두 번째 안내가 곧바로 사라진다.** 10단계가 `MutableStateFlow` 에서 같은 형태를
@@ -803,13 +1235,52 @@ private fun PlayerScreen(
     // 작아 같은 결함을 첫 프레임짜리로 남겼다.
     val controlsMeasured = controlsHeight > 0.dp
     val aboveControls = controlsHeight + OFFER_GAP
-    val showControls = controlsVisible || !state.hasVideo || playlistOpen
+    // 터치 잠금 중에는 무엇이든 거둔다 — 목록이 펼쳐져 있거나 소리 항목이어도(잠그는 단추는 영상이 보일 때만 있다).
+    val showControls = !touchLocked && (controlsVisible || !state.hasVideo || playlistOpen)
 
     // **영상이 실제로 보이고 있는가.** 목록이 열려 있으면 영상은 가려져 있으므로 그때는
     // 영상 화면이 아니다 — 배경·글자색·조작부의 판까지 모두 이 하나로 갈린다.
     // 액티비티가 테마를 고르는 조건과 **같은 식**이어야 한다. 어긋나면 목록은 밝은데
     // 조작부만 어두운 그림이 나온다.
     val showingVideo = state.hasVideo && !playlistOpen
+
+    // **두 번 두드림의 걸음** — 설정(`AppPreferences.tapSeekSeconds`, 기본 10초). 처음 값을 기본으로 두고 읽는 대로 바꾼다.
+    val prefs = remember(context) { AppPreferences(context.applicationContext) }
+    val tapSeekSeconds by prefs.tapSeekSeconds.collectAsStateWithLifecycle(AppPreferences.DEFAULT_TAP_SEEK_SECONDS)
+
+    // **조작부를 저절로 거둔다**(기기에서 잡았다: 재생 12초 뒤에도 그대로였다). 거둘 수 있는 동안 [PlayerChrome.AUTO_HIDE_MS]
+    // 를 재고, 무엇이든 하는 중이면(손가락이 닿아 있다·막대를 끈다·메뉴·시트·배속 눈금·구간 칸이 열려 있다·저장이 돈다) 멈췄다가 끝나면
+    // 처음부터 다시 잰다 — 효과의 키가 바뀌면 앞의 기다림이 취소되는 것이 곧 '만지면 시계를 다시 잰다' 다. 판정은 [PlayerChrome].
+    var touching by remember { mutableStateOf(false) }
+    var menuOpen by remember { mutableStateOf(false) }
+    val touchExploration = rememberTouchExploration()
+    val autoHide = controlsVisible && !touchLocked && PlayerChrome.autoHideAllowed(
+        showingVideo = showingVideo,
+        playing = state.isPlaying,
+        inPip = inPip,
+        scrubbing = scrubbing != null,
+        panelOpen = speedOpen || trackSheetOpen || clip != null || menuOpen || clipPending.isNotEmpty(),
+        touching = touching,
+        touchExploration = touchExploration,
+    )
+    LaunchedEffect(autoHide) {
+        if (autoHide) {
+            delay(PlayerChrome.AUTO_HIDE_MS)
+            onHideControls()
+        }
+    }
+
+    // **조작부가 떠 있는 동안 자막을 판 위로 올린다**(가로 영상에서 판이 자막을 덮었다). 판이 영상의 아래쪽을 얼마나
+    // 덮는지는 잰다 — 화면 높이, 영상 상자의 아래 끝, 판의 높이(불변식 3 — 상수로 맞히지 않는다). 세로 화면처럼 영상이 판보다 위에서
+    // 끝나면 덮는 것이 없어 0 이다. 판이 사라지면 제자리로 내려온다(움직임은 짧게 — 글자가 순간이동하면 읽던 줄을 놓친다).
+    var rootHeightPx by remember { mutableIntStateOf(0) }
+    var videoBottomPx by remember { mutableFloatStateOf(0f) }
+    val coveredPx = if (showControls && controlsMeasured && showingVideo) {
+        (videoBottomPx - (rootHeightPx - with(density) { controlsHeight.toPx() })).coerceAtLeast(0f)
+    } else {
+        0f
+    }
+    val subtitleLift by animateDpAsState(with(density) { coveredPx.toDp() }, label = "subtitleLift")
     // **낭독기용 문구는 미리 만들어 둔다.** `Modifier.semantics` 의 람다는 컴포저블이
     // 아니라 그 안에서 `stringResource` 를 부를 수 없다.
     val speedDescription = speedLabel(state.speed)
@@ -817,6 +1288,53 @@ private fun PlayerScreen(
     val abText = abSymbol()
     val background = if (showingVideo) Color.Black else MaterialTheme.colorScheme.background
     val onBackground = if (showingVideo) Color.White else MaterialTheme.colorScheme.onSurface
+
+    // 저장이 끝났다 — **이 화면이 앞에 있는 동안만** 결과를 받아 하나씩 말한다([ClipJobs.listening]). 뒤에 있는 동안 끝난 것은 앱의
+    // 결과 소비자(파일 목록)가 말한다 — 가려진 화면이 받으면 아무도 못 보는 자리에 떴다 사라진다(함정 표의 '값을 지우는 소비자를 …').
+    // 잇달아 끝난 둘은 차례로 — 앞의 것을 읽을 시간을 준 뒤에 다음 것을 띄운다. 구간을 저장했으면 칸을 닫는다(실패면 열어 두어 고쳐
+    // 다시 누르게. 소리만 저장했으면 열어 둔다 — 같은 구간의 영상도 저장할 수 있다).
+    //
+    // **칸은 자기가 넣은 요청의 결과에만 닫는다**([panelRequest]) — 다른 파일에서 넣어 둔 긴 저장이 끝났다고 지금 파일의 칸이 닫히면, 그
+    // 사이 고른 구간이 말없이 사라진다. 화면을 떠나면 아직 말하지 못한 결과를 앱의 결과 줄로 돌려보낸다
+    // ([ClipJobs.stopListening]) — 다음에 아무 영상이나 열 때 맥락 없이 뜨지 않게.
+    var panelRequest by remember { mutableStateOf<String?>(null) }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            ClipJobs.startListening()
+            try {
+                while (true) {
+                    val f = ClipJobs.next()
+                    clipNote = FileOpText.savedMessage(context, f)
+                    noteSeq++
+                    if (f.outcome is FileOpEngine.Outcome.Done && f.kind == FileOpManager.Kind.CLIP && f.id == panelRequest) clip = null
+                    delay(PlayerOpenWith.HANDOFF_NOTE_HOLD_MS)
+                }
+            } finally {
+                ClipJobs.stopListening()
+            }
+        }
+    }
+    // 넣었으면 그 신원, 못 넣었으면 까닭을 잠깐 띄우고 null.
+    val startSave: (String, Long, Long?, Boolean) -> String? = { key, start, end, audioOnly ->
+        when (val r = onClip(key, start, end, audioOnly)) {
+            is ClipStart.Started -> r.id
+            is ClipStart.Refused -> {
+                handoffNote = r.why
+                noteSeq++
+                null
+            }
+        }
+    }
+    // 칸에서 끝을 미디어의 끝으로 골랐으면 '끝까지'(null) 로 보낸다 — 재생 화면의 길이는 트랙의 끝보다 몇 ms 짧을 수 있어 그 값을
+    // 넣으면 끝 프레임을 잃는다(⋮ 의 '소리만 저장' 과 같은 까닭).
+    val endOf: (ClipRange) -> Long? = { c -> if (state.durationMs > 0 && c.endMs >= state.durationMs) null else c.endMs }
+    val saveClip: () -> Unit = {
+        clip?.takeIf { it.valid }?.let { c -> panelRequest = startSave(c.key, c.startMs, endOf(c), false) }
+    }
+    val saveClipAudio: () -> Unit = {
+        clip?.takeIf { it.valid }?.let { c -> panelRequest = startSave(c.key, c.startMs, endOf(c), true) }
+    }
 
     // 다른 앱으로 넘긴다. 띄웠으면 말할 것이 없고(STARTED), 못 띄웠으면 우리 문장을 잠깐 띄운다.
     val openWith: (String) -> Unit = { key ->
@@ -831,17 +1349,36 @@ private fun PlayerScreen(
     // 칸으로 두면 조작부가 나타날 때마다 위 칸이 좁아져 **영상이 줄어들고 자리가 움직인다.**
     // 눈에는 "화면이 흔들린다" 로 보이고 무엇이 바뀐 것인지 읽어 내기 어렵다. 겹쳐 두면
     // 바뀌는 것은 조작부의 유무 하나뿐이다.
-    Box(Modifier.fillMaxSize().background(background)) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(background)
+            .onSizeChanged { rootHeightPx = it.height }
+            // **손가락이 화면에 닿아 있는 동안은 조작부를 저절로 거두지 않는다**(위 `autoHide`) — 누르고 있는 단추·끄는 막대가 손
+            // 밑에서 사라지지 않게. 손을 떼면 그때부터 다시 잰다. **Initial 단계에서 보기만 한다**(소비하지 않는다) — 슬라이더·
+            // 두드림·끌기는 그대로 받는다(함정 표 — 모든 변화를 소비하면 슬라이더의 드래그가 죽는다). 바뀔 때만 적는다 — 움직일
+            // 때마다 적으면 끄는 내내 화면 전체가 다시 그려진다.
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent(PointerEventPass.Initial)
+                        val down = event.changes.any { it.pressed }
+                        if (down != touching) touching = down
+                    }
+                }
+            },
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 // **목록이 열려 있으면 제스처를 끈다.** 목록이 스크롤을 먹어야 한다.
-                // PiP 창에서는 애초에 우리 UI 를 만질 수 없다(시스템이 막는다).
+                // PiP 창에서는 애초에 우리 UI 를 만질 수 없다(시스템이 막는다). 터치 잠금 중에도 끈다 — 그것이 잠금이다.
                 .playerGestures(
-                    enabled = !playlistOpen && !inPip,
+                    enabled = !playlistOpen && !inPip && !touchLocked,
                     durationMs = state.durationMs,
+                    tapSeekMs = tapSeekSeconds * 1_000L,
                     positionMs = { PlaybackConnection.state.value.positionMs },
-                    onToggleControls = { controlsVisible = !controlsVisible },
+                    onToggleControls = onToggleControls,
                     onFeedback = { feedback = it },
                 ),
             contentAlignment = Alignment.Center,
@@ -866,12 +1403,16 @@ private fun PlayerScreen(
                 // 영상을 늘여, 세로 화면에서 가로 영상이 위아래로 잡아당겨진다.
                 // 비율을 아직 모르면(첫 프레임 전) 채워 두었다가 알게 되면 맞춘다.
                 //
+                // **`fillMaxWidth` 를 앞에 두지 않는다**. 폭을 화면에 못 박으면 `aspectRatio` 가 높이에
+                // 맞추는 길을 잃어, 20:9 폰을 가로로 눕힌 화면(2400×1080)에서 16:9 영상이 2400×1350 이 되어 위아래가 잘렸다 — 그 상자 안의
+                // 자막도 함께 잘린다. `aspectRatio` 만 두면 폭에 맞춰 보고 넘치면 높이에 맞춘다(부모 `Box` 는 최소 크기를 0 으로 넘긴다).
+                //
                 // **자막을 이 상자 안에 넣는다.** 밖에 두면 세로 영상 아래의 빈 여백에
                 // 자막이 뜨고, 영상과 글이 멀어져 함께 보기 어렵다.
                 Box(
                     modifier = (
                         if (state.videoAspect > 0f) {
-                            Modifier.fillMaxWidth().aspectRatio(state.videoAspect)
+                            Modifier.aspectRatio(state.videoAspect)
                         } else {
                             Modifier.fillMaxSize()
                         }
@@ -891,12 +1432,14 @@ private fun PlayerScreen(
                                     r.bottom.toInt(),
                                 )
                             )
+                            // 자막을 판 위로 올릴 높이를 재는 데 쓴다(위 `subtitleLift`). 판의 높이와 같은 좌표계(루트)로 잰다.
+                            videoBottomPx = coords.boundsInRoot().bottom
                         },
                 ) {
                     VideoSurface(Modifier.fillMaxSize())
                     // PiP 창에는 **영상 말고 아무것도 두지 않는다**(공식 문서). 작은 창에
                     // 자막을 얹으면 글자가 뭉개져 읽히지도 않는다.
-                    if (!inPip) SubtitleLayer()
+                    if (!inPip) SubtitleLayer(bottomLift = subtitleLift)
                 }
             } else if (!state.hasVideo && !inPip) {
                 // **PiP 창에는 영상 말고 아무것도 두지 않는다**(공식 문서). 소리 가지에도
@@ -994,19 +1537,27 @@ private fun PlayerScreen(
         // 것에 대한 답이 먼저다 — 이어보기 제안은 3초 뒤 저절로 사라지고, 사라진 뒤에도
         // 같은 자리에서 다시 볼 일이 없다.
         // 다른 앱으로 넘기지 못한 것도 여기로 온다 — 방금 누른 것에 대한 답이다.
+        // 저장의 결과는 몇 초 전에 누른 것의 답이라 맨 뒤다 — 방금 누른 것(A-B·넘기기)의 답을 가리지 않는다.
         val noteText = when {
             handoffNote != null -> stringResource(handoffNote!!)
             pipFailed -> pipFailedText()
             abNote != null -> abResultText(abNote!!)
+            clipNote != null -> clipNote
             else -> null
         }
         if (controlsMeasured && noteText != null) {
             LaunchedEffect(noteSeq) {
+                val mine = noteSeq
                 // 넘기지 못한 까닭은 문장이라 읽을 시간을 스낵바만큼 준다([PlayerOpenWith.HANDOFF_NOTE_HOLD_MS]).
-                delay(if (handoffNote != null) PlayerOpenWith.HANDOFF_NOTE_HOLD_MS else NOTE_HOLD_MS)
-                abNote = null
-                pipFailed = false
-                handoffNote = null
+                delay(if (handoffNote != null || clipNote != null) PlayerOpenWith.HANDOFF_NOTE_HOLD_MS else NOTE_HOLD_MS)
+                // **그사이 새 안내가 왔으면 지우지 않는다.** 기다림이 끝나는 프레임에 새 안내가 들어오면 이 효과가 취소되기 전에
+                // 새것까지 지워, 잇달아 끝난 둘째 결과가 한 번도 그려지지 않았다.
+                if (noteSeq == mine) {
+                    abNote = null
+                    pipFailed = false
+                    handoffNote = null
+                    clipNote = null
+                }
             }
             Text(
                 text = noteText,
@@ -1023,7 +1574,9 @@ private fun PlayerScreen(
                     .padding(horizontal = 16.dp)
                     .padding(bottom = aboveControls)
                     .background(MaterialTheme.colorScheme.inverseSurface, RoundedCornerShape(20.dp))
-                    .padding(horizontal = 20.dp, vertical = 10.dp),
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
+                    // 화면 낭독기가 뜨는 안내를 읽는다(저장의 결과 같은 것은 누른 지 몇 초 뒤에 온다).
+                    .semantics { liveRegion = LiveRegionMode.Polite },
             )
         }
 
@@ -1075,15 +1628,31 @@ private fun PlayerScreen(
         }
 
         // **시트는 조작부보다 앞에 둔다.** 뒤에 두면 조작부를 감춘 순간 시트가 컴포지션에서
-        // 통째로 빠져, 제스처까지 꺼 둔 상태에서는 **되돌릴 수 없는 화면**이 남는다
-        // (설계 검토가 치명으로 잡았다). 시트는 자기 창이라 여기 있어도 자리를 차지하지 않는다.
+        // 통째로 빠져, 제스처까지 꺼 둔 상태에서는 **되돌릴 수 없는 화면**이 남는다.
+        // 시트는 자기 창이라 여기 있어도 자리를 차지하지 않는다.
         if (trackSheetOpen) TrackSheet(onDismiss = { trackSheetOpen = false })
 
+        // **터치 잠금은 맨 위에 깐다** — 실패 문구·안내 알약의 단추까지 손이 닿지 않게. 두드리면 잠금 풀기 단추만 잠깐 뜬다.
+        if (touchLocked && !inPip) {
+            TouchLockLayer(hint = unlockHint, onTap = onRevealUnlock, onUnlock = { onTouchLockChange(false) })
+            return@Box
+        }
+
         if (!showControls) return@Box
+
+        // **가운데 큰 재생/일시정지 단추**(큰 재생기의 관행). 영상이 보일 때만, 판 위의 남은 자리 가운데에 — 판이
+        // 덮는 높이를 빼고 가운데에 두어야 가로 화면에서 판과 겹치지 않는다(불변식 3 — 잰 높이를 쓴다). 아래 줄의 단추는 그대로
+        // 둔다 — 소리 화면에는 이 단추가 없고, 이전·다음과 나란히 있는 자리를 찾는 손도 있다.
+        if (showingVideo) {
+            Box(Modifier.fillMaxSize().padding(bottom = controlsHeight), contentAlignment = Alignment.Center) {
+                CenterPlayButton(playing = state.isPlaying, onClick = { PlaybackConnection.togglePlayPause() })
+            }
+        }
+
         // **조작부 아래에 반투명한 판을 깐다.** 영상 위에 흰 글자만 얹으면 밝은 장면에서
         // 글자와 단추가 사라진다. 위로 갈수록 옅어지는 그라데이션이라 영상을 통째로
         // 가리지도 않는다. 영상이 아니면 테마의 표면색으로 덮는다.
-        Column(
+        Box(
             Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
@@ -1098,304 +1667,352 @@ private fun PlayerScreen(
                         Modifier.background(MaterialTheme.colorScheme.surface)
                     }
                 )
-                // **여기서 탭을 삼킨다.** 이 판에는 포인터를 잡는 수정자가 하나도
-                // 없어서, 단추가 아닌 빈 자리(제목 줄·시간 표시 옆)를 누르면 Compose 가
-                // 형제를 더 내려가 **판 뒤에 깔린 재생목록 줄**을 눌러 버렸다. 사용자는
-                // 아무것도 누르지 않았는데 곡이 바뀐다. `indication = null` 이라 눌린
-                // 표시는 나지 않는다.
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = {},
-                )
                 .onSizeChanged { controlsHeight = with(density) { it.height.toDp() } }
-                .safeDrawingPadding()
-                .padding(16.dp)
         ) {
-            Text(
-                text = state.title,
-                style = MaterialTheme.typography.bodyMedium,
-                color = onBackground,
-                maxLines = 1,
-                overflow = TextOverflow.MiddleEllipsis,
+            // **여기서 탭을 삼킨다.** 이 판에는 포인터를 잡는 수정자가 하나도
+            // 없어서, 단추가 아닌 빈 자리(제목 줄·시간 표시 옆)를 누르면 Compose 가
+            // 형제를 더 내려가 **판 뒤에 깔린 재생목록 줄**을 눌러 버렸다. 사용자는
+            // 아무것도 누르지 않았는데 곡이 바뀐다. `indication = null` 이라 눌린
+            // 표시는 나지 않는다. **내용 아래의 형제**에 단다 — 판(부모)에 달면 `clickable` 이 자손의 의미를 합쳐 화면 낭독기가 판
+            // 전체(구간 칸의 안내·진행 포함)를 눌러도 아무 일 없는 단추 하나로 읽었다(함정 표).
+            Box(
+                Modifier
+                    .matchParentSize()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {},
+                    )
+                    .clearAndSetSemantics {}
             )
-            val fraction = scrubbing ?: if (state.durationMs > 0) {
-                (state.positionMs.toFloat() / state.durationMs).coerceIn(0f, 1f)
-            } else 0f
-            // 끄는 중인지 알아야 손잡이를 키울 수 있다. `Slider` 가 이 소스를 쓰게
-            // 넘겨 주어야 하고, 그러지 않으면 우리가 만든 소스에는 아무것도 안 들어온다.
-            val barInteraction = remember { MutableInteractionSource() }
-            val dragging by barInteraction.collectIsDraggedAsState()
-            // 평소에는 작은 점, 끄는 동안에는 커진다. 즉시 바뀌면 튀므로 애니메이션을 건다.
-            val thumbDot by animateDpAsState(if (dragging) 16.dp else 11.dp, label = "thumb")
-            Slider(
-                value = fraction,
-                onValueChange = { scrubbing = it },
-                onValueChangeFinished = {
-                    scrubbing?.let { PlaybackConnection.seekTo((it * state.durationMs).toLong()) }
-                    scrubbing = null
-                },
-                interactionSource = barInteraction,
-                // **YouTube·VLC 의 모양을 따른다.** 앞서 Material 3 의 기본 손잡이(세로로
-                // 길고 좌우 여백이 있는 알약)를 얇은 막대로 바꿨더니 시인성은 나아졌지만
-                // "익숙한 형태가 아니라 어색하다"는 지적이 왔다. 재생기의 관행은 하나로
-                // 모여 있다 — **얇은 트랙 + 둥근 점**, 지나온 쪽은 강조색, 남은 쪽은 옅게.
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    // **판의 위쪽에는 인셋을 두지 않는다**(화면 아래에 붙은 판이 상태 표시줄 높이만큼 위 여백을 가져
+                    // 220dp 가운데 72dp 가 인셋이었다). 아래와 양옆만 피한다. 그리고 **바가 보이든 거둬졌든 같은 자리를 비운다**
+                    // (`…IgnoringVisibility`) — 조작부와 바가 함께 드나드는데, 인셋이 따라 바뀌면 판이 그때마다 출렁인다.
+                    .windowInsetsPadding(controlsInsets())
+                    .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 16.dp)
+            ) {
+                // **뒤로 단추를 판 왼쪽 위에, 제목 곁에 둔다**(VLC·MX·YouTube 의 관행). 시스템 바를 거두면 3버튼
+                // 내비게이션에서는 바를 끌어내야만 뒤로 갈 수 있다. 하는 일은 시스템의 뒤로 가기와 같다([PlayerActivity.goBack]).
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.player_back),
+                            tint = onBackground,
+                        )
+                    }
+                    Text(
+                        text = state.title,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = onBackground,
+                        maxLines = 1,
+                        overflow = TextOverflow.MiddleEllipsis,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                val fraction = scrubbing ?: if (state.durationMs > 0) {
+                    (state.positionMs.toFloat() / state.durationMs).coerceIn(0f, 1f)
+                } else 0f
+                // **막대를 끄는 동안에는 갈 자리를 보인다**(시간 글이 손을 뗄 때까지 지금 자리에 머물러, 구간 저장에서
+                // 자리를 찾을 때 특히 불편했다). 몸짓의 끌기가 '1:15 (+0:30)' 을 보이는 것과 같은 일을 막대도 한다.
+                val shownMs = scrubbing?.let { (it * state.durationMs).toLong() } ?: state.positionMs
+                // **화면 낭독기에게 이름과 값을 준다**(백분율로만 읽혔다). `IroSlider` 는 그것을 부르는 쪽에 맡긴다.
+                val seekName = seekBarLabel()
+                val seekValue = seekBarState(shownMs, state.durationMs)
+                // **YouTube·VLC 의 모양**(얇은 트랙 + 둥근 점, 끝점 표시 없음) — 이 막대에서 세운 모양을 앱의 모든 슬라이더가 쓰도록
+                // `core:ui` 의 [IroSlider] 로 옮겼다. 앞서 Material 3 의 기본 손잡이(세로로 긴 알약)를 얇은 막대로 바꿨더니
+                // "익숙한 형태가 아니라 어색하다" 는 지적이 왔다 — 재생기의 관행은 하나로 모여 있다.
                 //
-                // 기본 트랙을 쓰지 않는 이유가 둘이다. 하나는 두께(기본 16dp 짜리 알약)이고,
-                // 다른 하나는 Material 3 이 트랙 오른쪽 끝에 찍는 **정지 표시 점**이다 —
-                // 재생기에는 없는 기호라 '뭔가 더 있다' 로 읽힌다.
-                //
-                // 슬롯이 주는 `SliderState` 를 쓰지 않고 위에서 계산한 [fraction] 을 쓴다.
-                // 같은 값이고, 끄는 동안에는 `scrubbing` 이 손가락을 따라가므로 이쪽이
-                // 오히려 한 겹 덜 거친다.
-                track = {
-                    // **폭을 알아야 마커를 놓을 수 있다.** 비율로만 두면 `fillMaxWidth`
-                    // 상자가 가운데 정렬을 물려받아 엉뚱한 자리에 그려진다(설계 검토가
-                    // 잡았다). `offset(x)` 은 레이아웃 방향을 따르므로 RTL 도 함께 맞는다.
-                    BoxWithConstraints(
-                        Modifier.fillMaxWidth().height(TRACK_HEIGHT),
-                    ) {
-                        val full = maxWidth
-                        Box(
-                            Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(TRACK_HEIGHT / 2))
-                                // 남은 쪽. 배경이 검든 희든 보이도록 글자색을 옅혀 쓴다.
-                                .background(onBackground.copy(alpha = 0.28f))
-                        ) {
-                            Box(
-                                Modifier
-                                    .fillMaxHeight()
-                                    .fillMaxWidth(fraction)
-                                    .background(MaterialTheme.colorScheme.primary)
+                // 값은 위에서 계산한 [fraction] 이다 — 끄는 동안에는 `scrubbing` 이 손가락을 따라간다.
+                IroSlider(
+                    modifier = Modifier.semantics {
+                        contentDescription = seekName
+                        stateDescription = seekValue
+                    },
+                    value = fraction,
+                    onValueChange = { scrubbing = it },
+                    onValueChangeFinished = {
+                        scrubbing?.let { PlaybackConnection.seekTo((it * state.durationMs).toLong()) }
+                        scrubbing = null
+                    },
+                    // 남은 쪽. 배경이 검든 희든 보이도록 글자색을 옅혀 쓴다.
+                    inactiveColor = onBackground.copy(alpha = 0.28f),
+                    trackOverlay = {
+                        // **찍어 둔 구간을 막대에 보인다.** 숫자로만 말하면 '어디쯤을 되풀이하고 있는가' 가 머릿속에 그려지지 않는다.
+                        state.abSpan?.takeIf { state.durationMs > 0 }?.let { span ->
+                            AbMarker(maxWidth, span.aMs, state.durationMs)
+                            span.bMs?.let { AbMarker(maxWidth, it, state.durationMs) }
+                        }
+                        // 저장할 구간도 같은 막대에 띠로 — 끌어서 자리를 찾는 일과 고른 구간이 한 눈에 보여야 한다.
+                        clip?.let { ClipBand(maxWidth, it.startMs, it.endMs, state.durationMs) }
+                    },
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            text = "${formatTime(shownMs)} / ${formatTime(state.durationMs)}",
+                            style = MaterialTheme.typography.labelMedium,
+                            // 끄는 동안에는 강조색 — 지금 자리가 아니라 갈 자리라는 것을 글자색으로도 가른다.
+                            color = if (scrubbing != null) MaterialTheme.colorScheme.primary else onBackground,
+                        )
+                        // 큐가 하나뿐이면 "1 / 1" 은 아무것도 말하지 않는다.
+                        if (state.hasQueue) {
+                            Text(
+                                text = queuePosition(state.queueIndex, state.queueSize),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = onBackground.copy(alpha = 0.7f),
                             )
                         }
-                        // **찍어 둔 구간을 막대에 보인다.** 숫자로만 말하면 '어디쯤을
-                        // 되풀이하고 있는가' 가 머릿속에 그려지지 않는다.
-                        state.abSpan?.takeIf { state.durationMs > 0 }?.let { span ->
-                            AbMarker(full, span.aMs, state.durationMs)
-                            span.bMs?.let { AbMarker(full, it, state.durationMs) }
+                    }
+                    // **큐 조작은 큐가 있을 때만 보인다.** 한 곡을 틀어 놓고 섞기·반복·다음이
+                    // 회색으로 늘어서 있으면 무엇이 되는 상태인지 읽히지 않는다.
+                    if (state.hasQueue) {
+                        IconButton(onClick = {
+                            val open = !playlistOpen
+                            onPlaylistOpenChange(open)
+                            // 목록을 닫는 것은 "이 묶음을 그만 본다" 이므로 섞기 이력도 비운다.
+                            if (!open) PlaybackConnection.onPlaylistClosed()
+                        }) {
+                            Icon(
+                                imageVector = PlaylistIcon,
+                                contentDescription = playlistLabel(playlistOpen),
+                                tint = if (playlistOpen) MaterialTheme.colorScheme.primary else onBackground,
+                            )
+                        }
+                        IconButton(onClick = { PlaybackConnection.toggleShuffle() }) {
+                            Icon(
+                                imageVector = ShuffleIcon,
+                                contentDescription = shuffleLabel(state.shuffle),
+                                tint = if (state.shuffle) MaterialTheme.colorScheme.primary else onBackground,
+                            )
+                        }
+                        IconButton(onClick = { PlaybackConnection.cycleRepeat() }) {
+                            Icon(
+                                imageVector = if (state.repeatMode == Player.REPEAT_MODE_ONE) {
+                                    RepeatOneIcon
+                                } else {
+                                    RepeatIcon
+                                },
+                                contentDescription = repeatLabel(state.repeatMode),
+                                tint = if (state.repeatMode == Player.REPEAT_MODE_OFF) {
+                                    onBackground
+                                } else {
+                                    MaterialTheme.colorScheme.primary
+                                },
+                            )
+                        }
+                        IconButton(onClick = { PlaybackConnection.previous() }) {
+                            Icon(SkipPreviousIcon, previousLabel(), tint = onBackground)
                         }
                     }
-                },
-                thumb = {
-                    // **재는 상자는 고정하고 안의 점만 키운다.** Material 3 은 트랙을
-                    // `constraints.offset(-손잡이 너비)` 로 재고 손잡이 너비의 절반만큼
-                    // 민다(바이트코드로 확인했다). 그래서 손잡이의 **측정 크기**를
-                    // 애니메이션하면 막대의 좌우 여백이 잡을 때마다 함께 흔들린다 —
-                    // 커지는 것은 점 하나여야 하고 막대는 제자리에 있어야 한다.
-                    Box(Modifier.size(THUMB_SLOT), contentAlignment = Alignment.Center) {
-                        Box(
-                            Modifier
-                                .size(thumbDot)
-                                .background(MaterialTheme.colorScheme.primary, CircleShape)
+                    IconButton(onClick = { PlaybackConnection.togglePlayPause() }) {
+                        Icon(
+                            imageVector = if (state.isPlaying) PauseIcon else Icons.Filled.PlayArrow,
+                            contentDescription = if (state.isPlaying) pauseLabel() else playLabel(),
+                            tint = onBackground,
                         )
                     }
-                },
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        text = "${formatTime(state.positionMs)} / ${formatTime(state.durationMs)}",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = onBackground,
-                    )
-                    // 큐가 하나뿐이면 "1 / 1" 은 아무것도 말하지 않는다.
                     if (state.hasQueue) {
-                        Text(
-                            text = queuePosition(state.queueIndex, state.queueSize),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = onBackground.copy(alpha = 0.7f),
-                        )
+                        IconButton(onClick = { PlaybackConnection.next() }) {
+                            Icon(SkipNextIcon, nextLabel(), tint = onBackground)
+                        }
                     }
                 }
-                // **큐 조작은 큐가 있을 때만 보인다.** 한 곡을 틀어 놓고 섞기·반복·다음이
-                // 회색으로 늘어서 있으면 무엇이 되는 상태인지 읽히지 않는다.
-                if (state.hasQueue) {
-                    IconButton(onClick = {
-                        val open = !playlistOpen
-                        onPlaylistOpenChange(open)
-                        // 목록을 닫는 것은 "이 묶음을 그만 본다" 이므로 섞기 이력도 비운다.
-                        if (!open) PlaybackConnection.onPlaylistClosed()
-                    }) {
-                        Icon(
-                            imageVector = PlaylistIcon,
-                            contentDescription = playlistLabel(playlistOpen),
-                            tint = if (playlistOpen) MaterialTheme.colorScheme.primary else onBackground,
-                        )
-                    }
-                    IconButton(onClick = { PlaybackConnection.toggleShuffle() }) {
-                        Icon(
-                            imageVector = ShuffleIcon,
-                            contentDescription = shuffleLabel(state.shuffle),
-                            tint = if (state.shuffle) MaterialTheme.colorScheme.primary else onBackground,
-                        )
-                    }
-                    IconButton(onClick = { PlaybackConnection.cycleRepeat() }) {
-                        Icon(
-                            imageVector = if (state.repeatMode == Player.REPEAT_MODE_ONE) {
-                                RepeatOneIcon
-                            } else {
-                                RepeatIcon
-                            },
-                            contentDescription = repeatLabel(state.repeatMode),
-                            tint = if (state.repeatMode == Player.REPEAT_MODE_OFF) {
-                                onBackground
-                            } else {
-                                MaterialTheme.colorScheme.primary
-                            },
-                        )
-                    }
-                    IconButton(onClick = { PlaybackConnection.previous() }) {
-                        Icon(SkipPreviousIcon, previousLabel(), tint = onBackground)
-                    }
-                }
-                IconButton(onClick = { PlaybackConnection.togglePlayPause() }) {
-                    Icon(
-                        imageVector = if (state.isPlaying) PauseIcon else Icons.Filled.PlayArrow,
-                        contentDescription = if (state.isPlaying) pauseLabel() else playLabel(),
-                        tint = onBackground,
-                    )
-                }
-                if (state.hasQueue) {
-                    IconButton(onClick = { PlaybackConnection.next() }) {
-                        Icon(SkipNextIcon, nextLabel(), tint = onBackground)
-                    }
-                }
-            }
 
-            // **배속 눈금을 조작부 안에서 펼친다.**
-            //
-            // 떠 있는 층으로 두면 가로 영상에서 남는 높이가 절반뿐이라 아래 눈금이 잘린다.
-            // 안에 두면 판이 그만큼 높아지고, 판 높이는 `onSizeChanged` 로 재고 있으므로
-            // 위에 뜨는 안내들이 **저절로** 따라 올라간다 — 그 자리를 상수로 다시 적으면
-            // 10단계가 이미 고친 결함이 되돌아온다.
-            if (speedOpen) {
+                // **배속 눈금을 조작부 안에서 펼친다.**
+                //
+                // 떠 있는 층으로 두면 가로 영상에서 남는 높이가 절반뿐이라 아래 눈금이 잘린다.
+                // 안에 두면 판이 그만큼 높아지고, 판 높이는 `onSizeChanged` 로 재고 있으므로
+                // 위에 뜨는 안내들이 **저절로** 따라 올라간다 — 그 자리를 상수로 다시 적으면
+                // 10단계가 이미 고친 결함이 되돌아온다.
+                if (speedOpen) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = speedTitle(),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = onBackground.copy(alpha = 0.7f),
+                            modifier = Modifier.padding(end = 8.dp),
+                        )
+                        for (step in SpeedSteps.STEPS) {
+                            val picked = SpeedSteps.nearest(state.speed) == step
+                            TextButton(onClick = {
+                                PlaybackConnection.setSpeed(step)
+                                speedOpen = false
+                            }) {
+                                Text(
+                                    text = SpeedSteps.text(step),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = if (picked) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (picked) MaterialTheme.colorScheme.primary else onBackground,
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // **이 화면에 대한 조작은 줄을 따로 쓴다.**
+                //
+                // 위 줄은 '큐에 대한 조작'(목록·섞기·반복·이전/재생/다음)이고 여기는 '지금 이
+                // 재생에 대한 조작' 이다. 한 줄에 몰면 작은 폰에서 아홉 개가 넘어 겹치거나
+                // 잘린다. 넘칠 때를 대비해 가로 스크롤을 둔다 — 글꼴을 크게 쓰는 사람에게는
+                // 두 줄로도 모자랄 수 있다.
                 Row(
                     modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = speedTitle(),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = onBackground.copy(alpha = 0.7f),
-                        modifier = Modifier.padding(end = 8.dp),
-                    )
-                    for (step in SpeedSteps.STEPS) {
-                        val picked = SpeedSteps.nearest(state.speed) == step
-                        TextButton(onClick = {
-                            PlaybackConnection.setSpeed(step)
-                            speedOpen = false
-                        }) {
-                            Text(
-                                text = SpeedSteps.text(step),
-                                style = MaterialTheme.typography.labelLarge,
-                                fontWeight = if (picked) FontWeight.Bold else FontWeight.Normal,
-                                color = if (picked) MaterialTheme.colorScheme.primary else onBackground,
+                    // 배속은 **아이콘이 아니라 지금 값**을 보여 준다. 1.0 이 아닌 채로 잊으면
+                    // '왜 목소리가 이상하지' 가 되는데, 값이 늘 적혀 있으면 그 일이 없다.
+                    TextButton(
+                        onClick = { speedOpen = !speedOpen },
+                        modifier = Modifier.semantics { contentDescription = speedDescription },
+                    ) {
+                        Text(
+                            text = SpeedSteps.text(state.speed),
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = if (SpeedSteps.isNormal(state.speed)) {
+                                FontWeight.Normal
+                            } else {
+                                FontWeight.Bold
+                            },
+                            color = if (SpeedSteps.isNormal(state.speed)) {
+                                onBackground
+                            } else {
+                                MaterialTheme.colorScheme.primary
+                            },
+                        )
+                    }
+
+                    // A-B 도 글자가 아이콘보다 낫다 — 그림으로 그리면 무슨 구간인지 읽히지 않고,
+                    // 'A-B' 는 재생기에서 널리 쓰이는 표기다.
+                    TextButton(
+                        onClick = {
+                            abNote = PlaybackConnection.markAb()
+                            noteSeq++
+                        },
+                        modifier = Modifier.semantics { contentDescription = abDescription },
+                    ) {
+                        Text(
+                            text = abText,
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = if (state.abSpan == null) FontWeight.Normal else FontWeight.Bold,
+                            color = when {
+                                state.abSpan?.isLooping == true -> MaterialTheme.colorScheme.primary
+                                state.abSpan != null -> MaterialTheme.colorScheme.tertiary
+                                else -> onBackground
+                            },
+                        )
+                    }
+
+                    // **고를 것이 있을 때만** 뜬다. 소리 트랙 하나짜리 mp3 에서 '트랙' 단추를
+                    // 눌렀더니 줄이 하나뿐인 것은 아무것도 가르치지 않는다.
+                    if (state.canChooseTracks) {
+                        IconButton(onClick = { trackSheetOpen = true }) {
+                            Icon(SubtitleIcon, tracksTitle(), tint = onBackground)
+                        }
+                    }
+
+                    // **잠겨 있는 동안에는 영상이 아니어도 단추를 남긴다.** 큐가 소리로 넘어가면
+                    // 조건이 꺼지는데, 그때 단추가 사라지면 **잠금을 풀 방법이 없다.**
+                    // 그림은 **도는 폰**이다 — 자물쇠는 아래의 터치 잠금에 준다. VLC 를 쓰던 사람은 자물쇠를 터치
+                    // 잠금으로 읽는다([RotationLockIcon]).
+                    if (state.hasVideo || orientationLocked) {
+                        IconButton(onClick = onToggleOrientationLock) {
+                            Icon(
+                                imageVector = RotationLockIcon,
+                                contentDescription = orientationLockLabel(orientationLocked),
+                                tint = if (orientationLocked) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    onBackground
+                                },
                             )
                         }
                     }
-                }
-            }
 
-            // **이 화면에 대한 조작은 줄을 따로 쓴다.**
-            //
-            // 위 줄은 '큐에 대한 조작'(목록·섞기·반복·이전/재생/다음)이고 여기는 '지금 이
-            // 재생에 대한 조작' 이다. 한 줄에 몰면 작은 폰에서 아홉 개가 넘어 겹치거나
-            // 잘린다. 넘칠 때를 대비해 가로 스크롤을 둔다 — 글꼴을 크게 쓰는 사람에게는
-            // 두 줄로도 모자랄 수 있다.
-            Row(
-                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                // 배속은 **아이콘이 아니라 지금 값**을 보여 준다. 1.0 이 아닌 채로 잊으면
-                // '왜 목소리가 이상하지' 가 되는데, 값이 늘 적혀 있으면 그 일이 없다.
-                TextButton(
-                    onClick = { speedOpen = !speedOpen },
-                    modifier = Modifier.semantics { contentDescription = speedDescription },
-                ) {
-                    Text(
-                        text = SpeedSteps.text(state.speed),
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = if (SpeedSteps.isNormal(state.speed)) {
-                            FontWeight.Normal
-                        } else {
-                            FontWeight.Bold
-                        },
-                        color = if (SpeedSteps.isNormal(state.speed)) {
-                            onBackground
-                        } else {
-                            MaterialTheme.colorScheme.primary
-                        },
-                    )
-                }
-
-                // A-B 도 글자가 아이콘보다 낫다 — 그림으로 그리면 무슨 구간인지 읽히지 않고,
-                // 'A-B' 는 재생기에서 널리 쓰이는 표기다.
-                TextButton(
-                    onClick = {
-                        abNote = PlaybackConnection.markAb()
-                        noteSeq++
-                    },
-                    modifier = Modifier.semantics { contentDescription = abDescription },
-                ) {
-                    Text(
-                        text = abText,
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = if (state.abSpan == null) FontWeight.Normal else FontWeight.Bold,
-                        color = when {
-                            state.abSpan?.isLooping == true -> MaterialTheme.colorScheme.primary
-                            state.abSpan != null -> MaterialTheme.colorScheme.tertiary
-                            else -> onBackground
-                        },
-                    )
-                }
-
-                // **고를 것이 있을 때만** 뜬다. 소리 트랙 하나짜리 mp3 에서 '트랙' 단추를
-                // 눌렀더니 줄이 하나뿐인 것은 아무것도 가르치지 않는다.
-                if (state.canChooseTracks) {
-                    IconButton(onClick = { trackSheetOpen = true }) {
-                        Icon(SubtitleIcon, tracksTitle(), tint = onBackground)
+                    // **터치 잠금**(큰 재생기의 관행). 영상이 보일 때만 — 소리 화면에서는 손바닥이 닿아도 망칠 것이
+                    // 막대 하나라 잠글 까닭이 작다. 켜면 조작부가 사라지고, 화면을 두드리면 잠금 풀기 단추가 잠깐 뜬다([TouchLockLayer]).
+                    if (showingVideo) {
+                        IconButton(onClick = { onTouchLockChange(true) }) {
+                            Icon(Icons.Filled.Lock, stringResource(R.string.player_touch_lock), tint = onBackground)
+                        }
                     }
-                }
 
-                // **잠겨 있는 동안에는 영상이 아니어도 단추를 남긴다.** 큐가 소리로 넘어가면
-                // 조건이 꺼지는데, 그때 단추가 사라지면 **잠금을 풀 방법이 없다.**
-                if (state.hasVideo || orientationLocked) {
-                    IconButton(onClick = onToggleOrientationLock) {
-                        Icon(
-                            imageVector = Icons.Filled.Lock,
-                            contentDescription = orientationLockLabel(orientationLocked),
-                            tint = if (orientationLocked) {
-                                MaterialTheme.colorScheme.primary
+                    if (pipAvailable) {
+                        IconButton(onClick = {
+                            if (!onEnterPip()) {
+                                pipFailed = true
+                                noteSeq++
+                            }
+                        }) {
+                            Icon(PipIcon, pipLabel(), tint = onBackground)
+                        }
+                    }
+
+                    // **⋮ — 이 재생에 대한 드문 조작.** 지금은 '다른 앱으로 열기' 하나다. 줄 끝에 둔다: 자주 누르는 것이
+                    // 앞에 있어야 좁은 폰에서 가로 스크롤 없이 닿는다. 단추와 메뉴는 **한 상자에** 담는다 — `Popup` 은
+                    // 감싼 부모를 앵커로 삼아, 형제로 두면 메뉴가 줄의 맨 앞에서 열린다(함정 표).
+                    // 지금 항목이 파일에 닿지 못해 실패했으면 서지 않는다 — 받는 앱도 그 파일에 닿지 못한다.
+                    PlayerOpenWith.menuTarget(state.fileKey, inPip, state.failure)?.let { key ->
+                        PlayerMoreMenu(
+                            tint = onBackground,
+                            // 펼쳐 둔 동안은 조작부를 저절로 거두지 않는다(위 `autoHide`) — 메뉴는 따로 된 창이라 손가락을 볼 수 없다.
+                            onExpandedChange = { menuOpen = it },
+                            onOpenWith = { openWith(key) },
+                            // 구간 저장 — 길이를 아는 항목만. 처음 구간은 찍어 둔 A-B, 없으면 지금 자리부터 끝까지.
+                            onClip = if (state.durationMs > 0) {
+                                {
+                                    val span = state.abSpan
+                                    val dur = state.durationMs
+                                    clip = ClipRange(
+                                        key = key,
+                                        startMs = (span?.aMs ?: PlaybackConnection.positionNow()).coerceIn(0, dur),
+                                        endMs = (span?.bMs ?: dur).coerceIn(0, dur),
+                                    )
+                                }
                             } else {
-                                onBackground
+                                null
+                            },
+                            // 소리만 저장 — 영상의 소리 트랙 전체(구간을 고르려면 '구간 저장' 칸의 '소리만 저장'). 저장이 줄 서 있으면 끈다.
+                            onSaveAudio = if (state.hasVideo && clipPending.isEmpty()) {
+                                { startSave(key, 0, null, true) }
+                            } else {
+                                null
                             },
                         )
                     }
                 }
 
-                if (pipAvailable) {
-                    IconButton(onClick = {
-                        if (!onEnterPip()) {
-                            pipFailed = true
-                            noteSeq++
-                        }
-                    }) {
-                        Icon(PipIcon, pipLabel(), tint = onBackground)
-                    }
+                // **구간 칸은 조작부 안에서 펼친다**(배속 눈금과 같다 — 판이 자라고 위의 안내들이 따라 올라간다).
+                clip?.let { c ->
+                    ClipControls(
+                        range = c,
+                        // 컨트롤러에서 곧바로 — 상태의 위치는 500 ms 늦을 수 있다.
+                        positionMs = { PlaybackConnection.positionNow() },
+                        durationMs = state.durationMs,
+                        hasVideo = state.hasVideo,
+                        preview = clipPreview,
+                        saving = clipPending.isNotEmpty(),
+                        tint = onBackground,
+                        onChange = { clip = it },
+                        onPreview = {
+                            PlaybackConnection.seekTo(c.startMs)
+                            PlaybackConnection.resume()
+                        },
+                        onSave = saveClip,
+                        onSaveAudio = if (state.hasVideo) saveClipAudio else null,
+                        onClose = { clip = null },
+                    )
                 }
-
-                // **⋮ — 이 재생에 대한 드문 조작.** 지금은 '다른 앱으로 열기' 하나다. 줄 끝에 둔다: 자주 누르는 것이
-                // 앞에 있어야 좁은 폰에서 가로 스크롤 없이 닿는다. 단추와 메뉴는 **한 상자에** 담는다 — `Popup` 은
-                // 감싼 부모를 앵커로 삼아, 형제로 두면 메뉴가 줄의 맨 앞에서 열린다(함정 표).
-                // 지금 항목이 파일에 닿지 못해 실패했으면 서지 않는다 — 받는 앱도 그 파일에 닿지 못한다.
-                PlayerOpenWith.menuTarget(state.fileKey, inPip, state.failure)?.let { key ->
-                    PlayerMoreMenu(tint = onBackground, onOpenWith = { openWith(key) })
-                }
+                if (clipPending.isNotEmpty()) ClipProgress(clipPending, onBackground)
             }
         }
     }
@@ -1407,15 +2024,44 @@ private fun PlayerScreen(
  * 그 사이 항목이 바뀌었으면 누르지도 않은 메뉴가 다른 파일을 넘기는 줄을 들이민다. 만화 뷰어의 ⋮ 와 같은 모양이다.
  *
  * 단추와 메뉴는 **한 상자에** 담는다(함정 표의 `Popup` 앵커).
+ *
+ * 펼침 상태는 여기 든 채 **밖에 알리기만** 한다([onExpandedChange] — 펼쳐 둔 동안 조작부를 저절로 거두지 않게). 이 상자가
+ * 컴포지션에서 빠지면 '닫혔다' 를 한 번 더 알린다 — 그러지 않으면 펼친 채 빠진 메뉴가 저절로 거두기를 영영 막는다.
  */
 @Composable
-private fun PlayerMoreMenu(tint: Color, onOpenWith: () -> Unit) {
+private fun PlayerMoreMenu(
+    tint: Color,
+    onExpandedChange: (Boolean) -> Unit,
+    onOpenWith: () -> Unit,
+    onClip: (() -> Unit)?,
+    onSaveAudio: (() -> Unit)?,
+) {
     var open by remember { mutableStateOf(false) }
+    LaunchedEffect(open) { onExpandedChange(open) }
+    DisposableEffect(Unit) { onDispose { onExpandedChange(false) } }
     Box {
         IconButton(onClick = { open = true }) {
             Icon(Icons.Filled.MoreVert, stringResource(R.string.player_more), tint = tint)
         }
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+            if (onClip != null) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.player_clip)) },
+                    onClick = {
+                        open = false
+                        onClip()
+                    },
+                )
+            }
+            if (onSaveAudio != null) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.player_save_audio)) },
+                    onClick = {
+                        open = false
+                        onSaveAudio()
+                    },
+                )
+            }
             DropdownMenuItem(
                 text = { Text(stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with)) },
                 onClick = {
@@ -1481,27 +2127,14 @@ private val OFFER_GAP = 16.dp
  */
 private const val NOTE_HOLD_MS = 1_800L
 
+/** 구간의 시작을 옮긴 뒤 미리 재기까지 기다리는 시간 — 끌어 옮기는 동안 파일을 여러 번 열지 않는다. */
+private const val CLIP_PREVIEW_DELAY_MS = 150L
+
 /** 진행 바에 찍는 A·B 표시의 너비. 트랙보다 좁으면 눈에 띄지 않는다. */
 private val AB_MARKER_WIDTH = 3.dp
 
 /** 같은 표시의 높이. 트랙(4dp)보다 높아 위아래로 조금 넘친다. */
 private val AB_MARKER_HEIGHT = 12.dp
-
-/**
- * 진행 바의 트랙 두께.
- *
- * YouTube 가 3dp 안팎, VLC 가 그보다 조금 두껍다. 4dp 면 검은 영상 위에서도 보이고
- * 손잡이(11dp 점)와 굵기가 확실히 갈린다 — 트랙이 두꺼우면 점이 트랙에 묻힌다.
- */
-private val TRACK_HEIGHT = 4.dp
-
-/**
- * 손잡이가 **차지하는** 자리. 점이 커져도 이 값은 변하지 않는다.
- *
- * 이 값의 절반이 막대의 좌우 여백이 된다(Material 3 의 측정 규칙). 커진 점(16dp)과
- * 같게 두어 끌 때 점이 상자 밖으로 삐져나오지 않게 했다.
- */
-private val THUMB_SLOT = 16.dp
 
 /**
  * 영상 표면.
@@ -1521,3 +2154,113 @@ private fun VideoSurface(modifier: Modifier = Modifier) {
         onDispose { PlaybackConnection.attachSurface(null) }
     }
 }
+
+/**
+ * 조작부 판이 피할 인셋 — **아래와 양옆만**, 그리고 **바가 보이든 거둬졌든 같은 값**.
+ *
+ * 위쪽을 빼는 것은 판이 화면 아래에 붙어 있기 때문이다 — 예전의 `safeDrawingPadding()` 은 판 위에도 상태 표시줄 높이만큼 여백을 두어
+ * 가로 영상을 그만큼 더 덮었다. `…IgnoringVisibility` 인 것은 조작부와 시스템 바가 **함께** 드나들기 때문이다([PlayerChrome]) — 보이는
+ * 바만 재는 인셋이면 바가 들어오고 나가는 애니메이션 내내 판의 높이가 바뀌어 판과 그 위의 안내들이 출렁인다. 잘린 화면(노치)은
+ * 늘 그 자리라 그대로 더한다.
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun controlsInsets(): WindowInsets =
+    WindowInsets.systemBarsIgnoringVisibility
+        .union(WindowInsets.displayCutout)
+        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+
+/**
+ * 화면 낭독기(TalkBack)의 '터치하여 탐색' 이 켜져 있는가 — 켜져 있으면 조작부를 저절로 거두지 않는다([PlayerChrome.autoHideAllowed]).
+ * 켜고 끄는 것을 듣는다 — 재생 중에 낭독기를 켠 사람도 곧바로 거두기가 멈춘다.
+ */
+@Composable
+private fun rememberTouchExploration(): Boolean {
+    val context = LocalContext.current
+    val manager = remember(context) { context.getSystemService(AccessibilityManager::class.java) }
+    var on by remember(manager) { mutableStateOf(manager?.isTouchExplorationEnabled == true) }
+    DisposableEffect(manager) {
+        val listener = AccessibilityManager.TouchExplorationStateChangeListener { enabled -> on = enabled }
+        manager?.addTouchExplorationStateChangeListener(listener)
+        onDispose { manager?.removeTouchExplorationStateChangeListener(listener) }
+    }
+    return on
+}
+
+/**
+ * 가운데 큰 재생/일시정지 단추(큰 재생기의 관행). 영상 위에 뜨므로 바탕을 반투명 검정 원으로 깐다 — 밝은 장면에서도
+ * 보이게(조작부 판의 그라데이션과 같은 까닭).
+ */
+@Composable
+private fun CenterPlayButton(playing: Boolean, onClick: () -> Unit) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier
+            .size(CENTER_BUTTON_SIZE)
+            .clip(CircleShape)
+            .background(Color(0x66000000)),
+    ) {
+        Icon(
+            imageVector = if (playing) PauseIcon else Icons.Filled.PlayArrow,
+            contentDescription = if (playing) pauseLabel() else playLabel(),
+            tint = Color.White,
+            modifier = Modifier.size(CENTER_ICON_SIZE),
+        )
+    }
+}
+
+/**
+ * 터치 잠금 중의 화면 — 무엇을 눌러도 아래에 닿지 않고, 두드리면 잠금 풀기 단추가 [PlayerChrome.UNLOCK_HINT_MS] 동안 뜬다.
+ * 잠근 직후에도 한 번 뜬다 — 어디를 누르면 풀리는지 보여야 한다.
+ *
+ * 두드림을 `clickable` 로 받는 것은 화면 낭독기 때문이다 — 그 동작이 '잠금 풀기 단추 보이기' 로 읽히고, 뜬 단추에 초점을 옮겨 풀 수
+ * 있다. 끌기는 받지 않는다(아래의 몸짓은 꺼져 있다 — `playerGestures(enabled = …)`).
+ *
+ * @param hint 단추를 띄우라는 요청의 번호(두드림·뒤로 가기). 바뀔 때마다 다시 띄운다.
+ */
+@Composable
+private fun BoxScope.TouchLockLayer(hint: Long, onTap: () -> Unit, onUnlock: () -> Unit) {
+    var visible by remember { mutableStateOf(true) }
+    LaunchedEffect(hint) {
+        visible = true
+        delay(PlayerChrome.UNLOCK_HINT_MS)
+        visible = false
+    }
+    val lockedLabel = stringResource(R.string.player_touch_locked)
+    Box(
+        Modifier
+            .matchParentSize()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onTap,
+            )
+            .semantics { contentDescription = lockedLabel },
+    )
+    if (visible) {
+        TextButton(
+            onClick = onUnlock,
+            colors = androidx.compose.material3.ButtonDefaults.textButtonColors(
+                containerColor = Color(0xCC000000),
+                contentColor = Color.White,
+            ),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .windowInsetsPadding(controlsInsets())
+                .padding(bottom = 32.dp),
+        ) {
+            Icon(Icons.Filled.Lock, contentDescription = null, modifier = Modifier.size(20.dp))
+            Text(
+                text = stringResource(R.string.player_touch_unlock),
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(start = 8.dp),
+            )
+        }
+    }
+}
+
+/** 가운데 재생 단추의 지름. 엄지가 영상을 가리지 않고 짚을 만한 크기다(YouTube 의 그것과 비슷하다). */
+private val CENTER_BUTTON_SIZE = 64.dp
+
+/** 가운데 재생 단추 안의 그림. */
+private val CENTER_ICON_SIZE = 40.dp

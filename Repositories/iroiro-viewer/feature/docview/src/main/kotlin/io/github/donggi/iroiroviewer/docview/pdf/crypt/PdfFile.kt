@@ -68,7 +68,7 @@ internal class PdfFile private constructor(
             // `stream` 뒤에는 CRLF 또는 LF 가 온다. CR 하나만 둔 파일도 있어 그것도 받는다.
             // **그 사이의 공백·탭을 건너뛴다**(`stream \r\n`). 명세 위반이지만 pdfium(`ToNextLine`)·
             // pdf.js·qpdf 가 다 받는다 — 건너뛰지 않으면 공백이 데이터의 첫 바이트가 되어
-            // AES 의 IV 와 RC4 의 열쇠 흐름이 통째로 어긋난다(적대적 검토가 잡았다).
+            // AES 의 IV 와 RC4 의 열쇠 흐름이 통째로 어긋난다.
             var d = c.pos
             while (peekAt(d) == 32 || peekAt(d) == 9) d++
             val b1 = peekAt(d)
@@ -89,7 +89,7 @@ internal class PdfFile private constructor(
      *
      * pdfium 은 첫 항목을 확인하고 어긋나면 다시 세운다. 우리가 그러지 않으면 '표가 1 번에서
      * 시작한다' 같은 흔한 도구 결함에서 모든 항목이 한 칸씩 밀려, `/Encrypt` 가 엉뚱한 객체로
-     * 풀리고(암호를 묻지 않거나) 복호기가 객체를 전부 버린다(적대적 검토가 잡았다). 셋이면
+     * 풀리고(암호를 묻지 않거나) 복호기가 객체를 전부 버린다. 셋이면
      * 밀림은 잡고, 수만 개를 다 읽는 값은 치르지 않는다.
      */
     internal fun headersMatch(): Boolean {

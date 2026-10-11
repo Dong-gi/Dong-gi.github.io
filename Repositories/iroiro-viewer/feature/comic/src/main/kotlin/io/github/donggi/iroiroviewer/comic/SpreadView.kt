@@ -40,6 +40,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import io.github.donggi.iroiroviewer.ui.gesture.ZoomMath
 import io.github.donggi.iroiroviewer.ui.gesture.ZoomState
+import io.github.donggi.iroiroviewer.ui.gesture.trackZoomDrags
 import io.github.donggi.iroiroviewer.ui.image.DetailLayer
 import io.github.donggi.iroiroviewer.ui.image.RasterDetail
 import io.github.donggi.iroiroviewer.ui.image.rememberAnimatedPainter
@@ -74,10 +75,13 @@ internal fun SpreadView(
     viewportWidth: Int,
     viewportHeight: Int,
     zoomState: ZoomState,
-    onTap: () -> Unit,
+    /** 두드린 자리 — 가장자리면 넘기고 가운데면 막대다([EdgeTaps]). 펼침 전체의 폭으로 잰다. */
+    onTap: PageTap,
     /** 못 연 쪽의 파일을 다른 앱으로 연다(`FailedPage` — 폴더로 연 만화의 쪽에만 단추가 선다). */
     onOpenWith: (String) -> Unit,
 ) {
+    // 인식기는 한 번 세워진다 — 읽는 방향이 바뀌어도 새 람다를 읽게.
+    val latestTap by rememberUpdatedState(onTap)
     val slotWidth = (viewportWidth / 2).coerceAtLeast(1)
     val a by rememberHalf(store, left, slotWidth, viewportHeight)
     val b by rememberHalf(store, right, slotWidth, viewportHeight)
@@ -92,7 +96,7 @@ internal fun SpreadView(
             leftPage = l,
             rightPage = r,
             state = zoomState,
-            onTap = onTap,
+            onTap = { x, width, zoomed -> latestTap(x, width, zoomed) },
         )
         val apng = l.info.apng || r.info.apng
         if (apng) ApngNotice()
@@ -102,7 +106,7 @@ internal fun SpreadView(
         Row(
             Modifier
                 .fillMaxSize()
-                .pointerInput(Unit) { detectTapGestures(onTap = { onTap() }) },
+                .pointerInput(Unit) { detectTapGestures(onTap = { p -> latestTap(p.x, size.width.toFloat(), false) }) },
         ) {
             Half(l, store, left, onOpenWith, Alignment.CenterEnd, Modifier.weight(1f).fillMaxHeight())
             Half(r, store, right, onOpenWith, Alignment.CenterStart, Modifier.weight(1f).fillMaxHeight())
@@ -172,8 +176,8 @@ private fun Half(
 
 /**
  * 확대·이동되는 펼침. **제스처 구조는 `ZoomableImage` 와 글자 그대로 같다** — 바깥이 탭·더블탭, 안쪽이
- * `transformable(canPan)`. 그래서 배율 1 에서는 한 손가락 끌기를 소비하지 않아 **페이저가 받아 넘어가고**, 확대하면
- * 팬을 소비해 **넘어가지 않는다**(9단계의 '확대한 채 밀기' 약속).
+ * `trackZoomDrags` + `transformable(canPan)`. 그래서 배율 1 에서는 한 손가락 끌기를 소비하지 않아 **페이저가 받아 넘어가고**,
+ * 확대하면 미는 쪽으로 여유가 남은 동안 팬을 소비한다 — 가장자리에 닿은 뒤 **새로** 밀면 넘어간다(`ZoomState.claimsDrag`).
  *
  * `ZoomableImage` 를 쓰지 못하는 까닭은 그것이 비트맵 한 장을 받기 때문이다. 두 쪽을 한 장으로 합치면 예산을 넘긴다.
  * 변환은 여전히 [ZoomState] 하나에서만 읽는다 — 두 쪽이 같은 변환을 써야 제본선이 벌어지지 않는다.
@@ -186,8 +190,9 @@ private fun ZoomableSpread(
     leftPage: PageState.Still,
     rightPage: PageState.Still,
     state: ZoomState,
-    onTap: () -> Unit,
+    onTap: PageTap,
 ) {
+    val latestTap by rememberUpdatedState(onTap)
     val frame = remember(leftPage.bitmap, rightPage.bitmap) {
         SpreadMath.frameOf(leftPage.bitmap.width, leftPage.bitmap.height, rightPage.bitmap.width, rightPage.bitmap.height)
     } ?: return
@@ -235,7 +240,7 @@ private fun ZoomableSpread(
             .fillMaxSize()
             .pointerInput(state) {
                 detectTapGestures(
-                    onTap = { onTap() },
+                    onTap = { p -> latestTap(p.x, size.width.toFloat(), state.isZoomed) },
                     onDoubleTap = { position ->
                         scope.launch {
                             state.stopAnimation()
@@ -252,7 +257,8 @@ private fun ZoomableSpread(
         Box(
             Modifier
                 .fillMaxSize()
-                .transformable(state = transformable, canPan = { state.canPan }),
+                .trackZoomDrags(state)
+                .transformable(state = transformable, canPan = { state.claimsDrag() }),
         ) {
             var canvasSize by remember { mutableStateOf(Size.Zero) }
             SideEffect {

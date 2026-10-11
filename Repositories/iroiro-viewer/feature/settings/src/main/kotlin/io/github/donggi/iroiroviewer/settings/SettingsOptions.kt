@@ -32,6 +32,29 @@ internal object SettingsOptions {
         Option(ReaderAppearance.THEME_SEPIA, R.string.settings_theme_sepia),
     )
 
+    /**
+     * 재생 화면을 두 번 두드려 건너뛰는 시간(초) — 값은 `AppPreferences.TAP_SEEK_CHOICES` 와 **같은 차례·같은 값**이어야 한다
+     * (`SettingsViewModelTest` 가 견준다). 저장소가 목록 밖의 값을 기본값으로 누르므로, 어긋나면 고른 줄이 저장되지 않는다.
+     */
+    val tapSeekChoices = listOf(
+        Option(5, R.string.settings_tap_seek_5),
+        Option(10, R.string.settings_tap_seek_10),
+        Option(15, R.string.settings_tap_seek_15),
+        Option(30, R.string.settings_tap_seek_30),
+    )
+
+    /**
+     * 읽는 화면의 '화면 켜 두기'(분) — 0 은 켜 두지 않는다(기기 설정을 따른다). 기본 10분(`AppPreferences.KEEP_SCREEN_DEFAULT_MINUTES`).
+     * 손으로 고친 값(표에 없는 분)은 [labelOf] 가 첫 항목의 이름으로 보인다.
+     */
+    val keepScreenMinutes = listOf(
+        Option(0, R.string.settings_keep_screen_off),
+        Option(2, R.string.settings_keep_screen_2),
+        Option(5, R.string.settings_keep_screen_5),
+        Option(10, R.string.settings_keep_screen_10),
+        Option(30, R.string.settings_keep_screen_30),
+    )
+
     /** 모르는 값(옛 판이 적은 것)이면 첫 항목 — 저장소가 이미 범위를 누르지만 화면이 그것에 기대지 않는다. */
     fun labelOf(options: List<Option>, code: Int): Int = (options.firstOrNull { it.code == code } ?: options.first()).label
 

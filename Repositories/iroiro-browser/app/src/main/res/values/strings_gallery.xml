@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  갤러리 받기 — pixiv(작품·작가)와 hitomi.la(갤러리)의 여러 파일을 한 항목으로(사용자 결정 2026-10-11, 데스크톱 다운로더에서 옮김). 사이트를 알아보고
+  답을 읽는 것은 :core 의 sites, 받기는 download/DownloadCenter 의 SET, 판단은 GalleryRules, 묻기는 GalleryPrompt. 글은 짧게 둔다(사용자: '설명이
+  너무 장황합니다' — 한두 문장, 할 일과 경고만).
+-->
+<resources>
+    <!-- 브라우저의 ⋮ 메뉴·고리를 길게 누를 때(그 주소를 알아볼 때만) -->
+    <string name="gallery_menu_artwork">이 작품 받기</string>
+    <string name="gallery_menu_user">이 작가의 작품 모두 받기</string>
+    <string name="gallery_menu_hitomi">이 갤러리 받기</string>
+    <!-- 묻기 -->
+    <string name="gallery_reading">목록을 읽는 중…</string>
+    <string name="gallery_already_listed">이미 내려받기 목록에 있습니다</string>
+    <string name="gallery_ask_again">이미 받은 적이 있습니다. 다시 받을까요?</string>
+    <string name="gallery_again">다시 받기</string>
+    <string name="gallery_cannot">받을 수 없습니다</string>
+    <string name="gallery_creator">작가: %1$s</string>
+    <string name="gallery_files">파일 %1$d개</string>
+    <string name="gallery_works">작품 %1$d개</string>
+    <string name="gallery_place">저장: %1$s</string>
+    <string name="gallery_started">받기 시작했습니다</string>
+    <string name="gallery_open_list">목록 보기</string>
+    <!-- 받을 수 없거나 멈춘 까닭(GalleryRules.reason) -->
+    <string name="gallery_err_not_found">없거나 지워졌거나 비공개입니다</string>
+    <string name="gallery_err_login">로그인이 필요합니다</string>
+    <string name="gallery_err_login_pixiv">로그인이 필요합니다 — 이 브라우저에서 pixiv 에 로그인한 뒤 다시 해 보세요</string>
+    <string name="gallery_err_blocked">사이트가 요청을 막았습니다 — 그 페이지를 브라우저로 연 뒤 다시 해 보세요</string>
+    <string name="gallery_err_empty">받을 파일이 없습니다</string>
+    <string name="gallery_err_unexpected">사이트의 답을 읽지 못했습니다(사이트가 바뀌었을 수 있습니다)</string>
+    <string name="gallery_err_too_large">너무 많습니다(%1$d개 넘음)</string>
+    <string name="gallery_err_proxy">프록시를 거치지 못했습니다(HTTP %1$d)</string>
+    <string name="gallery_err_busy">요청이 잦다며 사이트가 막았습니다 — 잠시 뒤 이어받으세요</string>
+    <string name="gallery_err_server">사이트가 답하지 못했습니다(HTTP %1$d)</string>
+    <string name="gallery_err_http">사이트가 거절했습니다(HTTP %1$d)</string>
+    <string name="gallery_err_network">%1$s</string>
+    <string name="gallery_err_other">알 수 없는 까닭으로 멈췄습니다</string>
+    <string name="gallery_err_save">‘내려받기’ 에 저장하지 못했습니다 — 공간을 확인한 뒤 이어받으세요</string>
+    <string name="gallery_err_plan_lost">받을 목록을 읽지 못했습니다 — 원래 페이지에서 다시 받으세요</string>
+    <!-- 목록·알림 -->
+    <string name="gallery_progress_files">%1$d / %2$d개</string>
+    <string name="gallery_progress_works">작품 %1$d / %2$d · 파일 %3$d</string>
+    <string name="gallery_skipped">건너뜀 %1$d개</string>
+    <string name="gallery_skipped_login">건너뜀 %1$d개(로그인 필요 %2$d개)</string>
+    <string name="gallery_done_line">다 받음 · 파일 %1$d개 · %2$s</string>
+    <string name="gallery_stopped_line">그만 받음 · 파일 %1$d개</string>
+    <string name="gallery_notice_done">다 받았습니다 — 파일 %1$d개</string>
+    <string name="gallery_stop">그만 받기</string>
+    <string name="gallery_open_first">첫 파일 열기</string>
+    <string name="gallery_delete_files">받은 파일까지 지우기(%1$d개)</string>
+    <string name="gallery_delete_files_question">받은 파일 %1$d개를 ‘내려받기’ 에서 지울까요? 되돌릴 수 없습니다.</string>
+    <string name="gallery_files_deleted">파일 %1$d개를 지웠습니다</string>
+</resources>

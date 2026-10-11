@@ -166,4 +166,16 @@ class ImageBudgetTest {
         assertTrue(ImageLimits.canDraw(4000, 3000))
         assertTrue(!ImageLimits.canDraw(10000, 10000))
     }
+
+    @Test
+    fun `이어 보기의 긴 줄 셋은 살아 있는 몫 안이다`() {
+        for (mb in listOf(32, 48, 64, 96, 128, 192, 256, 384, 512)) {
+            for ((w, h) in listOf(720 to 1280, 1080 to 2400, 1440 to 3200, 2560 to 1600, 2400 to 1080)) {
+                val b = ImageLimits.budgetOf(w, h, mb)
+                val cap = ImageLimits.scrollPageCap(b)
+                assertTrue(cap * ImageLimits.SCROLL_LIVE_ROWS <= b.liveCap, "${w}x$h @${mb}MB: $cap × 3 > ${b.liveCap}")
+                assertTrue(cap >= 1)
+            }
+        }
+    }
 }

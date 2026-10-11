@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  화면에 나가는 글자는 예외 없이 여기에 둔다. 접두어는 모듈 이름(webhost_)이다 —
+  라이브러리 모듈의 리소스는 앱에서 하나로 합쳐지므로 접두어가 없으면 조용히 덮어쓴다.
+-->
+<resources>
+    <!--
+      스크립트를 켠 쪽(HTML 미리보기의 '스크립트 실행')이 띄우는 대화상자. 제목이 '문서가 띄운' 것임을 말한다 —
+      이 앱의 창인 척하는 쪽과 섞이지 않게.
+    -->
+    <string name="webhost_js_title">문서가 띄운 메시지</string>
+    <string name="webhost_js_ok">확인</string>
+    <string name="webhost_js_cancel">취소</string>
+    <string name="webhost_js_stop">이 문서가 메시지를 더 띄우지 않게 하기</string>
+</resources>

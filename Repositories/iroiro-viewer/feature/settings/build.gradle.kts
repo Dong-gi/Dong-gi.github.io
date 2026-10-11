@@ -29,6 +29,8 @@ dependencies {
     implementation(project(":core:data"))
     // 공유(`ShareHelper` — `getUriForFile` 을 부르는 유일한 곳)와 시각 표기(`Format`).
     implementation(project(":core:io"))
+    // 앱의 슬라이더(`IroSlider` — 재생 막대와 같은 모양).
+    implementation(project(":core:ui"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.coroutines.core)

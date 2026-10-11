@@ -15,8 +15,9 @@ import kotlinx.coroutines.launch
  * * **실패 화면**([onFailure]) — '글이 아니다(바이너리)' 와 '읽지 못하는 인코딩(UTF-32)' 에. 이 앱이 보여 줄 수 없을 뿐
  *   파일은 멀쩡하다 — 그림·압축이 확장자만 `.txt` 인 것일 수도 있고, UTF-32 를 읽는 편집기도 있다. **파일에 닿지 못한
  *   것(없다·못 읽는다)에는 두지 않는다** — 받는 앱도 같은 파일에 닿지 못한다.
- * * **⋮ 메뉴**([inMenu]) — **이번 열기에서 파일에 닿은 뒤로는** 언제나. 마크다운 미리보기 중에도 원문 파일을 넘긴다
- *   (미리보기는 이 앱이 만든 HTML 이지 파일이 아니다). 닿기 전(앞머리를 읽기 전, 수 ms)과 닿지 못한 실패에는 흐리다 —
+ * * **⋮ 메뉴**([inMenu]) — **이번 열기에서 파일에 닿은 뒤로는** 언제나. 미리보기(마크다운·HTML) 중에도 원문 파일을 넘긴다
+ *   (미리보기는 이 앱이 만든 HTML 이지 파일이 아니다 — HTML 도 위생을 거친 사본이다).
+ *   닿기 전(앞머리를 읽기 전, 수 ms)과 닿지 못한 실패에는 흐리다 —
  *   없는 파일은 `ExternalOpen` 이 '넘길 수 없다' 로 받지만, **있는데 열리지 않는 파일**은 거기서 걸러지지 않고 받는
  *   앱에 넘어가 그 앱이 같은 벽에 부딪힌다. 단추가 있는 실패 갈래에도 메뉴를 둔다(겹쳐 둔다 — 형제 화면과 같은 규칙).
  *
@@ -43,21 +44,26 @@ internal object TextOpenWith {
 
 /**
  * [path] 를 다른 앱으로 연다 — 언제나 고르는 창이다. 띄우지 못했으면 우리 문장([ExternalOpen.messageOf])을 이 화면의
- * 스낵바로 알린다(예외 문구는 내보내지 않는다). 띄웠으면 알릴 것이 없다.
+ * 스낵바로 알린다(예외 문구는 내보내지 않는다). 띄웠으면 알릴 것이 없다. [mode] 가 [ExternalOpen.Mode.WEB_PAGE] 면 HTML 을 웹 쪽으로
+ * 넘긴다 — 브라우저가 받는다('브라우저로 열기').
  *
  * **액티비티의 컨텍스트로 부른다**(`LocalContext`). 받는 앱의 화면이 우리 태스크 위에 쌓여 뒤로 가면 이 파일로
  * 돌아온다([ExternalOpen] 의 '태스크'). 호출은 동기이고 가볍다 — 주 스레드에서 그대로 부른다.
  */
 @Composable
-internal fun rememberOpenWith(path: String, snackbar: SnackbarHostState): () -> Unit {
+internal fun rememberOpenWith(
+    path: String,
+    snackbar: SnackbarHostState,
+    mode: ExternalOpen.Mode = ExternalOpen.Mode.CHOOSE,
+): () -> Unit {
     val context = LocalContext.current
     // 문장은 `LocalResources` 에서 읽는다 — 컨텍스트에서 읽으면 구성이 바뀌어도 다시 읽히지 않는다(lint 의
     // LocalContextGetResourceValueCall). 결과마다 문장이 다르므로 미리 `stringResource` 로 셋을 들지 않고 누른 자리에서 고른다.
     val resources = LocalResources.current
     val scope = rememberCoroutineScope()
-    return remember(path, context, resources, snackbar, scope) {
+    return remember(path, context, resources, snackbar, scope, mode) {
         {
-            val result = ExternalOpen.open(context, path, ExternalOpen.Mode.CHOOSE)
+            val result = ExternalOpen.open(context, path, mode)
             ExternalOpen.messageOf(result)?.let { id ->
                 val message = resources.getString(id)
                 scope.launch { snackbar.showSnackbar(message) }

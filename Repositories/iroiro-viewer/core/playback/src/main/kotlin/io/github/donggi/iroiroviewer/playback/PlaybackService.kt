@@ -1,18 +1,29 @@
 package io.github.donggi.iroiroviewer.playback
 
+import android.content.Context
 import android.content.Intent
+import android.media.AudioDeviceCallback
+import android.media.AudioDeviceInfo
+import android.media.AudioManager
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.extractor.DefaultExtractorsFactory
 import android.app.PendingIntent
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import io.github.donggi.iroiroviewer.data.AppPreferences
 import io.github.donggi.iroiroviewer.io.Iro
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 /**
  * 재생의 실체. **플레이어가 여기 산다.**
@@ -48,6 +59,41 @@ class PlaybackService : MediaSessionService() {
      */
     private val scope = CoroutineScope(SupervisorJob() + kotlinx.coroutines.Dispatchers.Main.immediate)
 
+    /**
+     * 블루투스가 끊겨 멈춘 재생을 다시 연결되면 이어 튼다(설정 '블루투스가 연결되면 이어서 재생', 기본 켜짐). 판단은 [BluetoothResume] 이
+     * 하고, 여기는 소리 장치 알림을 받아 넘기고 플레이어를 부른다. 알림·플레이어 모두 주 스레드다.
+     */
+    private val bluetoothResume = BluetoothResume()
+    private var resumeOnBluetooth = true
+    private val mainHandler = Handler(Looper.getMainLooper())
+
+    /** 플레이어의 '틀 것인가' 가 바뀐 횟수. 이어 틀기를 미뤄 둔 사이에 사용자가 무엇이든 했으면 틀지 않는다. */
+    private var playIntentChanges = 0
+
+    private fun bluetoothSinkConnected(): Boolean =
+        (getSystemService(Context.AUDIO_SERVICE) as? AudioManager)
+            ?.getDevices(AudioManager.GET_DEVICES_OUTPUTS)
+            ?.any { it.type in BluetoothResume.BLUETOOTH_OUTPUTS } == true
+
+    private val deviceCallback = object : AudioDeviceCallback() {
+        override fun onAudioDevicesAdded(addedDevices: Array<out AudioDeviceInfo>) {
+            val sinks = addedDevices.filter { it.isSink }.map { it.type }
+            if (!bluetoothResume.onDevicesAdded(sinks, resumeOnBluetooth)) return
+            // **조금 기다렸다 튼다.** 장치가 붙었다는 알림이 소리 경로가 그리로 넘어가기 전에 올 수 있다 — 곧바로 틀면 첫 소리가
+            // 기기 스피커로 샐 수 있다. 그 사이에 사용자가 틀거나 멈췄으면(횟수가 바뀌었으면) 그 뜻을 따른다.
+            val at = playIntentChanges
+            mainHandler.postDelayed({
+                val p = player ?: return@postDelayed
+                // 기다리는 사이에 장치가 다시 떨어졌으면 틀지 않는다 — 소리가 기기 스피커로 난다. 떨어질 때 멈춤
+                // 알림은 오지 않는다(그때 재생 중이 아니었다).
+                if (playIntentChanges == at && !p.playWhenReady && bluetoothSinkConnected()) {
+                    Iro.d { "블루투스가 다시 연결되어 이어서 튼다" }
+                    p.play()
+                }
+            }, BLUETOOTH_RESUME_DELAY_MS)
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
         val exo = ExoPlayer.Builder(this)
@@ -56,7 +102,9 @@ class PlaybackService : MediaSessionService() {
             // 들어가면 깨진 글자가 뜬다. 자세한 것은 `SubtitleSource.kt` 의 주석.
             .setMediaSourceFactory(
                 androidx.media3.exoplayer.source.DefaultMediaSourceFactory(
-                    subtitleAwareDataSourceFactory(this)
+                    subtitleAwareDataSourceFactory(this),
+                    // 추출기는 기본값 그대로이고 MPEG-TS 의 길이를 찾는 범위만 넓힌다 — 아래 [TS_TIMESTAMP_SEARCH_BYTES].
+                    DefaultExtractorsFactory().setTsExtractorTimestampSearchBytes(TS_TIMESTAMP_SEARCH_BYTES),
                 )
             )
             .setAudioAttributes(
@@ -74,21 +122,36 @@ class PlaybackService : MediaSessionService() {
             .build()
 
         player = exo
+        exo.addListener(object : Player.Listener {
+            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                playIntentChanges++
+                bluetoothResume.onPlayWhenReadyChanged(playWhenReady, reason)
+            }
+
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                bluetoothResume.disarm()
+            }
+        })
+        (getSystemService(Context.AUDIO_SERVICE) as? AudioManager)?.registerAudioDeviceCallback(deviceCallback, mainHandler)
+        scope.launch { AppPreferences(this@PlaybackService).resumeOnBluetooth.collect { resumeOnBluetooth = it } }
         session = MediaSession.Builder(this, exo)
             .setCallback(TrustedOnlyCallback(packageName))
             .apply {
-                // **알림을 누르면 재생목록이 펼쳐진 재생 화면으로 간다.**
+                // **알림을 누르면 재생 화면으로 간다 — 영상이면 영상, 소리면 재생목록.**
                 //
                 // 달지 않으면 알림 본체를 눌러도 아무 일도 일어나지 않는다(버튼만 듣는다).
-                // 목록을 펼쳐서 여는 것은 알림에서 돌아오는 사람이 대개 **다음에 무엇이
-                // 나오는지**를 보려 하기 때문이다 — 지금 나오는 것은 알림이 이미 적고 있다.
+                // '목록을 펼쳐라' 를 싣지 않는 것이 요점이다(그 전에는 언제나 실어, 영상을 뒤에서 틀어 두고 알림으로
+                // 돌아온 사람이 매번 목록을 닫아야 했다). 싣지 않으면 화면의 기본값(`PlayerActivity.playlistShown`)이 정한다 — 영상이
+                // 보이는 큐는 영상을, 소리만 나는 큐는 목록을 펼친다. 소리에서는 지금 나오는 것을 알림이 이미 적고 있어 돌아온 사람이
+                // 대개 **다음에 무엇이 나오는지**를 보려 하므로, 소리 쪽은 예전처럼 목록이다. 판정이 화면 하나에 있으므로 알림을 만든
+                // 뒤에 큐가 영상 ↔ 소리로 바뀌어도 누르는 순간의 큐를 따른다.
                 //
                 // 화면이 어느 모듈에 있는지 여기서는 모른다. 인텐트는 이음매가 준다
                 // (`PlayerSupport`). `app` 이 `onCreate` 에서 꽂으므로 — 애플리케이션이
                 // 서비스보다 먼저 만들어진다 — 여기서는 이미 꽂혀 있다. 그래도 null 을
                 // 견딘다: 안 꽂혔으면 누를 곳을 **달지 않는** 것이 엉뚱한 데로 보내는
                 // 것보다 낫다.
-                PlayerSupport.intent(this@PlaybackService, showPlaylist = true)?.let { i ->
+                PlayerSupport.intent(this@PlaybackService, showPlaylist = false)?.let { i ->
                     setSessionActivity(
                         PendingIntent.getActivity(
                             this@PlaybackService,
@@ -122,6 +185,8 @@ class PlaybackService : MediaSessionService() {
     }
 
     override fun onDestroy() {
+        (getSystemService(Context.AUDIO_SERVICE) as? AudioManager)?.unregisterAudioDeviceCallback(deviceCallback)
+        mainHandler.removeCallbacksAndMessages(null)
         saver?.saveNow()
         saver?.stop()
         scope.cancel()
@@ -132,6 +197,22 @@ class PlaybackService : MediaSessionService() {
         super.onDestroy()
     }
 }
+
+/** 블루투스가 다시 붙은 뒤 이어 틀기까지 기다리는 시간. 소리 경로가 그 장치로 넘어갈 틈이다. */
+private const val BLUETOOTH_RESUME_DELAY_MS = 1_000L
+
+/**
+ * MPEG-TS 의 시각(PCR)을 찾는 범위 — 188바이트 패킷 5,600개(1,052,800 바이트, 1 MiB 남짓).
+ *
+ * media3 는 TS 의 길이를 **처음과 끝의 이 범위**에서 찾은 첫·마지막 PCR 로 재고, 끝에서 하나도 못 찾으면 그 파일을 '되감을 수
+ * 없는' 것으로 본다 — 재생 화면에 길이가 0:00 으로 뜨고 막대를 끌어도 그 자리로 가지 않는다. 기본값은 600패킷(112,800 바이트)인데
+ * HLS 를 받아 이어 붙인 실물(3.38 GB·62분, 사용자가 짚었다)은 마지막 PCR 이 끝에서 142,128 바이트 앞이었다 — PCR 은 영상 줄기의
+ * 패킷 일부에만 실리는데, 끝의 142 KB 는 소리 패킷이 682개·영상 패킷이 75개였고 그 영상 패킷에는 PCR 이 없었다.
+ *
+ * 같은 값이 되감기의 한 걸음이 읽는 양이기도 하다(`TsBinarySearchSeeker` — 걸음마다 이만큼을 훑어 PCR 을 찾는다). 걸음은 사이를
+ * 짐작해 좁히므로 몇 번이고, 이 앱의 `.ts` 는 언제나 기기의 파일이다.
+ */
+private const val TS_TIMESTAMP_SEARCH_BYTES = 188 * 5_600
 
 /**
  * 우리 앱과 시스템(잠금화면·블루투스·어시스턴트)만 이 세션에 붙게 한다.

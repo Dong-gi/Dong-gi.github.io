@@ -159,7 +159,7 @@ class EpubCorpusTest {
      * 망가진 책 하나. 열리면 모든 장을 읽는다. 허용하지 않는 예외는 그대로 던진다.
      *
      * @return 문제가 있으면 그 문장. **못 열면 '깨진 파일' 이어야 한다** — `Io`('입출력이 실패했습니다')면
-     *   덜 받은 책이 디스크 고장처럼 읽힌다(검토가 잡았다. 예전에는 반으로 자른 책이 전부 그랬다).
+     *   덜 받은 책이 디스크 고장처럼 읽힌다(예전에는 반으로 자른 책이 전부 그랬다).
      */
     private fun brokenOne(file: File): String? {
         var orphan: OpenedDocument? = null

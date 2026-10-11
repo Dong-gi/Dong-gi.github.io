@@ -24,6 +24,15 @@ import java.text.Collator
  *    남기고 **풀지 못한다고 표시**한다([Node.unsafe]).
  * 4. **같은 이름이 파일이자 폴더일 수 있다.** `a` 와 `a/b` 가 함께 든 아카이브가 실재한다
  *    (악의적으로 만들기도 쉽다). 둘을 합치지 않고 **형제로 나란히** 둔다.
+ *
+ * ## 깊이에 비례하는 일만 한다
+ *
+ * 이름 하나가 64 KiB 까지 오므로(tar·cpio·ar·ZIP) `a/a/a/…` 한 항목이 3만 겹의 폴더가 된다. 그래서 둘을 지킨다.
+ *
+ * - **경로를 칸마다 미리 짓지 않는다** — 깊이마다 접두 경로를 새로 지으면 그 이름 하나에 길이의 제곱(기가바이트)을 잡는다.
+ *   [Node.path] 는 부모를 따라 올라가 **물을 때** 짓는다(화면은 지금 폴더의 칸만 묻는다).
+ * - **재귀하지 않는다** — 칸을 세우는 것도([build]) 아래를 모으는 것도([Node.collectIndices]) 손으로 든 더미로 돈다. 3만 겹을
+ *   재귀로 내려가면 스레드 스택(1 MiB)이 넘친다.
  */
 class ArchiveTree private constructor(val root: Node) {
 
@@ -36,8 +45,6 @@ class ArchiveTree private constructor(val root: Node) {
     class Node(
         /** 화면에 보이는 이름. 이 칸의 마지막 조각이다. */
         val name: String,
-        /** 아카이브 안의 경로. 루트는 빈 문자열. 다듬은 이름(safeName) 기준이다. */
-        val path: String,
         val isDirectory: Boolean,
         /** 아카이브 엔트리 번호. -1 은 합성 폴더. */
         val entryIndex: Int,
@@ -57,6 +64,30 @@ class ArchiveTree private constructor(val root: Node) {
     ) {
         val children: List<Node> = children
 
+        /** 이 칸을 품은 폴더. 루트와 풀 수 없는 이름(루트에 따로 둔 칸)은 null 이다. 트리를 세우는 쪽이 한 번 채운다. */
+        internal var parent: Node? = null
+            private set
+
+        /**
+         * 아카이브 안의 경로. 루트는 빈 문자열. 다듬은 이름(safeName) 기준이다. 풀 수 없는 이름은 폴더에 들지 않으므로 빈 문자열이다.
+         *
+         * **물을 때 짓는다**(위 '깊이에 비례하는 일만 한다'). 부모를 따라 올라가며 모은다 — 부모의 [path] 를 부르면 깊이만큼 재귀한다.
+         */
+        val path: String by lazy(LazyThreadSafetyMode.PUBLICATION) {
+            if (unsafe || parent == null) return@lazy ""
+            val parts = ArrayList<String>()
+            var cur: Node? = this
+            while (cur?.parent != null) {
+                parts += cur.name
+                cur = cur.parent
+            }
+            parts.asReversed().joinToString("/")
+        }
+
+        init {
+            for (c in children) if (!c.unsafe) c.parent = this
+        }
+
         /** 이 아래의 파일 수(폴더 제외). 폴더 한 줄에 '몇 개' 를 적는 데 쓴다. */
         val fileCount: Int = if (isDirectory) children.sumOf { it.fileCount } else 1
 
@@ -64,10 +95,18 @@ class ArchiveTree private constructor(val root: Node) {
         val totalDeclaredSize: Long =
             if (isDirectory) children.sumOf { it.totalDeclaredSize } else declaredSize.coerceAtLeast(0L)
 
-        /** 이 아래의 모든 엔트리 번호. 폴더째 풀기가 이것을 쓴다. 합성 폴더는 빠진다. */
+        /**
+         * 이 아래의 모든 엔트리 번호. 폴더째 풀기가 이것을 쓴다. 합성 폴더는 빠진다. 차례는 위에서 아래로, 형제는 화면의 차례다.
+         * 재귀하지 않는다(위 '깊이에 비례하는 일만 한다').
+         */
         fun collectIndices(into: MutableList<Int>) {
-            if (!isDirectory && entryIndex >= 0 && !unsafe) into += entryIndex
-            for (c in children) c.collectIndices(into)
+            val stack = ArrayDeque<Node>()
+            stack.addLast(this)
+            while (stack.isNotEmpty()) {
+                val n = stack.removeLast()
+                if (!n.isDirectory && n.entryIndex >= 0 && !n.unsafe) into += n.entryIndex
+                for (i in n.children.indices.reversed()) stack.addLast(n.children[i])
+            }
         }
     }
 
@@ -84,7 +123,7 @@ class ArchiveTree private constructor(val root: Node) {
     companion object {
 
         fun build(entries: List<ArchiveEntry>, collator: Collator = NameSortKey.koreanCollator()): ArchiveTree {
-            val root = Builder("", "")
+            val root = Builder("")
             val loose = ArrayList<ArchiveEntry>()
 
             for (e in entries) {
@@ -111,11 +150,30 @@ class ArchiveTree private constructor(val root: Node) {
                 }
             }
 
-            return ArchiveTree(root.toNode(loose, collator))
+            return ArchiveTree(toTree(root, loose, collator))
         }
 
-        /** 만드는 동안만 쓰는 가변 폴더. */
-        private class Builder(val name: String, val path: String) {
+        /**
+         * 만드는 동안의 폴더들을 칸으로 바꾼다 — **아래부터**(칸은 자식을 받아 서므로). 재귀 대신 더미로 돈다: 처음 꺼낸 폴더는 자식을
+         * 쌓고 다시 들어가며, 두 번째로 꺼낼 때 자식이 다 섰으므로 그 폴더를 세운다.
+         */
+        private fun toTree(root: Builder, loose: List<ArchiveEntry>, collator: Collator): Node {
+            val stack = ArrayDeque<Pair<Builder, Boolean>>()
+            stack.addLast(root to false)
+            while (stack.isNotEmpty()) {
+                val (b, expanded) = stack.removeLast()
+                if (expanded) {
+                    b.node = b.toNode(if (b === root) loose else emptyList(), collator)
+                } else {
+                    stack.addLast(b to true)
+                    for (d in b.dirs.values) stack.addLast(d to false)
+                }
+            }
+            return root.node!!
+        }
+
+        /** 만드는 동안만 쓰는 가변 폴더. 경로는 들지 않는다(위 '깊이에 비례하는 일만 한다'). */
+        private class Builder(val name: String) {
             val dirs = LinkedHashMap<String, Builder>()
             val files = ArrayList<Pair<ArchiveEntry, String>>()
 
@@ -123,8 +181,10 @@ class ArchiveTree private constructor(val root: Node) {
             var entryIndex = -1
             var rawName = name
 
-            fun dir(seg: String): Builder =
-                dirs.getOrPut(seg) { Builder(seg, if (path.isEmpty()) seg else "$path/$seg") }
+            /** 세운 칸([toTree]). 자식이 먼저 선다. */
+            var node: Node? = null
+
+            fun dir(seg: String): Builder = dirs.getOrPut(seg) { Builder(seg) }
 
             fun claim(e: ArchiveEntry) {
                 // 같은 폴더 엔트리가 두 번 나오면 **처음 것을 신원으로 삼는다.** 뒤엣것을
@@ -135,12 +195,12 @@ class ArchiveTree private constructor(val root: Node) {
                 }
             }
 
+            /** 이 폴더의 칸. 하위 폴더의 칸([node])은 이미 서 있어야 한다. */
             fun toNode(loose: List<ArchiveEntry>, collator: Collator): Node {
-                val childDirs = dirs.values.map { it.toNode(emptyList(), collator) }
+                val childDirs = dirs.values.map { it.node!! }
                 val childFiles = files.map { (e, leaf) ->
                     Node(
                         name = leaf,
-                        path = if (path.isEmpty()) leaf else "$path/$leaf",
                         isDirectory = false,
                         entryIndex = e.index,
                         unsafe = false,
@@ -157,7 +217,6 @@ class ArchiveTree private constructor(val root: Node) {
                 val looseNodes = loose.map { e ->
                     Node(
                         name = e.name,
-                        path = "",
                         isDirectory = false,
                         entryIndex = e.index,
                         unsafe = true,
@@ -174,7 +233,6 @@ class ArchiveTree private constructor(val root: Node) {
                 val all = (childDirs + childFiles + looseNodes).sortedWith(nodeOrder(collator))
                 return Node(
                     name = name,
-                    path = path,
                     isDirectory = true,
                     entryIndex = entryIndex,
                     unsafe = false,

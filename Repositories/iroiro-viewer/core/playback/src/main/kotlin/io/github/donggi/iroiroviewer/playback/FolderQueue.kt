@@ -27,10 +27,15 @@ import io.github.donggi.iroiroviewer.safety.PlaybackLimits
  */
 object FolderQueue {
 
-    /** 이 항목을 큐에 담을 수 있는가. 폴더·링크·못 들어가는 것은 뺀다. */
-    fun isPlayable(e: FileEntry): Boolean =
-        !e.isDirectory && !e.isLocked && !e.isSymlink &&
-            (e.kind == FileKind.AUDIO || e.kind == FileKind.VIDEO)
+    /**
+     * 이 항목을 큐에 담을 수 있는가. 폴더·못 들어가는 것은 뺀다. **심볼릭 링크도 뺀다** — 링크를 따라가지 않는 것이 이 앱의
+     * 기본이다(`FileEntry.isSymlink`).
+     */
+    fun isPlayable(e: FileEntry): Boolean = isMedia(e) && !e.isSymlink
+
+    /** 소리·영상 파일인가 — 링크인지는 보지 않는다(누른 것 하나를 틀 때, [plan]). */
+    private fun isMedia(e: FileEntry): Boolean =
+        !e.isDirectory && !e.isLocked && (e.kind == FileKind.AUDIO || e.kind == FileKind.VIDEO)
 
     /** 이 폴더에 ▶ 를 띄울 것인가. 하나라도 있으면 띄운다. */
     fun hasPlayable(entries: List<FileEntry>): Boolean = entries.any { isPlayable(it) }
@@ -60,11 +65,16 @@ object FolderQueue {
      */
     fun plan(entries: List<FileEntry>, startPath: String?): Plan {
         val playable = entries.filter(isPlayableRef)
+        val at = startPath?.let { p -> playable.indexOfFirst { it.path == p } } ?: 0
+        if (at < 0) {
+            // 누른 것이 큐에 들지 못했다(기기의 심볼릭 링크 같은 것). 큐의 처음을 틀면 **고른 것과 다른 것이 열린다** — 8단계가 치명으로
+            // 판정한 꼴이고, 예전에는 그렇게 했다. 누른 것이 소리·영상이면 그것 하나만 튼다(링크면 기기가 따라간다 — 다른
+            // 뷰어도 누른 링크는 연다). 아니면(재생할 수 없는 것·목록에 없는 것) 아무것도 틀지 않는다 — 빈 계획이면 부르는 쪽이 재생 화면을
+            // 열지 않는다(열면 앞의 큐가 보인다).
+            val one = entries.firstOrNull { it.path == startPath }?.takeIf(::isMedia)
+            return Plan(listOfNotNull(one), 0)
+        }
         if (playable.isEmpty()) return Plan(emptyList(), 0)
-
-        val tapped = startPath?.let { p -> playable.indexOfFirst { it.path == p } } ?: 0
-        // 누른 것이 목록에 없으면(사라졌거나 재생할 수 없는 종류다) 처음부터 튼다.
-        val at = if (tapped < 0) 0 else tapped
 
         val max = PlaybackLimits.MAX_QUEUE_ITEMS
         if (playable.size <= max) return Plan(playable, at)

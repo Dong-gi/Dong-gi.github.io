@@ -12,7 +12,7 @@
     <string name="image_more">더보기</string>
     <string name="image_loading">여는 중</string>
     <string name="image_failed">이 이미지를 열 수 없습니다</string>
-    <string name="image_failed_reason">%1$s · 이 형식은 이 기기가 디코딩하지 못합니다</string>
+    <string name="image_failed_reason">%1$s · 이 기기가 그리지 못하는 형식입니다</string>
     <string name="image_position">%1$d / %2$d</string>
 
     <string name="image_exif_size">크기</string>
@@ -35,5 +35,79 @@
     <string name="image_exif_owner">소유자</string>
     <string name="image_share_sanitized">메타데이터 제거하고 공유</string>
     <string name="image_rotate_unsupported">이 형식은 회전을 파일에 저장할 수 없습니다</string>
-    <string name="image_sanitize_failed">이 형식은 메타데이터를 제거할 수 없습니다</string>
+    <!--
+      '메타데이터 제거하고 공유' 가 사본을 만들지 못했을 때 - 뷰어가 그 자리에서 띄운다. 메뉴는 지울 수 있는 형식에서만 켜지므로
+      여기 오는 것은 형식이 아니라 사본 만들기(읽기·쓰기·태그 고치기)가 실패한 경우다 - '이 형식은' 이라고 말하지 않는다.
+    -->
+    <string name="image_sanitize_failed">메타데이터를 지운 사본을 만들지 못했습니다</string>
+
+    <!-- 잘라서 저장. 결과 문구는 그 작업을 만든 core:io 에 있다(io_saved_crop). -->
+    <string name="image_crop">잘라서 저장</string>
+    <string name="image_crop_title">잘라서 저장</string>
+    <string name="image_crop_save">저장</string>
+    <string name="image_crop_cancel">취소</string>
+    <string name="image_crop_reset">처음처럼</string>
+    <string name="image_crop_area">잘라 낼 자리. 모서리와 변을 끌어 고릅니다</string>
+    <string name="image_crop_size">%1$d × %2$d</string>
+    <string name="image_crop_ratio_free">자유</string>
+    <string name="image_crop_ratio_original">원본 비율</string>
+    <string name="image_crop_ratio_square">1:1</string>
+    <string name="image_crop_ratio_4_3">4:3</string>
+    <string name="image_crop_ratio_3_4">3:4</string>
+    <string name="image_crop_ratio_16_9">16:9</string>
+    <string name="image_crop_ratio_9_16">9:16</string>
+
+    <!--
+      그리기·메모 - 그림 위에 펜·형광펜·직선·글 메모를 달아 원본 곁의 새 파일로. 결과 문구는 그 작업을 만든
+      core:io 에 있다(io_saved_markup). 도구 이름은 그리기 앱들의 말(삼성 갤러리의 펜·형광펜·지우개)을 따른다.
+    -->
+    <string name="image_markup">그리기·메모</string>
+    <string name="image_markup_title">그리기·메모</string>
+    <string name="image_markup_close">닫기</string>
+    <string name="image_markup_save">저장</string>
+    <string name="image_markup_undo">되돌리기</string>
+    <string name="image_markup_redo">다시 하기</string>
+    <string name="image_markup_cancel">취소</string>
+    <string name="image_markup_tool_pen">펜</string>
+    <string name="image_markup_tool_highlighter">형광펜</string>
+    <string name="image_markup_tool_line">직선</string>
+    <string name="image_markup_tool_text">글</string>
+    <string name="image_markup_tool_eraser">지우개</string>
+    <string name="image_markup_hint_draw">한 손가락으로 그립니다 · 두 손가락으로 확대·이동합니다</string>
+    <string name="image_markup_hint_line">끌어서 곧은 선을 긋습니다 · 가로·세로에 가까우면 붙습니다</string>
+    <string name="image_markup_hint_text">빈 곳을 누르면 메모를 답니다 · 메모를 누르면 고치고, 끌면 옮깁니다</string>
+    <string name="image_markup_hint_eraser">닿은 획이나 메모를 통째로 지웁니다</string>
+    <string name="image_markup_width_thin">얇게</string>
+    <string name="image_markup_width_medium">보통</string>
+    <string name="image_markup_width_thick">굵게</string>
+    <string name="image_markup_size_small">작게</string>
+    <string name="image_markup_size_medium">보통</string>
+    <string name="image_markup_size_large">크게</string>
+    <!-- 글자 크기 단추에 그리는 글자. 크기만 다르게 그린다. -->
+    <string name="image_markup_size_glyph">가</string>
+    <string name="image_markup_box">바탕 상자</string>
+    <string name="image_markup_color_red">빨강</string>
+    <string name="image_markup_color_orange">주황</string>
+    <string name="image_markup_color_yellow">노랑</string>
+    <string name="image_markup_color_green">초록</string>
+    <string name="image_markup_color_blue">파랑</string>
+    <string name="image_markup_color_purple">보라</string>
+    <string name="image_markup_color_black">검정</string>
+    <string name="image_markup_color_white">흰색</string>
+    <string name="image_markup_clear">모두 지우기</string>
+    <string name="image_markup_clear_title">그린 것을 모두 지울까요?</string>
+    <string name="image_markup_clear_text">되돌리기로 다시 살릴 수 있습니다</string>
+    <string name="image_markup_exit_title">그린 것을 저장할까요?</string>
+    <string name="image_markup_exit_text">원본은 그대로 두고 곁에 새 파일로 저장합니다</string>
+    <string name="image_markup_discard">버리기</string>
+    <string name="image_markup_note_new">글 메모</string>
+    <string name="image_markup_note_edit">글 메모 고치기</string>
+    <string name="image_markup_note_label">메모</string>
+    <string name="image_markup_note_ok">확인</string>
+    <string name="image_markup_note_delete">지우기</string>
+    <!-- 화면 낭독기: 그리는 자리의 이름과 상태, 메모를 달고 고치는 동작. -->
+    <string name="image_markup_area">그리는 자리. 한 손가락으로 그리고, 두 손가락으로 확대·이동합니다</string>
+    <string name="image_markup_area_state">획 %1$d개 · 메모 %2$d개</string>
+    <string name="image_markup_a11y_add_note">가운데에 글 메모 달기</string>
+    <string name="image_markup_a11y_edit_note">‘%1$s’ · 메모 고치기</string>
 </resources>

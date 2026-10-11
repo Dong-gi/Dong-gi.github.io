@@ -94,13 +94,30 @@ class FolderQueueTest {
         assertEquals(0, FolderQueue.plan(list, null).startIndex)
     }
 
-    /** 누른 것이 재생할 수 없는 종류였으면 큐의 처음부터 튼다. 죽지 않는다. */
+    /**
+     * 누른 것이 재생할 수 없는 종류면 **아무것도 틀지 않는다**(빈 계획 — 부르는 쪽이 재생 화면을 열지 않는다). 예전에는 큐의 처음부터
+     * 틀었다 — 고른 것과 다른 것이 열린다.
+     */
     @Test
-    fun 누른_것이_목록에_없으면_처음부터() {
+    fun 누른_것이_재생할_수_없으면_아무것도_틀지_않는다() {
         val list = listOf(f("a.mp3"), f("메모.txt", FileKind.TEXT))
-        val plan = FolderQueue.plan(list, "/v/메모.txt")
+        assertTrue(FolderQueue.plan(list, "/v/메모.txt").isEmpty)
+        assertTrue(FolderQueue.plan(list, "/v/없는것.mp3").isEmpty)
+    }
+
+    /**
+     * **누른 링크는 그것 하나만 튼다.** 기기의 링크는 큐에 들지 않는데(위), 예전에는 누른 것이 큐에 없으면 0번을 틀어 그 폴더의 다른 곡이
+     * 열렸다. 링크만 있는 폴더면 아무것도 넣지 않은 채 옛 큐로 재생 화면이 열렸다.
+     */
+    @Test
+    fun 누른_링크는_그것_하나만_튼다() {
+        val list = listOf(f("가.mp3"), f("링크.mp3", link = true), f("나.mp3"))
+        val plan = FolderQueue.plan(list, "/v/링크.mp3")
+        assertEquals(listOf("링크.mp3"), plan.items.map { it.name })
         assertEquals(0, plan.startIndex)
-        assertEquals("a.mp3", plan.items[0].name)
+        // 링크만 있는 폴더도 같다.
+        val only = FolderQueue.plan(listOf(f("링크.mp3", link = true)), "/v/링크.mp3")
+        assertEquals(listOf("링크.mp3"), only.items.map { it.name })
     }
 
     @Test

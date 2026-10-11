@@ -44,12 +44,19 @@ class TarHostileTest {
     private fun readAll(r: ArchiveReader, name: String) =
         r.open(r.entries.single { it.name == name }).use { it.readBytes() }
 
-    /** 같은 표본을 압축 안 한 채·gzip·bzip2·xz 로 싸서 넷 다 본다 — 두 길(자리 옮기기·풀어 버리기)이 같아야 한다. */
+    /**
+     * 같은 표본을 압축 안 한 채·gzip·bzip2·xz·LZ4·LZMA·`.Z` 로 싸서 일곱 다 본다 — 두 길(자리 옮기기·풀어 버리기)이 같아야
+     * 하고, 해제기가 달라도 방어는 같아야 한다(해제기는 `CompressedStreams` 한 곳이 고른다). LZMA 는 매직이 없어 이름
+     * (`.tar.lzma`)이 판별을 돕는다.
+     */
     private fun allForms(name: String, tar: ByteArray): List<File> = listOf(
         file("$name.tar", tar),
         file("$name.tar.gz", TarBytes.gzip(tar)),
         file("$name.tar.bz2", TarBytes.bzip2(tar)),
         file("$name.tar.xz", TarBytes.xz(tar)),
+        file("$name.tar.lz4", StreamBytes.lz4(tar)),
+        file("$name.tar.lzma", StreamBytes.lzma(tar)),
+        file("$name.tar.Z", ZBytes.compress(tar)),
     )
 
     // ---- 이름 ------------------------------------------------------------------
@@ -105,15 +112,24 @@ class TarHostileTest {
     /**
      * **1 GiB 라고 적은 GNU 긴 이름.** commons-compress 의 tar 읽기는 적힌 크기만큼 메모리에 모은다. 우리는
      * 적힌 크기를 보고 곧바로 거절한다 — 이 시험이 1초 안에 끝나는 것 자체가 할당하지 않았다는 뜻이다.
+     *
+     * 거절의 말은 둘로 갈린다. 압축한 tar 는 남은 길이를 모르므로 **상한**이다. 압축 안 한 파일에서 남은 것보다 길다고 적혔으면
+     * **깨진 머리**다 — 그 이름은 그 파일에 있을 수 없다(cpio·ar 와 같은 바탕, `EntryScannerBase.readBytes`). 파일이 정말 그만큼
+     * 길면 다시 상한이다.
      */
     @Test
     fun `적힌 크기가 큰 긴 이름과 PAX 머리는 읽기 전에 거절한다`() {
         val longName = TarBytes().header("././@LongLink", 'L', size = 1L shl 30).bytes()
-        val e1 = assertFailsWith<ParseLimitExceededException> { names(file("longlink.tar", longName)) }
-        assertEquals("tarHeader", e1.limitName)
         val pax = TarBytes().header("PaxHeader", 'x', size = 2L shl 20).bytes()
-        val e2 = assertFailsWith<ParseLimitExceededException> { names(file("pax.tar", pax)) }
-        assertEquals("tarHeader", e2.limitName)
+        for ((name, tar) in listOf("longlink" to longName, "pax" to pax)) {
+            val e1 = assertFailsWith<ParseLimitExceededException>(name) { names(file("$name.tar.gz", TarBytes.gzip(tar))) }
+            assertEquals("tarHeader", e1.limitName, name)
+            val e2 = assertFailsWith<IOException>(name) { names(file("$name.tar", tar)) }
+            assertFalse(e2 is ParseLimitExceededException, "$name: 파일보다 긴 메타 자료를 '너무 크다' 로 말했다 — $e2")
+        }
+        val realPax = TarBytes().header("PaxHeader", 'x', size = 2L shl 20).data(ByteArray(2 shl 20) { 'a'.code.toByte() }).end()
+        val e3 = assertFailsWith<ParseLimitExceededException> { names(file("realpax.tar", realPax)) }
+        assertEquals("tarHeader", e3.limitName)
     }
 
     @Test
@@ -150,16 +166,27 @@ class TarHostileTest {
         for (f in allForms("badsum", tar)) assertFailsWith<IOException>(f.name) { names(f) }
     }
 
+    /**
+     * 첫 머리가 tar 가 아니면 tar 로 열지 않는다. 압축 안 한 것은 매직도 검사합도 없어 판별에서 떨어진다(다루지 않는 형식).
+     * **압축은 맞는데 안이 tar 가 아니면 항목 하나짜리다** — 14단계까지는 '다루지 않는 형식' 이었다. 이름이 `.tar.gz` 여도
+     * 내용이 이긴다: 안의 것이 tar 이름(`junk.tar`)으로 보이고, 그 tar 가 아닌 것을 풀어 볼 수 있다.
+     */
     @Test
-    fun `첫 머리가 tar 가 아니면 다루지 않는 형식이다`() {
+    fun `첫 머리가 tar 가 아니면 tar 로 열지 않는다`() {
         val notTar = ByteArray(2048) { (it % 7 + 1).toByte() }
         // 압축 안 한 것은 매직도 검사합도 없어 판별에서 떨어진다.
         assertNull(Archives.detect(FileDocumentSource(file("junk.tar", notTar))))
         assertFailsWith<IllegalStateException> { open(file("junk.tar", notTar)) }
-        // 압축은 맞는데 안이 tar 가 아니다.
-        for (f in listOf(file("junk.tar.gz", TarBytes.gzip(notTar)), file("junk.tar.xz", TarBytes.xz(notTar)))) {
-            assertFailsWith<TarArchiveReader.NotTarException>(f.name) { open(f) }
-            assertNull(Archives.detect(FileDocumentSource(f)), f.name)
+        // 압축은 맞는데 안이 tar 가 아니다 — 압축 tar 의 리더는 만들 때 거절하고, 입구는 항목 하나짜리로 연다.
+        for (f in allForms("junk", notTar).drop(1)) {
+            val codec = Archives.detect(FileDocumentSource(f))?.codec
+            assertEquals(ArchiveKind.streamOf(codec!!), Archives.detect(FileDocumentSource(f)), f.name)
+            assertFailsWith<TarArchiveReader.NotTarException>(f.name) { TarArchiveReader(FileDocumentSource(f), EntryBudget(), codec = codec) }
+            open(f).use { r ->
+                assertEquals(ArchiveKind.streamOf(codec), r.kind, f.name)
+                assertEquals("junk.tar", r.entries.single().name, f.name)
+                assertContentEquals(notTar, r.open(r.entries.single()).use { it.readBytes() }, f.name)
+            }
         }
     }
 
@@ -430,7 +457,7 @@ class TarHostileTest {
 
     // ---- 도우미 ------------------------------------------------------------------
 
-    // ---- 검토가 더한 것 — 머리 하나의 상한으로는 막히지 않던 것 -----------------------------------------
+    // ---- 머리 하나의 상한으로는 막히지 않던 것 -----------------------------------------
 
     /**
      * **이름은 목록이 끝까지 들고 있다.** 머리 하나(PAX 1 MiB·긴 이름 64 KiB)의 상한만 있으면, 같은 긴 이름을 되풀이한
@@ -448,7 +475,7 @@ class TarHostileTest {
         }
 
         val b = TarBytes()
-        val entries = TarLimits.MAX_NAME_BYTES_TOTAL / (60 * 1024) + 2
+        val entries = EntryNameLimits.MAX_NAME_BYTES_TOTAL / (60 * 1024) + 2
         repeat(entries) {
             val pax = paxRecords("path" to "d$it/" + "n".repeat(60 * 1024))
             b.header("PaxHeader", 'x', size = pax.size.toLong()).data(pax).file("x", byteArrayOf(it.toByte()))

@@ -61,7 +61,7 @@ object GestureMath {
     /**
      * 몇 번째 두드림인가.
      *
-     * 첫 두드림은 조작부를 여닫고, **두 번째부터** 30초씩 옮긴다. 창을 벗어나면 다시 1부터다.
+     * 첫 두드림은 조작부를 여닫고, **두 번째부터** 한 걸음([tapSeekMs])씩 옮긴다. 창을 벗어나면 다시 1부터다.
      *
      * @param lastAtMs 직전 두드림 시각. 없으면 0.
      * @param nowMs 지금.
@@ -71,14 +71,16 @@ object GestureMath {
         if (lastAtMs > 0 && nowMs - lastAtMs <= MULTI_TAP_WINDOW_MS) previousCount + 1 else 1
 
     /**
-     * 두드림 하나가 옮기는 시간. 1번째는 0(조작부 토글), 2번째부터 ±[TAP_SEEK_MS].
+     * 두드림 하나가 옮기는 시간. 1번째는 0(조작부 토글), 2번째부터 ±[stepMs].
      *
      * @param count [tapCount] 가 센 수.
      * @param side 두드린 쪽. 오른쪽이 앞으로.
+     * @param stepMs 한 걸음 — 설정의 '두 번 두드려 건너뛰기'(`AppPreferences.tapSeekSeconds`). 0 이하면 기본값을 쓴다.
      */
-    fun tapSeekMs(count: Int, side: Side): Long {
+    fun tapSeekMs(count: Int, side: Side, stepMs: Long = DEFAULT_TAP_SEEK_MS): Long {
         if (count < 2) return 0
-        return if (side == Side.RIGHT) TAP_SEEK_MS else -TAP_SEEK_MS
+        val step = if (stepMs > 0) stepMs else DEFAULT_TAP_SEEK_MS
+        return if (side == Side.RIGHT) step else -step
     }
 
     /** 화면 폭을 전부 끌었을 때 옮기는 시간. 90초. */
@@ -87,14 +89,17 @@ object GestureMath {
     /** 밝기·소리를 끝에서 끝까지 옮기는 데 쓰는 화면 높이의 비율. */
     const val FULL_SWIPE_FRACTION = 0.7f
 
-    /** 두드림 하나가 옮기는 시간. */
-    const val TAP_SEEK_MS = 30_000L
+    /**
+     * 두드림 하나가 옮기는 기본 시간 — **10초**. YouTube·MX·VLC 의 기본값이다. 10단계에는 30초 고정이었는데, 놓친 대사를 다시 들으려는
+     * 사람에게는 너무 멀었다. 설정에서 고른다(`AppPreferences.tapSeekSeconds`).
+     */
+    const val DEFAULT_TAP_SEEK_MS = 10_000L
 
     /**
      * 연속 두드림으로 세는 간격.
      *
      * **이 값이 조작부 토글을 미루는 시간이기도 하다.** 첫 두드림에 바로 토글해 버리면
-     * 두 번 두드려 30초를 건너뛸 때마다 조작부가 한 번 깜빡인다 — 사용자가 지적한 것이
+     * 두 번 두드려 건너뛸 때마다 조작부가 한 번 깜빡인다 — 사용자가 지적한 것이
      * 그것이다. 그래서 첫 두드림의 토글을 이만큼 미뤄 두고, 그 안에 두 번째가 오면
      * **미뤄 둔 토글을 취소한다.**
      *

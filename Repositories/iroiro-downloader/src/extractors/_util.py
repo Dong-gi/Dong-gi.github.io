@@ -42,7 +42,7 @@ def build_netscape_cookies(cookie_str: str, domain: str) -> str:
     `cookiefile`로 넘긴다 — 세션 쿠키가 디스크에 남지 않게 하기 위한 것이다.
 
     :param domain: 쿠키를 적용할 도메인. 하위 도메인 포함을 위해 앞에 점을 붙인 형태
-        (예: ``".youtube.com"``, ``".bilibili.com"``).
+        (예: ``".youtube.com"``).
     """
     expires = int(time.time()) + 365 * 24 * 3600
     lines = ["# Netscape HTTP Cookie File", ""]

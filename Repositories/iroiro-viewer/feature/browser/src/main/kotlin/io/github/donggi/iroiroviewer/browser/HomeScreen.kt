@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -27,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.donggi.iroiroviewer.ui.IroProgress
 import io.github.donggi.iroiroviewer.io.Format
 import io.github.donggi.iroiroviewer.io.VolumeRegistry
 
@@ -196,7 +196,7 @@ private fun VolumeRow(volume: VolumeRegistry.Volume, onClick: () -> Unit) {
             }
         }
         // 용량 막대. 남은 용량을 숫자로만 적으면 감이 오지 않는다.
-        LinearProgressIndicator(
+        IroProgress(
             progress = { volume.usedFraction },
             modifier = Modifier.fillMaxWidth(),
         )

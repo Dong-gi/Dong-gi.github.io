@@ -46,7 +46,7 @@ class RarArchiveReader(
     /**
      * junrar 의 예외를 우리 말로 옮긴다. **그대로 두면 앱이 죽는다** — `RarException` 은 `Exception`
      * 을 바로 잇는 검사 예외라 `IOException`·`RuntimeException` 을 잡는 호출부(만화 뷰어)를 모두
-     * 지나 코루틴 밖으로 나간다(검토가 잡았다). 헤더까지 잠긴 RAR5(`rar -hp`)를 암호 없이 열면
+     * 지나 코루틴 밖으로 나간다. 헤더까지 잠긴 RAR5(`rar -hp`)를 암호 없이 열면
      * `WrongPasswordException("Missing password…")` 이다.
      */
     private val archive: Archive = try {
@@ -157,7 +157,7 @@ class RarArchiveReader(
 
     /**
      * 암호가 맞는가. **읽는 스트림으로 확인하지 않는다** — [open] 의 주석처럼 실패가 삼켜져 어떤
-     * 암호든 '맞다' 가 된다(검토가 잡았다: 틀린 암호가 세션에 기억되고 자물쇠가 사라졌다).
+     * 암호든 '맞다' 가 된다(틀린 암호가 세션에 기억되고 자물쇠가 사라졌다).
      * `extractFile` 은 부르는 스레드에서 돌고 `RarException` 을 그대로 던진다. 맨 앞의 암호 항목을
      * [VERIFY_CAP] 까지 풀어 본다.
      */

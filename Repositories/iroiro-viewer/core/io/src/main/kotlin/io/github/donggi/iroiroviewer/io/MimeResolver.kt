@@ -1,6 +1,7 @@
 package io.github.donggi.iroiroviewer.io
 
 import io.github.donggi.iroiroviewer.model.FileKind
+import java.util.Locale
 
 /**
  * 확장자로 종류와 MIME 을 정한다.
@@ -14,29 +15,57 @@ import io.github.donggi.iroiroviewer.model.FileKind
  */
 object MimeResolver {
 
+    // `jfif`·`jpe` 는 JPEG 의 다른 이름이고(웹에서 받은 사진에 흔하다) `apng`·`wbmp` 도 플랫폼 디코더가 읽는다 — 내용으로
+    // 디코딩하므로 이름만 알면 된다. `svg`·`svgz` 는 플랫폼 디코더가 없어 그림 뷰어가 잠긴 WebView 로 그린다.
     private val image = setOf(
-        "jpg", "jpeg", "png", "gif", "webp", "bmp", "heic", "heif", "avif", "ico", "svg", "tif", "tiff", "dng",
+        "jpg", "jpeg", "jfif", "jpe", "png", "apng", "gif", "webp", "bmp", "wbmp", "heic", "heif", "avif", "ico",
+        "svg", "svgz", "tif", "tiff", "dng",
     )
+    // 표에 더한 것은 **media3 의 추출기가 이미 읽는** 것이다 — `m4b`·`m4r`·`3ga` 는 MP4, `awb` 는 AMR-WB, `weba` 는
+    // WebM, `ac3`·`eac3` 는 돌비 원시 스트림(디코더는 기기에 달렸다), `mp2` 는 MPEG 층 II(MP3 추출기가 읽는다 — 방송 녹화의
+    // 소리를 뽑으면 나온다). 추출기가 없는 것은 더하지 않았다(`aif`·`dts`).
     private val audio = setOf(
-        "mp3", "flac", "opus", "ogg", "oga", "m4a", "aac", "wav", "wma", "alac", "aiff", "ape", "mka", "amr", "mid", "midi",
+        "mp3", "mp2", "flac", "opus", "ogg", "oga", "m4a", "m4b", "m4r", "3ga", "aac", "wav", "wma", "alac", "aiff", "ape",
+        "mka", "weba", "amr", "awb", "ac3", "eac3", "mid", "midi",
     )
+    // `m2t` 는 HDV 캠코더의 MPEG-TS, `3g2`·`3gpp`·`f4v`·`qt` 는 MP4·QuickTime, `vob` 은 MPEG-PS, `divx` 는 AVI 다.
+    // **`ts` 는 TypeScript 와 확장자를 나눠 쓴다** — 목록은 파일을 열지 않으므로 영상으로 적고, 누를 때 내용으로
+    // 가른다(`ContentSniff.isAmbiguousStream`).
+    //
+    // **`mts` 는 여기 없다**(기타다). 캠코더(AVCHD)의 `.mts` 는 192바이트 패킷의 M2TS 라 media3 가 틀지 못한다 — 영상으로 적으면
+    // 재생 화면이 실패하고 나서야 다른 앱으로 넘어가고, 폴더의 ▶ 가 전부 실패할 큐를 만든다(이 회차 전에는 기타라
+    // 누르면 곧바로 다른 앱이었다). 그래서 기타로 두고, TypeScript 의 `.mts` 만 누를 때 내용으로 가려 텍스트 뷰어로 보낸다.
     private val video = setOf(
-        "mp4", "mkv", "webm", "avi", "mov", "wmv", "flv", "m4v", "3gp", "ts", "mpg", "mpeg", "m2ts", "rmvb", "ogv",
+        "mp4", "mkv", "webm", "avi", "divx", "mov", "qt", "wmv", "flv", "f4v", "m4v", "3gp", "3gpp", "3g2", "ts",
+        "m2t", "mpg", "mpeg", "vob", "m2ts", "rmvb", "ogv",
     )
     private val text = setOf(
-        "txt", "log", "md", "markdown", "mdown", "mkd", "mkdn", "mdwn", "csv", "tsv", "srt", "ass", "ssa", "vtt", "smi", "nfo", "ini", "cfg", "conf",
+        "txt", "log", "md", "markdown", "mdown", "mkd", "mkdn", "mdwn", "csv", "tsv", "srt", "ass", "ssa", "vtt", "smi",
+        "ttml", "dfxp", "nfo", "ini", "cfg", "conf",
     )
-    // `ts` 는 여기 없다 — 영상(MPEG-TS)으로 본다. 두 표에 함께 두었을 때도 먼저 맞는 영상이 이겨(그때는 `when` 이
-    // 골랐다) 이 자리는 한 번도 쓰이지 않았다. 겹쳐도 아무도 말하지 않으므로 시험이 겹침을 막는다.
+    // `ts`·`mts` 는 여기 없다 — 영상(MPEG-TS)과 기타(AVCHD)로 본다(위). 두 표에 함께 두었을 때도 먼저 맞는 영상이 이겨(그때는
+    // `when` 이 골랐다) 이 자리는 한 번도 쓰이지 않았다. 겹쳐도 아무도 말하지 않으므로 시험이 겹침을 막는다.
+    //
+    // 줄 둘째부터는 **텍스트 뷰어가 이미 강조하는** 확장자다(`format:text` 의 `TextLanguage`). 목록이 몰라 다른 앱으로
+    // 넘기고 있었다. 두 표가 어긋나지 않게 `app` 의 시험(`TextNamesConsistencyTest`)이 견준다.
     private val code = setOf(
         "kt", "kts", "java", "js", "mjs", "tsx", "jsx", "py", "rb", "go", "rs", "c", "h", "cpp", "hpp", "cc",
         "cs", "swift", "php", "sh", "bash", "zsh", "bat", "ps1", "sql", "json", "xml", "yaml", "yml", "toml",
         "html", "htm", "css", "scss", "gradle", "pug", "vue", "dart", "lua", "pl", "r", "m", "mm",
+        "aidl", "cxx", "hh", "hxx", "inl", "cjs", "cts", "phtml", "pyi", "pyw", "gemspec", "rake", "ksh",
+        "less", "sass", "json5", "jsonc", "webmanifest", "properties", "env", "xsd", "xsl", "xslt", "plist", "resx",
+        "csproj", "vcxproj", "pom", "xhtml", "profile", "bashrc", "zshrc", "editorconfig",
     )
-    private val archive = setOf("zip", "7z", "rar", "tar", "gz", "bz2", "xz", "tgz", "tbz2", "tbz", "txz", "jar", "iso")
+    // 둘째 줄은 **지금 라이브러리가 순수 JVM 으로 읽는** 것이다 — 단독 압축 스트림(`lz4`·`lzma`·`z` 는 commons-compress,
+    // `gz`·`bz2`·`xz` 는 원래 있었다)과 그것으로 싼 tar(`tlz`·`taz`), `cpio`, `ar`(·`deb`), ZIP 인 `war`·`ear`·`aar`.
+    // 무엇으로 여는지는 내용이 정한다(`Archives.detect`).
+    private val archive = setOf(
+        "zip", "7z", "rar", "tar", "gz", "bz2", "xz", "tgz", "tbz2", "tbz", "txz", "jar", "iso",
+        "lz4", "lzma", "tlz", "z", "taz", "cpio", "ar", "deb", "war", "ear", "aar",
+    )
     private val comic = setOf("cbz", "cbr", "cb7", "cbt")
     // 매크로(`m`)·서식(`t`·`x`)·쇼(`pps`) 파일도 같은 종류다. 빠뜨리면 목록이 '기타' 로 그려 **뷰어에 닿지 않는다**
-    // — 여는이(`OoxmlProbe`)는 여는데 누를 길이 없었다(12단계 검토가 잡았다).
+    // — 여는이(`OoxmlProbe`)는 여는데 누를 길이 없었다.
     private val document = setOf("doc", "docx", "docm", "dot", "dotx", "dotm", "odt", "rtf")
     private val sheet = setOf("xls", "xlsx", "xlsm", "xlt", "xltx", "xltm", "ods")
     private val slide = setOf("ppt", "pptx", "pptm", "pot", "potx", "potm", "pps", "ppsx", "ppsm", "odp")
@@ -44,6 +73,18 @@ object MimeResolver {
     private val hwp = setOf("hwp", "hwpx", "hwt", "hwtx", "owpml")
     private val ebook = setOf("epub", "mobi", "azw", "azw3", "fb2")
     private val font = setOf("ttf", "otf", "woff", "woff2", "ttc")
+
+    /**
+     * 확장자가 아니라 **이름으로** 정하는 글 파일. 텍스트 뷰어가 이름으로 강조하는 것들이다(`TextLanguage` 의 이름 표) —
+     * 확장자가 없거나(`Makefile`·`Dockerfile`) 점으로 시작해(`.gitignore`·`.env`) [extensionOf] 가 빈 글을 준다. 소문자로 견준다.
+     */
+    private val codeNames = setOf(
+        "dockerfile", "containerfile", "makefile", "gnumakefile", ".bashrc", ".zshrc", ".profile", ".bash_profile",
+        ".gitignore", ".gitattributes", ".editorconfig", ".npmrc", ".env",
+    )
+
+    /** 이름으로 정하는 글 파일 표. 시험(`TextNamesConsistencyTest`)이 텍스트 뷰어의 이름 표와 견준다. */
+    internal val codeNameTable: Set<String> get() = codeNames
 
     /**
      * 종류별 확장자 표. **[kindOf] 가 이 표 하나로 답한다** — 예전에는 `kindOf` 가 같은 차례의 `when` 을 따로 두어,
@@ -71,7 +112,9 @@ object MimeResolver {
 
     fun kindOf(name: String, isDirectory: Boolean): FileKind {
         if (isDirectory) return FileKind.FOLDER
-        return kindByExtension[extensionOf(name)] ?: FileKind.OTHER
+        kindByExtension[extensionOf(name)]?.let { return it }
+        // 표에 없는 이름만 이름 표를 본다 — 목록의 줄마다 불리므로 소문자 바꾸기를 아낀다.
+        return if (name.lowercase(Locale.ROOT) in codeNames) FileKind.CODE else FileKind.OTHER
     }
 
     /**
@@ -90,23 +133,30 @@ object MimeResolver {
      * `audio/mpeg`, `.avi` 는 `video/avi`, `.rar` 은 `application/rar`, `.cbz` 는 `application/x-cbz` 다. 그림·소리·영상은
      * 받는 앱이 계열 전체로 거르므로 어느 쪽이든 같은 앱이 나오고, 나머지는 등록된 값을 지킨다.
      */
-    fun mimeOf(name: String): String = when (val ext = extensionOf(name)) {
-        "jpg", "jpeg" -> "image/jpeg"
+    fun mimeOf(name: String): String = when (extensionOf(name)) {
+        "jpg", "jpeg", "jfif", "jpe" -> "image/jpeg"
+        "apng" -> "image/apng"
+        "wbmp" -> "image/vnd.wap.wbmp"
         "png" -> "image/png"
         "gif" -> "image/gif"
         "webp" -> "image/webp"
         "heic" -> "image/heic"
         "heif" -> "image/heif"
         "avif" -> "image/avif"
-        "svg" -> "image/svg+xml"
+        "svg", "svgz" -> "image/svg+xml"
         "bmp" -> "image/bmp"
         "tif", "tiff" -> "image/tiff"
         "ico" -> "image/vnd.microsoft.icon"
         "dng" -> "image/x-adobe-dng"
-        "mp3" -> "audio/mpeg"
+        "mp3", "mp2" -> "audio/mpeg"
         "flac" -> "audio/flac"
         "opus", "ogg", "oga" -> "audio/ogg"
-        "m4a" -> "audio/mp4"
+        "m4a", "m4b", "m4r" -> "audio/mp4"
+        "3ga" -> "audio/3gpp"
+        "weba" -> "audio/webm"
+        "awb" -> "audio/amr-wb"
+        "ac3" -> "audio/ac3"
+        "eac3" -> "audio/eac3"
         "aac" -> "audio/aac"
         "wav" -> "audio/wav"
         "wma" -> "audio/x-ms-wma"
@@ -118,10 +168,13 @@ object MimeResolver {
         "mkv" -> "video/x-matroska"
         "webm" -> "video/webm"
         "avi" -> "video/x-msvideo"
-        "mov" -> "video/quicktime"
-        "ts" -> "video/mp2t"
-        "m2ts" -> "video/mp2t"
-        "3gp" -> "video/3gpp"
+        "mov", "qt" -> "video/quicktime"
+        "ts", "mts", "m2t", "m2ts" -> "video/mp2t"
+        "3gp", "3gpp" -> "video/3gpp"
+        "3g2" -> "video/3gpp2"
+        "f4v" -> "video/mp4"
+        "vob" -> "video/mpeg"
+        "divx" -> "video/x-msvideo"
         "wmv" -> "video/x-ms-wmv"
         "flv" -> "video/x-flv"
         "mpg", "mpeg" -> "video/mpeg"
@@ -141,7 +194,16 @@ object MimeResolver {
         "bz2", "tbz2", "tbz" -> "application/x-bzip2"
         "xz", "txz" -> "application/x-xz"
         "iso" -> "application/x-iso9660-image"
-        "jar" -> "application/java-archive"
+        "jar", "war", "ear" -> "application/java-archive"
+        "aar" -> "application/zip"
+        "lz4" -> "application/x-lz4"
+        "lzma" -> "application/x-lzma"
+        "tlz" -> "application/x-lzma-compressed-tar"
+        "z" -> "application/x-compress"
+        "taz" -> "application/x-tarz"
+        "cpio" -> "application/x-cpio"
+        "ar" -> "application/x-archive"
+        "deb" -> "application/vnd.debian.binary-package"
         "apk" -> "application/vnd.android.package-archive"
         "docx" -> "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         "xlsx" -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -175,9 +237,9 @@ object MimeResolver {
         "xml" -> "text/xml"
         "html", "htm" -> "text/html"
         "csv" -> "text/csv"
-        else -> when {
-            ext.isEmpty() -> "application/octet-stream"
-            kindOf(name, false) == FileKind.TEXT || kindOf(name, false) == FileKind.CODE -> "text/plain"
+        // 표에 없는 글·코드는 `text/plain` 이다 — 확장자가 없어도 이름 표가 글이라고 하면(`Makefile`) 그렇다.
+        else -> when (kindOf(name, false)) {
+            FileKind.TEXT, FileKind.CODE -> "text/plain"
             else -> "application/octet-stream"
         }
     }

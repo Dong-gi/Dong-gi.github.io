@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
@@ -15,7 +14,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,8 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import io.github.donggi.iroiroviewer.ui.IroProgress
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.FileOpManager
+import io.github.donggi.iroiroviewer.io.FileOpText
 import io.github.donggi.iroiroviewer.io.Format
 import io.github.donggi.iroiroviewer.io.R as IoR
 
@@ -47,6 +47,8 @@ import io.github.donggi.iroiroviewer.io.R as IoR
  * 글꼴을 키웠을 때 줄이 넘친다(지금 다섯 단추로 거의 찬다). ⋮ 는 언제나 보이고, 하나를 고르지 않았으면 항목이
  * 꺼진다 — '이름 바꾸기' 가 하나일 때만 켜지는 것과 같은 모양이라 단추가 나타났다 사라지며 자리를 바꾸지 않는다.
  *
+ * @param allSelected 보이는 것을 모두 골랐는가 — '전체 선택' 이 토글이라(다시 누르면 모두 푼다) 지금 상태를 보인다.
+ * @param onToggleSelectAll 모두 고르거나 모두 푼다([SelectAll.toggled]).
  * @param onOpenWith 하나만 고른 파일을 다른 앱으로. null 이면 항목이 꺼진다.
  * @param onInfo 하나만 고른 파일의 정보 시트. null 이면 항목이 꺼진다.
  */
@@ -55,9 +57,12 @@ import io.github.donggi.iroiroviewer.io.R as IoR
 fun SelectionTopAppBar(
     count: Int,
     onClear: () -> Unit,
-    onSelectAll: () -> Unit,
+    allSelected: Boolean,
+    onToggleSelectAll: () -> Unit,
     onOpenWith: (() -> Unit)?,
     onInfo: (() -> Unit)?,
+    /** 고른 것들을 ZIP 으로 묶는다. null 이면 흐리게 둔다. */
+    onCompress: (() -> Unit)?,
 ) {
     var menuOpen by remember { mutableStateOf(false) }
     TopAppBar(
@@ -74,9 +79,8 @@ fun SelectionTopAppBar(
         },
         title = { Text(stringResource(R.string.browser_selection_count, count)) },
         actions = {
-            IconButton(onClick = onSelectAll) {
-                Icon(Icons.Filled.Check, stringResource(R.string.browser_select_all))
-            }
+            // 체크(✓) 아이콘이 아니라 '전체 선택' 의 그림이고, 다시 누르면 모두 푼다([SelectAllToggle]).
+            SelectAllToggle(allSelected = allSelected, onToggle = onToggleSelectAll)
             // **⋮ 단추와 메뉴를 한 상자에 담는다**(함정 표 — Popup 은 자기를 감싼 부모 레이아웃을 앵커로 삼는다.
             // `actions` 에 형제로 두면 메뉴가 아이콘 줄의 맨 왼쪽에서 시작한다).
             Box {
@@ -84,6 +88,14 @@ fun SelectionTopAppBar(
                     Icon(Icons.Filled.MoreVert, stringResource(R.string.browser_more))
                 }
                 DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.browser_action_compress)) },
+                        enabled = onCompress != null,
+                        onClick = {
+                            menuOpen = false
+                            onCompress?.invoke()
+                        },
+                    )
                     DropdownMenuItem(
                         text = { Text(stringResource(IoR.string.io_open_with)) },
                         enabled = onOpenWith != null,
@@ -250,6 +262,18 @@ fun OperationBar(
                                 FileOpManager.Kind.RESTORE -> R.string.browser_op_restoring
                                 FileOpManager.Kind.ROTATE -> R.string.browser_op_rotating
                                 FileOpManager.Kind.EXTRACT -> R.string.browser_op_extracting
+                                FileOpManager.Kind.COMPRESS -> R.string.browser_op_compressing
+                                // 잘라 저장·구간 저장의 문구는 그 작업을 만든 `core:io` 에 있다(재생 화면도 같은 문장을 쓴다).
+                                FileOpManager.Kind.CROP -> IoR.string.io_op_cropping
+                                FileOpManager.Kind.MARKUP -> IoR.string.io_op_markup
+                                FileOpManager.Kind.CLIP -> IoR.string.io_op_clipping
+                                FileOpManager.Kind.AUDIO -> IoR.string.io_op_audio
+                                // 글 편집의 저장·새 글 파일도 그 작업을 만든 `core:io` 의 문장이다.
+                                FileOpManager.Kind.SAVE_TEXT -> IoR.string.io_op_saving_text
+                                FileOpManager.Kind.NEW_TEXT -> IoR.string.io_op_creating_text
+                                // 오피스 문서의 저장·새 문서도.
+                                FileOpManager.Kind.SAVE_DOC -> IoR.string.io_op_saving_doc
+                                FileOpManager.Kind.NEW_DOC -> IoR.string.io_op_creating_doc
                                 // 정합성 검사는 조용히 돈다. 이 바가 뜨는 일이 없다.
                                 FileOpManager.Kind.RECONCILE -> R.string.browser_op_deleting
                             }
@@ -272,12 +296,13 @@ fun OperationBar(
             }
             val p = state.progress
             if (p.bytesTotal > 0) {
-                LinearProgressIndicator(
+                IroProgress(
                     progress = { (p.bytesDone.toFloat() / p.bytesTotal).coerceIn(0f, 1f) },
                     modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
                 )
             } else {
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp))
+                // 끝을 모른다(셈이 아직 없다) — 옅은 트랙 위를 짧은 막대가 지나간다.
+                IroProgress(progress = null, modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp))
             }
         }
     }
@@ -289,14 +314,7 @@ fun OperationBar(
  * 컴포저블과 따로 둔 것은 결과가 **채널로** 오기 때문이다. 그 자리는 컴포지션 밖이라
  * `stringResource` 를 부를 수 없고 `context.getString` 을 써야 한다. 대응표는 하나여야 한다.
  */
-fun reasonStringId(reason: FileOpEngine.Reason): Int = when (reason) {
-    FileOpEngine.Reason.NO_SPACE -> R.string.browser_error_no_space
-    FileOpEngine.Reason.NOT_FOUND -> R.string.browser_error_not_found
-    FileOpEngine.Reason.PERMISSION -> R.string.browser_error_permission
-    FileOpEngine.Reason.IO -> R.string.browser_error_io
-    FileOpEngine.Reason.INVALID_NAME -> R.string.browser_error_invalid_name
-    FileOpEngine.Reason.TARGET_INSIDE_SOURCE -> R.string.browser_error_target_inside
-}
+fun reasonStringId(reason: FileOpEngine.Reason): Int = FileOpText.reasonRes(reason)
 
 /** 실패 이유를 사람의 말로. */
 @Composable

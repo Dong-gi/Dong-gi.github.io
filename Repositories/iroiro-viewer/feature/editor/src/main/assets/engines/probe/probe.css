@@ -1,0 +1,11 @@
+:root { color-scheme: light dark; }
+body { font: 16px/1.5 sans-serif; margin: 0; padding: 16px; }
+h1 { font-size: 20px; margin: 0 0 12px; word-break: break-all; }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; margin: 0 0 16px; }
+dt { font-weight: bold; }
+dd { margin: 0; word-break: break-all; }
+.mono { font-family: monospace; font-size: 13px; }
+label { display: block; font-weight: bold; margin-bottom: 4px; }
+textarea { width: 100%; box-sizing: border-box; font-size: 16px; }
+button { margin-top: 8px; font-size: 16px; padding: 8px 20px; }
+#status { min-height: 1.5em; }

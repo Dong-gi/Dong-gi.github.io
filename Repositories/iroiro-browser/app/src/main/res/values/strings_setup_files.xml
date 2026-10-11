@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  설정 파일 zip — 설정 › 프록시의 서버 구성 파일, 테더링 › 다른 기기에서의 PC 연결 파일. 둘 다 '내려받기' 폴더에 zip 하나로 쓴다(setup/SetupFiles).
+  화면의 글은 짧게 둔다(사용자: '설명이 너무 장황합니다' — 2026-10-11).
+-->
+<resources>
+    <string name="setup_server_files">서버 구성 파일 받기</string>
+    <string name="setup_tether_pc_files">PC 연결 파일 받기</string>
+    <string name="setup_files_saved">‘내려받기’ 폴더에 저장했습니다: %1$s</string>
+    <string name="setup_files_failed">저장하지 못했습니다 — %1$s</string>
+</resources>

@@ -8,8 +8,14 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.isSpecified
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -60,8 +66,57 @@ class ZoomState {
     val maxOffsetY: Float
         get() = ZoomMath.maxOffset(fitted.height, viewport.height, scale)
 
-    /** 아직 밀 자리가 남았는가. 남지 않았으면 페이저가 손가락을 가져간다. */
+    /** 아직 밀 자리가 남았는가(방향을 보지 않는다). 한 손가락 끌기를 받을지는 [claimsDrag] 가 정한다. */
     val canPan: Boolean get() = ZoomMath.canPan(maxOffsetX, maxOffsetY)
+
+    /** 부모가 가로로 넘기는가(페이저 — 기본). [ZoomMath.claimsDrag] 가 끌기의 주된 방향과 견준다. */
+    var pagesHorizontally: Boolean = true
+
+    // ---- 끌기 하나의 결정 ----
+    // 인식기(`trackZoomDrags`)가 `Initial` 단계에서 적는다 — 같은 이벤트를 `transformable` 이 `Main` 단계에서 받기 전에.
+    // 컴포즈 상태가 아니다(그리기와 상관없는 값이라 다시 그릴 까닭이 없다).
+    private var dragFrom = Offset.Unspecified
+    private var dragTo = Offset.Zero
+    private var multiTouch = false
+    private var dragClaim: Boolean? = null
+
+    /** 손가락이 처음 닿았다 — 앞 끌기의 결정을 버린다. */
+    fun onDragDown(at: Offset) {
+        dragFrom = at
+        dragTo = at
+        multiTouch = false
+        dragClaim = null
+    }
+
+    /** 끌기가 움직였다. [pointers] 는 눌린 손가락 수다. */
+    fun onDragMove(at: Offset, pointers: Int) {
+        dragTo = at
+        if (pointers > 1) multiTouch = true
+    }
+
+    /**
+     * `transformable` 의 `canPan` — 이 끌기를 그림이 받는가.
+     *
+     * **한 손가락 끌기는 처음 물을 때 한 번 정하고 손을 뗄 때까지 그 답을 지킨다**([ZoomMath.claimsDrag]). `transformable` 은 손가락이
+     * 슬롭을 넘는 순간 처음 묻고, 그 뒤로는 델타마다 묻는다 — 도중에 답이 바뀌면 그림이 밀리다 말고 멈추거나, 가장자리에 닿은 순간 같은
+     * 끌기로 장이 넘어간다. 거짓으로 정했으면 그 끌기는 페이저가 가져간다.
+     *
+     * **두 손가락은 예전처럼 밀 자리만 본다** — 핀치로 키운 그림을 같은 몸짓 안에서 옮길 수 있어야 한다.
+     */
+    fun claimsDrag(): Boolean {
+        if (multiTouch) return canPan
+        dragClaim?.let { return it }
+        val moved = if (dragFrom.isSpecified) dragTo - dragFrom else Offset.Zero
+        return ZoomMath.claimsDrag(
+            dx = moved.x,
+            dy = moved.y,
+            offsetX = offset.x,
+            offsetY = offset.y,
+            maxOffsetX = maxOffsetX,
+            maxOffsetY = maxOffsetY,
+            pagesHorizontally = pagesHorizontally,
+        ).also { dragClaim = it }
+    }
 
     /**
      * @param contentWidth·[contentHeight] 그리는 바닥층 비트맵의 화소.
@@ -155,3 +210,22 @@ class ZoomState {
 
 @Composable
 fun rememberZoomState(key: Any?): ZoomState = remember(key) { ZoomState() }
+
+/**
+ * 끌기 하나를 [state] 에 알린다 — 손가락이 닿은 자리와 지금 자리([ZoomState.claimsDrag] 가 방향을 잰다). **`Initial` 단계에서 보고
+ * 아무것도 소비하지 않는다** — 같은 이벤트를 `transformable` 이 `Main` 단계에서 받아 `canPan` 을 묻기 전에 적어 두려는 것이다.
+ * `transformable` 과 같은 상자에, 그보다 앞에 단다.
+ */
+fun Modifier.trackZoomDrags(state: ZoomState): Modifier = pointerInput(state) {
+    awaitEachGesture {
+        val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+        state.onDragDown(down.position)
+        while (true) {
+            val event = awaitPointerEvent(PointerEventPass.Initial)
+            val pressed = event.changes.count { it.pressed }
+            if (pressed == 0) break
+            val change = event.changes.firstOrNull { it.id == down.id && it.pressed } ?: event.changes.first { it.pressed }
+            state.onDragMove(change.position, pressed)
+        }
+    }
+}

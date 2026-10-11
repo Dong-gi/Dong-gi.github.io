@@ -53,6 +53,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -95,8 +97,11 @@ fun ArchiveScreen(
     /** 공용 스낵바. Root 가 그리는 모든 화면이 하나씩 가져야 한다는 불변식을 지킨다. */
     snackbar: SnackbarHostState,
     onClose: () -> Unit,
-    /** 풀기를 시켜 달라는 요청. 실제 실행은 파일 작업 큐가 한다. */
-    onExtract: (ArchiveViewModel.ExtractPlan, newFolder: Boolean, FileOpEngine.Conflict) -> Unit,
+    /**
+     * 풀기를 시켜 달라는 요청. 실제 실행은 파일 작업 큐가 한다. **null 이면 풀기를 내지 않는다** — 다른 앱이 넘겨 앱 캐시에 둔
+     * 사본은 그 옆(캐시)에 풀어 봐야 사용자가 찾아갈 수 없다(`IncomingFiles`).
+     */
+    onExtract: ((ArchiveViewModel.ExtractPlan, newFolder: Boolean, FileOpEngine.Conflict) -> Unit)?,
     onOpenNotice: () -> Unit,
     /**
      * 아카이브 안의 **그림 항목**을 만화 뷰어로 연다(엔트리 번호를 준다).
@@ -181,15 +186,9 @@ fun ArchiveScreen(
                                 Icon(Icons.Filled.MoreVert, stringResource(R.string.archive_more))
                             }
                             DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.archive_extract_all)) },
-                                    enabled = state is ArchiveViewModel.State.Ready,
-                                    onClick = {
-                                        menuOpen = false
-                                        vm.preparePlan(null)
-                                    },
-                                )
-                                DropdownMenuItem(
+                                // '전부 풀기' 는 여기 없다 — 아래 막대의 단추다(⋮ 안의 '오픈소스 고지' 곁에 숨어 있었다).
+                                // 드문 갈래인 '이 폴더만 풀기' 는 여기 남는다.
+                                if (onExtract != null) DropdownMenuItem(
                                     text = { Text(stringResource(R.string.archive_extract_folder)) },
                                     enabled = state is ArchiveViewModel.State.Ready && folder.isNotEmpty(),
                                     onClick = {
@@ -223,7 +222,11 @@ fun ArchiveScreen(
             }
         },
         bottomBar = {
-            (state as? ArchiveViewModel.State.Ready)?.doc?.let { StatusBar(it) }
+            (state as? ArchiveViewModel.State.Ready)?.doc?.let { doc ->
+                // **'전부 풀기' 를 눈에 띄는 단추로**(Files by Google 은 압축을 열면 큰 '압축 풀기' 단추를 보인다).
+                // 떠 있는 단추가 아니라 아래 막대에 둔다 — 목록의 마지막 줄을 덮지 않는다. 받은 사본(풀 곳이 없다)에는 없다.
+                StatusBar(doc, onExtractAll = if (onExtract != null) { { vm.preparePlan(null) } } else null)
+            }
         },
     ) { inner ->
         Box(Modifier.padding(inner).fillMaxSize()) {
@@ -285,7 +288,7 @@ fun ArchiveScreen(
         }
     }
 
-    plan?.let { p ->
+    if (onExtract != null) plan?.let { p ->
         ExtractDialog(
             plan = p,
             onDismiss = vm::dismissPlan,
@@ -427,8 +430,7 @@ private val NESTED_KINDS = setOf(FileKind.ARCHIVE, FileKind.COMIC)
 /**
  * 뷰어가 **경로**를 요구하는 문서들. 아카이브 안에서는 경로를 줄 수 없으므로 열지 않는다.
  *
- * 12·13단계가 docx·hwpx 파서를 만들어도 이 목록은 그대로다. 그 파서들은 바이트 스트림을
- * 받으므로 기술적으로는 열 수 있지만, 아카이브 안의 문서를 여는 길을 한 번 뚫으면
+ * 바이트 스트림으로 열 수 있는 포맷이라도 이 목록에 둔다 — 아카이브 안의 문서를 여는 길을 한 번 뚫으면
  * '엔트리를 디스크로 뽑지 않는다' 는 이 화면의 불변식이 깨진다.
  */
 private val DOCUMENT_KINDS = setOf(
@@ -542,24 +544,41 @@ private fun secondLine(node: ArchiveTree.Node): String = when {
         node.fileCount,
         formatBytes(node.totalDeclaredSize),
     )
+    // 형식이 크기를 적지 않았다(파일 하나를 싼 `.gz` 등 — `SingleStreamReader` 의 표). '-' 보다 무엇을 모르는지 말한다.
+    node.declaredSize < 0 -> stringResource(R.string.archive_size_unknown)
     else -> formatBytes(node.declaredSize)
 }
 
 // ---- 막대와 대화상자 --------------------------------------------------------------
 
+/**
+ * 아래 막대 — 압축 파일의 요약과 **'전부 풀기' 단추**. 단추가 없으면(받은 사본) 요약만이다.
+ */
 @Composable
-private fun StatusBar(doc: ArchiveViewModel.Doc) {
+private fun StatusBar(doc: ArchiveViewModel.Doc, onExtractAll: (() -> Unit)?) {
     Surface(tonalElevation = 3.dp) {
-        Text(
-            text = stringResource(
-                R.string.archive_summary_header,
-                doc.kind.label,
-                doc.entries.size,
-                formatBytes(doc.fileBytes),
-            ) + if (doc.solid) " · " + stringResource(R.string.archive_summary_solid) else "",
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 8.dp, top = 4.dp, bottom = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(
+                    R.string.archive_summary_header,
+                    doc.kind.label,
+                    doc.entries.size,
+                    formatBytes(doc.fileBytes),
+                ) + if (doc.solid) " · " + stringResource(R.string.archive_summary_solid) else "",
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.weight(1f).padding(vertical = 8.dp),
+            )
+            if (onExtractAll != null) {
+                Button(onClick = onExtractAll, modifier = Modifier.padding(start = 8.dp)) {
+                    Text(stringResource(R.string.archive_extract_all))
+                }
+            }
+        }
     }
 }
 
@@ -567,6 +586,8 @@ private fun StatusBar(doc: ArchiveViewModel.Doc) {
 @Composable
 private fun SearchBar(query: String, onQuery: (String) -> Unit, onClose: () -> Unit) {
     val focus = remember { FocusRequester() }
+    val keyboard = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     LaunchedEffect(Unit) { focus.requestFocus() }
     TopAppBar(
         navigationIcon = {
@@ -581,7 +602,14 @@ private fun SearchBar(query: String, onQuery: (String) -> Unit, onClose: () -> U
                 singleLine = true,
                 placeholder = { Text(stringResource(R.string.archive_search_hint)) },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(),
+                // **검색 키는 키보드를 내린다**(아무 일도 없이 키보드가 목록을 가린 채 남았다). 거르기는 칠 때마다
+                // 이미 됐다 — 남은 일은 결과를 보는 것이다. 찾기 칸은 열어 둔다(닫는 것은 ✕).
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        keyboard?.hide()
+                        focusManager.clearFocus()
+                    },
+                ),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -616,7 +644,12 @@ private fun ExtractDialog(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
-                    stringResource(R.string.archive_extract_count, plan.fileCount, formatBytes(plan.declaredBytes)),
+                    // 크기를 모르는 항목이 섞이면(-1) '0 B' 라고 하지 않는다 — `knownSizeOf`.
+                    if (plan.declaredBytes < 0) {
+                        stringResource(R.string.archive_extract_count_unknown, plan.fileCount)
+                    } else {
+                        stringResource(R.string.archive_extract_count, plan.fileCount, formatBytes(plan.declaredBytes))
+                    },
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Choice(

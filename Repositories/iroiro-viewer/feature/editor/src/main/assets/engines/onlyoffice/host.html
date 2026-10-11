@@ -1,0 +1,46 @@
+<!doctype html>
+<!-- ONLYOFFICE 엔진의 첫 쪽(우리 코드). 편집기(web-apps — tools/build_onlyoffice.py 가 지은 묶음)를 틀로 띄우고, iroiro-onlyoffice.js 가
+     문서를 x2t 로 바꿔 넣고 가짜 서버 노릇을 하며 앱과 잇는다. 인라인 스크립트를 두지 않는다(CSP) — 칸의 단추는 어댑터가 잇는다. -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>편집기</title>
+  <link rel="stylesheet" href="/iroiro-onlyoffice.css">
+</head>
+<body>
+  <div id="io-editor"><div id="io-placeholder"></div></div>
+  <div id="io-busy" role="status" aria-live="polite"><div class="io-spinner"></div><div id="io-busy-text">문서를 여는 중…</div></div>
+  <div id="io-error" role="alert" hidden></div>
+  <!-- 암호가 걸린 문서(어댑터의 8). 넣은 암호는 쪽이 사는 동안만 든다. -->
+  <div id="io-pass" class="io-dialog" role="dialog" aria-modal="true" aria-labelledby="io-pass-title" hidden>
+    <form id="io-pass-form" class="io-card" autocomplete="off">
+      <div id="io-pass-title" class="io-title">암호가 걸린 문서</div>
+      <div class="io-body">이 문서를 열려면 암호를 넣으세요.</div>
+      <input id="io-pass-input" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="255" aria-label="암호">
+      <div id="io-pass-error" class="io-error-text" role="alert" hidden>암호가 맞지 않습니다.</div>
+      <div class="io-buttons">
+        <button type="button" id="io-pass-cancel">취소</button>
+        <button type="submit" class="io-primary">열기</button>
+      </div>
+    </form>
+  </div>
+  <!-- 예·아니오를 묻는 칸(글을 원래 인코딩으로 쓸 수 없을 때). -->
+  <div id="io-ask" class="io-dialog" role="dialog" aria-modal="true" aria-labelledby="io-ask-text" hidden>
+    <div class="io-card">
+      <div id="io-ask-text" class="io-body"></div>
+      <div class="io-buttons">
+        <button type="button" id="io-ask-cancel">취소</button>
+        <button type="button" id="io-ask-ok" class="io-primary"></button>
+      </div>
+    </div>
+  </div>
+  <!-- 알림 띠(어댑터의 10) — 편집을 열 때 한 번. -->
+  <div id="io-note" role="status" aria-live="polite" hidden>
+    <div id="io-note-text"></div>
+    <button type="button" id="io-note-close" aria-label="알림 닫기">✕</button>
+  </div>
+  <script src="/web-apps/apps/api/documents/api.js"></script>
+  <script src="/iroiro-onlyoffice.js"></script>
+</body>
+</html>

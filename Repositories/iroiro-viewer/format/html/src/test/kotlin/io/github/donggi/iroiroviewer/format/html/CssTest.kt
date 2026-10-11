@@ -69,12 +69,17 @@ class CssTest {
     @Test
     fun 우리가_만든_url_을_빠져나갈_수_없다() {
         // 원본의 따옴표·괄호가 결과에 남으면 그 자리에서 값이 끝나고 뒤가 CSS 가 된다.
-        val (out, _) = clean("""body{background:url(a.png"); color:red}""")
+        // 따옴표 없는 주소에 따옴표가 섞이면 명세의 '망가진 주소' 라 `none` 이 된다(값이 나오지 않는다).
+        val (bad, _) = clean("""body{background:url(a.png"); color:red}""")
+        assertTrue("background:none" in bad && "color:red" in bad, bad)
+        // 문자열 주소 안의 따옴표·괄호·역슬래시는 값으로 들어온다 — 우리가 적는 `url("…")` 안에는 남지 않는다.
+        val (out, _) = clean("""body{background:url("a.png\"); color:red; x:(\\y"); color:blue}""")
         val values = Regex("""url\("([^"]*)"\)""").findAll(out).map { it.groupValues[1] }.toList()
         assertTrue(values.isNotEmpty(), out)
         for (v in values) {
-            assertFalse('"' in v || '(' in v || ')' in v || '\'' in v, "값에 괄호·따옴표가 남았다: $v")
+            assertFalse('"' in v || '(' in v || ')' in v || '\'' in v || '\\' in v, "값에 괄호·따옴표가 남았다: $v")
         }
+        assertTrue(out.endsWith("color:blue}"), out)
     }
 
     @Test

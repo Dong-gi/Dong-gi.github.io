@@ -172,6 +172,20 @@ object ImageLimits {
     fun pageCap(budget: Budget): Long =
         (budget.liveCap / budget.livePages.coerceAtLeast(1)).coerceAtLeast(1L)
 
+    /**
+     * **세로로 이어 보는 화면**(PDF 이어 보기)의 줄 하나에 허락하는 바이트.
+     *
+     * 넘기는 화면([pageCap])과 셈이 다르다. 줄은 화면 **폭**에 맞춰 그리므로 한 장의 바이트는 화면에 차지하는 넓이 그대로이고,
+     * 목록이 들고 있는 줄은 화면에 걸친 것과 미리 만들어 두는 하나뿐이다. 화면보다 긴 줄(가로 화면의 A4 세로 쪽)이 아니면 걸친 줄의
+     * 합은 화면 두어 장이고, 긴 줄이면 화면에 걸치는 것이 많아야 둘에 미리 만든 하나다 — 그래서 줄 하나를 살아 있는 몫의
+     * [SCROLL_LIVE_ROWS] 분의 1 로 누르면 어느 쪽이든 [Budget.liveCap] 안이다. 넘는 줄은 배율을 낮춰(흐리게) 그리고, 확대하거나
+     * 흐린 만큼은 보이는 자리만 다시 그린다(`PdfLimits.regionTile`).
+     */
+    fun scrollPageCap(budget: Budget): Long = (budget.liveCap / SCROLL_LIVE_ROWS).coerceAtLeast(1L)
+
+    /** 이어 보기에서 상한을 받는 긴 줄이 한꺼번에 살아 있는 최대 수 — 화면에 걸친 둘과 미리 만드는 하나. */
+    const val SCROLL_LIVE_ROWS = 3
+
     /** 이 표본으로 디코딩하면 몇 바이트인가. */
     fun bytesAt(width: Int, height: Int, sample: Int): Long {
         val w = (width + sample - 1) / sample

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 손으로 그린 선 아이콘(24x24, 흰 선) — 열린 탭(겹친 두 쪽). 색은 쓰는 쪽이 칠한다(imageTintList). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M8,8V5.5A1.5,1.5 0,0 1,9.5,4H18.5A1.5,1.5 0,0 1,20,5.5V14.5A1.5,1.5 0,0 1,18.5,16H16"
+        android:strokeWidth="2"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M5.5,8H14.5A1.5,1.5 0,0 1,16,9.5V18.5A1.5,1.5 0,0 1,14.5,20H5.5A1.5,1.5 0,0 1,4,18.5V9.5A1.5,1.5 0,0 1,5.5,8Z"
+        android:strokeWidth="2"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineJoin="round" />
+</vector>

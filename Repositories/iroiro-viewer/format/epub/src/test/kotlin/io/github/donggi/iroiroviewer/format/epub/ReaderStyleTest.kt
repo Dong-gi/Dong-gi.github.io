@@ -93,16 +93,4 @@ class ReaderStyleTest {
         assertTrue(":where(body){color:#3b2f22}" in css, css)
         assertFalse("color:#3b2f22 !important" in css, css)
     }
-
-    @Test
-    fun 흐름_문서에_얹으면_머리_끝에_들어간다() {
-        val doc = "<!DOCTYPE html><html><head><style>p{color:red}</style></head><body><p>글</p></body></html>"
-        val css = ReaderStyle.flow(ReaderStyle.Margin.WIDE, ReaderStyle.Tone.DARK)
-        val out = ReaderStyle.apply(doc, css)
-        val ours = out.indexOf("padding-left:30pt")
-        assertTrue(ours > out.indexOf("p{color:red}"), out)
-        assertTrue(ours < out.indexOf("</head>"), out)
-        // 얹을 것이 없으면 그대로.
-        assertEquals(doc, ReaderStyle.apply(doc, ""))
-    }
 }

@@ -34,6 +34,25 @@ internal sealed interface AppScreen {
     /** 텍스트 뷰어. 목록이 필요 없어 경로 하나가 전부다. */
     data class Text(val path: String) : AppScreen
 
+    /**
+     * 글·코드 파일 편집기. **텍스트 뷰어의 모드가 아니라 따로 된 화면이다** — 고치는 글·되돌리기 기록·저장의 물음은 뷰어의
+     * 색인·창과 수명이 다르고(뷰어는 파일을 창으로만 읽는다), 편집기의 뒤로 가기는 '저장하지 않은 고침' 을 먼저 묻는다.
+     *
+     * [encoding] 은 뷰어에서 손으로 고른 인코딩(`TextEncoding.name` — 이 모듈은 그 타입을 보지 않는다), 판정이면 null.
+     * [fromViewer] 면 닫을 때 그 파일의 뷰어로, 아니면(폴더 화면의 '새 글 파일') 목록으로 돌아간다. **고치는 글은 여기에 싣지 않는다** —
+     * 편집기의 뷰모델과 초안(앱 전용 폴더)이 든다(저장 상태 번들의 한도 — 함정 표).
+     */
+    data class Edit(val path: String, val encoding: String? = null, val fromViewer: Boolean = true) : AppScreen
+
+    /**
+     * 다른 앱이 넘긴 문서를 **편집기의 보기 모드**로 연 자리(뷰어 교체). 오피스·한글 문서는 편집기가 쪽을 PC 처럼 그리므로
+     * 그쪽이 뷰어다. 편집기는 따로 된 프로세스의 화면이라 이 앱의 화면은 그 뒤에서 기다리기만 한다 — 편집기가 닫히면 이 화면도
+     * 끝난다(`Root` 의 `home`). 파일 목록에서 연 문서는 이 화면을 거치지 않는다 — 목록이 그대로 뒤에 남는다.
+     *
+     * [kind] 는 편집기의 형식 글자(`EditorApp.viewKindFor`). 편집기에 넘긴 세션의 표는 `Root` 가 따로 든다.
+     */
+    data class Editor(val path: String, val kind: String) : AppScreen
+
     /** 압축 파일 탐색. 아카이브 안 폴더 위치는 화면이 들고 있으므로 여기에는 경로만 남는다. */
     data class Archive(val path: String) : AppScreen
 
@@ -82,6 +101,10 @@ internal object AppScreenCodec {
         is AppScreen.Notice -> if (screen.back == AppScreen.Browser) "n" else "n>" + encode(screen.back)
         is AppScreen.Viewer -> "v:" + screen.startPath
         is AppScreen.Text -> "t:" + screen.path
+        // 머리 뒤에 돌아갈 곳(t·b)과 인코딩 이름(없으면 빈칸) — 둘 다 ':' 를 품지 않으므로 그 뒤는 통째로 경로다.
+        is AppScreen.Edit -> "e:" + (if (screen.fromViewer) "t" else "b") + ":" + screen.encoding.orEmpty() + ":" + screen.path
+        // 형식 글자(':' 를 품지 않는다), 그 뒤는 통째로 경로다. 옛 판의 `o:`(앱의 오피스 편집 화면 — 걷었다)는 첫 화면으로 읽는다.
+        is AppScreen.Editor -> "r:" + screen.kind + ":" + screen.path
         is AppScreen.Archive -> "a:" + screen.path
         is AppScreen.Comic -> "c:" + screen.entryIndex + ":" + screen.path
         is AppScreen.Doc -> "p:" + screen.path
@@ -95,6 +118,21 @@ internal object AppScreenCodec {
         v.startsWith("n>") -> AppScreen.Notice(backOf(decode(v.removePrefix("n>"))))
         v.startsWith("v:") -> AppScreen.Viewer(v.removePrefix("v:"))
         v.startsWith("t:") -> AppScreen.Text(v.removePrefix("t:"))
+        v.startsWith("e:") -> {
+            val rest = v.removePrefix("e:")
+            val encodingAt = rest.indexOf(':')
+            val pathAt = if (encodingAt == 1) rest.indexOf(':', encodingAt + 1) else -1
+            if (pathAt < 0) {
+                AppScreen.Browser
+            } else {
+                AppScreen.Edit(
+                    path = rest.substring(pathAt + 1),
+                    encoding = rest.substring(encodingAt + 1, pathAt).ifEmpty { null },
+                    fromViewer = rest[0] != 'b',
+                )
+            }
+        }
+        v.startsWith("r:") -> editor(v.removePrefix("r:"))
         v.startsWith("a:") -> AppScreen.Archive(v.removePrefix("a:"))
         v.startsWith("c:") -> {
             val rest = v.removePrefix("c:")
@@ -104,6 +142,16 @@ internal object AppScreenCodec {
         }
         v.startsWith("p:") -> AppScreen.Doc(v.removePrefix("p:"))
         else -> AppScreen.Browser
+    }
+
+    /** `r:` 의 나머지(`docx:/경로`). 형식·경로 가운데 하나라도 비었거나 형식에 쓸 수 없는 글자가 들었으면(손상된 저장 상태) 첫 화면. */
+    private fun editor(rest: String): AppScreen {
+        val at = rest.indexOf(':')
+        if (at <= 0) return AppScreen.Browser
+        val kind = rest.substring(0, at)
+        val path = rest.substring(at + 1)
+        if (path.isEmpty() || !kind.all { it in 'a'..'z' }) return AppScreen.Browser
+        return AppScreen.Editor(path, kind)
     }
 
     /**

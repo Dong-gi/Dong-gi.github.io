@@ -38,7 +38,7 @@ data class ComicProgressEntity(
 )
 
 /**
- * 문서에서 읽던 자리. **11~13단계의 모든 문서 포맷이 이 표 하나를 쓴다.**
+ * 문서에서 읽던 자리. **모든 문서 포맷이 이 표 하나를 쓴다.**
  *
  * ## 왜 `comic_progress` 를 다시 쓰지 않는가
  *
@@ -52,15 +52,15 @@ data class ComicProgressEntity(
  *
  * ## 왜 쪽 번호가 nullable 인가
  *
- * 12·13단계의 흐름 렌더 포맷(docx·HWP)에는 **쪽이 없다.** 지금 `NOT NULL` 로 세우면
- * 그때 표를 통째로 다시 만들어야 한다. 쪽이 있는 포맷(PDF)은 [page]·[pageCount] 를,
- * 흐름 포맷은 [locator]·[progress] 를 쓴다 — 서로의 칸을 비워 둔다.
+ * 쪽이 없는 포맷(그때 계획한 docx·HWP 의 흐름 렌더 — 지금은 없다)을 받으려고 비워 둘 수 있게 했다.
+ * `NOT NULL` 로 세웠다면 그런 포맷이 올 때 표를 통째로 다시 만들어야 한다. 지금은 PDF·EPUB 이 모두
+ * [page]·[pageCount] 를 적고(EPUB 은 장 번호), EPUB 은 장 안의 자리를 [locator]·[progress] 에 더 적는다.
  */
 @Entity(tableName = "doc_progress")
 data class DocProgressEntity(
     /** `FileKey.of(이름, 크기, 수정시각)`. **경로를 담지 않는다** — 무엇을 읽었는지가 새지 않게. */
     @PrimaryKey @ColumnInfo(name = "file_key") val fileKey: String,
-    /** 쪽이 있는 포맷의 읽던 쪽(0부터). 흐름 포맷은 null. */
+    /** 읽던 쪽(0부터). EPUB 은 장 번호다. */
     @ColumnInfo(name = "page") val page: Int? = null,
     /**
      * 그때의 총 쪽 수. **되살린 값을 믿을지 판단하는 데 쓴다** — 파일이 바뀌어 쪽 수가
@@ -68,7 +68,7 @@ data class DocProgressEntity(
      */
     @ColumnInfo(name = "page_count") val pageCount: Int? = null,
     /**
-     * 흐름 포맷의 읽던 자리. 포맷이 뜻을 정한다(EPUB 은 스파인 자리, 13단계는 문단 번호).
+     * 흐름 포맷의 읽던 자리. 포맷이 뜻을 정한다(EPUB 은 스파인 자리 — `DocLocator`).
      * **여기에 경로나 원문을 담지 않는다.**
      */
     @ColumnInfo(name = "locator") val locator: String? = null,

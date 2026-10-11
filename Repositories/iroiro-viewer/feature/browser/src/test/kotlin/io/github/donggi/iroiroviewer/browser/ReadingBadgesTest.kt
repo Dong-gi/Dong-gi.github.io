@@ -47,7 +47,7 @@ class ReadingBadgesTest {
     @Test
     fun 자리가_하나뿐이면_배지가_없다() {
         // 열기만 해도 마지막 자리에 닿는다 — '다 읽음' 이 거짓이 된다.
-        assertNull(ReadingBadges.ofPages(0, 1, BadgeUnit.PART))
+        assertNull(ReadingBadges.ofPages(0, 1, BadgeUnit.CHAPTER))
         assertNull(ReadingBadges.ofPages(0, 0, BadgeUnit.PAGE))
         assertNull(ReadingBadges.ofPages(-1, 10, BadgeUnit.PAGE))
     }
@@ -75,8 +75,9 @@ class ReadingBadgesTest {
         assertEquals(5, ReadingBadges.ofDoc(pdf, FileKind.PDF)!!.current)
         // EPUB 의 `page` 는 장 번호다.
         assertEquals(BadgeUnit.CHAPTER, ReadingBadges.ofDoc(pdf, FileKind.EBOOK)!!.unit)
-        assertEquals(BadgeUnit.SLIDE, ReadingBadges.ofDoc(pdf, FileKind.SLIDE)!!.unit)
-        assertEquals(BadgeUnit.PART, ReadingBadges.ofDoc(pdf, FileKind.HWP)!!.unit)
+        // 오피스·한글 문서는 편집기가 연다 — 옛 기록이 있어도 배지가 없다.
+        assertNull(ReadingBadges.ofDoc(pdf, FileKind.SLIDE))
+        assertNull(ReadingBadges.ofDoc(pdf, FileKind.HWP))
 
         assertNull(ReadingBadges.ofDoc(DocProgressEntity("k", displayName = "", updatedAt = 0), FileKind.PDF))
     }
@@ -87,7 +88,9 @@ class ReadingBadgesTest {
             FileEntry("x", "/x", isDirectory = dir, size = 0, lastModified = 0, isHidden = false, isSymlink = false, kind = kind)
         assertTrue(ReadingBadges.wantsBadge(e(FileKind.COMIC)))
         assertTrue(ReadingBadges.wantsBadge(e(FileKind.PDF)))
-        assertTrue(ReadingBadges.wantsBadge(e(FileKind.DOCUMENT)))
+        assertTrue(ReadingBadges.wantsBadge(e(FileKind.EBOOK)))
+        // 오피스·한글 문서는 편집기의 보기 모드가 연다(읽던 자리를 적지 않는다).
+        for (k in listOf(FileKind.DOCUMENT, FileKind.SHEET, FileKind.SLIDE, FileKind.HWP)) assertFalse(ReadingBadges.wantsBadge(e(k)), k.name)
         assertFalse(ReadingBadges.wantsBadge(e(FileKind.IMAGE)))
         assertFalse(ReadingBadges.wantsBadge(e(FileKind.ARCHIVE)))
         // 폴더 만화는 뺀다 — 뷰어의 키가 폴더의 st_size 를 쓰는데 목록은 폴더 크기를 0 으로 적는다.

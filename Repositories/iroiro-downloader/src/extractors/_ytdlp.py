@@ -1,6 +1,6 @@
 """yt-dlp 기반 익스트랙터 공통 베이스.
 
-YouTube · bilibili · 스트리밍 매니페스트(M3U8/MPD)가 모두 공유하는 부분을 모았다.
+yt-dlp로 받는 사이트가 공유하는 부분을 모았다 (지금은 YouTube 하나뿐이다).
 
 - 2단계 흐름: 메타데이터 probe → 실제 다운로드 (동일 옵션으로 인스턴스 2개)
 - 협력적 취소: progress_hook에서 `CancelDownload` → `InterruptedError` 재포장
@@ -287,9 +287,7 @@ class CookieFileAuthMixin(CookieAuth):
     `YoutubeDLCookieJar.load()`를 우회하므로 extractor의 로그인 판정이 동작하지 않는다.
     여기서는 `load()`를 그대로 태우되 입력만 파일이 아니라 스트림으로 준다.
 
-    영속 저장은 사이트마다 다르다(YouTube는 쿠키 회전이 잦아 세션 전용, bilibili는
-    수명이 길어 자격 증명 관리자에 저장). `_load_saved_cookies` / `_save_cookies`
-    를 재정의해 표현한다. 기본은 저장하지 않음.
+    쿠키는 세션 전용이다 — 어디에도 저장하지 않고 이번 실행 동안 메모리에만 둔다.
 
     `YtdlpExtractor` 앞에 두고 다중 상속한다 (``class X(CookieFileAuthMixin, YtdlpExtractor)``).
     """
@@ -299,21 +297,11 @@ class CookieFileAuthMixin(CookieAuth):
 
     def __init__(self, config: Config):
         super().__init__(config)  # type: ignore[call-arg]  # 협력적 다중 상속 — YtdlpExtractor로 전달
-        self._cookies: str = self._load_saved_cookies()
-
-    # ------------------------------------------------------------ 영속 저장 훅
-
-    def _load_saved_cookies(self) -> str:
-        """저장된 쿠키 복원. 기본은 세션 전용(저장 안 함)."""
-        return ""
-
-    def _save_cookies(self, cookie_str: str) -> None:
-        """쿠키 영속 저장/삭제. 기본은 아무것도 하지 않음."""
+        self._cookies: str = ""
 
     # ------------------------------------------------------------ CookieAuth
 
     def set_cookies(self, cookie_str: str) -> None:
-        self._save_cookies(cookie_str)
         self._cookies = cookie_str
 
     def has_cookies(self) -> bool:

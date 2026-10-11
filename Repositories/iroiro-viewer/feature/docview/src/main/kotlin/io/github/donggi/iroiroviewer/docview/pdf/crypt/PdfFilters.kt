@@ -100,7 +100,7 @@ internal object PdfFilters {
         //
         // **줄 폭을 실제 데이터로 누른다.** `/Columns` 는 파일이 적는 값이라 몇 바이트짜리
         // 스트림에 64 MiB 폭을 적을 수 있다. 그 폭으로 줄 버퍼를 잡고 0 으로 채워 내보내면
-        // 몇 바이트가 128 MiB 가 된다(적대적 검토가 잡았다). 데이터보다 넓은 줄은 어차피 모자라게
+        // 몇 바이트가 128 MiB 가 된다. 데이터보다 넓은 줄은 어차피 모자라게
         // 끝나므로, 있는 바이트까지만 잡고 그만큼만 내보낸다. 결과 전체에도 상한을 건다.
         val width = minOf(rowLen, data.size)
         val out = ByteArrayOutputStream(data.size)

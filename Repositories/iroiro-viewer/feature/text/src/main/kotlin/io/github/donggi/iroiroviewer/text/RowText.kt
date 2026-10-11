@@ -27,6 +27,9 @@ data class LineEndMarks(val lf: String, val crlf: String, val cr: String) {
  * **줄 끝 표시는 행의 글자 뒤에만 붙는다.** 찾기(`TextRow.text` 로 찾는다)와 강조의 좌표는 표시를 모른다 — 표시가
  * 글자 안에 들어가면 `찾을말⏎` 같은 줄이 찾기에 걸리지 않거나, 줄 끝을 켜는 순간 칠한 자리가 한 칸씩 밀린다.
  *
+ * 글 고르기를 위한 표지(문자열 주석) 둘도 여기서 단다 — 줄 끝 표시의 자리와 '앞 행을 잇는 행'. 화면에는 아무 영향이 없고
+ * 복사할 때만 읽는다([RowCopy]).
+ *
  * @param marks null 이면 줄 끝을 그리지 않는다.
  */
 internal fun annotateRow(
@@ -61,7 +64,12 @@ internal fun annotateRow(
         append(mark)
         // 줄 번호와 같은 흐린 색. 본문이 아니라는 것이 한눈에 보여야 한다.
         addStyle(SpanStyle(color = colors.gutter), start, length)
+        // 복사할 때 뺀다 — 화면에만 있는 기호다([RowCopy]).
+        addStringAnnotation(RowCopy.TAG_MARK, "", start, length)
     }
+    // 긴 줄의 둘째 조각부터는 앞 행에 줄바꿈 없이 이어 붙인다([RowCopy.join]). 행 전체를 덮어야 어느 자리에서 고르기
+    // 시작해도 표지가 조각에 남는다.
+    if (row.continuation) addStringAnnotation(RowCopy.TAG_CONTINUES, "", 0, length)
 }
 
 /**

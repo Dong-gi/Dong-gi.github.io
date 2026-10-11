@@ -1,8 +1,10 @@
 package io.github.donggi.iroiroviewer.settings
 
+import io.github.donggi.iroiroviewer.data.AppPreferences
 import io.github.donggi.iroiroviewer.data.CrashLog
 import io.github.donggi.iroiroviewer.data.ReaderAppearance
 import io.github.donggi.iroiroviewer.data.TextViewerDefaults
+import io.github.donggi.iroiroviewer.data.TextViewerKind
 import io.github.donggi.iroiroviewer.model.SortKey
 import io.github.donggi.iroiroviewer.model.SortSpec
 import kotlinx.coroutines.CancellationException
@@ -51,6 +53,11 @@ class SettingsViewModelTest {
         override val textViewer = MutableStateFlow(TextViewerDefaults())
         override val comicDefaultDirection = MutableStateFlow(0)
         override val readerAppearance = MutableStateFlow(ReaderAppearance())
+        override val resumeOnBluetooth = MutableStateFlow(true)
+        override val tapSeekSeconds = MutableStateFlow(AppPreferences.DEFAULT_TAP_SEEK_SECONDS)
+        override val readerKeepScreenMinutes = MutableStateFlow(10)
+        override val comicVolumeKeys = MutableStateFlow(false)
+        override val proseViewer = MutableStateFlow(TextViewerDefaults.defaultsFor(TextViewerKind.TEXT))
         var fail: Exception? = null
         val calls = mutableListOf<String>()
 
@@ -84,6 +91,31 @@ class SettingsViewModelTest {
             guard("reader")
             readerAppearance.value = transform(readerAppearance.value)
         }
+
+        override suspend fun setResumeOnBluetooth(on: Boolean) {
+            guard("bluetooth")
+            resumeOnBluetooth.value = on
+        }
+
+        override suspend fun setTapSeekSeconds(seconds: Int) {
+            guard("tapSeek")
+            tapSeekSeconds.value = seconds
+        }
+
+        override suspend fun setReaderKeepScreenMinutes(minutes: Int) {
+            guard("keepScreen")
+            readerKeepScreenMinutes.value = minutes
+        }
+
+        override suspend fun setComicVolumeKeys(on: Boolean) {
+            guard("volumeKeys")
+            comicVolumeKeys.value = on
+        }
+
+        override suspend fun updateProseViewer(transform: (TextViewerDefaults) -> TextViewerDefaults) {
+            guard("prose")
+            proseViewer.value = transform(proseViewer.value)
+        }
     }
 
     private class FakeHistory : HistorySource {
@@ -116,10 +148,22 @@ class SettingsViewModelTest {
         val vm = vm()
         val job = launch { vm.values.collect { } }
         val v = vm.values.filterNotNull().first()
-        assertEquals(SettingsViewModel.Values(false, true, TextViewerDefaults(), 0, ReaderAppearance()), v)
+        assertEquals(SettingsViewModel.Values(false, true, TextViewerDefaults(), 0, ReaderAppearance(), resumeOnBluetooth = true), v)
         // 다른 화면(목록)이 바꾼 값도 따라온다 — 이 화면은 사본을 들지 않는다.
         settings.showHidden.value = true
         assertEquals(true, vm.values.value?.showHidden)
+        job.cancel()
+    }
+
+    @Test
+    fun `블루투스 이어 재생을 끄면 적히고 화면 값도 따라온다`() = runTest(dispatcher) {
+        val vm = vm()
+        val job = launch { vm.values.collect { } }
+        vm.values.filterNotNull().first()
+        assertTrue(vm.setResumeOnBluetooth(false).await())
+        assertEquals(false, settings.resumeOnBluetooth.value)
+        assertEquals(false, vm.values.value?.resumeOnBluetooth)
+        assertEquals(listOf("bluetooth"), settings.calls)
         job.cancel()
     }
 
@@ -142,6 +186,24 @@ class SettingsViewModelTest {
             settings.textViewer.value)
         vm.setTextFontSp(3).await()
         assertEquals(TextViewerDefaults.MIN_FONT_SP, settings.textViewer.value.fontSp)
+    }
+
+    /** 글 파일의 텍스트 뷰어 값은 코드 파일의 것과 **따로** 적힌다. 화면 값도 따라온다. */
+    @Test
+    fun `글 파일의 텍스트 뷰어 값은 따로 적힌다`() = runTest(dispatcher) {
+        val vm = vm()
+        val job = launch { vm.values.collect { } }
+        assertEquals(TextViewerDefaults(wrap = true, lineNumbers = false), vm.values.filterNotNull().first().prose)
+        vm.setProseWrap(false).await()
+        vm.setProseLineNumbers(true).await()
+        vm.setProseLineEnds(true).await()
+        vm.setProseFontSp(99).await()
+        val expected = TextViewerDefaults(wrap = false, lineNumbers = true, fontSp = TextViewerDefaults.MAX_FONT_SP, showLineEnds = true)
+        assertEquals(expected, settings.proseViewer.value)
+        assertEquals(expected, vm.values.value?.prose)
+        assertEquals(TextViewerDefaults(), settings.textViewer.value, "코드 파일의 값은 그대로")
+        assertEquals(listOf("prose", "prose", "prose", "prose"), settings.calls)
+        job.cancel()
     }
 
     @Test
@@ -244,5 +306,50 @@ class SettingsViewModelTest {
         )
         // 모르는 값이면 첫 항목의 이름.
         assertEquals(SettingsOptions.readerThemes.first().label, SettingsOptions.labelOf(SettingsOptions.readerThemes, 42))
+        // 두 번 두드림의 걸음 — 저장소가 받는 값과 같은 차례·같은 값이다. 어긋나면 고른 줄이 기본값으로 눌려 저장되지 않는다.
+        assertEquals(AppPreferences.TAP_SEEK_CHOICES, SettingsOptions.tapSeekChoices.map { it.code })
+    }
+
+    /** 두 번 두드려 건너뛰는 시간. 기본 10초로 보이고, 고르면 그 칸에 적는다. */
+    @Test
+    fun `두 번 두드림의 걸음을 보이고 적는다`() = runTest(dispatcher) {
+        val vm = vm()
+        val job = launch { vm.values.collect { } }
+        assertEquals(AppPreferences.DEFAULT_TAP_SEEK_SECONDS, vm.values.filterNotNull().first().tapSeekSeconds)
+        assertTrue(vm.setTapSeekSeconds(30).await())
+        assertEquals(30, settings.tapSeekSeconds.value)
+        assertEquals(30, vm.values.value?.tapSeekSeconds)
+        assertEquals(listOf("tapSeek"), settings.calls)
+        job.cancel()
+    }
+
+    @Test
+    fun `화면 켜 두기와 볼륨 키는 저마다의 칸에 적히고 범위를 누른다`() = runTest(dispatcher) {
+        val vm = vm()
+        val job = launch { vm.values.collect { } }
+        val first = vm.values.filterNotNull().first()
+        assertEquals(10, first.keepScreenMinutes)
+        assertEquals(false, first.comicVolumeKeys)
+
+        assertTrue(vm.setKeepScreenMinutes(30).await())
+        assertTrue(vm.setComicVolumeKeys(true).await())
+        assertEquals(30, vm.values.value?.keepScreenMinutes)
+        assertEquals(true, vm.values.value?.comicVolumeKeys)
+        assertEquals(listOf("keepScreen", "volumeKeys"), settings.calls)
+
+        vm.setKeepScreenMinutes(-1).await()
+        assertEquals(0, settings.readerKeepScreenMinutes.value)
+        vm.setKeepScreenMinutes(9_999).await()
+        assertEquals(io.github.donggi.iroiroviewer.data.AppPreferences.KEEP_SCREEN_MAX_MINUTES, settings.readerKeepScreenMinutes.value)
+        job.cancel()
+    }
+
+    @Test
+    fun `화면 켜 두기의 표는 0(끄기)부터 늘어 가고 기본값을 담는다`() {
+        val codes = SettingsOptions.keepScreenMinutes.map { it.code }
+        assertEquals(0, codes.first())
+        assertEquals(codes.sorted(), codes)
+        assertTrue(io.github.donggi.iroiroviewer.data.AppPreferences.KEEP_SCREEN_DEFAULT_MINUTES in codes)
+        assertTrue(codes.all { it in 0..io.github.donggi.iroiroviewer.data.AppPreferences.KEEP_SCREEN_MAX_MINUTES })
     }
 }

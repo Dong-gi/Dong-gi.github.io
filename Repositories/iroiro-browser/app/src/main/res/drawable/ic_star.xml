@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 손으로 그린 선 아이콘(24x24, 흰 선) — 북마크(별, 바깥 반지름 9·안 반지름 3.8 의 다섯 꼭짓점). 색은 쓰는 쪽이 칠한다(imageTintList). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M12,3.5L14.23,9.43L20.56,9.72L15.61,13.67L17.29,19.78L12,16.3L6.71,19.78L8.39,13.67L3.44,9.72L9.77,9.43Z"
+        android:strokeWidth="1.8"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineJoin="round" />
+</vector>

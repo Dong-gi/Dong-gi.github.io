@@ -11,6 +11,7 @@ import io.github.donggi.iroiroviewer.data.CrashLog
 import io.github.donggi.iroiroviewer.data.IroiroDatabase
 import io.github.donggi.iroiroviewer.data.ReaderAppearance
 import io.github.donggi.iroiroviewer.data.TextViewerDefaults
+import io.github.donggi.iroiroviewer.data.TextViewerKind
 import io.github.donggi.iroiroviewer.io.ShareHelper
 import io.github.donggi.iroiroviewer.model.SortSpec
 import kotlinx.coroutines.CancellationException
@@ -62,15 +63,40 @@ class SettingsViewModel(
         val text: TextViewerDefaults,
         val comicDirection: Int,
         val reader: ReaderAppearance,
+        /** 블루투스가 끊겨 멈춘 재생을 다시 연결되면 이어서 튼다(기본 켜짐). */
+        val resumeOnBluetooth: Boolean,
+        /** 재생 화면을 두 번 두드려 건너뛰는 시간(초) — `AppPreferences.TAP_SEEK_CHOICES` 의 하나. */
+        val tapSeekSeconds: Int = AppPreferences.DEFAULT_TAP_SEEK_SECONDS,
+        /** 읽는 화면에서 마지막 조작 뒤 화면을 켜 두는 시간(분). 0 이면 켜 두지 않는다. */
+        val keepScreenMinutes: Int = AppPreferences.KEEP_SCREEN_DEFAULT_MINUTES,
+        /** 만화를 볼륨 키로 넘긴다(기본 끔). */
+        val comicVolumeKeys: Boolean = false,
+        /** 텍스트 뷰어의 **글 파일** 기본값([text] 는 코드 파일의 것이다). */
+        val prose: TextViewerDefaults = TextViewerDefaults.defaultsFor(TextViewerKind.TEXT),
     )
 
     val values: StateFlow<Values?> = combine(
-        settings.showHidden,
-        settings.sortSpec,
-        settings.textViewer,
-        settings.comicDefaultDirection,
-        settings.readerAppearance,
-    ) { hidden, sort, text, comic, reader -> Values(hidden, sort.foldersFirst, text, comic, reader) }
+        combine(
+            settings.showHidden,
+            settings.sortSpec,
+            settings.textViewer,
+            settings.comicDefaultDirection,
+            settings.readerAppearance,
+        ) { hidden, sort, text, comic, reader -> Values(hidden, sort.foldersFirst, text, comic, reader, resumeOnBluetooth = true) },
+        settings.resumeOnBluetooth,
+        settings.tapSeekSeconds,
+        settings.readerKeepScreenMinutes,
+        settings.comicVolumeKeys,
+    ) { v, bluetooth, tapSeek, keepScreen, volumeKeys ->
+        v.copy(
+            resumeOnBluetooth = bluetooth,
+            tapSeekSeconds = tapSeek,
+            keepScreenMinutes = keepScreen,
+            comicVolumeKeys = volumeKeys,
+        )
+    }
+        // 형식 있는 combine 은 흐름 다섯까지라 여섯째(글 파일의 기본값)는 따로 잇는다.
+        .combine(settings.proseViewer) { v, prose -> v.copy(prose = prose) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     private val _crash = MutableStateFlow<CrashLog.Summary?>(null)
@@ -112,6 +138,19 @@ class SettingsViewModel(
         settings.updateTextViewer { it.copy(fontSp = v) }
     }
 
+    // 글 파일 — 위 넷은 코드 파일의 것이다. 뷰어가 파일 목록의 표로 가른다(`feature:text` 의 `viewerKindOf`).
+
+    fun setProseWrap(on: Boolean) = attempt { settings.updateProseViewer { it.copy(wrap = on) } }
+
+    fun setProseLineNumbers(on: Boolean) = attempt { settings.updateProseViewer { it.copy(lineNumbers = on) } }
+
+    fun setProseLineEnds(on: Boolean) = attempt { settings.updateProseViewer { it.copy(showLineEnds = on) } }
+
+    fun setProseFontSp(sp: Int) = attempt {
+        val v = sp.coerceIn(TextViewerDefaults.MIN_FONT_SP, TextViewerDefaults.MAX_FONT_SP)
+        settings.updateProseViewer { it.copy(fontSp = v) }
+    }
+
     // ---- 만화 ---------------------------------------------------------------------------------
 
     fun setComicDirection(code: Int) = attempt { settings.setComicDefaultDirection(code.coerceIn(0, 2)) }
@@ -132,6 +171,20 @@ class SettingsViewModel(
         val v = code.coerceIn(ReaderAppearance.THEME_SYSTEM, ReaderAppearance.THEME_SEPIA)
         settings.updateReaderAppearance { it.copy(theme = v) }
     }
+
+    // ---- 재생 ---------------------------------------------------------------------------------
+
+    fun setResumeOnBluetooth(on: Boolean) = attempt { settings.setResumeOnBluetooth(on) }
+
+    /** 고를 수 없는 값은 저장소가 기본값으로 누른다(`AppPreferences.setTapSeekSeconds`). */
+    fun setTapSeekSeconds(seconds: Int) = attempt { settings.setTapSeekSeconds(seconds) }
+    // ---- 읽는 동안 -------------------------------------------------------------------
+
+    fun setKeepScreenMinutes(minutes: Int) = attempt {
+        settings.setReaderKeepScreenMinutes(minutes.coerceIn(0, AppPreferences.KEEP_SCREEN_MAX_MINUTES))
+    }
+
+    fun setComicVolumeKeys(on: Boolean) = attempt { settings.setComicVolumeKeys(on) }
 
     // ---- 기록 ---------------------------------------------------------------------------------
 
@@ -199,11 +252,23 @@ interface SettingsSource {
     val textViewer: Flow<TextViewerDefaults>
     val comicDefaultDirection: Flow<Int>
     val readerAppearance: Flow<ReaderAppearance>
+    val resumeOnBluetooth: Flow<Boolean>
+    val tapSeekSeconds: Flow<Int>
+    val readerKeepScreenMinutes: Flow<Int>
+    val comicVolumeKeys: Flow<Boolean>
+
+    /** 텍스트 뷰어의 글 파일 기본값. [textViewer] 는 코드 파일의 것이다. */
+    val proseViewer: Flow<TextViewerDefaults>
     suspend fun setShowHidden(show: Boolean)
     suspend fun setFoldersFirst(first: Boolean)
     suspend fun updateTextViewer(transform: (TextViewerDefaults) -> TextViewerDefaults)
     suspend fun setComicDefaultDirection(code: Int)
     suspend fun updateReaderAppearance(transform: (ReaderAppearance) -> ReaderAppearance)
+    suspend fun setResumeOnBluetooth(on: Boolean)
+    suspend fun setTapSeekSeconds(seconds: Int)
+    suspend fun setReaderKeepScreenMinutes(minutes: Int)
+    suspend fun setComicVolumeKeys(on: Boolean)
+    suspend fun updateProseViewer(transform: (TextViewerDefaults) -> TextViewerDefaults)
 }
 
 /** 지울 수 있는 기록의 갈래. 화면의 세 줄과 하나씩 맞는다. */
@@ -235,6 +300,11 @@ internal class PreferencesSettingsSource(private val prefs: AppPreferences) : Se
     override val textViewer = prefs.textViewer
     override val comicDefaultDirection = prefs.comicDefaultDirection
     override val readerAppearance = prefs.readerAppearance
+    override val resumeOnBluetooth = prefs.resumeOnBluetooth
+    override val tapSeekSeconds = prefs.tapSeekSeconds
+    override val readerKeepScreenMinutes = prefs.readerKeepScreenMinutes
+    override val comicVolumeKeys = prefs.comicVolumeKeys
+    override val proseViewer = prefs.proseViewer
     override suspend fun setShowHidden(show: Boolean) = prefs.setShowHidden(show)
     override suspend fun setFoldersFirst(first: Boolean) = prefs.setFoldersFirst(first)
     override suspend fun updateTextViewer(transform: (TextViewerDefaults) -> TextViewerDefaults) =
@@ -242,6 +312,12 @@ internal class PreferencesSettingsSource(private val prefs: AppPreferences) : Se
     override suspend fun setComicDefaultDirection(code: Int) = prefs.setComicDefaultDirection(code)
     override suspend fun updateReaderAppearance(transform: (ReaderAppearance) -> ReaderAppearance) =
         prefs.updateReaderAppearance(transform)
+    override suspend fun setResumeOnBluetooth(on: Boolean) = prefs.setResumeOnBluetooth(on)
+    override suspend fun setTapSeekSeconds(seconds: Int) = prefs.setTapSeekSeconds(seconds)
+    override suspend fun setReaderKeepScreenMinutes(minutes: Int) = prefs.setReaderKeepScreenMinutes(minutes)
+    override suspend fun setComicVolumeKeys(on: Boolean) = prefs.setComicVolumeKeys(on)
+    override suspend fun updateProseViewer(transform: (TextViewerDefaults) -> TextViewerDefaults) =
+        prefs.updateProseViewer(transform)
 }
 
 internal class RoomHistorySource(private val db: IroiroDatabase) : HistorySource {

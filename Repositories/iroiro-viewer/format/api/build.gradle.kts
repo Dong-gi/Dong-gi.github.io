@@ -22,6 +22,5 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     // 안드로이드가 런타임에 주는 API 라 컴파일에만 쓴다. APK 에 들어가지 않는다.
     compileOnly(libs.xmlpull)
-    testImplementation(libs.kxml2)
-    testImplementation(kotlin("test"))
+    // 시험이 없다 — 시험을 둘 때 시험의 의존도 함께 적는다.
 }

@@ -10,10 +10,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -21,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import android.content.res.AssetManager
+import java.io.IOException
 
 /**
  * 오픈소스 고지.
@@ -35,7 +42,8 @@ import kotlinx.coroutines.withContext
  * ## 14단계가 채운 것
  *
  * 릴리스 APK 에 실리는 서드파티 **전부**를 적는다 — 무엇이 어느 라이선스인지, 어디서 확인했는지는 [NoticeCatalog] 에
- * 있다. 그리고 한컴 문서 명세의 사용 조건이 요구하는 문장(13단계가 넘긴 의무)을 맨 위에 둔다.
+ * 있다. 그리고 한컴 문서 명세의 사용 조건이 요구하는 문장(편집기에 실린 rhwp 가 그 명세를 참고했다)을 맨
+ * 위에 둔다.
  *
  * ## 전문을 어디서 가져왔는가
  *
@@ -46,6 +54,13 @@ import kotlinx.coroutines.withContext
  *
  * 라이선스 전문은 공개해도 되는 글이므로 이 저장소가 통째로 웹에 올라가는 것과
  * 부딪치지 않는다 — 오히려 그것이 라이선스가 요구하는 바다.
+ *
+ * ## 편집기 엔진
+ *
+ * 편집기(`feature:editor`)가 묶은 웹 편집기 둘(rhwp — MIT, ONLYOFFICE 편집기와 x2t — GNU AGPL 3.0)과 그 글꼴(OFL·Apache·GUST)은 Maven
+ * 좌표가 아니라 엔진 묶음(`vendor/editor` → APK 의 `assets/engines/`)으로 실린다. 묶음의 도구(tools/editor)가 각 엔진의 라이선스 글을
+ * `assets/engines/<엔진>/licenses/` 에 두므로 **그 글을 그대로** 펼쳐 보인다(누를 때 읽는다 — AGPL 전문만 34 KB 다). 묶음 없이 지은 빌드는
+ * 그 절이 없고, 맨 위에서 두 엔진과 그 절을 말하는 문장(`notice_specs`)도 없다. ONLYOFFICE 편집기 안의 정보(i) 칸도 같은 글을 보인다.
  *
  * **제목 막대는 `app` 의 Root 가 씌운다**(뒤로 가는 곳이 연 자리마다 달라서 — 첫 화면·설정·압축 목록).
  *
@@ -64,6 +79,12 @@ fun NoticeScreen(modifier: Modifier = Modifier) {
         }
     }
 
+    // 편집기 엔진의 라이선스 글 — 엔진 묶음이 든 빌드에만 있다(위 '편집기 엔진').
+    val assets = LocalContext.current.assets
+    val engineLicenses by produceState<List<String>>(initialValue = emptyList(), assets) {
+        value = withContext(Dispatchers.IO) { engineLicenseFiles(assets) }
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
@@ -74,9 +95,19 @@ fun NoticeScreen(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
-        item(key = "specs") {
+        // 한글·오피스 문서를 여는 엔진과 '아래 편집기 엔진 절' 을 말하는 문장 — 그 절이 있는 빌드(엔진 묶음이 든 것)에만.
+        if (engineLicenses.isNotEmpty()) {
+            item(key = "specs") {
+                Text(
+                    stringResource(R.string.notice_specs),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 8.dp),
+                )
+            }
+        }
+        item(key = "trademarks") {
             Text(
-                stringResource(R.string.notice_specs),
+                stringResource(R.string.notice_trademarks),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(top = 8.dp),
             )
@@ -114,5 +145,67 @@ fun NoticeScreen(modifier: Modifier = Modifier) {
                 HorizontalDivider(Modifier.padding(vertical = 16.dp))
             }
         }
+        if (engineLicenses.isNotEmpty()) {
+            item(key = "editor") {
+                Column(Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.notice_editor_title), style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        stringResource(R.string.notice_editor_subtitle),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                    )
+                    Text(stringResource(R.string.notice_editor_components), style = MaterialTheme.typography.bodySmall)
+                }
+            }
+            items(engineLicenses, key = { it }) { path -> EngineLicense(assets, path) }
+        }
     }
 }
+
+/** 엔진 묶음이 든 라이선스 글의 자산 자리(`engines/<엔진>/licenses/<파일>`). 묶음이 없으면 빈 것. */
+private fun engineLicenseFiles(assets: AssetManager): List<String> = ENGINES.flatMap { engine ->
+    val dir = "engines/$engine/licenses"
+    try {
+        assets.list(dir).orEmpty().sorted().map { "$dir/$it" }
+    } catch (e: IOException) {
+        emptyList()
+    }
+}
+
+/** 라이선스 글 하나 — 이름을 누르면 펼친다(그때 읽는다). 줄바꿈이 뜻을 가지므로 고정폭으로 원문 그대로. */
+@Composable
+private fun EngineLicense(assets: AssetManager, path: String) {
+    var open by rememberSaveable(path) { mutableStateOf(false) }
+    val text by produceState<String?>(initialValue = null, path, open) {
+        value = if (!open) {
+            null
+        } else {
+            withContext(Dispatchers.IO) {
+                try {
+                    assets.open(path).bufferedReader(Charsets.UTF_8).use { it.readText() }
+                } catch (e: IOException) {
+                    null
+                }
+            }
+        }
+    }
+    val engine = path.removePrefix("engines/").substringBefore('/')
+    Column(Modifier.fillMaxWidth()) {
+        TextButton(onClick = { open = !open }) {
+            Text(stringResource(R.string.notice_editor_file, engine, path.substringAfterLast('/')))
+        }
+        text?.let { body ->
+            Text(
+                text = body,
+                fontFamily = FontFamily.Monospace,
+                fontSize = 11.sp,
+                lineHeight = 15.sp,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            )
+        }
+    }
+}
+
+/** 라이선스 글을 싣는 엔진(묶음의 폴더 이름). */
+private val ENGINES = listOf("rhwp", "onlyoffice")

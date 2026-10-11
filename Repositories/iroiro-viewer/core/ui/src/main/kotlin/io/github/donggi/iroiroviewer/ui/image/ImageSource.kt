@@ -153,8 +153,7 @@ object ImageIo {
         val swapped = displayW == storedH && displayH == storedW && storedW != storedH
         val applied: Boolean? = when {
             // **정방향은 잴 것이 없다** — 어느 디코더도 돌리지 않는다. 정사각 검사보다 먼저 둔다:
-            // 뒤에 두면 정사각 정방향 사진이 '잴 수 없다' 가 되어 선명화 조각이 한 번도 오지 않는다
-            // (적대적 검토가 잡았다).
+            // 뒤에 두면 정사각 정방향 사진이 '잴 수 없다' 가 되어 선명화 조각이 한 번도 오지 않는다.
             orientation == ExifInterface.ORIENTATION_NORMAL ||
                 orientation == ExifInterface.ORIENTATION_UNDEFINED -> true
             // 치수가 안 바뀌는 방향(3·거울상)이나 정사각이면 잴 수 없다.
@@ -383,6 +382,16 @@ object ImageIo {
                 raw.recycle()
             }
         }
+
+    /**
+     * 그림 전체를 **바닥층과 같은 디코더**로, 표본 [sample] 로 뜬다 — 화면이 본 그대로(방향 포함)다. 잘라 저장이 영역 디코딩을 쓸 수
+     * 없을 때(그 디코더가 없는 형식, 또는 방향을 가를 수 없는 사진) 쓴다. 못 뜨면 null.
+     */
+    suspend fun decodeSampled(path: String, sample: Int): Bitmap? = withContext(IroDispatchers.image) {
+        val file = File(path)
+        if (!file.isFile) return@withContext null
+        decodeAtSample(file, sample, currentCoroutineContext()[Job])
+    }
 
     /**
      * 바닥층과 **같은 디코더**로, 표본만 [sample] 로 못 박아 뜬다. [decode] 는 목표 크기에서 표본을

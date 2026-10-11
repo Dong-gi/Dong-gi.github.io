@@ -196,6 +196,37 @@ class ArchiveTreeTest {
         assertEquals(tree.root, tree.folderAt(""))
     }
 
+    /**
+     * 이름 하나가 3만 겹의 폴더(`a/a/…`, 60 KB — 이름 상한 64 KiB 안)여도 트리가 선다. 예전에는 칸마다 접두 경로를 새로 지어 그 이름
+     * 하나에 길이의 제곱을 잡았고(기가바이트), 칸을 세우는 것과 아래를 모으는 것이 깊이만큼 재귀했다. 경로는 물을 때
+     * 짓고, 둘은 더미로 돈다 — 스택이 작은 스레드에서 돌려 재귀가 남아 있으면 드러나게 한다.
+     */
+    @Test
+    fun `아주 깊은 이름도 재귀 없이 선다`() {
+        val depth = 30_000
+        val name = "a/".repeat(depth) + "f.txt"
+        var error: Throwable? = null
+        val t = Thread(null, {
+            try {
+                val tree = ArchiveTree.build(listOf(entry(0, name), entry(1, "b.txt")))
+                val indices = ArrayList<Int>()
+                tree.root.collectIndices(indices)
+                assertEquals(listOf(0, 1), indices)
+                val third = tree.folderAt("a/a/a")
+                assertNotNull(third)
+                assertEquals("a/a/a", third.path)
+                assertEquals("a/a/a/a", third.children.single().path)
+                assertEquals("b.txt", tree.root.children.single { !it.isDirectory }.path)
+                assertEquals("", tree.root.path)
+            } catch (t: Throwable) {
+                error = t
+            }
+        }, "small-stack", 256L * 1024)
+        t.start()
+        t.join()
+        error?.let { throw it }
+    }
+
     /** 진짜 ZIP 으로 한 번 훑는다 — 리더와 트리가 같은 번호를 쓰는지 확인한다. */
     @Test
     fun `진짜 ZIP 을 읽어 트리를 세운다`() {

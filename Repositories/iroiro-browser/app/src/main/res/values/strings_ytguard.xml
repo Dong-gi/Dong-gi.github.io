@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  유튜브 광고 가리기(browser/YtGuard) — 광고를 가린 자리 가운데에 보이는 표시. 쪽의 CSS 글자열에 들어간다(따옴표·역슬래시 같은 글자는
+  스크립트가 뺀다). 짧게 둔다(사용자: '설명이 너무 장황합니다').
+-->
+<resources>
+    <string name="ytguard_label">광고 가리는 중</string>
+</resources>

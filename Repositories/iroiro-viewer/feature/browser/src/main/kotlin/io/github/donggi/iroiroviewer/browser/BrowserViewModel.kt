@@ -14,6 +14,7 @@ import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.FileOpManager
 import io.github.donggi.iroiroviewer.io.ForegroundRelist
 import io.github.donggi.iroiroviewer.io.GalleryScanner
+import io.github.donggi.iroiroviewer.io.ContentSniff
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.io.LastListed
 import io.github.donggi.iroiroviewer.io.MediaIndex
@@ -22,13 +23,18 @@ import io.github.donggi.iroiroviewer.io.TrashStore
 import io.github.donggi.iroiroviewer.io.VolumeRegistry
 import io.github.donggi.iroiroviewer.io.settle
 import io.github.donggi.iroiroviewer.model.FileEntry
+import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.ui.ThumbnailStore
 import io.github.donggi.iroiroviewer.model.SortKey
 import io.github.donggi.iroiroviewer.model.SortSpec
 import io.github.donggi.iroiroviewer.model.ViewMode
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -56,6 +62,7 @@ import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * 파일 브라우저의 상태.
@@ -104,6 +111,8 @@ class BrowserViewModel(
     fun closeSubScreen() = setSubScreen(SUB_NONE)
 
     private fun setSubScreen(value: String) {
+        // 휴지통을 떠나면 거기서 고른 것을 잊는다 — 다시 들어왔을 때 보이지 않던 선택이 남아 있으면 무엇을 되돌리는지 모른다.
+        if (value != SUB_TRASH) clearTrashSelection()
         _subScreen.value = value
         saved[KEY_SUB_SCREEN] = value
     }
@@ -308,7 +317,8 @@ class BrowserViewModel(
         _selection.value = if (path in s) s - path else s + path
     }
 
-    fun selectAll(paths: List<String>) { _selection.value = paths.toSet() }
+    /** '전체 선택' — 이미 모두 골랐으면 모두 푼다(다시 눌러도 풀리지 않았다). 판정은 [SelectAll]. */
+    fun toggleSelectAll(paths: List<String>) { _selection.value = SelectAll.toggled(_selection.value, paths) }
 
     fun clearSelection() { _selection.value = emptySet() }
 
@@ -437,7 +447,7 @@ class BrowserViewModel(
      * 사본은 앱 캐시의 `share/` 에 둔다 — 공유가 끝나면 시스템이 치우게 두고, 공유 대상
      * 앱에는 `FileProvider` 로 **이 인텐트에만, 읽기만** 준다.
      */
-    fun shareSanitized(context: android.content.Context, path: String) {
+    fun shareSanitized(context: android.content.Context, path: String, onFailed: () -> Unit) {
         viewModelScope.launch {
             val src = java.io.File(path)
             val copy = io.github.donggi.iroiroviewer.ui.image.ExifReader.sanitizedCopy(
@@ -445,7 +455,10 @@ class BrowserViewModel(
                 io.github.donggi.iroiroviewer.io.ShareHelper.shareDir(getApplication()),
             )
             if (copy == null) {
-                _lastError.value = FileOpEngine.Reason.INVALID_NAME
+                // **누른 그 자리(뷰어)에서 말한다**. 예전에는 이름 바꾸기의 오류 칸에 '쓸 수 없는 이름입니다' 를
+                // 넣어, 뷰어에서는 아무 반응이 없다가 파일 목록으로 돌아간 뒤에야 엉뚱한 문장이 떴다 — 다른 앱에서 받은 사진이면
+                // 파일 목록이 없어 아예 뜨지 않았다. 문장은 그것을 아는 뷰어가 고른다.
+                onFailed()
                 return@launch
             }
             io.github.donggi.iroiroviewer.io.ShareHelper.share(
@@ -463,6 +476,32 @@ class BrowserViewModel(
         // 그래서 옛 썸네일이 살아남는다 — 반드시 여기서 지워야 한다.
         rememberThumbKeys(id, listOf(path))
         FileOpManager.enqueue(getApplication(), FileOpManager.Request.RotateExif(id, path, degrees))
+    }
+
+    /**
+     * 사진의 한 자리를 **새 파일로** 저장한다(뷰어의 '잘라서 저장'). 원본은 그대로다 — 썸네일을 지울 것도 없다. 결과(실제 이름)는
+     * 여느 작업처럼 앱의 결과 소비자가 말한다.
+     *
+     * @param rect 화면 방향의 원본 화소 `[왼, 위, 오른, 아래]`. [width]·[height] 는 고를 때 본 원본의 화면 방향 치수다.
+     */
+    fun crop(path: String, rect: IntArray, width: Int, height: Int) {
+        FileOpManager.enqueue(
+            getApplication(),
+            FileOpManager.Request.SaveCrop(newOpId(), path, rect[0], rect[1], rect[2], rect[3], width, height),
+        )
+    }
+
+    /**
+     * 그림 위에 그린 것을 **새 파일로** 저장한다(뷰어의 '그리기·메모'). 잘라 저장과 같은 요청에 그릴 것을 싣는다 — 그림
+     * 전체를 원본 해상도로 뜨고 그 위에 그려 `이름_markup` 으로 쓴다. 원본은 그대로다.
+     *
+     * @param width·[height] 그릴 때 본 원본의 화면 방향 치수 — 그사이 파일이 바뀌었으면 큐가 거절한다.
+     */
+    fun markup(path: String, overlay: io.github.donggi.iroiroviewer.io.CropSupport.Overlay, width: Int, height: Int) {
+        FileOpManager.enqueue(
+            getApplication(),
+            FileOpManager.Request.SaveCrop(newOpId(), path, 0, 0, width, height, width, height, overlay),
+        )
     }
 
     /**
@@ -493,25 +532,118 @@ class BrowserViewModel(
         )
     }
 
-    fun rename(path: String, newName: String) {
-        viewModelScope.launch {
-            val outcome = withContext(Dispatchers.IO) {
-                FileOpEngine(MediaIndex(getApplication())).rename(path, newName)
-            }
-            _lastError.value = (outcome as? FileOpEngine.Outcome.Failed)?.reason
+    /**
+     * 이름을 바꾼다. **실패한 까닭을 돌려준다** — 이름이 겹쳤으면([FileOpEngine.Reason.EXISTS]) 이름 칸이 닫히지 않고 칸 안에서
+     * 말한다(예전에는 칸이 닫히고 '쓸 수 없는 이름입니다' 가 떠, 글자가 틀린 줄 알고 처음부터 다시 쳤다). 그 밖의
+     * 실패는 여느 때처럼 스낵바로 간다([lastError]). 일은 이 ViewModel 의 스코프에서 끝까지 간다 — 칸이 기다리다 사라져도 바뀐다.
+     */
+    fun rename(path: String, newName: String): Deferred<FileOpEngine.Reason?> = viewModelScope.async {
+        val outcome = withContext(Dispatchers.IO) {
+            FileOpEngine(MediaIndex(getApplication())).rename(path, newName)
+        }
+        val reason = (outcome as? FileOpEngine.Outcome.Failed)?.reason
+        // 겹친 이름은 칸이 말한다. 선택은 남긴다 — 칸이 열린 채 다른 이름을 칠 수 있게.
+        if (!NameAttempt.keepsDialog(reason)) {
+            _lastError.value = reason
             clearSelection()
-            refresh()
+        }
+        refresh()
+        reason
+    }
+
+    /**
+     * 고른 것들을 지금 폴더에 ZIP 하나로 묶는다. [name] 은 제안이다 — 실제 이름은 묶기가 끝날 때 정해진다
+     * (`ZipMaker` — 그 사이 같은 이름이 생겼으면 `(2)` 가 붙는다). 선택은 푼다 — 붙여넣기·삭제와 같다.
+     */
+    fun compress(paths: List<String>, name: String) {
+        val dest = currentPath ?: return
+        if (paths.isEmpty()) return
+        clearSelection()
+        FileOpManager.enqueue(getApplication(), FileOpManager.Request.Compress(newOpId(), paths, dest, name))
+    }
+
+    /** 새 폴더. 실패한 까닭을 돌려준다 — 이름이 겹쳤으면 칸이 닫히지 않는다([rename] 과 같다). */
+    fun createFolder(name: String): Deferred<FileOpEngine.Reason?> = viewModelScope.async {
+        val parent = currentPath ?: return@async null
+        val outcome = withContext(Dispatchers.IO) {
+            FileOpEngine(MediaIndex(getApplication())).createFolder(parent, name)
+        }
+        val reason = (outcome as? FileOpEngine.Outcome.Failed)?.reason
+        if (!NameAttempt.keepsDialog(reason)) _lastError.value = reason
+        refresh()
+        reason
+    }
+
+    /** 새 글 파일을 만든 결과 — 이름 칸이 기다린다([createTextFile]). */
+    sealed interface NewText {
+        /** 만들었다 — 곧바로 편집 화면을 연다. */
+        data class Created(val path: String) : NewText
+
+        /** 만들지 못했다. [reason] 이 [FileOpEngine.Reason.EXISTS] 면 칸을 닫지 않는다. null 은 취소·폴더 없음. */
+        data class Failed(val reason: FileOpEngine.Reason?) : NewText
+    }
+
+    /**
+     * 지금 폴더에 **빈 글 파일**을 만든다(+ → '새 글 파일'). 새 폴더와 달리 **파일 작업 큐를 지난다**(사용자 파일을 쓰는
+     * 일의 공통 규칙 — 복사가 같은 폴더를 만지는 동안 끼어들지 않게). 그래서 앞의 큰 작업이 돌면 그동안 칸이 기다린다(확인이 흐리다).
+     *
+     * 결과는 이 뷰모델이 직접 받는다(`Request.sink`) — 이름 칸이 '같은 이름이 이미 있습니다'·편집 화면 열기를 정해야 해서다. 뷰모델이
+     * 사라졌으면 받지 않는다 — 결과는 앱의 결과 줄로 가서 '새 글 파일을 만들었습니다' 로 말해진다(어느 길로든 한 번이다).
+     */
+    fun createTextFile(name: String): Deferred<NewText> = viewModelScope.async {
+        val parent = currentPath ?: return@async NewText.Failed(null)
+        val done = CompletableDeferred<FileOpManager.Finished>()
+        val scope = viewModelScope
+        val sink = FileOpManager.ResultSink { f -> scope.isActive && done.complete(f) }
+        FileOpManager.enqueue(getApplication(), FileOpManager.Request.CreateText(newOpId(), parent, name, sink))
+        val finished = done.await()
+        refresh()
+        when (val o = finished.outcome) {
+            is FileOpEngine.Outcome.Done ->
+                (finished.extra as? FileOpManager.Extra.Saved)?.let { NewText.Created(it.path) }
+                    ?: NewText.Failed(FileOpEngine.Reason.IO)
+            is FileOpEngine.Outcome.Failed -> {
+                // 겹친 이름은 칸이 말한다. 그 밖은 여느 때처럼 스낵바로([lastError]).
+                if (!NameAttempt.keepsDialog(o.reason)) _lastError.value = o.reason
+                NewText.Failed(o.reason)
+            }
+            is FileOpEngine.Outcome.Cancelled -> NewText.Failed(null)
         }
     }
 
-    fun createFolder(name: String) {
-        val parent = currentPath ?: return
-        viewModelScope.launch {
-            val outcome = withContext(Dispatchers.IO) {
-                FileOpEngine(MediaIndex(getApplication())).createFolder(parent, name)
-            }
-            _lastError.value = (outcome as? FileOpEngine.Outcome.Failed)?.reason
-            refresh()
+    /** 새 오피스 문서를 만든 결과 — 이름 칸이 기다린다([createDocument]). */
+    sealed interface NewDoc {
+        /** 만들었다 — 곧바로 편집 화면을 연다. */
+        data class Created(val path: String) : NewDoc
+
+        /** 겹쳤다 — 칸을 닫지 않고 칸 안에서 말한다. */
+        data object Exists : NewDoc
+
+        /** 그 밖의 실패·취소 — 칸을 닫고 그 결과의 문장을 알린다(`FileOpText.docMessage`). [finished] 가 null 이면 폴더가 없었다. */
+        data class Failed(val finished: FileOpManager.Finished?) : NewDoc
+    }
+
+    /**
+     * 지금 폴더에 **빈 오피스 문서**를 만든다(+ → '새 문서(Word)' 넷). 새 글 파일([createTextFile])과 같은 길이다 —
+     * 파일 작업 큐를 지나고(`Request.CreateDocument` — 앱에 든 서식을 옮겨 적고 다시 읽어 본 뒤 **그 이름 그대로** 놓는다), 결과는 이
+     * 뷰모델이 곧바로 받는다. 뷰모델이 사라졌으면 받지 않는다 — 결과는 앱의 결과 줄로 간다(어느 길로든 한 번이다).
+     *
+     * @param name 확장자까지 붙인 이름(이름 칸이 다시 붙였다 — [NewDocName.withExtension]).
+     * @param kind 종류 글자(`docx`·`xlsx`·`pptx`·`hwpx`).
+     */
+    fun createDocument(name: String, kind: String): Deferred<NewDoc> = viewModelScope.async {
+        val parent = currentPath ?: return@async NewDoc.Failed(null)
+        val done = CompletableDeferred<FileOpManager.Finished>()
+        val scope = viewModelScope
+        val sink = FileOpManager.ResultSink { f -> scope.isActive && done.complete(f) }
+        FileOpManager.enqueue(getApplication(), FileOpManager.Request.CreateDocument(newOpId(), parent, name, kind, sink))
+        val finished = done.await()
+        refresh()
+        when (val o = finished.outcome) {
+            is FileOpEngine.Outcome.Done ->
+                (finished.extra as? FileOpManager.Extra.Saved)?.let { NewDoc.Created(it.path) } ?: NewDoc.Failed(finished)
+            is FileOpEngine.Outcome.Failed -> if (NameAttempt.keepsDialog(o.reason)) NewDoc.Exists else NewDoc.Failed(finished)
+            is FileOpEngine.Outcome.Cancelled -> NewDoc.Failed(finished)
         }
     }
 
@@ -527,9 +659,14 @@ class BrowserViewModel(
     val trashEntries: StateFlow<List<io.github.donggi.iroiroviewer.data.TrashEntryEntity>> =
         trashStore.observe().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    fun restoreFromTrash(uuid: String) {
-        dropFromRestorePick(listOf(uuid))
-        FileOpManager.enqueue(getApplication(), FileOpManager.Request.Restore(newOpId(), uuid))
+    /**
+     * 휴지통에서 원래 자리로 되돌린다. **여럿을 요청 하나로** 넣는다 — 결과도 한 줄이다. 하나씩 넣으면 40장을 되돌릴 때
+     * '1개 완료' 스낵바가 마흔 번 뜬다(스낵바의 '되돌리기' 가 바로 그 모양이었다).
+     */
+    fun restoreFromTrash(uuids: List<String>) {
+        if (uuids.isEmpty()) return
+        dropFromRestorePick(uuids)
+        FileOpManager.enqueue(getApplication(), FileOpManager.Request.Restore(newOpId(), ArrayList(uuids)))
     }
 
     fun purgeFromTrash(uuids: List<String>) {
@@ -554,9 +691,7 @@ class BrowserViewModel(
      * 그런 질의가 DAO 에 없고, 무엇보다 이 프로젝트는 "신원은 이름이 아니다" 를 아카이브
      * 엔트리에서 한 번 배워 회귀 시험까지 붙여 막아 두었다.
      */
-    fun undoTrash(uuids: List<String>) {
-        for (uuid in uuids) restoreFromTrash(uuid)
-    }
+    fun undoTrash(uuids: List<String>) = restoreFromTrash(uuids)
 
     /**
      * 기간이 지난 항목을 지우고 기록과 파일을 맞춘다.
@@ -571,6 +706,34 @@ class BrowserViewModel(
         // 다시 걸면 주기의 시계가 처음부터 가서, 앱을 매일 켜는 사람에게는 영영 돌지 않는다(`TrashPurgeJob.Spec`).
         // 이 함수가 프로세스당 한 번 불리는 자리(`Root`)라 조립을 바꿀 것이 없다.
         viewModelScope.launch(Dispatchers.IO) { TrashPurgeJob.ensureScheduled(getApplication()) }
+    }
+
+    // ---- 휴지통의 고르기 ----------------------------------------------------
+
+    /**
+     * 휴지통에서 고른 항목(uuid) — 폴더 목록과 같은 고르기(사진 40장을 지운 뒤 되돌리기를 놓치면 줄마다 '되돌리기' 를
+     * 40번 눌러야 했다). 길게 누르면 고르기가 시작되고, 고르는 동안은 누를 때마다 넣고 뺀다.
+     *
+     * [SavedStateHandle] 에 넣지 않는다 — 폴더 목록의 선택과 같은 판단이다(1만 개면 번들이 넘친다. 잃어도 휴지통에 그대로 있다).
+     * **보이는 선택은 지금 휴지통에 있는 것만**이다([trashSelection]) — 그사이 되돌렸거나 지운 항목이 남아 '3개 선택' 이 거짓말을 하지 않게.
+     */
+    private val _trashSelection = MutableStateFlow<Set<String>>(emptySet())
+    val trashSelection: StateFlow<Set<String>> =
+        combine(_trashSelection, trashEntries) { picked, entries ->
+            if (picked.isEmpty()) picked else TrashPick.present(picked, entries.map { it.uuid })
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptySet())
+
+    fun toggleTrashSelection(uuid: String) {
+        _trashSelection.update { if (uuid in it) it - uuid else it + uuid }
+    }
+
+    /** '전체 선택' — 이미 모두 골랐으면 모두 푼다([SelectAll.toggled], 폴더 목록과 같은 토글). */
+    fun toggleSelectAllTrash(uuids: List<String>) {
+        _trashSelection.value = SelectAll.toggled(trashSelection.value, uuids)
+    }
+
+    fun clearTrashSelection() {
+        _trashSelection.value = emptySet()
     }
 
     /** 휴지통의 당겨서 새로고침 표시. */
@@ -619,8 +782,11 @@ class BrowserViewModel(
      * 항목의 볼륨 루트([RestoreStart.folderFor]). 휴지통은 첫 화면에서 들어오는데 첫 화면에는 붙여넣기 바가 없어서,
      * 그대로 휴지통만 닫으면 바가 보이지 않는다.
      */
-    fun startRestoreElsewhere(entry: TrashEntryEntity) {
-        _restorePick.value = RestorePick(listOf(entry.uuid), entry.originalName)
+    fun startRestoreElsewhere(entries: List<TrashEntryEntity>) {
+        val entry = entries.firstOrNull() ?: return
+        // 여럿을 골랐으면 함께 옮긴다. 고르기 시작할 폴더는 첫 항목의 것이다 — 바가 개수로 말하고, 사용자는 어차피 폴더를 고른다.
+        _restorePick.value = RestorePick(entries.map { it.uuid }, entry.originalName)
+        clearTrashSelection()
         viewModelScope.launch {
             val volumes = volumesOrLoad()
             val start = withContext(Dispatchers.IO) {
@@ -937,13 +1103,7 @@ class BrowserViewModel(
      */
     private fun newOpId(): String = java.util.UUID.randomUUID().toString()
 
-    /**
-     * 그 작업이 끝나면 지울 썸네일 키.
-     *
-     * **작업을 시키기 전에 뽑아 두어야 한다.** 키가 `sha256(경로+크기+수정시각)` 이라
-     * 파일이 사라진 뒤에는 크기·수정시각을 읽을 수 없어 키를 만들 수 없다.
-     */
-    private val pendingThumbKeys = HashMap<String, List<Pair<String, String>>>()
+    // 그 작업이 끝나면 지울 썸네일 키는 프로세스에 하나다 — 아래 companion 의 `pendingThumbKeys`.
 
     private fun rememberThumbKeys(opId: String, paths: List<String>) {
         val keys = paths.mapNotNull { p ->
@@ -1058,6 +1218,40 @@ class BrowserViewModel(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
     /**
+     * 지금 폴더의 갈리는 이름(`.ts`·`.mts` — MPEG-TS·AVCHD 와 TypeScript 가 나눠 쓴다)이 글이 아닌가(경로 → 영상 쪽인가). 목록이 선 뒤
+     * **입출력 디스패처에서** 앞머리를 읽어 정한다([AmbiguousStreams]). 갈리는 이름이 없는 폴더는 아무것도 읽지 않는다 —
+     * '목록을 그릴 때 파일을 열지 않는다' 는 목록이 서는 길의 규칙이고, 이것은 그 뒤에 따로 돈다. 누름·큐·▶ 단추가 쓴다.
+     */
+    val streams: StateFlow<Map<String, Boolean>> =
+        _held
+            .map { h -> (h.shown as? DirectoryLister.Listing.Ready)?.entries }
+            .distinctUntilChanged()
+            .mapLatest { entries -> if (entries == null) emptyMap() else sniffStreams(entries) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
+
+    /**
+     * 앞서 가른 답(경로 → 크기·시각·답). 폴더 감시가 목록을 다시 세울 때마다 다시 읽지 않는다([AmbiguousStreams.sniff]).
+     * `mapLatest` 가 앞의 판정을 끝내고(취소하고 기다리고) 다음을 시작하므로 한 번에 하나만 만지지만, 스레드가 바뀌므로 동시 맵이다.
+     */
+    private val sniffed = ConcurrentHashMap<String, AmbiguousStreams.Sniffed>()
+
+    /** 앞머리를 읽는다. 배지와 같은 까닭으로 **실패해도 목록을 죽이지 않는다**([lookupBadges]). 취소는 되던진다. */
+    private suspend fun sniffStreams(entries: List<FileEntry>): Map<String, Boolean> {
+        if (entries.none { !it.isDirectory && ContentSniff.isAmbiguousStream(it.name) }) return emptyMap()
+        return try {
+            withContext(IroDispatchers.io) {
+                val context = coroutineContext
+                AmbiguousStreams.sniff(entries, checkpoint = { context.ensureActive() }, cache = sniffed)
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Iro.d { "영상인지 가르지 못했다: ${e::class.java.simpleName}" }
+            emptyMap()
+        }
+    }
+
+    /**
      * 배지를 찾는다. **실패해도 목록을 죽이지 않는다** — 이 흐름은 `stateIn` 의 공유 코루틴이라 예외가 새면
      * 앱이 내려간다(3·4단계가 `DirectoryIteratorException` 으로 밟은 형태). 취소는 되던진다.
      */
@@ -1088,6 +1282,18 @@ class BrowserViewModel(
     fun scrollOf(path: String): Pair<Int, Int> = scrollPositions[path] ?: (0 to 0)
 
     companion object {
+        /**
+         * 그 작업이 끝나면 지울 썸네일 키.
+         *
+         * **작업을 시키기 전에 뽑아 두어야 한다.** 키가 `sha256(경로+크기+수정시각)` 이라
+         * 파일이 사라진 뒤에는 크기·수정시각을 읽을 수 없어 키를 만들 수 없다.
+         *
+         * **프로세스에 하나다.** 결과는 앞에 있는 화면의 ViewModel 이 받는데(`Root` 는 RESUMED 일 때만 모은다), 작업을 시킨 것은 다른
+         * 액티비티의 ViewModel 일 수 있다 — 다른 앱에서 연 화면(`OpenActivity`)에서 돌린 사진의 결과를 파일 목록이 받는 식이다. 화면마다
+         * 들면 받은 쪽이 키를 못 찾아 옛 썸네일이 남는다.
+         */
+        private val pendingThumbKeys = java.util.concurrent.ConcurrentHashMap<String, List<Pair<String, String>>>()
+
         const val SUB_NONE = ""
         const val SUB_GALLERY = "gallery"
         const val SUB_TRASH = "trash"

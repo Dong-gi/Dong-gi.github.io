@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -23,12 +25,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -41,6 +45,7 @@ import io.github.donggi.iroiroviewer.format.epub.EpubBook
 import io.github.donggi.iroiroviewer.format.epub.ReaderStyle
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.webhost.LockedWebView
+import io.github.donggi.iroiroviewer.webhost.ReadingTurn
 import io.github.donggi.iroiroviewer.webhost.ResourceProvider
 import io.github.donggi.iroiroviewer.webhost.WebHost
 import io.github.donggi.iroiroviewer.webhost.WebResource
@@ -62,6 +67,12 @@ import java.util.concurrent.atomic.AtomicReference
  *
  * 글자 크기는 `textZoom`, 여백·바탕은 장에 얹는 CSS 다([ReaderLooks.forEpub]). **고정 레이아웃 쪽에는 셋 다 걸지 않고**
  * 쪽을 화면에 통째로 맞춘다 — 그러려면 화면의 크기(CSS 화소)를 알아야 하므로, 크기를 잰 뒤에 WebView 를 세운다.
+ *
+ * ## 손가락으로 장을 넘긴다
+ *
+ * 흐름 장은 **장의 끝에서 한 번 더 당겨** 다음 장으로, 처음에서 거꾸로 당겨 앞 장의 끝으로 간다. 고정 레이아웃 쪽은 **좌우로 밀거나
+ * 가장자리를 두드려** 넘긴다(오른쪽에서 왼쪽으로 넘기는 책이면 좌우를 뒤집는다). 판단은 `ReadingTurn`, 손가락을 재는 것은 잠긴
+ * WebView 다. 당기는 동안 '놓으면 다음 장' 을 띄워 손을 떼면 넘어간다는 것을 보인다([PullHint]).
  *
  * ## 자원을 통째로 읽어서 넘긴다
  *
@@ -92,6 +103,8 @@ fun EpubReader(
     onFraction: (chapter: Int, fraction: Float) -> Unit,
     /** 장 안에서 본 몫(화면 끝 가장자리까지 — `LockedWebView.onSeen`). 진행이 쓴다. */
     onSeen: (chapter: Int, seen: Float) -> Unit,
+    /** 손가락으로 장 [target] 으로 넘겼다. [fromEnd] 면 그 장의 끝에서 연다(처음에서 거꾸로 당겼다). 경계는 여기서 거른다. */
+    onTurn: (target: Int, fromEnd: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val book = doc.book
@@ -116,6 +129,10 @@ fun EpubReader(
     )
     lookRef.set(look.style)
     val latestChapter by rememberUpdatedState(chapter)
+    // 넘기는 몸짓 — 고정 레이아웃 쪽은 밀기·두드림, 흐름 장은 끝에서 당기기.
+    val turn = if (entry?.fixedLayout == true) ReadingTurn.Mode.SWIPE else ReadingTurn.Mode.PULL
+    // 당김의 진행(−1~1). 장이 바뀌면 걷힌다.
+    var pull by remember(book, chapter) { mutableFloatStateOf(0f) }
 
     val path = entry?.path
     Box(
@@ -159,6 +176,13 @@ fun EpubReader(
                 contentKey = look.contentKey,
                 onFraction = { onFraction(latestChapter, it) },
                 onSeen = { onSeen(latestChapter, it) },
+                turn = turn,
+                turnRightToLeft = book.rightToLeft,
+                onTurn = { forward ->
+                    val target = if (forward) latestChapter + 1 else latestChapter - 1
+                    if (target in book.spine.indices) onTurn(target, !forward && turn == ReadingTurn.Mode.PULL)
+                },
+                onPull = { pull = it },
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -167,7 +191,42 @@ fun EpubReader(
                 CircularProgressIndicator()
             }
         }
+        // 넘어갈 장이 있을 때만 보인다 — 끝 장에서 더 당겨도 '다음 장' 이라고 하지 않는다.
+        val canGo = (pull > 0f && chapter + 1 < book.spine.size) || (pull < 0f && chapter > 0)
+        if (canGo) {
+            PullHint(
+                progress = pull,
+                text = stringResource(
+                    when {
+                        pull >= 1f -> R.string.doc_pull_next_chapter_ready
+                        pull > 0f -> R.string.doc_pull_next_chapter
+                        pull <= -1f -> R.string.doc_pull_previous_chapter_ready
+                        else -> R.string.doc_pull_previous_chapter
+                    },
+                ),
+            )
+        }
     }
+}
+
+/**
+ * 당기는 동안 뜨는 알림 — '더 당기면 다음 장' → '놓으면 다음 장'. 진행([progress])만큼 짙어지고, 다음이면 아래, 앞이면 위에 선다
+ * (손가락이 당기는 쪽의 끝). 포인터를 받지 않는다 — WebView 의 스크롤을 막지 않게.
+ */
+@Composable
+internal fun BoxScope.PullHint(progress: Float, text: String) {
+    if (progress == 0f) return
+    Text(
+        text = text,
+        color = Color.White,
+        style = MaterialTheme.typography.labelLarge,
+        modifier = Modifier
+            .align(if (progress > 0f) Alignment.BottomCenter else Alignment.TopCenter)
+            .padding(24.dp)
+            .alpha((0.35f + 0.65f * kotlin.math.abs(progress)).coerceAtMost(1f))
+            .background(Color.Black.copy(alpha = 0.75f), RoundedCornerShape(50))
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+    )
 }
 
 /**
@@ -175,6 +234,8 @@ fun EpubReader(
  *
  * 슬라이더를 두지 않는 것은 장 수가 대개 열 남짓이라 끌 자리가 없기 때문이다.
  * 대신 목차가 그 일을 한다 — 장에는 이름이 있어 번호보다 낫다.
+ *
+ * [fixedPages] 면(모든 장이 고정 레이아웃 — 그림책·만화) 장 하나가 쪽 하나라 **쪽**으로 센다('37 / 200 쪽').
  */
 @Composable
 fun EpubBottomBar(
@@ -183,6 +244,7 @@ fun EpubBottomBar(
     onChapter: (Int) -> Unit,
     onToc: () -> Unit,
     modifier: Modifier = Modifier,
+    fixedPages: Boolean = false,
 ) {
     Row(
         modifier
@@ -198,13 +260,13 @@ fun EpubBottomBar(
         IconButton(enabled = chapter > 0, onClick = { onChapter(chapter - 1) }) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
-                stringResource(R.string.doc_previous_chapter),
+                stringResource(if (fixedPages) R.string.doc_previous_page else R.string.doc_previous_chapter),
                 tint = if (chapter > 0) Color.White else Color.White.copy(alpha = 0.3f),
             )
         }
         TextButton(onClick = onToc) {
             Text(
-                text = stringResource(R.string.doc_chapter_of, chapter + 1, count),
+                text = stringResource(if (fixedPages) R.string.doc_fixed_page_of else R.string.doc_chapter_of, chapter + 1, count),
                 color = Color.White,
                 style = MaterialTheme.typography.labelMedium,
             )
@@ -212,7 +274,7 @@ fun EpubBottomBar(
         IconButton(enabled = chapter < count - 1, onClick = { onChapter(chapter + 1) }) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowForward,
-                stringResource(R.string.doc_next_chapter),
+                stringResource(if (fixedPages) R.string.doc_next_page else R.string.doc_next_chapter),
                 tint = if (chapter < count - 1) Color.White else Color.White.copy(alpha = 0.3f),
             )
         }
@@ -290,7 +352,7 @@ private fun providerFor(
     try {
         val index = book.spineIndexOf(path)
         // 매니페스트의 형식은 책이 적은 값이다 — `text/css; charset=utf-8`·대문자·틀린 형식이 온다. 글자 그대로 견주면
-        // 그런 스타일시트가 위생 없이 나가고, 매개변수가 붙은 것은 WebView 가 그대로 적용한다(실세계 말뭉치 검토).
+        // 그런 스타일시트가 위생 없이 나가고, 매개변수가 붙은 것은 WebView 가 그대로 적용한다.
         val declared = book.mediaTypeOf(path)?.substringBefore(';')?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }
         if (index >= 0) {
             // 읽는 모양은 **읽는 그 순간의** 것이다 — 여백·바탕을 바꾸면 화면이 같은 장을 다시 청한다(`contentKey`).
@@ -323,7 +385,7 @@ private fun providerFor(
  *
  * **책이 적은 형식 문자열을 그대로 WebView 에 넘기지 않는다.** 크롬은 표준 모드에서도 형식이 비었거나
  * `application/x-unknown-content-type` 이거나 쉼표 앞이 `text/css` 인 것(`text/css,x`)을 스타일시트로 적용한다 —
- * 그런 형식으로 적힌 파일이 CSS 위생을 건너뛰고 적용됐다(검토가 크롬에서 재현했다). 그래서 형식은 **우리 표에서만** 나온다.
+ * 그런 형식으로 적힌 파일이 CSS 위생을 건너뛰고 적용됐다. 그래서 형식은 **우리 표에서만** 나온다.
  */
 internal fun rawResourceType(declared: String?, path: String): String? {
     val named = declared?.let { RAW_ALIASES[it] ?: it }?.takeIf { it in RAW_TYPES }

@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -25,6 +26,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import io.github.donggi.iroiroviewer.ui.gesture.ZoomMath
 import io.github.donggi.iroiroviewer.ui.gesture.ZoomState
+import io.github.donggi.iroiroviewer.ui.gesture.trackZoomDrags
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.Canvas
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -36,24 +38,26 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
  *
  * ```
  * Box(바깥)  .pointerInput { 탭·더블탭 }        ← 소비되지 않은 것만 본다
- *   Box(안쪽).transformable(canPan)              ← 두 손가락, 그리고 확대 상태의 팬
+ *   Box(안쪽).trackZoomDrags                     ← 끌기의 시작과 방향을 적는다(Initial, 소비하지 않는다)
+ *            .transformable(canPan)              ← 두 손가락, 그리고 확대 상태의 팬
  *     Canvas .그리기(scale·translate)            ← 변환은 여기서만 읽는다
  * ```
  *
  * 같은 요소에 `pointerInput` 을 여럿 얹고 **형제 사이의 순서에 기대는 것**이 이미지
  * 뷰어에서 가장 흔한 실패다. 그 순서는 보장된 계약이 아니다. 대신 부모–자식으로 나누면
  * "자식이 먼저, 부모가 나중" 이 문서화된 규칙이 되고, 부모는 자식이 소비하지 않은
- * 이벤트만 보게 된다.
+ * 이벤트만 보게 된다. (`trackZoomDrags` 는 `Initial` 단계라 순서가 계약이다 — `Main` 보다 언제나 먼저다.)
  *
  * 그래서:
  * - 배율 1 → `canPan = false` → `transformable` 이 한 손가락 드래그를 소비하지 않는다
  *   → **페이저가 받아 다음 장으로 넘어간다.**
- * - 배율 > 1 → `transformable` 이 팬을 소비한다 → 페이저는 못 받는다.
+ * - 배율 > 1 → 끌기마다 한 번 정한다(`ZoomState.claimsDrag`). 미는 쪽으로 여유가 남았으면 `transformable` 이 팬을
+ *   소비하고(페이저는 못 받는다), **가장자리에 닿은 채 새로 밀면** 받지 않아 페이저가 다음 장으로 넘긴다(구글 포토의
+ *   관행. 그 전에는 확대돼 있으면 언제나 받아, 주석이 말한 '손을 뗐다 다시 밀면 된다' 가 실제로는 되지 않았다).
  * - 탭·더블탭은 어느 쪽도 소비하지 않으므로 언제나 바깥이 받는다.
  *
- * **받아들이는 한계**: 확대한 채 경계까지 민 뒤 *같은 제스처 안에서* 다음 장으로 넘어가는
- * 것은 안 된다. 한 번 슬롭을 넘긴 인식기는 `canPan` 이 거짓이 되어도 소비를 멈추지 않기
- * 때문이다. Google Photos 도 같다 — 손을 뗐다 다시 밀면 된다.
+ * **같은 끌기 안에서는 넘어가지 않는다**: 경계까지 민 손가락을 떼지 않고 계속 밀어도 장이 넘어가지 않는다. 한 번 정한 답을
+ * 끌기가 끝날 때까지 지키기 때문이다 — 보던 자리를 밀던 손가락이 장을 넘기면 놀란다. 손을 뗐다 다시 밀면 된다.
  */
 @Composable
 fun ZoomableImage(
@@ -62,6 +66,11 @@ fun ZoomableImage(
     modifier: Modifier = Modifier,
     onTap: () -> Unit = {},
     onLongPress: () -> Unit = {},
+    /**
+     * 길게 누른 **자리**를 받는다(뷰포트 좌표 — 이 컴포저블의 왼쪽 위가 원점). 주면 [onLongPress] 대신 이것이 불린다.
+     * PDF 의 글 고르기가 쓴다 — 누른 자리의 낱말을 고른다.
+     */
+    onLongPressAt: ((Offset) -> Unit)? = null,
     detail: DetailLayer? = null,
     /**
      * 원본의 폭(화면 방향 기준, 화소). **최대 배율을 이것으로 잰다** — 원본의 2배까지
@@ -69,6 +78,11 @@ fun ZoomableImage(
      * 주지 않으면 바닥층 폭으로 친다.
      */
     originalWidth: Int = bitmap?.width ?: 0,
+    /**
+     * 두드린 **자리**를 받는다(이 컴포저블의 왼쪽 위가 원점). 주면 [onTap] 대신 이것이 불린다. 만화의 가장자리 두드림이
+     * 쓴다 — 가장자리면 넘기고 가운데면 막대다.
+     */
+    onTapAt: ((Offset) -> Unit)? = null,
 ) {
     ZoomableSurface(
         contentWidth = bitmap?.width ?: 0,
@@ -76,7 +90,9 @@ fun ZoomableImage(
         state = state,
         modifier = modifier,
         onTap = onTap,
+        onTapAt = onTapAt,
         onLongPress = onLongPress,
+        onLongPressAt = onLongPressAt,
         originalWidth = originalWidth,
     ) { fw, fh ->
         if (bitmap != null) drawBitmapLayers(bitmap, detail, fw, fh)
@@ -124,7 +140,9 @@ fun ZoomablePainter(
         state = state,
         modifier = modifier,
         onTap = onTap,
+        onTapAt = null,
         onLongPress = onLongPress,
+        onLongPressAt = null,
         originalWidth = originalWidth,
     ) { fw, fh ->
         with(painter) { draw(Size(fw, fh)) }
@@ -144,10 +162,17 @@ private fun ZoomableSurface(
     state: ZoomState,
     modifier: Modifier,
     onTap: () -> Unit,
+    onTapAt: ((Offset) -> Unit)?,
     onLongPress: () -> Unit,
+    onLongPressAt: ((Offset) -> Unit)?,
     originalWidth: Int,
     drawContent: DrawScope.(fw: Float, fh: Float) -> Unit,
 ) {
+    // 인식기는 `pointerInput(state)` 로 한 번 세워진다 — 그 안에서 바뀐 람다를 읽으려면 최신 값을 따로 든다.
+    val latestLongPressAt by rememberUpdatedState(onLongPressAt)
+    val latestLongPress by rememberUpdatedState(onLongPress)
+    val latestTap by rememberUpdatedState(onTap)
+    val latestTapAt by rememberUpdatedState(onTapAt)
     val hasContent = contentWidth > 0 && contentHeight > 0
     val scope = rememberCoroutineScope()
 
@@ -173,8 +198,8 @@ private fun ZoomableSurface(
         modifier = modifier
             .pointerInput(state) {
                 detectTapGestures(
-                    onTap = { onTap() },
-                    onLongPress = { onLongPress() },
+                    onTap = { p -> latestTapAt?.invoke(p) ?: latestTap() },
+                    onLongPress = { p -> latestLongPressAt?.invoke(p) ?: latestLongPress() },
                     onDoubleTap = { position ->
                         scope.launch {
                             state.stopAnimation()
@@ -192,7 +217,9 @@ private fun ZoomableSurface(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .transformable(state = transformable, canPan = { state.canPan }),
+                // 끌기의 시작을 먼저 적고(`Initial`) `transformable` 이 그것으로 받을지 정한다 — 가장자리에서 새로 밀면 페이저다.
+                .trackZoomDrags(state)
+                .transformable(state = transformable, canPan = { state.claimsDrag() }),
         ) {
             // **크기가 그대로여도 원본이 늦게 알려질 수 있다**(사진의 원본 치수를 재는 일이
             // 바닥층 디코딩과 따로 돈다). `onSizeChanged` 는 크기가 바뀔 때만 오므로 그것만
@@ -280,8 +307,8 @@ private fun DrawScope.drawFitted(
  *
  * **두 층 다 부동소수로 놓는다.** 예전에는 자리와 크기를 `IntOffset`·`IntSize` 로 잘라 **확대 변환
  * 안에서** 그렸다 — 잘린 1화소 미만의 어긋남이 배율만큼 커져, 원본 2배까지 확대하면 선명한 조각이
- * 바닥층에서 수 ~ 수십 화소 떨어진 자리에 얹혀 조각이 올 때마다 그림이 튀었다(적대적 검토가 계산으로
- * 잡았다: 12000 화소 파노라마에서 18 화소). 바닥층과 조각이 `ZoomMath` 가 가정하는 같은 사상을 쓴다.
+ * 바닥층에서 수 ~ 수십 화소 떨어진 자리에 얹혀 조각이 올 때마다 그림이 튀었다(12000 화소 파노라마에서
+ * 18 화소). 바닥층과 조각이 `ZoomMath` 가 가정하는 같은 사상을 쓴다.
  */
 private fun DrawScope.drawBitmapLayers(bitmap: ImageBitmap, detail: DetailLayer?, fw: Float, fh: Float) {
     scale(fw / bitmap.width, fh / bitmap.height, pivot = Offset.Zero) {

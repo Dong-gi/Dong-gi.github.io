@@ -1,7 +1,6 @@
 package io.github.donggi.iroiroviewer.format.text
 
 import io.github.donggi.iroiroviewer.charset.TextEncoding
-import io.github.donggi.iroiroviewer.charset.WindowedDecoder
 import io.github.donggi.iroiroviewer.format.UnsupportedFeatures
 import io.github.donggi.iroiroviewer.format.html.CssValues
 import io.github.donggi.iroiroviewer.format.html.FlowHtml
@@ -22,7 +21,7 @@ import java.util.Locale
  * ## 무엇을 하는가
  *
  * CommonMark 의 부분집합과 GFM 의 표·취소선·할 일 목록을 푼다([MdBlockParser]·[MdInlineParser]). 결과는
- * `format:html` 의 [HtmlWriter] 로만 쓰고, 흐름 문서와 같은 끝([FlowHtml.finish] — 위생 → CSS 거르기 → 껍데기)을
+ * `format:html` 의 [HtmlWriter] 로만 쓰고, [FlowHtml.finish](위생 → CSS 거르기 → 껍데기)를
  * 지난다. 화면은 그것을 잠긴 WebView(자바스크립트 꺼짐)에 띄운다 — 문서와 같은 길이다.
  *
  * ## 무엇을 하지 않는가
@@ -43,7 +42,7 @@ object MarkdownPreview {
     /** 미리보기를 만드는 원문의 상한. README 는 크게 잡아야 수백 KB 다. 넘으면 화면이 그렇게 말한다. */
     const val MAX_SOURCE_BYTES: Long = 2L * 1024 * 1024
 
-    /** 결과 HTML 의 상한(글자). WebView 가 한 번에 배치하는 양이라 흐름 문서의 부분 상한보다 작게 둔다. */
+    /** 결과 HTML 의 상한(글자). WebView 가 한 번에 배치하는 양이라 쓰개의 기본 상한(`HtmlWriter.DEFAULT_MAX_CHARS`)보다 작게 둔다. */
     const val MAX_HTML_CHARS = 4 * 1024 * 1024
 
     /** 한 문서가 가리킬 수 있는 그림 수. */
@@ -115,16 +114,7 @@ object MarkdownPreview {
         encoding: TextEncoding,
         bomLength: Int,
         maxBytes: Long = MAX_SOURCE_BYTES,
-    ): String {
-        val cs = encoding.charset ?: return ""
-        val sb = StringBuilder()
-        openAt(bomLength.toLong()).use { raw ->
-            WindowedDecoder(cs.newDecoder()).decodeAll(LimitedStream(raw, maxBytes)) { buf, off, len ->
-                sb.append(buf, off, len)
-            }
-        }
-        return sb.toString()
-    }
+    ): String = readPreviewSource(openAt, encoding, bomLength, maxBytes)
 
     /**
      * 그림 목적지를 **이 파일 기준의 정규화한 상대 경로**로. 실을 수 없으면 null(그림 대신 대체 글이 보인다).

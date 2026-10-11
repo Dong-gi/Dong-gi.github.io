@@ -49,19 +49,110 @@
     <string name="text_highlight_off">%1$s · 강조 꺼짐</string>
     <string name="text_lines">%1$d줄</string>
 
-    <!-- 마크다운 미리보기(14단계). -->
+    <!--
+      미리보기 — 마크다운(14단계)과 HTML(14단계 뒤)이 함께 쓴다. 어느 쪽인지 말하지 않는 문장으로 둔다.
+      상한(MiB)은 종류마다 다르다(마크다운 2, HTML 8).
+    -->
     <string name="text_preview">미리보기</string>
     <string name="text_preview_source">원문</string>
     <string name="text_preview_show_source">원문 보기</string>
     <string name="text_preview_building">미리보기를 만드는 중…</string>
-    <string name="text_preview_too_large">미리보기는 %1$d MiB 까지의 파일만 만듭니다</string>
+    <string name="text_preview_too_large">미리보기는 %1$d MiB까지의 파일만 만듭니다</string>
     <string name="text_preview_failed">미리보기를 만들지 못했습니다</string>
+    <string name="text_preview_render_gone">미리보기가 멈췄습니다 — 원문으로 갔다가 다시 열어 보세요</string>
     <string name="text_preview_truncated">문서가 커서 앞부분만 미리 봅니다</string>
+    <!--
+      HTML 미리보기가 버린 것. 스크립트로 그리는 쪽은 비어 보일 수 있다 - 그 까닭을 말한다. 이 앱은 인터넷에 닿지 않는다 -
+      바깥 자원까지 보려면 같은 줄의 '브라우저로 열기'(core:io 의 io_open_in_browser)로 브라우저에 넘긴다.
+    -->
+    <string name="text_preview_withheld">스크립트·프레임·바깥 자원은 싣지 않습니다</string>
+    <!--
+      스크립트를 버린 HTML 쪽에만 붙는 단추(보안 메일처럼 스크립트가 곧 내용인 쪽). 누르면 파일 그대로 스크립트를 켜고 연다 - 인터넷에는
+      닿지 않는다(이 앱에 INTERNET 이 없어 OS 가 막는다). 실행 중에는 아래 줄과 '멈추기' 가 그 자리에 선다.
+    -->
+    <string name="text_preview_run_scripts">스크립트 실행</string>
+    <string name="text_preview_live">스크립트를 실행하는 중 · 인터넷에는 연결하지 않습니다</string>
+    <string name="text_preview_live_stop">멈추기</string>
 
-    <string name="text_evidence_bom">파일 앞머리의 BOM 이 인코딩을 적어 두었습니다</string>
+    <string name="text_evidence_bom">파일 앞머리의 BOM이 인코딩을 적어 두었습니다</string>
     <string name="text_evidence_ascii">ASCII 문자만 있어 어느 인코딩으로 읽어도 같습니다</string>
     <string name="text_evidence_only">이 인코딩으로만 끝까지 읽혔습니다</string>
     <string name="text_evidence_script">글자 분포로 골랐습니다 (%1$d점, 다음 후보 %2$d점)</string>
-    <string name="text_evidence_korean">UTF-8 로도 읽히지만 한글로 읽는 편이 또렷했습니다 (%1$d%%)</string>
+    <string name="text_evidence_korean">UTF-8로도 읽히지만 한글로 읽는 편이 또렷했습니다 (%1$d%%)</string>
     <string name="text_evidence_unsupported">알아본 인코딩이지만 이 앱이 읽지 못합니다</string>
+    <!-- 글 고르기. '복사했습니다' 는 안드로이드 12 이하에서만 띄운다(13 부터는 시스템이 보여 준다). -->
+    <string name="text_copied">복사했습니다</string>
+    <string name="text_copy_too_long">고른 글이 너무 길어 복사하지 않았습니다(최대 %1$s자)</string>
+    <string name="text_copy_failed">복사하지 못했습니다</string>
+
+    <!-- 고르기 막대에서 고른 글을 다른 앱(번역 등)으로 보낼 때. 상한(10만 자)을 넘으면 앞부분만 보낸다. -->
+    <string name="text_send_truncated">고른 글이 길어 앞 %1$s자만 보냈습니다</string>
+    <string name="text_send_failed">고른 글을 보내지 못했습니다</string>
+
+    <!--
+      글·코드 파일 편집. 뷰어 위 막대의 '편집'(연필) → 편집 화면(TextEditScreen). 인코딩·BOM·줄 끝을 원래대로 쓰고,
+      첫 저장 때 고치기 전 판을 휴지통에 남긴다. 상한(TextLimits.EDIT_MAX_BYTES)을 넘는 파일은 단추를 누를 때 까닭을 말한다.
+      문구 규칙: 변수 뒤에는 받침과 무관한 조사(에·의·부터·까지)만 — 그 밖은 '‘%1$s’ · …' 꼴.
+    -->
+    <string name="text_edit">편집</string>
+    <!-- CSV 를 편집기(feature:editor)의 표 편집기로 — 편집기가 CSV 를 다룰 때만(엔진 묶음이 든 빌드) ⋮ 에 있다. -->
+    <string name="text_open_sheet_editor">표 편집기로 열기</string>
+    <string name="text_edit_too_large">이 파일은 커서 이 앱에서 고칠 수 없습니다 — %1$s까지</string>
+    <string name="text_edit_save">저장</string>
+    <string name="text_edit_close">닫기</string>
+    <string name="text_edit_undo">되돌리기</string>
+    <string name="text_edit_redo">다시 하기</string>
+    <string name="text_edit_find">찾기·바꾸기</string>
+    <string name="text_edit_find_hint">찾을 말</string>
+    <string name="text_edit_replace_hint">바꿀 말</string>
+    <string name="text_edit_find_prev">이전 것</string>
+    <string name="text_edit_find_next">다음 것</string>
+    <string name="text_edit_find_close">찾기 닫기</string>
+    <string name="text_edit_replace">바꾸기</string>
+    <string name="text_edit_replace_all">모두 바꾸기</string>
+    <string name="text_edit_case">대소문자 구분</string>
+    <string name="text_edit_on">켜짐</string>
+    <string name="text_edit_off">꺼짐</string>
+    <string name="text_edit_replaced">%1$d개를 바꿨습니다</string>
+    <string name="text_edit_not_found">찾는 말이 없습니다</string>
+    <!-- 위 막대 제목 아래 한 줄 — 저장할 때 입힐 꼴(인코딩 · 줄 끝)과, 저장하지 않은 고침이 있는가. -->
+    <string name="text_edit_status">%1$s · %2$s</string>
+    <string name="text_edit_status_bom">" · BOM"</string>
+    <string name="text_edit_status_dirty">" · 저장하지 않음"</string>
+    <string name="text_edit_eol_lf">LF</string>
+    <string name="text_edit_eol_crlf">CRLF</string>
+    <string name="text_edit_eol_cr">CR</string>
+    <string name="text_edit_saving">저장하는 중…</string>
+    <string name="text_edit_waiting">앞의 파일 작업이 끝나면 저장합니다</string>
+    <string name="text_edit_closing_after_save">저장이 끝나면 닫습니다</string>
+    <!-- 저장의 결과 한 줄은 core:io 의 FileOpText.textMessage 가 만든다(앱의 결과 줄과 같은 문장). UTF-8로 바꿔 저장했으면 이것을 덧붙인다. -->
+    <string name="text_edit_converted">" · 인코딩을 UTF-8로 바꿨습니다"</string>
+    <string name="text_edit_unencodable">이 글에는 어느 인코딩으로도 쓸 수 없는 글자가 있어 저장하지 않았습니다</string>
+
+    <!-- 고칠 수 없을 때의 화면. 뷰어가 단추를 숨기지만, 그사이 파일이 바뀌었거나 다른 길로 들어온 경우에 이 화면이 말한다. -->
+    <string name="text_edit_refused_place">이 위치의 파일은 이 앱에서 고칠 수 없습니다</string>
+    <string name="text_edit_refused_read_only">이 파일에는 쓸 수 없습니다(읽기 전용)</string>
+    <string name="text_edit_refused_malformed">‘%1$s’ · 이 인코딩으로 읽을 수 없는 바이트가 있어 고칠 수 없습니다 — 뷰어에서 인코딩을 바꿔 보세요</string>
+    <string name="text_edit_refused_round_trip">‘%1$s’ · 이 인코딩으로 다시 쓰면 바뀌는 글자가 있어 고칠 수 없습니다</string>
+
+    <!-- 묻는 것들. 기본 단추(강조)는 잃는 것이 없는 쪽이다. -->
+    <string name="text_edit_close_title">저장하지 않은 고침이 있습니다</string>
+    <string name="text_edit_close_message">닫기 전에 저장할까요?</string>
+    <string name="text_edit_discard">저장하지 않음</string>
+    <string name="text_edit_resume_title">저장하지 않은 고침이 있습니다</string>
+    <string name="text_edit_resume_message">이 파일을 고치다 남긴 글을 이어서 고칠까요?</string>
+    <string name="text_edit_resume_changed">그 뒤에 파일이 다른 곳에서 바뀌었습니다. 이어서 고치고 저장하면 그 바뀜을 덮어씁니다.</string>
+    <string name="text_edit_resume">이어서 고치기</string>
+    <string name="text_edit_resume_discard">버리기</string>
+    <string name="text_edit_mixed_title">줄 끝이 섞여 있습니다</string>
+    <string name="text_edit_mixed_message">LF %1$d · CRLF %2$d · CR %3$d — 저장하면 모든 줄 끝을 %4$s에 맞춥니다.</string>
+    <string name="text_edit_unmappable_title">인코딩을 바꿔 저장할까요?</string>
+    <string name="text_edit_unmappable_message">이 파일의 인코딩(%1$s)으로 쓸 수 없는 글자가 있습니다: ‘%2$s’\n\nUTF-8로 바꿔 저장할 수 있지만, UTF-8을 모르는 프로그램에서는 글자가 깨져 보일 수 있습니다.</string>
+    <string name="text_edit_unmappable_confirm">UTF-8로 바꿔 저장</string>
+    <string name="text_edit_changed_title">다른 곳에서 바뀌었습니다</string>
+    <string name="text_edit_changed_message">이 파일을 연 뒤에 다른 앱이 고쳤거나 지웠습니다. 덮어쓰면 그 바뀜을 잃습니다.</string>
+    <string name="text_edit_overwrite">덮어쓰기</string>
+    <string name="text_edit_previous_title">고치기 전의 글을 휴지통에 남기지 못했습니다</string>
+    <string name="text_edit_previous_message">저장 공간이 모자라거나 휴지통에 쓸 수 없습니다. 그래도 저장하면 고치기 전의 글은 되돌릴 수 없습니다.</string>
+    <string name="text_edit_save_anyway">그래도 저장</string>
 </resources>

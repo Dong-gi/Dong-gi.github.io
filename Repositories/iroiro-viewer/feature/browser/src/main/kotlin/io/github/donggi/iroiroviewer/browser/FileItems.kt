@@ -20,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.donggi.iroiroviewer.ui.IroProgress
 import io.github.donggi.iroiroviewer.io.Format
 import io.github.donggi.iroiroviewer.io.MimeResolver
 import io.github.donggi.iroiroviewer.io.PathRules
@@ -109,9 +109,10 @@ fun FileRow(
             // 막대 대신 글자('다 읽음')가 말한다 — 가득 찬 막대 열 개가 늘어서면 목록이 무거워 보인다.
             if (badge != null && !badge.finished) {
                 Spacer(Modifier.height(4.dp))
-                LinearProgressIndicator(
+                IroProgress(
                     progress = { badge.fraction },
-                    modifier = Modifier.fillMaxWidth(0.5f).height(3.dp),
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    height = 3.dp,
                 )
             }
         }
@@ -156,9 +157,10 @@ fun FileGridItem(
         }
         if (badge != null && !badge.finished) {
             // 그림 바로 아래, 그림 폭만큼. 칸의 글자와 겹치지 않게 그림에 붙인다.
-            LinearProgressIndicator(
+            IroProgress(
                 progress = { badge.fraction },
-                modifier = Modifier.width(56.dp).height(3.dp),
+                modifier = Modifier.width(56.dp),
+                height = 3.dp,
             )
         }
         Text(
@@ -210,9 +212,6 @@ fun badgeText(badge: ReadingBadge): String = when {
     else -> stringResource(
         when (badge.unit) {
             BadgeUnit.CHAPTER -> R.string.browser_badge_chapter
-            BadgeUnit.SHEET -> R.string.browser_badge_sheet
-            BadgeUnit.SLIDE -> R.string.browser_badge_slide
-            BadgeUnit.PART -> R.string.browser_badge_part
             // 백분율은 위에서 갈랐다. `else` 로 두지 않는 것은 단위가 늘 때 컴파일러가 이 자리를 가리키게 하려는 것이다.
             BadgeUnit.PAGE, BadgeUnit.PERCENT -> R.string.browser_badge_page
         },
@@ -246,10 +245,10 @@ fun kindLabel(kind: FileKind): String = stringResource(
 
 /**
  * 골랐다는 **둘째 단서**. 배경색 하나로만 알리면 색을 구분하기 어려운 사람에게는
- * 표시가 없는 것과 같고, 그 상태에서 누르는 것이 삭제다.
+ * 표시가 없는 것과 같고, 그 상태에서 누르는 것이 삭제다. 휴지통의 고르기도 같은 표시를 쓴다.
  */
 @Composable
-private fun SelectedMark(modifier: Modifier = Modifier) {
+internal fun SelectedMark(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .size(18.dp)
@@ -276,14 +275,17 @@ private fun SelectedMark(modifier: Modifier = Modifier) {
  * 썸네일 디스패처는 선입선출이라, 빠르게 훑는 동안 요청을 계속 넣으면 **이미 지나간 칸**이
  * 줄 앞을 차지해 정작 멈춘 자리의 칸이 늦게 온다. 취소를 잘 거는 것보다 애초에 줄을
  * 세우지 않는 편이 싸다. 메모리에 이미 있는 것은 스크롤 중에도 그대로 쓴다(기다림이 없다).
+ *
+ * @param coverAllowed 만화의 표지를 꺼내도 되는가. 휴지통은 거짓이다 — 휴지통 안의 파일은 이름이 uuid 라 확장자가 없고, 표지를 꺼내는
+ *   쪽(`CoverSupport`)은 확장자로 형식을 가린다. 그림·영상은 내용으로 읽으므로 그대로 된다(`TrashScreen`).
  */
 @Composable
-private fun Thumb(entry: FileEntry, size: Dp, allowLoad: Boolean) {
+internal fun Thumb(entry: FileEntry, size: Dp, allowLoad: Boolean, coverAllowed: Boolean = true) {
     // **만화는 확장자가 만화라고 적힌 것만이다.** `FileKind.ARCHIVE` 전체로 넓히면
     // 사용자가 연 적도 없는 압축 파일 속 개인 사진이 320px JPEG 으로 앱 저장소에
     // 영속된다(`ThumbnailStore.Kind.COMIC` 의 같은 주석 참고).
     val showThumb = entry.kind == FileKind.IMAGE || entry.kind == FileKind.VIDEO ||
-        entry.kind == FileKind.COMIC
+        (entry.kind == FileKind.COMIC && coverAllowed)
     if (!showThumb) {
         KindBadge(
             kind = entry.kind,

@@ -31,7 +31,7 @@ export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 /**
  * 빌드 요소가 사는 곳. 요소 스크립트와 **그 산출물(로그·해시 기록)이 함께** 여기 있다.
  *
- * 저장소 루트에 `build-*.log` 여섯 개가 흩어져 있으면, 루트를 열 때마다 사이트의 소스보다
+ * 저장소 루트에 `build-*.log` 다섯 개가 흩어져 있으면, 루트를 열 때마다 사이트의 소스보다
  * 빌드 부산물이 먼저 눈에 들어온다. 빌드에 딸린 것은 빌드 폴더에 둔다.
  *
  * 이름에 `build-` 접두사를 남겨 두는 이유는 두 가지다. `npm run build-pug` ↔
@@ -84,8 +84,8 @@ export async function fileExists(rel: string): Promise<boolean> {
 /**
  * 디렉터리 아래의 파일을 하위까지 훑어 정규 경로 배열로 준다.
  *
- * 디렉터리가 없으면 빈 배열이다. 아직 만들어지지 않은 산출 폴더(`imgs-generated/`)를
- * 훑는 자리가 있어서, 없는 것을 오류로 보지 않는다.
+ * 디렉터리가 없으면 빈 배열이다 — 아직 없는 폴더(그림을 처음 만드는 과목의 `figures/<과목>/` 등)를
+ * 오류로 보지 않는다.
  */
 export async function walkFiles(relDir: string): Promise<string[]> {
     let entries;

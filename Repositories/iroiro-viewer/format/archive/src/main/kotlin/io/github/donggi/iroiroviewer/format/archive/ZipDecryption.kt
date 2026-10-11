@@ -41,7 +41,7 @@ import javax.crypto.spec.SecretKeySpec
  * ISO-8859-1 을 차례로 대 본다. 각 후보는 확인 바이트로 거르므로 값이 싸다.
  *
  * **확인 바이트는 틀린 후보도 1/256 로 통과시킨다.** 그래서 항목마다 후보를 고르면 한글 암호의
- * 300쪽짜리 만화에서 한 쪽쯤은 틀린 인코딩으로 풀려 깨진다(검토가 셈했다 — 69%). 후보는
+ * 300쪽짜리 만화에서 한 쪽쯤은 틀린 인코딩으로 풀려 깨진다(69% 확률). 후보는
  * **아카이브마다 한 번** 정한다 — 리더가 항목 하나를 끝까지(CRC·인증값까지) 풀어 보고 맞은 후보만
  * 쓴다(`ZipArchiveReader.keys`). 이 객체는 받은 후보를 대 볼 뿐이다.
  *
@@ -93,7 +93,7 @@ internal object ZipDecryption {
     /**
      * 이 항목을 **어떤 암호로든** 우리가 풀 수 있는가. 거짓이면 목록이 암호를 묻지 않는다
      * (`ArchiveEntry.lockedForGood`) — 7-Zip 이 만드는 'AES + LZMA' ZIP 처럼, 맞는 암호를 넣어도
-     * 안쪽을 못 푸는 항목에 암호를 물으면 화면이 '틀렸다' 를 영원히 되풀이한다(검토가 잡았다).
+     * 안쪽을 못 푸는 항목에 암호를 물으면 화면이 '틀렸다' 를 영원히 되풀이한다.
      */
     fun canDecrypt(entry: ZipArchiveEntry): Boolean {
         if (entry.generalPurposeBit.usesStrongEncryption()) return false
@@ -130,7 +130,7 @@ internal object ZipDecryption {
      * 암호를 바이트로. 겹치는 후보는 한 번만. **받은 쪽이 다 쓰고 0 으로 덮는다.**
      *
      * `String` 을 만들지 않는다 — 문자열은 불변이라 덮을 수 없고, 항목을 열 때마다 만들면 힙에
-     * 암호 사본이 쌓인다(검토가 잡았다).
+     * 암호 사본이 쌓인다.
      */
     internal fun candidates(password: CharArray): List<ByteArray> {
         val out = ArrayList<ByteArray>(3)
@@ -214,7 +214,7 @@ internal object ZipDecryption {
         //
         // 시각을 `entry.time` 에서 되만들지 않는다. commons-compress 는 UT(0x5455)·NTFS 추가
         // 필드가 있으면 그 UTC 시각을 주고, 그것을 **기기의 시간대**로 DOS 시각에 되돌리면 만든
-        // 사람의 시간대와 시가 어긋난다 — 맞는 암호가 '틀렸다' 가 된다(검토가 잡았다). 부른 쪽이
+        // 사람의 시간대와 시가 어긋난다 — 맞는 암호가 '틀렸다' 가 된다. 부른 쪽이
         // 헤더의 날것 두 바이트를 읽어 준다.
         val crcByte = ((entry.crc ushr 24) and 0xFF).toInt()
         val useTime = entry.generalPurposeBit.usesDataDescriptor() && timeHigh != null
@@ -389,7 +389,7 @@ internal object ZipDecryption {
         8 -> {
             // **Inflater 를 직접 주면 `close` 가 그것을 끝내지 않는다**(`usesDefaultInflater` 가
             // 거짓). 끝내지 않으면 항목마다 네이티브 zlib 상태가 GC 를 기다린다 — 쪽을 넘길 때마다
-            // 하나씩 쌓인다(검토가 잡았다). commons-compress 도 닫을 때 `end()` 를 부른다.
+            // 하나씩 쌓인다. commons-compress 도 닫을 때 `end()` 를 부른다.
             val inflater = Inflater(true)
             object : InflaterInputStream(plain, inflater, 64 * 1024) {
                 override fun close() {

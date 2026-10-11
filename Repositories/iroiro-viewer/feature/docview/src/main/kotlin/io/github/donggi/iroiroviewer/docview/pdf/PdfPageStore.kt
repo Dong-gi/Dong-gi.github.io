@@ -44,6 +44,14 @@ import kotlinx.coroutines.flow.asStateFlow
  * 격자가 쪽을 덮고 있는 동안에는 확대한 조각이 보일 일이 없으므로, 열 때 조각을 놓고([openGrid] — 캐시는 여기서, 화면의 쪽
  * 층이 쥔 조각은 [gridOpen] 을 보고 그쪽이 놓는다) 닫을 때 작은 그림을 놓는다([closeGrid]). 그래서 살아 있는 양이 예산이 이미
  * 허락한 `liveCap + detailCap` 을 넘지 않는다. 선명화 예산이 0 인 작은 힙에서는 작은 그림도 없다(번호만 보인다).
+ *
+ * ## 이어 보기
+ *
+ * 세로로 이어 보는 화면(`ScrollDocument`)은 줄(쪽 하나, 또는 펼침)을 화면 **폭**에 맞춰 그린다([fittedToWidth]). 한 장의 상한은
+ * [ImageLimits.scrollPageCap] 이다 — 목록이 들고 있는 줄은 화면에 걸친 것과 미리 만드는 하나뿐이라, 긴 줄 셋이 살아 있는 몫
+ * (`liveCap`) 안에 든다. 확대는 바닥층을 다시 그리지 않고(목록 전체에 걸린 층이 키운다) 화면에 **보이는 자리만** 선명하게 다시
+ * 그린다([regionDetail]). 줄마다 보이는 넓이만큼 선명화 예산을 나눠 받으므로 합이 [ImageLimits.Budget.detailCap] 이다. 캐시는
+ * 쪽 넘김과 같은 둘(맞춤·조각)을 쓴다 — 열쇠의 높이 자리가 [FIT_WIDTH] 인 것이 폭 맞춤이다.
  */
 class PdfPageStore(
     private val doc: PdfDocument,
@@ -95,8 +103,21 @@ class PdfPageStore(
     /** 한 장에 허락하는 바이트. */
     val pageCap: Long = ImageLimits.pageCap(budget)
 
+    /** 이어 보기의 줄 한 장에 허락하는 바이트(머리말의 '이어 보기'). */
+    private val rowCap: Long = ImageLimits.scrollPageCap(budget)
+
+    /** 선명화층 전체의 예산. 이어 보기가 보이는 줄들에 나눠 준다. */
+    internal val detailCap: Long get() = budget.detailCap
+
     /** 이미 잰 크기가 있으면 그것. 없으면 null — 문서를 만지지 않는다. */
     fun knownSize(ordinal: Int): IntArray? = synchronized(sizes) { sizes[ordinal] }
+
+    /** 이 문서에서 글을 고를 수 있는가(글 고르기). */
+    internal val canSelectText: Boolean get() = doc.canSelectText
+
+    /** 쪽 하나의 글자와 자리. 꺼낼 수 없으면 null. 그리기의 예산과 상관이 없다 — 글자 표는 작다. */
+    internal suspend fun text(ordinal: Int): io.github.donggi.iroiroviewer.docview.pdf.text.PageText? =
+        doc.pageText(ordinal)
 
     /** 이미 잰 크기로 가상 쪽을 놓는다. 하나라도 모르면 null — 문서를 만지지 않는다. */
     internal fun knownLayout(view: PdfSpreads.View): PdfSpreads.Layout? {
@@ -152,6 +173,99 @@ class PdfPageStore(
             "쪽 ${view.pages} ${layout.width}x${layout.height}pt -> ${image.width}x${image.height} ${ms}ms"
         }
         return image
+    }
+
+    /**
+     * 화면 폭에 맞춘 한 장(이어 보기). 쪽이 화면보다 길면(가로 화면의 A4 세로) [rowCap] 에 걸려 낮은 배율로 그려진다 — 그 배율은
+     * [widthPlan] 이 같은 식으로 다시 준다(화면이 선명화의 문턱을 잰다).
+     */
+    internal suspend fun fittedToWidth(view: PdfSpreads.View, viewportWidth: Int): ImageBitmap? {
+        if (viewportWidth <= 0) return null
+        val key = FitKey(view, viewportWidth, FIT_WIDTH)
+        fitted.get(key)?.let { return it }
+
+        val layout = layout(view) ?: return null
+        val plan = widthPlan(layout, viewportWidth) ?: return null
+        val began = System.nanoTime()
+        val bitmap = doc.render(layout, PdfEngine.Spec(plan.width, plan.height, plan.scale)) ?: return null
+        val image = bitmap.asImageBitmap()
+        fitted.put(key, image)
+        Iro.d(TAG) {
+            val ms = (System.nanoTime() - began) / 1_000_000
+            "줄 ${view.pages} ${layout.width}x${layout.height}pt -> ${image.width}x${image.height} x${"%.2f".format(plan.scale)} ${ms}ms"
+        }
+        return image
+    }
+
+    /**
+     * 폭 맞춤의 비트맵 계획 — [fittedToWidth] 가 그리는 크기와 배율. **한 식으로만 낸다**: 화면이 바닥층의 배율(선명화를 켤 문턱)을
+     * 따로 셈하면 내림을 다르게 적는 날 타일이 어긋난다(`PdfLimits.Tile` 의 주석과 같은 까닭).
+     */
+    internal fun widthPlan(layout: PdfSpreads.Layout, viewportWidth: Int): PdfLimits.PageBitmap? {
+        if (viewportWidth <= 0 || layout.width <= 0) return null
+        return PdfLimits.pageBitmap(layout.width, layout.height, viewportWidth.toDouble() / layout.width, rowCap)
+    }
+
+    /**
+     * 이어 보기에서 확대(또는 상한에 걸려 흐린) 줄의 **보이는 자리만** 선명하게 다시 그린 조각([PdfLimits.regionTile]). 쪽 목록이
+     * 열려 있으면 null — 그 예산은 격자가 빌려 쓴다.
+     *
+     * @param left·[top]·[right]·[bottom] 보이는 자리(가상 쪽 안의 비율).
+     * @param capBytes 이 줄이 받은 선명화 예산(화면이 보이는 넓이대로 나눈다).
+     */
+    internal suspend fun regionDetail(
+        view: PdfSpreads.View,
+        scale: Double,
+        baseScale: Double,
+        left: Double,
+        top: Double,
+        right: Double,
+        bottom: Double,
+        capBytes: Long,
+        maxScale: Double,
+    ): DetailTile? {
+        if (_gridOpen.value) return null
+        val layout = layout(view) ?: return null
+        val tile = PdfLimits.regionTile(
+            widthPt = layout.width,
+            heightPt = layout.height,
+            scale = scale,
+            baseScale = baseScale,
+            left = left,
+            top = top,
+            right = right,
+            bottom = bottom,
+            capBytes = capBytes,
+            maxScale = maxScale,
+        ) ?: return null
+        val key = TileKey(
+            view = view,
+            scaleMilli = (tile.scale * 1000).toInt(),
+            srcLeft = tile.srcLeft,
+            srcTop = tile.srcTop,
+            width = tile.width,
+            height = tile.height,
+        )
+        tiles.get(key)?.let { return it }
+        val bitmap = doc.render(
+            layout,
+            PdfEngine.Spec(
+                bitmapWidth = tile.width,
+                bitmapHeight = tile.height,
+                scale = tile.scale,
+                srcLeft = tile.srcLeft,
+                srcTop = tile.srcTop,
+            ),
+        ) ?: return null
+        // 그리는 사이에 쪽 목록이 열렸으면 버린다(쪽 넘김의 [detail] 과 같다).
+        if (_gridOpen.value) return null
+        val made = DetailTile(bitmap.asImageBitmap(), tile)
+        tiles.put(key, made)
+        Iro.d(TAG) {
+            "줄 조각 ${view.pages} x${"%.2f".format(tile.scale)} (${tile.srcLeft},${tile.srcTop}) ${tile.width}x${tile.height} " +
+                "/ 쪽 ${tile.pageWidth}x${tile.pageHeight} 예산 $capBytes"
+        }
+        return made
     }
 
     /** 쪽 하나의 선명한 조각. [detail] 의 쪽 하나짜리다. */
@@ -237,7 +351,7 @@ class PdfPageStore(
     /**
      * 쪽 목록이 열려 있는가. **화면의 쪽 층이 이것을 본다** — 캐시를 비워도 지금 보이는 쪽이 든 조각(`DetailLayer`)은 그
      * 컴포저블이 쥐고 있어 놓이지 않는다. 열리면 쪽 층이 조각을 놓고, 닫히면 다시 청한다(`DocViewScreen` 의 `DocPageView`).
-     * 그래야 격자가 열린 동안 살아 있는 양이 정말 `liveCap + detailCap` 안이다(검토가 잡았다 — 캐시만 비웠었다).
+     * 그래야 격자가 열린 동안 살아 있는 양이 정말 `liveCap + detailCap` 안이다(캐시만 비웠었다).
      */
     val gridOpen: StateFlow<Boolean> = _gridOpen.asStateFlow()
 
@@ -297,5 +411,8 @@ class PdfPageStore(
 
         /** 선명화 예산을 작은 그림 몇 장이 나눠 쓰는가(적어도). */
         const val MIN_THUMBS = 24L
+
+        /** 맞춤 캐시의 열쇠에서 높이 자리에 넣는 값 — 폭 맞춤(이어 보기)이다. 화면 높이로는 나올 수 없는 값이라 겹치지 않는다. */
+        const val FIT_WIDTH = -1
     }
 }

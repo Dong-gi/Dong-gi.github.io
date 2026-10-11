@@ -43,8 +43,8 @@ sealed interface GestureFeedback {
  * | 오른쪽 세로 끌기 | 소리 |
  * | 좌우 끌기(어디서든) | 재생 위치 |
  * | 한 번 두드리기 | 조작부 여닫기 |
- * | 오른쪽 두 번 이상 | 두 번째부터 +30초씩 |
- * | 왼쪽 두 번 이상 | 두 번째부터 −30초씩 |
+ * | 오른쪽 두 번 이상 | 두 번째부터 한 걸음씩 앞으로(설정 — 기본 10초) |
+ * | 왼쪽 두 번 이상 | 두 번째부터 한 걸음씩 뒤로 |
  *
  * ## 중재를 형제 순서에 기대지 않는다
  *
@@ -62,6 +62,8 @@ sealed interface GestureFeedback {
 fun Modifier.playerGestures(
     enabled: Boolean,
     durationMs: Long,
+    /** 두 번 두드림의 한 걸음(ms) — 설정의 '두 번 두드려 건너뛰기'. 바뀌면 인식기를 새로 세운다(아래 `pointerInput` 의 키). */
+    tapSeekMs: Long,
     positionMs: () -> Long,
     onToggleControls: () -> Unit,
     onFeedback: (GestureFeedback?) -> Unit,
@@ -76,11 +78,11 @@ fun Modifier.playerGestures(
     val scope = androidx.compose.runtime.rememberCoroutineScope()
     if (!enabled) return this
 
-    return this.pointerInput(durationMs, enabled) {
+    return this.pointerInput(durationMs, enabled, tapSeekMs) {
         var lastTapAt = 0L
         var tapCount = 0
         // **첫 두드림의 토글은 미뤄 둔다.** 두 번째가 오면 취소한다 — 그러지 않으면
-        // 30초를 건너뛸 때마다 조작부가 한 번 깜빡인다.
+        // 건너뛸 때마다 조작부가 한 번 깜빡인다.
         var pendingToggle: kotlinx.coroutines.Job? = null
         // 두드림 안내를 지우는 일. 이어 두드리면 다시 시작한다.
         var clearFeedback: kotlinx.coroutines.Job? = null
@@ -168,7 +170,7 @@ fun Modifier.playerGestures(
                     // 이어 두드리는 중이면 미뤄 둔 토글을 무른다.
                     pendingToggle?.cancel()
                     clearFeedback?.cancel()
-                    val seek = GestureMath.tapSeekMs(tapCount, side)
+                    val seek = GestureMath.tapSeekMs(tapCount, side, tapSeekMs)
                     if (seek == 0L) {
                         // **바로 토글하지 않는다.** 두 번째 두드림이 올지 아직 모른다.
                         pendingToggle = scope.launch {

@@ -55,7 +55,7 @@ class EpubOpener(
             val entries = reader.entries
             // **ZIP 암호는 '암호로는 열 수 없는 방식' 이 아니다.** 공개된 암호 방식인데 EPUB 에서
             // 아직 암호를 받지 않을 뿐이다. `Encrypted`('암호로는 열 수 없다')로 말하면 사용자가
-            // 모르는 열쇠를 찾아 헤맨다(적대적 검토가 잡았다) — '다루지 않는다' 로 끝낸다.
+            // 모르는 열쇠를 찾아 헤맨다 — '다루지 않는다' 로 끝낸다.
             if (entries.any { it.isEncrypted }) {
                 return OpenOutcome.Failed(OpenFailure.Unsupported("ZIP 암호가 걸린 EPUB"))
             }
@@ -105,7 +105,7 @@ class EpubOpener(
             //
             // **글꼴이 아니면 연다고 하지 않는다.** 난독화 방식이 본문·그림에 걸려 있는데 열쇠를 못
             // 만들면, 앞 1024·1040 바이트가 뒤섞인 채로 화면에 간다 — 깨진 글자 위에 '글꼴을 못
-            // 풀었다' 는 안내가 뜬다(검토가 잡았다). 그때는 잠긴 책으로 끝낸다.
+            // 풀었다' 는 안내가 뜬다. 그때는 잠긴 책으로 끝낸다.
             val masks = HashMap<String, FontObfuscation.Mask>()
             var lockedFonts = plan?.lockedFonts ?: 0
             for ((path, algorithm) in plan?.obfuscated.orEmpty()) {
@@ -140,7 +140,7 @@ class EpubOpener(
             // **ZIP 이 깨졌으면 '입출력 실패' 가 아니라 '깨진 파일' 이다.** `ZipException` 은 `IOException` 을
             // 이어 공용 `toOpenFailure()` 가 `Io` 로 옮기는데, 그러면 덜 받은 책·ZIP 이 아닌 파일이
             // '입출력이 실패했습니다' 로 떠 **디스크가 고장 난 것처럼** 읽힌다(PDF·CFB 가 같은 이유로 따로
-            // 가린다 — CLAUDE.md). 실세계 말뭉치를 반으로 자른 책이 전부 이 길로 갔다(검토가 잡았다).
+            // 가린다 — CLAUDE.md). 실세계 말뭉치를 반으로 자른 책이 전부 이 길로 갔다.
             // 여기 오는 것은 중앙 디렉터리가 없거나 압축이 깨진 경우다 — 진짜 입출력 오류는 `ZipException` 이 아니다.
             return OpenOutcome.Failed(OpenFailure.Corrupt("ZIP 구조가 깨졌다"))
         } catch (t: Throwable) {

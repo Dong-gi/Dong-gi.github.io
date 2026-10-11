@@ -16,7 +16,7 @@ java {
 
 dependencies {
     implementation(project(":core:model"))
-    // `FlowDocumentBase` 의 공개 API 가 `ParseLimits`·`FlowDocument` 를 낸다.
+    // 위생기의 공개 API 가 `ParseLimits`(core:safety)·`UnsupportedFeatures`(format:api)를 낸다.
     api(project(":core:safety"))
     api(project(":format:api"))
     implementation(libs.kotlinx.coroutines.core)

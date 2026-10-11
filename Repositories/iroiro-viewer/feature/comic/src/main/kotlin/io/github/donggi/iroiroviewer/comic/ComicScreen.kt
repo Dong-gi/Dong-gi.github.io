@@ -11,13 +11,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -39,7 +44,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Slider
+import io.github.donggi.iroiroviewer.ui.IroSlider
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -57,6 +62,7 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -69,17 +75,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.donggi.iroiroviewer.ui.PasswordDialog
+import io.github.donggi.iroiroviewer.ui.SystemBarsHidden
+import io.github.donggi.iroiroviewer.ui.VolumeKeyPaging
 import io.github.donggi.iroiroviewer.ui.gesture.ZoomState
 import io.github.donggi.iroiroviewer.ui.image.ZoomableImage
 import io.github.donggi.iroiroviewer.ui.image.rememberAnimatedPainter
 import io.github.donggi.iroiroviewer.ui.image.rememberRasterDetail
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 /**
  * 만화 한 권을 읽는 화면.
@@ -102,11 +114,16 @@ import kotlinx.coroutines.flow.distinctUntilChanged
  *
  * ## 바깥 `Scaffold` 를 씌우지 않는다
  *
- * 6단계와 같은 이유다 — `Scaffold` 의 기본 인셋은 막대가 숨고 나타나는 애니메이션
- * 내내 프레임마다 변하고, 그 패딩을 받으면 확대·이동의 기준 상자가 함께 움직여 경계
- * 계산이 어긋난다.
+ * 6단계와 같은 이유다 — 막대를 감추면 시스템 바도 함께 숨는데([SystemBarsHidden]) `Scaffold` 의 기본 인셋은 바가
+ * 숨고 나타나는 애니메이션 내내 프레임마다 변하고, 그 패딩을 받으면 확대·이동의 기준 상자가 함께 움직여 경계 계산이 어긋난다.
+ * 겹치는 막대는 바가 숨어도 변하지 않는 인셋(`…IgnoringVisibility`)을 쓴다.
+ *
+ * ## 넘기는 길
+ *
+ * 밀기·슬라이더·쪽으로 가기에 더해 **가장자리 두드림**([EdgeTaps] — 가운데는 막대)과 **볼륨 키**(설정, 기본 끔 — 거는 것은
+ * 액티비티다, [VolumeKeyPaging])가 같은 넘기기를 부른다. 끝에서 더 갈 곳이 없으면 '첫 쪽입니다'·'마지막 쪽입니다' 를 알린다.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ComicScreen(
     path: String,
@@ -149,6 +166,8 @@ fun ComicScreen(
     val openBookNow by rememberUpdatedState(openBook)
 
     var chromeVisible by remember { mutableStateOf(true) }
+    // 막대를 감추면 시스템 바도 감춘다(열린 책에서만 — 여는 중·실패 화면에는 막대를 되살릴 두드림이 없다).
+    SystemBarsHidden(hidden = !chromeVisible && state is ComicViewModel.State.Ready)
     var showSettings by remember { mutableStateOf(false) }
     var showJump by remember { mutableStateOf(false) }
     // 격자는 회전을 견디게 둔다 — 고르던 도중 기기를 돌렸다고 닫히면 처음부터 다시 찾아야 한다.
@@ -156,6 +175,17 @@ fun ComicScreen(
     var viewport by remember { mutableStateOf(0 to 0) }
 
     val openWith = rememberOpenWith(snackbar)
+
+    // 끝에서 더 넘기려 했다 — 두드림·볼륨 키가 아무 일도 하지 않은 것처럼 보이지 않게 알린다. 떠 있는 알림(이어보기·다음 권)이
+    // 있으면 겹쳐 세우지 않는다 — 줄을 서면 그 알림이 끝난 뒤에 엉뚱하게 뜬다.
+    val firstPageText = stringResource(R.string.comic_first_page)
+    val lastPageText = stringResource(R.string.comic_last_page)
+    val edgeScope = rememberCoroutineScope()
+    val onEdge: (atStart: Boolean) -> Unit = { atStart ->
+        if (snackbar.currentSnackbarData == null) {
+            edgeScope.launch { snackbar.showSnackbar(if (atStart) firstPageText else lastPageText) }
+        }
+    }
 
     BackHandler {
         vm.close()
@@ -265,6 +295,7 @@ fun ComicScreen(
                             viewportWidth = vw,
                             viewportHeight = vh,
                             onTap = { chromeVisible = !chromeVisible },
+                            onEdge = onEdge,
                             onOpenWith = openWith,
                         )
                     } else {
@@ -280,6 +311,7 @@ fun ComicScreen(
                                 viewportWidth = vw,
                                 viewportHeight = vh,
                                 onTap = { chromeVisible = !chromeVisible },
+                                onEdge = onEdge,
                                 onOpenWith = openWith,
                             )
                         }
@@ -298,6 +330,8 @@ fun ComicScreen(
             modifier = Modifier.align(Alignment.TopCenter),
         ) {
             TopAppBar(
+                // 시스템 바가 숨어도 변하지 않는 인셋 — 막대가 사라지는 동안 바가 함께 숨어 제목이 위로 미끄러지지 않게.
+                windowInsets = WindowInsets.systemBarsIgnoringVisibility.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Black.copy(alpha = 0.55f),
                     titleContentColor = Color.White,
@@ -475,6 +509,11 @@ private fun MoreMenu(nextName: String?, onOpenNext: () -> Unit, onOpenWith: (() 
  * 페이저의 한 칸이 **펼침**이다([Spreads]). VM 은 여전히 **쪽**을 든다 — 페이저가 다른 펼침에 서면 그 펼침의 첫 쪽이
  * 새 쪽이 되고, 같은 펼침 안의 쪽이면 그대로 둔다([Spreads.pageAfterSettle]). 펼침 안의 두 쪽은 읽는 방향을 따라
  * 놓는다 — 오른쪽에서 왼쪽이면 앞 쪽이 오른쪽이다([Spreads.visualOrder]).
+ *
+ * ## 가장자리 두드림·볼륨 키
+ *
+ * 두드린 자리를 [EdgeTaps] 가 넘기기와 막대로 가른다. 넘기는 단위는 페이저의 **칸**(두 쪽 보기면 펼침)이고, 방향은 읽는 차례다 —
+ * `reverseLayout` 이 보이는 쪽을 뒤집으므로 '다음' 은 언제나 칸 번호 + 1 이다. 넘기는 중에 또 누르면 그 너머로 간다(`targetPage`).
  */
 @Composable
 private fun PagedReader(
@@ -485,6 +524,8 @@ private fun PagedReader(
     viewportWidth: Int,
     viewportHeight: Int,
     onTap: () -> Unit,
+    /** 끝에서 더 넘기려 했다. `true` 면 첫 칸에서 뒤로. */
+    onEdge: (atStart: Boolean) -> Unit,
     /** 못 연 쪽의 파일을 다른 앱으로 연다([FailedPage]). */
     onOpenWith: (String) -> Unit,
 ) {
@@ -506,6 +547,21 @@ private fun PagedReader(
     LaunchedEffect(current) {
         val target = Spreads.spreadOf(current, pageCount, twoUp)
         if (target != pagerState.currentPage) pagerState.scrollToPage(target)
+    }
+
+    // 넘기기 — 두드림과 볼륨 키가 함께 부른다.
+    val turnScope = rememberCoroutineScope()
+    val turn: (forward: Boolean) -> Unit = { forward ->
+        val target = EdgeTaps.target(pagerState.targetPage, spreadCount, forward)
+        if (target == null) onEdge(!forward) else turnScope.launch { pagerState.animateScrollToPage(target) }
+    }
+    VolumeKeyPaging(turn)
+    val tapAt: PageTap = { x, width, zoomed ->
+        when (EdgeTaps.of(x, width, rightToLeft, zoomed)) {
+            EdgeTaps.Action.PREVIOUS -> turn(false)
+            EdgeTaps.Action.NEXT -> turn(true)
+            EdgeTaps.Action.CHROME -> onTap()
+        }
     }
 
     // 화면에서 벗어난 쪽의 확대를 되돌린다. 6단계와 같은 이유다 — 되돌리지 않으면
@@ -541,7 +597,7 @@ private fun PagedReader(
                 viewportWidth = viewportWidth,
                 viewportHeight = viewportHeight,
                 zoomState = zoom,
-                onTap = onTap,
+                onTap = tapAt,
                 onOpenWith = onOpenWith,
             )
         } else if (pages.size == 1) {
@@ -551,23 +607,35 @@ private fun PagedReader(
                 ordinal = pages[0],
                 targetLongest = maxOf(viewportWidth, viewportHeight),
                 zoomState = zoom,
-                onTap = onTap,
+                onTap = tapAt,
                 onOpenWith = onOpenWith,
             )
         }
     }
 }
 
-/** 쪽 하나. 정지·움직임·실패 셋으로 갈린다. */
+/**
+ * 두드린 자리 — 가로 자리와 그 상자의 폭(같은 좌표계), 그리고 그때 확대돼 있었는가. [EdgeTaps.of] 가 넘기기와 막대로 가른다.
+ */
+internal typealias PageTap = (x: Float, width: Float, zoomed: Boolean) -> Unit
+
+/**
+ * 쪽 하나. 정지·움직임·실패 셋으로 갈린다.
+ *
+ * 두드림은 **바깥 상자 하나**가 받는다 — 여는 중·못 연 쪽·움직이는 쪽도 가장자리를 두드려 넘길 수 있게. 정지 그림은 확대 인식기
+ * (`ZoomableImage`)가 먼저 받아 소비하므로 두 번 불리지 않는다.
+ */
 @Composable
 private fun ComicPageView(
     store: ComicPageStore,
     ordinal: Int,
     targetLongest: Int,
     zoomState: ZoomState,
-    onTap: () -> Unit,
+    onTap: PageTap,
     onOpenWith: (String) -> Unit,
 ) {
+    // 인식기는 한 번 세워진다(`pointerInput(Unit)`) — 읽는 방향이 바뀌어도 새 람다를 읽게.
+    val latestTap by rememberUpdatedState(onTap)
     val state by produceState<PageState>(PageState.Loading, store, ordinal, targetLongest) {
         val info = store.info(ordinal)
         value = when {
@@ -583,7 +651,12 @@ private fun ComicPageView(
         }
     }
 
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) { detectTapGestures(onTap = { p -> latestTap(p.x, size.width.toFloat(), false) }) },
+        contentAlignment = Alignment.Center,
+    ) {
         when (val s = state) {
             is PageState.Loading -> CircularProgressIndicator(color = Color.White)
 
@@ -606,7 +679,7 @@ private fun ComicPageView(
                     bitmap = s.bitmap,
                     state = zoomState,
                     modifier = Modifier.fillMaxSize(),
-                    onTap = onTap,
+                    onTapAt = { p -> latestTap(p.x, zoomState.viewport.width, zoomState.isZoomed) },
                     detail = detail,
                     originalWidth = s.info.displayWidth,
                 )
@@ -618,13 +691,12 @@ private fun ComicPageView(
                 // 스스로 그리므로 확대·이동 변환을 층으로 얹으면 프레임마다 다시 합성해야
                 // 하고, 그 비용이 재생을 끊는다. 만화책 안의 GIF 는 드물어 이 제약이
                 // 실제로 걸리는 자리가 거의 없다 — 걸리면 그때 고친다.
+                // 두드림은 바깥 상자가 받는다(가장자리면 넘긴다).
                 Image(
                     painter = rememberAnimatedPainter(s.drawable),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .pointerInput(Unit) { detectTapGestures(onTap = { onTap() }) },
+                    modifier = Modifier.fillMaxSize(),
                 )
             }
         }
@@ -715,6 +787,8 @@ internal sealed interface PageState {
  * 잡아 두고, 재고 나면 그 자리가 실제 높이로 바뀐다.
  *
  * 두 쪽 보기는 이 모드에 걸리지 않는다 — 웹툰은 폭 맞춤으로 읽는 것이다.
+ *
+ * 가장자리 두드림·볼륨 키는 화면 높이의 [EdgeTaps.SCROLL_STEP] 만큼 내리고 올린다 — 오른쪽 가장자리·아래 키가 앞이다.
  */
 @Composable
 private fun VerticalReader(
@@ -723,6 +797,8 @@ private fun VerticalReader(
     viewportWidth: Int,
     viewportHeight: Int,
     onTap: () -> Unit,
+    /** 끝에서 더 넘기려 했다. `true` 면 처음에서 뒤로. */
+    onEdge: (atStart: Boolean) -> Unit,
     onOpenWith: (String) -> Unit,
 ) {
     val store = book.store
@@ -760,12 +836,32 @@ private fun VerticalReader(
             .collect { atEnd -> if (atEnd) vm.onReachedEnd() }
     }
 
+    // 넘기기 — 두드림과 볼륨 키가 함께 부른다. 한 화면보다 조금 적게 내려 앞 화면의 끝자락이 남게 한다.
+    val turnScope = rememberCoroutineScope()
+    val turn: (forward: Boolean) -> Unit = { forward ->
+        val room = if (forward) listState.canScrollForward else listState.canScrollBackward
+        if (!room) {
+            onEdge(!forward)
+        } else {
+            val step = viewportHeight * EdgeTaps.SCROLL_STEP
+            turnScope.launch { listState.animateScrollBy(if (forward) step else -step) }
+        }
+    }
+    VolumeKeyPaging(turn)
+    val tapAt by rememberUpdatedState<PageTap>({ x, width, _ ->
+        when (EdgeTaps.of(x, width, rightToLeft = false, zoomed = false)) {
+            EdgeTaps.Action.PREVIOUS -> turn(false)
+            EdgeTaps.Action.NEXT -> turn(true)
+            EdgeTaps.Action.CHROME -> onTap()
+        }
+    })
+
     val density = LocalDensity.current
     LazyColumn(
         state = listState,
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(Unit) { detectTapGestures(onTap = { onTap() }) },
+            .pointerInput(Unit) { detectTapGestures(onTap = { p -> tapAt(p.x, size.width.toFloat(), false) }) },
     ) {
         items(items.size, key = { items[it].key }) { i ->
             val item = items[i]
@@ -876,6 +972,7 @@ private sealed interface VPiece {
     data class Shown(val image: androidx.compose.ui.graphics.ImageBitmap) : VPiece
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BottomBar(
     page: Int,
@@ -890,7 +987,8 @@ private fun BottomBar(
         Modifier
             .fillMaxWidth()
             .background(Color.Black.copy(alpha = 0.55f))
-            .windowInsetsPadding(WindowInsets.navigationBars)
+            // 시스템 바가 숨어도 변하지 않는 인셋 — 막대가 나타나는 동안 바가 함께 나타나 글이 위로 밀려 오르지 않게.
+            .windowInsetsPadding(WindowInsets.navigationBarsIgnoringVisibility)
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -898,7 +996,16 @@ private fun BottomBar(
             // **오른쪽에서 왼쪽으로 읽으면 슬라이더도 뒤집는다.** 손가락이 가는 방향과
             // 쪽이 나아가는 방향이 어긋나면 슬라이더가 거꾸로 도는 것처럼 느껴진다.
             val value = if (rightToLeft) (pageCount - 1 - page) else page
-            Slider(
+            // 화면 낭독기는 슬라이더를 범위의 백분율로 읽는다(함정 표) — 무엇을 고르는지와 지금 쪽을 우리 말로 준다. 뒤집은
+            // 슬라이더여도 읽는 것은 실제 쪽이다.
+            val sliderName = stringResource(R.string.comic_slider)
+            val sliderValue = stringResource(R.string.comic_slider_value, page + 1, pageCount)
+            // 재생 막대와 같은 모양(`IroSlider` — 얇은 트랙 + 둥근 점). 눈금으로 쪽에 맞추되 눈금 표시는 그리지 않는다.
+            IroSlider(
+                modifier = Modifier.semantics {
+                    contentDescription = sliderName
+                    stateDescription = sliderValue
+                },
                 value = value.toFloat(),
                 onValueChange = {
                     val v = it.toInt().coerceIn(0, pageCount - 1)
@@ -906,6 +1013,7 @@ private fun BottomBar(
                 },
                 valueRange = 0f..(pageCount - 1).toFloat(),
                 steps = (pageCount - 2).coerceAtLeast(0),
+                inactiveColor = Color.White.copy(alpha = 0.28f),
             )
         }
         Row(

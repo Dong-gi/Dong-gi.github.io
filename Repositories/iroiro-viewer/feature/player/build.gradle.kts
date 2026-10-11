@@ -31,6 +31,8 @@ dependencies {
     // 이 모듈이 그 타입을 import 하기 때문이다.
     implementation(project(":core:model"))
     implementation(project(":core:ui"))
+    // 설정의 '두 번 두드려 건너뛰기'(`AppPreferences.tapSeekSeconds`)를 몸짓이 읽는다.
+    implementation(project(":core:data"))
 
     implementation(libs.androidx.core.ktx)
     // `core:playback` 이 coroutines 를 implementation 으로 가지므로 전파되지 않는다.

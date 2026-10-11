@@ -18,8 +18,11 @@ object PlayerEntry : PlayerLauncher {
     /** 들어가자마자 재생목록을 펼칠 것인가. `singleTask` 라 `onNewIntent` 로도 온다. */
     const val EXTRA_SHOW_PLAYLIST = "io.github.donggi.iroiroviewer.player.SHOW_PLAYLIST"
 
-    override fun open(context: Context, showPlaylist: Boolean) {
-        context.startActivity(intent(context, showPlaylist))
+    /** 다른 앱이 넘긴 파일을 트는 길이다 — 뒤로 가면 보낸 앱으로 돌아간다(`PlayerLauncher.open` 의 `fromOutside`). */
+    const val EXTRA_FROM_OUTSIDE = "io.github.donggi.iroiroviewer.player.FROM_OUTSIDE"
+
+    override fun open(context: Context, showPlaylist: Boolean, fromOutside: Boolean) {
+        context.startActivity(intent(context, showPlaylist).putExtra(EXTRA_FROM_OUTSIDE, fromOutside))
     }
 
     override fun intent(context: Context, showPlaylist: Boolean): Intent =

@@ -10,7 +10,8 @@ import io.github.donggi.iroiroviewer.playback.PlaybackService
 import java.util.concurrent.ExecutionException
 
 /**
- * 큐 항목의 **파일 경로**를 `mediaId` 로 찾는다 — '다른 앱으로 열기' 가 넘길 것.
+ * 큐 항목의 **파일 경로**를 `mediaId` 로 찾는다 — '다른 앱으로 열기' 가 넘길 것, 구간 저장의 원본, 그리고 프로세스가 죽은 뒤
+ * 다시 세울 큐([queueOf]).
  *
  * ## 왜 컨트롤러를 하나 더 드는가
  *
@@ -43,16 +44,46 @@ internal class ItemPaths(context: Context) : AutoCloseable {
 
     /** 그 항목의 파일 경로. 아직 붙지 않았거나, 큐에 없거나, 파일이 아닌 URI 면 null. */
     fun pathOf(mediaId: String): String? {
+        val controller = connected() ?: return null
+        val item = controller.currentMediaItem?.takeIf { it.mediaId == mediaId } ?: find(controller, mediaId)
+        return item?.let(::fileOf)
+    }
+
+    /** 큐 전체의 파일 경로와 그 안에서 [Queue.index] 번째가 지금 항목이다. */
+    data class Queue(val paths: List<String>, val index: Int)
+
+    /**
+     * 큐 전체의 파일 경로 — 되살릴 큐([PlayerRestore])를 적을 때 쓴다. 파일이 아닌 항목은 뺀다(지금 큐에는 파일만 든다 — 예전의
+     * 네트워크 저장소 항목을 거르던 자리다). 지금 항목은 **[mediaId] 로** 찾는다(자리로 맞추지 않는다 — 클래스 주석). 지금 항목이 파일이
+     * 아니거나 큐에 없으면 null.
+     */
+    fun queueOf(mediaId: String): Queue? {
+        val controller = connected() ?: return null
+        val paths = ArrayList<String>(controller.mediaItemCount)
+        var index = -1
+        for (i in 0 until controller.mediaItemCount) {
+            val item = controller.getMediaItemAt(i)
+            val path = fileOf(item) ?: continue
+            if (index < 0 && item.mediaId == mediaId) index = paths.size
+            paths += path
+        }
+        return if (index < 0) null else Queue(paths, index)
+    }
+
+    /** 붙은 컨트롤러. 아직이거나 붙지 못했으면 null. */
+    private fun connected(): MediaController? {
         if (!future.isDone || future.isCancelled) return null
-        val controller = try {
+        return try {
             future.get()
         } catch (e: ExecutionException) {
             // 세션이 거절했거나 서비스가 죽었다. 문구는 화면에 내지 않는다 — 화면은 우리 문장으로 말한다.
             Iro.d { "경로를 읽을 컨트롤러가 붙지 못했다: ${e.cause?.javaClass?.simpleName}" }
-            return null
+            null
         }
-        val item = controller.currentMediaItem?.takeIf { it.mediaId == mediaId } ?: find(controller, mediaId)
-        val uri = item?.localConfiguration?.uri ?: return null
+    }
+
+    private fun fileOf(item: MediaItem): String? {
+        val uri = item.localConfiguration?.uri ?: return null
         return PlayerOpenWith.fileOf(uri.scheme, uri.path)
     }
 

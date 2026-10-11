@@ -1,5 +1,6 @@
 package io.github.donggi.iroiroviewer.archive
 
+import org.junit.Assume
 import java.io.File
 import java.nio.file.Files
 import kotlin.test.AfterTest
@@ -116,5 +117,40 @@ class ExtractBookkeepingTest {
         times.entryTime(File(root, "x/z/../y"), t1)
         assertEquals(1, times.restore())
         assertEquals(t1, d.lastModified())
+    }
+
+    // ---- 자기 덮어쓰기 -------------------------------------------------------------------
+
+    /**
+     * 아카이브 자신은 **이름이 아니라 파일의 정체로** 알아본다. 대소문자만 다른 이름은 그 볼륨이 대소문자를 가리지 않을 때만 같은
+     * 파일이다 — 윈도우(이 시험이 도는 곳)·맥의 기본, 그리고 FAT SD 카드. 리눅스의 ext4 처럼 가리는 곳에서는 다른 파일(없는 파일)이다.
+     */
+    @Test
+    fun `아카이브 자신은 이름이 아니라 파일의 정체로 알아본다`() {
+        val archive = File(root, "A_B.GZ").apply { writeBytes(byteArrayOf(1, 2, 3)) }
+        val guard = SelfOverwriteGuard(archive)
+        assertEquals(SelfOverwriteGuard.Verdict.SELF, guard.check(File(root, "A_B.GZ")))
+        mk("x")
+        assertEquals(SelfOverwriteGuard.Verdict.SELF, guard.check(File(root, "x/../A_B.GZ")))
+        assertEquals(SelfOverwriteGuard.Verdict.OTHER, guard.check(File(root, "new.txt")), "없는 대상은 아카이브가 아니다")
+        val twin = File(root, "twin.bin").apply { writeBytes(byteArrayOf(1, 2, 3)) }
+        assertEquals(SelfOverwriteGuard.Verdict.OTHER, guard.check(twin), "내용이 같아도 다른 파일이다")
+        val folded = File(root, "a_b.gz")
+        val want = if (folded.exists()) SelfOverwriteGuard.Verdict.SELF else SelfOverwriteGuard.Verdict.OTHER
+        assertEquals(want, guard.check(folded), "대소문자만 다른 이름 (이 볼륨에서 있는가: ${folded.exists()})")
+    }
+
+    /**
+     * canonical 경로가 **다른** 같은 파일 — 하드링크로 만든다(대소문자를 가리지 않는 볼륨이 아니어도 만들 수 있는 모양이다).
+     * 문자열만 견주던 예전 검사는 이것을 다른 파일로 보았다. 하드링크를 만들 수 없는 파일 시스템이면 건너뛴다.
+     */
+    @Test
+    fun `canonical 경로가 달라도 같은 파일이면 아카이브 자신이다`() {
+        val archive = File(root, "pack.gz").apply { writeBytes(byteArrayOf(9, 9)) }
+        val link = File(root, "link.bin")
+        val linked = runCatching { Files.createLink(link.toPath(), archive.toPath()) }.isSuccess
+        Assume.assumeTrue("이 파일 시스템은 하드링크를 만들지 못한다", linked)
+        assertNotEquals(archive.canonicalPath, link.canonicalPath)
+        assertEquals(SelfOverwriteGuard.Verdict.SELF, SelfOverwriteGuard(archive).check(link))
     }
 }

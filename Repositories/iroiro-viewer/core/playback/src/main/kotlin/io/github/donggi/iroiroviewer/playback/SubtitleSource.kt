@@ -77,7 +77,8 @@ private class SubtitleDataSource(private val inner: DataSource) : DataSource {
 
     override fun open(dataSpec: DataSpec): Long {
         val name = dataSpec.uri.lastPathSegment.orEmpty()
-        if (!SubtitleNames.isSubtitle(name)) return inner.open(dataSpec)
+        // 글 자막만 바꾼다. TTML 은 인코딩을 XML 선언에 적으므로 그대로 흘린다(`SubtitleNames.needsTranscoding`).
+        if (!SubtitleNames.needsTranscoding(name)) return inner.open(dataSpec)
 
         // **원본 전체를 읽는다.** 구간 요청(position/length)은 변환본에 대해 다시 계산한다.
         val whole = DataSpec.Builder().setUri(dataSpec.uri).build()
@@ -168,8 +169,9 @@ private class SubtitleDataSource(private val inner: DataSource) : DataSource {
 /**
  * 기기 파일을 읽는 기본 소스에 위 변환을 얹은 공장.
  *
- * `INTERNET` 을 선언하지 않으므로 [DefaultDataSource] 의 네트워크 갈래는 어차피 죽어 있다.
+ * [DefaultDataSource] 의 네트워크 갈래(http·udp·rtmp)는 [LocalOnlyDataSource] 가 막는다 — 이 앱은 `INTERNET` 을 선언하지 않아 OS 도
+ * 막는다(2026-10-05 ~ 10-09 에는 SFTP 때문에 선언했었다 — 걷은 뒤에도 겹으로 남긴다).
  */
 @OptIn(UnstableApi::class)
 fun subtitleAwareDataSourceFactory(context: android.content.Context): DataSource.Factory =
-    SubtitleDataSourceFactory(DefaultDataSource.Factory(context))
+    SubtitleDataSourceFactory(LocalOnlyDataSource.Factory(DefaultDataSource.Factory(context)))

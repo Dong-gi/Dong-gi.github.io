@@ -2,6 +2,7 @@ package io.github.donggi.iroiroviewer.webhost
 
 import android.net.Uri
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -56,6 +57,23 @@ class WebHostTest {
     @Test
     fun 호스트_대소문자를_가리지_않는다() {
         assertEquals("a.png", WebHost.pathOf(Uri.parse("HTTPS://BOOK.IROIRO.INVALID/a.png")))
+    }
+
+    /**
+     * 스크립트를 켠 쪽의 호스트. 열 때마다 달라야 하고(앞 쪽이 남긴 저장소·서비스 워커를 읽지 못하게), 다른 쪽의 호스트 — 잠긴 쪽의
+     * 것을 포함해 — 로 온 요청을 제 것으로 받지 않아야 한다.
+     */
+    @Test
+    fun 스크립트_쪽의_호스트는_매번_다르고_서로를_모른다() {
+        val a = WebHost.isolatedHost()
+        val b = WebHost.isolatedHost()
+        assertNotEquals(a, b)
+        assertTrue(a, a.matches(Regex("s[0-9a-f]{32}\\.live\\.iroiro\\.invalid")))
+        val url = WebHost.urlFor("f/", a)
+        assertEquals("f/", WebHost.pathOf(Uri.parse(url), a))
+        assertNull(WebHost.pathOf(Uri.parse(url)))
+        assertNull(WebHost.pathOf(Uri.parse(url), b))
+        assertNull(WebHost.pathOf(Uri.parse(WebHost.urlFor("OEBPS/ch1.xhtml")), a))
     }
 
     @Test

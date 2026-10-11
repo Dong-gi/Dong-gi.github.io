@@ -77,6 +77,8 @@ class ThumbnailFailuresTest {
         assertEquals(Cause.TRANSIENT, ThumbnailFailures.causeOf(IOException()))
         assertEquals(Cause.TRANSIENT, ThumbnailFailures.causeOf(FileNotFoundException()))
         assertEquals(Cause.UNCERTAIN, ThumbnailFailures.causeOf(IllegalStateException()))
+        // 표지의 압축 해제기가 그 파일 때문에 스택을 넘겼다 — 다시 해도 같다(빈 LZ4 프레임의 `.cbt`).
+        assertEquals(Cause.PERMANENT, ThumbnailFailures.causeOf(StackOverflowError()))
     }
 
     @Test

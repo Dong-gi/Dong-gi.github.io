@@ -37,7 +37,7 @@ fun playbackFailureText(failure: PlaybackFailure): String = when (failure) {
 }
 
 /**
- * '3:12 부터 이어서 재생할까요?'
+ * '3:12부터 이어서 재생할까요?'
  *
  * **묻는 말이다.** 재생은 이미 0초부터 시작했고 이 줄은 제안일 뿐이다
  * (`PlaybackConnection.State.resumeOfferMs`).
@@ -115,6 +115,40 @@ fun seekLabel(targetMs: Long, deltaMs: Long): String {
     val delta = "$sign${formatTime(kotlin.math.abs(deltaMs))}"
     return stringResource(R.string.playback_gesture_seek, formatTime(targetMs), delta)
 }
+
+/**
+ * 화면 낭독기가 읽는 시각 — '1분 23초'·'45분'·'1시간 2분 3초'. 조각은 [SpokenTime] 이 고르고 여기서는 붙이기만 한다
+ * ([trackLabel] 과 같은 갈래).
+ */
+@Composable
+fun spokenTime(ms: Long): String {
+    val parts = SpokenTime.partsOf(ms)
+    val words = ArrayList<String>(parts.size)
+    for (p in parts) {
+        words += when (p.kind) {
+            SpokenTime.Kind.HOURS -> stringResource(R.string.playback_spoken_hours, p.value)
+            SpokenTime.Kind.MINUTES -> stringResource(R.string.playback_spoken_minutes, p.value)
+            SpokenTime.Kind.SECONDS -> stringResource(R.string.playback_spoken_seconds, p.value)
+        }
+    }
+    return words.joinToString(" ")
+}
+
+/** 재생 막대의 이름 — 화면 낭독기가 슬라이더를 무엇이라 부를지(그 전에는 이름 없이 백분율만 읽혔다). */
+@Composable
+fun seekBarLabel(): String = stringResource(R.string.playback_seekbar)
+
+/**
+ * 재생 막대의 값 — '1분 23초 / 45분'. 길이를 모르면(첫 프레임 전·흘려 읽는 중) 지금 자리만 말한다 — '/ 0초' 는 거짓이다.
+ * 막대를 끄는 동안에는 부르는 쪽이 갈 자리를 넘긴다(화면의 시간 글과 같은 값).
+ */
+@Composable
+fun seekBarState(positionMs: Long, durationMs: Long): String =
+    if (durationMs > 0) {
+        stringResource(R.string.playback_seekbar_state, spokenTime(positionMs), spokenTime(durationMs))
+    } else {
+        spokenTime(positionMs)
+    }
 
 /** 배속 시트의 제목. */
 @Composable

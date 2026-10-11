@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 뒤에서 재생 잇기(BackgroundPlay — 2026-10-11 사용자 요청). 알림·잠금 화면의 글이다 — 짧게 둔다. -->
+    <string name="channel_playback">재생</string>
+    <string name="bgplay_site">유튜브</string>
+    <string name="bgplay_pause">일시 정지</string>
+    <string name="bgplay_play">재생</string>
+    <string name="bgplay_close">닫기</string>
+</resources>

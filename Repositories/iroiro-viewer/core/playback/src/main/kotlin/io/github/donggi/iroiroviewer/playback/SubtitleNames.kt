@@ -29,9 +29,18 @@ object SubtitleNames {
      * 형식이지만 직접 파서를 쓰는 것은 이 단계의 범위가 아니다 — 목록에 올려 놓고 붙이면
      * 빈 자막이 되는 것보다, **다루지 않는다고 정확히 말하는 편이 낫다.**
      */
-    val EXTENSIONS = setOf("srt", "ass", "ssa", "vtt")
+    val EXTENSIONS = setOf("srt", "ass", "ssa", "vtt", "ttml", "dfxp")
 
     fun isSubtitle(name: String): Boolean = extensionOf(name) in EXTENSIONS
+
+    /**
+     * 인코딩을 판정해 UTF-8 로 바꿔 넘길 자막인가(`SubtitleDataSourceFactory`). **글 자막만**이다 — media3 의 파서가 BOM 이
+     * 없으면 UTF-8 로 단정하는 것들. TTML(`ttml`·`dfxp`)은 XML 이라 인코딩을 **선언**에 적는다(`<?xml … encoding=…?>`) —
+     * 바이트를 UTF-8 로 바꾸고 선언을 그대로 두면 파서가 선언대로 읽어 깨진다. 그래서 그대로 넘긴다.
+     */
+    fun needsTranscoding(name: String): Boolean = extensionOf(name) in TRANSCODED
+
+    private val TRANSCODED = setOf("srt", "ass", "ssa", "vtt")
 
     /**
      * media3 에 넘길 MIME. 확장자로 정한다 — 내용으로 보려면 파일을 열어야 하고,
@@ -41,6 +50,8 @@ object SubtitleNames {
         "srt" -> "application/x-subrip"
         "ass", "ssa" -> "text/x-ssa"
         "vtt" -> "text/vtt"
+        // media3 의 TTML 파서(`extractor/text/ttml`)가 받는 이름이다. DFXP 는 TTML 의 옛 이름이고 모양이 같다.
+        "ttml", "dfxp" -> "application/ttml+xml"
         else -> "application/x-subrip"
     }
 

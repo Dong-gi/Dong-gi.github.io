@@ -15,17 +15,10 @@ sealed interface OpenFailure {
     /** 파일이 깨졌거나 명세에 어긋난다. */
     data class Corrupt(override val detail: String) : OpenFailure
 
-    /** 포맷은 알아봤지만 이 뷰어가 다루지 않는 갈래다. */
-    data class Unsupported(override val detail: String) : OpenFailure
-
     /**
-     * **이전 형식**이다 — `.doc`·`.xls`·`.ppt`(OLE2 이진 형식). 1단계에서 제외했다.
-     *
-     * [Unsupported] 와 가르는 것은 사용자가 할 수 있는 일이 있기 때문이다 — 오피스에서
-     * 새 형식(docx·xlsx·pptx)으로 저장하면 열린다. '다루지 않는 문서' 로 끝내면 그 길을
-     * 알 방법이 없다.
+     * 포맷은 알아봤지만 이 뷰어가 다루지 않는 갈래다.
      */
-    data class LegacyFormat(override val detail: String) : OpenFailure
+    data class Unsupported(override val detail: String) : OpenFailure
 
     /**
      * 암호를 넣으면 열 수 있다. 잠근 방식이 공개 명세라 우리가 풀 줄 안다.

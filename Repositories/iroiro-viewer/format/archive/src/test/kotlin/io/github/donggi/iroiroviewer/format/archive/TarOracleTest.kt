@@ -166,10 +166,24 @@ class TarOracleTest {
         }
     }
 
+    /**
+     * tar 가 아닌 gzip 은 **항목 하나짜리**다(14단계까지는 '다루지 않는 형식' 이었다). 이 표본(파이썬 `gzip.compress`)은 머리에
+     * 이름(FNAME)도 시각도 없다 — 이름은 압축 파일 이름에서 확장자를 뗀 것이다. 압축 tar 의 리더는 여전히 만들 때 거절한다.
+     */
     @Test
-    fun `tar 가 아닌 gzip 은 다루지 않는 형식이다`() {
-        assertFailsWith<TarArchiveReader.NotTarException> { open("not-tar.gz") }
-        assertNull(Archives.detect(FileDocumentSource(File(dir, "not-tar.gz"))))
+    fun `tar 가 아닌 gzip 은 항목 하나짜리다`() {
+        val src = FileDocumentSource(File(dir, "not-tar.gz"))
+        assertEquals(ArchiveKind.GZ, Archives.detect(src))
+        assertFailsWith<TarArchiveReader.NotTarException> { TarArchiveReader(src, EntryBudget(), codec = StreamCodec.GZIP) }
+        open("not-tar.gz").use { r ->
+            assertEquals(ArchiveKind.GZ, r.kind)
+            val e = r.entries.single()
+            assertEquals("not-tar", e.name)
+            assertTrue(e.isReadable)
+            val body = r.open(e).use { it.readBytes() }
+            assertEquals(1000, body.size)
+            assertTrue(String(body).startsWith("2026-09-12 log line\n"))
+        }
     }
 
     @Test

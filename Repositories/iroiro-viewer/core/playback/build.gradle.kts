@@ -32,6 +32,9 @@ dependencies {
     implementation(project(":core:charset"))
     implementation(project(":core:io"))
     implementation(project(":core:data"))
+    // 미니 바의 진행 막대(`IroProgress` — 앱의 모든 진행 막대가 재생 막대와 같은 모양을 쓴다). 10단계가 화면을
+    // `feature:player` 로 옮기며 이 의존을 뗐는데, 미니 바는 여기 남은 화면이라 다시 붙였다(의존 표의 예외에 적었다).
+    implementation(project(":core:ui"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.coroutines.core)

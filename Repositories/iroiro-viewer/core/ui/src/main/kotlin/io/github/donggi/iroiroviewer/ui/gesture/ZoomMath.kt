@@ -54,13 +54,61 @@ object ZoomMath {
     }
 
     /**
-     * 이 방향으로 아직 밀 자리가 남았는가.
+     * 아직 밀 자리가 남았는가 — 방향을 보지 않고 남은 여유만 본다.
      *
-     * **방향을 보지 않고 남은 여유만 본다.** 인식기가 주는 것이 누적 이동이 아니라 이번
-     * 프레임의 델타라, 방향으로 판정하면 손가락이 미세하게 떨릴 때마다 판정이 뒤집힌다.
+     * 한 손가락 끌기를 그림이 받을지는 이것이 아니라 [claimsDrag] 가 정한다(방향을 본다). 이것은 두 손가락(핀치)의 이동과
+     * '확대돼 있는가' 를 묻는 자리에 남는다.
      */
     fun canPan(maxOffsetX: Float, maxOffsetY: Float): Boolean =
         maxOffsetX > 0.5f || maxOffsetY > 0.5f
+
+    /**
+     * 한 손가락 끌기를 **확대된 그림이 받을 것인가.** 받지 않으면 그 끌기는 부모(넘기는 페이저)의 것이다. 끌기마다 **한 번**,
+     * 손가락이 슬롭을 넘는 순간에 정한다(`ZoomState.claimsDrag`).
+     *
+     * 구글 포토의 규칙이다 — 확대한 그림을 밀어 가장자리에 닿게 한 뒤 **손을 떼고 새로** 그쪽으로 밀면 다음 장으로 넘어간다.
+     * 같은 끌기 안에서 가장자리에 닿았다고 넘어가지는 않는다(보던 자리를 밀던 손가락이 장을 넘기면 놀란다). 예전에는 확대돼 있으면
+     * 언제나 받아서, 확대한 채로는 다음 장으로 갈 길이 두 번 두드려 줄이는 것뿐이었다.
+     *
+     * - 밀 자리가 아예 없으면(배율 1) 받지 않는다 — [canPan] 과 같다.
+     * - 끌기의 주된 방향이 부모가 넘기는 축이 아니면 받는다 — 가로로 넘기는 페이저에서 세로로 끌면 그림을 민다.
+     * - 부모의 축이면 **그 방향으로 남은 여유**([roomToward])를 본다. 가장자리에 닿아 있으면([EDGE_SLACK] 이하) 받지 않는다.
+     *
+     * [dx]·[dy] 는 이번 프레임의 델타가 아니라 **손가락이 닿은 뒤로 움직인 거리**다 — 델타의 방향은 손가락이 떨릴 때마다
+     * 뒤집힌다. 좌표 약속은 이 객체의 머리말 그대로다(오른쪽·아래로 밀면 offset 이 는다).
+     *
+     * @param pagesHorizontally 부모가 가로로 넘기는가(페이저). 세로로 넘기는 부모면 거짓이다.
+     */
+    fun claimsDrag(
+        dx: Float,
+        dy: Float,
+        offsetX: Float,
+        offsetY: Float,
+        maxOffsetX: Float,
+        maxOffsetY: Float,
+        pagesHorizontally: Boolean = true,
+    ): Boolean {
+        if (!canPan(maxOffsetX, maxOffsetY)) return false
+        if (!dx.isFinite() || !dy.isFinite()) return true
+        val horizontal = abs(dx) >= abs(dy)
+        if (horizontal != pagesHorizontally) return true
+        val delta = if (horizontal) dx else dy
+        if (delta == 0f) return true
+        return if (horizontal) {
+            roomToward(delta, offsetX, maxOffsetX) > EDGE_SLACK
+        } else {
+            roomToward(delta, offsetY, maxOffsetY) > EDGE_SLACK
+        }
+    }
+
+    /**
+     * [delta] 쪽으로 더 밀 수 있는 거리(화면 픽셀). 오른쪽(아래)으로 밀면 offset 이 [maxOffset] 까지, 반대면 −[maxOffset] 까지 간다.
+     */
+    fun roomToward(delta: Float, offset: Float, maxOffset: Float): Float =
+        if (delta > 0f) maxOffset - offset else offset + maxOffset
+
+    /** 이만큼 안이면 가장자리에 닿은 것으로 본다. `clamp` 가 경계에 정확히 세우므로 부동소수의 떨림만 덮는다. */
+    const val EDGE_SLACK = 0.5f
 
     /**
      * 더블탭이 갈 다음 배율.

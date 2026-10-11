@@ -177,7 +177,7 @@ class EpubBook internal constructor(
         for ((kind, n) in result.dropped.snapshot()) unsupported.record(kind, n)
         // **읽기용 껍데기를 여기서 씌운다.** 화면이 `format:html` 을 직접 보게 하면
         // `feature:*` 이 포맷 모듈을 둘 보게 되어 의존 표를 어긴다. 껍데기는 어차피
-        // 12·13단계의 문서와도 같은 것이라 포맷 쪽에 두는 편이 맞다.
+        // 마크다운 미리보기와도 같은 것이라 포맷 쪽에 두는 편이 맞다.
         // 장이 언어를 적지 않았으면 책의 `dc:language` 를 쓴다 — 줄 나눔 규칙(`keep-all`)이 언어를 보고, 한자의 자형도
         // 언어를 따른다(적지 않으면 기기의 언어로 그린다).
         return HtmlShell.wrap(result.html, cssFor(raw), pkg.language)

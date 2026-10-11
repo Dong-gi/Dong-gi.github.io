@@ -7,10 +7,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,6 +28,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -54,6 +63,7 @@ import io.github.donggi.iroiroviewer.playback.playlistEmptyLabel
  * **순서는 폴더에서 본 그대로**다. 섞기를 켜도 목록은 재배열되지 않고 다음에 무엇이
  * 나올지만 달라진다 — 켤 때마다 줄이 뛰어다니면 방금 본 것을 다시 찾을 수 없다.
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PlaylistPanel(currentIndex: Int, bottomInset: Dp = 0.dp, modifier: Modifier = Modifier) {
     val queue by PlaybackConnection.queue.collectAsStateWithLifecycle()
@@ -87,11 +97,15 @@ fun PlaylistPanel(currentIndex: Int, bottomInset: Dp = 0.dp, modifier: Modifier 
         }
         // **시스템 바를 피한다.** 영상은 화면 끝까지 차야 하므로 이 층의 부모에는 인셋이
         // 없다. 목록은 글이라 상태 표시줄 아래에서 시작해야 첫 줄이 시계에 물리지 않는다.
+        // **바가 보이든 거둬졌든 같은 자리를 비운다**(`…IgnoringVisibility`) — 재생 화면은 영상을 보는 동안 바를
+        // 거두는데(`PlayerChrome`), 목록을 펼치는 순간 바가 다시 들어오며 인셋이 바뀌면 목록이 한 번 출렁인다.
         LazyColumn(
             state = listState,
             // 조작부 판이 덮는 만큼 끝에 자리를 비운다. 부르는 쪽이 재서 준다.
             contentPadding = PaddingValues(bottom = bottomInset),
-            modifier = Modifier.fillMaxSize().safeDrawingPadding(),
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.systemBarsIgnoringVisibility.union(WindowInsets.displayCutout)),
         ) {
             items(queue, key = { it.index }) { item ->
                 QueueRow(
@@ -114,10 +128,18 @@ private fun QueueRow(
     onSurface: Color,
     onClick: () -> Unit,
 ) {
+    // 화면 낭독기에게도 같은 두 가지를 말한다(그 전에는 아이콘의 설명이 없고 재생 중인 줄에 상태가 없어 듣는
+    // 사람에게는 모든 줄이 같았다). 재생 중인 줄은 **골라진 줄**(`selected`)이고 '재생 중' 이라고 말한다. 줄을 누를 수 있는 것은
+    // `clickable` 이 이미 말한다 — 그 아래의 아이콘·글은 한 줄로 합쳐 읽힌다.
+    val nowPlaying = stringResource(R.string.player_now_playing)
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
+            .semantics {
+                selected = playing
+                if (playing) stateDescription = nowPlaying
+            }
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -130,7 +152,10 @@ private fun QueueRow(
                 kind == FileKind.VIDEO -> VideoIcon
                 else -> TrackIcon
             },
-            contentDescription = null,
+            // 재생 중인 줄은 위의 상태가 말하므로 종류만 — 영상인지 소리인지는 그림으로만 갈리던 것이다.
+            contentDescription = stringResource(
+                if (kind == FileKind.VIDEO) R.string.player_kind_video else R.string.player_kind_audio,
+            ),
             tint = if (playing) MaterialTheme.colorScheme.primary else onSurface.copy(alpha = 0.55f),
             modifier = Modifier.size(20.dp),
         )

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 손으로 그린 선 아이콘(24x24, 흰 선) — 검색(돋보기). 색은 쓰는 쪽이 칠한다(imageTintList). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M16.5,10.5A6,6 0,1 1,4.5,10.5A6,6 0,1 1,16.5,10.5Z"
+        android:strokeWidth="2"
+        android:strokeColor="#FFFFFFFF" />
+    <path
+        android:pathData="M15,15L20,20"
+        android:strokeWidth="2"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round" />
+</vector>

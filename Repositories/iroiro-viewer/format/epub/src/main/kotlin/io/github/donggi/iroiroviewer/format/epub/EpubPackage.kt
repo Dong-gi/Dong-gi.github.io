@@ -190,8 +190,8 @@ internal object EpubPackage {
                     val raw = SafeXml.text(parser, limits)
                     // **식별자는 XML 공백 넷만 벗긴다.** 코틀린의 `trim()` 은 NBSP·U+3000 같은 유니코드
                     // 공백까지 벗기는데, 글꼴 난독화의 열쇠(EPUB 3.3 4.4)는 U+0020·0009·000D·000A 만
-                    // 뺀 식별자의 SHA-1 이다. 끝에 NBSP 가 붙은 식별자면 열쇠가 틀려 글꼴이 조용히 깨진다
-                    // (검토가 잡았다). 제목·언어는 화면에 보일 값이라 그대로 `trim()` 한다.
+                    // 뺀 식별자의 SHA-1 이다. 끝에 NBSP 가 붙은 식별자면 열쇠가 틀려 글꼴이 조용히 깨진다.
+                    // 제목·언어는 화면에 보일 값이라 그대로 `trim()` 한다.
                     val text = if (pending == "identifier") {
                         raw.trim { it == ' ' || it == '\t' || it == '\r' || it == '\n' }
                     } else {

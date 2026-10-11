@@ -2,6 +2,7 @@ package io.github.donggi.iroiroviewer.image
 
 import android.graphics.drawable.AnimatedImageDrawable
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
@@ -9,10 +10,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -37,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -44,11 +50,19 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
@@ -59,10 +73,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import io.github.donggi.iroiroviewer.io.CropSupport
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.model.FileEntry
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.ImageLimits
+import io.github.donggi.iroiroviewer.ui.SystemBarsHidden
 import io.github.donggi.iroiroviewer.ui.gesture.DismissMath
 import io.github.donggi.iroiroviewer.ui.gesture.DismissState
 import io.github.donggi.iroiroviewer.ui.gesture.ZoomState
@@ -95,10 +111,10 @@ import java.io.File
  *
  * | 동작 | 결과 | 왜 |
  * |---|---|---|
- * | 한 번 탭 | 상·하단 막대 감추기/보이기 | 사진만 보고 싶을 때 즉시 치운다 |
+ * | 한 번 탭 | 상·하단 막대 감추기/보이기 — 시스템 바도 함께 | 사진만 보고 싶을 때 즉시 치운다. 가장자리를 밀면 바가 잠깐 보인다 |
  * | 더블탭 | 짚은 자리를 중심으로 확대/원래대로 | 두 손가락을 쓸 수 없는 한 손 조작 |
  * | 핀치 | 확대·축소 | |
- * | 끌기(확대 상태) | 사진 안에서 이동 | |
+ * | 끌기(확대 상태) | 사진 안에서 이동. 가장자리에 닿은 뒤 **새로** 밀면 다음/이전 사진 | 구글 포토의 관행(`ZoomState.claimsDrag`) |
  * | 좌우로 밀기(배율 1) | 다음/이전 사진 | **폴더 목록 그대로**를 순서로 쓴다 |
  * | 아래로 끌기(배율 1) | 닫기 | 끌수록 그림이 내려가며 옅어지고, 문턱을 넘겨 놓거나 빠르게 튕기면 닫힌다 |
  * | 뒤로가기 | 목록으로 | 아래로 끌어 닫기와 **같은 곳**(`onClose`)으로 간다 |
@@ -108,9 +124,13 @@ import java.io.File
  * 까닭과 대가(선명화 조각 없음)는 `ZoomablePainter` 에 적었다. 트는 것은 **자리 잡은 장 하나**뿐이다.
  * 페이저가 앞뒤 한 장씩을 화면 밖에서도 구성해 두므로, 그대로 두면 보이지도 않는 GIF 가 프레임을 푼다.
  *
+ * **SVG 는 잠긴 WebView 가 그린다**(`SvgPage`, 14단계 뒤). 몸짓은 위 표와 같다 — 확대·이동은 WebView 가, 두 번 두드림은 같은
+ * 2.5배, 넘기기·끌어 닫기는 페이저가 한다. 화면 회전은 없다(메뉴가 꺼진다).
+ *
  * ## 이 뷰어가 못 여는 그림 — 다른 앱으로 연다
  *
- * 디코더가 풀지 못한 장(SVG·TIFF, 기기가 못 푸는 HEIC/AVIF, 깨진 파일)은 문구 아래에 '다른 앱으로 열기' 단추를 단다.
+ * 디코더가 풀지 못한 장(TIFF, 기기가 못 푸는 HEIC/AVIF, 뿌리가 svg 도 비트맵도 아닌 `.svg`, 깨진 파일)은 문구 아래에
+ * '다른 앱으로 열기' 단추를 단다.
  * ⋮ 메뉴에도 지금 장을 여는 줄이 있다. 둘 다 **언제나 고르는 창**이다 — 사용자가 '다른 앱으로' 라고 말했으므로 기본
  * 앱으로 곧장 보내지 않는다. 띄우지 못했으면(파일이 그새 사라졌다 등) 이 화면의 스낵바가 우리 문장으로 말한다. 무엇에
  * 단추를 다는가는 [ImageOpenWith] 가 정한다(파일이 없어진 장에는 달지 않는다).
@@ -128,14 +148,28 @@ import java.io.File
  * 자식이라 먼저 보고, 끌어 닫기가 그 위, 페이저가 맨 위다. 누가 이기는가는 `DismissMath` 의 주석과
  * JVM 시험이 답한다.
  *
+ * ## 잘라서 저장
+ *
+ * ⋮ 의 '잘라서 저장' 이 그림 위에 사각형을 고르는 화면([CropScreen])을 덮는다. 저장은 원본 곁의 새 파일이고 파일 작업 큐가 한다
+ * ([onCrop] → `FileOpManager.Request.SaveCrop`) — 결과(실제 이름)는 앱의 결과 소비자가 이 화면의 스낵바로 말한다. **정지 그림만**
+ * 자른다(움직이는 그림·SVG·못 연 장은 메뉴가 꺼진다). 회전을 저장하는 중이면 끈다 — 화면은 이미 돌았는데 파일은 아직이라, 고른
+ * 자리가 저장될 때의 파일과 어긋난다.
+ *
+ * ## 그리기·메모
+ *
+ * ⋮ 의 '그리기·메모' 가 그림 위에 펜·형광펜·직선·글 메모를 다는 화면([MarkupScreen])을 덮는다. **잘라서 저장과 같은 조건**에서만
+ * 켠다(같은 판단 하나 — `editableProbe`). 저장도 같은 길이다 — 그린 것을 실은 잘라 저장 요청([onMarkup] → `SaveCrop.overlay`)이
+ * 그림 전체를 원본 해상도로 뜬 위에 그려 `이름_markup` 으로 쓴다. 그린 것은 [MarkupViewModel] 이 들고(저장 상태 번들에 싣지 않는다),
+ * 프로세스가 죽었다 살아나면 저장 상태에 남긴 경로 하나로 초안을 되살린다.
+ *
  * ## 이 화면이 바깥 `Scaffold` 밖에 있는 이유
  *
- * `Scaffold` 의 기본 인셋은 시스템 바를 따라가고, 그 값은 막대가 숨겨지고 나타나는
- * **애니메이션 내내 프레임마다 변한다.** 그 패딩을 받으면 확대·이동의 기준 상자가
- * 프레임마다 움직여 경계 계산이 어긋난다. 사진은 인셋 0 으로 꽉 채우고, 겹치는 막대만
- * 자기 인셋을 쓴다.
+ * 막대를 감추면 **시스템 바도 함께 감춘다**([SystemBarsHidden], 거는 것은 액티비티다). `Scaffold` 의 기본 인셋은
+ * 시스템 바를 따라가고, 그 값은 바가 숨고 나타나는 **애니메이션 내내 프레임마다 변한다.** 그 패딩을 받으면 확대·이동의 기준
+ * 상자가 프레임마다 움직여 경계 계산이 어긋난다. 사진은 인셋 0 으로 꽉 채우고, 겹치는 막대만 자기 인셋을 쓴다 — 그것도 바가
+ * 숨어도 변하지 않는 인셋(`…IgnoringVisibility`)이라, 막대가 사라지거나 나타나는 동안 글자가 위아래로 미끄러지지 않는다.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ImageViewerScreen(
     entries: List<FileEntry>,
@@ -145,10 +179,28 @@ fun ImageViewerScreen(
     generation: Int,
     onClose: () -> Unit,
     onShare: (FileEntry) -> Unit,
-    onShareSanitized: (FileEntry) -> Unit,
-    onDelete: (FileEntry) -> Unit,
-    onRotate: (FileEntry, Int) -> Unit,
+    /**
+     * 메타데이터를 지운 사본을 공유한다. 만들지 못했으면 둘째 인자를 부른다 — **이 화면이 그 자리에서 말한다**(예전에는
+     * 파일 목록으로 돌아간 뒤에야 엉뚱한 문장이 떴고, 다른 앱에서 받은 사진이면 아예 뜨지 않았다).
+     */
+    onShareSanitized: (FileEntry, onFailed: () -> Unit) -> Unit,
+    /**
+     * 지우기(휴지통으로)와 회전(EXIF 저장). **null 이면 그 단추를 내지 않는다** — 다른 앱이 넘겨 앱 캐시에 둔 사본은 읽기
+     * 전용이다(`IncomingFiles` — 보낸 쪽의 원본이 아니고, 캐시는 사용자가 찾아갈 수 없는 자리다).
+     */
+    onDelete: ((FileEntry) -> Unit)?,
+    onRotate: ((FileEntry, Int) -> Unit)?,
     modifier: Modifier = Modifier,
+    /**
+     * 고른 자리를 새 파일로 저장한다 — (장, 화면 방향의 원본 화소 `[왼, 위, 오른, 아래]`, 고를 때 본 원본의 화면 방향 폭·높이).
+     * **null 이면 메뉴에 내지 않는다**(읽기 전용 사본 — [onDelete] 와 같은 까닭).
+     */
+    onCrop: ((FileEntry, IntArray, Int, Int) -> Unit)? = null,
+    /**
+     * 그린 것을 새 파일로 저장한다 — (원본 경로, 그릴 것, 그릴 때 본 원본의 화면 방향 폭·높이). **null 이면 메뉴에 내지 않는다**
+     * ([onCrop] 과 같은 까닭). 장이 아니라 경로를 받는 것은 프로세스가 죽었다 되살린 그리기가 지금 목록에 없는 그림일 수 있어서다.
+     */
+    onMarkup: ((String, CropSupport.Overlay, Int, Int) -> Unit)? = null,
 ) {
     if (entries.isEmpty()) {
         LaunchedEffect(Unit) { onClose() }
@@ -160,6 +212,8 @@ fun ImageViewerScreen(
         pageCount = { entries.size },
     )
     var chromeVisible by remember { mutableStateOf(true) }
+    // 막대를 감추면 시스템 바도 감춘다 — 뷰어를 닫으면(이 화면이 컴포지션에서 빠지면) 되돌아온다.
+    SystemBarsHidden(hidden = !chromeVisible)
     var showInfo by remember { mutableStateOf(false) }
     var menuOpen by remember { mutableStateOf(false) }
     var rotateNotice by remember { mutableStateOf(false) }
@@ -204,7 +258,43 @@ fun ImageViewerScreen(
     // [stillReasons] 와 같다 — 한 장은 자기 상태가 바뀔 때만 알린다.
     val pageFailures = remember { mutableStateMapOf<String, ImageOpenWith.PageFailure>() }
 
+    // 장마다 잘라 저장할 수 있는가 — 정지 그림으로 열렸고 원본 치수를 쟀다(고르는 화면이 그 치수로 좌표를 잡는다). 비우지 않는
+    // 까닭은 [stillReasons] 와 같다.
+    val croppable = remember { mutableStateMapOf<String, ImageProbe>() }
+    // 고르는 화면에 띄운 장. null 이면 닫혀 있다.
+    var cropping by remember { mutableStateOf<Pair<FileEntry, ImageProbe>?>(null) }
+
+    // 잘라 저장·그리기가 **함께 쓰는** 조건 — 정지 그림으로 열렸고(원본 치수를 쟀다), 화면에서 돌려 두고 아직 저장하지 않은 동안이
+    // 아니다(화면은 이미 돌았는데 파일은 아직이라 고른 자리·그린 자리가 저장될 때의 파일과 어긋난다). 되면 그 장의 원본 치수, 아니면 null.
+    fun editableProbe(e: FileEntry?): ImageProbe? =
+        e?.takeIf { (displayRotation[it.path] ?: 0) == 0 }?.let { croppable[it.path] }
+
+    // 그리기·메모. 그린 것은 ViewModel 이 든다 — 저장 상태 번들에 싣지 않는다(크기). 액티비티에 매여 밤 모드를 건너 산다.
+    val markupVm: MarkupViewModel = viewModel()
+    val markup by markupVm.session.collectAsStateWithLifecycle()
+    // 프로세스가 죽었다 살아나면 ViewModel 이 비어 있다 — 그리던 그림의 경로 하나만 저장 상태에 두고(작다), 그린 것은 앱이 화면에서
+    // 사라질 때 적어 둔 초안에서 되살린다. 되살리지 못하면(초안이 없다·원본이 바뀌었다) 뷰어 그대로다.
+    var markupPath by rememberSaveable { mutableStateOf<String?>(null) }
+    LaunchedEffect(markup?.path) { markup?.path?.let { markupPath = it } }
+    LaunchedEffect(Unit) {
+        val saved = markupPath ?: return@LaunchedEffect
+        if (markupVm.session.value == null && (onMarkup == null || !markupVm.restoreDraft(saved))) markupPath = null
+    }
+    // 뷰어가 사라지면(다른 앱이 다른 파일을 넘겨 화면이 바뀌었다, 액티비티를 끝냈다) 그리던 것을 접는다. 구성이 바뀌어(밤 모드) 다시
+    // 서거나 시스템이 액티비티를 거두는 것이면 그대로 둔다 — 그때는 ViewModel 과 초안이 이어 준다.
+    val activity = LocalActivity.current
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    DisposableEffect(markupVm, lifecycle) {
+        onDispose {
+            val destroying = lifecycle.currentState == Lifecycle.State.DESTROYED
+            if (!destroying || activity?.isFinishing == true) markupVm.close()
+        }
+    }
+
     val openWith = rememberOpenWith(snackbar)
+    // 메타데이터를 지운 공유가 실패했을 때 — 결과는 ViewModel 의 일에서 늦게 오므로 이 화면의 스코프로 띄운다(화면을 떠났으면 말하지 않는다).
+    val scope = rememberCoroutineScope()
+    val sanitizeFailed = stringResource(R.string.image_sanitize_failed)
 
     BackHandler { onClose() }
 
@@ -224,6 +314,10 @@ fun ImageViewerScreen(
         }
     }
 
+    // 고르는 화면·그리는 화면이 덮는 동안 뒤의 뷰어를 화면 낭독기에서 감춘다 — 손가락은 덮는 화면이 막지만 낭독기의 초점은 그 아래의
+    // 장·막대로 내려가, 보이지 않는 '회전'·'지우기' 를 읽고 누를 수 있었다.
+    val behindCrop = if (cropping != null || markup != null) Modifier.clearAndSetSemantics {} else Modifier
+
     Box(modifier.fillMaxSize().background(Color.Black)) {
         HorizontalPager(
             state = pagerState,
@@ -231,7 +325,7 @@ fun ImageViewerScreen(
             // 이보다 줄이면 되돌아 밀 때마다 다시 디코딩해 체감이 그만큼 나빠진다.
             beyondViewportPageCount = 1,
             key = { entries[it].path },
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().then(behindCrop),
         ) { page ->
             val entry = entries[page]
             val zoom = pages.getOrPut(entry.path) { ZoomState() }
@@ -277,6 +371,9 @@ fun ImageViewerScreen(
                         onFailure = { failure ->
                             if (failure == null) pageFailures.remove(entry.path) else pageFailures[entry.path] = failure
                         },
+                        onCroppable = { probe ->
+                            if (probe == null) croppable.remove(entry.path) else croppable[entry.path] = probe
+                        },
                         // 못 연 장의 단추는 **그 장의** 파일을 넘긴다(지금 장이 아니라). 넘기는 도중에도 옆 장이 걸려 있다.
                         onOpenWith = { openWith(entry.path) },
                     )
@@ -291,10 +388,13 @@ fun ImageViewerScreen(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 // 끌기 시작하면 막대가 먼저 사라진다 — 그림만 남아야 '닫힌다' 가 읽힌다.
-                .graphicsLayer { alpha = dismiss.chromeAlpha },
+                .graphicsLayer { alpha = dismiss.chromeAlpha }
+                .then(behindCrop),
         ) {
             val current = entries.getOrNull(pagerState.currentPage)
             TopAppBar(
+                // 시스템 바가 숨어도 변하지 않는 인셋 — 막대가 사라지는 동안 바가 함께 숨어 제목이 위로 미끄러지지 않게.
+                windowInsets = WindowInsets.systemBarsIgnoringVisibility.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Black.copy(alpha = 0.55f),
                     titleContentColor = Color.White,
@@ -320,8 +420,10 @@ fun ImageViewerScreen(
                     IconButton(onClick = { current?.let(onShare) }) {
                         Icon(Icons.Filled.Share, stringResource(R.string.image_share))
                     }
-                    IconButton(onClick = { current?.let(onDelete) }) {
-                        Icon(Icons.Filled.Delete, stringResource(R.string.image_delete))
+                    if (onDelete != null) {
+                        IconButton(onClick = { current?.let(onDelete) }) {
+                            Icon(Icons.Filled.Delete, stringResource(R.string.image_delete))
+                        }
                     }
                     // **⋮ 단추와 메뉴를 한 상자에 담는다.** Compose 의 Popup 은 자기를 감싼 **부모
                     // 레이아웃 노드**를 앵커로 삼는다. `actions` 에 형제로 두면 앵커가 아이콘 줄
@@ -332,11 +434,14 @@ fun ImageViewerScreen(
                             Icon(Icons.Filled.MoreVert, stringResource(R.string.image_more))
                         }
                         DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                            DropdownMenuItem(
+                            if (onRotate != null) DropdownMenuItem(
                                 leadingIcon = {
                                     Icon(RotateRightIcon, null)
                                 },
                                 text = { Text(stringResource(R.string.image_rotate)) },
+                                // SVG 장은 WebView 가 그려 화면에서도 돌지 않는다. 켜 두면 '저장할 수 없다' 만 떠서 화면에서는
+                                // 돈 것처럼 읽힌다.
+                                enabled = current?.let { !SvgSupport.isSvgName(it.name) } != false,
                                 onClick = {
                                     menuOpen = false
                                     current?.let { e ->
@@ -353,6 +458,24 @@ fun ImageViewerScreen(
                                     }
                                 },
                             )
+                            if (onCrop != null) DropdownMenuItem(
+                                text = { Text(stringResource(R.string.image_crop)) },
+                                // 정지 그림으로 열린 장만. 회전을 저장하는 중이면 끈다(머리말 — 고른 자리가 파일과 어긋난다).
+                                enabled = editableProbe(current) != null,
+                                onClick = {
+                                    menuOpen = false
+                                    current?.let { e -> editableProbe(e)?.let { probe -> cropping = e to probe } }
+                                },
+                            )
+                            // 잘라서 저장과 같은 조건이다 — 그린 자리도 저장될 때의 파일과 맞아야 한다.
+                            if (onMarkup != null) DropdownMenuItem(
+                                text = { Text(stringResource(R.string.image_markup)) },
+                                enabled = editableProbe(current) != null,
+                                onClick = {
+                                    menuOpen = false
+                                    current?.let { e -> editableProbe(e)?.let { probe -> markupVm.open(e.path, probe) } }
+                                },
+                            )
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.image_share_sanitized)) },
                                 // 되는 형식에서만 켠다. HEIC·AVIF·RAW 는 라이브러리가 쓰기를
@@ -360,7 +483,9 @@ fun ImageViewerScreen(
                                 enabled = current?.let { ExifReader.canSanitize(it.name) } == true,
                                 onClick = {
                                     menuOpen = false
-                                    current?.let(onShareSanitized)
+                                    current?.let { e ->
+                                        onShareSanitized(e) { scope.launch { snackbar.showSnackbar(sanitizeFailed) } }
+                                    }
                                 },
                             )
                             // 지금 장을 다른 앱으로. 이 뷰어가 **열어 보인** 그림에도 둔다 — 편집기·다른 갤러리로
@@ -392,7 +517,8 @@ fun ImageViewerScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .graphicsLayer { alpha = dismiss.chromeAlpha },
+                .graphicsLayer { alpha = dismiss.chromeAlpha }
+                .then(behindCrop),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val reason = entries.getOrNull(pagerState.currentPage)?.let { stillReasons[it.path] }
@@ -401,7 +527,7 @@ fun ImageViewerScreen(
                 val barGone = !barState.currentState && !barState.targetState
                 StillNotice(
                     reason = reason,
-                    modifier = if (barGone) Modifier.windowInsetsPadding(WindowInsets.navigationBars) else Modifier,
+                    modifier = if (barGone) Modifier.windowInsetsPadding(WindowInsets.navigationBarsIgnoringVisibility) else Modifier,
                 )
             }
             AnimatedVisibility(
@@ -413,7 +539,7 @@ fun ImageViewerScreen(
                     Modifier
                         .fillMaxWidth()
                         .background(Color.Black.copy(alpha = 0.55f))
-                        .windowInsetsPadding(WindowInsets.navigationBars)
+                        .windowInsetsPadding(WindowInsets.navigationBarsIgnoringVisibility)
                         .padding(12.dp),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -427,6 +553,39 @@ fun ImageViewerScreen(
                         color = Color.White,
                     )
                 }
+            }
+        }
+
+        // 고르는 화면은 뷰어를 통째로 덮는다(아래 페이저에 손가락이 닿지 않게 그 화면이 막는다). 스낵바는 그 위다.
+        cropping?.let { (entry, probe) ->
+            CropScreen(
+                path = entry.path,
+                probe = probe,
+                onCancel = { cropping = null },
+                onSave = { rect ->
+                    onCrop?.invoke(entry, rect, probe.displayWidth, probe.displayHeight)
+                    cropping = null
+                },
+            )
+        }
+
+        // 그리는 화면도 같은 꼴로 덮는다. 저장하면 그린 것을 실은 요청이 큐로 가고 화면은 닫힌다 — 결과는 이 화면의 스낵바가 말한다.
+        if (onMarkup != null) {
+            markup?.let { s ->
+                MarkupScreen(
+                    vm = markupVm,
+                    session = s,
+                    budget = budget,
+                    onSave = { overlay ->
+                        onMarkup(s.path, overlay, s.width, s.height)
+                        markupVm.close()
+                        markupPath = null
+                    },
+                    onClose = {
+                        markupVm.close()
+                        markupPath = null
+                    },
+                )
             }
         }
 
@@ -485,6 +644,8 @@ private fun ImagePage(
     onFailure: (ImageOpenWith.PageFailure?) -> Unit,
     /** 이 장의 파일을 다른 앱으로 연다. 못 연 장의 단추가 부른다. */
     onOpenWith: () -> Unit,
+    /** 잘라 저장할 수 있으면 원본 치수를, 아니면 null 을 알린다(정지 그림으로 열렸고 치수를 쟀을 때만). */
+    onCroppable: (ImageProbe?) -> Unit,
 ) {
     val density = LocalDensity.current
     val config = LocalConfiguration.current
@@ -499,13 +660,21 @@ private fun ImagePage(
     //
     // **원본 치수를 함께 잰다**(`probe`). 최대 배율이 원본의 2배이고, 바닥층은 화면에
     // 맞춰 줄여 뜬 것이라 원본이 아니다. `Ready` 전에 재 두어 첫 프레임부터 상한이 옳다.
-    val state by produceState<PageState>(PageState.Loading, path, generation) {
+    val opened by produceState<PageState>(PageState.Loading, path, generation) {
         value = openPage(path, targetLongest, budget)
     }
+    // SVG 를 그리던 엔진(WebView 의 렌더러 프로세스)이 죽었다 — 그 장은 못 연 장으로 보인다. 파일은 멀쩡하니 다른 앱으로 열 수 있다.
+    var renderGone by remember(path, generation) { mutableStateOf(false) }
+    val state = if (renderGone && opened is PageState.Vector) PageState.Failed(ImageOpenWith.PageFailure.UNDECODABLE) else opened
     val reportNow by rememberUpdatedState(onStillReason)
     LaunchedEffect(state) { reportNow((state as? PageState.Still)?.reason) }
     val reportFailure by rememberUpdatedState(onFailure)
     LaunchedEffect(state) { reportFailure((state as? PageState.Failed)?.failure) }
+    val reportCroppable by rememberUpdatedState(onCroppable)
+    LaunchedEffect(state) {
+        // 움직이는 그림을 첫 장면만 보이는 장(APNG·너무 큰 GIF)은 자르지 않는다 — 첫 장면만 남는 것을 잘라 낸 그림이라 할 수 없다.
+        reportCroppable((state as? PageState.Still)?.takeIf { it.reason == null }?.probe?.takeIf { !it.isAnimated })
+    }
 
     // 디버그 빌드에서만 남는다. 제스처는 눈으로만 확인할 수 있는 것이 많아서, 배율만은
     // 기계가 읽을 수 있게 찍어 둔다 — 'pan 인가 page 인가' 를 화면 캡처로 판정하려 들면
@@ -533,6 +702,13 @@ private fun ImagePage(
                     }
                 }
             }
+            is PageState.Vector -> SvgPage(
+                prepared = st.prepared,
+                generation = generation,
+                onTap = onTap,
+                onRenderGone = { renderGone = true },
+                modifier = Modifier.fillMaxSize(),
+            )
             is PageState.Moving -> {
                 val painter = rememberAnimatedPainter(st.drawable, playing = active)
                 LaunchedEffect(active) {
@@ -603,6 +779,12 @@ private fun ImagePage(
  * 움직이는 그림으로 열지 못하면 첫 장면으로 물러나되 **그렇게 말한다**(`DECODE_FAILED`).
  */
 private suspend fun openPage(path: String, targetLongest: Int, budget: ImageLimits.Budget): PageState {
+    // **SVG 는 플랫폼 디코더가 없다** — 잠긴 WebView 로 그린다(`SvgPage`). 뿌리 `<svg>` 를 확인하고 `svgz` 를 푸는 일은 입출력과
+    // 압축 풀기다. **뿌리가 svg 가 아니면 아래 비트맵 길로 간다** — 내용이 PNG·JPEG 인 `.svg` 를 디코더는 내용으로 연다(`MimeResolver`
+    // 머리말의 '내용이 이긴다'. 처음 판은 그런 파일을 '열 수 없다' 로 끝냈다). 비트맵도 아니면 거기서 '열 수 없다' 다.
+    if (SvgSupport.isSvgName(path)) {
+        withContext(IroDispatchers.parsing) { SvgSupport.prepare(File(path)) }?.let { return PageState.Vector(it) }
+    }
     val probe = ImageIo.probe(path)
     // APNG 은 플랫폼이 정지 PNG 으로 준다 — 청크를 우리가 훑어야 안다. PNG 일 때만 연다(IO).
     val apng = probe != null && !probe.isAnimated && probe.mimeType == "image/png" &&
@@ -650,6 +832,9 @@ private sealed interface PageState {
         /** 움직이는 그림을 첫 장면만 보여 주는 까닭. 처음부터 정지 그림이면 null. */
         val reason: AnimationPlan.StillReason?,
     ) : PageState
+
+    /** SVG. WebView 가 그리고 확대한다([SvgPage]). */
+    data class Vector(val prepared: SvgSupport.Prepared) : PageState
 
     /** 움직이는 그림. 프레임 버퍼는 `AnimationPlan` 이 예산에 맞춘 표본으로 떴다. */
     data class Moving(

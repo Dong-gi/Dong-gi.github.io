@@ -7,8 +7,15 @@
       까지 두는 것은, 나중에 붙는 라이브러리가 제 매니페스트에서 INTERNET 을 병합해
       들여오는 것을 막기 위해서다. 이 한 줄이 EPUB 의 추적 픽셀, 문서의 외부 참조,
       모든 서드파티의 소켓을 OS 수준에서 동시에 막는다.
+      2026-10-05 에 네트워크 저장소(SFTP) 때문에 선언했다가 2026-10-09 에 사용자가 이 앱의 네트워크 기능을 걷기로 해 되돌렸다
+      (CLAUDE.md 의 'INTERNET 을 다시 걷었다'). 그동안 세운 겹(잠긴 WebView 의 blockNetworkLoads 명시, 재생기의
+      LocalOnlyDataSource, 스크립트 쪽의 CSP)은 그대로 둔다 - 방어는 겹쳐 두어야 한 겹이 무너져도 남는다.
+      같은 권한을 uses-permission-sdk-23(API 23 부터만 청하는 모양)으로 들여오는 라이브러리도 있다 - 병합기는 그것을 다른 요소로 보아
+      위 줄의 remove 가 닿지 않으므로 그 모양으로도 한 줄 둔다. 병합된 매니페스트에 INTERNET 이 남지 않았는지는
+      빌드가 본다(app/build.gradle.kts 의 verify…NoInternet - assemble 이 기다린다).
     -->
     <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+    <uses-permission-sdk-23 android:name="android.permission.INTERNET" tools:node="remove" />
 
     <!-- 파일 관리자의 본체. 특별 접근 권한이라 설정 화면에서만 켤 수 있다. -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
@@ -26,6 +33,8 @@
       InstallStaging 을 거쳐 출처 안내가 뜨고(API 31 도 안내까지 같다), 선택 메뉴의 다른 앱으로 열기(CHOOSE)는 받는 앱이
       하나라 고르는 창이 곧바로 넘기는데 설치 관리자가 그것을 우리가 보낸 것으로 받는다.
       이 앱은 스스로 무엇도 설치하지 않는다(PackageInstaller 세션을 열지 않는다).
+      2026-10-11 에 Play 프로텍트가 이 앱의 설치를 '유해한 앱' 으로 막아 이 줄을 걷어 보았지만 막힘이 풀리지 않아 되살렸다(사용자 -
+      CLAUDE.md 의 '14단계 뒤 - Play 프로텍트의 설치 차단').
     -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
@@ -47,6 +56,14 @@
         android:theme="@style/Theme.IroiroViewer">
 
         <!--
+          WebView 가 밖으로 보낼 수 있는 것 둘을 끈다. 사용 통계(구글로 가는 WebView 의 기록)와 안전 브라우징(쪽의 주소를 구글에
+          묻는다 - 우리 쪽은 기기 안의 파일이고, 모든 WebView 가 설정으로도 끈다). INTERNET 이 없어도 그대로 둔다 - 둘은 이 앱이 아니라
+          WebView 꾸러미·구글 플레이 서비스 쪽에서 보낼 수 있다고 보았다(확인하지 않았다 - 끄는 쪽이 안전하다).
+        -->
+        <meta-data android:name="android.webkit.WebView.MetricsOptOut" android:value="true" />
+        <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing" android:value="false" />
+
+        <!--
           회전으로 액티비티를 다시 만들지 않는다. 다시 만들면 뷰어에 넘긴 **메모리 참조**
           목록이 사라져 사진을 보다 화면을 돌리면 한 장짜리로 떨어지고, 갤러리·휴지통을
           보다 돌리면 파일 목록으로 튕긴다. 재생 화면(PlayerActivity)과 같은 값이다.
@@ -60,5 +77,185 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--
+          다른 앱이 넘긴 파일을 연다(OpenActivity 의 KDoc). 보낸 앱의 태스크에 쌓이고 닫으면 보낸 앱으로 돌아간다 - taskAffinity 를
+          비워 두면 보낸 쪽이 새 태스크로 띄워도 우리 파일 목록 위에 얹히지 않는다. 끝나면 최근 앱에서도 사라진다.
+          회전으로 다시 만들지 않는 것은 MainActivity 와 같은 까닭이다(뷰어의 메모리 참조). singleTop 인 까닭: 보낸 쪽이 새 태스크로
+          띄우면 시스템이 이 화면을 뿌리로 가진 옛 태스크를 다시 쓰는데, 그 맨 위에 새 화면을 쌓지 않고 맨 위의 화면이 새 파일을 받게
+          한다(OpenActivity.onNewIntent).
+
+          받는 형식: 그림·소리·영상·글의 계열 전체와, 이 앱이 여는 문서·압축·만화의 형식, application/octet-stream.
+          문서에는 편집기의 보기 모드가 보이는 이전 오피스 형식(doc·xls·ppt)과 ODF(odt·ods·odp)도 든다(받은 뒤의 길은
+          OpenActivity 의 IncomingRoute 가 정한다).
+          시험(ReceiveFiltersTest)이 목록의 문서 확장자와 이 필터를 견준다.
+          형식은 소문자로만 적는다 - 안드로이드의 대조는 대소문자를 가리고(CLAUDE.md 함정 표) lint 가 대문자를 오류로 본다
+          (AppLinkUrlError). 등록된 이름이 대문자를 쓰는 오피스의 macroEnabled 도 소문자다 - 플랫폼 표가 그렇게 준다.
+          APK(application/vnd.android.package-archive)와 글꼴은 적지 않는다 - 이 앱에 뷰어가 없고, 적으면 이 앱의 '다른 앱으로
+          열기' 가 이 앱을 다시 고르는 고리가 된다(core:io 의 ExternalOpen KDoc '우리 자신'). 스킴은 content 와 file 둘이다 -
+          http(s) 는 받지 않는다(BROWSABLE 도 없다). file 은 저장 볼륨 아래만 연다(IncomingFiles).
+        -->
+        <activity
+            android:name=".OpenActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:autoRemoveFromRecents="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="text/*" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="application/epub+zip" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.template" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.template" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.slideshow" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.template" />
+                <data android:mimeType="application/vnd.ms-word.document.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-word.template.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-excel.sheet.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-excel.template.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-powerpoint.presentation.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-powerpoint.slideshow.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-powerpoint.template.macroenabled.12" />
+                <data android:mimeType="application/msword" />
+                <data android:mimeType="application/vnd.ms-excel" />
+                <data android:mimeType="application/vnd.ms-powerpoint" />
+                <data android:mimeType="application/vnd.oasis.opendocument.text" />
+                <data android:mimeType="application/vnd.oasis.opendocument.spreadsheet" />
+                <data android:mimeType="application/vnd.oasis.opendocument.presentation" />
+                <data android:mimeType="application/x-hwp" />
+                <data android:mimeType="application/haansofthwp" />
+                <data android:mimeType="application/vnd.hancom.hwp" />
+                <data android:mimeType="application/hwp" />
+                <data android:mimeType="application/hwp+zip" />
+                <data android:mimeType="application/haansofthwpx" />
+                <data android:mimeType="application/vnd.hancom.hwpx" />
+                <data android:mimeType="application/zip" />
+                <data android:mimeType="application/x-zip-compressed" />
+                <data android:mimeType="application/x-7z-compressed" />
+                <data android:mimeType="application/vnd.rar" />
+                <data android:mimeType="application/x-rar-compressed" />
+                <data android:mimeType="application/x-rar" />
+                <data android:mimeType="application/x-tar" />
+                <data android:mimeType="application/x-gtar" />
+                <data android:mimeType="application/x-compressed-tar" />
+                <data android:mimeType="application/x-bzip-compressed-tar" />
+                <data android:mimeType="application/x-xz-compressed-tar" />
+                <data android:mimeType="application/x-lzma-compressed-tar" />
+                <data android:mimeType="application/x-tarz" />
+                <data android:mimeType="application/gzip" />
+                <data android:mimeType="application/x-gzip" />
+                <data android:mimeType="application/x-bzip2" />
+                <data android:mimeType="application/x-xz" />
+                <data android:mimeType="application/x-lzma" />
+                <data android:mimeType="application/x-lz4" />
+                <data android:mimeType="application/x-compress" />
+                <data android:mimeType="application/x-cpio" />
+                <data android:mimeType="application/x-archive" />
+                <data android:mimeType="application/vnd.debian.binary-package" />
+                <data android:mimeType="application/x-debian-package" />
+                <data android:mimeType="application/vnd.comicbook+zip" />
+                <data android:mimeType="application/vnd.comicbook-rar" />
+                <data android:mimeType="application/x-cbz" />
+                <data android:mimeType="application/x-cbr" />
+                <data android:mimeType="application/x-cb7" />
+                <data android:mimeType="application/x-cbt" />
+                <data android:mimeType="application/json" />
+                <data android:mimeType="application/xml" />
+                <data android:mimeType="application/xhtml+xml" />
+                <data android:mimeType="application/javascript" />
+                <data android:mimeType="application/x-javascript" />
+                <data android:mimeType="application/x-sh" />
+                <data android:mimeType="application/x-subrip" />
+                <data android:mimeType="application/x-yaml" />
+                <data android:mimeType="application/ogg" />
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="application/epub+zip" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.template" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.template" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.slideshow" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.template" />
+                <data android:mimeType="application/vnd.ms-word.document.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-word.template.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-excel.sheet.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-excel.template.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-powerpoint.presentation.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-powerpoint.slideshow.macroenabled.12" />
+                <data android:mimeType="application/vnd.ms-powerpoint.template.macroenabled.12" />
+                <data android:mimeType="application/msword" />
+                <data android:mimeType="application/vnd.ms-excel" />
+                <data android:mimeType="application/vnd.ms-powerpoint" />
+                <data android:mimeType="application/vnd.oasis.opendocument.text" />
+                <data android:mimeType="application/vnd.oasis.opendocument.spreadsheet" />
+                <data android:mimeType="application/vnd.oasis.opendocument.presentation" />
+                <data android:mimeType="application/x-hwp" />
+                <data android:mimeType="application/haansofthwp" />
+                <data android:mimeType="application/vnd.hancom.hwp" />
+                <data android:mimeType="application/hwp" />
+                <data android:mimeType="application/hwp+zip" />
+                <data android:mimeType="application/haansofthwpx" />
+                <data android:mimeType="application/vnd.hancom.hwpx" />
+                <data android:mimeType="application/zip" />
+                <data android:mimeType="application/x-zip-compressed" />
+                <data android:mimeType="application/x-7z-compressed" />
+                <data android:mimeType="application/vnd.rar" />
+                <data android:mimeType="application/x-rar-compressed" />
+                <data android:mimeType="application/x-rar" />
+                <data android:mimeType="application/x-tar" />
+                <data android:mimeType="application/x-gtar" />
+                <data android:mimeType="application/x-compressed-tar" />
+                <data android:mimeType="application/x-bzip-compressed-tar" />
+                <data android:mimeType="application/x-xz-compressed-tar" />
+                <data android:mimeType="application/x-lzma-compressed-tar" />
+                <data android:mimeType="application/x-tarz" />
+                <data android:mimeType="application/gzip" />
+                <data android:mimeType="application/x-gzip" />
+                <data android:mimeType="application/x-bzip2" />
+                <data android:mimeType="application/x-xz" />
+                <data android:mimeType="application/x-lzma" />
+                <data android:mimeType="application/x-lz4" />
+                <data android:mimeType="application/x-compress" />
+                <data android:mimeType="application/x-cpio" />
+                <data android:mimeType="application/x-archive" />
+                <data android:mimeType="application/vnd.debian.binary-package" />
+                <data android:mimeType="application/x-debian-package" />
+                <data android:mimeType="application/vnd.comicbook+zip" />
+                <data android:mimeType="application/vnd.comicbook-rar" />
+                <data android:mimeType="application/x-cbz" />
+                <data android:mimeType="application/x-cbr" />
+                <data android:mimeType="application/x-cb7" />
+                <data android:mimeType="application/x-cbt" />
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          편집기(feature:editor - 따로 된 프로세스 :editor)의 저장 자리(EditorSlotProvider - EditorSlots). 주 프로세스에서 돈다. 내보내지
+          않는다 - 이 앱만 닿는다. 편집기가 쓴 것을 반영하라고 부르면 파일 작업 큐로 원본을 바꿔 쓴다(첫 저장이면 고치기 전 판을
+          휴지통에). 편집기는 원본에 직접 쓰지 않는다.
+          URI 권한도 주지 않는다(grantUriPermissions=false) - 같은 앱(UID)은 권한 없이 닿고, 남에게 열 일이 없다.
+        -->
+        <provider
+            android:name=".EditorSlotProvider"
+            android:authorities="${applicationId}.editorslot"
+            android:exported="false"
+            android:grantUriPermissions="false" />
     </application>
 </manifest>

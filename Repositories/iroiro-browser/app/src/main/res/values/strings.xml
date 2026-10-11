@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 사용자 지정(2026-10-04): 폰에 보이는 이름은 'Web'. -->
+    <string name="app_name">Web</string>
+
+    <!-- 브라우저 막대 -->
+    <string name="address_hint">주소 또는 검색어</string>
+    <string name="reload">새로 고침</string>
+    <string name="stop">멈추기</string>
+    <string name="menu">메뉴</string>
+    <string name="back">뒤로</string>
+    <string name="forward">앞으로</string>
+    <string name="new_tab">새 탭</string>
+    <string name="tabs_count">탭 %1$d개</string>
+    <string name="suggest_history">방문 기록</string>
+    <string name="suggest_go">이동</string>
+    <string name="suggest_search_row">검색</string>
+    <string name="suggest_search">%1$s 검색</string>
+    <string name="suggest_tab">열린 탭</string>
+    <string name="suggest_switch_tab">탭으로 전환 · %1$s</string>
+    <string name="suggest_bookmark">북마크</string>
+    <string name="suggest_fill">주소창에 채우기</string>
+    <string name="suggest_delete_question">방문 기록에서 지울까요? 북마크는 그대로 둡니다.</string>
+    <string name="suggest_dismiss">제안 목록 닫기</string>
+    <string name="close_tab_named">%1$s 탭 닫기</string>
+    <string name="close_all_tabs">모두 닫기</string>
+    <string name="close_all_question">탭 %1$d개를 모두 닫을까요? 메뉴의 \'최근 닫은 탭\' 에서 되살릴 수 있습니다.</string>
+    <string name="tab_closed">탭을 닫았습니다</string>
+    <string name="tabs_closed">탭 %1$d개를 닫았습니다</string>
+    <string name="undo">되돌리기</string>
+    <string name="recent_tabs">최근 닫은 탭</string>
+    <string name="desktop_site">데스크톱 사이트</string>
+    <string name="popup_blocked">팝업을 막았습니다 — %1$s</string>
+    <string name="popup_allow">이 사이트 허용</string>
+    <string name="popup_allowed">%1$s 의 팝업을 엽니다 — 페이지에서 다시 해 보세요</string>
+    <string name="popup_block_site">이 사이트의 팝업 다시 막기</string>
+    <string name="popup_blocked_again">%1$s 의 팝업을 다시 막습니다</string>
+    <string name="open_in_new_tab">새 탭에서 열기</string>
+    <string name="opened_in_background">새 탭에서 열었습니다</string>
+    <string name="copy_link">링크 복사</string>
+    <string name="share_link">링크 공유</string>
+    <string name="copied">복사했습니다</string>
+    <string name="download_image">이미지 받기</string>
+    <string name="open_image_in_new_tab">이미지를 새 탭에서 열기</string>
+
+    <!-- 찾은 미디어·HLS -->
+    <string name="media_found">찾은 미디어</string>
+    <!-- 찾은 미디어 단추의 상태(화면 낭독기)와 목록 — 지금 페이지의 것을 위에, 앞 페이지의 것은 아래에. -->
+    <string name="media_found_state">이 페이지에서 %1$d개</string>
+    <string name="media_found_state_previous">앞 페이지에서 찾은 것만 있습니다</string>
+    <string name="media_this_page">이 페이지</string>
+    <string name="media_none_here">이 페이지에서 찾은 것은 없습니다</string>
+    <string name="media_previous_page">앞 페이지 — %1$s · %2$s</string>
+    <string name="media_ago_now">방금</string>
+    <string name="media_ago_minutes">%1$d분 전</string>
+    <string name="media_ago_hours">%1$d시간 전</string>
+    <string name="media_master_variants">화질 %1$d개</string>
+    <string name="media_master_audio">따로 된 소리 %1$d개</string>
+    <string name="media_master_subtitles">자막 %1$d개</string>
+    <string name="media_single_playlist">화질 하나짜리 재생목록</string>
+    <string name="media_series_detail">번호만 다른 파일 %1$d개 — 영상의 조각일 수 있습니다</string>
+    <string name="media_series_title">번호만 다른 파일</string>
+    <string name="media_series_question">번호만 다른 파일이 %1$d개 있습니다 — 영상의 조각이면 하나로는 볼 수 없으니 ‘재생 중인 것 받기’로 담으세요.</string>
+    <string name="media_series_pick">파일 고르기</string>
+    <string name="media_kind_hls">HLS</string>
+    <string name="media_kind_dash">DASH</string>
+    <string name="media_kind_video">영상</string>
+    <string name="media_kind_audio">소리</string>
+    <string name="media_reading">재생목록을 읽는 중…</string>
+    <string name="media_failed">받지 못했습니다: %1$s</string>
+    <string name="media_choose_quality">화질 고르기</string>
+    <string name="media_hls_parts">조각 %1$d개 · %2$s</string>
+    <string name="media_hls_single_note">소리가 따로인 영상이면 이 재생목록에는 소리가 없습니다 — 화질을 고르는 재생목록이 있으면 그것을 고르세요.</string>
+    <string name="media_audio_only">소리만 · %1$s</string>
+    <string name="media_size_about">약 %1$s</string>
+    <string name="media_live_title">실시간 방송입니다</string>
+    <string name="media_live_message">실시간 방송은 파일로 받을 수 없습니다 — 재생하며 ‘재생 중인 것 받기’로 담으세요.</string>
+    <!-- 재생 시간 — 1분이 안 되면 초로(앞 판은 '약 0분' 이었다). -->
+    <string name="duration_seconds">%1$d초</string>
+    <string name="duration_minutes">약 %1$d분</string>
+    <string name="duration_hours">약 %1$d시간 %2$d분</string>
+    <string name="media_separate_audio">영상과 따로 된 소리를 받아 한 파일로 담습니다</string>
+    <string name="media_audio_name">%1$s (소리)</string>
+    <string name="download_parts">조각 %1$d / %2$d</string>
+
+    <!-- 광고 차단 -->
+    <string name="adblock">광고 차단</string>
+    <string name="adblock_note">목록을 받아 이 기기에서 규칙을 만듭니다(받기도 프록시를 거칩니다). 만료된 목록만 하루 한 번 다시 받습니다.</string>
+    <string name="adblock_lists">목록</string>
+    <string name="adblock_busy">목록을 받거나 규칙을 짓는 중입니다…</string>
+    <string name="adblock_engine">쓰는 규칙: 막기 %1$s개 · 숨기기 %2$s개</string>
+    <string name="adblock_rules">규칙 %1$s개</string>
+    <string name="adblock_fetched">%1$s 받음</string>
+    <string name="adblock_not_fetched">아직 받지 않음</string>
+    <string name="adblock_error">실패: %1$s</string>
+    <string name="adblock_update_now">지금 갱신</string>
+    <string name="adblock_updated">목록을 확인했습니다</string>
+    <string name="adblock_wifi_only">Wi-Fi 에서만 자동 갱신</string>
+    <string name="adblock_add_list">목록 더하기(주소)</string>
+    <string name="adblock_list_title">이름(비워 두면 주소의 호스트)</string>
+    <string name="adblock_add">더하기</string>
+    <string name="adblock_bad_url">http:// 또는 https:// 로 시작하는 주소를 넣으세요</string>
+    <string name="adblock_duplicate">이미 있는 목록입니다</string>
+    <string name="adblock_remove_question">%1$s 목록을 뺄까요?</string>
+    <string name="adblock_allowed_sites">광고 차단을 끈 사이트</string>
+    <string name="adblock_allowed_none">없습니다 — 페이지를 연 채 메뉴에서 그 사이트만 끕니다.</string>
+    <string name="adblock_allowed_remove">%1$s 에서 광고 차단을 다시 켤까요?</string>
+    <string name="adblock_allowed_reenable">다시 켜기</string>
+    <string name="adblock_credits">목록은 각 만든 이의 것입니다 — EasyList·EasyPrivacy(easylist.to, GPLv3 또는 CC BY-SA 3.0), YousList(CC BY 4.0), uBlock filters(GPLv3). 이 앱은 목록을 싣지 않고, 기기가 그 사이트에서 받아 씁니다.</string>
+    <string name="adblock_site_off">이 사이트에서 광고 차단 끄기(이 페이지 %1$d개 막음)</string>
+    <string name="adblock_site_on">이 사이트에서 광고 차단 켜기</string>
+    <string name="settings_adblock_open">광고 차단 설정</string>
+    <string name="settings_adblock_on">켜짐 · 목록 %1$d개</string>
+    <string name="settings_adblock_off">꺼짐</string>
+
+    <!--
+      요소 숨기기(사용자 요청 2026-10-08): 페이지에서 거슬리는 부분을 골라 그 사이트(등록 도메인)에서 숨긴다. 광고 차단의 숨김 규칙과 같은
+      꼴(사이트##선택자)이지만 목록과 따로 두고, 광고 차단을 끄거나 그 사이트에서 끈 때도 건다(사용자가 직접 고른 것이라).
+    -->
+    <string name="hide_element">요소 숨기기</string>
+    <string name="hide_this_element">이 요소 숨기기</string>
+    <string name="hide_restore_site">이 사이트에서 숨긴 요소 되돌리기(%1$d개)</string>
+    <string name="hide_restored">%1$s 에서 숨긴 요소 %2$d개를 되돌렸습니다</string>
+    <string name="hide_again">다시 숨기기</string>
+    <string name="picker_prompt">숨길 부분을 누르세요 — 끌면 페이지가 움직입니다</string>
+    <string name="picker_selected">%1$s · %2$d×%3$d</string>
+    <string name="picker_nothing">그 자리에는 고를 요소가 없습니다 — 다른 곳을 누르세요</string>
+    <string name="picker_gone">고른 요소가 페이지에서 사라졌습니다 — 다시 누르세요</string>
+    <string name="picker_wider">넓게</string>
+    <string name="picker_wider_description">넓게 — 감싼 요소를 고릅니다</string>
+    <string name="picker_narrower">좁게</string>
+    <string name="picker_narrower_description">좁게 — 앞서 고른 안쪽 요소로 돌아갑니다</string>
+    <string name="picker_hide">숨기기</string>
+    <string name="picker_hide_description">고른 요소를 이 사이트에서 숨기기</string>
+    <string name="picker_cancel_description">요소 고르기 끝내기</string>
+    <string name="picker_overlay">숨길 요소 고르기 — 누른 자리의 요소를 고릅니다(화면 낭독기로 활성화하면 가운데의 요소). 아래 막대의 넓게·좁게로 옮깁니다</string>
+    <string name="picker_unavailable">이 페이지에서는 요소를 고를 수 없습니다 — 페이지를 다 연 뒤 다시 해 보세요</string>
+    <string name="picker_page_changed">페이지가 바뀌어 요소 고르기를 끝냈습니다</string>
+    <string name="picker_no_selector">이 요소를 다시 찾을 방법을 만들지 못했습니다 — 넓게나 좁게로 다른 요소를 고르세요</string>
+    <string name="picker_no_answer">페이지가 답하지 않았습니다 — 다시 해 보세요</string>
+    <string name="picker_broad_title">페이지의 대부분입니다</string>
+    <string name="picker_broad_message">고른 요소가 화면의 %1$d%%를 덮습니다 — 숨기면 페이지가 거의 비어 보일 수 있습니다(메뉴에서 되돌립니다). 그래도 숨길까요?</string>
+    <string name="picker_hidden">숨겼습니다 — %1$s 의 페이지에서 계속 숨깁니다</string>
+    <string name="picker_already">이미 숨긴 요소입니다 — 이 페이지에서도 숨겼습니다</string>
+    <!-- 광고 차단 설정의 '숨긴 요소' -->
+    <string name="hidden_elements">숨긴 요소</string>
+    <string name="hidden_elements_note">메뉴의 \'요소 숨기기\' 로 숨긴 것입니다 — 광고 차단을 꺼도 숨깁니다. 지우면 다음에 열 때 다시 보입니다.</string>
+    <string name="hidden_elements_none">없습니다 — 페이지를 연 채 메뉴의 \'요소 숨기기\' 로 숨깁니다.</string>
+    <string name="hidden_site_row">%1$s · %2$d개</string>
+    <string name="hidden_remove_site">모두 지우기</string>
+    <string name="hidden_remove_site_description">%1$s 에서 숨긴 요소 모두 지우기</string>
+    <string name="hidden_remove_site_question">%1$s 에서 숨긴 요소 %2$d개를 모두 지울까요?</string>
+    <string name="hidden_remove_rule_question">이 규칙을 지울까요?\n\n%1$s</string>
+    <string name="hidden_rule_description">숨긴 요소 %1$s — 누르면 지울지 묻습니다</string>
+
+    <!-- 북마크·방문 기록·시작 화면·페이지에서 찾기 -->
+    <string name="library_title">북마크·방문 기록</string>
+    <string name="bookmarks">북마크</string>
+    <string name="history">방문 기록</string>
+    <string name="bookmark_add">북마크에 추가</string>
+    <string name="bookmark_remove">북마크에서 빼기</string>
+    <string name="bookmark_added">북마크에 넣었습니다</string>
+    <string name="bookmark_removed">북마크에서 뺐습니다</string>
+    <string name="bookmarks_empty">북마크가 없습니다 — 페이지를 연 채 메뉴의 \'북마크에 추가\' 로 넣습니다</string>
+    <string name="history_empty">방문 기록이 없습니다</string>
+    <string name="history_clear">방문 기록 모두 지우기</string>
+    <string name="history_clear_question">방문 기록을 모두 지울까요? 북마크·쿠키·사이트 데이터는 그대로 둡니다.</string>
+    <string name="history_cleared">방문 기록을 지웠습니다</string>
+    <string name="library_search_hint">제목이나 주소로 찾기</string>
+    <string name="rename">이름 바꾸기</string>
+    <string name="delete">지우기</string>
+    <string name="start_frequent">자주 간 곳</string>
+    <string name="start_empty">주소나 검색어를 위에 넣으세요. 자주 가는 곳은 메뉴의 \'북마크에 추가\' 로 모을 수 있습니다.</string>
+    <string name="find_in_page">페이지에서 찾기</string>
+    <string name="find_prev">이전 찾기</string>
+    <string name="find_next">다음 찾기</string>
+    <string name="find_close">찾기 닫기</string>
+    <string name="downloads">내려받기</string>
+    <string name="share">공유</string>
+    <string name="settings">설정</string>
+    <string name="open">열기</string>
+    <string name="close">닫기</string>
+    <string name="cancel">취소</string>
+    <string name="no_app">열 앱이 없습니다</string>
+
+    <!--
+      프록시 스위치(막대 왼쪽)와 그 옆의 상태 글. 켜고 끄는 곳은 스위치 하나다(사용자 지정). 상태 글은 스위치의 글이 아니다 — 누르면
+      '연결 상태' 가 열린다. 막대의 글은 짧게, 뜻은 화면 낭독기가 읽는 말(proxy_spoken_*)과 연결 상태 창이 푼다.
+    -->
+    <string name="proxy_switch">프록시</string>
+    <string name="state_ok">OK</string>
+    <string name="state_unreachable">끊김</string>
+    <string name="state_auth">계정 거절</string>
+    <string name="state_check_failed">출구 모름</string>
+    <string name="state_unsupported">미지원</string>
+    <string name="proxy_state_on">켜짐 · %1$s</string>
+    <string name="proxy_state_off">꺼짐 · %1$s</string>
+    <string name="proxy_status_label">연결 상태: %1$s</string>
+    <string name="proxy_spoken_off">직접 연결 — 프록시를 거치지 않습니다</string>
+    <string name="proxy_spoken_not_configured">프록시 주소를 넣지 않아 페이지가 열리지 않습니다</string>
+    <string name="proxy_spoken_checking">출구를 확인하는 중</string>
+    <string name="proxy_spoken_ok">출구 %1$s</string>
+    <string name="proxy_spoken_ok_unknown">프록시를 거쳐 나갑니다</string>
+    <string name="proxy_spoken_looks_direct">출구가 한국입니다 — 프록시를 거치지 않는 것 같습니다</string>
+    <string name="proxy_spoken_unreachable">프록시에 닿지 못합니다</string>
+    <string name="proxy_spoken_auth">프록시가 계정을 거절했습니다</string>
+    <string name="proxy_spoken_check_failed">프록시에는 닿지만 출구를 확인하지 못했습니다</string>
+    <string name="proxy_spoken_unsupported">이 WebView 는 프록시를 지원하지 않습니다</string>
+
+    <string name="banner_not_configured">프록시 주소를 넣지 않아 페이지가 열리지 않습니다 — 설정에서 넣거나 왼쪽 위 스위치로 끄세요</string>
+    <string name="banner_unreachable">프록시에 닿지 못합니다 — 직접 연결로 넘어가지 않습니다</string>
+    <string name="banner_auth">프록시가 계정을 거절했습니다</string>
+    <string name="banner_looks_direct">출구가 한국입니다 — 프록시를 거치지 않는 것 같습니다</string>
+    <string name="banner_unsupported">이 WebView 는 프록시 설정을 지원하지 않습니다 — Android System WebView 를 업데이트하세요</string>
+
+    <string name="status_title">연결 상태</string>
+    <string name="status_off">프록시를 껐습니다 — 요청이 바로 나가 사이트에 이 폰의 실제 IP 가 보입니다.</string>
+    <string name="status_not_configured">프록시 주소를 넣지 않아 아무 데도 나가지 않습니다 — 설정에서 넣거나 왼쪽 위 스위치로 끄세요.</string>
+    <string name="status_checking">출구를 확인하는 중입니다.</string>
+    <string name="status_ok">프록시를 거쳐 나갑니다.</string>
+    <string name="status_looks_direct">출구가 한국입니다. 프록시를 거치지 않는 것 같습니다 — 프록시 서버를 확인하세요.</string>
+    <string name="status_unreachable">프록시에 닿지 못합니다. 페이지는 열리지 않고, 직접 연결로 넘어가지 않습니다.</string>
+    <string name="status_auth">프록시가 계정을 거절했습니다. 설정에서 사용자와 비밀번호를 확인하세요.</string>
+    <string name="status_check_failed">프록시에는 닿지만 출구 확인 페이지가 답하지 않았습니다. 확인 주소가 막혔을 수 있습니다.</string>
+    <string name="status_unsupported">이 WebView 는 프록시 설정을 지원하지 않아 페이지를 열지 않습니다.</string>
+    <string name="status_proxy">프록시: %1$s</string>
+    <string name="status_exit">출구: %1$s (%2$s)</string>
+    <string name="status_dns_note">페이지가 미리 찾게 한 이름(dns-prefetch)은 프록시 없이 이 폰의 DNS 로 찾습니다 — 안드로이드의 \'개인 DNS\' 를 켜면 통신사·Wi-Fi 에는 보이지 않습니다.</string>
+    <!-- 연결 상태 창에 늘 보이는 예외(사용자 결정 — 토렌트는 프록시를 거치지 않는다). -->
+    <string name="status_torrent_note">토렌트는 예외입니다 — 프록시 스위치와 상관없이 프록시를 거치지 않고 이 기기의 IP 로 받습니다.</string>
+    <string name="check_again">다시 확인</string>
+    <string name="recording_ended_by_path">프록시 연결이 바뀌어 페이지를 다시 열었습니다 — 녹화는 받은 데까지 저장합니다</string>
+
+    <!-- 중계가 스스로 만든 오류 응답에 싣는 페이지(http 페이지가 하얀 빈 화면이 되지 않게). https 는 WebView 가 제 오류 화면을 그린다. -->
+    <string name="relay_page_title">이 페이지를 열지 않았습니다</string>
+    <string name="relay_page_not_configured">프록시 주소를 넣지 않아 열지 않았습니다 — 설정에서 넣거나 왼쪽 위 스위치로 끄세요.</string>
+    <string name="relay_page_unreachable">프록시에 닿지 못해 열지 않았습니다(직접 연결로 넘어가지 않습니다) — 서버나 망을 확인하고 새로 고침을 누르세요.</string>
+    <string name="relay_page_auth">프록시가 계정을 거절해 열지 않았습니다. 설정에서 사용자와 비밀번호를 확인하세요.</string>
+    <string name="relay_page_refused">프록시가 이 주소로 가는 연결을 받지 않았습니다. 포트나 목적지가 막혔을 수 있습니다.</string>
+    <string name="relay_page_other">이 브라우저 안의 중계가 이 요청을 처리하지 못했습니다.</string>
+
+    <!-- 페이지 — 열지 못함 덮개(탭 위에 덮는다. 까닭은 PageErrors 가 고른다) -->
+    <string name="cover_title">페이지를 열지 못했습니다</string>
+    <string name="cover_title_renderer">이 탭의 화면이 멈췄습니다</string>
+    <string name="cover_retry">다시 시도</string>
+    <string name="cover_retrying">다시 여는 중…</string>
+    <string name="cover_close">덮개 닫기 — 아래의 페이지 보기</string>
+    <string name="cover_detail_relay">중계: %1$s</string>
+    <string name="cover_detail_proxy">프록시 서버: %1$s</string>
+    <string name="cover_not_configured">프록시 주소를 넣지 않아 열지 않았습니다 — 설정에서 넣거나 왼쪽 위 스위치로 끄세요.</string>
+    <string name="cover_proxy_unreachable">프록시 서버에 닿지 못했습니다(직접 연결로 넘어가지 않습니다) — 서버와 이 폰의 인터넷 연결을 확인하세요.</string>
+    <string name="cover_proxy_auth">프록시 서버가 계정을 거절했습니다. 설정에서 사용자와 비밀번호를 확인하세요.</string>
+    <string name="cover_proxy_refused">프록시 서버가 이 사이트로 잇지 않았습니다 — 서버가 이 사이트를 막았거나, 서버에서 사이트에 닿지 못했습니다.</string>
+    <string name="cover_proxy_refused_port">프록시 서버가 이 사이트로 잇지 않았습니다 — 443 이 아닌 포트(%1$d)는 프록시가 막는 일이 많습니다.</string>
+    <string name="cover_relay">앱 안의 중계에 닿지 못했습니다 — 프록시 설정을 바꾼 직후라면 다시 시도하세요.</string>
+    <string name="cover_name">이 주소의 이름(%1$s)을 찾지 못했습니다 — 주소가 맞는지 확인하세요.</string>
+    <string name="cover_offline">이 폰이 인터넷에 연결되어 있지 않습니다.</string>
+    <string name="cover_timeout">사이트가 제때 답하지 않았습니다(시간 초과).</string>
+    <string name="cover_connection">사이트와의 연결이 거절되거나 끊겼습니다.</string>
+    <string name="cover_certificate">이 사이트의 인증서를 믿을 수 없어 열지 않았습니다 — 가짜 사이트이거나 누군가 연결을 가로채고 있을 수 있습니다.</string>
+    <string name="cover_tls">보안 연결(TLS)을 맺지 못했습니다.</string>
+    <string name="cover_redirects">넘겨주기가 너무 많아 멈췄습니다 — 설정의 \'사이트별 데이터\' 에서 이 사이트의 데이터를 지우면 풀릴 수 있습니다.</string>
+    <string name="cover_site_error">사이트가 내용 없는 오류 응답을 보냈습니다.</string>
+    <string name="cover_unknown">까닭을 알 수 없는 오류로 열지 못했습니다.</string>
+    <string name="cover_renderer_crashed">이 페이지가 화면을 그리는 과정을 멈추게 했습니다. 다시 시도하면 새로 엽니다.</string>
+    <string name="cover_renderer_killed">메모리가 모자라 시스템이 이 탭의 화면을 닫았습니다. 다시 시도하면 새로 엽니다.</string>
+    <string name="login_title">%1$s 에 로그인</string>
+    <string name="login_user">사용자</string>
+    <string name="login_password">비밀번호</string>
+    <string name="login">로그인</string>
+    <string name="external_title">다른 앱으로 열까요? (%1$s)</string>
+    <string name="external_warning">다른 앱은 이 브라우저의 프록시를 거치지 않습니다.</string>
+    <string name="open_outside">다른 브라우저로 열기</string>
+    <string name="open_outside_warning">다른 브라우저는 이 프록시를 거치지 않아 이 폰의 실제 IP 가 보입니다 — 여기서 막히는 페이지(구글 로그인 등)에만 쓰세요.</string>
+
+    <!-- 내려받기 -->
+    <string name="download">받기</string>
+    <string name="download_question">내려받을까요?</string>
+    <string name="download_detail">%1$s\n%2$s</string>
+    <string name="size_unknown">크기 모름</string>
+    <string name="size_checking">크기를 확인하는 중…</string>
+    <string name="download_name">파일 이름</string>
+    <string name="download_link">링크 내려받기</string>
+    <string name="download_started">내려받기를 시작했습니다</string>
+    <string name="download_blob_unsupported">이 WebView 판에서는 페이지가 만든 파일(blob)을 내려받지 못합니다</string>
+    <string name="download_blob_gone">페이지가 파일을 넘겨주지 못했습니다</string>
+    <string name="blob_stalled">페이지가 바뀌어 받기가 끊겼습니다</string>
+    <string name="download_blob_hook">준비하고 다시 열기</string>
+    <string name="download_blob_hook_question">페이지가 파일을 이미 치웠거나 막았습니다. 이 탭에서(이 사이트에 있는 동안만) 파일을 붙잡도록 준비하고 다시 열까요? 다시 열리면 받기를 한 번 더 누르세요.</string>
+    <string name="capture_menu">재생 중인 것 받기</string>
+    <string name="capture_mode_intercept">가로채기 — 화질 그대로(페이지를 다시 엽니다)</string>
+    <string name="capture_mode_record">녹화 — 지금부터 실시간(다시 인코딩)</string>
+    <string name="capture_mode_record_audio">소리만 녹화 — 지금부터 실시간</string>
+    <string name="capture_intercept_note">페이지를 다시 엽니다 — 영상을 원하는 데까지 재생한 뒤 저장을 누르세요(재생한 만큼만 담깁니다)</string>
+    <string name="capture_status_waiting">가로채는 중 — 영상을 틀어 주세요(재생해도 잡히지 않으면 녹화를 써 보세요)</string>
+    <string name="capture_status_intercept">가로채는 중 · 영상 %1$s · 소리 %2$s</string>
+    <string name="capture_status_intercept_many">가로채는 중 · 영상 %1$d개(저장할 때 고릅니다) · 가장 큰 것 %2$s</string>
+    <string name="capture_status_record">녹화 중 · %1$s · %2$s</string>
+    <string name="capture_status_record_stopping">녹화를 마무리하는 중</string>
+    <string name="capture_status_record_paused">녹화 멈춤(영상이 멈춰 있습니다) · %1$s · %2$s</string>
+    <string name="capture_status_dropped">%1$s · 버림 %2$s</string>
+    <string name="capture_overflow">쓰기가 밀려 받은 것 일부를 버렸습니다 — 그 구간은 빠집니다</string>
+    <string name="capture_other_recording">다른 탭에서 녹화 중 · %1$s</string>
+    <string name="capture_other_intercepting">다른 탭에서 가로채는 중 · %1$s</string>
+    <string name="capture_go_tab">그 탭으로</string>
+    <string name="capture_tab_recording">● 녹화 중 · %1$s</string>
+    <string name="capture_tab_intercepting">● 가로채는 중 · %1$s</string>
+    <string name="capture_tabs_state">녹화·가로채기 중인 탭이 있습니다</string>
+    <string name="capture_close_title">받는 중인 탭입니다</string>
+    <string name="capture_close_message">이 탭에서 받는 중입니다(%1$s). 닫기 전에 받은 데까지 저장할까요?</string>
+    <string name="capture_close_message_many">받는 중인 탭이 %1$d개 있습니다. 닫기 전에 받은 데까지 저장할까요?</string>
+    <string name="capture_close_save">저장하고 닫기</string>
+    <string name="capture_close_discard">버리고 닫기</string>
+    <string name="capture_saved_on_close">페이지가 탭을 닫아 받은 데까지 저장합니다</string>
+    <string name="capture_left_title">사이트를 떠나 가로채기를 멈췄습니다</string>
+    <string name="capture_left_message">%1$s 에서 담은 것(%2$s)을 저장할까요?</string>
+    <string name="capture_left_pick">사이트를 떠나 가로채기를 멈췄습니다 — 저장할 영상을 고르세요</string>
+    <string name="capture_left_empty">사이트를 떠나 가로채기를 멈췄습니다(담긴 것이 없습니다)</string>
+    <string name="capture_discard">버리기</string>
+    <string name="capture_save_which">어느 영상을 저장할까요?</string>
+    <string name="capture_clip_row">%1$s · %2$s</string>
+    <string name="capture_notice_many">%1$d개 받는 중</string>
+    <string name="capture_leftover_title">지난번에 받던 것이 남아 있습니다</string>
+    <string name="capture_leftover_message">앱이 닫히며 저장하지 못한 녹화·가로채기가 %1$d개(%2$s) 있습니다. 저장할까요?</string>
+    <string name="capture_name_recording">녹화</string>
+    <string name="capture_name_intercept">가로채기</string>
+    <string name="capture_status_drm">DRM 이 걸린 영상이라 받을 수 없습니다</string>
+    <string name="capture_save">저장</string>
+    <string name="capture_stop_save">멈추고 저장</string>
+    <string name="capture_cancel">취소</string>
+    <string name="capture_save_what">무엇을 저장할까요?</string>
+    <string name="capture_save_both">영상과 소리</string>
+    <string name="capture_save_audio">소리만</string>
+    <string name="capture_saving">저장을 시작했습니다 — 내려받기 목록에서 볼 수 있습니다</string>
+    <string name="capture_busy">이 탭에서 이미 받는 중입니다</string>
+    <string name="capture_nothing_playing">재생 중인 영상·소리가 없습니다 — 먼저 재생해 주세요</string>
+    <string name="capture_drm">DRM 이 걸린 영상이라 받을 수 없습니다</string>
+    <string name="capture_record_failed">녹화를 시작하지 못했습니다 — %1$s</string>
+    <!-- 녹화를 시작하지 못한 까닭 — 페이지가 준 이름(SecurityError 따위)을 그대로 보이지 않는다. -->
+    <string name="record_why_timeout">페이지가 답하지 않았습니다</string>
+    <string name="record_why_security">다른 사이트에서 온 영상이라 페이지가 녹화를 막았습니다</string>
+    <string name="record_why_unsupported">이 영상의 형식은 녹화할 수 없습니다</string>
+    <string name="record_why_no_track">영상·소리 트랙이 없습니다</string>
+    <string name="record_why_state">재생기가 아직 준비되지 않았습니다 — 재생한 뒤 다시 해 보세요</string>
+    <string name="record_why_other">알 수 없는 까닭입니다</string>
+    <string name="capture_unsupported">이 WebView 판은 이 기능을 지원하지 않습니다</string>
+    <string name="download_title">내려받는 중</string>
+    <string name="download_many">%1$d개 내려받는 중</string>
+    <string name="download_done">다 받았습니다 — 눌러서 엽니다</string>
+    <string name="download_failed">실패: %1$s</string>
+    <string name="download_cancelled">취소했습니다</string>
+    <string name="download_queued">기다리는 중</string>
+    <string name="download_saved">%1$s · 내려받기 폴더</string>
+    <!-- 받은 것을 지우는 단추 — 이 앱의 다른 창에서 '취소' 는 창을 닫는 단추라 글을 가른다. -->
+    <string name="download_cancel">받기 취소(지움)</string>
+    <string name="download_keep_going">계속 받기</string>
+    <string name="download_retry">다시 받기</string>
+    <string name="download_resume">이어받기</string>
+    <string name="download_pause">일시 정지</string>
+    <string name="download_pause_all">모두 일시 정지</string>
+    <string name="download_more">외 %1$d개</string>
+    <string name="download_delete">지우기</string>
+    <string name="download_paused">멈춤 — %1$s</string>
+    <string name="download_paused_notice">멈췄습니다 — 이어받기를 누르면 받은 데서부터 잇습니다(%1$s)</string>
+    <string name="download_interrupted">앱이 멈춰 중단됐습니다</string>
+    <string name="download_retrying">다시 해 보는 중(%1$d/3) — %2$s</string>
+    <string name="download_merging">영상과 소리를 한 파일로 담는 중</string>
+    <string name="download_merging_video">영상을 파일로 담는 중</string>
+    <string name="download_merging_audio">소리를 파일로 담는 중</string>
+    <string name="download_merge_failed">한 파일로 담지 못해 따로 저장했습니다(%1$s)</string>
+    <string name="download_cancel_question">받기를 취소할까요? 받은 것은 지웁니다.</string>
+    <string name="download_running_question">받기를 멈출까요? 일시 정지는 받은 것을 남기고, 받기 취소는 지웁니다.</string>
+    <string name="download_paused_question">%1$s
+
+이어받으면 받은 데서부터 잇습니다.</string>
+    <string name="download_no_app">이 파일을 열 앱이 없습니다</string>
+    <string name="downloads_empty">내려받은 것이 없습니다. 목록에서 뺀 파일도 \'내려받기\' 폴더에 그대로 있습니다.</string>
+    <string name="download_key_invalid">잠금을 풀 열쇠를 받지 못했습니다</string>
+    <string name="download_expired_media">주소가 만료됐거나 막혔습니다(HTTP %1$d) — 원래 페이지를 다시 열어 같은 영상을 고르세요</string>
+    <string name="download_expired_file">주소가 만료됐거나 막혔습니다(HTTP %1$d) — 원래 페이지를 다시 열어 같은 파일을 받으세요</string>
+    <string name="download_expired_how">같은 페이지에서 같은 것을 다시 고르면 받은 데서부터 잇습니다(주소의 경로가 다르면 새로 받습니다).</string>
+    <string name="download_expired_no_page">어느 페이지에서 받았는지 적혀 있지 않습니다 — 그 페이지를 찾아 같은 것을 다시 고르세요.</string>
+    <string name="download_open_page">원래 페이지 열기</string>
+    <string name="download_remove_from_list">목록에서 빼기(파일은 그대로)</string>
+    <string name="download_remove_paused">지우기(받던 것도)</string>
+    <string name="download_delete_file">파일까지 지우기</string>
+    <string name="download_cancel_confirm">받기를 취소할까요? 지금까지 받은 것(%1$s)을 지웁니다.</string>
+    <string name="download_remove_paused_question">받던 것(%1$s)을 지울까요? 이어받을 수 없게 됩니다.</string>
+    <string name="download_delete_file_question">\'내려받기\' 폴더에서 ‘%1$s’ 파일을 지울까요? 되돌릴 수 없습니다.</string>
+    <string name="download_file_deleted">파일을 지웠습니다</string>
+    <string name="download_file_not_deleted">파일을 지우지 못했습니다 — 이미 없거나 다른 앱이 옮겼습니다</string>
+    <string name="channel_downloads">내려받는 중</string>
+    <string name="channel_downloads_done">다 받음</string>
+    <string name="channel_capture">녹화·가로채기</string>
+
+    <!--
+      토렌트(2026-10-09 — 사용자 결정 CLAUDE.md '토렌트 받기 검토'): 엔진(:torrent)은 기계 말(TorrentState·TorrentError)만 내고 화면의 글은 여기서
+      고른다(TorrentTexts). 토렌트는 프록시를 거치지 않고 이 기기의 IP 로 받는다 — 브라우저의 fail-closed 의 예외(다른 하나는 테더링)라 목록의 머리·알림의 부제·
+      묻는 창·연결 상태·설정이 늘 그것을 말한다.
+    -->
+    <string name="torrent_title">토렌트</string>
+    <string name="torrent_section">토렌트 — 프록시를 거치지 않고 이 기기의 IP 로 받습니다</string>
+    <string name="torrent_direct_note">토렌트는 프록시를 거치지 않고 이 기기의 IP 로 받습니다. 받기만 하고 올리지 않습니다.</string>
+    <string name="torrent_direct_short">프록시 밖 · 이 기기의 IP</string>
+    <string name="torrent_name">%1$s</string>
+    <string name="torrent_unnamed">마그넷 %1$s…</string>
+    <!-- 상태(엔진의 TorrentState) -->
+    <string name="torrent_state_metadata">파일 목록을 받는 중</string>
+    <string name="torrent_state_checking">받아 둔 것을 확인하는 중</string>
+    <string name="torrent_state_downloading">받는 중</string>
+    <string name="torrent_state_waiting">조각이 모자라 기다림</string>
+    <string name="torrent_state_queued">차례를 기다림(동시에 둘까지 받습니다)</string>
+    <string name="torrent_state_network">망 조건 기다림</string>
+    <string name="torrent_state_paused">멈춤</string>
+    <string name="torrent_state_completed">다 받음</string>
+    <string name="torrent_state_error">오류</string>
+    <string name="torrent_wait_no_network">연결된 망이 없습니다</string>
+    <string name="torrent_wait_wifi">Wi-Fi 에서만 받습니다(설정)</string>
+    <string name="torrent_wait_unknown">망을 확인하는 중</string>
+    <!-- 받지 않거나 멈춘 까닭(엔진의 TorrentError) -->
+    <string name="torrent_error_invalid">토렌트 파일이 깨졌거나 규격에 맞지 않습니다</string>
+    <string name="torrent_error_private">비공개(private) 토렌트는 받지 않습니다 — 이 앱은 올리지 않아 초대제 트래커에서 정지될 수 있습니다</string>
+    <string name="torrent_error_v2">BitTorrent v2 전용 토렌트는 지원하지 않습니다(v1 이 함께 든 하이브리드는 받습니다)</string>
+    <string name="torrent_error_too_large">너무 큰 토렌트입니다 — 파일 수·조각 수·경로 길이의 상한을 넘었습니다</string>
+    <string name="torrent_error_magnet">마그넷 주소를 읽지 못했습니다</string>
+    <string name="torrent_error_duplicate">이미 내려받기 목록에 있는 토렌트입니다</string>
+    <string name="torrent_error_unknown">목록에 없는 토렌트입니다</string>
+    <string name="torrent_error_disk_full">저장 공간이 모자랍니다 — 공간을 비운 뒤 이어받으세요</string>
+    <string name="torrent_error_disk">파일을 쓰거나 읽지 못했습니다</string>
+    <string name="torrent_error_engine_closed">토렌트 엔진이 답하지 않습니다 — 다시 해 보세요</string>
+    <string name="torrent_error_other">알 수 없는 오류</string>
+    <!-- 목록의 줄·알림의 글 -->
+    <string name="torrent_choose_needed">받을 파일을 고르세요 — 눌러서 고릅니다</string>
+    <string name="torrent_files_count">파일 %1$d개</string>
+    <string name="torrent_percent">%1$d%%</string>
+    <string name="torrent_of">%1$s / %2$s</string>
+    <string name="torrent_rate">%1$s/s</string>
+    <string name="torrent_size">%1$s</string>
+    <string name="torrent_peers">피어 %1$d</string>
+    <string name="torrent_peers_seeds">피어 %1$d(시드 %2$d)</string>
+    <string name="torrent_web_seeds">웹 시드 %1$d</string>
+    <string name="torrent_in_downloads">‘내려받기’ 폴더로 옮김</string>
+    <string name="torrent_moving">‘내려받기’ 로 옮기는 중 %1$d개</string>
+    <string name="torrent_move_failed_count">옮기지 못한 파일 %1$d개</string>
+    <string name="torrent_active_file">지금: %1$s · %2$d%%</string>
+    <string name="torrent_file_moved">‘내려받기’ 로 옮김</string>
+    <string name="torrent_file_done">다 받음</string>
+    <string name="torrent_file_active">받는 중</string>
+    <string name="torrent_file_waiting">조각이 모자라 미룸</string>
+    <string name="torrent_file_skipped">고르지 않음</string>
+    <string name="torrent_file_queued">차례를 기다림</string>
+    <string name="torrent_file_link">링크 — 만들지 않음</string>
+    <string name="torrent_file_padding">채움 파일</string>
+    <!-- 자세히 -->
+    <string name="torrent_detail_wanted">받을 것: %1$s(파일 %3$d개 가운데 %2$d개)</string>
+    <string name="torrent_detail_downloaded">받은 바이트: %1$s(해시가 틀려 버린 것 포함)</string>
+    <string name="torrent_detail_peers">피어: 연결 %1$d(시드 %2$d) · 아는 피어 %3$d</string>
+    <string name="torrent_detail_sources">피어를 얻은 곳: 트래커 %1$d · DHT %2$d · 마그넷 %3$d</string>
+    <string name="torrent_detail_trackers">트래커 %1$d개(답한 것 %2$d)</string>
+    <string name="torrent_detail_mse">암호화(MSE) 연결 %1$d / 시도 %2$d · 평문으로 다시 붙음 %3$d</string>
+    <string name="torrent_detail_hash_failures">해시가 틀린 조각 %1$d개(보낸 피어는 막았습니다)</string>
+    <string name="torrent_detail_moved">‘내려받기’ 로 옮긴 파일 %1$d개</string>
+    <string name="torrent_move_failed_line">옮기지 못함: %1$s — %2$s</string>
+    <!-- 목록의 할 일 -->
+    <string name="torrent_choose_files">파일 고르기</string>
+    <string name="torrent_choose_intro">파일 목록을 받았습니다. 받을 파일을 고르면 토렌트의 차례대로 하나씩 받습니다.</string>
+    <string name="torrent_choose_apply">고르기 적용</string>
+    <string name="torrent_choose_all">모두 고르기</string>
+    <string name="torrent_choose_none">모두 빼기</string>
+    <string name="torrent_chosen">고른 파일 %1$d개 · %2$s</string>
+    <string name="torrent_file_row_checked">%1$s, %2$s, 고름</string>
+    <string name="torrent_file_row_unchecked">%1$s, %2$s, 고르지 않음</string>
+    <string name="torrent_not_ready">아직 파일 목록이 없습니다 — 잠시 뒤 다시 해 보세요</string>
+    <string name="torrent_retry_moves">‘내려받기’ 로 옮기기 다시 시도</string>
+    <string name="torrent_remove_action">지우기…</string>
+    <string name="torrent_remove_message">토렌트를 지울까요? 앱 안에 받아 둔 것(%1$s)은 지웁니다 — 이어받을 수 없게 됩니다.</string>
+    <string name="torrent_remove_moved">‘내려받기’ 폴더로 옮긴 파일 %1$d개도 지우기</string>
+    <string name="torrent_removed_files">‘내려받기’ 의 파일 %1$d개를 지웠습니다</string>
+    <!-- 묻기(브라우저 화면) -->
+    <string name="torrent_notice_title">토렌트 받기 — 처음 한 번 알립니다</string>
+    <string name="torrent_notice_message">토렌트는 프록시 스위치와 상관없이 프록시를 거치지 않고 이 기기의 IP 로 받습니다 — 같은 토렌트를 주고받는 쪽(과 지켜보는 쪽)에 그 IP 가 보입니다.\n\n받기만 하고 올리지 않습니다. 받은 내용의 저작권 책임은 받는 사람에게 있으니 공개·허락된 것만 받으세요(법률 자문 아님).\n\n다 받은 파일은 ‘내려받기’ 폴더로 옮깁니다. 모바일 데이터를 아끼려면 설정의 ‘Wi-Fi 에서만 받기’ 를 켜세요.</string>
+    <string name="torrent_notice_ok">알겠습니다</string>
+    <string name="torrent_refused_title">받지 않는 토렌트입니다</string>
+    <string name="torrent_file_question">토렌트 파일입니다</string>
+    <string name="torrent_file_detail">%1$s\n%2$s\n\n토렌트로 받으면 이 앱이 프록시를 거치지 않고 이 기기의 IP 로 받습니다. 파일로 저장하면 토렌트 파일만 ‘내려받기’ 폴더에 둡니다.</string>
+    <string name="torrent_as_torrent">토렌트로 받기</string>
+    <string name="torrent_as_file">파일로 저장</string>
+    <string name="torrent_reading">토렌트 파일을 읽는 중…</string>
+    <string name="torrent_fetch_failed">토렌트 파일을 받지 못했습니다</string>
+    <string name="torrent_file_too_big">토렌트 파일이 너무 큽니다(10 MB 넘음)</string>
+    <string name="torrent_ask_summary">%1$s · 파일 %2$d개 · 트래커 %3$d개 · 웹 시드 %4$d개</string>
+    <string name="torrent_magnet_question">마그넷 링크</string>
+    <string name="torrent_magnet_unnamed">이름 없음</string>
+    <string name="torrent_magnet_hash">정보 해시 %1$s</string>
+    <string name="torrent_magnet_sources">트래커 %1$d개 · 웹 시드 %2$d개 · 피어 주소 %3$d개</string>
+    <string name="torrent_magnet_note">이 앱에서 받으면 프록시를 거치지 않고 이 기기의 IP 로 받습니다(파일은 목록을 받은 뒤 고릅니다). 다른 앱으로 열어도 프록시를 거치지 않습니다.</string>
+    <string name="torrent_this_app">이 앱에서 받기</string>
+    <string name="torrent_other_app">다른 앱으로</string>
+    <string name="torrent_started">토렌트를 받기 시작했습니다</string>
+    <string name="torrent_started_magnet">토렌트를 더했습니다 — 파일 목록을 피어에게서 받는 중</string>
+    <string name="torrent_open_list">목록 보기</string>
+    <string name="torrent_suggest">토렌트로 받기(검색 엔진에 보내지 않습니다)</string>
+    <!-- 알림 -->
+    <string name="torrent_many">토렌트 %1$d개 받는 중</string>
+    <string name="torrent_notice_moving">다 받은 파일을 ‘내려받기’ 폴더로 옮기는 중</string>
+    <string name="torrent_notice_preparing">준비하는 중</string>
+    <string name="torrent_notice_finished">다 받았습니다 — 파일은 ‘내려받기’ 폴더로 옮깁니다</string>
+    <string name="torrent_notice_error">받기를 멈췄습니다 — %1$s</string>
+    <string name="torrent_notice_choose">파일 목록을 받았습니다 — 받을 파일을 고르세요(그때까지 멈춰 둡니다)</string>
+    <string name="torrent_notice_move_failed">다 받은 파일을 ‘내려받기’ 로 옮기지 못했습니다 — %1$s. 목록에서 ‘옮기기 다시 시도’ 를 누르세요</string>
+    <string name="torrent_paused_by_notice">멈췄습니다 — 이어받기를 누르면 받은 데서부터 잇습니다</string>
+    <string name="torrent_paused_by_timeout">시스템의 백그라운드 시간 제한(하루 6시간)으로 멈췄습니다 — 이어받기를 누르세요</string>
+    <!-- 옮기기('내려받기' 폴더로) -->
+    <string name="torrent_move_no_space">저장 공간이 모자랍니다 — 옮기는 동안은 두 벌이 필요합니다</string>
+    <string name="torrent_move_create_failed">‘내려받기’ 에 파일을 만들지 못했습니다</string>
+    <string name="torrent_move_copy_failed">‘내려받기’ 로 복사하지 못했습니다</string>
+    <string name="torrent_move_failed_other">알 수 없는 까닭으로 옮기지 못했습니다</string>
+
+    <!-- 설정 -->
+    <string name="settings_proxy">프록시</string>
+    <string name="settings_proxy_switch_note">켜고 끄기는 브라우저 왼쪽 위 스위치로 합니다. 여기서는 프록시를 정합니다.</string>
+    <string name="settings_host">호스트 (예: proxy.example.com)</string>
+    <string name="settings_port">포트</string>
+    <string name="settings_user">사용자</string>
+    <string name="settings_password">비밀번호</string>
+    <string name="settings_password_keep">비밀번호 — 저장돼 있습니다. 바꿀 때만 넣으세요</string>
+    <string name="settings_show_password">비밀번호 보이기</string>
+    <string name="settings_bypass">예외 — 프록시를 거치지 않는 곳</string>
+    <string name="settings_bypass_note">한 줄에 하나. IP 대역은 IP 로 적은 주소에만 걸립니다. 사설망이 아닌 대역을 넣으면 그 주소로는 실제 IP 가 드러납니다.</string>
+    <string name="settings_bypass_hosts">호스트 (예: *.local)</string>
+    <string name="settings_bypass_cidrs">IP 대역 (예: 192.168.0.0/16)</string>
+    <string name="settings_bypass_private">사설망(10.x · 172.16~31.x · 192.168.x · fc00::/7)</string>
+    <string name="settings_bypass_simple">점 없는 이름(사내망 이름)</string>
+    <string name="settings_exit">출구 확인</string>
+    <string name="settings_exit_note">출구의 IP 와 나라를 이 주소로 5분마다 확인합니다(ip=·loc= 줄을 주는 페이지).</string>
+    <string name="settings_exit_url">확인 주소</string>
+    <string name="settings_exit_invalid">확인 주소는 http:// 또는 https:// 로 시작해야 합니다</string>
+    <string name="settings_save">저장</string>
+    <string name="settings_invalid">고칠 것이 있습니다</string>
+    <string name="settings_public_title">공인 IP 대역</string>
+    <string name="settings_public_warning">%1$s 는 사설망이 아닙니다 — 그곳에는 프록시 없이 이 폰의 실제 IP 가 드러납니다. 그래도 저장할까요?</string>
+    <string name="settings_saved_checking">저장했습니다 — 연결을 확인합니다</string>
+    <string name="settings_saved_off">저장했습니다 — 프록시는 꺼져 있습니다(왼쪽 위 스위치로 켭니다)</string>
+    <string name="settings_unchanged">바뀐 것이 없습니다 — 연결은 그대로입니다</string>
+    <string name="settings_unsaved_title">저장하지 않았습니다</string>
+    <string name="settings_unsaved_question">바꾼 프록시 설정을 저장할까요?</string>
+    <string name="settings_discard">버리기</string>
+    <!-- 토렌트(사용자 결정 2026-10-09): 'Wi-Fi 에서만' 은 두되 기본 끔. 프록시를 거치지 않는다는 것을 늘 적는다. -->
+    <string name="settings_torrent">토렌트</string>
+    <string name="settings_torrent_note">토렌트(.torrent·마그넷)는 프록시 스위치와 상관없이 프록시를 거치지 않고 이 기기의 IP 로 받습니다. 받기만 하고, 화면이 꺼져도 받으며, 다 받은 파일은 ‘내려받기’ 폴더로 옮깁니다.</string>
+    <string name="settings_torrent_wifi_only">Wi-Fi 에서만 받기</string>
+    <string name="settings_torrent_wifi_note">켜면 모바일 데이터·요금제 망(휴대폰 핫스팟 등)에서는 받지 않고 기다립니다.</string>
+    <!-- 전체 화면(사용자 요청 2026-10-08): 상태 표시줄과 위의 막대를 함께 숨기고, 화면 맨 위에서 아래로 밀면 함께 보인다. 기본 켬. -->
+    <string name="settings_display">화면</string>
+    <string name="settings_fullscreen">전체 화면</string>
+    <string name="settings_fullscreen_note">상태 표시줄과 주소창 줄을 숨깁니다 — 화면 위쪽에서 아래로 밀면 나타납니다. 프록시 문제의 띠는 늘 보이고, TalkBack·화면 나누기 중에는 숨기지 않습니다.</string>
+    <!-- 항상 확대 허용(사용자 요청 2026-10-09): 사이트가 뷰포트로 막아 둔 두 손가락 확대를 푼다. 기본 켬. -->
+    <string name="settings_force_zoom">항상 확대 허용</string>
+    <string name="settings_force_zoom_note">사이트가 막아 두어도 두 손가락으로 확대할 수 있게 합니다(지도처럼 몸짓을 직접 받는 페이지는 그 페이지를 따릅니다).</string>
+    <string name="settings_search">검색 엔진</string>
+    <string name="settings_data">인터넷 사용 기록</string>
+    <string name="settings_clear_history">방문 기록 지우기</string>
+    <string name="settings_popups">팝업</string>
+    <string name="settings_popups_note">누르지 않았는데 뜨는 새 창(팝업)은 막고 알립니다. 허용한 사이트는 아래에 있고, 누르면 다시 막습니다.</string>
+    <string name="settings_popups_none">팝업을 허용한 사이트가 없습니다</string>
+    <string name="settings_popups_remove">%1$s 의 팝업을 다시 막을까요?</string>
+    <string name="settings_clear_data">쿠키·사이트 데이터·캐시 지우기</string>
+    <string name="settings_clear_question">모든 사이트의 로그인이 풀립니다.</string>
+    <string name="settings_clear">지우기</string>
+    <string name="settings_cleared">지웠습니다</string>
+    <string name="settings_about">정보</string>
+
+    <!-- 사이트별 데이터(사용자: 익명 탭 대신 설정에서 사이트별 데이터를 지울 수 있으면 된다) -->
+    <string name="site_data">사이트별 데이터</string>
+    <string name="site_data_note">누르면 그 사이트의 쿠키(로그인)·저장소·캐시를 지웁니다(www·m 같은 다른 이름도 함께).</string>
+    <string name="site_filter_hint">사이트 찾기 또는 이름 넣기</string>
+    <string name="site_empty">아직 연 사이트가 없습니다</string>
+    <string name="site_cookies_yes">쿠키 있음</string>
+    <string name="site_cookies_no">쿠키 없음</string>
+    <string name="site_storage">저장소 %1$s</string>
+    <string name="site_last">마지막 %1$s</string>
+    <string name="site_delete_typed">‘%1$s’ 사이트의 데이터 지우기</string>
+    <string name="site_delete_title">%1$s 의 데이터를 지울까요?</string>
+    <string name="site_delete_question">쿠키·저장소·캐시를 지워 로그인이 풀립니다(www·m 같은 다른 이름도 함께).</string>
+    <string name="site_delete">지우기</string>
+    <string name="site_deleted">%1$s 의 데이터를 지웠습니다</string>
+    <string name="site_invalid">사이트 이름으로 읽을 수 없습니다</string>
+    <string name="site_delete_unsupported">이 WebView 는 사이트별 지우기를 지원하지 않습니다 — 아래의 \'쿠키·사이트 데이터·캐시 지우기\' 를 쓰세요</string>
+    <!--
+      APK 에 드는 의존 전부(app 의 releaseRuntimeClasspath, 2026-10-07 에 gradle dependencies 로 확인). 모두 Apache License 2.0 —
+      Guava 가 끌어오는 checker-qual(MIT) 등 주석 라이브러리는 컴파일 때만 쓰여 APK 에 들지 않는다. 의존을 바꾸면 여기도 고친다.
+    -->
+    <string name="settings_about_text">Web %1$s · Android System WebView %2$s\n\n쓰는 오픈소스(모두 Apache License 2.0 — https://www.apache.org/licenses/LICENSE-2.0): AndroidX WebKit·Media3(Common·Container·Decoder·Extractor)·Annotation·Annotation Experimental·Core·Arch Core·Collection·Lifecycle·VersionedParcelable, Guava(failureaccess·listenablefuture 포함), Kotlin 표준 라이브러리, JetBrains Annotations, JSpecify.</string>
+</resources>

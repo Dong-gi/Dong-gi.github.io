@@ -1,0 +1,157 @@
+/* ONLYOFFICE 엔진의 첫 쪽(우리 코드). 편집기 틀이 화면을 채우고, 여는 동안·저장하는 동안은 덮개를 띄운다. */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f3f3f3;
+  font-family: sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  html, body { background: #222; color: #ddd; }
+}
+#io-editor, #io-placeholder, #io-editor iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+#io-busy {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgba(243, 243, 243, 0.92);
+  z-index: 10;
+  font-size: 16px;
+  color: #333;
+}
+@media (prefers-color-scheme: dark) {
+  #io-busy { background: rgba(34, 34, 34, 0.92); color: #ddd; }
+}
+#io-busy[hidden] { display: none; }
+.io-spinner {
+  width: 36px;
+  height: 36px;
+  border: 4px solid rgba(0, 0, 0, 0.15);
+  border-top-color: #446995;
+  border-radius: 50%;
+  animation: io-spin 0.9s linear infinite;
+}
+@keyframes io-spin { to { transform: rotate(360deg); } }
+#io-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  text-align: center;
+  background: #f3f3f3;
+  color: #b00020;
+  font-size: 16px;
+  z-index: 11;
+  white-space: pre-line;
+}
+#io-error[hidden] { display: none; }
+/* 열지 못함 — 어두운 화면에서 밝은 판이 튀지 않게. 글은 암호 칸의 오류 글과 같은 빛깔. */
+@media (prefers-color-scheme: dark) {
+  #io-error { background: #222; color: #ff8a80; }
+}
+
+/* 암호 칸·물음 칸(어댑터의 8·9) — 화면 가운데의 카드. 편집기 위에 뜨므로 z-index 가 덮개보다 높다. */
+.io-dialog {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 20;
+}
+.io-dialog[hidden] { display: none; }
+.io-card {
+  width: 100%;
+  max-width: 360px;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  background: #fff;
+  color: #222;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.io-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.io-body { margin-bottom: 12px; white-space: pre-line; }
+#io-pass-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #999;
+  border-radius: 8px;
+  font-size: 16px;
+  background: #fff;
+  color: #222;
+}
+#io-pass-input:focus { outline: 2px solid #446995; border-color: #446995; }
+.io-error-text { margin-top: 8px; color: #b00020; }
+.io-error-text[hidden] { display: none; }
+.io-buttons { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.io-buttons button {
+  min-width: 72px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  color: #446995;
+  font-size: 15px;
+  font-weight: 600;
+}
+.io-buttons button.io-primary { background: #446995; color: #fff; }
+@media (prefers-color-scheme: dark) {
+  .io-card { background: #2b2b2b; color: #ddd; }
+  #io-pass-input { background: #1e1e1e; color: #eee; border-color: #666; }
+  .io-buttons button { color: #8fb3e0; }
+  .io-buttons button.io-primary { background: #5a82b4; color: #fff; }
+  .io-error-text { color: #ff8a80; }
+}
+
+/* 알림 띠(어댑터의 10) — 상태 표시줄 바로 위. 편집기를 덮지 않게 작게, 닫기 단추와 함께. */
+#io-note {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 36px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 6px 10px 14px;
+  border-radius: 10px;
+  background: rgba(40, 40, 40, 0.94);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.45;
+  z-index: 15;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+}
+#io-note[hidden] { display: none; }
+#io-note-text { flex: 1; white-space: pre-line; }
+#io-note-close {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 16px;
+}

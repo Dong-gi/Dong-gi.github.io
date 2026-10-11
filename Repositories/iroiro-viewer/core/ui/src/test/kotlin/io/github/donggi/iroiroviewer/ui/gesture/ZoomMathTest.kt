@@ -131,10 +131,64 @@ class ZoomMathTest {
 
     @Test
     fun `밀 수 있는지는 방향이 아니라 남은 여유로 본다`() {
-        // 세로로만 여유가 있어도 참이다. 인식기가 주는 것은 이번 프레임의 델타라
-        // 방향으로 판정하면 손가락이 떨릴 때마다 판정이 뒤집힌다.
+        // 세로로만 여유가 있어도 참이다. 핀치의 이동과 '확대돼 있는가' 를 묻는 자리가 쓴다.
         assertTrue(ZoomMath.canPan(0f, 300f))
         assertTrue(ZoomMath.canPan(300f, 0f))
         assertFalse(ZoomMath.canPan(0.2f, 0.3f))
+    }
+
+    // ---- 확대한 채 가장자리에서 새로 밀면 넘긴다 ----
+
+    @Test
+    fun `배율 1 의 끌기는 그림이 받지 않는다 — 페이저가 넘긴다`() {
+        assertFalse(ZoomMath.claimsDrag(dx = -40f, dy = 0f, offsetX = 0f, offsetY = 0f, maxOffsetX = 0f, maxOffsetY = 0f))
+    }
+
+    @Test
+    fun `확대한 그림은 미는 쪽으로 여유가 있으면 받는다`() {
+        // 2배 확대 가운데(offset 0, 한쪽 여유 540). 왼쪽으로 밀면(다음 장 쪽) 그림이 왼쪽으로 간다 — 받는다.
+        assertTrue(ZoomMath.claimsDrag(dx = -40f, dy = 3f, offsetX = 0f, offsetY = 0f, maxOffsetX = 540f, maxOffsetY = 0f))
+        assertTrue(ZoomMath.claimsDrag(dx = 40f, dy = 3f, offsetX = 0f, offsetY = 0f, maxOffsetX = 540f, maxOffsetY = 0f))
+    }
+
+    @Test
+    fun `오른쪽 가장자리에 닿은 채 왼쪽으로 새로 밀면 페이저에 넘긴다`() {
+        // 그림의 오른쪽 끝이 보인다 = offset 이 -540(왼쪽으로 끝까지 밀었다). 더 왼쪽으로 밀 여유가 없다.
+        assertFalse(ZoomMath.claimsDrag(dx = -40f, dy = 5f, offsetX = -540f, offsetY = 0f, maxOffsetX = 540f, maxOffsetY = 300f))
+        // 같은 자리에서 반대로(오른쪽으로) 밀면 여유가 있다 — 받는다.
+        assertTrue(ZoomMath.claimsDrag(dx = 40f, dy = 5f, offsetX = -540f, offsetY = 0f, maxOffsetX = 540f, maxOffsetY = 300f))
+        // 떨림 안(EDGE_SLACK)은 닿은 것으로 본다.
+        assertFalse(ZoomMath.claimsDrag(dx = -40f, dy = 0f, offsetX = -539.8f, offsetY = 0f, maxOffsetX = 540f, maxOffsetY = 0f))
+    }
+
+    @Test
+    fun `왼쪽 가장자리에서 오른쪽으로 밀면 넘긴다`() {
+        assertFalse(ZoomMath.claimsDrag(dx = 40f, dy = 0f, offsetX = 540f, offsetY = 0f, maxOffsetX = 540f, maxOffsetY = 0f))
+    }
+
+    @Test
+    fun `부모의 축이 아닌 끌기는 여유가 있는 한 받는다`() {
+        // 가로로 넘기는 페이저 안에서 세로로 끈다 — 페이저가 받을 몸짓이 아니다. 세로로 위 끝에 닿았어도 가로 여유가 있으면 민다.
+        assertTrue(ZoomMath.claimsDrag(dx = 2f, dy = 40f, offsetX = 0f, offsetY = 300f, maxOffsetX = 540f, maxOffsetY = 300f))
+        // 세로로 넘기는 부모라면 같은 끌기를 넘긴다.
+        assertFalse(
+            ZoomMath.claimsDrag(
+                dx = 2f, dy = 40f, offsetX = 0f, offsetY = 300f, maxOffsetX = 540f, maxOffsetY = 300f, pagesHorizontally = false,
+            ),
+        )
+    }
+
+    @Test
+    fun `가로 여유가 없는 확대는 가로 끌기를 넘긴다`() {
+        // 세로로 긴 그림을 조금 키워 폭이 화면을 넘지 않는다(가로 여유 0, 세로 여유만). 예전에는 확대돼 있다는 이유로 받아서
+        // 그 장에서는 넘어갈 수 없었다.
+        assertFalse(ZoomMath.claimsDrag(dx = -40f, dy = 0f, offsetX = 0f, offsetY = 0f, maxOffsetX = 0f, maxOffsetY = 500f))
+    }
+
+    @Test
+    fun `여유는 미는 방향으로 잰다`() {
+        near(1080f, ZoomMath.roomToward(delta = 1f, offset = -540f, maxOffset = 540f))
+        near(0f, ZoomMath.roomToward(delta = -1f, offset = -540f, maxOffset = 540f))
+        near(540f, ZoomMath.roomToward(delta = -1f, offset = 0f, maxOffset = 540f))
     }
 }

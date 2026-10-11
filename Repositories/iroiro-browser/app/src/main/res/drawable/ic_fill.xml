@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 손으로 그린 선 아이콘(24x24, 흰 선) — 제안을 주소창에 채워 고쳐 쓰기(왼쪽 위로 가는 화살). 색은 쓰는 쪽이 칠한다(imageTintList). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M17,17L7.5,7.5M7,14V7H14"
+        android:strokeWidth="2"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

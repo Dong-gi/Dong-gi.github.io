@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  편집(연필) - 보기 모드의 '편집' 단추(EditorActivity 의 떠 있는 단추 묶음). 모양은 Material 아이콘의 edit 과 같다(Apache-2.0 - 앱이 이미 싣는
+  material-icons-core 의 Icons.Filled.Edit 과 같은 좌표). 빛깔은 단추가 입힌다(setTint).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M3,17.25V21h3.75L17.81,9.94l-3.75,-3.75L3,17.25zM20.71,7.04c0.39,-0.39 0.39,-1.02 0,-1.41l-2.34,-2.34c-0.39,-0.39 -1.02,-0.39 -1.41,0l-1.83,1.83 3.75,3.75 1.83,-1.83z" />
+</vector>

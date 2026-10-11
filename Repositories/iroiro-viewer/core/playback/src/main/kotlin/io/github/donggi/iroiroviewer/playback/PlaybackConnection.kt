@@ -476,6 +476,42 @@ object PlaybackConnection {
     }
 
     /**
+     * 프로세스가 죽은 뒤 되살아난 재생 화면이 **그 큐를 다시 세운다** — 멈춘 채, 저장해 둔 자리에서.
+     *
+     * 재생은 서비스에 있고 서비스는 프로세스와 함께 죽는다. 안드로이드가 재생 화면을 저장 상태로 되살리면 화면은 서는데 큐가 없어
+     * '0:00 / 0:00' 에 재생 단추가 듣지 않는 빈 화면이 남았다(기기에서 잡았다). 화면이 저장해 둔 경로로 큐를 다시 세운다
+     * (`feature:player` 의 `PlayerRestore`).
+     *
+     * [play]·[playQueue] 와 다른 것 둘.
+     *
+     * * **틀지 않는다.** 앱이 죽은 뒤 돌아온 사람에게 소리가 저절로 나면 그것은 돌려준 것이 아니라 새로 튼 것이다. 재생 단추 한 번이면 이어진다.
+     * * **저장해 둔 자리로 곧바로 간다.** '이어서 재생할까요?' 를 묻지 않는다([State.resumeOfferMs]) — 묻는 까닭은 '되돌릴 것을 먼저 해
+     *   놓고 무르라고 하는 꼴' 을 피하려는 것인데, 여기서는 사용자가 새로 고른 것이 아니라 하던 것을 돌려받고, 소리도 나지 않는다.
+     *
+     * 그사이 다른 재생이 시작됐으면(사용자가 다른 파일을 눌렀다) 덮지 않는다 — 큐가 비어 있을 때만 세운다.
+     */
+    fun restore(context: Context, plan: FolderQueue.Plan, positionMs: Long, subtitles: List<FileEntry> = emptyList()) {
+        if (plan.isEmpty) return
+        connect(context)
+        scope.launch {
+            val items = withContext(Dispatchers.Default) { plan.items.map { itemOf(it, subtitles) } }
+            val c = awaitController() ?: return@launch
+            if (c.mediaItemCount > 0) {
+                Iro.d { "되살릴 큐를 세우려는 사이에 다른 재생이 시작됐다 — 덮지 않는다" }
+                return@launch
+            }
+            c.shuffleModeEnabled = false
+            shuffleHistory.clear()
+            rememberSubtitleCandidates(subtitles)
+            c.setMediaItems(items, plan.startIndex, positionMs.coerceAtLeast(0))
+            c.playWhenReady = false
+            c.prepare()
+            refreshQueue()
+            _state.value = _state.value.copy(failure = null, resumeOfferMs = null)
+        }
+    }
+
+    /**
      * 재생목록의 **아무 줄이나** 눌러 그것으로 건너뛴다.
      *
      * `seekTo(index, C.TIME_UNSET)` 은 그 항목을 **처음부터** 튼다 — 이 앱에서 재생이
@@ -695,7 +731,7 @@ object PlaybackConnection {
     private fun itemOf(entry: FileEntry, subtitles: List<FileEntry>): MediaItem {
         val b = MediaItem.Builder()
             .setMediaId(FileKey.of(entry.name, entry.size, entry.lastModified))
-            .setUri(File(entry.path).toUri())
+            .setUri(uriOf(entry.path))
             .setMimeType(MimeResolver.mimeOf(entry.name))
             .setMediaMetadata(
                 MediaMetadata.Builder()
@@ -712,7 +748,7 @@ object PlaybackConnection {
 
     /** 자막 파일 하나를 media3 가 아는 모양으로. */
     private fun subtitleConfigOf(sub: FileEntry, selected: Boolean) =
-        MediaItem.SubtitleConfiguration.Builder(File(sub.path).toUri())
+        MediaItem.SubtitleConfiguration.Builder(uriOf(sub.path))
             .setMimeType(SubtitleNames.mimeOf(sub.name))
             .setLabel(sub.name)
             // **기본 선택 표시를 붙인다.** 붙이지 않으면 트랙은 생기지만 아무도 고르지 않아
@@ -907,6 +943,12 @@ object PlaybackConnection {
     fun seekTo(positionMs: Long) {
         controller?.seekTo(positionMs)
     }
+
+    /**
+     * 지금 위치 — 컨트롤러에서 곧바로 읽는다. 상태의 위치([State.positionMs])는 티커가 500 ms 마다 밀어 넣는 값이라, 듣다가 '끝을
+     * 여기로' 를 누르면 그만큼 앞의 자리가 잡혔다. 메인 스레드에서 부른다(컨트롤러의 스레드다).
+     */
+    fun positionNow(): Long = controller?.currentPosition?.coerceAtLeast(0) ?: _state.value.positionMs
 
     /** '이어서 재생' — 제안을 받아들여 저장된 위치로 간다. */
     fun resumeFromOffer() {
@@ -1123,5 +1165,6 @@ object PlaybackConnection {
             ?.joinToString(", ")
     }
 
-    private fun File.toUri(): android.net.Uri = android.net.Uri.fromFile(this)
+    /** 큐 항목의 주소 — 기기 파일의 `file:`. */
+    private fun uriOf(path: String): android.net.Uri = android.net.Uri.fromFile(File(path))
 }

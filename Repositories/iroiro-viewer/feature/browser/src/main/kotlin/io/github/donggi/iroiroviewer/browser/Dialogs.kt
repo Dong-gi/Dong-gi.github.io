@@ -22,19 +22,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.Format
 import io.github.donggi.iroiroviewer.io.PathRules
 import io.github.donggi.iroiroviewer.io.TrashStore
+import io.github.donggi.iroiroviewer.io.R as IoR
 
 /**
  * 이름을 받는 다이얼로그. 새 폴더와 이름 바꾸기가 같은 것을 쓴다.
  *
  * **입력하는 동안 검사한다.** 확인을 누른 뒤에 "쓸 수 없는 이름입니다" 를 보여주면
  * 무엇이 문제인지 모른 채 다시 시도하게 된다.
+ *
+ * **이미 있는 이름은 칸 안에서 말한다** — 그것은 누른 뒤에야 안다(디스크를 묻는다). 부르는 쪽이 겹친 이름을
+ * [taken] 으로 돌려주면 칸을 닫지 않고 '같은 이름이 이미 있습니다' 를 띄운다. 이름을 고치면 사라진다. 예전에는 칸이 닫히고 '쓸 수 없는
+ * 이름입니다' 가 떠, 사용자는 글자가 틀린 줄 알고 처음부터 다시 쳤다.
  */
 @Composable
 fun NameDialog(
@@ -46,6 +58,15 @@ fun NameDialog(
     selectBaseName: Boolean,
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
+    /** 방금 시도해 보니 이미 있던 이름(다듬은 이름). 지금 칸의 이름이 이것이면 칸 안에서 말하고 확인을 막는다. */
+    taken: String? = null,
+    /** 확인을 눌러 결과를 기다리는 중 — 두 번 누르지 않게 확인을 막는다. */
+    busy: Boolean = false,
+    /**
+     * 친 이름을 실제로 만들 이름으로(새 오피스 문서: 지운 확장자를 다시 붙인다). 검사·겹침·확인 모두 바꾼 이름으로 하고, 친 것과
+     * 다르면 칸 아래에 실제 이름을 보인다.
+     */
+    fixName: (String) -> String = { it },
 ) {
     var value by remember {
         val end = if (selectBaseName) {
@@ -59,8 +80,11 @@ fun NameDialog(
     val focus = remember { FocusRequester() }
     LaunchedEffect(Unit) { focus.requestFocus() }
 
-    val verdict = PathRules.validate(value.text)
+    val fixed = if (value.text.isBlank()) value.text else fixName(value.text)
+    val verdict = PathRules.validate(fixed)
     val error = (verdict as? PathRules.Verdict.Rejected)?.reason
+    val isTaken = taken != null && (verdict as? PathRules.Verdict.Ok)?.name == taken
+    val shown = (verdict as? PathRules.Verdict.Ok)?.name?.takeIf { it != value.text.trim() }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -72,15 +96,33 @@ fun NameDialog(
                     onValueChange = { value = it },
                     label = { Text(label) },
                     singleLine = true,
-                    isError = error != null && value.text.isNotEmpty(),
+                    isError = (error != null && value.text.isNotEmpty()) || isTaken,
                     modifier = Modifier.focusRequester(focus),
                 )
-                if (error != null && value.text.isNotEmpty()) {
+                val message = when {
+                    error != null && value.text.isNotEmpty() -> nameErrorText(error)
+                    isTaken -> stringResource(IoR.string.io_error_exists)
+                    else -> null
+                }
+                if (message != null) {
                     Text(
-                        text = nameErrorText(error),
+                        text = message,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(top = 4.dp),
+                        // 화면 낭독기가 누른 뒤에 생긴 까닭을 읽게 — 초점은 확인 단추에 남아 있다.
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                            .semantics { liveRegion = LiveRegionMode.Polite },
+                    )
+                } else if (shown != null) {
+                    // 지운 확장자를 다시 붙였다 — 무엇으로 만들지 보인다(확인은 그 이름으로 한다).
+                    Text(
+                        text = stringResource(R.string.browser_dialog_will_create, shown),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                            .semantics { liveRegion = LiveRegionMode.Polite },
                     )
                 }
             }
@@ -88,7 +130,7 @@ fun NameDialog(
         confirmButton = {
             TextButton(
                 onClick = { (verdict as? PathRules.Verdict.Ok)?.let { onConfirm(it.name) } },
-                enabled = verdict is PathRules.Verdict.Ok,
+                enabled = verdict is PathRules.Verdict.Ok && !isTaken && !busy,
             ) { Text(confirmLabel) }
         },
         dismissButton = {
@@ -150,12 +192,20 @@ fun PurgeConfirmDialog(
         title = { Text(stringResource(if (all) R.string.browser_purge_all_title else R.string.browser_purge_title)) },
         text = {
             Column {
+                // **'되돌릴 수 없습니다' 를 굵게** — 문구의 `<b>` 는 인자를 채우는 순간 사라진다(`getString(id, args)` 가 서식 없는
+                // 글로 만든다). 그래서 강조할 문장을 따로 두고 여기서 굵게 잇는다.
+                val body = stringResource(
+                    if (all) R.string.browser_purge_all_body else R.string.browser_purge_body,
+                    count,
+                    Format.size(bytes),
+                )
+                val irreversible = stringResource(R.string.browser_purge_irreversible)
                 Text(
-                    stringResource(
-                        if (all) R.string.browser_purge_all_body else R.string.browser_purge_body,
-                        count,
-                        Format.size(bytes),
-                    )
+                    buildAnnotatedString {
+                        append(body)
+                        append(' ')
+                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(irreversible) }
+                    },
                 )
                 if (unavailable > 0) {
                     Text(

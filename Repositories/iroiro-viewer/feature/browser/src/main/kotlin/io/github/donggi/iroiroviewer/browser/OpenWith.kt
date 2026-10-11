@@ -46,7 +46,10 @@ internal enum class TapRoute {
     /** 압축 목록 화면. */
     ARCHIVE,
 
-    /** 문서 뷰어(PDF·EPUB·오피스·한글). 그 안의 못 여는 형식은 뷰어가 말한다. */
+    /**
+     * 문서(PDF·EPUB·오피스·한글). `app` 이 연다 — 편집기가 쪽을 그리는 형식(오피스·한글·ODF)은 편집기의 보기 모드로, PDF·EPUB 은 문서
+     * 뷰어로. 그 안의 못 여는 형식(`.mobi`·`.rtf` …)은 문서 뷰어가 말한다.
+     */
     DOCUMENT,
 
     /**

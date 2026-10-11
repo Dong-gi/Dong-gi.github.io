@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import io.github.donggi.iroiroviewer.format.FlowWarnings
 import io.github.donggi.iroiroviewer.format.ParseWarning
 import io.github.donggi.iroiroviewer.format.epub.EpubOpener
 
@@ -69,10 +68,9 @@ fun DocNoticeList(
             }
         }
 
-        // **같은 문장은 한 번만.** 보조 부분 둘(스타일·공유 문자열)이 깨지면 코드는 둘이지만 문장은 같다.
+        // **같은 문장은 한 번만.** 같은 까닭이 여러 번 오면(같은 이름이 여럿) 코드는 여럿이지만 문장은 같다.
         // `ParseWarning.detail` 은 예외 메시지가 아니라 파서가 만든 값이라 경로가 없다(`OpenFailure.detail`
-        // 과 다르다). 다만 흐름 문서에서는 **문서의 이름**(시트 이름·슬라이드 제목)이 들어온다 — 변환기가
-        // 제어 문자·방향 바꾸기 문자를 걷고 길이를 자른 값이다.
+        // 과 다르다). 같은 이름 둘(EPUB)이면 그 이름이 들어온다 — 책 안의 이름이다.
         for (line in warnings.map { warningText(it) }.distinct()) {
             Text(
                 text = line,
@@ -95,27 +93,6 @@ private fun warningText(warning: ParseWarning): String = when (warning.code) {
     EpubOpener.WARN_MIMETYPE -> stringResource(R.string.doc_warn_mimetype)
     EpubOpener.WARN_DUPLICATE -> stringResource(R.string.doc_warn_duplicate, warning.detail)
     EpubOpener.WARN_OBFUSCATED -> stringResource(R.string.doc_warn_obfuscated)
-    FlowWarnings.TRUNCATED ->
-        if (warning.detail.isBlank()) stringResource(R.string.doc_warn_truncated_document)
-        else stringResource(R.string.doc_warn_truncated, partLabel(warning.detail))
-    FlowWarnings.PART_FAILED -> stringResource(R.string.doc_warn_part_failed, partLabel(warning.detail))
-    FlowWarnings.MACROS -> stringResource(R.string.doc_warn_macros)
-    FlowWarnings.DUPLICATE_PART -> stringResource(R.string.doc_warn_duplicate_part, warning.detail)
-    FlowWarnings.BROKEN_RELATIONSHIPS -> stringResource(R.string.doc_warn_broken_rels)
-    FlowWarnings.AUX_FAILED -> stringResource(R.string.doc_warn_aux_failed)
-    FlowWarnings.NO_CONTENT_TYPES -> stringResource(R.string.doc_warn_no_content_types)
     // 모르는 코드의 `detail` 은 파서가 만든 짧은 말이라 사람에게 보일 문장이 아니다. 뜻만 전한다.
     else -> stringResource(R.string.doc_warn_other)
-}
-
-/**
- * 부분의 이름. 흐름 문서는 이름 없는 부분(제목 없는 슬라이드·긴 글의 조각)에 **번호**를 싣되
- * [FlowWarnings.PART_NUMBER_PREFIX] 를 붙인다(`OpcFlowDocument.partName`). **앞머리가 있을 때만**
- * 번호로 읽는다 — 숫자만 보고 읽으면 '2024' 라는 시트가 '2024번째 부분' 이 된다.
- */
-@Composable
-private fun partLabel(detail: String): String {
-    if (!detail.startsWith(FlowWarnings.PART_NUMBER_PREFIX)) return detail
-    val n = detail.removePrefix(FlowWarnings.PART_NUMBER_PREFIX).toIntOrNull() ?: return detail
-    return stringResource(R.string.doc_part_number, n)
 }

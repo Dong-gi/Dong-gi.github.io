@@ -35,7 +35,7 @@ data class ReadingBadge(
 }
 
 /** 배지가 세는 단위. 문서 뷰어가 이어보기 안내에서 쓰는 단위와 같은 갈래다(`DocViewModel.ResumeUnit`). */
-enum class BadgeUnit { PAGE, CHAPTER, SHEET, SLIDE, PART, PERCENT }
+enum class BadgeUnit { PAGE, CHAPTER, PERCENT }
 
 object ReadingBadges {
 
@@ -52,21 +52,21 @@ object ReadingBadges {
      * 종류마다 세는 단위. **폴더 만화는 뺀다** — 만화 뷰어는 폴더의 키도 `File` 의 크기·시각으로 만드는데
      * 목록은 폴더의 크기를 0 으로 적는다(`DirectoryLister` — 폴더의 `st_size` 는 거짓말이다). 키를 맞추려면
      * 폴더마다 stat 을 또 해야 하고, 폴더 만화는 드물다.
+     *
+     * **오피스·한글 문서(DOCUMENT·SHEET·SLIDE·HWP)도 뺀다**. 그 문서는 편집기의 보기 모드가 열고 편집기는 읽던 자리를
+     * 적지 않는다 — 이 앱의 흐름 뷰어가 남긴 옛 기록이 그대로 남아 있으면 '50%' 같은 배지가 영영 그 자리에 멈춘다.
      */
     fun unitOf(kind: FileKind): BadgeUnit? = when (kind) {
         FileKind.COMIC, FileKind.PDF -> BadgeUnit.PAGE
         FileKind.EBOOK -> BadgeUnit.CHAPTER
-        FileKind.SHEET -> BadgeUnit.SHEET
-        FileKind.SLIDE -> BadgeUnit.SLIDE
-        FileKind.DOCUMENT, FileKind.HWP -> BadgeUnit.PART
         else -> null
     }
 
     /**
-     * 쪽이 있는 기록(만화·PDF·EPUB 의 장·시트·슬라이드·부분)의 배지.
+     * 쪽이 있는 기록(만화·PDF·EPUB 의 장)의 배지.
      *
      * **자리가 하나뿐이면 배지를 달지 않는다.** 열기만 해도 마지막 자리에 닿으므로 '다 읽음' 이 거짓이 되고
-     * (한 부분짜리 docx 를 열고 바로 닫아도 '다 읽음'), `1/1` 은 아무것도 말하지 않는다.
+     * (한 장짜리 EPUB 을 열고 바로 닫아도 '다 읽음'), `1/1` 은 아무것도 말하지 않는다.
      *
      * @param page 저장된 자리(0부터 — 두 뷰어가 모두 그렇게 적는다).
      */

@@ -8,4 +8,59 @@
 <resources>
     <!-- 조작부 둘째 줄 끝의 ⋮ 단추. 화면 낭독기가 읽는다. -->
     <string name="player_more">더보기</string>
+
+    <!--
+      구간 저장. 이 화면이 스스로 만드는 글자만 여기 둔다 - 저장한 결과와 실패 까닭은 그 작업을 만든 core:io 의
+      것(io_saved_clip·io_error_*)을 쓴다. 시각은 0:12.3 꼴이다(ClipTime).
+    -->
+    <string name="player_clip">구간 저장</string>
+    <string name="player_clip_range">구간 %1$s ~ %2$s (%3$s)</string>
+    <string name="player_clip_set_start">시작을 여기로</string>
+    <string name="player_clip_set_end">끝을 여기로</string>
+    <string name="player_clip_preview">시작부터 재생</string>
+    <string name="player_clip_save">저장</string>
+    <string name="player_clip_close">닫기</string>
+    <string name="player_clip_keyframe_hint">영상은 시작 바로 앞의 키프레임부터 담깁니다 · 자막 트랙은 담지 않습니다</string>
+    <!-- 미리 잰 실제 시작(고른 시작 바로 앞의 키프레임). 고른 것과 크게 다를 수 있다 - 내려받은 영상은 키프레임 간격이 10초인 것도 있다. -->
+    <string name="player_clip_keyframe_at">영상은 키프레임인 %1$s부터 담깁니다 · 자막 트랙은 담지 않습니다</string>
+    <string name="player_clip_too_short">끝이 시작보다 뒤여야 합니다(0.5초 이상)</string>
+    <string name="player_clip_saving">구간을 저장하는 중 %1$d%%</string>
+    <string name="player_clip_saving_wait">구간을 저장하는 중</string>
+    <string name="player_clip_cancel">취소</string>
+    <string name="player_clip_no_path">이 항목의 파일을 찾지 못했습니다</string>
+    <string name="player_clip_copy">다른 앱에서 받은 사본은 따로 저장할 수 없습니다 — 원래 폴더에서 열어 주세요</string>
+    <string name="player_save_audio">소리만 저장</string>
+    <string name="player_clip_video_unsupported_audio_ok">영상째로는 저장할 수 없는 형식입니다 · 소리만 저장할 수 있습니다</string>
+    <string name="player_clip_audio_none_suffix">" · 소리 트랙이 없습니다"</string>
+    <string name="player_clip_audio_unsupported_suffix">" · 소리만 따로 저장할 수 없는 형식입니다"</string>
+    <string name="player_clip_audio_saving">소리를 저장하는 중 %1$d%%</string>
+    <string name="player_clip_audio_saving_wait">소리를 저장하는 중</string>
+    <string name="player_clip_waiting">앞의 파일 작업이 끝나면 저장합니다</string>
+    <!--
+      앱 캐시의 공유 폴더 아래는 곁에 새 파일을 만들지 않는다 - 사용자가 찾아갈 수 없는 자리이고 캐시 정리가 지운다. 다른
+      앱이 넘긴 사본은 위의 player_clip_copy 가 따로 말한다.
+    -->
+    <string name="player_clip_app_copy">앱이 잠시 받아 둔 사본은 따로 저장할 수 없습니다</string>
+
+    <!-- 조작부 판 왼쪽 위의 뒤로 단추. 시스템의 뒤로 가기와 같은 일을 한다 - 재생은 서비스에서 이어진다. -->
+    <string name="player_back">뒤로</string>
+
+    <!--
+      터치 잠금. 화면 방향 잠금(playback_orientation_*)과 헷갈리지 않게 '터치' 를 이름에 넣는다 - 그림도 다르다
+      (방향은 도는 폰, 터치는 자물쇠).
+    -->
+    <string name="player_touch_lock">터치 잠금</string>
+    <string name="player_touch_unlock">터치 잠금 풀기</string>
+    <string name="player_touch_locked">터치 잠금 중 · 두드리면 잠금 풀기 단추가 보입니다</string>
+
+    <!-- 재생목록 줄을 화면 낭독기가 읽는 말. 재생 중인 줄의 상태와, 아이콘으로만 갈리던 종류. -->
+    <string name="player_now_playing">재생 중</string>
+    <string name="player_kind_video">영상</string>
+    <string name="player_kind_audio">소리</string>
+
+    <!--
+      프로세스가 죽은 뒤 되살아난 재생 화면이 큐를 다시 세우지 못했을 때 - 재생하던 파일이 사라졌다 따위.
+      토스트로 띄우고 파일 목록으로 간다(빈 재생 화면을 남기지 않는다).
+    -->
+    <string name="player_restore_failed">재생하던 파일을 다시 열지 못해 파일 목록으로 돌아갑니다</string>
 </resources>

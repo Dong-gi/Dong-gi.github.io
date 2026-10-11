@@ -4,14 +4,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -19,6 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import io.github.donggi.iroiroviewer.ui.icon.VisibilityIcon
+import io.github.donggi.iroiroviewer.ui.icon.VisibilityOffIcon
 
 /**
  * 암호를 묻는다. 문서·압축 파일·만화가 같은 것을 쓴다.
@@ -38,9 +46,17 @@ import androidx.compose.ui.unit.dp
  * **완전히 지우지는 못한다.** Compose 입력칸은 글자를 자기 버퍼(`CharSequence`)에 들고 있어
  * 우리가 그 메모리를 0 으로 덮을 길이 없다. 줄일 수 있는 데까지 줄인 것이다.
  *
+ * ## 친 글자를 볼 수 있다
+ *
+ * 칸 끝의 눈 단추가 가린 글자를 보이고 다시 가린다(널리 쓰이는 비밀번호 칸의 관행 — 긴 암호를 칠 때 친 것을 확인할 길이 필요했다).
+ * 보여도 복사·잘라내기는 그대로 막힌다(보안 입력칸이다). 보이기는 저장하지 않는다 —
+ * 칸이 새로 뜨면 늘 가린 채다.
+ *
  * @param title·[message] 무엇을 여는지는 부르는 쪽이 안다(문서인가 압축 파일인가).
  * @param wrong 방금 넣은 암호가 틀렸다 — 입력칸 아래에 알린다.
  * @param onSubmit **배열의 주인이 넘어간다.** 받은 쪽이 다 쓰고 0 으로 덮는다.
+ * @param label·[confirm]·[wrongText] 칸 이름·확인 단추·틀렸을 때의 말. 기본은 문서·압축의 말('암호'·'열기') — 다른 말이 필요한
+ *   쪽은 제 말을 준다. 한 창 안에서 같은 것을 다르게 부르지 않게.
  */
 @Composable
 fun PasswordDialog(
@@ -49,9 +65,13 @@ fun PasswordDialog(
     wrong: Boolean,
     onDismiss: () -> Unit,
     onSubmit: (CharArray) -> Unit,
+    label: String = stringResource(R.string.ui_password_label),
+    confirm: String = stringResource(R.string.ui_password_open),
+    wrongText: String = stringResource(R.string.ui_password_wrong),
 ) {
     val field = remember { TextFieldState() }
     val focus = remember { FocusRequester() }
+    var shown by remember { mutableStateOf(false) }
     val submit = {
         val text = field.text
         if (text.isNotEmpty()) {
@@ -68,12 +88,21 @@ fun PasswordDialog(
                 Text(message)
                 OutlinedSecureTextField(
                     state = field,
-                    label = { Text(stringResource(R.string.ui_password_label)) },
+                    label = { Text(label) },
                     isError = wrong,
                     supportingText = if (wrong) {
-                        { Text(stringResource(R.string.ui_password_wrong)) }
+                        { Text(wrongText) }
                     } else {
                         null
+                    },
+                    textObfuscationMode = if (shown) TextObfuscationMode.Visible else TextObfuscationMode.RevealLastTyped,
+                    trailingIcon = {
+                        IconButton(onClick = { shown = !shown }) {
+                            Icon(
+                                imageVector = if (shown) VisibilityOffIcon else VisibilityIcon,
+                                contentDescription = stringResource(if (shown) R.string.ui_password_hide else R.string.ui_password_show),
+                            )
+                        }
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
@@ -88,7 +117,7 @@ fun PasswordDialog(
         },
         confirmButton = {
             TextButton(enabled = field.text.isNotEmpty(), onClick = { submit() }) {
-                Text(stringResource(R.string.ui_password_open))
+                Text(confirm)
             }
         },
         dismissButton = {

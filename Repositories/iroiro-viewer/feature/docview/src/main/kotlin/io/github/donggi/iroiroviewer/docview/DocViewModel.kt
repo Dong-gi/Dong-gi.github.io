@@ -16,8 +16,6 @@ import io.github.donggi.iroiroviewer.docview.pdf.PdfPageStore
 import io.github.donggi.iroiroviewer.docview.pdf.PdfSearch
 import io.github.donggi.iroiroviewer.format.Documents
 import io.github.donggi.iroiroviewer.format.FileDocumentSource
-import io.github.donggi.iroiroviewer.format.FlowDocument
-import io.github.donggi.iroiroviewer.format.FlowKind
 import io.github.donggi.iroiroviewer.format.OpenFailure
 import io.github.donggi.iroiroviewer.format.OpenOutcome
 import io.github.donggi.iroiroviewer.format.OpenedDocument
@@ -70,7 +68,7 @@ import java.io.IOException
  *
  * ## 장 안의 자리(14단계)
  *
- * EPUB·흐름 문서는 장·부분 **안의** 자리도 기억한다 — 스크롤 범위에 대한 비율([fraction])이고, `locator` 에
+ * EPUB 은 장 **안의** 자리도 기억한다 — 스크롤 범위에 대한 비율([fraction])이고, `locator` 에
  * `"장:비율"` 로 적는다. `progress` 에는 문서 전체의 진행을 **본 몫**([seen] — 화면의 끝 가장자리)으로 적는다([DocLocator]).
  * PDF 는 둘 다 비운다. 화면(`LockedWebView`)이 스크롤할 때마다 알리고, 여기서는 **기록만 모았다가**([scheduleSave])
  * 떠날 때 마지막으로 쓴다.
@@ -103,25 +101,13 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         ) : Doc {
             override val count: Int get() = book.spine.size
         }
-
-        /**
-         * 흐름 문서 — docx·xlsx·pptx(12단계). 화면은 포맷을 모르고 `FlowDocument` 계약만 안다.
-         * 자리는 **부분**(시트·슬라이드·글의 조각)이다.
-         */
-        data class Flow(
-            override val path: String,
-            override val name: String,
-            val flow: FlowDocument,
-        ) : Doc {
-            override val count: Int get() = flow.parts.size
-        }
     }
 
     sealed interface State {
         /**
          * 여는 중. [reached] 는 **이번 열기에서 파일에 닿았다**(실제로 열어 봤다 — [reachState])는 표시다. 닿기 전에는
          * 파일이 없거나 열리지 않을 수 있으므로 막대의 '다른 앱으로 열기' 를 두지 않는다([DocOpenWith.inMenu]). 닿은
-         * 뒤의 판별·여는 일(docx·HWPX 는 몇 초, 상한 30초)은 기다리지 않고 넘길 수 있다.
+         * 뒤의 판별·여는 일(큰 EPUB 은 몇 초, 상한 30초)은 기다리지 않고 넘길 수 있다.
          */
         data class Loading(val reached: Boolean = false) : State
         data class Ready(val doc: Doc) : State
@@ -151,26 +137,15 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         data class Resumed(val page: Int, val unit: ResumeUnit, val inPlace: Boolean = false) : Event
 
         /**
-         * 흐름 문서를 **처음** 열었다(저장된 자리가 없다). 화면이 '쪽 모양은 원본과 다르다' 를
-         * 한 번 알린다 — 요구사항의 '첫 진입 고지'(CLAUDE.md '지원하지 않는 것').
-         *
-         * 문서마다 한 번이다. 앱 전체에 한 번이면 다른 종류(시트·슬라이드)의 다른 한계를 알릴
-         * 기회가 사라지고, 매번이면 소음이 된다. 자리 기록은 닫을 때 언제나 남으므로(0쪽이라도)
-         * '기록이 없다' 가 곧 '처음이다' 다.
-         *
-         * ([inPlace] 는 [Resumed] 의 것이다 — 첫 장·부분 **안에서** 이어 보면 '1장부터' 가 아니라 '읽던 자리부터' 라고 말한다.)
-         */
-        data class FirstFlowEntry(val kind: FlowKind) : Event
-
-        /**
          * 고정 레이아웃 쪽이 있는 EPUB 을 **처음** 열었다. 화면이 '쪽마다 화면에 맞춰 보여 준다' 를 한 번 알린다 —
-         * 글자 크기·여백·바탕이 그 쪽에는 걸리지 않는 까닭을 사용자가 알게. 문서마다 한 번인 것은 [FirstFlowEntry] 와 같다.
+         * 글자 크기·여백·바탕이 그 쪽에는 걸리지 않는 까닭을 사용자가 알게. 문서마다 한 번이다 — 앱 전체에 한 번이면 다른 책의
+         * 같은 한계를 알릴 기회가 사라지고, 매번이면 소음이 된다. 자리 기록은 닫을 때 언제나 남으므로 '기록이 없다' 가 곧 '처음이다' 다.
          */
         data object FixedLayoutEntry : Event
     }
 
     /** 이어보기 안내가 세는 단위. 문서의 종류에서 정해진다. */
-    enum class ResumeUnit { PAGE, CHAPTER, SHEET, SLIDE, PART }
+    enum class ResumeUnit { PAGE, CHAPTER }
 
     private val _state = MutableStateFlow<State>(State.Loading())
     val state: StateFlow<State> = _state.asStateFlow()
@@ -178,10 +153,10 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
     private val _page = MutableStateFlow(0)
     val page: StateFlow<Int> = _page.asStateFlow()
 
-    /** 지금 장·부분 안의 자리(0~1, 화면의 앞 가장자리). 흐름으로 내보내지 않는다(머리말). */
+    /** 지금 장 안의 자리(0~1, 화면의 앞 가장자리). 흐름으로 내보내지 않는다(머리말). */
     private var fraction = 0f
 
-    /** 지금 장·부분 안에서 본 몫(0~1, 화면의 끝 가장자리). 진행(`progress`)이 쓴다([DocLocator]). */
+    /** 지금 장 안에서 본 몫(0~1, 화면의 끝 가장자리). 진행(`progress`)이 쓴다([DocLocator]). */
     private var seen = 0f
 
     private val _jump = MutableStateFlow(0)
@@ -268,6 +243,45 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /**
+     * PDF 를 **세로로 이어 보는가**. 기본은 이어
+     * 보기 — 쪽을 폭에 맞춰 이어 붙이고 배율이 문서 전체에 걸린다(`ScrollDocument`). 거짓이면 예전의 한 쪽씩 넘기기다(`PagedDocument`).
+     * [spread] 와 같은 까닭으로 문서를 바꿔도 남기고 앱 전체의 설정으로 남긴다(`AppPreferences.pdfContinuous`). 두 보기가 세는 것은
+     * 같은 **쪽**([page])이라 바꿔도 보던 쪽 그대로다.
+     */
+    private val _continuous = MutableStateFlow(true)
+    val continuous: StateFlow<Boolean> = _continuous.asStateFlow()
+
+    /** 사용자가 이 화면에서 골랐다 — 늦게 끝난 설정 읽기가 그것을 덮지 않게. */
+    private var continuousChosen = false
+
+    init {
+        viewModelScope.launch {
+            val saved = try {
+                prefs.pdfContinuous.first()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                null
+            }
+            if (saved != null && !continuousChosen) _continuous.value = saved
+        }
+    }
+
+    fun setContinuous(on: Boolean) {
+        continuousChosen = true
+        _continuous.value = on
+        viewModelScope.launch {
+            try {
+                prefs.setPdfContinuous(on)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // 남기지 못해도 이 세션의 보기는 그대로다.
+            }
+        }
+    }
+
     /** PDF 찾기(API 35 이상). */
     private val _search = MutableStateFlow(PdfSearch.State())
     internal val search: StateFlow<PdfSearch.State> = _search.asStateFlow()
@@ -303,7 +317,6 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
     fun noteRead() {
         val document: io.github.donggi.iroiroviewer.format.OpenedDocument = when (val d = (_state.value as? State.Ready)?.doc) {
             is Doc.Epub -> d.book
-            is Doc.Flow -> d.flow
             else -> return
         }
         _notice.value = Notice(document.warnings, document.unsupported.snapshot())
@@ -420,10 +433,10 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         // 그래서 **만든 자리에서** 받아 두고, 성공 경로에서만 주인을 바꾼다.
         var orphan: OpenedDocument? = null
         try {
-            // **여는 일은 주 스레드에서 하지 않는다**(디스패처 규칙). 여는이 대부분(EPUB·OOXML)은 스스로
+            // **여는 일은 주 스레드에서 하지 않는다**(디스패처 규칙). 여는이(EPUB)는 스스로
             // 디스패처를 고르지 않는 순수 JVM 코드라, 여기서 옮기지 않으면 ZIP·XML 을 주 스레드에서 읽는다 —
-            // 큰 문서에서 화면이 멎고 시간 상한(`withTimeout`)도 뒤로가기도 끼어들 틈이 없다(12단계 검토가
-            // 잡았다. 11단계의 EPUB 도 같았다). 문서는 `onOpen` 으로 받으므로 돌아오는 사이에 취소돼도 새지 않는다.
+            // 큰 문서에서 화면이 멎고 시간 상한(`withTimeout`)도 뒤로가기도 끼어들 틈이 없다.
+            // 문서는 `onOpen` 으로 받으므로 돌아오는 사이에 취소돼도 새지 않는다.
             val outcome = withContext(IroDispatchers.parsing) { Documents.open(opener, source) { orphan = it } }
 
             when (outcome) {
@@ -447,7 +460,6 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
                     _state.value = State.Ready(doc)
                     val firstEntry = when {
                         seenBefore -> null
-                        doc is Doc.Flow -> Event.FirstFlowEntry(doc.flow.kind)
                         doc is Doc.Epub && doc.book.hasFixedLayout -> Event.FixedLayoutEntry
                         else -> null
                     }
@@ -457,9 +469,8 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
                         // 기록이 없어 다음에 또 '처음' 으로 알린다.
                         scheduleSave()
                     }
-                    // 여는 동안 나온 경고는 지금 이미 안다. 버린 것은 장·부분을 읽어야 는다.
+                    // 여는 동안 나온 경고는 지금 이미 안다. 버린 것은 장을 읽어야 는다.
                     if (doc is Doc.Epub) _notice.value = Notice(doc.book.warnings, emptyMap())
-                    if (doc is Doc.Flow) _notice.value = Notice(doc.flow.warnings, doc.flow.unsupported.snapshot())
                 }
             }
         } finally {
@@ -471,7 +482,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
     /**
      * 열린 문서를 화면이 쓰는 모양으로.
      *
-     * **`else` 로 끝내지 않는다.** 12·13단계가 새 문서 타입을 더하면 여기 한 줄이
+     * **`else` 로 끝내지 않는다.** 새 문서 타입을 더하면 여기 한 줄이
      * 늘어야 하고, 잊으면 '열렸는데 화면이 비어 있다' 가 된다. null 로 끝나는 길이
      * 있는 것은 이음매가 우리가 모르는 것을 줄 수 있기 때문이다.
      */
@@ -483,7 +494,6 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
     ): Doc? = when (document) {
         is PdfDocument -> Doc.Pdf(path, name, document.pageCount, PdfPageStore(document, budget))
         is EpubBook -> Doc.Epub(path, document.title.ifBlank { name }, document)
-        is FlowDocument -> Doc.Flow(path, document.title.ifBlank { name }, document)
         else -> null
     }
 
@@ -522,12 +532,8 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun unitOf(doc: Doc): ResumeUnit = when (doc) {
         is Doc.Pdf -> ResumeUnit.PAGE
-        is Doc.Epub -> ResumeUnit.CHAPTER
-        is Doc.Flow -> when (doc.flow.kind) {
-            FlowKind.SHEETS -> ResumeUnit.SHEET
-            FlowKind.SLIDES -> ResumeUnit.SLIDE
-            FlowKind.DOCUMENT -> ResumeUnit.PART
-        }
+        // 모든 장이 고정 레이아웃인 책(그림책·만화)은 장 하나가 쪽 하나다 — '37장부터' 가 아니라 '37쪽부터'.
+        is Doc.Epub -> if (doc.book.allFixedLayout) ResumeUnit.PAGE else ResumeUnit.CHAPTER
     }
 
     fun onPageChanged(ordinal: Int) {
@@ -540,7 +546,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * 화면이 장·부분 안의 자리를 알린다. 스크롤할 때마다 온다 — 값만 적어 두고 기록은 모아서 쓴다([scheduleSave]).
+     * 화면이 장 안의 자리를 알린다. 스크롤할 때마다 온다 — 값만 적어 두고 기록은 모아서 쓴다([scheduleSave]).
      *
      * **[chapter] 가 지금 장이 아니면 버린다.** 장이 바뀌는 사이에 앞 장의 WebView 가 보낸 값이 새 장의 자리로 적히면
      * 다음에 엉뚱한 곳에서 연다.
@@ -553,7 +559,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         scheduleSave()
     }
 
-    /** 화면이 장·부분 안에서 본 몫을 알린다(`LockedWebView.onSeen`). 받는 규칙은 [onFraction] 과 같다. */
+    /** 화면이 장 안에서 본 몫을 알린다(`LockedWebView.onSeen`). 받는 규칙은 [onFraction] 과 같다. */
     fun onSeen(chapter: Int, value: Float) {
         if (chapter != _page.value || value.isNaN()) return
         val s = value.coerceIn(0f, 1f)
@@ -562,11 +568,24 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         scheduleSave()
     }
 
+    /**
+     * 장 [ordinal] 을 **끝에서** 연다 — 장의 처음에서 거꾸로 당겨 앞 장으로 갔다. 읽던 흐름이 이어지도록 앞 장의
+     * 마지막 줄을 보인다(전자책 뷰어의 관행). 여는 자리는 쪽을 열 때 화면이 묻는 [fractionNow] 다.
+     */
+    fun openAtEnd(ordinal: Int) {
+        if (ordinal == _page.value) return
+        _page.value = ordinal
+        fraction = 1f
+        // 끝을 보고 있으니 본 몫도 끝까지다(화면이 쪽을 다 읽은 뒤 실제 값을 다시 알린다).
+        seen = 1f
+        scheduleSave()
+    }
+
     /** 처음부터 본다. 이어보기 안내의 단추가 부른다. */
     fun restart() = startAt(0)
 
     /**
-     * 장·부분 [ordinal] 의 **처음**으로 간다(목차에서 골랐다). 지금 보는 장을 골라도 그 장의 처음으로 간다 — 예전에는
+     * 장 [ordinal] 의 **처음**으로 간다(목차에서 골랐다). 지금 보는 장을 골라도 그 장의 처음으로 간다 — 예전에는
      * 쪽이 바뀌지 않아 아무 일도 없었다.
      */
     fun startAt(ordinal: Int) {
@@ -680,7 +699,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * 지금 자리의 기록. PDF 는 쪽만(`locator`·`progress` 는 비운다), 흐름 문서는 장 안의 자리와 문서 전체의 진행까지
+     * 지금 자리의 기록. PDF 는 쪽만(`locator`·`progress` 는 비운다), EPUB 은 장 안의 자리와 문서 전체의 진행까지
      * ([DocLocator.fields] — 왜 PDF 에 진행을 적지 않는지도 거기 있다).
      */
     private fun entityOf(fileKey: String, doc: Doc): DocProgressEntity {
@@ -702,8 +721,8 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
      *
      * **상태는 그 자리에서 끊는다.** 예전에는 마지막 자리를 DB 에 쓴 **뒤에** `opened`·상태를
      * 비웠는데, 그 쓰기가 끝나기 전에 같은 문서를 다시 누르면 `open` 이 '이미 열려 있다' 로
-     * 돌아가고, 곧이어 늦은 정리가 그 문서를 닫아 **끝나지 않는 동그라미**가 남았다(적대적
-     * 검토가 잡았다). 저장할 값과 닫을 문서는 지금 붙들어 두고, 쓰기가 끝나면 **붙든 것**을 닫는다.
+     * 돌아가고, 곧이어 늦은 정리가 그 문서를 닫아 **끝나지 않는 동그라미**가 남았다.
+     * 저장할 값과 닫을 문서는 지금 붙들어 두고, 쓰기가 끝나면 **붙든 것**을 닫는다.
      */
     fun close() {
         openJob?.cancel()
@@ -717,8 +736,8 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         key = null
         _state.value = State.Loading()
         val db = IroiroDatabase.get(context)
-        // **VM 스코프가 아니라 앱 수명의 IO 스코프에서** 쓰고 닫는다. 흐름 문서의 `close` 는 그리기 잠금을
-        // 기다리므로 주 스레드에서 부르면 큰 시트를 그리는 동안 화면이 멎는다(12단계 검토가 잡았다). VM 이
+        // **VM 스코프가 아니라 앱 수명의 IO 스코프에서** 쓰고 닫는다. 문서의 `close` 는 그리기·읽기 잠금을 기다리므로(PDF 는
+        // 렌더 디스패처, EPUB 은 장을 읽는 잠금) 주 스레드에서 부르면 그동안 화면이 멎는다. VM 이
         // 곧 치워지면(`onCleared`) VM 스코프의 일은 시작도 못 하고 취소되어 문서가 닫히지 않는다.
         closer.launch {
             try {
@@ -804,7 +823,7 @@ internal fun reachState(isFile: Boolean, openError: Throwable?): DocViewModel.St
 /**
  * 여는 일이 [failure] 로 끝난 **뒤에** 파일에 닿아 본 답으로 실패 화면을 정한다. 닿지 못하면 무엇으로 실패했든 닿지 못한 실패
  * 화면([unreachableState] — 단추도 ⋮ 도 없다)이고, 닿으면 여는이의 답 그대로다. 열기 전에 닿았어도([reachState]) 여는 동안
- * 없어질 수 있다 — 판별은 그 읽기 실패를 삼켜 '여는이가 없다(Unsupported)' 로, OOXML·EPUB 은 리더를 여는 자리의 입출력 예외를
+ * 없어질 수 있다 — 판별은 그 읽기 실패를 삼켜 '여는이가 없다(Unsupported)' 로, EPUB 은 리더를 여는 자리의 입출력 예외를
  * '깨졌다(Corrupt)' 로 낸다. 둘 다 '다른 앱으로 열기' 를 권하는 갈래다.
  */
 internal fun failedAfter(failure: OpenFailure, isFile: Boolean, openError: Throwable?): DocViewModel.State.Failed =

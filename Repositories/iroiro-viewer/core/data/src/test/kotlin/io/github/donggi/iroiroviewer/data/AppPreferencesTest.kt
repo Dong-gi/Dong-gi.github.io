@@ -3,6 +3,7 @@ package io.github.donggi.iroiroviewer.data
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import io.github.donggi.iroiroviewer.model.SortKey
@@ -146,5 +147,96 @@ class AppPreferencesTest {
             ReaderAppearance(fontPercent = 150, margin = ReaderAppearance.MARGIN_WIDE, theme = ReaderAppearance.THEME_SEPIA),
             prefs.readerAppearance.first(),
         )
+    }
+
+    /**
+     * 두 번 두드려 건너뛰는 시간. 기본 10초, 고를 수 있는 값만 남는다 — 이 값이 재생 화면의 몸짓의 걸음이라, 목록 밖의
+     * 값이 새어 나가면 두드릴 때마다 엉뚱한 자리로 뛴다.
+     */
+    @Test
+    fun `두 번 두드림의 걸음은 기본 10초이고 고를 수 있는 값만 남는다`() = runTest {
+        assertEquals(AppPreferences.DEFAULT_TAP_SEEK_SECONDS, prefs.tapSeekSeconds.first())
+        assertEquals(10, AppPreferences.DEFAULT_TAP_SEEK_SECONDS)
+        prefs.setTapSeekSeconds(30)
+        assertEquals(30, prefs.tapSeekSeconds.first())
+        // 쓸 때 누른다.
+        prefs.setTapSeekSeconds(7)
+        assertEquals(AppPreferences.DEFAULT_TAP_SEEK_SECONDS, prefs.tapSeekSeconds.first())
+        // 읽을 때도 누른다(옛 판·손으로 고친 파일).
+        store.edit { it[intPreferencesKey("tap_seek_seconds")] = 600 }
+        assertEquals(AppPreferences.DEFAULT_TAP_SEEK_SECONDS, prefs.tapSeekSeconds.first())
+        // 한 칸만 바꾸는 쓰기 — 다른 재생 설정을 건드리지 않는다.
+        prefs.setResumeOnBluetooth(false)
+        prefs.setTapSeekSeconds(15)
+        assertEquals(false, prefs.resumeOnBluetooth.first())
+        assertEquals(15, prefs.tapSeekSeconds.first())
+    }
+
+    @Test
+    fun `읽는 화면의 설정은 기본값에서 시작하고 범위를 누른다`() = runTest {
+        // 화면 켜 두기 10분, 볼륨 키 끔(소리 조절을 빼앗지 않는다), PDF 는 이어 보기.
+        assertEquals(AppPreferences.KEEP_SCREEN_DEFAULT_MINUTES, prefs.readerKeepScreenMinutes.first())
+        assertEquals(false, prefs.comicVolumeKeys.first())
+        assertEquals(true, prefs.pdfContinuous.first())
+
+        prefs.setReaderKeepScreenMinutes(0)
+        prefs.setComicVolumeKeys(true)
+        prefs.setPdfContinuous(false)
+        assertEquals(0, prefs.readerKeepScreenMinutes.first())
+        assertEquals(true, prefs.comicVolumeKeys.first())
+        assertEquals(false, prefs.pdfContinuous.first())
+
+        // 손으로 고친 값이 화면을 몇 시간씩 켜 두지 않게.
+        store.edit { it[intPreferencesKey("reader_keep_screen_minutes")] = 600 }
+        assertEquals(AppPreferences.KEEP_SCREEN_MAX_MINUTES, prefs.readerKeepScreenMinutes.first())
+        store.edit { it[intPreferencesKey("reader_keep_screen_minutes")] = -5 }
+        assertEquals(0, prefs.readerKeepScreenMinutes.first())
+        // 한 칸만 바꾸는 쓰기는 다른 칸을 건드리지 않는다.
+        prefs.setReaderKeepScreenMinutes(5)
+        assertEquals(true, prefs.comicVolumeKeys.first())
+        assertEquals(false, prefs.pdfContinuous.first())
+    }
+
+    /**
+     * 텍스트 뷰어의 설정은 **종류마다 따로** 남는다. 글 파일은 처음에 줄을 접고 줄 번호를 숨긴다 — 코드는 예전 그대로다.
+     */
+    @Test
+    fun `글 파일과 코드 파일의 텍스트 뷰어 설정은 따로 남는다`() = runTest {
+        assertEquals(TextViewerDefaults(), prefs.textViewer(TextViewerKind.CODE).first())
+        assertEquals(TextViewerDefaults(wrap = true, lineNumbers = false), prefs.textViewer(TextViewerKind.TEXT).first())
+        prefs.updateProseViewer { it.copy(lineNumbers = true, fontSp = 16) }
+        assertEquals(TextViewerDefaults(wrap = true, lineNumbers = true, fontSp = 16), prefs.proseViewer.first())
+        assertEquals(TextViewerDefaults(), prefs.textViewer.first(), "글의 설정이 코드에 번지지 않는다")
+        prefs.updateTextViewer { it.copy(fontSp = 20, wrap = true) }
+        assertEquals(TextViewerDefaults(wrap = true, lineNumbers = true, fontSp = 16), prefs.proseViewer.first(), "거꾸로도")
+        prefs.setTextViewer(TextViewerKind.TEXT, TextViewerDefaults(fontSp = 1))
+        assertEquals(TextViewerDefaults.MIN_FONT_SP, prefs.proseViewer.first().fontSp, "범위를 누른다")
+    }
+
+    /**
+     * **예전에 바꾼 값을 물려받는다** — 둘이 한 벌이던 때에 저장한 글자 크기와 줄 끝 표시(처음 값과 다르면 사람이 고른 것이다)는 글 파일도
+     * 그대로 쓴다. 줄 접기·줄 번호는 글의 처음 값이다. 그 뒤 코드의 값을 바꿔도 글은 물려받은 값에 머문다 — 첫 쓰기가 글의 값을 먼저
+     * 적어 둔다.
+     */
+    @Test
+    fun `예전에 바꾼 글자 크기와 줄 끝 표시는 글 파일이 물려받는다`() = runTest {
+        // 예전 판(둘이 한 벌)이 적은 모양 — 코드의 키 넷만 있고 글의 키는 없다.
+        store.edit {
+            it[booleanPreferencesKey("text_wrap")] = false
+            it[booleanPreferencesKey("text_line_numbers")] = true
+            it[intPreferencesKey("text_font_sp")] = 18
+            it[booleanPreferencesKey("text_show_line_ends")] = true
+        }
+        val inherited = TextViewerDefaults(wrap = true, lineNumbers = false, fontSp = 18, showLineEnds = true)
+        assertEquals(inherited, prefs.proseViewer.first())
+        assertEquals(TextViewerDefaults(wrap = false, lineNumbers = true, fontSp = 18, showLineEnds = true), prefs.textViewer.first())
+
+        prefs.updateTextViewer { it.copy(fontSp = 10, showLineEnds = false) }
+        assertEquals(inherited, prefs.proseViewer.first(), "코드의 값을 바꿔도 글은 물려받은 값에 머문다")
+        assertEquals(TextViewerDefaults(wrap = false, lineNumbers = true, fontSp = 10, showLineEnds = false), prefs.textViewer.first())
+
+        prefs.updateProseViewer { it.copy(showLineEnds = false) }
+        prefs.updateTextViewer { it.copy(fontSp = 12) }
+        assertEquals(inherited.copy(showLineEnds = false), prefs.proseViewer.first())
     }
 }

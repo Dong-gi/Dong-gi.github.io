@@ -123,6 +123,12 @@ class PlayerOpenWithTest {
         assertFalse(PlayerOpenWith.isUnreachable(null))
     }
 
+    /** 파일이 아닌 주소(예전의 네트워크 저장소 `sftp:` 따위)는 넘길 기기 파일이 없다. */
+    @Test
+    fun `파일이 아닌 주소는 넘기지 않는다`() {
+        assertNull(PlayerOpenWith.fileOf("sftp", "/home/opc/a.mkv"))
+    }
+
     @Test
     fun `파일 URI 만 경로로 읽는다`() {
         assertEquals("/storage/emulated/0/Movies/a.mkv", PlayerOpenWith.fileOf("file", "/storage/emulated/0/Movies/a.mkv"))

@@ -9,18 +9,8 @@ import io.github.donggi.iroiroviewer.format.FormatId
 import io.github.donggi.iroiroviewer.format.FormatProbe
 import io.github.donggi.iroiroviewer.format.ProbeContext
 import io.github.donggi.iroiroviewer.format.archive.ZipArchiveReader
-import io.github.donggi.iroiroviewer.format.docx.DocxDocument
 import io.github.donggi.iroiroviewer.format.epub.EpubOpener
 import io.github.donggi.iroiroviewer.format.epub.EpubProbe
-import io.github.donggi.iroiroviewer.format.hwp5.Hwp5Opener
-import io.github.donggi.iroiroviewer.format.hwp5.Hwp5Probe
-import io.github.donggi.iroiroviewer.format.hwpx.HwpxOpener
-import io.github.donggi.iroiroviewer.format.hwpx.HwpxProbe
-import io.github.donggi.iroiroviewer.format.opc.OoxmlKind
-import io.github.donggi.iroiroviewer.format.opc.OoxmlOpener
-import io.github.donggi.iroiroviewer.format.opc.OoxmlProbe
-import io.github.donggi.iroiroviewer.format.pptx.PptxDocument
-import io.github.donggi.iroiroviewer.format.xlsx.XlsxDocument
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.io.MimeResolver
 import io.github.donggi.iroiroviewer.safety.EntryBudget
@@ -35,9 +25,14 @@ import java.util.concurrent.CancellationException
  * ## 왜 `app` 에 있는가
  *
  * 포맷 모듈을 **전부** 볼 수 있는 곳이 여기뿐이다. `feature:docview` 가 직접 골랐다면
- * 12·13단계에 가서 포맷 모듈 일곱을 보게 되고, 그것은 의존 표가 금지한 모양이다
+ * 여는 포맷이 늘 때마다 포맷 모듈을 여럿 보게 되고, 그것은 의존 표가 금지한 모양이다
  * (`feature:*` 는 자기 포맷 모듈 하나). 조립은 `app` 이 한다 —
  * `ExtractSupport`·`CoverSupport`·`PlayerSupport` 와 같은 판단이다.
+ *
+ * **여는 것은 EPUB·PDF 둘이다.** 오피스·한글 문서(docx·xlsx·pptx·HWPX·HWP·이전 형식·ODF)는 편집기의 보기 모드가
+ * 쪽을 PC 처럼 그리므로 문서 뷰어에 오지 않는다(`MainActivity` 의 `openDocument` 가 가른다).
+ * 그 문서가 여기 오면(엔진 묶음 없이 지은 빌드) '이 앱이 다루지 않는 문서' 와 '다른 앱으로 열기' 로
+ * 끝난다.
  *
  * ## 확장자만 보지 않는다
  *
@@ -48,24 +43,17 @@ import java.util.concurrent.CancellationException
  *
  * ## ZIP 엔트리 이름을 게으르게 공급한다
  *
- * 12·13단계에 가면 docx·xlsx·pptx·hwpx 가 **전부 ZIP** 이라 이름을 봐야 갈린다.
- * 그래서 공급을 여기서 해 두되, **매직이 `PK` 일 때만** 연다 — 그렇지 않으면 아무도
- * 이 값을 건드리지 않는다.
+ * EPUB 은 ZIP 이라 이름을 봐야 갈린다(`mimetype`·`META-INF/container.xml`). 그래서 공급을 여기서 해 두되, **매직이 `PK` 일 때만**
+ * 연다 — 그렇지 않으면 아무도 이 값을 건드리지 않는다.
  */
 object FormatRegistry : DocumentSupport.Registry {
 
     /**
-     * 판별기. **순서가 뜻을 갖는다** — 먼저 답하는 것이 이긴다.
-     *
-     * ZIP 계열(HWPX·EPUB·OOXML)을 앞에 두는 것은 그쪽이 매직과 엔트리 이름으로 확실히 갈리기
-     * 때문이고, PDF 를 뒤에 두는 것은 그것이 확장자로도 맡기 때문이다. EPUB 과 OOXML 은
-     * 서로를 가로채지 않는다 — EPUB 에는 `[Content_Types].xml` 이 없고 OOXML 에는 `mimetype` 이 없다.
-     *
-     * **HWPX 는 EPUB 보다 먼저다.** HWPX 에도 `mimetype` 과 `META-INF/container.xml` 이 있어, 이름만 보는
-     * EPUB 판별기가 먼저 돌면 한글 문서를 전자책으로 연다(13단계에서 잡았다). HWP 5.0 은 CFB 라
-     * OOXML 판별기(오피스 확장자만 맡는다)와 겹치지 않는다.
+     * 판별기. **순서가 뜻을 갖는다** — 먼저 답하는 것이 이긴다. EPUB 은 매직과 엔트리 이름으로 확실히 갈리고, PDF 는 확장자로도
+     * 맡으므로 뒤에 둔다. (HWPX 도 `mimetype` 과 `META-INF/container.xml` 을 갖는다 —
+     * EPUB 판별기는 `mimetype` 의 내용을 보므로 HWPX 를 전자책으로 열지 않는다.)
      */
-    private val probes: List<FormatProbe> = listOf(HwpxProbe, EpubProbe, OoxmlProbe, Hwp5Probe, PdfProbe)
+    private val probes: List<FormatProbe> = listOf(EpubProbe, PdfProbe)
 
     /**
      * 여는이. 받는 것은 사용자가 넣은 암호다(없으면 null).
@@ -76,26 +64,7 @@ object FormatRegistry : DocumentSupport.Registry {
     private val openers: Map<FormatId, (CharArray?) -> DocumentOpener> = mapOf(
         FormatId.EPUB to { _ -> EpubOpener() },
         FormatId.PDF to { password -> PdfOpener(password) },
-        // OOXML 넷은 **한 여는이**가 맡는다. 판별기가 확장자로 짐작한 종류가 아니라 패키지가
-        // 말하는 종류로 열기 때문이다(`OoxmlOpener` 의 주석). 암호(MS-OFFCRYPTO)도 거기서 받는다.
-        FormatId.DOCX to ::ooxml,
-        FormatId.XLSX to ::ooxml,
-        FormatId.PPTX to ::ooxml,
-        FormatId.LEGACY_OFFICE to ::ooxml,
-        // 한글. 암호 HWPX 는 공개된 방식(한컴이 공개한 OWPML 모델)이라 암호를 받는다. HWP 5.0 의
-        // 암호 문서는 방식이 공개되지 않아 받지 않고 '암호로는 열 수 없다' 로 끝난다(여는이의 주석).
-        FormatId.HWPX to { password -> HwpxOpener(password) },
-        FormatId.HWP5 to { password -> Hwp5Opener(password) },
     )
-
-    /** 세 변환기를 이어 준 OOXML 여는이. */
-    private fun ooxml(password: CharArray?): DocumentOpener = OoxmlOpener(password) { pkg, kind, limits, progress ->
-        when (kind) {
-            OoxmlKind.DOCX -> DocxDocument.open(pkg, limits, progress)
-            OoxmlKind.XLSX -> XlsxDocument.open(pkg, limits, progress)
-            OoxmlKind.PPTX -> PptxDocument.open(pkg, limits, progress)
-        }
-    }
 
     /** `app` 이 시작할 때 이음매에 꽂는다. */
     fun install() {

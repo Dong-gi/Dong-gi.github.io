@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>probe</title>
+<link rel="stylesheet" href="probe.css">
+</head>
+<body>
+<!--
+  통로 시험 엔진 — 앱이 넘긴 문서를 받아(`/__io/in/<표>`) 크기·SHA-256·앞 바이트를 보이고, 편집 모드면 글을 덧붙여 덩이로 저장한다.
+  진짜 편집기(rhwp·ONLYOFFICE)가 지킬 약속을 이 작은 쪽으로 먼저 확인한다. 디버그 시험대만 쓴다.
+-->
+<main>
+  <h1 id="name">…</h1>
+  <dl>
+    <dt>형식</dt><dd id="kind">…</dd>
+    <dt>모드</dt><dd id="mode">…</dd>
+    <dt>크기</dt><dd id="size">…</dd>
+    <dt>SHA-256</dt><dd id="sha" class="mono">…</dd>
+    <dt>앞 32바이트</dt><dd id="head" class="mono">…</dd>
+  </dl>
+  <section id="edit" hidden>
+    <label for="text">덧붙일 글</label>
+    <textarea id="text" rows="4" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+    <button id="save" type="button">저장</button>
+  </section>
+  <p id="status" role="status"></p>
+</main>
+<script src="probe.js"></script>
+</body>
+</html>

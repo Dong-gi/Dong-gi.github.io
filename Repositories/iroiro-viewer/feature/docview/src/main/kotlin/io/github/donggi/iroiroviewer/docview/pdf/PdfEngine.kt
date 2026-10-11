@@ -92,7 +92,7 @@ internal object PdfEngine {
      * 파일을 연다. **실패하면 우리가 연 [ParcelFileDescriptor] 를 우리가 닫는다.**
      *
      * 소유권은 **성공했을 때만** 넘어간다 — [PdfRenderer] 의 생성자가 던지면 그 PFD 는
-     * 닫히지 않은 채 남는다(설계 검토가 치명으로 잡았다). 그리고 이 앱에서 실패는 드문
+     * 닫히지 않은 채 남는다. 그리고 이 앱에서 실패는 드문
      * 길이 아니다: 암호 PDF·깨진 PDF·PDF 아닌 파일이 전부 생성자에서 던진다.
      */
     suspend fun open(file: File): Opened = openWith(
@@ -106,8 +106,8 @@ internal object PdfEngine {
     suspend fun open(descriptor: ParcelFileDescriptor): Opened {
         // **소유권은 블록이 실제로 돌 때 넘어간다.** 렌더 디스패처에 줄을 서 있는 동안 취소되면
         // 블록이 아예 돌지 않아(`withContext` 가 들어가기 전에 취소를 본다) `acquire` 가 불리지
-        // 않고, 그러면 아무도 서술자를 닫지 않아 평문이 든 메모리 파일이 GC 를 기다린다(적대적
-        // 검토가 잡았다). 받지 않았으면 여기서 닫는다.
+        // 않고, 그러면 아무도 서술자를 닫지 않아 평문이 든 메모리 파일이 GC 를 기다린다.
+        // 받지 않았으면 여기서 닫는다.
         var taken = false
         try {
             return openWith({ taken = true; descriptor }) { PdfRenderer(it) }

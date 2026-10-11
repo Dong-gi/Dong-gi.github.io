@@ -6,6 +6,7 @@
 import re
 from pathlib import Path
 
+from src import pot_provider
 from src.extractors._util import safe_filename
 from src.extractors._ytdlp import CookieFileAuthMixin, YtdlpExtractor
 from src.extractors.base import (
@@ -23,12 +24,16 @@ _VIDEO_RE = re.compile(
     r"(?:youtube\.com/(?:watch\?.*?v=|shorts/)|youtu\.be/)([A-Za-z0-9_-]{11})"
 )
 
-# 2026 YouTube SABR/PO Token 우회: PO Token 없이도 동작하는 player_client 우선
-#   - default: yt-dlp가 알아서 최선 선택 (PO Token 있으면 사용)
-#   - web_safari: HLS 반환, GVS PO Token 불필요
-#   - android_vr: "made for kids" 검사 생략, PO Token 불필요
+# 여러 client의 포맷을 합친다. 쓸 수 있는 것이 상황마다 다르다 (CLAUDE.md "SABR / PO Token").
+#   - default: yt-dlp 기본 묶음. 쿠키가 있으면 로그인용 묶음으로 바뀐다
+#   - mweb: GVS PO Token이 있어야 포맷이 나온다 (bgutil 공급자). **쿠키를 지원하는
+#     client 중 실측으로 받아지는 유일한 것** — 연령 제한 영상은 이 경로로만 받힌다
+#   - web_safari: HLS 반환
+#   - android_vr: PO Token 불필요. 단 쿠키를 지원하지 않아 쿠키가 있으면 yt-dlp가 뺀다
 # 참고: yt-dlp/yt-dlp#12482, #13058, PO-Token-Guide wiki
-_PLAYER_CLIENTS = ["default", "web_safari", "android_vr"]
+_PLAYER_CLIENTS = ["default", "mweb", "web_safari", "android_vr"]
+
+_NO_FORMATS = "requested format is not available"
 
 _AUTH_KEYWORDS = (
     "sign in",
@@ -101,9 +106,8 @@ class YoutubeExtractor(CookieFileAuthMixin, YtdlpExtractor):
     site_id = "youtube"
 
     # YouTube 쿠키는 회전 주기가 짧아(실측 30분 이내) 영속 저장이 무의미.
-    # 인증 실패 시 사용자에게 입력받아 임시 파일에만 기록하고 종료 시 삭제한다.
+    # 인증 실패 시 사용자에게 입력받아 이번 실행 동안 메모리에만 둔다 (디스크에 쓰지 않음).
     COOKIE_DOMAIN = ".youtube.com"
-    COOKIES_PERSISTENT = False
     COOKIE_PROMPT = _COOKIE_PROMPT
 
     def can_handle(self, url: str) -> bool:
@@ -134,7 +138,10 @@ class YoutubeExtractor(CookieFileAuthMixin, YtdlpExtractor):
 
     def _extra_opts(self, task: Task) -> dict:
         opts: dict = {
-            "extractor_args": {"youtube": {"player_client": _PLAYER_CLIENTS}},
+            "extractor_args": {
+                "youtube": {"player_client": _PLAYER_CLIENTS},
+                **pot_provider.ytdlp_extractor_args(),
+            },
             # YouTube n/sig 챌린지 해결용 JS runtime. Node는 자동 감지되지 않으므로 명시
             # (Deno는 자동 감지). yt-dlp-ejs 패키지가 솔버 스크립트 제공.
             "js_runtimes": {"node": {}},
@@ -167,6 +174,15 @@ class YoutubeExtractor(CookieFileAuthMixin, YtdlpExtractor):
         if any(kw in lowered for kw in _AUTH_KEYWORDS):
             # 쿠키가 이미 있는데 실패 → 만료. 없으면 최초 입력 요청.
             return AuthExpiredError(self.site_id) if self.has_cookies() else RuntimeError(AUTH_REQUIRED)
+        if _NO_FORMATS in lowered and (reason := pot_provider.unavailable_reason()):
+            # 쿠키가 있으면 PO Token 없이 받을 수 있는 client가 남지 않는다.
+            # 쿠키 문제로 오해하지 않도록 원인과 해결 명령을 함께 알린다.
+            return RuntimeError(
+                "받을 수 있는 포맷이 없습니다. PO Token 공급자를 쓸 수 없어 "
+                "mweb 포맷을 받지 못했습니다(로그인이 필요한 영상은 이 경로로만 받힙니다). "
+                f"프로젝트 폴더에서 `{pot_provider.INSTALL_COMMAND}`를 실행한 뒤 다시 시도하세요. "
+                f"[원인: {reason}] [원본: {message[:120]}]"
+            )
         return None
 
 

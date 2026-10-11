@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!--
+          디버그 시험대 - 파일 화면 대신 문서를 넘기고 돌려받은 것을 그 자리에 쓴다. 디버그 빌드에만 있다. 실행 아이콘은 두지 않는다
+          (파일 앱의 아이콘 곁에 하나 더 서지 않게) - adb 로 띄운다:
+          am start -n io.github.donggi.iroiroviewer/io.github.donggi.iroiroviewer.editor.DevActivity
+        -->
+        <activity
+            android:name=".DevActivity"
+            android:exported="true"
+            android:label="편집기 시험대"
+            android:process=":editor" />
+
+        <!--
+          저장 자리가 없을 때(위 시험대) 고친 문서를 결과로 돌려주는 자리(앱 캐시의 editor/out 아래만 - OutputProvider). 내보내지 않고
+          URI 권한으로만 준다. 이름은 core:io 의 FileProvider(.files)와 겹치지 않게 .editorout 이다. 디버그 빌드에만 둔다 -
+          릴리스에는 저장 자리 없이 편집 모드로 여는 길이 없다(이 앱의 파일 화면은 편집 모드에 늘 저장 자리를 싣는다). 시험대도 넘길
+          문서의 사본을 이 자리에 둔다(DevActivity).
+        -->
+        <provider
+            android:name=".OutputProvider"
+            android:authorities="${applicationId}.editorout"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:process=":editor" />
+    </application>
+</manifest>

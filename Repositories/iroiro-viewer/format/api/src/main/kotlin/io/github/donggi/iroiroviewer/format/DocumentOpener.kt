@@ -79,9 +79,9 @@ data class ParseWarning(val code: String, val detail: String)
  * 이것이 있어야 "간이 렌더" 배지가 거짓말을 하지 않는다 — 사용자는 원문에 무엇이
  * 있었는지 모르므로, 빠진 것이 있다는 사실 자체를 앱이 말해 주어야 한다.
  *
- * **스레드 안전하다.** 흐름 문서·EPUB 은 WebView 의 스레드에서 부분을 그리며 세고, 화면은 주 스레드에서
+ * **스레드 안전하다.** EPUB 은 WebView 의 스레드에서 장을 그리며 세고, 화면은 주 스레드에서
  * [snapshot] 을 읽는다. 맵을 잠금 없이 두면 읽는 도중의 쓰기가 `ConcurrentModificationException` 이나
- * 틀린 수를 낸다(13단계 검토가 잡았다 — 11단계의 EPUB 부터 그랬다).
+ * 틀린 수를 낸다(11단계의 EPUB 부터 그랬다).
  */
 class UnsupportedFeatures {
     private val counts = LinkedHashMap<String, Int>()
@@ -101,25 +101,11 @@ class UnsupportedFeatures {
 
     companion object {
         // 종류 이름을 문자열로 흩뿌리지 않도록 여기에 모은다.
-        const val EQUATION = "수식"
-        const val CHART = "차트"
-        const val SHAPE = "도형"
         const val EMBEDDED_OBJECT = "삽입 개체"
-        const val FOOTNOTE = "각주"
-        const val HEADER_FOOTER = "머리말·꼬리말"
-        const val FORMULA_CACHED = "계산되지 않은 수식"
         const val UNKNOWN_ELEMENT = "알 수 없는 요소"
 
-        // 12단계(OOXML)가 더한 것.
-        const val COMMENT = "메모"
-        const val MACRO = "매크로"
-        /** 그림인데 화면이 그릴 수 없는 형식(EMF·WMF·TIFF 등). */
+        /** 그림인데 화면이 그릴 수 없는 형식(EMF·WMF·TIFF 등). EPUB 이 센다. */
         const val UNSUPPORTED_IMAGE = "그릴 수 없는 그림"
-        /** 바깥 파일을 가리키는 그림·연결(링크된 그림, 다른 통합 문서). */
-        const val LINKED_FILE = "연결된 바깥 파일"
-        const val SMART_ART = "SmartArt"
-        const val TEXT_EFFECT = "글자 효과"
-        const val ANIMATION = "애니메이션"
 
         // 11단계의 HTML 위생이 쓰는 것. **여기 모아 두는 이유는 2단계와 같다** —
         // 종류 이름을 문자열로 흩뿌리면 같은 것이 두 이름으로 세어지고, 배지의 숫자가
@@ -147,16 +133,6 @@ fun interface ProgressSink {
 }
 
 /**
- * **파일의 형식이 깨졌다**는 뜻의 예외. 스트림을 읽다가도 나므로 [IOException] 을 잇지만,
- * [toOpenFailure] 는 이것을 `Io`('입출력이 실패했다')가 아니라 [OpenFailure.Corrupt] 로 옮긴다 —
- * 사용자가 디스크 고장을 의심하게 만들지 않으려는 것이다(PDF 의 실패 매핑이 같은 이유로 따로 있다).
- *
- * 포맷의 형식 오류(CFB·HWP)는 이것을 잇는다. **메시지에는 우리가 쓴 고정 문장만** 넣는다 —
- * 그대로 [OpenFailure.detail] 이 된다.
- */
-open class CorruptFormatException(message: String) : IOException(message)
-
-/**
  * 파서 경계에서 예외를 [OpenFailure] 로 바꾼다.
  *
  * **취소는 실패가 아니다.** `CancellationException` 을 여기서 삼키면 코루틴 취소가
@@ -167,6 +143,9 @@ open class CorruptFormatException(message: String) : IOException(message)
  *
  * **예외 메시지를 그대로 담지 않는다.** 메시지에는 절대경로와 공격자가 심은 문자열이
  * 들어 있고, [OpenFailure.detail] 은 화면에 그대로 나간다. 종류별로 우리가 쓴 문장만 쓴다.
+ *
+ * **형식이 깨졌다는 입출력 예외는 여기서 가를 수 없다** — 깨진 ZIP 의 예외도 맨 `IOException` 이라 `Io` 가 된다. 그래서 형식을 아는
+ * 여는이가 리더를 여는 자리에서 [OpenFailure.Corrupt] 로 옮긴다(EPUB 의 여는이, PDF 의 `PdfFailures`).
  */
 fun Throwable.toOpenFailure(): OpenFailure {
     if (this is CancellationException) throw this
@@ -176,7 +155,6 @@ fun Throwable.toOpenFailure(): OpenFailure {
         is SecurityException -> OpenFailure.NoPermission("읽을 권한이 없다")
         is EOFException -> OpenFailure.Corrupt("파일이 중간에서 끝났다")
         is java.io.InterruptedIOException -> OpenFailure.Timeout("읽는 중에 중단되었다")
-        is CorruptFormatException -> OpenFailure.Corrupt(message ?: "형식이 깨졌다")
         is IOException -> OpenFailure.Io("입출력이 실패했다")
         is StackOverflowError -> OpenFailure.TooLarge("구조가 너무 깊다")
         is OutOfMemoryError -> OpenFailure.TooLarge("메모리가 모자랐다")

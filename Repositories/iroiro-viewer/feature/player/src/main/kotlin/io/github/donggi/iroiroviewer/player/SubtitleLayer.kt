@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,7 +44,14 @@ import io.github.donggi.iroiroviewer.playback.PlaybackConnection
  * 그것은 이 층이 하려는 일(글 몇 줄)과 종류가 다르다.
  */
 @Composable
-fun BoxScope.SubtitleLayer(modifier: Modifier = Modifier) {
+fun BoxScope.SubtitleLayer(
+    modifier: Modifier = Modifier,
+    /**
+     * 아래 자막을 이만큼 더 올린다 — 조작부 판이 영상의 아래쪽을 덮는 동안 그 위로(가로 영상에서 판이 자막을
+     * 덮었다). 판이 덮는 높이는 부르는 쪽이 잰다(불변식 3 — 상수로 맞히지 않는다). 위에 붙는 자막(`\an8`)은 옮기지 않는다.
+     */
+    bottomLift: Dp = 0.dp,
+) {
     val cues by PlaybackConnection.cues.collectAsStateWithLifecycle()
     if (cues.isEmpty()) return
 
@@ -55,7 +63,7 @@ fun BoxScope.SubtitleLayer(modifier: Modifier = Modifier) {
             CueColumn(top, Modifier.align(Alignment.TopCenter).padding(top = 24.dp))
         }
         if (bottom.isNotEmpty()) {
-            CueColumn(bottom, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
+            CueColumn(bottom, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp + bottomLift))
         }
     }
 }

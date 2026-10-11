@@ -22,19 +22,25 @@
     <string name="settings_text_wrap_desc">긴 줄을 화면 폭에서 접습니다</string>
     <string name="settings_text_line_numbers">줄 번호</string>
     <string name="settings_text_font">글자 크기</string>
-    <string name="settings_text_font_value">%1$d sp</string>
+    <!-- 글자 크기의 값. 단위(sp)를 적지 않는다 - 사람에게는 뜻이 없는 말이다. 기본값이면 그렇다고 함께 적는다. -->
+    <string name="settings_text_font_value">%1$d</string>
+    <string name="settings_text_font_value_default">%1$d (기본)</string>
     <string name="settings_text_line_ends">줄 끝 문자 보기</string>
     <string name="settings_text_line_ends_desc">줄이 끝나는 자리에 그 종류를 보입니다(↓ LF · ⏎ CRLF · ← CR)</string>
 
     <string name="settings_section_comic">만화</string>
     <string name="settings_comic_direction">새 책의 읽는 방향</string>
-    <string name="settings_comic_direction_note">처음 여는 책에만 씁니다. 읽던 책은 그 책에서 고른 방향으로 열립니다.</string>
+    <string name="settings_comic_direction_note">처음 여는 책에만 씁니다</string>
     <string name="settings_direction_ltr">왼쪽에서 오른쪽</string>
     <string name="settings_direction_rtl">오른쪽에서 왼쪽</string>
     <string name="settings_direction_vertical">세로 스크롤</string>
 
     <string name="settings_section_reader">문서 보기</string>
-    <string name="settings_reader_note">EPUB·오피스·한글 문서를 그릴 때 씁니다. PDF 는 쪽 모양 그대로 보입니다.</string>
+    <!--
+      글자 크기·여백·바탕은 EPUB 에만 걸린다(문서 뷰어의 ReaderLooks). 오피스·한글 문서는 편집기의 보기 모드가 쪽 그대로
+      그리고, PDF 는 처음부터 쪽 그대로다.
+    -->
+    <string name="settings_reader_note">EPUB에만 걸립니다(PDF·오피스·한글 문서는 쪽 그대로).</string>
     <string name="settings_reader_font">글자 크기</string>
     <string name="settings_reader_font_value">%1$d%%</string>
     <string name="settings_reader_margin">여백</string>
@@ -47,6 +53,21 @@
     <string name="settings_theme_dark">어둡게</string>
     <string name="settings_theme_sepia">세피아</string>
 
+    <!--
+      블루투스(이어폰·스피커·차)가 끊기면 재생은 언제나 멈춘다(소리가 스피커로 새지 않게). 이 줄은 '다시 연결되면 이어서 튼다' 를
+      켜고 끈다 — 요구사항의 VLC 차용 항목이라 기본은 켜짐이다.
+    -->
+    <string name="settings_section_playback">재생</string>
+    <string name="settings_resume_bluetooth">블루투스가 연결되면 이어서 재생</string>
+    <string name="settings_resume_bluetooth_desc">블루투스가 끊겨 멈춘 재생만 이어서 틉니다</string>
+    <!-- 재생 화면을 두 번 두드려 건너뛰는 시간. 값은 core:data 의 AppPreferences.TAP_SEEK_CHOICES 와 같다. 기본 10초. -->
+    <string name="settings_tap_seek">두 번 두드려 건너뛰기</string>
+    <string name="settings_tap_seek_note">영상의 오른쪽·왼쪽을 두 번 두드리면 이만큼 앞·뒤로 갑니다</string>
+    <string name="settings_tap_seek_5">5초</string>
+    <string name="settings_tap_seek_10">10초</string>
+    <string name="settings_tap_seek_15">15초</string>
+    <string name="settings_tap_seek_30">30초</string>
+
     <string name="settings_section_history">기록</string>
     <string name="settings_clear_playback">이어보기 기록 지우기</string>
     <string name="settings_clear_playback_desc">영상·소리를 이어서 틀 재생 위치</string>
@@ -54,9 +75,9 @@
     <string name="settings_clear_reading_desc">만화·문서에서 읽던 자리와 책마다 고른 읽는 방향</string>
 
     <string name="settings_confirm_playback_title">이어보기 기록을 지울까요?</string>
-    <string name="settings_confirm_playback_body">모든 영상·소리의 재생 위치가 지워집니다. 다음에 열면 처음부터 재생됩니다. 되돌릴 수 없습니다.</string>
+    <string name="settings_confirm_playback_body">모든 영상·소리의 재생 위치가 지워집니다. 되돌릴 수 없습니다.</string>
     <string name="settings_confirm_reading_title">읽던 쪽을 지울까요?</string>
-    <string name="settings_confirm_reading_body">만화와 문서에서 읽던 자리가 모두 지워지고, 만화책마다 고른 읽는 방향도 기본값으로 돌아갑니다. 되돌릴 수 없습니다.</string>
+    <string name="settings_confirm_reading_body">만화·문서의 읽던 자리와 책마다 고른 읽는 방향이 지워집니다. 되돌릴 수 없습니다.</string>
     <string name="settings_confirm_clear">지우기</string>
     <string name="settings_cancel">취소</string>
 
@@ -67,7 +88,7 @@
     <string name="settings_section_crash">크래시 기록</string>
     <string name="settings_crash_none">남은 기록이 없습니다</string>
     <string name="settings_crash_summary">%1$d건 · 마지막 %2$s</string>
-    <string name="settings_crash_desc">앱이 비정상으로 끝나면 그 원인을 이 기기 안에만 남깁니다(최근 5건). 내용은 화면에 보이지 않고, 공유를 누를 때만 사본이 앱 밖으로 나갑니다. 파일 경로는 지우고 남깁니다.</string>
+    <string name="settings_crash_desc">앱이 비정상으로 끝난 원인을 이 기기에만 남깁니다(파일 경로는 지웁니다). 공유를 누를 때만 앱 밖으로 나갑니다.</string>
     <string name="settings_crash_share">공유</string>
     <string name="settings_crash_clear">지우기</string>
     <string name="settings_crash_share_title">크래시 기록 보내기</string>
@@ -82,4 +103,27 @@
     <string name="settings_notice_desc">이 앱이 쓰는 오픈소스와 그 라이선스, 문서 형식 명세의 고지</string>
     <string name="settings_diag">진단</string>
     <string name="settings_diag_desc">이 기기에서 잰 값 — 저장소·코덱·문자셋·압축 경로</string>
+
+    <!--
+      읽는 동안. 화면 켜 두기는 만화·문서·글 화면에 함께 걸리고, 마지막으로 만진 때부터 센다(그 뒤에는 기기의 화면 꺼짐
+      시간을 따른다). 볼륨 키는 만화만이다 — 기본은 끔(소리 조절을 빼앗지 않는다).
+    -->
+    <string name="settings_section_reading">읽는 동안</string>
+    <string name="settings_keep_screen">화면 켜 두기</string>
+    <string name="settings_keep_screen_note">만화·문서·글을 보는 동안 마지막으로 만진 뒤 이만큼 화면을 켜 둡니다</string>
+    <string name="settings_keep_screen_off">켜 두지 않음(기기 설정을 따름)</string>
+    <string name="settings_keep_screen_2">2분</string>
+    <string name="settings_keep_screen_5">5분</string>
+    <string name="settings_keep_screen_10">10분</string>
+    <string name="settings_keep_screen_30">30분</string>
+    <string name="settings_comic_volume_keys">볼륨 키로 쪽 넘기기</string>
+    <string name="settings_comic_volume_keys_desc">만화를 보는 동안 아래 키는 다음 쪽, 위 키는 앞 쪽(볼륨은 바뀌지 않습니다)</string>
+
+    <!--
+      텍스트 뷰어의 기본값을 파일의 갈래마다 따로 둔다. 갈래는 파일 목록의 표로 가른다 - 목록이 '코드' 로 그리는 것과 나머지(글).
+      글 파일은 처음에 줄을 접고 줄 번호를 숨긴다.
+    -->
+    <string name="settings_text_code_note">코드 파일(.kt·.js·.html·.json 등)을 열 때 씁니다</string>
+    <string name="settings_section_prose">텍스트 뷰어 기본값 — 글 파일</string>
+    <string name="settings_prose_note">.txt·.md·.log·자막 같은 글 파일을 열 때 씁니다</string>
 </resources>

@@ -13,6 +13,7 @@ import android.os.SystemClock
 import android.webkit.MimeTypeMap
 import androidx.annotation.StringRes
 import java.io.File
+import java.util.Locale
 
 /**
  * 파일을 **다른 앱으로** 연다. 이 앱이 다루지 않는 파일(APK·글꼴·모르는 형식)을 누를 때와, 뷰어가 '이 앱이 다루지
@@ -96,10 +97,18 @@ import java.io.File
  *
  * ## 우리 자신
  *
- * 병합된 매니페스트에 VIEW 필터가 하나 있다 — media3 의 `BluetoothValidationActivity`(`content://media/…` 의 소리,
+ * **이 앱도 VIEW 를 받는다** — `app` 의 `OpenActivity`(다른 앱에서 이 앱으로 열기)가 그림·소리·영상·글의 계열 전체와 문서·압축의
+ * 형식, `application/octet-stream` 을 선언한다(APK·글꼴은 선언하지 않는다). 그래서 '다른 앱으로' 의 두 길 모두에서 우리를 뺀다 —
+ * 이 앱이 못 연다고 넘긴 파일을 이 앱이 다시 받는 고리가 생기기 때문이다.
+ *
+ * - 고르는 창은 우리 화면을 목록에서 뺀다(`EXTRA_EXCLUDE_COMPONENTS`, [ownHandlers]). 모든 것([ExternalMime.ANY])의 창은 형식을
+ *   하나라도 적은 필터에 다 맞으므로(`IntentFilter.findMimeType`) 여기서 늘 우리가 빠진다.
+ * - 곧바로 여는 길은 시스템의 '다음으로 열기' 가 띄우고 그 창에서는 우리를 뺄 수 없다. 그래서 그 MIME 을 **우리도 받으면** 곧바로
+ *   열지 않고 우리를 뺀 고르는 창으로 간다([chooserPlan] 의 `ownTakes`). 이 앱에 뷰어가 없는 종류(APK·글꼴·기타) 가운데 MIME 이
+ *   우리가 받는 계열에 드는 것(`.mts` 의 영상 형식, `.psd` 의 그림 형식 등)만 그렇다 — 그 파일들에서는 '항상 이 앱으로' 를 고를 수 없다.
+ *
+ * 병합된 매니페스트에는 VIEW 필터가 하나 더 있다 — media3 의 `BluetoothValidationActivity`(`content://media/…` 의 소리,
  * `DEFAULT` 범주 없음, 블루투스 특권 권한). 범주가 없어 `MATCH_DEFAULT_ONLY` 에 안 잡히고 호스트도 우리 URI 와 다르다.
- * 그래도 고르는 창에서 우리 화면을 뺀다(`EXTRA_EXCLUDE_COMPONENTS`, [ownHandlers]) — 언젠가 이 앱이 VIEW 를 받게 되면
- * '다른 앱으로' 에서 우리가 우리를 고르게 된다. 지금은 뺄 것이 없다.
  *
  * ## 권한이 받는 앱에 닿는 길
  *
@@ -121,7 +130,9 @@ import java.io.File
  *
  * 설치 관리자는 **보낸 앱이 `REQUEST_INSTALL_PACKAGES` 를 선언했는지** 본다. 선언은 `app` 의 매니페스트에 있고,
  * 무엇을 확인했는지도 거기 적었다. 선언하지 않으면 설치 관리자가 **아무 말 없이 닫혀** 우리에게는 [Result.STARTED]
- * 로 보인다 — 선언이 빠진 것을 결과로 알아챌 길이 없으므로 매니페스트의 그 줄을 지우지 마라.
+ * 로 보인다 — 선언이 빠진 것을 결과로 알아챌 길이 없으므로 매니페스트의 그 줄을 지우지 마라. 2026-10-11 에 Play 프로텍트가
+ * 이 앱을 '유해한 앱'(다른 앱을 까는 앱)으로 막아 이 권한을 걷어 보았지만 막힘이 풀리지 않아 되살렸다(사용자 — CLAUDE.md
+ * '14단계 뒤 — Play 프로텍트의 설치 차단').
  *
  * ## 태스크
  *
@@ -137,6 +148,13 @@ object ExternalOpen {
 
         /** 언제나 고르는 창. '다른 앱으로 열기' 메뉴의 길 — 사용자가 고르겠다고 말했다. */
         CHOOSE,
+
+        /**
+         * HTML 을 **웹 쪽으로**([webPageMime] — `text/html`·`application/xhtml+xml`) 넘기는 고르는 창 — '브라우저로 열기'. 이 앱은
+         * 인터넷에 닿지 않아 HTML 미리보기가 바깥 자원을 싣지 않는다 — 그것까지 보려면 브라우저로 연다. [CHOOSE] 는 HTML 을 글
+         * (`text/plain` — [ExternalMime])로 넘겨 편집기가 앞에 선다. 같은 파일을 둘로 눌러도 따로 센다([isRepeat] 가 모양을 본다).
+         */
+        WEB_PAGE,
     }
 
     enum class Result {
@@ -159,15 +177,17 @@ object ExternalOpen {
         if (isRepeat(lastStart, path, mode, now)) return Result.STARTED
         if (refuses(path)) return Result.NOT_SHAREABLE
         val uri = ShareHelper.uriOf(context, path) ?: return Result.NOT_SHAREABLE
-        val mime = ExternalMime.resolve(File(path).name, ::platformMime)
+        val mime = if (mode == Mode.WEB_PAGE) webPageMime(path) else mimeFor(File(path), ::platformMime)
         val view = viewOf(uri, mime)
-        val plan = chooserPlan(mode, mime) { hasHandler(context, view) }
+        val plan = chooserPlan(mode, mime, ownTakes = { ownHandlers(context, view).isNotEmpty() }) {
+            hasHandler(context, view)
+        }
         val intent = when (plan) {
             Plan.DIRECT -> view
             // 권한이 고른 앱에 닿는 길은 이 객체의 KDoc('권한이 받는 앱에 닿는 길'). 모든 것으로 넘길 때도 **같은 URI 와
             // 같은 읽기 권한**이다 — 바뀌는 것은 형식 하나다.
-            Plan.CHOOSER -> chooserOf(context, view, plan)
-            Plan.ALL_APPS -> chooserOf(context, viewOf(uri, ExternalMime.ANY), plan)
+            Plan.CHOOSER -> chooserOf(context, view, plan, mode)
+            Plan.ALL_APPS -> chooserOf(context, viewOf(uri, ExternalMime.ANY), plan, mode)
         }
         if (context.findActivity() == null) intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return try {
@@ -184,11 +204,28 @@ object ExternalOpen {
     }
 
     /**
-     * 고르는 창으로 띄우는가. 사용자가 고르겠다고 했거나([Mode.CHOOSE]) MIME 이 와일드카드라 기본 앱을 정하게 두면
+     * 고르는 창으로 띄우는가. 사용자가 고르겠다고 했거나([Mode.CHOOSE]·[Mode.WEB_PAGE]) MIME 이 와일드카드라 기본 앱을 정하게 두면
      * 안 될 때다. 곧바로 여는 길은 구체적인 MIME 의 [Mode.VIEW] 하나뿐이다.
      */
+    /**
+     * 넘길 MIME. `.ts`·`.mts` 가 TypeScript 면 영상 MIME(`video/mp2t`)으로 넘기지 않는다 — 고르는 창에 영상 앱만 뜬다. 앞머리 한 번
+     * (8 KiB, 읽기 한 번)이라 주 스레드에서 읽는다(`ContentSniff.looksLikeStream`) — [open] 이 먼저 부르는 `ShareHelper.uriOf` 도
+     * 주 스레드에서 경로를 디스크로 푼다(`canonicalFile`). 나머지는 [ExternalMime.resolve] 의 차례다.
+     */
+    internal fun mimeFor(file: File, platform: (String) -> String?): String =
+        if (ContentSniff.isTextNamedLikeStream(file)) TEXT_PLAIN else ExternalMime.resolve(file.name, platform)
+
     internal fun usesChooser(mode: Mode, mime: String): Boolean =
-        mode == Mode.CHOOSE || ExternalMime.isWildcard(mime)
+        mode != Mode.VIEW || ExternalMime.isWildcard(mime)
+
+    /**
+     * '브라우저로 열기'([Mode.WEB_PAGE])의 형식. XHTML 은 XML 로 읽혀야 뜻이 같다 — `text/html` 로 주면 `<div/>` 가 뒤의 쪽을 삼킨다
+     * (CLAUDE.md 의 'XHTML 을 `text/html` 로 내주면 뜻이 바뀐다'). 받는 앱이 그 형식을 모르면 모든 앱에서 고른다([chooserPlan]).
+     */
+    internal fun webPageMime(path: String): String {
+        val name = path.substringAfterLast('/').lowercase(Locale.ROOT)
+        return if (name.endsWith(".xhtml") || name.endsWith(".xht")) XHTML else HTML
+    }
 
     /** 무엇을 띄우는가. */
     internal enum class Plan {
@@ -212,20 +249,35 @@ object ExternalOpen {
      * 막지 않으며(이 객체의 KDoc '묻는 것은 넓힐지만 정한다'), 넓혀서 띄우는 창과 목록이 같으니 이름도 같아야 한다
      * ('처음부터 모든 것이면').
      *
-     * [hasHandler] 는 필요할 때만 부른다(질의 한 번이 바인더 호출이다).
+     * 곧바로 여는 길이라도 이 앱이 그 MIME 을 받으면([ownTakes]) 고르는 창으로 간다 — 시스템의 '다음으로 열기' 에서는 우리를 뺄
+     * 수 없다(이 객체의 KDoc '우리 자신').
+     *
+     * [ownTakes]·[hasHandler] 는 필요할 때만 부른다(질의 한 번이 바인더 호출이다).
      */
-    internal fun chooserPlan(mode: Mode, mime: String, hasHandler: () -> Boolean): Plan = when {
-        !usesChooser(mode, mime) -> Plan.DIRECT
+    internal fun chooserPlan(
+        mode: Mode,
+        mime: String,
+        ownTakes: () -> Boolean,
+        hasHandler: () -> Boolean,
+    ): Plan = when {
+        !usesChooser(mode, mime) && !ownTakes() -> Plan.DIRECT
         mime == ExternalMime.ANY -> Plan.ALL_APPS
         hasHandler() -> Plan.CHOOSER
         else -> Plan.ALL_APPS
     }
 
-    /** 고르는 창의 제목. 모든 앱을 보여 줄 때는 그렇다고 말한다 — 거기 선 앱은 이 형식을 안다고 한 적이 없다. */
+    /** 이 앱이 그 MIME 을 받지 않는 경우([chooserPlan] 의 `ownTakes` 가 늘 거짓). */
+    internal fun chooserPlan(mode: Mode, mime: String, hasHandler: () -> Boolean): Plan =
+        chooserPlan(mode, mime, ownTakes = { false }, hasHandler = hasHandler)
+
+    /**
+     * 고르는 창의 제목. 모든 앱을 보여 줄 때는 그렇다고 말한다 — 거기 선 앱은 이 형식을 안다고 한 적이 없다. 웹 쪽으로 넘기는
+     * 창([Mode.WEB_PAGE])은 '브라우저로 열기' 다.
+     */
     @StringRes
-    internal fun titleOf(plan: Plan): Int? = when (plan) {
+    internal fun titleOf(plan: Plan, mode: Mode = Mode.CHOOSE): Int? = when (plan) {
         Plan.DIRECT -> null
-        Plan.CHOOSER -> R.string.io_open_with
+        Plan.CHOOSER -> if (mode == Mode.WEB_PAGE) R.string.io_open_in_browser else R.string.io_open_with
         Plan.ALL_APPS -> R.string.io_open_with_any
     }
 
@@ -250,8 +302,8 @@ object ExternalOpen {
             .setDataAndType(uri, mime)
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-    private fun chooserOf(context: Context, view: Intent, plan: Plan): Intent {
-        val chooser = Intent.createChooser(view, context.getString(checkNotNull(titleOf(plan))))
+    private fun chooserOf(context: Context, view: Intent, plan: Plan, mode: Mode): Intent {
+        val chooser = Intent.createChooser(view, context.getString(checkNotNull(titleOf(plan, mode))))
         val own = ownHandlers(context, view)
         if (own.isNotEmpty()) chooser.putExtra(Intent.EXTRA_EXCLUDE_COMPONENTS, own)
         return chooser
@@ -303,6 +355,13 @@ object ExternalOpen {
      * 그쪽은 시트가 닫힌 자리 아래의 **다른 줄**이 눌리는 것까지 막는 것이라 이것과 겹치지 않는다.
      */
     internal const val REPEAT_WINDOW_MS = 500L
+
+    /** 글로 넘길 때의 형식. 편집기가 선언하는 것이다(`ExternalMime` 의 '글·코드는 `text/plain` 이다'). */
+    private const val TEXT_PLAIN = "text/plain"
+
+    /** 웹 쪽으로 넘길 때의 형식([webPageMime]). 브라우저가 `content:` 와 함께 선언하는 것이다. */
+    private const val HTML = "text/html"
+    private const val XHTML = "application/xhtml+xml"
 
     // 메인 스레드에서만 불리므로(이 객체의 사용 규칙) 잠그지 않는다. 프로세스가 죽으면 사라져도 되는 값이다.
     private var lastStart: Started? = null

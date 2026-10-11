@@ -186,6 +186,25 @@ class ExtractEngineTest {
         assertTrue(File(work, "other.txt").isFile)
     }
 
+    /**
+     * **대소문자만 다른 이름도 아카이브 자신이다** — 대소문자를 가리지 않는 볼륨(FAT SD 카드, 그리고 공유 저장소도 그렇다고 알려져
+     * 있다)에서. canonical 문자열은 다르지만 파일의 정체가 같다(`SelfOverwriteGuard`). 예전 검사는 문자열만 견주어 덮어쓰기로
+     * '여기에 풀기' 하면 `CASE.ZIP` 이 안의 `case.zip` 내용으로 바뀌었다. 이 볼륨이 대소문자를 가리면 다른 파일로 풀린다 —
+     * 시험은 두 갈래를 모두 받는다(어느 쪽이었는지는 `folds`).
+     */
+    @Test
+    fun 대소문자만_다른_이름도_아카이브_자신이다() {
+        val archive = zip("CASE.ZIP", listOf("case.zip" to "가짜 내용", "other.txt" to "정상"))
+        val before = archive.readBytes()
+        val folds = File(work, "case.zip").exists()
+
+        val result = run(archive, work, conflict = FileOpEngine.Conflict.OVERWRITE)
+
+        assertTrue("아카이브가 바뀌었다 (folds=$folds)", archive.readBytes().contentEquals(before))
+        assertEquals("folds=$folds", if (folds) 1 else 0, result.report.refusedSelfOverwrite)
+        assertTrue(File(work, "other.txt").isFile)
+    }
+
     /** 중간 폴더 자리에 **파일**이 있으면 그것을 건드리지 않는다. */
     @Test
     fun 폴더_자리의_파일을_지우지_않는다() {
@@ -511,6 +530,206 @@ class ExtractEngineTest {
         val pw = "iroiro".toCharArray()
         run(asset("archivecrypt/zipcrypto-bandizip.zip"), File(work, "d").apply { mkdirs() }, password = pw)
         assertTrue("암호가 남아 있다", pw.all { it == '\u0000' })
+    }
+
+    // ---- 파일 하나를 싼 압축 스트림·새 압축 tar·cpio·ar (2026-10) ------------------------------------
+
+    /** gzip 하나 — 머리의 이름(FNAME)과 시각(MTIME)을 쓴다. commons-compress 의 작성기가 만든다. */
+    private fun gz(name: String, body: ByteArray, fname: String?): File {
+        val f = File(work, name)
+        val params = org.apache.commons.compress.compressors.gzip.GzipParameters().apply {
+            // GNU gzip(리눅스)처럼 이름을 UTF-8 바이트로 적는다. 작성기의 기본값은 명세의 ISO-8859-1 이라 한글이 '?' 가 된다.
+            fileNameCharset = Charsets.UTF_8
+            if (fname != null) fileName = fname
+            modificationTime = FIXED_TIME / 1000
+        }
+        GzipCompressorOutputStream(f.outputStream(), params).use { it.write(body) }
+        return f
+    }
+
+    /**
+     * **파일 하나를 싼 `.gz` 를 '여기에 풀기'** — 항목 이름은 FNAME, 시각은 MTIME, 진행 바의 분모는 압축 파일 크기, 임시 파일은
+     * 남지 않는다. 같은 것을 다시 풀면 '둘 다 보관' 이 번호를 붙인다(이름 계산은 다른 아카이브와 같은 `ExtractNames`).
+     */
+    @Test
+    fun 파일_하나를_싼_gz_를_풀고_이름과_시각을_되살린다() {
+        val dest = File(work, "d").apply { mkdirs() }
+        val body = "한 줄짜리 기록\n".repeat(500).toByteArray()
+        val archive = gz("log.gz", body, fname = "기록.txt")
+        val progress = ArrayList<FileOpEngine.Progress>()
+        val result = run(archive, dest, onProgress = { progress += it })
+
+        assertTrue("${result.outcome}", result.outcome is FileOpEngine.Outcome.Done)
+        val out = File(dest, "기록.txt")
+        assertTrue(out.readBytes().contentEquals(body))
+        assertTrue("시각이 ${out.lastModified()}", kotlin.math.abs(out.lastModified() - FIXED_TIME) <= 2000)
+        assertTrue("분모가 압축 파일 크기가 아니다", progress.all { it.bytesTotal == archive.length() })
+        assertEquals(emptyList<String>(), partials(dest))
+
+        run(archive, dest, conflict = FileOpEngine.Conflict.KEEP_BOTH)
+        assertEquals(2, dest.listFiles()!!.count { it.name.startsWith("기록") })
+    }
+
+    /**
+     * **FNAME 의 경로는 버린다** — 마지막 조각만 목적지 안에 풀린다. 위로 올라가는 경로도 절대경로도 목적지 밖에 닿지 않는다.
+     */
+    @Test
+    fun gz_의_이름에_적힌_경로는_목적지_밖으로_나가지_않는다() {
+        val outside = File(work, "밖").apply { mkdirs() }
+        val dest = File(work, "안").apply { mkdirs() }
+        val archive = gz("evil.gz", "x".toByteArray(), fname = "../밖/탈출.txt")
+        val result = run(archive, dest)
+
+        assertTrue("${result.outcome}", result.outcome is FileOpEngine.Outcome.Done)
+        assertTrue("목적지 밖에 파일이 생겼다", outside.listFiles().isNullOrEmpty())
+        assertTrue(File(dest, "탈출.txt").isFile)
+    }
+
+    /** 0 64 MiB 를 싼 gz — 압축비 상한에서 그 항목만 실패하고 파일도 임시 파일도 남지 않는다. */
+    @Test
+    fun gz_폭탄은_실패_하나로_끝나고_남는_것이_없다() {
+        val dest = File(work, "d").apply { mkdirs() }
+        val f = File(work, "zero.bin.gz")
+        GzipCompressorOutputStream(f.outputStream()).use { out ->
+            val chunk = ByteArray(1 shl 20)
+            repeat(64) { out.write(chunk) }
+        }
+        val result = run(f, dest)
+
+        assertEquals(FileOpEngine.Outcome.Done(0, 0, 1), result.outcome)
+        assertFalse("상한에 걸렸는데 파일이 생겼다", File(dest, "zero.bin").exists())
+        assertEquals(emptyList<String>(), partials(dest))
+    }
+
+    /** LZ4 로 싼 tar — 압축 tar 의 길(목록 한 번 + 풀기 한 번)을 그대로 탄다. */
+    @Test
+    fun tar_lz4_를_푼다() {
+        val dest = File(work, "d").apply { mkdirs() }
+        val f = File(work, "책.tar.lz4")
+        TarArchiveOutputStream(
+            org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStream(f.outputStream()),
+        ).use { out ->
+            val body = "쪽 하나".toByteArray()
+            val file = TarArchiveEntry("책/쪽.txt")
+            file.size = body.size.toLong()
+            file.setModTime(FIXED_TIME)
+            out.putArchiveEntry(file)
+            out.write(body)
+            out.closeArchiveEntry()
+        }
+        val result = run(f, dest, newFolder = ExtractNames.folderNameOf(f.name))
+
+        assertTrue("${result.outcome}", result.outcome is FileOpEngine.Outcome.Done)
+        assertTrue("두 겹 확장자를 뗀 새 폴더가 아니다: ${result.report.destDir}", result.report.destDir.endsWith("책"))
+        assertEquals("쪽 하나", File(result.report.destDir, "책/쪽.txt").readText())
+        assertEquals(emptyList<String>(), partials(dest))
+    }
+
+    /** cpio(newc) — 폴더·파일은 풀고 심볼릭 링크는 풀지 않고 센다. */
+    @Test
+    fun cpio_를_풀고_링크는_센다() {
+        val dest = File(work, "d").apply { mkdirs() }
+        val f = File(work, "x.cpio")
+        f.writeBytes(
+            newc(
+                listOf(
+                    Triple("폴더", 0x41EDL, ByteArray(0)),
+                    Triple("폴더/글.txt", 0x81A4L, "내용".toByteArray()),
+                    Triple("폴더/바로가기", 0xA1FFL, "글.txt".toByteArray()),
+                ),
+            ),
+        )
+        val result = run(f, dest)
+
+        assertTrue("${result.outcome}", result.outcome is FileOpEngine.Outcome.Done)
+        assertEquals("내용", File(dest, "폴더/글.txt").readText())
+        assertFalse("링크가 풀렸다", File(dest, "폴더/바로가기").exists())
+        assertEquals(1, result.report.refusedLink)
+        val dirTime = File(dest, "폴더").lastModified()
+        assertTrue("폴더 시각이 $dirTime", kotlin.math.abs(dirTime - FIXED_TIME) <= 2000)
+    }
+
+    /**
+     * cpio(newc)를 손으로 쓴다. **commons-compress 의 `CpioArchiveOutputStream` 은 안드로이드에서 이름을 쓰다 죽는다** — `NioZipEncoding.encode`
+     * 가 쓰던 `CharsetEncoder` 에 `canEncode` 를 불러 `IllegalStateException: Current state = CODING` 이다(두 에뮬레이터 실측. JVM 의 인코더는
+     * 받아 준다). 게다가 그 쓰개의 기본 인코딩은 US-ASCII 라 한글 이름이 그대로 실리지 않는다. 이름은 UTF-8 로 쓴다(리눅스의 GNU cpio 와 같다).
+     * 앱은 cpio 를 읽기만 한다 — 이 쓰개는 시험의 표본용이다.
+     */
+    private fun newc(entries: List<Triple<String, Long, ByteArray>>): ByteArray {
+        val out = java.io.ByteArrayOutputStream()
+        fun pad4() {
+            while (out.size() % 4 != 0) out.write(0)
+        }
+        fun entry(ino: Int, name: String, mode: Long, nlink: Int, mtime: Long, body: ByteArray) {
+            val nameBytes = name.toByteArray(Charsets.UTF_8)
+            // ino·mode·uid·gid·nlink·mtime·filesize·devmajor·devminor·rdevmajor·rdevminor·namesize(NUL 포함)·check
+            val fields = longArrayOf(
+                ino.toLong(), mode, 0, 0, nlink.toLong(), mtime, body.size.toLong(), 0, 0, 0, 0, nameBytes.size + 1L, 0,
+            )
+            out.write("070701".toByteArray(Charsets.US_ASCII))
+            for (v in fields) out.write(String.format(java.util.Locale.ROOT, "%08X", v).toByteArray(Charsets.US_ASCII))
+            out.write(nameBytes)
+            out.write(0)
+            pad4()
+            out.write(body)
+            pad4()
+        }
+        entries.forEachIndexed { i, (name, mode, body) ->
+            entry(i + 1, name, mode, if (mode and 0xF000L == 0x4000L) 2 else 1, FIXED_TIME / 1000, body)
+        }
+        entry(0, "TRAILER!!!", 0, 1, 0, ByteArray(0))
+        return out.toByteArray()
+    }
+
+    /** `.deb`(ar) — 안의 tar 들은 풀어 보면 그냥 파일이다(열지 않는다 — 압축 파일 안의 압축 파일). */
+    @Test
+    fun deb_의_항목을_파일로_푼다() {
+        val dest = File(work, "d").apply { mkdirs() }
+        val f = File(work, "pkg.deb")
+        val members = listOf("debian-binary" to "2.0\n".toByteArray(), "data.tar" to ByteArray(1024))
+        org.apache.commons.compress.archivers.ar.ArArchiveOutputStream(f.outputStream()).use { out ->
+            for ((name, body) in members) {
+                out.putArchiveEntry(org.apache.commons.compress.archivers.ar.ArArchiveEntry(name, body.size.toLong(), 0, 0, 33188, FIXED_TIME / 1000))
+                out.write(body)
+                out.closeArchiveEntry()
+            }
+        }
+        val result = run(f, dest)
+
+        assertTrue("${result.outcome}", result.outcome is FileOpEngine.Outcome.Done)
+        assertEquals("2.0\n", File(dest, "debian-binary").readText())
+        assertEquals(1024L, File(dest, "data.tar").length())
+        assertEquals(emptyList<String>(), partials(dest))
+    }
+
+    /**
+     * 이름이 PATH_MAX(4,096바이트)를 넘으면 canonical 경로가 실패한다 — 그 입출력 예외가 예전에는 풀기를 그 항목에서 통째로 '입출력
+     * 실패' 로 끝냈고, 화면의 계획('전부 풀기')에서는 앱을 죽였다. 이제 그 항목만 '쓸 수 없는 이름' 이고 뒤의
+     * 항목은 그대로 풀린다(`ExtractNames.inside`). 조각 하나는 200자라 이름 한 조각의 상한(255바이트) 안이다.
+     */
+    @Test
+    fun PATH_MAX_를_넘는_이름은_그_항목만_거절한다() {
+        val dest = File(work, "long").apply { mkdirs() }
+        val f = File(work, "long.tar")
+        val longName = (1..30).joinToString("/") { "a".repeat(200) } + "/x.txt"
+        TarArchiveOutputStream(f.outputStream()).use { out ->
+            out.setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU)
+            for ((name, body) in listOf(longName to "긴 이름", "ok.txt" to "멀쩡한 것")) {
+                val bytes = body.toByteArray()
+                val e = TarArchiveEntry(name)
+                e.size = bytes.size.toLong()
+                e.setModTime(FIXED_TIME)
+                out.putArchiveEntry(e)
+                out.write(bytes)
+                out.closeArchiveEntry()
+            }
+        }
+        val result = run(f, dest)
+
+        assertTrue("${result.outcome}", result.outcome is FileOpEngine.Outcome.Done)
+        assertEquals("멀쩡한 것", File(dest, "ok.txt").readText())
+        assertTrue("${result.report}", result.report.refusedUnsafe >= 1)
+        assertEquals(emptyList<String>(), partials(dest))
     }
 
     private companion object {

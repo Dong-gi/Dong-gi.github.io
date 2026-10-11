@@ -17,7 +17,7 @@
     <string name="playback_gesture_volume">소리 %1$d / %2$d</string>
     <string name="playback_gesture_seek">%1$s (%2$s)</string>
     <string name="playback_stop">재생 끝내기</string>
-    <string name="playback_resume_offer">%1$s 부터 이어서 재생할까요?</string>
+    <string name="playback_resume_offer">%1$s부터 이어서 재생할까요?</string>
     <string name="playback_resume_confirm">이어서 재생</string>
 
     <string name="playback_speed">재생 속도</string>
@@ -42,8 +42,12 @@
     <string name="playback_ab_off">구간 반복</string>
     <string name="playback_ab_waiting">구간 끝을 찍으세요</string>
     <string name="playback_ab_on">구간 반복 중</string>
-    <string name="playback_ab_marked_a">%1$s 를 구간 시작으로 찍었습니다</string>
-    <string name="playback_ab_marked_b">%1$s ~ %2$s 를 되풀이합니다</string>
+    <!--
+      시각 뒤에는 받침에 따라 갈리는 조사(을·를·으로·로)를 붙이지 않는다 - 0:43 을 어떻게 읽느냐에 따라 맞는 조사가 다르다.
+      받침과 상관없는 조사(에·부터·까지)만 붙인다. 이름 뒤의 조사를 피하는 앱의 규칙(OperationBars 의 RestorePickBar)과 같은 까닭이다.
+    -->
+    <string name="playback_ab_marked_a">구간 시작을 %1$s에 찍었습니다</string>
+    <string name="playback_ab_marked_b">%1$s부터 %2$s까지 되풀이합니다</string>
     <string name="playback_ab_cleared">구간 반복을 껐습니다</string>
     <string name="playback_ab_too_short">구간이 너무 짧습니다</string>
 
@@ -61,4 +65,14 @@
     <string name="playback_error_not_readable">파일을 열 수 없습니다</string>
     <string name="playback_error_unsupported_track">일부 트랙을 재생할 수 없습니다: %1$s</string>
     <string name="playback_error_other">재생에 실패했습니다 (코드 %1$d)</string>
+
+    <!--
+      재생 막대를 화면 낭독기가 읽는 말. 백분율이 아니라 이름과 지금 값을 준다 - '재생 위치, 1분 23초 / 45분'.
+      시각은 조각(SpokenTime)을 이어 붙인다. 0 인 조각은 빠진다('45분', '1시간 5초').
+    -->
+    <string name="playback_seekbar">재생 위치</string>
+    <string name="playback_seekbar_state">%1$s / %2$s</string>
+    <string name="playback_spoken_hours">%1$d시간</string>
+    <string name="playback_spoken_minutes">%1$d분</string>
+    <string name="playback_spoken_seconds">%1$d초</string>
 </resources>

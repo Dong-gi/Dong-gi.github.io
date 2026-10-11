@@ -3,6 +3,7 @@ package io.github.donggi.iroiroviewer.format.archive
 import io.github.donggi.iroiroviewer.format.FormatId
 import io.github.donggi.iroiroviewer.safety.ArchivePath
 import io.github.donggi.iroiroviewer.safety.ParseLimitExceededException
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -141,8 +142,8 @@ interface ArchiveReader : AutoCloseable {
     /**
      * 무작위 접근이 싼가.
      *
-     * ZIP 은 true — 엔트리마다 독립 압축이라 필요한 것만 푼다. 압축하지 않은 tar 도 true 다(자료의 자리를
-     * 목록이 안다).
+     * ZIP 은 true — 엔트리마다 독립 압축이라 필요한 것만 푼다. 압축하지 않은 tar·cpio·ar 파일도 true 다(자료의
+     * 자리를 목록이 안다). 파일 하나를 싼 압축 스트림(`.gz` 등)도 true 다 — 항목이 하나라 앞에 풀어서 버릴 것이 없다.
      * 7z(solid)와 RAR(solid)은 false — 앞엣것을 다 풀어야 뒤엣것이 나온다. 압축한 tar 도 false 다(스트림이다).
      * 만화 뷰어는 이 값이 false 면 창(`SolidComicSource`)으로 읽는다.
      */
@@ -213,8 +214,9 @@ interface ArchiveReader : AutoCloseable {
      * | ZIP | 항목 스트림이 실제로 읽은 압축 바이트(`InputStreamStatistics`, 암호 항목은 날것을 센다) | 고른 항목의 압축 크기 합(중앙 디렉터리) |
      * | 7z | 항목마다 `statisticsForCurrentEntry.compressedCount` 의 합 — 건너뛰며 푸는 앞 항목까지 | 파일 크기(패스가 끝까지 푼다) |
      * | RAR | **실측 불가** — junrar 가 통계를 주지 않는다. 끝난 항목의 선언 압축 크기를 더한다(항목 단위로 뛴다) | 고른 항목의 선언 압축 크기 합 |
-     * | tar | 고른 항목의 자료를 읽은 바이트(건너뛰기는 자리만 옮긴다) | 고른 항목의 크기 합 |
-     * | tar.gz·bz2·xz | 파일에서 읽어 들인 압축 바이트 | 파일 크기 |
+     * | tar·cpio·ar | 고른 항목의 자료를 읽은 바이트(건너뛰기는 자리만 옮긴다) | 고른 항목의 크기 합 |
+     * | tar.gz·bz2·xz·lz4·lzma·Z | 파일에서 읽어 들인 압축 바이트 | 파일 크기 |
+     * | 파일 하나를 싼 gz·bz2·xz·lz4·lzma·Z | 파일에서 읽어 들인 압축 바이트 | 파일 크기(고르지 않았으면 0) |
      *
      * @param selected 고른 항목 번호. null 이면 전부.
      */
@@ -271,8 +273,18 @@ interface EntrySink {
  * 읽은 바이트를 세는 스트림. 압축 스트림 **아래**에 두면 파일에서 실제로 소비한 입력이 나온다
  * (위에 두면 풀린 양이다). 진행률과 압축비의 분모가 이것을 쓴다.
  *
- * **`mark`·`reset` 을 센다.** gzip 해제기는 멤버가 끝날 때마다 너무 많이 읽은 입력을 `reset` 으로 되돌린다 —
- * 그것을 세지 않으면 되돌린 만큼이 두 번 더해진다.
+ * **`mark`·`reset` 을 센다.** 머리를 미리 읽어 보고 되돌리는 쪽(`CompressedStreams` 의 LZMA·`.Z` 머리 확인, LZ4 의 프레임 고리)이
+ * 있다 — 그것을 세지 않으면 되돌린 만큼이 두 번 더해진다.
+ *
+ * **읽을 때마다 인터럽트를 본다.** 해제기가 풀어 내는 것 없이 입력만 먹는 길이 있다 — LZ4 의 건너뛰는 프레임(4 GiB 까지
+ * 적을 수 있다), gzip 의 끝없는 이름 칸, xz 의 빈 블록 수만 개. 그동안은 위의 복사 고리가 돌지 않아 취소가 닿을 곳이 여기뿐이다.
+ *
+ * **판별의 상한도 여기서 본다 — [limitProbe] 를 불렀을 때만.** 판별(안이 tar 인가 보려고 앞 512바이트를 풀어 보는 것)은 사용자가
+ * 시킨 일이 아니라 목록 화면이 여는 길에 끼어 있다. 위의 '입력만 먹는' 파일에서는 그 512바이트가 나오기까지 파일 끝까지 읽는다.
+ * 그래서 판별이 **소비한 입력**에 상한을 두고([ProbeLimitException]), 입력은 적게 먹으면서 값이 큰 일(LZ4 의 프레임마다 새로 서는
+ * 해제기)은 부르는 쪽이 [charge] 로 값을 얹는다. 예전에는 시각(5초)으로 끊었는데, 같은 파일이 기기가 느린 순간에만 다른 모양으로
+ * 열렸다(`StreamLimits.PROBE_INPUT_BYTES`). 풀기·목록에는 걸지 않는다 — 큰 정상 파일이 오래 걸리는 것은 정상이고, 그쪽은 진행이
+ * 보이고 취소가 닿는다.
  */
 internal class CountingInputStream(input: InputStream) : java.io.FilterInputStream(input) {
 
@@ -281,6 +293,28 @@ internal class CountingInputStream(input: InputStream) : java.io.FilterInputStre
         private set
 
     private var marked = 0L
+
+    /** 판별이 얹은 값([charge])의 합. */
+    private var charged = 0L
+
+    /** 판별의 상한 — `count + charged` 가 이것을 넘으면 멈춘다. 판별이 아니면 끝이 없다. */
+    private var probeLimit = Long.MAX_VALUE
+
+    /**
+     * 판별이다 — 지금부터 [bytes] 를 더 소비하면(얹은 값 포함) [ProbeLimitException]. 다시 부르면 그 자리에서 새로 센다(판별의 둘째
+     * 걸음이 쓴다 — `TarArchiveReader.startsLikeTar`).
+     */
+    fun limitProbe(bytes: Long) {
+        val used = count + charged
+        probeLimit = if (bytes > Long.MAX_VALUE - used) Long.MAX_VALUE else used + bytes
+    }
+
+    /** 판별이면 [cost] 를 소비한 것으로 친다(입력은 적게 먹지만 값이 큰 일). 판별이 아니면 아무 일도 하지 않는다. */
+    fun charge(cost: Long) {
+        if (probeLimit == Long.MAX_VALUE) return
+        charged = if (cost > Long.MAX_VALUE - charged) Long.MAX_VALUE else charged + cost
+        checkStop()
+    }
 
     @Synchronized
     override fun mark(readlimit: Int) {
@@ -295,23 +329,43 @@ internal class CountingInputStream(input: InputStream) : java.io.FilterInputStre
     }
 
     override fun read(): Int {
+        checkStop()
         val b = `in`.read()
         if (b >= 0) count++
         return b
     }
 
     override fun read(b: ByteArray, off: Int, len: Int): Int {
+        checkStop()
         val n = `in`.read(b, off, len)
         if (n > 0) count += n
         return n
     }
 
     override fun skip(n: Long): Long {
+        checkStop()
         val s = `in`.skip(n)
         if (s > 0) count += s
         return s
     }
+
+    /** 인터럽트는 `Thread.interrupted()` 로 보지 않는다 — 그것은 플래그를 지운다(함정 표). */
+    private fun checkStop() {
+        if (Thread.currentThread().isInterrupted) throw java.io.InterruptedIOException("읽는 중에 중단되었다")
+        // 상한만큼 소비했으면 더 읽지 않는다(읽어 봐야 넘는다 — 0 이면 첫 읽기에서 멈춘다). 뺄셈으로 견준다 — `count + charged` 는
+        // 넘칠 수 있다(얹은 값은 상한에 닿으면 멈추지만 count 는 그대로 자란다).
+        if (probeLimit != Long.MAX_VALUE && count >= probeLimit - charged) throw ProbeLimitException()
+    }
 }
+
+/**
+ * 판별이 입력 상한을 넘었다([CountingInputStream.limitProbe]). **깨진 것도 취소도 아니다** — 앞 512바이트가 나오기까지 입력만 먹는
+ * 스트림이 그만큼 길었을 뿐이다. 부르는 쪽(`Archives`)은 '안을 보지 못했다' 로 읽고 항목 하나짜리로 연다. 취소의 말
+ * (`InterruptedIOException`)을 상속하지 않는 것은 그래서다 — 상속하면 위의 모든 `catch` 가 사용자 취소로 옮긴다.
+ *
+ * 상한은 파일의 내용만으로 정해진다 — 같은 파일이면 목록·풀기·만화가 언제 열어도 같은 자리에서 넘는다(시각으로 끊던 때와 다르다).
+ */
+internal class ProbeLimitException : IOException("판별이 입력 상한을 넘었다")
 
 /**
  * 이 상한 위반이 **아카이브 전체를 무효로 만드는가.**

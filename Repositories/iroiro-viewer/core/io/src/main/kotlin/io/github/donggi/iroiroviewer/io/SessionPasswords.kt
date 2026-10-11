@@ -53,7 +53,7 @@ object SessionPasswords {
      *
      * 암호 확인은 몇 초 걸릴 수 있고(7z 의 열쇠 유도), 그동안 사용자가 홈으로 나가면 지우는 일은
      * 이미 지나갔다. 그 뒤에 도착한 `put` 을 받으면 **앱이 뒤에 있는 내내** 암호가 메모리에 남는다
-     * — '화면에서 사라지면 전부 지운다' 는 약속이 깨진다(검토가 잡았다).
+     * — '화면에서 사라지면 전부 지운다' 는 약속이 깨진다.
      */
     @Synchronized
     fun put(key: String, password: CharArray): Boolean {

@@ -357,6 +357,11 @@ object ThumbnailStore {
             return Outcome.Failed(ThumbnailFailures.causeOf(e))
         } catch (e: OutOfMemoryError) {
             return Outcome.Failed(ThumbnailFailures.causeOf(e))
+        } catch (e: StackOverflowError) {
+            // **목록을 스크롤하는 것만으로 프로세스가 죽지 않게.** 표지는 아무도 시키지 않은 일이다 — 빈 LZ4 프레임 20만 개짜리 `.cbt`
+            // 를 둔 폴더를 열기만 했는데 이음매 너머(압축 해제기의 재귀)에서 스택이 넘쳐 앱이 죽었다(기기에서 재현). 넘친 스택은
+            // 여기 왔을 때 이미 풀려 있다. 그 파일의 탓이라 영구 실패로 적는다. 나머지 `Error` 는 우리 결함이라 받지 않는다.
+            return Outcome.Failed(ThumbnailFailures.causeOf(e))
         } ?: return Outcome.Failed(ThumbnailFailures.Cause.UNCERTAIN)
         if (bytes.isEmpty()) return Outcome.Failed(ThumbnailFailures.Cause.PERMANENT)
         return decodeSmall(ImageDecoder.createSource(bytes))

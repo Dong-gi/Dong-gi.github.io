@@ -4,7 +4,8 @@ import io.github.donggi.iroiroviewer.format.UnsupportedFeatures
 import io.github.donggi.iroiroviewer.safety.ParseLimits
 
 /**
- * 변환기가 쓴 본문을 **화면에 띄울 문서 하나로** 마무리한다 — 흐름 문서(`FlowDocument`)의 공통 끝.
+ * 변환기가 쓴 본문을 **화면에 띄울 문서 하나로** 마무리한다 — 마크다운 미리보기(`format:text`)가 쓴다. 이름은 걷은 흐름 문서(docx·HWP)
+ * 변환기들의 공통 끝이던 때의 것이다.
  *
  * 순서가 뜻을 갖는다. ① 본문을 [HtmlSanitizer] 에 통과시키고(변환기가 `HtmlWriter` 로 썼더라도 —
  * 겹쳐 둔 방어다), ② 포맷의 CSS 를 [Css] 로 한 번 거르고, ③ [HtmlShell] 로 싼다. CSS 는 변환기가

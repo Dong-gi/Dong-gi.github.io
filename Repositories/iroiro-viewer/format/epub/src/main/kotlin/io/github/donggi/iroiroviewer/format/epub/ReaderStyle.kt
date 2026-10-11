@@ -1,7 +1,6 @@
 package io.github.donggi.iroiroviewer.format.epub
 
 import io.github.donggi.iroiroviewer.format.html.CssValues
-import io.github.donggi.iroiroviewer.format.html.HtmlShell
 import io.github.donggi.iroiroviewer.format.html.StyleBuilder
 import kotlin.math.floor
 import kotlin.math.min
@@ -17,8 +16,7 @@ import kotlin.math.min
  * ## 왜 `format:epub` 에 있는가
  *
  * 문서 화면이 볼 수 있는 포맷 모듈이 이것 하나다(의존 표). 값을 CSS 로 옮기는 길은 `format:html` 의 [CssValues]·[StyleBuilder]
- * 뿐이어야 하는데, 화면이 그것을 직접 부르게 하면 '화면은 `format:html` 을 직접 부르지 않는다' 가 깨진다. 흐름 문서(docx·HWP)도
- * 이 모양을 쓰므로([apply]) 본래 자리는 `format:html` 이다 — 옮기는 것은 그 모듈을 고칠 때의 일로 남긴다.
+ * 뿐이어야 하는데, 화면이 그것을 직접 부르게 하면 '화면은 `format:html` 을 직접 부르지 않는다' 가 깨진다.
  *
  * ## 바탕을 바꿀 때 지키는 것
  *
@@ -136,13 +134,6 @@ object ReaderStyle {
         val raw = min(viewWidth / pageWidth, viewHeight / pageHeight)
         return (floor(raw * 10_000.0) / 10_000.0).coerceIn(MIN_ZOOM, MAX_ZOOM)
     }
-
-    /**
-     * 흐름 문서(docx·HWP·HWPX)의 HTML 에 [css] 를 얹는다. 흐름 문서의 계약(`FlowDocument.partHtml`)은 CSS 를 받지 않으므로
-     * 껍데기를 **한 번 더** 씌운다 — `HtmlShell.wrap` 은 이미 머리가 있는 문서면 그 끝(`</head>` 앞)에 스타일을 넣고, 태그 자리를
-     * 주석·날것의 글을 건너뛰며 찾는다. 읽기용 기본 CSS 가 한 번 더 들어가지만 같은 규칙이라 모양이 바뀌지 않는다.
-     */
-    fun apply(html: String, css: String): String = if (css.isEmpty()) html else HtmlShell.wrap(html, css)
 
     private fun toneCss(tone: Tone): String = when (tone) {
         Tone.LIGHT -> ""

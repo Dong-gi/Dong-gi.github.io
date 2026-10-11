@@ -168,4 +168,68 @@ class PdfLimitsTest {
         assertEquals(1.7, bmp.scale, 1e-9)
         assertEquals((595 * 1.7).toInt(), bmp.width)
     }
+
+    // ---- 이어 보기의 보이는 자리 타일 ----
+
+    @Test
+    fun 이어_보기는_바닥층이_이미_그_해상도면_다시_그리지_않는다() {
+        // 폰 세로에서 A4 를 폭에 맞춘 배율 그대로 보는 중 — 바닥층이 이미 그 배율이다.
+        val base = 1080.0 / 595
+        assertNull(PdfLimits.regionTile(595, 842, base, base, 0.0, 0.0, 1.0, 0.6, 8L * 1024 * 1024, base * 6))
+    }
+
+    @Test
+    fun 이어_보기는_보이는_자리만_뜬다() {
+        // 2배로 키우고 쪽의 오른쪽 아래 1/4 이 보인다.
+        val base = 1080.0 / 595
+        val t = assertNotNull(
+            PdfLimits.regionTile(595, 842, base * 2, base, 0.5, 0.5, 1.0, 1.0, 64L * 1024 * 1024, base * 6),
+        )
+        assertEquals(t.pageWidth / 2, t.srcLeft, "보이는 자리의 왼쪽 = 쪽 가운데")
+        assertEquals(t.pageHeight / 2, t.srcTop)
+        assertTrue(t.srcLeft + t.width <= t.pageWidth && t.srcTop + t.height <= t.pageHeight, "$t")
+        // 쪽 넘김의 타일처럼 화면 한 장만큼이 아니라 보이는 자리만큼이다(쪽의 오른쪽 아래 1/4 — 예산 안이라 줄지 않는다).
+        assertEquals(t.pageWidth - t.pageWidth / 2, t.width)
+        assertEquals(t.pageHeight - t.pageHeight / 2, t.height)
+    }
+
+    @Test
+    fun 이어_보기의_타일은_나눠_받은_예산을_넘지_않는다() {
+        val base = 1080.0 / 595
+        val random = Random(7)
+        repeat(500) {
+            val cap = 1L + random.nextLong(16L * 1024 * 1024)
+            val l = random.nextDouble(0.0, 0.9)
+            val tp = random.nextDouble(0.0, 0.9)
+            val t = PdfLimits.regionTile(
+                595, 842, base * random.nextDouble(1.3, 6.0), base,
+                l, tp, l + random.nextDouble(0.01, 1.0), tp + random.nextDouble(0.01, 1.0), cap, base * 6,
+            ) ?: return@repeat
+            assertTrue(PdfLimits.bytesOf(t.width, t.height) <= maxOf(cap, 4L), "cap=$cap $t")
+            assertTrue(t.srcLeft >= 0 && t.srcTop >= 0 && t.srcLeft + t.width <= t.pageWidth && t.srcTop + t.height <= t.pageHeight, "$t")
+        }
+    }
+
+    @Test
+    fun 예산보다_큰_자리는_가운데를_남긴다() {
+        // 가로 화면에 A4 세로를 폭에 맞췄는데 바닥층이 상한 때문에 낮은 배율로 그려졌다 — 배율 1 에서도 다시 그린다.
+        val wanted = 2400.0 / 595
+        val base = wanted * 0.56
+        val t = assertNotNull(PdfLimits.regionTile(595, 842, wanted, base, 0.0, 0.3, 1.0, 0.6, 4L * 1024 * 1024, wanted * 2))
+        assertTrue(PdfLimits.bytesOf(t.width, t.height) <= 4L * 1024 * 1024)
+        val visibleLeft = 0
+        val visibleRight = t.pageWidth
+        val left = t.srcLeft - visibleLeft
+        val right = visibleRight - (t.srcLeft + t.width)
+        assertTrue(abs(left - right) <= 1, "좌우 여백이 같아야 한다: $left / $right")
+    }
+
+    @Test
+    fun 이어_보기도_최대_확대에서_멈춘다() {
+        val base = 1080.0 / 595
+        val t = assertNotNull(PdfLimits.regionTile(595, 842, base * 40, base, 0.4, 0.4, 0.45, 0.45, 64L * 1024 * 1024, base * 6))
+        assertEquals(base * 6, t.scale, 1e-9)
+        // 보이는 자리가 없으면 없다.
+        assertNull(PdfLimits.regionTile(595, 842, base * 3, base, 0.5, 0.5, 0.5, 0.9, 64L * 1024 * 1024, base * 6))
+    }
 }

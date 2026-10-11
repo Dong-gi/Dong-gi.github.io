@@ -8,7 +8,7 @@ class HtmlShellTest {
 
     @Test
     fun 띄어_쓰지_않는_언어는_keep_all_을_되돌리고_책의_언어를_기본으로_단다() {
-        // keep-all 은 한국어의 규칙이다 — 일본어·중국어에 걸면 문장 부호에서만 줄이 나뉜다(실세계 말뭉치 검토).
+        // keep-all 은 한국어의 규칙이다 — 일본어·중국어에 걸면 문장 부호에서만 줄이 나뉜다.
         val none = HtmlShell.wrap("<html><head></head><body>글</body></html>", lang = "ja")
         assertTrue(":lang(ja),:lang(zh){word-break:normal;}" in none, none)
         assertTrue("<html lang=\"ja\">" in none, none)
@@ -60,7 +60,7 @@ class HtmlShellTest {
     @Test
     fun 제_head_를_가진_문서도_표준_모드로_나간다() {
         // 위생기가 DOCTYPE 을 지운 XHTML 장(EPUB)이 이 갈래로 온다. DOCTYPE 이 없으면 WebView 가 쿼크 모드로
-        // 그려, 표가 본문의 글자 크기를 물려받지 않는다(말뭉치 검토가 크롬에서 실측).
+        // 그려, 표가 본문의 글자 크기를 물려받지 않는다(크롬에서 실측).
         for (doc in listOf("\n<html><head><title>t</title></head><body>글</body></html>", "<html><head><body>글")) {
             val out = HtmlShell.wrap(doc)
             assertTrue(out.startsWith("<!DOCTYPE html>"), out)

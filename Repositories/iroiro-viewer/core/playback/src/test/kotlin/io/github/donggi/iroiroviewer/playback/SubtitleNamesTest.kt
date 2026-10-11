@@ -98,4 +98,17 @@ class SubtitleNamesTest {
         assertEquals("text/x-ssa", SubtitleNames.mimeOf("a.SSA"))
         assertEquals("text/vtt", SubtitleNames.mimeOf("a.vtt"))
     }
+
+    @Test
+    fun `TTML 은 자막이지만 인코딩을 바꾸지 않는다`() {
+        // media3 에 TTML 파서가 있다. XML 이라 인코딩을 선언에 적으므로 바이트를 UTF-8 로 바꾸면 선언과 어긋난다.
+        for (name in listOf("영화.ttml", "영화.ko.dfxp", "A.TTML")) {
+            assertTrue(SubtitleNames.isSubtitle(name), name)
+            assertEquals("application/ttml+xml", SubtitleNames.mimeOf(name), name)
+            assertFalse(SubtitleNames.needsTranscoding(name), name)
+        }
+        assertTrue(SubtitleNames.matches("영화.mkv", "영화.ttml"))
+        for (name in listOf("a.srt", "a.ASS", "a.ssa", "a.vtt")) assertTrue(SubtitleNames.needsTranscoding(name), name)
+        assertFalse(SubtitleNames.needsTranscoding("a.smi"))
+    }
 }

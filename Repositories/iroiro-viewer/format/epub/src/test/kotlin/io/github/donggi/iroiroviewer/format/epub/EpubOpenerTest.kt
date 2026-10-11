@@ -232,7 +232,7 @@ class EpubOpenerTest {
     @Test
     fun 덜_받은_책은_깨진_파일이다() = runTest {
         // 내려받다 끊긴 책 — ZIP 의 중앙 디렉터리(파일 끝)가 없다. 실세계 말뭉치를 반으로 자른 책이 전부
-        // `Io`('입출력이 실패했습니다')로 끝났다(검토가 잡았다).
+        // `Io`('입출력이 실패했습니다')로 끝났다.
         val whole = TinyEpub.bytes(threeChapters)
         assertIs<OpenFailure.Corrupt>(failure(whole.copyOf(whole.size / 2)))
         assertIs<OpenFailure.Corrupt>(failure(whole.copyOf(whole.size - 1)))
@@ -298,7 +298,7 @@ class EpubOpenerTest {
     @Test
     fun 형식을_모른다고_적은_차례_항목은_내용을_보고_가른다() = runTest {
         // 매니페스트가 `application/octet-stream` 이라 적은 항목을 통째로 '글이 아닌 것' 으로 보면, 형식만
-        // 잘못 적은 XHTML 장이 빈 쪽이 된다(그림 차례를 고치기 전에는 글로 읽혀 보이던 장이다 — 검토가 잡았다).
+        // 잘못 적은 XHTML 장이 빈 쪽이 된다(그림 차례를 고치기 전에는 글로 읽혀 보이던 장이다).
         val png = byteArrayOf(0x89.toByte(), 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A) + ByteArray(24) { 7 }
         val book = open(
             TinyEpub.bytes(
@@ -394,7 +394,7 @@ class EpubOpenerTest {
 
     /**
      * **난독화 방식이 본문에 걸렸는데 열쇠를 못 만들면 열지 않는다.** 예전 판은 그것을 '글꼴을 못
-     * 풀었다' 로 세고 열어, 앞 1040 바이트가 뒤섞인 장을 화면에 보냈다(검토가 잡았다).
+     * 풀었다' 로 세고 열어, 앞 1040 바이트가 뒤섞인 장을 화면에 보냈다.
      */
     @Test
     fun 열쇠를_못_만드는_난독화_본문은_열지_않는다() = runTest {

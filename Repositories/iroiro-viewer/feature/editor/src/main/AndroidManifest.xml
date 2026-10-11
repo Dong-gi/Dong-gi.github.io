@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!--
+          편집기(rhwp·ONLYOFFICE 웹 편집기). **따로 된 프로세스(:editor)에서 돈다.** 남이 만든 문서를 큰 자바스크립트
+          편집기로 다루므로 그 WebView 와 메모리(렌더러 수백 MB)를 파일 쪽(주 프로세스 - 문서 뷰어의 WebView·재생기·작업 큐)과 가른다.
+          그 프로세스는 WebView 의 자료 폴더를 따로 쓰고 파일 쪽의 초기화를 하지 않는다(app 의 IroiroApp). 권한은 앱(UID) 단위라 나눠지지
+          않는다 - 이 앱에는 INTERNET 이 없다(app 의 매니페스트).
+          내보내지 않는다 - 이 앱의 파일 화면이 이름으로 띄운다(EditorApp.intent). 화면을 다시 만들지 않는다 - 다시 만들면 편집기의 WebView 와
+          고친 것이 말없이 사라지고 인텐트의 모드(보기)로 처음부터 다시 연다. 그래서 돌리기·밤 모드만이 아니라 글꼴 크기·굵기, 언어·쓰는 방향,
+          SIM(mcc·mnc), 색 모드 따위 바뀔 수 있는 설정을 모두 스스로 받는다(글꼴 크기를 바꾸면 고친 것을 잃었다).
+          WebView 는 textZoom 100 이라 글꼴 크기를 따르지 않고, 화면의 단추·덮개는 onConfigurationChanged 가 새 모양으로 다시 짓는다.
+        -->
+        <activity
+            android:name=".EditorActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection|density|colorMode|fontWeightAdjustment|grammaticalGender"
+            android:exported="false"
+            android:label="@string/editor_app_name"
+            android:process=":editor"
+            android:theme="@style/Theme.IroiroEditor"
+            android:windowSoftInputMode="adjustResize">
+            <!--
+              이 빌드가 다루는 형식(쉼표로) - 묶음이 든 엔진의 것만(build.gradle.kts 의 editorKinds). 파일 쪽(EditorApp.kinds)이 이것을
+              보고 그 형식만 넘긴다. 이름은 EditorApp.META_KINDS 와 같다.
+            -->
+            <meta-data
+                android:name="io.github.donggi.iroiro.editor.KINDS"
+                android:value="${editorKinds}" />
+        </activity>
+
+        <!--
+          고친 문서를 결과로 돌려주는 자리(OutputProvider)는 디버그 매니페스트에만 둔다 - 그 길(저장 자리 없이 편집 모드)을 쓰는
+          것은 디버그 시험대(DevActivity)뿐이다. 이 앱의 파일 화면은 편집 모드에 늘 저장 자리를 싣는다(app 의 MainActivity.openInEditor -
+          자리를 열지 못하면 편집 모드로 넘기지 않는다).
+        -->
+    </application>
+</manifest>

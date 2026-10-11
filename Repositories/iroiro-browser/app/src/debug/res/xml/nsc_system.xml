@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  실험용 인증 기관이 없을 때의 디버그 설정 — 시스템 인증서만 믿는다. 시험 페이지가 평문(http)이라 평문을 허락한다.
+  매니페스트 자리표시자(app/build.gradle.kts)로 고르므로 lint 는 쓰이지 않는다고 본다.
+-->
+<network-security-config xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <base-config cleartextTrafficPermitted="true" tools:ignore="InsecureBaseConfiguration">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

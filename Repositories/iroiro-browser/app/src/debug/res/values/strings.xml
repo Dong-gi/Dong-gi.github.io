@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 실험 화면(디버그 빌드에만 있다)의 문구. 본 자원에 두면 릴리스에 쓰이지 않는 채로 실린다(lint UnusedResources). -->
+    <string name="lab_intro">Web 실험 화면 — PC 의 실험 도구(tools/lab/run_lab.py)가 adb 로 돌립니다.</string>
+</resources>

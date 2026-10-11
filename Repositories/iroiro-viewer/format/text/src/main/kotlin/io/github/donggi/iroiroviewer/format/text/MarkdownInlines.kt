@@ -367,7 +367,7 @@ internal class MdInlineParser(
         // [stackBottom] 바로 위의 구분자를 찾는다. **[stackBottom] 에 닿으면 멈춘다** — 참조 구현(commonmark.js)처럼
         // `closer.previous !== stackBottom` 을 조건으로 걸면, 바닥이 쌓기의 맨 위일 때(링크 안에 구분자가 없을 때)
         // 멈출 자리를 지나쳐 쌓기 전체를 바닥까지 훑는다. 링크·그림마다 그러면 `~![a](b)` 를 되풀이한 문단이
-        // 제곱이 된다(검토가 잰 값: 40만 글자 한 문단에 2.2초. 노드 상한이 문단 하나를 묶을 뿐 문단마다 되풀이되어,
+        // 제곱이 된다(40만 글자 한 문단에 2.2초. 노드 상한이 문단 하나를 묶을 뿐 문단마다 되풀이되어,
         // `MarkdownLimitsTest` 의 1.6M 글자 두 벌은 75초였다).
         var closer: Delim? = null
         var c = delimiters

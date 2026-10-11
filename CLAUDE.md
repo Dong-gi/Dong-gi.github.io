@@ -1,7 +1,8 @@
 # Dong-gi.github.io 작업 지침
 
 Pug → 정적 HTML 개인 블로그. `pugs/**/*.pug` 가 `posts/**/*.html` 로 렌더된다.
-**이 파일이 저장소의 유일한 지침 문서다.** 규격·절차·인계 문서를 따로 두지 않는다.
+**이 파일이 블로그의 유일한 지침 문서다.** 규격·절차·인계 문서를 따로 두지 않는다.
+`Repositories/` 아래 개인 프로젝트는 각자 자기 `CLAUDE.md` 를 따른다.
 
 ---
 
@@ -16,8 +17,8 @@ Pug → 정적 HTML 개인 블로그. `pugs/**/*.pug` 가 `posts/**/*.html` 로 
 | `d2/` | 상자·화살표 도식의 **D2 소스**와 산출 SVG |
 | `source/` | 빌드 스크립트, 레이아웃(`skeleton.pug`), CSS/JS, 색인 데이터 |
 | `imgs/` | 사진·스크린샷. **`build-img` 가 여기서 제자리 변환한다**(아래 이미지 절) |
-| `Repositories/` | 글에서 인용하는 코드 원본. `+codeBtn('/Repositories/…')` 가 연다 |
-| `files/` | 첨부 파일과 사이트맵 |
+| `Repositories/` | 글에서 인용하는 코드 원본(`JavaScript/`·`Node/`·`Single/` — `+codeBtn('/Repositories/…')` 가 연다)과 개인 프로젝트(`iroiro-browser`·`iroiro-viewer`·`iroiro-downloader`) |
+| `404.html`, `robots.txt` | 손으로 쓰는 정적 파일. 둘 다 `/sitemap.txt` 를 가리킨다 |
 | `index.pug` | 첫 화면 원본 |
 | `scripts/` | 품질 검사와 도구 |
 
@@ -26,9 +27,9 @@ Pug → 정적 HTML 개인 블로그. `pugs/**/*.pug` 가 `posts/**/*.html` 로 
 | 경로 | 언제 갱신되는가 |
 |---|---|
 | `posts/` | `npm run build-pug` |
-| `index.html`, `404.html` | `npm run build-pug` |
+| `index.html` | `npm run build-pug` |
 | `figures/<과목>/*.svg` · `d2/**/*.svg` | `build-figure` · `build-d2` (소스와 같은 폴더) |
-| `source/posts-compressed.json`, `files/sitemap.txt` | `build-pug` |
+| `source/posts-compressed.json`, `sitemap.txt` | `build-pug` |
 | `fonts/` | 수식 폰트는 고정. 일본어 폰트는 문서가 새 한자를 쓸 때 |
 
 ---
@@ -134,7 +135,7 @@ MathJax 를 돌리지 않으므로 폰트는 `fonts/mathjax-newcm/` 에서 직�
 `npm run check` 의 `그림 전부 존재` 항목도 같은 규칙으로 찾는다.
 
 **이름이 `.webp` 라고 내용까지 webp 인 것은 아니다.** 가장 작은 것을 고르므로 avif 나
-원본 그대로가 그 이름으로 들어 있는 경우가 많다(현재 103 개 중 실제 webp 는 1 개).
+원본 그대로가 그 이름으로 들어 있는 경우가 많다(2026-10-11 기준 46 개 중 실제 webp 는 없다 — avif 39 개, png 7 개).
 브라우저는 바이트를 보고 판단하므로 `<img>` 로는 문제가 없다.
 
 `/figures/`·`/d2/` 의 SVG 는 이 규칙이 걸리지 않는다.
@@ -379,7 +380,7 @@ mcs 는 원서(MIT 6.042) 22개 장 전부를 다루며 이 사이트에서 가�
 
 - **철학** 때문에 §3-2(예제의 네 유형)·§3-3(합의되지 않은 내용)·§3-4(출처)가 생겼다.
   전문가들 사이에 합의가 없는 과목을 쓰려면 서술과 예제에 규칙이 더 필요했다
-- **심리학** 때문에 §3-5(외부에서 가져온 사진)가 생겼다. 뇌 해부처럼 그릴 수 없는 자리가
+- **심리학** 때문에 '이미지' 절의 '외부에서 가져온 사진' 규칙이 생겼다. 뇌 해부처럼 그릴 수 없는 자리가
   있었고, 라이선스를 파일마다 확인해야 했다
 - **일본어**는 첫 어학 문서다. **소리와 필순을 다루지 않는다** — 쓸 만한 음성 자료를
   확보하지 못했고 작성 도구가 소리를 검증할 수도 없기 때문이다. `+jp` 와 서브셋 폰트,

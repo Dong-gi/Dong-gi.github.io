@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      플랫폼의 기기 기본 모양(삼성 폰에서는 One UI 의 모양)을 그대로 쓴다 — 화면은 플랫폼 뷰로 짓는다(새 의존 없이: 이 앱의 의존은
+      androidx.webkit 하나다). 막대 아래까지 그리는 것과 막대 글자색은 코드가 정한다(Ui.edgeToEdge).
+    -->
+    <style name="Theme.Web" parent="android:Theme.DeviceDefault.DayNight">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>
