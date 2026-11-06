@@ -27,6 +27,7 @@ import android.text.InputType
 import android.text.format.Formatter
 import android.util.Log
 import android.util.TypedValue
+import android.view.ActionMode
 import android.view.ContextMenu
 import android.view.Gravity
 import android.view.KeyEvent
@@ -72,6 +73,7 @@ import io.github.donggi.iroirobrowser.R
 import io.github.donggi.iroirobrowser.WebApp
 import io.github.donggi.iroirobrowser.adblock.AdBlockService
 import io.github.donggi.iroirobrowser.core.DataUrl
+import io.github.donggi.iroirobrowser.core.Retention
 import io.github.donggi.iroirobrowser.core.adblock.AdBlocker
 import io.github.donggi.iroirobrowser.core.adblock.CosmeticEngine
 import io.github.donggi.iroirobrowser.core.adblock.HideSelectors
@@ -84,7 +86,6 @@ import io.github.donggi.iroirobrowser.core.sites.SiteTarget
 import io.github.donggi.iroirobrowser.core.sites.SiteUrls
 import io.github.donggi.iroirobrowser.download.DownloadCenter
 import io.github.donggi.iroirobrowser.core.Omnibox
-import io.github.donggi.iroirobrowser.core.Referrer
 import io.github.donggi.iroirobrowser.download.DownloadsActivity
 import io.github.donggi.iroirobrowser.download.GalleryPrompt
 import io.github.donggi.iroirobrowser.download.GalleryRules
@@ -127,7 +128,7 @@ import kotlin.math.tanh
  * **쪽은 길이 걸린 뒤에만 연다**([NetworkPath.whenReady]) — 걸리기 전에 연 쪽은 옛 길(켜던 중이면 직접)로 나간다.
  * 길이 바뀌면(설정을 고쳤다·프록시를 켜고 껐다) 열린 탭을 모두 다시 불러 옛 길에 붙어 있던 연결을 끊는다.
  *
- * 탭: 열린 탭의 주소는 앱이 다시 뜰 때 되살린다([SessionStore]). WebView 는 [MAX_LIVE_TABS] 개까지만 살려 두고 오래 안 본 탭은 접는다
+ * 탭: 열린 탭의 주소는 앱이 다시 뜰 때 되살린다([SessionStore]). WebView 는 설정의 수([io.github.donggi.iroirobrowser.proxy.SettingsStore.liveTabs])까지만 살려 두고 오래 안 본 탭은 접는다
  * (기록은 메모리에 두고 고르면 되살린다). 고리·그림을 길게 누르면 새 탭에서 열기·복사·공유·그림 받기.
  *
  * 주소가 없는 탭에는 시작 화면([StartPage] — 북마크·자주 간 곳)을 보인다. 다 연 쪽은 방문 기록에 적는다(중계가 막은 쪽·오류 쪽은 빼고).
@@ -350,6 +351,7 @@ class BrowserActivity : Activity(), PageHost {
             if (isDestroyed) return
             if (tab == current) updateScreenOn()
             if (tab == bgTab) onBackgroundPlayChanged(tab)
+            if (rebuildPending) main.post { maybeRebuild() }
         }
 
         override fun onMediaTitleChanged(tab: Tab) {
@@ -388,6 +390,9 @@ class BrowserActivity : Activity(), PageHost {
 
     /** 앞에 있는가(onResume 부터 onPause 까지). */
     private var foreground = false
+
+    /** 재생 때문에 미뤄 둔 밤 모드 다시 짓기가 있는가([onConfigurationChanged]). */
+    private var rebuildPending = false
 
     /**
      * 뒤에서 재생을 잇는 탭(회) — 하나뿐이다. 앱이 뒤에 있는 동안의 지금 탭([PageWebView.keepWindowVisible])이거나, 다른 탭을 고른 사이 쪽의
@@ -505,6 +510,10 @@ class BrowserActivity : Activity(), PageHost {
         // 전체 화면 — 설정 화면에서 바꿨을 수 있다. 돌아오면 막대는 숨긴 상태로(주소창을 고치던 중이면 그대로).
         applyFullscreen()
         applyForceZoom()
+        // 살아 있는 탭의 수 — 설정에서 줄였으면 넘는 탭을 접는다.
+        trimLiveTabs()
+        // 보관 기간 — 지난 방문 기록을 지우고, 때가 되면 캐시를 비운다(설정 › 인터넷 사용 기록).
+        applyRetention()
         // 유튜브 광고 가리기 — 광고 차단 설정 화면에서 바꾼 것을 이미 연 유튜브 틀에도 곧바로 알린다.
         tabs.forEach { it.bridge?.refreshYtGuard() }
         if (network.revision != seenRevision) {
@@ -620,6 +629,38 @@ class BrowserActivity : Activity(), PageHost {
             null
         }
         BackgroundPlayback.update(this, state)
+        syncOffscreen()
+        if (rebuildPending) main.post { maybeRebuild() }
+    }
+
+    /**
+     * 뒤에서 재생을 잇는 탭이 화면에 그려지지 않는 동안 재생 중이면 화면 밖에 그린다([PageWebView.drawOffscreen]) — 앱이 뒤로 가는 순간(onPause —
+     * 창이 실제로 숨는 onStop 은 0.7초쯤 늦어 그 사이 디코더가 막혔다, 에뮬레이터)부터 돌아올 때까지, 또는 다른 탭을 보는 동안. 그 밖의 탭은
+     * 그리지 않는다.
+     */
+    private fun syncOffscreen() {
+        val bg = bgTab
+        for (tab in tabs) {
+            val view = tab.webView as? PageWebView ?: continue
+            val want = tab == bg && (!foreground || tab != current) && bgPlaying(tab)
+            if (view.drawOffscreen == want) continue
+            view.drawOffscreen = want
+            trace("offscreen ${if (want) "on" else "off"} tab=${tab.id}")
+            hideVideos(tab, view, want)
+        }
+    }
+
+    /**
+     * 화면 밖에 그리는 동안 그 탭의 영상 요소를 숨기고 그치면 되돌린다([PageBridge.hideVideos] — 2026-10-16). 숨은 영상은 크로미움이 화면에 내지
+     * 않아 WebView 가 다시 그리기를 청하지 않는다 — 숨긴 것이 확인되면 청이 있을 때만 그리게 해([PageWebView.offscreenRequestsOnly]) 화면 밖 그리기가
+     * 거의 선다. 통로가 없으면(그 기능을 모르는 WebView) 숨기지 않고 앞 판처럼 그린다.
+     */
+    private fun hideVideos(tab: Tab, view: PageWebView, hide: Boolean) {
+        val bridge = tab.bridge ?: return
+        bridge.hideVideos(hide) { hidden ->
+            if (hide && hidden && view.drawOffscreen) view.offscreenRequestsOnly = true
+            trace("bgvideo ${if (hide) "hide" else "show"} tab=${tab.id} hidden=$hidden")
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -662,6 +703,7 @@ class BrowserActivity : Activity(), PageHost {
         // 받던 녹화·가로채기는 파일째 남긴다 — 다음에 뜰 때 저장할지 묻는다(CaptureRecovery).
         tabs.forEach {
             it.bridge?.dispose(keep = true)
+            it.requests.clear()
             it.webView?.destroy()
         }
         tabs.clear()
@@ -688,6 +730,30 @@ class BrowserActivity : Activity(), PageHost {
         super.onConfigurationChanged(newConfig)
         val night = (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         if (night == builtNight) return
+        // 소리 나는 재생 중이면 다시 짓기를 미룬다 — 다시 지으면 쪽(WebView)을 새 화면으로 떼었다 붙여 쪽이 잠깐 숨는데, 유튜브는 그 틈을 보고
+        // 재생을 멈춘다(2026-10-12 에뮬레이터 — 밤 모드가 '자동' 이면 시스템은 화면이 꺼진 동안 바꿔 두고, 켜는 순간 이 화면이 다시 지어졌다).
+        // 재생이 끝나면 짓는다([maybeRebuild]).
+        if (holdsRebuild()) {
+            rebuildPending = true
+            trace("rebuild deferred")
+            return
+        }
+        rebuildUi()
+    }
+
+    /** 미뤄 둔 다시 짓기 — 밤 모드가 바뀐 채이고 지금 해도 되면 한다. */
+    private fun maybeRebuild() {
+        if (!rebuildPending || isDestroyed || holdsRebuild()) return
+        rebuildPending = false
+        if (Ui.isNight(this) != builtNight) rebuildUi()
+    }
+
+    /** 다시 짓기를 미뤄야 하는가 — 뒤에서 재생을 잇는 회가 있거나 지금 탭에서 소리 나는 재생 중. */
+    private fun holdsRebuild(): Boolean =
+        bgTab != null || current?.bridge?.playing?.state(SystemClock.elapsedRealtime())?.audible == true
+
+    /** 밤 모드에 맞춰 화면을 다시 짓는다(지금 탭은 새 화면에 다시 붙인다). */
+    private fun rebuildUi() {
         hideCustomView()
         val typed = if (address.hasFocus()) address.text.toString() else null
         buildUi()
@@ -711,6 +777,8 @@ class BrowserActivity : Activity(), PageHost {
                 trace("pick back")
                 picker.stop()
             }
+            // 글을 고른 채면 뒤로 가기는 고르기만 푼다(크롬처럼 — 쪽은 그대로).
+            (tab?.webView as? PageWebView)?.finishSelection() == true -> trace("selection back")
             findBar.visibility == View.VISIBLE -> hideFind()
             address.hasFocus() -> {
                 address.clearFocus()
@@ -2160,6 +2228,8 @@ class BrowserActivity : Activity(), PageHost {
         PageNavigation.attach(view, this, tab)
         // 쪽의 뿌리가 맨 위에서 더 밀렸다 — 지금 탭이면 당겨서 새로 고침이 듣는다.
         (view as? PageWebView)?.onTopOverscroll = { if (tab == current && tab.webView === view) content.onTopOverscroll() }
+        // 글 고르기 메뉴의 '검색' — 고른 글은 통로가 읽으므로 통로가 있을 때만 줄을 더한다.
+        if (bridge != null) (view as? PageWebView)?.onSearchSelection = { mode -> searchSelection(tab, mode) }
         view.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
             onDownload(tab, url, userAgent, contentDisposition, mimeType, contentLength)
         }
@@ -2207,6 +2277,8 @@ class BrowserActivity : Activity(), PageHost {
 
     /** 탐색이 커밋됐다 — 찾은 미디어의 페이지 경계를 옮긴다(지우지 않는다). 같은 문서 안의 이동이면 지금 제목을 그 페이지의 것으로. */
     private fun onNavigationCommitted(tab: Tab, url: String, sameDocument: Boolean?, navigationStart: Long?) {
+        // 다른 사이트의 문서면 쥐던 요청 머리를 버린다(값이 토큰일 수 있다 — PageRequests).
+        if (sameDocument != true) tab.requests.committed(url, navigationStart)
         val title = if (sameDocument == true) tab.title else ""
         if (!tab.media.commit(url, title, SystemClock.elapsedRealtime(), sameDocument, navigationStart)) return
         trace("media page ${if (sameDocument == true) "same-document" else "new"} $url")
@@ -2227,13 +2299,18 @@ class BrowserActivity : Activity(), PageHost {
         }
         val leaving = current
         leaving?.webView?.let {
-            if (leaving != tab && it is PageWebView && (leaving == bgTab || playsInBackground(leaving))) {
-                // 뒤에서 재생을 잇는다 — 떼지 않고 보이지 않게 둔다(BackgroundPlay — 떼었다 붙이면 재생이 멈춘다).
-                beginBackgroundPlay(leaving)
-                it.backstaged = true
-            } else {
-                it.onPause()
-                detach(it)
+            when {
+                // 같은 탭을 다시 골랐다(탭 목록에서 지금 탭·화면을 다시 지음) — 멈추지 않는다. 자리는 아래에서 맞춘다.
+                leaving == tab -> Unit
+                it is PageWebView && (leaving == bgTab || playsInBackground(leaving)) -> {
+                    // 뒤에서 재생을 잇는다 — 떼지 않고 보이지 않게 둔다(BackgroundPlay — 떼었다 붙이면 재생이 멈춘다).
+                    beginBackgroundPlay(leaving)
+                    it.backstaged = true
+                }
+                else -> {
+                    it.onPause()
+                    detach(it)
+                }
             }
         }
         current = tab
@@ -2249,14 +2326,17 @@ class BrowserActivity : Activity(), PageHost {
             }
         }
         tab.webView?.let {
-            if (it is PageWebView && it.backstaged && it.parent === content) {
+            when {
                 // 뒤에서 재생을 잇던 탭으로 돌아왔다 — 붙인 채 다시 보인다(떼었다 붙이면 재생이 멈춘다). 앞에서 보고 있으니 회는 닫는다(아래).
-                it.backstaged = false
-            } else {
-                detach(it)
-                // 시작 화면 밑에 둔다 — 주소가 없는 탭이면 시작 화면이 덮는다. 뒤에서 재생을 잇는(보이지 않는) 쪽보다는 위.
-                content.addView(it, pageIndex(), FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-                it.onResume()
+                it is PageWebView && it.backstaged && it.parent === content -> it.backstaged = false
+                // 이미 제자리다(같은 탭을 다시 골랐다) — 떼었다 붙이면 쪽이 잠깐 숨고, 유튜브는 그 틈에 재생을 멈춘다.
+                it.parent === content -> it.onResume()
+                else -> {
+                    detach(it)
+                    // 시작 화면 밑에 둔다 — 주소가 없는 탭이면 시작 화면이 덮는다. 뒤에서 재생을 잇는(보이지 않는) 쪽보다는 위.
+                    content.addView(it, pageIndex(), FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                    it.onResume()
+                }
             }
         }
         if (tab == bgTab && foreground) endBackgroundPlay(pauseMedia = false)
@@ -2277,13 +2357,36 @@ class BrowserActivity : Activity(), PageHost {
         updateScreenOn()
     }
 
-    /** 살아 있는 WebView 가 [MAX_LIVE_TABS] 를 넘으면 가장 오래 안 본 탭부터 접는다(탭마다 수십 MB). */
+    /**
+     * 인터넷 사용 기록의 보관 기간([Retention] — 설정 › 인터넷 사용 기록). 화면으로 돌아올 때마다 본다 — 방문 기록은 SQL 하나, 캐시는 시각 견주기
+     * 하나다. 캐시는 WebView 의 HTTP 캐시를 통째로 비운다(앱이 하나를 함께 쓴다 — 쿠키·사이트 저장소·로그인은 그대로).
+     */
+    private fun applyRetention() {
+        val now = System.currentTimeMillis()
+        Retention.historyCutoff(app.settings.historyDays, now)?.let { app.library.expireHistory(it) }
+        if (Retention.cacheDue(app.settings.cacheDays, app.settings.cacheClearedAt, now)) {
+            val view = current?.webView
+            if (view != null) {
+                view.clearCache(true)
+            } else {
+                WebView(this).apply {
+                    clearCache(true)
+                    destroy()
+                }
+            }
+            app.settings.cacheClearedAt = now
+            trace("cache cleared")
+        }
+    }
+
+    /** 살아 있는 WebView 가 설정의 수([io.github.donggi.iroirobrowser.proxy.SettingsStore.liveTabs])를 넘으면 가장 오래 안 본 탭부터 접는다(탭마다 수십 MB). */
     private fun trimLiveTabs() {
         val live = tabs.filter { it.webView != null }
-        if (live.size <= MAX_LIVE_TABS) return
+        val limit = app.settings.liveTabs
+        if (live.size <= limit) return
         // 녹화·가로채기 중인 탭은 접지 않는다(쪽이 멈추면 받기도 멈춘다).
         live.filter { it != current && it != bgTab && it.bridge?.let { b -> b.capture != null || b.recording != null } != true }
-            .sortedBy { it.lastShown }.take(live.size - MAX_LIVE_TABS).forEach { freeze(it) }
+            .sortedBy { it.lastShown }.take(live.size - limit).forEach { freeze(it) }
     }
 
     /** 탭을 접는다 — 뒤로·앞으로 기록을 메모리에 두고 WebView 를 없앤다. */
@@ -2337,6 +2440,7 @@ class BrowserActivity : Activity(), PageHost {
             }
             tabs.removeAt(index)
             tab.bridge?.dispose()
+            tab.requests.clear()
             tab.webView?.let {
                 detach(it)
                 it.destroy()
@@ -2557,7 +2661,7 @@ class BrowserActivity : Activity(), PageHost {
         menu.setHeaderTitle(url.take(MENU_TITLE_MAX))
         if (ExternalLinks.isWebScheme(Uri.parse(url))) {
             menu.add(R.string.open_in_new_tab).setOnMenuItemClickListener {
-                openInBackground(tab, url)
+                openInNewTab(tab, url)
                 true
             }
             // 누르면 재생해 버리는 고리(.mp4 등)도 받을 수 있게 — 받기 확인 창(이름·미리 읽은 크기).
@@ -2594,18 +2698,39 @@ class BrowserActivity : Activity(), PageHost {
         }
         if (web) {
             menu.add(R.string.open_image_in_new_tab).setOnMenuItemClickListener {
-                openInBackground(tab, src)
+                openInNewTab(tab, src)
                 true
             }
         }
     }
 
-    /** 뒤에 새 탭을 열어 [url] 을 연다(지금 탭은 그대로). 그 탭에서 뒤로 갈 곳이 없으면 이 탭으로 돌아온다. */
-    private fun openInBackground(opener: Tab, url: String) {
-        val tab = newTab(select = false, opener = opener)
-        trace("background tab=${tab.id} $url")
+    /**
+     * 새 탭을 열어 [url] 을 열고 **곧바로 그 탭으로 간다**(사용자 요청, 2026-10-16 — '새 탭으로 즉시 전환되도록' — 앞 판은 뒤에 열고 알렸다).
+     * 그 탭에서 뒤로 갈 곳이 없으면 이 탭으로 돌아온다. 이 탭이 소리 나는 유튜브면 뒤에서 이어진다(탭을 떠날 때와 같다).
+     */
+    private fun openInNewTab(opener: Tab, url: String) {
+        val tab = newTab(select = true, opener = opener)
+        trace("new tab=${tab.id} $url")
         load(tab, url)
-        Toast.makeText(this, R.string.opened_in_background, Toast.LENGTH_SHORT).show()
+    }
+
+    /**
+     * 글 고르기 메뉴의 '검색'([SelectionSearch]) — 고른 글을 지금 검색 엔진으로 새 탭에서 찾는다. 고른 글을 다 읽은 뒤에 메뉴를 닫는다(먼저
+     * 닫으면 고르기가 풀려 글이 빈다).
+     */
+    private fun searchSelection(tab: Tab, mode: ActionMode) {
+        val bridge = tab.bridge ?: return
+        bridge.selectedText { text ->
+            mode.finish()
+            if (isDestroyed || tab !in tabs) return@selectedText
+            val query = SelectionSearch.query(text)
+            trace("selection search ${if (query == null) "empty" else "len=${query.length}"}")
+            if (query == null) {
+                Toast.makeText(this, R.string.search_selection_empty, Toast.LENGTH_SHORT).show()
+            } else {
+                openInNewTab(tab, app.settings.searchEngine.searchUrl(query))
+            }
+        }
     }
 
     /**
@@ -2635,9 +2760,9 @@ class BrowserActivity : Activity(), PageHost {
         val downloads = app.downloads
         val mime = if (src.startsWith("data:", ignoreCase = true)) DataUrl.parse(src)?.mimeType else null
         val name = downloads.names.choose(null, src, mime)
-        val referer = Referrer.strictOriginWhenCrossOrigin(tab.committedUrl, src)
         askNotificationPermission()
-        downloads.enqueue(src, name, mime, tab.webView?.settings?.userAgentString.orEmpty(), referer, tab.committedUrl, tab.title)
+        // Referer 는 받는 쪽이 홉마다 이 쪽에서 짓는다(strict-origin-when-cross-origin — DownloadCenter.headersFromPage).
+        downloads.enqueue(src, name, mime, tab.webView?.settings?.userAgentString.orEmpty(), tab.committedUrl, tab.title)
         trace("download asked $name")
         Toast.makeText(this, R.string.download_started, Toast.LENGTH_SHORT).show()
     }
@@ -2871,6 +2996,8 @@ class BrowserActivity : Activity(), PageHost {
             return null
         }
         adBlock(tab, request, url)?.let { return it }
+        // 잠긴 HLS 의 열쇠를 쪽처럼 받으려고 나가는 요청의 머리(Referer·스크립트가 단 것)를 잠깐 쥔다 — 메모리에만, 기록하지 않는다(PageRequests).
+        tab.requests.record(url, request.method, request.requestHeaders, SystemClock.elapsedRealtime())
         sniffMedia(tab, url)
         return null
     }
@@ -3390,12 +3517,12 @@ class BrowserActivity : Activity(), PageHost {
             onBlobDownload(tab, url, contentDisposition, mimeType)
             return
         }
-        // 내려받기로 끝난 탐색은 화면을 바꾸지 않는다 — 주소창을 지금 쪽으로 되돌리고, Referer 는 그 쪽에서(크롬의 기본 정책).
+        // 내려받기로 끝난 탐색은 화면을 바꾸지 않는다 — 주소창을 지금 쪽으로 되돌리고, Referer 는 그 쪽에서(크롬의 기본 정책 — 받는 쪽이 홉마다
+        // 짓는다).
         tab.url = tab.committedUrl
         tab.progress = 100
         if (tab == current) showUrl()
         renderProgress(tab)
-        val referer = Referrer.strictOriginWhenCrossOrigin(tab.committedUrl, url)
         val downloads = app.downloads
         val name = downloads.names.choose(contentDisposition, url, mimeType)
         trace("download asked $name")
@@ -3404,12 +3531,12 @@ class BrowserActivity : Activity(), PageHost {
         val pageTitle = tab.title
         val saveFile = {
             askNotificationPermission()
-            downloads.enqueue(url, name, mimeType?.takeIf { it.isNotBlank() }, userAgent, referer, pageUrl, pageTitle)
+            downloads.enqueue(url, name, mimeType?.takeIf { it.isNotBlank() }, userAgent, pageUrl, pageTitle)
             Toast.makeText(this, R.string.download_started, Toast.LENGTH_SHORT).show()
         }
         if (TorrentRules.isTorrentFile(mimeType, name, url)) {
             // `.torrent` 는 '토렌트로 받기 / 파일로 저장' 을 묻는다(사용자 결정 ⑲). 파일로 저장은 지금까지의 내려받기다.
-            torrentPrompt.offerFile(name, size, url, userAgent, referer, saveFile)
+            torrentPrompt.offerFile(name, size, url, userAgent, pageUrl, saveFile)
             return
         }
         AlertDialog.Builder(this)
@@ -3574,8 +3701,6 @@ class BrowserActivity : Activity(), PageHost {
             0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44, 0x01, 0x00, 0x3B,
         )
 
-        /** 살아 있는 WebView 의 수 — 넘으면 오래 안 본 탭을 접는다(CLAUDE.md '사용자가 정할 것' — 지금은 이 값). */
-        const val MAX_LIVE_TABS = 5
 
         const val SAVE_DELAY_MS = 1_000L
         const val MAX_SAVED_URL = 8 * 1024

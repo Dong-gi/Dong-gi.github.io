@@ -138,10 +138,12 @@ add((() => {
     g.push(f.line([[0, 0], [500, 50]], { cls: 's2' }));
     g.push(txt(f.X(430), f.Y(43) - 12, '기울기 0.10 인 차원', { anchor: 'end', cls: 'ink bold', size: 'sm' }));
     g.push(f.line([[0, 0], [500, 20]], { cls: 's1' }));
-    g.push(txt(f.X(500), f.Y(20) - 12, '기울기 0.04 인 차원', { anchor: 'end', cls: 'ink bold', size: 'sm' }));
+    // 이름은 직선 가운데쯤 위에 둔다. 오른쪽 끝은 아래의 ‘센 쪽’ 점선이 올라가는 자리다.
+    g.push(txt(f.X(395), f.Y(0.04 * 395) - 8, '기울기 0.04 인 차원', { anchor: 'end', cls: 'ink bold', size: 'sm' }));
 
-    /* 아주 약한 자극 쪽에서 직선을 벗어나는 부분. */
+    /* 아주 약한 자극 쪽과 아주 센 자극 쪽에서 직선을 벗어나는 부분(둘 다 위로 — 베버 비가 커진다). */
     g.push(f.curve(x => 0.04 * x + 5 * Math.exp(-x / 26), { from: 0, to: 140, cls: 's1', dash: '5 4' }));
+    g.push(f.curve(x => 0.04 * x + 5 * Math.exp((x - 500) / 26), { from: 360, to: 500, cls: 's1', dash: '5 4' }));
 
     g.push(f.guide([100, 0], [100, 10]));
     g.push(f.guide([0, 10], [100, 10]));
@@ -222,8 +224,9 @@ add((() => {
     const yArr = f.Y(0.47);
     g.push(f.guide([0, 0.399], [0, 0.47]));
     g.push(f.guide([mu, 0.399], [mu, 0.47]));
-    g.push(px(f.X(0), yArr, f.X(mu), yArr, { cls: '', marker: 'ark', width: 1.6 }));
-    g.push(px(f.X(mu), yArr, f.X(0), yArr, { cls: '', marker: 'ark', width: 1.6 }));
+    // cls 를 비우면 선이 사라지고 화살촉만 남는다. 회색 화살표는 'ax'.
+    g.push(px(f.X(0), yArr, f.X(mu), yArr, { cls: 'ax', marker: 'ark', width: 1.6 }));
+    g.push(px(f.X(mu), yArr, f.X(0), yArr, { cls: 'ax', marker: 'ark', width: 1.6 }));
     g.push(txt((f.X(0) + f.X(mu)) / 2, yArr - 10, '민감도 — 두 봉우리 사이의 거리', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
 
     g.push(txt(f.X(3.0), f.Y(0.115), '적중', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));

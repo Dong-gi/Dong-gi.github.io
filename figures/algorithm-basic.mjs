@@ -208,7 +208,7 @@ add((() => {
         {
             title: 'O(g) — 위로 눌린다',
             sub: 'n₀ 뒤에서 f ≤ b·g',
-            bands: [{ fn: v => 9 * v, stroke: C2, name: 'b·g(n)' }],
+            bands: [{ fn: v => 10 * v, stroke: C2, name: 'b·g(n)' }],
             n0: 3.2,
         },
         {
@@ -220,11 +220,12 @@ add((() => {
         {
             title: 'Θ(g) — 양쪽으로 눌린다',
             sub: 'n₀ 뒤에서 b₁·g ≤ f ≤ b₂·g',
-            bands: [{ fn: v => 9 * v, stroke: C2, name: 'b₂·g(n)' }, { fn: v => 3.4 * v, stroke: C3, name: 'b₁·g(n)' }],
+            bands: [{ fn: v => 10 * v, stroke: C2, name: 'b₂·g(n)' }, { fn: v => 3.4 * v, stroke: C3, name: 'b₁·g(n)' }],
             n0: 3.2,
         },
     ];
-    const fEx = v => 5.5 * v + 18 * Math.sin(v * 1.1) + 12;
+    // 회색 영역(n ≥ 3.2)에서 위 선 10n 과는 3.6, 아래 선 3.4n 과는 4.9 이상 떨어진다(눈으로 닿아 보이지 않게).
+    const fEx = v => 5.5 * v + 16 * Math.sin(v * 1.1) + 12;
     spec.forEach((s, i) => {
         const px0 = 14 + i * 250, py0 = 40, pw = 236, ph = 244;
         g.push(panel(px0, py0, pw, ph, s.title, s.sub));
@@ -364,8 +365,8 @@ add((() => {
     });
     g.push(ln([[560, 56], [560, 306]], { stroke: CG, sw: 1 }));
     g.push(txt(586, 44, '그 층의 비용 합', { cls: 'ink2 bold', size: 'sm' }));
-    g.push(txt(500, 330, '층이 log₂ n + 1 개 × 층마다 n = n log₂ n', { cls: 'ink bold', size: 'sm', anchor: 'middle' }));
-    g.push(txt(66, H - 30, 'T(n) = 2T(n/2) + n 을 펼친 그림. 문제를 반으로 쪼개므로 층은 log₂ n 개 생기고,', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(500, 330, '층이 log₂ n + 1 개 × 층마다 n = n(log₂ n + 1)', { cls: 'ink bold', size: 'sm', anchor: 'middle' }));
+    g.push(txt(66, H - 30, 'T(n) = 2T(n/2) + n 을 펼친 그림. 문제를 반으로 쪼개므로 층은 log₂ n + 1 개 생기고,', { cls: 'ink2', size: 'sm' }));
     g.push(txt(66, H - 12, '층마다 합치는 비용은 언제나 n 이다. 두 값을 곱한 것이 전체 비용이다', { cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-b-recursion-tree',
@@ -925,7 +926,7 @@ add((() => {
     g.push(txt(360, 186, '서버 추가', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     g.push(txt(26, H - 46, '키와 서버를 같은 해시 값의 고리 위에 얹고, 키는 시계 방향으로 처음 만나는 서버가 맡는다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(26, H - 26, '서버 번호 = 해시 mod 서버수 로 정하면 서버 수가 바뀔 때 거의 모든 키가 자리를 옮겨야 한다.', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(26, H - 6, '고리를 쓰면 새로 들어온 서버 앞 구간의 키만 옮긴다. 평균 1/n 만 움직인다', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(26, H - 6, '고리를 쓰면 새로 들어온 서버 앞 구간의 키만 옮긴다. 평균 서버 수 분의 1 만 움직인다', { cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-b-consistent-hash',
         svg: svg({
@@ -1154,7 +1155,7 @@ add((() => {
 add((() => {
     const W = 770, H = 356;
     const g = [];
-    g.push(txt(W / 2, 24, 'x · y · z 가 꺾여 있으면 먼저 펴고 나서 돌린다 — 원문의 LR 예제', { anchor: 'middle', cls: 'ink bold' }));
+    g.push(txt(W / 2, 24, 'x · y · z 가 꺾여 있으면 먼저 펴고 나서 돌린다 — 본문의 LR 예제', { anchor: 'middle', cls: 'ink bold' }));
     const panels = [
         {
             x: 14, title: '처음 — 9 가 불균형', sub: 'z = 9, y = 3, x = 5 로 꺾였다',

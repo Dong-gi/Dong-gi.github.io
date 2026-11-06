@@ -114,12 +114,13 @@ text{font-size:13px}
 <circle cx="432.8" cy="220.97" r="3.4" fill="var(--grid)"/>
 <circle cx="410.4" cy="251.17" r="3.4" fill="var(--grid)"/>
 <circle cx="423.2" cy="266.69" r="3.4" fill="var(--grid)"/>
-<circle cx="436" cy="246.7" r="3.4" fill="var(--grid)"/>
-<circle cx="413.6" cy="217.95" r="3.4" fill="var(--grid)"/>
-<circle cx="426.4" cy="269.52" r="3.4" fill="var(--grid)"/>
-<circle cx="404" cy="246.43" r="3.4" fill="var(--grid)"/>
+<circle cx="436" cy="217.95" r="3.4" fill="var(--grid)"/>
+<circle cx="413.6" cy="269.52" r="3.4" fill="var(--grid)"/>
+<circle cx="426.4" cy="246.43" r="3.4" fill="var(--grid)"/>
+<circle cx="404" cy="280.57" r="3.4" fill="var(--grid)"/>
+<circle cx="416.8" cy="236.45" r="3.4" fill="var(--grid)"/>
 <text class="ink2 sm" x="420" y="301.4" text-anchor="middle">중간에 빠진 사람</text>
-<path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M300 190 L400 190"/>
+<path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M326 190 L400 190"/>
 <path class="s2" fill="none" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M452 190 L552 190"/>
 <text class="ink bold sm" x="230" y="360" text-anchor="middle">첫 측정 — 모두 있다</text>
 <text class="ink bold sm" x="618" y="360" text-anchor="middle">몇 해 뒤 — 남은 사람만</text>

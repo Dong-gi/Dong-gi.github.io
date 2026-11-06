@@ -44,10 +44,11 @@ add((() => {
     const R = 178;
 
     g.push(`<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${COL.grid}" stroke-width="1.4" stroke-dasharray="5 4"/>`);
-    g.push(px(cx, cy + R + 44, cx, cy - R - 44, { cls: '', marker: 'ark', width: 1.5 }));
-    g.push(px(cx - R - 66, cy, cx + R + 66, cy, { cls: '', marker: 'ark', width: 1.5 }));
-    g.push(px(cx, cy - R - 44, cx, cy + R + 44, { cls: '', marker: 'ark', width: 1.5 }));
-    g.push(px(cx + R + 66, cy, cx - R - 66, cy, { cls: '', marker: 'ark', width: 1.5 }));
+    // cls 를 비우면 선의 stroke 가 없어 화살촉만 남는다. 회색 축은 'ax'.
+    g.push(px(cx, cy + R + 44, cx, cy - R - 44, { cls: 'ax', marker: 'ark', width: 1.5 }));
+    g.push(px(cx - R - 66, cy, cx + R + 66, cy, { cls: 'ax', marker: 'ark', width: 1.5 }));
+    g.push(px(cx, cy - R - 44, cx, cy + R + 44, { cls: 'ax', marker: 'ark', width: 1.5 }));
+    g.push(px(cx + R + 66, cy, cx - R - 66, cy, { cls: 'ax', marker: 'ark', width: 1.5 }));
 
     g.push(txt(cx, cy - R - 56, '각성이 높다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(cx, cy + R + 66, '각성이 낮다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));

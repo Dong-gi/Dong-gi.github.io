@@ -115,20 +115,22 @@ add((() => {
         g.push(line([[X(e), yb], [X(e), yb + 8]], { stroke: 'var(--ink2)', sw: 1 }));
         g.push(txt(X(e), yb + 24, name, { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     }
+    // 첫 값은 크기를 미터로 잰 값의 상용로그다(리보솜 25 nm → log 2.5×10⁻⁸ = −7.6).
+    // 난자 이름표는 왼쪽 끝을 점에 맞춘다. 가운데 맞춤이면 사람 세포의 점선이 글자를 가로지른다.
     const items = [
         [-10, '원자 하나 0.1 nm', 1],
         [-8.7, 'DNA 이중나선 굵기 2 nm', 0],
-        [-7.4, '리보솜 25 nm', 1],
+        [-7.6, '리보솜 25 nm', 1],
         [-6.3, '세균 0.5 μm', 0],
-        [-4.9, '사람 세포 20 μm', 1],
-        [-3.7, '사람 난자 0.2 mm', 0],
-        [-0.77, '사람 키 1.7 m', 1],
+        [-4.7, '사람 세포 20 μm', 1],
+        [-4.0, '사람 난자 0.1 mm', 0, 'start'],
+        [0.23, '사람 키 1.7 m', 1],
     ];
-    for (const [e, name, lv] of items) {
+    for (const [e, name, lv, anchor = 'middle'] of items) {
         const yy = lv === 1 ? 82 : 118;
         g.push(line([[X(e), yy + 8], [X(e), yb - 5]], { stroke: 'var(--grid)', sw: 1, dash: '3 3' }));
         g.push(circ(X(e), yb - 4, 3.4, { fill: 'var(--s1)', stroke: 'none', sw: 0 }));
-        g.push(txt(X(e), yy, name, { anchor: 'middle', cls: 'ink', size: 'sm' }));
+        g.push(txt(anchor === 'start' ? X(e) - 8 : X(e), yy, name, { anchor, cls: 'ink', size: 'sm' }));
     }
     // 접두어 안내
     g.push(txt(20, 252, '1 mm = 10⁻³ m', { cls: 'ink2', size: 'sm' }));
@@ -448,7 +450,7 @@ add((() => {
         g.push(txt(lx, 78, name, { anchor: 'middle', cls: 'ink', size: 'sm' }));
     }
     g.push(txt(20, 226, '혈액 7.4 와 리소좀 4.8 은 pH 로 2.6 차이지만 수소 이온 농도로는 약 400배 차이다.', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(20, 246, '사람 혈액이 7.35 아래로 내려가거나 7.45 위로 올라가면 살지 못한다. 붙잡아 두는 장치가 완충계다.', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(20, 246, '사람 혈액은 정상일 때 pH 7.35 에서 7.45 사이다. 벗어나면 병이 된다. 붙잡아 두는 장치가 완충계다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(20, 272, '중성의 정의는 pH 7 이 아니라 H⁺ 와 OH⁻ 의 농도가 같은 것이다. 체온에서 그 값은 약 6.8 이다.', { cls: 'ink2', size: 'sm' }));
     return {
         name: 'bio-cell-ph-scale',
@@ -1167,7 +1169,7 @@ add((() => {
     g.push(txt(376, 232, '2.5씩, FADH₂ 로 넘기면', { cls: 'ink2', size: 'sm' }));
     g.push(txt(376, 250, '1.5씩 받는다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(20, 324, '이 값들은 정수가 아니고 조건에 따라 변한다. ‘포도당 하나당 약 30-32개’라고 적는 것이 정직하다.', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(20, 346, '옛 교재의 36-38개는 NADH 당 3, FADH₂ 당 2 로 어림하던 시절의 값이다. 사실이 바뀐 것이 아니라 가정이 바뀌었다.', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(20, 346, '옛 교재의 36-38개는 NADH 당 3, FADH₂ 당 2 로 어림하던 시절의 값이다. 더 정확히 재면서 2.5 와 1.5 로 고쳐졌다.', { cls: 'ink2', size: 'sm' }));
     return {
         name: 'bio-cell-atp-budget',
         title: '포도당 하나의 ATP 수지',
@@ -1185,7 +1187,7 @@ add((() => {
 add((() => {
     const W = 690, H = 380;
     const g = [];
-    g.push(txt(20, 30, '엽록체 — 막이 세 겹이고 방이 두 개다', { cls: 'ink bold' }));
+    g.push(txt(20, 30, '엽록체 — 막이 세 겹이고, 이 장에서 쓰는 방은 둘이다', { cls: 'ink bold' }));
     g.push(ell(250, 176, 210, 108, { fill: 'var(--s3)', op: 0.07, stroke: 'var(--s3)', sw: 2.2 }));
     g.push(ell(250, 176, 196, 96, { fill: 'none', stroke: 'var(--s3)', sw: 1.6 }));
     // 그라나 세 무더기
@@ -1261,12 +1263,14 @@ add((() => {
     const g = [];
     g.push(txt(20, 30, 'Z-도식 — 광자 두 번으로 전자를 물에서 NADP⁺ 까지 끌어올린다', { cls: 'ink bold' }));
     g.push(txt(20, 50, '세로축은 전자를 끌어당기는 세기(V)다. 위로 갈수록 약하게 당긴다 = 전자가 에너지를 더 많이 갖는다', { cls: 'ink2', size: 'sm' }));
-    const f = frame({ xRange: [0, 10], yRange: [1.0, -1.6], box: { x: 92, y: 76, w: 396, h: 208 } });
+    // 전위(V)는 교과서 값: 물 +0.82, P680 약 +1.2(물보다 세게 당겨야 물에서 전자를 뺏는다), P700 +0.45,
+    // 페레독신(Fd) −0.42 로 NADP⁺(−0.32) 바로 위다. 그래서 세로 범위가 +1.3 까지 내려간다.
+    const f = frame({ xRange: [0, 10], yRange: [1.3, -1.6], box: { x: 92, y: 76, w: 396, h: 208 } });
     g.push(f.axes({ xTicks: [], yTicks: [1.0, 0.5, 0, -0.5, -1.0, -1.5] }));
     const pt = [
-        [0.7, 0.82, '물'], [2.0, 0.9, 'P680'], [2.0, -0.8, 'P680*'],
+        [0.7, 0.82, '물'], [2.0, 1.2, 'P680'], [2.0, -0.8, 'P680*'],
         [3.3, 0.0, 'PQ'], [4.3, 0.2, 'b6f'], [5.3, 0.37, 'PC'],
-        [6.4, 0.45, 'P700'], [6.4, -1.3, 'P700*'], [7.6, -0.9, 'Fd'], [8.9, -0.32, 'NADP⁺'],
+        [6.4, 0.45, 'P700'], [6.4, -1.3, 'P700*'], [7.6, -0.42, 'Fd'], [8.9, -0.32, 'NADP⁺'],
     ];
     for (const [x, y, name] of pt) {
         g.push(f.line([[x - 0.34, y], [x + 0.34, y]], { cls: 's1' }));
@@ -1274,20 +1278,20 @@ add((() => {
     }
     const arrows = [[0, 1], [2, 3], [3, 4], [4, 5], [5, 6], [7, 8], [8, 9]];
     for (const [a, b] of arrows) g.push(f.vector([pt[a][0] + 0.34, pt[a][1]], [pt[b][0] - 0.34, pt[b][1]], { cls: 'ax', marker: 'ark', width: 1.5 }));
-    g.push(f.vector([2.0, 0.9], [2.0, -0.8], { cls: 's2', marker: 'ar2', width: 2.4 }));
+    g.push(f.vector([2.0, 1.2], [2.0, -0.8], { cls: 's2', marker: 'ar2', width: 2.4 }));
     g.push(f.vector([6.4, 0.45], [6.4, -1.3], { cls: 's2', marker: 'ar2', width: 2.4 }));
     g.push(f.label([2.0, 0.05], '광자 흡수', { dx: -60, dy: 4, size: 'sm', cls: 'ink' }));
     g.push(f.label([6.4, -0.45], '광자 흡수', { dx: -60, dy: 4, size: 'sm', cls: 'ink' }));
-    g.push(f.label([0.7, 0.82], '물', { dx: -8, dy: 18, size: 'sm', anchor: 'middle', cls: 'ink' }));
-    g.push(f.label([2.0, 0.9], 'P680 (광계 II)', { dx: 4, dy: 18, size: 'sm', cls: 'ink' }));
+    g.push(f.label([0.7, 0.82], '물', { dx: -8, dy: -10, size: 'sm', anchor: 'middle', cls: 'ink' }));
+    g.push(f.label([2.0, 1.2], 'P680 (광계 II)', { dx: 16, dy: -4, size: 'sm', cls: 'ink' }));
     g.push(f.label([2.0, -0.8], 'P680*', { dx: -4, dy: -10, size: 'sm', anchor: 'middle', cls: 'ink' }));
     g.push(f.label([3.3, 0.0], 'PQ', { dx: 0, dy: -10, size: 'sm', anchor: 'middle', cls: 'ink' }));
     g.push(f.label([4.3, 0.2], 'b6f', { dx: 0, dy: 18, size: 'sm', anchor: 'middle', cls: 'ink' }));
     g.push(f.label([5.3, 0.37], 'PC', { dx: 0, dy: 18, size: 'sm', anchor: 'middle', cls: 'ink' }));
     g.push(f.label([6.4, 0.45], 'P700 (광계 I)', { dx: 4, dy: 18, size: 'sm', cls: 'ink' }));
     g.push(f.label([6.4, -1.3], 'P700*', { dx: -4, dy: -10, size: 'sm', anchor: 'middle', cls: 'ink' }));
-    g.push(f.label([7.6, -0.9], 'Fd', { dx: 0, dy: -10, size: 'sm', anchor: 'middle', cls: 'ink' }));
-    g.push(f.label([8.9, -0.32], 'NADP⁺ → NADPH', { dx: -104, dy: -10, size: 'sm', cls: 'ink' }));
+    g.push(f.label([7.6, -0.42], 'Fd', { dx: 0, dy: -10, size: 'sm', anchor: 'middle', cls: 'ink' }));
+    g.push(f.label([8.9, -0.32], 'NADP⁺ → NADPH', { dx: 34, dy: 20, size: 'sm', anchor: 'end', cls: 'ink' }));
     g.push(txt(528, 106, '읽는 법', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(528, 126, '주황 화살표는 빛이 준 힘이다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(528, 144, '위로 올라간다 = 에너지를 얻는다.', { cls: 'ink2', size: 'sm' }));

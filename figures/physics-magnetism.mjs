@@ -357,7 +357,9 @@ add((() => {
         const g = [`<rect x="${x0}" y="86" width="192" height="188" rx="6" fill="none" stroke="var(--grid)" stroke-width="1.2"/>`];
         // 찌그러진 닫힌 고리
         g.push(`<path d="M${cx - 64} ${cy} C${cx - 62} ${cy - 62} ${cx + 6} ${cy - 66} ${cx + 30} ${cy - 40} C${cx + 70} ${cy - 8} ${cx + 52} ${cy + 56} ${cx - 4} ${cy + 52} C${cx - 44} ${cy + 48} ${cx - 66} ${cy + 32} ${cx - 64} ${cy} Z" fill="var(--s1)" fill-opacity="0.07" stroke="var(--s1)" stroke-width="2" stroke-dasharray="6 4"/>`);
-        g.push(curl(cx - 64, cy, 12, 250, 110, { cls: 's1', marker: 'ar1', width: 1.8 }));
+        // 고리를 도는 방향: 왼쪽 끝에서 아래로 = 화면에서 반시계. 그래야 화면 밖으로 나오는 전류 ⊙ 에
+        // 대해 오른손 규약으로 합이 +μ₀I 다(250 → 110 이면 시계 방향이라 −μ₀I 가 된다).
+        g.push(curl(cx - 64, cy, 12, 110, 250, { cls: 's1', marker: 'ar1', width: 1.8 }));
         for (const [dx, dy, kind, lab] of wires) {
             g.push(kind === 'in' ? into(cx + dx, cy + dy, { r: 11, cls: 's2', w: 2 }) : outof(cx + dx, cy + dy, { r: 11, cls: 's2', w: 2 }));
             g.push(txt(cx + dx + 17, cy + dy + 5, lab, { cls: 'ink', size: 'sm' }));
@@ -367,7 +369,8 @@ add((() => {
         return g.join('');
     };
     b.push(panel(16, [[-14, 0, 'out', 'I']], '합 = μ~0 I', '고리가 전류를 감쌌다'));
-    b.push(panel(234, [[104, 6, 'out', 'I']], '합 = 0', '전류가 고리 밖에 있다'));
+    // 고리 밖 전류는 칸 안 오른쪽 아래에 둔다(예전 104, 6 은 칸 테두리에 걸치고 이름 I 가 옆 칸 테두리에 닿았다).
+    b.push(panel(234, [[68, 50, 'out', 'I']], '합 = 0', '전류가 고리 밖에 있다'));
     b.push(panel(452, [[-30, -8, 'out', 'I'], [8, 22, 'in', 'I']], '합 = 0', '반대 방향 두 전류가 상쇄'));
     b.push(txt(16, H - 12, '전류가 고리 밖에 있으면 자기장이 0이라는 뜻이 아니다. 한 바퀴 돌며 더한 값이 0이라는 뜻이다',
         { cls: 'ink2', size: 'sm' }));

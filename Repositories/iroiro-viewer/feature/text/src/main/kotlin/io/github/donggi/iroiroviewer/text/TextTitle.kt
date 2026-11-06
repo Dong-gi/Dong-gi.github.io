@@ -13,10 +13,12 @@ import io.github.donggi.iroiroviewer.model.PathNames
  */
 internal object TextTitle {
 
-    fun of(state: TextViewModel.State, path: String): String = when (state) {
-        is TextViewModel.State.Ready -> state.doc.name
-        is TextViewModel.State.Loading, is TextViewModel.State.Indexing, is TextViewModel.State.Failed -> fileNameOf(path)
-    }
+    fun of(state: TextViewModel.State, path: String): String = PathNames.forDisplay(
+        when (state) {
+            is TextViewModel.State.Ready -> state.doc.name
+            is TextViewModel.State.Loading, is TextViewModel.State.Indexing, is TextViewModel.State.Failed -> fileNameOf(path)
+        },
+    )
 
     /** 경로의 마지막 조각 — 판단은 [PathNames.lastSegment] 한 벌이다(뷰어 넷이 같은 답을 낸다). */
     fun fileNameOf(path: String): String = PathNames.lastSegment(path)

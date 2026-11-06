@@ -36,6 +36,13 @@ class DocTitleTest {
         }
     }
 
+    /** 이름 속의 방향 제어 글자는 제목에서 보이는 표시로 — 실제 경로는 그대로 쓴다. */
+    @Test
+    fun 방향_제어_글자는_보이는_표시로_적는다() {
+        val spoofed = "/storage/emulated/0/Documents/invoice" + Char(0x202E) + "fdp.pdf"
+        assertEquals("invoice" + io.github.donggi.iroiroviewer.model.PathNames.BIDI_MARK + "fdp.pdf", DocTitle.of(DocViewModel.State.Loading(), spoofed))
+    }
+
     @Test
     fun 전체_경로를_적지_않는다() {
         assertEquals("a.pdf", DocTitle.fileNameOf("/storage/emulated/0/a.pdf"))

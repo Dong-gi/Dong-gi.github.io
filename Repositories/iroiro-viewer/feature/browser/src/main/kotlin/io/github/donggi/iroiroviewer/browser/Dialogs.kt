@@ -3,6 +3,8 @@ package io.github.donggi.iroiroviewer.browser
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
@@ -32,10 +34,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import io.github.donggi.iroiroviewer.io.AesZipCrypto
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.Format
 import io.github.donggi.iroiroviewer.io.PathRules
 import io.github.donggi.iroiroviewer.io.TrashStore
+import io.github.donggi.iroiroviewer.ui.NewPasswordFields
+import io.github.donggi.iroiroviewer.ui.NewPasswordState
 import io.github.donggi.iroiroviewer.io.R as IoR
 
 /**
@@ -67,6 +72,10 @@ fun NameDialog(
      * 다르면 칸 아래에 실제 이름을 보인다.
      */
     fixName: (String) -> String = { it },
+    /** 이름 칸 아래에 더 놓을 것(ZIP 만들기의 암호 칸). */
+    extra: (@Composable () -> Unit)? = null,
+    /** [extra] 가 확인을 허락하는가(두 암호가 다르면 막는다). */
+    extraOk: Boolean = true,
 ) {
     var value by remember {
         val end = if (selectBaseName) {
@@ -90,7 +99,8 @@ fun NameDialog(
         onDismissRequest = onDismiss,
         title = { Text(title) },
         text = {
-            Column {
+            // 칸이 셋까지 는다(암호 둘) — 자판이 올라온 낮은 화면에서 잘리지 않게 넘치면 민다.
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 OutlinedTextField(
                     value = value,
                     onValueChange = { value = it },
@@ -125,17 +135,53 @@ fun NameDialog(
                             .semantics { liveRegion = LiveRegionMode.Polite },
                     )
                 }
+                extra?.invoke()
             }
         },
         confirmButton = {
             TextButton(
                 onClick = { (verdict as? PathRules.Verdict.Ok)?.let { onConfirm(it.name) } },
-                enabled = verdict is PathRules.Verdict.Ok && !isTaken && !busy,
+                enabled = verdict is PathRules.Verdict.Ok && !isTaken && !busy && extraOk,
             ) { Text(confirmLabel) }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.browser_dialog_cancel)) }
         },
+    )
+}
+
+/**
+ * ZIP 만들기의 암호(선택) — 새 암호의 두 칸([NewPasswordFields])과 경고. 비워 두면 예전처럼 암호 없이 묶는다. 넣으면 WinZip AES-256 으로
+ * 잠근다(`core:io` 의 `ZipMaker`).
+ *
+ * 경고는 꼭 필요한 둘만 둔다(화면의 설명은 짧게 — CLAUDE.md) — 파일 이름은 가려지지 않는다(형식의 성질), 영문·숫자·기호 밖의 글자가 든
+ * 암호는 다른 프로그램이 다른 바이트로 옮겨 열지 못할 수 있다(우리는 UTF-8 로 넣는데 반디집은 한글을 CP949 로 넣는다 — 실측). 판정은 엔진과
+ * 같은 것(`AesZipCrypto`)을 쓴다.
+ */
+@Composable
+fun ZipPasswordFields(state: NewPasswordState) {
+    NewPasswordFields(state, modifier = Modifier.padding(top = 12.dp))
+    if (state.isEmpty) return
+    val text = state.text
+    ZipPasswordNote(stringResource(R.string.browser_zip_password_names_visible), error = false)
+    if (!AesZipCrypto.isEncodable(text)) {
+        ZipPasswordNote(stringResource(R.string.browser_zip_password_invalid), error = true)
+    } else if (!AesZipCrypto.isAscii(text)) {
+        ZipPasswordNote(stringResource(R.string.browser_zip_password_non_ascii), error = false)
+    }
+}
+
+/** 암호 칸이 '압축' 을 허락하는가 — 비었거나(암호 없이), 두 칸이 같고 엔진이 받을 수 있는 글자다. */
+fun zipPasswordOk(state: NewPasswordState): Boolean =
+    state.isEmpty || (state.matches && AesZipCrypto.isEncodable(state.text))
+
+@Composable
+private fun ZipPasswordNote(text: String, error: Boolean) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        color = if (error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(top = 4.dp),
     )
 }
 

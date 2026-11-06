@@ -23,8 +23,9 @@ import java.util.Locale
  *   - `GET/POST/… http://host[:port]/path HTTP/1.1` → 절대 URI 를 벗겨 origin-form 으로 원격에 넘긴다
  *
  * 인증은 없다. 머리는 바이트 단위로 읽어 본문 바이트가 스트림에 남게 하고(같은 스트림을 중계까지 넘긴다), 줄 길이·줄 수(`:` 없는 줄도
- * 센다)·다 받기까지의 시간(전체 마감 — [DeadlineInputStream])에 상한을 둔다. 요청 스머글링의 재료(CL+TE·겹친 Host·홀로 선 CR)는 400 으로
- * 거절한다. 막힌 목적지는 403, 풀지 못한 이름은 502 — 둘 다 까닭을 적은 본문으로 답한다.
+ * 센다)·다 받기까지의 시간(전체 마감 — [DeadlineInputStream])에 상한을 둔다. 요청 스머글링의 재료(CL+TE·값이 다른 CL 여럿·TE 여럿이나
+ * 끝이 chunked 가 아닌 TE·겹친 Host·홀로 선 CR)는 400 으로 거절한다([framingChecked]). 막힌 목적지는 403, 풀지 못한 이름은 502 — 둘 다 까닭을
+ * 적은 본문으로 답한다.
  *
  * 상한: 동시 연결 [MAX_SESSIONS](usb-tether 그대로 — 이 PC 처럼 시스템·환경 변수의 프록시로 PC 의 앱들이 통째로 지나는 쓰임이 있다). 스레드는
  * [ThreadBudget] 이 셋을 함께 묶는다.
@@ -71,8 +72,7 @@ class HttpProxyServer(
             if (method.equals("CONNECT", ignoreCase = true)) {
                 handleConnect(client, inp, target)
             } else {
-                rejectDesyncHeaders(headers)
-                handleForward(client, inp, method, target, version, headers)
+                handleForward(client, inp, method, target, version, framingChecked(headers))
             }
         } catch (_: HeaderTooLargeException) {
             env.log.w(TAG, "머리가 상한을 넘어 거절했다")
@@ -108,26 +108,62 @@ class HttpProxyServer(
     }
 
     /**
-     * 요청 스머글링(desync)에 쓰이는 머리 조합을 거절한다 — `Content-Length` 와 `Transfer-Encoding` 을 **함께**(원격의 CDN·리버스 프록시와 본문의
-     * 경계를 달리 읽는 CL.TE/TE.CL 의 재료), **겹친 `Host`**(앞뒤가 다른 Host 를 보고 길을 정해 캐시 오염으로 이어진다). 손님은 이미 CONNECT 로
-     * 아무 바이트나 쓸 수 있어 권한이 오르지는 않지만, 이 폰이 사용자의 통신사 IP 로 그런 공격을 세탁해 주는 경유지가 되는 것을 막는다.
-     * RFC 7230 3.3.3 은 둘이 함께 오면 400 으로 거절하게 한다.
+     * 요청 스머글링(desync)에 쓰이는 머리를 거절하고, 본문의 길이를 정하는 머리를 한 꼴로 고른다 — 돌려준 머리를 원격에 넘긴다. 원격의 CDN·리버스
+     * 프록시와 본문의 경계를 달리 읽는 머리가 재료다. 손님은 이미 CONNECT 로 아무 바이트나 쓸 수 있어 권한이 오르지는 않지만, 이 폰이 사용자의
+     * 통신사 IP 로 그런 공격을 세탁해 주는 경유지가 되는 것을 막는다. RFC 7230 3.3.2·3.3.3 그대로:
      *
-     * @throws MalformedRequestException 위 조합이 있으면
+     * - `Content-Length` 와 `Transfer-Encoding` 을 **함께**(CL.TE/TE.CL) — 400.
+     * - `Content-Length` 가 여럿이거나 한 줄에 쉼표로 여럿이면(2026-10-16 보안 점검) — 모두 같은 십진수면 하나로 줄여 넘기고(3.3.2 가 허락한다 —
+     *   앞의 0 은 같은 값), 값이 다르거나 수(`1*DIGIT`)가 아닌 것(빈 값·부호·빈칸)이 있으면 400(3.3.3 의 넷째).
+     * - `Transfer-Encoding` 이 둘 이상이면 400(2026-10-16). 하나여도 마지막 코딩이 `chunked` 가 아니거나 `chunked` 가 두 번이거나 빈 코딩이
+     *   있으면 400(3.3.3 의 셋째·3.3.1 — `xchunked`·`chunked, identity` 처럼 서버마다 다르게 읽는 꼴).
+     * - **겹친 `Host`**(앞뒤가 다른 Host 를 보고 길을 정해 캐시 오염으로 이어진다) — 400.
+     *
+     * @throws MalformedRequestException 위의 400
      */
-    private fun rejectDesyncHeaders(headers: List<Pair<String, String>>) {
-        var hasContentLength = false
-        var hasTransferEncoding = false
+    private fun framingChecked(headers: List<Pair<String, String>>): List<Pair<String, String>> {
+        var length: String? = null
+        var lengthFields = 0
+        var transferEncodings = 0
         var hostCount = 0
-        for ((name, _) in headers) {
+        for ((name, value) in headers) {
             when {
-                name.equals("Content-Length", ignoreCase = true) -> hasContentLength = true
-                name.equals("Transfer-Encoding", ignoreCase = true) -> hasTransferEncoding = true
+                name.equals("Content-Length", ignoreCase = true) -> {
+                    lengthFields++
+                    for (item in value.split(',')) {
+                        val digits = item.trim()
+                        if (digits.isEmpty() || digits.any { it !in '0'..'9' }) throw MalformedRequestException()
+                        val decimal = digits.trimStart('0').ifEmpty { "0" }
+                        if (length != null && length != decimal) throw MalformedRequestException()
+                        length = decimal
+                    }
+                }
+                name.equals("Transfer-Encoding", ignoreCase = true) -> {
+                    transferEncodings++
+                    val codings = value.split(',').map { it.trim().lowercase(Locale.ROOT) }
+                    if (codings.any { it.isEmpty() } || codings.last() != "chunked" || codings.count { it == "chunked" } != 1) {
+                        throw MalformedRequestException()
+                    }
+                }
                 name.equals("Host", ignoreCase = true) -> hostCount++
             }
         }
-        if (hasContentLength && hasTransferEncoding) throw MalformedRequestException()
-        if (hostCount > 1) throw MalformedRequestException()
+        if (length != null && transferEncodings > 0) throw MalformedRequestException()
+        if (transferEncodings > 1 || hostCount > 1) throw MalformedRequestException()
+        val single = length ?: return headers
+        // 하나뿐이고 이미 그 꼴이면 그대로 — 아니면 첫 자리에 하나만 남긴다.
+        if (lengthFields == 1 && headers.any { it.first.equals("Content-Length", ignoreCase = true) && it.second == single }) return headers
+        var written = false
+        return headers.mapNotNull { h ->
+            when {
+                !h.first.equals("Content-Length", ignoreCase = true) -> h
+                written -> null
+                else -> {
+                    written = true
+                    "Content-Length" to single
+                }
+            }
+        }
     }
 
     private fun handleForward(

@@ -218,9 +218,10 @@ class YtGuardTest {
         val at = install.indexOf("YtGuard.SCRIPT.replace(BridgeScripts.OBJECT_PLACEHOLDER, OBJECT)")
         assertTrue(at > install.indexOf("BridgeScripts.BRIDGE.replace"), "통로 뒤에 건다")
         assertTrue("YtGuard.ORIGIN_RULES,\n                world," in install.substring(at))
-        // 쪽의 세계로 물러서지 않는다 — 실행 세계를 모르는 WebView 면 걸지 않는다.
+        // 쪽의 세계로 물러서지 않는다 — 실행 세계를 모르는 WebView 면 걸지 않는다(유튜브 출처 규칙을 함께 쓰는 쪽의 세계의 스크립트는 따로다 —
+        // 뒤에서 재생 잇기의 보임 속이기, BackgroundPlayTest).
         val all = File(DIR).listFiles { f -> f.name.endsWith(".kt") }.orEmpty().joinToString("\n") { source(it.name) }
-        assertFalse(Regex("addDocumentStartJavaScript[(][^)]*YtGuard").containsMatchIn(all))
+        assertFalse(Regex("addDocumentStartJavaScript[(][^)]*YtGuard[.]SCRIPT").containsMatchIn(all))
         // 화면이 광고 차단의 켜기와 그 사이트의 끄기로 답하고, 설정에서 돌아오면 다시 알린다.
         val activity = source("BrowserActivity.kt")
         assertTrue("YtGuard.wanted(it.enabled, topHost, it::isAllowed)" in activity)

@@ -228,7 +228,7 @@ add((() => {
         name: 'chem-acid-strong-weak',
         title: '강산과 약산 — 같은 농도, 다른 pH',
         desc: '같은 0.10 mol/L 라도 강산은 거의 전부 이온으로 갈라지고 약산은 대부분 분자 그대로 남는다. '
-            + '그래서 수소 이온 농도가 약 100배 차이 나고 pH 가 약 2 차이 난다. '
+            + '그래서 수소 이온 농도가 약 75배 차이 나고 pH 가 2 가까이 차이 난다. '
             + '강약은 용액이 진한지 묽은지가 아니라 얼마나 갈라지느냐를 말한다.',
         svg: svg({ width: W, height: H, title: '강산과 약산의 이온화', desc: '두 비커에 든 강산과 약산의 알갱이 그림', body: g.join('') }),
     };
@@ -492,14 +492,14 @@ add((() => {
     g.push(txt(185, 330, 'Zn²⁺ 용액', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(545, 330, 'Cu²⁺ 용액', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(20, 34, '갈바니 전지 — 전자가 도선으로 돌아가게 만든 장치', { cls: 'ink bold' }));
-    g.push(txt(365, 476, '염다리가 없으면 왼쪽에 양전하가, 오른쪽에 음전하가 쌓여 몇 초 만에 전류가 멈춘다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(365, 476, '염다리가 없으면 왼쪽에 양전하가, 오른쪽에 음전하가 쌓여 곧바로 전류가 멈춘다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(365, 496, '염다리 속 이온이 반대로 옮겨가 그 전하를 중화해 주기 때문에 전류가 계속 흐른다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'chem-echem-galvanic-cell',
         title: '갈바니 전지의 구조',
         desc: '아연이 산화되며 내놓은 전자가 도선을 지나 구리 쪽으로 흐른다. 산화가 일어나는 전극이 산화전극이고 '
             + '갈바니 전지에서는 음극이다. 염다리는 두 용액을 이어 전하가 한쪽에 쌓이는 것을 막는다. '
-            + '염다리를 빼면 몇 초 만에 전류가 끊긴다.',
+            + '염다리를 빼면 곧바로 전류가 끊긴다.',
         svg: svg({ width: W, height: H, title: '갈바니 전지', desc: '아연-구리 전지의 전극·염다리·전자 흐름', body: g.join('') }),
     };
 })());
@@ -1358,14 +1358,14 @@ add((() => {
     g.push(txt(20, 32, '방사성 붕괴는 반감기를 셀 줄 알면 대부분 풀린다', { cls: 'ink bold' }));
     g.push(txt(20, H - 32, '붕괴 확률은 핵이 얼마나 오래되었는지와 무관하다. 그래서 남은 비율만 시간의 함수가 된다.',
         { cls: 'ink2', size: 'sm' }));
-    g.push(txt(20, H - 12, '온도·압력·화학 결합 상태를 바꿔도 반감기는 바뀌지 않는다. 화학 반응과 결정적으로 다른 점이다',
+    g.push(txt(20, H - 12, '온도·압력·화학 결합 상태를 바꿔도 반감기는 사실상 그대로다. 화학 반응과 결정적으로 다른 점이다',
         { cls: 'ink2', size: 'sm' }));
     return {
         name: 'chem-nuc-decay-curve',
         title: '붕괴 곡선과 반감기',
         desc: '방사성 핵은 반감기가 한 번 지날 때마다 정확히 절반으로 준다. 반감기를 n 번 지나면 남는 양은 처음의 '
             + '2의 n 제곱분의 1 이므로, 횟수가 정수일 때는 로그 없이도 답이 나온다. 온도나 화학 결합 상태를 바꿔도 '
-            + '반감기는 변하지 않는다.',
+            + '반감기는 사실상 변하지 않는다.',
         svg: svg({ width: W, height: H, title: '붕괴 곡선', desc: '반감기 횟수에 따른 남은 비율', body: g.join('') }),
     };
 })());
@@ -1511,7 +1511,7 @@ add((() => {
     g.push(txt(520, 288, '두 핵이 서로 밀어내는 전기력을 이기고', { cls: 'ink2', size: 'sm' }));
     g.push(txt(520, 306, '닿을 만큼 가까워져야 하므로', { cls: 'ink2', size: 'sm' }));
     g.push(txt(520, 324, '아주 높은 온도가 필요하다.', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(520, 348, '별의 중심에서 일어나는 일이다', { cls: 'ink bold', size: 'sm' }));
+    g.push(txt(520, 348, '태양 중심에서는 양성자 넷이 헬륨이 된다', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(20, 32, '두 길 모두 결합에너지 봉우리 쪽으로 가는 변화다', { cls: 'ink bold' }));
     return {
         name: 'chem-nuc-fission-fusion',

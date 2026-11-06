@@ -265,7 +265,7 @@ add((() => {
         g.push(txt(x0 + 16 * cw + 12, y + 20, s.note, { cls: i === 3 ? 'ink bold' : 'ink2', size: 'sm' }));
         g.push(txt(x0 + 16 * cw + 12, y + 36, `남은 후보 ${s.hi - s.lo + 1}개`, { cls: 'ink2', size: 'sm' }));
     });
-    g.push(txt(W / 2, H - 30, '16 → 8 → 4 → 2 → 1. 반씩 줄이므로 견주는 횟수는 log₂ 16 = 4 번을 넘지 않는다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W / 2, H - 30, '16 → 8 → 3 → 1. 절반 이하로 주므로 견주는 횟수는 ⌊log₂ 16⌋ + 1 = 5 번을 넘지 않는다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(W / 2, H - 12, '합치는 일이 없고 한쪽만 재귀하므로 재귀식은 T(n) = T(n/2) + 1 이다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-d-binary-search',
@@ -413,8 +413,8 @@ add((() => {
         g.push(txt(X(m.v) + dx, y2 + (m.up ? -4 : 14), m.name, { anchor, cls: 'ink bold', size: 'sm' }));
         g.push(txt(X(m.v) + dx, y2 + (m.up ? -20 : 30), m.sub, { anchor, cls: 'ink2', size: 'sm' }));
     });
-    g.push(txt(W / 2, H - 30, '지수 0.2 의 차이가 별것 아니게 보이지만 n = 10⁶ 에서는 열여섯 배가 넘는 차이다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    g.push(txt(W / 2, H - 12, '오른쪽 끝에 가까운 두 방법은 상수가 워낙 커서 실제로 쓰이는 크기가 서로 다르다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W / 2, H - 30, '지수 0.2 의 차이가 별것 아니게 보이지만 n = 10⁶ 에서는 열여섯 배 가까운 차이다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W / 2, H - 12, '행렬 곱을 줄인 두 방법(스트라센 · 2.37)은 상수가 커서 이득이 나는 크기가 서로 다르다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-d-exponent-line',
         svg: svg({
@@ -430,7 +430,7 @@ add((() => {
 add((() => {
     const W = 812, H = 396;
     const g = [];
-    g.push(txt(W / 2, 26, '최근접 점 쌍 — 가운데 띠만 다시 보면 되고, 띠 안에서도 여섯 점만 보면 된다', { anchor: 'middle', cls: 'ink bold' }));
+    g.push(txt(W / 2, 26, '최근접 점 쌍 — 가운데 띠만 다시 보면 되고, 띠 안에서도 일곱 점만 보면 된다', { anchor: 'middle', cls: 'ink bold' }));
 
     // 왼쪽: 전체 그림
     const px0 = 22, py0 = 48, pw = 452, ph = 288;
@@ -461,25 +461,28 @@ add((() => {
     g.push(ln([[mid - delta, by + bh + 6], [mid + delta, by + bh + 6]], { stroke: C3, sw: 1.4 }));
     g.push(txt(px0 + pw / 2, py0 + ph - 12, '띠 밖의 쌍은 이미 δ 보다 멀다 — 다시 볼 필요가 없다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
-    // 오른쪽: 띠 안의 상자
+    // 오른쪽: 띠 안의 상자 — 가로 2δ × 세로 δ 직사각형을 한 변 δ/2 인 칸 4열 × 2행으로 나눈다(본문과 같은 그림).
+    // 칸 한 변 40px = δ/2 이므로 δ = 80px. 파란 점은 칸마다 하나 이하이고, 같은 쪽 점끼리는 δ 이상 떨어져 있다.
     const qx = 496, qy = py0, qw = W - 22 - 496, qh = ph;
     g.push(panel(qx, qy, qw, qh, '띠 안에서 몇 개를 보나', 'y 순으로 정렬해 두면'));
-    const gx = qx + 76, gy = qy + 66, cw = 60, chh = 60;
+    const cw = 40, chh = 40, gx = qx + (qw - cw * 4) / 2, gy = qy + 90;
     for (let r = 0; r < 2; r += 1) {
-        for (let c = 0; c < 2; c += 1) {
+        for (let c = 0; c < 4; c += 1) {
             g.push(box(gx + c * cw, gy + r * chh, cw, chh, { stroke: CG, sw: 1 }));
         }
     }
-    g.push(box(gx, gy, cw * 2, chh * 2, { stroke: C3, sw: 1.8, dash: '5 4' }));
-    g.push(ln([[gx + cw, gy - 10], [gx + cw, gy + chh * 2 + 10]], { stroke: CI, sw: 1.4 }));
-    [[26, 22], [92, 40], [30, 88], [96, 104]].forEach(p => g.push(pdot(gx + p[0], gy + p[1], C1, 4.5)));
-    g.push(pdot(gx + cw, gy + chh * 2, C2, 5.5));
-    g.push(txt(gx + cw + 12, gy + chh * 2 + 16, '지금 보는 점', { cls: 'ink bold', size: 'sm' }));
-    g.push(txt(gx - 8, gy + chh, '2δ', { anchor: 'end', cls: 'ink2', size: 'sm' }));
-    g.push(txt(gx + cw, gy - 18, '가로 2δ', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(box(gx, gy, cw * 4, chh * 2, { stroke: C3, sw: 1.8, dash: '5 4' }));
+    g.push(ln([[gx + cw * 2, gy - 10], [gx + cw * 2, gy + chh * 2 + 10]], { stroke: CI, sw: 1.4 }));
+    [[14, 12], [94, 10], [154, 68]].forEach(p => g.push(pdot(gx + p[0], gy + p[1], C1, 4.5)));
+    g.push(pdot(gx + cw * 2, gy + chh * 2, C2, 5.5));
+    g.push(txt(gx + cw * 2 + 12, gy + chh * 2 + 18, '지금 보는 점', { cls: 'ink bold', size: 'sm' }));
+    g.push(txt(gx - 8, gy + chh + 4, 'δ', { anchor: 'end', cls: 'ink2', size: 'sm' }));
+    g.push(txt(gx + cw * 2, gy - 18, '가로 2δ', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(ln([[gx, gy + chh * 2 + 6], [gx + cw, gy + chh * 2 + 6]], { stroke: CK, sw: 1.2 }));
+    g.push(txt(gx + cw / 2, gy + chh * 2 + 20, 'δ/2', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(qx + qw / 2, qy + qh - 62, '한 칸(δ/2 × δ/2)에는 점이 둘 이상 들어갈 수 없다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(qx + qw / 2, qy + qh - 42, '들어가면 그 둘의 거리가 δ 보다 작아 모순이다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    g.push(txt(qx + qw / 2, qy + qh - 16, '그래서 뒤로 여섯 점만 보면 충분하다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+    g.push(txt(qx + qw / 2, qy + qh - 16, '그래서 뒤로 일곱 점만 보면 충분하다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
 
     g.push(txt(W / 2, H - 14, 'T(n) = 2T(n/2) + Θ(n) — 마스터 정리 둘째 경우이므로 Θ(n log n) 이다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
@@ -487,7 +490,7 @@ add((() => {
         svg: svg({
             width: W, height: H,
             title: '최근접 점 쌍의 가운데 띠',
-            desc: '가운데 선에서 폭 2δ 안의 점만 다시 보고, 그 안에서도 y 순으로 여섯 점만 견주면 된다',
+            desc: '가운데 선에서 폭 2δ 안의 점만 다시 보고, 그 안에서도 y 순으로 일곱 점만 견주면 된다',
             body: g.join(''),
         }),
     };
@@ -537,13 +540,14 @@ add((() => {
     }
     g.push(txt(qx + pw / 2, py + 210, '주황색은 이미 푼 것을 또 푸는 자리다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(qx + pw / 2, py + 232, '나눈 조각이 서로 겹치면', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    g.push(txt(qx + pw / 2, py + 248, '분할정복이 아니라 12장의 DP 다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+    g.push(txt(qx + pw / 2, py + 248, '분할정복이 아니라 11장의 DP 다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
 
     // 3) 합치는 값이 비쌀 때
     const rx = qx + pw + 26;
     g.push(panel(rx, py, pw, ph, '3. 합치는 값이 비쌀 때', 'f(n) 이 잎 비용을 눌러 버린다'));
     const barX = rx + 34, barY = py + 64;
-    const levels = [{ w: 180, t: '뿌리 — f(n) = n²' }, { w: 92, t: '다음 층 합 — n²/2' }, { w: 46, t: 'n²/4' }, { w: 24, t: 'n²/8' }];
+    // 막대 길이는 층마다 반씩. 맨 위를 124 로 두어야 그 옆 이름표가 칸 테두리 안에 든다(180 이면 밖으로 나갔다).
+    const levels = [{ w: 124, t: '뿌리 — f(n) = n²' }, { w: 62, t: '다음 층 합 — n²/2' }, { w: 31, t: 'n²/4' }, { w: 16, t: 'n²/8' }];
     levels.forEach((L, i) => {
         g.push(box(barX, barY + i * 34, L.w, 22, { fill: C2, op: 0.3, stroke: C2, sw: 1.3, rx: 2 }));
         g.push(txt(barX + L.w + 8, barY + i * 34 + 16, L.t, { cls: 'ink2', size: 'sm' }));
@@ -606,7 +610,7 @@ add((() => {
 
     g.push(ln([[40, 288], [W - 40, 288]], { stroke: CG, sw: 1 }));
     g.push(txt(W / 2, 312, '탐욕은 되돌아보지 않는다. 그래서 ‘지금 가장 좋은 것’ 이 뒤에 무엇을 막는지 알 수 없다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
-    g.push(txt(W / 2, 336, '12장에서 같은 문제를 동적 계획법으로 다시 풀어 2 라는 답을 얻는다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W / 2, 336, '11장에서 같은 문제를 동적 계획법으로 다시 풀어 2 라는 답을 얻는다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-d-coin-greedy-fail',
         svg: svg({
@@ -782,7 +786,7 @@ add((() => {
         });
         g.push(txt(t.x + 25 * sc2, 362, t.sum, { anchor: 'middle', cls: 'ink bold' }));
     });
-    g.push(txt(W / 2, 390, 'C 를 통째로 넣으려면 A 를 포기해야 하는데, 탐욕은 이미 A 를 넣은 뒤라 되돌릴 수 없다 — 12장의 자리다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W / 2, 390, 'C 를 통째로 넣으려면 A 를 포기해야 하는데, 탐욕은 이미 A 를 넣은 뒤라 되돌릴 수 없다 — 11장의 자리다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-d-knapsack-fractional',
         svg: svg({
@@ -911,13 +915,14 @@ add((() => {
     const panels = [
         {
             x: 22, title: 'ε = 0 — 순수 탐욕', sub: '100번 당긴 뒤',
-            rows: [['1번', 0.3, 0.50, 97], ['2번', 0.7, 0.00, 2], ['3번', 0.5, 0.00, 1]],
+            // 1번의 표본 평균은 97번 중 30번 딴 값(30/97 ≈ 0.31) — 참값 0.3 에 붙었지만 다른 둘의 0 보다 높아 갇힌다.
+            rows: [['1번', 0.3, 0.31, 97], ['2번', 0.7, 0.00, 2], ['3번', 0.5, 0.00, 1]],
             note: ['처음 두 번 운 좋게 딴 1번에 갇혔다.', '참값이 가장 높은 2번은 두 번 당기고 말았다.'],
             col: C2,
         },
         {
             x: W - 22 - pw, title: 'ε = 0.1 — 열 번에 한 번은 아무거나', sub: '100번 당긴 뒤',
-            rows: [['1번', 0.3, 0.33, 12], ['2번', 0.7, 0.69, 76], ['3번', 0.5, 0.50, 12]],
+            rows: [['1번', 0.3, 0.33, 12], ['2번', 0.7, 0.68, 76], ['3번', 0.5, 0.50, 12]],
             note: ['가끔 딴 데를 찔러 본 덕에 표본이 참값에 붙었다.', '그 뒤로는 2번을 주로 당긴다.'],
             col: C3,
         },
@@ -990,7 +995,7 @@ add((() => {
 
     g.push(txt(92, H - 54, '왼쪽 끝: 너무 일찍 멈추면 기준이 없어 아무나 뽑게 된다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(92, H - 34, '오른쪽 끝: 너무 오래 보면 최고가 이미 지나가 버려 아무도 못 뽑는다.', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(92, H - 12, '봉우리가 1/e 자리에 있고 그때의 성공 확률도 1/e 다. 사람 수가 늘어도 이 값은 변하지 않는다', { cls: 'ink bold', size: 'sm' }));
+    g.push(txt(92, H - 12, '봉우리가 1/e 자리에 있고 그때의 성공 확률도 1/e 다. 사람 수가 늘어도 이 값 밑으로 안 떨어진다', { cls: 'ink bold', size: 'sm' }));
     return {
         name: 'alg-d-secretary',
         svg: svg({
@@ -1090,7 +1095,7 @@ add((() => {
         g.push(arcTo(dx0 + k * dgap - 6, dy2 - 12, dx0 + (k - 2) * dgap + 8, dy2 - 12, 40, { stroke: CG, sw: 1.2 }));
     }
     g.push(txt(453, py + 62, '화살표는 ‘이것이 필요하다’ 를 가리킨다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    g.push(txt(453, dy2 + 34, '순환이 없다 — 8장의 DAG 다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(453, dy2 + 34, '순환이 없다 — 9장의 DAG 다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(453, dy2 + 54, '위상 순서대로 채우면 된다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
 
     g.push(arw(590, py + ph / 2, 620, py + ph / 2, { cls: 'ark', width: 1.8 }));
@@ -1174,7 +1179,7 @@ add((() => {
 add((() => {
     const W = 828, H = 470;
     const g = [];
-    g.push(txt(W / 2, 26, '11장에서 탐욕이 진 문제 — 표를 왼쪽부터 채우면 답이 나온다 (동전 1 · 4 · 6)', { anchor: 'middle', cls: 'ink bold' }));
+    g.push(txt(W / 2, 26, '10장에서 탐욕이 진 문제 — 표를 왼쪽부터 채우면 답이 나온다 (동전 1 · 4 · 6)', { anchor: 'middle', cls: 'ink bold' }));
     g.push(txt(W / 2, 50, 'dp[m] = m 원을 만드는 데 드는 가장 적은 동전 수 = min( dp[m−1], dp[m−4], dp[m−6] ) + 1', { anchor: 'middle', cls: 'ink', size: 'sm' }));
 
     const full = [0, 1, 2, 3, 1, 2, 1, 2, 2];
@@ -1271,7 +1276,7 @@ add((() => {
     g.push(txt(tx + 6, 226, '답 dp[4][5] = 7', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(tx + 6, 248, '되짚으면 1번 + 2번', { cls: 'ink2', size: 'sm' }));
     g.push(txt(tx + 6, 268, '무게 2 + 3 = 5', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(tx + 6, 286, '11장의 탐욕은 160 원이었다', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(tx + 6, 286, '10장의 예에서 탐욕은 160 원이었다', { cls: 'ink2', size: 'sm' }));
 
     const ey = 316;
     g.push(txt(gx - 34, ey, '2번 물건(무게 3, 가치 4)을 쓸 수 있게 되었을 때 용량 5 칸을 정하는 법', { cls: 'ink bold', size: 'sm' }));
@@ -1527,7 +1532,7 @@ add((() => {
 
     g.push(ln([[40, 322], [W - 40, 322]], { stroke: CG, sw: 1 }));
     g.push(txt(W / 2, 344, 'P 는 왼쪽이 다항 시간인 문제들, NP 는 오른쪽이 다항 시간인 문제들이다.', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
-    g.push(txt(W / 2, 364, '‘답이 없다’ 를 확인하는 데는 내밀 증명서가 없다는 점을 눈여겨보라 — 그래서 NP 는 예 · 아니오가 대칭이 아니다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W / 2, 364, '‘답이 없다’ 를 확인할 짧은 증명서는 알려져 있지 않다는 점을 눈여겨보라 — NP 의 정의는 예 · 아니오가 대칭이 아니다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-d-solve-verify',
         svg: svg({
@@ -1709,7 +1714,7 @@ add((() => {
 
     g.push(ln([[40, 342], [W - 40, 342]], { stroke: CG, sw: 1 }));
     g.push(txt(W / 2, 366, '절이 k 개일 때 크기 k 인 클리크가 있다 ⟺ 논리식을 참으로 만드는 값이 있다. 굵게 이어진 셋은 x₁ = 참, x₂ = 거짓, x₃ = 참 을 뜻한다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    g.push(txt(W / 2, 386, '점을 찍고 선을 긋는 일이 논리식 길이에 비례하므로 변환 자체는 다항 시간이다 — 환원의 조건을 지켰다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W / 2, 386, '점과 선의 수가 논리식 길이의 제곱을 넘지 않으므로 변환 자체는 다항 시간이다 — 환원의 조건을 지켰다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-d-3sat-clique',
         svg: svg({

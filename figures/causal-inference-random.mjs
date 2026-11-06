@@ -119,7 +119,7 @@ const DRAWS = [
 const sixDraws = caseTitle(330, 42, '넷 가운데 둘을 고르는 여섯 가지 배정')
     + DRAWS.map(([x, y, name, value]) => panel(x - 90, y - 32, 180, 64)
         + caseTitle(x, y - 6, name) + tag(x, y + 18, value)).join('')
-    + caseTitle(330, 238, '하나하나는 2 가 아닌데 여섯의 평균이 2 다');
+    + caseTitle(330, 238, '넷은 2 가 아닌데 여섯의 평균이 2 다');
 
 /* ── 7. 양수성 ───────────────────────────────────────────────── */
 

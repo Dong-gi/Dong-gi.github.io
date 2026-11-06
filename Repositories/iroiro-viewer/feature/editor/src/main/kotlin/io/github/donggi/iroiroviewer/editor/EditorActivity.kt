@@ -51,6 +51,7 @@ import android.widget.Toast
 import android.window.OnBackInvokedDispatcher
 import io.github.donggi.iroiroviewer.editor.EditorContract.Kind
 import io.github.donggi.iroiroviewer.io.R as IoR
+import io.github.donggi.iroiroviewer.model.PathNames
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
@@ -609,7 +610,7 @@ class EditorActivity : Activity() {
             } finally {
                 file.parentFile?.deleteRecursively()
             }
-            val shownName = if (ok) displayName(target) ?: file.name else null
+            val shownName = if (ok) PathNames.forDisplay(displayName(target) ?: file.name) else null
             main.post {
                 if (isFinishing || isDestroyed) return@post
                 if (shownName != null) {
@@ -618,6 +619,16 @@ class EditorActivity : Activity() {
                     message(R.string.editor_export_failed)
                 }
             }
+        }
+    }
+
+    /** 고르개가 돌려준 [uri] 를 받는가 — 판단은 [EditorRules.acceptsReturnedUri](남의 content 주소만). */
+    private fun acceptsReturned(uri: Uri): Boolean = EditorRules.acceptsReturnedUri(uri.scheme, uri.authority, packageName) { authority ->
+        try {
+            @Suppress("DEPRECATION") // ComponentInfoFlags 판은 API 33 부터다(minSdk 31). 정수 판은 뜻이 같다.
+            packageManager.resolveContentProvider(authority, 0)?.packageName
+        } catch (e: RuntimeException) {
+            null
         }
     }
 
@@ -931,14 +942,27 @@ class EditorActivity : Activity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_IMAGE -> {
-                chooser?.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data))
+                // 고르개가 돌려준 것 가운데 **남의 content 주소만** 쪽에 건넨다([acceptsReturned]) — 이 앱의 파일·제공자를 가리키면 이 앱의
+                // 신원으로 읽혀 문서에 실린다. 하나라도 걸렀으면 알린다.
+                val picked = WebChromeClient.FileChooserParams.parseResult(resultCode, data)
+                val accepted = picked?.filter(::acceptsReturned)
+                chooser?.onReceiveValue(accepted?.takeIf { it.isNotEmpty() }?.toTypedArray())
                 chooser = null
+                if (picked != null && accepted?.size != picked.size) message(R.string.editor_pick_refused)
             }
             REQUEST_EXPORT -> {
                 val file = pendingExport ?: return
                 pendingExport = null
                 val target = data?.data
-                if (resultCode == RESULT_OK && target != null) writeExport(file, target) else file.parentFile?.deleteRecursively()
+                when {
+                    resultCode != RESULT_OK || target == null -> file.parentFile?.deleteRecursively()
+                    // 고른 자리가 이 앱의 것이면 쓰지 않는다 — 이 앱의 신원으로 그 자리(앱 안의 파일·이 앱의 제공자가 내주는 사용자 파일)를 덮게 된다.
+                    !acceptsReturned(target) -> {
+                        file.parentFile?.deleteRecursively()
+                        message(R.string.editor_export_refused)
+                    }
+                    else -> writeExport(file, target)
+                }
             }
             else -> super.onActivityResult(requestCode, resultCode, data)
         }
@@ -1124,7 +1148,7 @@ class EditorActivity : Activity() {
     private fun showMoreMenu(anchor: View) {
         morePopup?.dismiss()
         val popup = PopupMenu(this, anchor, Gravity.END)
-        popup.menu.add(Menu.NONE, MENU_NAME, 0, name).isEnabled = false
+        popup.menu.add(Menu.NONE, MENU_NAME, 0, PathNames.forDisplay(name)).isEnabled = false
         popup.menu.add(Menu.NONE, MENU_OPEN_WITH, 1, IoR.string.io_open_with)
         popup.setOnMenuItemClickListener { item ->
             if (item.itemId == MENU_OPEN_WITH) openWithOtherApp()

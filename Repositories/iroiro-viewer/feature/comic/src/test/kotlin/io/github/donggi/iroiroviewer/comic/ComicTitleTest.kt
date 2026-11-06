@@ -25,6 +25,13 @@ class ComicTitleTest {
         }
     }
 
+    /** 이름 속의 방향 제어 글자는 제목에서 보이는 표시로 — 실제 경로는 그대로 쓴다. */
+    @Test
+    fun `방향 제어 글자는 보이는 표시로 적는다`() {
+        val spoofed = "/storage/emulated/0/만화/권1" + Char(0x2067) + "abc.cbz"
+        assertEquals("권1" + io.github.donggi.iroiroviewer.model.PathNames.BIDI_MARK + "abc", ComicTitle.of(ComicViewModel.State.Loading, spoofed))
+    }
+
     @Test
     fun `폴더로 연 만화는 폴더 이름이다`() {
         assertEquals("웹툰", ComicTitle.of(ComicViewModel.State.Loading, "/storage/emulated/0/웹툰/"))

@@ -259,7 +259,7 @@ add((() => {
     g.push(txt(623, 322, '왼쪽 표를 그대로 두 번 베끼고 R 열만 T 와 F 로 채웠다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(623, 340, '그래서 줄 수가 정확히 두 배 — 이것이 2ⁿ 의 정체다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
-    g.push(txt(W / 2, 386, '1 초에 100 만 줄을 채워도 n = 40 이면 열흘이 넘고 n = 50 이면 한 사람의 일생으로 모자란다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W / 2, 386, '1 초에 100 만 줄을 채워도 n = 40 이면 열흘이 넘고 n = 50 이면 36 년쯤 걸린다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'log-d-row-explosion',
         svg: svg({

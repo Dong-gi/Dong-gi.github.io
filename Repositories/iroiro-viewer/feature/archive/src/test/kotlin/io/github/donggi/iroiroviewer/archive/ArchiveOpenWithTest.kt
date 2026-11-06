@@ -146,6 +146,21 @@ class ArchiveOpenWithTest {
     }
 
     /**
+     * **릴리스에서는 이름이 남지 않는다** — R8 이 예외 클래스의 이름을 줄인다(`mp5` 따위, 2026-10-16 매핑 파일). 그래서 '풀지 않는 방식' 은
+     * 공개된 바탕 타입([io.github.donggi.iroiroviewer.format.archive.ArchiveEncryptionUnsupportedException])으로 가른다 — 받을 수 없는 7z
+     * 열쇠 유도 반복(`SevenZKeyGuard`)과 PKWARE 의 강한 암호화가 그것을 잇는다. 이름에 'Encrypt' 가 없는 하위 타입으로 본다.
+     */
+    @Test
+    fun 풀지_않는_방식은_이름이_줄어도_타입으로_가른다() {
+        class Mp5 : io.github.donggi.iroiroviewer.format.archive.ArchiveEncryptionUnsupportedException("x")
+        assertEquals(ArchiveViewModel.State.Failed.Kind.ENCRYPTED, failureKindOf(Mp5()))
+        assertEquals(ArchiveViewModel.State.Failed.Kind.ENCRYPTED, failureKindOf(Mp5(), reachable = true))
+        // 이름만 같은 것과 견주면 — 바탕을 잇지 않은 맨 IOException 은 '깨졌다' 다(이름 보기가 남아 있지 않은 한).
+        class Ab : IOException("x")
+        assertEquals(ArchiveViewModel.State.Failed.Kind.CORRUPT, failureKindOf(Ab()))
+    }
+
+    /**
      * **열리지 않는 파일은 '깨졌다' 가 아니다.** 리더가 받으면 그 예외(`FileNotFoundException` — 안드로이드의 권한 거부도
      * 이것이다)가 [failureKindOf] 에서 CORRUPT 가 되어 단추가 뜬다. 그래서 목록을 읽기 전에 [isReachable] 로 가른다 —
      * 그 답은 단추가 없는 UNREADABLE 이다.

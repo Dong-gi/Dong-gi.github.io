@@ -133,7 +133,7 @@ add((() => {
     g.push(ln([[40, 300], [820, 300]], { stroke: CG, sw: 1 }));
     g.push(ctxt(W / 2, 328, '두 도출의 차이는 이름 하나다 — a 는 전제가 이미 지목한 이름이고 c 는 우리가 방금 만든 이름이다', { anchor: 'middle', col: CI, size: 'sm', bold: true }));
     g.push(ctxt(W / 2, 352, '∀I 가 요구하는 것은 그 줄의 이름이 아무 대상을 가리켜도 상관없어야 한다는 것이고,', { anchor: 'middle', col: CK, size: 'sm' }));
-    g.push(ctxt(W / 2, 372, '그것을 문법으로 확인하는 방법이 ‘열린 가정 목록에 그 이름이 없는가’ 하나다', { anchor: 'middle', col: CK, size: 'sm' }));
+    g.push(ctxt(W / 2, 372, '그것을 문법으로 확인하는 방법이 ‘열린 가정에도 결과에도 그 이름이 없는가’ 다', { anchor: 'middle', col: CK, size: 'sm' }));
 
     return {
         name: 'log-i-forall-i-wrong',

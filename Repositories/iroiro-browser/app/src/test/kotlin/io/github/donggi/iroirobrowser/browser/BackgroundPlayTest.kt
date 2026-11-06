@@ -158,4 +158,150 @@ class BackgroundPlayTest {
         assertTrue("it != current && it != bgTab &&" in activity)
         assertTrue("!neighbor.crashed && neighbor != bgTab" in activity)
     }
+
+    @Test
+    fun 그려지지_않는_동안에는_화면_밖에_그린다() {
+        // 크로미움에 '보임' 인 채 아무도 그리지 않으면 영상 프레임이 소비되지 않아 재생이 선다(사용자 기기 — 2초 끊긴 뒤 144p, 에뮬레이터 —
+        // DECODER_UNDERFLOW). 회의 탭이 재생 중이고, 앱이 뒤에 있거나(onPause 부터) 다른 탭을 보는 동안만.
+        val activity = main("kotlin/io/github/donggi/iroirobrowser/browser/BrowserActivity.kt")
+        val sync = activity.substringAfter("private fun syncOffscreen() {").substringBefore("\n    }\n")
+        assertTrue("tab == bg && (!foreground || tab != current) && bgPlaying(tab)" in sync)
+        val syncPlay = activity.substringAfter("private fun syncBackgroundPlay() {").substringBefore("\n    }\n")
+        assertTrue("syncOffscreen()" in syncPlay)
+        // 떼거나 없애면 멈추고, 투명하게 남았던 탭이 다시 보이면 새로 그리게 한다(투명도만 바꾸면 쪽에 새 그림을 청하지 않는다).
+        val page = main("kotlin/io/github/donggi/iroirobrowser/browser/PullToRefresh.kt")
+        assertTrue("override fun onDetachedFromWindow() {\n        offscreen?.stop()" in page)
+        assertTrue("override fun destroy() {\n        offscreen?.stop()" in page)
+        assertTrue("if (!value) invalidate()" in page)
+        // 하드웨어 캔버스에 그리고(그래야 WebView 의 그리기가 렌더 스레드에서 돈다) 그린 것은 곧바로 버린다.
+        val draw = main("kotlin/io/github/donggi/iroirobrowser/browser/OffscreenDraw.kt")
+        assertTrue("surface.lockHardwareCanvas()" in draw)
+        assertTrue("view.draw(canvas)" in draw)
+        assertTrue("r.acquireLatestImage()?.close()" in draw)
+    }
+
+    @Test
+    fun 화면_밖에는_뷰가_다시_그리기를_청할_때만_그린다() {
+        // vsync 마다(초당 60번) 그리면 30 fps 영상에서 앞에서 볼 때의 두 배를 그린다(2026-10-16 에뮬레이터 — 뒤에서 렌더 스레드 21% 대 앞 11%).
+        // 크로미움(AwContents)이 다시 그리기를 청하는 두 길을 모두 받아 화면 밖 그리기에 알린다.
+        val page = main("kotlin/io/github/donggi/iroirobrowser/browser/PullToRefresh.kt")
+        val invalidate = page.substringAfter("override fun invalidate() {").substringBefore("\n    }\n")
+        assertTrue("super.invalidate()" in invalidate)
+        assertTrue("offscreen?.invalidated()" in invalidate)
+        val onAnimation = page.substringAfter("override fun postInvalidateOnAnimation() {").substringBefore("\n    }\n")
+        assertTrue("super.postInvalidateOnAnimation()" in onAnimation)
+        assertTrue("offscreen?.invalidated()" in onAnimation)
+        // 상위 생성자 안에서도 invalidate 가 불린다 — 그때는 화면 밖 그리기가 아직 없다(널이어도 넘어간다).
+        assertTrue("private var offscreen: OffscreenDraw? = null" in page)
+        // 청이 있을 때만 그리고, 그리기 전에 청을 내린다(그리는 동안 들어온 청은 다음 프레임에 그린다).
+        val draw = main("kotlin/io/github/donggi/iroirobrowser/browser/OffscreenDraw.kt")
+        val frame = draw.substringAfter("override fun doFrame(frameTimeNanos: Long) {").substringBefore("\n    }\n")
+        assertTrue("if (due(wasRequested, now - requestedAt, requestsOnly)) {" in frame)
+        assertTrue(frame.indexOf("requested = false") in 0 until frame.indexOf("drawOnce()"))
+        // 처음 한 번은 청이 없어도 그린다.
+        val start = draw.substringAfter("fun start() {").substringBefore("\n    }\n")
+        assertTrue("invalidated()" in start)
+    }
+
+    @Test
+    fun 청이_끊기면_예전처럼_프레임마다_그린다() {
+        assertTrue(OffscreenDraw.due(requested = true, sinceRequestMs = 0))
+        assertTrue(OffscreenDraw.due(requested = true, sinceRequestMs = 10_000))
+        assertFalse(OffscreenDraw.due(requested = false, sinceRequestMs = 0))
+        assertFalse(OffscreenDraw.due(requested = false, sinceRequestMs = OffscreenDraw.FALLBACK_MS - 1))
+        assertTrue(OffscreenDraw.due(requested = false, sinceRequestMs = OffscreenDraw.FALLBACK_MS))
+        // 재생 중 영상의 청 사이(24 fps 면 42 ms)보다 넉넉히 길고, 끊김을 사람이 느끼기 전에 물러선다.
+        assertTrue(OffscreenDraw.FALLBACK_MS in 200L..1_000L)
+    }
+
+    @Test
+    fun 영상을_숨긴_동안에는_물러서지_않는다() {
+        // 숨은 영상은 다시 그리기를 청하지 않는다 — 그때 물러서면 청이 없다는 까닭으로 vsync 마다 그렸다(2026-10-16 에뮬레이터, 10초에 600번).
+        assertFalse(OffscreenDraw.due(requested = false, sinceRequestMs = 10_000, requestsOnly = true))
+        assertTrue(OffscreenDraw.due(requested = true, sinceRequestMs = 0, requestsOnly = true))
+        // 화면 밖 그리기를 켤 때마다 내린다 — 숨긴 것이 확인되어야 다시 올린다.
+        val draw = main("kotlin/io/github/donggi/iroirobrowser/browser/OffscreenDraw.kt")
+        val start = draw.substringAfter("fun start() {").substringBefore("\n    }\n")
+        assertTrue("requestsOnly = false" in start)
+        assertTrue("if (due(wasRequested, now - requestedAt, requestsOnly)) {" in draw)
+    }
+
+    @Test
+    fun 화면_밖에_그리는_동안_영상을_숨기고_그치면_되돌린다() {
+        val activity = main("kotlin/io/github/donggi/iroirobrowser/browser/BrowserActivity.kt")
+        val sync = activity.substringAfter("private fun syncOffscreen() {").substringBefore("\n    }\n")
+        assertTrue("hideVideos(tab, view, want)" in sync)
+        // 숨긴 영상이 있다고 확인되고 아직 화면 밖에 그리는 중일 때만 청만 받는다(늦게 온 답이 되돌린 뒤를 덮지 않게).
+        val hide = activity.substringAfter("private fun hideVideos(tab: Tab, view: PageWebView, hide: Boolean) {").substringBefore("\n    }\n")
+        assertTrue("if (hide && hidden && view.drawOffscreen) view.offscreenRequestsOnly = true" in hide)
+        // 틀마다의 실행 세계에서(쪽의 세계가 아니다), 이 프로세스의 무작위 이름으로.
+        val bridge = main("kotlin/io/github/donggi/iroirobrowser/browser/PageBridge.kt")
+        val fn = bridge.substringAfter("fun hideVideos(hide: Boolean, done: (Boolean) -> Unit = {}) {").substringBefore("\n    }\n")
+        assertTrue("BackgroundPlay.hideVideoScript(HIDE_ID, hide)" in fn)
+        assertTrue("frame.proxy.executeJavaScript(script," in fn)
+        assertTrue("private val HIDE_ID = randomName(\"s\")" in bridge)
+    }
+
+    @Test
+    fun 영상_숨기기_스크립트() {
+        val on = BackgroundPlay.hideVideoScript("s0a1", hide = true)
+        val off = BackgroundPlay.hideVideoScript("s0a1", hide = false)
+        for (s in listOf(on, off)) {
+            assertFalse(BackgroundPlay.HIDE_ID_PLACEHOLDER in s)
+            assertFalse(BackgroundPlay.HIDE_FLAG_PLACEHOLDER in s)
+            assertTrue("getElementById('s0a1')" in s)
+        }
+        assertTrue("if (true) {" in on)
+        assertTrue("if (false) {" in off)
+        // 영상만 숨긴다 — 건너뛰기 단추(B2) 같은 다른 요소는 그대로.
+        assertTrue("s.textContent = 'video{visibility:hidden!important}';" in BackgroundPlay.HIDE_VIDEO_SCRIPT)
+        assertTrue("if (s) s.remove();" in BackgroundPlay.HIDE_VIDEO_SCRIPT)
+        // 코틀린의 날 글자열·셸이 먹는 글자를 쓰지 않는다.
+        assertFalse('\\' in BackgroundPlay.HIDE_VIDEO_SCRIPT)
+        assertFalse('$' in BackgroundPlay.HIDE_VIDEO_SCRIPT)
+        // 이름은 영문·숫자만 받는다(스크립트의 글자열에 그대로 들어간다).
+        for (bad in listOf("", "a'b", "a b", "a-b")) {
+            assertTrue(runCatching { BackgroundPlay.hideVideoScript(bad, hide = true) }.isFailure, bad)
+        }
+    }
+
+    @Test
+    fun 같은_탭을_다시_골라도_밤_모드가_바뀌어도_재생_중인_쪽을_떼지_않는다() {
+        // 쪽을 떼었다 붙이면 쪽이 잠깐 숨고, 유튜브는 그 틈을 보고 재생을 멈춘다(2026-10-12 에뮬레이터 — 화면을 켤 때 밤 모드가 바뀌었다).
+        val activity = main("kotlin/io/github/donggi/iroirobrowser/browser/BrowserActivity.kt")
+        val select = activity.substringAfter("private fun select(tab: Tab) {").substringBefore("\n    }\n")
+        assertTrue("leaving == tab -> Unit" in select)
+        assertTrue("it.parent === content -> it.onResume()" in select)
+        val config = activity.substringAfter("override fun onConfigurationChanged(newConfig: Configuration) {").substringBefore("\n    }\n")
+        assertTrue("if (holdsRebuild()) {" in config)
+        assertTrue("rebuildPending = true" in config)
+        val holds = activity.substringAfter("private fun holdsRebuild(): Boolean =").substringBefore("\n\n")
+        assertTrue("bgTab != null" in holds)
+        assertTrue("?.audible == true" in holds)
+        // 재생이 바뀌거나 회가 닫히면 미뤄 둔 것을 본다.
+        val onPlaying = activity.substringAfter("override fun onPlayingChanged(tab: Tab) {").substringBefore("\n        }\n")
+        assertTrue("if (rebuildPending) main.post { maybeRebuild() }" in onPlaying)
+        val syncPlay = activity.substringAfter("private fun syncBackgroundPlay() {").substringBefore("\n    }\n")
+        assertTrue("if (rebuildPending) main.post { maybeRebuild() }" in syncPlay)
+    }
+
+    @Test
+    fun 유튜브의_주_틀은_늘_보임을_읽는다() {
+        // 사용자 결정 2026-10-12 — 브레이브의 방식. 주 틀에서만, 문서의 보임 둘을 '보임' 으로 덮고 사건은 창의 포착 단계에서 멈춘다.
+        val s = BackgroundPlay.VISIBILITY_SCRIPT
+        assertTrue("if (window.top !== window) return;" in s)
+        assertTrue("keep('visibilityState', 'visible');" in s)
+        assertTrue("keep('hidden', false);" in s)
+        assertTrue("window.addEventListener('visibilitychange', stop, true);" in s)
+        assertTrue("function stop(e) { e.stopImmediatePropagation(); }" in s)
+        // 쪽의 함수를 바꿔 끼우지 않는다(브레이브의 탭 도우미는 document.addEventListener 를 바꿔 끼운다 — 그러지 않는다).
+        assertFalse("addEventListener =" in s)
+        assertFalse("prototype" in s)
+        // 코틀린의 날 글자열·셸이 먹지 않게.
+        assertFalse(Char(92) in s)
+        assertFalse(Char(36) in s)
+        // 쪽의 세계에, 문서 시작으로, 유튜브 출처 규칙으로 건다(앱의 실행 세계가 아니다 — 그 세계의 문서 객체는 따로다).
+        val webViews = main("kotlin/io/github/donggi/iroirobrowser/browser/WebViews.kt")
+        assertTrue("WebViewCompat.addDocumentStartJavaScript(view, BackgroundPlay.VISIBILITY_SCRIPT, YtGuard.ORIGIN_RULES)" in webViews)
+    }
 }

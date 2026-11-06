@@ -18,15 +18,26 @@ class UrlPattern private constructor(
     val matchCase: Boolean,
 ) {
 
-    /** [url] 에 맞는가. [hostStart]·[hostEnd] 는 주소 안의 호스트 자리(`||` 에 쓴다). */
+    /**
+     * [url] 에 맞는가. [hostStart]·[hostEnd] 는 주소 안의 호스트 자리(`||` 에 쓴다).
+     *
+     * 시간은 주소 길이에 비례한다(2026-10-16 보안 점검). 첫 조각이 맞는 자리가 여럿이어도 **가장 앞의 자리 하나로 족하다** — 뒤의 조각들은
+     * 앞에서 맞출수록 남은 자리가 넓어([rest] 는 시작 자리가 뒤일수록 맞기 어렵다) 앞 자리에서 실패하면 뒤 자리도 실패한다. 앞 판은 맞는
+     * 자리마다 [rest](주소 끝까지 훑을 수 있다)를 다시 불러, 첫 조각을 수만 번 되풀이한 주소(쪽이 지을 수 있다)에서 시간이 길이의 제곱으로
+     * 늘었다. 조각이 하나이고 끝이 `|` 일 때만 끝에 붙는 자리를 찾아 자리마다 해 본다(그때 [rest] 는 견주기 한 번이다).
+     */
     fun matches(url: String, hostStart: Int, hostEnd: Int): Boolean {
         if (segments.isEmpty()) return true
         val first = segments[0]
+        val leftmostSuffices = segments.size > 1 || !endAnchor
         if (hostAnchor) {
-            // 호스트의 이름 경계마다 해 본다(몇 곳 안 된다).
+            // 호스트의 이름 경계마다 해 본다 — 첫 조각이 맞은 가장 앞의 경계에서 뒤가 실패하면 뒤의 경계도 실패한다(위).
             var p = hostStart
             while (p in hostStart until maxOf(hostStart + 1, hostEnd)) {
-                if (matchFrom(url, first, p) && rest(url, p + first.length, 1)) return true
+                if (matchFrom(url, first, p)) {
+                    if (rest(url, p + first.length, 1)) return true
+                    if (leftmostSuffices) return false
+                }
                 val dot = url.indexOf('.', p)
                 if (dot < 0 || dot >= hostEnd) break
                 p = dot + 1
@@ -34,7 +45,11 @@ class UrlPattern private constructor(
             return false
         }
         if (startAnchor) return matchFrom(url, first, 0) && rest(url, first.length, 1)
-        // 앵커가 없으면 첫 조각을 아무 데서나 — 맞는 자리마다 해 본다(뒤에 `|` 가 있으면 첫 자리가 답이 아닐 수 있다).
+        if (leftmostSuffices) {
+            val p = find(url, first, 0)
+            return p >= 0 && rest(url, p + first.length, 1)
+        }
+        // 조각 하나에 끝의 `|` — 맞는 자리마다 끝에 닿는지 본다.
         var from = 0
         while (true) {
             val p = find(url, first, from)

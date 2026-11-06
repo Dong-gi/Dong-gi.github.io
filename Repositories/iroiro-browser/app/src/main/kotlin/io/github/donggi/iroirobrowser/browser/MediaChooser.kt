@@ -20,7 +20,6 @@ import android.widget.Toast
 import io.github.donggi.iroirobrowser.R
 import io.github.donggi.iroirobrowser.WebApp
 import io.github.donggi.iroirobrowser.core.DownloadNames
-import io.github.donggi.iroirobrowser.core.Referrer
 import io.github.donggi.iroirobrowser.core.adblock.Request
 import io.github.donggi.iroirobrowser.core.media.DashManifest
 import io.github.donggi.iroirobrowser.core.media.FoundMediaLog
@@ -60,14 +59,14 @@ class MediaChooser(private val activity: Activity, private val host: Host) {
     }
 
     /**
-     * 찾은 미디어 하나를 받을 때 함께 넘길 것 — 쪽의 User-Agent, 그 미디어를 **찾은 페이지**의 주소(Referer 를 정한다)와 제목(기본 이름).
+     * 찾은 미디어 하나를 받을 때 함께 넘길 것 — 쪽의 User-Agent, 그 미디어를 **찾은 페이지**의 주소(Referer 를 정한다 — 받는 쪽이 홉마다 짓는다)와
+     * 제목(기본 이름).
      * [entry] 가 없으면(고리를 길게 눌렀다) 지금 페이지.
      */
     private class MediaRequest(val tab: Tab, val url: String, entry: FoundMediaLog.Entry?) {
         val pageUrl: String = entry?.pageUrl?.ifEmpty { null } ?: tab.committedUrl
         val pageTitle: String = entry?.pageTitle?.ifBlank { null } ?: tab.title
         val userAgent: String = tab.webView?.settings?.userAgentString.orEmpty()
-        val referer: String? = Referrer.strictOriginWhenCrossOrigin(pageUrl, url)
 
         /** 받는 파일의 바탕 이름(확장자는 받으면서 붙는다) — 찾은 페이지의 제목, 없으면 사이트. */
         val base: String = pageTitle.ifBlank { Request.hostOf(pageUrl).ifBlank { "video" } }
@@ -225,13 +224,13 @@ class MediaChooser(private val activity: Activity, private val host: Host) {
                 val chosen = DownloadNames.edited(name.text.toString(), original)
                 host.askNotificationPermission()
                 // 찾은 페이지를 함께 적는다 — 주소가 만료되면 다시 열 곳이고, 같은 것을 다시 고르면 멈춘 항목을 잇는다(BR-NET).
-                downloads.enqueue(url, chosen, null, request.userAgent, request.referer, request.pageUrl, request.pageTitle)
+                downloads.enqueue(url, chosen, null, request.userAgent, request.pageUrl, request.pageTitle)
                 host.trace("download started $chosen")
                 Toast.makeText(activity, R.string.download_started, Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
-        probe.size(url, request.userAgent, request.referer) { bytes ->
+        probe.size(url, request.userAgent, request.pageUrl) { bytes ->
             if (!dialog.isShowing) return@size
             size.text = if (bytes > 0) Formatter.formatShortFileSize(activity, bytes) else activity.getString(R.string.size_unknown)
         }
@@ -246,7 +245,7 @@ class MediaChooser(private val activity: Activity, private val host: Host) {
 
     private fun inspectHls(tab: Tab, entry: FoundMediaLog.Entry, serial: Int, redirected: Boolean) {
         val request = MediaRequest(tab, entry.url, entry)
-        inspection = app.downloads.inspectHls(entry.url, request.userAgent, request.referer) { info ->
+        inspection = app.downloads.inspectHls(entry.url, request.userAgent, request.pageUrl) { info ->
             if (!stillReading(serial)) return@inspectHls
             when (info) {
                 is DownloadCenter.HlsInfo.Failed -> {
@@ -272,7 +271,7 @@ class MediaChooser(private val activity: Activity, private val host: Host) {
 
     /** 마스터 — 가장 높은 화질의 재생목록을 한 번 더 읽어 길이(크기 어림)·실시간·DRM 을 본 뒤 화질 창. 읽지 못해도 화질 창은 연다(크기 없이). */
     private fun readTopVariant(request: MediaRequest, master: HlsPlaylist.Master, serial: Int) {
-        inspection = app.downloads.inspectHls(master.variants.first().uri, request.userAgent, request.referer) { info ->
+        inspection = app.downloads.inspectHls(master.variants.first().uri, request.userAgent, request.pageUrl) { info ->
             if (!stillReading(serial)) return@inspectHls
             stopReading()
             val media = (info as? DownloadCenter.HlsInfo.Single)?.media
@@ -332,7 +331,8 @@ class MediaChooser(private val activity: Activity, private val host: Host) {
 
     private fun startHls(request: MediaRequest, url: String, base: String, audioUrl: String?, audioOnly: Boolean = false) {
         host.askNotificationPermission()
-        app.downloads.enqueueHls(url, audioUrl, base, request.userAgent, request.referer, request.pageUrl, request.pageTitle, audioOnly)
+        // 그 탭이 쥔 쪽의 요청 머리를 함께 — 잠긴 HLS 의 열쇠를 쪽처럼 받는다(메모리에만 — PageRequests).
+        app.downloads.enqueueHls(url, audioUrl, base, request.userAgent, request.pageUrl, request.pageTitle, audioOnly, request.tab.requests)
         Toast.makeText(activity, if (audioUrl != null) R.string.media_separate_audio else R.string.download_started, Toast.LENGTH_LONG).show()
         host.trace("hls started $url audio=${audioUrl ?: "-"}")
     }
@@ -342,7 +342,7 @@ class MediaChooser(private val activity: Activity, private val host: Host) {
     private fun readDash(tab: Tab, entry: FoundMediaLog.Entry) {
         val serial = startReading() ?: return
         val request = MediaRequest(tab, entry.url, entry)
-        inspection = app.downloads.inspectDash(entry.url, request.userAgent, request.referer) { info ->
+        inspection = app.downloads.inspectDash(entry.url, request.userAgent, request.pageUrl) { info ->
             if (!stillReading(serial)) return@inspectDash
             stopReading()
             onDash(request, info)
@@ -395,7 +395,7 @@ class MediaChooser(private val activity: Activity, private val host: Host) {
     private fun startDash(request: MediaRequest, video: DashManifest.Representation?, audio: DashManifest.Representation?, base: String) {
         if (video == null && audio == null) return
         host.askNotificationPermission()
-        app.downloads.enqueueDash(video, audio, base, request.userAgent, request.referer, request.pageUrl, request.pageTitle)
+        app.downloads.enqueueDash(video, audio, base, request.userAgent, request.pageUrl, request.pageTitle)
         Toast.makeText(activity, if (video != null && audio != null) R.string.media_separate_audio else R.string.download_started, Toast.LENGTH_LONG).show()
         host.trace("dash started ${video?.id ?: "-"} ${audio?.id ?: "-"}")
     }
@@ -425,7 +425,7 @@ class MediaChooser(private val activity: Activity, private val host: Host) {
         if (!tab.media.claimRead(url)) return
         val page = tab.media.currentPage.url.ifEmpty { tab.committedUrl }
         val userAgent = tab.webView?.settings?.userAgentString.orEmpty()
-        probe.playlist(url, userAgent, Referrer.strictOriginWhenCrossOrigin(page, url)) { playlist ->
+        probe.playlist(url, userAgent, page) { playlist ->
             tab.media.readDone(url, playlist)
             val what = when (playlist) {
                 is HlsPlaylist.Master -> "master ${playlist.variants.size}"

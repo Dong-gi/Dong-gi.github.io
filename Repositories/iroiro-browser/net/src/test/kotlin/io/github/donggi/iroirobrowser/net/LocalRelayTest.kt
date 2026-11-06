@@ -530,6 +530,49 @@ class LocalRelayTest {
         assertEquals("0", challenge.header("Content-Length"))
     }
 
+    @Test
+    fun 홀로_선_CR_LF_가_든_요청은_400_으로_거절하고_원격에_보내지_않는다() {
+        // 머리는 CRLF 로만 가르므로 줄 안의 홀로 선 CR·LF 가 살아남는다 — 중계가 그 줄을 원격 Squid 에 그대로 다시 쓰면 머리 주입·스머글링의
+        // 재료가 된다(2026-10-16 보안 점검 — 테더의 HTTP 프록시는 같은 것을 400 으로 거절한다). 계정이 맞아도 거절한다.
+        val up = keep(FakeUpstream())
+        val relay = relayTo(up.port)
+        val bad = listOf(
+            "GET http://example.test/x\rEvil:1 HTTP/1.1\r\nHost: example.test\r\n", // 요청 줄의 CR(나눠도 세 칸)
+            "GET http://example.test/x HTTP/1.1\r\nX-A: foo\rEvil: 1\r\n", // 값의 CR
+            "GET http://example.test/x HTTP/1.1\r\nX-A: foo\nEvil: 1\r\n", // 값의 LF
+            "GET http://example.test/x HTTP/1.1\r\nX-A: foo\r\r\n", // 줄 끝에 CR 하나 더
+            "CONNECT example.test:443\r HTTP/1.1\r\n", // CONNECT 의 대상 — 원격에 `CONNECT $target` 과 `Host: $target` 으로 다시 쓴다
+            "CONNECT example.test:443 HTTP/1.1\r\nHost: a\nX: b\r\n",
+        )
+        for (head in bad) {
+            val s = connect(relay)
+            s.send(head + auth(relay) + "\r\n")
+            assertEquals(400, s.head().status, head.replace("\r", "\\r").replace("\n", "\\n"))
+        }
+        // 계정이 없어도 400 이다(407 로 계정을 물어 같은 머리를 다시 받지 않는다).
+        connect(relay).run {
+            send("GET http://example.test/x HTTP/1.1\r\nX-A: foo\rEvil: 1\r\n\r\n")
+            assertEquals(400, head().status)
+        }
+        assertTrue(up.startLines.isEmpty(), "원격에 갔다: ${up.startLines}")
+        // 정상 머리는 그대로 넘어간다 — 값 가운데의 탭·빈칸은 홀로 선 CR·LF 가 아니다.
+        val s = connect(relay)
+        s.send("GET http://example.test/x HTTP/1.1\r\nHost: example.test\r\nX-Tab: a\tb c\r\n" + auth(relay) + "\r\n")
+        assertEquals(200, s.head().status)
+        assertEquals(listOf("GET http://example.test/x HTTP/1.1"), up.startLines)
+        assertEquals("a\tb c", up.headers.single().first { it.first == "X-Tab" }.second)
+    }
+
+    @Test
+    fun 머리를_읽으며_홀로_선_CR_LF_를_가린다() {
+        fun head(text: String) = assertNotNull(HttpHead.read(text.byteInputStream(Charsets.ISO_8859_1)))
+        assertFalse(head("GET / HTTP/1.1\r\nA: 1\r\nB: x y\tz\r\n\r\n").hasBareLineBreak)
+        assertFalse(head("HTTP/1.1 200 OK\r\n\r\nbody\rwith\nbreaks").hasBareLineBreak, "몸은 머리가 아니다")
+        for (text in listOf("GET /\r HTTP/1.1\r\n\r\n", "GET / HTTP/1.1\r\nA: 1\rB: 2\r\n\r\n", "GET / HTTP/1.1\r\nA: 1\nB: 2\r\n\r\n", "GET / HTTP/1.1\r\nA: 1\n\r\n\r\n", "GET / HTTP/1.1\r\nA\r\r\n\r\n")) {
+            assertTrue(head(text).hasBareLineBreak, text.replace("\r", "\\r").replace("\n", "\\n"))
+        }
+    }
+
     private fun readFully(input: InputStream, into: ByteArray) {
         var at = 0
         while (at < into.size) {

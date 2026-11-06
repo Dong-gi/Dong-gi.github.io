@@ -69,8 +69,10 @@
     <string name="open_close">닫기</string>
     <!-- 넘긴 것에 파일이 없다 - 글만 실은 공유, URI 가 없는 열기. -->
     <string name="open_nothing">열 파일이 없습니다</string>
-    <!-- 이름이 알려 주는 종류에 이 앱의 뷰어가 없다(APK·글꼴·기타). 아래에 '다른 앱으로 열기' 가 선다. -->
+    <!-- 이름이 알려 주는 종류에 이 앱의 뷰어가 없다(글꼴·기타). 아래에 '다른 앱으로 열기' 가 선다. -->
     <string name="open_no_viewer">이 앱에는 이 파일을 보여 줄 화면이 없습니다</string>
+    <!-- 다른 앱이 넘긴 것이 설치 파일(APK - 이름이든 내용이든)이다. 어느 화면으로도 보내지 않고 단추도 없다(OpenActivity 의 refusalOf). -->
+    <string name="open_refused_apk">다른 앱이 보낸 설치 파일은 열지 않습니다</string>
 
     <!-- 편집기(feature:editor)로 고치기. -->
     <string name="editor_open_failed">편집기를 열지 못했습니다</string>

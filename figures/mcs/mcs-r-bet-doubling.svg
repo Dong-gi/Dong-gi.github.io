@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" width="640" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
-<title id="t">배팅 두 배 전략과 무한 선형성</title><desc id="d">판마다 절댓값 기댓값이 5 로 일정해 급수가 발산하므로 무한 개 항에 선형성을 쓸 수 없음을 보이는 그림</desc>
+<title id="t">배팅 두 배 전략과 무한 선형성</title><desc id="d">판마다 절댓값 기댓값이 10 으로 일정해 급수가 발산하므로 무한 개 항에 선형성을 쓸 수 없음을 보이는 그림</desc>
 <style>
 svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
 @media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}

@@ -2,6 +2,8 @@ package io.github.donggi.iroirobrowser.browser
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ClipDescription
+import android.content.ClipboardManager
 import android.content.res.ColorStateList
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +13,8 @@ import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.view.textclassifier.TextClassifier
 import android.view.inputmethod.BaseInputConnection
 import android.widget.EditText
 import android.widget.ImageButton
@@ -18,7 +22,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import io.github.donggi.iroirobrowser.R
+import io.github.donggi.iroirobrowser.core.ClipText
 import io.github.donggi.iroirobrowser.core.Suggester
 import io.github.donggi.iroirobrowser.library.Library
 import io.github.donggi.iroirobrowser.ui.Ui
@@ -32,6 +38,9 @@ import java.util.concurrent.Executors
  * - **목록의 차례**: 맨 위가 Enter 가 갈 곳이다 — 인라인 완성이 있으면 그 주소, 없으면 '입력한 그대로'(주소면 이동, 아니면 검색 — 크롬의
  *   what-you-typed 줄). 그다음 친 글에 맞는 **열린 탭**(눌러 그 탭으로 — 둘까지), 그다음 기록·북마크([Suggester.DEFAULT_LIMIT] 줄까지).
  *   빈 글로 초점을 얻으면 자주·최근 간 곳(크롬의 '자주 간 곳' 자리).
+ * - **복사한 링크 열기**(사용자 요청, 2026-10-16) — 빈 글로 초점을 얻었을 때 클립보드에 링크가 있으면 맨 위에 둔다(새 탭의 시작 화면 위에서는
+ *   그 줄 하나만 — 시작 화면을 덮지 않는다). 클립보드의 **내용은 누를 때만 읽는다** — 그 전에는 설명(MIME·이름표·시스템의 분류 점수)만 본다
+ *   ([clipHasLink]). 다른 앱의 링크를 받지 않으므로(VIEW 보류) 복사·붙여 넣기 길을 줄인다.
  * - 인라인 완성은 **지우기 한 번이 채운 것만 지우고**, 이어 치는 글자가 채운 글자와 같으면 다시 채워져 이어진다. 친 글이 늘지 않았으면(지우기)
  *   채우지 않는다. **조합 중인 글(한글 자판의 조합)이 있으면 채우지 않는다** — 조합 영역 뒤에 글을 붙이면 자판이 조합을 잃는다. 크롬·파이어폭스는
  *   채운 글을 진짜 선택이 아니라 배경색과 숨긴 커서로 그리고 자판과의 주고받기를 감싸는데, 여기서는 진짜 선택으로 그린다(ASCII 에서만 채우므로
@@ -77,7 +86,7 @@ class AddressSuggestions(
     /** 친 글의 뜻 — [url] 이면 [detail] 은 열 주소, 아니면 [detail] 은 검색 엔진의 이름. */
     class Typed(val url: Boolean, val detail: String)
 
-    private enum class Kind { GO, SEARCH, TAB, HISTORY, BOOKMARK }
+    private enum class Kind { GO, SEARCH, TAB, HISTORY, BOOKMARK, CLIP }
 
     private class Row(val kind: Kind, val title: String, val subtitle: String, val url: String, val tabId: Long = -1)
 
@@ -109,6 +118,9 @@ class AddressSuggestions(
 
     /** 지금 주소창에 채워 둔 인라인 완성(없으면 null). */
     private var inline: Suggester.Inline? = null
+
+    /** '복사한 링크 열기' 로 이미 연(또는 링크가 없던) 클립의 복사 시각 — 같은 클립이면 그 줄을 다시 두지 않는다. */
+    private var usedClipStamp = Long.MIN_VALUE
 
     private val watcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -184,8 +196,15 @@ class AddressSuggestions(
     private fun query(text: String) {
         val s = suggester
         val gen = ++generation
-        if (s == null || (text.isBlank() && host.showsStartPage())) {
-            render(emptyList())
+        // 복사한 링크 — 빈 글일 때만, 메인 스레드에서(클립보드는 초점이 있는 앱만 본다).
+        val clip = if (text.isBlank() && clipHasLink()) Row(Kind.CLIP, activity.getString(R.string.suggest_clip_link), "", "") else null
+        if (text.isBlank() && host.showsStartPage()) {
+            // 시작 화면 위에서는 복사한 링크 줄 하나만, 시작 화면을 덮지 않게.
+            render(listOfNotNull(clip), compact = true)
+            return
+        }
+        if (s == null) {
+            render(listOfNotNull(clip))
             return
         }
         // 열린 탭과 친 글의 뜻은 메인 스레드에서 떠 간다(탭 목록은 메인 스레드의 것이다).
@@ -196,6 +215,7 @@ class AddressSuggestions(
             val rows = ArrayList<Row>()
             var completion: Suggester.Inline? = null
             if (text.isBlank()) {
+                clip?.let { rows += it }
                 s.top(now).forEach { rows += historyRow(it) }
             } else {
                 val result = s.query(text, now)
@@ -269,18 +289,29 @@ class AddressSuggestions(
         inline = completion
     }
 
-    private fun render(rows: List<Row>) {
+    /** 줄들을 그린다. [compact] 면 줄만큼의 높이로(쪽을 덮지 않는다 — 시작 화면 위의 복사한 링크 줄), 아니면 쪽의 자리를 채운다. */
+    private fun render(rows: List<Row>, compact: Boolean = false) {
         column.removeAllViews()
         if (rows.isEmpty()) {
             view.visibility = View.GONE
             return
         }
+        view.layoutParams?.let { lp ->
+            val height = if (compact) ViewGroup.LayoutParams.WRAP_CONTENT else ViewGroup.LayoutParams.MATCH_PARENT
+            if (lp.height != height) {
+                lp.height = height
+                view.layoutParams = lp
+            }
+        }
+        view.isFillViewport = !compact
         rows.forEach { column.addView(rowView(it)) }
         // 줄 아래의 빈 곳 — 누르면 목록을 걷는다(크롬처럼).
-        column.addView(View(activity).apply {
-            contentDescription = activity.getString(R.string.suggest_dismiss)
-            setOnClickListener { host.dismiss() }
-        }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+        if (!compact) {
+            column.addView(View(activity).apply {
+                contentDescription = activity.getString(R.string.suggest_dismiss)
+                setOnClickListener { host.dismiss() }
+            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+        }
         view.scrollTo(0, 0)
         view.visibility = View.VISIBLE
     }
@@ -297,6 +328,7 @@ class AddressSuggestions(
                 Kind.GO, Kind.SEARCH -> host.go(r.title)
                 Kind.TAB -> host.switchTab(r.tabId)
                 Kind.HISTORY, Kind.BOOKMARK -> host.open(r.url)
+                Kind.CLIP -> openClipLink()
             }
         }
         if (r.kind == Kind.HISTORY || r.kind == Kind.BOOKMARK) {
@@ -312,6 +344,7 @@ class AddressSuggestions(
             Kind.TAB -> R.drawable.ic_tab to R.string.suggest_tab
             Kind.HISTORY -> R.drawable.ic_history to R.string.suggest_history
             Kind.BOOKMARK -> R.drawable.ic_star to R.string.suggest_bookmark
+            Kind.CLIP -> R.drawable.ic_go to R.string.suggest_clip_link
         }
         addView(ImageView(activity).apply {
             setImageResource(icon)
@@ -348,6 +381,52 @@ class AddressSuggestions(
         }
     }
 
+    /**
+     * 클립보드에 링크가 있어 보이는가 — **내용은 읽지 않는다**(안드로이드 12 는 남의 클립을 읽을 때마다 알린다 — 누를 때만 읽는다,
+     * [openClipLink]). [CLIP_MAX_AGE_MS] 안에 복사한 글만 본다(복사하고 곧 브라우저로 오는 길이다 — 오래된 클립이 새 탭마다 뜨지 않게). 링크
+     * 목록(`text/uri-list`)이거나 이름표가 http(s) 주소 하나이면(이 앱의 '링크 복사' 는 이름표에 주소를 둔다 — 파일 이름을 이름표로 다는 앱이 있어
+     * 스킴을 적은 것만) 참. 그 밖의 글은 시스템의 글 분류를 따른다 — 끝났으면 주소라고 본 글만, **아직이거나 하지 않았으면 참**(막 복사한 글은
+     * 분류가 늦고, 분류 서비스가 없는 기기도 있다 — 2026-10-16 에뮬레이터는 끝나지 않은 채였다. 링크가 없으면 누를 때 알린다). 한 번 연(또는
+     * 링크가 없던) 클립은 다시 두지 않는다([usedClipStamp]).
+     */
+    private fun clipHasLink(): Boolean {
+        val description = try {
+            activity.getSystemService(ClipboardManager::class.java)?.primaryClipDescription
+        } catch (e: SecurityException) {
+            null
+        } ?: return false
+        if (description.timestamp == usedClipStamp) return false
+        // 복사한 시각은 System.currentTimeMillis() 의 시계다(ClipDescription.getTimestamp — 에뮬레이터에서 견줘 보았다).
+        if (System.currentTimeMillis() - description.timestamp !in 0..CLIP_MAX_AGE_MS) return false
+        if (description.hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) return true
+        if (!description.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) && !description.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) return false
+        if (description.label?.let { ClipText.isExplicitLink(it.toString()) } == true) return true
+        if (description.classificationStatus != ClipDescription.CLASSIFICATION_COMPLETE) return true
+        return description.getConfidenceScore(TextClassifier.TYPE_URL) >= CLIP_URL_CONFIDENCE
+    }
+
+    /**
+     * '복사한 링크 열기' — 이제 클립보드를 읽어 그 글의 첫 링크로 간다(주소창에서 친 것처럼). 링크가 없으면 알리고 줄을 걷는다. 글이 없는 항목은
+     * http(s) 주소만 본다 — `coerceToText` 는 `content:` 주소면 남의 제공자를 열어 읽는다.
+     */
+    private fun openClipLink() {
+        val clip = try {
+            activity.getSystemService(ClipboardManager::class.java)?.primaryClip
+        } catch (e: SecurityException) {
+            null
+        }
+        clip?.description?.let { usedClipStamp = it.timestamp }
+        val item = clip?.takeIf { it.itemCount > 0 }?.getItemAt(0)
+        val text = item?.text?.toString() ?: item?.uri?.takeIf { it.scheme == "http" || it.scheme == "https" }?.toString()
+        val link = text?.let(ClipText::firstLink)
+        if (link == null) {
+            Toast.makeText(activity, R.string.suggest_clip_no_link, Toast.LENGTH_SHORT).show()
+            query(currentTyped())
+            return
+        }
+        host.go(link)
+    }
+
     /** 화살 — 그 주소를 주소창에 채워 고쳐 쓰게(커서는 끝에). */
     private fun fill(url: String) {
         inline = null
@@ -377,5 +456,11 @@ class AddressSuggestions(
     private companion object {
         /** '탭으로 전환' 줄의 수. */
         const val MAX_TAB_ROWS = 2
+
+        /** 시스템의 글 분류가 이 점수 이상으로 주소라고 본 클립만 링크로 친다(높게 잡는다). */
+        const val CLIP_URL_CONFIDENCE = 0.9f
+
+        /** 이보다 오래전에 복사한 클립은 '복사한 링크 열기' 를 두지 않는다. */
+        const val CLIP_MAX_AGE_MS = 10 * 60_000L
     }
 }

@@ -861,14 +861,14 @@ add((() => {
         { n: 'Σ', c: 3, r: 5, kind: 'sig', d: 'm × n', op: '×' },
         { n: 'V^T', c: 3, r: 3, kind: 'o', d: 'n × n' },
     ]));
-    g.push(panel(430, 44, 332, 200, '축소형', '0 만 있는 부분을 잘라낸 것 (r = 계수)'));
+    g.push(panel(430, 44, 332, 200, '축소형', '0 만 있는 부분을 잘라낸 것 (r = 랭크)'));
     g.push(blockRow(430, 44, 332, [
         { n: 'A', c: 3, r: 5, kind: 'a', d: 'm × n', op: '=' },
         { n: 'U~r', c: 2, r: 5, kind: 'o', d: 'm × r', op: '×' },
         { n: 'Σ~r', c: 2, r: 2, kind: 'sig', d: 'r × r', op: '×' },
         { n: 'V~r^T', c: 3, r: 2, kind: 'o', d: 'r × n' },
     ]));
-    g.push(txt(W / 2, 268, 'Σ 는 대각선에만 값이 있고 그 값이 σ~1 ≥ σ~2 ≥ … ≥ 0 이다. 0 이 아닌 σ 의 개수가 계수 r 이다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+    g.push(txt(W / 2, 268, 'Σ 는 대각선에만 값이 있고 그 값이 σ~1 ≥ σ~2 ≥ … ≥ 0 이다. 0 이 아닌 σ 의 개수가 랭크 r 이다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     g.push(txt(W / 2, 288, '완전형은 이론을 적기 좋고 축소형은 계산과 저장에 쓴다. 두 형태가 주는 A 는 똑같다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(W / 2, 310, '고유값 분해와 달리 정사각행렬이 아니어도 되고, 어떤 행렬에도 존재하며, σ 는 언제나 실수이고 0 이상이다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     g.push(txt(W / 2, 330, '대각화가 되지 않는 행렬도 특이값 분해는 된다. 그 점이 SVD 를 실무의 기본 도구로 만들었다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
@@ -890,7 +890,7 @@ add((() => {
     const A = [[3, 0], [4, 5]];
     const A1 = [[1.5, 1.5], [4.5, 4.5]];
     const A2 = [[1.5, -1.5], [-0.5, 0.5]];
-    g.push(txt(W / 2, 26, 'A = σ~1 u~1 v~1^T + σ~2 u~2 v~2^T — 계수 1 짜리 조각의 합', { anchor: 'middle', cls: 'ink bold' }));
+    g.push(txt(W / 2, 26, 'A = σ~1 u~1 v~1^T + σ~2 u~2 v~2^T — 랭크 1 짜리 조각의 합', { anchor: 'middle', cls: 'ink bold' }));
     const CW = 58; const CH = 46;
     const grid = (x, y, M, title, sub, col) => {
         const out = [];
@@ -912,7 +912,7 @@ add((() => {
     g.push(grid(432, y0, A2, '둘째 조각', 'σ~2 = 2.24 — 작다', C2));
     const tx = 574;
     g.push(ln([[tx - 16, 64], [tx - 16, 244]], { stroke: 'var(--grid)', sw: 1 }));
-    g.push(txt(tx, 78, '두 조각 모두 계수가 1 이다.', { cls: 'ink', size: 'sm' }));
+    g.push(txt(tx, 78, '두 조각 모두 랭크가 1 이다.', { cls: 'ink', size: 'sm' }));
     g.push(txt(tx, 96, '(모든 행이 서로 비례한다)', { cls: 'ink2', size: 'sm' }));
     g.push(txt(tx, 126, '첫 조각만 남기면', { cls: 'ink', size: 'sm' }));
     g.push(txt(tx, 144, '오차가 정확히 둘째 조각이고', { cls: 'ink', size: 'sm' }));
@@ -926,8 +926,8 @@ add((() => {
         name: 'la-in-svd-rank1',
         svg: svg({
             width: W, height: H,
-            title: '특이값 분해를 계수 1 조각의 합으로 읽기',
-            desc: '2×2 행렬이 두 개의 계수 1 행렬로 갈리고 그 크기를 특이값이 정한다',
+            title: '특이값 분해를 랭크 1 조각의 합으로 읽기',
+            desc: '2×2 행렬이 두 개의 랭크 1 행렬로 갈리고 그 크기를 특이값이 정한다',
             body: g.join(''),
         }),
     };
@@ -974,9 +974,9 @@ add((() => {
     const gy = 66;
     const total = dec.s.reduce((a, v) => a + v * v, 0);
     const cum = k => dec.s.slice(0, k).reduce((a, v) => a + v * v, 0) / total;
-    g.push(drawImg(38, gy, M, '원본 (계수 12)', '값 144 개'));
+    g.push(drawImg(38, gy, M, '원본 (랭크 12)', '값 144 개'));
     ks.forEach((k, i) => {
-        g.push(drawImg(200 + i * 162, gy, approx[i], `계수 ${k} 근사`, `값 ${k * (N + N + 1)} 개 · 에너지 ${(cum(k) * 100).toFixed(2)}%`));
+        g.push(drawImg(200 + i * 162, gy, approx[i], `랭크 ${k} 근사`, `값 ${k * (N + N + 1)} 개 · 에너지 ${(cum(k) * 100).toFixed(2)}%`));
     });
     const bx = 70; const by = 322; const bw = 570; const bh = 58;
     const smax = dec.s[0];
@@ -997,7 +997,7 @@ add((() => {
         svg: svg({
             width: W, height: H,
             title: '낮은 계수 근사와 압축',
-            desc: '12×12 짜리 그림을 계수 1, 2, 4 로 근사하면 큰 특이값 몇 개만으로도 형태가 살아난다',
+            desc: '12×12 짜리 그림을 랭크 1, 2, 4 로 근사하면 큰 특이값 몇 개만으로도 형태가 살아난다',
             body: g.join(''),
         }),
     };

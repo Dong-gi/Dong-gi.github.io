@@ -10,6 +10,7 @@ import io.github.donggi.iroiroviewer.io.FileOpManager
 import io.github.donggi.iroiroviewer.io.FileStamp
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.io.PathRules
+import io.github.donggi.iroiroviewer.model.PathNames
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -357,7 +358,9 @@ internal object EditorSlots {
         val room = PathRules.MAX_NAME_BYTES - ".$ext".toByteArray(Charsets.UTF_8).size
         fun tidy(s: String) = s.trim { it.isWhitespace() || it == '.' }
         fun base(n: String): String {
-            var b = BAD.replace(n.substringAfterLast('/').substringAfterLast('\\'), "").trim()
+            // 글의 방향을 바꾸는 글자는 `_` 로 — `PathRules.sanitize` 와 같고, 편집기 쪽 `OutputNames` 도 같은 자리에서 같게 한다.
+            val leaf = n.substringAfterLast('/').substringAfterLast('\\').map { if (PathNames.isBidiControl(it)) '_' else it }.joinToString("")
+            var b = BAD.replace(leaf, "").trim()
             // 확장자를 먼저 뗀다 — 점·빈칸을 걷은 뒤에 보면 `.hwp` 가 `hwp` 라는 이름이 된다. 점 둘레의 빈칸(`보고서. hwp`)도 확장자로 본다.
             val dot = b.lastIndexOf('.')
             if (dot >= 0 && b.substring(dot + 1).trim().lowercase(Locale.ROOT) in DOC_EXTS) b = b.substring(0, dot)

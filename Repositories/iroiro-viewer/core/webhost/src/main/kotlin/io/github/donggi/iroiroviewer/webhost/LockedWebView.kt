@@ -89,13 +89,17 @@ import java.io.ByteArrayInputStream
  * | 닫을 때 | **렌더러를 끝낸다** — 멈추지 않는 스크립트가 렌더러를 붙들면 그 뒤의 모든 WebView 가 비고, 풀린 글이 렌더러의 메모리에 남는다. 그리고 출처별 저장소를 지운다. 부수는 동안에도 가로채기를 놓지 않는다(`TeardownClient`) |
  * | 대화상자 | `alert`·`confirm`·`prompt` 를 우리가 그린다(`JsDialogView`). 둘째부터 '더 띄우지 않게' 가 붙는다(`JsDialogGate`) |
  * | 콘솔 | [onConsole] 로만 — 받지 않으면 WebView 가 logcat 에 스스로 적는다고 알려져 있다(확인하지 않았다) |
+ * | 클립보드 | 쪽이 쓰지 못한다 — 쪽보다 먼저 모든 틀에서 도는 문서 시작 스크립트(`ScriptPage.CLIPBOARD_GUARD` — `execCommand` 의 copy·cut, `navigator.clipboard` 의 쓰기, `copy`·`cut` 사건)와 응답 머리의 권한 정책(`clipboard-write=()`). 걸지 못하는 WebView 면 스크립트를 켜지 않는다 |
  *
  * 가로채기(`shouldInterceptRequest`)는 HTTP 요청만 본다 — 웹소켓·WebRTC·이름 미리 찾기(DNS prefetch)는 그것을 지나지 않고, 스크립트를
  * 켠 쪽은 같은 폴더의 파일을 읽을 수 있다. **그것이 밖으로 나가지 않는 것은 이 앱에 `INTERNET` 이 없기 때문이다**(OS 가 앱의 소켓·이름
- * 찾기를 막는다). 이 앱이 `INTERNET` 을 선언했던 동안(2026-10-05 ~ 10-09) 응답 머리의 CSP([ScriptPage.OFFLINE_HEADERS])가 웹소켓·
+ * 찾기를 막는다). 남는 길이던 **클립보드**(사용자가 무엇이든 누르는 순간 쪽이 쓸 수 있었다 — 다른 앱이 넘긴 HTML 이면 뷰어를 닫을 때 앞으로
+ * 오는 그 앱이 읽는다)는 위 표의 막음이 닫는다(2026-10-16 보안 점검). 이 앱이 `INTERNET` 을 선언했던 동안(2026-10-05 ~ 10-09) 응답 머리의 CSP([ScriptPage.OFFLINE_HEADERS])가 웹소켓·
  * `fetch` 를 막았지만 이름 미리 찾기와 WebRTC 는 막지 못했다(실험실) — **`INTERNET` 을 다시 선언하는 날 이 모드부터 다시 본다.**
  */
-@SuppressLint("SetJavaScriptEnabled")
+@SuppressLint("SetJavaScriptEnabled", "MissingOnRenderProcessGone")
+// `MissingOnRenderProcessGone` — 아래 클라이언트는 `onRenderProcessGone` 을 재정의해 true 를 돌려준다(머리말의 '렌더러가 죽으면'). androidx.webkit
+// 1.17.1 의 lint(`RenderProcessGoneDetector`)가 이 모듈의 코틀린 재정의를 찾지 못해 내는 거짓 경고다 — 이 모듈이 webkit 을 들인 2026-10-16 에 나타났다.
 @Composable
 fun LockedWebView(
     url: String,
@@ -339,7 +343,9 @@ fun LockedWebView(
                     // 그 파일의 출처가 우리가 만든 가짜 호스트가 된다.
                     setDownloadListener { _, _, _, _, _ -> }
                     lock(settings)
-                    if (scripts) {
+                    // **클립보드 막음을 먼저 건다** — 쪽을 싣기 전에, 쪽의 스크립트보다 먼저 모든 틀에서 돈다(`ScriptPage.CLIPBOARD_GUARD`).
+                    // 걸지 못하면(문서 시작 스크립트를 모르는 WebView) 스크립트를 켜지 않는다 — 쪽이 같은 폴더의 파일을 클립보드로 내보낼 길이 남는다.
+                    if (scripts && ScriptPage.installClipboardGuard(this)) {
                         // 머리말의 '스크립트를 켜면'. 나머지 잠금은 그대로다.
                         ScriptPage.lockOnce()
                         settings.javaScriptEnabled = true

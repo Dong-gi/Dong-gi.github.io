@@ -705,17 +705,22 @@ add((() => {
     b.push(txt(P2[0] + d2[0] * Lv + 2, P2[1] + d2[1] * Lv + 16, '나중 v', { anchor: 'middle', cls: 'ink', size: 'sm' }));
     b.push(txt(P1[0] + 10, P1[1] - 10, '처음 위치', { cls: 'ink2', size: 'sm' }));
     b.push(txt(P2[0] - 10, P2[1] - 12, '나중 위치', { anchor: 'end', cls: 'ink2', size: 'sm' }));
-    b.push(px(cx - 34, cy + r + 30, cx + 34, cy + r + 30, { cls: 'ink2', marker: 'ark', width: 1.5 }));
+    // cls 는 'ax'(회색 선)여야 한다. 'ink2' 는 채움 색이라 선이 사라지고 화살촉만 남았다.
+    b.push(px(cx - 34, cy + r + 30, cx + 34, cy + r + 30, { cls: 'ax', marker: 'ark', width: 1.5 }));
     b.push(txt(cx, cy + r + 22, '이 방향으로 돈다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    // 속도 삼각형
+    // 속도 삼각형 — 처음 v(P1 의 d1)와 나중 v(P2 의 d2)를 한 점 Q 에 모은다.
+    // Δv = 나중 v − 처음 v 이므로 처음 v 의 끝에서 나중 v 의 끝으로 긋는다(화면 아래 = 원의 중심 쪽).
     const Q = [430, 110];
+    const T1 = [Q[0] + d1[0] * Lv, Q[1] + d1[1] * Lv];   // 처음 v 의 끝 ≈ (373, 77)
+    const T2 = [Q[0] + d2[0] * Lv, Q[1] + d2[1] * Lv];   // 나중 v 의 끝 ≈ (373, 143)
     b.push(txt(360, 40, '두 속도를 한 점에 모아 그리면', { cls: 'ink' }));
-    b.push(px(Q[0], Q[1], Q[0] + d2[0] * Lv, Q[1] + d2[1] * Lv, { cls: 's1', marker: 'ar1' }));
-    b.push(txt(Q[0] + d2[0] * Lv - 6, Q[1] + d2[1] * Lv + 4, '처음 v', { anchor: 'end', cls: 'ink', size: 'sm' }));
-    b.push(px(Q[0], Q[1], Q[0] + d1[0] * Lv, Q[1] + d1[1] * Lv, { cls: 's1', marker: 'ar1' }));
-    b.push(txt(Q[0] + d1[0] * Lv - 4, Q[1] + d1[1] * Lv - 8, '나중 v', { anchor: 'end', cls: 'ink', size: 'sm' }));
-    b.push(px(Q[0] + d2[0] * Lv, Q[1] + d2[1] * Lv, Q[0] + d1[0] * Lv, Q[1] + d1[1] * Lv, { cls: 's2', marker: 'ar2', width: 3 }));
-    b.push(txt(Q[0] + (d1[0] + d2[0]) * Lv / 2 - 8, Q[1] + (d1[1] + d2[1]) * Lv / 2 + 6, 'Δv', { anchor: 'end', cls: 'ink bold' }));
+    b.push(px(Q[0], Q[1], T1[0], T1[1], { cls: 's1', marker: 'ar1' }));
+    b.push(txt(T1[0] - 4, T1[1] - 8, '처음 v', { anchor: 'end', cls: 'ink', size: 'sm' }));
+    b.push(px(Q[0], Q[1], T2[0], T2[1], { cls: 's1', marker: 'ar1' }));
+    // 끝 바로 왼쪽은 Δv 의 화살촉이 차지하므로 이름은 끝의 아래에 둔다.
+    b.push(txt(T2[0], T2[1] + 20, '나중 v', { anchor: 'middle', cls: 'ink', size: 'sm' }));
+    b.push(px(T1[0], T1[1], T2[0], T2[1], { cls: 's2', marker: 'ar2', width: 3 }));
+    b.push(txt((T1[0] + T2[0]) / 2 - 8, (T1[1] + T2[1]) / 2 + 6, 'Δv', { anchor: 'end', cls: 'ink bold' }));
     b.push(txt(360, 240, 'Δv 는 두 위치의 한가운데에서', { cls: 'ink2', size: 'sm' }));
     b.push(txt(360, 258, '원의 중심을 가리킨다', { cls: 'ink bold' }));
     b.push(txt(360, 286, '가속도 = Δv / Δt 도 중심 방향', { cls: 'ink2', size: 'sm' }));

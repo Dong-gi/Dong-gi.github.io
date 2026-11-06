@@ -22,8 +22,8 @@ direction: right
 
 시그마아는가: { label: "σ 를 아는가"; shape: diamond }
 한평균 -> 시그마아는가
-z검정: { label: "z = (x̄ − μ~0)/(σ/√n)" }
-t검정: { label: "t = (x̄ − μ~0)/(s/√n)\n자유도 n − 1"; style.bold: true }
+z검정: { label: "z = (x̄ − μ₀)/(σ/√n)" }
+t검정: { label: "t = (x̄ − μ₀)/(s/√n)\n자유도 n − 1"; style.bold: true }
 시그마아는가 -> z검정: "안다"
 시그마아는가 -> t검정: "모른다"
 
@@ -33,22 +33,22 @@ t검정: { label: "t = (x̄ − μ~0)/(s/√n)\n자유도 n − 1"; style.bold: 
 등분산인가: { label: "두 모분산이 비슷한가"; shape: diamond }
 짝인가 -> 대응t: "짝지어져 있다"
 짝인가 -> 등분산인가: "독립이다"
-합동t: { label: "합동분산 t\n자유도 n~1 + n~2 − 2"; style.bold: true }
+합동t: { label: "합동분산 t\n자유도 n₁ + n₂ − 2"; style.bold: true }
 웰치t: { label: "웰치 t\n자유도는 근사식" }
 등분산인가 -> 합동t: "비슷하다"
 등분산인가 -> 웰치t: "많이 다르다"
 
 비율개수: { label: "비율이 하나인가 둘인가"; shape: diamond }
 비율검정 -> 비율개수
-한비율: { label: "z = (p̂ − p~0)/√(p~0(1−p~0)/n)\n분모에 p~0 을 쓴다"; style.bold: true }
+한비율: { label: "z = (p̂ − p₀)/√(p₀(1−p₀)/n)\n분모에 p₀ 을 쓴다"; style.bold: true }
 두비율: { label: "합동비율로 표준오차를 만들고 z" }
 비율개수 -> 한비율: "하나"
 비율개수 -> 두비율: "둘"
 
 분산개수: { label: "분산이 하나인가 둘인가"; shape: diamond }
 분산검정 -> 분산개수
-카이분산: { label: "χ² = (n−1)s²/σ~0²\n자유도 n − 1"; style.bold: true }
-F분산: { label: "F = s~1²/s~2²\n자유도 (n~1−1, n~2−1)"; style.bold: true }
+카이분산: { label: "χ² = (n−1)s²/σ₀²\n자유도 n − 1"; style.bold: true }
+F분산: { label: "F = s₁²/s₂²\n자유도 (n₁−1, n₂−1)"; style.bold: true }
 분산개수 -> 카이분산: "하나"
 분산개수 -> F분산: "둘"
 
@@ -62,9 +62,12 @@ F분산: { label: "F = s~1²/s~2²\n자유도 (n~1−1, n~2−1)"; style.bold: t
 꼬리: {
   label: "꼬리를 정하는 것은 대립가설이다.\n‘다르다’ 면 양쪽, ‘크다’ 나 ‘작다’ 면 한쪽.\n자료를 보고 정하면 유의수준이 두 배가 된다"
   shape: text
+  # 자리를 정해 주지 않으면 시작 → 도수 화살표가 이 글을 가로지른다. 그림 위아래 가운데에 따로 둔다.
+  near: top-center
 }
 
 F주의: {
   label: "F 검정은 큰 쪽을 분자에 두는 관례가 있다.\n그렇게 했으면 양쪽 검정에서도 오른쪽 꼬리만 보되\n비교하는 것은 α 점이 아니라 α/2 점이다"
   shape: text
+  near: bottom-center
 }

@@ -8,11 +8,16 @@ import java.io.InputStream
  * HTTP/1.x 의 머리(첫 줄 + 머리 줄들). 프록시 사이에서 오가는 것은 이것뿐이고, 몸은 해석하지 않고 흘려보낸다.
  *
  * [extra] 는 머리 끝(빈 줄) 뒤에 같이 읽힌 바이트다 — 터널의 첫 바이트일 수 있으므로 버리지 않고 먼저 넘긴다.
+ *
+ * [hasBareLineBreak] — 줄 안에 홀로 선 CR 이나 LF(CRLF 짝이 아닌 것)가 있다. 머리는 CRLF 로만 가르므로 그런 글자는 요청 줄이나 값 안에
+ * 살아남는데, 중계는 머리를 ISO-8859-1 바이트 그대로 원격에 다시 쓴다 — 홀로 선 CR·LF 를 줄 끝으로 읽는 서버가 머리를 하나 더 보거나 요청을
+ * 둘로 읽는다(머리 주입·스머글링). 중계는 그런 요청을 400 으로 거절한다([LocalRelay] — 2026-10-16 보안 점검, 테더의 HTTP 프록시와 같게).
  */
 internal class HttpHead(
     val startLine: String,
     val headers: List<Pair<String, String>>,
     val extra: ByteArray,
+    val hasBareLineBreak: Boolean = false,
 ) {
     fun header(name: String): String? = headers.firstOrNull { it.first.equals(name, ignoreCase = true) }?.second
 
@@ -68,7 +73,7 @@ internal class HttpHead(
                 val colon = line.indexOf(':')
                 if (colon <= 0) null else line.substring(0, colon).trim() to line.substring(colon + 1).trim()
             }
-            return HttpHead(lines.first(), headers, bytes.copyOfRange(end, bytes.size))
+            return HttpHead(lines.first(), headers, bytes.copyOfRange(end, bytes.size), lines.any { it.indexOf('\r') >= 0 || it.indexOf('\n') >= 0 })
         }
 
         private const val CR = '\r'.code.toByte()

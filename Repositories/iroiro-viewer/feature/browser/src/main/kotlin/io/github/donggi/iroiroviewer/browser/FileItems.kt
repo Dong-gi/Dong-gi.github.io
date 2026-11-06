@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.donggi.iroiroviewer.model.PathNames
 import io.github.donggi.iroiroviewer.ui.IroProgress
 import io.github.donggi.iroiroviewer.io.Format
 import io.github.donggi.iroiroviewer.io.MimeResolver
@@ -92,7 +93,8 @@ fun FileRow(
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text(
-                text = entry.name,
+                // 이름 속의 방향 제어 글자는 보이는 표시로 — `invoice` + U+202E + `fdp.apk` 가 'invoicekpa.pdf' 로 보이지 않게.
+                text = PathNames.forDisplay(entry.name),
                 style = MaterialTheme.typography.bodyLarge,
                 maxLines = 1,
                 overflow = TextOverflow.MiddleEllipsis,
@@ -164,7 +166,7 @@ fun FileGridItem(
             )
         }
         Text(
-            text = entry.name,
+            text = PathNames.forDisplay(entry.name),
             style = MaterialTheme.typography.bodySmall,
             maxLines = 2,
             overflow = TextOverflow.MiddleEllipsis,

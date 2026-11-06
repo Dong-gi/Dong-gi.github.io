@@ -50,6 +50,13 @@ import java.util.zip.ZipOutputStream
  *
  * 다 쓰기 전에는 결과의 크기를 모른다(글은 줄고 영상은 그대로다). 미리 거절하지 않고, 쓰는 동안 [SPACE_CHECK_BYTES] 마다
  * 남은 공간을 보고 [SPACE_MARGIN_BYTES] 밑으로 내려가면 멈춘다 — 디스크를 0 까지 채우면 다른 앱과 시스템이 함께 넘어진다.
+ *
+ * ## 암호(2026-10-16)
+ *
+ * 암호를 받으면 항목을 **WinZip AES-256(AE-2)** 으로 잠근다([AesZipWriter] — 플랫폼의 쓰개는 방식 99 를 쓰지 못한다). 훑기·거르기·임시본·
+ * 끝에 이름 맡기·공간·취소·'읽다 실패하면 전부 버린다' 는 위와 같은 길이다. 다른 점 셋 — '저장' 항목도 **한 번만** 읽는다(AE-2 는 CRC 를 적지
+ * 않고 크기는 머리를 고쳐 적는다), 폴더는 잠그지 않는다, 전통 암호(ZipCrypto)는 쓰지 않는다(약하다). 암호는 열쇠의 바탕([AesZipKey])으로
+ * 옮기는 즉시 0 으로 덮는다.
  */
 object ZipMaker {
 
@@ -77,6 +84,10 @@ object ZipMaker {
         /** 진행률의 분모 — 읽을 바이트. '저장' 항목은 두 번 읽는다(재고, 쓴다). */
         val work: Long
             get() = items.sumOf { if (it.isDirectory) 0L else if (isCompressed(it.file.name)) it.size * 2 else it.size }
+
+        /** 암호 ZIP 의 분모 — 파일마다 한 번만 읽는다(재지 않는다). */
+        val workOnce: Long
+            get() = items.sumOf { if (it.isDirectory) 0L else it.size }
     }
 
     /** 결과. 성공이면 [path] 가 실제로 만든 파일이다. */
@@ -114,6 +125,8 @@ object ZipMaker {
      * 묶는다. 취소되면 임시본을 지우고 [FileOpEngine.Outcome.Cancelled] 를 돌려준다(던지지 않는다 — 큐의 경계가 여기다).
      *
      * @param sources 고른 것들. **같은 폴더 안의 것**이어야 한다(목록의 선택이 그렇다) — ZIP 안의 맨 위 이름이 그 이름들이다.
+     * @param password 암호. null 이거나 비었으면 암호 없이 묶는다(예전 그대로). 있으면 WinZip AES-256 으로 잠근다(머리말 '암호').
+     *   **열쇠의 바탕으로 옮기는 즉시 0 으로 덮는다** — 묶는 동안 배열에 남겨 두지 않는다(큐도 끝에 한 번 더 덮는다).
      */
     suspend fun make(
         sources: List<String>,
@@ -121,9 +134,19 @@ object ZipMaker {
         name: String,
         media: MediaIndex?,
         onProgress: (FileOpEngine.Progress) -> Unit,
+        password: CharArray? = null,
         /** ZIP 을 놓은 순간에 불린다(`NewFiles.place`) — 그 뒤에 온 취소가 결과를 버려도 큐가 '놓였다' 를 안다. */
         onPlaced: (Result) -> Unit = {},
     ): Result = withContext(IroDispatchers.io) {
+        // 암호는 맨 먼저 열쇠의 바탕(암호로 열쇠를 건 HMAC)으로 옮기고 덮는다 — 훑기·묶기는 몇 분이 걸릴 수 있다. 옮길 수 없는 암호(짝 없는
+        // 서로게이트)는 화면이 이미 막는다(`AesZipCrypto.isEncodable` — 같은 판정이다). 여기까지 오면 우리 결함이라 '입출력' 으로 말한다.
+        val key: AesZipKey? = password?.let { pw ->
+            try {
+                if (pw.isEmpty()) null else AesZipKey.of(pw) ?: return@withContext unusablePassword(name)
+            } finally {
+                pw.fill('\u0000')
+            }
+        }
         val dir = File(destDir)
         val zipName = zipName(name) ?: return@withContext Result(FileOpEngine.Outcome.Failed(FileOpEngine.Reason.INVALID_NAME, name), null)
         if (!dir.isDirectory) {
@@ -146,6 +169,7 @@ object ZipMaker {
         } catch (e: IOException) {
             return@withContext Result(FileOpEngine.Outcome.Failed(FileOpEngine.reasonOf(e), zipName), null)
         }
+        if (key != null) return@withContext makeLocked(plan, pending, dir, zipName, key, media, onProgress, onPlaced)
         var unreadable = plan.unreadable
         var added = 0
         // **닫아도 아래 파일은 열어 둔다.** ZIP 흐름을 닫아야 그 안의 `Deflater` 가 네이티브 메모리를 놓는데(닫지 않으면 GC 를
@@ -241,6 +265,108 @@ object ZipMaker {
             // 버리는 길이다 — 닫기의 실패로 할 일은 없다.
         }
         pending.abort()
+    }
+
+    // ---- 암호 ZIP -------------------------------------------------------------------
+
+    /**
+     * 암호를 건 길 — 쓰는 것만 [AesZipWriter] 이고, 훑은 계획·임시본·공간·취소·'읽다 실패하면 전부 버린다'·끝에 이름 맡기는 [make] 의
+     * 암호 없는 길과 같다. '저장' 항목도 한 번만 읽는다(재지 않는다 — 크기는 머리를 고쳐 적고 CRC 는 적지 않는다).
+     */
+    private suspend fun makeLocked(
+        plan: Plan,
+        pending: AtomicFileWriter.Pending,
+        dir: File,
+        zipName: String,
+        key: AesZipKey,
+        media: MediaIndex?,
+        onProgress: (FileOpEngine.Progress) -> Unit,
+        onPlaced: (Result) -> Unit,
+    ): Result {
+        var unreadable = plan.unreadable
+        var added = 0
+        val writer = try {
+            AesZipWriter(pending.stream.channel, key)
+        } catch (t: Throwable) {
+            // 쓰개를 세우지도 못했다(이 기기에 AES·HMAC 이 없다면) — 쓴 것이 없으니 임시본만 지운다.
+            withContext(NonCancellable) { pending.abort() }
+            Iro.e(message = "암호 ZIP 쓰개를 세우지 못했다: ${t::class.java.simpleName}")
+            return Result(FileOpEngine.Outcome.Failed(FileOpEngine.Reason.IO, zipName, 0, plan.skipped, unreadable), null)
+        }
+        try {
+            val progress = Progress(plan.workOnce, plan.files, onProgress)
+            val space = SpaceGuard(dir)
+            val buf = ByteArray(BUFFER)
+            for (item in plan.items) {
+                currentCoroutineContext().ensureActive()
+                if (item.isDirectory) {
+                    writer.addDirectory(item.name, item.modified)
+                    continue
+                }
+                // **연 다음에 항목을 연다.** 열리지 않는 파일에 항목부터 쓰면 빈 항목이 남는다(암호 없는 길과 같다).
+                val input = try {
+                    FileInputStream(item.file)
+                } catch (e: IOException) {
+                    unreadable++
+                    progress.skip(item.size)
+                    continue
+                }
+                input.use { stream ->
+                    writer.beginFile(item.name, item.modified, compress = !isCompressed(item.file.name), sizeHint = item.size)
+                    progress.begin(item.file.name)
+                    while (true) {
+                        currentCoroutineContext().ensureActive()
+                        val n = try {
+                            stream.read(buf)
+                        } catch (e: IOException) {
+                            // 반쯤 쓴 항목은 지울 수 없다 — ZIP 전체를 버린다.
+                            throw Stop(FileOpEngine.reasonOf(e), item.file.name)
+                        }
+                        if (n < 0) break
+                        writer.write(buf, 0, n)
+                        progress.add(n.toLong())
+                        space.wrote(n.toLong())
+                    }
+                    try {
+                        writer.finishFile()
+                    } catch (e: AesZipWriter.SizeOverflow) {
+                        // 훑은 뒤에 파일이 4 GiB 를 넘게 자랐다 — 머리에 자리를 잡지 않았으니 이 ZIP 은 믿을 수 없다(암호 없는 길의 '잰 뒤에
+                        // 파일이 바뀌었다' 와 같은 판단).
+                        throw Stop(FileOpEngine.Reason.IO, item.file.name)
+                    }
+                }
+                added++
+                progress.fileDone()
+            }
+            writer.finish()
+            val done = FileOpEngine.Outcome.Done(added, plan.skipped, unreadable)
+            val target = try {
+                NewFiles.place(pending, dir, zipName, media) { t -> onPlaced(Result(done, t.absolutePath)) }
+            } catch (e: NewFiles.ClaimFailed) {
+                throw Stop(e.reason, zipName)
+            }
+            return Result(done, target.absolutePath)
+        } catch (e: Stop) {
+            withContext(NonCancellable) { pending.abort() }
+            // **끝낸 수를 싣지 않는다** — ZIP 을 통째로 버렸다.
+            return Result(FileOpEngine.Outcome.Failed(e.reason, e.name, 0, plan.skipped, unreadable), null)
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            withContext(NonCancellable) { pending.abort() }
+            return Result(FileOpEngine.Outcome.Cancelled, null)
+        } catch (t: Throwable) {
+            withContext(NonCancellable) { pending.abort() }
+            Iro.e(message = "암호 ZIP 만들기가 실패했다: ${t::class.java.simpleName}")
+            return Result(FileOpEngine.Outcome.Failed(FileOpEngine.reasonOf(t), zipName, 0, plan.skipped, unreadable), null)
+        } finally {
+            // 압축기의 네이티브 메모리와 남은 열쇠 흐름. 임시본은 위에서 놓았거나 지웠다.
+            writer.close()
+        }
+    }
+
+    /** 옮길 수 없는 암호 — 화면이 막으므로 여기 온 것은 우리 결함이다. 경로도 암호도 남기지 않는다. */
+    private fun unusablePassword(name: String): Result {
+        Iro.e(message = "ZIP 암호를 바이트로 옮기지 못했다")
+        return Result(FileOpEngine.Outcome.Failed(FileOpEngine.Reason.IO, name), null)
     }
 
     // ---- 계획 -------------------------------------------------------------------

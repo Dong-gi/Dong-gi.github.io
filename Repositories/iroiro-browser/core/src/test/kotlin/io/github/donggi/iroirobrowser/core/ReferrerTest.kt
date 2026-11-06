@@ -28,6 +28,29 @@ class ReferrerTest {
     }
 
     @Test
+    fun 넘겨주기의_홉마다_쪽에서_다시_고른다() {
+        // 같은 출처의 처음 홉 → 다른 출처로 넘겨줌 → 다시 쪽의 출처로(2026-10-16 보안 점검 — 앞 판은 처음 홉의 값을 모든 홉에 실었다).
+        val page = "https://a.test/watch?v=1&token=secret#t"
+        val hops = listOf("https://a.test/dl/file.mp4", "https://cdn.test/x/file.mp4?sig=1", "https://a.test/again", "http://plain.test/f")
+        assertEquals(listOf("https://a.test/watch?v=1&token=secret", "https://a.test/", "https://a.test/watch?v=1&token=secret", null), hops.map { ref(page, it) })
+        // HLS — 재생목록은 쪽과 같은 출처, 조각·열쇠는 다른 출처.
+        val hls = listOf("https://a.test/hls/index.m3u8", "https://seg.test/s1.ts", "https://keys.test/k.bin")
+        assertEquals(listOf("https://a.test/watch?v=1&token=secret", "https://a.test/", "https://a.test/"), hls.map { ref(page, it) })
+    }
+
+    @Test
+    fun 사이트가_정한_Referer_는_처음_홉에만_그대로() {
+        val chosen = "https://hitomi.test/reader/1.html"
+        val first = "https://img.test/1/a.webp"
+        assertEquals(chosen, Referrer.pinnedFirstHop(chosen, first, first), "처음 홉은 사이트의 규약 그대로(다른 출처여도)")
+        assertEquals("https://hitomi.test/", Referrer.pinnedFirstHop(chosen, first, "https://other.test/a.webp"), "넘겨주기 뒤 다른 출처는 출처만")
+        assertEquals(chosen, Referrer.pinnedFirstHop(chosen, first, "https://hitomi.test/b"))
+        assertNull(Referrer.pinnedFirstHop(chosen, first, "http://img.test/1/a.webp"))
+        assertNull(Referrer.pinnedFirstHop(null, first, "https://other.test/a"))
+        assertNull(Referrer.pinnedFirstHop(null, first, first))
+    }
+
+    @Test
     fun 웹이_아니면_없다() {
         assertNull(ref(null, "https://a.test/f"))
         assertNull(ref("about:blank", "https://a.test/f"))

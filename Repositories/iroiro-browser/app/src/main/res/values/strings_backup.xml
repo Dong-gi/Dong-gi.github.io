@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  설정 › 백업 — 북마크·설정 내보내기와 가져오기(settings/BackupScreen, CLAUDE.md '설정·북마크 백업'). 화면의 글은 짧게 둔다(사용자: '설명이
+  너무 장황합니다' — 2026-10-11). 할 일과 경고만, 까닭은 CLAUDE.md 에.
+-->
+<resources>
+    <string name="backup">백업</string>
+    <string name="backup_note">북마크와 설정을 파일 하나로 옮깁니다. 비밀번호·쿠키·열린 탭은 담지 않습니다.</string>
+    <string name="backup_export">설정 내보내기</string>
+    <string name="backup_import">설정 가져오기</string>
+
+    <string name="backup_with_history">방문 기록도 넣기</string>
+    <string name="backup_with_proxy">프록시 주소·사용자 이름도 넣기(비밀번호는 넣지 않습니다)</string>
+    <string name="backup_export_warning">파일은 잠기지 않습니다 — 넣은 것은 누구나 읽을 수 있습니다.</string>
+    <string name="backup_export_go">내보내기</string>
+    <string name="backup_import_go">가져오기</string>
+
+    <string name="backup_exported">내보냈습니다 — 북마크 %1$d개</string>
+    <string name="backup_exported_history">내보냈습니다 — 북마크 %1$d개 · 방문 기록 %2$d곳</string>
+    <string name="backup_imported">가져왔습니다</string>
+    <string name="backup_imported_password">가져왔습니다 — 프록시 비밀번호를 다시 넣고 저장하세요</string>
+    <string name="backup_nothing">바뀔 것이 없습니다 — 모두 이미 있습니다</string>
+
+    <string name="backup_no_picker">파일을 고를 앱이 없습니다</string>
+    <string name="backup_read_failed">파일을 읽지 못했습니다</string>
+    <string name="backup_write_failed">파일에 쓰지 못했습니다</string>
+    <string name="backup_too_large">파일이 너무 큽니다</string>
+    <string name="backup_not_backup">Web 의 설정 백업 파일이 아닙니다</string>
+    <string name="backup_newer">새 판의 Web 이 만든 파일입니다 — 앱을 올린 뒤 가져오세요</string>
+    <string name="backup_malformed">파일이 깨졌습니다</string>
+
+    <string name="backup_sum_bookmarks">북마크 %1$d개 더함</string>
+    <string name="backup_sum_bookmarks_known">북마크 %1$d개 더함(이미 있는 %2$d개는 그대로)</string>
+    <string name="backup_sum_history">방문 기록 %1$d곳 더함 · %2$d곳 합침</string>
+    <string name="backup_sum_history_cap">방문 기록은 최근 %1$d곳까지만 남습니다</string>
+    <string name="backup_sum_hidden">숨긴 요소 %1$d개 더함</string>
+    <string name="backup_sum_popups">팝업 허용 사이트 %1$d곳 더함</string>
+    <string name="backup_sum_allowed">광고 차단을 끈 사이트 %1$d곳 더함</string>
+    <string name="backup_sum_lists">광고 목록 %1$d개 더함 · %2$d개 켜기·끄기 바꿈</string>
+    <string name="backup_sum_settings">설정 %1$d개 바꿈</string>
+    <string name="backup_sum_bypass_added">프록시를 거치지 않을 곳을 더함 — %1$s</string>
+    <string name="backup_sum_bypass">프록시 예외 규칙을 바꿈</string>
+    <string name="backup_bypass_private">사설망</string>
+    <string name="backup_bypass_simple">점 없는 이름</string>
+    <string name="backup_sum_more">%1$s 외 %2$d개</string>
+    <string name="backup_sum_exit">출구 확인 주소를 %1$s 로 바꿈</string>
+    <string name="backup_sum_proxy">프록시를 %1$s 로 바꿈</string>
+    <string name="backup_sum_password">프록시 비밀번호는 다시 넣어야 합니다</string>
+    <string name="backup_sum_public">%1$s 는 사설망이 아닙니다 — 그곳에는 실제 IP 가 드러납니다</string>
+    <string name="backup_sum_skipped">알아보지 못한 %1$d개는 건너뜀</string>
+    <string name="backup_sum_unsaved">이 화면에서 저장하지 않은 프록시 칸의 변경은 버려집니다</string>
+</resources>

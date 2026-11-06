@@ -12,6 +12,10 @@
     <!-- 칸 끝의 눈 단추(화면 낭독기가 읽는다). 암호든 비밀번호든 같이 쓰도록 둘 다 아닌 말로. -->
     <string name="ui_password_show">친 글자 보기</string>
     <string name="ui_password_hide">친 글자 가리기</string>
+    <!-- 새 암호의 두 칸(NewPasswordFields) - 무엇을 잠글 때. 비워 두면 암호를 쓰지 않는다. -->
+    <string name="ui_password_optional">암호 (선택)</string>
+    <string name="ui_password_confirm">암호 확인</string>
+    <string name="ui_password_mismatch">두 암호가 다릅니다</string>
 
     <!--
       움직이는 그림을 첫 장면만 보여 주는 까닭(AnimationPlan.StillReason, 뜻은 StillReasonText).

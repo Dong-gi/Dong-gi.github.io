@@ -121,7 +121,7 @@ add((() => {
 
     /* ---- 아래: 대응 ---- */
     g.push(ln([[40, 372], [840, 372]], { stroke: CG, sw: 1 }));
-    g.push(ctxt(W / 2, 398, '두 사다리의 칸이 하나씩 대응한다. 0 자리에 문장문자와 ⊥ 가 오고, +1 자리에 조항 여섯이 온다', { anchor: 'middle', col: CI, size: 'sm', bold: true }));
+    g.push(ctxt(W / 2, 398, '두 사다리의 칸이 하나씩 대응한다. 0 자리에 문장문자와 ⊥ 가 오고, +1 자리에 조항 다섯이 온다', { anchor: 'middle', col: CI, size: 'sm', bold: true }));
     g.push(ctxt(W / 2, 420, '정당한 근거도 같다 — 자연수는 +1 을 유한 번, 적형식은 조항을 유한 번 적용해 만들어진다. 뒤엣것이 5장의 폐포 조항이다', { anchor: 'middle', col: CK, size: 'sm' }));
 
     return {

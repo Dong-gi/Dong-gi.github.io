@@ -23,14 +23,14 @@ direction: right
 }
 정의.사건확률 -> 합의규칙: 정의를 두 번 쓰고 항을 모은다
 
-여사건: { label: "여사건 규칙\nPr[¬A] = 1 − Pr[A]" }
+여사건: { label: "여사건 규칙\nPr[S − A] = 1 − Pr[A]" }
 차: { label: "차의 규칙\nPr[B − A] = Pr[B] − Pr[A ∩ B]" }
 포함배제: { label: "포함배제\nPr[A ∪ B] = Pr[A] + Pr[B] − Pr[A ∩ B]" }
 불: { label: "불의 부등식\nPr[A ∪ B] ≤ Pr[A] + Pr[B]" }
 단조: { label: "단조성\nA ⊆ B 이면 Pr[A] ≤ Pr[B]" }
 합집합한계: { label: "합집합 한계(union bound)\nPr[∪ Eₙ] ≤ Σ Pr[Eₙ]\n서로소가 아니어도 된다"; style.bold: true }
 
-합의규칙 -> 여사건: S = A ∪ ¬A 로 쪼갠다
+합의규칙 -> 여사건: S = A ∪ (S−A) 로 쪼갠다
 합의규칙 -> 차: B = (B−A) ∪ (A∩B)
 차 -> 포함배제: A ∪ B = A ∪ (B−A)
 포함배제 -> 불: 확률은 음이 아니다

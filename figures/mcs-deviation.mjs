@@ -185,7 +185,7 @@ add((() => {
     g.push(ctxt(x0, 134, `체르노프  ${sci(Math.exp(-beta(1.2) * mu))}`, C2, { bold: true }));
     g.push(ctxt(x0, 152, `참값      ${sci(binTailGe(n, 600, p))}`, C1, { bold: true }));
     g.push(txt(x0, 178, '한 단계 내려갈수록', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(x0, 196, '네 자리씩 좁혀진다', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(x0, 196, '상한이 크게 좁혀진다', { cls: 'ink2', size: 'sm' }));
     g.push(txt(x0, 224, '더 아는 것이 있어야', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(x0, 242, '더 좁게 잡는다', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(x0, 262, '평균만 → 마르코프', { cls: 'ink2', size: 'sm' }));
@@ -364,7 +364,7 @@ add((() => {
 
     g.push(ln([[20, 272], [W - 20, 272]], { stroke: CG, sw: 1 }));
     g.push(txt(20, 292, '곡선이 1/n 로 떨어진다. 오차를 절반으로 줄이려면 x² 이 4분의 1이 되므로 표본은 네 배가 필요하다.', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(20, 312, '체르노프 한계를 쓰면 같은 신뢰도에 필요한 n 이 대략 4분의 1로 줄어든다 — 이항분포임을 더 쓰기 때문이다.', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(20, 312, '이항 꼬리를 직접 계산하면 같은 신뢰도에 필요한 n 이 대략 5분의 1로 줄어든다 — 이항분포임을 더 쓰기 때문이다.', { cls: 'ink2', size: 'sm' }));
 
     return {
         name: 'mcs-d-sample-size',
@@ -448,7 +448,7 @@ add((() => {
     g.push(f.label([11, digits(11)], '0.78', { dx: 0, dy: -10, anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     g.push(f.label([12, digits(12)], '0.001', { dx: 0, dy: -10, anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     g.push(f.label([13.1, digits(13)], '8 × 10⁻⁸', { dx: 0, dy: -10, anchor: 'middle', cls: 'ink bold', size: 'sm' }));
-    g.push(f.label([16, digits(16)], '10⁻²⁴ 아래', { dx: -4, dy: -10, anchor: 'end', cls: 'ink2', size: 'sm' }));
+    g.push(f.label([16, digits(16)], '10⁻²³ 아래', { dx: -4, dy: -10, anchor: 'end', cls: 'ink2', size: 'sm' }));
 
     const x0 = 380;
     g.push(txt(x0, 76, '왜 10대로는 안 되는가', { cls: 'ink bold', size: 'sm' }));
@@ -460,10 +460,10 @@ add((() => {
     g.push(txt(x0, 196, '합집합 한계로 m 배 하면', { cls: 'ink2', size: 'sm' }));
     g.push(txt(x0 + 10, 214, '어느 한 대라도 넘칠 확률', { cls: 'ink2', size: 'sm' }));
     g.push(txt(x0, 240, '서버 한 대를 더 놓는 것이', { cls: 'ink bold', size: 'sm' }));
-    g.push(txt(x0, 256, '확률을 세 자리씩 깎는다', { cls: 'ink bold', size: 'sm' }));
+    g.push(txt(x0, 256, '상한을 세 자리쯤씩 깎는다', { cls: 'ink bold', size: 'sm' }));
 
     g.push(ln([[20, 274], [W - 20, 274]], { stroke: CG, sw: 1 }));
-    g.push(txt(20, 294, '11대는 곧 넘치고, 12대는 며칠에 한 번 넘치고, 13대는 수백 년에 한 번 넘친다. 여유 30%가 이만큼을 산다.', { cls: 'ink bold', size: 'sm' }));
+    g.push(txt(20, 294, '11대는 보장이 없고, 12대는 많아야 며칠에 한 번, 13대는 많아야 수백 년에 한 번 넘친다. 여유 30%가 이만큼을 산다.', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(20, 314, '작업의 길이를 하나도 모른 채 무작위로 뿌리기만 했는데도 이런 보장이 나온다는 것이 체르노프 한계의 쓸모다.', { cls: 'ink2', size: 'sm' }));
 
     return {
@@ -573,13 +573,13 @@ add((() => {
     g.push(txt(x0, 270, '질 때 크게 진다', { cls: 'ink bold', size: 'sm' }));
 
     g.push(ln([[20, 286], [W - 20, 286]], { stroke: CG, sw: 1 }));
-    g.push(txt(20, 306, '직선이라는 것이 요점이다. 승률은 초기 자본에 정확히 비례하고, 목표까지의 거리에 반비례한다.', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(20, 306, '직선이라는 것이 요점이다. 승률은 초기 자본에 정확히 비례하고, 목표 T 에 반비례한다.', { cls: 'ink2', size: 'sm' }));
 
     return {
         name: 'mcs-d-ruin-fair',
         svg: svg({
             width: W, height: H,
-            title: '공정한 게임에서 자본에 따른 파산 확률',
+            title: '공정한 게임에서 자본에 따른 승률',
             desc: '목표가 600 일 때 초기 자본 n 에 대한 승률이 정확히 n/600 인 직선임을 보이는 그림',
             body: g.join(''),
         }),
@@ -671,7 +671,7 @@ add((() => {
     g.push(f.label([bestK, best], '가장 운 좋았던 순간 — 목표에 닿지 못했다', { dx: 14, dy: 6, cls: 'ink', size: 'sm' }));
 
     g.push(ln([[20, 254], [W - 20, 254]], { stroke: CG, sw: 1 }));
-    g.push(txt(20, 274, '진동의 크기는 판 수의 제곱근으로 자라고(표준편차가 √(kpq) 다) 표류는 판 수에 비례해 자란다.', { cls: 'ink bold', size: 'sm' }));
+    g.push(txt(20, 274, '진동의 크기는 판 수의 제곱근으로 자라고(표준편차가 2√(kpq) 다) 표류는 판 수에 비례해 자란다.', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(20, 294, '오래 하면 표류가 반드시 이긴다. 그래서 초반에 운이 오지 않으면 필요한 진동이 갈수록 커져 사실상 불가능해진다.', { cls: 'ink2', size: 'sm' }));
 
     return {
@@ -738,7 +738,7 @@ add((() => {
         svg: svg({
             width: W, height: H,
             title: '파스칼의 칩 가치 배정',
-            desc: '두 사람의 칩을 아래에서 위로 r 의 거듭제곱으로 값을 매기면 각 판의 가치 기댓값이 0 이 되는 것을 보이는 그림',
+            desc: '갑의 칩은 아래에서 위로, 을의 칩은 위에서 아래로 r 의 거듭제곱으로 값을 매기면 각 판의 가치 기댓값이 0 이 되는 것을 보이는 그림',
             body: g.join(''),
         }),
     };
@@ -830,7 +830,7 @@ add((() => {
     g.push(txt(44, 208, '(1,0), (0,1), (1,0), ⋯ 로 튄다', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(44, 228, '정상분포에 결코 가까워지지 않는다', { cls: 'ink2', size: 'sm' }));
 
-    g.push(panel(352, 44, 304, 200, '싱크가 둘인 그래프', '정상분포가 셀 수 없이 많다'));
+    g.push(panel(352, 44, 304, 200, '갇히는 정점이 둘인 그래프', '정상분포가 셀 수 없이 많다'));
     g.push(nd(400, 106, 'a', C3));
     g.push(nd(504, 106, 'b', C1));
     g.push(nd(504, 178, 'c', C1));
@@ -847,7 +847,7 @@ add((() => {
 
     g.push(ln([[20, 258], [W - 20, 258]], { stroke: CG, sw: 1 }));
     g.push(txt(20, 278, '그래서 페이지랭크는 슈퍼 정점을 더해 그래프를 강하게 연결된 것으로 만든다. 강한 연결이면 정상분포가 유일하고', { cls: 'ink bold', size: 'sm' }));
-    g.push(txt(20, 298, '어디서 출발해도 충분히 오래 걸으면 그 분포에 가까워진다. 위 두 그래프에는 그 성질이 없다.', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(20, 298, '주기까지 없으면 어디서 출발해도 그 분포에 가까워진다. 왼쪽은 주기가 있고, 오른쪽은 강한 연결이 아니다.', { cls: 'ink2', size: 'sm' }));
 
     return {
         name: 'mcs-d-stationary-odd',
@@ -976,7 +976,7 @@ add((() => {
     g.push(f.curve(x => Math.log10(phi ** x / Math.sqrt(5)), { from: 0, to: 10, cls: 's1' }));
     g.push(f.curve(x => Math.log10(Math.abs(psi) ** x / Math.sqrt(5)), { from: 0, to: 10, cls: 's2', dash: '5 4' }));
     g.push(f.label([9.4, Math.log10(phi ** 9.4 / Math.sqrt(5))], 'φⁿ/√5  (φ = 1.618)', { dx: -6, dy: -8, anchor: 'end', cls: 'ink bold', size: 'sm' }));
-    g.push(f.label([8.2, Math.log10(Math.abs(psi) ** 8.2 / Math.sqrt(5))], '(0.618)ⁿ/√5 — 금방 사라진다', { dx: -8, dy: -12, anchor: 'end', cls: 'ink2', size: 'sm' }));
+    g.push(f.label([8.2, Math.log10(Math.abs(psi) ** 8.2 / Math.sqrt(5))], '(0.618)ⁿ/√5 — 금방 사라진다', { dx: -8, dy: 16, anchor: 'end', cls: 'ink2', size: 'sm' }));
 
     const x0 = 396;
     g.push(txt(x0, 74, '특성방정식', { cls: 'ink bold', size: 'sm' }));
@@ -988,7 +988,7 @@ add((() => {
     g.push(txt(x0, 190, '작은 뿌리는 절댓값이 1 미만', { cls: 'ink2', size: 'sm' }));
     g.push(txt(x0, 206, '이라 금방 사라진다', { cls: 'ink2', size: 'sm' }));
     g.push(box(x0 - 10, 220, 246, 46, { stroke: C2, sw: 1.4, rx: 5 }));
-    g.push(txt(x0, 240, 'f(n) = φⁿ⁺¹/√5 + o(1)', { cls: 'ink bold', size: 'sm' }));
+    g.push(txt(x0, 240, 'f(n) = φⁿ/√5 + o(1)', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(x0, 258, '무리수가 정수를 만든다', { cls: 'ink2', size: 'sm' }));
 
     g.push(ln([[20, 282], [W - 20, 282]], { stroke: CG, sw: 1 }));
@@ -1040,7 +1040,7 @@ add((() => {
     g.push(txt(x0 + 10, 248, 'n − 1 (많다)', { cls: 'ink2', size: 'sm' }));
 
     g.push(ln([[20, 274], [W - 20, 274]], { stroke: CG, sw: 1 }));
-    g.push(txt(20, 294, '병합정렬이 추가 작업은 훨씬 많은데도 압도적으로 빠르다. 부분문제를 얼마나 줄이는지가 전부를 정한다.', { cls: 'ink bold', size: 'sm' }));
+    g.push(txt(20, 294, '병합정렬이 추가 작업은 훨씬 많은데도 압도적으로 빠르다. 부분문제를 얼마나 줄이는지가 그 차이를 만든다.', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(20, 314, '점선은 원판 옮기기에 크기만큼 시간이 드는 하노이 변형(2·2ⁿ − n − 2)이다. 추가 작업을 1 에서 n 으로 늘려도 두 배뿐이다.', { cls: 'ink2', size: 'sm' }));
 
     return {
@@ -1066,7 +1066,7 @@ add((() => {
     const gx = 168;
     const gy = 74;
     const cells = [
-        ['n − 1 로 줄인다 (가산적)', '개수 2', '2ⁿ 규모', '하노이 탑, 피보나치'],
+        ['n − 1 로 줄인다 (가산적)', '개수 2', '2ⁿ 규모', '하노이 탑 (피보나치는 φⁿ)'],
         ['n − 1 로 줄인다 (가산적)', '개수 3', '3ⁿ 규모', '뿌리가 2에서 3으로'],
         ['n/2 로 줄인다 (배수적)', '개수 2', 'n log n 규모', '병합정렬'],
         ['n/2 로 줄인다 (배수적)', '개수 3', 'n^(log₂3) 규모', '카라추바 곱셈'],
@@ -1091,7 +1091,7 @@ add((() => {
 
     g.push(ln([[20, 258], [W - 20, 258]], { stroke: CG, sw: 1 }));
     g.push(txt(20, 278, '위 줄은 지수, 아래 줄은 다항식이다. 가로로 옮기면(부분문제를 하나 더 만들면) 지수의 밑이나 지수 자리가 바뀐다.', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(20, 296, '반면 한 번의 추가 작업을 1 에서 n 으로 늘리는 것은 상수배만 바꾼다.', { cls: 'ink bold', size: 'sm' }));
+    g.push(txt(20, 296, '반면 하노이에서 한 번의 추가 작업을 1 에서 n 으로 늘린 것은 상수배만 바꾸었다.', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(20, 314, '그러므로 알고리즘을 빠르게 하려면 층마다의 일을 줄이기보다 부분문제를 작게 만들어야 한다.', { cls: 'ink2', size: 'sm' }));
 
     return {

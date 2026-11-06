@@ -1,7 +1,6 @@
 package io.github.donggi.iroirobrowser.core.media
 
-import java.net.URI
-import java.net.URISyntaxException
+import io.github.donggi.iroirobrowser.core.UriRefs
 import java.util.Locale
 
 /**
@@ -11,7 +10,8 @@ import java.util.Locale
  * - **미디어**: 조각(`#EXTINF` 와 주소 — `#EXT-X-BYTERANGE` 면 한 파일의 일부), 잠금(`#EXT-X-KEY`), 초기 조각(`#EXT-X-MAP` — fMP4),
  *   첫 조각의 번호(`#EXT-X-MEDIA-SEQUENCE` — 잠금의 기본 IV), 끝(`#EXT-X-ENDLIST` — 없으면 실시간 방송).
  *
- * 상대 주소는 재생목록의 주소에 대어 푼다.
+ * 상대 주소는 재생목록의 주소에 대어 RFC 3986 대로 푼다([UriRefs] — 브라우저·hls.js 와 같은 꼴). 넘겨주기를 따라 받았으면 **넘겨주기 뒤의 주소**를
+ * 주어야 한다(RFC 8216 4.1 '그것을 담은 재생목록의 주소' — hls.js·ExoPlayer 도 응답의 주소로 푼다).
  */
 sealed class HlsPlaylist {
 
@@ -218,12 +218,7 @@ sealed class HlsPlaylist {
             return ByteArray(h.length / 2) { k -> h.substring(k * 2, k * 2 + 2).toInt(16).toByte() }
         }
 
-        internal fun resolve(base: String, ref: String): String = try {
-            URI(base).resolve(URI(ref.replace(" ", "%20"))).toString()
-        } catch (e: URISyntaxException) {
-            ref
-        } catch (e: IllegalArgumentException) {
-            ref
-        }
+        /** [ref] 를 [base] 에 대어 푼다([UriRefs] — RFC 3986). 빈칸은 `%20` 으로(재생목록에 날것으로 적힌 이름이 있다). */
+        internal fun resolve(base: String, ref: String): String = UriRefs.resolve(base, ref.replace(" ", "%20"))
     }
 }

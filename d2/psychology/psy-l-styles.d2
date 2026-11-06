@@ -21,11 +21,14 @@ direction: down
 
 설계: {
   label: "3번을 검사하는 설계 — 교차 설계"
-  direction: right
-  cell1: { label: "시각형이라 분류된 학습자\n× 그림 위주 수업" }
-  cell2: { label: "시각형이라 분류된 학습자\n× 말 위주 수업" }
-  cell3: { label: "청각형이라 분류된 학습자\n× 그림 위주 수업" }
-  cell4: { label: "청각형이라 분류된 학습자\n× 말 위주 수업" }
+  # 2×2 로 둬야 대각선(맞춘 짝: 시각형×그림, 청각형×말)이 보인다. 한 줄로 두면 대각선이 없다.
+  grid-rows: 2
+  grid-columns: 2
+  grid-gap: 16
+  cell1: { label: "시각형이라 분류된 학습자\n× 그림 위주 수업\n(맞춘 짝)"; style.stroke-width: 3 }
+  cell2: { label: "시각형이라 분류된 학습자\n× 말 위주 수업\n(어긋난 짝)" }
+  cell3: { label: "청각형이라 분류된 학습자\n× 그림 위주 수업\n(어긋난 짝)" }
+  cell4: { label: "청각형이라 분류된 학습자\n× 말 위주 수업\n(맞춘 짝)"; style.stroke-width: 3 }
 }
 
 조건: {

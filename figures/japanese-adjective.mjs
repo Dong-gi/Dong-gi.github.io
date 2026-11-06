@@ -299,7 +299,7 @@ export default [
                 px(204, 212, 424, 112, { cls: 'ax', marker: 'ark', width: 1.2, dash: '5 4' }),
                 big(272, 137, '×', { px: 17, anchor: 'middle', cls: 'ink2' }),
                 big(272, 186, '×', { px: 17, anchor: 'middle', cls: 'ink2' }),
-                txt(40, 294, '× たかいだ  × たかいな — い형용사에 な형용사 쪽의 꼬리를 붙인 것',
+                txt(40, 294, '× たかいだ  × たかいなやま — い형용사에 な형용사 쪽의 꼬리를 붙인 것',
                     { cls: 'ink2', size: 'sm' }),
                 txt(40, 316, '× しずかくない — な형용사에 い형용사 쪽의 꼬리를 붙인 것',
                     { cls: 'ink2', size: 'sm' }),

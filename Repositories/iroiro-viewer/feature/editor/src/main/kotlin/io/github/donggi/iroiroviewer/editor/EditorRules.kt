@@ -10,6 +10,29 @@ package io.github.donggi.iroiroviewer.editor
  */
 object EditorRules {
 
+    /**
+     * 시스템 고르개가 돌려준 주소를 **받는가** — 그림 넣기(`GET_CONTENT`)와 내보내기(`CREATE_DOCUMENT`)의 결과(2026-10-16 보안 점검). `content`
+     * 이고 그 권한자가 **이 앱의 것이 아닐** 때만 받는다.
+     *
+     * 고르개 자리에는 제3자 앱이 설 수 있고(그림 고르기는 갤러리·파일 앱이 받는다), 그 앱이 `file:///data/user/0/<이 앱>/…` 나 **이 앱의**
+     * FileProvider·저장 자리 주소를 돌려주면 이 앱은 그것을 **제 신원으로** 연다 — 그림 넣기면 이 앱의 내부 파일(설정·기록)이나 남이 못 읽는
+     * 저장소 파일이 문서에 실려 나가고, 내보내기면 이 앱의 내부 파일이나(모든 파일 접근 권한으로) 사용자 파일이 덮인다.
+     *
+     * - 스킴은 `content` 하나 — `file:` 은 경로를 그대로 연다(이 앱의 신원으로).
+     * - 권한자 앞의 사용자 번호(`0@`)는 떼고 본다 — `ContentResolver` 가 떼고 같은 사용자의 제공자를 연다(파일 쪽 `IncomingFiles.bareAuthority`
+     *   와 같은 판단).
+     * - 이 앱의 것 — 권한자가 꾸러미 이름이거나 `꾸러미.` 로 시작하거나(이 앱의 제공자는 다 그렇다), 그 제공자의 주인([ownerOf])이 이 앱이다.
+     *   대소문자는 가리지 않고 본다(엄한 쪽으로). 주인을 모르는 권한자(보이지 않거나 없는 제공자)는 이 앱의 것이 아니다 — 여는 것은 그쪽이 막는다.
+     *
+     * @param ownerOf 권한자 → 그 제공자의 꾸러미. 기기에서는 `PackageManager.resolveContentProvider`.
+     */
+    fun acceptsReturnedUri(scheme: String?, authority: String?, ownPackage: String, ownerOf: (String) -> String?): Boolean {
+        if (!scheme.equals("content", ignoreCase = true)) return false
+        val bare = authority?.substringAfterLast('@')?.takeIf { it.isNotBlank() } ?: return false
+        if (bare.equals(ownPackage, ignoreCase = true) || bare.startsWith("$ownPackage.", ignoreCase = true)) return false
+        return !ownerOf(bare).equals(ownPackage, ignoreCase = true)
+    }
+
     /** 쪽이 문서를 열지 못한 까닭 — `open-failed` 의 `reason`(어댑터가 싣는다). 모르는 글은 [OTHER]. */
     enum class OpenFailure {
         /** 암호 물음을 닫았다 — 다시 열면 엔진이 다시 묻는다. 그래서 주 단추가 '다시 열기' 다. */

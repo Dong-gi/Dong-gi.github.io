@@ -1,5 +1,6 @@
 package io.github.donggi.iroiroviewer.webhost
 
+import android.annotation.SuppressLint
 import android.os.SystemClock
 import android.view.View
 import android.webkit.ConsoleMessage
@@ -42,6 +43,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.webkit.WebViewCompat
+import androidx.webkit.WebViewFeature
 import java.io.ByteArrayInputStream
 
 /**
@@ -108,7 +111,223 @@ internal object ScriptPage {
      */
     val OFFLINE_HEADERS: Map<String, String> = mapOf(
         "Content-Security-Policy" to "connect-src 'self' data: blob:",
+        // 비동기 클립보드(`navigator.clipboard`)의 쓰기·읽기를 쪽과 그 안의 모든 틀에서 끈다 — 권한 정책은 아래 틀로 물려 내려가고 쪽이
+        // 넓히지 못한다. `execCommand('copy')`·`copy` 사건은 이 정책이 막지 않는다 — 그쪽은 [CLIPBOARD_GUARD] 다.
+        "Permissions-Policy" to "clipboard-write=(), clipboard-read=()",
     )
+
+    /**
+     * **쪽이 클립보드에 쓰지 못하게 하는 문서 시작 스크립트**(2026-10-16 보안 점검 — '스크립트를 켠 HTML 미리보기가 클립보드로 같은 폴더의 내용을
+     * 내보낼 수 있다'). 스크립트를 켠 쪽은 같은 폴더의 글·자료·그림을 이름으로 읽는다. 사용자가 무엇이든 누르는 순간(사용자 동작) 쪽은
+     * `document.execCommand('copy')`·`navigator.clipboard.write…` 로 그것을 클립보드에 쓸 수 있었고, 다른 앱이 넘긴 HTML 이면 뷰어를 닫을 때
+     * 앞으로 오는 그 앱이 클립보드를 읽는다. 그래서 **쪽의 스크립트보다 먼저**, **모든 틀에서**:
+     *
+     * - `Document.prototype.execCommand` — `copy`·`cut` 이면 아무것도 하지 않고 거짓(명령 글자는 한 번만 글로 바꿔 넘긴다 — 두 번 바꾸면
+     *   `toString` 이 다른 답을 낼 수 있다).
+     * - `Clipboard.prototype.write`·`writeText` — 거절된 약속(권한 정책이 플랫폼에서 한 번 더 막는다 — [OFFLINE_HEADERS]).
+     * - `copy`·`cut` 사건 — 창의 포착 단계에서 **맨 먼저 건 듣개**가 멈춘다(쪽의 듣개·`oncopy` 에 닿지 않는다 — 사용자가 고른 글은 그대로
+     *   복사된다). 그 사건의 `clipboardData` 는 null 이다(`setData` 로 바꿔치지 못한다).
+     *
+     * **쪽이 되돌리지 못한다.** 위 셋은 쓰기·지우기가 안 되는 속성으로 걸고, 고리가 부르는 함수(`Reflect.apply`·`toLowerCase`·사건의 멈춤·
+     * `WeakSet` 의 두 함수·`Object.create`)는 쪽보다 먼저 쥔 사본을 쓴다 — 쪽이 나중에 내장 함수를 바꿔도 이 스크립트는 바뀐 것을 부르지
+     * 않는다. 속성을 거는 설명 객체는 원형이 없는 객체다(쪽이 `Object.prototype` 에 심은 값이 끼지 않게).
+     *
+     * **틀마다.** 문서 시작 스크립트는 같은 출처의 **빈 틀**(about:blank — 스크립트가 만든 iframe)에는 들어가지 않는다 — 쪽이 그런 틀을
+     * 만들어 그 틀의 손대지 않은 `execCommand` 를 쓸 수 있다. 그래서 틀이 생길 수 있는 모든 길의 바로 뒤에서 틀 나무를 훑어 같은 출처의 창마다
+     * 위 셋과 같은 고리를 건다 — Web(iroiro-browser)의 WebRTC 가드(2판 — 15길을 실험으로 막았다)의 갈고리 목록을 그대로 쓴다: DOM 에 넣는
+     * 메서드와 `innerHTML`·`outerHTML`, `document.write`, `execCommand`, `Range.insertNode`, `contentWindow`·`contentDocument`, 틀의 `load`
+     * (문서의 포착 단계), 파서가 넣은 틀(MutationObserver), `window.open`. 다른 출처·data:·샌드박스 틀에는 문서 시작 스크립트가 들어간다
+     * (`addDocumentStartJavaScript` 의 규칙 `*`).
+     *
+     * **남는 것.** 그 밖의 새 길, 쪽이 갈고리를 알아챌 수 있다는 것(`toString`), 그리고 **사용자가 스스로 고른 글의 복사** — 쪽이 보이지
+     * 않게 심은 글(글자 크기 0 등)이 고른 범위 안에 있으면 함께 복사된다(막으려면 고르기를 끄는 수밖에 없다 — 끄지 않았다). 코틀린 글자열과
+     * 셸이 먹지 않게 역슬래시·달러 기호를 쓰지 않는다(시험이 본다).
+     */
+    const val CLIPBOARD_GUARD = """
+(function () {
+  'use strict';
+  var apply = Reflect.apply;
+  var create = Object.create;
+  var define = Object.defineProperty;
+  var describe = Object.getOwnPropertyDescriptor;
+  var toText = String;
+  var lowerCase = String.prototype.toLowerCase;
+  var stopNow = Event.prototype.stopImmediatePropagation;
+  var eventType = describe(Event.prototype, 'type').get;
+  var PromiseCtor = Promise;
+  var promiseReject = Promise.reject;
+  var ErrorCtor = Error;
+  var seen = new WeakSet();
+  var seenHas = WeakSet.prototype.has;
+  var seenAdd = WeakSet.prototype.add;
+  var root = window;
+  var NODE = ['appendChild', 'insertBefore', 'replaceChild'];
+  var ELEMENT = ['append', 'prepend', 'before', 'after', 'replaceWith', 'replaceChildren', 'insertAdjacentElement',
+    'insertAdjacentHTML', 'setHTMLUnsafe', 'moveBefore'];
+  var DOCUMENT = ['write', 'writeln', 'append', 'prepend', 'replaceChildren'];
+  var SHADOW = ['setHTMLUnsafe'];
+  var RANGE = ['insertNode', 'surroundContents'];
+  var MARKUP = ['innerHTML', 'outerHTML'];
+  var SHADOW_MARKUP = ['innerHTML'];
+  var FRAMES = ['HTMLIFrameElement', 'HTMLFrameElement', 'HTMLObjectElement'];
+  var FRAME_GETTERS = ['contentWindow', 'contentDocument'];
+  var CLIPBOARD = ['write', 'writeText'];
+  function clipboardEvent(type) { return type === 'copy' || type === 'cut'; }
+  function data(value, enumerable, locked) {
+    var d = create(null);
+    d.value = value;
+    d.writable = !locked;
+    d.enumerable = enumerable;
+    d.configurable = !locked;
+    return d;
+  }
+  function accessor(get, set, enumerable, locked) {
+    var d = create(null);
+    d.get = get;
+    d.set = set;
+    d.enumerable = enumerable;
+    d.configurable = !locked;
+    return d;
+  }
+  function stop(e) { apply(stopNow, e, []); }
+  function guard(w) {
+    var D = w.Document && w.Document.prototype;
+    var exec = D && describe(D, 'execCommand');
+    if (exec && typeof exec.value === 'function') {
+      var run = exec.value;
+      try {
+        define(D, 'execCommand', data(function execCommand(command) {
+          var c = toText(command);
+          if (clipboardEvent(apply(lowerCase, c, []))) return false;
+          arguments[0] = c;
+          try { return apply(run, this, arguments); } finally { sweep(); }
+        }, exec.enumerable, true));
+      } catch (e) {}
+    }
+    var C = w.Clipboard && w.Clipboard.prototype;
+    for (var i = 0; C && i < CLIPBOARD.length; i++) {
+      var m = describe(C, CLIPBOARD[i]);
+      if (!m) continue;
+      try {
+        define(C, CLIPBOARD[i], data(function () {
+          return apply(promiseReject, PromiseCtor, [new ErrorCtor('clipboard')]);
+        }, m.enumerable, true));
+      } catch (e) {}
+    }
+    var E = w.ClipboardEvent && w.ClipboardEvent.prototype;
+    var cd = E && describe(E, 'clipboardData');
+    if (cd && typeof cd.get === 'function') {
+      var read = cd.get;
+      try {
+        define(E, 'clipboardData', accessor(function () {
+          if (clipboardEvent(apply(eventType, this, []))) return null;
+          return apply(read, this, []);
+        }, undefined, cd.enumerable, true));
+      } catch (e) {}
+    }
+    try {
+      w.addEventListener('copy', stop, true);
+      w.addEventListener('cut', stop, true);
+    } catch (e) {}
+  }
+  function wrapMethods(proto, names) {
+    for (var i = 0; proto && i < names.length; i++) {
+      var d = describe(proto, names[i]);
+      if (!d || typeof d.value !== 'function') continue;
+      (function (f, name, enumerable) {
+        try {
+          define(proto, name, data(function () { try { return apply(f, this, arguments); } finally { sweep(); } }, enumerable, false));
+        } catch (e) {}
+      })(d.value, names[i], d.enumerable);
+    }
+  }
+  function wrapSetters(proto, names) {
+    for (var i = 0; proto && i < names.length; i++) {
+      var d = describe(proto, names[i]);
+      if (!d || typeof d.set !== 'function') continue;
+      (function (get, set, name, enumerable) {
+        try {
+          define(proto, name, accessor(get, function (v) { try { apply(set, this, [v]); } finally { sweep(); } }, enumerable, false));
+        } catch (e) {}
+      })(d.get, d.set, names[i], d.enumerable);
+    }
+  }
+  function wrapGetters(proto, names) {
+    for (var i = 0; proto && i < names.length; i++) {
+      var d = describe(proto, names[i]);
+      if (!d || typeof d.get !== 'function') continue;
+      (function (get, set, name, enumerable) {
+        try {
+          define(proto, name, accessor(function () { sweep(); return apply(get, this, []); }, set, enumerable, false));
+        } catch (e) {}
+      })(d.get, d.set, names[i], d.enumerable);
+    }
+  }
+  function hook(w) {
+    wrapMethods(w.Node && w.Node.prototype, NODE);
+    wrapMethods(w.Element && w.Element.prototype, ELEMENT);
+    wrapMethods(w.Document && w.Document.prototype, DOCUMENT);
+    wrapMethods(w.ShadowRoot && w.ShadowRoot.prototype, SHADOW);
+    wrapMethods(w.Range && w.Range.prototype, RANGE);
+    wrapSetters(w.Element && w.Element.prototype, MARKUP);
+    wrapSetters(w.ShadowRoot && w.ShadowRoot.prototype, SHADOW_MARKUP);
+    for (var i = 0; i < FRAMES.length; i++) {
+      var c = w[FRAMES[i]];
+      wrapGetters(c && c.prototype, FRAME_GETTERS);
+    }
+    try {
+      var open = w.open;
+      w.open = function () { var r = apply(open, this, arguments); sweep(); return r; };
+    } catch (e) {}
+    try { w.document.addEventListener('load', sweep, true); } catch (e) {}
+    try { new w.MutationObserver(sweep).observe(w.document, { childList: true, subtree: true }); } catch (e) {}
+  }
+  function sweep() {
+    var stack = create(null);
+    var top = 0;
+    stack[top++] = root;
+    while (top > 0) {
+      var w = stack[--top];
+      var d;
+      try { d = w.document; } catch (e) { continue; }
+      try {
+        if (!apply(seenHas, seen, [d])) {
+          apply(seenAdd, seen, [d]);
+          guard(w);
+          hook(w);
+        }
+      } catch (e) {}
+      var n = 0;
+      try { n = w.length; } catch (e) {}
+      for (var i = 0; i < n; i++) {
+        try { stack[top++] = w[i]; } catch (e) {}
+      }
+    }
+  }
+  sweep();
+})();
+"""
+
+    /**
+     * 이 기기의 WebView 가 문서 시작 스크립트를 받는가 — [CLIPBOARD_GUARD] 를 걸 수 있는가. 받지 않으면 **스크립트를 켜지 않는다**
+     * (`LockedWebView` 가 자바스크립트를 끈 채로 두고, 화면은 '스크립트 실행' 을 내지 않는다 — `WebHost.scriptsAllowed`).
+     */
+    fun clipboardGuardSupported(): Boolean = WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)
+
+    /**
+     * [view] 에 [CLIPBOARD_GUARD] 를 건다 — **쪽을 싣기 전에**(그 뒤의 모든 문서·틀에 들어간다). 규칙 `*` 는 모든 출처다 — 이 WebView 는
+     * 우리 쪽만 싣고, 쪽이 만든 data:·샌드박스 틀(출처가 없다)까지 들어가야 한다. 걸지 못했으면 거짓이다 — 부른 쪽은 스크립트를 켜지 않는다.
+     */
+    fun installClipboardGuard(view: WebView): Boolean {
+        // lint 의 `RequiresFeature` 가 보는 꼴 그대로 — 같은 함수 안에서 묻는다.
+        if (!WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) return false
+        return try {
+            WebViewCompat.addDocumentStartJavaScript(view, CLIPBOARD_GUARD, setOf("*"))
+            true
+        } catch (e: RuntimeException) {
+            false
+        }
+    }
 
     /** 스크립트를 켠 쪽을 닫으며 렌더러를 끝낸 때(`elapsedRealtime`, ms). 0 이면 아직 없다. */
     @Volatile
@@ -158,6 +377,8 @@ internal object ScriptPage {
  * 겹쳐 둔다. 이 앱이 `INTERNET` 을 선언했던 2026-10-05 ~ 10-09 에는 이것이 막았다). 그리고
  * 렌더러가 그 사이에 죽어도 **앱을 끝내지 않는다**(맨 클라이언트의 `onRenderProcessGone` 은 false 다).
  */
+@SuppressLint("MissingOnRenderProcessGone")
+// `onRenderProcessGone` 은 아래에 있다 — androidx.webkit 의 lint 가 내는 거짓 경고(`LockedWebView` 의 같은 줄).
 internal object TeardownClient : WebViewClient() {
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse = notFound()
 

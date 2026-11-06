@@ -103,6 +103,28 @@ class HlsTest {
     }
 
     @Test
+    fun 열쇠의_상대_주소는_준_주소에_대어_RFC3986_대로() {
+        val text = """
+            #EXTM3U
+            #EXT-X-TARGETDURATION:4
+            #EXT-X-KEY:METHOD=AES-128,URI="?k=7"
+            #EXTINF:4,
+            seg0.ts
+            #EXT-X-KEY:METHOD=AES-128,URI="../keys/k|2.bin"
+            #EXTINF:4,
+            seg1.ts
+            #EXT-X-ENDLIST
+        """.trimIndent()
+        // 부르는 쪽(DownloadCenter.readPlaylist)은 넘겨주기 뒤의 주소를 준다 — 그 주소에 대어 푼다.
+        val m = assertIs<HlsPlaylist.Media>(HlsPlaylist.parse(text, "https://cdn.test/v/x7/index.m3u8?sig=1"))
+        // 질의만 있는 참조는 재생목록의 이름을 지킨다(java.net.URI 는 `/v/x7/?k=7` 로 풀었다).
+        assertEquals("https://cdn.test/v/x7/index.m3u8?k=7", m.segments[0].key!!.uri)
+        // URI 가 받지 않는 글자가 든 참조도 푼다(앞 판은 상대 주소를 그대로 돌렸다).
+        assertEquals("https://cdn.test/v/keys/k|2.bin", m.segments[1].key!!.uri)
+        assertEquals("https://cdn.test/v/x7/seg0.ts", m.segments[0].uri)
+    }
+
+    @Test
     fun 재생목록이_아니면() {
         assertFailsWith<HlsPlaylist.Invalid> { HlsPlaylist.parse("<html>login</html>", "https://x.test/a.m3u8") }
     }

@@ -3,6 +3,7 @@ package io.github.donggi.iroiroviewer.archive
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.donggi.iroiroviewer.format.FileDocumentSource
+import io.github.donggi.iroiroviewer.format.archive.ArchiveEncryptionUnsupportedException
 import io.github.donggi.iroiroviewer.format.archive.ArchiveEntry
 import io.github.donggi.iroiroviewer.format.archive.ArchiveKind
 import io.github.donggi.iroiroviewer.format.archive.ArchivePasswordException
@@ -509,6 +510,9 @@ internal fun failureKindOf(t: Throwable, reachable: Boolean): ArchiveViewModel.S
 internal fun failureKindOf(t: Throwable): ArchiveViewModel.State.Failed.Kind {
     val name = t::class.java.simpleName
     return when {
+        // **타입으로 먼저 가른다** — 아래의 이름 보기는 릴리스에서 듣지 않는다(R8 이 클래스 이름을 줄인다). 7z 의 받을 수 없는 열쇠 유도
+        // 반복(`SevenZKeyGuard`)과 PKWARE 의 강한 암호화가 이 바탕을 잇는다.
+        t is ArchiveEncryptionUnsupportedException -> ArchiveViewModel.State.Failed.Kind.ENCRYPTED
         t is ParseLimitExceededException && t.limitName == "maxEntries" -> ArchiveViewModel.State.Failed.Kind.TOO_LARGE
         t is ParseLimitExceededException || name.contains("MemoryLimit") -> ArchiveViewModel.State.Failed.Kind.TOO_BIG
         name.contains("Password", ignoreCase = true) ||

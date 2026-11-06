@@ -1,7 +1,7 @@
 package io.github.donggi.iroirobrowser.core.adblock
 
 import java.util.Locale
-import java.util.regex.PatternSyntaxException
+import java.util.concurrent.atomic.AtomicBoolean
 
 /** 네트워크 규칙 하나 — 막기 또는 예외(`@@`). [FilterParser] 가 만든다. */
 class NetworkRule(
@@ -10,7 +10,8 @@ class NetworkRule(
     val exception: Boolean,
     /** 주소 무늬. 정규식 규칙이면 null. */
     val pattern: UrlPattern?,
-    val regex: Regex?,
+    /** 정규식 규칙(`/…/`)의 정규식 — 주소 길이에 비례하는 시간으로 맞춘다([ListRegex]). */
+    val regex: ListRegex?,
     /** `||호스트^` 꼴(호스트 표에 넣는다). 아니면 null. */
     val host: String?,
     /** 걸리는 요청 종류([RequestType] 마스크). */
@@ -31,6 +32,14 @@ class NetworkRule(
     /** `$badfilter` 규칙이면 그것이 끄는 규칙의 글(이 규칙 자신은 아무것도 맞추지 않는다). */
     val badfilterOf: String? = null,
 ) {
+    private val regexOff = AtomicBoolean(false)
+
+    /**
+     * 정규식이 걸음 예산([ListRegex.budgetFor])을 넘어 꺼졌는가 — 그 뒤로 이 규칙은 아무것도 맞추지 않는다(목록을 다시 받거나 켜고 끄면 엔진을
+     * 새로 지으며 되살아난다). 예산을 넘은 요청에도 맞지 않은 것으로 친다 — 막는 규칙이면 막지 않고, 예외면 풀어 주지 않는다.
+     */
+    val regexDisabled: Boolean get() = regexOff.get()
+
     /**
      * 이 요청에 걸리는가(무늬·종류·제1자/제3자·쪽의 도메인).
      *
@@ -53,9 +62,22 @@ class NetworkRule(
         if (includeDomains != null && includeDomains.none { Domains.isSameOrSubdomain(req.documentHost, it) }) return false
         if (excludeDomains != null && excludeDomains.any { Domains.isSameOrSubdomain(req.documentHost, it) }) return false
         if (host != null) return Domains.isSameOrSubdomain(req.host, host)
-        if (regex != null) return regex.containsMatchIn(if (regex.options.contains(RegexOption.IGNORE_CASE)) req.urlLower else req.url)
+        if (regex != null) return matchesRegex(regex, req)
         val p = pattern ?: return true
         return p.matches(if (p.matchCase) req.url else req.urlLower, req.hostStart, req.hostEnd)
+    }
+
+    /** 정규식 규칙 — 예산을 넘으면 이 요청에는 맞지 않은 것으로 치고 규칙을 끈다(처음 끈 부름만 [Request.onRegexDisabled] 에 알린다). */
+    private fun matchesRegex(regex: ListRegex, req: Request): Boolean {
+        if (regexOff.get()) return false
+        return when (regex.find(if (regex.ignoreCase) req.urlLower else req.url)) {
+            ListRegex.Result.MATCH -> true
+            ListRegex.Result.NO_MATCH -> false
+            ListRegex.Result.OVER_BUDGET -> {
+                if (regexOff.compareAndSet(false, true)) req.onRegexDisabled?.invoke(this)
+                false
+            }
+        }
     }
 
     override fun toString(): String = text
@@ -189,11 +211,8 @@ object FilterParser {
         // 주 문서만 막으라는 규칙은 쓰지 않는다(막은 쪽을 보일 화면이 없다).
         if (!pageLevel && (o.blocksDocumentOnly || o.types == 0)) return null
         if (rest.length > 2 && rest.startsWith("/") && rest.endsWith("/")) {
-            val regex = try {
-                Regex(rest.substring(1, rest.length - 1), if (o.matchCase) emptySet() else setOf(RegexOption.IGNORE_CASE))
-            } catch (e: PatternSyntaxException) {
-                return null
-            }
+            // 우리 엔진이 받지 않는 꼴(앞뒤 보기 등)·틀린 꼴·너무 긴 것은 건너뛴다([ListRegex] — 되짚지 않아 주소 길이에 비례하는 시간).
+            val regex = ListRegex.compile(rest.substring(1, rest.length - 1), ignoreCase = !o.matchCase) ?: return null
             return NetworkRule(line, exception, null, regex, null, o.types, o.party, o.include, o.exclude, o.important, null,
                 o.document, o.elemhide, o.generichide)
         }

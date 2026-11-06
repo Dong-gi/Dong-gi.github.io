@@ -687,14 +687,14 @@ add((() => {
     g.push(txt(496, 182, 'μ = α/(α + β)', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(496, 202, '값이 0 과 1 사이', { cls: 'ink2', size: 'sm' }));
     g.push(txt(496, 220, '비율 자체를 다룬다', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(350, 284, '두 모수의 크기 비가 봉우리의 위치를, 합이 뾰족한 정도를 정한다', { anchor: 'middle', cls: 'ink' }));
+    g.push(txt(350, 284, '두 모수의 크기 비가 평균의 자리를, 합이 뾰족한 정도를 정한다', { anchor: 'middle', cls: 'ink' }));
     g.push(txt(350, 310, '둘 다 1 보다 작으면 봉우리가 아니라 양 끝이 올라간 U 자가 된다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'st-d-beta-shapes',
         svg: svg({
             width: W, height: H,
             title: '베타분포의 모수와 모양',
-            desc: '0 과 1 사이에서만 값을 갖는 베타분포는 두 모수의 비로 봉우리 위치가, 합으로 뾰족한 정도가 정해진다',
+            desc: '0 과 1 사이에서만 값을 갖는 베타분포는 두 모수의 비로 평균의 자리가, 합으로 뾰족한 정도가 정해진다',
             body: BG + g.join(''),
         }),
     };
@@ -901,7 +901,9 @@ add((() => {
     g.push(txt(140, 240, `μ = ${POP_MU},  σ = ${r2(Math.sqrt(POP_VAR))}`, { anchor: 'middle', cls: 'ink', size: 'sm' }));
 
     g.push(panel(266, 46, 200, 208, '② 표본을 뽑는다', { sub: '크기 5 짜리로 몇 번' }));
-    const rand = rng(11235813);
+    // 씨앗은 네 표본의 평균이 모두 다르게 나오는 것으로 골랐다(0.6 · 0.2 · 0.4 · 1.2).
+    // 아래 글 ‘표본마다 x̄ 가 다르다’ 가 그림과 맞아야 한다. 11235813 은 0.8 이 세 번 나왔다.
+    const rand = rng(11235823);
     for (let s = 0; s < 4; s += 1) {
         const sample = Array.from({ length: 5 }, () => popDraw(rand));
         const mean = sample.reduce((a, b) => a + b, 0) / 5;
@@ -1285,12 +1287,12 @@ add((() => {
     g.push(fr.curve(f => Math.sqrt(Math.max(1 - f, 0)), { from: 0, to: 1, cls: 's1', steps: 240 }));
     g.push(ln([[fr.X(0), fr.Y(1)], [fr.X(1.02), fr.Y(1)]], { stroke: 'var(--grid)', sw: 1, dash: '4 3' }));
     for (const f of [0.5, 1]) g.push(pdot(fr.X(f), fr.Y(Math.sqrt(1 - f)), 'var(--s2)', 4));
-    g.push(txt(fr.X(0.12), fr.Y(0.44), 'n/N 이 0.05 이하이면 수정계수가', { cls: 'ink', size: 'sm' }));
-    g.push(txt(fr.X(0.12), fr.Y(0.33), '0.975 보다 커서 무시해도 된다.', { cls: 'ink', size: 'sm' }));
+    g.push(txt(fr.X(0.12), fr.Y(0.44), 'n/N 이 0.05 이하이면 이 값이', { cls: 'ink', size: 'sm' }));
+    g.push(txt(fr.X(0.12), fr.Y(0.33), '0.97 보다 커서 무시해도 된다.', { cls: 'ink', size: 'sm' }));
     g.push(txt(fr.X(0.12), fr.Y(0.22), '왼쪽 옅은 띠가 그 구간이다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(fr.X(0.5) + 8, fr.Y(Math.sqrt(0.5)) + 4, '절반을 조사하면 0.707 배', { cls: 'ink', size: 'sm' }));
     g.push(txt(fr.X(1) - 6, fr.Y(0) - 12, '전수조사면 0', { anchor: 'end', cls: 'ink', size: 'sm' }));
-    g.push(txt(76, 44, '표준오차에 곱해지는 수정계수 √((N − n)/(N − 1))', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(76, 44, '표준오차에 곱해지는 수정계수의 제곱근 √((N − n)/(N − 1))', { cls: 'ink2', size: 'sm' }));
 
     g.push(box(486, 66, 186, 152, { stroke: 'var(--grid)', sw: 1, rx: 6 }));
     g.push(txt(579, 90, '왜 줄어드는가', { anchor: 'middle', cls: 'ink bold' }));
@@ -1309,7 +1311,7 @@ add((() => {
         svg: svg({
             width: W, height: H,
             title: '유한모집단 수정계수',
-            desc: '표본 비율 n/N 이 커질수록 표준오차에 곱하는 수정계수가 작아지고, n/N 이 0.05 이하면 1 에 가까워 무시할 수 있다',
+            desc: '표본 비율 n/N 이 커질수록 표준오차에 곱하는 수정계수의 제곱근이 작아지고, n/N 이 0.05 이하면 1 에 가까워 무시할 수 있다',
             body: BG + g.join(''),
         }),
     };

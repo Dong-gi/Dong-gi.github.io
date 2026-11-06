@@ -3,10 +3,14 @@ package io.github.donggi.iroirobrowser.browser
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Rect
 import android.graphics.drawable.GradientDrawable
 import android.os.SystemClock
+import android.view.ActionMode
 import android.view.Gravity
 import android.view.InputDevice
+import android.view.Menu
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -37,8 +41,8 @@ class PageWebView(context: Context) : WebView(context) {
 
     /**
      * 창이 보이지 않아도(앱이 뒤로 갔다·화면이 꺼졌다) WebView 에는 창이 보인다고 알린다 — 뒤에서 재생을 잇는 탭([BackgroundPlay]). 크로미움은
-     * 안드로이드에서 숨은 쪽의 영상을 소리가 있어도 멈추고, 쪽은 `visibilitychange` 로 숨은 것을 안다(유튜브는 그때 스스로 멈춘다) — 창이
-     * 보인다고 알리면 둘 다 일어나지 않는다.
+     * 안드로이드에서 숨은 쪽의 영상을 소리가 있어도 멈추고, 쪽은 `visibilitychange` 로 숨은 것을 안다(유튜브는 그때 스스로 멈춘다 — 그래서
+     * 유튜브는 늘 '보임' 을 읽게도 한다, [BackgroundPlay.VISIBILITY_SCRIPT]) — 창이 보인다고 알리면 둘 다 일어나지 않는다.
      *
      * **창이 실제로 다시 보이면 저절로 꺼진다.** 화면이 돌아올 때(`onResume`) 끄면 창은 아직 보이기 전이라 그 사이 '안 보임' 을 알리게 되고,
      * 쪽이 그 틈에 재생을 멈췄다(2026-10-11 에뮬레이터). 뒤에서 재생이 끝나 끌 때는 지금의 실제 창 상태를 다시 알린다.
@@ -67,7 +71,83 @@ class PageWebView(context: Context) : WebView(context) {
             alpha = if (value) 0f else 1f
             descendantFocusability = if (value) FOCUS_BLOCK_DESCENDANTS else FOCUS_BEFORE_DESCENDANTS
             importantForAccessibility = if (value) IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS else IMPORTANT_FOR_ACCESSIBILITY_AUTO
+            // 다시 보이면 새로 그리게 한다 — 투명도만 바꾸면 그려 둔 것을 다시 쓸 뿐 쪽에 새 그림을 청하지 않는다.
+            if (!value) invalidate()
         }
+
+    /**
+     * 화면에 그려지지 않는 동안 화면 밖에 그리는가([OffscreenDraw]) — 뒤에서 재생을 잇는 탭이 재생 중일 때. 위의 둘([keepWindowVisible]·
+     * [backstaged])은 크로미움이 쪽을 '보임' 으로 두게 할 뿐 그리지는 않는다 — 그리지 않으면 영상 프레임이 소비되지 않아 재생이 선다.
+     */
+    var drawOffscreen: Boolean
+        get() = offscreen?.isRunning == true
+        set(value) {
+            if (value) (offscreen ?: OffscreenDraw(this).also { offscreen = it }).start() else offscreen?.stop()
+        }
+
+    /** 처음 켤 때 만든다 — [invalidate] 는 상위 생성자(WebView) 안에서도 불리는데 그때는 이 필드가 아직 없다. */
+    private var offscreen: OffscreenDraw? = null
+
+    /**
+     * 화면 밖에 그리는 동안 청이 있을 때만 그리는가([OffscreenDraw.requestsOnly]) — 쪽의 영상을 숨겼을 때([PageBridge.hideVideos]). 화면 밖
+     * 그리기를 켤 때마다 내려간다.
+     */
+    var offscreenRequestsOnly: Boolean
+        get() = offscreen?.requestsOnly == true
+        set(value) {
+            offscreen?.requestsOnly = value
+        }
+
+    // 다시 그리기 청을 화면 밖 그리기에도 알린다 — 화면 밖에 그리는 동안은 청이 있을 때만 그린다([OffscreenDraw]). 크로미움(AwContents)은
+    // 새 그림이 있으면 이 둘로 청한다(vsync 안이면 invalidate, 밖이면 postInvalidateOnAnimation — 다음 프레임에 시스템이 invalidate 를 다시 부른다).
+    override fun invalidate() {
+        super.invalidate()
+        offscreen?.invalidated()
+    }
+
+    override fun postInvalidateOnAnimation() {
+        super.postInvalidateOnAnimation()
+        offscreen?.invalidated()
+    }
+
+    override fun onDetachedFromWindow() {
+        offscreen?.stop()
+        super.onDetachedFromWindow()
+    }
+
+    override fun destroy() {
+        offscreen?.stop()
+        super.destroy()
+    }
+
+    /**
+     * 글을 고르면 뜨는 메뉴의 '검색'(사용자 요청, 2026-10-16) — 누르면 이것을 부른다(메뉴는 그쪽이 고른 글을 읽은 뒤 닫는다). null 이면 줄을
+     * 더하지 않는다. 크로미움은 고르기 메뉴를 이 뷰의 [startActionMode](떠 있는 꼴)로 띄운다 — 그 콜백을 감싸 줄 하나를 더한다([SearchItemCallback]).
+     */
+    var onSearchSelection: ((ActionMode) -> Unit)? = null
+
+    /** 떠 있는 고르기 메뉴(감싼 것) — 끝나면 비운다. 뒤로 가기가 먼저 고르기를 푼다([finishSelection]). */
+    private var selectionMode: ActionMode? = null
+
+    override fun startActionMode(callback: ActionMode.Callback, type: Int): ActionMode? {
+        val search = onSearchSelection
+        if (search == null || type != ActionMode.TYPE_FLOATING) return super.startActionMode(callback, type)
+        val wrapped = SearchItemCallback(callback, context.getString(R.string.search_selection), context.getString(android.R.string.copy), search) { ended ->
+            if (selectionMode === ended) selectionMode = null
+        }
+        return super.startActionMode(wrapped, type).also { selectionMode = it }
+    }
+
+    /**
+     * 글을 고른 채면(떠 있는 고르기 메뉴) 그 고르기를 푼다 — 참이면 풀었다. 화면의 뒤로 가기가 먼저 부른다(크롬처럼 — 2026-10-16 에뮬레이터에서
+     * 고른 채 뒤로 가기를 누르자 쪽이 뒤로 넘어가거나 앱이 뒤로 갔다. 떠 있는 메뉴는 창이 뒤로 가기를 가로채지 않는다).
+     */
+    fun finishSelection(): Boolean {
+        val mode = selectionMode ?: return false
+        selectionMode = null
+        mode.finish()
+        return true
+    }
 
     /** 진짜 손가락이 닿아 있는가(누르고 떼기 전) — 앱이 넣는 누름([tap])이 그 사이에 끼어들지 않게. */
     private var touching = false
@@ -124,6 +204,70 @@ internal fun injectTap(x: Float, y: Float, dispatch: (MotionEvent) -> Unit) {
 
 /** 넣는 누름의 길이(누름 → 뗌). */
 private const val TAP_MS = 60L
+
+/**
+ * 크로미움의 고르기 메뉴 콜백을 감싸 '검색' 줄을 더한다 — **'복사' 가 있을 때만**, 그와 같은 차례·같은 '늘 보임' 으로 두어 그 바로 뒤에 온다
+ * (떠 있는 메뉴는 '늘 보임' 줄을 먼저, 그다음 차례로 늘어놓는다 — 그냥 더하면 '넘침' 줄이라 맨 끝으로 가고 자리가 모자라면 ⋮ 안으로 숨는다,
+ * 2026-10-16 에뮬레이터). '복사' 가 없는 메뉴(비밀번호 칸·고른 글이 없는 입력칸의 '붙여넣기')에는 두지 않는다 — 읽을 글이 없다. 크로미움이
+ * 메뉴를 다시 지으면(`onPrepareActionMode`) 다시 본다. 떠 있는 메뉴의 자리 셈(`onGetContentRect`)은 그대로 넘긴다 — 넘기지 않으면 메뉴가 고른
+ * 글이 아니라 뷰 전체에 붙는다.
+ */
+internal class SearchItemCallback(
+    private val inner: ActionMode.Callback,
+    private val label: String,
+    private val copyTitle: String,
+    private val onSearch: (ActionMode) -> Unit,
+    private val onDestroyed: (ActionMode) -> Unit,
+) : ActionMode.Callback2() {
+
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+        val shown = inner.onCreateActionMode(mode, menu)
+        if (shown) addItem(menu)
+        return shown
+    }
+
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+        val changed = inner.onPrepareActionMode(mode, menu)
+        return addItem(menu) || changed
+    }
+
+    override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_search_selection) {
+            onSearch(mode)
+            return true
+        }
+        return inner.onActionItemClicked(mode, item)
+    }
+
+    override fun onDestroyActionMode(mode: ActionMode) {
+        inner.onDestroyActionMode(mode)
+        onDestroyed(mode)
+    }
+
+    override fun onGetContentRect(mode: ActionMode, view: View, outRect: Rect) {
+        if (inner is ActionMode.Callback2) inner.onGetContentRect(mode, view, outRect) else super.onGetContentRect(mode, view, outRect)
+    }
+
+    /**
+     * '복사' 가 보이면 그 뒤에 두고(없으면 더하고), 없으면 걷는다 — 메뉴를 바꿨으면 참. lint 는 '늘 보임' 대신 '자리 있으면' 을 권하지만, 떠 있는
+     * 메뉴는 '늘 보임' 줄(크로미움의 것이 그렇다)을 먼저 놓으므로 '자리 있으면' 이면 맨 끝으로 밀린다.
+     */
+    @SuppressLint("AlwaysShowAction")
+    private fun addItem(menu: Menu): Boolean {
+        val copy = (0 until menu.size()).map { menu.getItem(it) }
+            .firstOrNull { it.isVisible && (it.itemId == android.R.id.copy || it.title?.toString() == copyTitle) }
+        val ours = menu.findItem(R.id.menu_search_selection)
+        if (copy == null) {
+            if (ours == null) return false
+            menu.removeItem(R.id.menu_search_selection)
+            return true
+        }
+        if (ours != null) return false
+        menu.add(Menu.NONE, R.id.menu_search_selection, copy.order, label)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS or MenuItem.SHOW_AS_ACTION_WITH_TEXT)
+        return true
+    }
+}
 
 /**
  * 당겨서 새로 고침의 판정(화면 밖의 계산 — 시험한다). 크롬(`OverscrollRefresh`)처럼 **몸짓을 쪽의 맨 위에서 시작했고, 손가락이 아래로 움직여

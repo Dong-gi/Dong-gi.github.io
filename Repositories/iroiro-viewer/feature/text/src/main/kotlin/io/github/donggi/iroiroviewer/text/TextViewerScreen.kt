@@ -96,6 +96,7 @@ import io.github.donggi.iroiroviewer.io.ExternalOpen
 import io.github.donggi.iroiroviewer.format.text.PlainHighlighter
 import io.github.donggi.iroiroviewer.format.text.RowHighlighter
 import io.github.donggi.iroiroviewer.format.text.TextLanguage
+import io.github.donggi.iroiroviewer.webhost.WebHost
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -949,6 +950,8 @@ private fun PreviewArea(
     onOpenInBrowser: () -> Unit,
 ) {
     val runScripts = stringResource(R.string.text_preview_run_scripts)
+    // 스크립트는 클립보드 막음(문서 시작 스크립트)을 걸 수 있는 WebView 에서만 켠다 — 아니면 단추를 내지 않는다(`WebHost.scriptsAllowed`).
+    val scriptsAllowed = remember { WebHost.scriptsAllowed() }
     val stopScripts = stringResource(R.string.text_preview_live_stop)
     val browser = stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_in_browser)
     when (preview) {
@@ -969,7 +972,7 @@ private fun PreviewArea(
             ),
             onShowSource = onShowSource,
             actions = listOfNotNull(
-                (runScripts to onRunScripts).takeIf { html && !preview.live },
+                (runScripts to onRunScripts).takeIf { scriptsAllowed && html && !preview.live },
                 (browser to onOpenInBrowser).takeIf { html },
             ),
         )
@@ -977,7 +980,7 @@ private fun PreviewArea(
             text = stringResource(R.string.text_preview_failed),
             onShowSource = onShowSource,
             actions = listOfNotNull(
-                (runScripts to onRunScripts).takeIf { html && !preview.live },
+                (runScripts to onRunScripts).takeIf { scriptsAllowed && html && !preview.live },
                 (browser to onOpenInBrowser).takeIf { html },
             ),
         )
@@ -992,7 +995,7 @@ private fun PreviewArea(
                 preview.withheld -> PreviewNote(
                     text = stringResource(R.string.text_preview_withheld),
                     actions = listOfNotNull(
-                        (runScripts to onRunScripts).takeIf { preview.scripted },
+                        (runScripts to onRunScripts).takeIf { scriptsAllowed && preview.scripted },
                         (browser to onOpenInBrowser).takeIf { preview.kind == PreviewKind.HTML },
                     ),
                 )

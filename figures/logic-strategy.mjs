@@ -162,7 +162,7 @@ add((() => {
         [3, 'Q', '1, 2 →E', 1, false],
         [4, 'P ∧ Q', '2, 3 ∧I', 1, false],
         [5, 'P → (P ∧ Q)', '2–4 →I', 0, true],
-        [6, '¬Q', '가정', 1, null],
+        [6, '¬Q', '가정', 1, true],
         [7, 'Q', '?', 1, null],
     ];
     g.push(box(x0, y - 4, w, rows.length * rh + 12, { stroke: CG, sw: 1.2, rx: 6 }));
@@ -182,8 +182,8 @@ add((() => {
     const bx = 512;
     g.push(box(bx, 66, 268, 84, { fill: C3, op: 0.12, stroke: C3, sw: 1.6, rx: 6 }));
     g.push(ctxt(bx + 14, 90, '7번 줄에서 부를 수 있는 줄', { col: CI, bold: true, size: 'sm' }));
-    g.push(ctxt(bx + 14, 112, '1번 — 상자 밖에 있다', { col: CK, size: 'sm' }));
-    g.push(ctxt(bx + 14, 130, '5번 — 상자가 닫힌 뒤 밖에 적혔다', { col: CK, size: 'sm' }));
+    g.push(ctxt(bx + 14, 112, '1번 · 5번 — 닫힌 상자 밖에 있다', { col: CK, size: 'sm' }));
+    g.push(ctxt(bx + 14, 130, '6번 — 지금 열려 있는 상자의 가정', { col: CK, size: 'sm' }));
 
     g.push(box(bx, 166, 268, 102, { fill: C2, op: 0.12, stroke: C2, sw: 1.6, rx: 6 }));
     g.push(ctxt(bx + 14, 190, '부를 수 없는 줄', { col: CI, bold: true, size: 'sm' }));
@@ -206,7 +206,7 @@ add((() => {
         svg: svg({
             width: W, height: H,
             title: '부증명 상자가 닫히면 그 안의 줄은 다시 부를 수 없다',
-            desc: '피치 스타일 도출 일곱 줄에서 2번부터 4번까지가 닫힌 상자 안에 있어 7번 줄에서 부를 수 없고, 상자 밖의 1번과 상자를 요약한 5번만 부를 수 있음을 색으로 갈라 보인다',
+            desc: '피치 스타일 도출 일곱 줄에서 2번부터 4번까지가 닫힌 상자 안에 있어 7번 줄에서 부를 수 없고, 상자 밖의 1번과 상자를 요약한 5번, 지금 열려 있는 상자의 가정인 6번은 부를 수 있음을 색으로 갈라 보인다',
             body: g.join(''),
         }),
     };

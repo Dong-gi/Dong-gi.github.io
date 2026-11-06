@@ -11,7 +11,7 @@ internal class JsonException(message: String, val tooLarge: Boolean = false) : I
 
 /**
  * 사이트의 답(pixiv 의 AJAX·hitomi 의 갤러리 정보)과 우리 계획 글([GalleryCodec])을 읽고 쓰는 작은 JSON. `:core` 에 JSON 읽개가 없고 새 의존을
- * 들이지 않는다(테더의 `Json` 은 쓰기만 하고 다른 모듈이다).
+ * 들이지 않는다(테더의 `Json` 은 쓰기만 하고 다른 모듈이다). 설정 백업 파일(`backup/BackupJson` — 자기 상한으로)도 이것으로 읽고 쓴다.
  *
  * 나무는 Map(차례를 지키는 `LinkedHashMap` — 같은 키는 뒤의 것)·List·String·Long(소수점·지수가 없고 Long 에 드는 정수)·Double·Boolean·null.
  * RFC 8259 를 엄격하게 읽는다 — 주석·끝의 쉼표·작은따옴표·`NaN`·글 안의 날것 제어 문자는 받지 않는다(데스크톱의 `json.loads` 도 그랬다).

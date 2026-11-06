@@ -2,29 +2,41 @@
 #
 # 무엇을 읽어야 하나: 네 칸 가운데 두 칸에서만 학습이 일어났다는 것, 그리고
 # 그 두 칸이 대각선으로 놓인다는 것. 어떤 짝은 붙고 어떤 짝은 붙지 않는다.
+#
+# 배치: 두 결과를 가로줄로, 두 자극을 세로줄로 둔 3×3 격자(첫 줄·첫 칸은 머리).
+# 두 결과를 한 줄에 나란히 두면 네 칸이 한 줄이 되어 대각선이 보이지 않는다.
 direction: down
+
+# 머리 칸은 테두리 없는 상자로 둔다. 글 모양(shape: text)은 격자 칸을 채우지 않아 머리가 칸 왼쪽 위로 쏠린다.
+classes: {
+  머리칸: { style: { fill: transparent; stroke: transparent; bold: true } }
+}
 
 설계: {
   label: "쥐에게 두 가지를 함께 준다 — 맛이 있는 물, 그리고 마실 때 켜지는 빛과 소리.\n그 뒤에 오는 결과만 조건마다 다르게 한다"
   shape: text
 }
 
-메스: {
-  label: "뒤에 속이 불편해진다"
-  grid-columns: 2
-  m1: { label: "맛\n배운다\n그 맛을 피하게 된다.\n한 번으로도, 몇 시간 뒤에\n불편해져도 배운다"; style.bold: true }
-  m2: { label: "빛과 소리\n거의 배우지 않는다\n같은 횟수를 짝지어도\n피하게 되지 않는다" }
+네칸: {
+  label: "네 칸 — 가로줄은 뒤에 오는 결과, 세로줄은 함께 준 자극"
+  grid-rows: 3
+  grid-columns: 3
+  grid-gap: 16
+
+  모서리: { label: "결과 ↓ · 자극 →"; style: { fill: transparent; stroke: transparent } }
+  맛머리: { label: "맛"; class: 머리칸 }
+  빛머리: { label: "빛과 소리"; class: 머리칸 }
+
+  메스: { label: "뒤에 속이\n불편해진다"; class: 머리칸 }
+  m1: { label: "배운다\n그 맛을 피하게 된다.\n한 번으로도, 몇 시간 뒤에\n불편해져도 배운다"; style.bold: true; style.stroke-width: 3 }
+  m2: { label: "거의 배우지 않는다\n같은 횟수를 짝지어도\n피하게 되지 않는다" }
+
+  통증: { label: "뒤에 발에\n짧은 자극이 온다"; class: 머리칸 }
+  t1: { label: "거의 배우지 않는다" }
+  t2: { label: "배운다\n그 신호를 피하게 된다"; style.bold: true; style.stroke-width: 3 }
 }
 
-통증: {
-  label: "뒤에 발에 짧은 자극이 온다"
-  grid-columns: 2
-  t1: { label: "맛\n거의 배우지 않는다" }
-  t2: { label: "빛과 소리\n배운다\n그 신호를 피하게 된다"; style.bold: true }
-}
-
-설계 -> 메스
-설계 -> 통증
+설계 -> 네칸
 
 결론: {
   label: "무엇이 무너졌나"
@@ -35,5 +47,4 @@ direction: down
   c1 -> c2 -> c3
 }
 
-메스 -> 결론
-통증 -> 결론
+네칸 -> 결론

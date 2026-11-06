@@ -305,20 +305,20 @@ add((() => {
     g.push(ctxt(400, 282, '앞은 참인데 뒤가 거짓이다', { anchor: 'middle', col: CK, size: 'sm' }));
 
     /* |D| = 3 */
-    g.push(cell(536, '정의역이 세 점', '처음으로 건너뛰기가 막힌다'));
+    g.push(cell(536, '정의역이 세 점', '한 방향 사슬의 건너뛰기가 막힌다'));
     g.push(box(568, 100, 186, 78, { stroke: CG, sw: 1.2, rx: 8, dash: '6 4' }));
     g.push(pt(600, 134, '1'));
     g.push(pt(661, 134, '2'));
     g.push(pt(722, 134, '3'));
     g.push(arw(609, 132, 648, 132, { col: C2, marker: 'ar2', width: 1.6 }));
     g.push(arw(670, 132, 709, 132, { col: C2, marker: 'ar2', width: 1.6 }));
-    g.push(`<path fill="none" stroke="${CG}" stroke-width="1.4" stroke-dasharray="5 4" d="M600 148 Q661 190 722 148"/>`);
-    g.push(ctxt(661, 184, '✗', { anchor: 'middle', col: CK, bold: true }));
+    g.push(`<path fill="none" stroke="${CG}" stroke-width="1.4" stroke-dasharray="5 4" d="M607 158 Q661 180 715 158"/>`);
+    g.push(ctxt(661, 174, '✗', { anchor: 'middle', col: CK, bold: true }));
     g.push(ctxt(661, 194, '1 에서 3 으로 가는 화살표는 없다', { anchor: 'middle', col: CK, size: 'sm' }));
     g.push(ln([[558, 212], [764, 212]], { stroke: CG, sw: 1 }));
     g.push(ctxt(661, 234, '이것으로 깨지는 것', { anchor: 'middle', col: C2, size: 'sm', bold: true }));
     g.push(ctxt(661, 258, '∀x∀y∀z (Gxy ∧ Gyz → Gxz)', { anchor: 'middle', col: CI, bold: true }));
-    g.push(ctxt(661, 282, '두 점으로는 이 반례를 만들 수 없다', { anchor: 'middle', col: CK, size: 'sm' }));
+    g.push(ctxt(661, 282, '한 방향 화살표로는 두 점이 모자란다', { anchor: 'middle', col: CK, size: 'sm' }));
 
     g.push(ln([[14, 334], [786, 334]], { stroke: CG, sw: 1 }));
     g.push(ctxt(W / 2, 356, '먼저 무엇을 구별해야 하는지 세고, 그만큼의 점만 놓는다. 대부분 셋을 넘지 않는다.', { anchor: 'middle', col: CI, size: 'sm' }));

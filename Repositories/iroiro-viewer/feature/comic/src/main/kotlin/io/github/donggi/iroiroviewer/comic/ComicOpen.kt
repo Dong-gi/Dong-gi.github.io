@@ -1,6 +1,7 @@
 package io.github.donggi.iroiroviewer.comic
 
 import io.github.donggi.iroiroviewer.format.FileDocumentSource
+import io.github.donggi.iroiroviewer.format.archive.ArchiveEncryptionUnsupportedException
 import io.github.donggi.iroiroviewer.format.archive.ArchivePasswordException
 import io.github.donggi.iroiroviewer.format.archive.Archives
 import io.github.donggi.iroiroviewer.format.archive.ComicPages
@@ -205,6 +206,8 @@ object ComicOpen {
 internal fun openFailureKind(t: Throwable): ComicOpen.Kind? = when (t) {
     // 헤더까지 잠겼다. `IOException` 보다 먼저 본다 — 그쪽은 '깨졌다' 다.
     is ArchivePasswordException -> ComicOpen.Kind.NEEDS_PASSWORD
+    // 이 앱이 풀지 않는 방식(받을 수 없는 7z 열쇠 유도 반복 — `SevenZKeyGuard`, PKWARE 의 강한 암호화). 이것도 `IOException` 이다.
+    is ArchiveEncryptionUnsupportedException -> ComicOpen.Kind.ENCRYPTED
     is ParseLimitExceededException -> ComicOpen.Kind.TOO_LARGE
     is IOException -> ComicOpen.Kind.CORRUPT
     is IllegalStateException -> ComicOpen.Kind.UNSUPPORTED

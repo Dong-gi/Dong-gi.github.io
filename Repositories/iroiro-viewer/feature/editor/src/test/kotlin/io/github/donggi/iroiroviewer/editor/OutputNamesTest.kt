@@ -25,6 +25,9 @@ class OutputNamesTest {
     fun dropsCharactersFileSystemsRefuse() {
         assertEquals("ab.hwp", OutputNames.of("a\u0000<>:\"|?*b.hwp", "x.hwp", Kind.HWP))
         assertEquals("a b.hwp", OutputNames.of("a\nb".replace("\n", " "), "x.hwp", Kind.HWP))
+        // 글의 방향을 바꾸는 글자는 `_` 로 — 파일 쪽(`EditorSlots.cleanName`)과 같다(교차 시험 `theEditorsNamingAndOursAgree`).
+        assertEquals("계약_fdp.hwp", OutputNames.of("계약" + Char(0x202E) + "fdp.hwp", "x.hwp", Kind.HWP))
+        assertEquals("a_b.pdf", OutputNames.exportName("a" + Char(0x200F) + "b.pdf", "x.hwp"))
     }
 
     @Test

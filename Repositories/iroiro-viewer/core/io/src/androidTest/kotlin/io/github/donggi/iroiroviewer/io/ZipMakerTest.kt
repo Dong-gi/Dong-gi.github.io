@@ -156,6 +156,96 @@ class ZipMakerTest {
         assertFalse(File(work, "n.zip").exists())
     }
 
+    // ---- 암호 ZIP(2026-10-16) — 푸는 왕복은 `feature:archive` 의 `AesZipExtractTest`(이 앱의 풀기로) ---------------------------------
+
+    /** 가운데 목록의 한 줄 — 이름·일반 목적 비트·압축 방식·추가 필드 번호들. 명세의 자리를 그대로 읽는다. */
+    private data class Cen(val name: String, val flags: Int, val method: Int, val extraIds: List<Int>, val crc: Long)
+
+    private fun centralDirectory(zip: File): List<Cen> {
+        val b = zip.readBytes()
+        fun u16(at: Int) = (b[at].toInt() and 0xFF) or ((b[at + 1].toInt() and 0xFF) shl 8)
+        fun u32(at: Int) = u16(at).toLong() or (u16(at + 2).toLong() shl 16)
+        var eocd = b.size - 22
+        while (u32(eocd) != 0x06054B50L) eocd--
+        var p = u32(eocd + 16).toInt()
+        val out = ArrayList<Cen>()
+        repeat(u16(eocd + 10)) {
+            assertEquals(0x02014B50L, u32(p))
+            val nameLen = u16(p + 28)
+            val extraLen = u16(p + 30)
+            val ids = ArrayList<Int>()
+            var e = p + 46 + nameLen
+            while (e < p + 46 + nameLen + extraLen) {
+                ids += u16(e)
+                e += 4 + u16(e + 2)
+            }
+            out += Cen(String(b, p + 46, nameLen, Charsets.UTF_8), u16(p + 8), u16(p + 10), ids, u32(p + 16))
+            p += 46 + nameLen + extraLen + u16(p + 32)
+        }
+        return out
+    }
+
+    @Test
+    fun 암호를_주면_파일은_AES_로_잠그고_폴더는_두고_암호_배열을_덮는다() {
+        val src = File(work, "src").apply { mkdirs() }
+        File(src, "a.txt").writeText("hello ".repeat(1000))
+        File(src, "사진.jpg").writeBytes(Random(2).nextBytes(5000))
+        File(src, "빈폴더").mkdirs()
+        val password = "iroiro 암호".toCharArray()
+        val result = runBlocking {
+            ZipMaker.make(listOf(src.absolutePath), work.absolutePath, "잠금", media = null, onProgress = {}, password = password)
+        }
+        assertEquals(FileOpEngine.Outcome.Done(2, 0, 0), result.outcome)
+        assertEquals(File(work, "잠금.zip").absolutePath, result.path)
+        assertTrue("묶는 쪽이 암호 배열을 덮지 않았다", password.all { it == '\u0000' })
+        assertTrue(partials().isEmpty())
+
+        val cen = centralDirectory(File(result.path!!)).associateBy { it.name }
+        assertEquals(setOf("src/", "src/a.txt", "src/빈폴더/", "src/사진.jpg"), cen.keys)
+        for (name in listOf("src/a.txt", "src/사진.jpg")) {
+            val e = cen.getValue(name)
+            assertEquals(name, 99, e.method)
+            assertEquals(name, 0x0801, e.flags)
+            assertTrue(name, 0x9901 in e.extraIds)
+            assertEquals(name, 0L, e.crc)
+        }
+        for (name in listOf("src/", "src/빈폴더/")) {
+            assertEquals(name, 0, cen.getValue(name).method)
+            assertEquals(name, 0x0800, cen.getValue(name).flags)
+        }
+    }
+
+    @Test
+    fun 빈_암호는_암호_없이_묶는다() {
+        val file = File(work, "a.txt").apply { writeText("x") }
+        val result = runBlocking {
+            ZipMaker.make(listOf(file.absolutePath), work.absolutePath, "e", media = null, onProgress = {}, password = CharArray(0))
+        }
+        assertEquals(FileOpEngine.Outcome.Done(1, 0, 0), result.outcome)
+        // 플랫폼의 ZipFile 이 그대로 읽는다 — 예전과 같은 ZIP 이다.
+        ZipFile(File(result.path!!)).use { z -> assertEquals("x", z.getInputStream(z.getEntry("a.txt")).readBytes().decodeToString()) }
+    }
+
+    @Test
+    fun 암호_ZIP_도_취소하면_아무것도_남지_않는다() = runBlocking {
+        val big = File(work, "big.bin")
+        big.outputStream().use { out ->
+            val rnd = Random(7)
+            repeat(48) { out.write(rnd.nextBytes(1 shl 20)) }
+        }
+        val password = "cancel".toCharArray()
+        val job = async {
+            ZipMaker.make(listOf(big.absolutePath), work.absolutePath, "c", media = null, onProgress = {}, password = password)
+        }
+        delay(150)
+        job.cancel()
+        val outcome = runCatching { job.await() }.getOrNull()?.outcome
+        assumeTrue("취소보다 먼저 끝났다", outcome == null || outcome == FileOpEngine.Outcome.Cancelled)
+        repeat(50) { if (partials().isEmpty()) return@repeat; delay(20) }
+        assertTrue("임시본이 남았다: ${partials()}", partials().isEmpty())
+        assertFalse(File(work, "c.zip").exists())
+    }
+
     @Test
     fun 취소하면_아무것도_남지_않는다() = runBlocking {
         // 다시 압축하는 형식이 아니라서(.bin) 깊이 압축한다 — 무작위 바이트라 오래 걸린다.

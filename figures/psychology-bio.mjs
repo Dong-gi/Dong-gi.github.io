@@ -276,8 +276,9 @@ add((() => {
         g.push(ln([[f.X(t), f.Y(0.5)], [f.X(t), f.Y(0.5) + 5]], { stroke: COL.ink2, sw: 1 }));
         g.push(txt(f.X(t), f.Y(0.5) + 20, String(t), { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     }
-    g.push(px(f.X(0.12), 52, f.X(1.40), 52, { cls: '', marker: 'ark', width: 1.4 }));
-    g.push(px(f.X(1.40), 52, f.X(0.12), 52, { cls: '', marker: 'ark', width: 1.4 }));
+    // cls 를 비우면 선이 사라지고 화살촉만 남는다. 회색 화살표는 'ax'.
+    g.push(px(f.X(0.12), 52, f.X(1.40), 52, { cls: 'ax', marker: 'ark', width: 1.4 }));
+    g.push(px(f.X(1.40), 52, f.X(0.12), 52, { cls: 'ax', marker: 'ark', width: 1.4 }));
     g.push(txt(f.X(0.76), 42, '한 주기', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
 
     const notes = [

@@ -32,6 +32,16 @@ class ComicOpenFailureTest {
     }
 
     /**
+     * 이 앱이 풀지 않는 방식(받을 수 없는 7z 열쇠 유도 반복 — `SevenZKeyGuard`, PKWARE 의 강한 암호화)은 **타입으로** 가른다. 그것도
+     * `IOException` 이라 먼저 가르지 않으면 '깨진 만화' 가 된다. 이름에 'Encrypt' 가 없는 하위 타입으로 본다 — 릴리스에서는 R8 이 이름을 줄인다.
+     */
+    @Test
+    fun `풀지 않는 방식은 이름이 줄어도 잠긴 만화다`() {
+        class Mp5 : io.github.donggi.iroiroviewer.format.archive.ArchiveEncryptionUnsupportedException("x")
+        assertEquals(Kind.ENCRYPTED, openFailureKind(Mp5()))
+    }
+
+    /**
      * 기기에서 재현한 파일 그대로 — 빈 LZ4 프레임 20만 개(11바이트씩)를 이은 `x.cbt`. 프로세스가 죽지 않고 정의된 실패로 끝난다: 판별은
      * 안을 보지 못한 항목 하나짜리 LZ4 로 열고, 그 항목(`x`)은 그림이 아니다.
      */

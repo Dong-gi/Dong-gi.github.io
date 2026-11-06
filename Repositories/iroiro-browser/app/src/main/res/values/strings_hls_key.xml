@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  잠긴 HLS 의 열쇠를 받지 못했을 때의 갈래(download/HlsKeyTexts, CLAUDE.md '찾은 미디어·HLS·DASH' — 2026-10-16). 주소·쿠키·토큰·몸은 싣지 않는다
+  (이 글은 목록 파일에 남는다). download_key_failed 는 strings.xml 의 download_key_invalid 로 시작해야 한다(실패 창이 그것으로 안내를 붙인다).
+  화면의 글은 짧게 둔다(사용자: '설명이 너무 장황합니다' — 2026-10-11).
+-->
+<resources>
+    <string name="download_key_failed">잠금을 풀 열쇠를 받지 못했습니다 — %1$s</string>
+    <string name="download_key_empty">빈 응답이 왔습니다</string>
+    <string name="download_key_html">열쇠 대신 웹 페이지(HTML, %1$s)가 왔습니다</string>
+    <string name="download_key_json">열쇠 대신 JSON(%1$s)이 왔습니다</string>
+    <string name="download_key_text">열쇠 대신 글(%1$s)이 왔습니다</string>
+    <string name="download_key_hex">hex 글로 온 열쇠가 맞지 않습니다</string>
+    <string name="download_key_base64">base64 글로 온 열쇠가 맞지 않습니다</string>
+    <string name="download_key_long">열쇠가 %1$d바이트입니다(앞 16바이트로도 풀리지 않습니다)</string>
+    <string name="download_key_short">열쇠가 %1$d바이트입니다(16바이트여야 합니다)</string>
+    <string name="download_key_too_large">열쇠 대신 64 KB 넘는 응답이 왔습니다</string>
+    <string name="download_key_redirects">넘겨주기 %1$d번</string>
+    <string name="download_key_ordinal">열쇠 %1$d번째(%2$d개 중)</string>
+    <string name="download_key_cross_site">쪽과 다른 사이트</string>
+    <string name="download_key_page_headers">쪽이 보낸 머리를 실음</string>
+    <string name="download_key_playlist_referer">재생목록 요청의 Referer 를 실음</string>
+    <string name="download_key_no_page_request">쪽의 요청 기록 없음</string>
+    <string name="download_key_hint">재생은 되면 ‘재생 중인 것 받기’의 ‘가로채기’로 받을 수 있습니다.</string>
+</resources>

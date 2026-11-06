@@ -28,6 +28,13 @@ class TextTitleTest {
         assertEquals("README.md", TextTitle.of(TextViewModel.State.Ready(doc("/storage/emulated/0/README.md")), path))
     }
 
+    /** 이름 속의 방향 제어 글자는 제목에서 보이는 표시로 — 실제 경로는 그대로 쓴다. */
+    @Test
+    fun 방향_제어_글자는_보이는_표시로_적는다() {
+        val spoofed = "/storage/emulated/0/Download/note" + Char(0x202E) + "txt.exe"
+        assertEquals("note" + io.github.donggi.iroiroviewer.model.PathNames.BIDI_MARK + "txt.exe", TextTitle.of(TextViewModel.State.Loading(), spoofed))
+    }
+
     @Test
     fun 전체_경로를_적지_않는다() {
         assertFalse('/' in TextTitle.of(TextViewModel.State.Loading(), path))

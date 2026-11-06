@@ -13,6 +13,7 @@ import androidx.webkit.UserAgentMetadata
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
+import androidx.webkit.WebViewMediaIntegrityApiStatusConfig
 import io.github.donggi.iroirobrowser.BuildConfig
 import io.github.donggi.iroirobrowser.core.UserAgents
 import java.security.SecureRandom
@@ -57,13 +58,35 @@ object WebViews {
         rememberDefaults(view.settings)
         applyUserAgent(view, desktop = false)
         CookieManager.getInstance().setAcceptThirdPartyCookies(view, false)
+        hideIdentity(view.settings)
         if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
             WebViewCompat.addDocumentStartJavaScript(view, PageScripts.WEBRTC_GUARD, setOf("*"))
+            // 뒤에서 재생 잇기 — 유튜브의 주 틀은 쪽의 세계에서 늘 '보임' 을 읽는다(BackgroundPlay.VISIBILITY_SCRIPT). 걸지 못해도 WebView 는 쓴다.
+            runCatching { WebViewCompat.addDocumentStartJavaScript(view, BackgroundPlay.VISIBILITY_SCRIPT, YtGuard.ORIGIN_RULES) }
         }
         bridge?.install(view)
         installHeaders(view)
         configureServiceWorkers()
         return view
+    }
+
+    /**
+     * 앱의 정체를 덜 드러낸다(사용자 요청, 2026-10-16 — CLAUDE.md '더할 만한 기능 검토' 의 1번).
+     * - **WebView Media Integrity API 를 끈다** — 기본값(켜짐)이면 쪽의 스크립트가 그 API 로 이 앱의 꾸러미 이름을 받는다(androidx 의
+     *   `WEBVIEW_MEDIA_INTEGRITY_API_ENABLED` 문서). `X-Requested-With` 를 비운 까닭('개인 앱의 이름이 곧 사람을 가리킨다')과 같다.
+     * - **파비콘을 받지 않는다** — 이 앱은 파비콘을 쓰지 않는데 WebView 는 쪽마다 받아 왔다(요청 하나씩 — 프록시·셀룰러를 쓴다).
+     * 그 기능을 모르는 WebView 면 그 줄만 건너뛴다.
+     */
+    private fun hideIdentity(settings: WebSettings) {
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.WEBVIEW_MEDIA_INTEGRITY_API_STATUS)) {
+            WebSettingsCompat.setWebViewMediaIntegrityApiStatus(
+                settings,
+                WebViewMediaIntegrityApiStatusConfig.Builder(WebViewMediaIntegrityApiStatusConfig.WEBVIEW_MEDIA_INTEGRITY_API_DISABLED).build(),
+            )
+        }
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.DOWNLOAD_FAVICONS_ENABLED)) {
+            WebSettingsCompat.setDownloadFaviconsEnabled(settings, false)
+        }
     }
 
     /** 첫 WebView 의 기본값을 적어 둔다 — 그 뒤로는 UA 를 바꾼 WebView 만 있어 기본값을 다시 읽을 수 없다. */

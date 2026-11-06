@@ -16,6 +16,7 @@ import io.github.donggi.iroirobrowser.BuildConfig
 import io.github.donggi.iroirobrowser.core.adblock.AdBlocker
 import io.github.donggi.iroirobrowser.core.adblock.Domains
 import io.github.donggi.iroirobrowser.core.adblock.FilterParser
+import io.github.donggi.iroirobrowser.core.adblock.ListRegex
 import io.github.donggi.iroirobrowser.core.adblock.ParsedList
 import io.github.donggi.iroirobrowser.net.HttpFetcher
 import io.github.donggi.iroirobrowser.proxy.NetErrors
@@ -145,6 +146,15 @@ class AdBlockService(context: Context, private val network: NetworkPath) {
 
     fun allowedSites(): List<String> = allowed.sorted()
 
+    /** 광고 차단을 끈 사이트를 한꺼번에 더한다(설정 › 백업의 가져오기) — 설정 파일을 한 번만 쓴다. 이름은 등록 도메인으로. */
+    fun allowSites(sites: Collection<String>) {
+        val added = sites.map { Domains.registrable(it) }.filter { it.isNotEmpty() && it !in allowed }
+        if (added.isEmpty()) return
+        allowed = allowed + added
+        prefs.edit().putStringSet(K_ALLOWED, allowed).apply()
+        notifyChanged()
+    }
+
     // ── 켜기·목록 ──────────────────────────────────────────────────────────────────────────────────────────────
 
     fun setEnabled(on: Boolean) {
@@ -170,14 +180,17 @@ class AdBlockService(context: Context, private val network: NetworkPath) {
         notifyChanged()
     }
 
-    /** 사용자가 주소로 더한 목록. */
-    fun addList(url: String, title: String): FilterList? {
+    /**
+     * 사용자가 주소로 더한 목록. [enabled] 가 거짓이면 받지 않고 꺼 둔 채 더한다(설정 › 백업의 가져오기 — 백업에서 꺼져 있던 목록. 켜 두고
+     * 끄면 그 사이 일꾼이 한 번 받을 수 있다).
+     */
+    fun addList(url: String, title: String, enabled: Boolean = true): FilterList? {
         if (lists.any { it.url == url }) return null
         val list = FilterList("custom-" + Integer.toHexString(url.hashCode()) + "-" + (System.currentTimeMillis() % 100000), title, url, builtin = false)
-        list.enabled = true
+        list.enabled = enabled
         listStore += list
         saveLists()
-        worker.execute { update(force = true, only = list) }
+        if (enabled) worker.execute { update(force = true, only = list) }
         notifyChanged()
         return list
     }
@@ -304,7 +317,8 @@ class AdBlockService(context: Context, private val network: NetworkPath) {
             list.ruleCount = p.network.size + p.cosmetic.size
             parsed += p
         }
-        val built = if (parsed.isEmpty()) null else AdBlocker(parsed)
+        // 걸음 예산을 넘어 꺼진 정규식 규칙 — 디버그 기록에 규칙의 앞부분만(주소는 싣지 않는다). 요청 스레드에서 불린다.
+        val built = if (parsed.isEmpty()) null else AdBlocker(parsed) { rule -> debugLog("adblock regex off ${ListRegex.preview(rule.text)}") }
         engine = built
         busy = false
         debugLog("adblock ready ${built?.networkRuleCount ?: 0} ${built?.cosmeticRuleCount ?: 0}")

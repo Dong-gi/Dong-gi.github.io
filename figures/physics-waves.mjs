@@ -564,8 +564,10 @@ add((() => {
 
 /* 13. 도플러 효과 */
 add((() => {
-    const W = 620, H = 380;
-    const cy = 196, xs = 330, v = 55, vs = 32;
+    // 파원(xs)과 파면을 오른쪽으로 옮기고(330 → 380) 높이를 늘려(380 → 404) 가장 큰 파면이
+    // 왼쪽 관측자 이름과 아래 설명 줄을 가로지르지 않게 했다.
+    const W = 620, H = 404;
+    const cy = 196, xs = 380, v = 55, vs = 32;
     const b = [txt(16, 24, '파원이 움직이면 앞쪽 파면이 촘촘해진다', { cls: 'ink bold' })];
     b.push(`<path class="gr" stroke-dasharray="5 4" d="M40 ${cy} H580"/>`);
     for (let k = 3; k >= 1; k -= 1) {
@@ -575,14 +577,20 @@ add((() => {
     }
     b.push(`<circle class="f2" cx="${xs}" cy="${cy}" r="7"/>`);
     b.push(px(xs, cy, xs + 52, cy, { cls: 's2', marker: 'ar2', width: 2.4 }));
-    b.push(txt(xs + 10, cy - 18, '파원  v~s', { cls: 'ink' }));
-    // 앞쪽·뒤쪽 파장 표시
-    const front = [xs + 30, xs + 60, xs + 90];
-    b.push(dbl(front[0], cy + 26, front[1], cy + 26, { cls: 's3', marker: 'ar3', width: 1.6 }));
-    b.push(txt(front[2] + 24, cy + 30, '짧아진 파장', { cls: 'ink', anchor: 'start' }));
-    const back = [xs - 110, xs - 220];
-    b.push(dbl(back[0], cy + 26, back[1], cy + 26, { cls: 's3', marker: 'ar3', width: 1.6 }));
-    b.push(txt((back[0] + back[1]) / 2, cy + 46, '길어진 파장', { anchor: 'middle', cls: 'ink' }));
+    // 이름은 가장 안쪽 파면 안, 파원의 왼쪽 위에 둔다(파원 오른쪽 위는 그 파면이 지나간다).
+    b.push(txt(xs - 8, cy - 16, '파원  v~s', { anchor: 'end', cls: 'ink' }));
+    // 앞쪽·뒤쪽 파장 표시 — k 번째 파면(중심 xs − vs·k, 반지름 v·k)이 표시 높이(축에서 dy)를 지나는 x.
+    // 축 위에서 앞쪽 간격은 v − vs = 23, 뒤쪽은 v + vs = 87 이다. 표시는 축에서 26 아래라 양 끝이
+    // 파면에 닿도록 그 높이에서의 교점을 쓴다(앞 약 26, 뒤 약 90).
+    const cross = (k, side, dy) => xs - vs * k + side * Math.sqrt((v * k) ** 2 - dy ** 2);
+    const my = cy + 26;
+    const front = [cross(1, 1, 26), cross(2, 1, 26)];
+    b.push(dbl(front[0], my, front[1], my, { cls: 's3', marker: 'ar3', width: 1.6 }));
+    b.push(txt(cross(3, 1, 20) + 8, cy + 30, '짧아진 파장', { cls: 'ink', anchor: 'start' }));
+    const back = [cross(1, -1, 26), cross(2, -1, 26)];
+    b.push(dbl(back[0], my, back[1], my, { cls: 's3', marker: 'ar3', width: 1.6 }));
+    // 이름은 표시 아래, 첫째와 둘째 파면 사이의 빈 곳 한가운데(글자 높이 dy 37~49)
+    b.push(txt((cross(2, -1, 49) + cross(1, -1, 37)) / 2, cy + 46, '길어진 파장', { anchor: 'middle', cls: 'ink' }));
     b.push(txt(552, cy - 14, '앞쪽 관측자', { anchor: 'end', cls: 'ink2', size: 'sm' }));
     b.push(txt(552, cy + 4, '높은 소리', { anchor: 'end', cls: 'ink2', size: 'sm' }));
     b.push(txt(46, cy - 14, '뒤쪽 관측자', { cls: 'ink2', size: 'sm' }));

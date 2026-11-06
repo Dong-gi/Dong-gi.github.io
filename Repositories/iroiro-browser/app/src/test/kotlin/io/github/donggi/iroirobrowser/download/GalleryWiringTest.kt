@@ -26,11 +26,12 @@ class GalleryWiringTest {
         // HttpFetcher 를 짓는 곳은 fetcher() 하나이고 그 길은 NetworkPath.httpRoute() 다.
         assertEquals(1, Regex("""HttpFetcher\(""").findAll(center).count())
         assertTrue(Regex("""HttpFetcher\(\s*network\.httpRoute\(\)""").containsMatchIn(center))
-        // 해석기에 주는 fetch 는 siteFetch(getBytes — 같은 fetcher)뿐이다.
+        // 해석기에 주는 fetch 는 siteFetch(getBytes — 같은 fetcher)뿐이다. Referer 는 사이트가 정한 값을 처음 홉에만(2026-10-16 — 넘겨주기 뒤는
+        // strict-origin-when-cross-origin, DownloadRefererTest).
         val resolvers = Regex("""GalleryResolver\(([^)]*)""").findAll(center).map { it.groupValues[1].trim() }.toList()
         assertEquals(2, resolvers.size, "계획 읽기와 받기 — 둘")
         for (args in resolvers) assertTrue(args.startsWith("siteFetch("), args)
-        assertTrue(Regex("""getBytes\(url, userAgent, referer, item, patience, limit, stop\)""").containsMatchIn(center))
+        assertTrue(center.contains("getBytes(url, userAgent, null, item, patience, limit, headersFor = { u -> headersPinned(userAgent, referer, url, u) }, stop = stop)"))
         // 갤러리의 다른 파일은 망에 손대지 않는다.
         for (name in listOf("GalleryRules.kt", "GalleryPrompt.kt", "DownloadSets.kt")) {
             val text = File(download, name).readText()

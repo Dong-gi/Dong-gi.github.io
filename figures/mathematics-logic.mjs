@@ -86,7 +86,7 @@ function panel(x, y, w, h, title, { sub } = {}) {
  * 꼭짓점 v 에서 p1 방향과 p2 방향 사이의 각을 호로 표시한다.
  * 두 방향 중 사잇각이 작은 쪽(180° 미만)을 그린다.
  */
-function angleMark(v, p1, p2, r, label, { stroke = 'var(--ink2)', sw = 1.4, lgap = 15, cls = 'ink2' } = {}) {
+function angleMark(v, p1, p2, r, label, { stroke = 'var(--ink2)', sw = 1.4, lgap = 15, cls = 'ink2', ldx = 0 } = {}) {
     const a1 = Math.atan2(p1[1] - v[1], p1[0] - v[0]);
     const a2 = Math.atan2(p2[1] - v[1], p2[0] - v[0]);
     let da = a2 - a1;
@@ -96,7 +96,8 @@ function angleMark(v, p1, p2, r, label, { stroke = 'var(--ink2)', sw = 1.4, lgap
     const q1 = [v[0] + r * Math.cos(a1), v[1] + r * Math.sin(a1)];
     const q2 = [v[0] + r * Math.cos(a2), v[1] + r * Math.sin(a2)];
     const am = a1 + da / 2;
-    const lp = [v[0] + (r + lgap) * Math.cos(am), v[1] + (r + lgap) * Math.sin(am) + 4];
+    // ldx: 이름을 가로로 비켜 놓는다. 이등분선 위에 다른 선이 지나갈 때(원주각 ①) 글자를 가리지 않게.
+    const lp = [v[0] + (r + lgap) * Math.cos(am) + ldx, v[1] + (r + lgap) * Math.sin(am) + 4];
     return `<path d="M${r2(q1[0])} ${r2(q1[1])} A${r2(r)} ${r2(r)} 0 0 ${sweep} ${r2(q2[0])} ${r2(q2[1])}" fill="none" stroke="${stroke}" stroke-width="${sw}"/>`
         + (label ? txt(lp[0], lp[1], label, { anchor: 'middle', cls, size: 'sm' }) : '');
 }
@@ -210,7 +211,8 @@ add({
         g.push(txt(300, 256, 'q 지만 p 는 아니다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
         g.push(dot([120, 316], '', { cls: 'fk' }));
         g.push(txt(120, 334, 'q 밖 — p 도 아니다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-        g.push(arw(150, 306, 176, 226, { cls: 'ark', width: 1.2, dash: '4 3' }));
+        // 'q 밖' 점에서 p 안으로 가는 점선 화살표가 있었는데, 무엇을 가리키는지 설명이 없고
+        // 본문·캡션의 '화살표(⟹)는 작은 쪽에서 큰 쪽으로 간다'와 거꾸로 읽혀 지웠다.
         const tx = 412;
         g.push(txt(tx, 106, 'p 안에 있으면 반드시 q 안에 있다', { cls: 'ink' }));
         g.push(txt(tx, 128, 'p 는 q 이기 위한 충분조건', { cls: 'ink2', size: 'sm' }));
@@ -537,7 +539,7 @@ add({
         const yn = y0 + rows.length * rh + 16;
         g.push(line([[x0 - 96, yn - 20], [x0 + 5 * cw + 30, yn - 20]], { stroke: 'var(--grid)', sw: 1.3 }));
         g.push(txt(x0 - 12, yn + 12, 'd = 0.', { anchor: 'end', cls: 'ink bold', size: 'sm' }));
-        '41403'.split('').forEach((d, j) => {
+        '41413'.split('').forEach((d, j) => {
             g.push(box(x0 + j * cw, yn - 12, cw - 4, rh - 6, { fill: C1, op: 0.24, stroke: C1, sw: 1.6, rx: 3 }));
             g.push(txt(x0 + j * cw + (cw - 4) / 2, yn + 10, d, { anchor: 'middle', cls: 'ink', size: 'sm' }));
         });
@@ -674,8 +676,8 @@ add({
             out.push(line([O, A], { stroke: C2, sw: 1.8 }));
             out.push(line([O, B], { stroke: C2, sw: 1.8 }));
             out.push(line([P, Q], { stroke: 'var(--ink2)', sw: 1.2, dash: '5 4' }));
-            out.push(angleMark(P, A, B, 24, 'θ'));
-            out.push(angleMark(O, A, B, 22, '2θ'));
+            out.push(angleMark(P, A, B, 24, 'θ', { ldx: lab.thdx ?? 0 }));
+            out.push(angleMark(O, A, B, 22, '2θ', { ldx: lab.thdx ?? 0, lgap: lab.gap2 ?? 15 }));
             out.push(dot(P, 'P', lab.P));
             out.push(dot(A, 'A', lab.A));
             out.push(dot(B, 'B', lab.B));
@@ -686,13 +688,15 @@ add({
         const up = { dx: 0, dy: -12, anchor: 'middle', cls: 'fk' };
         const lft = { dx: -11, dy: 6, anchor: 'end', cls: 'fk' };
         const rgt = { dx: 11, dy: 6, cls: 'fk' };
+        // ① 은 각의 이등분선이 곧 점선 PO 라 θ·2θ 가 점선에 꿰인다 — 이름만 오른쪽으로 조금 비킨다.
         g.push(one(140, 176, 84, 90, 200, 340, '① O 가 각 안에 있다', '이등변삼각형 둘로 쪼갠다',
-            { P: up, A: lft, B: rgt, O: { dx: 9, dy: -6, cls: 'fk' } }));
+            { P: up, A: lft, B: rgt, O: { dx: 9, dy: -6, cls: 'fk' }, thdx: 10 }));
         g.push(one(393, 176, 84, 90, 190, 270, '② O 가 변 위에 있다', '이등변삼각형 하나로 끝난다',
             { P: up, A: lft, B: { dx: 10, dy: 14, cls: 'fk' }, O: { dx: 10, dy: -6, cls: 'fk' } }));
+        // ③ 은 PB 가 각 AOB 를 가로질러 2θ 가 그 선에 얹힌다 — 이등분선을 따라 조금 더 바깥에 둔다.
         g.push(one(646, 176, 84, 150, 30, 350, '③ O 가 각 밖에 있다', '두 각의 차로 얻는다',
-            { P: { dx: -10, dy: -6, anchor: 'end', cls: 'fk' }, A: { dx: 6, dy: -10, cls: 'fk' }, B: rgt, O: { dx: -2, dy: 20, anchor: 'middle', cls: 'fk' } }));
-        g.push(txt(W / 2, H - 10, '세 경우 어디서나 ∠AOB = 2∠APB 다. P 를 원 위에서 옮겨도 원주각은 변하지 않는다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+            { P: { dx: -10, dy: -6, anchor: 'end', cls: 'fk' }, A: { dx: 6, dy: -10, cls: 'fk' }, B: rgt, O: { dx: -2, dy: 20, anchor: 'middle', cls: 'fk' }, gap2: 33 }));
+        g.push(txt(W / 2, H - 10, '세 경우 어디서나 ∠AOB = 2∠APB 다. P 를 호 AB 밖에서 옮겨도 원주각은 변하지 않는다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
         return svg({ width: W, height: H, title: '원주각 정리의 세 가지 경우', desc: '중심 O 가 원주각 안, 변 위, 밖에 있는 세 경우로 나누어 원주각이 중심각의 절반임을 본다.', body: g.join('') });
     })(),
 });

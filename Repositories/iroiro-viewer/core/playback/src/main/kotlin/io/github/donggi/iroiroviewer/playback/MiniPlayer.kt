@@ -1,5 +1,6 @@
 package io.github.donggi.iroiroviewer.playback
 
+import io.github.donggi.iroiroviewer.model.PathNames
 import io.github.donggi.iroiroviewer.ui.IroProgress
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -55,7 +56,7 @@ fun MiniPlayer(modifier: Modifier = Modifier) {
             ) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        text = state.title,
+                        text = PathNames.forDisplay(state.title),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSecondaryContainer,
                         maxLines = 1,

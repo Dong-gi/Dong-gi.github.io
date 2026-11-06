@@ -32,7 +32,8 @@ import io.github.donggi.iroiroviewer.ui.icon.VisibilityOffIcon
  * 암호를 묻는다. 문서·압축 파일·만화가 같은 것을 쓴다.
  *
  * **한 곳에 두는 이유**는 암호가 머무는 자리를 줄이는 규칙이 여기 있기 때문이다. 화면마다 따로
- * 만들면 그중 하나가 `rememberTextFieldState()` 를 써서 암호를 저장 번들에 싣는 날이 온다.
+ * 만들면 그중 하나가 `rememberTextFieldState()` 를 써서 암호를 저장 번들에 싣는 날이 온다. 새 암호를 받는 두 칸(무엇을 잠글 때 —
+ * ZIP 만들기)은 곁의 [NewPasswordFields] 이고 같은 규칙을 지킨다.
  *
  * ## 암호가 머무는 곳을 줄인다
  *

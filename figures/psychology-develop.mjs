@@ -134,18 +134,20 @@ add((() => {
     g.push(txt(292, val(m0) + 5, '평균', { cls: 'ink bold', size: 'sm' }));
 
     // 오른쪽 — 낮은 쪽이 더 많이 빠진 뒤 남은 사람.
-    const stay = people.filter((v, i) => v > 4.4 || (i % 5 === 0 && v > 3.2));
+    const stays = (v, i) => v > 4.4 || (i % 5 === 0 && v > 3.2);
+    const stay = people.filter(stays);
     stay.forEach((v, i) => g.push(pdot(600 + jit(i) * 4.4, val(v), COL.s3, 4)));
     const m1 = stay.reduce((a, b) => a + b, 0) / stay.length;
     g.push(ln([[556, val(m1)], [656, val(m1)]], { stroke: COL.ink, sw: 2.4 }));
     g.push(txt(662, val(m1) + 5, '평균', { cls: 'ink bold', size: 'sm' }));
 
-    // 빠진 사람.
-    const gone = people.filter(v => !(v > 4.4));
-    gone.slice(0, 12).forEach((v, i) => g.push(pdot(420 + jit(i) * 3.2, val(v), COL.grid, 3.4)));
+    // 빠진 사람 — 남은 사람의 정확한 여집합(46 = 남은 33 + 빠진 13). 한 사람이 두 칸에 함께 찍히지 않는다.
+    const gone = people.filter((v, i) => !stays(v, i));
+    gone.forEach((v, i) => g.push(pdot(420 + jit(i) * 3.2, val(v), COL.grid, 3.4)));
     g.push(txt(420, val(1.1), '중간에 빠진 사람', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
-    g.push(px(300, 190, 400, 190, { cls: 's2', marker: 'ar2', width: 2 }));
+    // 왼쪽 ‘평균’ 글(292 부터)이 같은 높이에 있으므로 그 뒤에서 시작한다.
+    g.push(px(326, 190, 400, 190, { cls: 's2', marker: 'ar2', width: 2 }));
     g.push(px(452, 190, 552, 190, { cls: 's2', marker: 'ar2', width: 2 }));
 
     g.push(txt(230, 360, '첫 측정 — 모두 있다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));

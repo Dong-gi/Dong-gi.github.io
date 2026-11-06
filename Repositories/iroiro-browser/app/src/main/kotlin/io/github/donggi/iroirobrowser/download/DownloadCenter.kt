@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Process
 import android.os.SystemClock
+import android.text.format.Formatter
 import android.webkit.CookieManager
 import android.webkit.MimeTypeMap
 import androidx.annotation.OptIn
@@ -18,12 +19,17 @@ import io.github.donggi.iroirobrowser.R
 import io.github.donggi.iroirobrowser.core.DataUrl
 import io.github.donggi.iroirobrowser.core.DownloadNames
 import io.github.donggi.iroirobrowser.core.LinkRenewal
+import io.github.donggi.iroirobrowser.core.Referrer
 import io.github.donggi.iroirobrowser.core.SafeFileName
 import io.github.donggi.iroirobrowser.core.Streams
+import io.github.donggi.iroirobrowser.core.adblock.Domains
+import io.github.donggi.iroirobrowser.core.adblock.Request
 import io.github.donggi.iroirobrowser.core.media.DashManifest
 import io.github.donggi.iroirobrowser.core.media.HlsCrypto
+import io.github.donggi.iroirobrowser.core.media.HlsKeys
 import io.github.donggi.iroirobrowser.core.media.HlsPlaylist
 import io.github.donggi.iroirobrowser.core.media.Id3Timestamp
+import io.github.donggi.iroirobrowser.core.media.PageRequests
 import io.github.donggi.iroirobrowser.core.sites.GalleryCodec
 import io.github.donggi.iroirobrowser.core.sites.GalleryFile
 import io.github.donggi.iroirobrowser.core.sites.GalleryPlan
@@ -40,6 +46,7 @@ import io.github.donggi.iroirobrowser.proxy.NetworkPath
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -47,6 +54,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.RandomAccessFile
+import java.io.SequenceInputStream
 import java.security.GeneralSecurityException
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CopyOnWriteArraySet
@@ -76,6 +84,8 @@ import javax.crypto.spec.SecretKeySpec
  *
  * 잠긴 것: **AES-128 은 풀어서 받는다**(사용자 결정, 2026-10-05 — [HlsCrypto]), `SAMPLE-AES`·DRM(키 형식이 identity 가 아닌 것·
  * `ContentProtection`)은 받지 않는다. 실시간 방송은 받지 않는다. POST 로 받은 내려받기는 GET 으로 다시 받으므로 실패할 수 있다(알려진 한계).
+ * 열쇠는 쪽의 재생기가 보낸 요청의 머리를 따라 청하고([PageRequests]), hls.js 처럼 너그럽게 읽되 첫 조각을 풀어 꼴이 맞을 때만 쓴다([HlsKeys]).
+ * 그래도 받지 못하면 까닭의 갈래를 글에 싣는다([loadKey] — 2026-10-16, m3u8 열쇠 오류 고침).
  *
  * 조각은 **받으면서 곧바로 파일에 쓴다**(잠긴 것은 흘려 보내며 푼다) — 통째로 메모리에 올리지 않는다(DASH 의 파일 하나짜리 화질은 수백 MB 다).
  * 시도마다 길을 다시 얻는다([NetworkPath.httpRoute]) — 설정을 바꾸거나 스위치를 눌러 중계가 새 포트로 서면 옛 포트는 닫힌다.
@@ -195,6 +205,10 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         @Volatile var userAgent: String = userAgent
             internal set
 
+        /**
+         * 앞 판이 받기를 넣을 때 한 번 지어 적어 둔 Referer(downloads.json 의 `referer`). 지금은 홉마다 쪽 주소([pageUrl])에서 짓고([refererSource]),
+         * 이것은 쪽 주소를 적지 않던 옛 항목만 쓴다. 새 항목은 null.
+         */
         @Volatile var referer: String? = referer
             internal set
 
@@ -207,6 +221,12 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
         @Volatile var pageTitle: String? = pageTitle
             internal set
+
+        /**
+         * Referer 를 짓는 쪽 주소 — 홉마다 `strict-origin-when-cross-origin`([headersFromPage] — 2026-10-16 보안 점검). 쪽 주소를 적지 않던 옛
+         * 항목은 그때 지어 둔 [referer] 를 쪽으로 본다(그 값은 쪽 주소이거나 그 출처라 홉마다 다시 지어도 옛 판보다 더 내보내지 않는다).
+         */
+        internal val refererSource: String? get() = refererSourceOf(pageUrl, referer)
 
         /** 주소가 만료됐거나 막혔다(401·403·404·410) — 같은 주소로 이어받아도 같다. 원래 페이지를 다시 열어 고르게 한다. */
         @Volatile var expired: Boolean = false
@@ -266,6 +286,12 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
         /** SET — 계획(단위들). 받는 동안 메모리에 두고, 앱이 다시 뜨면 곁의 파일([DownloadSets])에서 읽는다. downloads.json 에 두지 않는다. */
         @Volatile internal var plan: GalleryPlan? = null
+
+        /**
+         * MEDIA(HLS) — 이것을 고른 탭이 쥔 쪽의 요청 머리([PageRequests] — 열쇠를 쪽처럼 받는다). **메모리에만** 둔다 — 값은 토큰일 수 있어
+         * downloads.json 에 쓰지 않는다. 앱이 다시 뜨면 없다(그때는 앞 판처럼 받고, 실패하면 글이 '쪽의 요청 기록 없음' 을 말한다).
+         */
+        @Volatile internal var pageRequests: PageRequests? = null
 
         val isActive: Boolean get() = status == Status.QUEUED || status == Status.RUNNING
         val canResume: Boolean get() = status == Status.PAUSED
@@ -387,46 +413,51 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
     /**
      * 보통 파일(또는 `data:`). 메인 스레드. [pageUrl]·[pageTitle] 은 이것을 고른 페이지 — 주소가 만료되면 다시 열 곳이고, 그 페이지에서 같은
-     * 파일을 다시 받으면 멈춘 항목에 새 주소를 붙여 잇는다(링크 갱신 — 그때는 그 항목을 돌려준다).
+     * 파일을 다시 받으면 멈춘 항목에 새 주소를 붙여 잇는다(링크 갱신 — 그때는 그 항목을 돌려준다). Referer 는 홉마다 [pageUrl] 에서 짓는다.
      */
     fun enqueue(
         url: String,
         fileName: String,
         mimeType: String?,
         userAgent: String,
-        referer: String?,
-        pageUrl: String? = null,
+        pageUrl: String?,
         pageTitle: String? = null,
     ): Item {
         renewable(pageUrl, hls = false, dash = false, listOf(url))?.let { old ->
-            return renew(old, url, userAgent, referer, pageTitle) {}
+            return renew(old, url, userAgent, pageTitle) {}
         }
-        return start(Item(ids.incrementAndGet(), Kind.FILE, url, fileName, mimeType, userAgent, referer, pageUrl = pageUrl, pageTitle = pageTitle))
+        return start(Item(ids.incrementAndGet(), Kind.FILE, url, fileName, mimeType, userAgent, null, pageUrl = pageUrl, pageTitle = pageTitle))
     }
 
     /**
      * HLS — [playlistUrl] 은 영상의 미디어 재생목록(화질을 고른 뒤의 것), [audioUrl] 은 따로 된 소리의 재생목록(있으면 한 파일로 합친다).
      * [baseName] 에 확장자는 받으면서 붙인다. [pageUrl]·[pageTitle] 은 [enqueue] 와 같다(같은 화질·같은 소리면 멈춘 항목을 잇는다).
      * [audioOnly] 면 [playlistUrl] 이 소리의 재생목록이다 — fMP4 소리가 `.mp4` 가 아니라 `.m4a` 로 나간다(화질 창의 '소리만').
+     * [pageRequests] 는 그것을 고른 탭이 쥔 쪽의 요청 머리 — 잠긴 HLS 의 열쇠를 쪽처럼 받는다([Item.pageRequests], 메모리에만).
      */
     fun enqueueHls(
         playlistUrl: String,
         audioUrl: String?,
         baseName: String,
         userAgent: String,
-        referer: String?,
-        pageUrl: String? = null,
+        pageUrl: String?,
         pageTitle: String? = null,
         audioOnly: Boolean = false,
+        pageRequests: PageRequests? = null,
     ): Item {
         val urls = listOfNotNull(playlistUrl, audioUrl)
         renewable(pageUrl, hls = true, dash = false, urls)?.let { old ->
-            return renew(old, playlistUrl, userAgent, referer, pageTitle) { old.tracks.forEachIndexed { i, t -> t.playlistUrl = urls[i] } }
+            return renew(old, playlistUrl, userAgent, pageTitle) {
+                old.tracks.forEachIndexed { i, t -> t.playlistUrl = urls[i] }
+                old.pageRequests = pageRequests
+            }
         }
         val tracks = listOfNotNull(Track(playlistUrl, null, null, audio = audioOnly), audioUrl?.let { Track(it, null, null, audio = true) })
-        return start(
-            Item(ids.incrementAndGet(), Kind.MEDIA, playlistUrl, SafeFileName.clean(baseName), null, userAgent, referer, tracks, pageUrl, pageTitle),
+        val item = Item(
+            ids.incrementAndGet(), Kind.MEDIA, playlistUrl, SafeFileName.clean(baseName), null, userAgent, null, tracks, pageUrl, pageTitle,
         )
+        item.pageRequests = pageRequests
+        return start(item)
     }
 
     /** DASH — 영상 화질과 소리(둘 중 하나는 없어도 된다)를 받아 한 파일로. [pageUrl]·[pageTitle] 은 [enqueue] 와 같다(같은 화질·같은 조각 수면 잇는다). */
@@ -435,8 +466,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         audio: DashManifest.Representation?,
         baseName: String,
         userAgent: String,
-        referer: String?,
-        pageUrl: String? = null,
+        pageUrl: String?,
         pageTitle: String? = null,
     ): Item {
         val tracks = listOfNotNull(video?.let { dashTrack(it, audio = false) }, audio?.let { dashTrack(it, audio = true) })
@@ -445,8 +475,8 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         val plans = tracks.map { it.plan.orEmpty() }
         renewable(pageUrl, hls = false, dash = true, plans.map { it.firstOrNull()?.url.orEmpty() })
             ?.takeIf { old -> old.tracks.map { it.plan?.size } == plans.map { it.size } }
-            ?.let { old -> return renew(old, first, userAgent, referer, pageTitle) { old.tracks.forEachIndexed { i, t -> t.plan = plans[i] } } }
-        return start(Item(ids.incrementAndGet(), Kind.MEDIA, first, SafeFileName.clean(baseName), null, userAgent, referer, tracks, pageUrl, pageTitle))
+            ?.let { old -> return renew(old, first, userAgent, pageTitle) { old.tracks.forEachIndexed { i, t -> t.plan = plans[i] } } }
+        return start(Item(ids.incrementAndGet(), Kind.MEDIA, first, SafeFileName.clean(baseName), null, userAgent, null, tracks, pageUrl, pageTitle))
     }
 
     private fun dashTrack(rep: DashManifest.Representation, audio: Boolean): Track {
@@ -475,11 +505,13 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         }
     }
 
-    /** 링크 갱신 — 멈춘 항목에 새 주소([change] 가 줄기를 바꾼다)를 붙여 받은 데서부터 잇는다. 메인 스레드(그 항목은 멈춰 있다). */
-    private fun renew(item: Item, url: String, userAgent: String, referer: String?, pageTitle: String?, change: () -> Unit): Item {
+    /**
+     * 링크 갱신 — 멈춘 항목에 새 주소([change] 가 줄기를 바꾼다)를 붙여 받은 데서부터 잇는다. 메인 스레드(그 항목은 멈춰 있다). 같은 페이지라
+     * ([LinkRenewal.samePage] — 조각만 다를 수 있다) 쪽 주소는 그대로 두고 Referer 도 홉마다 그것에서 짓는다.
+     */
+    private fun renew(item: Item, url: String, userAgent: String, pageTitle: String?, change: () -> Unit): Item {
         item.url = url
         item.userAgent = userAgent
-        item.referer = referer
         pageTitle?.takeIf { it.isNotBlank() }?.let { item.pageTitle = it }
         change()
         debug("download renewed ${item.savedName}")
@@ -563,14 +595,16 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
     /**
      * DASH 목록을 읽어 본다 — 살피기 일꾼에서(받기 수와 따로), 답은 메인 스레드로. 살피기는 짧게 해 본다(두 번·짧은 시간 제한 — 그동안 사용자가
-     * 화면 앞에서 기다린다). 돌려준 것으로 그만둘 수 있다(그러면 [done] 을 부르지 않는다).
+     * 화면 앞에서 기다린다). 돌려준 것으로 그만둘 수 있다(그러면 [done] 을 부르지 않는다). [pageUrl] 은 그 미디어를 찾은 쪽 — Referer 를 홉마다
+     * 그것에서 짓는다.
      */
-    fun inspectDash(url: String, userAgent: String, referer: String?, done: (DashInfo) -> Unit): Inspection {
+    fun inspectDash(url: String, userAgent: String, pageUrl: String?, done: (DashInfo) -> Unit): Inspection {
         val job = Inspection()
         inspector.execute {
             val info = try {
-                val bytes = getBytes(url, userAgent, referer, null, INSPECT, MAX_PLAYLIST_BYTES) { job.cancelled }
-                DashInfo.Ready(DashManifest.parse(bytes.decodeToString(), url))
+                val fetched = getBody(url, userAgent, pageUrl, null, INSPECT, MAX_PLAYLIST_BYTES) { job.cancelled }
+                // BaseURL·조각 주소는 넘겨주기 뒤의 주소에 대어 푼다(재생기와 같게 — readPlaylist 와 같은 까닭).
+                DashInfo.Ready(DashManifest.parse(fetched.bytes.decodeToString(), fetched.url))
             } catch (e: Cancelled) {
                 null
             } catch (e: IOException) {
@@ -584,11 +618,11 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     }
 
     /** 재생목록을 읽어 본다(화질을 고르기 전에) — [inspectDash] 와 같은 꼴. */
-    fun inspectHls(url: String, userAgent: String, referer: String?, done: (HlsInfo) -> Unit): Inspection {
+    fun inspectHls(url: String, userAgent: String, pageUrl: String?, done: (HlsInfo) -> Unit): Inspection {
         val job = Inspection()
         inspector.execute {
             val info = try {
-                when (val p = readPlaylist(url, userAgent, referer, null, INSPECT) { job.cancelled }) {
+                when (val p = readPlaylist(url, userAgent, pageUrl, null, INSPECT) { job.cancelled }) {
                     is HlsPlaylist.Master -> HlsInfo.Choices(p)
                     is HlsPlaylist.Media -> HlsInfo.Single(p)
                 }
@@ -606,14 +640,15 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
     /**
      * 작은 파일 하나(`.torrent`)를 메모리로 받는다 — **웹 쪽 길**(앱의 HTTP, 중계 — 프록시를 켰는데 중계가 없으면 받지 않는다)로, 그 페이지의
-     * 쿠키·Referer·User-Agent 를 싣는다(로그인해야 받는 토렌트 파일이 있다). 토렌트의 내용은 엔진이 기기에서 바로 받지만 이 파일은 페이지가 건넨
-     * 내려받기다. [limit] 바이트를 넘으면 받지 않는다. 살피기 일꾼에서(받기 수와 따로), 답은 메인 스레드로 — [inspectHls] 와 같은 꼴.
+     * 쿠키·Referer(홉마다 [pageUrl] 에서)·User-Agent 를 싣는다(로그인해야 받는 토렌트 파일이 있다). 토렌트의 내용은 엔진이 기기에서 바로 받지만
+     * 이 파일은 페이지가 건넨 내려받기다. [limit] 바이트를 넘으면 받지 않는다. 살피기 일꾼에서(받기 수와 따로), 답은 메인 스레드로 — [inspectHls]
+     * 와 같은 꼴.
      */
-    fun fetchSmall(url: String, userAgent: String, referer: String?, limit: Int, done: (SmallFile) -> Unit): Inspection {
+    fun fetchSmall(url: String, userAgent: String, pageUrl: String?, limit: Int, done: (SmallFile) -> Unit): Inspection {
         val job = Inspection()
         inspector.execute {
             val result = try {
-                SmallFile.Ready(getBytes(url, userAgent, referer, null, INSPECT, limit) { job.cancelled })
+                SmallFile.Ready(getBytes(url, userAgent, pageUrl, null, INSPECT, limit) { job.cancelled })
             } catch (e: Cancelled) {
                 null
             } catch (e: Streams.TooLarge) {
@@ -752,9 +787,12 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         if (item.kind == Kind.SET) return null
         items.remove(item)
         val tracks = item.tracks.map { Track(it.playlistUrl, it.plan, it.mimeType, it.audio) }
-        return start(
-            Item(ids.incrementAndGet(), item.kind, item.url, item.fileName, item.mimeType, item.userAgent, item.referer, tracks, item.pageUrl, item.pageTitle),
+        val fresh = Item(
+            ids.incrementAndGet(), item.kind, item.url, item.fileName, item.mimeType, item.userAgent, item.referer, tracks, item.pageUrl, item.pageTitle,
         )
+        // 쪽의 요청 머리는 메모리에만 — 이 프로세스에서 고른 것이면 다시 받을 때도 싣는다.
+        fresh.pageRequests = item.pageRequests
+        return start(fresh)
     }
 
     /**
@@ -874,7 +912,11 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         item.pendingUri = null
     }
 
-    /** 요청 머리 — WebView 와 같은 User-Agent, 쪽의 Referer, 그 주소의 쿠키(넘겨주기의 홉마다 다시 고른다). */
+    /**
+     * 요청 머리 — WebView 와 같은 User-Agent, 이 홉의 Referer([referer] — 부르는 쪽이 홉마다 지은 것), 그 주소의 쿠키(넘겨주기의 홉마다 다시
+     * 고른다). Referer 를 짓는 길은 둘이다 — 쪽에서 낸 요청은 [headersFromPage], 사이트의 규약이 처음 홉의 값을 정한 요청(갤러리)은
+     * [headersPinned]. 열쇠의 '쪽이 보낸 머리 따라 하기'만 쪽이 실제로 보낸 값을 그대로 싣는다([keyHeaders]).
+     */
     private fun headers(userAgent: String, referer: String?, url: String, extra: Map<String, String> = emptyMap()): Map<String, String> =
         buildMap {
             put("User-Agent", userAgent)
@@ -883,6 +925,18 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
             CookieManager.getInstance().getCookie(url)?.takeIf { it.isNotEmpty() }?.let { put("Cookie", it) }
             putAll(extra)
         }
+
+    /**
+     * 쪽 [page] 에서 낸 요청의 홉 [hop] 머리 — Referer 를 **홉마다** 쪽에서 다시 짓는다(`strict-origin-when-cross-origin` — 2026-10-16 보안 점검).
+     * 앞 판은 받기를 넣을 때 처음 주소에 맞춰 한 번 지은 값을 모든 홉(넘겨주기·HLS·DASH 의 조각·재생목록·열쇠)에 실어, 처음 주소가 쪽과 같은
+     * 출처면 쪽의 전체 주소(질의 포함)가 다른 출처의 서버에 갔다.
+     */
+    private fun headersFromPage(userAgent: String, page: String?, hop: String, extra: Map<String, String> = emptyMap()): Map<String, String> =
+        headers(userAgent, Referrer.strictOriginWhenCrossOrigin(page, hop), hop, extra)
+
+    /** 사이트의 규약이 처음 홉([first])의 Referer 를 정한 요청(갤러리 받기)의 홉 [hop] 머리 — 넘겨주기 뒤의 홉은 같은 규칙([Referrer.pinnedFirstHop]). */
+    private fun headersPinned(userAgent: String, chosen: String?, first: String, hop: String): Map<String, String> =
+        headers(userAgent, Referrer.pinnedFirstHop(chosen, first, hop), hop)
 
     private val storeCookies: (String, List<String>) -> Unit = { url, values -> values.forEach { CookieManager.getInstance().setCookie(url, it) } }
 
@@ -949,7 +1003,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         } else {
             emptyMap()
         }
-        fetcher().get(item.url, headersFor = { u -> headers(item.userAgent, item.referer, u, extra) }, onSetCookie = storeCookies).use { r ->
+        fetcher().get(item.url, headersFor = { u -> headersFromPage(item.userAgent, item.refererSource, u, extra) }, onSetCookie = storeCookies).use { r ->
             val range = if (r.code == 206) ContentRange.parse(r.header("Content-Range")) else null
             val append = when {
                 resumeAt > 0 && r.code == 206 && range?.start == resumeAt -> true
@@ -1211,7 +1265,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     }
 
     private fun saveSetFileOnce(item: Item, g: Gallery, file: GalleryFile, unit: Int, index: Int) {
-        fetcher().get(file.url, headersFor = { u -> headers(item.userAgent, file.referer, u) }, onSetCookie = storeCookies).use { r ->
+        fetcher().get(file.url, headersFor = { u -> headersPinned(item.userAgent, file.referer, file.url, u) }, onSetCookie = storeCookies).use { r ->
             if (r.code !in 200..299) throw SiteHttpException(r.code, NetErrors.describeStatus(r), NetErrors.isProxyAnswer(r))
             // 이름은 사이트가 지은 것이라 한 번 더 거른다(같은 것을 두 번 걸러도 같다). 형식은 확장자로 — 모르면 octet-stream(이름이 그대로 남는다).
             val name = SafeFileName.clean(file.fileName)
@@ -1242,12 +1296,13 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
     /**
      * 사이트에서 작은 덩이(JSON·JS)를 읽는 길 — `:core` 의 해석기에 준다. **내려받기와 같은 길**이다([getBytes] — [fetcher], WebView 의 쿠키·
-     * [userAgent], [patience] 만큼 다시 해 보기 — [item] 이 있으면 그 항목에 '다시 해 보는 중' 을 보인다). 2xx 밖은 [SiteHttpException](프록시가 만든
-     * 답인지도 싣는다). [stop] 이 참이면 그만둔다.
+     * [userAgent], [patience] 만큼 다시 해 보기 — [item] 이 있으면 그 항목에 '다시 해 보는 중' 을 보인다). Referer 는 해석기가 정한 값(사이트의
+     * 규약)을 처음 홉에만, 넘겨주기 뒤는 같은 규칙으로([headersPinned]). 2xx 밖은 [SiteHttpException](프록시가 만든 답인지도 싣는다). [stop] 이
+     * 참이면 그만둔다.
      */
     private fun siteFetch(userAgent: String, item: Item?, patience: Patience, stop: () -> Boolean) = SiteFetch { url, referer, limit ->
         try {
-            getBytes(url, userAgent, referer, item, patience, limit, stop)
+            getBytes(url, userAgent, null, item, patience, limit, headersFor = { u -> headersPinned(userAgent, referer, url, u) }, stop = stop)
         } catch (e: HttpStatus) {
             throw SiteHttpException(e.code, e.message ?: "HTTP ${e.code}", e.byProxy)
         }
@@ -1326,10 +1381,10 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
             }
         }
         val url = track.playlistUrl ?: throw Refused(NOT_A_PLAYLIST)
-        val media = when (val p = readPlaylist(url, item.userAgent, item.referer, item)) {
+        val media = when (val p = readPlaylist(url, item.userAgent, item.refererSource, item)) {
             is HlsPlaylist.Media -> p
             // 마스터를 곧바로 받으라 했으면 가장 높은 화질로.
-            is HlsPlaylist.Master -> readPlaylist(p.variants.first().uri, item.userAgent, item.referer, item) as? HlsPlaylist.Media
+            is HlsPlaylist.Master -> readPlaylist(p.variants.first().uri, item.userAgent, item.refererSource, item) as? HlsPlaylist.Media
                 ?: throw Refused(NOT_A_PLAYLIST)
         }
         if (!media.ended) throw Refused(HLS_LIVE)
@@ -1363,27 +1418,22 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
      * 올리지 않고 받으면서 쓴다([fetchPart]).
      */
     private fun fetchParts(item: Item, track: Track, plan: Plan, out: FileOutputStream) {
-        val keys = HashMap<String, ByteArray>()
+        val keys = HashMap<String, KeyMaterial>()
+        // 서로 다른 열쇠 주소의 차례 — 실패 글의 '열쇠 k번째(n개 중)'.
+        val keyOrder = plan.parts.mapNotNull { it.key?.uri }.distinct()
         val ticker = Ticker(item)
         for (k in track.partsDone until plan.parts.size) {
             if (item.cancelled || item.pauseRequested) throw Cancelled()
             val part = plan.parts[k]
-            val secret = part.key?.let { key ->
-                val keyUri = key.uri ?: throw Refused(HLS_DRM)
-                keys.getOrPut(keyUri) {
-                    try {
-                        getBytes(keyUri, item.userAgent, item.referer, item, DOWNLOAD, MAX_KEY_BYTES)
-                    } catch (e: Streams.TooLarge) {
-                        // 열쇠 대신 페이지 따위가 왔다.
-                        throw Refused(app.getString(R.string.download_key_invalid))
-                    }
-                }.also { if (it.size != 16) throw Refused(app.getString(R.string.download_key_invalid)) }
+            val key = part.key?.let { partKey ->
+                val keyUri = partKey.uri ?: throw Refused(HLS_DRM)
+                keys.getOrPut(keyUri) { loadKey(item, track, keyUri, keyOrder.indexOf(keyUri) + 1, keyOrder.size) }
             }
             // 묶음 AAC 의 첫 조각은 앞머리(ID3 의 시각)를 함께 쥔다 — 합칠 때 영상 TS 의 PTS 와 맞춘다.
             val head = if (k == 0 && plan.container == Remux.Container.ADTS) HeadCapture(ID3_HEAD_BYTES) else null
             val at = track.bytes
             val before = item.received
-            val written = fetchPart(item, part, secret, out, at, head) { n ->
+            val written = fetchPart(item, part, key, out, at, head) { n ->
                 item.received = before + n
                 ticker.tick()
             }
@@ -1400,6 +1450,68 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         saveSoon()
     }
 
+    /** 열쇠 하나 — 받은 응답에서 지은 후보와 진단. 16바이트면 곧바로 [chosen], 아니면 첫 조각으로 확인한 뒤에([pump]). */
+    private class KeyMaterial(val candidates: HlsKeys.Candidates, val report: HlsKeys.Report) {
+        @Volatile var chosen: ByteArray? = candidates.exact
+    }
+
+    /** 조각의 앞머리 — [complete] 면 조각 전체다. */
+    private class Prefix(val bytes: ByteArray, val complete: Boolean)
+
+    /**
+     * 열쇠 하나를 받는다(2026-10-16 — m3u8 열쇠 오류 고침). 이 탭이 쥔 쪽의 요청([Item.pageRequests])에서 그 열쇠의 요청을 찾으면 쪽이 보낸 Referer·
+     * 스크립트가 단 머리·Origin 을 그대로 싣고(쪽이 질의를 더한 주소면 그 주소로 — [PageRequests.replayFor]), 못 찾으면 앞 판처럼 받는다. 16바이트면
+     * 그것, 아니면 hls.js 처럼 너그러운 후보([HlsKeys.candidates] — 첫 조각으로 확인한 뒤에 쓴다, [pump]). 후보가 하나도 없으면 까닭의 갈래를 실은
+     * 글로 끝낸다([Refused] — 다시 해도 같다). 기록에는 꼴과 수만 적는다(주소·머리의 값은 적지 않는다).
+     */
+    private fun loadKey(item: Item, track: Track, keyUri: String, ordinal: Int, count: Int): KeyMaterial {
+        val replay = item.pageRequests?.replayFor(keyUri, track.playlistUrl, SystemClock.elapsedRealtime())
+        val target = replay?.url ?: keyUri
+        val fetched = getBody(
+            target, item.userAgent, item.refererSource, item, DOWNLOAD, MAX_KEY_BYTES,
+            headersFor = { u -> keyHeaders(item, replay, u) }, keepTooLarge = true,
+        )
+        val kind = if (fetched.tooLarge) HlsKeys.BodyKind.TOO_LARGE else HlsKeys.classify(fetched.bytes)
+        val size = if (fetched.tooLarge) MAX_KEY_BYTES.toLong() else fetched.bytes.size.toLong()
+        val report = HlsKeys.Report(kind, size, fetched.redirects, ordinal, count, crossSite(item, target), replay?.match)
+        if (fetched.tooLarge) throw Refused(keyFailure(report))
+        val candidates = HlsKeys.candidates(fetched.bytes)
+        if (candidates.isEmpty) throw Refused(keyFailure(report))
+        debug("hls key kind=$kind bytes=$size exact=${candidates.exact != null} lenient=${candidates.lenient.size} match=${replay?.match}")
+        return KeyMaterial(candidates, report)
+    }
+
+    /**
+     * 열쇠 요청의 머리 — 쪽이 보낸 요청을 찾았으면([replay]) 그 Referer(쪽이 실제로 보낸 값 그대로 — 쪽이 보내지 않았으면 보내지 않는다)·스크립트가
+     * 단 머리(같은 출처에만)·Origin, 못 찾았으면 다른 요청처럼([headersFromPage] — 홉마다 맨 위 쪽에서 지은 Referer). 쿠키는 어느 쪽이든 홉마다
+     * WebView 에서.
+     */
+    private fun keyHeaders(item: Item, replay: PageRequests.Replay?, url: String): Map<String, String> =
+        if (replay == null) headersFromPage(item.userAgent, item.refererSource, url) else headers(item.userAgent, replay.referer, url, replay.headersFor(url))
+
+    /** 열쇠가 쪽(그것을 고른 페이지)과 다른 사이트(등록 도메인)에 있는가 — 실패 글의 갈래. 페이지를 모르면 거짓. */
+    private fun crossSite(item: Item, url: String): Boolean =
+        item.pageUrl?.let { Domains.isThirdParty(Request.hostOf(url), Request.hostOf(it)) } ?: false
+
+    /** 열쇠를 받지 못한 글 — '잠금을 풀 열쇠를 받지 못했습니다 — <갈래>'([HlsKeyTexts] — 주소·쿠키·토큰·몸은 싣지 않는다). */
+    private fun keyFailure(report: HlsKeys.Report): String =
+        app.getString(R.string.download_key_failed, TorrentTexts.join(app, HlsKeyTexts.parts(report, keySizes)))
+
+    private val keySizes = TorrentTexts.Sizes { Formatter.formatShortFileSize(app, it) }
+
+    /** 앞머리 — [limit] 바이트까지 또는 몸이 끝날 때까지(그러면 [Prefix.complete]). 취소·정지를 본다. */
+    private fun readPrefix(item: Item, input: InputStream, limit: Int): Prefix {
+        val buffer = ByteArray(limit)
+        var filled = 0
+        while (filled < limit) {
+            if (item.cancelled || item.pauseRequested) throw Cancelled()
+            val n = input.read(buffer, filled, limit - filled)
+            if (n < 0) return Prefix(buffer.copyOf(filled), complete = true)
+            filled += n
+        }
+        return Prefix(buffer, complete = false)
+    }
+
     /**
      * 조각 하나를 받아 [out] 의 [at] 자리부터 곧바로 쓴다 — 통째로 메모리에 올리지 않는다(DASH 의 파일 하나짜리 화질은 수백 MB 다). 바이트 범위면
      * `Range` 로 묻고, 서버가 통째로(200) 주면 그 범위만 읽는다([Streams.slice] — Long 셈). 끊기면 [at] 까지 잘라 내고 [RETRIES] 번까지 다시
@@ -1408,7 +1520,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     private fun fetchPart(
         item: Item,
         part: Part,
-        secret: ByteArray?,
+        key: KeyMaterial?,
         out: FileOutputStream,
         at: Long,
         head: HeadCapture?,
@@ -1423,10 +1535,10 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
                 progress(0)
                 val range = part.range
                 val extra = range?.let { mapOf("Range" to "bytes=${it.offset}-${it.offset + it.length - 1}") } ?: emptyMap()
-                fetcher().get(part.url, headersFor = { u -> headers(item.userAgent, item.referer, u, extra) }, onSetCookie = storeCookies).use { r ->
+                fetcher().get(part.url, headersFor = { u -> headersFromPage(item.userAgent, item.refererSource, u, extra) }, onSetCookie = storeCookies).use { r ->
                     if (r.code != 200 && r.code != 206) throw httpStatus(r)
                     val body = if (range != null && r.code == 200) Streams.slice(r.body, range.offset, range.length) else r.body
-                    return pump(item, part, secret, body, out, head, progress)
+                    return pump(item, part, key, body, out, head, progress)
                 }
             } catch (e: Cancelled) {
                 throw e
@@ -1448,20 +1560,36 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         throw last ?: IOException(NOT_RECEIVED)
     }
 
-    /** 몸을 [out] 에 흘려 쓴다 — 잠겼으면 풀며(CBC 를 덩이마다 이어 푼다 — 끝의 채움은 마지막에 확인한다). 쓰기가 실패하면 [StorageFailure]. */
+    /**
+     * 몸을 [out] 에 흘려 쓴다 — 잠겼으면 풀며(CBC 를 덩이마다 이어 푼다 — 끝의 채움은 마지막에 확인한다). 쓰기가 실패하면 [StorageFailure].
+     * 열쇠가 아직 확인되지 않았으면(16바이트가 아니었다) 이 조각의 앞머리([HlsKeys.PROBE_BYTES])로 후보를 맞춰 보고([HlsKeys.pick]) 맞는 것을
+     * 쓴다 — 없으면 까닭의 갈래를 실은 글로 끝낸다. 읽은 앞머리는 그대로 이어 쓴다(다시 받지 않는다).
+     */
     private fun pump(
         item: Item,
         part: Part,
-        secret: ByteArray?,
+        key: KeyMaterial?,
         body: InputStream,
         out: FileOutputStream,
         head: HeadCapture?,
         progress: (Long) -> Unit,
     ): Long {
+        val partIv = part.key?.iv ?: HlsCrypto.ivFor(part.sequence)
+        var input = body
+        val secret = key?.let { k ->
+            k.chosen ?: run {
+                val probe = readPrefix(item, body, HlsKeys.PROBE_BYTES)
+                val picked = HlsKeys.pick(k.candidates.lenient, partIv, probe.bytes, probe.complete) ?: throw Refused(keyFailure(k.report))
+                debug("hls key lenient picked")
+                k.chosen = picked
+                input = SequenceInputStream(ByteArrayInputStream(probe.bytes), body)
+                picked
+            }
+        }
         val cipher = secret?.let { s ->
             try {
                 Cipher.getInstance("AES/CBC/PKCS5Padding").apply {
-                    init(Cipher.DECRYPT_MODE, SecretKeySpec(s, "AES"), IvParameterSpec(part.key?.iv ?: HlsCrypto.ivFor(part.sequence)))
+                    init(Cipher.DECRYPT_MODE, SecretKeySpec(s, "AES"), IvParameterSpec(partIv))
                 }
             } catch (e: GeneralSecurityException) {
                 throw Refused(DECRYPT_FAILED)
@@ -1481,7 +1609,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         val buffer = ByteArray(64 * 1024)
         while (true) {
             if (item.cancelled || item.pauseRequested) throw Cancelled()
-            val n = body.read(buffer)
+            val n = input.read(buffer)
             if (n < 0) break
             if (cipher == null) emit(buffer, n) else cipher.update(buffer, 0, n)?.let { emit(it, it.size) }
             progress(written)
@@ -1651,43 +1779,75 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         }
     }
 
+    /** 재생목록 — [page] 는 Referer 를 홉마다 짓는 쪽 주소([headersFromPage]). */
     private fun readPlaylist(
         url: String,
         userAgent: String,
-        referer: String?,
+        page: String?,
         item: Item?,
         patience: Patience = DOWNLOAD,
         stop: () -> Boolean = { item?.cancelled == true || item?.pauseRequested == true },
     ): HlsPlaylist {
-        val bytes = try {
-            getBytes(url, userAgent, referer, item, patience, MAX_PLAYLIST_BYTES, stop)
+        val fetched = try {
+            getBody(url, userAgent, page, item, patience, MAX_PLAYLIST_BYTES, stop = stop)
         } catch (e: Streams.TooLarge) {
             throw Refused("재생목록이 너무 큽니다")
         }
-        return HlsPlaylist.parse(bytes.decodeToString(), url)
+        // 상대 주소(화질·조각·열쇠)는 **넘겨주기 뒤의 주소**에 대어 푼다 — hls.js·ExoPlayer 가 그렇게 풀고, 찾은 미디어의 미리 읽기(MediaProbe)도 그렇다.
+        // 앞 판은 처음 주소에 대어 풀어, 넘겨준 재생목록의 열쇠를 엉뚱한 곳에 청했다(그곳이 200 의 웹 페이지를 주면 '열쇠를 받지 못했습니다').
+        return HlsPlaylist.parse(fetched.bytes.decodeToString(), fetched.url)
     }
+
+    /** 작은 덩이의 몸만 — [getBody] 와 같다(재생목록·DASH 목록처럼 상대 주소를 풀 일이 없는 것: `.torrent`·사이트의 JSON). */
+    private fun getBytes(
+        url: String,
+        userAgent: String,
+        page: String?,
+        item: Item?,
+        patience: Patience = DOWNLOAD,
+        limit: Int = MAX_PLAYLIST_BYTES,
+        headersFor: ((String) -> Map<String, String>)? = null,
+        stop: () -> Boolean = { item?.cancelled == true || item?.pauseRequested == true },
+    ): ByteArray = getBody(url, userAgent, page, item, patience, limit, headersFor = headersFor, stop = stop).bytes
+
+    /**
+     * [getBody] 의 답 — 몸과 넘겨주기를 다 따른 뒤의 주소([url] — 그 몸이 담은 상대 주소는 여기에 대어 푼다)와 넘겨주기 수. [tooLarge] 면 몸이 상한을
+     * 넘어 버렸다(그때 [bytes] 는 비었다 — 열쇠의 진단이 넘겨주기 수를 잃지 않게).
+     */
+    private class Fetched(val bytes: ByteArray, val url: String, val redirects: Int, val tooLarge: Boolean = false)
 
     /**
      * 작은 덩이(재생목록·열쇠·DASH 목록)를 받는다 — [limit] 바이트까지만([Streams.readAll] — 넘으면 끊는다. 큰 것을 통째로 쥐다 메모리를 다
      * 쓰지 않게). [patience] 만큼 해 본다(4xx 는 한 번). 시도마다 길을 다시 얻는다([fetcher]). [stop] 이 참이면 그만둔다([Cancelled]).
-     * 조각은 여기서 받지 않는다 — 받으면서 쓴다([fetchPart]).
+     * [headersFor] 를 주면 홉마다 그 머리로(열쇠 — 쪽이 보낸 머리 [keyHeaders], 갤러리 — [headersPinned]), 아니면 홉마다 쪽 [page] 에서
+     * 지은 Referer 로([headersFromPage]). [keepTooLarge] 면 상한을 넘은 몸을 던지지 않고 [Fetched.tooLarge] 로 돌려준다. 조각은 여기서 받지
+     * 않는다 — 받으면서 쓴다([fetchPart]).
      */
-    private fun getBytes(
+    private fun getBody(
         url: String,
         userAgent: String,
-        referer: String?,
+        page: String?,
         item: Item?,
         patience: Patience = DOWNLOAD,
         limit: Int = MAX_PLAYLIST_BYTES,
+        headersFor: ((String) -> Map<String, String>)? = null,
+        keepTooLarge: Boolean = false,
         stop: () -> Boolean = { item?.cancelled == true || item?.pauseRequested == true },
-    ): ByteArray {
+    ): Fetched {
+        val forHop: (String) -> Map<String, String> = headersFor ?: { u -> headersFromPage(userAgent, page, u) }
         var last: IOException? = null
         for (attempt in 0 until patience.attempts) {
             if (stop()) throw Cancelled()
             try {
-                fetcher(patience).get(url, headersFor = { u -> headers(userAgent, referer, u) }, onSetCookie = storeCookies).use { r ->
+                fetcher(patience).get(url, headersFor = forHop, onSetCookie = storeCookies).use { r ->
                     if (r.code != 200 && r.code != 206) throw httpStatus(r)
-                    return Streams.readAll(r.body, limit)
+                    val bytes = try {
+                        Streams.readAll(r.body, limit)
+                    } catch (e: Streams.TooLarge) {
+                        if (!keepTooLarge) throw e
+                        return Fetched(ByteArray(0), r.url, r.redirects, tooLarge = true)
+                    }
+                    return Fetched(bytes, r.url, r.redirects)
                 }
             } catch (e: Cancelled) {
                 throw e
@@ -2072,6 +2232,12 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
         /** 맡겨 둔 페이지(없으면 null) — 가져가면 비운다. 브라우저 화면이 보일 때(onResume) 부른다. */
         fun takePageToOpen(): String? = pageToOpen.getAndSet(null)
+
+        /**
+         * 받기 항목의 Referer 를 짓는 쪽 주소([Item.refererSource]) — 그것을 고른 쪽([pageUrl]), 쪽 주소를 적지 않던 옛 항목(downloads.json)은 그때
+         * 지어 적어 둔 Referer([stored] — 쪽 주소이거나 그 출처). 그것을 쪽으로 보고 홉마다 다시 지어도 옛 판보다 더 내보내지 않는다.
+         */
+        internal fun refererSourceOf(pageUrl: String?, stored: String?): String? = pageUrl?.takeIf { it.isNotEmpty() } ?: stored
 
         /**
          * 지난 프로세스가 남긴 **감춘 '내려받기' 항목**(IS_PENDING)을 지운다 — 목록(downloads.json)에 기록이 없는 것만. 마무리(가로채기·녹화)와

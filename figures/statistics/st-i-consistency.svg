@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 342" width="740" height="342" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
-<title id="t">일치성 — 표본을 늘리면 추정량이 참값으로 몰린다</title><desc id="d">표본 크기 4, 16, 100 에서 추정량의 표본분포. 고정된 폭의 띠 안에 들 확률이 31%, 58%, 95% 로 커진다</desc>
+<title id="t">일치성 — 표본을 늘리면 추정량이 참값으로 몰린다</title><desc id="d">표본 크기 4, 16, 100 에서 추정량의 표본분포. 고정된 폭의 띠 안에 들 확률이 38%, 68%, 99% 로 커진다</desc>
 <style>
 svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
 @media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}

@@ -31,6 +31,15 @@ class ArchiveTitleTest {
         assertEquals("사진", ArchiveTitle.of(ready, folder = "사진", path = path))
     }
 
+    /** 이름 속의 방향 제어 글자(U+202E 등)는 제목에서 보이는 표시로 — `.zip` 이 다른 확장자처럼 보이지 않게(실제 경로는 그대로 쓴다). */
+    @Test
+    fun 방향_제어_글자는_보이는_표시로_적는다() {
+        val spoofed = "/storage/emulated/0/Download/invoice" + Char(0x202E) + "fdp.zip"
+        val shown = "invoice" + io.github.donggi.iroiroviewer.model.PathNames.BIDI_MARK + "fdp.zip"
+        assertEquals(shown, ArchiveTitle.of(ArchiveViewModel.State.NeedsPassword, folder = "", path = spoofed))
+        assertEquals(shown, ArchiveTitle.of(ArchiveViewModel.State.Ready(doc().copy(name = "invoice" + Char(0x202E) + "fdp.zip")), folder = "", path = spoofed))
+    }
+
     @Test
     fun 전체_경로를_적지_않는다() {
         assertFalse('/' in ArchiveTitle.of(ArchiveViewModel.State.NeedsPassword, folder = "", path = path))

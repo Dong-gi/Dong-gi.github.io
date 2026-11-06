@@ -128,6 +128,11 @@ import java.util.Locale
  *
  * ## APK
  *
+ * **다른 앱이 이 앱에 넘긴 APK 는 넘기지 않는다**(2026-10-16 보안 점검). 넘기면 설치 관리자가 그것을 이 앱이 보낸 것으로 받아, 권한 없는
+ * 앱이 이 앱의 설치 권한과 '출처를 알 수 없는 앱' 허용을 빌려 쓴다. 판별은 이름과 **내용**이다([ApkFiles] — 이름을 바꾼 APK 는 모르는
+ * 형식이라 '모든 앱에서 고르기' 로 가고, 그 창에 설치 관리자도 선다). 받는 화면(`OpenActivity`)이 받을 때 거절하고, 여기서는 받은 사본을
+ * 한 번 더 막는다. 파일 목록에서 사용자가 고른 APK 는 그대로 설치 관리자로 간다.
+ *
  * 설치 관리자는 **보낸 앱이 `REQUEST_INSTALL_PACKAGES` 를 선언했는지** 본다. 선언은 `app` 의 매니페스트에 있고,
  * 무엇을 확인했는지도 거기 적었다. 선언하지 않으면 설치 관리자가 **아무 말 없이 닫혀** 우리에게는 [Result.STARTED]
  * 로 보인다 — 선언이 빠진 것을 결과로 알아챌 길이 없으므로 매니페스트의 그 줄을 지우지 마라. 2026-10-11 에 Play 프로텍트가
@@ -176,6 +181,9 @@ object ExternalOpen {
         // 방금 띄운 것을 또 누른 것이다. 앞의 것이 뜨는 중이므로 알릴 것도 없다.
         if (isRepeat(lastStart, path, mode, now)) return Result.STARTED
         if (refuses(path)) return Result.NOT_SHAREABLE
+        // **다른 앱이 넘긴 설치 파일을 넘기지 않는다**(이 객체의 KDoc 'APK'). 받는 화면(`app` 의 `OpenActivity`)이 받을 때 이미 거절하므로
+        // 사본은 여기까지 오지 않는다 — 모든 화면이 지나는 이곳에서 받은 사본을 한 번 더 막는다. 파일 목록의 APK 는 그대로 간다.
+        if (ApkFiles.refusesHandOff(IncomingFiles.isCopy(context, path)) { ApkFiles.isApk(File(path)) }) return Result.NOT_SHAREABLE
         val uri = ShareHelper.uriOf(context, path) ?: return Result.NOT_SHAREABLE
         val mime = if (mode == Mode.WEB_PAGE) webPageMime(path) else mimeFor(File(path), ::platformMime)
         val view = viewOf(uri, mime)

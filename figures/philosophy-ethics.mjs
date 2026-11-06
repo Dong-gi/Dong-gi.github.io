@@ -143,7 +143,7 @@ add((() => {
     g.push(notes(40, ny, [
         '실재론과 반실재론을 가르는 선은 이 표의 세로선이 아니다. 왼쪽 위 칸 안에 한 번 더 그어진다',
         '상대주의는 왼쪽 위에 있다 — 참인 도덕 문장이 있되 그 참이 틀에 상대적이라고 본다',
-        '어느 칸도 지워지지 않았다. 도덕 실재론과 반실재론의 다툼은 미결이고, 근소한 차이다',
+        '어느 칸도 지워지지 않았다. 도덕 실재론과 반실재론의 다툼은 미결이다',
     ]));
 
     return {
@@ -353,9 +353,12 @@ add((() => {
 
     y += 74;
     g.push(rowLabel(y + 12, '문턱을 둔 결과주의', '충분히 좋으면 허용한다'));
+    // 오른쪽이 더 좋은 행위다(첫째 줄의 ‘최선인 것’ 이 오른쪽 끝). 문턱을 넘은 행위는 모두 허용이고
+    // 그보다 훨씬 좋은 행위는 초과 의무다. 문턱 위에 ‘의무’ 띠를 두면 덜 좋은 행위가 의무이고
+    // 더 좋은 행위가 선택인 꼴이 되어 거꾸로 선다.
     g.push(seg(y, h, 0, 0.3, '금지', C2));
-    g.push(seg(y, h, 0.3, 0.62, '의무', C1));
-    g.push(seg(y, h, 0.62, 1, '해도 되고 안 해도 된다', 'none'));
+    g.push(seg(y, h, 0.3, 0.62, '허용 — 충분히 좋다', 'none'));
+    g.push(seg(y, h, 0.62, 1, '초과 의무 — 안 해도 된다', C3));
 
     y += 74;
     g.push(rowLabel(y + 12, '의무론', '제약과 선택지가 함께 있다'));
@@ -666,23 +669,28 @@ add((() => {
     g.push(txt(x0, y + 24, '낮다', { cls: 'ink2', size: 'sm' }));
     g.push(txt(x1, y + 24, '높다', { cls: 'ink2', size: 'sm', anchor: 'end' }));
 
+    // 위 줄로 올린 이름은 아래 줄 이름 사이를 지나는 가는 선으로 제 점에 잇는다.
     const point = (t, name, up, col) => {
         const x = at(t);
-        return pdot(x, y, col, 5.5)
+        return (up > 20 ? ln([[x, y - up + 6], [x, y - 9]], { stroke: CG, sw: 1 }) : '')
+            + pdot(x, y, col, 5.5)
             + txt(x, y - up, name, { cls: 'ink', size: 'sm', anchor: 'middle' });
     };
 
-    g.push(point(0.10, '물고기', 16, C3));
-    g.push(point(0.26, '개 · 돼지', 38, C3));
-    g.push(point(0.42, '갓 태어난 아기', 16, C1));
-    g.push(point(0.52, '유인원', 38, C3));
-    g.push(point(0.62, '심한 인지 장애가 있는 사람', 16, C1));
+    // 선 B 는 모든 사람을 안에 두는 가장 높은 자리다. 그 오른쪽에 개 · 돼지와 유인원이 함께 들어와야
+    // 아래 글 ‘많은 동물이 함께 안으로 들어온다’ 가 그림과 맞는다. 그래서 아기와 심한 인지 장애가
+    // 있는 사람을 개 · 돼지보다 왼쪽에 둔다(논증의 (P2) — 이 능력을 갖추지 못한 사람들이 있다).
+    g.push(point(0.06, '물고기', 16, C3));
+    g.push(point(0.18, '갓 태어난 아기', 16, C1));
+    g.push(point(0.25, '심한 인지 장애가 있는 사람', 38, C1));
+    g.push(point(0.33, '개 · 돼지', 16, C3));
+    g.push(point(0.52, '유인원', 16, C3));
     g.push(point(0.88, '보통의 성인', 16, C1));
 
     const thr = (t, col) => ln([[at(t), y - 10], [at(t), y + 40]], { stroke: col, sw: 2.2, dash: '6 4' });
-    g.push(thr(0.34, C1));
+    g.push(thr(0.12, C1));
     g.push(thr(0.72, C2));
-    g.push(txt(at(0.34), y + 56, '선 B', { cls: 'ink bold', size: 'sm', anchor: 'middle' }));
+    g.push(txt(at(0.12), y + 56, '선 B', { cls: 'ink bold', size: 'sm', anchor: 'middle' }));
     g.push(txt(at(0.72), y + 56, '선 A', { cls: 'ink bold', size: 'sm', anchor: 'middle' }));
 
     g.push(txt(60, y + 86, '선 B — 모든 사람을 안에 두려면 여기쯤이다', { cls: 'ink bold', size: 'sm' }));

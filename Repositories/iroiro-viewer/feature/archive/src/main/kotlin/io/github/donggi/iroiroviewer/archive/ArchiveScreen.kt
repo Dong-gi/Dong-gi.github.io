@@ -68,6 +68,7 @@ import io.github.donggi.iroiroviewer.format.archive.ComicPages
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.MimeResolver
 import io.github.donggi.iroiroviewer.model.FileKind
+import io.github.donggi.iroiroviewer.model.PathNames
 import io.github.donggi.iroiroviewer.ui.KindBadge
 import io.github.donggi.iroiroviewer.ui.PasswordDialog
 
@@ -382,7 +383,7 @@ private fun EntryNotice(node: ArchiveTree.Node, onDismiss: () -> Unit) {
     // 않기로 한 바로 그 일이다. 무엇을 못 하는지 말하는 것이 아무 반응도 없는 것보다 낫다.
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(node.name, maxLines = 2, overflow = TextOverflow.MiddleEllipsis) },
+        title = { Text(PathNames.forDisplay(node.name), maxLines = 2, overflow = TextOverflow.MiddleEllipsis) },
         text = {
             Text(
                 stringResource(
@@ -501,7 +502,8 @@ private fun EntryRow(
         )
         Column(Modifier.weight(1f)) {
             Text(
-                text = if (showPath) node.path else node.name,
+                // 압축 안의 이름은 만든 쪽이 적은 글이다 — 방향 제어 글자를 보이는 표시로.
+                text = PathNames.forDisplay(if (showPath) node.path else node.name),
                 style = MaterialTheme.typography.bodyLarge,
                 maxLines = 1,
                 overflow = TextOverflow.MiddleEllipsis,

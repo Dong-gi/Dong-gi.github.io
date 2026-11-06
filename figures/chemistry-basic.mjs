@@ -621,7 +621,7 @@ add((() => {
     g.push(px(cx + 40, cy - 48, cx + 12, cy - 112, { cls: 's1', marker: 'ar1', width: 2 }));
     g.push(txt(cx + 46, cy - 52, '안쪽 전자 10개가', { cls: 'ink2', size: 'sm' }));
     g.push(txt(cx + 46, cy - 34, '밀어낸다  −10', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(390, 96, '남는 것: 대략 +1', { cls: 'ink bold' }));
+    g.push(txt(390, 96, '거친 어림: 약 +1', { cls: 'ink bold' }));
     g.push(txt(390, 118, '이 값을 유효핵전하라 하고 Z(eff) 로 적는다', { cls: 'ink2', size: 'sm' }));
     g.push(txt(390, 160, '같은 주기를 오른쪽으로 가면', { cls: 'ink2', size: 'sm' }));
     g.push(txt(390, 180, '양성자는 하나씩 늘어나는데', { cls: 'ink2', size: 'sm' }));
@@ -631,12 +631,12 @@ add((() => {
     g.push(txt(390, 284, '껍질이 하나 더 붙어 바깥 전자가 멀어진다', { cls: 'ink2', size: 'sm' }));
     g.push(txt(390, 310, '→ 원자가 커진다', { cls: 'ink bold' }));
     g.push(txt(20, 30, '나트륨 원자 — 바깥 전자 하나가 실제로 느끼는 끌림', { cls: 'ink bold' }));
-    g.push(txt(W - 14, H - 12, '가려 주는 정도는 껍질마다 달라서 실제 값은 정수가 아니다', { anchor: 'end', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W - 14, H - 12, '안쪽 전자도 완전히 가리지는 못해 실제 값은 +1 보다 크다', { anchor: 'end', cls: 'ink2', size: 'sm' }));
     return {
         name: 'chem-zeff-shielding',
         title: '차폐와 유효핵전하',
         desc: '나트륨의 바깥 전자는 핵의 +11 을 그대로 느끼지 않는다. 안쪽 전자 10개가 사이에서 밀어내기 때문에 '
-            + '실제로 느끼는 끌림은 대략 +1 이다. 이 알짜 전하를 유효핵전하라 한다. '
+            + '거친 어림으로 느끼는 끌림은 대략 +1 이다. 이 알짜 전하를 유효핵전하라 한다. '
             + '같은 주기 안에서 오른쪽으로 갈수록 유효핵전하가 커지고 원자는 작아진다.',
         svg: svg({ width: W, height: H, title: '차폐와 유효핵전하', desc: '나트륨 원자에서 안쪽 전자가 바깥 전자를 가리는 그림', body: g.join('') }),
     };
@@ -821,14 +821,14 @@ add((() => {
     const B = (p1, p2, n) => bond(p1, p2, n, { r1: R, r2r: R, sw: 1.7, gap: 5 });
 
     // 패널 1 — 물
-    g.push(panel(12, 20, 206, 168, 'H₂O', { sub: '전자 8개, 결합 2 + 홀전자쌍 2' }));
+    g.push(panel(12, 20, 206, 168, 'H₂O', { sub: '전자 8개, 결합 2 + 비공유 전자쌍 2' }));
     let c = [115, 118];
     g.push(B([c[0] - 52, c[1] + 26], c, 1), B(c, [c[0] + 52, c[1] + 26], 1));
     g.push(A(c[0], c[1], 'O'), A(c[0] - 58, c[1] + 26, 'H'), A(c[0] + 58, c[1] + 26, 'H'));
     g.push(lonePair(c[0], c[1], 20, 115), lonePair(c[0], c[1], 20, 65));
 
     // 패널 2 — 암모니아
-    g.push(panel(230, 20, 206, 168, 'NH₃', { sub: '결합 3 + 홀전자쌍 1' }));
+    g.push(panel(230, 20, 206, 168, 'NH₃', { sub: '결합 3 + 비공유 전자쌍 1' }));
     c = [333, 122];
     g.push(B([c[0] - 52, c[1] + 22], c, 1), B(c, [c[0] + 52, c[1] + 22], 1), B(c, [c[0], c[1] + 48], 1));
     g.push(A(c[0], c[1], 'N'), A(c[0] - 58, c[1] + 22, 'H'), A(c[0] + 58, c[1] + 22, 'H'), A(c[0], c[1] + 54, 'H'));
@@ -851,7 +851,7 @@ add((() => {
 
     // 패널 5 — 오존의 공명
     g.push(panel(230, 200, 428, 168, 'O₃ — 공명', { sub: '어느 한쪽이 아니라 둘의 평균이 실제 모습이다' }));
-    // 이중결합 쪽 끝 산소는 홀전자쌍 2개, 단일결합 쪽 끝 산소는 3개, 가운데는 1개.
+    // 이중결합 쪽 끝 산소는 비공유 전자쌍 2개, 단일결합 쪽 끝 산소는 3개, 가운데는 1개.
     const ozone = (bx, leftDouble) => {
         const o = [bx, 288];
         const l = [bx - 56, 322], r = [bx + 56, 322];
@@ -867,13 +867,13 @@ add((() => {
     g.push(txt(445, 298, '↔', { anchor: 'middle', cls: 'ink bold' }));
     g.push(txt(445, 330, '두 구조를', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(445, 346, '오가는 것이 아니다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    g.push(txt(W - 14, H - 8, '점 두 개 = 홀전자쌍(비공유 전자쌍), 선 하나 = 공유한 전자 두 개',
+    g.push(txt(W - 14, H - 8, '점 두 개 = 비공유 전자쌍, 선 하나 = 공유한 전자 두 개',
         { anchor: 'end', cls: 'ink2', size: 'sm' }));
     return {
         name: 'chem-lewis-examples',
         title: '루이스 구조 다섯 가지',
-        desc: '선 하나는 공유한 전자 두 개, 점 두 개는 한 원자에만 속한 홀전자쌍이다. '
-            + '물과 암모니아는 홀전자쌍을 가지고 있고, 이산화탄소는 이중결합 두 개, 질소는 삼중결합이다. '
+        desc: '선 하나는 공유한 전자 두 개, 점 두 개는 한 원자에만 속한 비공유 전자쌍이다. '
+            + '물과 암모니아는 비공유 전자쌍을 가지고 있고, 이산화탄소는 이중결합 두 개, 질소는 삼중결합이다. '
             + '오존처럼 한 가지 구조로 다 적을 수 없는 경우에는 여러 구조를 함께 적고, 실제 모습은 그 평균이다.',
         svg: svg({ width: W, height: H, title: '루이스 구조의 예', desc: 'H2O, NH3, CO2, N2, O3 의 루이스 구조', body: g.join('') }),
     };
@@ -881,7 +881,8 @@ add((() => {
 
 /* 6-4. VSEPR — 전자쌍 수가 모양을 정한다 */
 add((() => {
-    const W = 690, H = 580;
+    // 아래 줄 설명이 맨 아래 칸(400~578) 밖에 오도록 화폭을 604 로 둔다(580 이면 글이 칸 안을 가로질렀다).
+    const W = 690, H = 604;
     const pw = 218, ph = 178;
     const cols = [12, 236, 460], rows = [20, 210, 400];
     const g = [];
@@ -939,28 +940,28 @@ add((() => {
     g.push(txt(cols[2] + 20, rows[1] + 84, '   전자쌍 수를 센다', { cls: 'ink2', size: 'sm' }));
     g.push(txt(cols[2] + 20, rows[1] + 106, '② 전자쌍끼리 가장 멀어지는', { cls: 'ink2', size: 'sm' }));
     g.push(txt(cols[2] + 20, rows[1] + 124, '   배치를 고른다', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(cols[2] + 20, rows[1] + 146, '③ 홀전자쌍 자리를 지우고', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(cols[2] + 20, rows[1] + 146, '③ 비공유 전자쌍 자리를 지우고', { cls: 'ink2', size: 'sm' }));
     g.push(txt(cols[2] + 20, rows[1] + 164, '   원자만 보고 이름을 붙인다', { cls: 'ink2', size: 'sm' }));
-    const lpTag = (mx, my, dy) => txt(mx, my - dy, '주황색 = 홀전자쌍', { anchor: 'middle', cls: 'ink2', size: 'sm' });
-    cell(0, 2, '4쌍 중 1쌍이 홀전자쌍', '삼각뿔형 107°  예: NH₃',
+    const lpTag = (mx, my, dy) => txt(mx, my - dy, '주황색 = 비공유 전자쌍', { anchor: 'middle', cls: 'ink2', size: 'sm' });
+    cell(0, 2, '4쌍 중 1쌍이 비공유 전자쌍', '삼각뿔형 107°  예: NH₃',
         (mx, my) => link(mx, my, 200, L, 'plain') + link(mx, my, 340, L, 'wedge')
-            + link(mx, my, 280, L - 10, 'dash') + lp(mx, my, 90, 44) + lpTag(mx, my, 62));
-    cell(1, 2, '4쌍 중 2쌍이 홀전자쌍', '굽은형 104.5°  예: H₂O',
+            + link(mx, my, 280, L - 10, 'dash') + lp(mx, my, 90, 44) + lpTag(mx, my, 57));
+    cell(1, 2, '4쌍 중 2쌍이 비공유 전자쌍', '굽은형 104.5°  예: H₂O',
         (mx, my) => link(mx, my, 235, L, 'plain') + link(mx, my, 305, L, 'plain')
-            + lp(mx, my, 55, 42) + lp(mx, my, 125, 42) + lpTag(mx, my, 62));
-    cell(2, 2, '3쌍 중 1쌍이 홀전자쌍', '굽은형 약 119°  예: SO₂',
+            + lp(mx, my, 55, 42) + lp(mx, my, 125, 42) + lpTag(mx, my, 57));
+    cell(2, 2, '3쌍 중 1쌍이 비공유 전자쌍', '굽은형 약 119°  예: SO₂',
         (mx, my) => link(mx, my, 210, L, 'plain') + link(mx, my, 330, L, 'plain')
-            + lp(mx, my, 90, 44) + lpTag(mx, my, 62));
-    g.push(txt(20, H - 8, '홀전자쌍은 결합 전자쌍보다 넓게 퍼져 더 세게 밀어낸다 → 결합각이 조금씩 좁아진다',
+            + lp(mx, my, 90, 44) + lpTag(mx, my, 57));
+    g.push(txt(20, H - 8, '비공유 전자쌍은 결합 전자쌍보다 넓게 퍼져 더 세게 밀어낸다 → 결합각이 조금씩 좁아진다',
         { cls: 'ink2', size: 'sm' }));
     return {
         name: 'chem-vsepr-shapes',
         title: 'VSEPR — 전자쌍 수로 정해지는 분자 모양',
         desc: '중심 원자 둘레의 전자쌍은 서로 밀어내므로 가능한 한 멀리 떨어진 배치를 잡는다. '
             + '전자쌍이 2, 3, 4, 5, 6 개일 때 각각 직선·평면삼각·사면체·삼각쌍뿔·팔면체가 된다. '
-            + '그중 일부가 홀전자쌍이면 그 자리는 비어 보이므로 삼각뿔형·굽은형 같은 이름이 붙고, '
-            + '홀전자쌍이 더 세게 밀기 때문에 결합각이 조금 좁아진다.',
-        svg: svg({ width: W, height: H, title: 'VSEPR 로 정해지는 분자 모양', desc: '전자쌍 2~6개와 홀전자쌍이 있는 경우의 모양', body: g.join('') }),
+            + '그중 일부가 비공유 전자쌍이면 그 자리는 비어 보이므로 삼각뿔형·굽은형 같은 이름이 붙고, '
+            + '비공유 전자쌍이 더 세게 밀기 때문에 결합각이 조금 좁아진다.',
+        svg: svg({ width: W, height: H, title: 'VSEPR 로 정해지는 분자 모양', desc: '전자쌍 2~6개와 비공유 전자쌍이 있는 경우의 모양', body: g.join('') }),
     };
 })());
 
@@ -1439,7 +1440,7 @@ add((() => {
     g.push(beaker(290, 90, 150, 140, 118, [[26, 26], [64, 90], [118, 40], [42, 70], [96, 16], [130, 100]],
         '묽은 용액', '용질은 그대로 6알, 부피만 커졌다'));
     g.push(txt(480, 116, '용질의 몰수는 변하지 않는다', { cls: 'ink bold' }));
-    g.push(txt(480, 144, 'C₁V₁ = C₂V₂', { cls: 'ink bold' }));
+    g.push(txt(480, 144, 'c₁V₁ = c₂V₂', { cls: 'ink bold' }));
     g.push(txt(480, 172, '양쪽 다 "용질의 몰수"를', { cls: 'ink2', size: 'sm' }));
     g.push(txt(480, 190, '적은 것일 뿐이다', { cls: 'ink2', size: 'sm' }));
     g.push(txt(480, 220, '부피가 3배가 되면', { cls: 'ink2', size: 'sm' }));
@@ -1449,7 +1450,7 @@ add((() => {
         name: 'chem-dilution',
         title: '희석에서 변하지 않는 것',
         desc: '용액에 물을 부으면 부피가 늘고 농도가 낮아지지만, 녹아 있는 용질의 몰수는 그대로다. '
-            + '희석 공식 C₁V₁ = C₂V₂ 는 양변이 모두 "용질의 몰수"라는 같은 값을 다르게 적은 것이다. '
+            + '희석 공식 c₁V₁ = c₂V₂ 는 양변이 모두 "용질의 몰수"라는 같은 값을 다르게 적은 것이다. '
             + '부피가 세 배가 되면 농도는 삼분의 일이 된다.',
         svg: svg({ width: W, height: H, title: '희석', desc: '물을 부어도 용질 알갱이 수는 변하지 않는다', body: g.join('') }),
     };

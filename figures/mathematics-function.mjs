@@ -546,10 +546,10 @@ add((() => {
     g.push(`<path d="M${A[0]} ${A[1]} L${B[0]} ${B[1]} L${C[0]} ${C[1]} Z" fill="var(--s1)" fill-opacity="0.1" stroke="var(--s1)" stroke-width="2"/>`);
     g.push(rightAngle(B[0], B[1], -1, -1, 13));
     g.push(arc(A[0], A[1], 40, 0, 36, 'θ'));
-    g.push(txt(172, 276, '밑변 a', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    g.push(txt(276, 190, '높이 b', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(172, 276, '밑변 b', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(276, 190, '높이 a', { cls: 'ink2', size: 'sm' }));
     g.push(txt(152, 174, '빗변 c', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    g.push(txt(174, 300, 'sin θ = b/c,  cos θ = a/c,  tan θ = b/a', { anchor: 'middle', cls: 'ink' }));
+    g.push(txt(174, 300, 'sin θ = a/c,  cos θ = b/c,  tan θ = a/b', { anchor: 'middle', cls: 'ink' }));
     g.push(panel(352, 30, 304, 286, '7장 — 단위원', { sub: '반지름 1 인 원. 어떤 각에서도 뜻이 있다' }));
     const ox = 516, oy = 190, R = 84;
     g.push(circ(ox, oy, R, { stroke: 'var(--grid)', sw: 1.4 }));

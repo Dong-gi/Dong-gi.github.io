@@ -2,6 +2,7 @@ package io.github.donggi.iroiroviewer.editor
 
 import io.github.donggi.iroiroviewer.editor.EditorContract.Kind
 import io.github.donggi.iroiroviewer.io.PathRules
+import io.github.donggi.iroiroviewer.model.PathNames
 
 /**
  * 돌려줄 파일의 이름 — **순수**(JVM 시험). 쪽이 댄 이름(다른 이름으로 저장에서 사용자가 친 것)을 쓰되 믿지 않는다: 마지막 조각만, 제어 문자와
@@ -87,10 +88,11 @@ object OutputNames {
         return trimBase(n)
     }
 
-    /** 마지막 조각만, 받지 않는 글자를 뺀다. */
+    /** 마지막 조각만, 받지 않는 글자를 뺀다. 글의 방향을 바꾸는 글자는 `_` 로 — 파일 쪽(`EditorSlots.cleanName`)과 같은 자리·같은 모양이다. */
     private fun clean(name: String?): String? {
         if (name == null) return null
-        val n = BAD.replace(name.substringAfterLast('/').substringAfterLast('\\'), "").trim()
+        val leaf = name.substringAfterLast('/').substringAfterLast('\\').map { if (PathNames.isBidiControl(it)) '_' else it }.joinToString("")
+        val n = BAD.replace(leaf, "").trim()
         return n.ifEmpty { null }
     }
 

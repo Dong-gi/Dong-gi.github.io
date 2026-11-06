@@ -84,7 +84,10 @@ object ShareHelper {
      * 주지 않는다 — 그렇게 주면 우리가 취소하기 전까지 남는다.
      */
     fun share(context: Context, paths: List<String>, chooserTitle: String): Boolean {
-        val uris = paths.mapNotNull { uriOf(context, it) }
+        // 다른 앱이 넘긴 설치 파일(받은 사본)은 싣지 않는다 — `ExternalOpen` 의 'APK' 와 같은 판단이다.
+        val uris = paths
+            .filterNot { p -> ApkFiles.refusesHandOff(IncomingFiles.isCopy(context, p)) { ApkFiles.isApk(File(p)) } }
+            .mapNotNull { uriOf(context, it) }
         if (uris.isEmpty()) return false
         val mime = mimeOf(paths)
 

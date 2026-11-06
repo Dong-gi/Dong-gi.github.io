@@ -9,8 +9,11 @@ package io.github.donggi.iroirobrowser.core.adblock
  *   늘 본다. `$badfilter` 가 가리킨 규칙은 만들 때 뺀다.
  * - 요소 숨김: 쪽을 열 때 [startCss](그 사이트의 것 + 클래스·id 가 없는 일반 규칙), 쪽을 다 연 뒤 [genericCss](쪽이 가진 클래스·id 에
  *   맞는 일반 규칙) — [CosmeticEngine] 의 머리말.
+ * - 시간: 요청 하나를 맞추는 시간이 주소 길이에 비례한다(쪽이 지은 아주 긴 주소가 WebView 의 요청 스레드를 세우지 못하게 — 2026-10-16 보안
+ *   점검). 정규식은 되짚지 않는 엔진([ListRegex])에 걸음 예산을 두고, 예산을 넘은 정규식 규칙은 그 자리에서 꺼서 [onRegexDisabled] 에
+ *   알린다(그 요청의 스레드에서 — 앱은 디버그 기록에 규칙의 앞부분만 남긴다).
  */
-class AdBlocker(lists: List<ParsedList>) {
+class AdBlocker(lists: List<ParsedList>, private val onRegexDisabled: ((NetworkRule) -> Unit)? = null) {
 
     /** 쪽 하나에 대한 결정 — 그 쪽에서 아무것도 막지 않는가, 요소를 숨기지 않는가, 일반 숨김을 쓰지 않는가. */
     class Page(val url: String, val host: String, val allowAll: Boolean, val noCosmetic: Boolean, val noGenericCosmetic: Boolean)
@@ -52,7 +55,7 @@ class AdBlocker(lists: List<ParsedList>) {
     /** 쪽(주 문서)의 결정. 주 문서를 열 때 한 번. */
     fun page(documentUrl: String): Page {
         val host = Request.hostOf(documentUrl)
-        val req = Request(documentUrl, host, RequestType.DOCUMENT)
+        val req = Request(documentUrl, host, RequestType.DOCUMENT, onRegexDisabled)
         var allowAll = false
         var noCosmetic = false
         var noGeneric = false
@@ -68,7 +71,7 @@ class AdBlocker(lists: List<ParsedList>) {
     /** 이 요청을 막는가 — 막으면 막은 규칙, 아니면 null. */
     fun shouldBlock(url: String, page: Page?, types: Int): NetworkRule? {
         if (page?.allowAll == true) return null
-        val req = Request(url, page?.host.orEmpty(), types)
+        val req = Request(url, page?.host.orEmpty(), types, onRegexDisabled)
         importantBlock.find(req)?.let { return it }
         val rule = block.find(req) ?: return null
         return if (allow.find(req) != null) null else rule

@@ -235,7 +235,7 @@ add((() => {
     g.push(txt(W / 2, 26, '가우스 소거법은 교점을 그대로 둔 채 직선만 단순하게 바꾼다', { anchor: 'middle', cls: 'ink bold' }));
     const spec = [
         ['처음', '기울어진 두 직선', [[1, 1, 3], [1, -1, 1]], ['x + y = 3', 'x − y = 1']],
-        ['R₂ ← R₁ − R₂', '한 직선이 수평이 되었다', [[1, 1, 3], [0, 1, 1]], ['x + y = 3', 'y = 1']],
+        ['R₂ ← ½(R₁ − R₂)', '한 직선이 수평이 되었다', [[1, 1, 3], [0, 1, 1]], ['x + y = 3', 'y = 1']],
         ['R₁ ← R₁ − R₂', '읽으면 그대로 답이다', [[1, 0, 2], [0, 1, 1]], ['x = 2', 'y = 1']],
     ];
     spec.forEach(([title, sub, lines, texts], i) => {
@@ -243,8 +243,12 @@ add((() => {
         const { f } = sq(xR, yR, px + 42, py + 52, 30);
         g.push(panel(px, py, pw, ph, title, sub));
         g.push(axes(f, { xRange: xR, yRange: yR, xTicks: [1, 2, 3], yTicks: [1, 2, 3], xLabel: 'x', yLabel: 'y' }));
-        g.push(lineIn(f, lines[0][0], lines[0][1], lines[0][2], xR, yR, { stroke: C1, sw: 2.4 }));
-        g.push(lineIn(f, lines[1][0], lines[1][1], lines[1][2], xR, yR, { stroke: C2, sw: 2.4 }));
+        // 축과 나란한 직선(y = 1, x = 2)은 축 바로 앞에서 시작한다. 창 끝까지 그으면
+        // 눈금 숫자 '1'·'2' 위를 지나가 숫자가 가려진다.
+        const clipX = ([a]) => (a === 0 ? [-0.15, xR[1]] : xR);
+        const clipY = ([, b]) => (b === 0 ? [-0.15, yR[1]] : yR);
+        g.push(lineIn(f, lines[0][0], lines[0][1], lines[0][2], clipX(lines[0]), clipY(lines[0]), { stroke: C1, sw: 2.4 }));
+        g.push(lineIn(f, lines[1][0], lines[1][1], lines[1][2], clipX(lines[1]), clipY(lines[1]), { stroke: C2, sw: 2.4 }));
         g.push(pdot(f.X(2), f.Y(1), C3, 5.5));
         g.push(txt(f.X(2) + 10, f.Y(1) - 9, '(2, 1)', { cls: 'ink bold', size: 'sm' }));
         g.push(txt(px + pw / 2, py + 226, texts[0], { anchor: 'middle', cls: 'ink2', size: 'sm' }));
@@ -656,7 +660,7 @@ add((() => {
         g.push(txt(...P([0, 0, 1.06]).map((v, k) => (k === 1 ? v - 6 : v + 8)), 'c', { cls: 'ink bold', size: 'sm' }));
         g.push(txt(px + pw / 2, py + ph - 20, '부피 8 = |det A|', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     }
-    g.push(txt(W / 2, H - 30, '한 변이 2배인 상자의 부피가 8배인 것과 같은 이치다. 행렬식은 그 배율을 한 수로 적은 것이다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W / 2, H - 30, '한 변이 2배인 정육면체의 부피가 8배인 것과 같은 이치다. 행렬식은 그 배율을 한 수로 적은 것이다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(W / 2, H - 12, '부호는 세 벡터가 오른손 좌표계를 이루면 양수, 뒤집혀 있으면 음수다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'la-mat-det-volume',
@@ -845,10 +849,10 @@ add((() => {
         g.push(varw(f, [0, 0], [2, 1], { cls: 's1', width: 2.6 }));
         g.push(varw(f, [0, 0], [1, 0.5], { cls: 's3', width: 2.4 }));
         g.push(varw(f, [0, 0], [-2, -1], { cls: 's2', width: 2.2, dash: '5 4' }));
-        g.push(txt(f.X(4.1), f.Y(2) - 6, '2u', { cls: 'ink bold', size: 'sm' }));
-        g.push(txt(f.X(2.1), f.Y(1) + 16, 'u', { cls: 'ink bold', size: 'sm' }));
-        g.push(txt(f.X(1.05), f.Y(0.5) + 20, '½u', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
-        g.push(txt(f.X(-2.05), f.Y(-1) + 18, '−u', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+        g.push(txt(f.X(4.1), f.Y(2) - 6, '2w', { cls: 'ink bold', size: 'sm' }));
+        g.push(txt(f.X(2.1), f.Y(1) + 16, 'w', { cls: 'ink bold', size: 'sm' }));
+        g.push(txt(f.X(1.05), f.Y(0.5) + 20, '½w', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+        g.push(txt(f.X(-2.05), f.Y(-1) + 18, '−w', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     }
     g.push(txt(W / 2, H - 12, '이 두 동작(합과 스칼라배)만으로 벡터로 할 수 있는 일이 정해진다. 6장에서 벡터공간을 정의할 때 공리로 삼는 것이 바로 이 둘이다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {

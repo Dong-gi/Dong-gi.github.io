@@ -12,9 +12,9 @@ direction: down
 }
 그림 -> 그림설명: { style.stroke-dash: 3 }
 
-추정: { label: "2. 최소제곱으로 b~0, b~1 을 구한다"; style.bold: true }
+추정: { label: "2. 최소제곱으로 b₀, b₁ 을 구한다"; style.bold: true }
 추정식: {
-  label: "b~1 = S~{xy}/S~{xx},   b~0 = ȳ − b~1x̄\n편미분 두 개를 0 으로 놓은 결과다"
+  label: "b₁ = Sxy/Sxx,   b₀ = ȳ − b₁x̄\n편미분 두 개를 0 으로 놓은 결과다"
   shape: text
 }
 추정 -> 추정식: { style.stroke-dash: 3 }
@@ -30,7 +30,7 @@ direction: down
 
 추론: { label: "4. 기울기를 검정하고 구간을 만든다"; style.bold: true }
 추론식: {
-  label: "s² = SSE/(n−2),   SE(b~1) = s/√S~{xx}\nt = b~1/SE(b~1),  자유도 n − 2"
+  label: "s² = SSE/(n−2),   SE(b₁) = s/√Sxx\nt = b₁/SE(b₁),  자유도 n − 2"
   shape: text
 }
 추론 -> 추론식: { style.stroke-dash: 3 }
@@ -55,6 +55,6 @@ direction: down
 }
 
 인과: {
-  label: "관측자료에 회귀를 돌린 것은 관계를 요약한 것이지 원인을 찾은 것이 아니다.\n인과를 말하려면 무작위 배정이나 교란변수 통제가 있어야 한다"
+  label: "관측자료에 회귀를 돌린 것은 관계를 요약한 것이지 원인을 찾은 것이 아니다.\n인과를 말하려면 무작위 배정이나 교란변수 통제 같은 설계가 있어야 한다"
   shape: text
 }

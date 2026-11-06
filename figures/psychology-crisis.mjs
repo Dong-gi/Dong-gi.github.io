@@ -81,8 +81,8 @@ add((() => {
 
     g.push(box(478, 84, 330, 118, { stroke: COL.s2, sw: 1.6 }));
     g.push(txt(494, 110, '논문이 보고한 값', { cls: 'ink bold', size: 'sm' }));
-    g.push(txt(494, 134, '원 연구 100편의 평균 효과크기 0.403,', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(494, 154, '재현 연구의 평균 0.197. 100편 가운데 83편에서', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(494, 134, '원 연구의 평균 효과크기 0.403,', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(494, 154, '재현 연구의 평균 0.197. 99편 가운데 82편에서', { cls: 'ink2', size: 'sm' }));
     g.push(txt(494, 174, '원 연구 쪽이 더 컸다', { cls: 'ink2', size: 'sm' }));
     g.push(txt(494, 194, 'Open Science Collaboration (2015)', { cls: 'ink2', size: 'sm' }));
 

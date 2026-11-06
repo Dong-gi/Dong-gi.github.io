@@ -53,14 +53,14 @@ internal class TorrentPrompt(private val activity: Activity, private val host: H
 
     /**
      * 페이지가 건넨 `.torrent` 내려받기 — 토렌트로 받을지 파일로 저장할지 묻는다. [saveFile] 은 지금까지의 내려받기(파일로 저장 — 다른 토렌트 앱에
-     * 넘길 수 있다). [referer]·[userAgent] 는 그 페이지의 것(토렌트 파일도 그 페이지의 쿠키로 받는다).
+     * 넘길 수 있다). [pageUrl]·[userAgent] 는 그 페이지의 것(토렌트 파일도 그 페이지의 쿠키로, Referer 는 홉마다 그 쪽에서 지어 받는다).
      */
-    fun offerFile(name: String, size: String, url: String, userAgent: String, referer: String?, saveFile: () -> Unit) {
+    fun offerFile(name: String, size: String, url: String, userAgent: String, pageUrl: String?, saveFile: () -> Unit) {
         host.trace("torrent file offered $name")
         AlertDialog.Builder(activity)
             .setTitle(R.string.torrent_file_question)
             .setMessage(activity.getString(R.string.torrent_file_detail, name, size))
-            .setPositiveButton(R.string.torrent_as_torrent) { _, _ -> TorrentDialogs.notice(activity) { readTorrentFile(url, userAgent, referer, saveFile) } }
+            .setPositiveButton(R.string.torrent_as_torrent) { _, _ -> TorrentDialogs.notice(activity) { readTorrentFile(url, userAgent, pageUrl, saveFile) } }
             .setNeutralButton(R.string.torrent_as_file) { _, _ -> saveFile() }
             .setNegativeButton(R.string.cancel, null)
             .show()
@@ -97,14 +97,14 @@ internal class TorrentPrompt(private val activity: Activity, private val host: H
 
     // ── .torrent ────────────────────────────────────────────────────────────────────────────────────────
 
-    private fun readTorrentFile(url: String, userAgent: String, referer: String?, saveFile: () -> Unit) {
+    private fun readTorrentFile(url: String, userAgent: String, pageUrl: String?, saveFile: () -> Unit) {
         if (url.startsWith("data:", ignoreCase = true)) {
             val data = DataUrl.parse(url)
             if (data == null) TorrentDialogs.refusal(activity, null, TorrentError.INVALID_TORRENT) else inspect(data.bytes, saveFile, startReading())
             return
         }
         val serial = startReading() ?: return
-        fetch = app.downloads.fetchSmall(url, userAgent, referer, MAX_TORRENT_BYTES) { result ->
+        fetch = app.downloads.fetchSmall(url, userAgent, pageUrl, MAX_TORRENT_BYTES) { result ->
             if (!stillReading(serial)) return@fetchSmall
             fetch = null
             when (result) {

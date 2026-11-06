@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 2026-10-16 — 살아 있는 탭 수(설정 › 화면), 보관 기간(설정 › 인터넷 사용 기록), 글 고르기 메뉴의 '검색', 주소창의 '복사한 링크 열기'. -->
+<resources>
+    <string name="settings_live_tabs">살아 있는 탭: %1$d개</string>
+    <string name="settings_live_tabs_title">살아 있는 탭</string>
+    <string name="settings_live_tabs_choice">%1$d개</string>
+    <string name="settings_history_keep">방문 기록 보관: %1$s</string>
+    <string name="settings_history_keep_title">방문 기록 보관</string>
+    <string name="settings_keep_forever">기간 없음(최근 1만 곳)</string>
+    <string name="settings_keep_year">1년</string>
+    <string name="settings_keep_days">%1$d일</string>
+    <string name="settings_cache_clear">캐시 비우기: %1$s</string>
+    <string name="settings_cache_clear_title">캐시 비우기</string>
+    <string name="settings_cache_never">하지 않음</string>
+    <string name="settings_cache_daily">매일</string>
+    <string name="settings_cache_every">%1$d일마다</string>
+    <string name="settings_retention_note">지난 방문 기록은 앱으로 돌아올 때 지웁니다. 캐시를 비워도 쿠키·로그인은 그대로입니다.</string>
+    <string name="settings_live_tabs_note">넘으면 오래 안 본 탭부터 쉬게 하고, 고르면 다시 엽니다. 늘리면 메모리를 더 씁니다.</string>
+    <string name="search_selection">검색</string>
+    <string name="search_selection_empty">고른 글이 없습니다</string>
+    <string name="suggest_clip_link">복사한 링크 열기</string>
+    <string name="suggest_clip_no_link">복사한 글에서 링크를 찾지 못했습니다</string>
+    <item name="menu_search_selection" type="id" />
+</resources>

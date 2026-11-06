@@ -7,11 +7,13 @@ import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.webkit.WebView
+import androidx.webkit.JavaScriptExecutionException
 import androidx.webkit.JavaScriptReplyProxy
 import androidx.webkit.ScriptHandler
 import androidx.webkit.WebMessageCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
+import androidx.webkit.WebViewOutcomeReceiver
 import io.github.donggi.iroirobrowser.R
 import io.github.donggi.iroirobrowser.core.adblock.Domains
 import io.github.donggi.iroirobrowser.core.adblock.HideSelectors
@@ -575,12 +577,111 @@ class PageBridge(private val context: Context, private val tab: Tab, private val
     }
 
     /**
+     * 고른 글을 묻는다(글 고르기 메뉴의 '검색' — 사용자 요청, 2026-10-16). 틀마다의 실행 세계에서 [SelectionSearch.SCRIPT] 를 돌린다
+     * (`JavaScriptReplyProxy.executeJavaScript` — 그 프록시를 보낸 틀·세계에서 돈다. 그 기능 조건은 통로와 같은 JS_INJECTION_IN_FRAME_AND_WORLD).
+     * 모두 답하거나 [SELECTION_TIMEOUT_MS] 가 지나면 [done] 을 메인 스레드에서 한 번 — 초점이 있는 틀의 글을 먼저, 없으면 처음 온 글(없으면 빈 글).
+     */
+    fun selectedText(done: (String) -> Unit) {
+        val targets = frames.values.toList()
+        var finished = false
+        var waiting = targets.size
+        var focused: String? = null
+        var first: String? = null
+        lateinit var timeout: Runnable
+        val finish = {
+            if (!finished) {
+                finished = true
+                main.removeCallbacks(timeout)
+                done(focused ?: first ?: "")
+            }
+        }
+        timeout = Runnable { finish() }
+        val answered = { result: String? ->
+            if (!finished) {
+                val o = result?.let { runCatching { JSONObject(it) }.getOrNull() }
+                val text = o?.optString("t").orEmpty()
+                if (text.isNotBlank()) {
+                    if (first == null) first = text
+                    if (focused == null && o?.optBoolean("f") == true) focused = text
+                }
+                if (--waiting <= 0) finish()
+            }
+        }
+        targets.forEach { frame ->
+            var asked = false
+            // 통로가 걸렸으면 이 기능이 있다 — lint 가 부르는 곳을 감싼 확인만 알아본다(함정 'lint RequiresFeature').
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD)) {
+                asked = runCatching {
+                    frame.proxy.executeJavaScript(SelectionSearch.SCRIPT, object : WebViewOutcomeReceiver<String, JavaScriptExecutionException> {
+                        override fun onResult(result: String) {
+                            main.post { answered(result) }
+                        }
+
+                        override fun onError(error: JavaScriptExecutionException) {
+                            main.post { answered(null) }
+                        }
+                    })
+                }.isSuccess
+            }
+            if (!asked) waiting--
+        }
+        if (waiting <= 0) finish() else main.postDelayed(timeout, SELECTION_TIMEOUT_MS)
+    }
+
+    /**
      * 뒤에서 재생 잇기의 조작([BackgroundPlay] — 알림·잠금 화면·이어폰 단추) — 이 탭의 틀들에 미디어를 멈추거나([play] 거짓) 다시 틀라고 한다.
      * 재생 중이거나 멈춰 둔 것을 가진 틀만 움직인다(BRIDGE 의 media-control).
      */
     fun mediaControl(play: Boolean) {
         val msg = JSONObject().put("op", "media-control").put("play", play)
         frames.values.forEach { post(it.proxy, msg) }
+    }
+
+    /**
+     * 뒤에서 재생을 잇는 동안 이 탭의 영상 요소를 숨기거나([hide]) 되돌린다([BackgroundPlay.HIDE_VIDEO_SCRIPT] — 2026-10-16). 틀마다의 실행
+     * 세계에서 돈다([selectedText] 와 같은 길 — 틀마다 차례가 지켜지므로 숨기기 뒤의 되돌리기가 앞지르지 않는다). [done] 은 메인 스레드에서 한 번 —
+     * 숨겼는데 영상이 있는 틀이 하나라도 있으면 참(되돌릴 때는 늘 거짓). 모두 답하거나 [SELECTION_TIMEOUT_MS] 가 지나면 부른다.
+     */
+    fun hideVideos(hide: Boolean, done: (Boolean) -> Unit = {}) {
+        val script = BackgroundPlay.hideVideoScript(HIDE_ID, hide)
+        val targets = frames.values.toList()
+        var finished = false
+        var waiting = targets.size
+        var videos = 0
+        lateinit var timeout: Runnable
+        val finish = {
+            if (!finished) {
+                finished = true
+                main.removeCallbacks(timeout)
+                done(hide && videos > 0)
+            }
+        }
+        timeout = Runnable { finish() }
+        val answered = { result: String? ->
+            if (!finished) {
+                videos += result?.trim()?.toIntOrNull() ?: 0
+                if (--waiting <= 0) finish()
+            }
+        }
+        targets.forEach { frame ->
+            var asked = false
+            // 통로가 걸렸으면 이 기능이 있다 — lint 가 부르는 곳을 감싼 확인만 알아본다(함정 'lint RequiresFeature').
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.JS_INJECTION_IN_FRAME_AND_WORLD)) {
+                asked = runCatching {
+                    frame.proxy.executeJavaScript(script, object : WebViewOutcomeReceiver<String, JavaScriptExecutionException> {
+                        override fun onResult(result: String) {
+                            main.post { answered(result) }
+                        }
+
+                        override fun onError(error: JavaScriptExecutionException) {
+                            main.post { answered(null) }
+                        }
+                    })
+                }.isSuccess
+            }
+            if (!asked) waiting--
+        }
+        if (waiting <= 0) finish() else main.postDelayed(timeout, SELECTION_TIMEOUT_MS)
     }
 
     private fun forgetPlaying() {
@@ -871,6 +972,9 @@ class PageBridge(private val context: Context, private val tab: Tab, private val
     }
 
     companion object {
+        /** 고른 글을 기다리는 시간 — 틀이 답하지 않아도 메뉴가 걸려 있지 않게. */
+        const val SELECTION_TIMEOUT_MS = 1_500L
+
         private const val KIND_BLOB = 1
         private const val KIND_RECORDING = 2
         private const val KIND_CAPTURE = 3
@@ -886,6 +990,9 @@ class PageBridge(private val context: Context, private val tab: Tab, private val
         /** 실행 세계와 주입 객체의 이름 — 프로세스마다 무작위(쪽은 그 세계를 볼 수 없지만 고정된 이름을 두지 않는다). */
         private val WORLD = randomName("w")
         private val OBJECT = randomName("o")
+
+        /** 뒤에서 재생하는 동안 영상을 숨기는 스타일 요소의 id([hideVideos]) — 쪽이 미리 알고 겨냥하지 못하게 무작위. */
+        private val HIDE_ID = randomName("s")
 
         private fun randomName(prefix: String): String {
             val b = ByteArray(9)

@@ -79,6 +79,12 @@ object WebHost {
     private const val ISOLATED_BYTES = 16
 
     /**
+     * 이 기기에서 쪽의 스크립트를 켤 수 있는가 — **클립보드 막음**(`ScriptPage.CLIPBOARD_GUARD`, 문서 시작 스크립트)을 걸 수 있을 때만. 화면은
+     * 아니면 '스크립트 실행' 을 내지 않는다. 걸지 못하는 WebView 에서 켜면 쪽이 같은 폴더의 파일을 클립보드로 내보낼 수 있다.
+     */
+    fun scriptsAllowed(): Boolean = ScriptPage.clipboardGuardSupported()
+
+    /**
      * 경로의 글자 가운데 URL 에서 뜻이 달라지는 것만 바꾼다.
      *
      * `Uri.encode` 는 `/` 까지 바꾸므로 쓸 수 없고, 전부 바꾸면 한글 파일명이 읽기

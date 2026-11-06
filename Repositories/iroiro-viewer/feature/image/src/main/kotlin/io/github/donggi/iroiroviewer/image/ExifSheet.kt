@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.donggi.iroiroviewer.io.Format
+import io.github.donggi.iroiroviewer.model.PathNames
 import io.github.donggi.iroiroviewer.ui.image.ExifReader
 import io.github.donggi.iroiroviewer.ui.image.ExifSummary
 import java.io.File
@@ -52,7 +53,7 @@ fun ExifSheet(file: File, onDismiss: () -> Unit) {
                 .padding(start = 24.dp, end = 24.dp, bottom = 32.dp),
         ) {
             Text(
-                text = file.name,
+                text = PathNames.forDisplay(file.name),
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 2,
                 overflow = TextOverflow.MiddleEllipsis,

@@ -90,6 +90,7 @@ import io.github.donggi.iroiroviewer.io.FileOpText
 import io.github.donggi.iroiroviewer.io.ZipMaker
 import io.github.donggi.iroiroviewer.io.ShareHelper
 import io.github.donggi.iroiroviewer.model.IroDispatchers
+import io.github.donggi.iroiroviewer.model.PathNames
 import io.github.donggi.iroiroviewer.playback.FolderQueue
 import io.github.donggi.iroiroviewer.playback.MiniPlayer
 import io.github.donggi.iroiroviewer.playback.PlaybackConnection
@@ -101,6 +102,7 @@ import io.github.donggi.iroiroviewer.model.FileEntry
 import io.github.donggi.iroiroviewer.model.FileKind
 import io.github.donggi.iroiroviewer.model.SortKey
 import io.github.donggi.iroiroviewer.model.ViewMode
+import io.github.donggi.iroiroviewer.ui.rememberNewPasswordState
 import java.io.File
 import io.github.donggi.iroiroviewer.io.R as IoR
 import kotlinx.coroutines.launch
@@ -248,11 +250,21 @@ fun opResultMessage(context: android.content.Context, f: FileOpManager.Finished)
             if (o.done > 0) context.getString(R.string.browser_op_failed_partial, why, o.done) else why
         }
         is FileOpEngine.Outcome.Done -> {
-            // 묶기는 만든 파일의 **실제 이름**을 말한다 — 고른 이름이 그새 생겼으면 `(2)` 가 붙었다.
-            val zip = (f.extra as? FileOpManager.Extra.Compressed)?.path?.let { File(it).name }
+            // 묶기는 만든 파일의 **실제 이름**을 말한다 — 고른 이름이 그새 생겼으면 `(2)` 가 붙었다. 암호를 걸었으면 그것도 말한다.
+            val compressed = f.extra as? FileOpManager.Extra.Compressed
+            val zip = compressed?.path?.let { File(it).name }
+            val locked = compressed?.locked == true
             when {
-                zip != null && o.skipped == 0 && o.failed == 0 -> context.getString(R.string.browser_op_compressed, zip)
-                zip != null -> context.getString(R.string.browser_op_compressed_with_skips, zip, o.skipped, o.failed)
+                zip != null && o.skipped == 0 && o.failed == 0 -> context.getString(
+                    if (locked) R.string.browser_op_compressed_locked else R.string.browser_op_compressed,
+                    zip,
+                )
+                zip != null -> context.getString(
+                    if (locked) R.string.browser_op_compressed_locked_with_skips else R.string.browser_op_compressed_with_skips,
+                    zip,
+                    o.skipped,
+                    o.failed,
+                )
                 o.skipped == 0 && o.failed == 0 -> context.getString(R.string.browser_op_done, o.moved)
                 else -> context.getString(R.string.browser_op_done_with_skips, o.moved, o.skipped, o.failed)
             }
@@ -861,14 +873,19 @@ private fun FolderScreen(
         val fallback = stringResource(R.string.browser_compress_fallback_name)
         // 제안 이름은 대화상자가 뜰 때 한 번 정한다(파일 몇 개의 존재만 본다).
         val suggested = remember(paths, path) { ZipMaker.suggestName(paths.map(::File), File(path), fallback) }
+        // 암호(선택). **저장되지 않는 상태로** 든다(회전하면 지워진다 — 함정 표 `rememberTextFieldState`). 누르는 순간 배열로 꺼내 칸을 비우고
+        // 큐의 요청에만 싣는다 — 인텐트·저장 상태·디스크에는 가지 않는다.
+        val password = rememberNewPasswordState()
         NameDialog(
             title = stringResource(R.string.browser_dialog_compress),
             label = stringResource(R.string.browser_dialog_zip_name),
             initial = suggested,
             confirmLabel = stringResource(R.string.browser_dialog_compress_confirm),
             selectBaseName = true,
-            onConfirm = { vm.compress(paths, it); compressing = null },
-            onDismiss = { compressing = null },
+            onConfirm = { vm.compress(paths, it, password.take()); compressing = null },
+            onDismiss = { password.clear(); compressing = null },
+            extra = { ZipPasswordFields(password) },
+            extraOk = zipPasswordOk(password),
         )
     }
 
@@ -1328,7 +1345,7 @@ private fun FailureNote(reason: DirectoryLister.Reason) {
 @Composable
 private fun DetailSheet(entry: FileEntry, @StringRes notice: Int?, onOpenWith: (() -> Unit)?) {
     Column(Modifier.padding(start = 24.dp, end = 24.dp, bottom = 32.dp)) {
-        Text(entry.name, style = MaterialTheme.typography.titleMedium)
+        Text(PathNames.forDisplay(entry.name), style = MaterialTheme.typography.titleMedium)
         if (notice != null) {
             Text(
                 stringResource(notice),

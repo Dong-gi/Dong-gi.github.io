@@ -48,7 +48,12 @@ class SevenZArchiveReader(
             // 바이트를 받아** 1024로 나눈다 — 65536을 넘기면 64MiB 가 아니라 64KiB 가
             // 되어 정상 7z 도 MemoryLimitException 으로 죽는다(실측으로 밟았다).
             .setMaxMemoryLimitKiB(MAX_HEADER_MEMORY_KIB)
-        if (withPassword && password != null) builder.setPassword(password)
+        if (withPassword && password != null) {
+            // **라이브러리에 암호를 넘기기 전에** 열쇠 유도 반복을 본다([SevenZKeyGuard]). 넘기면 라이브러리는 잠긴 머리(여는 순간)나
+            // 내용 폴더(첫 읽기)에서 그 반복을 상한도 인터럽트 확인도 없이 돈다. 열 때마다 다시 본다 — 그 사이에 파일이 바뀌었을 수 있다.
+            SevenZKeyGuard.check(source, password, MAX_HEADER_MEMORY_KIB)
+            builder.setPassword(password)
+        }
         val file = source.asFile()
         if (file != null) builder.setFile(file)
         else builder.setSeekableByteChannel(
@@ -64,11 +69,25 @@ class SevenZArchiveReader(
      *
      * **어떤 실패든 사본을 지운다.** 예전 판은 두 예외만 잡아, 라이브러리가 던지는
      * `RuntimeException`(깨진 헤더)에서는 사본이 지워지지 않은 채 버려졌다.
+     *
+     * 열쇠 유도 반복의 거절([SevenZKeyGuard] — '풀지 않는 방식')·취소·상한은 **'틀렸다' 로 옮기지 않는다** — 아래 `IOException` 갈래는
+     * 암호 없이 한 번 더 열어 보고 머리가 잠겼으면 '틀렸다' 로 옮기는데, 그 셋은 암호가 틀린 것이 아니다. 그래서 먼저 가른다.
+     * 머리가 잠겼고 암호가 없으면 **머리를 잠근 열쇠의 반복을 본다** — 받을 수 없는 값이면 물어도 소용없으니 묻지 않고 '풀지 않는 방식' 이다.
      */
     private val handle: SevenZFile = try {
         openFile()
+    } catch (e: ArchiveEncryptionUnsupportedException) {
+        this.password?.fill('\u0000')
+        throw e
+    } catch (e: InterruptedIOException) {
+        this.password?.fill('\u0000')
+        throw e
+    } catch (e: ParseLimitExceededException) {
+        this.password?.fill('\u0000')
+        throw e
     } catch (e: org.apache.commons.compress.PasswordRequiredException) {
         this.password?.fill('\u0000')
+        if (SevenZKeyGuard.unsafeWithoutPassword(source, MAX_HEADER_MEMORY_KIB)) throw SevenZUnsafeKeyException()
         throw ArchivePasswordException(wrongPassword = false)
     } catch (e: java.io.IOException) {
         val headerLocked = this.password != null && try {
@@ -124,8 +143,13 @@ class SevenZArchiveReader(
                 )
             }
             val locked = lockedPositions(handle.entries.count())
+            // 암호 없이 연 목록에서 **받을 수 없는 열쇠 유도 반복**이 보이면([SevenZKeyGuard]) 잠긴 항목은 암호로도 열지 않는다 — 물어도
+            // 소용이 없다(`lockedForGood`). 어느 폴더의 것인지 가르지 않고 잠긴 항목 전부다 — 7-Zip 이 만든 파일에는 그런 값이 없다.
+            // 암호를 받았으면 그런 파일은 위에서(`openFile`) 이미 거절됐다.
+            val forGood = password == null && locked.isNotEmpty() &&
+                SevenZKeyGuard.unsafeWithoutPassword(source, MAX_HEADER_MEMORY_KIB)
             entries = if (locked.isEmpty()) list else list.map {
-                if (it.index in locked) it.copy(isEncrypted = true, decryptable = password != null) else it
+                if (it.index in locked) it.copy(isEncrypted = true, decryptable = password != null, lockedForGood = forGood) else it
             }
         } catch (t: Throwable) {
             handle.close()

@@ -144,13 +144,13 @@ add((() => {
         panel(10, 'right', 'θ = 0°,  cos 0° = 1', 'W > 0', 's2', 'ar2'),
         panel(210, 'up', 'θ = 90°,  cos 90° = 0', 'W = 0', 's3', 'ar3'),
         panel(410, 'left', 'θ = 180°,  cos 180° = −1', 'W < 0', 's1', 'ar1'),
-        txt(W / 2, H - 12, '수직항력은 언제나 가운데 경우이고, 운동을 방해하는 마찰력은 언제나 오른쪽 경우다', { anchor: 'middle', cls: 'ink2', size: 'sm' }),
+        txt(W / 2, H - 12, '정지한 면의 수직항력은 가운데 경우이고, 운동을 방해하는 마찰력은 오른쪽 경우다', { anchor: 'middle', cls: 'ink2', size: 'sm' }),
     ].join('');
     return {
         name: 'energy-work-sign',
         title: '일의 부호 세 가지',
         desc: '힘이 변위와 같은 쪽이면 양의 일, 수직이면 일이 0, 반대쪽이면 음의 일이다. '
-            + '수직항력은 언제나 변위와 수직이라 일을 하지 않고, 운동을 방해하는 마찰력은 언제나 음의 일을 한다.',
+            + '정지한 면의 수직항력은 변위와 수직이라 일을 하지 않고, 운동을 방해하는 마찰력은 언제나 음의 일을 한다.',
         svg: svg({ width: W, height: H, title: '일의 부호', desc: '같은 쪽·수직·반대쪽 세 경우', body }),
     };
 })());
@@ -324,20 +324,21 @@ add((() => {
  * ------------------------------------------------------------------ */
 add((() => {
     const W = 640, H = 388;
-    const S = 32;                     // 속도 1 당 화살표 길이(화소)
+    // 속도 v(= 1) 당 화살표 길이(화소). 충돌 전 v 화살표도 같은 축척이어야 충돌 뒤 화살표와 견줄 수 있다.
+    const S = 44;
     const row = (y, r1, r2, u1, u2, tag1, tag2, note) => {
         const out = [];
         out.push(txt(24, y - 6, tag1, { cls: 'ink2', size: 'sm' }));
         out.push(txt(24, y + 11, tag2, { cls: 'ink2', size: 'sm' }));
         // 충돌 전
         out.push(ball(120, y, r1, 'f1'));
-        out.push(px(120 + r1 + 8, y, 120 + r1 + 8 + 48, y, { cls: 's1', marker: 'ar1', width: 2.4 }));
-        out.push(txt(120 + r1 + 32, y - 12, 'v', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+        out.push(px(120 + r1 + 8, y, 120 + r1 + 8 + S, y, { cls: 's1', marker: 'ar1', width: 2.4 }));
+        out.push(txt(120 + r1 + 8 + S / 2, y - 12, 'v', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
         out.push(ball(272, y, r2, 'f3'));
-        // 충돌 후
+        // 충돌 후 — 멈춘 공은 화살표 자리에 '멈춤'(공 위에 두면 칸을 가르는 선에 닿는다)
         out.push(ball(410, y, r1, 'f1'));
         out.push(u1 === 0
-            ? txt(410, y - r1 - 10, '멈춤', { anchor: 'middle', cls: 'ink2', size: 'sm' })
+            ? txt(410 + r1 + 10, y + 4, '멈춤', { cls: 'ink2', size: 'sm' })
             : px(410 + Math.sign(u1) * (r1 + 8), y, 410 + Math.sign(u1) * (r1 + 8 + S * Math.abs(u1)), y,
                 { cls: 's1', marker: 'ar1', width: 2.4 }));
         out.push(ball(524, y, r2, 'f3'));
@@ -350,11 +351,14 @@ add((() => {
         txt(470, 46, '충돌 후', { anchor: 'middle', cls: 'ink bold' }),
         txt(24, 74, '파란 공 = 속도 v 로 부딪혀 오는 m~1,   초록 공 = 처음에 정지해 있던 m~2', { cls: 'ink2', size: 'sm' }),
         `<path class="gr" stroke-dasharray="5 4" d="M344 88 V${H - 20}"/>`,
-        row(126, 12, 30, -0.95, 0.35, '가벼운 것이', '무거운 것에', '거의 그대로 되튄다 (−v 에 가깝다)'),
+        // 정지한 표적과의 탄성 충돌(v = 1): u1 = (m1 − m2)/(m1 + m2), u2 = 2m1/(m1 + m2). 어느 줄이든 u2 − u1 = 1
+        // (다가가는 속력 = 멀어지는 속력). 위아래 줄은 질량비 1:9 와 9:1 — 밀도가 같다고 보면
+        // 반지름비가 9 의 세제곱근 ≈ 2.08 이라 14:29 로 그린다. 1:9 의 u2 = 0.2 는 화살촉만 보일 만큼 짧다.
+        row(126, 14, 29, -0.8, 0.2, '가벼운 것이', '무거운 것에', '거의 그대로 되튄다 (−v 에 가깝다)'),
         `<path class="gr" d="M20 182 H${W - 20}"/>`,
         row(220, 20, 20, 0, 1, '질량이', '같으면', '속도를 통째로 맞바꾼다'),
         `<path class="gr" d="M20 278 H${W - 20}"/>`,
-        row(320, 30, 12, 0.6, 1.8, '무거운 것이', '가벼운 것에', '가벼운 쪽이 최대 2v 로 튕겨 나간다'),
+        row(320, 29, 14, 0.8, 1.8, '무거운 것이', '가벼운 것에', '가벼운 쪽이 최대 2v 로 튕겨 나간다'),
     ].join('');
     return {
         name: 'energy-collision-mass-ratio',

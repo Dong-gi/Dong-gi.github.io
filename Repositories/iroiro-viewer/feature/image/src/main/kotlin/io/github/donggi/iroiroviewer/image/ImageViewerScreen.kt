@@ -59,6 +59,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.donggi.iroiroviewer.model.PathNames
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -408,7 +409,7 @@ fun ImageViewerScreen(
                 },
                 title = {
                     Text(
-                        text = current?.name.orEmpty(),
+                        text = PathNames.forDisplay(current?.name.orEmpty()),
                         maxLines = 1,
                         overflow = TextOverflow.MiddleEllipsis,
                     )

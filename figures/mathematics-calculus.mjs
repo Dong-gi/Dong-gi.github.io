@@ -755,7 +755,8 @@ add((() => {
     g.push(fa.curve(fn, { from: 0, to: 4, cls: 's1' }));
     g.push(pdot(fa.X(0), fa.Y(fn(0)), 'var(--ink2)', 4));
     g.push(pdot(fa.X(4), fa.Y(fn(4)), 'var(--ink2)', 4));
-    for (const c of [0.605, 1.253, 2.933]) g.push(pdot(fa.X(c), fa.Y(1), 'var(--s2)', 4.6));
+    // fn(c) = 1 의 세 해(이분법으로 구한 값): 0.63269, 1.26484, 2.92421
+    for (const c of [0.633, 1.265, 2.924]) g.push(pdot(fa.X(c), fa.Y(1), 'var(--s2)', 4.6));
     g.push(txt(fa.X(0) + 10, fa.Y(fn(0)) + 5, 'f(a)', { cls: 'ink2', size: 'sm' }));
     g.push(txt(fa.X(4) - 2, fa.Y(fn(4)) - 10, 'f(b)', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(fa.X(4.3), fa.Y(1) - 9, 'v', { anchor: 'end', cls: 'f3' }));
@@ -823,7 +824,7 @@ add((() => {
     g.push(txt(fb.X(0.95), fb.Y(0.3), '최댓값이 없다', { anchor: 'middle', cls: 'ink' }));
 
     g.push(txt(W / 2, 278, '닫힌 구간에서 연속인 함수는 그 구간 안에서 최댓값과 최솟값을 실제로 갖는다', { anchor: 'middle', cls: 'ink bold' }));
-    g.push(txt(W / 2, 302, '‘닫힌’ 과 ‘연속’ 중 하나만 빠져도 오른쪽처럼 최댓값이 사라진다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W / 2, 302, '‘닫힌’ 과 ‘연속’ 중 하나만 빠져도 오른쪽처럼 최댓값이 사라질 수 있다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'math-cal-evt',
         svg: svg({

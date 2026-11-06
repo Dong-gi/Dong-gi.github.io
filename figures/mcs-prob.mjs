@@ -363,7 +363,7 @@ add((() => {
     // 규칙 목록
     const rules = [
         ['합의 규칙', '서로소이면 Pr[A ∪ B] = Pr[A] + Pr[B]'],
-        ['여사건 규칙', 'Pr[¬A] = 1 − Pr[A]'],
+        ['여사건 규칙', 'Pr[S − A] = 1 − Pr[A]'],
         ['차의 규칙', 'Pr[B − A] = Pr[B] − Pr[A ∩ B]'],
         ['포함배제', 'Pr[A ∪ B] = Pr[A] + Pr[B] − Pr[A ∩ B]'],
         ['불의 부등식', 'Pr[A ∪ B] ≤ Pr[A] + Pr[B]'],
@@ -706,7 +706,7 @@ add((() => {
 
     g.push(box(bx + 200, 112, 132, 40, { fill: C2, op: 0.2, stroke: C2, sw: 1.3, rx: 4 }));
     g.push(txt(bx + 266, 130, '병이 있는 100 명', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
-    g.push(txt(bx + 266, 146, '민감도 90%', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(bx + 266, 146, '위음성 10%', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
     g.push(box(bx + 200, 206, 132, 40, { fill: C1, op: 0.18, stroke: C1, sw: 1.3, rx: 4 }));
     g.push(txt(bx + 266, 224, '건강한 9900 명', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
@@ -1232,7 +1232,7 @@ add((() => {
         svg: svg({
             width: W, height: H,
             title: '배팅 두 배 전략과 무한 선형성',
-            desc: '판마다 절댓값 기댓값이 5 로 일정해 급수가 발산하므로 무한 개 항에 선형성을 쓸 수 없음을 보이는 그림',
+            desc: '판마다 절댓값 기댓값이 10 으로 일정해 급수가 발산하므로 무한 개 항에 선형성을 쓸 수 없음을 보이는 그림',
             body: g.join(''),
         }),
     };

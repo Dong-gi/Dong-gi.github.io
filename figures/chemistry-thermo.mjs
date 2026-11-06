@@ -445,13 +445,13 @@ add((() => {
     g.push(brace(0, 2, '고체', 1));
     g.push(brace(3, 3, '액체', 2));
     g.push(brace(4, 6, '기체', 3));
-    g.push(txt(360, 382, '단단히 붙잡힌 고체가 가장 작고 마음대로 돌아다니는 기체가 가장 크다. 같은 상이면 무거울수록 크다',
+    g.push(txt(360, 382, '단단히 붙잡힌 고체가 가장 작고 마음대로 돌아다니는 기체가 가장 크다. 같은 상이면 대개 무거울수록 크다',
         { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'chem-thermo-entropy-phases',
         title: '상태에 따른 표준 몰 엔트로피',
         desc: '표준 몰 엔트로피는 고체에서 가장 작고 기체에서 가장 크다. 흑연은 5.7, 물(액체)은 70.0, '
-            + '수증기는 188.8 J/(mol·K) 이다. 같은 상 안에서도 원자가 많고 무거운 분자일수록 크다. '
+            + '수증기는 188.8 J/(mol·K) 이다. 같은 상 안에서는 대개 원자가 많고 무거운 분자일수록 크다. '
             + '이 때문에 기체가 늘어나는 반응이면 계산하기 전에 이미 ΔS 의 부호를 짐작할 수 있다.',
         svg: svg({ width: W, height: H, title: '표준 몰 엔트로피 막대그림', desc: '고체·액체·기체의 S° 비교', body: g.join('') }),
     };
@@ -550,7 +550,8 @@ add((() => {
     const cases = [
         [-100, 0.1, 's1', 'ΔH < 0,  ΔS > 0', '어느 온도에서나 자발'],
         [-100, -0.2, 's2', 'ΔH < 0,  ΔS < 0', '낮은 온도에서만 자발'],
-        [100, 0.2, 's3', 'ΔH > 0,  ΔS > 0', '높은 온도에서만 자발'],
+        // 둘째 줄(500 K)과 전환 온도가 겹치지 않게 ΔS 를 0.125 로 둔다 → 100 / 0.125 = 800 K.
+        [100, 0.125, 's3', 'ΔH > 0,  ΔS > 0', '높은 온도에서만 자발'],
         [100, -0.1, 'ink-line', 'ΔH > 0,  ΔS < 0', '어느 온도에서도 비자발'],
     ];
     g.push(f.line([[0, 0], [1000, 0]], { cls: 's1' }).replace('class="cv s1"', 'class="cv" stroke="var(--ink)" stroke-width="1.4" stroke-dasharray="7 4"'));
@@ -565,18 +566,21 @@ add((() => {
         const Tc = dH / dS;
         if (Tc > 0 && Tc < 1000) {
             g.push(f.dot([Tc, 0], { cls: 'f1', r: 4 }));
-            g.push(f.label([Tc, 0], '전환 온도', { dy: -12, anchor: 'middle', cls: 'ink2', size: 'sm' }));
+            // 이름표는 자기 직선이 가로축 아래로 내려간 쪽의 위 빈자리에 둔다(올라가는 직선은 왼쪽, 내려가는 직선은 오른쪽).
+            const left = dS < 0;
+            g.push(f.label([Tc, 0], `전환 온도 ${Tc} K`, { dx: left ? -6 : 6, dy: -10, anchor: left ? 'end' : 'start', cls: 'ink2', size: 'sm' }));
         }
     }
     g.push(f.label([20, -190], 'ΔG < 0 — 자발', { cls: 'ink bold' }));
     g.push(f.label([20, 190], 'ΔG > 0 — 비자발', { cls: 'ink2' }));
 
+    // 범례는 가로축 이름 'T (K)'(x 526~553) 오른쪽에서 시작한다. 540 이면 셋째 줄 견본선이 그 글자를 덮었다.
     let ly = 92;
     for (const [, , cls, name, note] of cases) {
         const stroke = cls === 'ink-line' ? 'var(--ink2)' : `var(--${cls})`;
-        g.push(line([[540, ly - 5], [572, ly - 5]], { stroke, sw: 3, dash: cls === 'ink-line' ? '6 4' : undefined }));
-        g.push(txt(582, ly, name, { cls: 'ink' }));
-        g.push(txt(582, ly + 19, note, { cls: 'ink2', size: 'sm' }));
+        g.push(line([[566, ly - 5], [598, ly - 5]], { stroke, sw: 3, dash: cls === 'ink-line' ? '6 4' : undefined }));
+        g.push(txt(608, ly, name, { cls: 'ink' }));
+        g.push(txt(608, ly + 19, note, { cls: 'ink2', size: 'sm' }));
         ly += 54;
     }
     g.push(txt(390, 362, '가로 점선(ΔG = 0)을 지나는 지점이 전환 온도이고, 그 값이 ΔH / ΔS 다',
@@ -681,23 +685,24 @@ add((() => {
 /* 11-2. 용해도와 온도 */
 add((() => {
     const W = 720, H = 360;
-    const g = [txt(26, 34, '온도가 오르면 고체는 대개 더 녹고, 기체는 반드시 덜 녹는다', { cls: 'ink bold' })];
+    const g = [txt(26, 34, '온도가 오르면 고체는 대개 더 녹고, 기체는 거의 늘 덜 녹는다', { cls: 'ink bold' })];
     const fa = frame({ xRange: [0, 100], yRange: [0, 10], box: { x: 84, y: 66, w: 234, h: 186 } });
     g.push(fa.axes({ xLabel: 'T (°C)', yLabel: '용해도', xTicks: [0, 25, 50, 75, 100], yTicks: [] }));
     g.push(fa.curve(t => 1 + 0.0008 * t * t, { cls: 's1' }));
     g.push(fa.curve(t => 3.2 - 0.021 * t, { cls: 's2', dash: '6 4' }));
-    g.push(fa.label([52, 6.2], '대부분의 고체', { cls: 'ink' }));
-    g.push(fa.label([52, 5.2], '(KNO₃ 등)', { cls: 'ink2', size: 'sm' }));
-    g.push(fa.label([98, 1.9], '줄어드는 고체도 있다', { anchor: 'end', cls: 'ink2', size: 'sm' }));
+    g.push(fa.label([40, 6.2], '대부분의 고체', { cls: 'ink' }));
+    g.push(fa.label([40, 5.2], '(KNO₃ 등)', { cls: 'ink2', size: 'sm' }));
+    // 이름표는 점선 위 왼쪽 빈자리에 둔다(오른쪽 끝에 두면 점선이 글자를 지난다).
+    g.push(fa.label([4, 3.7], '줄어드는 고체도 있다', { anchor: 'start', cls: 'ink2', size: 'sm' }));
     g.push(txt(201, 284, '고체 — 규칙이 아니라 경향일 뿐이다', { anchor: 'middle', cls: 'ink' }));
 
     const fb = frame({ xRange: [0, 100], yRange: [0, 10], box: { x: 434, y: 66, w: 234, h: 186 } });
     g.push(fb.axes({ xLabel: 'T (°C)', yLabel: '용해도', xTicks: [0, 25, 50, 75, 100], yTicks: [] }));
     g.push(fb.curve(t => 8.4 * Math.exp(-t / 38), { cls: 's3' }));
-    g.push(fb.label([32, 6.4], '모든 기체', { cls: 'ink' }));
-    g.push(fb.label([98, 2.6], '녹는 것이 발열이므로', { anchor: 'end', cls: 'ink2', size: 'sm' }));
-    g.push(fb.label([98, 1.6], '온도를 올리면 빠져나간다', { anchor: 'end', cls: 'ink2', size: 'sm' }));
-    g.push(txt(551, 284, '기체 — 예외 없이 줄어든다', { anchor: 'middle', cls: 'ink' }));
+    g.push(fb.label([32, 6.4], '거의 모든 기체', { cls: 'ink' }));
+    g.push(fb.label([98, 3.8], '녹는 것이 발열이므로', { anchor: 'end', cls: 'ink2', size: 'sm' }));
+    g.push(fb.label([98, 2.8], '온도를 올리면 빠져나간다', { anchor: 'end', cls: 'ink2', size: 'sm' }));
+    g.push(txt(551, 284, '기체 — 상온의 물에서는 예외가 드물다', { anchor: 'middle', cls: 'ink' }));
 
     g.push(txt(360, 322, '세로 눈금은 물질마다 자릿수가 다르므로 생략했다. 읽어야 할 것은 기울기의 방향이다',
         { anchor: 'middle', cls: 'ink2', size: 'sm' }));
@@ -707,7 +712,7 @@ add((() => {
         name: 'chem-soln-solubility-temp',
         title: '온도에 따른 고체와 기체의 용해도',
         desc: '고체의 용해도는 대개 온도가 오르면 커지지만 줄어드는 예도 있어 절대 규칙이 아니다. 반면 기체의 '
-            + '용해도는 예외 없이 온도가 오르면 작아진다. 기체가 녹는 과정이 발열이기 때문이다. '
+            + '용해도는 상온의 물에서 거의 예외 없이 온도가 오르면 작아진다. 그 범위에서 기체가 녹는 과정이 발열이기 때문이다. '
             + '데워진 강물의 용존 산소가 모자라는 것이 오른쪽 그림의 직접적인 결과다.',
         svg: svg({ width: W, height: H, title: '용해도와 온도', desc: '고체와 기체의 용해도 곡선 비교', body: g.join('') }),
     };
@@ -788,7 +793,7 @@ add((() => {
 add((() => {
     const W = 770, H = 390;
     const g = [];
-    g.push(txt(26, 34, '용질이 표면을 차지하면 빠져나가는 분자가 줄어든다', { cls: 'ink bold' }));
+    g.push(txt(26, 34, '용질과 섞이면 용매가 빠져나가려는 경향이 줄어든다', { cls: 'ink bold' }));
 
     const jar = (x, title, nSolute, nEsc) => {
         const out = [box(x, 64, 200, 200, { stroke: 'var(--ink2)', sw: 1.8, rx: 6 })];
@@ -816,15 +821,15 @@ add((() => {
     g.push(f.dot([0.8, 0.8], { cls: 'f2', r: 4 }));
     g.push(txt(635, 76, '라울 법칙', { anchor: 'middle', cls: 'ink bold' }));
 
-    g.push(txt(370, 330, '용질이 비휘발성이면 증기에는 용매만 있다. 그런데 표면의 일부를 용질이 차지하므로 나가는 수가 준다',
+    g.push(txt(370, 330, '용질이 비휘발성이면 증기에는 용매만 있다. 그런데 섞이면 가짓수가 늘어 용매가 액체에 머물기 쉬워진다',
         { anchor: 'middle', cls: 'ink' }));
-    g.push(txt(370, 356, '그래서 증기압이 용매의 몰분율만큼 줄어든다. 총괄성 네 가지가 전부 여기서 나온다',
+    g.push(txt(370, 356, '그래서 증기압이 순수할 때의 x(용매) 배로 낮아진다. 총괄성 네 가지가 전부 여기서 나온다',
         { anchor: 'middle', cls: 'ink' }));
     g.push(txt(W - 16, H - 10, '용질이 무엇인지는 상관없고 몇 개인지만 문제가 된다', { anchor: 'end', cls: 'ink2', size: 'sm' }));
     return {
         name: 'chem-soln-vapor-lowering',
         title: '증기압 내림 — 총괄성의 뿌리',
-        desc: '비휘발성 용질을 녹이면 용매 분자가 표면에서 차지하는 몫이 줄어 빠져나가는 수가 준다. 그래서 '
+        desc: '비휘발성 용질을 녹이면 용매가 용질과 섞여 엔트로피가 커지므로 액체에 머무는 쪽이 유리해져 빠져나가는 수가 준다. 그래서 '
             + '용액의 증기압이 순수한 용매보다 낮아지고, 그 값은 용매의 몰분율에 비례한다(라울 법칙). '
             + '용질이 무엇인지는 상관없고 몇 개인지만 문제가 되며, 총괄성 네 가지가 모두 이 사실에서 나온다.',
         svg: svg({ width: W, height: H, title: '증기압 내림', desc: '순수 용매와 용액의 증발 비교', body: g.join('') }),
@@ -1090,20 +1095,27 @@ add((() => {
 add((() => {
     const W = 700, H = 380;
     const g = [txt(26, 34, '부피를 줄이면 기체 알갱이 수가 적은 쪽으로 옮겨 간다', { cls: 'ink bold' })];
-    const put = (x, y, w, h, pairs, singles) => {
-        const out = [box(x, y, w, h, { stroke: 'var(--ink2)', sw: 1.8, rx: 4 })];
-        pairs.forEach(([dx, dy]) => {
-            out.push(circ(x + dx, y + dy, 9, { fill: 'var(--s1)', op: 0.55, stroke: 'var(--s1)', sw: 1.2 }));
-            out.push(circ(x + dx + 15, y + dy, 9, { fill: 'var(--s1)', op: 0.55, stroke: 'var(--s1)', sw: 1.2 }));
-        });
-        singles.forEach(([dx, dy]) => {
-            out.push(circ(x + dx, y + dy, 9, { fill: 'var(--s2)', op: 0.7, stroke: 'var(--s2)', sw: 1.2 }));
-        });
-        return out.join('');
+    // 세 물질을 원자 배치로 가른다: S 는 큰 파란 공, O 는 작은 주황 공. SO₂ 는 굽은 셋, O₂ 는 둘, SO₃ 는 넷.
+    // 오른쪽 위 범례가 모양과 이름을 잇는다(색만으로 가르지 않는다).
+    const S = (x, y) => circ(x, y, 8, { fill: 'var(--s1)', op: 0.6, stroke: 'var(--s1)', sw: 1.2 });
+    const O = (x, y) => circ(x, y, 6, { fill: 'var(--s2)', op: 0.6, stroke: 'var(--s2)', sw: 1.2 });
+    const mol = {
+        SO2: (x, y) => O(x - 10.5, y + 6) + O(x + 10.5, y + 6) + S(x, y),
+        O2: (x, y) => O(x - 5.5, y) + O(x + 5.5, y),
+        SO3: (x, y) => O(x, y - 12) + O(x - 10.5, y + 6) + O(x + 10.5, y + 6) + S(x, y),
     };
+    const put = (x, y, w, h, list) => [box(x, y, w, h, { stroke: 'var(--ink2)', sw: 1.8, rx: 4 }),
+        ...list.map(([k, dx, dy]) => mol[k](x + dx, y + dy))].join('');
+    [['SO2', 'SO₂'], ['O2', 'O₂'], ['SO3', 'SO₃']].forEach(([k, name], i) => {
+        g.push(mol[k](440 + i * 80, 40));
+        g.push(txt(462 + i * 80, 45, name, { cls: 'ink', size: 'sm' }));
+    });
+    g.push(txt(680, 66, '큰 공 = S, 작은 공 = O', { anchor: 'end', cls: 'ink2', size: 'sm' }));
+    // 2SO₂ + O₂ → 2SO₃ 가 한 번 일어나면 SO₂ 4 · O₂ 2 · SO₃ 1(7개)이 SO₂ 2 · O₂ 1 · SO₃ 3(6개)이 된다.
     g.push(txt(150, 74, '누르기 전', { anchor: 'middle', cls: 'ink bold' }));
-    g.push(put(60, 90, 180, 180, [[30, 34], [110, 40], [40, 106], [122, 112]], [[36, 158], [92, 150], [148, 166]]));
-    g.push(txt(150, 292, '기체 알갱이 7개', { anchor: 'middle', cls: 'ink' }));
+    g.push(put(60, 90, 180, 180, [['SO2', 34, 38], ['O2', 96, 34], ['SO2', 150, 42], ['SO3', 44, 98],
+        ['SO2', 110, 92], ['O2', 60, 152], ['SO2', 136, 146]]));
+    g.push(txt(150, 292, '기체 알갱이 7개 — SO₂ 4 · O₂ 2 · SO₃ 1', { anchor: 'middle', cls: 'ink' }));
     g.push(txt(150, 312, '2SO₂ + O₂ ⇌ 2SO₃', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
     g.push(px(266, 180, 356, 180, { cls: 's3', marker: 'ar3', width: 2.4 }));
@@ -1112,8 +1124,9 @@ add((() => {
     g.push(txt(311, 220, 'Q 가 K 보다 작아진다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
     g.push(txt(470, 74, '누른 뒤 새 평형', { anchor: 'middle', cls: 'ink bold' }));
-    g.push(put(400, 130, 140, 140, [[26, 30], [80, 36]], [[30, 88], [82, 94], [40, 122], [96, 124]]));
-    g.push(txt(470, 292, '기체 알갱이 6개', { anchor: 'middle', cls: 'ink' }));
+    g.push(put(400, 130, 140, 140, [['SO3', 30, 36], ['SO2', 100, 32], ['O2', 62, 76], ['SO3', 114, 84],
+        ['SO2', 30, 116], ['SO3', 92, 120]]));
+    g.push(txt(470, 292, '기체 알갱이 6개 — SO₂ 2 · O₂ 1 · SO₃ 3', { anchor: 'middle', cls: 'ink' }));
     g.push(txt(470, 312, '왼쪽 3몰이 오른쪽 2몰로 바뀌었다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
     g.push(txt(350, 348, '이 규칙은 양쪽 기체 몰수가 다를 때만 뜻이 있다. 같으면 눌러도 평형이 움직이지 않는다',

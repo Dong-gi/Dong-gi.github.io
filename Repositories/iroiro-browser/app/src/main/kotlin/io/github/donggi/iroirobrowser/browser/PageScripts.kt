@@ -19,91 +19,131 @@ object PageScripts {
      * - `window.open`
      *
      * 갈고리를 건 문서는 닫힌 WeakSet 으로 기억한다(쪽이 흉내 낼 표식을 창에 두지 않는다). 실험이 잰 15길(같은 출처의 빈 틀 열 가지·
-     * srcdoc·샌드박스·data:·다른 출처)을 모두 막았다. 남는 위험: 그 밖의 새 길, 쪽이 갈고리를 알아챌 수 있다(`toString`).
+     * srcdoc·샌드박스·data:·다른 출처)을 모두 막았다.
+     *
+     * **쪽이 바꿀 수 있는 내장 함수를 나중에 부르지 않는다**(2026-10-16 보안 점검 — 에뮬레이터에서 재현). 이 스크립트는 쪽의 세계에서 쪽보다
+     * 먼저 돌지만, 틀 나무를 훑는 일은 쪽이 틀을 만든 **뒤에** 한다 — 앞 판은 그때 `Object.getOwnPropertyNames`·`RegExp.prototype.test`·
+     * `WeakSet.prototype.has`·`Array.prototype.push`·`pop`·`forEach`·`Function.prototype.apply`·`window.length` 를 불러, 쪽이 그것을 미리 바꿔
+     * 두면 새 틀의 RTC 가 그대로 남았다(`Object.getOwnPropertyNames` 를 빈 목록을 돌려주게 바꾸고 만든 빈 틀에 `RTCPeerConnection` 이 있었다 —
+     * `RegExp.prototype.test` 도 같다, `Array.prototype.pop` 을 바꾸자 훑기가 끝나지 않았다). 그래서 쓸 것은 처음에 붙잡아 두고(`Reflect.apply` 로
+     * 부른다), 속성 설명은 원형이 없는 객체로 짓고(쪽이 `Object.prototype` 에 `get` 따위를 더해도 섞이지 않게), 틀 나무는 연결 목록으로 훑고, 틀
+     * 수는 처음에 붙잡은 `window.length` 의 getter 로 읽는다(쪽이 `window.length` 를 덮어도 — 창의 번호 접근 `w[i]` 은 쪽이 가릴 수 없다).
+     * 남는 위험: 그 밖의 새 길, 쪽이 갈고리를 알아챌 수 있다(`toString`).
      */
     const val WEBRTC_GUARD = """
 (function () {
   'use strict';
+  var apply = Reflect.apply;
+  var ownNames = Object.getOwnPropertyNames, getDesc = Object.getOwnPropertyDescriptor, defProp = Object.defineProperty;
+  var create = Object.create, hasOwn = Object.prototype.hasOwnProperty, slice = String.prototype.slice;
+  var WS = WeakSet, wsHas = WS.prototype.has, wsAdd = WS.prototype.add;
+  var listen = EventTarget.prototype.addEventListener;
+  var MO = MutationObserver, observe = MO.prototype.observe;
+  var lenDesc = getDesc(window, 'length') || getDesc(Window.prototype, 'length');
+  var lengthOf = lenDesc && lenDesc.get;
   var root = window;
-  var hooked = new WeakSet();
-  var RX = /^(webkit)?RTC/;
+  var hooked = new WS();
+  var NODE = ['appendChild', 'insertBefore', 'replaceChild'];
+  var ELEMENT = ['append', 'prepend', 'before', 'after', 'replaceWith', 'replaceChildren', 'insertAdjacentElement', 'insertAdjacentHTML',
+    'setHTMLUnsafe', 'moveBefore'];
+  var DOCUMENT = ['write', 'writeln', 'execCommand', 'append', 'prepend', 'replaceChildren'];
+  var SHADOW = ['setHTMLUnsafe'];
+  var RANGE = ['insertNode', 'surroundContents'];
+  var HTML = ['innerHTML', 'outerHTML'];
+  var SHADOW_HTML = ['innerHTML'];
+  var FRAMES = ['HTMLIFrameElement', 'HTMLFrameElement', 'HTMLObjectElement'];
+  var FRAME_GETTERS = ['contentWindow', 'contentDocument'];
+  function own(o, k) { return apply(hasOwn, o, [k]); }
+  function bare() { return apply(create, null, [null]); }
+  function isRtc(n) { return apply(slice, n, [0, 3]) === 'RTC' || apply(slice, n, [0, 9]) === 'webkitRTC'; }
   function strip(w) {
     var names;
-    try { names = Object.getOwnPropertyNames(w); } catch (e) { return; }
+    try { names = apply(ownNames, null, [w]); } catch (e) { return; }
     for (var i = 0; i < names.length; i++) {
       var n = names[i];
-      if (!RX.test(n)) continue;
+      if (typeof n !== 'string' || !isRtc(n)) continue;
       try { delete w[n]; } catch (e) {}
-      try { Object.defineProperty(w, n, { value: undefined, writable: false, configurable: false, enumerable: false }); } catch (e) {}
+      var d = bare();
+      d.value = undefined; d.writable = false; d.enumerable = false; d.configurable = false;
+      try { apply(defProp, null, [w, n, d]); } catch (e) {}
     }
   }
+  function childCount(w) {
+    try { return lengthOf ? apply(lengthOf, w, []) : w.length; } catch (e) {}
+    try { return w.length; } catch (e) { return 0; }
+  }
   function sweep() {
-    var stack = [root];
-    while (stack.length) {
-      var w = stack.pop();
+    var top = { w: root, next: null };
+    while (top) {
+      var w = top.w;
+      top = top.next;
       try {
         if (typeof w.RTCPeerConnection !== 'undefined' || typeof w.webkitRTCPeerConnection !== 'undefined' ||
             typeof w.RTCDataChannel !== 'undefined') strip(w);
-        var d = w.document;
-        if (!hooked.has(d)) { hooked.add(d); hook(w); }
+        var doc = w.document;
+        if (!apply(wsHas, hooked, [doc])) { apply(wsAdd, hooked, [doc]); hook(w); }
       } catch (e) { continue; }
-      var n = 0;
-      try { n = w.length; } catch (e) {}
-      for (var i = 0; i < n; i++) { try { stack.push(w[i]); } catch (e) {} }
+      var n = childCount(w);
+      for (var i = 0; i < n; i++) { try { top = { w: w[i], next: top }; } catch (e) {} }
     }
   }
+  function define(proto, name, d) { try { apply(defProp, null, [proto, name, d]); } catch (e) {} }
+  function describe(proto, name) { try { return apply(getDesc, null, [proto, name]); } catch (e) { return undefined; } }
+  function wrapCall(f) { return function () { try { return apply(f, this, arguments); } finally { sweep(); } }; }
+  function wrapSet(set) { return function (v) { try { apply(set, this, [v]); } finally { sweep(); } }; }
+  function wrapGet(get) { return function () { sweep(); return apply(get, this, []); }; }
   function wrapMethods(proto, names) {
     if (!proto) return;
-    names.forEach(function (name) {
-      var d = Object.getOwnPropertyDescriptor(proto, name);
-      if (!d || typeof d.value !== 'function') return;
-      var f = d.value;
-      var g = function () { try { return f.apply(this, arguments); } finally { sweep(); } };
-      try { Object.defineProperty(proto, name, { value: g, writable: d.writable, enumerable: d.enumerable, configurable: d.configurable }); } catch (e) {}
-    });
+    for (var i = 0; i < names.length; i++) {
+      var d = describe(proto, names[i]);
+      if (!d || !own(d, 'value') || typeof d.value !== 'function') continue;
+      var nd = bare();
+      nd.value = wrapCall(d.value); nd.writable = d.writable; nd.enumerable = d.enumerable; nd.configurable = d.configurable;
+      define(proto, names[i], nd);
+    }
   }
   function wrapSetters(proto, names) {
     if (!proto) return;
-    names.forEach(function (name) {
-      var d = Object.getOwnPropertyDescriptor(proto, name);
-      if (!d || !d.set) return;
-      var set = d.set;
-      try {
-        Object.defineProperty(proto, name, { get: d.get, set: function (v) { try { set.call(this, v); } finally { sweep(); } },
-          enumerable: d.enumerable, configurable: d.configurable });
-      } catch (e) {}
-    });
+    for (var i = 0; i < names.length; i++) {
+      var d = describe(proto, names[i]);
+      if (!d || !own(d, 'set') || typeof d.set !== 'function') continue;
+      var nd = bare();
+      nd.get = d.get; nd.set = wrapSet(d.set); nd.enumerable = d.enumerable; nd.configurable = d.configurable;
+      define(proto, names[i], nd);
+    }
   }
   function wrapGetters(proto, names) {
     if (!proto) return;
-    names.forEach(function (name) {
-      var d = Object.getOwnPropertyDescriptor(proto, name);
-      if (!d || !d.get) return;
-      var get = d.get;
-      try {
-        Object.defineProperty(proto, name, { get: function () { sweep(); return get.call(this); }, set: d.set,
-          enumerable: d.enumerable, configurable: d.configurable });
-      } catch (e) {}
-    });
+    for (var i = 0; i < names.length; i++) {
+      var d = describe(proto, names[i]);
+      if (!d || !own(d, 'get') || typeof d.get !== 'function') continue;
+      var nd = bare();
+      nd.get = wrapGet(d.get); nd.set = d.set; nd.enumerable = d.enumerable; nd.configurable = d.configurable;
+      define(proto, names[i], nd);
+    }
   }
+  function protoOf(w, name) { try { var c = w[name]; return c ? c.prototype : null; } catch (e) { return null; } }
   function hook(w) {
-    wrapMethods(w.Node && w.Node.prototype, ['appendChild', 'insertBefore', 'replaceChild']);
-    wrapMethods(w.Element && w.Element.prototype, ['append', 'prepend', 'before', 'after', 'replaceWith', 'replaceChildren',
-      'insertAdjacentElement', 'insertAdjacentHTML', 'setHTMLUnsafe', 'moveBefore']);
-    wrapMethods(w.Document && w.Document.prototype, ['write', 'writeln', 'execCommand', 'append', 'prepend', 'replaceChildren']);
-    wrapMethods(w.ShadowRoot && w.ShadowRoot.prototype, ['setHTMLUnsafe']);
-    wrapMethods(w.Range && w.Range.prototype, ['insertNode', 'surroundContents']);
-    wrapSetters(w.Element && w.Element.prototype, ['innerHTML', 'outerHTML']);
-    wrapSetters(w.ShadowRoot && w.ShadowRoot.prototype, ['innerHTML']);
-    ['HTMLIFrameElement', 'HTMLFrameElement', 'HTMLObjectElement'].forEach(function (c) {
-      wrapGetters(w[c] && w[c].prototype, ['contentWindow', 'contentDocument']);
-    });
+    wrapMethods(protoOf(w, 'Node'), NODE);
+    wrapMethods(protoOf(w, 'Element'), ELEMENT);
+    wrapMethods(protoOf(w, 'Document'), DOCUMENT);
+    wrapMethods(protoOf(w, 'ShadowRoot'), SHADOW);
+    wrapMethods(protoOf(w, 'Range'), RANGE);
+    wrapSetters(protoOf(w, 'Element'), HTML);
+    wrapSetters(protoOf(w, 'ShadowRoot'), SHADOW_HTML);
+    for (var i = 0; i < FRAMES.length; i++) wrapGetters(protoOf(w, FRAMES[i]), FRAME_GETTERS);
     try {
       var open = w.open;
-      w.open = function () { var r = open.apply(this, arguments); sweep(); try { if (r) { strip(r); } } catch (e) {} return r; };
+      if (typeof open === 'function') {
+        w.open = function () { var r = apply(open, this, arguments); sweep(); try { if (r) strip(r); } catch (e) {} return r; };
+      }
     } catch (e) {}
-    try { w.document.addEventListener('load', sweep, true); } catch (e) {}
-    try { new w.MutationObserver(sweep).observe(w.document, { childList: true, subtree: true }); } catch (e) {}
+    try { apply(listen, w.document, ['load', sweep, true]); } catch (e) {}
+    try {
+      var o = bare();
+      o.childList = true; o.subtree = true;
+      apply(observe, new MO(sweep), [w.document, o]);
+    } catch (e) {}
   }
   sweep();
 })();

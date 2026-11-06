@@ -61,7 +61,7 @@ internal object PasswordCheck {
             false
         } catch (e: ParseLimitExceededException) {
             if (read >= MIN_EVIDENCE) true else throw e
-        } catch (e: ZipDecryption.UnsupportedEncryptionException) {
+        } catch (e: ArchiveEncryptionUnsupportedException) {
             throw e
         } catch (e: org.apache.commons.compress.MemoryLimitException) {
             throw e

@@ -554,12 +554,18 @@ class BrowserViewModel(
     /**
      * 고른 것들을 지금 폴더에 ZIP 하나로 묶는다. [name] 은 제안이다 — 실제 이름은 묶기가 끝날 때 정해진다
      * (`ZipMaker` — 그 사이 같은 이름이 생겼으면 `(2)` 가 붙는다). 선택은 푼다 — 붙여넣기·삭제와 같다.
+     *
+     * @param password 암호(없으면 null — 암호 없이). **배열의 주인이 큐의 요청으로 넘어간다** — 여기 들지 않는다(저장 상태에도). 넣지 못하는
+     *   길에서는 여기서 덮는다.
      */
-    fun compress(paths: List<String>, name: String) {
-        val dest = currentPath ?: return
-        if (paths.isEmpty()) return
+    fun compress(paths: List<String>, name: String, password: CharArray? = null) {
+        val dest = currentPath
+        if (dest == null || paths.isEmpty()) {
+            password?.fill('\u0000')
+            return
+        }
         clearSelection()
-        FileOpManager.enqueue(getApplication(), FileOpManager.Request.Compress(newOpId(), paths, dest, name))
+        FileOpManager.enqueue(getApplication(), FileOpManager.Request.Compress(newOpId(), paths, dest, name, password))
     }
 
     /** 새 폴더. 실패한 까닭을 돌려준다 — 이름이 겹쳤으면 칸이 닫히지 않는다([rename] 과 같다). */

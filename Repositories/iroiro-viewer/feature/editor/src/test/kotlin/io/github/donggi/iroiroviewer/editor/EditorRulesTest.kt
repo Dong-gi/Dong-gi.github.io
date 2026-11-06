@@ -11,8 +11,64 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-/** 편집기 화면의 판단 — 떠 있는 단추, 오류 화면의 단추, 읽던 자리의 꼴, '새 파일로 저장했습니다' 의 횟수. */
+/** 편집기 화면의 판단 — 떠 있는 단추, 오류 화면의 단추, 읽던 자리의 꼴, '새 파일로 저장했습니다' 의 횟수, 고르개가 돌려준 주소. */
 class EditorRulesTest {
+
+    // ---- 고르개가 돌려준 주소(그림 넣기·내보내기 — 2026-10-16 보안 점검) ----
+
+    private val own = "io.github.donggi.iroiroviewer"
+    private val providers = mapOf(
+        "com.android.providers.media.documents" to "com.android.providers.media.module",
+        "media" to "com.android.providers.media.module",
+        "com.google.android.apps.photos.contentprovider" to "com.google.android.apps.photos",
+        // 이 앱이 선언했지만 이름이 꾸러미로 시작하지 않는 제공자 — 주인으로 가른다.
+        "odd.authority" to own,
+    )
+    private fun accepts(scheme: String?, authority: String?) = EditorRules.acceptsReturnedUri(scheme, authority, own) { providers[it] }
+
+    @Test
+    fun othersContentAddressesAreAccepted() {
+        assertTrue(accepts("content", "com.android.providers.media.documents"))
+        assertTrue(accepts("content", "media"))
+        assertTrue(accepts("CONTENT", "com.google.android.apps.photos.contentprovider"))
+        // 다른 사용자의 같은 제공자(0@ 을 떼고 본다).
+        assertTrue(accepts("content", "10@media"))
+        // 주인을 모르는 권한자는 이 앱의 것이 아니다 — 여는 것은 그쪽이 막는다.
+        assertTrue(accepts("content", "unknown.provider"))
+    }
+
+    @Test
+    fun ourOwnAddressesAndFilesAreRefused() {
+        // file: 은 경로를 그대로 연다 — 이 앱의 신원으로.
+        assertFalse(accepts("file", null))
+        assertFalse(accepts("file", "localhost"))
+        assertFalse(accepts(null, "media"))
+        assertFalse(accepts("android.resource", own))
+        // 이 앱의 FileProvider·저장 자리·(디버그) 시험대 제공자 — 사용자 번호를 붙여도, 대소문자를 바꿔도.
+        for (authority in listOf("$own.files", "$own.editorslot", "$own.editorout", own, "0@$own.files", "IO.GITHUB.DONGGI.IROIROVIEWER.FILES")) {
+            assertFalse(accepts("content", authority), authority)
+        }
+        // 이름은 달라도 주인이 이 앱이면.
+        assertFalse(accepts("content", "odd.authority"))
+        // 권한자가 없거나 비었다.
+        assertFalse(accepts("content", null))
+        assertFalse(accepts("content", ""))
+        assertFalse(accepts("content", "0@"))
+    }
+
+    /** 배선 — 그림 넣기는 걸러서 쪽에 건네고, 내보내기는 걸리면 쓰지 않는다. 쓰는 자리는 그 갈래 하나다. */
+    @Test
+    fun theActivityFiltersWhatThePickerReturned() {
+        val activity = java.io.File("src/main/kotlin/io/github/donggi/iroiroviewer/editor/EditorActivity.kt").readText()
+        val image = activity.substringAfter("REQUEST_IMAGE -> {").substringBefore("REQUEST_EXPORT -> {")
+        assertTrue("val accepted = picked?.filter(::acceptsReturned)" in image, image)
+        assertTrue("chooser?.onReceiveValue(accepted?.takeIf { it.isNotEmpty() }?.toTypedArray())" in image, image)
+        assertFalse("onReceiveValue(picked" in image || "onReceiveValue(WebChromeClient" in image, "거르지 않은 것을 건넨다")
+        val export = activity.substringAfter("REQUEST_EXPORT -> {").substringBefore("else -> super.onActivityResult")
+        assertTrue(export.indexOf("!acceptsReturned(target) ->") in 0 until export.indexOf("else -> writeExport(file, target)"), export)
+        assertEquals(1, Regex("""writeExport\(file, target\)""").findAll(activity).count(), "내보내기를 쓰는 자리는 하나다")
+        assertTrue("EditorRules.acceptsReturnedUri(uri.scheme, uri.authority, packageName)" in activity)
+    }
 
     // ---- 떠 있는 단추 묶음 ----
 

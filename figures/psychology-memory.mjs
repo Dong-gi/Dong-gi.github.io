@@ -139,21 +139,27 @@ add((() => {
 
     g.push(f.axes({ xTicks: [0, 5, 10, 15, 20, 25, 30], yTicks: [], grid: true }));
 
+    // 몰아서 한 쪽의 감쇠(10.6)는 두 곡선이 t ≈ 3.39, 높이 ≈ 0.715 에서 만나도록 고른 값이다.
+    // 아래 교차점 표시는 이 교점에 맞춘 것이므로 곡선을 바꾸면 함께 다시 계산한다.
+    const massedAt = t => 0.93 * Math.exp(-t / 10.6) + 0.04;
+    const spacedAt = t => 0.80 * Math.exp(-t / 17) + 0.06;
     const massed = [];
     const spaced = [];
     for (let t = 0; t <= 30; t += 0.5) {
-        massed.push([t, 0.93 * Math.exp(-t / 5.5) + 0.04]);
-        spaced.push([t, 0.80 * Math.exp(-t / 17) + 0.06]);
+        massed.push([t, massedAt(t)]);
+        spaced.push([t, spacedAt(t)]);
     }
     g.push(f.line(massed, { cls: 's2' }));
     g.push(f.line(spaced, { cls: 's1' }));
 
-    g.push(f.label([2.6, 0.60], '몰아서 한 쪽', { dx: 10, dy: -10, cls: 'ink bold', size: 'sm' }));
-    g.push(f.label([20, 0.30], '나눠서 한 쪽', { dx: 6, dy: -12, cls: 'ink bold', size: 'sm' }));
+    // 이름은 두 곡선이 벌어진 자리에 — 몰아서 한 쪽은 곡선 아래(왼쪽으로 끝 맞춤: 곡선이
+    // 오른쪽으로 내려가므로 글이 오른쪽으로 뻗으면 곡선에 걸린다), 나눠서 한 쪽은 곡선 위.
+    g.push(f.label([10, massedAt(10)], '몰아서 한 쪽', { dx: -4, dy: 16, anchor: 'end', cls: 'ink bold', size: 'sm' }));
+    g.push(f.label([20, spacedAt(20)], '나눠서 한 쪽', { dx: 0, dy: -10, cls: 'ink bold', size: 'sm' }));
 
     // 교차점 표시.
-    g.push(f.line([[3.4, 0], [3.4, 0.62]], { cls: 'ax', dash: '4 3' }));
-    g.push(f.label([3.4, 0.06], '여기서 뒤집힌다', { dx: 8, dy: 0, cls: 'ink2', size: 'sm' }));
+    g.push(f.line([[3.39, 0], [3.39, 0.715]], { cls: 'ax', dash: '4 3' }));
+    g.push(f.label([3.39, 0.06], '여기서 뒤집힌다', { dx: 8, dy: 0, cls: 'ink2', size: 'sm' }));
 
     g.push(txt(f.X(15), 334, '학습이 끝난 뒤 시험까지 흐른 시간 (단위 없는 도식)', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(30, 66, '세로축 — 시험에서 맞힌 양 (눈금 없음)', { cls: 'ink2', size: 'sm' }));

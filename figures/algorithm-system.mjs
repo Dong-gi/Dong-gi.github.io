@@ -441,7 +441,7 @@ add((() => {
         });
         g.push(txt(bx + 8 * bw + 16, y + 13, `선행 0 이 ${s[2]}개`, { cls: s[2] === 3 ? 'ink bold' : 'ink2', size: 'sm' }));
     });
-    g.push(txt(bx + 8 * bw + 16, by + 6 * 30 + 10, '여섯 개 중 최대는 3 → 크기를 2⁴ = 16 쯤으로 짐작한다', { cls: 'ink bold', size: 'sm' }));
+    g.push(txt(bx + 8 * bw + 16, by + 6 * 30 + 10, '여섯 개 중 최대는 3 → 크기를 2³ = 8 쯤으로 짐작한다', { cls: 'ink bold', size: 'sm' }));
 
     const tx = 452, ty = 62;
     g.push(box(tx, ty - 16, 328, 190, { stroke: CG, sw: 1, rx: 6 }));
@@ -470,7 +470,7 @@ add((() => {
         svg: svg({
             width: W, height: H,
             title: '선행 0 의 개수로 집합 크기를 짐작한다',
-            desc: '해시 값의 앞머리에 붙은 0 의 최대 개수가 k 이면 원소 수를 2 의 k+1 제곱쯤으로 짐작한다',
+            desc: '해시 값의 앞머리에 붙은 0 의 최대 개수가 k 이면 원소 수를 2 의 k 제곱쯤으로 짐작한다',
             body: g.join(''),
         }),
     };
@@ -538,12 +538,12 @@ add((() => {
 
     const cw = 46, chh = 34, gx = 120, gy = 76;
     const rows = [
-        [3, 41, 8, 12, 5, 27, 9, 16, 4, 22],
-        [17, 6, 30, 9, 44, 8, 13, 25, 7, 11],
-        [8, 19, 5, 33, 10, 21, 40, 3, 14, 26],
+        [14, 41, 8, 12, 16, 27, 9, 16, 15, 22],
+        [17, 6, 30, 9, 44, 8, 13, 25, 17, 11],
+        [8, 19, 5, 33, 10, 21, 40, 4, 14, 26],
         [24, 12, 15, 7, 18, 9, 6, 38, 20, 31],
     ];
-    const hitApple = [3, 5, 0, 5];      // 사과가 가리키는 열 — 값 12, 2, 8, 9
+    const hitApple = [3, 5, 0, 5];      // 사과가 가리키는 열 — 값 12, 8, 8, 9
     const hitPear = [1, 4, 6, 7];       // 배가 가리키는 열 — 값 41, 44, 40, 38
     const hl = {};
     hitApple.forEach((c, r) => { hl[`${r},${c}`] = C1; });
@@ -717,7 +717,8 @@ add((() => {
     const mapR = draw(rxp, ryp);
     const leaves = [];
     const split = (x, y, w, h, inside, depth) => {
-        if (inside.length <= 3 || depth >= 5) { leaves.push([x, y, w, h, inside.length]); return; }
+        // 깊이 한도는 안전장치일 뿐이다. 이 점 집합에서는 6 이면 모든 칸이 점 3개 이하가 된다(5 면 4개짜리 칸이 남는다).
+        if (inside.length <= 3 || depth >= 6) { leaves.push([x, y, w, h, inside.length]); return; }
         const hw = w / 2, hh = h / 2;
         for (const [qx, qy] of [[x, y], [x + hw, y], [x, y + hh], [x + hw, y + hh]]) {
             split(qx, qy, hw, hh, inside.filter(p => p[0] >= qx && p[0] < qx + hw && p[1] >= qy && p[1] < qy + hh), depth + 1);
@@ -734,7 +735,7 @@ add((() => {
     g.push(txt(rxp, ryp + side + 40, '어느 칸을 열어도 점이 세 개 이하라 훑는 값이 고르다', { cls: 'ink2', size: 'sm' }));
 
     g.push(ln([[52, 378], [W - 52, 378]], { stroke: CG, sw: 1 }));
-    g.push(txt(W / 2, 398, '균등 격자는 자리 계산이 나눗셈 한 번으로 끝나고, 쿼드트리는 트리를 타고 내려가야 한다. 값을 치르고 고르게 만드는 것이다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+    g.push(txt(W / 2, 398, '균등 격자는 자리 계산이 나눗셈 두 번으로 끝나고, 쿼드트리는 트리를 타고 내려가야 한다. 값을 치르고 고르게 만드는 것이다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     return {
         name: 'alg-s-quadtree',
         svg: svg({
@@ -823,18 +824,19 @@ add((() => {
 add((() => {
     const W = 840, H = 404;
     const g = [];
-    g.push(txt(W / 2, 26, '고쳐야 할 것이 둘이다 — 나뉘지 않게 하는 것과 남에게 보이게 하는 것', { anchor: 'middle', cls: 'ink bold' }));
+    g.push(txt(W / 2, 26, '원자성만으로는 모자란다 — 남에게 보이는 것과 순서도 고쳐야 한다', { anchor: 'middle', cls: 'ink bold' }));
 
-    // 왼쪽: 가시성 (캐시)
+    // 왼쪽: 가시성 (쓰기 버퍼 · 레지스터)
     const lx = 46;
     g.push(box(lx, 52, 372, 296, { stroke: CG, sw: 1, rx: 6 }));
     g.push(txt(lx + 186, 74, '가시성 — 쓴 값이 아직 남에게 안 보인다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     g.push(tbox(lx + 26, 92, 140, 44, ['핵 1 의 스레드 A', '멈춤 = 참 이라 썼다'], { stroke: C1, fill: C1, sw: 1.5 }));
     g.push(tbox(lx + 206, 92, 140, 44, ['핵 2 의 스레드 B', '멈춤 을 계속 읽는다'], { stroke: C2, fill: C2, sw: 1.5 }));
-    g.push(tbox(lx + 26, 154, 140, 34, ['자기 캐시: 참'], { stroke: C1 }));
-    g.push(tbox(lx + 206, 154, 140, 34, ['자기 캐시: 거짓'], { stroke: C2 }));
+    g.push(tbox(lx + 26, 154, 140, 34, ['쓰기 버퍼: 참'], { stroke: C1 }));
+    g.push(tbox(lx + 206, 154, 140, 34, ['레지스터: 거짓'], { stroke: C2 }));
     g.push(arw(lx + 96, 136, lx + 96, 150, { cls: 's1', width: 1.4 }));
-    g.push(arw(lx + 276, 154 + 34, lx + 276, 136, { cls: 's2', width: 1.4 }));
+    // B 는 레지스터에서 읽는다. 화살표는 아래 상자 윗변에서 시작한다(아래 변에서 그으면 글자를 가로지른다).
+    g.push(arw(lx + 276, 154, lx + 276, 140, { cls: 's2', width: 1.4 }));
     g.push(tbox(lx + 96, 216, 180, 34, ['주 메모리: 거짓'], { stroke: CK, sw: 1.5 }));
     g.push(arw(lx + 96, 188, lx + 140, 214, { cls: 'ark', width: 1.4, dash: '4 3' }));
     g.push(txt(lx + 186, 268, '아직 내려쓰지 않았다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
@@ -1373,7 +1375,7 @@ add((() => {
 
     const bx = 502;
     const dirs = [
-        ['앞으로 가는 길 — 쉽다', ['x 를 알 때 3ˣ mod 17 을 구한다', '10장의 빠른 거듭제곱으로', '곱셈 log x 번이면 끝난다', '지수가 2²⁰⁴⁸ 급이어도 수천 번이다'], C3],
+        ['앞으로 가는 길 — 쉽다', ['x 를 알 때 3ˣ mod 17 을 구한다', '7장의 빠른 거듭제곱으로', '곱셈 log x 번이면 끝난다', '지수가 2²⁰⁴⁸ 급이어도 수천 번이다'], C3],
         ['되돌아오는 길 — 어렵다', ['15 를 보고 x = 6 을 알아낸다', '이것을 이산로그 문제라 한다', '작은 수는 하나씩 해 보면 되지만', '수가 커지면 알려진 빠른 방법이 없다'], C2],
     ];
     dirs.forEach((d, i) => {
@@ -1384,8 +1386,8 @@ add((() => {
     });
 
     g.push(ln([[52, 328], [W - 52, 328]], { stroke: CG, sw: 1 }));
-    g.push(txt(W / 2, 350, '한쪽으로만 쉬운 계산 — 이 비대칭 하나가 공개키 암호 전체를 떠받친다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
-    g.push(txt(W / 2, 372, '어렵다는 것이 증명된 적은 없다. 빠른 방법이 아직 발견되지 않았을 뿐이라는 점을 잊지 말아야 한다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(W / 2, 350, '한쪽으로만 쉬운 계산 — 이 비대칭이 오늘 쓰는 공개키 암호 대부분을 떠받친다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+    g.push(txt(W / 2, 372, '어렵다는 것이 증명된 적은 없다. 지금의 컴퓨터로 빠른 방법이 아직 발견되지 않았을 뿐이다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-s-modexp-oneway',
         svg: svg({
@@ -1404,7 +1406,7 @@ add((() => {
     g.push(txt(W / 2, 26, 'RSA — 아주 작은 수로 한 번 돌려 본다', { anchor: 'middle', cls: 'ink bold' }));
 
     const steps = [
-        ['① 소수 두 개를 고른다', ['p = 5,  q = 11', '실제로는 각각 1000자리쯤 된다'], C1],
+        ['① 소수 두 개를 고른다', ['p = 5,  q = 11', '실제로는 각각 300자리를 넘는다'], C1],
         ['② 곱과 φ 를 구한다', ['N = p·q = 55', 'φ(N) = (p−1)(q−1) = 40'], C1],
         ['③ 두 지수를 정한다', ['e = 3  (φ 와 서로소)', 'd = 27  (e·d ≡ 1 mod φ)'], C2],
         ['④ 공개하고 감춘다', ['공개키 (N, e) = (55, 3)', '비밀키 d = 27. p, q 는 지운다'], C3],
@@ -1435,7 +1437,7 @@ add((() => {
     const why = [
         'e·d ≡ 1 (mod φ) 이므로 어떤 정수 k 에 대해 e·d = 1 + kφ 다.',
         '그러면 M 을 e·d 제곱한 것은 M 을 1 + kφ 제곱한 것이고, 그것은 M × (M 을 φ 제곱한 것)을 k 제곱한 것이다.',
-        '오일러 정리가 M 을 φ 제곱하면 N 으로 나눈 나머지가 1 임을 보장하므로 남는 것은 M 뿐이다.',
+        'M 이 N 과 서로소면 오일러 정리가 M 을 φ 제곱한 나머지가 1 임을 보장하므로 남는 것은 M 뿐이다.',
         '페르마 소정리(소수 p 에 대해 M 을 p−1 제곱하면 나머지가 1)를 소수 아닌 N 으로 넓힌 것이 오일러 정리다.',
     ];
     why.forEach((t, i) => g.push(txt(40, 308 + i * 20, t, { cls: 'ink2', size: 'sm' })));
@@ -1457,7 +1459,7 @@ add((() => {
 
 /* ---- 16-5. 디피-헬만 — 색 섞기 ---- */
 add((() => {
-    const W = 836, H = 412;
+    const W = 836, H = 420;
     const g = [];
     g.push(txt(W / 2, 26, '섞기는 쉽고 되돌리기는 어렵다 — 색으로 본 디피-헬만', { anchor: 'middle', cls: 'ink bold' }));
 
@@ -1479,10 +1481,11 @@ add((() => {
     g.push(swatch(474, 268, S2, '받은 것 + 밥', ''));
     g.push(arw(392, 100, 300, 148, { cls: 'ark', width: 1.4 }));
     g.push(arw(444, 100, 546, 148, { cls: 'ark', width: 1.4 }));
-    g.push(arw(192, 194, 276, 210, { cls: 'ark', width: 1.4 }));
-    g.push(arw(670, 194, 582, 210, { cls: 'ark', width: 1.4 }));
-    g.push(curvePath('M284 224 Q300 250 330 264', { stroke: C1, sw: 1.8, marker: 'ar1' }));
-    g.push(curvePath('M552 224 Q536 250 506 264', { stroke: C2, sw: 1.8, marker: 'ar2' }));
+    // 비밀색은 옆 견본으로 곧장 들어간다(예전 끝점은 '공개색 + 앨리스' 글자 위였다).
+    g.push(arw(196, 172, 254, 172, { cls: 'ark', width: 1.4 }));
+    g.push(arw(640, 172, 582, 172, { cls: 'ark', width: 1.4 }));
+    g.push(curvePath('M284 232 Q300 254 330 264', { stroke: C1, sw: 1.8, marker: 'ar1' }));
+    g.push(curvePath('M552 232 Q536 254 506 264', { stroke: C2, sw: 1.8, marker: 'ar2' }));
     g.push(txt(418, 250, '섞는 순서가 달라도 같은 색에 이른다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     g.push(txt(418, 292, '같다', { anchor: 'middle', cls: 'ink bold' }));
 
@@ -1490,7 +1493,7 @@ add((() => {
     g.push(txt(40, 366, '수로 바꾸면', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(140, 366, '공개색은 (소수 p, 밑 g). 섞기는 gˣ mod p. 앨리스가 gᵃ 를, 밥이 gᵇ 를 보내고 둘 다 gᵃᵇ 를 얻는다', { cls: 'ink2', size: 'sm' }));
     g.push(txt(40, 388, '엿듣는 자는', { cls: 'ink bold', size: 'sm' }));
-    g.push(txt(140, 388, 'g, gᵃ, gᵇ 를 모두 보지만 gᵃᵇ 를 만들 수 없다. a 나 b 를 알아내야 하는데 그것이 이산로그 문제다', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(140, 388, 'g, gᵃ, gᵇ 를 모두 보지만 gᵃᵇ 를 만들 수 없다. 알려진 길은 a 나 b 를 알아내는 것뿐이고 그것이 이산로그 문제다', { cls: 'ink2', size: 'sm' }));
     g.push(txt(40, 410, '막지 못하는 것', { cls: 'ink bold', size: 'sm' }));
     g.push(txt(140, 410, '가운데서 양쪽과 따로 키를 맺는 중간자. 상대가 누구인지는 서명과 인증서가 따로 확인해야 한다', { cls: 'ink2', size: 'sm' }));
     return {

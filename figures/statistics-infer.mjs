@@ -334,7 +334,7 @@ add((() => {
         svg: svg({
             width: W, height: H,
             title: '일치성 — 표본을 늘리면 추정량이 참값으로 몰린다',
-            desc: '표본 크기 4, 16, 100 에서 추정량의 표본분포. 고정된 폭의 띠 안에 들 확률이 31%, 58%, 95% 로 커진다',
+            desc: '표본 크기 4, 16, 100 에서 추정량의 표본분포. 고정된 폭의 띠 안에 들 확률이 38%, 68%, 99% 로 커진다',
             body: BG + g.join(''),
         }),
     };
@@ -427,7 +427,7 @@ add((() => {
     g.push(txt(543, 226, `차이 ${sMu} − ${sXb} = ${sMu - sXb} = n(x̄ − μ)²`, { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
 
     g.push(ln([[46, 258], [694, 258]], { stroke: 'var(--grid)', sw: 1 }));
-    g.push(txt(370, 282, 'x̄ 는 자료 쪽으로 끌려온 기준점이므로 제곱합이 언제나 참값 기준보다 작다',
+    g.push(txt(370, 282, 'x̄ 는 자료 쪽으로 끌려온 기준점이므로 제곱합이 참값 기준보다 크지 않다',
         { anchor: 'middle', cls: 'ink' }));
     g.push(txt(370, 306, '평균적으로 정확히 n·V(x̄) = σ² 만큼 작다. 그래서 n 이 아니라 n − 1 로 나눠야 제자리로 온다',
         { anchor: 'middle', cls: 'ink bold' }));
@@ -438,7 +438,7 @@ add((() => {
         svg: svg({
             width: W, height: H,
             title: '표본분산이 n − 1 로 나누는 이유',
-            desc: '표본평균 기준의 제곱합은 참값 기준의 제곱합보다 언제나 작고, 그 차이가 정확히 n 곱하기 표본평균의 분산이다',
+            desc: '표본평균 기준의 제곱합은 참값 기준의 제곱합보다 크지 않고, 그 차이 n(x̄ − μ)² 의 평균이 정확히 n 곱하기 표본평균의 분산이다',
             body: BG + g.join(''),
         }),
     };
@@ -1045,8 +1045,11 @@ add((() => {
         g.push(pdot(A.X(x), A.Y(y), 'var(--ink)', 4));
         g.push(pdot(A.X(x), A.Y(F12.f(x)), 'var(--s1)', 2.6));
         const e = y - F12.f(x);
-        g.push(txt(A.X(x) + 7, A.Y((y + F12.f(x)) / 2) + 4, (e > 0 ? '+' : '') + neg(e.toFixed(1)),
-            { cls: 'ink2', size: 'sm' }));
+        // 양의 잔차는 화면에서 몇 화소뿐이라 점 오른쪽에 두면 오르막 직선이 글자를 지난다.
+        // 직선이 내려가는 쪽인 점의 왼쪽 위에 둔다. 음의 잔차는 그대로 오른쪽 가운데.
+        g.push(e > 0
+            ? txt(A.X(x) - 6, A.Y(y) - 6, '+' + neg(e.toFixed(1)), { anchor: 'end', cls: 'ink2', size: 'sm' })
+            : txt(A.X(x) + 7, A.Y((y + F12.f(x)) / 2) + 4, neg(e.toFixed(1)), { cls: 'ink2', size: 'sm' }));
     }
     g.push(txt(214, 254, `ŷ = ${F12.b0.toFixed(1)} + ${F12.b1.toFixed(1)}x,  잔차제곱합 ${F12.sse.toFixed(1)}`,
         { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
@@ -1067,7 +1070,7 @@ add((() => {
     g.push(txt(556, 254, 'x 는 정확히 안다고 보고 y 의 오차만 센다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
     g.push(ln([[46, 288], [694, 288]], { stroke: 'var(--grid)', sw: 1 }));
-    g.push(txt(370, 310, '잔차의 합은 언제나 0 이다. 그래서 잔차를 그냥 더해 좋은 직선을 고를 수는 없다',
+    g.push(txt(370, 310, '(x̄, ȳ) 를 지나는 직선이면 잔차의 합이 모두 0 이다. 그래서 그냥 더해서는 직선을 고를 수 없다',
         { anchor: 'middle', cls: 'ink' }));
     g.push(txt(370, 332, '절댓값을 쓰는 방법도 있지만 제곱을 쓰면 미분이 되고 답이 식으로 나온다',
         { anchor: 'middle', cls: 'ink' }));
@@ -1186,7 +1189,7 @@ add((() => {
     g.push(ln([[46, 338], [694, 338]], { stroke: 'var(--grid)', sw: 1 }));
     g.push(txt(370, 360, '결정계수가 커도 잔차 그림이 나쁘면 그 모형은 믿을 수 없다',
         { anchor: 'middle', cls: 'ink bold' }));
-    g.push(txt(370, 384, '거꾸로 잔차 그림이 깨끗하면 R² 가 작아도 모형 자체는 옳다 — 흩어짐이 큰 것일 뿐이다',
+    g.push(txt(370, 384, '거꾸로 잔차 그림이 깨끗하면 R² 가 작아도 모형 자체는 옳을 수 있다 — 흩어짐이 큰 것일 뿐이다',
         { anchor: 'middle', cls: 'ink' }));
     return {
         name: 'st-i-residual-four',
@@ -1373,7 +1376,7 @@ add((() => {
         { anchor: 'middle', cls: 'ink bold' }));
     g.push(txt(370, 334, '상관이 인과가 아닌 세 가지 이유 — 방향이 반대일 수 있다, 교란변수가 있을 수 있다, 우연일 수 있다',
         { anchor: 'middle', cls: 'ink' }));
-    g.push(txt(370, 358, '인과를 말하려면 무작위 배정 실험을 하거나 교란변수를 찾아 통제해야 한다',
+    g.push(txt(370, 358, '인과를 말하려면 무작위 배정 실험이나 교란변수 통제 같은 설계가 필요하다',
         { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(370, 380, '3장의 심슨의 역설이 바로 이 구조이며, 거기서는 층을 나눌 때 부호까지 뒤집혔다',
         { anchor: 'middle', cls: 'ink2', size: 'sm' }));

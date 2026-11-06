@@ -235,7 +235,8 @@ class LocalRelay(
             while (true) {
                 val head = HttpHead.read(input) ?: return
                 val parts = head.startLine.split(' ')
-                if (parts.size != 3 || !parts[2].startsWith("HTTP/1.")) {
+                // 줄 안의 홀로 선 CR·LF 는 거절한다 — 요청 줄(CONNECT 의 대상)과 값을 원격 Squid 에 그대로 다시 쓰기 때문이다([HttpHead.hasBareLineBreak]).
+                if (head.hasBareLineBreak || parts.size != 3 || !parts[2].startsWith("HTTP/1.")) {
                     respond(output, 400, "bad-request")
                     return
                 }

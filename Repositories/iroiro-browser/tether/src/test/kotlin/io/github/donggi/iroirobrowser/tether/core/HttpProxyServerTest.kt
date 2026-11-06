@@ -113,6 +113,60 @@ class HttpProxyServerTest {
     }
 
     @Test
+    fun 값이_다른_Content_Length_와_겹친_Transfer_Encoding_도_400() {
+        // RFC 7230 3.3.3 — 본문의 경계를 서버마다 다르게 읽는 꼴(2026-10-16 보안 점검). 앞 판은 CL+TE 와 겹친 Host 만 막았다.
+        val origin = closer.keep(OriginServer())
+        val p = proxy()
+        val target = "http://127.0.0.1:${origin.port}/"
+        val bad = listOf(
+            "POST $target HTTP/1.1\r\nContent-Length: 5\r\nContent-Length: 6\r\n\r\nhello!", // 값이 다른 둘
+            "POST $target HTTP/1.1\r\nContent-Length: 5, 6\r\n\r\nhello!", // 한 줄에 다른 값
+            "POST $target HTTP/1.1\r\nContent-Length: 5\r\nContent-Length: 5, 6\r\n\r\nhello!",
+            "POST $target HTTP/1.1\r\nContent-Length: 5,\r\n\r\nhello", // 빈 값
+            "POST $target HTTP/1.1\r\nContent-Length: +5\r\n\r\nhello", // 수가 아니다
+            "POST $target HTTP/1.1\r\nContent-Length: 5 5\r\n\r\nhello",
+            "POST $target HTTP/1.1\r\nContent-Length: 0x5\r\n\r\nhello",
+            "POST $target HTTP/1.1\r\nContent-Length:\r\n\r\n",
+            "POST $target HTTP/1.1\r\nTransfer-Encoding: chunked\r\nTransfer-Encoding: chunked\r\n\r\n0\r\n\r\n", // 둘
+            "POST $target HTTP/1.1\r\nTransfer-Encoding: gzip\r\nTransfer-Encoding: chunked\r\n\r\n0\r\n\r\n",
+            "POST $target HTTP/1.1\r\nTransfer-Encoding: chunked, identity\r\n\r\n0\r\n\r\n", // 끝이 chunked 가 아니다
+            "POST $target HTTP/1.1\r\nTransfer-Encoding: xchunked\r\n\r\n0\r\n\r\n",
+            "POST $target HTTP/1.1\r\nTransfer-Encoding: chunked, chunked\r\n\r\n0\r\n\r\n",
+            "POST $target HTTP/1.1\r\nTransfer-Encoding: gzip\r\n\r\n",
+            "POST $target HTTP/1.1\r\nTransfer-Encoding: chunked,\r\n\r\n0\r\n\r\n", // 빈 코딩
+            "POST $target HTTP/1.1\r\nContent-Length: 5\r\nContent-Length: 5\r\nTransfer-Encoding: chunked\r\n\r\n0\r\n\r\n",
+        )
+        for (request in bad) assertEquals(400, rawHttp(p.actualPort, ascii(request)).status, request)
+        assertTrue(origin.heads.isEmpty(), "아무것도 원격에 가지 않았다: ${origin.heads}")
+    }
+
+    @Test
+    fun 같은_값의_Content_Length_는_하나로_넘기고_정상_머리는_그대로() {
+        // 3.3.2 — 같은 십진수가 겹친 것은 앞의 처리기가 합친 것이라 하나로 줄여 넘긴다(앞의 0 도 같은 값).
+        val origin = closer.keep(OriginServer())
+        val p = proxy()
+        val target = "http://127.0.0.1:${origin.port}/"
+        val doubled = listOf(
+            "POST $target HTTP/1.1\r\nContent-Length: 5\r\nX-A: 1\r\nContent-Length: 5\r\n\r\nhello",
+            "POST $target HTTP/1.1\r\nContent-Length: 5, 05\r\n\r\nhello",
+            "POST $target HTTP/1.1\r\ncontent-length: 005\r\n\r\nhello",
+        )
+        for (request in doubled) assertEquals(200, rawHttp(p.actualPort, ascii(request)).status, request)
+        assertEquals(3, origin.heads.size)
+        for (head in origin.heads) {
+            assertEquals(1, Regex("(?i)\r\ncontent-length:").findAll(head).count(), head)
+            assertTrue(head.contains("\r\nContent-Length: 5\r\n"), head)
+        }
+        assertTrue(origin.heads[0].contains("\r\nX-A: 1\r\n"))
+        assertEquals(listOf("hello", "hello", "hello"), origin.bodies.toList())
+        // 하나뿐인 Content-Length 와 끝이 chunked 인 Transfer-Encoding 은 그대로 넘어간다.
+        assertEquals(200, rawHttp(p.actualPort, ascii("POST $target HTTP/1.1\r\nContent-Length: 2\r\n\r\nok")).status)
+        assertTrue(origin.heads[3].contains("\r\nContent-Length: 2\r\n"))
+        assertEquals(200, rawHttp(p.actualPort, ascii("POST $target HTTP/1.1\r\nTransfer-Encoding: gzip, Chunked\r\n\r\n0\r\n\r\n")).status)
+        assertTrue(origin.heads[4].contains("\r\nTransfer-Encoding: gzip, Chunked\r\n"))
+    }
+
+    @Test
     fun 머리_한_줄이나_개수가_상한을_넘으면_431() {
         val p = proxy()
         val longLine = "GET http://127.0.0.1/ HTTP/1.1\r\nX-Long: ${"a".repeat(HttpProxyServer.MAX_HEADER_LINE_BYTES)}\r\n\r\n"

@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.donggi.iroiroviewer.model.FileKind
+import io.github.donggi.iroiroviewer.model.PathNames
 import io.github.donggi.iroiroviewer.playback.NowPlayingIcon
 import io.github.donggi.iroiroviewer.playback.PlaybackConnection
 import io.github.donggi.iroiroviewer.playback.TrackIcon
@@ -109,7 +110,7 @@ fun PlaylistPanel(currentIndex: Int, bottomInset: Dp = 0.dp, modifier: Modifier 
         ) {
             items(queue, key = { it.index }) { item ->
                 QueueRow(
-                    title = item.title,
+                    title = PathNames.forDisplay(item.title),
                     kind = item.kind,
                     playing = item.index == currentIndex,
                     onSurface = onSurface,

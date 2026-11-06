@@ -32,7 +32,9 @@ import io.github.donggi.iroirobrowser.R
 import io.github.donggi.iroirobrowser.WebApp
 import io.github.donggi.iroirobrowser.adblock.AdBlockActivity
 import io.github.donggi.iroirobrowser.core.Bypass
+import io.github.donggi.iroirobrowser.core.LiveTabs
 import io.github.donggi.iroirobrowser.core.ProxySettings
+import io.github.donggi.iroirobrowser.core.Retention
 import io.github.donggi.iroirobrowser.core.SearchEngine
 import io.github.donggi.iroirobrowser.setup.SetupBundle
 import io.github.donggi.iroirobrowser.setup.SetupFiles
@@ -161,6 +163,13 @@ class SettingsActivity : Activity() {
             setOnCheckedChangeListener { _, on -> app.settings.forceZoom = on }
         }))
         note(column, R.string.settings_force_zoom_note)
+        // 살아 있는 탭의 수 — 고르는 즉시 저장한다. 줄이면 브라우저 화면으로 돌아갈 때(onResume) 넘는 탭을 접는다.
+        choiceButton(
+            column, R.string.settings_live_tabs_title, LiveTabs.CHOICES,
+            text = { getString(R.string.settings_live_tabs, it) }, label = { getString(R.string.settings_live_tabs_choice, it) },
+            get = { app.settings.liveTabs }, set = { app.settings.liveTabs = it },
+        )
+        note(column, R.string.settings_live_tabs_note)
 
         section(column, R.string.settings_search)
         engines = RadioGroup(this)
@@ -179,6 +188,18 @@ class SettingsActivity : Activity() {
         column.addView(padded(engines))
 
         section(column, R.string.settings_data)
+        // 보관 기간 — 고르는 즉시 저장한다. 브라우저 화면으로 돌아갈 때 지난 방문 기록을 지우고, 정한 날마다 캐시를 비운다(applyRetention).
+        choiceButton(
+            column, R.string.settings_history_keep_title, Retention.HISTORY_DAYS,
+            text = { getString(R.string.settings_history_keep, historyLabel(it)) }, label = ::historyLabel,
+            get = { app.settings.historyDays }, set = { app.settings.historyDays = it },
+        )
+        choiceButton(
+            column, R.string.settings_cache_clear_title, Retention.CACHE_DAYS,
+            text = { getString(R.string.settings_cache_clear, cacheLabel(it)) }, label = ::cacheLabel,
+            get = { app.settings.cacheDays }, set = { app.settings.cacheDays = it },
+        )
+        note(column, R.string.settings_retention_note)
         column.addView(padded(Button(this).apply {
             text = getString(R.string.site_data)
             setOnClickListener { startActivity(Intent(this@SettingsActivity, SiteDataActivity::class.java)) }
@@ -198,6 +219,17 @@ class SettingsActivity : Activity() {
         column.addView(popupList)
         renderPopupSites(popupList)
 
+        // 백업 — 북마크·설정을 파일로 내보내고 가져온다(BackupScreen, CLAUDE.md '설정·북마크 백업').
+        backup = BackupScreen(this, ::isDirty)
+        section(column, R.string.backup)
+        note(column, R.string.backup_note)
+        for ((label, action) in backup.actions) {
+            column.addView(padded(Button(this).apply {
+                text = getString(label)
+                setOnClickListener { action() }
+            }))
+        }
+
         section(column, R.string.settings_about)
         val webView = WebViewCompat.getCurrentWebViewPackage(this)?.versionName ?: "?"
         note(column, 0, getString(R.string.settings_about_text, BuildConfig.VERSION_NAME, webView))
@@ -212,6 +244,14 @@ class SettingsActivity : Activity() {
     @Deprecated("Android 12 이하의 뒤로 — 13 이상은 OnBackInvokedCallback")
     override fun onBackPressed() {
         leave()
+    }
+
+    /** 설정 › 백업([onCreate] 에서 짓는다) — 파일을 고르는 화면의 결과를 넘긴다. */
+    private lateinit var backup: BackupScreen
+
+    @Deprecated("플랫폼 Activity 의 결과 받기 — AndroidX 없이")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!backup.onResult(requestCode, resultCode, data)) super.onActivityResult(requestCode, resultCode, data)
     }
 
     /** 나간다 — 바꾼 것이 저장되지 않았으면 먼저 묻는다. */
@@ -337,6 +377,8 @@ class SettingsActivity : Activity() {
 
     private fun clearData() {
         app.sites.clear()
+        // 정한 날마다 비우는 캐시는 지금부터 다시 센다.
+        app.settings.cacheClearedAt = System.currentTimeMillis()
         CookieManager.getInstance().removeAllCookies(null)
         CookieManager.getInstance().flush()
         WebViewDatabase.getInstance(this).clearHttpAuthUsernamePassword()
@@ -354,6 +396,47 @@ class SettingsActivity : Activity() {
 
     private fun done() {
         Toast.makeText(this, R.string.settings_cleared, Toast.LENGTH_SHORT).show()
+    }
+
+    /** 값 하나를 고르는 단추 — 누르면 고르는 창, 고르는 즉시 저장하고 단추의 글을 고친다. 지금 값이 고르는 값 밖이면 아무것도 고르지 않은 창. */
+    private fun choiceButton(
+        column: LinearLayout,
+        title: Int,
+        choices: List<Int>,
+        text: (Int) -> String,
+        label: (Int) -> String,
+        get: () -> Int,
+        set: (Int) -> Unit,
+    ) {
+        val button = Button(this)
+        val render = { button.text = text(get()) }
+        render()
+        button.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle(title)
+                .setSingleChoiceItems(choices.map(label).toTypedArray(), choices.indexOf(get())) { d, which ->
+                    set(choices[which])
+                    render()
+                    d.dismiss()
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+        column.addView(padded(button))
+    }
+
+    /** 방문 기록 보관의 글 — 0 은 기간 없음, 365 는 1년. */
+    private fun historyLabel(days: Int): String = when (days) {
+        0 -> getString(R.string.settings_keep_forever)
+        365 -> getString(R.string.settings_keep_year)
+        else -> getString(R.string.settings_keep_days, days)
+    }
+
+    /** 캐시 비우기의 글 — 0 은 하지 않음, 1 은 매일. */
+    private fun cacheLabel(days: Int): String = when (days) {
+        0 -> getString(R.string.settings_cache_never)
+        1 -> getString(R.string.settings_cache_daily)
+        else -> getString(R.string.settings_cache_every, days)
     }
 
     private fun section(column: LinearLayout, title: Int) {

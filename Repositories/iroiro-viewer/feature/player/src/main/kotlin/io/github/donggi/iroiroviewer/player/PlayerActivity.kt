@@ -70,6 +70,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import io.github.donggi.iroiroviewer.model.PathNames
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.compose.runtime.remember
@@ -1446,7 +1447,7 @@ private fun PlayerScreen(
                 // 같은 가드가 필요하다 — 영상 가지에만 달아 두었더니 큐가 소리로 넘어간
                 // 그 짧은 창 동안 제목과 자막이 작은 창에 찍혔다.
                 Text(
-                    text = state.title,
+                    text = PathNames.forDisplay(state.title),
                     style = MaterialTheme.typography.titleMedium,
                     color = onBackground,
                     maxLines = 2,
@@ -1705,7 +1706,7 @@ private fun PlayerScreen(
                         )
                     }
                     Text(
-                        text = state.title,
+                        text = PathNames.forDisplay(state.title),
                         style = MaterialTheme.typography.bodyMedium,
                         color = onBackground,
                         maxLines = 1,

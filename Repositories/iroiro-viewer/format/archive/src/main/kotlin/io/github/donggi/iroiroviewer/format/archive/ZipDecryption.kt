@@ -59,8 +59,11 @@ internal object ZipDecryption {
     /** 암호가 맞지 않다. 화면이 '틀렸습니다' 를 띄운다. */
     class WrongPasswordException : IOException("암호가 맞지 않다")
 
-    /** 우리가 풀지 않는 방식(PKWARE 의 강한 암호화 등). */
-    class UnsupportedEncryptionException(what: String) : IOException("풀지 않는 암호화: $what")
+    /**
+     * 우리가 풀지 않는 방식(PKWARE 의 강한 암호화 등). 화면이 타입으로 가르도록 공개된 바탕([ArchiveEncryptionUnsupportedException])을
+     * 잇는다 — 이름으로 가르던 화면은 릴리스(R8 이 이름을 줄인다)에서 이것을 '깨진 파일' 로 말했다.
+     */
+    class UnsupportedEncryptionException(what: String) : ArchiveEncryptionUnsupportedException("풀지 않는 암호화: $what")
 
     private val AES_EXTRA = ZipShort(0x9901)
     private const val METHOD_AES = 99
@@ -83,7 +86,7 @@ internal object ZipDecryption {
         return if (aes != null) {
             val plain = aesStream(raw, candidates, aes.keyLen, entry.compressedSize)
             // AE-2 는 CRC 를 0 으로 적는다(HMAC 이 대신 지킨다). AE-1 은 CRC 를 적는다.
-            checked(decompress(plain, aes.actualMethod), if (aes.vendor == 1) entry.crc else -1)
+            checked(authenticated(decompress(plain, aes.actualMethod), plain), if (aes.vendor == 1) entry.crc else -1)
         } else {
             val plain = zipCryptoStream(raw, candidates, entry, timeHigh)
             checked(decompress(plain, entry.method), entry.crc)
@@ -251,7 +254,31 @@ internal object ZipDecryption {
 
     // ---- WinZip AES ------------------------------------------------------------------
 
-    private fun aesStream(raw: InputStream, candidates: List<ByteArray>, keyLen: Int, compressedSize: Long): InputStream {
+    /**
+     * 해제기가 끝을 말하면 **남은 암호문을 끝까지 읽어 인증값을 확인한다**(2026-10-16).
+     *
+     * 해제기는 제 흐름의 끝(deflate 의 마지막 블록)에서 멈추고 남은 입력을 읽지 않는다. 그런데 CTR 암호문은 비트를 골라 뒤집으면 평문의 같은
+     * 비트가 뒤집힌다 — 첫 블록의 '마지막 블록' 비트를 켜면 해제기가 거기서 끝나고, 인증값을 보지 않은 채 **잘린 평문이 정상의 끝으로**
+     * 나갔다(AE-2 에는 CRC 도 없다). 암호문이 해제기의 한 번 채우기(64 KiB)보다 큰 항목에서만 드러난다 — 작은 항목은 첫 채우기가 끝까지 읽어
+     * 인증값을 봤다. 남는 암호문은 정상이면 0 바이트다(`feature:archive` 의 `AesZipRoundTripTest` 가 박는다).
+     */
+    private fun authenticated(input: InputStream, cipher: AesCtrStream): InputStream = object : FilterInputStream(input) {
+        override fun read(): Int {
+            val c = super.read()
+            if (c < 0) cipher.drain()
+            return c
+        }
+
+        override fun read(b: ByteArray, off: Int, len: Int): Int {
+            val n = super.read(b, off, len)
+            if (n < 0) cipher.drain()
+            return n
+        }
+
+        override fun markSupported() = false
+    }
+
+    private fun aesStream(raw: InputStream, candidates: List<ByteArray>, keyLen: Int, compressedSize: Long): AesCtrStream {
         val saltLen = keyLen / 2
         val salt = ByteArray(saltLen)
         readFully(raw, salt)
@@ -334,6 +361,15 @@ internal object ZipDecryption {
             remaining -= n
             if (remaining <= 0) verify()
             return n
+        }
+
+        /** 남은 암호문을 읽어 버리고 인증값을 확인한다([authenticated]). 이미 끝까지 읽었으면 아무 일도 없다. */
+        fun drain() {
+            if (verified) return
+            val skip = ByteArray(8192)
+            while (read(skip, 0, skip.size) >= 0) {
+                // 읽는 것이 곧 HMAC 에 넣는 것이다 — 버릴 뿐이다.
+            }
         }
 
         private fun verify() {

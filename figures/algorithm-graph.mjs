@@ -189,7 +189,7 @@ add((() => {
 
     // 오른쪽: 제자리 여부
     g.push(panel(478, 42, 298, 262, '제자리 여부 — 배열 밖에 얼마나 더 쓰는가', '원소가 n 개일 때 필요한 추가 칸'));
-    g.push(txt(494, 96, '제자리(in-place) — 삽입 · 힙 · 퀵', { cls: 'ink', size: 'sm' }));
+    g.push(txt(494, 96, '제자리(in-place) — 삽입 · 힙', { cls: 'ink', size: 'sm' }));
     g.push(cells(496, 106, 30, 26, [5, 2, 8, 1, 9, 3, 7, 4], { small: true }));
     g.push(box(742, 106, 24, 26, { stroke: C1, sw: 1.8, rx: 2 }));
     g.push(txt(754, 148, '상수', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
@@ -264,7 +264,7 @@ add((() => {
         g.push(txt(px0 + pw / 2, py0 + 286, sp.note[1], { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     });
     g.push(txt(20, H - 26, '초록으로 칠한 칸이 ‘이제 확정된 자리’ 다. 세 방법의 차이는 그 초록이 어느 쪽에서 자라는가에 있다.', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(20, H - 8, '견주는 횟수는 셋 다 n(n−1)/2 에 가까워 모두 O(n²) 이지만 교환 횟수와 최선의 경우는 크게 다르다', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(20, H - 8, '최악에 견주는 횟수는 셋 다 n(n−1)/2 라 모두 O(n²) 이지만 교환 횟수와 최선의 경우는 크게 다르다', { cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-g-quadratic-three',
         svg: svg({
@@ -349,7 +349,7 @@ add((() => {
     });
     g.push(txt(20, H - 44, '주황 삼각형이 각 줄에서 아직 안 꺼낸 첫 칸이다. 작은 쪽을 꺼내고 그 줄의 삼각형만 한 칸 나아간다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(20, H - 26, '값 하나를 옮길 때마다 견주기가 한 번이므로 합치기 전체가 두 줄의 길이 합, 곧 O(n) 이다.', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(20, H - 8, '결과를 따로 담아야 하므로 병합 정렬은 제자리가 아니다. 그 대가로 안정성을 얻는다', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(20, H - 8, '결과를 따로 담아야 하므로 병합 정렬은 제자리가 아니다. 안정성은 같을 때 왼쪽부터 꺼내서 생긴다', { cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-g-merge-two',
         svg: svg({
@@ -415,7 +415,7 @@ add((() => {
     const frames = [
         { lab: '시작', arr: [3, 7, 8, 5, 2, 1, 9, 4], b: 0, s: 0, note: '피벗은 맨 뒤 4. 경계는 0 에서 출발' },
         { lab: '자리 = 4', arr: [3, 2, 8, 5, 7, 1, 9, 4], b: 2, s: 4, note: '2 < 4 → 경계 자리와 교환하고 경계를 한 칸' },
-        { lab: '자리 = 5', arr: [3, 2, 1, 5, 7, 8, 9, 4], b: 3, s: 5, note: '1 < 4 → 또 교환. 7 8 9 는 건드리지 않는다' },
+        { lab: '자리 = 5', arr: [3, 2, 1, 5, 7, 8, 9, 4], b: 3, s: 5, note: '1 < 4 → 또 교환. 7 8 9 는 경계 뒤에 남는다' },
         { lab: '마지막', arr: [3, 2, 1, 4, 7, 8, 9, 5], b: 3, s: -1, note: '피벗을 경계 자리로 옮긴다 — 피벗이 제자리다' },
     ];
     frames.forEach((f, k) => {
@@ -571,7 +571,7 @@ add((() => {
     g.push(txt(228, 134, 'k = 3 이면 여기만', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(450, 134, '통째로 버린다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
-    g.push(panel(14, 152, 380, 210, '평균 — 반씩 줄어든다', '되풀이할 때마다 볼 것이 절반이 된다'));
+    g.push(panel(14, 152, 380, 210, '고르게 갈리면 — 반씩 준다', '되풀이할 때마다 볼 것이 절반이 된다'));
     const bars = [[12, 'n'], [6, 'n/2'], [3, 'n/4'], [1.5, 'n/8']];
     bars.forEach((b, k) => {
         const y = 204 + k * 32;
@@ -595,7 +595,7 @@ add((() => {
         svg: svg({
             width: W, height: H,
             title: '선택 문제와 quickselect',
-            desc: '분할 뒤 한쪽만 파고들면 볼 양이 등비수열로 줄어 합이 2n 을 넘지 않는다',
+            desc: '분할 뒤 한쪽만 파고들면 매번 반씩 줄 때 볼 양이 등비수열이 되어 합이 2n 을 넘지 않는다',
             body: g.join(''),
         }),
     };
@@ -780,35 +780,42 @@ add((() => {
     g.push(txt(24, 348, '깊이 우선은 한쪽으로 끝까지 돌고', { cls: 'ink2', size: 'sm' }));
     g.push(txt(24, 366, '너비 우선은 양쪽으로 동시에 퍼진다', { cls: 'ink2', size: 'sm' }));
 
-    const dfs = [['—', ['A']], ['A', ['B', 'C']], ['C', ['B', 'E']], ['E', ['B', 'F']], ['F', ['B', 'D']], ['D', ['B']], ['B', []]];
-    const bfs = [['—', ['A']], ['A', ['B', 'C']], ['B', ['C', 'D']], ['C', ['D', 'E']], ['D', ['E', 'F']], ['E', ['F']], ['F', []]];
+    // 본문의 뼈대는 꺼낼 때 표시한다. 그래서 같은 정점이 그릇에 두 번 들어갈 수 있고(D 뒤의 B B, E 뒤의 F F),
+    // 두 번째로 꺼낸 것은 이미 표시되어 버린다(셋째 칸 true). A 의 이웃은 B, C 순서로 넣는다(다른 정점은 넣을 것이 하나뿐이다).
+    const dfs = [['—', ['A']], ['A', ['B', 'C']], ['C', ['B', 'E']], ['E', ['B', 'F']], ['F', ['B', 'D']], ['D', ['B', 'B']], ['B', ['B']], ['B', [], true]];
+    const bfs = [['—', ['A']], ['A', ['B', 'C']], ['B', ['C', 'D']], ['C', ['D', 'E']], ['D', ['E', 'F']], ['E', ['F', 'F']], ['F', ['F']], ['F', [], true]];
     const col = (x0, title, sub, data, isStack) => {
         const out = [txt(x0 + 108, 58, title, { anchor: 'middle', cls: 'ink bold', size: 'sm' }),
             txt(x0 + 108, 74, sub, { anchor: 'middle', cls: 'ink2', size: 'sm' })];
         out.push(txt(x0 + 34, 94, '꺼낸 것', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
         out.push(txt(x0 + 132, 94, '남아 있는 것', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
         data.forEach((d, k) => {
-            const y = 104 + k * 32;
-            g.push('');
-            out.push(box(x0 + 16, y, 34, 26, { fill: d[0] === '—' ? 'none' : (isStack ? C2 : C1), op: d[0] === '—' ? 1 : 0.2, stroke: d[0] === '—' ? CG : (isStack ? C2 : C1), sw: 1.4, rx: 3 }));
-            out.push(txt(x0 + 33, y + 18, d[0], { anchor: 'middle', cls: 'ink', size: 'sm' }));
-            out.push(box(x0 + 76, y, 116, 26, { stroke: CG, sw: 1, rx: 3 }));
+            const y = 104 + k * 28;
+            const blank = d[0] === '—', drop = d[2] === true;
+            out.push(box(x0 + 16, y, 34, 24, blank || drop
+                ? { stroke: CG, sw: 1.4, rx: 3, dash: drop ? '3 3' : undefined }
+                : { fill: isStack ? C2 : C1, op: 0.2, stroke: isStack ? C2 : C1, sw: 1.4, rx: 3 }));
+            out.push(txt(x0 + 33, y + 16, d[0], { anchor: 'middle', cls: drop ? 'ink2' : 'ink', size: 'sm' }));
+            // 버린 것은 글자에 줄을 긋고, 비어 버린 그릇 칸에 까닭을 적는다.
+            if (drop) out.push(ln([[x0 + 26, y + 18], [x0 + 40, y + 6]], { stroke: CK, sw: 1.3 }));
+            out.push(box(x0 + 76, y, 116, 24, { stroke: CG, sw: 1, rx: 3 }));
+            if (drop) out.push(txt(x0 + 134, y + 16, '이미 표시 — 버림', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
             d[1].forEach((v, i) => {
-                out.push(box(x0 + 82 + i * 32, y + 3, 28, 20, { fill: C3, op: 0.18, stroke: C3, sw: 1.3, rx: 2 }));
-                out.push(txt(x0 + 96 + i * 32, y + 18, v, { anchor: 'middle', cls: 'ink', size: 'sm' }));
+                out.push(box(x0 + 82 + i * 32, y + 2, 28, 20, { fill: C3, op: 0.18, stroke: C3, sw: 1.3, rx: 2 }));
+                out.push(txt(x0 + 96 + i * 32, y + 16, v, { anchor: 'middle', cls: 'ink', size: 'sm' }));
             });
         });
         return out.join('');
     };
     g.push(col(320, '스택 — 깊이 우선', '나중에 넣은 것을 먼저 꺼낸다', dfs, true));
     g.push(col(560, '큐 — 너비 우선', '먼저 넣은 것을 먼저 꺼낸다', bfs, false));
-    g.push(arw(462, 336, 486, 336, { cls: 's2', width: 1.4 }));
-    g.push(arw(486, 350, 462, 350, { cls: 's2', width: 1.4 }));
-    g.push(txt(428, 372, '오른쪽 끝에서만 넣고 뺀다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    g.push(arw(660, 342, 640, 342, { cls: 's1', width: 1.4 }));
-    g.push(arw(700, 342, 724, 342, { cls: 's1', width: 1.4 }));
-    g.push(txt(668, 372, '왼쪽에서 빼고 오른쪽에 넣는다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    g.push(txt(20, H - 24, '꺼낸 것 칸을 위에서 아래로 읽으면 그것이 방문 순서다. 스택은 A C E F D B, 큐는 A B C D E F 다.', { cls: 'ink2', size: 'sm' }));
+    g.push(arw(462, 338, 486, 338, { cls: 's2', width: 1.4 }));
+    g.push(arw(486, 352, 462, 352, { cls: 's2', width: 1.4 }));
+    g.push(txt(428, 374, '오른쪽 끝에서만 넣고 뺀다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(arw(660, 345, 640, 345, { cls: 's1', width: 1.4 }));
+    g.push(arw(700, 345, 724, 345, { cls: 's1', width: 1.4 }));
+    g.push(txt(668, 374, '왼쪽에서 빼고 오른쪽에 넣는다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(20, H - 24, '꺼낸 것 칸을 위에서 아래로 읽으면(버린 것은 빼고) 그것이 방문 순서다. 스택은 A C E F D B, 큐는 A B C D E F 다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(20, H - 6, '두 알고리즘의 차이는 여기서 끝난다. 4장의 스택과 큐가 그대로 두 탐색이 된다', { cls: 'ink2', size: 'sm' }));
     return {
         name: 'alg-g-stack-vs-queue',
@@ -1019,7 +1026,7 @@ add((() => {
     g.push(txt(66, 244, '간선 수로 가장 짧은 길 — S 에서 T 로 바로. 간선 1개, 가중치 10', { cls: 'ink', size: 'sm' }));
     g.push(ln([[30, 266], [58, 266]], { stroke: C2, sw: 2.8 }));
     g.push(txt(66, 270, '가중치 합으로 가장 짧은 길 — S → A → B → T. 간선 3개, 가중치 2+3+2 = 7', { cls: 'ink', size: 'sm' }));
-    g.push(txt(20, H - 44, '8장의 너비 우선 탐색은 앞의 답을 준다. 간선 하나를 한 걸음으로 세기 때문이다.', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(20, H - 44, '9장의 너비 우선 탐색은 앞의 답을 준다. 간선 하나를 한 걸음으로 세기 때문이다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(20, H - 26, '이 장은 뒤의 답을 구한다. 걸음마다 값이 다르면 걸음 수를 세는 것이 뜻을 잃는다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(20, H - 8, '가중치가 전부 같으면 두 답이 일치한다 — 너비 우선 탐색은 이 장의 특별한 경우다', { cls: 'ink2', size: 'sm' }));
     return {
@@ -1079,7 +1086,7 @@ add((() => {
 
     const cols = ['S', 'A', 'C', 'B', 'D', 'E'];
     const rows = [
-        ['— (초기)', ['0', '∞', '∞', '∞', '∞', '∞'], [1, 2, 3, 4, 5], -1, '(S,0)'],
+        ['— (초기)', ['0', '∞', '∞', '∞', '∞', '∞'], [], -1, '(S,0)'],
         ['S 확정 (0)', ['0', '4', '2', '∞', '∞', '∞'], [1, 2], 0, '(C,2) (A,4)'],
         ['C 확정 (2)', ['0', '3', '2', '∞', '10', '∞'], [1, 4], 2, '(A,3) (A,4) (D,10)'],
         ['A 확정 (3)', ['0', '3', '2', '8', '10', '∞'], [3], 1, '(A,4) (B,8) (D,10)'],
@@ -1258,7 +1265,7 @@ add((() => {
 add((() => {
     const W = 792, H = 378;
     const g = [];
-    g.push(txt(W / 2, 24, '어떻게 잘라도 그 자름을 건너는 가장 싼 간선은 최소신장트리에 들어 있다', { anchor: 'middle', cls: 'ink bold' }));
+    g.push(txt(W / 2, 24, '어떻게 잘라도 그 자름을 건너는 가장 싼 간선은 어떤 최소신장트리에 반드시 들어 있다', { anchor: 'middle', cls: 'ink bold' }));
     g.push(panel(14, 42, 374, 272, '자르기 성질', '점선이 자름이다. 두 무리로 아무렇게나 나눈다'));
     const N = { a: [76, 108, 'a'], b: [76, 180, 'b'], c: [76, 252, 'c'], d: [316, 108, 'd'], e: [316, 180, 'e'], f: [316, 252, 'f'] };
     g.push(graph(N, [
@@ -1267,7 +1274,8 @@ add((() => {
         ['a', 'd', { w: 9, stroke: CK, sw: 1.4, woff: 13 }],
         ['c', 'f', { w: 7, stroke: CK, sw: 1.4, woff: 13 }],
     ], { r: 17 }));
-    g.push(ln([[248, 80], [236, 128], [260, 176], [234, 228], [248, 276]], { stroke: C2, sw: 2, dash: '7 5' }));
+    // 자름 점선은 부제(y 78) 아래에서 시작한다. 80 에서 시작하면 부제 글자에 닿았다.
+    g.push(ln([[245, 90], [236, 128], [260, 176], [234, 228], [248, 276]], { stroke: C2, sw: 2, dash: '7 5' }));
     g.push(txt(28, 292, '자름을 건너는 간선은 4 · 7 · 9 셋이다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(28, 308, '그중 가장 싼 4 는 반드시 답에 들어간다', { cls: 'ink2', size: 'sm' }));
 
@@ -1289,7 +1297,7 @@ add((() => {
     return {
         name: 'alg-g-cut-property',
         svg: svg({ width: W, height: H, title: '자르기 성질',
-            desc: '자름을 건너는 최소 가중치 간선은 어떤 최소신장트리에도 들어 있다는 것을 바꿔치기로 보인다', body: g.join('') }),
+            desc: '자름을 건너는 최소 가중치 간선은 어떤 최소신장트리에는 반드시 들어 있다는 것을 바꿔치기로 보인다', body: g.join('') }),
     };
 })());
 
@@ -1319,7 +1327,7 @@ add((() => {
     g.push(arw(524, 190, 562, 190, { cls: 's3', width: 1.8 }));
     g.push(txt(543, 178, 'find(z)', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(418, 280, '다음부터 x · y · z 의 find 가 한 걸음이면 끝난다', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(20, H - 42, '둘 중 하나만 쓰면 한 연산이 O(log n) 이고, 둘을 같이 쓰면 n 번 연산의 평균이 사실상 상수다.', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(20, H - 42, '둘 중 하나만 쓰면 연산당 분할상환 O(log n) 이고, 둘을 같이 쓰면 n 번 연산의 평균이 사실상 상수다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(20, H - 24, '정확히는 역 애커만 함수라는 아주 천천히 자라는 함수인데, 현실의 어떤 n 에서도 5 를 넘지 않는다.', { cls: 'ink2', size: 'sm' }));
     g.push(txt(20, H - 6, '경로 압축을 쓰면 트리의 실제 높이가 랭크보다 낮아진다. 그래서 랭크는 높이가 아니라 상한으로만 쓴다', { cls: 'ink2', size: 'sm' }));
     return {

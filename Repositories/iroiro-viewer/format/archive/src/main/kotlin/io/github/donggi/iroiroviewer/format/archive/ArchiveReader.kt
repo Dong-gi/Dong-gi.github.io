@@ -105,6 +105,15 @@ class ArchivePasswordException(val wrongPassword: Boolean) :
     java.io.IOException(if (wrongPassword) "암호가 맞지 않다" else "암호가 필요하다")
 
 /**
+ * **이 앱이 풀지 않는 방식으로 잠겼다** — 암호를 넣어도 열지 않는다(PKWARE 의 강한 암호화, 열쇠 유도 반복이 상한을 넘는 7z —
+ * [SevenZKeyGuard]). 화면은 '이 앱이 풀지 않는 방식으로 잠긴 …' 을 말한다.
+ *
+ * **화면은 이 타입으로 가른다.** 예외의 이름(`simpleName` 에 'Encrypt' 가 드는가)으로 가르면 릴리스에서 틀린다 — R8 이 클래스
+ * 이름을 줄여(`mp5` 따위) 이름이 남지 않는다(2026-10-16 매핑 파일로 확인). 메시지에 경로를 넣지 않는다.
+ */
+open class ArchiveEncryptionUnsupportedException(message: String) : java.io.IOException(message)
+
+/**
  * 아카이브를 읽는 공통 계약.
  *
  * ## 자원 규칙

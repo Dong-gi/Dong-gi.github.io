@@ -199,13 +199,27 @@ class DownloadsActivity : Activity() {
             DownloadCenter.Status.FAILED, DownloadCenter.Status.CANCELLED -> {
                 val b = AlertDialog.Builder(this)
                     .setTitle(item.savedName)
-                    .setMessage(item.error ?: getString(R.string.download_cancelled))
+                    .setMessage(failureMessage(item))
                     .setNegativeButton(R.string.close, null)
                 if (item.pausable) {
                     b.setPositiveButton(R.string.download_retry) { _, _ -> center.retry(item) }
                 }
                 b.show()
             }
+        }
+    }
+
+    /**
+     * 실패·취소한 것의 글 — 잠긴 HLS 의 열쇠를 받지 못한 것이면(글이 그 머리로 시작한다) '재생 중인 것 받기' 를 권하는 한 줄을 붙인다(2026-10-16 —
+     * 가로채기는 재생기가 푼 뒤의 바이트를 담으므로 열쇠가 필요 없다).
+     */
+    private fun failureMessage(item: DownloadCenter.Item): String {
+        val error = item.error ?: return getString(R.string.download_cancelled)
+        if (!error.startsWith(getString(R.string.download_key_invalid))) return error
+        return buildString {
+            append(error)
+            append(Char(10)).append(Char(10))
+            append(getString(R.string.download_key_hint))
         }
     }
 

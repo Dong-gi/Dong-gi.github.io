@@ -344,7 +344,7 @@ add((() => {
     const midY = [104, 236];
     const leafY = [[68, 140], [200, 272]];
     const pB = [0.30, 0.70];
-    const pAgB = [0.80, 0.15];
+    const pAgB = [0.08, 0.15];
     g.push(txt(380, 26, '가지를 따라 곱하고, 끝을 모아 더한다', { anchor: 'middle', cls: 'ink bold' }));
     g.push(pdot(rootX, rootY, 'var(--ink2)', 4));
     g.push(txt(rootX, rootY + 24, '시작', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
@@ -490,17 +490,19 @@ add((() => {
         ratio.push([i, heads / i]);
         diff.push([i, heads - (i - heads)]);
     }
-    const L = frame({ xRange: [0, N], yRange: [0.2, 0.8], box: { x: 74, y: 76, w: 250, h: 160 } });
-    const R = frame({ xRange: [0, N], yRange: [-34, 34], box: { x: 434, y: 76, w: 236, h: 160 } });
+    // 세로 범위는 이 씨앗의 경로가 다 들어가게 잡는다. 처음 네 번이 모두 앞면이라 비율이 1 에서 시작하고,
+    // 차이는 201~305회 사이에 최대 41 까지 오른다. 범위를 좁히면 선이 틀 위로 빠져나가 제목에 닿는다.
+    const L = frame({ xRange: [0, N], yRange: [0, 1], box: { x: 74, y: 76, w: 250, h: 160 } });
+    const R = frame({ xRange: [0, N], yRange: [-45, 45], box: { x: 434, y: 76, w: 236, h: 160 } });
     const g = [];
     g.push(txt(199, 52, '앞면의 비율', { anchor: 'middle', cls: 'ink bold' }));
-    g.push(L.axes({ xTicks: [0, 200, 400], yTicks: [0.2, 0.5, 0.8], grid: false }));
+    g.push(L.axes({ xTicks: [0, 200, 400], yTicks: [0, 0.5, 1], grid: false }));
     g.push(ln([[L.X(0), L.Y(0.5)], [L.X(N), L.Y(0.5)]], { stroke: 'var(--ink2)', sw: 1.2, dash: '6 4' }));
     g.push(L.line(ratio, { cls: 's1' }));
     g.push(txt(199, 296, '0.5 로 다가간다', { anchor: 'middle', cls: 'ink' }));
 
     g.push(txt(552, 52, '앞면 수 − 뒷면 수', { anchor: 'middle', cls: 'ink bold' }));
-    g.push(R.axes({ xTicks: [0, 200, 400], yTicks: [-20, 0, 20], grid: false }));
+    g.push(R.axes({ xTicks: [0, 200, 400], yTicks: [-40, -20, 0, 20, 40], grid: false }));
     g.push(R.line(diff, { cls: 's2' }));
     g.push(txt(552, 296, '0 으로 돌아가지 않는다', { anchor: 'middle', cls: 'ink' }));
     g.push(txt(199, 272, '던진 횟수', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
@@ -1412,9 +1414,12 @@ add((() => {
         const x = a * 1.2;
         lin.push([x, 0.9 * x + 0.42 * b]);
     }
+    // 잡음은 x 와 −x 짝에 같은 값을 준다. 따로 주면 표본상관이 0.015 쯤 나와 ‘ρ = 0.01’ 이 찍히는데
+    // 바로 아래 글은 ‘ρ 는 0 이다’ 다. 짝마다 같게 주면 합 Σ x·y 가 짝끼리 지워져 정확히 0 이 된다.
+    const parNoise = Array.from({ length: 22 }, () => (rand() - 0.5) * 0.35);
     for (let i = 0; i < 44; i += 1) {
         const x = -2.6 + (5.2 * i) / 43;
-        par.push([x, 0.55 * x * x - 1.6 + (rand() - 0.5) * 0.35]);
+        par.push([x, 0.55 * x * x - 1.6 + parNoise[Math.min(i, 43 - i)]]);
     }
     for (let i = 0; i < 44; i += 1) {
         const t = (2 * PI * i) / 44;
@@ -1501,7 +1506,7 @@ add((() => {
     g.push(txt(590, 246, '방향만 반대일 뿐', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(txt(590, 264, '좁아지는 정도는 같다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     g.push(ln([[66, 284], [674, 284]], { stroke: 'var(--grid)', sw: 1 }));
-    g.push(txt(370, 308, '이 분포에서만은 ρ = 0 이 곧 독립이다. 일반적으로는 성립하지 않는 특별한 성질이다', { anchor: 'middle', cls: 'ink' }));
+    g.push(txt(370, 308, '이 분포에서는 ρ = 0 이 곧 독립이다. 일반적으로는 성립하지 않는 특별한 성질이다', { anchor: 'middle', cls: 'ink' }));
     return {
         name: 'st-b-binormal',
         svg: svg({

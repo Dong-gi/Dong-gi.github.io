@@ -151,7 +151,7 @@ add((() => {
     b.push(ctxt(38, yBot + 14, '기저', { anchor: 'middle', col: C3, size: 'xs' }));
 
     b.push(ctxt(LX, TY + 6 * DY + 48, '아래 두 칸은 정의와 일관성으로 직접 맞춘다. 위 다섯 칸은 짝이 맞으므로 귀납 가정에서 저절로 따라온다.', { col: CK, size: 'sm' }));
-    b.push(ctxt(LX, TY + 6 * DY + 66, '왼쪽 사다리는 6장이 세웠고 오른쪽 사다리는 규칙 열일곱 개가 세웠는데 가로대가 하나도 어긋나지 않는다 — 이것이 완전성의 심장이다.', { col: CK, size: 'sm' }));
+    b.push(ctxt(LX, TY + 6 * DY + 66, '왼쪽 사다리는 6장이 세웠고 오른쪽 사다리는 7장의 규칙들이 세웠는데 가로대가 하나도 어긋나지 않는다 — 이것이 완전성의 심장이다.', { col: CK, size: 'sm' }));
 
     return {
         name: 'log-l-truth-lemma-climb',

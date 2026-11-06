@@ -3,7 +3,9 @@ package io.github.donggi.iroirobrowser.proxy
 import android.annotation.SuppressLint
 import android.content.Context
 import io.github.donggi.iroirobrowser.core.Bypass
+import io.github.donggi.iroirobrowser.core.LiveTabs
 import io.github.donggi.iroirobrowser.core.ProxySettings
+import io.github.donggi.iroirobrowser.core.Retention
 import io.github.donggi.iroirobrowser.core.SearchEngine
 
 /**
@@ -98,10 +100,42 @@ class SettingsStore(context: Context) {
             prefs.edit().putBoolean(K_TORRENT_NOTICE, value).commit()
         }
 
+    /**
+     * 살아 있는 탭의 수 — 넘으면 가장 오래 안 본 탭을 접는다(WebView 를 없애고 뒤로·앞으로 기록만 메모리에 — 고르면 되살린다). 기본 5. 사용자
+     * 요청(2026-10-16 — '별 문제 없다면 설정에서 조절할 수 있게'). 저장값은 [LiveTabs.clamp] 로 범위 안에 맞춘다.
+     */
+    var liveTabs: Int
+        get() = LiveTabs.clamp(prefs.getInt(K_LIVE_TABS, LiveTabs.DEFAULT))
+        set(value) = prefs.edit().putInt(K_LIVE_TABS, LiveTabs.clamp(value)).apply()
+
+    /** 방문 기록 보관 기간(일, 0 = 기간 없음 — 최근 1만 곳까지). 고를 수 있는 값([Retention.HISTORY_DAYS]) 밖이면 기간 없음. 사용자 요청(2026-10-16). */
+    var historyDays: Int
+        get() = prefs.getInt(K_HISTORY_DAYS, 0).takeIf { it in Retention.HISTORY_DAYS } ?: 0
+        set(value) = prefs.edit().putInt(K_HISTORY_DAYS, value.takeIf { it in Retention.HISTORY_DAYS } ?: 0).apply()
+
+    /** 캐시 비우기 주기(일, 0 = 하지 않음). 처음 켜면 비운 때를 지금으로 적는다 — 켜는 순간부터 센다([Retention.cacheDue]). */
+    var cacheDays: Int
+        get() = prefs.getInt(K_CACHE_DAYS, 0).takeIf { it in Retention.CACHE_DAYS } ?: 0
+        set(value) {
+            val days = value.takeIf { it in Retention.CACHE_DAYS } ?: 0
+            val edit = prefs.edit().putInt(K_CACHE_DAYS, days)
+            if (days > 0 && prefs.getLong(K_CACHE_CLEARED_AT, 0L) <= 0L) edit.putLong(K_CACHE_CLEARED_AT, System.currentTimeMillis())
+            edit.apply()
+        }
+
+    /** 캐시를 마지막으로 비운 때(밀리초, 0 = 적은 적 없음) — 정한 날마다 비울 때와 '쿠키·사이트 데이터·캐시 지우기' 가 적는다. */
+    var cacheClearedAt: Long
+        get() = prefs.getLong(K_CACHE_CLEARED_AT, 0L)
+        set(value) = prefs.edit().putLong(K_CACHE_CLEARED_AT, value).apply()
+
     private fun lines(text: String): List<String> = text.lines().map { it.trim() }.filter { it.isNotEmpty() }
 
     private companion object {
         const val K_ENABLED = "proxy_enabled"
+        const val K_LIVE_TABS = "live_tabs"
+        const val K_HISTORY_DAYS = "history_days"
+        const val K_CACHE_DAYS = "cache_days"
+        const val K_CACHE_CLEARED_AT = "cache_cleared_at"
         const val K_HOST = "proxy_host"
         const val K_PORT = "proxy_port"
         const val K_USER = "proxy_user"

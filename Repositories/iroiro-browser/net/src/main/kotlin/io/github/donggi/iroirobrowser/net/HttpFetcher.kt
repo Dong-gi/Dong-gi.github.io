@@ -35,10 +35,12 @@ class HttpFetcher(
     }
 
     class Response internal constructor(
-        /** 넘겨주기를 다 따른 뒤의 주소. */
+        /** 넘겨주기를 다 따른 뒤의 주소 — 그 몸이 담은 상대 주소는 여기에 대어 푼다(재생기도 그렇게 푼다). */
         val url: String,
         val code: Int,
         private val connection: HttpURLConnection,
+        /** 따른 넘겨주기의 수(0 — 처음 주소가 답했다). */
+        val redirects: Int = 0,
     ) : Closeable {
         val contentLength: Long get() = connection.contentLengthLong
         val contentType: String? get() = connection.contentType
@@ -97,7 +99,7 @@ class HttpFetcher(
                 }
                 continue
             }
-            return Response(current, code, c)
+            return Response(current, code, c, hops)
         }
     }
 

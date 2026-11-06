@@ -70,6 +70,10 @@
     <string name="editor_export_done">내보냈습니다: %1$s</string>
     <string name="editor_export_failed">내보내지 못했습니다.</string>
     <string name="editor_export_no_picker">저장할 곳을 고르는 화면을 열지 못했습니다.</string>
+    <!-- 고르는 화면이 돌려준 자리가 이 앱의 것(앱 안의 파일·이 앱의 제공자)이다 - 쓰지 않는다(EditorRules.acceptsReturnedUri). -->
+    <string name="editor_export_refused">그 자리에는 내보낼 수 없습니다.</string>
+    <!-- 그림 넣기 - 고르는 화면이 돌려준 것이 이 앱의 파일이다. 넣지 않는다. -->
+    <string name="editor_pick_refused">이 앱의 파일은 넣을 수 없습니다.</string>
 
     <!-- 문서의 링크 — 첫 줄은 호스트(속는 것을 막으려 따로 보인다), 그다음 주소 전체 -->
     <string name="editor_link_title">링크를 열까요?</string>

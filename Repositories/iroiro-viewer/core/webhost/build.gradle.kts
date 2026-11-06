@@ -33,6 +33,9 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)
     implementation(libs.androidx.core.ktx)
+    // 스크립트를 켠 쪽의 문서 시작 스크립트(클립보드 막음 — `ScriptPage.CLIPBOARD_GUARD`). 편집기(`feature:editor`)가 이미 싣는 같은
+    // 판이라 APK 에 새로 드는 것이 없다(2026-10-16 보안 점검).
+    implementation(libs.androidx.webkit)
 
     testImplementation(kotlin("test-junit"))
 

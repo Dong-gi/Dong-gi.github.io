@@ -16,10 +16,12 @@ import io.github.donggi.iroiroviewer.model.PathNames
  */
 internal object ComicTitle {
 
-    fun of(state: ComicViewModel.State, bookPath: String): String = when (state) {
-        is ComicViewModel.State.Ready -> state.book.name
-        ComicViewModel.State.Loading, is ComicViewModel.State.Failed -> bookNameOf(PathNames.lastSegment(bookPath))
-    }
+    fun of(state: ComicViewModel.State, bookPath: String): String = PathNames.forDisplay(
+        when (state) {
+            is ComicViewModel.State.Ready -> state.book.name
+            ComicViewModel.State.Loading, is ComicViewModel.State.Failed -> bookNameOf(PathNames.lastSegment(bookPath))
+        },
+    )
 
     /**
      * [ComicViewModel.Book.name] 과 같은 모양 — 책 파일은 확장자를 뗀다. 폴더인지는 여기서 묻지 않는다(디스크를 읽는 일이고

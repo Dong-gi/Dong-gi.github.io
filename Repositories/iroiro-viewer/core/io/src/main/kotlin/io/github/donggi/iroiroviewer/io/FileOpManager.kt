@@ -190,8 +190,17 @@ object FileOpManager {
             val sources: List<String>,
             val destDir: String,
             val name: String,
+            /**
+             * 암호(없으면 null — 암호 없이 묶는다). 대화상자가 칸에서 꺼내 넘긴 배열이고 **메모리에만** 있다 — 인텐트·저장 상태·디스크에
+             * 싣지 않는다. 묶는 쪽([ZipMaker])이 열쇠로 옮기는 즉시 0 으로 덮고, 돌지 않고 버려지는 길(대기 중 '전부 취소', 작업 사이의 취소,
+             * 시작 전에 끊긴 작업)은 큐가 덮는다 — [settle]. 풀기([Extract.password])와 같은 약속이다.
+             */
+            val password: CharArray? = null,
         ) : Request {
             override val label get() = name
+
+            // 암호 배열이 `toString`(로그·예외)에 실려 나가지 않게 한다(풀기와 같다). 경로도 싣지 않는다.
+            override fun toString(): String = "Compress(id=$id, sources=${sources.size}, locked=${password != null})"
         }
 
         /**
@@ -399,8 +408,8 @@ object FileOpManager {
         /** 푼 곳과, 풀지 **못한** 것들. 화면이 숨기지 않고 말한다. */
         data class Extracted(val report: ExtractReport) : Extra
 
-        /** 만든 ZIP 의 실제 경로. 고른 이름과 다를 수 있다([Request.Compress]). */
-        data class Compressed(val path: String) : Extra
+        /** 만든 ZIP 의 실제 경로. 고른 이름과 다를 수 있다([Request.Compress]). [locked] 는 암호를 걸었는가(결과 문구가 말한다). */
+        data class Compressed(val path: String, val locked: Boolean = false) : Extra
 
         /**
          * 잘라 저장·그리기·메모·구간 저장이 만든 파일의 실제 경로(`(2)` 가 붙었을 수 있다)와, 고른 것과 **다르게 된 점**([note]) —
@@ -616,7 +625,7 @@ object FileOpManager {
     }
 
     /**
-     * 요청이 끝났거나 버려질 때 부른다. 붙든 비밀(아카이브 암호)을 0 으로 덮고, 끝을 기다리는 쪽
+     * 요청이 끝났거나 버려질 때 부른다. 붙든 비밀(풀기의 아카이브 암호·묶기의 ZIP 암호)을 0 으로 덮고, 끝을 기다리는 쪽
      * (예약된 휴지통 비우기)에 알린다. 두 번 불러도 된다 — 덮은 배열을 다시 덮고, 완료된 신호는
      * 다시 완료되지 않는다.
      *
@@ -624,6 +633,7 @@ object FileOpManager {
      */
     private fun Request.settle(ran: Boolean) {
         if (this is Request.Extract) password?.fill('\u0000')
+        if (this is Request.Compress) password?.fill('\u0000')
         if (this is Request.Reconcile) done?.complete(ran)
     }
 
@@ -798,8 +808,12 @@ object FileOpManager {
                 }
             }
             is Request.Compress -> {
-                val result = ZipMaker.make(request.sources, request.destDir, request.name, MediaIndex(context), onProgress) { r ->
-                    r.path?.let { onExtra(Extra.Compressed(it)) }
+                // 암호를 걸었는가 — 묶는 쪽이 배열을 곧바로 덮으므로 먼저 본다(빈 배열은 암호 없음이다 — `ZipMaker` 와 같은 판단).
+                val locked = request.password?.isNotEmpty() == true
+                val result = ZipMaker.make(
+                    request.sources, request.destDir, request.name, MediaIndex(context), onProgress, password = request.password,
+                ) { r ->
+                    r.path?.let { onExtra(Extra.Compressed(it, locked)) }
                     onPlaced(r.outcome)
                 }
                 result.outcome

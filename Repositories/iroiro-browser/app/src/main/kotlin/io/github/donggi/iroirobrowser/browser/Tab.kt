@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.webkit.WebView
 import io.github.donggi.iroirobrowser.core.adblock.AdBlocker
 import io.github.donggi.iroirobrowser.core.media.FoundMediaLog
+import io.github.donggi.iroirobrowser.core.media.PageRequests
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -69,6 +70,12 @@ class Tab(val id: Long, var webView: WebView?) {
      * 더하고 화면이 읽는다. 항목은 찾은 페이지의 주소·제목을 든다(받기의 Referer·기본 이름).
      */
     val media = FoundMediaLog()
+
+    /**
+     * 쪽이 낸 하위 요청의 머리 — 잠긴 HLS 의 열쇠를 쪽처럼 받는다([PageRequests], 2026-10-16). WebView 의 스레드가 적고 내려받기 일꾼이 읽는다.
+     * **메모리에만** 둔다(값은 토큰일 수 있다) — 탭을 닫거나 다른 사이트로 가면 버린다.
+     */
+    val requests = PageRequests()
 
     /** 쪽↔앱 통로(blob·녹화·가로채기) — 이 WebView 판이 그 기능을 모르면 null. */
     var bridge: PageBridge? = null

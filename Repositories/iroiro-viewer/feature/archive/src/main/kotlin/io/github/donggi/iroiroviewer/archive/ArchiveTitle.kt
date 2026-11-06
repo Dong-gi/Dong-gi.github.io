@@ -16,13 +16,15 @@ import io.github.donggi.iroiroviewer.model.PathNames
 internal object ArchiveTitle {
 
     /** [folder] 는 아카이브 안에서 지금 보는 폴더(빈 글이 맨 위), [path] 는 화면이 받은 압축 파일의 경로다. */
-    fun of(state: ArchiveViewModel.State, folder: String, path: String): String = when (state) {
-        is ArchiveViewModel.State.Ready -> folder.substringAfterLast('/').ifEmpty { state.doc.name }
-        is ArchiveViewModel.State.Loading,
-        ArchiveViewModel.State.NeedsPassword,
-        is ArchiveViewModel.State.Failed,
-        -> fileNameOf(path)
-    }
+    fun of(state: ArchiveViewModel.State, folder: String, path: String): String = PathNames.forDisplay(
+        when (state) {
+            is ArchiveViewModel.State.Ready -> folder.substringAfterLast('/').ifEmpty { state.doc.name }
+            is ArchiveViewModel.State.Loading,
+            ArchiveViewModel.State.NeedsPassword,
+            is ArchiveViewModel.State.Failed,
+            -> fileNameOf(path)
+        },
+    )
 
     /** 경로의 마지막 조각 — 판단은 [PathNames.lastSegment] 한 벌이다(뷰어 넷이 같은 답을 낸다). */
     fun fileNameOf(path: String): String = PathNames.lastSegment(path)

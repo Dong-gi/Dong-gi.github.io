@@ -4,9 +4,15 @@ import java.util.Locale
 
 /**
  * 막을지 볼 요청 하나 — 주소, 그 요청을 낸 쪽(문서)의 호스트, 요청의 종류([RequestType] 마스크). 주소를 한 번만 소문자로 바꾸고 호스트의 자리와
- * 제1자/제3자를 미리 정한다(규칙 수십 개와 견주는 동안 다시 하지 않게).
+ * 제1자/제3자를 미리 정한다(규칙 수십 개와 견주는 동안 다시 하지 않게). [onRegexDisabled] 는 이 요청을 맞추다 걸음 예산을 넘어 꺼진 정규식
+ * 규칙을 받는다(그 엔진의 알림 — [AdBlocker]).
  */
-class Request(val url: String, documentHost: String, val types: Int) {
+class Request(
+    val url: String,
+    documentHost: String,
+    val types: Int,
+    internal val onRegexDisabled: ((NetworkRule) -> Unit)? = null,
+) {
 
     val urlLower: String = url.lowercase(Locale.ROOT)
     val hostStart: Int
@@ -23,9 +29,13 @@ class Request(val url: String, documentHost: String, val types: Int) {
         thirdParty = Domains.isThirdParty(host, this.documentHost)
     }
 
-    /** 주소의 낱말들(글자·숫자·`%` 의 묶음) — 낱말 색인을 찾는다. */
+    /**
+     * 주소의 낱말들(글자·숫자·`%` 의 묶음) — 낱말 색인을 찾는다. **같은 낱말은 한 번만**(2026-10-16 보안 점검): 앞 판은 나오는 대로 모두 담아,
+     * 한 낱말을 수만 번 되풀이한 주소(쪽이 지을 수 있다)에서 그 낱말의 규칙들을 되풀이한 수만큼 다시 맞췄다 — 시간이 주소 길이의 제곱으로 늘었다.
+     */
     val tokens: List<String> by lazy(LazyThreadSafetyMode.NONE) {
         val out = ArrayList<String>(16)
+        val seen = HashSet<String>()
         var i = 0
         val s = urlLower
         while (i < s.length) {
@@ -35,7 +45,10 @@ class Request(val url: String, documentHost: String, val types: Int) {
             }
             val start = i
             while (i < s.length && FilterParser.isTokenChar(s[i])) i++
-            if (i - start >= 2) out += s.substring(start, i)
+            if (i - start >= 2) {
+                val token = s.substring(start, i)
+                if (seen.add(token)) out += token
+            }
         }
         out
     }

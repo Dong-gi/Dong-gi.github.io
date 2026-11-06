@@ -164,7 +164,7 @@ add((() => {
     };
 })());
 
-/* ---- 7-2. 코트야드 타일 덮기 — 귀납 가정을 강하게 만든다 ---- */
+/* ---- 7-2. 마당 타일 덮기 — 귀납 가정을 강하게 만든다 ---- */
 add((() => {
     const W = 780, H = 372;
     const g = [];
@@ -192,8 +192,9 @@ add((() => {
     const g2x = p2 + 48, g2y = py + 60;
     g.push(grid(g2x, g2y, c, 8, 8));
     g.push(box(g2x + 6 * c, g2y + c, c, c, { fill: C1, op: 0.85, stroke: C1, sw: 1.5, rx: 1 }));
-    // 임시 상 셋 — 가운데 네 칸 중 상이 든 사분면 밖의 셋
-    const tmp = [[3, 3], [4, 3], [3, 4]];
+    // 임시 상 셋 — 가운데 네 칸 중 상이 든 사분면 밖의 셋. [열, 행] 이고 진짜 상이 (6, 1) —
+    // 오른쪽 위 사분면 — 이므로 왼쪽 위 (3, 3) · 왼쪽 아래 (3, 4) · 오른쪽 아래 (4, 4) 다.
+    const tmp = [[3, 3], [3, 4], [4, 4]];
     for (const [i, j] of tmp) g.push(box(g2x + i * c, g2y + j * c, c, c, { fill: C3, op: 0.8, stroke: C3, sw: 1.5, rx: 1 }));
     g.push(ln([[g2x + 4 * c, g2y], [g2x + 4 * c, g2y + 8 * c]], { stroke: C2, sw: 2 }));
     g.push(ln([[g2x, g2y + 4 * c], [g2x + 8 * c, g2y + 4 * c]], { stroke: C2, sw: 2 }));
@@ -224,7 +225,7 @@ add((() => {
         name: 'mcs-i-tiling-quadrant',
         svg: svg({
             width: W, height: H,
-            title: '코트야드 타일 덮기 — 귀납 가정을 강하게 만드는 수법',
+            title: '마당 타일 덮기 — 귀납 가정을 강하게 만드는 수법',
             desc: '왼쪽은 상이 가운데에만 있다고 가정하면 세 사분면에서 막히는 그림, 가운데는 상 위치를 자유롭게 둔 강한 가정과 임시 상 셋, 오른쪽은 L 타일 범례',
             body: g.join(''),
         }),
@@ -672,7 +673,7 @@ add((() => {
     }
     // 순위 라벨이 붙은 선분 네 개
     const rank = [
-        [0, 0, '1', '1'], [0, 1, '2', '2'], [1, 0, '1', '2'], [1, 1, '2', '1'],
+        [0, 0, '1', '1'], [0, 1, '2', '1'], [1, 0, '1', '2'], [1, 1, '2', '2'],
     ];
     for (const [mi, wi, mr, wr] of rank) {
         const y1 = ry + mi * rgap, y2 = ry + wi * rgap;
@@ -1161,12 +1162,12 @@ add((() => {
 
 /* ---- 10-2. 쌍과 유리수를 줄 세우기 ---- */
 add((() => {
-    const W = 780, H = 364;
+    const W = 780, H = 372;
     const g = [];
     g.push(txt(W / 2, 26, '대각선을 따라 훑으면 어떤 쌍도 유한한 걸음 안에 번호를 받는다', { anchor: 'middle', cls: 'ink bold' }));
 
     const py = 46;
-    g.push(panel(20, py, 440, 286, 'ℕ × ℕ 의 모든 쌍에 번호를 붙인다', null));
+    g.push(panel(20, py, 440, 294, 'ℕ × ℕ 의 모든 쌍에 번호를 붙인다', null));
     const gx = 118, gy = py + 76, c = 48;
     for (let i = 0; i < 5; i += 1) {
         g.push(txt(gx + i * c, gy - 18, String(i), { anchor: 'middle', cls: 'ink2', size: 'sm' }));
@@ -1181,18 +1182,39 @@ add((() => {
             if (i < 5 && j < 5) order.push([i, j]);
         }
     }
-    const pos = new Map();
-    order.forEach(([i, j], k) => pos.set(`${i},${j}`, k));
-    g.push(ln(order.map(([i, j]) => [gx + j * c, gy + i * c]), { stroke: C1, sw: 1.3, dash: '4 3' }));
+    const route = order.map(([i, j]) => [gx + j * c, gy + i * c]);
+    g.push(ln(route, { stroke: C1, sw: 1.3, dash: '4 3' }));
+    /* 번호는 점의 위오른쪽에 두되, 점선 경로나 다른 점이 그 자리를 지나가면 아래 순서로 다음 자리를 본다.
+     * 대각선 사이를 건너는 긴 점선이 격자를 가로지르므로 한 방향으로는 모든 번호를 비켜 둘 수 없다. */
+    const spots = [[9, -8, 'start'], [9, 16, 'start'], [10, 4, 'start'], [0, 19, 'middle'],
+        [0, -9, 'middle'], [-9, -8, 'end'], [-9, 16, 'end'], [-10, 4, 'end']];
+    const room = ([x0, y0, x1, y1]) => {
+        const away = (x, y) => Math.hypot(Math.max(x0 - x, 0, x - x1), Math.max(y0 - y, 0, y - y1));
+        let best = Infinity;
+        for (let k = 1; k < route.length; k += 1) {
+            const [ax, ay] = route[k - 1], [bx, by] = route[k];
+            for (let t = 0; t <= 100; t += 1) best = Math.min(best, away(ax + (bx - ax) * t / 100, ay + (by - ay) * t / 100));
+        }
+        for (const [x, y] of route) best = Math.min(best, away(x, y) - 3);
+        return best;
+    };
     for (let i = 0; i < 5; i += 1) {
         for (let j = 0; j < 5; j += 1) {
-            g.push(dot(gx + j * c, gy + i * c, C3, 4));
-            g.push(ctxt(gx + j * c + 9, gy + i * c - 8, String(pos.get(`${i},${j}`)), C1, { bold: true }));
+            const x = gx + j * c, y = gy + i * c;
+            const label = String((i + j) * (i + j + 1) / 2 + i);
+            const w = 6.3 * label.length;
+            const tried = spots.map(([dx, dy, anchor]) => {
+                const left = anchor === 'start' ? x + dx : anchor === 'end' ? x + dx - w : x + dx - w / 2;
+                return { score: room([left, y + dy - 8.5, left + w, y + dy + 0.5]), dx, dy, anchor };
+            });
+            const pick = tried.find(s => s.score >= 3) ?? tried.reduce((a, b) => (b.score > a.score ? b : a));
+            g.push(dot(x, y, C3, 4));
+            g.push(ctxt(x + pick.dx, y + pick.dy, label, C1, { anchor: pick.anchor, bold: true }));
         }
     }
-    g.push(txt(24, 352, '점 옆의 파란 수가 그 쌍이 받는 번호다. 가로로 훑으면 첫 줄에서 영원히 못 벗어나므로 대각선으로 훑어야 한다', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(24, 360, '점 옆의 파란 수가 그 쌍이 받는 번호다. 가로로 훑으면 첫 줄에서 영원히 못 벗어나므로 대각선으로 훑어야 한다', { cls: 'ink2', size: 'sm' }));
 
-    g.push(panel(478, py, 282, 286, '같은 줄 세우기로 ℚ⁺ 도 가산이다', null));
+    g.push(panel(478, py, 282, 294, '같은 줄 세우기로 ℚ⁺ 도 가산이다', null));
     g.push(lines(496, py + 46, [
         '쌍 (i, j) 를 분수 i / j 로 읽으면',
         'ℕ × ℕ 의 줄 세우기가 곧 유리수의 줄',
@@ -1334,7 +1356,7 @@ add((() => {
     g.push(txt(508, py + 230, '어떤 A 에 대해서도 성립한다', { cls: 'ink2', size: 'sm' }));
 
     g.push(lines(24, 336, [
-        '이 표와 앞의 비트열 표는 같은 표다. 부분집합 하나가 비트열 하나이므로(6장) pow(ℕ) 이 무한 비트열 전체와 전단사다',
+        '이 표와 뒤의 비트열 표는 같은 표다. 부분집합 하나가 비트열 하나이므로(6장) pow(ℕ) 이 무한 비트열 전체와 전단사다',
     ], { lh: 20 }));
     return {
         name: 'mcs-i-cantor-power',

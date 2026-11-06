@@ -111,6 +111,7 @@ import io.github.donggi.iroiroviewer.data.TextViewerKind
 import io.github.donggi.iroiroviewer.io.FileOpManager
 import io.github.donggi.iroiroviewer.io.FileOpText
 import io.github.donggi.iroiroviewer.io.Format
+import io.github.donggi.iroiroviewer.model.PathNames
 import io.github.donggi.iroiroviewer.ui.IroProgress
 import io.github.donggi.iroiroviewer.ui.icon.RedoIcon
 import io.github.donggi.iroiroviewer.ui.icon.UndoIcon
@@ -219,7 +220,7 @@ fun TextEditScreen(
                 title = {
                     Column {
                         Text(
-                            text = ready?.name ?: TextTitle.fileNameOf(path),
+                            text = PathNames.forDisplay(ready?.name ?: TextTitle.fileNameOf(path)),
                             maxLines = 1,
                             overflow = TextOverflow.MiddleEllipsis,
                         )

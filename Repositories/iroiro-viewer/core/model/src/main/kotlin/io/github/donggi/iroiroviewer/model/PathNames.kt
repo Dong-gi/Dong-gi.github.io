@@ -17,4 +17,28 @@ object PathNames {
      * 정규화한다).
      */
     fun lastSegment(path: String): String = path.trimEnd('/').substringAfterLast('/')
+
+    /**
+     * 글의 방향을 바꾸는 **보이지 않는 글자**인가(2026-10-16 보안 점검 — '파일 이름의 양방향 제어 문자로 확장자를 위장할 수 있다').
+     * U+061C(아랍 글자 표시)·U+200E·U+200F(왼쪽에서 오른쪽·오른쪽에서 왼쪽 표시)·U+202A~202E(끼워 넣기·덮어쓰기 — U+202E 가
+     * '오른쪽에서 왼쪽으로 덮어쓰기')·U+2066~2069(격리). 이름에 끼면 `invoice` + U+202E + `fdp.apk` 가 화면에서 'invoicekpa.pdf' 로
+     * 보인다 — 확장자를 속인다. 이 앱이 짓거나 받는 이름에서는 `_` 로 바꾸고(`PathRules.sanitize`), 이미 있는 이름은 화면에서만
+     * [forDisplay] 로 드러낸다. (소스에 그 글자를 날것으로 적지 않는다 — 언제나 이스케이프로.)
+     */
+    fun isBidiControl(c: Char): Boolean =
+        c == '\u061C' || c == '\u200E' || c == '\u200F' ||
+            c in '\u202A'..'\u202E' || c in '\u2066'..'\u2069'
+
+    /** 방향 제어 글자를 화면에서 대신하는 표시 — U+FFFD(대체 문자). 무언가 숨어 있었다는 것이 보인다. */
+    const val BIDI_MARK = '\uFFFD'
+
+    /**
+     * **화면에 보일** 이름 — 방향 제어 글자([isBidiControl])를 눈에 보이는 표시([BIDI_MARK])로 바꾼다. 그 글자가 없으면 같은 문자열을
+     * 그대로 돌려준다. **실제 이름은 바꾸지 않는다** — 파일을 찾고 열고 넘기는 데는 언제나 원래 이름을 쓴다. 목록·격자·정보 시트·받은
+     * 화면·뷰어의 제목·압축 안의 항목·재생 화면이 이것을 지난다.
+     */
+    fun forDisplay(name: String): String {
+        if (name.none(::isBidiControl)) return name
+        return buildString(name.length) { for (c in name) append(if (isBidiControl(c)) BIDI_MARK else c) }
+    }
 }

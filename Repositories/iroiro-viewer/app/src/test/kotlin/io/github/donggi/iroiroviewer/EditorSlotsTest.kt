@@ -83,6 +83,9 @@ class EditorSlotsTest {
         assertEquals("원본.hwpx", EditorSlots.cleanName("...", "hwpx", "원본.hwp"))
         assertEquals("원본.hwp", EditorSlots.cleanName(null, "hwp", "원본.hwp"))
         assertEquals("document.hwp", EditorSlots.cleanName("", "hwp", ".hwp"))
+        // 글의 방향을 바꾸는 글자는 `_` 로(`PathRules.sanitize` 와 같다) — 화면에서 뒤집혀 보이는 이름의 새 파일을 만들지 않는다.
+        assertEquals("계약_fdp.hwp", EditorSlots.cleanName("계약" + Char(0x202E) + "fdp.hwp", "hwp", "x.hwp"))
+        assertEquals("a_b.docx", EditorSlots.cleanName("a" + Char(0x2066) + "b", "docx", "x.docx"))
         // 길이는 바이트로 묶는다(255 − 확장자) — 한글 300자는 83자(249바이트)가 된다(`newNamesAreCutByBytes`).
         assertEquals(83 + ".hwp".length, EditorSlots.cleanName("가".repeat(300), "hwp", "x.hwp").length)
         // 글자로는 120자까지다 — 편집기 쪽(`OutputNames`)과 같은 자리에서 잘라야 긴 이름의 제자리 저장이 맞는다.
@@ -155,6 +158,8 @@ class EditorSlotsTest {
             "공문.HWP", ".메모.hwp", "보고서 .hwp", "질문?.hwp",
             "a".repeat(200) + ".hwp", "가".repeat(100) + ".hwp", "a" + "😀".repeat(100) + ".hwp",
             "가".repeat(83) + "ab.hwp", // 255바이트
+            // 글의 방향을 바꾸는 글자(U+202E) — 양쪽이 같은 자리에서 `_` 로 바꾸므로 제자리 저장이다(실제 원본 이름은 그대로 쓴다).
+            "계약" + Char(0x202E) + "서.hwp",
         )
         for (name in originals) {
             // 편집기가 '저장' 으로 보내는 이름 — 쪽이 댄 이름(원본 그대로), 모자라면 Files 가 준 보이는 이름.

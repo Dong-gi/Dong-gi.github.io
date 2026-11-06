@@ -213,7 +213,7 @@ add('mcs-n-euclid-trace', (() => {
 add('mcs-n-jug-reachable', (() => {
     const W = 720, H = 300;
     const g = [];
-    g.push(txt(W / 2, 26, '두 물통으로 얻을 수 있는 양은 정확히 두 용량의 최대공약수의 배수다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+    g.push(txt(W / 2, 26, '각 통에 담을 수 있는 양은 정확히, 그 통의 용량을 넘지 않는 두 용량의 최대공약수의 배수다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
 
     const cw = 23, x = 60;
     // 패널 A: 12 L, 18 L → gcd 6
@@ -519,7 +519,7 @@ add('mcs-n-chain-antichain', (() => {
     g.push(ctxt(430, 276, '그 다섯으로 정점 여덟이 모두 덮인다.', CK));
     g.push(ctxt(430, 300, '딜워스: 사슬의 크기가 t 이하이면', C1));
     g.push(ctxt(430, 318, '반사슬의 크기가 8/t 이상이다.', C1));
-    g.push(ctxt(430, 336, 't = 4 로 두면 2 이상이 된다.', C1));
+    g.push(ctxt(430, 336, 't = 5 로 두면 2 이상이 된다.', C1));
     g.push(txt(225, 396, '띠 하나가 한 단계다. 굵은 길이 임계 경로이고 초록 정점이 최대 반사슬이다',
         { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return svg({

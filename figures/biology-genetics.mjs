@@ -413,7 +413,7 @@ add((() => {
         b.push(arw(cx + 20, cy + 62, cx + 56, gy - 40, { width: 1.8 }));
     }
     b.push(line([[318, 50], [318, 282]], { stroke: 'var(--grid)', sw: 1, dash: '5 4' }));
-    b.push(txt(W / 2, 302, '쌍이 2개면 배열이 2² = 4 가지, 사람처럼 23쌍이면 2²³ ≈ 8.4 × 10⁶ 가지다 (교차는 아직 세지 않았다)', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    b.push(txt(W / 2, 302, '쌍이 2개면 배우자가 2² = 4 가지, 사람처럼 23쌍이면 2²³ ≈ 8.4 × 10⁶ 가지다 (교차는 아직 세지 않았다)', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'bio-gen-independent-assortment',
         svg: svg({ width: W, height: H, title: '상동염색체의 독립적 배열', desc: '쌍마다 어느 극을 보는지가 독립이라 배우자 종류가 2의 거듭제곱으로 늘어난다', body: b.join('') }),
@@ -616,7 +616,7 @@ add((() => {
     b.push(arw(F.X(11.6), F.Y(0.115), F.X(10.2), F.Y(0.022), { width: 1.6 }));
     b.push(txt(F.X(11.8), F.Y(0.125), '오른쪽 꼬리 넓이 = 5%', { cls: 'ink2', size: 'sm' }));
     b.push(txt(W / 2, H - 34, '관찰값이 임계값보다 왼쪽이면 우연으로 설명되는 범위 안이므로 가설을 버리지 않는다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    b.push(txt(W / 2, H - 14, '오른쪽이면 그만한 어긋남이 우연으로는 20번에 한 번도 안 나온다는 뜻이므로 가설을 버린다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    b.push(txt(W / 2, H - 14, '오른쪽이면 그만하거나 더 큰 어긋남이 우연으로는 20번에 한 번도 안 나온다는 뜻이므로 가설을 버린다.', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'bio-gen-chisquare',
         svg: svg({ width: W, height: H, title: '카이제곱 분포와 임계값', desc: '자유도별 분포 곡선과 유의수준 5%의 기각역', body: b.join('') }),
@@ -630,7 +630,7 @@ add((() => {
     b.push(txt(W / 2, 26, '이형접합이 어떻게 보이는가 — 세 경우', { anchor: 'middle', cls: 'ink bold' }));
     const py = 46, ph = 266, pw = 216;
     const X0 = [16, 238, 460];
-    const titles = ['완전우성', '불완전우성', '공우성'];
+    const titles = ['완전우성', '불완전우성', '공동우성'];
     const subs = ['한쪽만 보인다', '중간이 보인다', '둘 다 보인다'];
     const ratios = ['3 : 1', '1 : 2 : 1', '1 : 2 : 1'];
     for (let k = 0; k < 3; k += 1) {
@@ -672,7 +672,7 @@ add((() => {
     b.push(txt(W / 2, H - 10, '유전자형 비는 셋 다 1 : 2 : 1 로 같다. 달라지는 것은 그것이 몇 가지 표현형으로 보이느냐뿐이다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'bio-gen-dominance-types',
-        svg: svg({ width: W, height: H, title: '완전우성 · 불완전우성 · 공우성', desc: '유전자형 비는 같고 표현형으로 드러나는 방식만 다르다', body: b.join('') }),
+        svg: svg({ width: W, height: H, title: '완전우성 · 불완전우성 · 공동우성', desc: '유전자형 비는 같고 표현형으로 드러나는 방식만 다르다', body: b.join('') }),
     };
 })());
 
@@ -961,19 +961,20 @@ add((() => {
     // 풀린 어미 가닥 둘
     b.push(line([[110, 100], [350, 100], [FX, FY - 10]], { stroke: 'var(--s1)', sw: 4 }));
     b.push(line([[110, 300], [350, 300], [FX, FY + 10]], { stroke: 'var(--s2)', sw: 4 }));
-    b.push(txt(102, 104, '3′', { anchor: 'end', cls: 'ink bold' }));
-    b.push(txt(102, 304, '5′', { anchor: 'end', cls: 'ink bold' }));
+    b.push(txt(102, 104, '5′', { anchor: 'end', cls: 'ink bold' }));
+    b.push(txt(102, 304, '3′', { anchor: 'end', cls: 'ink bold' }));
     b.push(txt(116, 64, '지연가닥 — 짧게 여러 번 만들고 나중에 잇는다 (오카자키 조각)', { cls: 'ink', size: 'sm' }));
     b.push(txt(116, 86, '어미 가닥 (지연가닥의 주형)', { cls: 'ink2', size: 'sm' }));
     b.push(txt(116, 322, '어미 가닥 (선도가닥의 주형)', { cls: 'ink2', size: 'sm' }));
     b.push(txt(116, 344, '선도가닥 — 분기점을 따라가며 한 번에 이어 만든다', { cls: 'ink', size: 'sm' }));
-    // 지연가닥 조각
+    // 지연가닥 조각. 조각마다 분기점 쪽(오른쪽) 끝에서 프라이머로 시작해 왼쪽(5′→3′)으로 자란다.
+    // 그래서 프라이머는 각 조각의 오른쪽 끝(5′ 끝)에 있고, 분기점에서 먼 왼쪽 조각일수록 먼저 만들어졌다.
     [[124, 196], [212, 284], [300, 372]].forEach((f, i) => {
-        b.push(box(f[0], 128, 24, 9, { fill: 'var(--s2)', op: 0.85, stroke: 'none', sw: 0, rx: 3 }));
-        b.push(line([[f[0] + 26, 132], [f[1], 132]], { stroke: 'var(--s3)', sw: 4 }));
-        b.push(txt((f[0] + f[1]) / 2, 156, `조각 ${3 - i}`, { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+        b.push(box(f[1] - 24, 128, 24, 9, { fill: 'var(--s2)', op: 0.85, stroke: 'none', sw: 0, rx: 3 }));
+        b.push(line([[f[0], 132], [f[1] - 26, 132]], { stroke: 'var(--s3)', sw: 4 }));
+        b.push(txt((f[0] + f[1]) / 2, 156, `조각 ${i + 1}`, { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     });
-    b.push(txt(30, 136, 'RNA 프라이머', { cls: 'ink2', size: 'sm' }));
+    b.push(txt(184, 121, 'RNA 프라이머', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     b.push(arw(200, 178, 160, 178, { cls: 's3', width: 2.2 }));
     b.push(arw(288, 178, 248, 178, { cls: 's3', width: 2.2 }));
     b.push(txt(120, 204, '조각 하나하나도 5′→3′ 다', { cls: 'ink2', size: 'sm' }));
@@ -1187,7 +1188,8 @@ add((() => {
         { n: '야생형', s: 'AUG GCA UUC GAU AAG UGA', a: 'Met Ala Phe Asp Lys 종결', m: '', hi: -1, cls: 'ink2' },
         { n: '침묵', s: 'AUG GCG UUC GAU AAG UGA', a: 'Met Ala Phe Asp Lys 종결', m: '코돈은 바뀌었는데 아미노산은 그대로', hi: 1, cls: 's3' },
         { n: '미스센스', s: 'AUG GAA UUC GAU AAG UGA', a: 'Met Glu Phe Asp Lys 종결', m: '아미노산 하나가 다른 것으로', hi: 1, cls: 's1' },
-        { n: '넌센스', s: 'AUG GCA UAA GAU AAG UGA', a: 'Met Ala 종결', m: '여기서 잘린다', hi: 2, cls: 's2' },
+        // 한 글자 치환(넷째 코돈 AAG → UAG)으로 종결코돈이 생긴다. 다른 줄과 같이 한 글자만 바꾼다.
+        { n: '넌센스', s: 'AUG GCA UUC GAU UAG UGA', a: 'Met Ala Phe Asp 종결', m: '여기서 잘린다', hi: 4, cls: 's2' },
         { n: '틀 이동', s: 'AUG GAU UCG AUA AGU GA', a: 'Met Asp Ser Ile Ser …', m: 'C 하나가 빠져 뒤가 전부 밀렸다', hi: 1, cls: 's2' },
     ];
     const y0 = 66, rh = 60, sx = 126, cwc = 62;
@@ -1610,7 +1612,8 @@ add((() => {
         b.push(box(ln.x - 24, gy + 8, 48, 8, { fill: 'var(--ink2)', op: 0.20, stroke: 'none', sw: 0, rx: 2 }));
         for (const s of ln.bands) {
             b.push(box(ln.x - 24, Y(s) - 4, 48, 8, { fill: ln.lab ? 'var(--ink2)' : 'var(--s1)', op: ln.lab ? 0.35 : 0.7, stroke: 'none', sw: 0, rx: 2 }));
-            if (ln.lab) b.push(txt(ln.x - 30, Y(s) + 4, `${s} kb`, { anchor: 'end', cls: 'ink2', size: 'sm' }));
+            // 크기 이름표는 젤 테두리 바깥(왼쪽)에 둔다. 띠 바로 옆(ln.x − 30)이면 테두리가 글자를 지났다.
+            if (ln.lab) b.push(txt(gx - 6, Y(s) + 4, `${s} kb`, { anchor: 'end', cls: 'ink2', size: 'sm' }));
         }
     }
     b.push(arw(gx + gw + 12, gy + 30, gx + gw + 12, gy + gh - 16, { width: 1.6 }));
@@ -1630,7 +1633,7 @@ add((() => {
     b.push(txt(mx + 190, my + 34, '8.0 kb', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     b.push(txt(mx, my + 86, '좌우를 뒤집은 지도도 같은 밴드를 낸다.', { cls: 'ink2', size: 'sm' }));
     b.push(txt(mx, my + 104, '방향은 이 실험만으로 정할 수 없다', { cls: 'ink2', size: 'sm' }));
-    b.push(txt(W / 2, H - 12, '이동 거리는 크기의 로그에 대체로 비례한다. 그래서 큰 조각끼리는 잘 안 갈리고 작은 조각끼리는 잘 갈린다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    b.push(txt(W / 2, H - 12, '이동 거리는 크기의 로그에 대해 대체로 직선으로 준다. 그래서 큰 조각끼리는 잘 안 갈리고 작은 조각끼리는 잘 갈린다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'bio-gen-gel',
         svg: svg({ width: W, height: H, title: '제한효소 소화의 전기영동과 절단 지도', desc: '단일 소화와 이중 소화의 밴드를 견주어 자른 자리를 정한다', body: b.join('') }),
@@ -1719,14 +1722,18 @@ add((() => {
     b.push(txt(W / 2, 26, 'CRISPR-Cas9 — 자르는 데까지가 이 도구의 일이다', { anchor: 'middle', cls: 'ink bold' }));
     const dx = 130, cw = 21, n = 20;
     const y1 = 122, y2 = 150;
+    // 안내 RNA 는 PAM 이 없는 쪽 가닥(위)과 짝짓는다. PAM 은 반대쪽 가닥(아래)의 표적 바로 뒤(3′ 쪽)에 있고,
+    // 그 가닥의 표적 자리는 안내 RNA 와 서열이 같다(U 대신 T). 안내 RNA 를 왼쪽이 5′ 이 되게 그렸으므로 위 가닥은 3′ 에서 시작한다.
     b.push(box(dx, y1 - 12, cw * n, 24, { fill: 'var(--s1)', op: 0.14, stroke: 'var(--ink2)', sw: 1.1, rx: 3 }));
     b.push(box(dx, y2 - 12, cw * n, 24, { fill: 'var(--s2)', op: 0.14, stroke: 'var(--ink2)', sw: 1.1, rx: 3 }));
     b.push(txt(dx + cw * 7.5, y1 + 5, '표적 서열 20 글자', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
-    b.push(box(dx + cw * 15, y1 - 12, cw * 3, 24, { fill: 'var(--s3)', op: 0.45, stroke: 'var(--ink2)', sw: 1.1, rx: 3 }));
-    b.push(txt(dx + cw * 16.5, y1 + 5, 'PAM', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
-    b.push(txt(dx + cw * 18.5, y1 - 20, 'Cas9 이 확인하는 짧은 서열', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    b.push(txt(dx - 10, y1 + 5, '5′', { anchor: 'end', cls: 'ink bold' }));
-    b.push(txt(dx - 10, y2 + 5, '3′', { anchor: 'end', cls: 'ink bold' }));
+    b.push(txt(dx + cw * 7.5, y2 + 5, '안내 RNA 와 같은 서열 (U 대신 T)', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    b.push(box(dx + cw * 15, y2 - 12, cw * 3, 24, { fill: 'var(--s3)', op: 0.45, stroke: 'var(--ink2)', sw: 1.1, rx: 3 }));
+    b.push(txt(dx + cw * 16.5, y2 + 5, 'PAM', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+    b.push(txt(dx + cw * n + 8, y2 + 1, 'Cas9 이 확인하는', { cls: 'ink2', size: 'sm' }));
+    b.push(txt(dx + cw * n + 8, y2 + 17, '짧은 서열', { cls: 'ink2', size: 'sm' }));
+    b.push(txt(dx - 10, y1 + 5, '3′', { anchor: 'end', cls: 'ink bold' }));
+    b.push(txt(dx - 10, y2 + 5, '5′', { anchor: 'end', cls: 'ink bold' }));
     b.push(box(dx, 74, cw * 15, 22, { fill: 'var(--s2)', op: 0.35, stroke: 'var(--ink2)', sw: 1.1, rx: 3 }));
     b.push(txt(dx + cw * 7.5, 90, '안내 RNA — 이 20 글자가 표적을 고른다', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     for (let i = 0; i < 15; i += 1) b.push(line([[dx + cw * i + cw / 2, 96], [dx + cw * i + cw / 2, y1 - 12]], { stroke: 'var(--s3)', sw: 1.6 }));

@@ -46,6 +46,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewModelScope
+import io.github.donggi.iroiroviewer.io.ApkFiles
 import io.github.donggi.iroiroviewer.io.ContentSniff
 import io.github.donggi.iroiroviewer.io.EditorApp
 import io.github.donggi.iroiroviewer.io.ExternalOpen
@@ -57,6 +58,7 @@ import io.github.donggi.iroiroviewer.io.MimeResolver
 import io.github.donggi.iroiroviewer.model.FileEntry
 import io.github.donggi.iroiroviewer.model.FileKind
 import io.github.donggi.iroiroviewer.model.IroDispatchers
+import io.github.donggi.iroiroviewer.model.PathNames
 import io.github.donggi.iroiroviewer.playback.FolderQueue
 import io.github.donggi.iroiroviewer.playback.PlaybackConnection
 import io.github.donggi.iroiroviewer.playback.PlayerSupport
@@ -89,7 +91,8 @@ import java.io.File
  * 받는 형식은 매니페스트의 필터가 정한다 — 그림·소리·영상·글의 계열 전체, 이 앱이 여는 문서·압축·만화의 형식,
  * `application/octet-stream`. **APK·글꼴은 받지 않는다** — 이 앱에 뷰어가 없고, 받으면 우리 '다른 앱으로 열기' 가 우리를 다시
  * 고르는 고리가 된다(`ExternalOpen` 의 KDoc '우리 자신'). 형식이 맞아도 뷰어가 없는 파일(이름이 알려 주는 종류가 기타)은 이름과
- * '다른 앱으로 열기' 를 보인다.
+ * '다른 앱으로 열기' 를 보인다. **그래도 APK 가 오면 열지 않는다**([refusalOf]) — 필터는 이름을 가리킨 인텐트에 듣지 않고, 이름을 바꾼
+ * APK 는 `octet-stream`·문서·그림의 형식으로 온다. 이름과 내용으로 보고 '다른 앱이 보낸 설치 파일은 열지 않습니다' 만 보인다.
  *
  * **내보낸 액티비티라 인텐트의 모든 것이 남이 적은 값이다.** 받는 것은 데이터 URI(또는 공유의 스트림)와 형식뿐이고, extras 를
  * ViewModel 의 저장 상태로 넘기지 않는다([withoutIntentArgs]).
@@ -198,6 +201,19 @@ internal class IncomingRequest(val uri: Uri, val type: String?) {
         }
     }
 }
+
+/**
+ * 받은 파일을 **열지 않는 까닭** — 설치 파일(APK — 이름이든 내용이든, `ApkFiles`)이면 그 문장, 아니면 null(연다). 판단만(JVM 시험).
+ *
+ * 다른 앱이 넘긴 APK 를 이 앱이 '다른 앱으로 열기' 로 설치 관리자에 넘기면 설치 관리자는 그것을 **이 앱이 보낸 것**으로 받는다 — 권한 없는
+ * 앱이 이 앱의 설치 권한과 '출처를 알 수 없는 앱' 허용을 빌려 쓴다(2026-10-16 보안 점검). 안드로이드 12 는 이름을 가리킨 인텐트에 필터를
+ * 보지 않으므로 필터에 APK 형식을 적지 않은 것으로는 막지 못한다. 그래서 받은 것을 **어느 화면으로도 보내지 않는다** — 이름을 바꾼 APK 가
+ * 다른 갈래(뷰어의 실패 화면·'보여 줄 화면이 없다'·재생기·편집기)로 빠져 '다른 앱으로 열기'·공유에 닿는 길이 함께 막힌다. 파일 목록에서
+ * 사용자가 고른 APK 는 이 길을 지나지 않는다. 디스크를 읽는다(입출력 스레드).
+ */
+@StringRes
+internal fun refusalOf(file: File): Int? =
+    if (ApkFiles.refusesHandOff(received = true) { ApkFiles.isApk(file) }) R.string.open_refused_apk else null
 
 /**
  * 받은 파일을 어느 화면이 여는가. 파일 목록의 누름(`feature:browser` 의 `TapRoute`)과 같은 표다 — 그쪽은 그 모듈 안의 것이라 여기
@@ -326,6 +342,12 @@ internal class OpenViewModel(app: Application, private val saved: SavedStateHand
         restored()?.let { r ->
             if (withContext(IroDispatchers.io) { IncomingFiles.stillUsable(app, r.path, r.copy) }) {
                 if (r.copy) copyPath = r.path
+                // 되살린 경로도 설치 파일인지 다시 본다 — 그 사이에 제자리의 파일이 바뀌었을 수 있다.
+                val refusal = withContext(IroDispatchers.io) { refusalOf(File(r.path)) }
+                if (refusal != null) {
+                    refuse(refusal)
+                    return
+                }
                 _state.value = r
                 return
             }
@@ -362,6 +384,12 @@ internal class OpenViewModel(app: Application, private val saved: SavedStateHand
             is IncomingFiles.Outcome.Failed -> _state.value = State.Failed(IncomingFiles.messageOf(outcome.failure))
             is IncomingFiles.Outcome.Ok -> {
                 val path = outcome.received.path
+                // **설치 파일은 열지 않는다**([refusalOf]) — 어느 화면으로도 보내지 않으므로 그 뒤의 '다른 앱으로 열기'·공유가 하나도 없다.
+                val refusal = withContext(IroDispatchers.io) { refusalOf(File(path)) }
+                if (refusal != null) {
+                    refuse(refusal)
+                    return
+                }
                 val route = withContext(IroDispatchers.io) { IncomingRoute.of(File(path)) }
                 Iro.d { "받았다: ${outcome.received.javaClass.simpleName} → $route" }
                 val ready = State.Ready(path, outcome.received is IncomingFiles.Received.Copied, route)
@@ -398,6 +426,15 @@ internal class OpenViewModel(app: Application, private val saved: SavedStateHand
     override fun onCleared() {
         // 다 본 사본을 남기지 않는다 — 메일의 명세서 같은 첨부가 캐시에 쌓이지 않게. 화면이 끝날 때만 불린다(회전은 아니다).
         discardCopy()
+    }
+
+    /** 받은 것을 열지 않는다 — 사본은 곧바로 지우고 되살릴 경로도 남기지 않는다. */
+    private fun refuse(@StringRes message: Int) {
+        discardCopy()
+        saved.remove<String>(KEY_PATH)
+        saved.remove<Boolean>(KEY_COPY)
+        saved.remove<String>(KEY_ROUTE)
+        _state.value = State.Failed(message)
     }
 
     private fun discardCopy() {
@@ -532,7 +569,7 @@ private fun ReceivingScreen(s: OpenViewModel.State.Receiving, onCancel: () -> Un
 private fun NoViewerScreen(path: String, onClose: () -> Unit) {
     val context = LocalContext.current
     var notice by remember { mutableStateOf<Int?>(null) }
-    MessageScreen(name = File(path).name, message = stringResource(R.string.open_no_viewer), onClose = onClose) {
+    MessageScreen(name = PathNames.forDisplay(File(path).name), message = stringResource(R.string.open_no_viewer), onClose = onClose) {
         Button(onClick = { notice = ExternalOpen.messageOf(ExternalOpen.open(context, path, ExternalOpen.Mode.CHOOSE)) }) {
             Text(stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with))
         }

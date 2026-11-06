@@ -431,7 +431,7 @@ add((() => {
 
 /* 14-4. 바이러스의 크기와 구조 */
 add((() => {
-    const W = 640, H = 300;
+    const W = 640, H = 306;   // 맨 아래 굵은 줄(y 294)이 화폭 끝에 붙지 않게 6px 더 둔다
     const b = [];
     // 왼쪽: 구조
     b.push(txt(30, 30, '구조 — 세포에 있는 것 가운데 무엇이 없는지를 보라', { cls: 'ink2', size: 'sm' }));
@@ -466,12 +466,12 @@ add((() => {
     b.push(txt(bx - 10, by1 + 4, '작게', { anchor: 'end', cls: 'ink2', size: 'sm' }));
     b.push(txt(330, 44, '세로 눈금은 한 칸이 10배인 로그 눈금이다', { cls: 'ink2', size: 'sm' }));
     b.push(txt(330, 276, '바이러스는 세균보다 열 배 작고 리보솜보다 몇 배 클 뿐이다.', { cls: 'ink2', size: 'sm' }));
-    b.push(txt(330, 294, '이 크기에는 리보솜도 대사 효소도 담을 자리가 없다.', { cls: 'ink bold', size: 'sm' }));
+    b.push(txt(330, 294, '그 안에는 리보솜도 대사 효소도 없다. 숙주의 것을 쓴다.', { cls: 'ink bold', size: 'sm' }));
     return {
         name: 'bio-org-virus-structure',
         svg: svg({
             width: W, height: H, title: '바이러스의 구조와 크기',
-            desc: '유전체와 캡시드, 때로는 외피가 전부다. 크기 사다리에서 보듯 리보솜을 담을 공간조차 없으므로 숙주 세포 밖에서는 증식할 수 없다',
+            desc: '유전체와 캡시드, 때로는 외피가 전부다. 리보솜도 대사 효소도 없으므로 숙주 세포 밖에서는 증식할 수 없다',
             body: b.join(''),
         }),
     };
@@ -1017,7 +1017,7 @@ add((() => {
         ['같은 곡선을 두 지점에서 읽는다.', 'ink bold'],
         ['폐 13.3 kPa → 0.98', 'ink2'],
         ['안정 시 조직 5.3 kPa → 0.76', 'ink2'],
-        ['차이는 0.21. 실은 것의 21% 만', 'ink'],
+        ['차이는 0.22. 실은 것의 22% 만', 'ink'],
         ['내려놓고 돌아온다.', 'ink'],
         ['', 'ink2'],
         ['운동 중 조직은 2.7 kPa 로 내려가고,', 'ink2'],
@@ -1065,12 +1065,13 @@ add((() => {
         }
         return s.join('');
     };
+    // 근절 길이를 화소로 비례시킨다: 2.2 µm = 280, 1.8 µm = 280 × 1.8 / 2.2 ≈ 229.
     b.push(sarco(46, 106, 280));
-    b.push(sarco(46, 196, 200));
+    b.push(sarco(46, 196, 229));
     b.push(txt(46, 76, 'A. 이완 — 근절 2.2 µm', { cls: 'ink bold', size: 'sm' }));
     b.push(txt(46, 166, 'B. 수축 — 근절 1.8 µm', { cls: 'ink bold', size: 'sm' }));
     b.push(txt(340, 111, '겹침이 좁다', { cls: 'ink2', size: 'sm' }));
-    b.push(txt(260, 201, '겹침이 넓다', { cls: 'ink2', size: 'sm' }));
+    b.push(txt(289, 201, '겹침이 넓다', { cls: 'ink2', size: 'sm' }));
     b.push(legend(40, 250, [{ slot: 1, name: '액틴 (가는 필라멘트)' }]));
     b.push(legend(206, 250, [{ slot: 2, name: '미오신 (굵은 필라멘트)' }]));
     b.push(txt(40, 272, '두 필라멘트의 길이는 A 와 B 에서 똑같다. 변하는 것은 겹치는 정도뿐이다', { cls: 'ink', size: 'sm' }));
@@ -1302,10 +1303,10 @@ add((() => {
     b.push(txt(548, 100, '판정 규칙', { cls: 'ink bold', size: 'sm' }));
     b.push(txt(548, 122, '상대를 없앴을 때', { cls: 'ink2', size: 'sm' }));
     b.push(txt(548, 138, '넓어지면 경쟁이,', { cls: 'ink2', size: 'sm' }));
-    b.push(txt(548, 154, '그대로면 물리적', { cls: 'ink2', size: 'sm' }));
-    b.push(txt(548, 170, '조건이 정한', { cls: 'ink2', size: 'sm' }));
-    b.push(txt(548, 186, '경계다.', { cls: 'ink2', size: 'sm' }));
-    b.push(txt(30, 26, '실현 지위는 언제나 기본 지위의 부분집합이다. 두 지위의 차이를 만든 것이 무엇인지가 질문이다', { cls: 'ink2', size: 'sm' }));
+    b.push(txt(548, 154, '그대로면 다른 요인,', { cls: 'ink2', size: 'sm' }));
+    b.push(txt(548, 170, '흔히 물리적 조건이', { cls: 'ink2', size: 'sm' }));
+    b.push(txt(548, 186, '정한 경계다.', { cls: 'ink2', size: 'sm' }));
+    b.push(txt(30, 26, '실현 지위는 대개 기본 지위의 부분집합이다. 두 지위의 차이를 만든 것이 무엇인지가 질문이다', { cls: 'ink2', size: 'sm' }));
     b.push(txt(30, 300, 'A 의 아래쪽 경계 — B 를 없애면 A 가 아래로 퍼졌다. 경쟁이 정한 경계다', { cls: 'ink', size: 'sm' }));
     b.push(txt(30, 320, 'B 의 위쪽 경계 — A 를 없애도 B 는 올라가지 않았다. 건조를 견디지 못하는 것이다', { cls: 'ink', size: 'sm' }));
     return {

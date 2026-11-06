@@ -648,7 +648,7 @@ add((() => {
     g.push(txt(619, 168, '같다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
     g.push(ln([[24, 226], [W - 24, 226]], { stroke: CG, sw: 1 }));
-    g.push(txt(24, 250, '② 옆에 누가 앉았는지만 따지면 넷이 모두 같다. 순환 이동 n 가지가 한 배열로 가므로 사상이 n 대 1 이다', { cls: 'ink2', size: 'sm' }));
+    g.push(txt(24, 250, '② 왼쪽·오른쪽 이웃만 따지면 넷이 모두 같다. 순환 이동 n 가지가 한 배열로 가므로 사상이 n 대 1 이다', { cls: 'ink2', size: 'sm' }));
     g.push(txt(24, 274, '③ 그래서 원탁 배열은 n! / n = (n−1)! 개다. n = 4 이면 4! / 4 = 6 개의 배열이 있다', { cls: 'ink bold', size: 'sm' }));
     return {
         name: 'mcs-c-round-table',
@@ -719,9 +719,9 @@ add((() => {
     g.push(txt(cx, 78, '수학 60', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     g.push(txt(cx - 58, 240, '전산 200', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     g.push(txt(cx + 58, 240, '물리 40', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
-    g.push(txt(cx - 30, 160, '6', { anchor: 'middle', cls: 'ink', size: 'sm' }));
-    g.push(txt(cx + 30, 160, '5', { anchor: 'middle', cls: 'ink', size: 'sm' }));
-    g.push(txt(cx, 216, '13', { anchor: 'middle', cls: 'ink', size: 'sm' }));
+    g.push(txt(cx - 30, 160, '4', { anchor: 'middle', cls: 'ink', size: 'sm' }));
+    g.push(txt(cx + 30, 160, '3', { anchor: 'middle', cls: 'ink', size: 'sm' }));
+    g.push(txt(cx, 216, '11', { anchor: 'middle', cls: 'ink', size: 'sm' }));
     g.push(txt(cx, 184, '2', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
 
     const px0 = 400, pw = 376;

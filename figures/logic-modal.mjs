@@ -141,7 +141,7 @@ add((() => {
         name: 'log-p-frame-eval',
         svg: svg({
             width: W, height: H,
-            title: '크립케 모형 하나에서 상자와 마름모의 값을 실제로 계산한다',
+            title: '크립키 모형 하나에서 상자와 마름모의 값을 실제로 계산한다',
             desc: '네 세계와 네 화살표로 된 모형에서 P, ◇P, □P, □Q, □□P 의 값을 첫 세계에서 하나씩 따진다. 막다른 세계에서는 □ 가 공허하게 참이 된다',
             body: g.join(''),
         }),
@@ -243,7 +243,7 @@ add((() => {
         g.push(ctxt(562, y, e, { col: CI, bold: true }));
     });
     g.push(ctxt(538, 306, 'S5 에서 서로 다른 양상은 셋뿐이다 — 없음 · □ · ◇', { col: C1, size: 'sm', bold: true }));
-    g.push(ctxt(538, 328, 'S4 에서는 열넷이라고 알려져 있다', { col: CK, size: 'sm' }));
+    g.push(ctxt(538, 328, 'S4 에서는 일곱 — 부정까지 세면 열넷이다', { col: CK, size: 'sm' }));
 
     /* ---- 아래 메모 ---- */
     g.push(ln([[20, 384], [880, 384]], { stroke: CG, sw: 1 }));

@@ -136,6 +136,8 @@ class HttpFetcherTest {
         ).use { r ->
             assertEquals(200, r.code)
             assertEquals("http://127.0.0.1:${origin.port}/final", r.url)
+            // 넘겨주기 수 — 열쇠를 받지 못한 HLS 의 실패 글에 '넘겨주기 n번' 으로 싣는다.
+            assertEquals(2, r.redirects)
             assertEquals("done", r.body.readBytes().decodeToString())
         }
         assertEquals(listOf("GET /r1 HTTP/1.1", "GET /r2 HTTP/1.1", "GET /final HTTP/1.1"), origin.startLines.toList())
@@ -162,6 +164,7 @@ class HttpFetcherTest {
         val origin = keep(FakeOrigin())
         HttpFetcher(DIRECT).get("http://127.0.0.1:${origin.port}/missing").use { r ->
             assertEquals(404, r.code)
+            assertEquals(0, r.redirects)
             assertEquals("nope", r.body.readBytes().decodeToString())
         }
     }

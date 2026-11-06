@@ -304,7 +304,7 @@ export default [
                 txt(140, 240, '말하는 때', { anchor: 'middle', cls: 'ink2', size: 'sm' }),
                 txt(360, 240, '절의 일', { anchor: 'middle', cls: 'f2', size: 'sm' }),
                 txt(540, 240, '주절의 일', { anchor: 'middle', cls: 'f1', size: 'sm' }),
-                txt(40, 334, '위는 주절이 지난 일이고 아래는 앞일이다. 절 안의 꼴은 말하는 때와 무관하게 정해진다', {}),
+                txt(40, 334, '위는 주절이 지난 일이고 아래는 앞일이다. 두 줄 모두 절 안의 꼴을 주절이 정했다', {}),
             ),
         }),
     },

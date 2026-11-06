@@ -669,7 +669,7 @@ add((() => {
         svg: svg({
             width: W, height: H,
             title: '파스칼 삼각형과 이항계수',
-            desc: '각 수는 바로 위 두 수의 합이며, n 번째 줄이 (a+b)의 n 제곱을 전개한 계수와 같다',
+            desc: '각 수는 바로 위 두 수의 합이며, 맨 윗줄을 0 번째로 세면 n 번째 줄이 (a+b)의 n 제곱을 전개한 계수와 같다',
             body: BG + g.join(''),
         }),
     };
@@ -810,7 +810,8 @@ add((() => {
     g.push(arw(360, 228, 448, 210, { cls: 's2', width: 1.4 }));
     g.push(arw(360, 242, 448, 266, { cls: 'ark', width: 1.4 }));
     g.push(txt(186, 88, '1%', { cls: 'ink2', size: 'sm' }));
-    g.push(txt(186, 208, '99%', { cls: 'ink2', size: 'sm' }));
+    // 아래 갈래 선이 (186, 208) 의 % 를 지나가서 선 왼쪽으로 비켰다.
+    g.push(txt(188, 206, '99%', { anchor: 'end', cls: 'ink2', size: 'sm' }));
     g.push(txt(392, 36, '99%', { cls: 'ink2', size: 'sm' }));
     g.push(txt(396, 104, '1%', { cls: 'ink2', size: 'sm' }));
     g.push(txt(392, 198, '5%', { cls: 'ink2', size: 'sm' }));
@@ -820,7 +821,7 @@ add((() => {
     g.push(txt(612, 136, '모두', { cls: 'ink2', size: 'sm' }));
     g.push(txt(612, 158, '594명', { cls: 'ink bold' }));
     g.push(txt(360, 320, '양성 594명 가운데 실제로 병이 있는 사람은 99명뿐이다.  99 ÷ 594 ≈ 0.17', { anchor: 'middle', cls: 'ink' }));
-    g.push(txt(360, 342, '검사가 99% 맞는데도 양성의 대부분이 건강한 사람인 이유는 건강한 사람이 훨씬 많기 때문이다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(360, 342, '환자의 99%를 잡아내는데도 양성의 대부분이 건강한 사람인 것은 건강한 사람이 훨씬 많기 때문이다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     return {
         name: 'math-int-bayes-tree',
         svg: svg({
