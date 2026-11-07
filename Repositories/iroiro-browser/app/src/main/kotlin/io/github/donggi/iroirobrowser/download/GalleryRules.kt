@@ -8,17 +8,16 @@ import io.github.donggi.iroirobrowser.core.sites.Site
 import io.github.donggi.iroirobrowser.core.sites.SiteException
 import io.github.donggi.iroirobrowser.core.sites.SiteHttpException
 import io.github.donggi.iroirobrowser.core.sites.SiteTarget
-import io.github.donggi.iroirobrowser.download.TorrentTexts.Part
+import io.github.donggi.iroirobrowser.download.TextParts.Part
 import io.github.donggi.iroirobrowser.proxy.NetErrors
 import java.io.IOException
 
 /**
  * 갤러리 받기(pixiv 작품·작가, hitomi.la 갤러리 — [DownloadCenter.Kind.SET])의 **판단** — 화면·MediaStore·망에 묶이지 않은 것만 모았다(기기 없이
- * 시험한다 — `GalleryRulesTest`). 사용자 결정(2026-10-11): 'pixiv, hitomi 기능을 브라우저에 통합' — 데스크톱 다운로더(iroiro-downloader)에서 옮겼다.
- * 사이트를 알아보고 답을 읽는 것은 `:core` 의 `sites`(다른 갈래가 짓는다), 받기는 [DownloadCenter], 묻기는 [GalleryPrompt] 다.
+ * 시험한다 — `GalleryRulesTest`). 사이트를 알아보고 답을 읽는 것은 `:core` 의 `sites`, 받기는 [DownloadCenter], 묻기는 [GalleryPrompt] 다.
  *
  * 공용 '내려받기' 아래의 자리, 목록·알림의 진행 글, 이어받을 자리, 실패를 건너뛸지 멈출지, 까닭의 글, 같은 것을 다시 받으려 할 때의 판단. 글은
- * 자원 번호와 인자([Part] — 토렌트의 글이 쓰는 그 꼴)로만 고른다 — 글로 짓는 것은 부르는 쪽([TorrentTexts.text])이다.
+ * 자원 번호와 인자([Part])로만 고른다 — 글로 짓는 것은 부르는 쪽([TextParts.text])이다.
  */
 internal object GalleryRules {
 
@@ -34,7 +33,7 @@ internal object GalleryRules {
      */
     fun relativePath(folder: List<String>): String {
         val parts = folder.filter { it.isNotBlank() }.take(MAX_DEPTH).map { SafeFileName.clean(it) }
-        return (listOf(TorrentRules.DOWNLOAD_DIR) + parts).joinToString("/") + "/"
+        return (listOf(TextParts.DOWNLOAD_DIR) + parts).joinToString("/") + "/"
     }
 
     // ── 진행의 글 ────────────────────────────────────────────────────────────────────────────────────────

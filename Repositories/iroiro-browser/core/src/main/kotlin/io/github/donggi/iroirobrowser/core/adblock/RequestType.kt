@@ -65,7 +65,7 @@ object RequestType {
             "css" -> STYLESHEET
             "png", "jpg", "jpeg", "gif", "webp", "svg", "ico", "avif", "bmp" -> IMAGE
             "woff", "woff2", "ttf", "otf", "eot" -> FONT
-            // hls.js·dash.js 는 조각을 XHR 로 받지만 미디어로 본다 — 그 주소 자체가 영상·소리라 `$media` 규칙이 노린 것이다(앞 판과 같다).
+            // hls.js·dash.js 는 조각을 XHR 로 받지만 미디어로 본다 — 그 주소 자체가 영상·소리라 `$media` 규칙이 노린 것이다.
             "mp4", "webm", "m3u8", "mpd", "ts", "m4s", "mp3", "aac", "ogg", "oga", "wav", "m4a", "flac" -> MEDIA
             "html", "htm" -> SUBDOCUMENT or XHR
             else -> SCRIPT or XHR or FONT or MEDIA or OTHER

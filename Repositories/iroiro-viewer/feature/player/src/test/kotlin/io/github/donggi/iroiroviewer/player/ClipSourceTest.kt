@@ -8,8 +8,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * 구간 저장·소리만 저장을 거절할 자리 — 앱 캐시의 공유 폴더 아래는 **모두**다. 다른 앱이 넘긴 사본(`share/inbox`)만
- * 거절해 그 밖의 사본(그때의 네트워크 저장소 사본 `share/remote`)이 그 길로 빠졌고, '저장했습니다' 가 뜬 파일은 캐시에 남았다.
+ * 구간 저장·소리만 저장을 거절할 자리 — 앱 캐시의 공유 폴더 아래는 다른 앱이 넘긴 사본(`share/inbox`)만이
+ * 아니라 **모두**다 — 그 곁에 저장하면 '저장했습니다' 가 떠도 파일은 사용자가 찾아갈 수 없는 캐시에 남는다.
  */
 class ClipSourceTest {
 

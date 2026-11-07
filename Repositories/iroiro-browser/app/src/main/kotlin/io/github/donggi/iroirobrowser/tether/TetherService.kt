@@ -36,29 +36,26 @@ import io.github.donggi.iroirobrowser.tether.core.ThreadBudget
 
 /**
  * 테더의 포그라운드 서비스(`specialUse`) — **`:tether` 프로세스**에서 돈다(브라우저의 WebView·중계·프록시 계정이 올라오지 않는 프로세스 —
- * WebApp.onCreate·CLAUDE.md '테더링'). **떠 있는 것이 곧 테더링이 켜진 것이다** — 켜기·끄기는 하나다(사용자 결정 2026-10-10: '서버 3종과
- * 핫스팟의 시작/종료를 통합 … 셀룰러 데이터만으로 모든 기기에서 인터넷을 사용하도록 하기 위하여 만든 앱'). 시작 요청([start])이 오면 서버
- * 셋과 Wi-Fi Direct 핫스팟을 함께 세우고, 멈추면([stop] — 서비스를 멈춘다) [onDestroy] 가 함께 내린다:
+ * WebApp.onCreate·CLAUDE.md '테더링'). **떠 있는 것이 곧 테더링이 켜진 것이다** — 켜기·끄기는 하나다(사용자 결정). 시작 요청([start])이
+ * 오면 서버 셋과 Wi-Fi Direct 핫스팟을 함께 세우고, 멈추면([stop] — 서비스를 멈춘다) [onDestroy] 가 함께 내린다:
  *
  *  - SOCKS5 `0.0.0.0:1080` — PC 의 tun2proxy. **1080 하나** — 차 있으면 옮기지 않고 까닭을 보인다(PC 의 런처가 1080 만 쓴다)
- *  - HTTP 프록시 `0.0.0.0:8282` — PC 의 `HTTP_PROXY`. 차 있으면 8283…8291 로 옮겨 선다(사용자 결정 2026-10-10)
+ *  - HTTP 프록시 `0.0.0.0:8282` — PC 의 `HTTP_PROXY`. 차 있으면 8283…8291 로 옮겨 선다(사용자 결정)
  *  - 파일 서버 `0.0.0.0:8080` — 차 있으면 8081…8089. 공유 폴더를 고르지 않아도 뜬다(브라우저에서 '폴더를 고르세요' 를 보는 편이 아무 반응이
  *    없는 것보다 알기 쉽다)
  *
  * 세운 포트(옮겨 섰으면 그 포트)와 실패의 까닭은 [TetherState] 에 둔다(화면·알림이 읽는다). 서버 하나가 서지 못해도 테더링은 켜진 채이고 그
  * 서버의 줄에 까닭이 보인다. 돌던 서버의 받기 고리가 죽으면 그 서버는 포트를 놓고 내려가며 여기서 상태를 내리고 다음 시작 요청에서 다시 세운다.
- * 자격 증명은 인텐트에 싣지 않고 이 서비스가 설정([TetherSettings])에서 읽는다(usb-tether 는 패스프레이즈를 인텐트의 덧붙임으로
- * 넘겼다).
+ * 자격 증명은 인텐트에 싣지 않고 이 서비스가 설정([TetherSettings])에서 읽는다.
  *
  * **핫스팟이 서지 못하거나(권한·위치·Wi-Fi 꺼짐·BUSY·15초 안에 서지 않음 …) 켜진 뒤 밖에서 내려가면(Wi-Fi 끄기·Channel 을 잃음) 테더링을
  * 통째로 끈다**([endTethering]) — 핫스팟 없는 서버는 어떤 손님도 받지 못한다(손님 거르기 — 우리 그룹이 없으면 NO_GROUP). 까닭은
  * [TetherState.hotspotProblem] 에 남아 화면이 보인다.
  *
  * 그룹의 소식은 Wi-Fi Direct 의 연결 변경 방송을 **동적으로**(내보내지 않게) 받아 안다 — 켜져 있던 우리 그룹이 밖에서 내려가면 조회로 확인하고
- * 테더링을 끈다(예전에는 '켜짐' 이 남았다). 손님 거르개는 그 그룹의 인터페이스 이름([TetherState.groupInterface])과 견줘 우리
- * 그룹이 떠 있을 때만 받는다.
+ * 테더링을 끈다. 손님 거르개는 그 그룹의 인터페이스 이름([TetherState.groupInterface])과 견줘 우리 그룹이 떠 있을 때만 받는다.
  *
- * `START_STICKY` 이고 매니페스트의 `stopWithTask="false"` 와 [onTaskRemoved] 로 최근 앱에서 밀어 없애도 다시 선다(usb-tether 의 동작 그대로).
+ * `START_STICKY` 이고 매니페스트의 `stopWithTask="false"` 와 [onTaskRemoved] 로 최근 앱에서 밀어 없애도 다시 선다.
  * 시스템이 다시 세우는 sticky 포그라운드 서비스는 안드로이드 12 의 '뒤에서 포그라운드 서비스 시작하기' 제한의 예외다. 시작 요청은 모두 '켜기'
  * 라 그 재시작도 핫스팟을 다시 켜 본다 — 이 앱의 화면이 앞에 없어 BUSY 면 떠 있는 우리 그룹을 다시 쓰고(같은 SSID·패스프레이즈), 그것도 없으면
  * 테더링을 끄고 까닭을 남긴다.
@@ -160,7 +157,7 @@ class TetherService : Service() {
 
     /**
      * 아직 뜨지 않은 서버를 띄운다. **실패한 서버는 들고 있지 않는다** — 들고 있으면 다음 시작 요청이 `== null` 만 보고 다시 해 보지 않아, 포트를
-     * 쥔 앱을 끈 뒤에도 사용자가 서비스를 껐다 켜야 했다(usb-tether 의 주석 그대로). 받기 고리가 죽어 내려간 서버([onServerDied])도 그렇게
+     * 쥔 앱을 끈 뒤에도 사용자가 서비스를 껐다 켜야 한다. 받기 고리가 죽어 내려간 서버([onServerDied])도 그렇게
      * 비워 두므로 여기서 다시 선다. 상태에 두는 포트는 실제로 묶인 것이다(HTTP·파일은 옮겨 섰을 수 있다).
      */
     private fun startServersIfNeeded() {
@@ -271,7 +268,7 @@ class TetherService : Service() {
     }
 
     /**
-     * 핫스팟이 서지 못했거나 켜진 뒤 내려갔다 — **테더링을 통째로 끈다**(사용자 결정 2026-10-10 — 켜기·끄기는 하나). 핫스팟 없는 서버는 어떤
+     * 핫스팟이 서지 못했거나 켜진 뒤 내려갔다 — **테더링을 통째로 끈다**(사용자 결정 — 켜기·끄기는 하나). 핫스팟 없는 서버는 어떤
      * 손님도 받지 못한다(손님 거르기 — 우리 그룹이 없으면 NO_GROUP). 까닭은 상태에 남겨 화면(상태 줄)이 보이고 토스트로도 알린다 —
      * [onDestroy] 는 그것을 지우지 않는다. 그 사이 새 시작 요청이 와 있으면 멈추지 않는다(`stopSelfResult(startId)` — 그 요청이 핫스팟을 다시
      * 켠다).
@@ -333,7 +330,7 @@ class TetherService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        // 최근 앱에서 밀어 없앨 때 다시 세운다(usb-tether 의 동작 그대로 — stopWithTask=false 와 함께). 켜져 있는 동안이면 이 시작 요청은
+        // 최근 앱에서 밀어 없앨 때 다시 세운다(stopWithTask=false 와 함께). 켜져 있는 동안이면 이 시작 요청은
         // 아무것도 바꾸지 않는다(이미 선 서버·핫스팟). 시스템이 막으면 그대로 둔다.
         try {
             startForegroundService(Intent(applicationContext, TetherService::class.java))
@@ -349,7 +346,7 @@ class TetherService : Service() {
         } catch (e: IllegalArgumentException) {
             // 걸지 못했다(onCreate 가 중간에 던짐) — 걷을 것이 없다.
         }
-        // 끄기는 핫스팟과 서버를 함께 내린다(켜기·끄기는 하나 — 사용자 결정 2026-10-10). 그룹을 내린 결과는 이 서비스가 내려간 뒤에 온다 —
+        // 끄기는 핫스팟과 서버를 함께 내린다(켜기·끄기는 하나). 그룹을 내린 결과는 이 서비스가 내려간 뒤에 온다 —
         // 내리지 못했고 그룹이 정말 남았으면(WifiHotspot.stop 이 조회로 확인한다) 까닭을 남긴다. 그 사이 테더링을 다시 켰으면 덮지 않는다.
         val hs = hotspot
         hotspot = null
@@ -422,8 +419,8 @@ class TetherService : Service() {
         private const val TAG = "WebTether"
 
         /**
-         * 알림 번호. 앱 전체(같은 UID 라 프로세스를 나눠도 한 공간)의 번호: 내려받기 진행 1, 녹화·가로채기 2, 토렌트 진행 3, **테더 4**, 끝난
-         * 내려받기 1000 + 번호(1 부터 늘어난다), 토렌트 소식 0x10000000 + (info-hash 를 흩은 24비트) — 겹치지 않는다(CLAUDE.md '테더링').
+         * 알림 번호. 앱 전체(같은 UID 라 프로세스를 나눠도 한 공간)의 번호: 내려받기 진행 1, 녹화·가로채기 2, **테더 4**, 뒤에서 재생 5, 끝난
+         * 내려받기 1000 + 번호(1 부터 늘어난다) — 겹치지 않는다(CLAUDE.md '알림 번호 — 앱 전체').
          */
         const val NOTICE_ID = 4
 

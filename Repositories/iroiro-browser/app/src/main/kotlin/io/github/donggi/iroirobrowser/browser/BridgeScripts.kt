@@ -8,12 +8,11 @@ package io.github.donggi.iroirobrowser.browser
  *   붙잡아 둔다(쪽은 흔히 누른 직후 주소를 거둔다 — 앱이 내려받기를 알아챌 때는 이미 늦다), 앱이 청하면 blob·녹화를 덩이로 넘긴다, 가로채기 중이면
  *   쪽의 갈고리([MSE_HOOK])에 통로를 건넨다, **요소 고르기**(요소 숨기기 — [PickProtocol])는 앱이 그 탭의 주 틀에 `pick-start` 를 보낼 때만 깨어
  *   누른 자리의 요소와 조상을 알리고 `pick-stop` 에 듣개·시계를 걷는다(그 전에는 함수만 있고 아무것도 걸지 않는다). 페이지의 DOM 은 바꾸지
- *   않는다 — 테두리는 앱이 덮개에 그리고, 누름은 앱이 가로채 페이지에 가지 않는다. 고르는 코드를 따로 넣지 않고 여기 두는 까닭은 지을 때
- *   실행 세계에 스크립트를 넣는 길을 문서 시작(`addJavaScriptOnEvent`)뿐이라고 보았기 때문이다 — 1.16 부터는 `JavaScriptReplyProxy.executeJavaScript`
- *   로 그 틀·세계에 그때 돌릴 수도 있다(2026-10-13 확인, 아직 쓰지 않는다).
+ *   않는다 — 테두리는 앱이 덮개에 그리고, 누름은 앱이 가로채 페이지에 가지 않는다. 고르는 코드는
+ *   `JavaScriptReplyProxy.executeJavaScript`(1.16 부터)로 그때 넣을 수도 있지만 여기 둔 채다.
  *   그리고 **재생 중인 미디어**(화면 켜 두기 — [ScreenWake])를 알린다 — 미디어 이벤트를 포착 단계로 보고 소리가 나는가·영상인가가 바뀔 때,
  *   재생 중이면 10초마다, 앱이 물으면(`media-ask`).
- * - [MSE_HOOK] — **가로채기를 고른 탭에만, 그동안만** 쪽의 세계에 문서 시작 때 넣는다(사용자 결정, 2026-10-05 — 쪽이 알아챌 수 있는 것은 이것뿐이다).
+ * - [MSE_HOOK] — **가로채기를 고른 탭에만, 그동안만** 쪽의 세계에 문서 시작 때 넣는다(사용자 결정 — 쪽이 알아챌 수 있는 것은 이것뿐이다).
  *   `SourceBuffer.appendBuffer` 를 감싸 재생기가 넣는 바이트를 **그 호출 안에서 복사해** 보낸다(브라우저가 곧 가져간다).
  * - [BLOB_HOOK] — blob 을 넘겨받지 못한 쪽(쪽의 CSP 가 `blob:` 읽기를 막거나 — 보이지 않는 세계에도 쪽의 CSP 가 걸린다 — 본문 밖의 고리를 누르고
  *   곧바로 주소를 거뒀다)에서 **사용자가 고르면 그 탭에만** 넣는다. `URL.createObjectURL` 이 받은 Blob 을 쥐어 두었다가 청하면 Blob 자체를 건넨다
@@ -520,6 +519,45 @@ object BridgeScripts {
     wrap(SB.prototype, 'changeType', function (args) { post({ op: 'type', sb: idOf(this), mime: String(args[0]) }); });
   }
   if (window.HTMLMediaElement) wrap(HTMLMediaElement.prototype, 'setMediaKeys', function (args) { if (args[0]) post({ op: 'drm' }); });
+  // AV1 은 '틀 수 없다' 고 답한다 — 안드로이드 13 이하의 MediaMuxer 는 AV1 을 담지 못해 영상·소리가 두 파일로 남는다(2026-11-07 유튜브 실험:
+  // AV1 + Opus). 재생기가 VP9·H.264 를 고르면 다시 인코딩 없이 한 파일이 된다. 가로채는 동안 이 쪽에만 걸린다.
+  function av1(t) {
+    var s = String(t).toLowerCase().split(' ').join('');
+    return s.indexOf('av01') >= 0 || s.indexOf('codecs="av1') >= 0 || s.indexOf('codecs=av1') >= 0;
+  }
+  ['MediaSource', 'ManagedMediaSource', 'WebKitMediaSource'].forEach(function (n) {
+    var C = window[n];
+    if (!C || typeof C.isTypeSupported !== 'function') return;
+    var f = C.isTypeSupported;
+    try {
+      Object.defineProperty(C, 'isTypeSupported', {
+        value: function (t) { return av1(t) ? false : f.apply(this, arguments); },
+        writable: true, configurable: true
+      });
+    } catch (e) {}
+  });
+  if (window.HTMLMediaElement) {
+    var cpt = HTMLMediaElement.prototype.canPlayType;
+    if (typeof cpt === 'function') {
+      try {
+        Object.defineProperty(HTMLMediaElement.prototype, 'canPlayType', {
+          value: function (t) { return av1(t) ? '' : cpt.apply(this, arguments); },
+          writable: true, configurable: true
+        });
+      } catch (e) {}
+    }
+  }
+  var mc = navigator.mediaCapabilities;
+  if (mc && typeof mc.decodingInfo === 'function') {
+    var di = mc.decodingInfo;
+    try {
+      mc.decodingInfo = function (cfg) {
+        var v = cfg && cfg.video;
+        if (v && av1(v.contentType)) return Promise.resolve({ supported: false, smooth: false, powerEfficient: false, configuration: cfg });
+        return di.apply(this, arguments);
+      };
+    } catch (e) {}
+  }
 })();
 """
     const val BLOB_HOOK = """

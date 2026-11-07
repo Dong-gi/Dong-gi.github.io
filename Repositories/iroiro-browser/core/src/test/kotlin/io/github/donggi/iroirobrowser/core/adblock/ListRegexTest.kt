@@ -13,7 +13,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * 목록의 정규식을 맞추는 엔진([ListRegex] — 2026-10-16 보안 점검, ReDoS). 뜻은 java.util.regex(이 JVM 의 것)와 같아야 하고, 시간은 주소 길이에
+ * 목록의 정규식을 맞추는 엔진([ListRegex] — ReDoS 막기). 뜻은 java.util.regex(이 JVM 의 것)와 같아야 하고, 시간은 주소 길이에
  * 비례해야 하며, 예산을 넘으면 멈춰야 한다.
  */
 class ListRegexTest {
@@ -129,7 +129,7 @@ class ListRegexTest {
             }
             repeat(25) {
                 val input = input(r)
-                // 기준(java.util.regex)이 되짚다 터지는 무늬는 견주지 않는다 — 그 시험 자체가 멈췄다(2026-10-16, 이 PC 에서 10분).
+                // 기준(java.util.regex)이 되짚다 터지는 무늬는 견주지 않는다 — 그 시험 자체가 멈춘다(이 PC 에서 10분).
                 val expected = try {
                     javaRegex.containsMatchIn(Bounded(input, JAVA_READS))
                 } catch (e: TooManyReads) {

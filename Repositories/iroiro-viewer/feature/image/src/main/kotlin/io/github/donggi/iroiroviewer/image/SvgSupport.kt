@@ -9,8 +9,8 @@ import java.io.InputStream
 import java.util.zip.GZIPInputStream
 
 /**
- * SVG 를 그리는 데 필요한 판단 — 플랫폼 디코더(`ImageDecoder`)에 SVG 가 없어서 그림 뷰어가 **잠긴 WebView** 로 그린다(사용자 요청,
- * 14단계 뒤). 여기는 `android.*` 를 쓰지 않는 판단만 둔다 — 파일 고르기·앞머리 읽기·뿌리 요소의 치수·우리가 쓰는 쪽(HTML).
+ * SVG 를 그리는 데 필요한 판단 — 플랫폼 디코더(`ImageDecoder`)에 SVG 가 없어서 그림 뷰어가 **잠긴 WebView** 로 그린다.
+ * 여기는 `android.*` 를 쓰지 않는 판단만 둔다 — 파일 고르기·앞머리 읽기·뿌리 요소의 치수·우리가 쓰는 쪽(HTML).
  *
  * ## 그리는 길
  *
@@ -60,8 +60,8 @@ internal object SvgSupport {
      * **XML 을 해석하지 않는다.** 시작 태그 하나의 속성 셋만 필요하고, 해석기를 세우면 외부 실체·DOCTYPE 을 따로 막아야 한다. 주석과
      * 처리 지시(`<?…?>`)·DOCTYPE 은 건너뛴다 — 그 안의 `<svg` 를 뿌리로 읽지 않으려는 것이다.
      *
-     * **앞머리를 한 번만 훑는다**(정규식도 쓰지 않는다). 처음 판은 속성을 정규식으로 찾아, 이름 글자만 6만 개 이어진 시작 태그 하나에
-     * 53초가 걸렸다(실패할 때마다 짧은 이름으로 되짚었다). 함정 표의 '되풀이될 수 있는 것의 탐색 범위를 묶어라' 다.
+     * **앞머리를 한 번만 훑는다**(정규식도 쓰지 않는다). 속성을 정규식으로 찾으면 이름 글자만 6만 개 이어진 시작 태그 하나에
+     * 53초가 걸린다(실패할 때마다 짧은 이름으로 되짚는다). 함정 표의 '되풀이될 수 있는 것의 탐색 범위를 묶어라' 다.
      */
     fun rootOf(head: String): Root? {
         var i = 0
@@ -96,7 +96,7 @@ internal object SvgSupport {
 
     /**
      * `<!DOCTYPE …>` 같은 선언의 끝 다음 자리. 내부 부분집합(`[…]`) 안의 `>` 와 따옴표 안의 글자(`"<svg …>"`)는 끝으로 보지 않는다.
-     * `]` 와 `>` 사이의 공백도 받는다 — XML 이 허락한다(`] >` 에서 처음 판이 멀쩡한 SVG 를 'SVG 가 아니다' 로 보냈다).
+     * `]` 와 `>` 사이의 공백도 받는다 — XML 이 허락한다.
      */
     private fun declarationEnd(s: String, from: Int): Int? {
         var quote = 0.toChar()
@@ -245,8 +245,8 @@ internal object SvgSupport {
     /** 그릴 준비가 된 SVG — 파일과 그것이 gzip 인지(`svgz`), 그리고 뿌리의 치수. **풀린 바이트를 들고 있지 않는다**([open]). */
     class Prepared(val file: File, val gzip: Boolean, val root: Root) {
         /**
-         * 내줄 바이트. WebView 의 다른 스레드에서 불린다. **그때 다시 열어 그때 푼다** — 처음 판은 풀린 바이트를 장마다 쥐어, 페이저가
-         * 미리 세우는 서너 장의 svgz 가 저마다 32 MiB 까지 들 수 있었다. 다시 열 때도 [MAX_BYTES] 로 묶는다 — 그새 파일이
+         * 내줄 바이트. WebView 의 다른 스레드에서 불린다. **그때 다시 열어 그때 푼다** — 풀린 바이트를 장마다 쥐면 페이저가
+         * 미리 세우는 서너 장의 svgz 가 저마다 32 MiB 까지 든다. 다시 열 때도 [MAX_BYTES] 로 묶는다 — 그새 파일이
          * 바뀌어도 상한을 건너뛰지 못하고, 넘으면 그림이 거기서 끊긴다. 파일이 사라졌으면 [IOException] 이다(부르는 쪽이 404 로 바꾼다).
          */
         fun open(): InputStream = LimitedInputStream(if (gzip) gunzip(file) else FileInputStream(file), MAX_BYTES, "svgBytes")
@@ -308,7 +308,7 @@ internal object SvgSupport {
 
     /**
      * gzip 으로 읽는 스트림. **머리를 읽다 던지면 파일을 닫는다** — `GZIPInputStream` 의 생성자가 머리를 읽으므로 두 바이트짜리 파일
-     * 하나가 서술자를 GC 까지 쥐게 할 수 있었다('생성자에서 자원을 열었으면 초기화 실패 시 스스로 닫아라').
+     * 하나가 서술자를 GC 까지 쥐게 할 수 있다('생성자에서 자원을 열었으면 초기화 실패 시 스스로 닫아라').
      */
     private fun gunzip(file: File): InputStream {
         val raw = FileInputStream(file)

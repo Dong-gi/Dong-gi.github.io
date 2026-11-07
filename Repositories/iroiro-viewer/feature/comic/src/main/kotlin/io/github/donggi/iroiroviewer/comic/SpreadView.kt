@@ -50,13 +50,13 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 /**
- * 두 쪽 펼침 하나(14단계). [left]·[right] 는 **화면의 왼쪽·오른쪽**이다(읽는 차례가 아니다 — `Spreads.visualOrder`).
+ * 두 쪽 펼침 하나. [left]·[right] 는 **화면의 왼쪽·오른쪽**이다(읽는 차례가 아니다 — `Spreads.visualOrder`).
  *
  * ## 두 모양을 오간다
  *
  * - 두 쪽이 다 정지 그림으로 뜨면 [ZoomableSpread] — 확대·이동·선명화가 한 장짜리와 같다.
  * - 하나라도 아직 뜨는 중이거나, 움직이거나(GIF·애니WebP), 못 열었으면 **나란히 놓기만** 한다. 움직이는 쪽을 확대하지
- *   않는 9단계의 결정(프레임마다 다시 합성하는 값이 재생을 끊는다)이 펼침에도 그대로 걸린다.
+ *   않는 결정(프레임마다 다시 합성하는 값이 재생을 끊는다)이 펼침에도 그대로 걸린다.
  *
  * 나란히 놓을 때 두 쪽을 **가운데(제본선) 쪽으로 붙인다.** 같은 크기의 두 쪽이면 [ZoomableSpread] 가 그리는 자리와
  * 같아서, 두 번째 쪽이 뜨며 모양이 바뀌는 순간 그림이 옮겨 가지 않는다.

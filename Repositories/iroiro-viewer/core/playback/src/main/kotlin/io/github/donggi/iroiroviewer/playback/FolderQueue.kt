@@ -13,8 +13,7 @@ import io.github.donggi.iroiroviewer.safety.PlaybackLimits
  * ## android.* 를 쓰지 않는다
  *
  * 목록을 고르는 일과 상한을 거는 일은 순수 계산이라 **JVM 시험으로 전부 박힌다.**
- * 플레이어를 만지는 일은 [PlaybackConnection] 이 한다. 9단계가 `ComicSource` 를 같은
- * 이유로 갈라 놓았고, 그 덕에 창 계산이 에뮬레이터 없이 시험됐다.
+ * 플레이어를 만지는 일은 [PlaybackConnection] 이 한다.
  *
  * ## '소리를 가진 미디어' 를 확장자로 센다
  *
@@ -57,7 +56,7 @@ object FolderQueue {
      *
      * [PlaybackLimits.MAX_QUEUE_ITEMS] 를 넘으면 **누른 항목이 가운데쯤 오도록** 창을
      * 잡는다. 앞에서부터 자르면 폴더 뒤쪽 파일을 눌렀을 때 그것이 큐에서 빠지고 **다른
-     * 파일이 재생된다** — 8단계가 '고른 것과 다른 것이 열린다' 로 치명 판정을 내린 형태다.
+     * 파일이 재생된다.**
      *
      * 창의 시작을 구하는 식에 주의한다. `count - MAX` 가 음수일 수 있으므로
      * `coerceIn(0, count - MAX)` 를 그대로 쓰면 **하한이 상한보다 커져 예외로 죽는다**
@@ -67,8 +66,8 @@ object FolderQueue {
         val playable = entries.filter(isPlayableRef)
         val at = startPath?.let { p -> playable.indexOfFirst { it.path == p } } ?: 0
         if (at < 0) {
-            // 누른 것이 큐에 들지 못했다(기기의 심볼릭 링크 같은 것). 큐의 처음을 틀면 **고른 것과 다른 것이 열린다** — 8단계가 치명으로
-            // 판정한 꼴이고, 예전에는 그렇게 했다. 누른 것이 소리·영상이면 그것 하나만 튼다(링크면 기기가 따라간다 — 다른
+            // 누른 것이 큐에 들지 못했다(기기의 심볼릭 링크 같은 것). 큐의 처음을 틀면 **고른 것과 다른 것이 열린다.**
+            // 누른 것이 소리·영상이면 그것 하나만 튼다(링크면 기기가 따라간다 — 다른
             // 뷰어도 누른 링크는 연다). 아니면(재생할 수 없는 것·목록에 없는 것) 아무것도 틀지 않는다 — 빈 계획이면 부르는 쪽이 재생 화면을
             // 열지 않는다(열면 앞의 큐가 보인다).
             val one = entries.firstOrNull { it.path == startPath }?.takeIf(::isMedia)
@@ -82,7 +81,7 @@ object FolderQueue {
         val lastStart = playable.size - max
         val from = (at - max / 4).coerceAtLeast(0).coerceAtMost(lastStart)
         // **`subList` 를 그대로 내보내지 않는다.** 원본을 들여다보는 뷰라 수명이 얽히고,
-        // 이 저장소는 같은 종류로 한 번 죽은 적이 있다(함정 표의 `SavedStateHandle`).
+        // 저장 상태에 넣으면 앱이 죽는다(함정 표의 `SavedStateHandle`).
         return Plan(ArrayList(playable.subList(from, from + max)), at - from)
     }
 

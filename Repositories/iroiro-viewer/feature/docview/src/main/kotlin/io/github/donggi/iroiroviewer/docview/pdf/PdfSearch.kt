@@ -6,7 +6,7 @@ package io.github.donggi.iroiroviewer.docview.pdf
  * ## 안드로이드 15(API 35) 이상에서만 있다
  *
  * 찾기는 플랫폼의 `PdfRenderer.Page.searchText`(API 35)가 한다. 그 아래 기기의 레거시 `PdfRenderer` 는 쪽의 글자를 주지
- * 않고, 글자 배치 엔진을 우리가 다시 만드는 일은 11단계가 미룬 그대로다(CLAUDE.md '11단계에서 미룬 것'). 그래서 화면은
+ * 않는다(글 고르기의 `PdfTextEngine` 위에 찾기를 세우지는 않았다). 그래서 화면은
  * API 35 아래에서 찾기 단추 자체를 **띄우지 않는다** — 누르면 '안 된다' 고 말하는 단추보다 없는 편이 정직하다.
  *
  * ## 좌표

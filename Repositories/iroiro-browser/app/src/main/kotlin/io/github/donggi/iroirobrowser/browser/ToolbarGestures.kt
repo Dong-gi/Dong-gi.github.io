@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import kotlin.math.abs
 
 /**
- * 막대(주소창 줄)의 몸짓 — **좌우로 밀면 앞·뒤 탭, 아래로 당기면 탭 목록**(사용자 요청, 2026-10-05). 크롬(`ToolbarSwipeHandler`)과
+ * 막대(주소창 줄)의 몸짓 — **좌우로 밀면 앞·뒤 탭, 아래로 당기면 탭 목록**. 크롬(`ToolbarSwipeHandler`)과
  * 파이어폭스(`ToolbarHorizontal/VerticalGesturesHandler`)가 같은 자리에서 하는 일을 따랐다(조사 — CLAUDE.md '탭·세션·막대의 몸짓').
  *
  * - 막대의 아이(주소창·단추)는 그대로 눌린다. 손가락이 움직여 **방향이 정해지는 순간에만** 몸짓을 가져온다 — 아이에게는 취소가 가므로 주소창이

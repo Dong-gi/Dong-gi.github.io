@@ -11,16 +11,16 @@ import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * 테더의 지금 상태 — **`:tether` 프로세스 안의 정적 필드**(usb-tether 의 TetherService 의 companion 과 같은 자리). 서비스가 쓰고 화면·타일·
+ * 테더의 지금 상태 — **`:tether` 프로세스 안의 정적 필드**. 서비스가 쓰고 화면·타일·
  * 트램폴린이 읽는다. 그래서 테더의 구성 요소는 매니페스트에서 모두 `android:process=":tether"` 다 — 다른 프로세스에서 읽으면 늘 처음 값이다(앱의
  * 시험 `TetherIsolationTest` 가 매니페스트를 본다). 손님 거르개([io.github.donggi.iroirobrowser.tether.core.PeerFilter])도 여기의
  * [groupInterface] 를 읽는다.
  *
- * 켜기·끄기는 하나다(사용자 결정 2026-10-10) — 화면의 단추·타일·트램폴린은 [tetheringOn] 하나로 켜고 끈다. 핫스팟이 서지 못하거나 내려가면
+ * 켜기·끄기는 하나다(사용자 결정) — 화면의 단추·타일·트램폴린은 [tetheringOn] 하나로 켜고 끈다. 핫스팟이 서지 못하거나 내려가면
  * 서비스가 테더링을 통째로 끄고 그 까닭([hotspotProblem])은 여기 남아 화면이 보인다. 사용자가 끄면 [clearProblem] 이 지운다.
  *
  * 바뀌면 메인 스레드에서 듣개를 부른다 — [CHANGE_WINDOW_MS] 안의 바뀜은 한 번으로 합친다([ChangeCoalescer]). 브로드캐스트를 쓰지
- * 않는다 — 한 프로세스 안이라 필요 없고, 내보낸 수신기의 틈을 만들지 않는다(usb-tether 는 타일이 패키지 브로드캐스트를 받았다). 연결마다 바뀌는
+ * 않는다 — 한 프로세스 안이라 필요 없고, 내보낸 수신기의 틈을 만들지 않는다. 연결마다 바뀌는
  * 수(주고받은 양·거절·상한)는 알리지 않는다 — 화면이 1초마다 읽는다.
  */
 internal object TetherState {
@@ -31,7 +31,7 @@ internal object TetherState {
 
     /**
      * 실제로 묶인 포트. 못 묶었으면 -1(그 까닭이 아래에). SOCKS5 는 1080 하나, HTTP 프록시·파일 서버는 기본 포트가 차 있으면 다음 포트로
-     * 옮겨 선다(사용자 결정 2026-10-10) — 화면·알림은 기본 상수가 아니라 이 값을 보인다.
+     * 옮겨 선다(사용자 결정) — 화면·알림은 기본 상수가 아니라 이 값을 보인다.
      */
     @Volatile
     var socksPort = -1
@@ -86,8 +86,7 @@ internal object TetherState {
     var hotspotDetail: String? = null
 
     /**
-     * 테더링이 켜져 있는가(핫스팟을 켜는 중 포함) — 화면의 단추·타일·트램폴린이 이것 하나로 켜고 끈다(사용자 결정 2026-10-10 — 서버 셋과
-     * 핫스팟의 켜기·끄기를 하나로). 판정은 [TetherTexts.isOn].
+     * 테더링이 켜져 있는가(핫스팟을 켜는 중 포함) — 화면의 단추·타일·트램폴린이 이것 하나로 켜고 끈다. 판정은 [TetherTexts.isOn].
      */
     val tetheringOn: Boolean
         get() = TetherTexts.isOn(serviceRunning, hotspotActive, hotspotStarting)

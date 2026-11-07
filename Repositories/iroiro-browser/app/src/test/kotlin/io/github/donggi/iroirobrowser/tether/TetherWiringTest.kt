@@ -9,9 +9,9 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * 독립 검토(2026-10-10)의 고침 가운데 **안드로이드에 기대어 JVM 에서 돌릴 수 없는 이음새**를 소스·자원으로 박는다(`TetherIsolationTest` 와 같은
+ * 테더의 **안드로이드에 기대어 JVM 에서 돌릴 수 없는 이음새**를 소스·자원으로 박는다(`TetherIsolationTest` 와 같은
  * 꼴). 판정 자체는 `:tether` 의 시험이 돌려 본다(PeerFilter·GroupWatch·ChangeCoalescer·PassphraseVault) — 여기서는 앱이 그것을 실제로 잇는지만
- * 본다. 같은 날 저녁의 사용자 결정(켜기·끄기를 하나로 — 핫스팟이 서지 못하거나 내려가면 테더링을 통째로 끈다, HTTP·파일 포트는 +1 씩, 타일의
+ * 본다. 사용자 결정(켜기·끄기를 하나로 — 핫스팟이 서지 못하거나 내려가면 테더링을 통째로 끈다, HTTP·파일 포트는 +1 씩, 타일의
  * 이름 '테더링')도 같은 꼴로 박는다. 기기에서 볼 것은 CLAUDE.md '테더링' 의 '확인한 것·확인하지 못한 것'.
  */
 class TetherWiringTest {
@@ -56,7 +56,7 @@ class TetherWiringTest {
         assertTrue(service.contains("IntentFilter(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)"))
         assertTrue(service.contains("registerReceiver(p2pReceiver, filter, RECEIVER_NOT_EXPORTED)"))
         assertTrue(service.contains("unregisterReceiver(p2pReceiver)"))
-        // 예전에는 initialize(…, null) 이라 Channel 을 잃어도 몰랐다.
+        // initialize(…, null) 이면 Channel 을 잃어도 모른다.
         val hotspot = code("WifiHotspot.kt")
         assertTrue(Regex("""initialize\(appContext, Looper\.getMainLooper\(\)\) \{\s*if \(!closed\) onChannelLost\(this\)""").containsMatchIn(hotspot), hotspot)
         assertFalse(hotspot.contains("Looper.getMainLooper(), null)"))
@@ -108,7 +108,7 @@ class TetherWiringTest {
 
     @Test
     fun 켜기_끄기는_단추_하나다() {
-        // 사용자 결정(2026-10-10) — '서버 3종과 핫스팟의 시작/종료를 통합'. 서버 단추와 핫스팟 단추가 '테더링 켜기·끄기' 하나가 되었다.
+        // 사용자 결정 — 서버 셋과 핫스팟의 켜기·끄기는 '테더링 켜기·끄기' 하나다.
         val strings = strings()
         for (gone in listOf("tether_server_start", "tether_server_stop", "tether_hotspot_start", "tether_hotspot_stop")) {
             assertFalse(gone in strings, "$gone 이 남았다")
@@ -170,7 +170,7 @@ class TetherWiringTest {
 
     @Test
     fun 포트_설명은_SOCKS5_고정과_HTTP_파일의_다음_포트를_적는다() {
-        // 사용자 결정(2026-10-10) — HTTP·파일은 차 있으면 다음 포트로(+1 씩 열 개), SOCKS5 는 1080 하나(PC 의 런처가 1080 만 쓴다).
+        // 사용자 결정 — HTTP·파일은 차 있으면 다음 포트로(+1 씩 열 개), SOCKS5 는 1080 하나(PC 의 런처가 1080 만 쓴다).
         val strings = strings()
         val note = strings.getValue("tether_server_note")
         assertTrue(note.contains("SOCKS5 는 1080 고정"), note)
@@ -198,7 +198,7 @@ class TetherWiringTest {
 
     @Test
     fun macOS_스크립트는_실행_권한_없이_받아도_sudo_로_다시_뜬다() {
-        // 'PC 연결 파일 받기' 의 zip 에 담는 사본(예전에는 저장소의 pc/ 에 있었다). zip 은 실행 비트를 싣지 못한다.
+        // 'PC 연결 파일 받기' 의 zip 에 담는 사본. zip 은 실행 비트를 싣지 못한다.
         val bytes = File("src/main/assets/setup/tether-pc/macos-wifi.sh").readBytes()
         val text = String(bytes, Charsets.UTF_8)
         assertTrue(text.contains("exec sudo /bin/bash \"\$0\" \"\$@\""), "실행 비트가 없으면 sudo \"\$0\" 은 '명령을 찾을 수 없다' 로 실패한다")

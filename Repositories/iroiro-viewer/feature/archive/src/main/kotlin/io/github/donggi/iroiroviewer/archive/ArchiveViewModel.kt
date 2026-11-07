@@ -261,7 +261,7 @@ class ArchiveViewModel : ViewModel() {
         val now = Opened(path, file.length(), file.lastModified())
         if (opened == now) return
         // 다른 파일이다. 앞 파일의 암호 창과 풀기 계획을 넘겨받지 않는다 — 이 ViewModel 은
-        // 액티비티에 묶여 파일을 바꿔도 같은 객체다(헤더가 잠긴 A 의 창이 B 위에 떴다).
+        // 액티비티에 묶여 파일을 바꿔도 같은 객체다(넘겨받으면 헤더가 잠긴 A 의 창이 B 위에 뜬다).
         _asking.value = null
         _plan.value = null
         opened = now

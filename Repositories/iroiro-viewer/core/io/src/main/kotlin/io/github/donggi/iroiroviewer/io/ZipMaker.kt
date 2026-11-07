@@ -21,7 +21,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
 /**
- * 고른 파일·폴더를 ZIP 하나로 묶는다(사용자 요청 'zip 만들기').
+ * 고른 파일·폴더를 ZIP 하나로 묶는다.
  *
  * ## 라이브러리를 늘리지 않는다
  *
@@ -51,7 +51,7 @@ import java.util.zip.ZipOutputStream
  * 다 쓰기 전에는 결과의 크기를 모른다(글은 줄고 영상은 그대로다). 미리 거절하지 않고, 쓰는 동안 [SPACE_CHECK_BYTES] 마다
  * 남은 공간을 보고 [SPACE_MARGIN_BYTES] 밑으로 내려가면 멈춘다 — 디스크를 0 까지 채우면 다른 앱과 시스템이 함께 넘어진다.
  *
- * ## 암호(2026-10-16)
+ * ## 암호
  *
  * 암호를 받으면 항목을 **WinZip AES-256(AE-2)** 으로 잠근다([AesZipWriter] — 플랫폼의 쓰개는 방식 99 를 쓰지 못한다). 훑기·거르기·임시본·
  * 끝에 이름 맡기·공간·취소·'읽다 실패하면 전부 버린다' 는 위와 같은 길이다. 다른 점 셋 — '저장' 항목도 **한 번만** 읽는다(AE-2 는 CRC 를 적지
@@ -62,7 +62,7 @@ object ZipMaker {
 
     /**
      * 담을 항목 수(폴더 포함)의 상한 — **이 앱이 다시 열 수 있는 수**다(`ParseLimits` 의 엔트리 상한, 압축 목록과 풀기가 쓴다).
-     * 처음에는 50만으로 두었는데, 그러면 사진 1만 2천 장을 묶은 ZIP 을 같은 앱이 '너무 크다' 로 열지 못했다.
+     * 더 크게 두면 묶은 ZIP 을 같은 앱이 '너무 크다' 로 열지 못한다.
      */
     val MAX_ENTRIES: Int = ParseLimits.DEFAULT.maxEntries
 
@@ -125,7 +125,7 @@ object ZipMaker {
      * 묶는다. 취소되면 임시본을 지우고 [FileOpEngine.Outcome.Cancelled] 를 돌려준다(던지지 않는다 — 큐의 경계가 여기다).
      *
      * @param sources 고른 것들. **같은 폴더 안의 것**이어야 한다(목록의 선택이 그렇다) — ZIP 안의 맨 위 이름이 그 이름들이다.
-     * @param password 암호. null 이거나 비었으면 암호 없이 묶는다(예전 그대로). 있으면 WinZip AES-256 으로 잠근다(머리말 '암호').
+     * @param password 암호. null 이거나 비었으면 암호 없이 묶는다. 있으면 WinZip AES-256 으로 잠근다(머리말 '암호').
      *   **열쇠의 바탕으로 옮기는 즉시 0 으로 덮는다** — 묶는 동안 배열에 남겨 두지 않는다(큐도 끝에 한 번 더 덮는다).
      */
     suspend fun make(
@@ -443,8 +443,8 @@ object ZipMaker {
     /**
      * 파일 항목. [measured] 가 있으면 '저장'(압축하지 않음)이고 그 크기·CRC 를 머리에 적는다. 없으면 압축이다.
      *
-     * **압축 수준을 항목마다 바꾸지 않는다.** 처음에는 이미 압축된 형식에 `setLevel(NO_COMPRESSION)` 을 걸었는데, 안드로이드
-     * 12 에뮬레이터에서 그 항목이 **풀리지 않았다**(`invalid stored block lengths` — 계측 시험이 잡았다). 하나의 `Deflater` 를
+     * **압축 수준을 항목마다 바꾸지 않는다.** 이미 압축된 형식에 `setLevel(NO_COMPRESSION)` 을 걸면 안드로이드
+     * 12 에뮬레이터에서 그 항목이 **풀리지 않는다**(`invalid stored block lengths` — 계측 시험이 잡았다). 하나의 `Deflater` 를
      * 돌려 쓰는 `ZipOutputStream` 에서 수준 바꾸기는 `deflateParams` 를 지나는데, 그 길이 이 판의 zlib 와 어긋나는 것으로 보인다
      * (원인은 확인하지 않았다). '저장' 은 그 길을 지나지 않는다.
      */

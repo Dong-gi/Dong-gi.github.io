@@ -199,8 +199,8 @@ class PdfDocument internal constructor(
     }
 
     /**
-     * 글 꺼내기를 연다. **실패하면 다시 열지 않는다**(취소는 빼고) — 예전에는 길게 누를 때마다 파일을 새로 열어 xref 를 다시
-     * 세웠고, 그때마다 앞 채널이 닫히지 않고 새었다.
+     * 글 꺼내기를 연다. **실패하면 다시 열지 않는다**(취소는 빼고) — 다시 열면 길게 누를 때마다 파일을 새로 열어 xref 를
+     * 다시 세운다.
      */
     private fun openText(check: () -> Unit): PdfTextEngine? {
         runCatching { textChannel?.close() }

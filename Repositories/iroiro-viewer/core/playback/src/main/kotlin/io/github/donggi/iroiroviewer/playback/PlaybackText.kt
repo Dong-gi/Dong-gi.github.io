@@ -6,16 +6,9 @@ import androidx.compose.ui.res.stringResource
 /**
  * 재생 상태를 **사람의 말로** 옮긴다.
  *
- * ## 왜 이 파일이 생겼는가
- *
- * 5단계는 이 문구를 `core:playback` 의 `strings.xml` 에 넣고, 화면은 `feature:browser`
- * 에 만들면서 **같은 문구 여덟 개를 `browser_playback_*` 이라는 이름으로 한 벌 더**
- * 두었다. 그래서 `core:playback` 쪽 여덟은 한 번도 쓰이지 않았고, 재생 화면
- * ([PlayerActivity])은 디코더가 죽어도 아무 말도 하지 않았다 — 문구가 자기 모듈에
- * 있는데도 그것을 읽는 코드가 다른 모듈에만 있었기 때문이다.
- *
  * **문구는 그것을 만들어 내는 타입 곁에 둔다.** [PlaybackFailure] 가 여기 있으므로
- * 문구도 여기다. 화면이 둘이든 셋이든 읽는 곳은 이 함수들 하나뿐이다.
+ * 문구도 여기다. 화면이 둘이든 셋이든 읽는 곳은 이 함수들 하나뿐이다 — 다른 모듈에
+ * 같은 문구를 한 벌 더 두면 한쪽만 고쳐지고 다른 쪽은 조용히 쓰이지 않는다.
  */
 
 /** 재생 실패를 사람의 말로. 코덱 이름을 함께 적어 '파일이 깨졌다' 는 오해를 막는다. */
@@ -134,7 +127,7 @@ fun spokenTime(ms: Long): String {
     return words.joinToString(" ")
 }
 
-/** 재생 막대의 이름 — 화면 낭독기가 슬라이더를 무엇이라 부를지(그 전에는 이름 없이 백분율만 읽혔다). */
+/** 재생 막대의 이름 — 화면 낭독기가 슬라이더를 무엇이라 부를지(없으면 이름 없이 백분율만 읽힌다). */
 @Composable
 fun seekBarLabel(): String = stringResource(R.string.playback_seekbar)
 
@@ -202,7 +195,7 @@ fun trackLabel(descriptor: TrackLabels.Descriptor, isText: Boolean): String {
     parts += head
     // 이름이 따로 있으면 언어를 뒤에 덧붙인다 — '감독 해설' 만으로는 무슨 말인지 모른다.
     // 다만 **이름이 이미 그 말을 하고 있으면 덧붙이지 않는다**: `한국어 더빙 · 한국어` 는
-    // 같은 말을 두 번 하는 것이고, 기기에서 실제로 그렇게 나왔다.
+    // 같은 말을 두 번 하는 것이다.
     if (descriptor.name != null && descriptor.languageCode != null) {
         val language = languageName(descriptor.languageCode)
         if (!descriptor.name.contains(language)) parts += language
@@ -229,8 +222,8 @@ private fun channelsLabel(count: Int): String = when (count) {
  *
  * **`Locale.getDefault()` 를 쓰지 않는다.** 그것은 *기기*의 언어이고 이 앱의 화면은
  * 언제나 한국어다(문자열 자원이 `values/` 하나뿐이다). 기기가 영어로 맞춰져 있으면
- * 나머지 줄은 한국어인데 이 한 조각만 `Korean`·`English` 로 나온다 — 에뮬레이터에서
- * 실제로 그렇게 나왔다. **읽는 사람이 보는 언어를 따라야 한다.**
+ * 나머지 줄은 한국어인데 이 한 조각만 `Korean`·`English` 로 나온다.
+ * **읽는 사람이 보는 언어를 따라야 한다.**
  */
 private fun languageName(code: String): String {
     val locale = java.util.Locale.forLanguageTag(code.replace('_', '-'))
@@ -287,7 +280,7 @@ fun pipFailedText(): String = stringResource(R.string.playback_pip_failed)
  *
  * PiP 창의 조작(`RemoteAction`)은 액티비티 콜백에서 만들어진다 — 컴포지션 밖이라
  * `stringResource` 를 부를 수 없다. 그렇다고 그 자리에 한국어를 적으면 같은 말이 두 벌이
- * 되고, 5단계가 그것으로 조용한 실패를 한 번 겪었다. **자원은 하나로 두고 읽는 길만 둘로 둔다.**
+ * 된다. **자원은 하나로 두고 읽는 길만 둘로 둔다.**
  */
 object PlaybackStrings {
     fun play(context: android.content.Context): String = context.getString(R.string.playback_play)

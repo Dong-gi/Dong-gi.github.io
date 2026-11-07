@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-/** 줄 끝 표시(T3)와 찾기 진행률(T2)의 순수한 부분. */
+/** 줄 끝 표시와 찾기 진행률의 순수한 부분. */
 class RowTextTest {
 
     private val colors = CodeColors(

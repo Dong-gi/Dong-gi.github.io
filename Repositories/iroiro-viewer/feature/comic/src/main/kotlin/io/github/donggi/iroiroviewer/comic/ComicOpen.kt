@@ -90,8 +90,7 @@ object ComicOpen {
         if (!withContext(IroDispatchers.io) { reachable(file) }) return@withContext Result.Failed(Kind.UNREADABLE)
 
         val result = try {
-            // **상한이 선언만 되고 아무 데서도 걸리지 않는 일**을 2단계 검토가 잡았다.
-            // 무한 루프형 DoS 는 크기 상한에 걸리지 않는다 — 아무것도 만들어 내지
+            // **시간 상한을 실제로 건다.** 무한 루프형 DoS 는 크기 상한에 걸리지 않는다 — 아무것도 만들어 내지
             // 않으면서 돌기 때문이다.
             withTimeout(limits.openTimeoutMs) {
                 runInterruptible { openArchive(file, windowCap, limits, password, onOpen) }
@@ -153,9 +152,9 @@ object ComicOpen {
         try {
             val pages = archivePagesOf(reader.entries)
             if (pages.isEmpty()) {
-                // **잠긴 그림이 있으면 '그림이 없다' 가 아니다.** 예전 조건은 '폴더 항목이 하나도
-                // 없고 전부 잠겼다' 였는데, 쪽을 폴더에 담은 CBZ(흔하다)는 폴더 항목 때문에
-                // '그림이 한 장도 없습니다' 로 나갔다. 잠긴 **그림 이름**이 있는지를 본다.
+                // **잠긴 그림이 있으면 '그림이 없다' 가 아니다.** '폴더 항목이 하나도 없고 전부
+                // 잠겼다' 로 보면 쪽을 폴더에 담은 CBZ(흔하다)가 폴더 항목 때문에 '그림이 한 장도
+                // 없습니다' 로 나간다. 잠긴 **그림 이름**이 있는지를 본다.
                 val lockedPages = reader.entries.filter {
                     it.isEncrypted && !it.isReadable && ComicPages.isPage(it.name)
                 }
@@ -198,8 +197,8 @@ object ComicOpen {
  * `IOException` 이고(먼저 가른다), 취소는 `IllegalStateException` 이다(부르는 쪽이 이 함수보다 먼저 거른다).
  *
  * `Error` 가운데 받는 것은 둘이다. 메모리 부족은 '너무 크다' 다. **스택이 넘친 것은 그 파일이 깨진 것이다** — 입력이 깊이를 정하는
- * 재귀가 라이브러리 해제기에 남아 있으면 넘친다: 빈 LZ4 프레임 20만 개짜리 `.cbt` 를 둔 폴더를 열기만 했는데 표지 썸네일이 여기를
- * 지나 프로세스가 죽었다(기기에서 재현). 해제기는 `CompressedStreams` 가 이미 '깨졌다' 로 옮기지만 그 그물 밖에서도(목록·이름·쪽
+ * 재귀가 라이브러리 해제기에 남아 있으면 넘친다: 빈 LZ4 프레임 20만 개짜리 `.cbt` 를 둔 폴더를 열기만 해도 표지 썸네일이 여기를
+ * 지난다. 해제기는 `CompressedStreams` 가 이미 '깨졌다' 로 옮기지만 그 그물 밖에서도(목록·이름·쪽
  * 정렬) 같은 파일이 재귀를 만들 수 있다. 넘친 스택은 여기 왔을 때 이미 풀려 있다. 나머지 `Error`(`InternalError` 따위)는 우리
  * 결함이라 받지 않는다.
  */

@@ -17,8 +17,6 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
@@ -35,15 +33,14 @@ import io.github.donggi.iroirobrowser.core.Bypass
 import io.github.donggi.iroirobrowser.core.LiveTabs
 import io.github.donggi.iroirobrowser.core.ProxySettings
 import io.github.donggi.iroirobrowser.core.Retention
-import io.github.donggi.iroirobrowser.core.SearchEngine
 import io.github.donggi.iroirobrowser.setup.SetupBundle
 import io.github.donggi.iroirobrowser.setup.SetupFiles
 import io.github.donggi.iroirobrowser.sites.SiteDataActivity
 import io.github.donggi.iroirobrowser.ui.Ui
 
 /**
- * 설정 — 프록시(호스트·포트·계정·예외·출구 확인 주소), 토렌트('Wi-Fi 에서만'), 화면(전체 화면), 검색 엔진, 사이트별 데이터·사용 기록 지우기, 정보. **프록시를 켜고 끄는 것은
- * 브라우저 화면 왼쪽 위의 스위치뿐이다**(사용자 지정 — 같은 단추를 다른 곳에 두지 않는다). 여기서는 어느 프록시로 나갈지만 정한다.
+ * 설정 — 프록시(호스트·포트·계정·예외·출구 확인 주소), 광고 차단, 화면, 사이트별 데이터·사용 기록 지우기·보관 기간, 팝업, 정보(검색은 Google 고정이라
+ * 고르는 칸이 없다). **프록시를 켜고 끄는 것은 브라우저 화면 왼쪽 위의 스위치뿐이다**(사용자 지정 — 같은 단추를 다른 곳에 두지 않는다). 여기서는 어느 프록시로 나갈지만 정한다.
  *
  * 비밀번호 칸은 비워 두면 저장된 비밀번호를 그대로 둔다(다시 칠 필요가 없게). 화면 상태 저장에서 빠진다(`isSaveEnabled = false`).
  * 저장하면 길이 바뀌었을 때만 중계를 새로 세우고(새 세션 계정) WebView 의 길을 다시 걸고 출구를 다시 본다
@@ -62,7 +59,6 @@ class SettingsActivity : Activity() {
     private lateinit var privateNetworks: Switch
     private lateinit var simpleHostnames: Switch
     private lateinit var exitUrl: EditText
-    private lateinit var engines: RadioGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,22 +129,8 @@ class SettingsActivity : Activity() {
             setOnClickListener { startActivity(Intent(this@SettingsActivity, AdBlockActivity::class.java)) }
         }))
 
-        // 토렌트 — 프록시를 거치지 않는다는 것(브라우저가 직접 연결로 넘어가지 않는다는 약속의 예외 — 다른 하나는 테더링)을 늘 적어 두고, 'Wi-Fi 에서만'(사용자 결정
-        // — 기본 끔)은 고르는 즉시 저장하고 엔진이 망 조건을 곧바로 다시 묻게 한다.
-        section(column, R.string.settings_torrent)
-        note(column, R.string.settings_torrent_note)
-        column.addView(padded(Switch(this).apply {
-            text = getString(R.string.settings_torrent_wifi_only)
-            isChecked = app.settings.torrentWifiOnly
-            setOnCheckedChangeListener { _, on ->
-                app.settings.torrentWifiOnly = on
-                app.torrents.settingsChanged()
-            }
-        }))
-        note(column, R.string.settings_torrent_wifi_note)
-
-        // 전체 화면 — 고르는 즉시 저장한다(검색 엔진처럼 '저장' 단추를 기다리지 않는다). 브라우저 화면은 돌아갈 때(onResume) 읽는다.
-        // 설명은 스위치 아래에 둔다(토렌트 절과 같은 차례) — 위에 두면 '전체 화면' 바로 밑의 '항상 확대 허용' 설명이 전체 화면의 것으로 읽혔다.
+        // 전체 화면 — 고르는 즉시 저장한다('저장' 단추를 기다리지 않는다). 브라우저 화면은 돌아갈 때(onResume) 읽는다.
+        // 설명은 스위치 아래에 둔다 — 위에 두면 '전체 화면' 바로 밑의 '항상 확대 허용' 설명이 전체 화면의 것으로 읽힌다.
         section(column, R.string.settings_display)
         column.addView(padded(Switch(this).apply {
             text = getString(R.string.settings_fullscreen)
@@ -170,22 +152,6 @@ class SettingsActivity : Activity() {
             get = { app.settings.liveTabs }, set = { app.settings.liveTabs = it },
         )
         note(column, R.string.settings_live_tabs_note)
-
-        section(column, R.string.settings_search)
-        engines = RadioGroup(this)
-        val currentEngine = app.settings.searchEngine
-        SearchEngine.entries.forEach { engine ->
-            engines.addView(RadioButton(this).apply {
-                id = View.generateViewId()
-                text = engine.label
-                tag = engine
-                isChecked = engine == currentEngine
-            })
-        }
-        engines.setOnCheckedChangeListener { group, checkedId ->
-            (group.findViewById<View>(checkedId)?.tag as? SearchEngine)?.let { app.settings.searchEngine = it }
-        }
-        column.addView(padded(engines))
 
         section(column, R.string.settings_data)
         // 보관 기간 — 고르는 즉시 저장한다. 브라우저 화면으로 돌아갈 때 지난 방문 기록을 지우고, 정한 날마다 캐시를 비운다(applyRetention).
@@ -219,17 +185,6 @@ class SettingsActivity : Activity() {
         column.addView(popupList)
         renderPopupSites(popupList)
 
-        // 백업 — 북마크·설정을 파일로 내보내고 가져온다(BackupScreen, CLAUDE.md '설정·북마크 백업').
-        backup = BackupScreen(this, ::isDirty)
-        section(column, R.string.backup)
-        note(column, R.string.backup_note)
-        for ((label, action) in backup.actions) {
-            column.addView(padded(Button(this).apply {
-                text = getString(label)
-                setOnClickListener { action() }
-            }))
-        }
-
         section(column, R.string.settings_about)
         val webView = WebViewCompat.getCurrentWebViewPackage(this)?.versionName ?: "?"
         note(column, 0, getString(R.string.settings_about_text, BuildConfig.VERSION_NAME, webView))
@@ -244,14 +199,6 @@ class SettingsActivity : Activity() {
     @Deprecated("Android 12 이하의 뒤로 — 13 이상은 OnBackInvokedCallback")
     override fun onBackPressed() {
         leave()
-    }
-
-    /** 설정 › 백업([onCreate] 에서 짓는다) — 파일을 고르는 화면의 결과를 넘긴다. */
-    private lateinit var backup: BackupScreen
-
-    @Deprecated("플랫폼 Activity 의 결과 받기 — AndroidX 없이")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!backup.onResult(requestCode, resultCode, data)) super.onActivityResult(requestCode, resultCode, data)
     }
 
     /** 나간다 — 바꾼 것이 저장되지 않았으면 먼저 묻는다. */
@@ -269,7 +216,7 @@ class SettingsActivity : Activity() {
             .show()
     }
 
-    /** 프록시 칸들이 저장된 것과 다른가(검색 엔진은 고르는 즉시 저장된다). */
+    /** 프록시 칸들이 저장된 것과 다른가(화면·보관 기간 같은 것은 고르는 즉시 저장된다). */
     private fun isDirty(): Boolean {
         val s = app.network.settings
         return host.text.toString().trim() != s.host ||
@@ -341,7 +288,7 @@ class SettingsActivity : Activity() {
 
     /**
      * 저장한다. 길이 그대로면(아무것도 바꾸지 않았거나 꺼져 있을 때 주소만 바꿨다) [io.github.donggi.iroirobrowser.proxy.NetworkPath.update] 가
-     * 중계를 다시 세우지 않는다 — 앞 판은 '저장' 만 눌러도 길을 다시 세워 열린 쪽을 모두 다시 부르고 받던 HLS·DASH 를 끊었다.
+     * 중계를 다시 세우지 않는다 — 다시 세우면 열린 쪽을 모두 다시 부르고 받던 HLS·DASH 가 끊긴다.
      */
     private fun apply(next: ProxySettings) {
         val old = app.network.settings
@@ -461,8 +408,8 @@ class SettingsActivity : Activity() {
     }
 
     /**
-     * 이름이 위에 붙은 칸. 이름을 칸에 잇는다(`labelFor`) — 화면 낭독기가 칸을 읽을 때 '호스트' 처럼 이름을 함께 읽는다(앞 판은 이름 없이
-     * 'edit box' 로만 읽혔다).
+     * 이름이 위에 붙은 칸. 이름을 칸에 잇는다(`labelFor`) — 화면 낭독기가 칸을 읽을 때 '호스트' 처럼 이름을 함께 읽는다(없으면
+     * 'edit box' 로만 읽힌다).
      */
     private fun field(column: LinearLayout, label: Int, type: Int, value: String, multiLine: Boolean = false): EditText {
         val edit = EditText(this).apply {

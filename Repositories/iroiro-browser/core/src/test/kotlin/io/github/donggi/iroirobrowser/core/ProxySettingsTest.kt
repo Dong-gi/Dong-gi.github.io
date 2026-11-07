@@ -140,7 +140,7 @@ class ProxySettingsTest {
 
     @Test
     fun 길이_같은지() {
-        // 설정에서 '저장' 만 눌러도 중계를 다시 세워 받던 HLS·DASH 가 끊겼다 — 길이 같으면 다시 세우지 않는다.
+        // 길이 같으면 중계를 다시 세우지 않는다 — 설정에서 '저장' 만 눌러도 받던 HLS·DASH 가 끊기지 않게.
         val on = ProxySettings.DEFAULT.copy(host = "proxy.example", user = "u", password = "p")
         assertTrue(on.sameRoute(on.copy()))
         assertTrue(on.sameRoute(on.copy(host = " proxy.example ")))

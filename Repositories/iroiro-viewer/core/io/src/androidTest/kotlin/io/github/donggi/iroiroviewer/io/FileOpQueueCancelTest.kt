@@ -22,8 +22,8 @@ import java.util.UUID
 
 /**
  * 파일 작업 큐의 **신원으로 취소하기**. 재생 화면이 넣은 구간 저장이 앞 작업(긴 복사)에 밀려 줄 서 있을 때
- * 취소하면 곧바로 '취소' 를 받고, 앞 작업이 끝나면 큐가 Idle 로 돌아와야 한다. 예전에는 줄 선 요청을 건너뛰는 길이 정리를 빼먹어
- * 앞 작업의 `Running` 과 알림이 영영 남았고, 아무것도 돌지 않을 때 누른 '취소' 는 다음에 시킨 작업을 시작하자마자 끊었다.
+ * 취소하면 곧바로 '취소' 를 받고, 앞 작업이 끝나면 큐가 Idle 로 돌아와야 한다. 아무것도 돌지 않을 때 누른 '취소' 는
+ * 다음에 시킨 작업을 끊지 않아야 한다.
  *
  * 앞 작업은 시간에 기대지 않는다 — 가짜 뜨는 쪽([CropSupport.renderer])을 꽂아 잘라 저장 하나가 [gate] 가 열릴 때까지 멈춰 있게
  * 한다. 그것은 아무 파일도 쓰지 않고 '이 형식은 저장할 수 없다' 로 끝난다.
@@ -109,7 +109,7 @@ class FileOpQueueCancelTest {
         FileOpManager.enqueue(context, queued)
 
         FileOpManager.cancel(queued.id)
-        // 줄 서 있으니 워커를 기다리지 않고 그 자리에서 '취소' 가 온다(예전에는 앞 작업이 끝날 때까지 아무것도 오지 않았다).
+        // 줄 서 있으니 워커를 기다리지 않고 그 자리에서 '취소' 가 온다.
         assertEquals(1, sink.got.size)
         assertEquals(queued.id, sink.got[0].id)
         assertTrue(sink.got[0].outcome.toString(), sink.got[0].outcome is FileOpEngine.Outcome.Cancelled)
@@ -117,7 +117,7 @@ class FileOpQueueCancelTest {
         assertEquals(head.id, running()?.id)
 
         gate.complete(Unit)
-        // 앞 작업이 끝나고 거둔 칸을 건너뛰면 큐가 비었다 — Idle 로 돌아와야 한다(예전에는 앞 작업의 Running 이 남았다).
+        // 앞 작업이 끝나고 거둔 칸을 건너뛰면 큐가 비었다 — Idle 로 돌아와야 한다.
         waitIdle()
         assertTrue("거둔 요청이 돌았다: ${clipsWritten()}", clipsWritten().isEmpty())
         assertEquals("결과는 한 번뿐이다", 1, sink.got.size)
@@ -182,8 +182,7 @@ class FileOpQueueCancelTest {
 
     /**
      * 거두기(`withdraw`)는 **줄 선 요청만** 거둔다 — 도는 요청은 끊지 않고 거짓을 돌려준다. 편집기의 저장 반영이 기다리다 시간이 넘으면
-     * 이것으로 거두고, 거두지 못하면(돌고 있다) 끝을 기다려 진짜 결과로 답한다(예전에는 '바쁘다' 고 답한 요청을 큐에 그대로 두어 나중에
-     * 말없이 원본을 바꿨다).
+     * 이것으로 거두고, 거두지 못하면(돌고 있다) 끝을 기다려 진짜 결과로 답한다.
      */
     @Test
     fun 거두기는_줄_선_요청만_거두고_도는_요청은_끊지_않는다() = runBlocking {

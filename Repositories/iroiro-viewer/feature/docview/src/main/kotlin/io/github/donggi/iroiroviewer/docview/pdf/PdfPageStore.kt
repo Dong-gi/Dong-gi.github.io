@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * 예외가 아니라 **`SIGABRT` 로 프로세스가 즉사한다**(조사 중 실제로 죽었다). 로그 한 줄
  * 남기고 앱이 사라지는 종류의 실패다.
  *
- * **다른 것**: 창(window)과 미리 읽기가 없다. 9단계의 창은 solid 아카이브의 정의(앞
+ * **다른 것**: 창(window)과 미리 읽기가 없다. 만화 뷰어의 창은 solid 아카이브의 정의(앞
  * 14쪽을 풀어야 15쪽이 나온다) 때문에 생긴 장치인데, `PdfRenderer` 는 쪽 무작위 접근이
  * 싸다(2000쪽 문서에서 마지막 쪽 열기 9.7ms 실측). **없어도 되는 상태를 만들면 그 상태가
  * 틀리는 날이 온다.**
@@ -32,9 +32,9 @@ import kotlinx.coroutines.flow.asStateFlow
  * `BitmapRegionDecoder` 로 다시 읽지만 PDF 에는 디코딩할 원본이 없다 — 대신 더 큰 배율로
  * 다시 그리면 되고, 그것이 PDF 가 벡터라서 얻는 이득이다.
  *
- * ## 화면 한 칸 = 가상 쪽 하나(14단계)
+ * ## 화면 한 칸 = 가상 쪽 하나
  *
- * 두 쪽 보기를 더하면서 그리는 단위가 쪽이 아니라 **화면 한 칸([PdfSpreads.View])** 이 됐다. 쪽 하나면 그 쪽, 펼침이면
+ * 그리는 단위는 쪽이 아니라 **화면 한 칸([PdfSpreads.View])** 이다. 쪽 하나면 그 쪽, 펼침이면
  * 두 쪽을 나란히 놓은 가상 쪽이다([PdfSpreads.layout]). 맞춤·타일·예산 계산은 가상 쪽의 크기로 `PdfLimits` 를 그대로
  * 부른다 — 계산을 두 벌로 두지 않는다.
  *
@@ -335,7 +335,7 @@ class PdfPageStore(
         if (_gridOpen.value) return null
         val made = DetailTile(bitmap.asImageBitmap(), tile)
         tiles.put(key, made)
-        // **확대는 화면 캡처로 판정하지 않는다**(6단계가 그것으로 세 번 틀렸다).
+        // **확대는 화면 캡처로 판정하지 않는다.**
         // 배율과 자리를 여기 찍어 두면 기기에서 logcat 으로 읽을 수 있다.
         // 릴리스에서는 호출 지점째 사라진다.
         Iro.d(TAG) {
@@ -351,7 +351,7 @@ class PdfPageStore(
     /**
      * 쪽 목록이 열려 있는가. **화면의 쪽 층이 이것을 본다** — 캐시를 비워도 지금 보이는 쪽이 든 조각(`DetailLayer`)은 그
      * 컴포저블이 쥐고 있어 놓이지 않는다. 열리면 쪽 층이 조각을 놓고, 닫히면 다시 청한다(`DocViewScreen` 의 `DocPageView`).
-     * 그래야 격자가 열린 동안 살아 있는 양이 정말 `liveCap + detailCap` 안이다(캐시만 비웠었다).
+     * 그래야 격자가 열린 동안 살아 있는 양이 정말 `liveCap + detailCap` 안이다.
      */
     val gridOpen: StateFlow<Boolean> = _gridOpen.asStateFlow()
 

@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
- * 쪽 목록 — 작은 썸네일 격자에서 쪽을 골라 뛴다(14단계).
+ * 쪽 목록 — 작은 썸네일 격자에서 쪽을 골라 뛴다.
  *
  * **책 위에 겹치는 층이다**(화면 전환이 아니다). 그래서 읽던 페이저가 그대로 살아 있고, 고르면 층을 걷어 내고 그 쪽으로
  * 옮긴다. 겹치는 층에는 탭을 삼키는 수정자를 단다 — 형제 히트 테스트는 포인터 노드가 없는 층을 지나쳐 아래의 페이저를

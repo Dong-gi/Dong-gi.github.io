@@ -39,8 +39,8 @@ data class PageInfo(
      * APNG 인가.
      *
      * **[animated] 와 따로 둔다.** APNG 은 움직이는 파일이지만 플랫폼이 첫 장면만 준다.
-     * 하나로 합치면 화면이 "움직입니다" 라고 말해 놓고 멈춘 그림을 보여 주게 된다 —
-     * 6단계가 판별기(`ImageFormats.isApng`)를 미리 넣어 둔 것이 이 자리를 위해서다.
+     * 하나로 합치면 화면이 "움직입니다" 라고 말해 놓고 멈춘 그림을 보여 주게 된다
+     * (판별은 `ImageFormats.isApng`).
      */
     val apng: Boolean,
     /**
@@ -113,7 +113,7 @@ class ComicPageStore(
     val detailCap: Long = budget.detailCap
 
     /**
-     * 두 쪽 보기에서 **쪽 하나**에 허락하는 바이트 — [pageCap] 의 절반(14단계).
+     * 두 쪽 보기에서 **쪽 하나**에 허락하는 바이트 — [pageCap] 의 절반.
      *
      * 두 쪽이 **화면 한 장의 몫을 나눠 쓴다.** 페이저는 펼침 넷을 들므로(앞뒤 한 장씩 + 넘기는 도중 둘) 반쪽 여덟 장이
      * 한 장짜리 넷과 같은 바이트다 — [ImageLimits.Budget.liveCap] 이 그대로 성립하고 [stills] 의 상한도 그대로다.
@@ -123,7 +123,7 @@ class ComicPageStore(
     val spreadPageCap: Long = (pageCap / 2).coerceAtLeast(1L)
 
     /**
-     * 쪽 목록(격자)의 썸네일 전체에 허락하는 바이트(14단계).
+     * 쪽 목록(격자)의 썸네일 전체에 허락하는 바이트.
      *
      * **선명화 몫([ImageLimits.Budget.detailCap])을 빌린다.** `budgetOf` 가 '살아 있는 쪽 말고 더 써도 되는 양' 으로
      * 계산해 둔 수이고, 격자가 떠 있는 동안에는 새 선명화 조각도 세로 모드의 띠도 뜨지 않는다 — 격자를 열 때 띠 캐시를
@@ -192,7 +192,7 @@ class ComicPageStore(
     }
 
     /**
-     * 두 쪽 보기의 정지 쪽 하나 — 반쪽 자리([slotWidth]×[slotHeight])에 **맞춘 크기 그대로** 뜬다(14단계).
+     * 두 쪽 보기의 정지 쪽 하나 — 반쪽 자리([slotWidth]×[slotHeight])에 **맞춘 크기 그대로** 뜬다.
      *
      * [still] 과 길이 다른 까닭은 [SpreadMath.halfSize] 에 있다: 2의 거듭제곱 표본은 반쪽 몫([spreadPageCap])에 들려면
      * 흔한 쪽 크기에서 자리보다 작게 떠서 늘어나 보인다. 그래서 `setTargetSize` 로 자리 크기에 맞춰 뜨고, 그 크기가

@@ -47,7 +47,7 @@ import java.util.Locale
  * 고르는 창 쪽의 거동(빈 화면 `NoAppsAvailableEmptyStateProvider`, 하나면 곧바로 띄우는
  * `shouldAutoLaunchSingleChoice`, 고른 앱을 띄우는 `DisplayResolveInfo.startAsCaller`)은 SDK 소스(android-36.1)의
  * `com.android.internal.app` 으로 읽었는데, **그것은 옛 고르는 창이다** — 그 파일 머리말이 '시스템이 실제로 쓰는 것은
- * IntentResolver 모듈' 이라고 적는다. 에뮬레이터에서 본 것(2026-09-28): API 31 은 그 옛 창(`android/…ChooserActivity`)이고,
+ * IntentResolver 모듈' 이라고 적는다. 에뮬레이터에서 본 것: API 31 은 그 옛 창(`android/…ChooserActivity`)이고,
  * API 35 는 IntentResolver(`com.android.intentresolver`)다. 둘 다 받는 앱이 하나면 곧바로 띄우고(API 35 는 우리를
  * `realCallingUid` 로 달고 띄워 설치 관리자가 받아들인다), 받을 앱이 없으면 'No apps can perform this action.' 뿐이며,
  * **VIEW 의 고르는 창에 제목을 그리지 않는다.**
@@ -71,8 +71,8 @@ import java.util.Locale
  * 넓혀서 띄우는 창과 **같은 앱들**이다. 같은 목록에 제목만 둘이면(모르는 `.bin` 은 '다른 앱으로 열기', 선언한 앱이 없는
  * `.xyz` 는 '모든 앱에서 고르기') 사용자는 무엇이 다른지 알 길이 없다 — 모든 것의 고르는 창은 언제나 같은 이름이다.
  *
- * **묻는 것은 넓힐지만 정한다. 막는 데 쓰지 않는다.** 모든 것까지 받는 앱이 없다고 [Result.NO_APP] 을 돌려주는 길도
- * 있었지만 쓰지 않았다. 그 대답이 틀리는 길(아래 공개 범위가 기기에서 읽은 것과 다르게 도는 경우)에서는 모르는 파일을
+ * **묻는 것은 넓힐지만 정한다. 막는 데 쓰지 않는다.** 모든 것까지 받는 앱이 없다고 [Result.NO_APP] 을 돌려주지
+ * 않는다. 그 대답이 틀리는 길(아래 공개 범위가 기기에서 읽은 것과 다르게 도는 경우)에서는 모르는 파일을
  * 하나도 열 수 없게 되고, 맞는 길에서 얻는 것은 시스템의 빈 화면 대신 우리 문장 하나뿐이다. 잘못 넓히는 쪽의 대가는
  * 목록이 길어지고 제목이 '모든 앱' 이 되는 것뿐이다.
  *
@@ -128,16 +128,15 @@ import java.util.Locale
  *
  * ## APK
  *
- * **다른 앱이 이 앱에 넘긴 APK 는 넘기지 않는다**(2026-10-16 보안 점검). 넘기면 설치 관리자가 그것을 이 앱이 보낸 것으로 받아, 권한 없는
+ * **다른 앱이 이 앱에 넘긴 APK 는 넘기지 않는다.** 넘기면 설치 관리자가 그것을 이 앱이 보낸 것으로 받아, 권한 없는
  * 앱이 이 앱의 설치 권한과 '출처를 알 수 없는 앱' 허용을 빌려 쓴다. 판별은 이름과 **내용**이다([ApkFiles] — 이름을 바꾼 APK 는 모르는
  * 형식이라 '모든 앱에서 고르기' 로 가고, 그 창에 설치 관리자도 선다). 받는 화면(`OpenActivity`)이 받을 때 거절하고, 여기서는 받은 사본을
  * 한 번 더 막는다. 파일 목록에서 사용자가 고른 APK 는 그대로 설치 관리자로 간다.
  *
  * 설치 관리자는 **보낸 앱이 `REQUEST_INSTALL_PACKAGES` 를 선언했는지** 본다. 선언은 `app` 의 매니페스트에 있고,
  * 무엇을 확인했는지도 거기 적었다. 선언하지 않으면 설치 관리자가 **아무 말 없이 닫혀** 우리에게는 [Result.STARTED]
- * 로 보인다 — 선언이 빠진 것을 결과로 알아챌 길이 없으므로 매니페스트의 그 줄을 지우지 마라. 2026-10-11 에 Play 프로텍트가
- * 이 앱을 '유해한 앱'(다른 앱을 까는 앱)으로 막아 이 권한을 걷어 보았지만 막힘이 풀리지 않아 되살렸다(사용자 — CLAUDE.md
- * '14단계 뒤 — Play 프로텍트의 설치 차단').
+ * 로 보인다 — 선언이 빠진 것을 결과로 알아챌 길이 없으므로 매니페스트의 그 줄을 지우지 마라. Play 프로텍트가 이 앱을
+ * '유해한 앱'(다른 앱을 까는 앱)으로 막는 것은 이 권한을 걷어도 풀리지 않는다.
  *
  * ## 태스크
  *
@@ -156,7 +155,7 @@ object ExternalOpen {
 
         /**
          * HTML 을 **웹 쪽으로**([webPageMime] — `text/html`·`application/xhtml+xml`) 넘기는 고르는 창 — '브라우저로 열기'. 이 앱은
-         * 인터넷에 닿지 않아 HTML 미리보기가 바깥 자원을 싣지 않는다 — 그것까지 보려면 브라우저로 연다. [CHOOSE] 는 HTML 을 글
+         * 인터넷에 닿지 않으므로 쪽으로 보려면 브라우저로 연다. [CHOOSE] 는 HTML 을 글
          * (`text/plain` — [ExternalMime])로 넘겨 편집기가 앞에 선다. 같은 파일을 둘로 눌러도 따로 센다([isRepeat] 가 모양을 본다).
          */
         WEB_PAGE,
@@ -227,8 +226,8 @@ object ExternalOpen {
         mode != Mode.VIEW || ExternalMime.isWildcard(mime)
 
     /**
-     * '브라우저로 열기'([Mode.WEB_PAGE])의 형식. XHTML 은 XML 로 읽혀야 뜻이 같다 — `text/html` 로 주면 `<div/>` 가 뒤의 쪽을 삼킨다
-     * (CLAUDE.md 의 'XHTML 을 `text/html` 로 내주면 뜻이 바뀐다'). 받는 앱이 그 형식을 모르면 모든 앱에서 고른다([chooserPlan]).
+     * '브라우저로 열기'([Mode.WEB_PAGE])의 형식. XHTML 은 XML 로 읽혀야 뜻이 같다 — `text/html` 로 주면 `<div/>` 가 뒤의 쪽을 삼킨다.
+     * 받는 앱이 그 형식을 모르면 모든 앱에서 고른다([chooserPlan]).
      */
     internal fun webPageMime(path: String): String {
         val name = path.substringAfterLast('/').lowercase(Locale.ROOT)
@@ -251,7 +250,7 @@ object ExternalOpen {
     }
 
     /**
-     * 어느 창을 띄우는가. 곧바로 여는 길([usesChooser] 가 아니다)은 묻지 않는다 — [Mode.VIEW] 는 예전 그대로이고, 받는
+     * 어느 창을 띄우는가. 곧바로 여는 길([usesChooser] 가 아니다)은 묻지 않는다 — [Mode.VIEW] 는 인텐트를 그대로 띄우고, 받는
      * 앱이 없으면 [Result.NO_APP] 으로 끝나 화면이 [Mode.CHOOSE] 로 다시 고르게 한다. 고르는 창이면 [hasHandler] 에 한 번
      * 묻고, 받을 앱이 없으면 모든 것으로 넓힌다. 이미 모든 것이면 묻지 않고 모든 것의 창이다 — 넓힐 곳이 없고, 대답으로
      * 막지 않으며(이 객체의 KDoc '묻는 것은 넓힐지만 정한다'), 넓혀서 띄우는 창과 목록이 같으니 이름도 같아야 한다

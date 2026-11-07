@@ -8,8 +8,8 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * 확장자의 별칭 — 한글 서식(`.hwt`)·HWPX 서식(`.hwtx`)·OWPML(`.owpml`)은 목록이 '한글 문서' 로 그리는데, 뷰어 교체(10-09)
- * 뒤 편집기의 형식 표에 없어 누르면 '이 앱이 다루지 않는 문서입니다' 였다. 별칭으로 HWP·HWPX 가 되어 편집기의 보기 모드로 간다.
+ * 확장자의 별칭 — 한글 서식(`.hwt`)·HWPX 서식(`.hwtx`)·OWPML(`.owpml`)은 목록이 '한글 문서' 로 그린다. 편집기의
+ * 형식 표에 없으면 누를 때 '이 앱이 다루지 않는 문서입니다' 다. 별칭으로 HWP·HWPX 가 되어 편집기의 보기 모드로 간다.
  */
 class EditorAppAliasTest {
 

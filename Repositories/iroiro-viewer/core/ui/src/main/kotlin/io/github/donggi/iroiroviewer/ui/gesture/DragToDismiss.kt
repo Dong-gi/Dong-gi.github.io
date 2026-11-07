@@ -42,7 +42,7 @@ class DismissState {
 
     /**
      * 지금 손가락이 그림을 끌고 있는가. 축을 '닫기' 로 정한 순간 참이 되고 손을 떼면 거짓이다. 화면이
-     * `Iro.d` 로 찍는다 — 제스처 중재는 화면 캡처가 아니라 로그로 판정한다(6단계가 세 번 틀렸다).
+     * `Iro.d` 로 찍는다 — 제스처 중재는 화면 캡처가 아니라 로그로 판정한다.
      */
     var dragging by mutableStateOf(false)
         private set

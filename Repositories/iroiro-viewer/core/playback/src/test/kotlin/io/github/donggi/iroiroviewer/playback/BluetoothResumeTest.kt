@@ -7,8 +7,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * 블루투스가 다시 연결되면 이어서 트는 판단([BluetoothResume]). 에뮬레이터에는 블루투스 장치를 붙일 길이 없어 기기에서는 등록이 죽지
- * 않는 것만 볼 수 있다 — 차례는 여기서 박는다.
+ * 블루투스가 다시 연결되면 이어서 트는 판단([BluetoothResume]). 에뮬레이터에는 블루투스 장치를 붙일 길이 없어 차례는 여기서 박는다.
  */
 class BluetoothResumeTest {
 

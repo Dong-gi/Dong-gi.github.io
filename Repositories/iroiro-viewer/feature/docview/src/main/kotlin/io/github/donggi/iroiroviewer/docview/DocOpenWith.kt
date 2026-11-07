@@ -21,8 +21,7 @@ import kotlinx.coroutines.launch
  * 넣으면 여기서 열린다.
  *
  * **`else` 로 끝내지 않는다.** [OpenFailure] 는 sealed 라, 갈래가 새로 생기면 [onFailure] 의 `when` 이 컴파일되지 않는다
- * — 그 갈래를 여기서 정하기 전까지. 종류를 옮긴 뒤 `else` 가 조용히 틀린 답을 내던 자리(함정 표의 `FileKind`)를 되풀이하지
- * 않으려는 것이다.
+ * — 그 갈래를 여기서 정하기 전까지. `else` 는 종류가 옮겨 갈 때 조용히 틀린 답을 낸다(함정 표의 `FileKind`).
  *
  * ## 위쪽 막대의 ⋮ — 파일에 닿은 뒤로는 언제나
  *

@@ -33,8 +33,8 @@ class ProxySettings(
     ) = ProxySettings(enabled, host, port, user, password, bypass, exitCheckUrl)
 
     /**
-     * 길이 같은가 — 같으면 저장해도 중계를 다시 세우지 않는다(다시 세우면 열린 쪽을 모두 다시 부르고 받던 HLS·DASH 가 끊긴다 — 설정에서
-     * '저장' 만 눌러도 그랬다). 꺼져 있으면 켜기만 본다(주소·계정·예외는 길에 쓰이지 않는다). 출구 확인 주소는 길이 아니다.
+     * 길이 같은가 — 같으면 저장해도 중계를 다시 세우지 않는다(다시 세우면 열린 쪽을 모두 다시 부르고 받던 HLS·DASH 가 끊긴다). 꺼져 있으면
+     * 켜기만 본다(주소·계정·예외는 길에 쓰이지 않는다). 출구 확인 주소는 길이 아니다.
      */
     fun sameRoute(other: ProxySettings): Boolean =
         enabled == other.enabled && (

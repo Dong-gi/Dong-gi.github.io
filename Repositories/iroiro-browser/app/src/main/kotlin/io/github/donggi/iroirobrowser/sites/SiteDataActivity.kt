@@ -32,8 +32,7 @@ import io.github.donggi.iroirobrowser.ui.Ui
 import java.util.Locale
 
 /**
- * 설정의 '사이트별 데이터' — 사이트 하나의 쿠키(로그인)·저장소·캐시를 지운다(사용자: 익명 탭 대신 설정에서 사이트별 데이터를 지울 수 있으면
- * 된다, 2026-10-04).
+ * 설정의 '사이트별 데이터' — 사이트 하나의 쿠키(로그인)·저장소·캐시를 지운다(익명 탭 대신 — 사용자 결정).
  *
  * 목록은 이 브라우저로 연 사이트([SiteList])와 저장소를 쓴 출처(`WebStorage.getOrigins` — 쓴 양도 준다)를 합친 것이다. 쿠키가 있는지는
  * 줄을 그릴 때 그 이름의 쿠키를 물어 본다. 지우기는 WebView 의 `deleteBrowsingDataForSite` 다 — **사이트 단위**(등록 도메인 —

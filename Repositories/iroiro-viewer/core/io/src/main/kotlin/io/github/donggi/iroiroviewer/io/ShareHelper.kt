@@ -23,8 +23,8 @@ object ShareHelper {
     /**
      * `file_paths.xml` 이 노출하는 루트. **코드와 XML 이 같은 범위를 말해야 한다.**
      *
-     * `cache-path share/` 는 XML 에 처음부터 있었는데 코드 쪽 관문이 `/storage/` 뿐이라
-     * 캐시 사본이 언제나 null 이 되고 있었다 — 두 곳이 어긋나면 좁은 쪽이 조용히 이긴다.
+     * 두 곳이 어긋나면 좁은 쪽이 조용히 이긴다(예: 코드 쪽 관문이 `/storage/` 뿐이면 `cache-path share/` 의 캐시 사본이
+     * 언제나 null 이 된다).
      * 캐시 경로는 기기마다 다르므로 문자열 상수로 적을 수 없고 **런타임에 계산한다.**
      */
     private fun allowedRoots(context: Context): List<String> = listOf(
@@ -45,8 +45,8 @@ object ShareHelper {
      * **도착한 자리**로 판정한다(FileProvider 도 URI 를 열 때 도착한 자리를 루트와 한 번 더 견준다).
      *
      * 파일을 누르는 손에서 불리므로 **던지지 않는다.** `canonicalFile` 은 경로가 망가졌거나 너무 길면
-     * `IOException`, `getUriForFile` 은 루트 밖이면 `IllegalArgumentException` 이다. 그 둘만 잡는다 — 예전의
-     * `runCatching` 은 오류(`Error`)까지 삼켰고, 정작 앞의 `IOException` 은 그 바깥에서 났다.
+     * `IOException`, `getUriForFile` 은 루트 밖이면 `IllegalArgumentException` 이다. 그 둘만 잡는다 —
+     * `runCatching` 은 오류(`Error`)까지 삼킨다.
      */
     fun uriOf(context: Context, path: String): Uri? = try {
         val file = File(path).canonicalFile

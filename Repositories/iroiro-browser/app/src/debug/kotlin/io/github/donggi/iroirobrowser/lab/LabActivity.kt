@@ -417,8 +417,8 @@ class LabActivity : Activity() {
         private const val PAGE_PREFIX = "IROLAB "
         private const val MAX_AUTH_ATTEMPTS = 3
 
-        // REQUESTED_WITH_HEADER_ALLOW_LIST 는 1.17 에서 라이브러리 밖에서 부를 수 없게 막혔다(RestrictedApi). WebView 153 에서
-        // false 였고(2026-10-04 실측) 지금은 목록에서 뺐다. 실험 표지가 붙은 기능은 지원 여부만 묻는다.
+        // REQUESTED_WITH_HEADER_ALLOW_LIST 는 1.17 에서 라이브러리 밖에서 부를 수 없어(RestrictedApi) 목록에 없다(WebView 153 도
+        // 지원하지 않는다). 실험 표지가 붙은 기능은 지원 여부만 묻는다.
         private val FEATURES = listOf(
             "PROXY_OVERRIDE" to WebViewFeature.PROXY_OVERRIDE,
             "PROXY_OVERRIDE_REVERSE_BYPASS" to WebViewFeature.PROXY_OVERRIDE_REVERSE_BYPASS,

@@ -23,17 +23,17 @@ import io.github.donggi.iroirobrowser.tether.core.Passphrases
  *
  * ## 켜짐은 그룹이 선 것을 확인한 뒤에
  *
- * `createGroup` 의 성공은 '요청을 받았다' 일 뿐 그룹이 섰다는 뜻이 아니다. 예전에는 그것으로 '켜짐' 이라 했고 인터페이스 이름도 몰랐다. 이제
+ * `createGroup` 의 성공은 '요청을 받았다' 일 뿐 그룹이 섰다는 뜻이 아니다. 그래서
  * 성공 뒤에 그룹 조회(`requestGroupInfo`)를 [FORMATION_POLL_MS] 마다 되풀이해 **우리 그룹**([GroupWatch])이 인터페이스와 함께 보이면 켜짐이다
  * (서비스가 받는 연결 변경 방송이 먼저 알려 주면 [noteGroup] 으로 더 일찍). [FORMATION_TIMEOUT_MS] 안에 서지 않으면 그룹을 내리고 실패다.
  *
  * ## 밖에서 내려가는 것
  *
  * Wi-Fi 를 끄거나 다른 앱이 Wi-Fi Direct 를 가져가면 그룹이 밖에서 내려간다. 서비스가 연결 변경 방송으로 알고 [confirm] 으로 확인하며, 프레임
- * 워크와의 Channel 을 잃는 것은 여기서 [onChannelLost] 로 알린다(예전에는 `initialize(…, null)` 이라 몰랐다).
+ * 워크와의 Channel 을 잃는 것은 여기서 [onChannelLost] 로 알린다.
  *
  * **한 번 쓰고 버린다.** [stop] 이 `WifiP2pManager.Channel` 을 닫으므로 같은 인스턴스로 다시 [start] 하지 못한다 — 켤 때마다 새로 만든다.
- * 오류는 기계 말([problem]·[detail])로 남기고 글은 화면이 고른다([TetherTexts.hotspot]) — usb-tether 는 영어 글을 그대로 보였다.
+ * 오류는 기계 말([problem]·[detail])로 남기고 글은 화면이 고른다([TetherTexts.hotspot]).
  *
  * @param onChannelLost 프레임워크와의 Channel 이 끊겼다(메인 스레드). 우리가 닫은 것은 알리지 않는다.
  */
@@ -114,7 +114,7 @@ internal class WifiHotspot(
 
     /**
      * 그 자리의 환경 점검. Wi-Fi 가 꺼져 있으면 Wi-Fi Direct 그룹을 만들 수 없다(인터넷 연결은 필요 없다). 위치 서비스가 꺼져 있으면 안드로이드가
-     * Wi-Fi Direct 를 막는다 — usb-tether 의 안내를 그대로 둔다(13 이상의 neverForLocation 에서도 필요한지는 확인하지 않았다).
+     * Wi-Fi Direct 를 막는다(13 이상의 neverForLocation 에서도 필요한지는 확인하지 않았다).
      */
     private fun checkEnvironment(): HotspotProblem? {
         val wifi = appContext.getSystemService(WifiManager::class.java)
@@ -219,10 +219,9 @@ internal class WifiHotspot(
 
     /**
      * `createGroup` 이 BUSY 로 실패했을 때, 떠 있는 그룹이 **우리가 만들려던 바로 그 그룹일 때만** 다시 쓴다(SSID 와 패스프레이즈가 모두 같을
-     * 때). usb-tether 의 예전 판은 그룹 오너이기만 하면 받아들여, 화면에는 만든 패스프레이즈가 보이는데 실제 그룹은 다른(약할 수도 있는) 것을
-     * 쓰거나 남의 그룹을 받아들였다가 [stop] 이 내려 버렸다. 패스프레이즈를 확인할 수 없으면(null·던짐) 다르다고 본다 — 판단할 수 없을 때 안전한
-     * 쪽은 다시 쓰지 않는 쪽이다. 옛 앱(usb-tether)이 같은 자격 증명으로 그룹을 띄워 두었다면 그 그룹을 다시 쓰게 된다 — 옛 앱을 먼저 멈춘다
-     * (CLAUDE.md '테더링' 의 '사용자가 폰에서 할 일').
+     * 때). 그룹 오너이기만 하면 받아들이면 화면에는 만든 패스프레이즈가 보이는데 실제 그룹은 다른(약할 수도 있는) 것을 쓰거나, 남의 그룹을
+     * 받아들였다가 [stop] 이 내려 버린다. 패스프레이즈를 확인할 수 없으면(null·던짐) 다르다고 본다 — 판단할 수 없을 때 안전한 쪽은 다시 쓰지
+     * 않는 쪽이다. 다른 앱이 같은 자격 증명으로 그룹을 띄워 두었다면 그 그룹을 다시 쓰게 된다.
      */
     @SuppressLint("MissingPermission")
     private fun reuseExistingGroup(mgr: WifiP2pManager, ch: WifiP2pManager.Channel, onResult: (Boolean) -> Unit) {

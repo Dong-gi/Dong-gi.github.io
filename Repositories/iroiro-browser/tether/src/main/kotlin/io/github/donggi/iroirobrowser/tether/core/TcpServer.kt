@@ -54,12 +54,12 @@ class TetherTimings(
     val relayPollMs: Long = 1_000,
 )
 
-/** 서버를 세우지 못한(또는 돌던 서버가 내려간) 까닭. 화면의 글은 앱이 고른다(이 모듈은 기계 말만 — 토렌트 엔진과 같은 꼴). */
+/** 서버를 세우지 못한(또는 돌던 서버가 내려간) 까닭. 화면의 글은 앱이 고른다(이 모듈은 기계 말만). */
 enum class StartError {
     /**
      * 해 볼 포트를 모두 다른 앱이 쓰고 있다 — SOCKS5 는 1080 하나(옮기지 않는다 — PC 의 런처가 1080 만 쓴다, [Socks5Server] 의 머리말),
-     * HTTP 프록시·파일 서버는 기본 포트부터 열 개(8282…8291·8080…8089)가 모두. HTTP·파일이 옮겨 서는 것은 사용자 결정이다(2026-10-10 —
-     * 그 위험을 감수했다, [HttpProxyServer]·[FileServer] 의 머리말). 옮겨 선 포트는 [TcpServer.actualPort] 가 말한다.
+     * HTTP 프록시·파일 서버는 기본 포트부터 열 개(8282…8291·8080…8089)가 모두. HTTP·파일이 옮겨 서는 것은 사용자 결정이다(그 위험을
+     * 감수했다 — [HttpProxyServer]·[FileServer] 의 머리말). 옮겨 선 포트는 [TcpServer.actualPort] 가 말한다.
      */
     PORT_TAKEN,
 
@@ -83,14 +83,13 @@ enum class Refusal {
 }
 
 /**
- * accept 하고 손님을 가르고 일꾼에 넘기는 몸통 — SOCKS5·HTTP 프록시·파일 서버가 함께 쓴다(usb-tether 에서는 셋이 같은 코드를 따로 들고
- * 있었고 파일 서버만 '멈춘 뒤 다시 세우기' 를 막지 않았다). 프록시 둘의 중계([relay])도 여기 하나다.
+ * accept 하고 손님을 가르고 일꾼에 넘기는 몸통 — SOCKS5·HTTP 프록시·파일 서버가 함께 쓴다. 프록시 둘의 중계([relay])도 여기 하나다.
  *
  * 받는 차례: 손님 거르기([TetherEnvironment.peers]) → 서버의 동시 연결 상한 → 스레드 예산([ThreadBudget]) → 적기([ConnectionRegistry]) →
  * 일꾼. 상한·예산은 **accept 스레드에서** 센다 — 일꾼 안에서 세면 그 사이에 일이 쌓여 캐시 스레드 풀이 스레드를 끝없이 만든다.
  *
  * [start] 는 호출자가 결과를 곧바로 보도록 **그 자리에서 묶고** 나서 accept 를 시작한다. [basePort] 부터 [attempts] 개를 차례로 해 보아
- * 비어 있는 첫 포트에 묶는다 — SOCKS5 는 하나(옮기지 않는다), HTTP 프록시·파일 서버는 열(사용자 결정 2026-10-10). 모두 차 있으면
+ * 비어 있는 첫 포트에 묶는다 — SOCKS5 는 하나(옮기지 않는다), HTTP 프록시·파일 서버는 열(사용자 결정). 모두 차 있으면
  * [StartError.PORT_TAKEN]. 실제로 묶인 포트는 [actualPort] — 화면·알림은 기본 상수가 아니라 이것을 보인다(시험의 0 은 아무 빈 포트이고 한
  * 번만 해 본다).
  */
@@ -112,7 +111,7 @@ abstract class TcpServer internal constructor(
     /**
      * 이미 멈췄는가 — 되돌아가지 않는다. 멈출 때 일꾼 풀을 내리고 적어 둔 연결을 닫았으므로, 다시 세우면 **포트를 잡고 화면에는 정상으로
      * 보이면서 모든 연결을 거절하는** 서버가 된다. 1080 을 쥔 채 아무것도 하지 않는 것은 이 서버가 막으려는 바로 그 상황이라 실패로 둔다.
-     * [stop] 의 멱등성도 이것으로 본다 — [running] 으로 보면 받기 고리가 먼저 죽어 running 이 내려간 서버의 stop 이 아무것도 하지 않았다.
+     * [stop] 의 멱등성도 이것으로 본다 — [running] 으로 보면 받기 고리가 먼저 죽어 running 이 내려간 서버의 stop 이 아무것도 하지 않는다.
      */
     private val terminated = AtomicBoolean(false)
 
@@ -218,15 +217,15 @@ abstract class TcpServer internal constructor(
      * 프록시 둘의 중계 — 손님 → 원격은 이 일꾼에서, 원격 → 손님은 따로 된 스레드에서 돌린다.
      *
      * 한쪽이 끝(EOF)나면 반대편의 쓰기만 닫아(`shutdownOutput`) 상대가 RST 가 아니라 정상 FIN 을 받게 하고, **반대 방향은 시한 없이 끝까지**
-     * 넘긴다 — 요청을 보낸 뒤 쓰기를 닫는 손님(반쯤 닫힘)에게 원격의 답이 오래 걸려도 자르지 않는다. 예전에는 반대 방향을 5초 기다린 뒤
-     * 일꾼이 돌아가 소켓을 닫아 그 뒤의 답이 잘렸다. 그 대신 기다리는 동안 [TetherTimings.relayPollMs] 마다 멈춤을 본다 —
+     * 넘긴다 — 요청을 보낸 뒤 쓰기를 닫는 손님(반쯤 닫힘)에게 원격의 답이 오래 걸려도 자르지 않는다. 그 대신 기다리는 동안
+     * [TetherTimings.relayPollMs] 마다 멈춤을 본다 —
      * [stop] 이 손님 소켓을 닫았으면 원격도 닫아 반대 방향을 끝낸다. 원격 소켓은 [ConnectionRegistry] 에 없어서, 이렇게 하지 않으면 조용한
      * 원격을 읽는 스레드가 stop() 뒤에도 남는다(멈추면 실제로 끊긴다 — 그 약속을 지킨다). 손님 쪽이 깨져서(EOF 가 아니라 예외) 끝났으면
      * 원격도 곧바로 닫는다 — 받을 사람이 없다.
      *
-     * 스트림은 [pipe] 의 try 안에서 얻는다 — usb-tether 는 반대 방향 스레드에서 `client.getOutputStream()` 을 try 밖에서 불러, 그 사이 소켓이
-     * 닫히면(손님이 끊음·`stop()`) `SocketException` 이 스레드 밖으로 나갔다. 안드로이드에서 잡히지 않은 예외는 **프로세스를 죽인다**(PC 의
-     * 인터넷이 끊긴다). 시험의 `Uncaught` 가 그것을 찾았다(2026-10-10).
+     * 스트림은 [pipe] 의 try 안에서 얻는다 — try 밖에서 `client.getOutputStream()` 을 부르면 그 사이 소켓이 닫혔을 때(손님이 끊음·`stop()`)
+     * `SocketException` 이 스레드 밖으로 나간다. 안드로이드에서 잡히지 않은 예외는 **프로세스를 죽인다**(PC 의 인터넷이 끊긴다 — 시험의
+     * `Uncaught` 가 지킨다).
      *
      * @param clientIn 머리를 읽은 것과 **같은** 스트림 — 버퍼에 이미 들어온 본문(머리 뒤에 붙어 온 바이트)이 여기 있다.
      */
@@ -269,15 +268,14 @@ abstract class TcpServer internal constructor(
     }
 
     /**
-     * [basePort] 부터 [attempts] 개를 차례로 묶어 본다 — 비어 있는 첫 포트. 처음 합친 판(과 usb-tether)의 고리를 되살렸다(사용자 결정
-     * 2026-10-10). 모두 차 있으면 [StartError.PORT_TAKEN].
+     * [basePort] 부터 [attempts] 개를 차례로 묶어 본다 — 비어 있는 첫 포트(사용자 결정). 모두 차 있으면 [StartError.PORT_TAKEN].
      */
     private fun bind(): ServerSocket? {
         for (offset in 0 until attempts) {
             // 0 은 시험의 '아무 빈 포트' — 다음 포트를 셀 수 없으므로 한 번만.
             val port = if (basePort == 0) 0 else basePort + offset
             try {
-                // reuseAddress 는 걸지 않는다 — 생성자가 이미 묶은 뒤라 효과가 없다(usb-tether 에서 오해를 부르던 죽은 코드였다).
+                // reuseAddress 는 걸지 않는다 — 생성자가 이미 묶은 뒤라 효과가 없다.
                 return ServerSocket(port, BACKLOG, env.bindAddress)
             } catch (e: Exception) {
                 val next = when {
@@ -295,7 +293,7 @@ abstract class TcpServer internal constructor(
 
     /**
      * 받기 고리. 두 출구 — accept 가 던짐(stop() 이 닫은 것이 아니면)과 고리 밖으로 나간 Throwable — 모두 [died] 로 간다: 듣는 소켓을 닫고
-     * 상태를 내리고 알린다. 예전에는 고리만 끝나 **포트를 쥔 채 화면은 '켜짐'** 이었다.
+     * 상태를 내리고 알린다 — 고리만 끝나면 **포트를 쥔 채 화면은 '켜짐'** 이 된다.
      */
     private fun acceptLoop(socket: ServerSocket) {
         try {

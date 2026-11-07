@@ -3,8 +3,8 @@ package io.github.donggi.iroirobrowser.core.sites
 import java.io.IOException
 
 /**
- * 갤러리 받기를 하는 사이트 — pixiv(작품·작가)와 hitomi.la(갤러리). 사용자 결정(2026-10-11): 'pixiv, hitomi 기능을 브라우저에 통합' —
- * 데스크톱 다운로더(iroiro-downloader)에서 옮겼다. [folder] 는 공용 '내려받기' 아래 맨 앞 폴더 이름이다.
+ * 갤러리 받기를 하는 사이트 — pixiv(작품·작가)와 hitomi.la(갤러리). 데스크톱 다운로더(iroiro-downloader)에서 옮겼다(사용자 결정).
+ * [folder] 는 공용 '내려받기' 아래 맨 앞 폴더 이름이다.
  */
 enum class Site(val folder: String) {
     PIXIV("Pixiv"),

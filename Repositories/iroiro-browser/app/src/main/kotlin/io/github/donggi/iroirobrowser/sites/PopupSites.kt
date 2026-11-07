@@ -27,14 +27,6 @@ class PopupSites(context: Context) {
         prefs.edit().putStringSet(K_ALLOWED, allowed).apply()
     }
 
-    /** 여럿을 한꺼번에 허용한다(설정 › 백업의 가져오기) — 설정 파일을 한 번만 쓴다. 이름은 등록 도메인으로. */
-    fun allowAll(sites: Collection<String>) {
-        val added = sites.map { Domains.registrable(it) }.filter { it.isNotEmpty() && it !in allowed }
-        if (added.isEmpty()) return
-        allowed = allowed + added
-        prefs.edit().putStringSet(K_ALLOWED, allowed).apply()
-    }
-
     /** 허용한 사이트(등록 도메인) — 이름 차례. */
     fun sites(): List<String> = allowed.sorted()
 

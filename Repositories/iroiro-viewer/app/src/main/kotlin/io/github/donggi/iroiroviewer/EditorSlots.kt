@@ -42,10 +42,9 @@ import java.util.concurrent.atomic.AtomicReference
  * ## 반영의 답은 참이어야 한다
  *
  * - 반영마다 `incoming` 을 **그 반영만의 파일로 옮긴 뒤** 큐에 넣는다([stage]) — 다음 저장이 `incoming` 을 다시 쓰는 동안 앞 요청이 그것을
- *   읽으면 잘린 문서가 원본 자리에 놓였다.
+ *   읽으면 잘린 문서가 원본 자리에 놓인다.
  * - 큐에 줄 서서 기다리는 것은 [QUEUE_WAIT_MS] 까지다. 넘으면 **줄에서 거두고**([FileOpManager.withdraw]) '바쁘다' 로 답한다. 이미 돌기 시작한
- *   요청은 끝을 기다려 그 결과로 답한다([ResultWait]). 예전에는 300초를 기다려 '저장하지 못했다' 고 답하면서 요청을 그대로 두어, 나중에 말없이
- *   원본을 바꿨다 — 그동안 편집기의 뒤로 가기는 몇 분씩 아무 일도 하지 않았다.
+ *   요청은 끝을 기다려 그 결과로 답한다([ResultWait]) — 실패라 답하고 요청을 남겨 두면 나중에 말없이 원본을 바꾼다.
  * - 세션이 닫히면(편집기가 끝났다) 아직 줄 서 있는 그 세션의 반영을 거둔다([close]) — 결과를 받을 이가 없어진 저장이 원본을 몰래 바꾸지 않게.
  *
  * ## 기록
@@ -338,8 +337,8 @@ internal object EditorSlots {
     /**
      * 편집기가 댄 이름(다듬은 것 — [name])이 원본([originalName])과 같은 이름인가 — 판단만(JVM 시험). 원본 이름에도 **같은 다듬기**([cleanName])를
      * 하고 견준다. 편집기 쪽 이름은 엔진(rhwp 는 확장자를 소문자로 갈아 끼운다)·편집기의 `OutputNames`·[cleanName] 을 지나며
-     * 다듬어지는데 원본은 그대로 견주어, 대문자 확장자(`공문.HWP`)·점으로 시작하는 이름·확장자 앞의 빈칸·금지 글자·긴 이름이 영영 제자리에
-     * 저장되지 않고 열 때마다 `(2)`·`(3)` 이 쌓였다. 대소문자는 가리지 않는다 — 바깥 저장소(FUSE·FAT·exFAT)가 가리지 않으므로 같은 파일이다.
+     * 다듬어지므로, 원본을 그대로 견주면 대문자 확장자(`공문.HWP`)·점으로 시작하는 이름·확장자 앞의 빈칸·금지 글자·긴 이름이 영영 제자리에
+     * 저장되지 않고 열 때마다 `(2)`·`(3)` 이 쌓인다. 대소문자는 가리지 않는다 — 바깥 저장소(FUSE·FAT·exFAT)가 가리지 않으므로 같은 파일이다.
      * 원본의 확장자가 그 형식의 것이 아니면 같은 이름이 아니다(곁에 새 파일 — 원본의 형식을 바꿔 쓰지 않는다).
      */
     internal fun sameName(name: String, originalName: String, ext: String): Boolean =
@@ -350,8 +349,8 @@ internal object EditorSlots {
      * 편집기가 댄 이름을 다듬는다 — 판단만(JVM 시험). 마지막 조각만, 제어 문자와 흔한 파일 시스템(FAT·exFAT·NTFS)이 받지 않는 글자를
      * 빼고, 앞뒤의 점·빈칸을 걷고, 길이를 묶고, 확장자는 [ext] 로 맞춘다. 남는 것이 없으면 [originalName] 의 이름 부분으로.
      *
-     * 길이는 **바이트로** 묶는다 — 255바이트(ext4·F2FS 의 이름 상한)에서 확장자 몫을 뺀 만큼. 글자 수(120)로만 묶었더니
-     * 한글 90자 이름이 이름 맡기에서 실패해 '저장하지 못했습니다' 만 남았다. 글자로도 [MAX_BASE] 까지다 — 편집기 쪽(`OutputNames`)이 같은 자리에서
+     * 길이는 **바이트로** 묶는다 — 255바이트(ext4·F2FS 의 이름 상한)에서 확장자 몫을 뺀 만큼. 글자 수로만 묶으면
+     * 한글 90자 이름이 이름 맡기에서 실패한다. 글자로도 [MAX_BASE] 까지다 — 편집기 쪽(`OutputNames`)이 같은 자리에서
      * 자르므로, 긴 이름의 같은 이름 판정([sameName])이 맞는다.
      */
     internal fun cleanName(rawName: String?, ext: String, originalName: String): String {
@@ -398,7 +397,7 @@ internal object EditorSlots {
 
     /**
      * 돌아왔을 때 한 번 말할 것 — 판단만(JVM 시험). 새 파일을 만들었으면 그 이름(마지막으로 쓴 것이 새 파일이면 그것, 아니면 마지막으로 만든 것),
-     * 고치기 전 판을 휴지통에 남겼으면 그것(글 편집기는 저장할 때 말하는데 편집기의 저장은 어디서도 말하지 않았다). 둘 다 없으면 null.
+     * 고치기 전 판을 휴지통에 남겼으면 그것. 둘 다 없으면 null.
      */
     internal fun noticeOf(summary: Summary): Notice? {
         val newFile = summary.last?.takeIf { it != summary.original } ?: summary.created.lastOrNull()
@@ -408,8 +407,7 @@ internal object EditorSlots {
 
     /**
      * 새 세션 하나를 더하기 전에 걷을 세션들 — 판단만(JVM 시험). 상한([max])을 넘는 만큼 **가장 오래 쓰이지 않은 것부터**, 편집기가 쥔 것
-     * ([held])은 빼고(예전에는 연 때가 가장 이른 것을 지워, 다른 태스크에 떠 있는 편집기의 세션이 사라질 수 있었다. 그
-     * 편집기의 저장은 모두 실패한다). 쥔 것만 남았으면 상한을 넘겨 둔다 — 사람이 띄운 편집기의 수만큼이다.
+     * ([held])은 빼고(지우면 다른 태스크에 떠 있는 편집기의 저장이 모두 실패한다). 쥔 것만 남았으면 상한을 넘겨 둔다 — 사람이 띄운 편집기의 수만큼이다.
      */
     internal fun evictable(all: Collection<Session>, held: Set<String>, max: Int): List<String> {
         val over = all.size + 1 - max
@@ -418,8 +416,7 @@ internal object EditorSlots {
     }
 
     /**
-     * 오래 쓰이지 않았는가 — 판단만(JVM 시험). 쓰인 때가 지금보다 뒤면(시계를 뒤로 돌렸다) 오래된 것이 아니다(예전에는 시계가
-     * 뒤로 가면 살아 있는 세션까지 지웠다).
+     * 오래 쓰이지 않았는가 — 판단만(JVM 시험). 쓰인 때가 지금보다 뒤면(시계를 뒤로 돌렸다) 오래된 것이 아니다 — 살아 있는 세션을 지우지 않게.
      */
     internal fun expired(session: Session, now: Long): Boolean = now - session.usedAt > MAX_AGE_MS
 
@@ -587,7 +584,7 @@ internal object EditorSlots {
                 saves = o.optInt("saves"),
                 last = if (o.isNull("last")) null else o.optString("last"),
                 openedAt = openedAt,
-                // 2026-10-10 전의 기록에는 없다 — 연 때로 본다.
+                // 없는 기록이 있다 — 쓰인 때는 연 때로 본다.
                 trashed = o.optBoolean("trashed"),
                 usedAt = o.optLong("usedAt", openedAt),
             )
@@ -606,7 +603,7 @@ internal object EditorSlots {
     /** 원본을 찾지 못했다(지워졌다·옮겨졌다·폴더가 사라졌다). */
     const val REASON_GONE = "gone"
 
-    /** 이 표의 세션이 없다(닫혔다·기록을 잃었다·오래되어 지웠다) — 다른 이름으로 저장해도 같다(예전에는 [REASON_GONE] 이었다). */
+    /** 이 표의 세션이 없다(닫혔다·기록을 잃었다·오래되어 지웠다) — 다른 이름으로 저장해도 같다. */
     const val REASON_SESSION = "session"
     const val REASON_SPACE = "space"
     const val REASON_PREVIOUS = "previous"

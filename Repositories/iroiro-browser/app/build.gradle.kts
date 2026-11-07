@@ -38,9 +38,9 @@ android {
     }
 
     lint {
-        // :core·:net·:torrent·:tether 는 순수 JVM 모듈이라 JDK 의 API 로 컴파일된다 — 안드로이드 12(API 31)에 없는 것을 써도
-        // 컴파일러는 모른다(URLEncoder.encode(String, Charset) 로 앱이 죽었다). lint 는 이것을 켜도 그 모듈들을 보지 않았다(되돌려
-        // 확인했다) — 그 모듈들의 API 수준은 tools/check_api_level.py 가 본다(CLAUDE.md '툴체인과 확인 명령').
+        // :core·:net·:tether 는 순수 JVM 모듈이라 JDK 의 API 로 컴파일된다 — 안드로이드 12(API 31)에 없는 것을 써도
+        // 컴파일러는 모른다(예: URLEncoder.encode(String, Charset)). lint 는 이것을 켜도 그 모듈들을 보지 않는다 — 그 모듈들의
+        // API 수준은 tools/check_api_level.py 가 본다(CLAUDE.md '툴체인과 확인 명령').
         checkDependencies = true
     }
 
@@ -53,14 +53,12 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":net"))
-    // 토렌트 받기 엔진(순수 코틀린, 새 의존 없음 — CLAUDE.md '토렌트 엔진'). 프록시를 거치지 않고 기기에서 바로 나간다(사용자 결정).
-    implementation(project(":torrent"))
     // 테더링의 서버·거르개(순수 코틀린, 새 의존 없음 — CLAUDE.md '테더링'). 앱의 tether/ 가 따로 된 프로세스(:tether)에서 잇는다.
     implementation(project(":tether"))
     implementation(libs.androidx.webkit)
     implementation(libs.androidx.media3.extractor)
 
-    // 앱 모듈의 순수 함수(실패 까닭의 글, 막대의 상태 글·오류 까닭·닫은 탭·당겨서 새로 고침의 판정 등)를 기기 없이 시험한다 —
+    // 앱 모듈의 순수 함수(실패 까닭의 글, 막대의 상태 글·오류 까닭·당겨서 새로 고침의 판정 등)를 기기 없이 시험한다 —
     // :core·:net 이 이미 쓰는 것(APK 에는 들지 않는다).
     // 안드로이드 모듈의 JVM 시험이라 `kotlin("test")` 만으로는 러너가 붙지 않는다(iroiro-viewer 의 함정 표).
     testImplementation(kotlin("test-junit"))

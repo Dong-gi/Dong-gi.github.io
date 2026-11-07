@@ -79,7 +79,7 @@ class DownloadNamesTest {
 
     @Test
     fun 정해진_이름은_확장자만_맞춘다() {
-        // 확장자 없는 blob 의 download 속성 — 앞 판은 이름을 잃고 'download.mp4' 였다.
+        // 확장자 없는 blob 의 download 속성 — 이름을 잃고 'download.mp4' 가 되지 않는다.
         assertEquals("내영상.mp4", names.named("내영상", "video/mp4"))
         assertEquals("보고서.pdf", names.named("보고서.pdf", "application/pdf"))
         assertEquals("a_b.mp4", names.named("a/b", "video/mp4; codecs=avc1"))

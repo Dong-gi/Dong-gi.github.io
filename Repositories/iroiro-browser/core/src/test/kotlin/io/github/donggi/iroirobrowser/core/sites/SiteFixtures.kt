@@ -4,7 +4,7 @@ import java.io.IOException
 
 /**
  * 시험의 합성 자료 — 번호·제목·이름은 모두 지어낸 것이다(이 저장소는 GitHub Pages 로 통째 공개된다 — 실제 작품·이름을 넣지 않는다).
- * 꼴은 2026-10-11 실측한 답의 짜임을 흉내 낸다: pixiv 의 봉투와 body 의 키(받기에 쓰지 않는 잡다한 키도 함께), hitomi 의
+ * 꼴은 실측한 답의 짜임을 흉내 낸다: pixiv 의 봉투와 body 의 키(받기에 쓰지 않는 잡다한 키도 함께), hitomi 의
  * `var galleryinfo = …`(끝의 `;` 없음)·`hasavif` 만 있는 파일 항목, gg.js 의 줄마다 `case N:` 와 한 묶음.
  */
 internal object SiteFixtures {

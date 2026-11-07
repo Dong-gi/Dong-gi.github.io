@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 /**
  * 편집기 화면의 글로 된 약속 — 매니페스트·문구·엔진의 첫 쪽·어댑터를 글로 읽어 견준다(EngineKindsTest 와 같은 방식).
  *
- * - 설정이 바뀌어도 화면을 다시 만들지 않는다(글꼴 크기를 바꾸면 고친 것을 잃었다 — '경미 17').
+ * - 설정이 바뀌어도 화면을 다시 만들지 않는다(다시 만들면 글꼴 크기를 바꿀 때 고친 것을 잃는다).
  * - 문구 규칙(조사는 라틴 글자·숫자 뒤에도 붙인다)과 '다른 앱으로 열기' 의 한 벌(core:io).
  * - 앱과 어댑터 셋(rhwp·ONLYOFFICE·probe)이 같은 말을 쓴다 — 뒤로 가기·읽던 자리·열기 실패의 갈래·링크의 prompt.
  */
@@ -101,7 +101,7 @@ class EditorScreenFilesTest {
     @Test
     fun theOnlyofficeAdapterDoesNotEchoTheAppsRefusal() {
         // 앱이 받기를 거절하면(save-failed) 앱은 그 자리에서 까닭을 이미 띄웠다. 쪽이 그것을 save-error·transfer-error 로 되알리면 앱이 일반
-        // 실패 창을 그 위에 하나 더 띄워 까닭이 가려졌다(2026-10-10 기기 — 세션을 지운 뒤의 저장). rhwp 는 같은 것을 AbortError 로 가른다.
+        // 실패 창을 그 위에 하나 더 띄워 까닭을 가린다. rhwp 는 같은 것을 AbortError 로 가른다.
         val transfer = onlyoffice.substringAfter("async function transferNow").substringBefore("\n  }\n")
         assertEquals(3, Regex("""throw refused\(""").findAll(transfer).count(), "앱이 false 로 답한 세 자리는 거절로 던진다")
         assertFalse("throw new Error('앱이 받" in transfer || "throw new Error('앱이 덩이" in transfer)

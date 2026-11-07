@@ -101,7 +101,7 @@ class AdBlockerTest {
 
     @Test
     fun 종류를_모르는_요청은_좁힌_규칙이_막지_않는다() {
-        // EasyPrivacy 의 `*$ping,third-party` — 겹치기만 해도 막던 앞 판은 종류를 모르는 모든 제3자 요청(측정 서버·영상 CDN)을 막았다.
+        // EasyPrivacy 의 `*$ping,third-party` — 겹치기만 해도 막으면 종류를 모르는 모든 제3자 요청(측정 서버·영상 CDN)이 막힌다.
         val ping = blocker("*\$ping,third-party")
         val oca = "https://ipv4-c001-x.1.oca.nflxvideo.net/speedtest/range/0-2048?c=us"
         assertFalse(ping.blocks(oca, page = "https://fast.com/", types = RequestType.guess(oca, "*/*", false, "GET")))
@@ -273,9 +273,9 @@ class AdBlockerTest {
         assertNotNull(b.shouldBlock("https://ads.test/x", null, RequestType.IMAGE))
     }
 
-    // ── 시간 상한(2026-10-16 보안 점검 — 쪽이 지은 주소가 요청 스레드를 세우지 못하게) ──
+    // ── 시간 상한(쪽이 지은 주소가 요청 스레드를 세우지 못하게) ──
 
-    /** [block] 이 [ms] 안에 끝나는가 — 앞 판의 제곱·지수 시간이면 여기서 깨진다(그 스레드는 데몬이라 시험이 끝나면 함께 끝난다). */
+    /** [block] 이 [ms] 안에 끝나는가 — 제곱·지수 시간이면 여기서 깨진다(그 스레드는 데몬이라 시험이 끝나면 함께 끝난다). */
     private fun within(ms: Long, block: () -> Unit) {
         var failure: Throwable? = null
         val t = Thread {
@@ -314,7 +314,7 @@ class AdBlockerTest {
 
     @Test
     fun 되짚는_엔진에서_터지는_정규식도_긴_주소에서_곧바로_끝나고_켜진_채다() {
-        // `(a+)+$` 는 앞 판(java.util.regex — 되짚는다)에서 이런 주소에 길이의 지수 시간이었다. 이 엔진은 길이에 비례하고 예산 안이라 끄지 않는다.
+        // `(a+)+$` 는 되짚는 엔진(java.util.regex)에서 이런 주소에 길이의 지수 시간이다. 이 엔진은 길이에 비례하고 예산 안이라 끄지 않는다.
         val off = CopyOnWriteArrayList<String>()
         val b = AdBlocker(listOf(FilterParser.parse("/(a+)+\$/")), onRegexDisabled = { off += it.text })
         val long = "https://x.test/" + "a".repeat(100_000) + "!"
@@ -346,7 +346,7 @@ class AdBlockerTest {
 
     @Test
     fun 첫_조각을_되풀이한_긴_주소도_곧바로_끝난다() {
-        // 앞 판은 첫 조각이 맞는 자리마다 뒤의 조각을 주소 끝까지 찾아 길이의 제곱이었다(UrlPattern.matches). 뒤 조각의 머리 글자가 자주 나오게
+        // 첫 조각이 맞는 자리마다 뒤의 조각을 주소 끝까지 찾으면 길이의 제곱이다(UrlPattern.matches). 뒤 조각의 머리 글자가 자주 나오게
         // 했다 — 드물면 JVM 의 indexOf(벡터 명령)가 워낙 빨라 이 PC 에서는 제곱이 3초 안에 숨는다(폰은 훨씬 느리다).
         val repeated = "https://x.test" + "/ads/".repeat(100_000)
         val range = Request.hostRange(repeated)
@@ -362,7 +362,7 @@ class AdBlockerTest {
 
     @Test
     fun 같은_낱말을_되풀이한_긴_주소도_곧바로_끝난다() {
-        // 앞 판은 낱말을 나오는 대로 모두 담아 되풀이마다 그 낱말의 규칙들을 다시 맞췄다(Request.tokens) — 규칙 하나를 맞추는 데 주소를 한 번
+        // 낱말을 나오는 대로 모두 담으면 되풀이마다 그 낱말의 규칙들을 다시 맞춘다(Request.tokens) — 규칙 하나를 맞추는 데 주소를 한 번
         // 훑으면(여기서는 `-` 마다 견준다) 길이의 제곱이다.
         val b = blocker("-banner/ad.gif", "||ads.test^")
         within(3_000) { assertFalse(b.blocks("https://x.test/" + "banner-".repeat(100_000))) }
@@ -371,7 +371,7 @@ class AdBlockerTest {
 
     @Test
     fun 이름이_많은_호스트도_곧바로_끝난다() {
-        // 앞 판은 상위 이름을 모두 늘어놓아 글자가 호스트 길이의 제곱만큼 쌓였다(Domains.suffixes — 광고 차단의 호스트 표).
+        // 상위 이름을 모두 늘어놓으면 글자가 호스트 길이의 제곱만큼 쌓인다(Domains.suffixes — 광고 차단의 호스트 표).
         val b = blocker("||ads.test^")
         val host = "a.".repeat(100_000) + "ads.test"
         within(3_000) { assertTrue(b.blocks("https://$host/x.js")) }
@@ -392,7 +392,7 @@ class AdBlockerTest {
 
     @Test
     fun 무늬_맞추기는_앞_판과_답이_같다() {
-        // 가장 앞의 자리 하나로 족하다는 고침(UrlPattern.matches)이 답을 바꾸지 않았는지 — 앞 판의 맞추기를 그대로 옮긴 것과 무작위로 견준다.
+        // 가장 앞의 자리 하나로 족하다는 것(UrlPattern.matches)이 답을 바꾸지 않는지 — 모든 자리를 해 보는 맞추기와 무작위로 견준다.
         val r = Random(16)
         val segment = "ab/.^-"
         var compared = 0
@@ -422,7 +422,7 @@ class AdBlockerTest {
         assertTrue(compared > 100_000)
     }
 
-    /** 앞 판의 [UrlPattern] 맞추기 그대로(첫 조각이 맞는 자리마다 해 본다) — 견주기 시험의 기준. */
+    /** 첫 조각이 맞는 자리마다 해 보는 [UrlPattern] 맞추기 — 견주기 시험의 기준. */
     private class OldUrlPattern(
         private val segments: List<String>,
         private val hostAnchor: Boolean,

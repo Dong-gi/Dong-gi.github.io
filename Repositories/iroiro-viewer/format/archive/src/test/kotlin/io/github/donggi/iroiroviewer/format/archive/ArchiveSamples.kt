@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets
  * 다만 [SevenZArchiveReader.open] 이 엔트리를 **순차로 찾아가는 비용**(nextEntry 를
  * index 번 부른다)은 solid 여부와 무관하므로 그쪽은 이 표본으로 정확히 잰다.
  *
- * RAR 은 아예 만들지 못한다(junrar 에 쓰기 구현이 없다). 실측표에 '미검증' 으로 남는다.
+ * RAR 은 아예 만들지 못한다(junrar 에 쓰기 구현이 없다). 그 길은 미검증으로 남는다.
  */
 internal object ArchiveSamples {
 

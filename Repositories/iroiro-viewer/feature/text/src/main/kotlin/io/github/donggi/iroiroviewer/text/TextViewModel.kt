@@ -7,10 +7,7 @@ import io.github.donggi.iroiroviewer.charset.Bom
 import io.github.donggi.iroiroviewer.charset.CharsetDetector
 import io.github.donggi.iroiroviewer.charset.TextEncoding
 import io.github.donggi.iroiroviewer.data.TextViewerDefaults
-import io.github.donggi.iroiroviewer.format.text.HtmlPreview
-import io.github.donggi.iroiroviewer.format.text.LivePage
 import io.github.donggi.iroiroviewer.format.text.MarkdownPreview
-import io.github.donggi.iroiroviewer.format.text.PreviewAsset
 import io.github.donggi.iroiroviewer.format.text.RowHighlighter
 import io.github.donggi.iroiroviewer.format.text.RowIndex
 import io.github.donggi.iroiroviewer.format.text.RowReader
@@ -22,7 +19,6 @@ import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.io.TextSaver
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.TextLimits
-import io.github.donggi.iroiroviewer.webhost.WebHost
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
@@ -52,7 +48,7 @@ import java.io.InputStream
  * [WINDOW_ROWS] 행만 들고, 목록이 창 가장자리에 닿으면 다시 읽는다. 되읽기는 앵커가
  * 64 KiB 간격이라 한 번에 그만큼이다.
  *
- * ## 설정은 저장소에서 온다(14단계)
+ * ## 설정은 저장소에서 온다
  *
  * 줄 접기·줄 번호·글자 크기·줄 끝 표시는 [ViewerSettings] 가 든다 — 바꾸면 곧바로 저장되고 다음 파일도 그 모양으로
  * 열린다. 저장소는 생성자로 받는다([TextViewerStore]) — 화면은 `AppPreferencesTextStore` 를, 시험은 가짜를 꽂는다.
@@ -71,11 +67,14 @@ class TextViewModel(store: TextViewerStore) : ViewModel() {
         val language: RowHighlighter,
         /** null 이면 강조가 꺼져 있다. [highlightOff] 가 이유를 말한다. */
         val highlight: TextHighlight?,
-        /** 사용자가 인코딩을 손으로 골랐다(판정이 아니다). 스크립트를 실행하는 미리보기가 그 인코딩을 쪽의 선언보다 앞세운다([LivePage]). */
+        /** 사용자가 인코딩을 손으로 골랐다(판정이 아니다). 편집기로 넘길 때 그 인코딩을 함께 건넨다. */
         val encodingChosen: Boolean = false,
     ) {
-        /** 그려 볼 수 있는 파일(마크다운·HTML)이면 그 종류. 미리보기 단추를 이 파일들에만 띄운다. */
-        val previewKind: PreviewKind? get() = PreviewKind.of(name)
+        /**
+         * 그려 볼 수 있는 파일(마크다운)인가. 미리보기 단추를 이 파일들에만 띄운다. HTML 은 그리지 않는다 — '브라우저로 열기' 로
+         * 다른 브라우저에 넘긴다.
+         */
+        val previewable: Boolean get() = MarkdownPreview.isMarkdownName(name)
 
         /** 언어는 정했는데 강조를 못 켠 상태인가(파일이 상한보다 크다). */
         val highlightOff: Boolean
@@ -153,7 +152,7 @@ class TextViewModel(store: TextViewerStore) : ViewModel() {
     }
 
     /**
-     * 미리보기 — 마크다운(14단계)과 HTML(14단계 뒤). [Off] 가 아니면 화면은 본문 대신 이것을 그린다.
+     * 마크다운 미리보기. [Off] 가 아니면 화면은 본문 대신 이것을 그린다.
      */
     sealed interface Preview {
         data object Off : Preview
@@ -163,48 +162,21 @@ class TextViewModel(store: TextViewerStore) : ViewModel() {
         /**
          * @param pagePath 쪽의 경로. 다시 만들 때마다 바뀐다 — 같은 주소면 WebView 가 다시 읽지 않는다.
          * @param html 머리까지 붙인 문서(UTF-8). WebView 의 스레드에서 매번 인코딩하지 않게 미리 바꿔 둔다.
-         * @param assets 쪽이 번호로 가리키는 것(마크다운 `img/N`, HTML `r/N`). 디스크의 것은 [baseDir] 기준 상대 경로다.
-         * @param withheld 스크립트·프레임·바깥 자원을 버렸다(HTML) — 화면이 한 줄로 말한다.
-         * @param scripted 버린 것 가운데 스크립트가 있었다 — 화면이 '스크립트 실행' 을 단다.
-         * @param live 쪽을 파일의 바이트 그대로 내준다 — 스크립트를 실행한다(사용자가 골랐다). 그때 [html]·[assets] 는 비어 있고, 쪽은
-         *   디스크에서 내준다([PreviewServer]).
+         * @param images 쪽이 번호(`img/N`)로 가리키는 그림 — [baseDir] 기준 상대 경로다.
          */
         class Ready(
-            val kind: PreviewKind,
             val pagePath: String,
             val html: ByteArray,
-            val assets: List<PreviewAsset>,
+            val images: List<String>,
             val baseDir: File,
             val truncated: Boolean,
-            val withheld: Boolean = false,
-            val scripted: Boolean = false,
-            val live: Live? = null,
         ) : Preview
 
-        /**
-         * 파일의 바이트 그대로 내주는 쪽(HTML 미리보기의 '스크립트 실행' — [LivePage]). 쪽의 스크립트가 돈다.
-         *
-         * @param host 이 쪽만의 호스트(`WebHost.isolatedHost`). 만들 때마다 새로 짓는다 — 쪽이 남긴 것을 다른 쪽이 읽지 못하게. (액티비티가
-         *   다시 서면 — 밤 모드·언어 — 같은 쪽을 같은 호스트로 다시 읽는다. 같은 문서가 제 것을 다시 보는 것이라 가르지 않았다.)
-         * @param file 미리보는 파일. 쪽은 이것의 바이트 그대로다.
-         * @param length 만들 때 잰 크기. 화면은 그만큼만 읽는다(그 사이에 파일이 자라도).
-         * @param encoding WebView 에 줄 인코딩 이름. null 이면 브라우저가 BOM·`<meta charset>` 으로 정한다([LivePage.transportLabel]).
-         */
-        class Live(
-            val host: String,
-            val file: File,
-            val length: Long,
-            val encoding: String?,
-        )
+        /** 원문이 상한보다 크다. 화면이 상한을 말한다. */
+        data class TooLarge(val limitBytes: Long) : Preview
 
-        /**
-         * 원문이 상한보다 크다. 화면이 상한을 말한다. [live] 는 스크립트를 실행하는 쪽의 상한([LivePage.MAX_PAGE_BYTES])에 걸렸다는 것 —
-         * 위생을 거친 쪽의 상한(8 MiB)에 걸린 HTML 에는 화면이 '스크립트 실행' 을 단다(그 쪽은 더 큰 파일도 연다).
-         */
-        data class TooLarge(val limitBytes: Long, val live: Boolean = false) : Preview
-
-        /** 만들지 못했다. [live] 는 스크립트를 실행하는 쪽을 만들다 실패했다는 것(그때는 '스크립트 실행' 을 다시 달지 않는다). */
-        data class Failed(val live: Boolean = false) : Preview
+        /** 만들지 못했다. */
+        data object Failed : Preview
     }
 
     private val _state = MutableStateFlow<State>(State.Loading())
@@ -254,12 +226,6 @@ class TextViewModel(store: TextViewerStore) : ViewModel() {
     private var previewJob: Job? = null
     private var searchGeneration = 0
     private var previewGeneration = 0
-
-    /**
-     * 사용자가 이 미리보기에서 스크립트 실행을 골랐다. 미리보기를 닫으면(원문으로 돌아가거나 화면을 떠나면) 내린다 — **저장하지 않는다.**
-     * 다시 미리보기를 열면 위생을 거친 쪽부터다. 인코딩을 바꿔 다시 만들 때는 남는다(같은 미리보기다).
-     */
-    private var previewLive = false
 
     // ---- 열기 ------------------------------------------------------------------
 
@@ -442,30 +408,8 @@ class TextViewModel(store: TextViewerStore) : ViewModel() {
     }
 
     /**
-     * 이 미리보기의 스크립트를 실행한다 — 위생을 거친 HTML 쪽의 알림 줄에서, 또는 그 쪽이 너무 커서·만들지 못해서 선 안내에서(그 길을
-     * 막으면 첨부를 품은 큰 보안 메일은 실행할 길이 없다). 쪽을 파일의 바이트 그대로 다시 세운다.
-     */
-    fun runScripts() {
-        val doc = (_state.value as? State.Ready)?.doc ?: return
-        if (doc.previewKind != PreviewKind.HTML || previewLive) return
-        when (_preview.value) {
-            is Preview.Ready, is Preview.TooLarge, is Preview.Failed -> Unit
-            Preview.Off, Preview.Building -> return
-        }
-        previewLive = true
-        buildPreview()
-    }
-
-    /** 스크립트 실행을 멈춘다 — 위생을 거친 쪽으로 돌아간다. */
-    fun stopScripts() {
-        if (!previewLive) return
-        previewLive = false
-        buildPreview()
-    }
-
-    /**
      * 화면을 **떠났다**(회전이 아니라 — 그것은 화면이 가른다). 미리보기를 닫는다. 이 뷰모델은 액티비티에 묶여 있어 화면을 떠나도
-     * 살아 있다 — 그대로 두면 다 만든 쪽(큰 HTML 이면 수십 MB)을 다음에 텍스트 뷰어에 들어올 때까지 쥔다. 돌아오면
+     * 살아 있다 — 그대로 두면 다 만든 쪽(큰 문서면 수 MB)을 다음에 텍스트 뷰어에 들어올 때까지 쥔다. 돌아오면
      * 원문부터 보이는 것은 지금과 같다([open] 의 입장 표).
      */
     fun onScreenLeft() {
@@ -475,28 +419,20 @@ class TextViewModel(store: TextViewerStore) : ViewModel() {
     private fun closePreview() {
         previewJob?.cancel()
         previewJob = null
-        previewLive = false
         _preview.value = Preview.Off
     }
 
     /**
      * 원문을 읽어 쪽 하나로 만든다. **원문 전체를 한 번 더 읽는다** — 창만 들고 있는 뷰어와 달리 미리보기는 문서 전체를 봐야
-     * 뜻이 정해진다(마크다운의 참조 정의는 뒤에 올 수 있고, HTML 은 통째로 WebView 에 넘긴다). 그래서 종류마다 크기 상한
-     * ([MarkdownPreview.MAX_SOURCE_BYTES]·[HtmlPreview.MAX_SOURCE_BYTES])이 있다.
+     * 뜻이 정해진다(마크다운의 참조 정의는 뒤에 올 수 있다). 그래서 크기 상한([MarkdownPreview.MAX_SOURCE_BYTES])이 있다.
      */
     private fun buildPreview() {
         val doc = (_state.value as? State.Ready)?.doc ?: return
-        val kind = doc.previewKind ?: return
+        if (!doc.previewable) return
         previewJob?.cancel()
-        // 바이트 그대로 내주는 쪽 — 사용자가 스크립트 실행을 골랐다.
-        val live = kind == PreviewKind.HTML && previewLive
-        val limit = when {
-            live -> LivePage.MAX_PAGE_BYTES
-            kind == PreviewKind.MARKDOWN -> MarkdownPreview.MAX_SOURCE_BYTES
-            else -> HtmlPreview.MAX_SOURCE_BYTES
-        }
+        val limit = MarkdownPreview.MAX_SOURCE_BYTES
         if (doc.sizeBytes > limit) {
-            _preview.value = Preview.TooLarge(limit, live)
+            _preview.value = Preview.TooLarge(limit)
             return
         }
         _preview.value = Preview.Building
@@ -506,27 +442,20 @@ class TextViewModel(store: TextViewerStore) : ViewModel() {
                 // 만들어도 크기가 굳지 않는다.
                 val file = File(doc.path)
                 val baseDir = file.absoluteFile.parentFile ?: file.absoluteFile
-                if (live) {
-                    _preview.value = buildLive(doc, file, baseDir, limit)
-                    return@launch
+                val source = withContext(IroDispatchers.io) {
+                    MarkdownPreview.readSource(opener(file), doc.encoding, doc.bomLength)
                 }
-                val built = when (kind) {
-                    PreviewKind.MARKDOWN -> buildMarkdown(doc, file)
-                    PreviewKind.HTML -> buildHtml(doc, file, baseDir)
+                val r = withContext(IroDispatchers.parsing) {
+                    val job = coroutineContext.job
+                    MarkdownPreview.render(source) { job.ensureActive() }
                 }
                 previewGeneration++
                 _preview.value = Preview.Ready(
-                    kind = kind,
-                    pagePath = when (kind) {
-                        PreviewKind.MARKDOWN -> MarkdownPreview.pagePath(previewGeneration)
-                        PreviewKind.HTML -> HtmlPreview.pagePath(previewGeneration)
-                    },
-                    html = built.html,
-                    assets = built.assets,
+                    pagePath = MarkdownPreview.pagePath(previewGeneration),
+                    html = r.html.toByteArray(Charsets.UTF_8),
+                    images = r.images,
                     baseDir = baseDir,
-                    truncated = built.truncated,
-                    withheld = built.withheld,
-                    scripted = built.scripted,
+                    truncated = r.truncated,
                 )
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
@@ -534,115 +463,15 @@ class TextViewModel(store: TextViewerStore) : ViewModel() {
                 // 닫은 미리보기(`Off`)나 새로 만든 쪽 위에 '만들지 못했다' 가 덮인다.
                 ensureActive()
                 // 예외 문구는 화면에 내보내지 않는다. 종류만 남긴다.
-                Iro.d { "미리보기 실패(${kind.name}): ${e.javaClass.simpleName}" }
-                _preview.value = Preview.Failed(live)
+                Iro.d { "미리보기 실패: ${e.javaClass.simpleName}" }
+                _preview.value = Preview.Failed
             } catch (e: OutOfMemoryError) {
                 ensureActive()
                 // 결과는 상한으로 묶었지만 만드는 동안 몇 벌이 겹친다. 미리보기 하나 때문에 앱을 내리지 않는다 — 원문 보기는
                 // 창만 들고 있어 그대로 돈다(이미지 디코딩이 같은 판단을 한다).
-                Iro.d { "미리보기 메모리 부족(${kind.name})" }
-                _preview.value = Preview.Failed(live)
+                Iro.d { "미리보기 메모리 부족" }
+                _preview.value = Preview.Failed
             }
-        }
-    }
-
-    /** 만든 쪽 하나. [html] 은 UTF-8 바이트다. */
-    private class Built(
-        val html: ByteArray,
-        val assets: List<PreviewAsset>,
-        val truncated: Boolean,
-        val withheld: Boolean,
-        val scripted: Boolean = false,
-    )
-
-    /**
-     * 바이트 그대로 내주는 쪽([LivePage]) — 스크립트를 실행한다. 만들 것이 거의 없다 — 쪽은 파일의 바이트 그대로이고, 정하는 것은
-     * 크기(다시 잰다)와 WebView 에 줄 인코딩뿐이다. 인코딩을 정하려고 앞 [LivePage.PRESCAN_BYTES] 바이트를 읽는다(문서의 `<meta charset>`).
-     */
-    private suspend fun buildLive(
-        doc: Doc,
-        file: File,
-        baseDir: File,
-        limit: Long,
-    ): Preview = withContext(IroDispatchers.io) {
-        val length = file.length()
-        if (length > limit) return@withContext Preview.TooLarge(limit, live = true)
-        val head = ByteArray(LivePage.PRESCAN_BYTES)
-        val read = FileInputStream(file).use { readFully(it, head, head.size) }
-        val label = LivePage.transportLabel(
-            chosen = doc.encoding.takeIf { doc.encodingChosen },
-            detected = doc.encoding,
-            // 바이트에서 다시 본다 — `doc.bomLength` 는 고른 인코딩과 BOM 이 맞을 때만 0 이 아니다. 브라우저는 고른 것과 상관없이 BOM 을 따른다.
-            hasBom = Bom.detect(head, read) != null,
-            head = head,
-            headLength = read,
-            // XML 로 내주는 쪽(`.xhtml` — `PreviewServer` 가 같은 표로 형식을 정한다)은 `<meta>` 가 아니라 XML 선언이 문서의 말이다.
-            xml = LivePage.servedAsXml(file.name),
-        )
-        Preview.Ready(
-            kind = PreviewKind.HTML,
-            pagePath = LivePage.PAGE_PATH,
-            html = ByteArray(0),
-            assets = emptyList(),
-            baseDir = baseDir,
-            truncated = false,
-            live = Preview.Live(
-                host = WebHost.isolatedHost(),
-                file = file,
-                length = length,
-                encoding = label,
-            ),
-        )
-    }
-
-    private suspend fun buildMarkdown(doc: Doc, file: File): Built {
-        val source = withContext(IroDispatchers.io) {
-            MarkdownPreview.readSource(opener(file), doc.encoding, doc.bomLength)
-        }
-        return withContext(IroDispatchers.parsing) {
-            val job = coroutineContext.job
-            val r = MarkdownPreview.render(source) { job.ensureActive() }
-            Built(
-                html = r.html.toByteArray(Charsets.UTF_8),
-                // 마크다운의 표(14단계) 그대로 — HTML 이 더한 형식을 들이지 않는다.
-                assets = r.images.map { PreviewAsset.Disk(it, PreviewAsset.Use.MARKDOWN) },
-                truncated = r.truncated,
-                withheld = false,
-            )
-        }
-    }
-
-    /**
-     * HTML 은 세 걸음이다 — 앞 패스(파싱), 문서가 건 스타일시트 읽기(디스크), 위생과 머리(파싱). 스타일시트를 읽는 일만 디스크
-     * IO 에서 한다(디스패처 규칙). 폴더 밖·형식·크기는 [PreviewFiles] 가, 개수·합의 상한은 [HtmlPreview.loadStylesheets] 가 본다.
-     */
-    private suspend fun buildHtml(doc: Doc, file: File, baseDir: File): Built {
-        val prepared = prepareHtml(doc, file)
-        val sheets = withContext(IroDispatchers.io) {
-            val job = coroutineContext.job
-            HtmlPreview.loadStylesheets(prepared.stylesheets) { path, max ->
-                job.ensureActive()
-                PreviewFiles.readStylesheet(baseDir, path, max)
-            }
-        }
-        return withContext(IroDispatchers.parsing) {
-            val job = coroutineContext.job
-            val r = HtmlPreview.finish(prepared, sheets, doc.encoding) { job.ensureActive() }
-            Built(r.html.toByteArray(Charsets.UTF_8), r.assets, r.truncated, r.withheld, r.scripted)
-        }
-    }
-
-    /**
-     * 원문을 읽어 앞 패스까지. **원문은 이 안에서만 산다** — 8 MiB 원문은 글자로 16 MB 이고, 뒤의 걸음(스타일시트 읽기·위생)이
-     * 그것을 쥐고 있을 까닭이 없다. 한 함수에 두어 그 수명을 글로 박는다.
-     */
-    private suspend fun prepareHtml(doc: Doc, file: File): HtmlPreview.Prepared {
-        val source = withContext(IroDispatchers.io) {
-            HtmlPreview.readSource(opener(file), doc.encoding, doc.bomLength)
-        }
-        return withContext(IroDispatchers.parsing) {
-            val job = coroutineContext.job
-            HtmlPreview.prepare(source, HtmlPreview.isXhtmlName(doc.name), doc.name) { job.ensureActive() }
         }
     }
 
@@ -788,7 +617,7 @@ class TextViewModel(store: TextViewerStore) : ViewModel() {
      *
      * **`InputStream.readNBytes` 를 쓰지 마라.** 자바 9 의 함수지만 안드로이드에는
      * **API 33 부터** 있고, 이 앱의 minSdk 는 31 이다. 컴파일은 통과하고 Android 12
-     * 에서 `NoSuchMethodError` 로 앱이 죽는다 — 실제로 한 번 죽였다.
+     * 에서 `NoSuchMethodError` 로 앱이 죽는다.
      *
      * 한 번의 `read` 가 요청한 만큼 준다고 가정해서도 안 된다. FUSE 로 올라온
      * `/sdcard` 는 한 번에 주는 양이 요청보다 작을 수 있다.

@@ -11,7 +11,7 @@ import io.github.donggi.iroirobrowser.tether.core.StartError
 
 /**
  * 테더의 기계 말(서버의 [StartError]·핫스팟의 [HotspotProblem]·거르개의 [PeerRejection]·[Passphrases.Problem]) → 화면의 글(자원 번호와 인자).
- * `:tether` 모듈은 기계 말만 낸다(토렌트 엔진과 같은 꼴) — 자원 번호와 인자로만 골라 기기 없이 시험한다(`TetherTextsTest`). 인자가 [Text] 면
+ * `:tether` 모듈은 기계 말만 낸다 — 자원 번호와 인자로만 골라 기기 없이 시험한다(`TetherTextsTest`). 인자가 [Text] 면
  * 화면이 그것을 먼저 글로 바꾼다(겹친 글).
  */
 internal object TetherTexts {
@@ -51,7 +51,7 @@ internal object TetherTexts {
     )
 
     /**
-     * 테더링이 켜져 있는가(핫스팟을 켜는 중 포함) — 하나뿐인 켜기·끄기(화면의 단추·타일·트램폴린)의 판정(사용자 결정 2026-10-10 — 서버 셋과
+     * 테더링이 켜져 있는가(핫스팟을 켜는 중 포함) — 하나뿐인 켜기·끄기(화면의 단추·타일·트램폴린)의 판정(서버 셋과
      * 핫스팟을 함께 켜고 끈다). 서비스가 떠 있어도 핫스팟이 없으면(서지 못해 테더링을 끄는 사이) 꺼짐이다 — 그때 '켜기' 를 누르면 다시 켠다.
      */
     fun isOn(serviceRunning: Boolean, hotspotActive: Boolean, hotspotStarting: Boolean): Boolean =
@@ -59,7 +59,7 @@ internal object TetherTexts {
 
     /**
      * 상태 줄 — 화면 낭독기가 바뀔 때마다 읽는 **라이브 영역**에 든다. 그래서 1초마다 바뀌는 것(주고받은 양·거절·상한의 수)을 넣지 않는다
-     * ([traffic] 이 따로 맡는다) — 예전에는 한 글에 함께 있어 1초마다 다시 쓰여 낭독기가 쉬지 않고 읽었다.
+     * ([traffic] 이 따로 맡는다) — 한 글에 함께 있으면 1초마다 다시 쓰여 낭독기가 쉬지 않고 읽는다.
      *
      * 꺼져 있으면 '테더링 꺼짐' 한 줄과 — 핫스팟이 서지 못했거나 내려가 테더링이 꺼졌으면(또는 끄며 그룹을 내리지 못했으면) — 그 까닭.
      * 켜져 있으면 서버 줄(실제 포트와 세우지 못한 서버의 까닭)과 핫스팟 줄(SSID·그룹 인터페이스).
@@ -97,7 +97,7 @@ internal object TetherTexts {
         StartError.TERMINATED -> Text(R.string.tether_err_terminated)
         StartError.DIED -> Text(R.string.tether_err_died, listOf(serverName(server)))
         // SOCKS5 는 고정 포트 하나(옮기지 않는다 — PC 의 런처가 1080 만 쓴다). HTTP·파일은 기본 포트부터 열 개를 다 해 본 범위(사용자 결정
-        // 2026-10-10 — 다음 포트로 옮긴다).
+        // — 다음 포트로 옮긴다).
         StartError.PORT_TAKEN -> when (server) {
             Server.SOCKS5 -> Text(R.string.tether_err_socks_port, listOf(Socks5Server.BASE_PORT))
             Server.HTTP -> Text(

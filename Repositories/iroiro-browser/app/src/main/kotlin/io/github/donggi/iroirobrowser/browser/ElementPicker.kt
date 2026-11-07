@@ -29,7 +29,7 @@ import io.github.donggi.iroirobrowser.ui.Ui
 import java.util.Locale
 
 /**
- * 요소 숨기기의 **고르는 상태**(사용자 요청, 2026-10-08 — uBlock Origin 의 '요소 선택기' 와 같은 종류). 지금 탭의 페이지 위에 덮개([PickOverlay])와
+ * 요소 숨기기의 **고르는 상태**(uBlock Origin 의 '요소 선택기' 와 같은 종류). 지금 탭의 페이지 위에 덮개([PickOverlay])와
  * 아래 막대(고른 요소의 설명 · 넓게 · 좁게 · 취소 · 숨기기 — 플랫폼 뷰)를 둔다.
  *
  * - **누름을 앱이 가로챈다** — 덮개가 손가락을 모두 받으므로 고르는 동안 페이지에는 터치·누름이 가지 않는다(고리가 열리지 않고 페이지의

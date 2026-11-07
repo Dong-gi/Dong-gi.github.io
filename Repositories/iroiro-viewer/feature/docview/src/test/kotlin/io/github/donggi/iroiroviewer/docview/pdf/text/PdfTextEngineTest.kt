@@ -229,8 +229,8 @@ class PdfTextEngineTest {
     // ---- 검토가 잡은 적대적 입력 ----
 
     /**
-     * 객체 스트림의 `/Length` 가 그 스트림 안의 객체를 가리킨다 — 예전에는 `objStream → resolve → load → objStream` 이 끝없이
-     * 돌아 `StackOverflowError` 로 앱이 죽었다. 이제 그 참조는 '없다' 가 되고, 길이는 `endstream` 을 찾아 정한다.
+     * 객체 스트림의 `/Length` 가 그 스트림 안의 객체를 가리킨다 — 끊지 않으면 `objStream → resolve → load → objStream` 이 끝없이
+     * 돌아 `StackOverflowError` 로 앱이 죽는다. 그 참조는 '없다' 가 되고, 길이는 `endstream` 을 찾아 정한다.
      */
     @Test
     fun `제 안을 가리키는 객체 스트림의 길이에 넘어지지 않는다`() {
@@ -255,7 +255,7 @@ class PdfTextEngineTest {
         assertEquals("inside", text(page(pdf)))
     }
 
-    /** `/W` 가 같은 간접 배열을 수천 번 가리킨다 — 예전에는 몇 KB 로 수십 GB 를 청했다. 값의 수를 표 전체로 묶는다. */
+    /** `/W` 가 같은 간접 배열을 수천 번 가리킨다 — 묶지 않으면 몇 KB 로 수십 GB 를 청한다. 값의 수를 표 전체로 묶는다. */
     @Test
     fun `폭 표 폭탄을 묶는다`() {
         val widths = (1..10_000).joinToString(" ", "[", "]") { "500" }
@@ -270,7 +270,7 @@ class PdfTextEngineTest {
         assertTrue((System.nanoTime() - started) / 1_000_000 < 5_000, "너무 오래 걸렸다")
     }
 
-    /** 폼은 `Do` 를 부른 자리의 글꼴을 물려받는다(명세 8.10.1). 예전에는 빈 상태로 시작해 글이 빠졌다. */
+    /** 폼은 `Do` 를 부른 자리의 글꼴을 물려받는다(명세 8.10.1). 빈 상태로 시작하면 글이 빠진다. */
     @Test
     fun `폼이 부른 자리의 글꼴을 물려받는다`() {
         val form = MiniPdf.stream(

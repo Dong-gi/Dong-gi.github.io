@@ -18,9 +18,7 @@ import java.util.concurrent.CancellationException
 
 /**
  * **무엇을 무엇으로 여는가** 를 아는 단 한 곳.
- *
- * 2단계의 계획이 적어 두고 11단계까지 비어 있던 파일이다(모듈 지도가 "아직 없다" 고
- * 현재형으로 가리키고 있었다). 11단계가 여는 포맷이 둘이 되면서 실제로 자리가 생겼다.
+
  *
  * ## 왜 `app` 에 있는가
  *
@@ -100,7 +98,7 @@ object FormatRegistry : DocumentSupport.Registry {
     /**
      * ZIP 이면 엔트리 이름, 아니면 null.
      *
-     * **8단계의 리더로 연다.** 엔트리 수·경로 탈출 방어가 거기 있고, 판별 한 번을 위해
+     * **`ZipArchiveReader` 로 연다.** 엔트리 수·경로 탈출 방어가 거기 있고, 판별 한 번을 위해
      * 그것을 우회하는 두 번째 ZIP 경로를 만들지 않는다.
      */
     private fun zipNames(source: DocumentSource, head: ByteArray): List<String>? {

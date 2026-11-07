@@ -71,7 +71,7 @@ class UriRefsTest {
 
     @Test
     fun 질의만_있는_참조는_재생목록_이름을_지킨다() {
-        // 열쇠 주소가 `URI="?k=1"` 꼴이면 브라우저는 재생목록의 이름에 질의만 바꾼다. java.net.URI(RFC 2396)는 이름을 뗀다 — 앞 판이 그렇게 풀었다.
+        // 열쇠 주소가 `URI="?k=1"` 꼴이면 브라우저는 재생목록의 이름에 질의만 바꾼다. java.net.URI(RFC 2396)는 이름을 뗀다.
         val playlist = "https://cdn.test/v/x7/index.m3u8?sig=1"
         assertEquals("https://cdn.test/v/x7/index.m3u8?k=1", UriRefs.resolve(playlist, "?k=1"))
         assertNotEquals(URI(playlist).resolve(URI("?k=1")).toString(), UriRefs.resolve(playlist, "?k=1"))
@@ -81,7 +81,7 @@ class UriRefsTest {
     fun 길이_빈_바탕과_URI_가_받지_않는_글자() {
         // 바탕의 길이 비면 빗금을 넣는다(java.net.URI 는 `http://cdn.testkey.bin` 을 만든다).
         assertEquals("http://cdn.test/key.bin", UriRefs.resolve("http://cdn.test", "key.bin"))
-        // java.net.URI 가 받지 않는 글자가 든 상대 주소도 푼다(앞 판은 상대 주소를 그대로 돌려 '잘못된 주소' 로 끝났다).
+        // java.net.URI 가 받지 않는 글자가 든 상대 주소도 푼다.
         assertEquals("https://cdn.test/v/key|1.bin", UriRefs.resolve("https://cdn.test/v/index.m3u8", "key|1.bin"))
         assertEquals("https://cdn.test/v/a%20b/seg{1}.ts", UriRefs.resolve("https://cdn.test/v/index.m3u8", "a%20b/seg{1}.ts"))
         // 스킴처럼 생겼으나 스킴의 글자가 아닌 앞머리는 길이다.

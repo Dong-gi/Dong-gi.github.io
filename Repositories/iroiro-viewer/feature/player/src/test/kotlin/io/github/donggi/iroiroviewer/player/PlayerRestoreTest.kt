@@ -9,7 +9,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 /**
- * 프로세스가 죽은 뒤 되살아난 재생 화면이 다시 세울 큐(빈 재생 화면이 남았다, 기기에서 잡았다). 저장 상태에 무엇을
+ * 프로세스가 죽은 뒤 되살아난 재생 화면이 다시 세울 큐(없으면 빈 재생 화면이 남는다). 저장 상태에 무엇을
  * 얼마나 적는가, 적어 둔 것으로 무엇을 다시 세우는가.
  */
 class PlayerRestoreTest {

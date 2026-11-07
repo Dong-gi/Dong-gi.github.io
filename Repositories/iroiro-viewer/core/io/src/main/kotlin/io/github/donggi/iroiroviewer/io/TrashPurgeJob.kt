@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * ## 왜 WorkManager 가 아니라 JobScheduler 인가
  *
- * 3·4단계 검토가 'WorkManager 를 넣으면 된다' 고 적어 두었지만, 그것은 새 의존이다. 하는 일은 주기 작업
+ * WorkManager 는 새 의존이다. 하는 일은 주기 작업
  * 하나이고 minSdk 31 의 플랫폼 `JobScheduler` 가 그것을 그대로 한다(WorkManager 도 안에서 이것을 쓴다).
  *
  * ## 무엇을 돌리는가

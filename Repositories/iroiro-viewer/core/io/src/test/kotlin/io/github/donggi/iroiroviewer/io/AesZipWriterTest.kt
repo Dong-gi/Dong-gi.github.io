@@ -33,7 +33,7 @@ import kotlin.test.assertTrue
  * 이 시험의 읽개([MiniZip])는 쓰개와 **다른 길**로 푼다 — 열쇠는 JCE 의 `PBKDF2WithHmacSHA1`(SunJCE 는 암호 글자를 UTF-8 로 옮긴다),
  * 계수기는 `BigInteger` 를 리틀 엔디언으로 늘어놓아 블록마다 따로 암호화, 압축은 `java.util.zip.Inflater`. 머리 칸은 명세의 바이트 자리를
  * 그대로 읽는다. 이 앱의 리더(`format:archive`)로 읽는 왕복은 `feature:archive` 의 `AesZipRoundTripTest`, 파이썬 pyzipper 로 읽는 것은
- * CLAUDE.md 의 '14단계 뒤 — AES 암호 ZIP' 이 적는다.
+ * 손으로 확인했다.
  */
 class AesZipWriterTest {
 

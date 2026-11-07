@@ -219,7 +219,7 @@ class PlayerActivity : ComponentActivity() {
      * 값만 들고 있으면 `MutableStateFlow` 가 같은 값을 합쳐 버려(`equals` 기반) **같은
      * 뜻의 인텐트가 두 번째로 올 때 아무 일도 일어나지 않는다.** 알림이 싣고 오는 값은
      * 언제나 `true` 라 정확히 그 경우다 — 목록을 펼쳐 들어왔다가 사용자가 닫은 뒤
-     * 알림을 다시 누르면 펼쳐지지 않았다. 번호가 바뀌므로 요청이 **도착했다는 사실**
+     * 알림을 다시 누르면 펼쳐지지 않는다. 번호가 바뀌므로 요청이 **도착했다는 사실**
      * 자체가 상태를 되돌리는 계기가 된다.
      */
     private data class PlaylistRequest(val seq: Long, val expand: Boolean)
@@ -229,11 +229,10 @@ class PlayerActivity : ComponentActivity() {
     /**
      * 사용자가 재생목록을 직접 여닫았는가. null 이면 아직 손대지 않았다.
      *
-     * **컴포지션이 아니라 액티비티가 든다.** 예전에는 `remember` 였는데, 그러면 이 값이
-     * 컴포지션 안에만 있어 **PiP 판정이 그것을 볼 수 없었다.** 목록이 펼쳐진 채 PiP 로
-     * 들어가면 표면이 컴포지션에 없어 **영상 없는 창**이 뜨는데, 그것을 막을 조건을
-     * 세울 자리가 없었던 것이다. 지금은 화면과 PiP 판정이
-     * **같은 흐름**을 읽는다.
+     * **컴포지션이 아니라 액티비티가 든다.** `remember` 로 두면 이 값이 컴포지션 안에만
+     * 있어 **PiP 판정이 그것을 볼 수 없다** — 목록이 펼쳐진 채 PiP 로 들어가면 표면이
+     * 컴포지션에 없어 **영상 없는 창**이 뜨는데, 그것을 막을 조건을 세울 자리가 없다.
+     * 화면과 PiP 판정이 **같은 흐름**을 읽는다.
      */
     private val playlistChoice = MutableStateFlow<Boolean?>(null)
 
@@ -320,19 +319,18 @@ class PlayerActivity : ComponentActivity() {
     /**
      * **PiP 인 채로 화면이 멈췄다.** 'PiP 창을 닫았다' 를 알아보는 첫 조각이다.
      *
-     * 콜백 차례를 기기에서 재 보고 두 번 고쳤다. 둘 다 추측으로는 맞힐 수 없는 것이었다.
+     * 아래 콜백 차례는 기기에서 잰 것이다 — 추측으로는 맞힐 수 없다.
      *
      * * 창의 X 는 액티비티를 **끝내지 않는다.** 고정 태스크만 걷어 내고 액티비티는
      *   전체화면 크기로 뒤에 남는다 — `isFinishing=false` 이고 창이 `[0,0][1080,2400]`
-     *   인 것을 실측했다. 그래서 처음 쓴 `isFinishing` 검사는 **한 번도 참이 되지 않았고**
-     *   '닫으면 멈춘다' 가 조용히 빠져 있었다.
+     *   이다. 그래서 `isFinishing` 검사는 **한 번도 참이 되지 않는다.**
      * * 닫을 때의 차례는 **`onStop` → `onPictureInPictureModeChanged(false)`** 다.
      *   모드 콜백에서 표시를 세우는 방식은 이미 늦다(그 다음에 오는 `onStop` 이 없다).
      *
      * 그래서 [onStop] 이 '그때 PiP 였는가' 를 적어 두고, **그 뒤에 모드가 꺼지면** 창을
      * 닫은 것으로 본다. 전체화면으로 되돌리는 길은 멈추지 않고 곧바로 리줌되므로 이 표시가
      * 서 있지 않고, 화면이 꺼져 멈춘 길에서는 모드 콜백이 아예 오지 않는다 — 그 구분이
-     * 중요한 이유는 5단계부터 지켜 온 **'화면을 꺼도 소리는 계속된다'** 때문이다.
+     * 중요한 이유는 **'화면을 꺼도 소리는 계속된다'** 때문이다.
      */
     private var stoppedWhileInPip = false
 
@@ -356,8 +354,8 @@ class PlayerActivity : ComponentActivity() {
      * 여느 뒤로 가기처럼 서비스에서 이어진다. 우리 앱 안에서 다시 열면(미니 바·알림·목록) 그 인텐트가 이것을 거둔다.
      *
      * **한 번뿐이다**([forgetSender]) — 뒤로 가기로 보낸 앱에 돌아갔거나 홈·최근 앱으로 떠났으면 거둔다. 그 뒤 런처로 돌아온 사람은
-     * 보낸 앱에서 오지 않았다. 처음에는 거두지 않아, 내려받은 영상을 뷰어로 연 사람이 그 뒤 몇 번을 돌아와도 뒤로 가기가 파일
-     * 목록 대신 홈으로 튕겼다(사용자가 짚었다).
+     * 보낸 앱에서 오지 않았다 — 거두지 않으면 그 뒤 몇 번을 돌아와도 뒤로 가기가 파일 목록 대신
+     * 홈으로 튕긴다.
      */
     private var fromOutside = false
 
@@ -520,7 +518,7 @@ class PlayerActivity : ComponentActivity() {
             // 목록이라 다른 화면과 같은 규칙을 따르는 편이 낫다.
             //
             // **테마와 조작부가 같은 식을 써야 한다** — 어긋나면 목록은 밝은데 조작부만
-            // 어두운 그림이 나온다(한 번 겪었다). 그래서 여기서 한 번 정해 내려보낸다.
+            // 어두운 그림이 나온다. 그래서 여기서 한 번 정해 내려보낸다.
             IroiroTheme(forceDark = playback.hasVideo && !playlistVisible) {
                 PlayerScreen(
                     onBack = ::goBack,
@@ -577,8 +575,8 @@ class PlayerActivity : ComponentActivity() {
         val path = itemPaths.pathOf(mediaId) ?: return ClipStart.Refused(R.string.player_clip_no_path)
         // 다른 앱이 넘겨 앱 캐시에 둔 사본은 그 곁에 저장해도 사용자가 찾아갈 수 없다(읽기 전용 사본 — `IncomingFiles`).
         if (IncomingFiles.isCopy(this, path)) return ClipStart.Refused(R.string.player_clip_copy)
-        // 앱 캐시의 공유 폴더 아래는 **모두** 같다 — 받은 사본이 아닌 것(예전의 네트워크 저장소 사본 `share/remote`)이 위의 검사를
-        // 빠져 '저장했습니다' 가 뜨고 파일은 캐시에 남았다. 까닭을 말한다([ClipSource]).
+        // 앱 캐시의 공유 폴더 아래는 **모두** 같다 — 받은 사본이 아니어도 그 곁에 저장한 파일은 캐시에 남는다. 까닭을
+        // 말한다([ClipSource]).
         if (ClipSource.isAppCopy(path, ShareHelper.shareDir(this))) return ClipStart.Refused(R.string.player_clip_app_copy)
         val id = java.util.UUID.randomUUID().toString()
         // 넣기 **전에** 신원을 적는다 — 곧바로 끝난 결과가 먼저 오면 신원이 영영 '기다리는 중' 에 남는다.
@@ -679,9 +677,8 @@ class PlayerActivity : ComponentActivity() {
      * 정지하면 **다시 그려지지 않는다** — `collectAsStateWithLifecycle` 의
      * `minActiveState` 를 낮춰도 마찬가지다. 그래서 큐가 영상 → 소리로 넘어가도 효과가
      * 다시 돌지 않고, 보이지도 않는 화면이 [ActivityInfo.SCREEN_ORIENTATION_SENSOR] 를
-     * 그대로 쥐고 있었다. 알림에서 돌아오는 순간 창이 가로로 잡혔다가 세로로 되돌아오고,
-     * 그 사이 새로 넓어진 창의 아래쪽이 아무도 칠하지 않은 채 남는 것이 사용자가 본
-     * '하단이 검게 보인다' 다.
+     * 그대로 쥐고 있게 된다. 알림에서 돌아오는 순간 창이 가로로 잡혔다가 세로로 되돌아오고,
+     * 그 사이 새로 넓어진 창의 아래쪽이 아무도 칠하지 않은 채 검게 남는다.
      *
      * **잠금 값은 지우지 않는다.** 다시 서면 [followDeviceRotationWhileVideo] 의 수집이
      * 처음부터 다시 돌면서 잠금을 그대로 다시 건다 — 전화를 받고 돌아온 사람이 잠금을
@@ -689,7 +686,7 @@ class PlayerActivity : ComponentActivity() {
      */
     override fun onStop() {
         // **여기서는 적어만 둔다.** 창을 닫았는지 여기서는 알 수 없다 — 화면이 꺼져 멈춘
-        // 것일 수도 있고, 그때 재생을 멈추면 이 앱이 5단계부터 지켜 온 '화면을 꺼도 소리는
+        // 것일 수도 있고, 그때 재생을 멈추면 이 앱의 '화면을 꺼도 소리는
         // 계속된다' 를 정면으로 깨뜨린다. 판정은 모드 콜백이 이어서 한다.
         stoppedWhileInPip = pipActive.value
         super.onStop()
@@ -728,11 +725,11 @@ class PlayerActivity : ComponentActivity() {
      * **보낸 앱으로 돌아가는 길을 거둔다**([fromOutside]) — 다음에 런처로 돌아온 사람에게 뒤로 가기는 파일 목록이다. 우리가 다른
      * 앱을 띄운 길([handingOff])은 빼고, 화면이 꺼진 것은 여기 오지 않는다.
      *
-     * **API 31 의 자동 PiP(영상을 트는 중에 홈)는 이 콜백을 부르지 않는다** — 모드 콜백만 온다(2026-10-05, 로그로 실측). 그래서
+     * **API 31 의 자동 PiP(영상을 트는 중에 홈)는 이 콜백을 부르지 않는다** — 모드 콜백만 온다(로그로 확인). 그래서
      * PiP 에 들어가는 길은 [onPictureInPictureModeChanged] 가 따로 거둔다. 같은 까닭으로 아래의 '미리 접기' 는 그 길에서 돌지
-     * 않는다 — 그 길을 위해 둔 것이었다: 모드 콜백은 애니메이션이 **끝난 뒤** 오고 시작 시점을 알려 주는
+     * 않는다 — 그 길을 위해 둔 것이다: 모드 콜백은 애니메이션이 **끝난 뒤** 오고 시작 시점을 알려 주는
      * `PictureInPictureUiState.isTransitioningToPip()` 는 API 35 라, 첫 프레임에 조작부가 찍히지 않게 하려면 우리가 먼저 접어야
-     * 했다. 계획이 자동 진입인데 이 콜백이 오는 길이 API 31 에 남아 있는지는 확인하지 않았다(오면 접고, 다시 서면 [onResume] 이
+     * 한다. 계획이 자동 진입인데 이 콜백이 오는 길이 API 31 에 남아 있는지는 확인하지 않았다(오면 접고, 다시 서면 [onResume] 이
      * 편다). 계획이 자동 진입이 아닐 때는 접지 않는다 — 소리 파일이나 목록을 펼친 상태에서 홈을 눌러도 화면이 공연히 접히면
      * 돌아왔을 때 한 프레임이 비어 보인다.
      */
@@ -905,8 +902,8 @@ class PlayerActivity : ComponentActivity() {
     /**
      * PiP 로 보는 중에 큐가 **소리 항목으로 넘어가면** 창을 닫는다. 재생은 계속된다.
      *
-     * 영상이 없으면 PiP 창은 검은 사각형이고, 소리의 백그라운드 자리는 5단계가 알림과
-     * 미니 바로 이미 정해 두었다. 재생을 멈추지 않는 것은 **플레이어가 서비스에 살아
+     * 영상이 없으면 PiP 창은 검은 사각형이고, 소리의 백그라운드 자리는 알림과
+     * 미니 바다. 재생을 멈추지 않는 것은 **플레이어가 서비스에 살아
      * 화면이 사라져도 끊길 이유가 없기** 때문이다.
      *
      * **판정을 `state.hasVideo` 로 하지 않는다.** 그 값은 항목을 건너뛰는 동안 잠깐
@@ -917,11 +914,9 @@ class PlayerActivity : ComponentActivity() {
     private fun leavePipWhenQueueTurnsToAudio() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // **종류와 자리를 한 흐름에서 받는다.** 예전에는 `queue` 와
-                // `state.queueIndex` 를 각각 다른 흐름에서 받아 짝지었는데, 둘이 한 프레임
-                // 어긋난 순간에 엉뚱한 줄의 종류를 읽는다 — 그 값으로 창을 닫기로 했으므로
-                // **어긋난 짝 하나가 재생 화면을 끝내 버린다.** 지금은 커넥션이
-                // `State.currentKind` 로 함께 실어 보낸다.
+                // **종류와 자리를 한 흐름에서 받는다**(커넥션이 `State.currentKind` 로 함께 싣는다).
+                // `queue` 와 `state.queueIndex` 를 다른 흐름에서 받아 짝지으면 둘이 한 프레임 어긋난 순간에
+                // 엉뚱한 줄의 종류를 읽는다 — 그 값으로 창을 닫으므로 **어긋난 짝 하나가 재생 화면을 끝내 버린다.**
                 combine(PlaybackConnection.state, pipActive) { s, pip ->
                     pip && s.currentKind == FileKind.AUDIO
                 }.distinctUntilChanged().collect { leave ->
@@ -1012,8 +1007,8 @@ class PlayerActivity : ComponentActivity() {
     }
 
     /**
-     * **영상이 도는 동안 화면을 끄지 않는다**(기기에서 화면 꺼짐 시간을 15초로 두고 영상을 틀자 32초 뒤
-     * 화면이 꺼진 채 소리만 이어졌다. 에뮬레이터의 기본값은 '끄지 않음' 이라 10단계부터 아무도 보지 못했다). 재생은 서비스가 하고
+     * **영상이 도는 동안 화면을 끄지 않는다**(걸지 않으면 기기의 화면 꺼짐 시간이 지나 화면이 꺼진 채 소리만 이어진다.
+     * 에뮬레이터의 기본값은 '끄지 않음' 이라 거기서는 드러나지 않는다). 재생은 서비스가 하고
      * 표면은 우리가 직접 붙이므로 `PlayerView` 가 해 주던 `keepScreenOn` 이 없다 — 창의 [WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON]
      * 을 우리가 건다.
      *
@@ -1041,14 +1036,14 @@ class PlayerActivity : ComponentActivity() {
     }
 
     /**
-     * **영상을 보는 동안 시스템 바를 거둔다**(기기에서 잡았다: 1080×2400 에뮬레이터를 가로로 눕히고 조작부를 감춰도
-     * 상태 표시줄이 영상 위에 겹쳤고 내비게이션 바가 밝은 회색 띠로 남았다). 언제 거두는지는 [PlayerChrome.barsHidden] 이고, 거는 일은
+     * **영상을 보는 동안 시스템 바를 거둔다**(거두지 않으면 가로로 눕히고 조작부를 감춰도
+     * 상태 표시줄이 영상 위에 겹치고 내비게이션 바가 밝은 회색 띠로 남는다). 언제 거두는지는 [PlayerChrome.barsHidden] 이고, 거는 일은
      * 이 액티비티가 수명에 묶어 한다 — 방향 잠금과 같은 까닭이다(불변식 2: 정지한 화면은 다시 그려지지 않아 컴포저블이 쥐면 보이지 않는
      * 화면이 바를 붙든다). 놓는 것은 [onStop], PiP 에서 돌아올 때 다시 거는 것은 [onPictureInPictureModeChanged] 다.
      *
      * 영상이 보이는 동안에는 **바의 색도 어둡게** 둔다 — 상태 표시줄 아이콘은 테마(`IroiroTheme(forceDark)`)가 밝게 두지만, 3버튼
      * 내비게이션의 바탕은 시스템이 밝은 모드를 따라 흰 띠를 깐다(`enableEdgeToEdge` 의 기본은 '시스템을 따른다'). 두 값 모두 테마와
-     * **같은 식**(영상이 보이고 목록이 닫혔다)을 쓴다 — 어긋나면 목록은 밝은데 바만 검거나 그 반대가 된다(10단계가 조작부로 겪은 모양).
+     * **같은 식**(영상이 보이고 목록이 닫혔다)을 쓴다 — 어긋나면 목록은 밝은데 바만 검거나 그 반대가 된다.
      *
      * 조작부의 판은 바가 드나들어도 출렁이지 않게 `…IgnoringVisibility` 인셋을 쓴다([PlayerScreen]).
      */
@@ -1093,13 +1088,13 @@ class PlayerActivity : ComponentActivity() {
     private data class BarsPlan(val dark: Boolean, val hidden: Boolean)
 
     /**
-     * **되살아난 화면이 빈 채로 남지 않게 한다**(기기에서 잡았다: 재생하던 앱이 죽은 뒤 안드로이드가 이 화면을 저장
-     * 상태로 되살리면 '0:00 / 0:00' 에 제목도 없고 재생 단추가 듣지 않았다. 뒤로 가기만 파일 목록으로 갔다).
+     * **되살아난 화면이 빈 채로 남지 않게 한다** — 재생하던 앱이 죽은 뒤 안드로이드가 이 화면을 저장 상태로
+     * 되살리면 그대로는 '0:00 / 0:00' 에 제목도 없고 재생 단추가 듣지 않는다.
      *
      * 재생은 서비스에 있고 서비스는 프로세스와 함께 죽어 큐가 없다. 붙고 나서 플레이어가 비어 있으면 — 프로세스가 새로 섰다 — 적어 둔
      * 큐([PlayerRestore])를 **멈춘 채, 그 자리에서** 다시 세운다(`PlaybackConnection.restore`). 비어 있지 않으면 프로세스가 살아 있던
-     * 것(밤 모드를 바꿔 다시 섰다)이라 아무것도 하지 않는다. 다시 세울 것이 없으면 — 적어 둔 것이 없다·지금 항목이 사라졌다·네트워크
-     * 저장소에서 흘려 읽던 것이라 연결이 없다 — 알리고 파일 목록(그 폴더)으로 간다([leaveEmptyScreen]).
+     * 것(밤 모드를 바꿔 다시 섰다)이라 아무것도 하지 않는다. 다시 세울 것이 없으면 — 적어 둔 것이 없다·지금 항목이 사라졌다 —
+     * 알리고 파일 목록(그 폴더)으로 간다([leaveEmptyScreen]).
      */
     private fun restoreIfEmpty() {
         lifecycleScope.launch {
@@ -1224,16 +1219,15 @@ private fun PlayerScreen(
     }
     // **안내에 번호를 붙인다.** 같은 결과를 두 번 내면(`구간이 너무 짧습니다` 를 두 번)
     // 값이 같아 `LaunchedEffect` 의 키가 바뀌지 않고, 그러면 **첫 번째 타이머가 그대로
-    // 흘러 두 번째 안내가 곧바로 사라진다.** 10단계가 `MutableStateFlow` 에서 같은 형태를
-    // 한 번 겪었다(함정 표).
+    // 흘러 두 번째 안내가 곧바로 사라진다.** 함정 표의 `MutableStateFlow` 와 같은 형태다.
     var noteSeq by remember { mutableStateOf(0L) }
     // 조작부 판이 실제로 차지하는 높이. 재생목록이 그만큼 끝을 비우고, 위에 뜨는
     // 안내들이 그만큼 비켜선다.
     var controlsHeight by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
     // 판 바로 위. **아직 재기 전이면 그리지 않는다** — 추측한 자리에 그리느니 한
-    // 프레임 늦게 뜨는 편이 낫다. 상수로 떨어뜨렸더니 그 상수가 실제 판(220dp)보다
-    // 작아 같은 결함을 첫 프레임짜리로 남겼다.
+    // 프레임 늦게 뜨는 편이 낫다. 상수로 떨어뜨리면 그 상수가 실제 판(220dp)보다
+    // 작아 첫 프레임에 판과 겹친다.
     val controlsMeasured = controlsHeight > 0.dp
     val aboveControls = controlsHeight + OFFER_GAP
     // 터치 잠금 중에는 무엇이든 거둔다 — 목록이 펼쳐져 있거나 소리 항목이어도(잠그는 단추는 영상이 보일 때만 있다).
@@ -1249,7 +1243,7 @@ private fun PlayerScreen(
     val prefs = remember(context) { AppPreferences(context.applicationContext) }
     val tapSeekSeconds by prefs.tapSeekSeconds.collectAsStateWithLifecycle(AppPreferences.DEFAULT_TAP_SEEK_SECONDS)
 
-    // **조작부를 저절로 거둔다**(기기에서 잡았다: 재생 12초 뒤에도 그대로였다). 거둘 수 있는 동안 [PlayerChrome.AUTO_HIDE_MS]
+    // **조작부를 저절로 거둔다**. 거둘 수 있는 동안 [PlayerChrome.AUTO_HIDE_MS]
     // 를 재고, 무엇이든 하는 중이면(손가락이 닿아 있다·막대를 끈다·메뉴·시트·배속 눈금·구간 칸이 열려 있다·저장이 돈다) 멈췄다가 끝나면
     // 처음부터 다시 잰다 — 효과의 키가 바뀌면 앞의 기다림이 취소되는 것이 곧 '만지면 시계를 다시 잰다' 다. 판정은 [PlayerChrome].
     var touching by remember { mutableStateOf(false) }
@@ -1271,7 +1265,7 @@ private fun PlayerScreen(
         }
     }
 
-    // **조작부가 떠 있는 동안 자막을 판 위로 올린다**(가로 영상에서 판이 자막을 덮었다). 판이 영상의 아래쪽을 얼마나
+    // **조작부가 떠 있는 동안 자막을 판 위로 올린다**(가로 영상에서는 판이 자막을 덮는다). 판이 영상의 아래쪽을 얼마나
     // 덮는지는 잰다 — 화면 높이, 영상 상자의 아래 끝, 판의 높이(불변식 3 — 상수로 맞히지 않는다). 세로 화면처럼 영상이 판보다 위에서
     // 끝나면 덮는 것이 없어 0 이다. 판이 사라지면 제자리로 내려온다(움직임은 짧게 — 글자가 순간이동하면 읽던 줄을 놓친다).
     var rootHeightPx by remember { mutableIntStateOf(0) }
@@ -1389,8 +1383,8 @@ private fun PlayerScreen(
             // `SurfaceView` 는 `setZOrderOnTop` 을 부르지 않으면 **창에 구멍을 뚫고**
             // 그 자리를 컴포지터가 따로 합성한다. 목록이 그 위를 덮는 동안에도 구멍은
             // 살아 있어서, 창을 다시 칠할 일이 생기면(방향이 바뀌어 창 크기가 달라지는
-            // 순간 따위) **아무도 칠하지 않은 자리가 검게 남는다** — 사용자가 알림에서
-            // 돌아왔을 때 본 것이 그 그림이다(아래 절반이 검고 조작부가 통째로 없다).
+            // 순간 따위) **아무도 칠하지 않은 자리가 검게 남는다**(알림에서 돌아올 때
+            // 아래 절반이 검고 조작부가 통째로 없는 그림).
             //
             // 그 그림은 **이 컴포지션이 만들 수 없다**: 목록이 그려졌다면
             // `playlistOpen` 이 참이고, 그러면 `showControls` 도 반드시 참이며
@@ -1405,7 +1399,7 @@ private fun PlayerScreen(
                 // 비율을 아직 모르면(첫 프레임 전) 채워 두었다가 알게 되면 맞춘다.
                 //
                 // **`fillMaxWidth` 를 앞에 두지 않는다**. 폭을 화면에 못 박으면 `aspectRatio` 가 높이에
-                // 맞추는 길을 잃어, 20:9 폰을 가로로 눕힌 화면(2400×1080)에서 16:9 영상이 2400×1350 이 되어 위아래가 잘렸다 — 그 상자 안의
+                // 맞추는 길을 잃어, 20:9 폰을 가로로 눕힌 화면(2400×1080)에서 16:9 영상이 2400×1350 이 되어 위아래가 잘린다 — 그 상자 안의
                 // 자막도 함께 잘린다. `aspectRatio` 만 두면 폭에 맞춰 보고 넘치면 높이에 맞춘다(부모 `Box` 는 최소 크기를 0 으로 넘긴다).
                 //
                 // **자막을 이 상자 안에 넣는다.** 밖에 두면 세로 영상 아래의 빈 여백에
@@ -1444,8 +1438,8 @@ private fun PlayerScreen(
                 }
             } else if (!state.hasVideo && !inPip) {
                 // **PiP 창에는 영상 말고 아무것도 두지 않는다**(공식 문서). 소리 가지에도
-                // 같은 가드가 필요하다 — 영상 가지에만 달아 두었더니 큐가 소리로 넘어간
-                // 그 짧은 창 동안 제목과 자막이 작은 창에 찍혔다.
+                // 같은 가드가 필요하다 — 영상 가지에만 달면 큐가 소리로 넘어간
+                // 그 짧은 창 동안 제목과 자막이 작은 창에 찍힌다.
                 Text(
                     text = PathNames.forDisplay(state.title),
                     style = MaterialTheme.typography.titleMedium,
@@ -1473,8 +1467,8 @@ private fun PlayerScreen(
             }
         }
 
-        // **여기서 죽으면 여기서 말한다.** 실패 문구는 5단계부터 있었지만 읽는 곳이
-        // 파일 목록뿐이라, 재생 화면에 들어와 있는 동안 디코더가 죽으면 빈 화면만 남았다.
+        // **여기서 죽으면 여기서 말한다.** 실패 문구를 파일 목록만 읽으면 재생 화면에 들어와
+        // 있는 동안 디코더가 죽을 때 빈 화면만 남는다.
         // 소비(`consumeFailure`)는 하지 않는다 — 나가면 목록이 한 번 더 말해 주고, 새로
         // 틀면 `PlaybackConnection` 이 스스로 지운다. 큐 안에서 다음 곡으로 넘어가면 커넥션이
         // 앞 곡의 실패를 버린다(`State.carriedFailure`) — 여기 뜨는 실패는 언제나 지금 곡의 것이다.
@@ -1530,8 +1524,7 @@ private fun PlayerScreen(
         // 그린 것이 위다). 조작부의 `return@Box` 보다 **앞에** 있어야 조작부를 숨긴
         // 상태에서도 보인다 — 영상을 탭해 조작부를 감추는 것과 이 제안은 무관한 일이다.
         //
-        // 파일 관리자 목록에는 그리지 않는다. 거기서는 재생이 곁가지이고, 예전에 그 자리에
-        // 띄웠던 스낵바가 사라지지도 않았다(`BrowserScreen` 의 주석).
+        // 파일 관리자 목록에는 그리지 않는다. 거기서는 재생이 곁가지다.
         // **잠깐 뜨는 안내.** A-B 를 누른 결과와 PiP 진입 실패가 여기로 온다.
         //
         // 이어보기 알약과 **같은 자리**를 쓰므로 둘이 겹치지 않게 갈라 둔다. 방금 누른
@@ -1552,7 +1545,7 @@ private fun PlayerScreen(
                 // 넘기지 못한 까닭은 문장이라 읽을 시간을 스낵바만큼 준다([PlayerOpenWith.HANDOFF_NOTE_HOLD_MS]).
                 delay(if (handoffNote != null || clipNote != null) PlayerOpenWith.HANDOFF_NOTE_HOLD_MS else NOTE_HOLD_MS)
                 // **그사이 새 안내가 왔으면 지우지 않는다.** 기다림이 끝나는 프레임에 새 안내가 들어오면 이 효과가 취소되기 전에
-                // 새것까지 지워, 잇달아 끝난 둘째 결과가 한 번도 그려지지 않았다.
+                // 새것까지 지워, 잇달아 끝난 둘째 결과가 한 번도 그려지지 않는다.
                 if (noteSeq == mine) {
                     abNote = null
                     pipFailed = false
@@ -1594,17 +1587,15 @@ private fun PlayerScreen(
                     .align(Alignment.BottomCenter)
                     // **조작부 판의 실제 높이를 재서 그 위로 비켜선다.**
                     //
-                    // 상수(200dp)로 두었더니 판이 그보다 높아 **알약의 아래쪽이 잘렸다**
-                    // — 위 모서리는 둥근데 아래는 직선으로 끊기고 글자가 바닥에 붙는다
-                    // (사용자가 지적했다). 판 높이는 글꼴 배율과 시스템 바 인셋에 따라
-                    // 달라지므로 상수로는 맞힐 수 없다.
+                    // 판 높이는 글꼴 배율과 시스템 바 인셋에 따라 달라지므로 상수로는 맞힐 수 없다 —
+                    // 상수(200dp)로 두면 판이 그보다 높을 때 **알약의 아래쪽이 잘린다**.
                     //
                     // 조작부를 숨겨도 자리가 그대로인 것은 [controlsHeight] 가 **마지막으로
                     // 잰 값을 들고 있기** 때문이다 — 판이 사라져도 값은 남는다. 조작부의
                     // 유무로 다른 것이 움직이지 않아야 한다는 규칙이 그래서 지켜진다.
                     .padding(bottom = aboveControls)
                     // **색을 테마에서 가져온다.** 검정 알약은 영상 위에서 아예 보이지
-                    // 않았고(검정 위 검정), 목록을 펼친 밝은 화면에서는 혼자 튄다.
+                    // 않고(검정 위 검정), 목록을 펼친 밝은 화면에서는 혼자 튄다.
                     // `inverseSurface` 는 스낵바가 쓰는 짝이라 어느 테마에서도 배경과
                     // 반대편에 선다.
                     .background(MaterialTheme.colorScheme.inverseSurface, RoundedCornerShape(24.dp))
@@ -1672,10 +1663,10 @@ private fun PlayerScreen(
         ) {
             // **여기서 탭을 삼킨다.** 이 판에는 포인터를 잡는 수정자가 하나도
             // 없어서, 단추가 아닌 빈 자리(제목 줄·시간 표시 옆)를 누르면 Compose 가
-            // 형제를 더 내려가 **판 뒤에 깔린 재생목록 줄**을 눌러 버렸다. 사용자는
+            // 형제를 더 내려가 **판 뒤에 깔린 재생목록 줄**을 눌러 버린다. 사용자는
             // 아무것도 누르지 않았는데 곡이 바뀐다. `indication = null` 이라 눌린
             // 표시는 나지 않는다. **내용 아래의 형제**에 단다 — 판(부모)에 달면 `clickable` 이 자손의 의미를 합쳐 화면 낭독기가 판
-            // 전체(구간 칸의 안내·진행 포함)를 눌러도 아무 일 없는 단추 하나로 읽었다(함정 표).
+            // 전체(구간 칸의 안내·진행 포함)를 눌러도 아무 일 없는 단추 하나로 읽는다(함정 표).
             Box(
                 Modifier
                     .matchParentSize()
@@ -1689,8 +1680,8 @@ private fun PlayerScreen(
             Column(
                 Modifier
                     .fillMaxWidth()
-                    // **판의 위쪽에는 인셋을 두지 않는다**(화면 아래에 붙은 판이 상태 표시줄 높이만큼 위 여백을 가져
-                    // 220dp 가운데 72dp 가 인셋이었다). 아래와 양옆만 피한다. 그리고 **바가 보이든 거둬졌든 같은 자리를 비운다**
+                    // **판의 위쪽에는 인셋을 두지 않는다**(화면 아래에 붙은 판이 상태 표시줄 높이만큼 위 여백을 가질
+                    // 까닭이 없다). 아래와 양옆만 피한다. 그리고 **바가 보이든 거둬졌든 같은 자리를 비운다**
                     // (`…IgnoringVisibility`) — 조작부와 바가 함께 드나드는데, 인셋이 따라 바뀌면 판이 그때마다 출렁인다.
                     .windowInsetsPadding(controlsInsets())
                     .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 16.dp)
@@ -1717,15 +1708,14 @@ private fun PlayerScreen(
                 val fraction = scrubbing ?: if (state.durationMs > 0) {
                     (state.positionMs.toFloat() / state.durationMs).coerceIn(0f, 1f)
                 } else 0f
-                // **막대를 끄는 동안에는 갈 자리를 보인다**(시간 글이 손을 뗄 때까지 지금 자리에 머물러, 구간 저장에서
-                // 자리를 찾을 때 특히 불편했다). 몸짓의 끌기가 '1:15 (+0:30)' 을 보이는 것과 같은 일을 막대도 한다.
+                // **막대를 끄는 동안에는 갈 자리를 보인다**(시간 글만으로는 손을 뗄 때까지 지금 자리에 머물러 구간 저장에서
+                // 자리를 찾기 어렵다). 몸짓의 끌기가 '1:15 (+0:30)' 을 보이는 것과 같은 일을 막대도 한다.
                 val shownMs = scrubbing?.let { (it * state.durationMs).toLong() } ?: state.positionMs
-                // **화면 낭독기에게 이름과 값을 준다**(백분율로만 읽혔다). `IroSlider` 는 그것을 부르는 쪽에 맡긴다.
+                // **화면 낭독기에게 이름과 값을 준다**(주지 않으면 백분율로만 읽힌다). `IroSlider` 는 그것을 부르는 쪽에 맡긴다.
                 val seekName = seekBarLabel()
                 val seekValue = seekBarState(shownMs, state.durationMs)
-                // **YouTube·VLC 의 모양**(얇은 트랙 + 둥근 점, 끝점 표시 없음) — 이 막대에서 세운 모양을 앱의 모든 슬라이더가 쓰도록
-                // `core:ui` 의 [IroSlider] 로 옮겼다. 앞서 Material 3 의 기본 손잡이(세로로 긴 알약)를 얇은 막대로 바꿨더니
-                // "익숙한 형태가 아니라 어색하다" 는 지적이 왔다 — 재생기의 관행은 하나로 모여 있다.
+                // **YouTube·VLC 의 모양**(얇은 트랙 + 둥근 점, 끝점 표시 없음) — 앱의 모든 슬라이더가 같은 `core:ui` 의
+                // [IroSlider] 를 쓴다(사용자 결정 — 재생기의 관행은 하나로 모여 있어 다른 모양은 어색하게 읽힌다).
                 //
                 // 값은 위에서 계산한 [fraction] 이다 — 끄는 동안에는 `scrubbing` 이 손가락을 따라간다.
                 IroSlider(
@@ -1831,7 +1821,7 @@ private fun PlayerScreen(
                 // 떠 있는 층으로 두면 가로 영상에서 남는 높이가 절반뿐이라 아래 눈금이 잘린다.
                 // 안에 두면 판이 그만큼 높아지고, 판 높이는 `onSizeChanged` 로 재고 있으므로
                 // 위에 뜨는 안내들이 **저절로** 따라 올라간다 — 그 자리를 상수로 다시 적으면
-                // 10단계가 이미 고친 결함이 되돌아온다.
+                // 불변식 3 이 깨진다.
                 if (speedOpen) {
                     Row(
                         modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
@@ -1914,7 +1904,7 @@ private fun PlayerScreen(
                     }
 
                     // **고를 것이 있을 때만** 뜬다. 소리 트랙 하나짜리 mp3 에서 '트랙' 단추를
-                    // 눌렀더니 줄이 하나뿐인 것은 아무것도 가르치지 않는다.
+                    // 눌러 줄이 하나뿐인 것은 아무것도 가르치지 않는다.
                     if (state.canChooseTracks) {
                         IconButton(onClick = { trackSheetOpen = true }) {
                             Icon(SubtitleIcon, tracksTitle(), tint = onBackground)
@@ -2021,7 +2011,7 @@ private fun PlayerScreen(
 
 /**
  * 조작부 ⋮ 단추와 그 메뉴. **펼침 상태를 이 안에 든다** — 단추가 사라지면(지금 항목이 파일에 닿지 못해 실패했다·PiP·조작부를
- * 감췄다) 상태도 함께 사라진다. 화면 쪽에 두었더니 메뉴를 펼친 채 단추가 사라진 뒤 다시 설 때 메뉴가 **저 혼자 펼쳐졌다** —
+ * 감췄다) 상태도 함께 사라진다. 화면 쪽에 두면 메뉴를 펼친 채 단추가 사라진 뒤 다시 설 때 메뉴가 **저 혼자 펼쳐진다** —
  * 그 사이 항목이 바뀌었으면 누르지도 않은 메뉴가 다른 파일을 넘기는 줄을 들이민다. 만화 뷰어의 ⋮ 와 같은 모양이다.
  *
  * 단추와 메뉴는 **한 상자에** 담는다(함정 표의 `Popup` 앵커).
@@ -2099,11 +2089,10 @@ private fun androidx.compose.foundation.layout.BoxScope.AbMarker(
 }
 
 /**
- * 이어보기 제안을 띄워 두는 시간. 사용자가 3초로 정했다.
+ * 이어보기 제안을 띄워 두는 시간(사용자 결정 — 3초).
  *
- * 예전 안내는 `actionLabel` 이 붙은 스낵바라 기간이 `Indefinite` 였고, 누르거나 밀기
- * 전에는 사라지지 않았다. **끝이 없는 안내를 만들지 마라** — 10단계가 두드림 안내에서
- * 같은 것을 한 번 겪었다(`GestureMath.TAP_FEEDBACK_HOLD_MS`).
+ * **끝이 없는 안내를 만들지 마라** — `actionLabel` 이 붙은 스낵바는 기간이 `Indefinite` 라 누르거나 밀기
+ * 전에는 사라지지 않는다(`GestureMath.TAP_FEEDBACK_HOLD_MS` 도 같은 규칙).
  */
 private const val RESUME_OFFER_HOLD_MS = 3_000L
 
@@ -2159,8 +2148,8 @@ private fun VideoSurface(modifier: Modifier = Modifier) {
 /**
  * 조작부 판이 피할 인셋 — **아래와 양옆만**, 그리고 **바가 보이든 거둬졌든 같은 값**.
  *
- * 위쪽을 빼는 것은 판이 화면 아래에 붙어 있기 때문이다 — 예전의 `safeDrawingPadding()` 은 판 위에도 상태 표시줄 높이만큼 여백을 두어
- * 가로 영상을 그만큼 더 덮었다. `…IgnoringVisibility` 인 것은 조작부와 시스템 바가 **함께** 드나들기 때문이다([PlayerChrome]) — 보이는
+ * 위쪽을 빼는 것은 판이 화면 아래에 붙어 있기 때문이다 — `safeDrawingPadding()` 은 판 위에도 상태 표시줄 높이만큼 여백을 두어
+ * 가로 영상을 그만큼 더 덮는다. `…IgnoringVisibility` 인 것은 조작부와 시스템 바가 **함께** 드나들기 때문이다([PlayerChrome]) — 보이는
  * 바만 재는 인셋이면 바가 들어오고 나가는 애니메이션 내내 판의 높이가 바뀌어 판과 그 위의 안내들이 출렁인다. 잘린 화면(노치)은
  * 늘 그 자리라 그대로 더한다.
  */

@@ -7,7 +7,7 @@
     <string name="tether_title">테더링</string>
     <!-- 브라우저의 ⋮ 메뉴와 연결 상태 창 -->
     <string name="tether_menu">테더링</string>
-    <string name="status_tether_note">테더링도 예외입니다 — 핫스팟에 붙은 다른 기기의 트래픽은 프록시를 거치지 않고 이 폰의 회선으로 나갑니다.</string>
+    <string name="status_tether_note">테더링은 예외입니다 — 핫스팟에 붙은 다른 기기의 트래픽은 프록시를 거치지 않고 이 폰의 회선으로 나갑니다.</string>
     <!-- 퀵 설정 타일 — 누르면 테더링을 켜고 끈다, 길게 누르면 테더 화면 -->
     <string name="tether_tile">테더링</string>
     <string name="tether_tile_off">꺼짐</string>

@@ -18,8 +18,8 @@ import androidx.compose.foundation.text.selection.SelectionState
  *
  * compose-foundation 1.12.1 의 고르기 막대는 `PROCESS_TEXT` 항목을 스스로 달고(`addProcessedTextContextMenuItems`), 누르면 **날것의
  * 선택**(행마다 이어 붙인 글 — 4,096자 경계의 줄바꿈과 줄 끝 표시까지)을 그대로 인텐트에 싣는다. 우리 복사의 상한과 잇기([RowCopy])는
- * 클립보드를 가로채는 데만 걸려 이 길을 지나지 않는다 — 미니파이 JS 130행쯤을 고르고 '번역' 을 누르면 엑스트라가 바인더 한도(1 MB)를
- * 넘어 `TransactionTooLargeException` 으로 **앱이 죽었다**. 그래서 그 항목을 걸러 내고(화면의 `ProcessTextKey` 거르기)
+ * 클립보드를 가로채는 데만 걸려 이 길을 지나지 않는다 — 미니파이 JS 를 크게 고르고 '번역' 을 누르면 엑스트라가 바인더 한도(1 MB)를
+ * 넘어 `TransactionTooLargeException` 으로 **앱이 죽는다**. 그래서 그 항목을 걸러 내고(화면의 `ProcessTextKey` 거르기)
  * 같은 앱 목록으로 우리 항목을 단다 — [RowCopy.joinPrefix] 가 이은 깨끗한 글을 [MAX_CHARS] 자까지만 보내고, 보내기의 실패를 잡는다.
  * 보내는 쪽은 읽기 전용이라고 적는다(`EXTRA_PROCESS_TEXT_READONLY` — Compose 는 거꾸로 적는다).
  */

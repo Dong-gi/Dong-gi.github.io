@@ -6,11 +6,11 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 /**
- * 책을 여는 자리 — 설정의 기본 방향(14단계)과 책마다 저장된 값의 차례.
+ * 책을 여는 자리 — 설정의 기본 방향과 책마다 저장된 값의 차례.
  */
 class ReadingStartTest {
 
-    /** **새 책은 설정의 기본 방향으로 연다.** 9단계까지는 언제나 왼쪽에서 오른쪽이었다. */
+    /** **새 책은 설정의 기본 방향으로 연다.** */
     @Test
     fun `기록이 없는 책은 설정의 기본 방향으로 연다`() {
         for (d in Direction.entries) {
@@ -48,7 +48,7 @@ class ReadingStartTest {
         assertEquals(Direction.LTR, s.direction)
     }
 
-    /** 압축 목록에서 그림을 탭해 들어온 길은 쪽을 이미 정했다. 그래도 **방향은** 되살린다(9단계 뒤 감사의 결함). */
+    /** 압축 목록에서 그림을 탭해 들어온 길은 쪽을 이미 정했다. 그래도 **방향은** 되살린다. */
     @Test
     fun `엔트리를 지정해 들어와도 방향은 되살리고 쪽은 되살리지 않는다`() {
         val s = ReadingStart.decide(Saved(5, 10, Direction.VERTICAL.code), 10, resumePage = false, defaultDirection = 0)

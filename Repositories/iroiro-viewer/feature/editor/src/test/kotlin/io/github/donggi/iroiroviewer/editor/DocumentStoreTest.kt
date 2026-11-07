@@ -14,7 +14,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-/** 떠 둔 문서와 원본을 견주기·갈아타기(보기 → 편집이 연 때의 사본으로 열었다). */
+/** 떠 둔 문서와 원본을 견주기·갈아타기(보기 → 편집이 연 때의 사본으로 열지 않게). */
 class DocumentStoreTest {
 
     private val root: File = Files.createTempDirectory("docstore").toFile()

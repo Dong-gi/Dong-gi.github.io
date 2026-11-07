@@ -36,7 +36,7 @@ class SpokenTimeTest {
         assertEquals(listOf(Part(MINUTES, 1)), SpokenTime.partsOf(60_999))
     }
 
-    /** 62분짜리 `.ts`(사용자의 실물 — CLAUDE.md '`.ts` 되감기') 같은 긴 것도 시간으로 올린다. */
+    /** 62분짜리 `.ts` 같은 긴 것도 시간으로 올린다. */
     @Test
     fun `한 시간을 넘으면 시간으로 올린다`() {
         assertEquals(listOf(Part(HOURS, 1), Part(MINUTES, 2), Part(SECONDS, 19)), SpokenTime.partsOf((62 * 60 + 19) * 1000L))

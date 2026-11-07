@@ -3,7 +3,7 @@ package io.github.donggi.iroirobrowser.core.media
 import java.util.Locale
 
 /**
- * 화질 창에 보이는 것 — 코덱 이름과 어림한 크기(화질 창에 크기 어림·코덱이 없었다).
+ * 화질 창에 보이는 것 — 코덱 이름과 어림한 크기.
  *
  * 코덱 글은 RFC 6381 의 꼴(`avc1.64001f,mp4a.40.2` — HLS 의 `CODECS`·DASH 의 `@codecs`)이다. 자막 코덱(`stpp`·`wvtt`)은 뺀다.
  */

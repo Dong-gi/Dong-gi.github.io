@@ -28,11 +28,11 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 /**
- * 7z AES 의 열쇠 유도 반복을 **유도하기 전에** 거절하는가([SevenZKeyGuard] — 2026-10-16 보안 점검).
+ * 7z AES 의 열쇠 유도 반복을 **유도하기 전에** 거절하는가([SevenZKeyGuard]).
  *
  * 받을 수 없는 반복(25·30·62)을 적은 7z 는 암호를 넣어도 **몇 초 안에** '풀지 않는 방식'([SevenZUnsafeKeyException])으로 끝나야 한다.
  * 라이브러리가 그 반복을 돌면 25 는 이 PC 에서도 몇 초, 62 는 끝나지 않는다 — 그래서 시험은 시간 제한이 있는 데몬 스레드에서 돈다
- * ([within]). 고침을 되돌리면 62 는 시간 초과로, 25·30 은 다른 결과로 깨진다.
+ * ([within]). 가드가 없으면 62 는 시간 초과로, 25·30 은 다른 결과로 깨진다.
  *
  * 표본은 전부 **합성**이다 — commons-compress 가 잠근 것(반복 19)의 속성 바이트를 고쳐 CRC 를 다시 맞춘 것, py7zr 표본(`archivecrypt/`)의
  * 평문 StreamsInfo 를 고친 것, 이 시험이 손으로 지은 머리([Mini7z]).

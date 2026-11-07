@@ -9,8 +9,8 @@ import io.github.donggi.iroiroviewer.safety.ParseLimits
  *
  * ## 이 모듈이 따로 있는 이유
  *
- * 11단계의 EPUB 이 첫 사용자이고, 텍스트 뷰어의 HTML·마크다운 미리보기가 같은 길을 탄다. 내놓는 것이 모두 HTML 이니 위생 규칙도 한 벌이어야
- * 한다. 5단계가 문구를 두 벌 두고 양쪽 다 조용히 실패한 것이 이 저장소의 교훈이다.
+ * EPUB 과 텍스트 뷰어의 마크다운 미리보기가 같은 길을 탄다. 내놓는 것이 모두 HTML 이니 위생 규칙도 한 벌이어야
+ * 한다 — 두 벌이면 한쪽만 고쳐진다.
  *
  * ## DOM 을 만들지 않는다
  *
@@ -23,9 +23,8 @@ import io.github.donggi.iroiroviewer.safety.ParseLimits
  *
  * 문서를 그리는 WebView 는 바깥 요청을 막는다(가로채기의 빈 404 와 `blockNetworkLoads`). 그런데도 여기서 원격
  * 참조를 **지우는** 이유는 둘이다. ① 막힌 요청이라도 WebView 는 시도하고, 그동안 화면이
- * 비어 보인다. ② 그 막음은 누가 뒤집을 수 있는 설정이다 — 실제로 2026-10-05 ~ 10-09 에 이 앱이 `INTERNET` 을 선언해(SFTP)
- * OS 수준의 막음이 사라졌었고, 이 위생이 없었다면 EPUB 의 추적 픽셀은 WebView 설정 한 줄에만 기댔을 것이다. **방어는 겹쳐 두어야 한 겹이 무너져도
- * 남는다.**
+ * 비어 보인다. ② 그 막음은 누가 뒤집을 수 있는 설정이다 — `INTERNET` 을 선언하면 OS 수준의 막음이 사라지고, 이 위생이 없으면
+ * EPUB 의 추적 픽셀은 WebView 설정 한 줄에만 기댄다. **방어는 겹쳐 두어야 한 겹이 무너져도 남는다.**
  *
  * 스크립트는 WebView 쪽에서도 끄지만(`javaScriptEnabled = false`) 같은 이유로 여기서도
  * 지운다.
@@ -112,8 +111,8 @@ object HtmlSanitizer {
 
     /**
      * SVG 의 **표현 속성** 가운데 값(CSS)에 `<url>` 을 받는 것. `filter="url(img/x.svg#f)"` 는 `style="filter:url(…)"` 과 같은 일을
-     * 한다 — 그 문서를 가져와 가리킨 요소를 쓴다. 예전에는 안전한 이름이라 값을 보지 않고 남겨, `<use>`·CSS 에서 막은 '같은 문서만'
-     * 규칙을 이 길로 비켜 갔다. 값은 문자 참조를 푼 글을 CSS 로 거른다([writeStart]).
+     * 한다 — 그 문서를 가져와 가리킨 요소를 쓴다. 값을 보지 않고 남기면 `<use>`·CSS 에서 막은 '같은 문서만'
+     * 규칙을 이 길로 비켜 간다. 값은 문자 참조를 푼 글을 CSS 로 거른다([writeStart]).
      */
     private val CSS_URL_ATTRS = setOf(
         "fill", "stroke", "filter", "mask", "clip-path", "marker", "marker-start", "marker-mid", "marker-end", "cursor",
@@ -125,7 +124,7 @@ object HtmlSanitizer {
      * 이것이 없으면 위생에 구멍이 하나 남는다 — 장 안의 `<style>` 은 [sanitize] 가 보지만
      * `<link rel="stylesheet" href="book.css">` 로 걸린 파일은 우리 손을 거치지 않고
      * 그대로 WebView 에 들어간다. 그 파일 안의 `url(https://…)` 한 줄이면 바깥을 막는 설정이
-     * 하나라도 빠지는 날 추적 픽셀이 살아난다(그 설정에는 `INTERNET` 미선언도 든다 — 2026-10-05 ~ 10-09 에는 선언했었다).
+     * 하나라도 빠지는 날 추적 픽셀이 살아난다(그 설정에는 `INTERNET` 미선언도 든다).
      */
     fun sanitizeCss(
         css: String,
@@ -156,7 +155,7 @@ object HtmlSanitizer {
             throw ParseLimitExceededException("maxXmlBytes", "${input.length}자 (상한 $cap)")
         }
         // **결과의 상한은 쓰는 도중에 잰다.** 다 쓴 뒤에 재면 `<` 하나가 `&lt;` 넷이 되는 입력에서 상한의 몇 배를 이미 쥔 뒤다
-        // (8 Mi 의 `<` 가 33.5 M 자 쪽이 되어 화면이 그대로 들고 있었다).
+        // (8 Mi 의 `<` 가 33.5 M 자가 된다).
         val out = Capped(cap)
         val dropped = UnsupportedFeatures()
         var i = 0
@@ -379,8 +378,7 @@ object HtmlSanitizer {
         checkpoint: () -> Unit,
     ) {
         // `<link>` 는 스타일시트만 남긴다. 다른 `rel`(preload·prefetch·license·author)은 그리는 데 쓰지 않는
-        // 힌트라 **세지 않고** 버린다 — 예전에는 세되 그 주소도 따로 세어, 장마다 있는 `rel="license"
-        // href="http://…"` 하나가 '바깥을 가리키는 참조' 둘이 됐다(실세계 말뭉치가 잡았다).
+        // 힌트라 **세지 않고** 버린다 — 세면 장마다 있는 `rel="license" href="http://…"` 가 알림을 띄운다.
         if (tag.name == "link") {
             val rel = tag.attrs.firstOrNull { it.first == "rel" }?.second?.lowercase().orEmpty()
             if (!rel.split(' ', '\t', '\n', '\r').contains("stylesheet")) return
@@ -514,7 +512,7 @@ object HtmlSanitizer {
      * XHTML 은 DOCTYPE 안에 엔티티 선언을 둘 수 있다(`<!ENTITY x SYSTEM "…">`). 첫 `>` 에서 끝내면 그것은
      * 엔티티 선언의 끝이라 남은 `]>` 가 글이 되어 **화면 맨 위에 찍힌다**(W3C 의 XXE 시험 책이 그랬다).
      * 부분집합의 끝은 `]` 뒤의 `>` 로 찾는다 — 따옴표를 세면 짝이 안 맞는 따옴표 하나가 본문 전체를
-     * 삼킨다. 끝을 못 찾으면 예전처럼 첫 `>` 에서 끝낸다.
+     * 삼킨다. 끝을 못 찾으면 첫 `>` 에서 끝낸다.
      */
     private fun skipDoctype(s: String, from: Int): Int {
         val gt = s.indexOf('>', from)
@@ -557,10 +555,10 @@ object HtmlSanitizer {
      *
      * HTML 의 `<style>` 은 날글이라 브라우저가 문자 참조를 풀지 않는다. 그런데 `<svg>`·`<math>` 안의 `<style>` 은 보통 요소라 **푼다** —
      * `<svg><style>filter{x:&#117;rl(img/x.svg#f)}</style></svg>` 는 위생을 지난 뒤 브라우저에게 `url(…)` 이 되어, 책 안의 날것 SVG 를
-     * 필터 문서로 끌어왔다(`<` 는 막았지만 `&` 가 남았다). 우리는 DOM 을 세우지 않아 어느 쪽인지 정확히 모른다(외래
+     * 필터 문서로 끌어온다(`<` 만 막으면 `&` 가 남는다). 우리는 DOM 을 세우지 않아 어느 쪽인지 정확히 모른다(외래
      * 콘텐츠를 깨고 나오는 HTML 태그의 규칙까지 따라야 한다). 그래서 참조가 있는 블록은 **푼 글**([CharRefs.decodeText] — 글의 규칙)을
      * 거르고, 내보낼 때 `&` 를 CSS 이스케이프(`\26 `)로 적는다 — 날글로 읽든 풀어 읽든 같은 CSS 다. 참조가 없는 블록
-     * (거의 전부)은 예전 그대로다. 우리 표에 없는 이름 참조가 있으면 브라우저가 무엇으로 풀지 모르므로 블록째 버린다.
+     * (거의 전부)은 그대로 거른다. 우리 표에 없는 이름 참조가 있으면 브라우저가 무엇으로 풀지 모르므로 블록째 버린다.
      *
      * 대가: 참조가 있는 블록에서는 CSS 중첩의 `&` 선택자가 이스케이프되어 듣지 않는다(문서 CSS 에서 드물다).
      */
@@ -580,8 +578,8 @@ object HtmlSanitizer {
     }
 
     /**
-     * `<style>` 에 넣는 CSS 의 `<` 를 CSS 이스케이프(`\3c `)로 바꾼다. **CSS 는 그 안의 `<` 를 막지 않으므로** 구멍이 둘
-     * 있었다.
+     * `<style>` 에 넣는 CSS 의 `<` 를 CSS 이스케이프(`\3c `)로 바꾼다. **CSS 는 그 안의 `<` 를 막지 않으므로** 바꾸지 않으면
+     * 구멍이 둘이다.
      *
      * 1. 책의 `<style>` 안의 `</head>` 를 읽기용 껍데기가 진짜 `</head>` 로 알고 거기에 우리 `<style>` 을 끼우면, 우리
      *    `</style>` 이 책의 것을 먼저 닫아 **뒤의 CSS 글자가 위생을 거치지 않은 마크업**이 된다(`<img onerror>`·`<iframe>`).

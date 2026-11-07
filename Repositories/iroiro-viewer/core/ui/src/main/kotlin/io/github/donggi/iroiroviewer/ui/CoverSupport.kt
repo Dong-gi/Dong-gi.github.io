@@ -10,8 +10,7 @@ import kotlinx.coroutines.sync.withPermit
  *
  * 목록의 썸네일은 [ThumbnailStore] 가 만드는데 그것은 `core:ui` 에 있고, 아카이브를
  * 읽는 코드는 `format:archive` 에 있다. `core:ui` 가 `format:*` 을 보게 하면
- * **계층이 통째로 뒤집힌다**(format 이 core 를 보는 구조다). 8단계가 아카이브 풀기를
- * 파일 작업 큐에 잇느라 `ExtractSupport.Runner` 를 둔 것과 **같은 형태의 문제**이고,
+ * **계층이 통째로 뒤집힌다**(format 이 core 를 보는 구조다). `ExtractSupport.Runner` 와
  * 같은 해법을 쓴다 — 포맷을 전혀 모르는 함수 하나를 두고 구현은 `feature:comic` 이,
  * 꽂는 것은 `app` 이 한다.
  *

@@ -30,12 +30,12 @@ import java.util.concurrent.Executors
 import javax.net.ssl.HttpsURLConnection
 
 /**
- * **이 앱의 네트워크 길을 정하는 유일한 곳.** 사용자의 결정(2026-10-04)대로 길은 [LocalRelay] 하나다:
+ * **이 앱의 네트워크 길을 정하는 유일한 곳.** 사용자 결정대로 길은 [LocalRelay] 하나다:
  *
  * - 프록시가 켜져 있으면 중계를 세우고, WebView(프로세스 전체 — `ProxyController`)와 앱의 HTTP([httpRoute])를 모두 그리로 보낸다.
  *   프록시를 정하지 않았으면 중계가 모든 요청을 502 로 막는다 — **직접 연결로 가는 길은 없다.** `addDirect()` 를 넣지 않는다.
  * - **예외 규칙**(사설망·`*.local`·점 없는 이름 …)에 든 주소만 바로 간다 — WebView 는 override 의 bypass 로, 앱의 HTTP 는 같은 규칙을
- *   크로미움처럼 읽는 [io.github.donggi.iroirobrowser.core.BypassMatcher] 로 **홉마다**([AppRoute] — 사용자 결정 2026-10-10). 출구 확인은
+ *   크로미움처럼 읽는 [io.github.donggi.iroirobrowser.core.BypassMatcher] 로 **홉마다**([AppRoute] — 사용자 결정). 출구 확인은
  *   예외를 보지 않고 늘 중계로 간다(프록시의 출구를 보려는 것이다).
  * - 꺼져 있으면(사용자가 고른 것) 직접 연결이다.
  *
@@ -311,7 +311,7 @@ class NetworkPath(context: Context, private val store: SettingsStore) {
      * 판([revision])이 오른다. [then] 은 WebView 의 길이 다시 걸린 뒤(WebView 를 아직 쓰지 않았으면 바로). 데우기는 [whenReady] 가 기다린다.
      *
      * **길이 그대로면 다시 세우지 않는다**([ProxySettings.sameRoute]) — 저장만 하고(출구 확인 주소가 바뀌었으면 출구를 다시 본다) 판도 그대로다.
-     * 다시 세우면 열린 쪽을 모두 다시 부르고 옛 중계를 지나던 받기가 끊긴다 — 설정에서 아무것도 바꾸지 않고 '저장' 만 눌러도 그랬다.
+     * 다시 세우면 열린 쪽을 모두 다시 부르고 옛 중계를 지나던 받기가 끊긴다.
      */
     fun update(newSettings: ProxySettings, then: () -> Unit = {}) {
         val old = settings
@@ -425,7 +425,7 @@ class NetworkPath(context: Context, private val store: SettingsStore) {
             log = ::debugLog,
             listener = object : LocalRelay.Listener {
                 override fun onUpstream(event: LocalRelay.UpstreamEvent) {
-                    // 이 객체의 onUpstream 이 아니라 NetworkPath 의 것을 부른다 — 이름이 같으면 제 자신을 다시 부르며 메인 스레드를 돈다(그랬다).
+                    // 이 객체의 onUpstream 이 아니라 NetworkPath 의 것을 부른다 — 이름이 같으면 제 자신을 다시 부르며 메인 스레드를 돈다.
                     main.post { if (gen == generation) handleUpstream(event) }
                 }
 

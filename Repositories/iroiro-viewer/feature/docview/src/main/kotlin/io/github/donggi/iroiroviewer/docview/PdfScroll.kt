@@ -93,7 +93,7 @@ import kotlin.math.roundToInt
 /**
  * PDF 를 **세로로 이어 보는** 화면 — 기본 보기다.
  * 구글 드라이브·삼성·Adobe 의 PDF 뷰어처럼 쪽을 화면 폭에 맞춰 위아래로 이어 붙이고, **배율은 문서 전체에 걸린다** — 키운 채
- * 다음 쪽으로 내려가도 그 배율이다. 예전의 한 쪽씩 넘기기(`PagedDocument`)는 ⋮ 의 '보기 방식' 으로 남는다(`AppPreferences.pdfContinuous`).
+ * 다음 쪽으로 내려가도 그 배율이다. 한 쪽씩 넘기기(`PagedDocument`)는 ⋮ 의 '보기 방식' 으로 고른다(`AppPreferences.pdfContinuous`).
  *
  * ## 무엇을 그리고 무엇을 버리는가(메모리)
  *
@@ -744,7 +744,7 @@ internal object PdfScrollMath {
      * 아니면 화면 가운데를 지나는 줄, 가운데가 줄 사이 틈이면 그 아래 줄이다. [windowTop]·[windowBottom] 은 보이는 창(목록 좌표)이다.
      *
      * [atEnd] 면(더 내릴 수 없는데 위로는 올릴 수 있다 — 문서가 화면보다 길다) 창의 **마지막 줄**이다. 목록은 마지막 줄을 맨 위로 올리지
-     * 못하므로, 짧은 쪽이 여럿 보이는 끝에서 맨 위 줄로 세면 '마지막 쪽으로 가기' 가 몇 쪽 앞으로 읽혔다.
+     * 못하므로, 짧은 쪽이 여럿 보이는 끝에서 맨 위 줄로 세면 '마지막 쪽으로 가기' 가 몇 쪽 앞으로 읽힌다.
      */
     fun currentRow(rows: List<Row>, windowTop: Float, windowBottom: Float, atEnd: Boolean = false): Int? {
         val visible = rows.filter { it.bottom > windowTop && it.top < windowBottom }.sortedBy { it.top }

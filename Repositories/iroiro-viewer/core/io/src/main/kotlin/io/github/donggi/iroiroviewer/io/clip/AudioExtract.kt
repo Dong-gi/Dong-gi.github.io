@@ -11,7 +11,7 @@ import java.io.RandomAccessFile
 import java.nio.ByteBuffer
 
 /**
- * 영상에서 **소리 트랙 하나만** 새 파일로 뽑는다(사용자 요청 '오디오만 추출하여 별도로 저장'). 다시 인코딩하지 않는다 —
+ * 영상에서 **소리 트랙 하나만** 새 파일로 뽑는다. 다시 인코딩하지 않는다 —
  * 소리의 바이트를 그대로 옮기고 그릇만 바꾼다. 무엇에 담는가는 [RemuxPlan.AudioOut] 이 정한다.
  *
  * | 소리 | 결과 | 누가 쓰나 |
@@ -248,7 +248,7 @@ internal object AudioExtract {
      * 어림해(무음으로 시작하는 곡은 첫 프레임이 작다) 길이와 탐색이 크게 틀린다. 첫 표본에서 같은 판·표본율로 자리를 지어 두고, 다 쓴
      * 뒤 프레임 수·바이트 수·목차를 채운다. 표본이 프레임 경계로 나뉘지 않으면(우리가 모르는 흐름) 태그 없이 무음 프레임으로 둔다.
      *
-     * 목차에 쓸 프레임 자리는 성기게 든다([SparseOffsets]) — 프레임마다 Long 을 들면 긴 소리에서 수십 MB 였다.
+     * 목차에 쓸 프레임 자리는 성기게 든다([SparseOffsets]) — 프레임마다 Long 을 들면 긴 소리에서 수십 MB 다.
      */
     internal class Mp3Sink : RawSink {
         private var info: ByteArray? = null
@@ -479,7 +479,7 @@ internal object AudioExtract {
 
     /**
      * MP3 목차를 짓는 프레임 수의 상한 — Xing 의 프레임 수 칸(32비트)과 그 셈의 Int 에 드는 만큼. 넘으면 목차 없이 둔다. 자리를 성기게
-     * 든 뒤로는 메모리의 상한이 아니다(예전에는 약 60시간 — 프레임마다 8바이트를 들었다).
+     * 들므로 메모리의 상한이 아니다.
      */
     private const val MAX_MP3_FRAMES = Int.MAX_VALUE.toLong()
 }

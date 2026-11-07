@@ -14,9 +14,9 @@ import java.io.InterruptedIOException
  *
  * commons-compress 의 `FramedLZ4CompressorInputStream(in, decompressConcatenated = true)` 는 프레임 경계를 **재귀로** 넘는다 —
  * 1.28.0 소스에서 블록 길이 0(프레임의 끝)을 읽은 `nextBlock()` 이 `init(false)` 를 부르고, 다음 프레임도 비었으면 그것이 다시
- * `nextBlock()` 을 부른다. 빈 프레임(11바이트)을 이은 만큼 스택이 깊어지고, 생성자에서 바로 돈다. 빈 프레임 20만 개짜리 `x.cbt` 를
- * 둔 폴더를 파일 목록에서 **열기만 했는데** 프로세스가 죽었다(R8 릴리스 빌드, 기기에서 재현 — `StackOverflowError`, 스택 1035 KB 에서
- * `init`↔`nextBlock` 이 2,600번 남짓). 표지 썸네일이 판별(`Archives.detect`)로 그 생성자에 들어갔다.
+ * `nextBlock()` 을 부른다. 빈 프레임(11바이트)을 이은 만큼 스택이 깊어지고, 생성자에서 바로 돈다. 빈 프레임 수천 개짜리 `x.cbt` 를
+ * 둔 폴더를 파일 목록에서 **열기만 해도** `StackOverflowError` 로 프로세스가 죽는다 — 표지 썸네일이 판별(`Archives.detect`)로 그
+ * 생성자에 들어간다.
  *
  * 그래서 해제기는 언제나 `decompressConcatenated = false` 로 **프레임 하나만** 푼다 — 프레임 끝에서 멈추고 입력을 그 바로 뒤에 둔다
  * (블록·검사값을 정확히 그 길이만큼 읽고 더 읽지 않는다 — 1.28.0 소스로 확인했다). 다음 프레임은 새 해제기다.
@@ -29,7 +29,7 @@ import java.io.InterruptedIOException
  * - **건너뛰는 프레임**(`5x 2A 4D 18` + 길이 4 + 자료)은 어디에 와도 읽어서 버린다 — 맨 앞, 프레임 사이, 마지막 프레임 뒤. 해제기에
  *   맡기면 마지막 프레임 뒤의 것에서 'LZ4 가 아니다' 로 던진다(새 해제기에게는 그것이 첫 프레임이다).
  * - 프레임이 하나도 없으면(빈 입력·건너뛰는 프레임뿐) LZ4 가 아니다. 프레임 뒤에 다른 것이 붙었으면 깨진 파일이다 — 해제기가
- *   이어 풀던 때와 같은 말이다.
+ *   이어 풀 때와 같은 말이다.
  *
  * ## 대가
  *

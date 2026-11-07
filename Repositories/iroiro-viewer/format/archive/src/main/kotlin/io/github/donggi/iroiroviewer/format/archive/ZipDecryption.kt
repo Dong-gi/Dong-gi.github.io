@@ -37,7 +37,7 @@ import javax.crypto.spec.SecretKeySpec
  * ## 암호의 바이트
  *
  * 명세는 문자 인코딩을 정하지 않는다. 도구마다 다르고, **반디집은 한글 암호를 CP949 로
- * 적는다**(2026-09-23 실측 — UTF-8 로는 안 풀리고 CP949 로 풀렸다). 그래서 UTF-8 · CP949 ·
+ * 적는다**(실측 — UTF-8 로는 안 풀리고 CP949 로 풀렸다). 그래서 UTF-8 · CP949 ·
  * ISO-8859-1 을 차례로 대 본다. 각 후보는 확인 바이트로 거르므로 값이 싸다.
  *
  * **확인 바이트는 틀린 후보도 1/256 로 통과시킨다.** 그래서 항목마다 후보를 고르면 한글 암호의
@@ -61,7 +61,7 @@ internal object ZipDecryption {
 
     /**
      * 우리가 풀지 않는 방식(PKWARE 의 강한 암호화 등). 화면이 타입으로 가르도록 공개된 바탕([ArchiveEncryptionUnsupportedException])을
-     * 잇는다 — 이름으로 가르던 화면은 릴리스(R8 이 이름을 줄인다)에서 이것을 '깨진 파일' 로 말했다.
+     * 잇는다 — 이름으로 가르면 릴리스(R8 이 이름을 줄인다)에서 이것이 '깨진 파일' 로 읽힌다.
      */
     class UnsupportedEncryptionException(what: String) : ArchiveEncryptionUnsupportedException("풀지 않는 암호화: $what")
 
@@ -255,12 +255,12 @@ internal object ZipDecryption {
     // ---- WinZip AES ------------------------------------------------------------------
 
     /**
-     * 해제기가 끝을 말하면 **남은 암호문을 끝까지 읽어 인증값을 확인한다**(2026-10-16).
+     * 해제기가 끝을 말하면 **남은 암호문을 끝까지 읽어 인증값을 확인한다**.
      *
      * 해제기는 제 흐름의 끝(deflate 의 마지막 블록)에서 멈추고 남은 입력을 읽지 않는다. 그런데 CTR 암호문은 비트를 골라 뒤집으면 평문의 같은
-     * 비트가 뒤집힌다 — 첫 블록의 '마지막 블록' 비트를 켜면 해제기가 거기서 끝나고, 인증값을 보지 않은 채 **잘린 평문이 정상의 끝으로**
-     * 나갔다(AE-2 에는 CRC 도 없다). 암호문이 해제기의 한 번 채우기(64 KiB)보다 큰 항목에서만 드러난다 — 작은 항목은 첫 채우기가 끝까지 읽어
-     * 인증값을 봤다. 남는 암호문은 정상이면 0 바이트다(`feature:archive` 의 `AesZipRoundTripTest` 가 박는다).
+     * 비트가 뒤집힌다 — 첫 블록의 '마지막 블록' 비트를 켜면 해제기가 거기서 끝나고, 이것이 없으면 인증값을 보지 않은 채 **잘린 평문이 정상의
+     * 끝으로** 나간다(AE-2 에는 CRC 도 없다). 암호문이 해제기의 한 번 채우기(64 KiB)보다 큰 항목에서만 드러난다 — 작은 항목은 첫 채우기가
+     * 끝까지 읽는다. 남는 암호문은 정상이면 0 바이트다(`feature:archive` 의 `AesZipRoundTripTest` 가 박는다).
      */
     private fun authenticated(input: InputStream, cipher: AesCtrStream): InputStream = object : FilterInputStream(input) {
         override fun read(): Int {

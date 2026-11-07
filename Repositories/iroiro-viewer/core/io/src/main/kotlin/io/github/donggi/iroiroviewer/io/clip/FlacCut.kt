@@ -30,8 +30,7 @@ import java.io.RandomAccessFile
  *
  * 고른 구간의 프레임마다 **길이 한 수만** 든다(원시 배열) — 담는 프레임은 이어져 있어 자리는 첫 프레임에서 길이를 더해 안다. 머리는
  * 쓸 때 다시 읽는다 — 프레임마다 객체를 들면 긴 파일에서 수백 MB 가 됐다. 옮길 메타데이터 블록(주석·그림, 최대
- * [MAX_KEPT_BYTES])도 원본의 자리만 들고 쓸 때 옮긴다 — 예전에는 그림을 읽어 든 위에 머리 한 벌을 묶어(두 배까지 자라는 버퍼) 또
- * 복사했다.
+ * [MAX_KEPT_BYTES])도 원본의 자리만 들고 쓸 때 옮긴다 — 읽어 들면 두 배까지 자라는 버퍼가 된다.
  */
 internal object FlacCut {
 
@@ -349,8 +348,8 @@ internal object FlacCut {
                     val next = parseHeader(r, q)
                     if (next != null && next.sameStream(first)) return q
                 } else if (crc == stored && tagTailAt(r, q)) {
-                    // 끝에 태그 꼬리(ID3v1·APE·ID3v2)를 단 FLAC — 그 앞이 마지막 프레임의 끝이다. 예전에는 끝을 파일 끝이나 다음 동기
-                    // 부호로만 받아 끝까지 자르면 마지막 프레임을 잃었다.
+                    // 끝에 태그 꼬리(ID3v1·APE·ID3v2)를 단 FLAC — 그 앞이 마지막 프레임의 끝이다. 끝을 파일 끝이나 다음 동기
+                    // 부호로만 받으면 끝까지 자를 때 마지막 프레임을 잃는다.
                     return q
                 }
             }

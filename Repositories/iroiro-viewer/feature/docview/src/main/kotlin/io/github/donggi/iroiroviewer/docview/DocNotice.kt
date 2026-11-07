@@ -19,9 +19,8 @@ import io.github.donggi.iroiroviewer.format.epub.EpubOpener
 /**
  * **무엇을 버렸는지 말한다.**
  *
- * `UnsupportedFeatures` 의 주석이 2단계부터 적어 둔 계약이다 — "사용자는 원문에 무엇이
- * 있었는지 모르므로, 빠진 것이 있다는 사실 자체를 앱이 말해 주어야 한다". 11단계가 그
- * 계약의 첫 소비자다.
+ * `UnsupportedFeatures` 의 계약이다 — 사용자는 원문에 무엇이 있었는지 모르므로, 빠진 것이
+ * 있다는 사실 자체를 앱이 말해 주어야 한다.
  *
  * ## 숫자를 세는 쪽과 문장을 만드는 쪽을 가른다
  *
@@ -86,7 +85,7 @@ fun DocNoticeList(
  *
  * **코드를 여기 다시 적지 않고 `EpubOpener` 의 상수를 그대로 본다.** 문자열을 두 벌
  * 두면 한쪽을 고칠 때 다른 쪽이 남고, 그때 화면에는 우리가 쓴 문장 대신 파서가 만든
- * 짧은 말이 뜬다 — 5단계의 '문구 두 벌' 과 같은 형태다.
+ * 짧은 말이 뜬다.
  */
 @Composable
 private fun warningText(warning: ParseWarning): String = when (warning.code) {

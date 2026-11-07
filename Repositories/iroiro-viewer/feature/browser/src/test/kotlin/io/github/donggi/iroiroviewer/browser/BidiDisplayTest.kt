@@ -7,7 +7,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * 파일 목록이 이름을 **화면에 보일 이름**(`PathNames.forDisplay` — 방향 제어 글자를 보이는 표시로)으로 적는가(2026-10-16 보안 점검).
+ * 파일 목록이 이름을 **화면에 보일 이름**(`PathNames.forDisplay` — 방향 제어 글자를 보이는 표시로)으로 적는가.
  * `invoice` + U+202E + `fdp.apk` 가 목록에서 'invoicekpa.pdf' 로 보이면 사용자는 APK 를 문서로 알고 누른다. 판단은 `core:model` 의
  * `PathNamesTest` 가 보고, 여기서는 목록·격자·정보 시트가 그것을 지나는지(배선)를 소스로 본다 — 이 저장소의 관례.
  */

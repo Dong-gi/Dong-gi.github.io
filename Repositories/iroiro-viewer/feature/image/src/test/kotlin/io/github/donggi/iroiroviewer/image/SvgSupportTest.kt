@@ -40,7 +40,7 @@ class SvgSupportTest {
 
     @Test
     fun `DOCTYPE 의 닫는 괄호 뒤 공백을 받는다`() {
-        // XML 은 `]` 와 `>` 사이의 공백을 허락한다. 처음 판은 이것을 'SVG 가 아니다' 로 보냈다.
+        // XML 은 `]` 와 `>` 사이의 공백을 허락한다.
         val head = """<!DOCTYPE svg [ <!ENTITY ns "http://www.w3.org/2000/svg"> ] >
             <svg xmlns="&ns;" width="20" height="10">"""
         assertEquals(2.0, SvgSupport.rootOf(head)!!.aspect)
@@ -50,8 +50,8 @@ class SvgSupportTest {
 
     @Test
     fun `적대적인 앞머리도 한 번 훑고 끝난다`() {
-        // 처음 판은 속성을 정규식으로 찾아, 이름 글자만 이어진 64 KiB 시작 태그 하나에 53초가 걸렸다. 길이가 두 배면
-        // 네 배라, 이 크기면 옛 판은 이 시험의 상한을 확실히 넘는다(함정 표 — '시간 시험은 옛 판이 확실히 넘는 크기로').
+        // 속성을 정규식으로 찾으면 이름 글자만 이어진 64 KiB 시작 태그 하나에 53초가 걸린다. 길이가 두 배면
+        // 네 배라, 이 크기면 되짚는 구현은 이 시험의 상한을 확실히 넘는다(함정 표 — '시간 시험은 옛 판이 확실히 넘는 크기로').
         val names = "<svg " + "a".repeat(SvgSupport.HEAD_BYTES - 6) + ">"
         val digits = """<svg width="""" + "1".repeat(32_000) + """!" height="1">"""
         val declarations = "<!a>".repeat(SvgSupport.HEAD_BYTES / 4) + "<svg width='3' height='1'>"

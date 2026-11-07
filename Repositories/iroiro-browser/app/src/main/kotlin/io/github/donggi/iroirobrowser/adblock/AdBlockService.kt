@@ -111,7 +111,7 @@ class AdBlockService(context: Context, private val network: NetworkPath) {
 
     /**
      * 켰는데 아직 받지 못한 목록만 받는다 — 1분에 한 번까지. 길의 상태가 바뀔 때마다(스위치·설정·5분마다의 출구 확인) 메인 스레드에서 불리므로
-     * 파일이 있는지는 **일꾼이 본다**(앞 판은 메인 스레드에서 목록마다 디스크를 봤다).
+     * 파일이 있는지는 **일꾼이 본다**(메인 스레드에서 디스크를 보지 않게).
      */
     private fun retryMissing() {
         if (busy) return
@@ -146,15 +146,6 @@ class AdBlockService(context: Context, private val network: NetworkPath) {
 
     fun allowedSites(): List<String> = allowed.sorted()
 
-    /** 광고 차단을 끈 사이트를 한꺼번에 더한다(설정 › 백업의 가져오기) — 설정 파일을 한 번만 쓴다. 이름은 등록 도메인으로. */
-    fun allowSites(sites: Collection<String>) {
-        val added = sites.map { Domains.registrable(it) }.filter { it.isNotEmpty() && it !in allowed }
-        if (added.isEmpty()) return
-        allowed = allowed + added
-        prefs.edit().putStringSet(K_ALLOWED, allowed).apply()
-        notifyChanged()
-    }
-
     // ── 켜기·목록 ──────────────────────────────────────────────────────────────────────────────────────────────
 
     fun setEnabled(on: Boolean) {
@@ -180,17 +171,13 @@ class AdBlockService(context: Context, private val network: NetworkPath) {
         notifyChanged()
     }
 
-    /**
-     * 사용자가 주소로 더한 목록. [enabled] 가 거짓이면 받지 않고 꺼 둔 채 더한다(설정 › 백업의 가져오기 — 백업에서 꺼져 있던 목록. 켜 두고
-     * 끄면 그 사이 일꾼이 한 번 받을 수 있다).
-     */
-    fun addList(url: String, title: String, enabled: Boolean = true): FilterList? {
+    /** 사용자가 주소로 더한 목록 — 더하자마자 받는다. */
+    fun addList(url: String, title: String): FilterList? {
         if (lists.any { it.url == url }) return null
         val list = FilterList("custom-" + Integer.toHexString(url.hashCode()) + "-" + (System.currentTimeMillis() % 100000), title, url, builtin = false)
-        list.enabled = enabled
         listStore += list
         saveLists()
-        if (enabled) worker.execute { update(force = true, only = list) }
+        worker.execute { update(force = true, only = list) }
         notifyChanged()
         return list
     }
@@ -364,7 +351,7 @@ class AdBlockService(context: Context, private val network: NetworkPath) {
             // 깨졌다 — 기본값으로.
         }
         val all = BUILTIN.map { (id, title, url) -> FilterList(id, title, url, builtin = true) } + customs
-        // 2026-10-05 에 기본으로 켜는 목록이 넷이 됐다(사용자 결정). 그 전에 깔린 앱은 EasyList 하나만 켜 두었으므로 한 번 켜 준다.
+        // 기본으로 켜는 목록이 넷이 되기 전에 깔린 앱은 EasyList 하나만 켜 두었으므로 한 번 켜 준다.
         val migrate = !prefs.getBoolean(K_DEFAULTS_V2, false)
         for (l in all) {
             val o = saved[l.id]
@@ -417,9 +404,8 @@ class AdBlockService(context: Context, private val network: NetworkPath) {
         const val ERR_NOT_A_LIST = "광고 목록이 아닙니다"
 
         /**
-         * 들어 있는 목록(주소는 목록이 스스로 밝힌 내려받기 주소). **넷 모두 기본으로 켠다**(사용자 결정, 2026-10-05 — '꾸준히 업데이트되는
-         * 목록들이라면 YousList·EasyPrivacy·uBlock filters 도 포함' — 셋의 GitHub 커밋 기록이 2026-09-22~10-04 까지 이어지는 것을 확인했다).
-         * 'Wi-Fi 에서만' 은 정하지 않아 꺼 둔다. List-KR·filterslists-KO 는 주소를 확인하지 못해 넣지 않았다(사용자가 주소로 더할 수 있다).
+         * 들어 있는 목록(주소는 목록이 스스로 밝힌 내려받기 주소). **넷 모두 기본으로 켠다**(사용자 결정 — 꾸준히 갱신되는
+         * 목록만). 'Wi-Fi 에서만' 은 정하지 않아 꺼 둔다. List-KR·filterslists-KO 는 주소를 확인하지 못해 넣지 않았다(사용자가 주소로 더할 수 있다).
          */
         private val BUILTIN = listOf(
             Triple("easylist", "EasyList", "https://easylist.to/easylist/easylist.txt"),

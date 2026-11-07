@@ -64,7 +64,7 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
         /** [tapSeekSeconds] 의 기본값 — 큰 재생기들(YouTube·MX·VLC)의 기본이 10초다. */
         const val DEFAULT_TAP_SEEK_SECONDS = 10
 
-        /** [readerKeepScreenMinutes] 의 기본값(분). 검토가 권한 '마지막 조작 뒤 5~10분' 의 긴 쪽이다. */
+        /** [readerKeepScreenMinutes] 의 기본값(분). '마지막 조작 뒤 5~10분' 의 긴 쪽이다. */
         const val KEEP_SCREEN_DEFAULT_MINUTES = 10
 
         /** [readerKeepScreenMinutes] 의 상한(분). 손으로 고친 값이 화면을 몇 시간씩 켜 두지 않게 누른다. */
@@ -78,7 +78,7 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
         val viewMode = intPreferencesKey("view_mode")
         val showHidden = booleanPreferencesKey("show_hidden")
 
-        // 14단계 — 뷰어의 기본값. 7·9·11단계가 '설정 화면을 만들 때' 로 미뤄 둔 것이다.
+        // 뷰어의 기본값.
         val textWrap = booleanPreferencesKey("text_wrap")
         val textLineNumbers = booleanPreferencesKey("text_line_numbers")
         val textFontSp = intPreferencesKey("text_font_sp")
@@ -97,8 +97,8 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
         val comicVolumeKeys = booleanPreferencesKey("comic_volume_keys")
         val pdfContinuous = booleanPreferencesKey("pdf_continuous")
 
-        // 텍스트 뷰어의 **글 파일** 기본값([TextViewerKind.TEXT]). 위의 `text_*` 넷은 코드 파일의 것으로 남는다(예전 값을
-        // 그대로 쓴다 — 아래 [readProseViewer] 의 '물려받기').
+        // 텍스트 뷰어의 **글 파일** 기본값([TextViewerKind.TEXT]). 위의 `text_*` 넷은 코드 파일의 것이다(글 파일이 아직
+        // 적히지 않았으면 그 일부를 물려받는다 — 아래 [readProseViewer]).
         val proseWrap = booleanPreferencesKey("text_prose_wrap")
         val proseLineNumbers = booleanPreferencesKey("text_prose_line_numbers")
         val proseFontSp = intPreferencesKey("text_prose_font_sp")
@@ -137,7 +137,7 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
     }
 
     /**
-     * '폴더 먼저' 한 칸만 바꾼다(14단계, 설정 화면).
+     * '폴더 먼저' 한 칸만 바꾼다(설정 화면).
      *
      * [setSortSpec] 에 '지금 값의 사본' 을 넘기면 읽은 때와 쓰는 때 사이에 목록 화면이 바꾼 정렬 기준을 옛 값으로 되돌린다.
      * DataStore 의 `edit` 한 번 안에서 그 칸만 적으면 다른 칸은 그 순간의 값 그대로다.
@@ -154,7 +154,7 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
         store.edit { it[Keys.showHidden] = show }
     }
 
-    // ---- 14단계: 뷰어의 기본값 ------------------------------------------------------------------
+    // ---- 뷰어의 기본값 ------------------------------------------------------------------
     //
     // **한 DataStore 파일에 둔다.** 같은 파일(`settings`)에 DataStore 를 둘 만들면 '같은 파일에 여러 DataStore' 로
     // 죽는다 — 설정이 늘어도 이 클래스에 키를 더한다. 값의 범위는 여기서 누른다(DataStore 는 누가 무엇을 적었는지
@@ -192,8 +192,7 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
 
     /**
      * **글 파일**(`.txt`·`.md`·`.log`·자막 …)의 텍스트 뷰어 설정. 처음 값이 코드와 다르다 — 줄을 접고 줄 번호를 숨긴다. 문단마다 한 줄인
-     * 산문이 코드의 기본값(접지 않음·줄 번호)으로 열려 문장이 화면 밖으로 뻗었다. 예전에는 둘이 한 벌이라
-     * 줄 접기를 켜면 코드도 함께 접혔다.
+     * 산문이 코드의 기본값(접지 않음·줄 번호)으로 열리면 문장이 화면 밖으로 뻗는다.
      */
     val proseViewer: Flow<TextViewerDefaults> = data.map { p -> readProseViewer(p) }
 
@@ -211,7 +210,7 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
 
     /**
      * 만화의 쪽 배치 — 0 한 쪽, 1 두 쪽, 2 자동(가로 화면이면 두 쪽). 기본은 자동. 책마다가 아니라 앱 전체의 값이다 — 두 쪽으로
-     * 보는 사람은 대개 모든 책을 그렇게 본다. 처음(14단계)에는 세션 동안만 남아 앱을 다시 켜면 자동으로 돌아갔다.
+     * 보는 사람은 대개 모든 책을 그렇게 본다.
      */
     val comicPageLayout: Flow<Int> = data.map { p -> (p[Keys.comicPageLayout] ?: COMIC_LAYOUT_AUTO).coerceIn(0, COMIC_LAYOUT_AUTO) }
 
@@ -250,7 +249,7 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
 
     /**
      * 재생 화면을 두 번 두드려 건너뛰는 시간(초) — [TAP_SEEK_CHOICES] 가운데 하나, 기본 [DEFAULT_TAP_SEEK_SECONDS].
-     * 10단계에는 30초 고정이었다 — 놓친 대사를 다시 들으려는 사람에게는 너무 멀었다. 목록 밖의 값(옛 판·손으로 고친 값)은 기본값으로
+     * 목록 밖의 값(옛 판·손으로 고친 값)은 기본값으로
      * 읽는다 — 이 값이 제스처의 걸음이라 엉뚱한 값이면 두드릴 때마다 엉뚱한 자리로 뛴다.
      */
     val tapSeekSeconds: Flow<Int> = data.map { p -> tapSeekOrDefault(p[Keys.tapSeekSeconds]) }
@@ -265,7 +264,7 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
 
     /**
      * 읽는 화면(만화·문서·글)에서 **마지막 조작 뒤 화면을 켜 두는 시간**(분). 0 이면 켜 두지 않는다(기기의 화면 꺼짐 시간을 따른다).
-     * 기본 [KEEP_SCREEN_DEFAULT_MINUTES] — 한 쪽을 기기의 꺼짐 시간(갤럭시는 흔히 30초)보다 오래 읽으면 화면이 꺼졌다.
+     * 기본 [KEEP_SCREEN_DEFAULT_MINUTES] — 기기의 꺼짐 시간(갤럭시는 흔히 30초)은 한 쪽을 읽기에 짧다.
      * 거는 것은 액티비티다(`ViewerWindowHost`).
      */
     val readerKeepScreenMinutes: Flow<Int> = data.map { p ->
@@ -284,7 +283,7 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
     }
 
     /**
-     * PDF 를 **세로로 이어 보는가**(쪽을 폭에 맞춰 이어 붙이고 배율이 문서 전체에 걸린다). 거짓이면 예전의 한 쪽씩 넘기기다.
+     * PDF 를 **세로로 이어 보는가**(쪽을 폭에 맞춰 이어 붙이고 배율이 문서 전체에 걸린다). 거짓이면 한 쪽씩 넘긴다.
      * 기본은 이어 보기 — 구글 드라이브·삼성·Adobe 의 PDF 뷰어가 그렇다. 뷰어의 ⋮ 에서 고르고 여기 남는다.
      */
     val pdfContinuous: Flow<Boolean> = data.map { p -> p[Keys.pdfContinuous] ?: true }
@@ -303,7 +302,7 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
 
     private fun writeTextViewer(p: MutablePreferences, value: TextViewerDefaults) {
         // 글 파일의 값이 아직 예전 값을 물려받는 중이면([readProseViewer]) 코드의 값을 바꾸기 **전에** 그것을 적어 둔다 — 그러지 않으면
-        // 코드의 글자 크기를 바꿀 때 글의 것도 따라 바뀐다(둘은 이제 따로다).
+        // 코드의 글자 크기를 바꿀 때 글의 것도 따라 바뀐다(둘은 따로다).
         if (p[Keys.proseWrap] == null) writeProseViewer(p, readProseViewer(p))
         p[Keys.textWrap] = value.wrap
         p[Keys.textLineNumbers] = value.lineNumbers
@@ -352,8 +351,7 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
 }
 
 /**
- * 텍스트 뷰어의 기본값. 뷰어에서 바꾸면 여기에 남아 다음 파일도 그 모양으로 열린다(7단계가 '파일을 닫으면 기본값으로
- * 돌아간다' 로 미뤄 둔 것). **종류([TextViewerKind])마다 따로 남는다** — 이 클래스의 기본 인자는 코드의 처음 값이다.
+ * 텍스트 뷰어의 기본값. 뷰어에서 바꾸면 여기에 남아 다음 파일도 그 모양으로 열린다. **종류([TextViewerKind])마다 따로 남는다** — 이 클래스의 기본 인자는 코드의 처음 값이다.
  */
 data class TextViewerDefaults(
     val wrap: Boolean = false,
@@ -367,7 +365,7 @@ data class TextViewerDefaults(
         const val MIN_FONT_SP = 9
         const val MAX_FONT_SP = 22
 
-        /** 종류마다의 처음 값 — 글은 접고 줄 번호를 숨긴다. 코드는 예전 그대로(접지 않음 — 들여쓰기가 뜻을 가진다, 줄 번호). */
+        /** 종류마다의 처음 값 — 글은 접고 줄 번호를 숨긴다. 코드는 접지 않고(들여쓰기가 뜻을 가진다) 줄 번호를 보인다. */
         fun defaultsFor(kind: TextViewerKind): TextViewerDefaults = when (kind) {
             TextViewerKind.TEXT -> TextViewerDefaults(wrap = true, lineNumbers = false)
             TextViewerKind.CODE -> TextViewerDefaults()
@@ -388,8 +386,7 @@ enum class TextViewerKind {
 }
 
 /**
- * 흐름 문서를 읽는 모양 — 글자 크기(문서 크기의 %), 좌우 여백, 바탕색. 11단계의 `chapterHtml(extraCss)` 가 이 자리를
- * 열어 두었다.
+ * 흐름 문서를 읽는 모양 — 글자 크기(문서 크기의 %), 좌우 여백, 바탕색.
  */
 data class ReaderAppearance(
     val fontPercent: Int = DEFAULT_FONT_PERCENT,

@@ -157,7 +157,7 @@ class Socks5ServerTest {
 
     @Test
     fun 풀지_못한_이름은_호스트에_닿지_못함으로_답한다() {
-        // 예전에는 풀이 실패도 '규칙이 허락하지 않음'(2)이었다 — 막은 것이 아니다.
+        // 풀이 실패는 '규칙이 허락하지 않음'(2)이 아니다 — 막은 것이 아니다.
         val srv = server(testEnv(destinations = TestDestinations()))
         val s = greet(srv.actualPort)
         assertEquals(4, request(s, 1, 3, "nowhere.test".toByteArray(), 443)[1].toInt())
@@ -196,8 +196,8 @@ class Socks5ServerTest {
 
     @Test
     fun 반쯤_닫은_뒤의_늦은_답도_끝까지_넘긴다() {
-        // 손님이 요청을 보내고 쓰기를 닫았다. 원격은 그 뒤 아홉 번에 나눠 천천히 답한다 — 예전에는 반대 방향을 정한 시간(5초)만 기다리고
-        // 잘랐다. 시간을 줄여 꾸몄다: 멈춤을 보는 주기 50ms, 답은 100ms 간격으로 아홉 조각(옛 꼴이면 50ms 에서 잘린다).
+        // 손님이 요청을 보내고 쓰기를 닫았다. 원격은 그 뒤 아홉 번에 나눠 천천히 답한다 — 반대 방향을 정한 시간만 기다리고 자르면 안 된다.
+        // 시간을 줄여 꾸몄다: 멈춤을 보는 주기 50ms, 답은 100ms 간격으로 아홉 조각(시간으로 자르면 50ms 에서 잘린다).
         val pieces = (1..9).map { "piece-$it;" }
         val slow = closer.keep(SlowReplyServer(pieces, gapMs = 100))
         val srv = server(testEnv(timings = TetherTimings(relayPollMs = 50)))
@@ -282,7 +282,7 @@ class Socks5ServerTest {
         val first = closer.keep(DatagramSocket(0, LOOPBACK))
         first.sendTo(relayPort, udpPacket(1, byteArrayOf(127, 0, 0, 1), echo.port, "a".toByteArray()))
         assertTrue(first.receiveOrNull() != null)
-        // 같은 주소의 다른 포트(먼저 패킷을 보낸 쪽이 손님이 되던 예전 판의 탈취 길) — 보내지도 답하지도 않는다.
+        // 같은 주소의 다른 포트(먼저 패킷을 보낸 쪽을 손님으로 삼으면 탈취 길이 된다) — 보내지도 답하지도 않는다.
         val intruder = closer.keep(DatagramSocket(0, LOOPBACK))
         intruder.sendTo(relayPort, udpPacket(1, byteArrayOf(127, 0, 0, 1), echo.port, "b".toByteArray()))
         assertNull(intruder.receiveOrNull(800))
@@ -343,7 +343,7 @@ class Socks5ServerTest {
 
     @Test
     fun UDP_묶음_상한에_걸린_것은_일반_실패로_답하고_따로_센다() {
-        // 예전에는 기록 한 줄뿐이라 화면에서 보이지 않았다.
+        // 기록만으로는 화면에 보이지 않아 따로 센다.
         val counters = Counters()
         val srv = closer.keep(Socks5Server(testEnv(counters = counters), port = 0, maxUdpAssociations = 1))
         assertTrue(srv.start() > 0)

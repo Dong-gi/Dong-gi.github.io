@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
 /** 편집기 화면의 판단 — 떠 있는 단추, 오류 화면의 단추, 읽던 자리의 꼴, '새 파일로 저장했습니다' 의 횟수, 고르개가 돌려준 주소. */
 class EditorRulesTest {
 
-    // ---- 고르개가 돌려준 주소(그림 넣기·내보내기 — 2026-10-16 보안 점검) ----
+    // ---- 고르개가 돌려준 주소(그림 넣기·내보내기) ----
 
     private val own = "io.github.donggi.iroiroviewer"
     private val providers = mapOf(
@@ -85,7 +85,7 @@ class EditorRulesTest {
 
     @Test
     fun nothingFloatsWhileOpening() {
-        // 여는 동안에는 아무것도 띄우지 않는다 — 엔진이 여는 동안 띄우는 암호 칸을 ⋮ 가 가렸다(2026-10-10 기기, rhwp). 넘기려면 암호 물음을
+        // 여는 동안에는 아무것도 띄우지 않는다 — 엔진이 여는 동안 띄우는 암호 칸을 ⋮ 가 가린다(rhwp). 넘기려면 암호 물음을
         // 닫는다 — 그때 ⋮ 와 '다시 열기'(아래 시험). '편집' 은 문서를 연 뒤에만.
         assertEquals(Floating(null, more = false), EditorRules.floating(viewMode = true, opened = false, failure = null, hasSlot = true, hasDocumentUri = true))
     }

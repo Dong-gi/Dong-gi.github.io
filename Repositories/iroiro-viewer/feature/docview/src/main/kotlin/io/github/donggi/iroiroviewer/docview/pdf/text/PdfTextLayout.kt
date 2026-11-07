@@ -127,7 +127,7 @@ internal object PdfTextLayout {
     /**
      * 누른 자리의 글자. 상자 안이 아니어도 [slop](포인트) 안이면 가장 가까운 것 — 손가락은 글자보다 굵다. 없으면 null.
      *
-     * **띄어쓰기 글자는 고르지 않는다** — 낱말 사이를 누르면 가까운 낱말이 골라져야 한다(기기에서 띄어쓰기 하나만 칠해졌다).
+     * **띄어쓰기 글자는 고르지 않는다** — 낱말 사이를 누르면 가까운 낱말이 골라져야 한다.
      */
     fun hit(page: PageText, x: Float, y: Float, slop: Float): Int? {
         var best = -1

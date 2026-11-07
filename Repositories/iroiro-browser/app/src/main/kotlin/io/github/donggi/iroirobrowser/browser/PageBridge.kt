@@ -30,24 +30,24 @@ import java.util.Locale
 /**
  * 탭 하나의 **쪽↔앱 통로**. 쪽에서 보이지 않는 실행 세계([BridgeScripts.BRIDGE] — 모든 틀에)와 주입 객체를 두고, 거기서 오는 알림·바이트를 받는다:
  *
- * - **`blob:` 내려받기**(사용자 결정, 2026-10-05 — '지원합시다'). WebView 는 blob 주소만 알려 준다 — 그 주소의 바이트는 쪽 안에만 있다. 틀마다
+ * - **`blob:` 내려받기**(사용자 결정). WebView 는 blob 주소만 알려 준다 — 그 주소의 바이트는 쪽 안에만 있다. 틀마다
  *   물어([findBlob]) 가진 틀이 덩이(512 KB)로 넘기고, 앱은 한 덩이를 쓴 뒤 다음 덩이를 청한다(메모리를 묶어 둔다).
  * - **실시간 녹화**([startRecording]) — 재생 중인 요소를 고르게 해 그 틀이 MediaRecorder 로 1초마다 넘긴다. 쪽을 다시 열지 않는다.
  * - **가로채기**([armCapture]) — 그 탭에만 쪽의 세계에 갈고리([BridgeScripts.MSE_HOOK])를 문서 시작 스크립트로 걸고(부르는 쪽이 쪽을 다시 연다),
- *   틀이 인사하면 통로를 건네게 한다. 끝나면([endCapture]) 갈고리를 걷는다. **가로채기를 건 사이트에 묶는다**(앞 판은 사이트·
- *   영상을 넘어 계속 담았다): 다른 사이트로 가는 탐색이 시작되면 갈고리를 걷어 두고([onNavigationStarted] — 다른 사이트의 문서에 넣지 않게),
+ *   틀이 인사하면 통로를 건네게 한다. 끝나면([endCapture]) 갈고리를 걷는다. **가로채기를 건 사이트에 묶는다**:
+ *   다른 사이트로 가는 탐색이 시작되면 갈고리를 걷어 두고([onNavigationStarted] — 다른 사이트의 문서에 넣지 않게),
  *   다른 사이트의 문서가 인사하면([onHello] — 주 틀의 출처로 가린다) 가로채기를 끝내 화면에 넘긴다(저장할지 묻는다). 통로는 그 사이트의 문서에만
  *   건넨다.
- * - **요소 고르기**([startPick] — 사용자 요청 2026-10-08, 요소 숨기기): 이 탭의 **주 틀**의 고르는 스크립트(실행 세계에 잠들어 있다)를 고르는
+ * - **요소 고르기**([startPick] — 요소 숨기기): 이 탭의 **주 틀**의 고르는 스크립트(실행 세계에 잠들어 있다)를 고르는
  *   동안만 깨워 누른 자리의 요소를 묻고, 그 알림([PickProtocol])을 고르는 화면([PickEvents] — [ElementPicker])에 넘긴다. 주 틀에 새 문서가
  *   인사하면(페이지가 바뀌었다) 고르기를 끝낸다.
- * - **유튜브 광고 가리기·건너뛰기**([YtGuard] — 사용자 결정 2026-10-11, B1·B2): 같은 실행 세계에 유튜브 출처에만 스크립트를 걸고, 그 틀이
+ * - **유튜브 광고 가리기·건너뛰기**([YtGuard] — B1·B2): 같은 실행 세계에 유튜브 출처에만 스크립트를 걸고, 그 틀이
  *   물으면([YtGuard.HELLO]) 켤지 답한다([Events.ytGuardWanted] — 광고 차단과 그 사이트의 끄기를 화면이 안다). 설정에서 돌아오면 다시 알린다
  *   ([refreshYtGuard]). 주 틀이 건너뛸 수 있게 된 단추의 자리를 알리면([YtGuard.SKIP]) 화면이 그 자리를 진짜 터치로 누르고([Events.onYtSkip]),
  *   광고가 나오는 동안을 알리면([YtGuard.AD]) 든다([ytAdShowing] — 뒤에서 재생 잇기).
  *
- * 이 기능은 실행 세계(`JS_INJECTION_IN_FRAME_AND_WORLD`)와 ArrayBuffer 알림을 아는 WebView 에서만 켠다([isSupported]). 모르면 앞 판처럼
- * blob 은 받지 못한다고 알린다.
+ * 이 기능은 실행 세계(`JS_INJECTION_IN_FRAME_AND_WORLD`)와 ArrayBuffer 알림을 아는 WebView 에서만 켠다([isSupported]). 모르면 blob 은
+ * 받지 못한다고 알린다.
  */
 class PageBridge(private val context: Context, private val tab: Tab, private val events: Events) {
 
@@ -189,7 +189,7 @@ class PageBridge(private val context: Context, private val tab: Tab, private val
 
     /**
      * 탭의 WebView 에 실행 세계·주입 객체·문서 시작 스크립트를 건다(다음 탐색부터). WebView 를 새로 만들었으면(렌더러가 죽었다) 걸어 두었던
-     * 갈고리도 새 WebView 에 건다 — 앞 판은 그때 가로채기가 말없이 멈췄다.
+     * 갈고리도 새 WebView 에 건다 — 걸지 않으면 가로채기가 말없이 멈춘다.
      */
     @SuppressLint("RequiresFeature") // isSupported() 가 두 기능을 함께 본다 — lint 는 다른 함수의 확인을 알아보지 못한다.
     fun install(view: WebView) {
@@ -508,7 +508,7 @@ class PageBridge(private val context: Context, private val tab: Tab, private val
         }
     }
 
-    /** 녹화를 시작하지 못한 까닭 — 쪽이 준 이름(DOMException 의 이름 따위)을 읽는 말로('(SecurityError)' 가 그대로 나왔다). */
+    /** 녹화를 시작하지 못한 까닭 — 쪽이 준 이름(DOMException 의 이름 따위)을 그대로 보이지 않고 읽는 말로. */
     private fun recordFailure(why: String): String {
         if (why == "none") return context.getString(R.string.capture_nothing_playing)
         val reason = when (why) {
@@ -577,7 +577,7 @@ class PageBridge(private val context: Context, private val tab: Tab, private val
     }
 
     /**
-     * 고른 글을 묻는다(글 고르기 메뉴의 '검색' — 사용자 요청, 2026-10-16). 틀마다의 실행 세계에서 [SelectionSearch.SCRIPT] 를 돌린다
+     * 고른 글을 묻는다(글 고르기 메뉴의 '검색'). 틀마다의 실행 세계에서 [SelectionSearch.SCRIPT] 를 돌린다
      * (`JavaScriptReplyProxy.executeJavaScript` — 그 프록시를 보낸 틀·세계에서 돈다. 그 기능 조건은 통로와 같은 JS_INJECTION_IN_FRAME_AND_WORLD).
      * 모두 답하거나 [SELECTION_TIMEOUT_MS] 가 지나면 [done] 을 메인 스레드에서 한 번 — 초점이 있는 틀의 글을 먼저, 없으면 처음 온 글(없으면 빈 글).
      */
@@ -638,7 +638,7 @@ class PageBridge(private val context: Context, private val tab: Tab, private val
     }
 
     /**
-     * 뒤에서 재생을 잇는 동안 이 탭의 영상 요소를 숨기거나([hide]) 되돌린다([BackgroundPlay.HIDE_VIDEO_SCRIPT] — 2026-10-16). 틀마다의 실행
+     * 뒤에서 재생을 잇는 동안 이 탭의 영상 요소를 숨기거나([hide]) 되돌린다([BackgroundPlay.HIDE_VIDEO_SCRIPT]). 틀마다의 실행
      * 세계에서 돈다([selectedText] 와 같은 길 — 틀마다 차례가 지켜지므로 숨기기 뒤의 되돌리기가 앞지르지 않는다). [done] 은 메인 스레드에서 한 번 —
      * 숨겼는데 영상이 있는 틀이 하나라도 있으면 참(되돌릴 때는 늘 거짓). 모두 답하거나 [SELECTION_TIMEOUT_MS] 가 지나면 부른다.
      */
@@ -926,7 +926,7 @@ class PageBridge(private val context: Context, private val tab: Tab, private val
 
     /**
      * 탭을 닫는다(또는 화면이 사라진다). 남은 녹화·가로채기는 [keep] 이면 파일째 남기고(다음에 뜰 때 저장할지 묻는다 — 화면이 사라질 때), 아니면
-     * 받은 데까지 저장으로 넘긴다 — 쪽이 바뀔 때와 같다. 버릴지는 닫기 전에 화면이 물어 [discardAll] 로 정한다(앞 판은 묻지 않고 버렸다).
+     * 받은 데까지 저장으로 넘긴다 — 쪽이 바뀔 때와 같다. 버릴지는 닫기 전에 화면이 물어 [discardAll] 로 정한다.
      */
     fun dispose(keep: Boolean = false) {
         // 고르기는 화면이 탭을 닫기 전에 끝낸다 — 여기서는 조용히 잊는다(알리면 '페이지가 바뀌었다' 가 된다).

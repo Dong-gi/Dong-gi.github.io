@@ -58,7 +58,7 @@ androidComponents {
 dependencies {
     // 파일 쪽과의 약속(EditorApp — 동작 이름·추가값·저장 자리의 글자열). feature 끼리는 보지 않는다.
     implementation(project(":core:io"))
-    // 사용자 승인(2026-10-09). 편집기와 바이트를 ArrayBuffer 로 주고받는 WebMessageListener 가 여기 있다. 순수 자바 AndroidX, 네이티브 없음.
+    // 사용자 승인. 편집기와 바이트를 ArrayBuffer 로 주고받는 WebMessageListener 가 여기 있다. 순수 자바 AndroidX, 네이티브 없음.
     implementation(libs.androidx.webkit)
 
     // 순수한 판단(자산 자리 풀이·형식 표·저장 덩이 맞추기·이름 다듬기·용지)을 기기 없이 시험한다.

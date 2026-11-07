@@ -76,8 +76,8 @@ class EpubEncryptionTest {
 
     @Test
     fun 풀리지_않는_주소가_하나라도_있으면_열지_않는다() {
-        // **오래 구멍이었다.** 풀리지 않는 주소를 조용히 버렸기 때문에, 글꼴 하나와 책 밖을
-        // 가리키는 본문 주소 하나가 적힌 책이 '글꼴만 걸렸다' 로 통과했다.
+        // 풀리지 않는 주소를 조용히 버리면, 글꼴 하나와 책 밖을 가리키는 본문 주소 하나가
+        // 적힌 책이 '글꼴만 걸렸다' 로 통과한다.
         val result = parse(doc("OEBPS/fonts/a.otf" to FontObfuscation.IDPF, "../../escape.xhtml" to AES))
         assertEquals(1, result.unresolved)
         assertIs<EpubEncryption.Plan.Refuse>(EpubEncryption.plan(result))
@@ -92,9 +92,8 @@ class EpubEncryptionTest {
     }
 
     /**
-     * **`EncryptedData` 가 하나도 없으면 잠긴 것이 없다.** 예전 판은 파일 전체가 비었으면 거절해,
-     * 아무것도 잠기지 않은 책을 '잠겼다' 고 말했다. 명세상 틀린 파일이지만 거절할
-     * 이유는 아니다.
+     * **`EncryptedData` 가 하나도 없으면 잠긴 것이 없다.** 거절하면 아무것도 잠기지 않은 책을
+     * '잠겼다' 고 말한다. 명세상 틀린 파일이지만 거절할 이유는 아니다.
      */
     @Test
     fun 잠긴_것이_하나도_적혀_있지_않으면_연다() {
@@ -104,8 +103,8 @@ class EpubEncryptionTest {
     }
 
     /**
-     * **가리키는 곳 없는 블록이 하나라도 있으면 거절한다.** 예전 판은 그런 블록을 조용히 건너뛰어,
-     * 글꼴 하나가 함께 적혀 있으면 '글꼴만 걸렸다' 로 통과했다 — 전부 비었을 때만 거절했다.
+     * **가리키는 곳 없는 블록이 하나라도 있으면 거절한다.** 그런 블록을 건너뛰면 글꼴 하나가
+     * 함께 적혀 있을 때 '글꼴만 걸렸다' 로 통과한다.
      */
     @Test
     fun 가리키는_곳_없는_블록이_하나라도_있으면_열지_않는다() {

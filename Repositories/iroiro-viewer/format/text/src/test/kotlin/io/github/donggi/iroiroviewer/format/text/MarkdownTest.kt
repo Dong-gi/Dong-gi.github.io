@@ -453,4 +453,20 @@ class MarkdownTest {
         // 쓰개가 제어 문자를 버린다.
         assertEquals("<p>ab</p>", html("a\u0001b"))
     }
+
+    // ---- 그림 형식 -------------------------------------------------------------
+
+    @Test
+    fun `그림 형식은 확장자 표에서만`() {
+        assertEquals("image/png", MarkdownPreview.imageTypeOf("A.PNG"))
+        assertEquals("image/svg+xml", MarkdownPreview.imageTypeOf("dir/i.svg"))
+        assertEquals("image/png", MarkdownPreview.imageTypeOf(".png"))
+        assertNull(MarkdownPreview.imageTypeOf("f.woff2"))
+        assertNull(MarkdownPreview.imageTypeOf("x.html"))
+        assertNull(MarkdownPreview.imageTypeOf("png"))
+        assertNull(MarkdownPreview.imageTypeOf("dir.png/x"))
+        // 표에 없는 그림 형식은 싣지 않는다.
+        assertNull(MarkdownPreview.imageTypeOf("a.jfif"))
+        assertNull(MarkdownPreview.imageTypeOf("a.ico"))
+    }
 }

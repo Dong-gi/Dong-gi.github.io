@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 /**
- * 알림을 그 책이 열려 있는 동안만 띄운다(14단계).
+ * 알림을 그 책이 열려 있는 동안만 띄운다.
  *
  * 다음 권은 뷰어를 닫지 않고 책을 바꾼다. 앞 책의 '처음부터' 가 새 책 위에 남아 있으면 그것을 누른 사람은 **새 책**을
  * 되감는다 — 화면 캡처로는 잡기 어려운 종류라(함정 표) 여기서 박는다. `SnackbarHostState` 는 화면 없이 도는 상태

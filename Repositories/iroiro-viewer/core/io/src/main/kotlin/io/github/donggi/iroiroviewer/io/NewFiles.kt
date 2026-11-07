@@ -62,8 +62,8 @@ object NewFiles {
 
     /**
      * 쓰기가 까닭 없이 실패했을 때(플랫폼의 그릇이 던진 `IllegalStateException`, `Bitmap.compress` 의 false) — 공간이 거의 없으면
-     * 그것이 까닭이다. 그런 실패는 errno 를 싣지 않아 [FileOpEngine.reasonOf] 가 '입출력' 으로 읽는다(디스크가 찬
-     * 것을 '이 형식은 저장할 수 없습니다' 로 말했다).
+     * 그것이 까닭이다. 그런 실패는 errno 를 싣지 않아 [FileOpEngine.reasonOf] 가 '입출력' 으로 읽는다(그대로 두면 디스크가 찬
+     * 것을 '이 형식은 저장할 수 없습니다' 로 말한다).
      */
     @SuppressLint("UsableSpace") // 남길 몫을 재는 자리라 보수적인 값이 맞다(ZIP 만들기와 같다).
     fun reasonWhenSilent(dir: File, otherwise: FileOpEngine.Reason): FileOpEngine.Reason = when {

@@ -25,7 +25,7 @@ import kotlin.math.min
  * `readUtfCharsetFromBom()` — **BOM 이 없으면 UTF-8 로 단정한다.**
  *
  * 한국어 자막은 CP949 가, 일본어 자막은 Shift_JIS 가 흔하고 둘 다 BOM 이 없다.
- * 그대로 넘기면 **화면에 깨진 글자가 뜬다.** 7단계가 텍스트 뷰어를 위해 만들어 둔
+ * 그대로 넘기면 **화면에 깨진 글자가 뜬다.** 텍스트 뷰어의
  * `CharsetDetector` 가 답을 알고 있는데 그것을 먹일 구멍이 없는 셈이다.
  *
  * 그래서 **바이트가 들어가는 길**에서 바꾼다. media3 가 자막을 읽을 때 쓰는
@@ -53,8 +53,8 @@ class SubtitleDataSourceFactory(
         /**
          * 자막 하나의 상한. **4 MiB.**
          *
-         * 7단계가 문법 강조를 끄는 경계로 쓴 값과 같다 — '이것은 사람이 읽는 글이다' 의
-         * 실질적 상한으로 이미 한 번 고른 수이고, 자막에는 훨씬 넉넉하다.
+         * 텍스트 뷰어가 문법 강조를 끄는 경계와 같다 — '이것은 사람이 읽는 글이다' 의
+         * 실질적 상한이고, 자막에는 훨씬 넉넉하다.
          */
         const val MAX_BYTES = 4 * 1024 * 1024
 
@@ -170,7 +170,7 @@ private class SubtitleDataSource(private val inner: DataSource) : DataSource {
  * 기기 파일을 읽는 기본 소스에 위 변환을 얹은 공장.
  *
  * [DefaultDataSource] 의 네트워크 갈래(http·udp·rtmp)는 [LocalOnlyDataSource] 가 막는다 — 이 앱은 `INTERNET` 을 선언하지 않아 OS 도
- * 막는다(2026-10-05 ~ 10-09 에는 SFTP 때문에 선언했었다 — 걷은 뒤에도 겹으로 남긴다).
+ * 막지만 겹으로 둔다.
  */
 @OptIn(UnstableApi::class)
 fun subtitleAwareDataSourceFactory(context: android.content.Context): DataSource.Factory =

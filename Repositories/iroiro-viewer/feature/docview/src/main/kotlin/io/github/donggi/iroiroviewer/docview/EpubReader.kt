@@ -61,9 +61,9 @@ import java.util.concurrent.atomic.AtomicReference
  * 장 하나의 길이는 글의 길이가 정하고, 그것을 우리가 화면 크기로 잘라 쪽을 만들면
  * 글꼴 크기가 바뀔 때마다 쪽 번호가 달라진다 — 이어보기가 가리키는 자리가 그때마다
  * 움직인다는 뜻이다. **차례(spine)의 번호가 우리가 세는 유일한 자리**이고, 장 안에서는
- * 세로로 스크롤한다. 장 안의 자리는 스크롤의 **비율**로 따로 기억한다(14단계 — `DocLocator`).
+ * 세로로 스크롤한다. 장 안의 자리는 스크롤의 **비율**로 따로 기억한다(`DocLocator`).
  *
- * ## 읽는 모양(14단계)
+ * ## 읽는 모양
  *
  * 글자 크기는 `textZoom`, 여백·바탕은 장에 얹는 CSS 다([ReaderLooks.forEpub]). **고정 레이아웃 쪽에는 셋 다 걸지 않고**
  * 쪽을 화면에 통째로 맞춘다 — 그러려면 화면의 크기(CSS 화소)를 알아야 하므로, 크기를 잰 뒤에 WebView 를 세운다.
@@ -385,7 +385,7 @@ private fun providerFor(
  *
  * **책이 적은 형식 문자열을 그대로 WebView 에 넘기지 않는다.** 크롬은 표준 모드에서도 형식이 비었거나
  * `application/x-unknown-content-type` 이거나 쉼표 앞이 `text/css` 인 것(`text/css,x`)을 스타일시트로 적용한다 —
- * 그런 형식으로 적힌 파일이 CSS 위생을 건너뛰고 적용됐다. 그래서 형식은 **우리 표에서만** 나온다.
+ * 그러면 그런 형식으로 적힌 파일이 CSS 위생을 건너뛰고 적용된다. 그래서 형식은 **우리 표에서만** 나온다.
  */
 internal fun rawResourceType(declared: String?, path: String): String? {
     val named = declared?.let { RAW_ALIASES[it] ?: it }?.takeIf { it in RAW_TYPES }

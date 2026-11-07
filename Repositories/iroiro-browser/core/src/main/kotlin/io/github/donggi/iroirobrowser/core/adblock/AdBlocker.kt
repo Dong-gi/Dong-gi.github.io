@@ -9,8 +9,8 @@ package io.github.donggi.iroirobrowser.core.adblock
  *   늘 본다. `$badfilter` 가 가리킨 규칙은 만들 때 뺀다.
  * - 요소 숨김: 쪽을 열 때 [startCss](그 사이트의 것 + 클래스·id 가 없는 일반 규칙), 쪽을 다 연 뒤 [genericCss](쪽이 가진 클래스·id 에
  *   맞는 일반 규칙) — [CosmeticEngine] 의 머리말.
- * - 시간: 요청 하나를 맞추는 시간이 주소 길이에 비례한다(쪽이 지은 아주 긴 주소가 WebView 의 요청 스레드를 세우지 못하게 — 2026-10-16 보안
- *   점검). 정규식은 되짚지 않는 엔진([ListRegex])에 걸음 예산을 두고, 예산을 넘은 정규식 규칙은 그 자리에서 꺼서 [onRegexDisabled] 에
+ * - 시간: 요청 하나를 맞추는 시간이 주소 길이에 비례한다(쪽이 지은 아주 긴 주소가 WebView 의 요청 스레드를 세우지 못하게). 정규식은 되짚지
+ *   않는 엔진([ListRegex])에 걸음 예산을 두고, 예산을 넘은 정규식 규칙은 그 자리에서 꺼서 [onRegexDisabled] 에
  *   알린다(그 요청의 스레드에서 — 앱은 디버그 기록에 규칙의 앞부분만 남긴다).
  */
 class AdBlocker(lists: List<ParsedList>, private val onRegexDisabled: ((NetworkRule) -> Unit)? = null) {

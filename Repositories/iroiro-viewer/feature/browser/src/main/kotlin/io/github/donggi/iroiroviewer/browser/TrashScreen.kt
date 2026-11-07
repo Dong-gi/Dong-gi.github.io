@@ -73,9 +73,9 @@ import io.github.donggi.iroiroviewer.model.FileEntry
  *
  * ## 여럿을 골라 한꺼번에
  *
- * 사진 40장을 지운 뒤 스낵바의 되돌리기를 놓치면 줄마다 '되돌리기' 를 40번 눌러야 했다. **폴더 목록과 같은 고르기**를 둔다 — 길게
+ * 스낵바의 되돌리기를 놓쳐도 줄마다 되돌리지 않게 **폴더 목록과 같은 고르기**를 둔다 — 길게
  * 누르면 고르고, 고르는 동안은 누를 때마다 넣고 뺀다(그때 줄의 단추는 거둔다 — 고르는 손이 단추를 누르지 않게). 여기서는 **그냥 눌러도
- * 고른다** — 줄을 누르는 것에 다른 뜻이 없어(위 문단) 아무 반응이 없던 자리다. 위 막대가 개수와 '전체 선택'(다시 누르면 모두 푼다)을,
+ * 고른다** — 줄을 누르는 것에 다른 뜻이 없다(위 문단). 위 막대가 개수와 '전체 선택'(다시 누르면 모두 푼다)을,
  * 아래 막대가 되돌리기·다른 곳에 복원·완전히 삭제를 든다. 손대는 것은 저장소가 붙어 있는 항목뿐이다 —
  * 붙지 않은 것을 골랐으면 완전히 삭제의 확인이 '남긴다' 고 말한다. 고르기는 ViewModel 이 든다(`BrowserViewModel.trashSelection`).
  *
@@ -342,8 +342,8 @@ private fun TrashRow(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                // 기록 없이 발견된 항목. 예전에는 이런 것을 말없이 영구 삭제했는데, 그것은
-                // '무엇인지 모르겠다' 를 '지워도 된다' 로 읽는 것이었다. 이제는 이렇게 띄운다.
+                // 기록 없이 발견된 항목. 말없이 영구 삭제하지 않고 띄운다 — '무엇인지 모르겠다' 는
+                // '지워도 된다' 가 아니다.
                 if (entry.originalParent == TrashStore.UNKNOWN_PARENT) {
                     Text(
                         text = stringResource(R.string.browser_trash_unknown_origin, TrashStore.RECOVERED_DIR),

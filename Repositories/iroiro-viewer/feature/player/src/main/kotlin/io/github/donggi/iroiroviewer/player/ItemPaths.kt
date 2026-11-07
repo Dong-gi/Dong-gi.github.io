@@ -53,8 +53,8 @@ internal class ItemPaths(context: Context) : AutoCloseable {
     data class Queue(val paths: List<String>, val index: Int)
 
     /**
-     * 큐 전체의 파일 경로 — 되살릴 큐([PlayerRestore])를 적을 때 쓴다. 파일이 아닌 항목은 뺀다(지금 큐에는 파일만 든다 — 예전의
-     * 네트워크 저장소 항목을 거르던 자리다). 지금 항목은 **[mediaId] 로** 찾는다(자리로 맞추지 않는다 — 클래스 주석). 지금 항목이 파일이
+     * 큐 전체의 파일 경로 — 되살릴 큐([PlayerRestore])를 적을 때 쓴다. 파일이 아닌 항목은 뺀다(지금 큐에는 파일만 든다). 지금
+     * 항목은 **[mediaId] 로** 찾는다(자리로 맞추지 않는다 — 클래스 주석). 지금 항목이 파일이
      * 아니거나 큐에 없으면 null.
      */
     fun queueOf(mediaId: String): Queue? {

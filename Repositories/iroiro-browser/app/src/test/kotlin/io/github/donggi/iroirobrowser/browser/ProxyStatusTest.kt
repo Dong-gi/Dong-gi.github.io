@@ -33,7 +33,7 @@ class ProxyStatusTest {
 
     @Test
     fun 뜻이_안_잡히던_글은_말로() {
-        // 앞 판의 '계정'·'불가'·'?' — 막대 글만으로 뜻이 안 잡혔다.
+        // '계정'·'불가'·'?' 같은 짧은 글은 막대 글만으로 뜻이 안 잡힌다.
         assertEquals(R.string.state_auth, ProxyStatus.of(Phase.AUTH_REJECTED, null).labelRes)
         assertEquals(R.string.state_unsupported, ProxyStatus.of(Phase.UNSUPPORTED, null).labelRes)
         assertEquals(R.string.state_check_failed, ProxyStatus.of(Phase.CHECK_FAILED, null).labelRes)

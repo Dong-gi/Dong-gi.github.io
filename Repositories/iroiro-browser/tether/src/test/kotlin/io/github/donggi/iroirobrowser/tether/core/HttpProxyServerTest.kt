@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
 
 /**
  * HTTP 프록시를 루프백에서 — CONNECT 터널(머리 뒤에 붙어 온 바이트까지), 절대 URI 전달(origin-form·Host 채우기·hop-by-hop 걷기·
- * `Connection: close`), 스머글링 막기·머리 상한(줄 수·전체 마감), 403·502 본문, 차 있으면 다음 포트로(사용자 결정 2026-10-10), 반쯤 닫힌
+ * `Connection: close`), 스머글링 막기·머리 상한(줄 수·전체 마감), 403·502 본문, 차 있으면 다음 포트로(사용자 결정), 반쯤 닫힌
  * 연결의 늦은 답.
  */
 class HttpProxyServerTest {
@@ -114,7 +114,7 @@ class HttpProxyServerTest {
 
     @Test
     fun 값이_다른_Content_Length_와_겹친_Transfer_Encoding_도_400() {
-        // RFC 7230 3.3.3 — 본문의 경계를 서버마다 다르게 읽는 꼴(2026-10-16 보안 점검). 앞 판은 CL+TE 와 겹친 Host 만 막았다.
+        // RFC 7230 3.3.3 — 본문의 경계를 서버마다 다르게 읽는 꼴.
         val origin = closer.keep(OriginServer())
         val p = proxy()
         val target = "http://127.0.0.1:${origin.port}/"
@@ -181,7 +181,7 @@ class HttpProxyServerTest {
 
     @Test
     fun 콜론_없는_머리_줄도_센다() {
-        // 예전에는 담은 머리만 세어 `:` 없는 줄(걷어 버린다)은 끝없이 이어져도 걸리지 않았다.
+        // `:` 없는 줄(걷어 버린다)도 센다 — 끝없이 이어지면 걸린다.
         val origin = closer.keep(OriginServer())
         val p = proxy()
         val request = buildString {
@@ -202,8 +202,7 @@ class HttpProxyServerTest {
 
     @Test
     fun 머리를_다_받기까지의_전체_마감이_지나면_답_없이_닫는다() {
-        // 3바이트씩 80ms 마다 흘린다 — 읽기 하나의 시한은 늘 지키지만 머리 전체는 1초 넘게 걸린다. 예전에는 읽기마다 시한이 새로 걸려 끝까지
-        // 받고 넘겼다.
+        // 3바이트씩 80ms 마다 흘린다 — 읽기 하나의 시한은 늘 지키지만 머리 전체는 1초 넘게 걸려 전체 마감에 걸려야 한다.
         val origin = closer.keep(OriginServer("late"))
         val p = proxy(testEnv(timings = TetherTimings(proxyHeaderMs = 300)))
         val request = ascii("GET http://127.0.0.1:${origin.port}/ HTTP/1.1\r\nHost: 127.0.0.1\r\n\r\n")
@@ -227,7 +226,7 @@ class HttpProxyServerTest {
 
     @Test
     fun 풀지_못한_이름은_403_이_아니라_502_와_그_까닭() {
-        // 예전에는 풀이 실패도 '사설·로컬 주소' 403 이라 오타 난 주소가 프록시의 막기처럼 보였다.
+        // 풀이 실패는 403(막음)이 아니다 — 오타 난 주소가 프록시의 막기처럼 보이지 않게.
         val unresolvable = DestinationFilter({ throw java.net.UnknownHostException("없음") }, localAddresses = { emptyList() })
         val p = proxy(testEnv(destinations = unresolvable))
         for (request in listOf("GET http://nowhere.invalid/ HTTP/1.1\r\n\r\n", "CONNECT nowhere.invalid:443 HTTP/1.1\r\n\r\n")) {
@@ -247,7 +246,7 @@ class HttpProxyServerTest {
 
     @Test
     fun 기본_포트가_차_있으면_다음_빈_포트로_가고_모두_차면_실패를_알린다() {
-        // 사용자 결정(2026-10-10) — 8282 가 차 있으면 8283… 로(usb-tether·처음 합친 판처럼).
+        // 사용자 결정 — 8282 가 차 있으면 8283… 로.
         val squatter = closer.keep(squatWithFreeNext())
         val base = squatter.localPort
         val p = closer.keep(HttpProxyServer(testEnv(), basePort = base, attempts = 2))
@@ -271,8 +270,8 @@ class HttpProxyServerTest {
 
     @Test
     fun 반쯤_닫은_뒤의_늦은_답도_끝까지_넘긴다() {
-        // 손님이 요청을 보내고 쓰기를 닫았다(반쯤 닫힘). 원격은 그 뒤 아홉 번에 나눠 천천히 답한다 — 예전에는 반대 방향을 정한 시간(5초)만
-        // 기다리고 잘랐다. 시간을 줄여 꾸몄다: 멈춤을 보는 주기 50ms, 답은 100ms 간격으로 아홉 조각(옛 꼴이면 50ms 에서 잘린다).
+        // 손님이 요청을 보내고 쓰기를 닫았다(반쯤 닫힘). 원격은 그 뒤 아홉 번에 나눠 천천히 답한다 — 반대 방향을 정한 시간만 기다리고 자르면
+        // 안 된다. 시간을 줄여 꾸몄다: 멈춤을 보는 주기 50ms, 답은 100ms 간격으로 아홉 조각(시간으로 자르면 50ms 에서 잘린다).
         val pieces = (1..9).map { "piece-$it;" }
         val slow = closer.keep(SlowReplyServer(pieces, gapMs = 100))
         val p = proxy(testEnv(timings = TetherTimings(relayPollMs = 50)))

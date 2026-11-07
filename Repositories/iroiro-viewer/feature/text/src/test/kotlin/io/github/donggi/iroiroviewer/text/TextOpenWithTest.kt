@@ -55,6 +55,21 @@ class TextOpenWithTest {
         assertFalse(TextOpenWith.inMenu(TextViewModel.State.Failed(TextViewModel.State.Failed.Kind.UNREADABLE)))
     }
 
+    @Test
+    fun `브라우저로 열기는 HTML 이름에만`() {
+        for (n in listOf("a.html", "A.HTM", "page.xhtml", ".html")) assertTrue(TextOpenWith.isHtmlName(n), n)
+        for (n in listOf("a.md", "html", "a.html.txt", "a.shtml", "a.mhtml")) assertFalse(TextOpenWith.isHtmlName(n), n)
+    }
+
+    @Test
+    fun `미리보기는 마크다운에만 선다 — HTML 은 그리지 않는다`() {
+        assertTrue(doc().previewable)
+        for (n in listOf("a.markdown", "B.MD", "c.mdown", "d.mkd", "e.mkdn", "f.mdwn")) {
+            assertTrue(doc().copy(name = n).previewable, n)
+        }
+        for (n in listOf("a.html", "b.htm", "c.xhtml", "d.txt", "md")) assertFalse(doc().copy(name = n).previewable, n)
+    }
+
     /** 한 줄짜리 문서. 이 시험은 행을 읽지 않는다 — 상태의 모양만 본다. */
     private fun doc(): TextViewModel.Doc {
         val head = "hello".toByteArray()

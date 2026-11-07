@@ -31,14 +31,14 @@ import io.github.donggi.iroirobrowser.ui.Ui
 import java.util.concurrent.Executors
 
 /**
- * 주소창의 제안(사용자 요청, 2026-10-05: '주소표시줄 입력 시 방문 이력으로부터 자동 완성'). **방문 기록·북마크·열린 탭에서만** 고른다
+ * 주소창의 제안. **방문 기록·북마크·열린 탭에서만** 고른다
  * ([Suggester] — 친 글을 밖에 묻지 않는다). 치는 동안 주소창 아래(쪽 위)에 목록을 덮고, 친 글이 아는 주소의 앞머리면 그 뒤를 **골라 둔 채**
  * 채운다(인라인 완성). 꼴은 크롬의 주소창을 따랐다(조사 — CLAUDE.md '주소창과 제안').
  *
  * - **목록의 차례**: 맨 위가 Enter 가 갈 곳이다 — 인라인 완성이 있으면 그 주소, 없으면 '입력한 그대로'(주소면 이동, 아니면 검색 — 크롬의
  *   what-you-typed 줄). 그다음 친 글에 맞는 **열린 탭**(눌러 그 탭으로 — 둘까지), 그다음 기록·북마크([Suggester.DEFAULT_LIMIT] 줄까지).
  *   빈 글로 초점을 얻으면 자주·최근 간 곳(크롬의 '자주 간 곳' 자리).
- * - **복사한 링크 열기**(사용자 요청, 2026-10-16) — 빈 글로 초점을 얻었을 때 클립보드에 링크가 있으면 맨 위에 둔다(새 탭의 시작 화면 위에서는
+ * - **복사한 링크 열기** — 빈 글로 초점을 얻었을 때 클립보드에 링크가 있으면 맨 위에 둔다(새 탭의 시작 화면 위에서는
  *   그 줄 하나만 — 시작 화면을 덮지 않는다). 클립보드의 **내용은 누를 때만 읽는다** — 그 전에는 설명(MIME·이름표·시스템의 분류 점수)만 본다
  *   ([clipHasLink]). 다른 앱의 링크를 받지 않으므로(VIEW 보류) 복사·붙여 넣기 길을 줄인다.
  * - 인라인 완성은 **지우기 한 번이 채운 것만 지우고**, 이어 치는 글자가 채운 글자와 같으면 다시 채워져 이어진다. 친 글이 늘지 않았으면(지우기)
@@ -73,7 +73,7 @@ class AddressSuggestions(
 
         /**
          * 지금 탭이 새 탭의 시작 화면(북마크·자주 간 곳)을 보이는 중 — 그때는 빈 글로 초점을 얻어도 자주 간 곳을 덮지 않는다(시작 화면이
-         * 이미 보인다 — 덮으면 북마크가 가려졌다). 치기 시작하면 목록이 뜬다.
+         * 이미 보인다 — 덮으면 북마크가 가려진다). 치기 시작하면 목록이 뜬다.
          */
         fun showsStartPage(): Boolean
 
@@ -92,7 +92,7 @@ class AddressSuggestions(
 
     /**
      * 쪽 위에 덮는 목록. 부르는 쪽이 쪽의 자리(막대 아래)에 붙인다. 제안이 없으면 숨는다. 줄 아래의 빈 곳까지 채워(`fillViewport`) 그곳을
-     * 누르면 목록을 걷는다 — 앞 판은 빈 곳을 눌러도 아무 일이 없었다.
+     * 누르면 목록을 걷는다.
      */
     val view: ScrollView = ScrollView(activity).apply {
         visibility = View.GONE
@@ -386,7 +386,7 @@ class AddressSuggestions(
      * [openClipLink]). [CLIP_MAX_AGE_MS] 안에 복사한 글만 본다(복사하고 곧 브라우저로 오는 길이다 — 오래된 클립이 새 탭마다 뜨지 않게). 링크
      * 목록(`text/uri-list`)이거나 이름표가 http(s) 주소 하나이면(이 앱의 '링크 복사' 는 이름표에 주소를 둔다 — 파일 이름을 이름표로 다는 앱이 있어
      * 스킴을 적은 것만) 참. 그 밖의 글은 시스템의 글 분류를 따른다 — 끝났으면 주소라고 본 글만, **아직이거나 하지 않았으면 참**(막 복사한 글은
-     * 분류가 늦고, 분류 서비스가 없는 기기도 있다 — 2026-10-16 에뮬레이터는 끝나지 않은 채였다. 링크가 없으면 누를 때 알린다). 한 번 연(또는
+     * 분류가 늦고, 분류 서비스가 없는 기기도 있다. 링크가 없으면 누를 때 알린다). 한 번 연(또는
      * 링크가 없던) 클립은 다시 두지 않는다([usedClipStamp]).
      */
     private fun clipHasLink(): Boolean {
@@ -396,7 +396,7 @@ class AddressSuggestions(
             null
         } ?: return false
         if (description.timestamp == usedClipStamp) return false
-        // 복사한 시각은 System.currentTimeMillis() 의 시계다(ClipDescription.getTimestamp — 에뮬레이터에서 견줘 보았다).
+        // 복사한 시각은 System.currentTimeMillis() 의 시계다(ClipDescription.getTimestamp).
         if (System.currentTimeMillis() - description.timestamp !in 0..CLIP_MAX_AGE_MS) return false
         if (description.hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) return true
         if (!description.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) && !description.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) return false

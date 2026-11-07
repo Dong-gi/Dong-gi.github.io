@@ -5,8 +5,8 @@ import android.webkit.WebSettings
 import io.github.donggi.iroirobrowser.core.UserAgents
 
 /**
- * 앱이 스스로 내는 요청(출구 확인·광고 목록 받기)의 User-Agent — 쪽과 같은 **일반화된 꼴**(사용자 결정, 2026-10-05). WebView 의 기본값을 그대로 쓰면
- * 기기 모델·`wv` 가 실린다(실험실에서 출구 확인이 그렇게 나갔다). 내려받기는 쪽의 WebView 에서 UA 를 받으므로 이미 같다.
+ * 앱이 스스로 내는 요청(출구 확인·광고 목록 받기)의 User-Agent — 쪽과 같은 **일반화된 꼴**(사용자 결정). WebView 의 기본값을 그대로 쓰면
+ * 기기 모델·`wv` 가 실린다. 내려받기는 쪽의 WebView 에서 UA 를 받으므로 이미 같다.
  */
 object AppUserAgent {
 

@@ -36,11 +36,10 @@ import java.security.MessageDigest
  * 모자랄 때 통째로 비우고, 그러면 사진 수천 장을 처음부터 다시 디코딩해야 한다.
  * "한 번 만들고 나면 재사용" 이 요구사항이므로 우리가 수명을 쥔다([trim]).
  *
- * ## 폴더마다 통을 나누는 이유 — 소비자가 둘이 되었다
+ * ## 폴더마다 통을 나누는 이유 — 소비자가 둘이다
  *
- * 예전에는 캐시가 평평했고 [sweep] 이 "지금 살아 있는 키에 없는 파일을 전부 지운다" 였다.
- * 그것은 **갤러리가 유일한 소비자**일 때만 성립한다. 파일 브라우저가 임의의 폴더에서
- * 썸네일을 만들기 시작하면, 갤러리를 열 때마다 브라우저가 만든 것이 통째로 지워지고
+ * 캐시가 평평하고 [sweep] 이 "지금 살아 있는 키에 없는 파일을 전부 지운다" 면, 소비자가
+ * 둘(갤러리·파일 브라우저)이라 갤러리를 열 때마다 브라우저가 만든 것이 통째로 지워지고
  * 그 반대도 마찬가지다.
  *
  * 그래서 `thumbs/<부모폴더 해시>/<키>.jpg` 로 통을 나누고, **폴더를 통째로 열거한 쪽만**
@@ -100,10 +99,9 @@ object ThumbnailStore {
      * 네이티브 디코더를 다시 태운다 — 실패하는 데도 비용이 든다.
      *
      * **파일이 없어서 실패한 것은 넣지 않는다.** 그것은 '이 파일로는 안 된다' 가 아니라
-     * '지금 없다' 이고, 휴지통에서 되돌아오면 다시 만들 수 있어야 한다. 9단계가 '일시적
-     * 실패와 영구 실패를 가르지 않는다' 로 미뤄 두었던 것을 10단계가 여기서 갈랐다.
+     * '지금 없다' 이고, 휴지통에서 되돌아오면 다시 만들 수 있어야 한다.
      *
-     * **메모리 부족·입출력 실패도 영구로 넣지 않는다**(14단계). 그것은 파일이 아니라 그 순간의
+     * **메모리 부족·입출력 실패도 영구로 넣지 않는다.** 그것은 파일이 아니라 그 순간의
      * 사정이라 물러났다가 다시 한다 — 갈래와 물러나는 시간은 [ThumbnailFailures] 에 있다.
      */
     private val failures = ThumbnailFailures()
@@ -123,7 +121,7 @@ object ThumbnailStore {
      *
      * 같은 칸이 메모리에서 밀려난 직후 다시 보이면 요청이 여러 번 겹친다. 병합하지 않으면
      * 같은 사진을 동시에 두세 번 디코딩한다. 일하던 칸이 스크롤로 취소되면 기다리던 칸이 이어받는다
-     * — 예전에는 null 을 받아 방금 만든 썸네일 대신 배지를 그렸다([SingleFlight] 주석).
+     * ([SingleFlight] 주석).
      */
     private val inFlight = SingleFlight<Bitmap>()
 
@@ -222,8 +220,8 @@ object ThumbnailStore {
                         break
                     }
                     // 파일이 **없어서** 실패한 것을 기억하면, 사진을 휴지통에 보냈다가 되돌린 뒤
-                    // 그 썸네일이 **다시는** 만들어지지 않는다(앱을 껐다 켜야 한다). 사용자가 실제로
-                    // 그렇게 잃었다(10단계). 실패하고 보니 파일이 사라진 것도 여기로 온다(`attempt`).
+                    // 그 썸네일이 **다시는** 만들어지지 않는다(앱을 껐다 켜야 한다). 실패하고 보니
+                    // 파일이 사라진 것도 여기로 온다(`attempt`).
                     Outcome.Missing -> break
                     // 영구가 되면 다음 바퀴의 waitMs 가 멈춘다. 일시·불확실이면 물러났다가 다시 한다.
                     is Outcome.Failed -> failures.record(key, made.cause)
@@ -254,8 +252,8 @@ object ThumbnailStore {
             val fromDisk = try {
                 BitmapFactory.decodeFile(cached.absolutePath)
             } catch (e: OutOfMemoryError) {
-                // 예전에는 이 한 자리가 `OutOfMemoryError` 를 부르는 쪽까지 올려 보냈다(다른
-                // 디코딩 길은 전부 잡는데 여기만 비어 있었다). 캐시가 멀쩡하니 일시 실패다.
+                // 다른 디코딩 길처럼 여기서도 잡아야 부르는 쪽까지 올라가지 않는다. 캐시가 멀쩡하니
+                // 일시 실패다.
                 return@withContext Outcome.Failed(ThumbnailFailures.Cause.TRANSIENT)
             }
             if (fromDisk != null) return@withContext Outcome.Made(fromDisk)
@@ -290,9 +288,8 @@ object ThumbnailStore {
     }
 
     /**
-     * 사진과 표지가 **같은 헤더 콜백과 같은 실패 갈래**를 쓰게 모은 곳. 예전에는 표지가
-     * `ImageIo.decodeFitted` 를 거쳤는데 그것은 실패를 전부 null 로 접어 메모리 부족과 깨진 그림을
-     * 가를 수 없었다.
+     * 사진과 표지가 **같은 헤더 콜백과 같은 실패 갈래**를 쓰게 모은 곳. `ImageIo.decodeFitted` 는
+     * 실패를 전부 null 로 접어 메모리 부족과 깨진 그림을 가를 수 없어 쓰지 않는다.
      */
     private suspend fun decodeSmall(source: ImageDecoder.Source): Outcome {
         // 호출자의 Job 을 **미리** 붙잡는다. 아래 콜백은 네이티브가 부르는 자리라

@@ -94,8 +94,7 @@ internal fun testEnv(
 
 /**
  * 서버의 스레드에서 잡히지 않고 나간 예외. **안드로이드에서는 그런 예외 하나가 프로세스를 죽인다**(테더가 죽으면 PC 의 인터넷이 끊긴다) — JVM
- * 에서는 스레드만 끝나 조용히 지나가므로 시험마다 여기에 모아 없는지 본다([Closer.close]). usb-tether 에서 옮겨 온 중계가 닫힌 소켓에서
- * `getOutputStream()` 을 try 밖에서 불러 던지던 것을 이것으로 찾았다.
+ * 에서는 스레드만 끝나 조용히 지나가므로 시험마다 여기에 모아 없는지 본다([Closer.close]).
  */
 internal object Uncaught {
     val errors = CopyOnWriteArrayList<String>()

@@ -72,7 +72,7 @@ object BackgroundPlayback {
  *
  * 화면이 [BackgroundPlayback.update] 로 세우고, 회가 없어지면 스스로 내려간다(요청마다 곧바로 포그라운드에 서고 마지막 요청의 번호로 멈춘다 —
  * CLAUDE.md 함정 '포그라운드 서비스의 차례'). 서 있는 것만으로 앱이 정리되지 않고 Doze 에서도 망을 쓴다. 재생 중인 동안은 부분 wake lock 과
- * Wi-Fi 잠금도 쥔다 — 서비스 없이 화면을 끄자 재생이 멈췄다(2026-10-11 에뮬레이터). 멈춘 동안은 놓는다.
+ * Wi-Fi 잠금도 쥔다 — 서비스 없이 화면을 끄면 재생이 멈춘다. 멈춘 동안은 놓는다.
  *
  * 내보내지 않는다(다른 앱이 단추를 부르지 못하게). 작업이 지워지면(최근 앱에서 밀기) 시스템이 함께 멈춘다(`stopWithTask`) — 탭이 사라졌다.
  */
@@ -193,7 +193,7 @@ class BackgroundPlayService : Service() {
             wake.acquire(WAKE_TIMEOUT_MS)
             wakeRefreshedAt = now
         }
-        @Suppress("DEPRECATION") // TorrentService 와 같다 — 12 에서는 문서대로, 14 부터는 플랫폼이 LOW_LATENCY 로 바꿔 낀다
+        @Suppress("DEPRECATION") // 12 에서는 문서대로, 14 부터는 플랫폼이 LOW_LATENCY 로 바꿔 낀다
         val wifi = wifiLock ?: getSystemService(WifiManager::class.java)?.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, WAKE_TAG)
             ?.apply { setReferenceCounted(false) }
             ?.also { wifiLock = it }
@@ -246,7 +246,7 @@ class BackgroundPlayService : Service() {
     companion object {
         private const val CHANNEL = "playback"
 
-        /** 앱 전체의 알림 번호 — 내려받기 1·녹화 2·토렌트 3·테더링 4(CLAUDE.md '알림 번호 — 앱 전체'). */
+        /** 앱 전체의 알림 번호 — 내려받기 1·녹화 2·테더링 4(CLAUDE.md '알림 번호 — 앱 전체'). */
         const val NOTICE_ID = 5
         private const val SESSION_TAG = "Web"
         private const val WAKE_TAG = "Web:background-play"

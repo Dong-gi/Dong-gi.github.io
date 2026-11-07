@@ -45,8 +45,8 @@ class NetworkRule(
      *
      * 요청의 종류는 어림이라([RequestType.guess]) 여럿일 수 있다. **막는 규칙은 그 모두가 자기 종류일 때만** 걸리고(확실할 때만 막는다),
      * **예외는 하나라도 겹치면** 걸린다(의심스러우면 통과시킨다). 종류를 좁힌 막는 규칙(`$ping`·`$script` …)은 목록이 그 종류만 막으려고
-     * 좁힌 것이다 — 겹치기만 해도 막던 앞 판에서는 EasyPrivacy 의 `*$ping,third-party` 가 종류를 모르는 **모든 제3자 요청**을 막았다
-     * (fast.com 의 측정 서버·영상 CDN·남의 API — 2026-10-05, 실제 프록시를 넣은 사용자가 잡았다).
+     * 좁힌 것이다 — 겹치기만 해도 막으면 EasyPrivacy 의 `*$ping,third-party` 가 종류를 모르는 **모든 제3자 요청**을 막는다(측정 서버·영상
+     * CDN·남의 API).
      */
     fun matches(req: Request): Boolean {
         val typeOk = if (exception) types and req.types != 0 else req.types != 0 && req.types and types.inv() == 0

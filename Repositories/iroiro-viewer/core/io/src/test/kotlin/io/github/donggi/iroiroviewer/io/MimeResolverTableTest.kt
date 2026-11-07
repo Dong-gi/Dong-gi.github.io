@@ -43,7 +43,7 @@ class MimeResolverTableTest {
 
     @Test
     fun `확장자가 없거나 점으로 시작하는 글 파일은 이름으로 정한다`() {
-        // 텍스트 뷰어가 이름으로 칠하는 파일들이다. 예전에는 '기타' 라 누르면 다른 앱으로 넘어갔다.
+        // 텍스트 뷰어가 이름으로 칠하는 파일들이다. '기타' 면 누를 때 다른 앱으로 넘어간다.
         for (name in listOf("Makefile", "Dockerfile", "GNUmakefile", ".gitignore", ".env", ".editorconfig", ".bashrc")) {
             assertEquals(FileKind.CODE, MimeResolver.kindOf(name, isDirectory = false), name)
             assertEquals("text/plain", MimeResolver.mimeOf(name), name)
@@ -129,7 +129,7 @@ class MimeResolverTableTest {
             "aiff" to "audio/x-aiff", "wmv" to "video/x-ms-wmv", "flv" to "video/x-flv",
             "hwp" to "application/x-hwp", "hwpx" to "application/hwp+zip",
             "apk" to "application/vnd.android.package-archive",
-            // 14단계 뒤에 더한 것 — 플랫폼·media3·commons-compress 가 이미 읽는 것들
+            // 플랫폼·media3·commons-compress 가 이미 읽는 것들
             "jfif" to "image/jpeg", "jpe" to "image/jpeg", "apng" to "image/apng", "wbmp" to "image/vnd.wap.wbmp",
             "svg" to "image/svg+xml", "svgz" to "image/svg+xml",
             "m4b" to "audio/mp4", "m4r" to "audio/mp4", "3ga" to "audio/3gpp", "weba" to "audio/webm",

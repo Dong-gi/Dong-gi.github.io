@@ -22,7 +22,7 @@ class DownloadNames(
 
     /**
      * 이름은 이미 정해졌다(쪽이 준 `download` 속성·사용자가 고친 이름) — 저장해도 되는 꼴로 하고 확장자만 형식에 맞춘다(없으면 형식의 것을
-     * 붙인다). 앞 판은 확장자 없는 blob 이름을 가짜 주소에 실어 [choose] 로 넘겨 이름을 통째로 잃었다('download.mp4').
+     * 붙인다). 가짜 주소에 실어 [choose] 로 넘기면 확장자 없는 blob 이름을 통째로 잃는다('download.mp4').
      */
     fun named(name: String, mimeType: String?): String {
         val mime = mimeType?.substringBefore(';')?.trim()?.lowercase(Locale.ROOT)?.takeIf { it.isNotEmpty() }

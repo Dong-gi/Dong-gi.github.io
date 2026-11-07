@@ -7,10 +7,10 @@ import io.github.donggi.iroiroviewer.format.text.LineEnd
 import io.github.donggi.iroiroviewer.format.text.TextRow
 
 /**
- * 줄 끝 표시에 쓰는 글자(14단계). 문구와 같이 `strings.xml` 에서 온다 — 화면이 [rememberLineEndMarks] 로 읽어 건넨다.
+ * 줄 끝 표시에 쓰는 글자. 문구와 같이 `strings.xml` 에서 온다 — 화면이 [rememberLineEndMarks] 로 읽어 건넨다.
  *
  * 세 모양은 **움직임**을 그린다: LF 는 한 줄 내림(`↓`), CR 은 줄 머리로 돌아감(`←`), CRLF 는 둘을 이은 `⏎`.
- * 폭이 한 글자라 코드의 세로 정렬을 흩뜨리지 않는다. `⏎` 는 7단계의 인코딩 미리보기가 기기에서 이미 그렸다.
+ * 폭이 한 글자라 코드의 세로 정렬을 흩뜨리지 않는다. `⏎` 는 인코딩 미리보기도 쓰는 글자라 기기 글꼴에 있다.
  */
 data class LineEndMarks(val lf: String, val crlf: String, val cr: String) {
     fun of(end: LineEnd): String? = when (end) {

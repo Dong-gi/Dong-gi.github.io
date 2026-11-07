@@ -84,7 +84,7 @@ data class ImageProbe(
      *
      * 여덟 방향 모두 좌표를 옮길 수 있다(`RegionMath`). 모르는 것은 '바닥층이 적용했는가' 하나이고,
      * 그것이 거짓이 되는 파일(180°·거울상·정사각)은 [needsPixelCheck] 로 화소를 재 본 뒤에야 조각을
-     * 뜬다(`ImageIo.appliedOrientationByPixels`). 6단계는 그 파일들을 흐린 채로 두었다.
+     * 뜬다(`ImageIo.appliedOrientationByPixels`).
      */
     val canUseRegionDecoder: Boolean
         get() = decoderAppliesOrientation != null
@@ -294,8 +294,7 @@ object ImageIo {
      * `BitmapRegionDecoder` 가 EXIF 방향을 적용하지 않기 때문이다. 바닥층이 방향을 적용하지 않은
      * 파일이면 부르는 쪽이 [RegionMath.NORMAL] 을 준다 — 조각도 바닥층처럼 저장 방향 그대로여야 한다.
      *
-     * 여덟 방향을 전부 받는다. 예전 판(`decodeRegion(path, …, rotation)`)은 돌리기만 했고 90°·270°
-     * 에서만 불렸다.
+     * 여덟 방향을 전부 받는다.
      *
      * 형식이 영역 디코딩을 지원하지 않으면(GIF 등) null 이다 — 그때는 흐린 바닥층이 남는다.
      */
@@ -512,9 +511,8 @@ object ImageIo {
      *
      * ## 왜 여기서만 영역 디코딩을 쓰는가
      *
-     * 6단계가 [android.graphics.BitmapRegionDecoder] 를 미룬 이유는 그것이 EXIF 회전을
-     * 적용하지 않아 [ImageDecoder] 로 뜬 바닥층과 방향이 어긋날 수 있어서였다. 만화
-     * 쪽에서는 그 이유가 약하다 — 스캔·작화 이미지에 EXIF 방향 태그가 붙는 일이 드물고,
+     * [android.graphics.BitmapRegionDecoder] 는 EXIF 회전을 적용하지 않아 [ImageDecoder] 로 뜬
+     * 바닥층과 방향이 어긋날 수 있다. 만화 쪽에서는 그 걱정이 약하다 — 스캔·작화 이미지에 EXIF 방향 태그가 붙는 일이 드물고,
      * 무엇보다 **여기에는 겹쳐 그릴 바닥층이 없다.** 띠가 그 자리의 유일한 그림이다.
      *
      * `newInstance(byte[], int, int)` 는 **API 31 부터**다(`api-versions.xml` 확인).

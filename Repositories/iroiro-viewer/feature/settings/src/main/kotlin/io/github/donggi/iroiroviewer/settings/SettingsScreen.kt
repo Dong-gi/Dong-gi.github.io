@@ -71,10 +71,8 @@ private enum class SettingsDialog {
 }
 
 /**
- * 설정(14단계).
- *
- * 7·9·11단계가 '설정 화면을 만들 때 한꺼번에 한다' 로 미뤄 둔 뷰어의 기본값과, 기록 지우기·크래시 기록·고지로 가는 길을
- * 한 화면에 모은다. 값은 전부 `AppPreferences` 의 흐름이라 **바꾸는 즉시** 그 값을 보는 화면에 걸린다([SettingsViewModel]).
+ * 설정 — 뷰어의 기본값과 기록 지우기·크래시 기록·고지로 가는 길을 한 화면에 모은다. 값은 전부 `AppPreferences` 의
+ * 흐름이라 **바꾸는 즉시** 그 값을 보는 화면에 걸린다([SettingsViewModel]).
  *
  * **알림은 [snackbar] — Root 가 가진 공용 스낵바 — 에 띄운다.** Root 가 그릴 수 있는 모든 화면은 그것에 붙은
  * `SnackbarHost` 를 하나씩 가져야 한다(붙지 않은 화면으로 넘어가면 파일 작업 결과의 `showSnackbar` 가 돌아오지 않는다).
@@ -496,7 +494,7 @@ private fun SwitchRow(@StringRes title: Int, @StringRes desc: Int?, checked: Boo
  * 실패하면 놓는다. 끝낸 자리가 원래 값이면 쓰지 않는다.
  */
 /**
- * 텍스트 뷰어의 글자 크기 — 코드 파일과 글 파일의 두 줄이 같이 쓴다(따로 두었더니 글 파일 줄만 '(기본)' 을 빠뜨렸다).
+ * 텍스트 뷰어의 글자 크기 — 코드 파일과 글 파일의 두 줄이 같이 쓴다(따로 두면 한쪽만 '(기본)' 을 빠뜨린다).
  * 단위(sp)를 적지 않는다 — 사람에게는 뜻이 없는 말이다. 기본값이 어디인지를 함께 보인다.
  */
 @Composable
@@ -531,7 +529,7 @@ private fun SliderRow(
             Text(titleText, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
             Text(shownText, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
         }
-        // 재생 막대와 같은 모양(`IroSlider` — 얇은 트랙 + 둥근 점, 2026-10-03 사용자 요청으로 통일).
+        // 재생 막대와 같은 모양(`IroSlider` — 얇은 트랙 + 둥근 점 — 사용자 결정).
         IroSlider(
             // 화면 낭독기는 슬라이더를 **범위의 백분율**로 읽는다(글자 크기 13sp 가 '30%'). 무엇을 고르는지와 지금 값을
             // 우리 말로 준다 — 위 줄의 글과 같은 것.
@@ -628,7 +626,7 @@ private fun ChoiceDialog(
 }
 
 /**
- * 지우기 확인. 되돌릴 수 없는 조작이라 **반드시 묻는다**(3·4단계 검토가 영구 삭제에서 세운 규칙). 모양은 휴지통의
+ * 지우기 확인. 되돌릴 수 없는 조작이라 **반드시 묻는다**. 모양은 휴지통의
  * 영구 삭제 확인과 같다 — 경고 아이콘, 붉은 '지우기', 왼쪽의 '취소'.
  */
 @Composable

@@ -28,7 +28,7 @@ class ReadingScrollTest {
         assertEquals(ReadingScroll.Axis.HORIZONTAL, ReadingScroll.axisOf(maxX = 9000, maxY = 30, rightToLeft = true))
         // 가로쓰기 RTL 책(가로로 넘치지 않는다)은 그대로 세로다.
         assertEquals(ReadingScroll.Axis.VERTICAL, ReadingScroll.axisOf(maxX = 0, maxY = 5000, rightToLeft = true))
-        // 왼쪽에서 넘기는 책은 예전 그대로 세로가 먼저다.
+        // 왼쪽에서 넘기는 책은 세로가 먼저다.
         assertEquals(ReadingScroll.Axis.VERTICAL, ReadingScroll.axisOf(maxX = 9000, maxY = 30, rightToLeft = false))
         assertNull(ReadingScroll.axisOf(0, 0, rightToLeft = true))
     }

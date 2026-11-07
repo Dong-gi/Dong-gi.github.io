@@ -13,9 +13,8 @@ import kotlin.test.assertTrue
  * 다른 앱에서 이 앱으로 넘기는 길(`OpenActivity` 의 VIEW·SEND 필터)과 매니페스트가 지키는 것. 매니페스트를 글로 읽는다(모듈 폴더에서 —
  * Gradle 이 JVM 시험을 돌리는 자리. `app/build.gradle.kts` 가 시험의 입력으로 적는다).
  *
- * **편집기가 보이는 형식은 받는다**. 뷰어 교체(10-09)로 이전 오피스 형식(doc·xls·ppt)과 ODF(odt·ods·odp)를 이 앱이 보이게
- * 됐는데 필터는 그대로라, 메일의 `.doc` 첨부를 '다음으로 열기' 하면 고르는 창에 이 앱이 없었다. 받은 뒤의 길은 이미 됐다(`IncomingRoute` →
- * 편집기의 보기 모드).
+ * **편집기가 보이는 형식은 받는다** — 이전 오피스 형식(doc·xls·ppt)과 ODF(odt·ods·odp)도. 필터에 없으면 메일의 `.doc` 첨부를
+ * '다음으로 열기' 할 때 고르는 창에 이 앱이 없다. 받은 뒤의 길은 `IncomingRoute` → 편집기의 보기 모드다.
  *
  * '다른 앱으로 열기' 의 **우리 자신 빼기**는 기기에서 묻는다(`ExternalOpen` 의 `ownHandlers` — 이 필터에 그 형식이 있으면 고르는 창에서 우리를
  * 빼고, 곧바로 여는 길도 우리를 뺀 고르는 창으로 바꾼다. 그 판단은 `core:io` 의 `ExternalOpenTest` 가 본다). 여기서는 그 질의가 우리를

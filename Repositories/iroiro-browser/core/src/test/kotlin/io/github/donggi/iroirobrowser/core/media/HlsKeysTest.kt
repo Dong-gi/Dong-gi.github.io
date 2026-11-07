@@ -13,7 +13,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * 열쇠 응답을 hls.js 처럼 너그럽게 읽되 첫 조각의 꼴로 확인하는가(2026-10-16 — m3u8 열쇠 오류 고침). 조각은 시험이 지은 합성 바이트(TS 묶음·
+ * 열쇠 응답을 hls.js 처럼 너그럽게 읽되 첫 조각의 꼴로 확인하는가. 조각은 시험이 지은 합성 바이트(TS 묶음·
  * fMP4 상자·ID3·ADTS 머리)를 JCE 로 잠근 것이다.
  */
 class HlsKeysTest {
@@ -69,7 +69,7 @@ class HlsKeysTest {
 
     @Test
     fun hls_js_처럼_16바이트보다_길면_앞_16바이트() {
-        // 끝의 줄바꿈 — hls.js 는 앞 네 낱말만 읽어 이것으로 재생한다. 앞 판은 '잠금을 풀 열쇠를 받지 못했습니다' 로 끝냈다.
+        // 끝의 줄바꿈 — hls.js 는 앞 네 낱말만 읽어 이것으로 재생한다.
         val withNewline = key + byteArrayOf(10)
         val c = HlsKeys.candidates(withNewline)
         assertNull(c.exact)

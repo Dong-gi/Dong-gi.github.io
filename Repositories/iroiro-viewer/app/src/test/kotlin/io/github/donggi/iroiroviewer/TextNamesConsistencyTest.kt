@@ -10,8 +10,7 @@ import kotlin.test.assertTrue
 /**
  * 목록의 종류 표(`core:io` 의 [MimeResolver])와 텍스트 뷰어의 언어 표(`format:text` 의 [TextLanguage])가 어긋나지 않는가.
  *
- * 뷰어가 칠할 줄 아는 파일을 목록이 '기타' 로 보면 누르는 순간 **다른 앱으로 넘어간다** — 14단계 뒤까지 `.cjs`·`.less`·
- * `.properties`·`.gitignore`·`Dockerfile` 이 그랬다. 두 모듈은 서로를 볼 수 없어 둘을 다 보는 여기서 견준다.
+ * 뷰어가 칠할 줄 아는 파일을 목록이 '기타' 로 보면 누르는 순간 **다른 앱으로 넘어간다**. 두 모듈은 서로를 볼 수 없어 둘을 다 보는 여기서 견준다.
  */
 class TextNamesConsistencyTest {
 

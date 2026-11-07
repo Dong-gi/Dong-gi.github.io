@@ -29,7 +29,7 @@ class StreamsTest {
 
     @Test
     fun 자리는_Long_으로_센다() {
-        // 앞 판은 offset.toInt() 로 잘라 2 GB 넘는 자리에서 음수가 됐다. 3 GB 를 건너뛰고(만들지 않고 세기만 한다) 그 뒤 4 바이트를 읽는다.
+        // 2 GB 넘는 자리(Int 로 자르면 음수가 된다). 3 GB 를 건너뛰고(만들지 않고 세기만 한다) 그 뒤 4 바이트를 읽는다.
         val start = 3L * 1024 * 1024 * 1024
         val huge = CountingStream(start + 10)
         val part = Streams.slice(huge, start, 4).readBytes()

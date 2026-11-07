@@ -11,7 +11,7 @@ import java.io.InputStream
  *
  * [hasBareLineBreak] — 줄 안에 홀로 선 CR 이나 LF(CRLF 짝이 아닌 것)가 있다. 머리는 CRLF 로만 가르므로 그런 글자는 요청 줄이나 값 안에
  * 살아남는데, 중계는 머리를 ISO-8859-1 바이트 그대로 원격에 다시 쓴다 — 홀로 선 CR·LF 를 줄 끝으로 읽는 서버가 머리를 하나 더 보거나 요청을
- * 둘로 읽는다(머리 주입·스머글링). 중계는 그런 요청을 400 으로 거절한다([LocalRelay] — 2026-10-16 보안 점검, 테더의 HTTP 프록시와 같게).
+ * 둘로 읽는다(머리 주입·스머글링). 중계는 그런 요청을 400 으로 거절한다([LocalRelay] — 테더의 HTTP 프록시와 같게).
  */
 internal class HttpHead(
     val startLine: String,

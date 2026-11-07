@@ -156,7 +156,7 @@ class ZipMakerTest {
         assertFalse(File(work, "n.zip").exists())
     }
 
-    // ---- 암호 ZIP(2026-10-16) — 푸는 왕복은 `feature:archive` 의 `AesZipExtractTest`(이 앱의 풀기로) ---------------------------------
+    // ---- 암호 ZIP — 푸는 왕복은 `feature:archive` 의 `AesZipExtractTest`(이 앱의 풀기로) ---------------------------------
 
     /** 가운데 목록의 한 줄 — 이름·일반 목적 비트·압축 방식·추가 필드 번호들. 명세의 자리를 그대로 읽는다. */
     private data class Cen(val name: String, val flags: Int, val method: Int, val extraIds: List<Int>, val crc: Long)
@@ -222,7 +222,7 @@ class ZipMakerTest {
             ZipMaker.make(listOf(file.absolutePath), work.absolutePath, "e", media = null, onProgress = {}, password = CharArray(0))
         }
         assertEquals(FileOpEngine.Outcome.Done(1, 0, 0), result.outcome)
-        // 플랫폼의 ZipFile 이 그대로 읽는다 — 예전과 같은 ZIP 이다.
+        // 플랫폼의 ZipFile 이 그대로 읽는다 — 암호 없는 ZIP 은 플랫폼의 쓰개가 쓴다.
         ZipFile(File(result.path!!)).use { z -> assertEquals("x", z.getInputStream(z.getEntry("a.txt")).readBytes().decodeToString()) }
     }
 

@@ -3,7 +3,7 @@ package io.github.donggi.iroiroviewer.webhost
 import kotlin.math.abs
 
 /**
- * 글을 읽는 WebView 에서 **장을 넘기는 몸짓**(예전에는 아래 막대의 작은 화살표로만 넘겼다). 순수 함수라 JVM 시험이 답한다
+ * 글을 읽는 WebView 에서 **장을 넘기는 몸짓**. 순수 함수라 JVM 시험이 답한다
  * (`ReadingTurnTest`). 몸짓을 받는 것은 [ReaderWebView] 다.
  *
  * ## 두 갈래 — 글이 흐르는가, 쪽 모양이 고정됐는가
@@ -20,7 +20,7 @@ import kotlin.math.abs
 object ReadingTurn {
 
     enum class Mode {
-        /** 넘기는 몸짓이 없다(기본값 — 장을 넘기지 않는 화면: SVG·HTML·마크다운 미리보기). */
+        /** 넘기는 몸짓이 없다(기본값 — 장을 넘기지 않는 화면: SVG·마크다운 미리보기). */
         NONE,
         PULL,
         SWIPE,

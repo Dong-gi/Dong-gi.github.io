@@ -44,8 +44,8 @@ class TcpServerTest {
 
     @Test
     fun 받기_고리가_던지면_포트를_놓고_내리고_알린다() {
-        // 거르개가 Error 를 던지면 받기 고리 밖으로 나간다(OutOfMemoryError 와 같은 길). 예전에는 고리만 끝나 포트를 쥔 채 '켜짐' 이었고,
-        // stop() 도 running 이 이미 내려가 있어 아무것도 하지 않았다.
+        // 거르개가 Error 를 던지면 받기 고리 밖으로 나간다(OutOfMemoryError 와 같은 길). 그때 고리만 끝나 포트를 쥔 채 '켜짐' 으로 남으면
+        // 안 되고, stop() 도 제 일을 해야 한다.
         val counters = Counters()
         var calls = 0
         val gate = PeerGate { if (++calls == 2) throw OutOfMemoryError("시험") else null }

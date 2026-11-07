@@ -5,12 +5,12 @@ import androidx.compose.runtime.saveable.Saver
 /**
  * 지금 보고 있는 화면.
  *
- * **`navigation-compose` 를 들이지 않는다.** 화면이 셋이고 백스택이 한 겹인데, 그 라이브러리의
+ * **`navigation-compose` 를 들이지 않는다.** 백스택이 거의 한 겹인데, 그 라이브러리의
  * 지금 권장 형태인 타입 안전 라우트는 `kotlin.plugin.serialization` 과
  * `kotlinx-serialization-json` 을 요구한다 — 둘 다 이 저장소의 버전 카탈로그에 없다.
  * 경로를 라우트 문자열에 넣으려면 임의의 유니코드와 `/` 를 인코딩해야 하는 문제도 그대로다.
  *
- * **백스택이 한 겹을 넘는 자리가 둘 생겼다**(14단계) — 설정에서 연 고지·진단은 뒤로 가면 설정으로, 압축 목록에서 연 고지는
+ * **백스택이 한 겹을 넘는 자리가 둘 있다** — 설정에서 연 고지·진단은 뒤로 가면 설정으로, 압축 목록에서 연 고지는
  * 그 압축 목록으로 돌아가야 한다. 스택을 들이는 대신 그 두 화면이 **돌아갈 곳**([Notice.back]·[Diag.back])을 든다.
  * 저장 상태에도 그대로 들어간다([AppScreenCodec]).
  */
@@ -20,7 +20,7 @@ internal sealed interface AppScreen {
     /** 진단. [back] 은 뒤로 갔을 때의 화면 — 첫 화면에서 열면 [Browser], 설정에서 열면 [Settings]. */
     data class Diag(val back: AppScreen = Browser) : AppScreen
 
-    /** 설정(14단계). 첫 화면의 '설정' 줄에서만 열린다. */
+    /** 설정. 첫 화면의 '설정' 줄에서만 열린다. */
     data object Settings : AppScreen
 
     /**
@@ -90,7 +90,7 @@ internal sealed interface AppScreen {
  *
  * 모양은 '머리 글자 + 값' 이다. 경로에는 `:` 가 들어갈 수 있으므로 **머리만 보고 가른 뒤 나머지는 통째로** 값이다.
  * 돌아갈 곳을 드는 화면(고지·진단)은 `>` 뒤에 그 화면을 같은 규칙으로 적는다 — 머리에서만 가르므로 겹쳐도 풀린다.
- * 옛 판이 남긴 `"d"`·`"n"` 은 돌아갈 곳이 첫 화면인 것으로 읽는다.
+ * `>` 가 없는 `"d"`·`"n"` 은 돌아갈 곳이 첫 화면인 것으로 읽는다.
  */
 internal object AppScreenCodec {
 
@@ -103,7 +103,7 @@ internal object AppScreenCodec {
         is AppScreen.Text -> "t:" + screen.path
         // 머리 뒤에 돌아갈 곳(t·b)과 인코딩 이름(없으면 빈칸) — 둘 다 ':' 를 품지 않으므로 그 뒤는 통째로 경로다.
         is AppScreen.Edit -> "e:" + (if (screen.fromViewer) "t" else "b") + ":" + screen.encoding.orEmpty() + ":" + screen.path
-        // 형식 글자(':' 를 품지 않는다), 그 뒤는 통째로 경로다. 옛 판의 `o:`(앱의 오피스 편집 화면 — 걷었다)는 첫 화면으로 읽는다.
+        // 형식 글자(':' 를 품지 않는다), 그 뒤는 통째로 경로다. 모르는 머리는 첫 화면으로 읽는다.
         is AppScreen.Editor -> "r:" + screen.kind + ":" + screen.path
         is AppScreen.Archive -> "a:" + screen.path
         is AppScreen.Comic -> "c:" + screen.entryIndex + ":" + screen.path

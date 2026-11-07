@@ -9,8 +9,7 @@ import androidx.annotation.StringRes
  *
  * ## 무엇을 적는가 — 릴리스 APK 에 실리는 서드파티 전부
  *
- * 목록은 `./gradlew :app:dependencies --configuration releaseRuntimeClasspath` 에서 얻었다(14단계, 2026-09-28 — 좌표
- * 147개). 라이선스는 **캐시에 이미 있는 jar·POM 에서만** 읽었다(내려받지 않았다): 각 POM 의 `<licenses>`(없으면 부모
+ * 목록은 `./gradlew :app:dependencies --configuration releaseRuntimeClasspath` 에서 얻었다. 라이선스는 **캐시에 이미 있는 jar·POM 에서만** 읽었다(내려받지 않았다): 각 POM 의 `<licenses>`(없으면 부모
  * POM), jar 안의 `META-INF/LICENSE*`·`NOTICE*`, 그것도 없으면 소스 jar 의 머리 주석. 결과는 다섯 갈래다.
  *
  * - **Apache License 2.0** — AndroidX(Compose·Media3·Room·DataStore 포함), Kotlin 표준 라이브러리, kotlinx(coroutines·

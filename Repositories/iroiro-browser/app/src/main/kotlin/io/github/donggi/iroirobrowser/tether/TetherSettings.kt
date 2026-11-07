@@ -42,7 +42,7 @@ internal class TetherSettings(context: Context) {
     fun passphrase(): PassphraseVault.Current = vault.current()
 
     /**
-     * 빈 SSID 는 저장하지 않는다 — 저장하면 타일의 길이 앱을 열어 다시 넣을 때까지 빈 이름으로 실패한다(usb-tether 의 결함). 패스프레이즈를
+     * 빈 SSID 는 저장하지 않는다 — 저장하면 타일의 길이 앱을 열어 다시 넣을 때까지 빈 이름으로 실패한다. 패스프레이즈를
      * 기기에 잠가 두었는가를 돌려준다(false 여도 이 프로세스는 이 값을 쓴다 — 화면이 '저장하지 못했다' 를 알린다).
      */
     @SuppressLint("ApplySharedPref") // 일부러 commit — 머리말
@@ -60,7 +60,7 @@ internal class TetherSettings(context: Context) {
             prefs.edit().apply { if (value == null) remove(K_TREE) else putString(K_TREE, value.toString()) }.commit()
         }
 
-    /** 잠근 블롭은 이 설정 파일에, 자물쇠는 기기 키([TetherSecret]). 잠그지 못하면 평문으로 두지 않는다(usb-tether 가 없앤 바로 그것이다). */
+    /** 잠근 블롭은 이 설정 파일에, 자물쇠는 기기 키([TetherSecret]). 잠그지 못하면 평문으로 두지 않는다. */
     private class PrefsStore(private val prefs: SharedPreferences) : PassphraseVault.Store {
         override fun readSealed(): String? = prefs.getString(K_PASSPHRASE, null)
 

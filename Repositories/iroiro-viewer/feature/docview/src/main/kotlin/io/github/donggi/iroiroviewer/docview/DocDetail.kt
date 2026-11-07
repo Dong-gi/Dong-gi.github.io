@@ -6,10 +6,8 @@ import kotlin.math.floor
 /**
  * 확대한 자리를 다시 그릴지, 그린다면 **어디를 얼마로** 그릴지 정하는 계산.
  *
- * 화면에서 갈라 둔 이유는 이 저장소가 여러 번 확인한 것과 같다 — `FolderQueue`·
- * `GestureMath`·`SpeedSteps`·`PipMath` 가 전부 그렇게 갈렸다. **확대·이동의 좌표 계산은
- * 화면 캡처로 판정할 수 있는 종류가 아니다**(6단계가 그것으로 세 번 틀린 결론을 냈다).
- * 여기 있으면 JVM 시험이 초 단위로 답한다.
+ * 화면에서 갈라 둔 것은 **확대·이동의 좌표 계산이 화면 캡처로 판정할 수 있는 종류가 아니기** 때문이다
+ * (`GestureMath`·`PipMath` 와 같은 까닭). 여기 있으면 JVM 시험이 초 단위로 답한다.
  *
  * ## 값을 눈금으로 끊는다
  *
@@ -77,8 +75,7 @@ internal object DocDetail {
 
         return Want(
             // **반올림 방향이 뜻을 가지면 `floor(x + 0.5)` 로 적는다.**
-            // `kotlin.math.round` 는 짝수 쪽으로 반올림한다(함정 표) — 10단계가
-            // 9:16 을 1000배 한 562.5 에서 그것으로 한 번 걸렸다.
+            // `kotlin.math.round` 는 짝수 쪽으로 반올림한다(함정 표 — 562.5 가 562 가 된다).
             scaleStep = floor(absolute * SCALE_STEPS + 0.5).toInt().coerceAtLeast(1),
             focusStepX = floor(fx.coerceIn(0f, 1f) * FOCUS_STEPS + 0.5f).toInt(),
             focusStepY = floor(fy.coerceIn(0f, 1f) * FOCUS_STEPS + 0.5f).toInt(),

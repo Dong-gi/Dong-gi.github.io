@@ -50,8 +50,7 @@ import io.github.donggi.iroiroviewer.io.R as IoR
  * 무엇이 문제인지 모른 채 다시 시도하게 된다.
  *
  * **이미 있는 이름은 칸 안에서 말한다** — 그것은 누른 뒤에야 안다(디스크를 묻는다). 부르는 쪽이 겹친 이름을
- * [taken] 으로 돌려주면 칸을 닫지 않고 '같은 이름이 이미 있습니다' 를 띄운다. 이름을 고치면 사라진다. 예전에는 칸이 닫히고 '쓸 수 없는
- * 이름입니다' 가 떠, 사용자는 글자가 틀린 줄 알고 처음부터 다시 쳤다.
+ * [taken] 으로 돌려주면 칸을 닫지 않고 '같은 이름이 이미 있습니다' 를 띄운다. 이름을 고치면 사라진다.
  */
 @Composable
 fun NameDialog(
@@ -151,7 +150,7 @@ fun NameDialog(
 }
 
 /**
- * ZIP 만들기의 암호(선택) — 새 암호의 두 칸([NewPasswordFields])과 경고. 비워 두면 예전처럼 암호 없이 묶는다. 넣으면 WinZip AES-256 으로
+ * ZIP 만들기의 암호(선택) — 새 암호의 두 칸([NewPasswordFields])과 경고. 비워 두면 암호 없이 묶는다. 넣으면 WinZip AES-256 으로
  * 잠근다(`core:io` 의 `ZipMaker`).
  *
  * 경고는 꼭 필요한 둘만 둔다(화면의 설명은 짧게 — CLAUDE.md) — 파일 이름은 가려지지 않는다(형식의 성질), 영문·숫자·기호 밖의 글자가 든
@@ -214,13 +213,9 @@ fun DeleteConfirmDialog(count: Int, onConfirm: () -> Unit, onDismiss: () -> Unit
 }
 
 /**
- * **되돌릴 수 없는 삭제**의 확인.
+ * **되돌릴 수 없는 삭제**('완전히 삭제'·'휴지통 비우기')의 확인.
  *
- * 이 대화상자가 없던 것이 이 앱에서 가장 위험한 자리였다. '휴지통으로 보내기' 는
- * 확인을 받는데 '완전히 삭제' 와 '휴지통 비우기' 는 누르는 즉시 실행됐다 — 보호가
- * 정확히 거꾸로 걸려 있었다.
- *
- * 그래서 [DeleteConfirmDialog] 와 **눈으로 구분되게** 만든다. 제목이 다르고, 개수와
+ * [DeleteConfirmDialog] 와 **눈으로 구분되게** 만든다. 제목이 다르고, 개수와
  * 용량을 적고, 확인 단추가 error 색이다.
  */
 @Composable
@@ -285,7 +280,7 @@ fun PurgeConfirmDialog(
  *
  * **선택지를 세로 한 열로 세운다.** `AlertDialog` 의 `dismissButton` 은 `confirmButton`
  * 왼쪽에 놓이므로, 거기에 덮어쓰기를 넣으면 평소 '취소' 가 있던 자리에 가장 위험한
- * 선택지가 온다. 그리고 취소가 아예 없었다 — 바깥을 눌러야만 빠져나갈 수 있었다.
+ * 선택지가 온다.
  */
 @Composable
 fun ConflictDialog(

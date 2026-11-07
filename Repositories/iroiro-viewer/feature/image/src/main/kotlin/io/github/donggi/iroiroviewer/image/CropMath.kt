@@ -30,9 +30,9 @@ internal object CropMath {
      * 사각형이 손가락보다 좁으면 왼쪽 변과 오른쪽 변이 둘 다 '가깝다' — 더 가까운 쪽을 잡는다. 그러지 않으면 언제나 왼쪽이 이겨 좁은
      * 사각형을 오른쪽으로 넓힐 수 없다.
      *
-     * **손가락이 그 축의 범위 안이면 변의 손잡이를 변 길이의 넷째 몫까지만 넓힌다.** 한 변이 손가락 두 개(2 × [reach])보다 짧으면 안쪽의
-     * 모든 점이 어느 변의 손잡이 안이라 '옮기기' 가 나오지 않았다 — 얼굴 하나만 한 사각형의 가운데를 끌면 모서리가 끌려 크기가 바뀌었다.
-     * 같은 까닭으로 작은 사각형의 오른쪽 바깥 가운데를 잡으면 모서리가 잡혔다. 범위 밖(사각형 바깥쪽)의 손잡이는 그대로다.
+     * **손가락이 그 축의 범위 안이면 변의 손잡이를 변 길이의 넷째 몫까지만 넓힌다.** 넓히지 않으면 한 변이 손가락 두 개(2 × [reach])보다
+     * 짧을 때 안쪽의 모든 점이 어느 변의 손잡이 안이라 '옮기기' 가 나오지 않고(가운데를 끌면 크기가 바뀐다), 작은 사각형의 오른쪽
+     * 바깥 가운데를 잡으면 모서리가 잡힌다. 범위 밖(사각형 바깥쪽)의 손잡이는 그대로다.
      */
     fun grip(b: Box, x: Float, y: Float, reach: Float): Grip? {
         val withinX = x >= b.left - reach && x <= b.right + reach
@@ -93,7 +93,7 @@ internal object CropMath {
 
     private fun free(s: Box, g: Grip, dx: Float, dy: Float, w: Float, h: Float, m: Float): Box {
         // **이미 최소보다 작은 사각형은 그 크기까지만 지킨다**(축마다) — 비율을 바꿔 넓이를 지키면 한 변이 최소보다 짧아질 수 있고,
-        // 그때 최소를 그대로 쓰면 잡을 수 있는 범위가 비어(`r - m < 0`) 셈이 죽었다.
+        // 그때 최소를 그대로 쓰면 잡을 수 있는 범위가 비어(`r - m < 0`) 셈이 죽는다.
         val mw = minOf(m, s.width)
         val mh = minOf(m, s.height)
         var l = s.left
@@ -141,7 +141,7 @@ internal object CropMath {
                 width = maxOf(width, minW)
                 if (width > avail + EPS || width / ratio > h + EPS) return s
                 // 실수 셈은 높이를 그림보다 0.0001 크게 낼 수 있다(2560×1600 을 4:3 으로 끝까지 끌면 1600.0001) — 그 넘침이
-                // 아래 범위를 비워(`h - height < 0`) 앱이 죽었다. 그림에 맞춰 자른다.
+                // 아래 범위를 비워(`h - height < 0`) 앱이 죽는다. 그림에 맞춰 자른다.
                 val height = minOf(width / ratio, h)
                 val l = if (east) s.left else s.right - width
                 val t = clampTo(s.centerY - height / 2, 0f, h - height)

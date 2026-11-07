@@ -39,8 +39,7 @@ import kotlinx.coroutines.withContext
  * 방문한 (장치, inode) 를 기억하고 깊이 상한을 함께 건다.
  *
  * **4. 한 파일의 실패가 배치를 끝내지 않는다.** 1,000개를 복사하다 3번째가 권한 오류면
- * 나머지 997개를 그대로 옮기고 '3개 실패' 로 센다. 예전에는 그 자리에서 작업 전체가
- * 끝나고 진행 수까지 버려져, 사용자는 무엇이 옮겨졌는지 알 수 없었다. **전체를 멈추는
+ * 나머지 997개를 그대로 옮기고 '3개 실패' 로 센다. **전체를 멈추는
  * 것은 저장공간 부족 하나뿐이다** — 그때는 계속해 봐야 전부 실패한다.
  */
 class FileOpEngine(private val media: MediaIndex) {
@@ -91,7 +90,7 @@ class FileOpEngine(private val media: MediaIndex) {
 
         /**
          * 고른 구간에 소리가 없다(구간 저장 — 영상은 있는데 첫 소리 트랙이 그 구간 전에 끝났거나 뒤에 시작한다). 소리 없는 영상을 말없이
-         * 만들지 않는다. [EMPTY_RANGE] 와 가른다 — 예전에는 둘 다 '담을 것이 없다' 여서 무엇이 빈 것인지 말하지 못했다.
+         * 만들지 않는다. [EMPTY_RANGE] 와 가른다 — 무엇이 빈 것인지 말하려고.
          */
         NO_AUDIO_IN_RANGE,
 
@@ -102,8 +101,8 @@ class FileOpEngine(private val media: MediaIndex) {
         NO_AUDIO,
 
         /**
-         * 그 이름이 이미 있다(이름 바꾸기·새 폴더). 예전에는 [INVALID_NAME] 으로 냈다 — 사용자는 '쓸 수 없는 이름' 을
-         * 글자가 틀린 것으로 읽고 처음부터 다시 쳤다. 이름 칸은 이것이면 닫지 않고 칸 안에서 말한다(`feature:browser` 의 `NameAttempt`).
+         * 그 이름이 이미 있다(이름 바꾸기·새 폴더). [INVALID_NAME] 과 가른다 — '쓸 수 없는 이름' 은 글자가 틀린 것으로
+         * 읽힌다. 이름 칸은 이것이면 닫지 않고 칸 안에서 말한다(`feature:browser` 의 `NameAttempt`).
          */
         EXISTS,
 
@@ -213,7 +212,7 @@ class FileOpEngine(private val media: MediaIndex) {
      * fsync → `rename` 복사 뒤 삭제, 충돌 규칙, 종류가 다른 충돌의 거절)는 [move] 와 **같은 길**을 탄다.
      *
      * @param targetName 이미 쓸 수 있는지 확인한 이름이다. 여기서 다시 다듬지 않는다 — 다듬으면
-     *   화면이 충돌을 검사한 이름과 엔진이 쓰는 이름이 갈린다(3·4단계가 치명으로 고친 형태).
+     *   화면이 충돌을 검사한 이름과 엔진이 쓰는 이름이 갈린다.
      */
     suspend fun moveAs(
         source: String,
@@ -541,8 +540,7 @@ class FileOpEngine(private val media: MediaIndex) {
         val src = File(path)
         val target = File(src.parentFile, name)
         if (src.absolutePath == target.absolutePath) return Outcome.Done(1, 0, 0)
-        // 맡지 못한 까닭을 가른다 — 이미 있으면 [Reason.EXISTS], 그 밖(권한·공간·입출력)은 그 까닭 그대로. 예전에는 모두
-        // '쓸 수 없는 이름' 이었다.
+        // 맡지 못한 까닭을 가른다 — 이미 있으면 [Reason.EXISTS], 그 밖(권한·공간·입출력)은 그 까닭 그대로.
         reserveName(target, src.isDirectory)?.let { return Outcome.Failed(it, name) }
         return try {
             Os.rename(src.absolutePath, target.absolutePath)
@@ -614,7 +612,7 @@ class FileOpEngine(private val media: MediaIndex) {
                 FileOutputStream(tmp, true).use { it.fd.sync() }
 
                 // ④ 수정시각을 되살린다. 이것이 없으면 날짜 정렬이 무너지고
-                //    이어보기 키(sha256(크기+이름+수정시각))도 끊긴다 — 4단계가 치명으로 고친 자리다.
+                //    이어보기 키(sha256(크기+이름+수정시각))도 끊긴다.
                 tmp.setLastModified(modified)
 
                 // ⑤ 원자적 대체 + 부모 디렉터리 fsync.
@@ -636,8 +634,8 @@ class FileOpEngine(private val media: MediaIndex) {
             return@withContext Outcome.Failed(reasonOf(t), src.name)
         }
 
-        // 죽은 작업이 남긴 임시본이 이 폴더에 있으면 함께 걷는다. 지금까지는 복사·이동의
-        // 대상 폴더에서만 돌았고, 회전은 어느 폴더에서나 일어난다.
+        // 죽은 작업이 남긴 임시본이 이 폴더에 있으면 함께 걷는다 — 회전은 복사·이동의 대상이
+        // 아닌 폴더에서도 일어난다.
         sweepPartials(parent)
         media.scanAll(listOf(path))
         Outcome.Done(1, 0, 0)
@@ -722,8 +720,7 @@ class FileOpEngine(private val media: MediaIndex) {
 
     /**
      * 새 폴더. 이름을 맡는 것과 만드는 것이 한 번의 `mkdir(2)` 다([reserveName]) — 그 답의 까닭을 그대로 말한다. 이미 있으면
-     * [Reason.EXISTS](예전에는 '쓸 수 없는 이름' 이었다), 못 만들면 권한·공간·입출력 가운데 실제 까닭이다(예전에는 늘
-     * '권한이 없다' 였다).
+     * [Reason.EXISTS], 못 만들면 권한·공간·입출력 가운데 실제 까닭이다.
      */
     fun createFolder(parent: String, name: String): Outcome {
         val verdict = PathRules.validate(name)

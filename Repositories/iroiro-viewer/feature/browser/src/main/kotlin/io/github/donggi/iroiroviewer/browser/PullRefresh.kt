@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 /**
- * 당겨서 새로고침(사용자 요청 — "화면을 아래로 당겼다 놓으면 새로고침").
+ * 당겨서 새로고침.
  *
  * ## 왜 `PullToRefreshBox` 를 그대로 쓰지 않는가
  *

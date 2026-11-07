@@ -100,13 +100,13 @@ import kotlinx.coroutines.launch
  *
  * 겉모습은 닮았지만 세 가지가 다르고, 그 셋이 이 화면이 따로 있는 이유다.
  *
- * | | 이미지 뷰어(6단계) | 만화 뷰어 |
+ * | | 이미지 뷰어 | 만화 뷰어 |
  * |---|---|---|
  * | 쪽의 출처 | 디스크 위의 파일 | **아카이브 안의 바이트**(경로가 없다) |
  * | 차례 | 폴더 목록 그대로 | **이름의 자연 정렬**(`ComicPages`) |
  * | 방향 | 왼→오 고정 | 왼→오 · **오→왼** · 세로 스크롤 |
  *
- * 14단계가 셋을 더했다 — 두 쪽 보기([Spreads]), 쪽 목록([PageGrid]), 다음 권([NextVolume]).
+ * 그 위에 두 쪽 보기([Spreads]), 쪽 목록([PageGrid]), 다음 권([NextVolume])이 있다.
  *
  * **이 앱이 보여 줄 수 없는 책은 다른 앱으로 넘긴다.** 실패 화면의 단추와 ⋮ 메뉴가 **책 파일**을 고르는 창으로 넘긴다
  * — 폴더 자체와 아카이브 안의 쪽은 넘기지 않는다. 폴더로 연 만화의 **못 연 쪽**은 그 쪽의 파일을 넘긴다([FailedPage]).
@@ -114,7 +114,7 @@ import kotlinx.coroutines.launch
  *
  * ## 바깥 `Scaffold` 를 씌우지 않는다
  *
- * 6단계와 같은 이유다 — 막대를 감추면 시스템 바도 함께 숨는데([SystemBarsHidden]) `Scaffold` 의 기본 인셋은 바가
+ * 이미지 뷰어와 같은 이유다 — 막대를 감추면 시스템 바도 함께 숨는데([SystemBarsHidden]) `Scaffold` 의 기본 인셋은 바가
  * 숨고 나타나는 애니메이션 내내 프레임마다 변하고, 그 패딩을 받으면 확대·이동의 기준 상자가 함께 움직여 경계 계산이 어긋난다.
  * 겹치는 막대는 바가 숨어도 변하지 않는 인셋(`…IgnoringVisibility`)을 쓴다.
  *
@@ -133,7 +133,7 @@ fun ComicScreen(
     /** 압축 목록에서 그림 항목을 탭해 들어온 경우의 엔트리 번호. -1 이면 이어보기가 정한다. */
     startEntryIndex: Int = -1,
     /**
-     * 다음 권으로 넘어갔다(14단계). 조립하는 쪽이 자기 화면 상태(`AppScreen.Comic`)를 새 경로로 바꾸면 프로세스가
+     * 다음 권으로 넘어갔다. 조립하는 쪽이 자기 화면 상태(`AppScreen.Comic`)를 새 경로로 바꾸면 프로세스가
      * 죽었다 살아나도 새 책으로 돌아온다. **주지 않아도 된다** — 화면이 새 경로를 저장 상태에 들고 스스로 연다.
      */
     onOpenBook: ((path: String) -> Unit)? = null,
@@ -192,19 +192,19 @@ fun ComicScreen(
         onClose()
     }
 
-    // 이어보기를 알린다. **'처음부터' 를 되돌리기처럼 붙인다** — 5단계 재생이
-    // 이어보기에 쓴 것과 같은 모양이라 사용자가 새로 배울 것이 없다.
+    // 이어보기를 알린다. **'처음부터' 를 되돌리기처럼 붙인다** — 재생의
+    // 이어보기와 같은 모양이라 사용자가 새로 배울 것이 없다.
     val resumedFormat = stringResource(R.string.comic_resumed)
     val restartLabel = stringResource(R.string.comic_restart)
     val nextOfferFormat = stringResource(R.string.comic_next_offer)
     val nextOpenLabel = stringResource(R.string.comic_next_open)
     LaunchedEffect(vm) {
         vm.eventFlow.collect { event ->
-            // **그 책이 열려 있는 동안만 띄운다**(14단계). 다음 권은 뷰어를 닫지 않고 책을 바꾸므로, 앞 책의 알림이 새 책
+            // **그 책이 열려 있는 동안만 띄운다.** 다음 권은 뷰어를 닫지 않고 책을 바꾸므로, 앞 책의 알림이 새 책
             // 위에 남으면 '처음부터' 가 새 책을 되감는다. 늦게 배달된 것(그 사이 책이 바뀌었다)은 띄우지도 않는다.
             // 기간은 `showWhileCurrent` 가 손으로 적는다 — 생략하면 Material 3 이 `actionLabel != null` 일 때
-            // `Indefinite` 를 넣어, 누르거나 밀기 전에는 사라지지 않는다(재생 쪽에서 사용자가 "제한시간 없이 계속
-            // 노출된다" 고 지적한 것). `Long`(10초)은 단추를 누를 시간은 되면서 쪽을 넘기는 동안 눌어붙지는 않는 길이다.
+            // `Indefinite` 를 넣어, 누르거나 밀기 전에는 사라지지 않는다.
+            // `Long`(10초)은 단추를 누를 시간은 되면서 쪽을 넘기는 동안 눌어붙지는 않는 길이다.
             when (event) {
                 is ComicViewModel.Event.Resumed -> {
                     val result = snackbar.showWhileCurrent(
@@ -453,7 +453,7 @@ fun ComicScreen(
  * ⋮ 메뉴 — 다음 권 열기, 다른 앱으로 열기. 둘 중 하나라도 있을 때만 선다(부르는 쪽이 가른다).
  *
  * **단추와 메뉴를 `Box` 하나에 담는다.** `actions` 에 형제로 두면 `Popup` 의 앵커가 아이콘 줄 전체가 되어 메뉴가
- * 맨 왼쪽 아이콘 아래에서 열린다(함정 표 — 사용자가 '꽤 동떨어진 자리' 로 지적했다).
+ * 맨 왼쪽 아이콘 아래에서 열린다(함정 표).
  *
  * @param nextName 같은 폴더의 다음 권 이름. null 이면 그 줄이 없다.
  * @param onOpenWith 지금 책 파일을 다른 앱으로 연다. 책이 보통 파일이 아니면 null — 그 줄이 없다([ComicOpenWith.menuTarget]).
@@ -504,7 +504,7 @@ private fun MoreMenu(nextName: String?, onOpenNext: () -> Unit, onOpenWith: (() 
  * 뒤집으면 [BottomBar] 의 슬라이더도 함께 뒤집어야 한다. 손가락이 가는 방향과 쪽이
  * 나아가는 방향이 어긋나면 슬라이더가 거꾸로 도는 것처럼 느껴진다.
  *
- * ## 두 쪽 보기(14단계)
+ * ## 두 쪽 보기
  *
  * 페이저의 한 칸이 **펼침**이다([Spreads]). VM 은 여전히 **쪽**을 든다 — 페이저가 다른 펼침에 서면 그 펼침의 첫 쪽이
  * 새 쪽이 되고, 같은 펼침 안의 쪽이면 그대로 둔다([Spreads.pageAfterSettle]). 펼침 안의 두 쪽은 읽는 방향을 따라
@@ -564,7 +564,7 @@ private fun PagedReader(
         }
     }
 
-    // 화면에서 벗어난 쪽의 확대를 되돌린다. 6단계와 같은 이유다 — 되돌리지 않으면
+    // 화면에서 벗어난 쪽의 확대를 되돌린다 — 되돌리지 않으면
     // 나중에 그 쪽으로 돌아왔을 때 전에 확대해 둔 자리에서 시작한다.
     val zooms = remember(book.path) { HashMap<Int, ZoomState>() }
     LaunchedEffect(pagerState) {
@@ -953,8 +953,8 @@ private fun VerticalPiece(
 
     when (val p = piece) {
         VPiece.Loading -> CircularProgressIndicator(color = Color.White)
-        // **못 연 것을 여는 중으로 보이지 않는다.** 예전에는 둘 다 null 이라 못 연 쪽에서 동그라미가 영원히 돌았다 — 이미지
-        // 뷰어가 6단계에 세 상태(여는 중·열림·못 엶)로 가른 그 결함이다. 좌우 읽기와 같은 문구를 쓴다.
+        // **못 연 것을 여는 중으로 보이지 않는다** — 둘을 같은 값(null)으로 두면 못 연 쪽에서 동그라미가 영원히
+        // 돈다. 좌우 읽기와 같은 문구를 쓴다.
         VPiece.Failed -> FailedPage(store, item.page, onOpenWith, Modifier.padding(32.dp), offerHandoff = item.band == 0)
         is VPiece.Shown -> Image(
             bitmap = p.image,
@@ -1075,8 +1075,7 @@ private fun ReadingOptions(
         )
 
         if (solid) {
-            // 되돌아갈 때 느린 이유를 미리 말해 둔다. 8단계 실측이 7z 의 무작위 접근을
-            // 제곱 비용으로 재 두었고, 이 화면은 그 사실을 숨기지 않는다.
+            // 되돌아갈 때 느린 이유를 미리 말해 둔다 — 7z 의 무작위 접근은 제곱 비용이다(실측).
             Text(
                 text = stringResource(R.string.comic_solid_hint),
                 style = MaterialTheme.typography.bodySmall,

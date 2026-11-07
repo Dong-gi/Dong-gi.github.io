@@ -16,11 +16,11 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * 뷰어 설정이 **저장소에서 시작해 저장소로 돌아가는가**(14단계, T1). 회전과 '새로 열기' 를 입장 표로 가른다.
+ * 뷰어 설정이 **저장소에서 시작해 저장소로 돌아가는가**. 회전과 '새로 열기' 를 입장 표로 가른다.
  */
 class ViewerSettingsTest {
 
-    /** 갈래마다 한 칸. 예전 시험들은 코드 갈래 하나만 쓴다([stored] 가 그 칸이다). */
+    /** 갈래마다 한 칸. 갈래를 가리지 않는 시험은 코드 갈래 하나만 쓴다([stored] 가 그 칸이다). */
     private class FakeStore(
         var stored: TextViewerDefaults = TextViewerDefaults(),
         var loadDelay: Long = 0,

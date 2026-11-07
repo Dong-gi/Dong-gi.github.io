@@ -62,7 +62,7 @@ object ImageCropRenderer : CropSupport.Renderer {
         val whole = ImageIo.decodeSampled(ask.path, wholeSample) ?: return CropSupport.Rendered.Unreadable
         return try {
             // 뜬 그림의 크기로 사각형을 옮긴다. 표본으로 나누지 않고 비율로 옮긴다 — 디코더가 나머지를 올리는지 내리는지 모른다.
-            // 왼·위는 내리고 오른·아래는 올린다 — 둘 다 내리면 고른 자리의 마지막 줄·칸이 잘려 나갔다.
+            // 왼·위는 내리고 오른·아래는 올린다 — 둘 다 내리면 고른 자리의 마지막 줄·칸이 잘려 나간다.
             val sx = whole.width.toDouble() / dw
             val sy = whole.height.toDouble() / dh
             val cl = floor(l * sx).toInt().coerceIn(0, whole.width - 1)

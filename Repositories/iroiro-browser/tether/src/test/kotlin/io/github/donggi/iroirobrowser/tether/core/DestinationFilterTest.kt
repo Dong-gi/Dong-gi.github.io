@@ -11,7 +11,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 /**
- * 목적지 거르개 — 고정 대역(usb-tether 의 목록 + 문서·464XLAT·벤치마크 대역), **폰 자신의 주소와 LAN 쪽 인터페이스의 on-link 접두**,
+ * 목적지 거르개 — 고정 대역(문서·464XLAT·벤치마크 대역 포함), **폰 자신의 주소와 LAN 쪽 인터페이스의 on-link 접두**,
  * '한 번 풀어 주소 객체로', 풀지 못한 이름은 거절이 아니다.
  */
 class DestinationFilterTest {
@@ -119,14 +119,14 @@ class DestinationFilterTest {
             assertTrue(f.isBlocked(ip(text)), text)
             assertIs<Destination.Rejected>(f.resolve(text), text)
         }
-        // 고정 대역만 보는 판정은 이 주소들을 몰랐다.
+        // 고정 대역만으로는 이 주소들을 막지 못한다.
         assertFalse(DestinationFilter.isBlockedAddress(ip("2600:380:1:2::5")))
     }
 
     @Test
     fun LAN_쪽_인터페이스의_on_link_접두는_막고_셀룰러의_접두는_막지_않는다() {
         val f = filter({ phone })
-        // 집 Wi-Fi 의 같은 망 — 공인 주소라 고정 대역에 걸리지 않던 NAS·프린터.
+        // 집 Wi-Fi 의 같은 망 — 공인 주소라 고정 대역에 걸리지 않는 NAS·프린터.
         for (text in listOf("81.2.3.99", "81.2.3.255", "2a00:1450:1:2::1", "2a00:1450:1:2:ffff:ffff:ffff:ffff")) {
             assertTrue(f.isBlocked(ip(text)), text)
         }

@@ -9,8 +9,8 @@ import java.nio.charset.StandardCharsets
  */
 internal object TarLimits {
 
-    // 이름의 두 상한(하나 64 KiB, 합 16 MiB)은 `EntryNameLimits` 로 옮겼다 — cpio·ar 의 머리도 같은 바탕에서 같은 값을 쓴다.
-    // xz 사전의 메모리 상한은 `StreamLimits.DICTIONARY_MEMORY_KIB` 로 옮겼다 — 단독 `.xz`·`.lzma` 도 같은 해제기를 쓴다.
+    // 이름의 두 상한은 `EntryNameLimits`(cpio·ar 도 쓴다), xz 사전의 메모리 상한은 `StreamLimits.DICTIONARY_MEMORY_KIB`
+    // (단독 `.xz`·`.lzma` 도 쓴다)에 있다.
 
     /**
      * PAX 확장 머리(`x`·`g`) 하나의 상한. 확장 속성(ACL·xattr)이 실리면 이름보다 길다 — 1 MiB.

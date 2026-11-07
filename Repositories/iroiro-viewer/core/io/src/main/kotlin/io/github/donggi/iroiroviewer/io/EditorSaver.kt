@@ -137,7 +137,7 @@ object EditorSaver {
     /**
      * 고쳐 쓰기 전에 지금 판([now])을 휴지통에 남기는가 — 판단만(JVM 시험). 세션의 첫 저장이면([keepPrevious]) 남기고, 아니어도 **지금 표가 넣는
      * 쪽이 기대한 표([expected])와 다르면** 남긴다. 넣는 쪽은 넣기 전에만 견줄 수 있다 — 반영이 앞 작업(긴 복사)에 밀려 줄
-     * 서 있는 사이 동기화 앱·PC 가 원본을 바꾸면, 그 판을 남기지 않고 덮었다(되돌릴 수 없다). 그래서 글 저장([TextSaver])처럼 큐 안에서 다시 본다.
+     * 서 있는 사이 동기화 앱·PC 가 원본을 바꾸면 그 판을 남기지 않고 덮게 된다(되돌릴 수 없다). 그래서 글 저장([TextSaver])처럼 큐 안에서 다시 본다.
      * 기대한 표를 모르면(null) 남긴다. 빈 파일·없는 파일은 남길 것이 없다.
      */
     internal fun keepsPrevious(keepPrevious: Boolean, expected: FileStamp?, now: FileStamp?): Boolean =

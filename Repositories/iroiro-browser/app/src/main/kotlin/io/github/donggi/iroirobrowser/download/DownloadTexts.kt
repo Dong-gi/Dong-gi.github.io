@@ -7,7 +7,7 @@ import io.github.donggi.iroirobrowser.R
 /** 내려받기의 글 — 목록([DownloadsActivity])과 알림([DownloadService])이 함께 쓴다. */
 internal object DownloadTexts {
 
-    /** 마무리 중의 글 — 담는 것에 따라(앞 판은 소리만 녹화한 것도 '영상과 소리를 한 파일로 담는 중' 이었다). */
+    /** 마무리 중의 글 — 담는 것(영상과 소리, 소리만 등)에 따라. */
     fun merging(context: Context, item: DownloadCenter.Item): String = context.getString(
         when (item.finishing) {
             DownloadCenter.Finishing.AV -> R.string.download_merging
@@ -32,5 +32,5 @@ internal object DownloadTexts {
 
     /** 갤러리 받기의 진행 — 'n / m개' 또는 '작품 a / b · 파일 n'([GalleryRules.progress]). */
     fun gallery(context: Context, g: DownloadCenter.Gallery): String =
-        TorrentTexts.text(context, GalleryRules.progress(g.units, g.unitsDone, g.fileCount, g.filesSaved))
+        TextParts.text(context, GalleryRules.progress(g.units, g.unitsDone, g.fileCount, g.filesSaved))
 }

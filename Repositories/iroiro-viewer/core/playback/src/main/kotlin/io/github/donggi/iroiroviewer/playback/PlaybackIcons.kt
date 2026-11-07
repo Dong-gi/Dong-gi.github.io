@@ -11,8 +11,7 @@ import androidx.compose.ui.unit.dp
  *
  * 코어에 있는 것은 49개뿐이고(`Add`·`PlayArrow`·`Close`·`Lock` 등) 재생에 필요한
  * `Pause`·`SkipNext`·`SkipPrevious`·`Shuffle`·`Repeat`·자막·PiP 는 하나도 없다. 그렇다고
- * `material-icons-extended`(수천 개, APK 를 크게 불린다)를 들이지는 않는다 —
- * 5단계가 `Pause` 를 손으로 그린 이유가 그것이고 여기서도 같다.
+ * `material-icons-extended`(수천 개, APK 를 크게 불린다)를 들이지는 않는다.
  *
  * 모양은 Material 의 24×24 격자를 따른다. 색은 칠하는 쪽이 `tint` 로 준다.
  *
@@ -20,7 +19,7 @@ import androidx.compose.ui.unit.dp
  * 받는 것은 `android.graphics.drawable.Icon` 이고 변환 경로가 없다. 그래서 PiP 조작
  * 아이콘만 `res/drawable/` 에 벡터 드로어블로 **한 벌 더** 그려 두었다(`ic_pip_*.xml`).
  * **같은 그림을 두 형식으로 유지하는 빚**이라, 좌표를 글자 그대로 맞추고 양쪽 주석에
- * 짝을 적어 둔다 — 5단계가 문구를 두 벌 두었다가 한쪽만 고쳐진 그 형태를 피하려는 것이다.
+ * 짝을 적어 둔다 — 한쪽만 고쳐지지 않게.
  */
 private fun icon(name: String, path: androidx.compose.ui.graphics.vector.PathBuilder.() -> Unit): ImageVector =
     ImageVector.Builder(
@@ -83,9 +82,8 @@ val RepeatIcon: ImageVector by lazy {
 /**
  * 한 곡 반복.
  *
- * **전체 반복과 한눈에 갈려야 한다.** 처음에는 같은 화살표에 작은 '1' 을 얹었는데, 24dp
- * 아이콘 안의 5px 짜리 숫자는 나란히 놓고 봐도 구별되지 않았다(사용자가 지적했다).
- * 그래서 **화살표를 위아래 두 도막으로 줄이고 가운데를 비워, 그 자리에 큰 '1'** 을 넣는다.
+ * **전체 반복과 한눈에 갈려야 한다.** 같은 화살표에 작은 '1' 을 얹으면 24dp 아이콘 안의
+ * 5px 짜리 숫자는 구별되지 않는다. 그래서 **화살표를 위아래 두 도막으로 줄이고 가운데를 비워, 그 자리에 큰 '1'** 을 넣는다.
  * 획이 굵고 높이가 아이콘의 절반이라 곁눈으로도 읽힌다.
  */
 val RepeatOneIcon: ImageVector by lazy {

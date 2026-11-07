@@ -33,12 +33,12 @@ import io.github.donggi.iroirobrowser.ui.Ui
 /**
  * '찾은 미디어' 의 창들 — 브라우저 화면([Host])이 띄운다(메인 스레드).
  *
- * - **목록**([show]): 지금 페이지의 것을 위에(최근에 요청된 차례), 앞 페이지의 것은 '앞 페이지 — 제목 · n분 전' 아래에 흐리게(사용자가 짚었다 —
- *   어느 페이지의 것인지 가릴 수 없었다. [FoundMediaLog]). 번호만 다른 파일은 한 줄, 읽은 HLS 마스터 아래의 재생목록은 숨긴다.
+ * - **목록**([show]): 지금 페이지의 것을 위에(최근에 요청된 차례), 앞 페이지의 것은 '앞 페이지 — 제목 · n분 전' 아래에 흐리게(어느 페이지의
+ *   것인지 가리게 — [FoundMediaLog]). 번호만 다른 파일은 한 줄, 읽은 HLS 마스터 아래의 재생목록은 숨긴다.
  * - **받기 확인**([confirmDownload]): 이름 칸(기본은 찾은 페이지의 제목 — 주소 끝의 이름은 흔히 무의미한 글자다)과 프록시 길로 미리 읽은 크기.
  *   고리를 길게 눌러 '링크 내려받기' 도 이 창이다.
- * - **재생목록 읽기**: 읽는 동안 취소할 수 있는 진행 창 하나 — 읽는 중에 다시 누르면 무시한다(앞 판은 2초 토스트 뒤 아무것도 없다가
- *   화질 창이 불쑥 떴고, 다시 누르면 창이 겹쳤다). 하위 재생목록을 고르면 그 마스터의 화질 창으로 돌린다(소리 없는 영상이 받아졌다).
+ * - **재생목록 읽기**: 읽는 동안 취소할 수 있는 진행 창 하나 — 읽는 중에 다시 누르면 무시한다(창이 겹치지
+ *   않게). 하위 재생목록을 고르면 그 마스터의 화질 창으로 돌린다(소리 없는 영상을 받지 않게).
  * - **화질 고르기**: 어림 크기·코덱·'소리만'. 마스터면 가장 높은 화질의 재생목록을 한 번 더 읽어 길이를 안다(실시간·DRM 도 그때 안다).
  * - 실시간 방송은 받지 않는 대신 그 자리에서 '재생 중인 것 받기' 로 잇는다.
  *
@@ -568,7 +568,7 @@ class MediaChooser(private val activity: Activity, private val host: Host) {
         listOfNotNull(MediaCodecs.describe(codecs), bytes?.let { activity.getString(R.string.media_size_about, Formatter.formatShortFileSize(activity, it)) })
             .joinToString(" · ").ifEmpty { null }
 
-    /** 재생 시간 — 1분이 안 되면 초로(앞 판은 '약 0분' 이었다). */
+    /** 재생 시간 — 1분이 안 되면 초로('약 0분' 이 되지 않게). */
     private fun duration(seconds: Double): String {
         val s = seconds.toLong()
         return when {

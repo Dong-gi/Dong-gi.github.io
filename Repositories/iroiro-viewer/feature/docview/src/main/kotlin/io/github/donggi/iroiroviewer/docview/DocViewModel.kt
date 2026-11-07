@@ -52,8 +52,7 @@ import java.io.IOException
  * ## 만화에서 반드시 가져오는 것 넷
  *
  * 1. **[open] 첫머리에서 기본값으로 되돌린다.** 이 VM 은 액티비티에 묶여 있어 문서를
- *    바꿔도 같은 객체다 — 되돌리지 않으면 앞 문서의 읽던 쪽이 새 문서로 옮겨 간다
- *    (9단계가 웹툰을 닫고 연 만화가 세로 모드로 열리는 것으로 겪었다).
+ *    바꿔도 같은 객체다 — 되돌리지 않으면 앞 문서의 읽던 쪽이 새 문서로 옮겨 간다.
  * 2. **되살린 뒤에 [State.Ready] 를 낸다.** 먼저 내면 페이저가 컴포지션 첫 순간에 흘리는
  *    초기값 0 이 되돌아와 방금 되살린 쪽을 지운다.
  * 3. **경로만으로 같은 문서라고 보지 않는다** — `(경로, 크기, 수정시각)` 으로 본다.
@@ -66,7 +65,7 @@ import java.io.IOException
  * `doc_progress.page` 칸에 넣는 것은 뜻이 같기 때문이다 — '문서에서 몇 번째 자리를
  * 보고 있는가'.
  *
- * ## 장 안의 자리(14단계)
+ * ## 장 안의 자리
  *
  * EPUB 은 장 **안의** 자리도 기억한다 — 스크롤 범위에 대한 비율([fraction])이고, `locator` 에
  * `"장:비율"` 로 적는다. `progress` 에는 문서 전체의 진행을 **본 몫**([seen] — 화면의 끝 가장자리)으로 적는다([DocLocator]).
@@ -131,8 +130,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
          *
          * **문서의 종류를 함께 싣는다.** 이 사건은 `Ready` 보다 **먼저** 나가므로
          * (되살린 뒤에 화면을 세우는 순서 때문이다) 화면이 상태를 보고 '쪽' 인지
-         * '장' 인지 고를 수가 없다. 함께 쓸 값은 한 흐름에 실어 보낸다 — 10단계가
-         * `State.currentKind` 로 같은 결론에 닿았다.
+         * '장' 인지 고를 수가 없다. 함께 쓸 값은 한 흐름에 실어 보낸다.
          */
         data class Resumed(val page: Int, val unit: ResumeUnit, val inPlace: Boolean = false) : Event
 
@@ -208,7 +206,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
      * PDF 의 두 쪽 보기. 가로 화면에서만 뜻이 있다(화면이 가른다).
      *
      * **문서를 바꿔도 남긴다** — [open] 이 첫머리에서 되돌리는 것은 문서의 상태(읽던 쪽)이고 이것은 보는 사람의 모양이다.
-     * 앱 전체의 설정으로 남긴다(`AppPreferences.pdfSpread` — 처음에는 세션 동안만 남았다).
+     * 앱 전체의 설정으로 남긴다(`AppPreferences.pdfSpread`).
      */
     private val _spread = MutableStateFlow(false)
     val spread: StateFlow<Boolean> = _spread.asStateFlow()
@@ -245,7 +243,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
 
     /**
      * PDF 를 **세로로 이어 보는가**. 기본은 이어
-     * 보기 — 쪽을 폭에 맞춰 이어 붙이고 배율이 문서 전체에 걸린다(`ScrollDocument`). 거짓이면 예전의 한 쪽씩 넘기기다(`PagedDocument`).
+     * 보기 — 쪽을 폭에 맞춰 이어 붙이고 배율이 문서 전체에 걸린다(`ScrollDocument`). 거짓이면 한 쪽씩 넘기기다(`PagedDocument`).
      * [spread] 와 같은 까닭으로 문서를 바꿔도 남기고 앱 전체의 설정으로 남긴다(`AppPreferences.pdfContinuous`). 두 보기가 세는 것은
      * 같은 **쪽**([page])이라 바꿔도 보던 쪽 그대로다.
      */
@@ -296,8 +294,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
      *
      * **`UnsupportedFeatures` 를 화면이 직접 보게 두면 배지가 뜨지 않는다.** 그것은
      * 그냥 가변 객체라 값이 늘어도 재구성이 일어나지 않고, 장을 읽는 일은 WebView 의
-     * **다른 스레드**에서 일어난다(기기에서 그 증상을 봤다 — 스크립트를 버린 장을
-     * 보고 있는데 알림 단추가 없었다). 흐름으로 내보내는 쪽이 유일하게 도는 길이다.
+     * **다른 스레드**에서 일어난다. 흐름으로 내보내는 쪽이 유일하게 도는 길이다.
      */
     private val _notice = MutableStateFlow(Notice())
     val notice: StateFlow<Notice> = _notice.asStateFlow()
@@ -519,7 +516,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         if (page !in 0 until doc.count) return true
         // 장 안의 자리. 적힌 장 번호가 `page` 와 다르면 믿지 않는다(`DocLocator.decode`). PDF 는 쓰지 않는다.
         val inside = if (doc is Doc.Pdf) null else DocLocator.decode(saved.locator, page)
-        // **첫 장의 처음이면 알릴 것이 없다**(11단계부터 그랬다). 첫 장 **안의** 자리는 되살리고 알린다 — '처음부터' 로
+        // **첫 장의 처음이면 알릴 것이 없다**. 첫 장 **안의** 자리는 되살리고 알린다 — '처음부터' 로
         // 돌아갈 길이 그 알림에 있다.
         if (page == 0 && (inside == null || inside < RESUME_MIN_FRACTION)) return true
         _page.value = page
@@ -585,8 +582,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
     fun restart() = startAt(0)
 
     /**
-     * 장 [ordinal] 의 **처음**으로 간다(목차에서 골랐다). 지금 보는 장을 골라도 그 장의 처음으로 간다 — 예전에는
-     * 쪽이 바뀌지 않아 아무 일도 없었다.
+     * 장 [ordinal] 의 **처음**으로 간다(목차에서 골랐다). 지금 보는 장을 골라도 그 장의 처음으로 간다.
      */
     fun startAt(ordinal: Int) {
         _page.value = ordinal
@@ -719,9 +715,9 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
     /**
      * 화면을 떠난다. **문서를 닫는 유일한 자리다.**
      *
-     * **상태는 그 자리에서 끊는다.** 예전에는 마지막 자리를 DB 에 쓴 **뒤에** `opened`·상태를
-     * 비웠는데, 그 쓰기가 끝나기 전에 같은 문서를 다시 누르면 `open` 이 '이미 열려 있다' 로
-     * 돌아가고, 곧이어 늦은 정리가 그 문서를 닫아 **끝나지 않는 동그라미**가 남았다.
+     * **상태는 그 자리에서 끊는다.** 마지막 자리를 DB 에 쓴 **뒤에** `opened`·상태를 비우면, 그
+     * 쓰기가 끝나기 전에 같은 문서를 다시 누를 때 `open` 이 '이미 열려 있다' 로 돌아가고, 곧이어
+     * 늦은 정리가 그 문서를 닫아 **끝나지 않는 동그라미**가 남는다.
      * 저장할 값과 닫을 문서는 지금 붙들어 두고, 쓰기가 끝나면 **붙든 것**을 닫는다.
      */
     fun close() {

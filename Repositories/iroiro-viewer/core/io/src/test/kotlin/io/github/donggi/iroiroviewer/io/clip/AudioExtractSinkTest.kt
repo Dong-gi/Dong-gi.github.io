@@ -17,7 +17,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * 소리만 뽑기가 우리 손으로 쓰는 그릇(`AudioExtract` 의 MP3·FLAC·WAV)과, 같은 회차에 고친 자르기의 셈(Xing 목차·TLEN·빈 WAV·취소).
+ * 소리만 뽑기가 우리 손으로 쓰는 그릇(`AudioExtract` 의 MP3·FLAC·WAV)과 자르기의 셈(Xing 목차·TLEN·빈 WAV·취소).
  * 표본은 시험이 짓고([ClipSamples]) 결과는 **다른 길로** 다시 읽는다 — FLAC 은 시험 쪽의 VERBATIM 풀개로, MP3 는 머리와 표지로.
  */
 class AudioExtractSinkTest {
@@ -90,8 +90,7 @@ class AudioExtractSinkTest {
     }
 
     /**
-     * 프레임이 성기게 드는 칸 수(4,096)를 넘어도 목차는 프레임마다의 자리로 지은 것과 같다(한 칸의 단위 1/256 안에서) — 예전에는 목차
-     * 때문에 프레임마다 Long 을 들어 긴 소리에서 수십 MB 였다.
+     * 프레임이 성기게 드는 칸 수(4,096)를 넘어도 목차는 프레임마다의 자리로 지은 것과 같다(한 칸의 단위 1/256 안에서).
      */
     @Test
     fun `긴 MP3 의 목차도 프레임마다 든 자리로 지은 것과 같다`() {
@@ -246,7 +245,7 @@ class AudioExtractSinkTest {
         assertEquals(3, float.u16le(20), "실수 PCM")
     }
 
-    // ---- 같은 회차에 고친 자르기의 셈 ---------------------------------------------
+    // ---- 자르기의 셈 ---------------------------------------------
 
     @Test
     fun `MP3 를 자르면 Xing 에 목차를 적는다`(): Unit = runBlocking {
@@ -310,7 +309,7 @@ class AudioExtractSinkTest {
         assertIs<CutPlan.Ok>(RandomAccessFile(temp(streamed), "r").use { WavCut.plan(it, 0, 100_000, "wav") })
     }
 
-    /** 끝에 ID3v1 꼬리를 단 FLAC 을 끝까지 자르면 마지막 프레임도 담긴다 — 예전에는 끝을 파일 끝·다음 동기로만 받아 잃었다. */
+    /** 끝에 ID3v1 꼬리를 단 FLAC 을 끝까지 자르면 마지막 프레임도 담긴다 — 끝을 파일 끝·다음 동기로만 받으면 잃는다. */
     @Test
     fun `태그 꼬리를 단 FLAC 의 마지막 프레임을 잃지 않는다`(): Unit = runBlocking {
         val samples = arrayOf(ShortArray(4096) { (it % 500 - 250).toShort() })

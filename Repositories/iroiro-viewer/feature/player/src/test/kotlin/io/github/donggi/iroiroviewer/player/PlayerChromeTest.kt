@@ -5,8 +5,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * 재생 화면의 틀 — 시스템 바와 조작부를 언제 거두는가(바가 늘 보였고, 조작부가 저절로 숨지 않았다. 둘 다 기기에서
- * 확인됨). 거는 일은 액티비티가, 판정은 [PlayerChrome] 이 한다.
+ * 재생 화면의 틀 — 시스템 바와 조작부를 언제 거두는가.
+ * 거는 일은 액티비티가, 판정은 [PlayerChrome] 이 한다.
  */
 class PlayerChromeTest {
 

@@ -36,7 +36,7 @@ class PassphraseVaultTest {
 
     @Test
     fun 잠그지_못해도_이_프로세스는_사용자가_정한_값을_쓴다() {
-        // 예전에는 잠그기가 실패하면 저장값을 지웠고, 서비스가 '없다' 고 보아 새 난수로 그룹을 세웠다 — 화면의 값과 그룹이 어긋났다.
+        // 잠그기가 실패해도 서비스가 '없다' 고 보아 새 난수로 그룹을 세우면 화면의 값과 그룹이 어긋난다.
         val store = FakeStore().apply { sealFails = true }
         val generated = CopyOnWriteArrayList<String>()
         val vault = PassphraseVault(store) { "generated-${generated.size}".also { generated += it } }
@@ -57,7 +57,7 @@ class PassphraseVaultTest {
 
     @Test
     fun 잠근_값을_열지_못하면_덮어쓰지_않고_알린다() {
-        // 예전에는 한 번 열지 못하면 새 난수로 덮어써 사용자가 정한 값이 사라졌다(일시 오류여도).
+        // 한 번 열지 못했다고 새 난수로 덮어쓰면 사용자가 정한 값이 사라진다(일시 오류여도).
         val store = FakeStore(blob = "sealed:$strong").apply { openFails = true }
         val vault = PassphraseVault(store) { error("만들지 않는다") }
         assertEquals(PassphraseVault.Current.Unreadable, vault.current())

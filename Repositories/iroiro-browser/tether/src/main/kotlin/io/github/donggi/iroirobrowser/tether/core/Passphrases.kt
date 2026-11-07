@@ -61,7 +61,7 @@ object Passphrases {
 
     /**
      * 패스프레이즈만의 문제. WPA2 의 패스프레이즈는 **출력 가능한 ASCII 8–63자**다(IEEE 802.11i) — 한글·이모지·제어 문자를 넘기면 프레임워크가
-     * 두루뭉술한 오류로 실패하거나, 기기마다 다른 부호로 바꿔 PC 가 같은 글자를 쳐도 붙지 못한다. 예전에는 길이(UTF-16 글자 수)만 보았다.
+     * 두루뭉술한 오류로 실패하거나, 기기마다 다른 부호로 바꿔 PC 가 같은 글자를 쳐도 붙지 못한다.
      * ASCII 를 먼저 본다 — 한글 일곱 자에 '8자 이상' 이라 답하면 한 자를 더 친 뒤에야 진짜 까닭을 듣는다.
      */
     fun passphraseProblem(passphrase: String): Problem? {
@@ -73,7 +73,7 @@ object Passphrases {
 
     /**
      * 뻔히 짐작되는 패스프레이즈인가 — 알려진 약한 목록, 서로 다른 글자가 둘 이하, 전체가 오름·내림 차례(12345678·abcdefgh).
-     * 저장해 둔 값이 약하면 없는 것으로 친다(앱이 새로 만든다 — usb-tether 의 옛 기본값 `12345678` 을 그대로 옮겨 오지 않으려고).
+     * 저장해 둔 값이 약하면 없는 것으로 친다(앱이 새로 만든다).
      */
     fun isWeak(value: String): Boolean {
         if (value.lowercase() in WEAK) return true
@@ -92,8 +92,8 @@ object Passphrases {
     }
 
     /**
-     * 새 패스프레이즈 — 기기마다 다른 [GENERATED_LENGTH] 자 난수. 상수 기본값을 두지 않는다: usb-tether 의 처음 판은 `12345678` 을 채워 두어,
-     * 고치지 않고 켠 사용자는 지나가는 사람이 몇 초에 붙는 망을 띄웠다.
+     * 새 패스프레이즈 — 기기마다 다른 [GENERATED_LENGTH] 자 난수. 상수 기본값을 두지 않는다 — 고치지 않고 켠 사용자가 지나가는 사람이 몇 초에
+     * 붙는 망을 띄우게 된다.
      */
     fun generate(random: SecureRandom = SecureRandom()): String {
         val builder = StringBuilder(GENERATED_LENGTH)

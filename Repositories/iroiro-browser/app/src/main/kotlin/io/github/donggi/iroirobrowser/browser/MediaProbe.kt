@@ -14,12 +14,12 @@ import java.util.concurrent.Executors
 import java.util.concurrent.RejectedExecutionException
 
 /**
- * 받기 전에 묻는 작은 것 — 영상 파일의 크기(받기 확인 창 — 늘 '크기 모름' 이었다)와 HLS 재생목록이 마스터인지(찾은 미디어에서
+ * 받기 전에 묻는 작은 것 — 영상 파일의 크기(받기 확인 창)와 HLS 재생목록이 마스터인지(찾은 미디어에서
  * 그 아래 재생목록을 숨긴다).
  *
  * **내려받기와 같은 길**로 묻는다 — 앱의 HTTP, 길은 [NetworkPath.httpRoute](중계, 예외 규칙에 든 사설망 주소는 바로 — 홉마다. 프록시를 켰는데
  * 중계가 없으면 묻지 않는다, 직접 나가지 않는다),
- * 머리는 쪽의 User-Agent·Referer(홉마다 쪽에서 짓는다 — 2026-10-16 보안 점검, 내려받기와 같다)·그 주소의 쿠키. 내려받기의 일꾼과 따로 돌고(받는
+ * 머리는 쪽의 User-Agent·Referer(홉마다 쪽에서 짓는다 — 내려받기와 같다)·그 주소의 쿠키. 내려받기의 일꾼과 따로 돌고(받는
  * 중에도 바로 답한다) 다시 해 보지 않으며 시간 제한도 짧다 — 답이 없으면 '모름' 일 뿐이다.
  */
 class MediaProbe(private val network: NetworkPath) {

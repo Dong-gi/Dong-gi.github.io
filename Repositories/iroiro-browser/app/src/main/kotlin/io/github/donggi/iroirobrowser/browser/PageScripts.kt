@@ -21,11 +21,9 @@ object PageScripts {
      * 갈고리를 건 문서는 닫힌 WeakSet 으로 기억한다(쪽이 흉내 낼 표식을 창에 두지 않는다). 실험이 잰 15길(같은 출처의 빈 틀 열 가지·
      * srcdoc·샌드박스·data:·다른 출처)을 모두 막았다.
      *
-     * **쪽이 바꿀 수 있는 내장 함수를 나중에 부르지 않는다**(2026-10-16 보안 점검 — 에뮬레이터에서 재현). 이 스크립트는 쪽의 세계에서 쪽보다
-     * 먼저 돌지만, 틀 나무를 훑는 일은 쪽이 틀을 만든 **뒤에** 한다 — 앞 판은 그때 `Object.getOwnPropertyNames`·`RegExp.prototype.test`·
-     * `WeakSet.prototype.has`·`Array.prototype.push`·`pop`·`forEach`·`Function.prototype.apply`·`window.length` 를 불러, 쪽이 그것을 미리 바꿔
-     * 두면 새 틀의 RTC 가 그대로 남았다(`Object.getOwnPropertyNames` 를 빈 목록을 돌려주게 바꾸고 만든 빈 틀에 `RTCPeerConnection` 이 있었다 —
-     * `RegExp.prototype.test` 도 같다, `Array.prototype.pop` 을 바꾸자 훑기가 끝나지 않았다). 그래서 쓸 것은 처음에 붙잡아 두고(`Reflect.apply` 로
+     * **쪽이 바꿀 수 있는 내장 함수를 나중에 부르지 않는다**. 이 스크립트는 쪽의 세계에서 쪽보다 먼저 돌지만, 틀 나무를 훑는 일은 쪽이
+     * 틀을 만든 **뒤에** 한다 — 그때 `Object.getOwnPropertyNames`·`RegExp.prototype.test`·`WeakSet.prototype.has`·`Array.prototype.*`·
+     * `Function.prototype.apply`·`window.length` 를 부르면, 쪽이 그것을 미리 바꿔 두어 새 틀의 RTC 가 남거나 훑기가 끝나지 않는다. 그래서 쓸 것은 처음에 붙잡아 두고(`Reflect.apply` 로
      * 부른다), 속성 설명은 원형이 없는 객체로 짓고(쪽이 `Object.prototype` 에 `get` 따위를 더해도 섞이지 않게), 틀 나무는 연결 목록으로 훑고, 틀
      * 수는 처음에 붙잡은 `window.length` 의 getter 로 읽는다(쪽이 `window.length` 를 덮어도 — 창의 번호 접근 `w[i]` 은 쪽이 가릴 수 없다).
      * 남는 위험: 그 밖의 새 길, 쪽이 갈고리를 알아챌 수 있다(`toString`).
@@ -150,7 +148,7 @@ object PageScripts {
 """
 
     /**
-     * **사이트가 막아 둔 확대를 푼다**(사용자 요청 2026-10-09 — '사이트 설정과 무관하게 확대하여 볼 수 있게'). 설정 '항상 확대 허용'
+     * **사이트가 막아 둔 확대를 푼다**. 설정 '항상 확대 허용'
      * (`SettingsStore.forceZoom`, 기본 켬)이 켜져 있을 때만 건다([WebViews.applyForceZoom]).
      *
      * 사이트는 `<meta name="viewport">` 의 `user-scalable=no`·`maximum-scale=1` 로 두 손가락 확대를 막는다. 크롬의 '확대/축소 강제 사용'·

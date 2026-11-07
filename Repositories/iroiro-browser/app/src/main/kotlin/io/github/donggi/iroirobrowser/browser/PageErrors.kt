@@ -3,7 +3,7 @@ package io.github.donggi.iroirobrowser.browser
 import io.github.donggi.iroirobrowser.proxy.NetworkPath.Phase
 
 /**
- * 주 문서가 열리지 않은 까닭을 고른다(앞 판은 WebView 의 영어 오류 쪽·빈 쪽·사라지는 토스트뿐이었다). 재료는 넷이다:
+ * 주 문서가 열리지 않은 까닭을 고른다. 재료는 넷이다:
  *
  * - WebView 의 연결 오류 — `net::ERR_…` 이름(설명 글)을 먼저 보고, 모르는 이름이면 `WebViewClient.ERROR_*` 코드로 어림한다(크로미움이 코드를
  *   어떻게 묶는지는 판마다 바뀔 수 있어 이름이 더 믿을 만하다).
@@ -33,7 +33,7 @@ object PageErrors {
         TIMEOUT,
         CONNECTION,
 
-        /** 인증서를 믿을 수 없다(넘기지 않는다 — 1단계의 결정). */
+        /** 인증서를 믿을 수 없다(넘기지 않는다). */
         CERTIFICATE,
         TLS,
         REDIRECTS,

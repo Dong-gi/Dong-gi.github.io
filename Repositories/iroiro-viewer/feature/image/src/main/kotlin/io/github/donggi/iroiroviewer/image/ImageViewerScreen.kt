@@ -120,12 +120,12 @@ import java.io.File
  * | 아래로 끌기(배율 1) | 닫기 | 끌수록 그림이 내려가며 옅어지고, 문턱을 넘겨 놓거나 빠르게 튕기면 닫힌다 |
  * | 뒤로가기 | 목록으로 | 아래로 끌어 닫기와 **같은 곳**(`onClose`)으로 간다 |
  *
- * **움직이는 그림(GIF·애니WebP)도 같은 표를 따른다**(14단계). 만화 뷰어는 움직이는 쪽을 확대하지
+ * **움직이는 그림(GIF·애니WebP)도 같은 표를 따른다**. 만화 뷰어는 움직이는 쪽을 확대하지
  * 않지만, 여기서는 사진과 섞인 폴더에서 어떤 장만 두 번 두드려도 아무 일이 없으면 고장으로 읽힌다 —
  * 까닭과 대가(선명화 조각 없음)는 `ZoomablePainter` 에 적었다. 트는 것은 **자리 잡은 장 하나**뿐이다.
  * 페이저가 앞뒤 한 장씩을 화면 밖에서도 구성해 두므로, 그대로 두면 보이지도 않는 GIF 가 프레임을 푼다.
  *
- * **SVG 는 잠긴 WebView 가 그린다**(`SvgPage`, 14단계 뒤). 몸짓은 위 표와 같다 — 확대·이동은 WebView 가, 두 번 두드림은 같은
+ * **SVG 는 잠긴 WebView 가 그린다**(`SvgPage`). 몸짓은 위 표와 같다 — 확대·이동은 WebView 가, 두 번 두드림은 같은
  * 2.5배, 넘기기·끌어 닫기는 페이저가 한다. 화면 회전은 없다(메뉴가 꺼진다).
  *
  * ## 이 뷰어가 못 여는 그림 — 다른 앱으로 연다
@@ -145,7 +145,7 @@ import java.io.File
  *       ImagePage → ZoomableImage(탭 / transformable)
  * ```
  *
- * 형제 `pointerInput` 의 순서에 기대지 않고 부모–자식으로 세운다(6단계의 규칙). 한 장의 인식기가
+ * 형제 `pointerInput` 의 순서에 기대지 않고 부모–자식으로 세운다. 한 장의 인식기가
  * 자식이라 먼저 보고, 끌어 닫기가 그 위, 페이저가 맨 위다. 누가 이기는가는 `DismissMath` 의 주석과
  * JVM 시험이 답한다.
  *
@@ -181,8 +181,7 @@ fun ImageViewerScreen(
     onClose: () -> Unit,
     onShare: (FileEntry) -> Unit,
     /**
-     * 메타데이터를 지운 사본을 공유한다. 만들지 못했으면 둘째 인자를 부른다 — **이 화면이 그 자리에서 말한다**(예전에는
-     * 파일 목록으로 돌아간 뒤에야 엉뚱한 문장이 떴고, 다른 앱에서 받은 사진이면 아예 뜨지 않았다).
+     * 메타데이터를 지운 사본을 공유한다. 만들지 못했으면 둘째 인자를 부른다 — **이 화면이 그 자리에서 말한다**.
      */
     onShareSanitized: (FileEntry, onFailed: () -> Unit) -> Unit,
     /**
@@ -302,11 +301,9 @@ fun ImageViewerScreen(
     // 화면에서 벗어난 장의 확대를 되돌린다. 되돌리지 않으면 나중에 그 장으로 돌아왔을 때
     // 전에 확대해 둔 자리에서 시작해 '내가 뭘 한 거지' 가 된다.
     //
-    // **표가 바뀌면 효과도 다시 선다**(키에 `pages`). 표는 목록(`entries`)이 바뀔 때 새로 서는데, 예전에는
-    // 효과가 처음 잡은 표와 목록을 쥔 채 돌아 **새 표의 장은 떠나도 되돌려지지 않았다** — 돌아오면 확대된
-    // 채이고, 그 장에서는 끌어 닫기도 막힌다(`DismissMath.canStart` 가 확대 상태를 거절한다). 지금의 `app` 은
-    // 목록을 뷰어를 열 때 한 번만 넘기므로 아직 드러나지 않았지만, 목록을 도중에 바꾸지 않는다는 것은 이
-    // 화면의 계약이 아니다. `pages` 가 `entries` 를 키로 서므로 다시 선 효과는 새 목록도 함께 쥔다.
+    // **표가 바뀌면 효과도 다시 선다**(키에 `pages`). 표는 목록(`entries`)이 바뀔 때 새로 서는데, 효과가
+    // 처음 잡은 표를 쥔 채 돌면 **새 표의 장은 떠나도 되돌려지지 않는다** — 돌아오면 확대된 채이고 끌어 닫기도
+    // 막힌다(`DismissMath.canStart` 가 확대 상태를 거절한다). 목록을 도중에 바꾸지 않는다는 것은 이 화면의 계약이 아니다.
     val pages = remember(entries) { HashMap<String, ZoomState>() }
     LaunchedEffect(pagerState, pages) {
         snapshotFlow { pagerState.settledPage }.collect { settled ->
@@ -316,7 +313,7 @@ fun ImageViewerScreen(
     }
 
     // 고르는 화면·그리는 화면이 덮는 동안 뒤의 뷰어를 화면 낭독기에서 감춘다 — 손가락은 덮는 화면이 막지만 낭독기의 초점은 그 아래의
-    // 장·막대로 내려가, 보이지 않는 '회전'·'지우기' 를 읽고 누를 수 있었다.
+    // 장·막대로 내려가, 보이지 않는 '회전'·'지우기' 를 읽고 누를 수 있다.
     val behindCrop = if (cropping != null || markup != null) Modifier.clearAndSetSemantics {} else Modifier
 
     Box(modifier.fillMaxSize().background(Color.Black)) {
@@ -428,7 +425,7 @@ fun ImageViewerScreen(
                     }
                     // **⋮ 단추와 메뉴를 한 상자에 담는다.** Compose 의 Popup 은 자기를 감싼 **부모
                     // 레이아웃 노드**를 앵커로 삼는다. `actions` 에 형제로 두면 앵커가 아이콘 줄
-                    // 전체가 되어 메뉴가 맨 왼쪽 아이콘 아래에서 시작한다(사용자가 지적했다).
+                    // 전체가 되어 메뉴가 맨 왼쪽 아이콘 아래에서 시작한다.
                     // `offset` 으로 보정하지 마라 — 화면 폭·글꼴 배율에서 다시 어긋난다.
                     Box {
                         IconButton(onClick = { menuOpen = true }) {
@@ -510,7 +507,7 @@ fun ImageViewerScreen(
         // 아래 막대와 '첫 장면만' 고지를 **한 칸에 쌓는다.** 고지는 막대 바로 위에 서고, 막대가 사라지면
         // 그 자리로 내려간다 — 막대의 높이(글꼴 배율·내비게이션 바 인셋에 따라 다르다)를 상수 dp 로
         // 비켜 세우지 않는다(함정 표). 고지는 막대를 감춰도 남는다: 막대를 치운 채 넘겨 온 APNG 가
-        // 아무 말 없이 멈춰 있으면 6단계 감사가 찾은 그 결함 그대로다.
+        // 아무 말 없이 멈춰 있으면 고장으로 읽힌다.
         val barState = remember { MutableTransitionState(true) }
         // 구성이 확정된 뒤에 바꾼다 — 구성 도중에 상태를 쓰면 버려질 구성이 애니메이션을 건드린다.
         SideEffect { barState.targetState = chromeVisible }
@@ -782,7 +779,7 @@ private fun ImagePage(
 private suspend fun openPage(path: String, targetLongest: Int, budget: ImageLimits.Budget): PageState {
     // **SVG 는 플랫폼 디코더가 없다** — 잠긴 WebView 로 그린다(`SvgPage`). 뿌리 `<svg>` 를 확인하고 `svgz` 를 푸는 일은 입출력과
     // 압축 풀기다. **뿌리가 svg 가 아니면 아래 비트맵 길로 간다** — 내용이 PNG·JPEG 인 `.svg` 를 디코더는 내용으로 연다(`MimeResolver`
-    // 머리말의 '내용이 이긴다'. 처음 판은 그런 파일을 '열 수 없다' 로 끝냈다). 비트맵도 아니면 거기서 '열 수 없다' 다.
+    // 머리말의 '내용이 이긴다'). 비트맵도 아니면 거기서 '열 수 없다' 다.
     if (SvgSupport.isSvgName(path)) {
         withContext(IroDispatchers.parsing) { SvgSupport.prepare(File(path)) }?.let { return PageState.Vector(it) }
     }

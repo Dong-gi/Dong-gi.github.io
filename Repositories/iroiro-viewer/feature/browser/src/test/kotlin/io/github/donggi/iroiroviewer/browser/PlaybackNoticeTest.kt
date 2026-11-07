@@ -88,7 +88,7 @@ class PlaybackNoticeTest {
 
     @Test
     fun `재생 화면이 뜨는 동안의 목록(STARTED)은 말하지도 지우지도 않는다`() = runTest(main) {
-        // 에뮬레이터에서 잡힌 결함의 차례 — 목록을 눌러 재생 화면을 여는 사이에 실패가 왔다. 목록은 아직 STARTED 다.
+        // 막는 결함의 차례 — 목록을 눌러 재생 화면을 여는 사이에 실패가 왔다. 목록은 아직 STARTED 다.
         val screen = Screen().apply { at(Lifecycle.State.STARTED) }
         val bar = Snackbar()
         var consumed = 0

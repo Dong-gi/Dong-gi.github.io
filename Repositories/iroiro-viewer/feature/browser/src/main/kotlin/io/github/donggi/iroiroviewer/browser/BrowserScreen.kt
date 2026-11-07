@@ -115,16 +115,13 @@ import kotlinx.coroutines.withContext
  * 이름 필터 → 상위 폴더 → 홈 → 앱 종료. 화면마다 `BackHandler` 를 흩어 두면 어느 것이 먼저 먹는지
  * 아무도 모르게 된다.
  *
- * **작업 결과도 같은 이유로 여기서 한 번만 받는다.** 예전에는 폴더 화면만 결과를
- * 소비해서, 휴지통에서 누른 영구 삭제의 성패가 아무에게도 전해지지 않고 나중에 폴더로
- * 돌아간 순간 엉뚱한 자리에서 뒤늦게 떴다. 되돌릴 수 없는 조작의 결과를 화면이 받지
- * 못하는 구조였다.
+ * 작업 결과는 여기서 받지 않는다 — `app` 의 Root 가 한 곳에서 받는다(아래 `snackbar` 주석).
  */
 @Composable
 fun BrowserScreen(
     vm: BrowserViewModel,
     onOpenDiagnostics: () -> Unit,
-    /** 설정 화면(14단계). `app` 이 연다 — 설정은 `feature:settings` 에 있고 feature 끼리는 서로를 보지 않는다. */
+    /** 설정 화면. `app` 이 연다 — 설정은 `feature:settings` 에 있고 feature 끼리는 서로를 보지 않는다. */
     onOpenSettings: () -> Unit = {},
     onOpenImage: (List<FileEntry>, Int) -> Unit,
     onOpenText: (FileEntry) -> Unit,
@@ -321,7 +318,7 @@ private fun FolderScreen(
     val restorePick by vm.restorePick.collectAsStateWithLifecycle()
     val restoreConflicts by vm.pendingRestoreConflicts.collectAsStateWithLifecycle()
 
-    // **보이는 동안만 폴더를 듣는다**(B2). 이 효과는 컴포지션이 아니라 수명 주기의 알림으로 돈다 — 화면이 멈추면
+    // **보이는 동안만 폴더를 듣는다.** 이 효과는 컴포지션이 아니라 수명 주기의 알림으로 돈다 — 화면이 멈추면
     // 재구성이 멎어도(함정 표) `onStop` 은 온다. 뷰어가 이 화면을 대신하면 컴포지션에서 빠지면서 똑같이 꺼지고,
     // 돌아오면 켜지면서 떠나 있던 동안의 변화를 수정 시각으로 한 번 본다. 폴더가 바뀌는 것은 VM 이 따라간다.
     LifecycleStartEffect(Unit) {
@@ -330,11 +327,11 @@ private fun FolderScreen(
     }
 
     // **`context.getString` 을 컴포저블 안에서 부르지 않는다.** 그 값은 구성 변경을 따라가지 않는다
-    // (lint `LocalContextGetResourceValueCall` 이 오류로 잡는다 — `app` 의 Root 가 같은 까닭으로 고쳤다).
+    // (lint `LocalContextGetResourceValueCall` 이 오류로 잡는다).
     val shareTitle = stringResource(R.string.browser_action_share)
 
     var detail by remember { mutableStateOf<DetailRequest?>(null) }
-    // + 단추의 '무엇을 만들까'(사용자: 편집이 들어오면 + 를 누를 때 고르게 한다).
+    // + 단추의 '무엇을 만들까'.
     var createMenu by remember { mutableStateOf(false) }
     var newFolder by remember { mutableStateOf(false) }
     var newTextFile by remember { mutableStateOf(false) }
@@ -348,7 +345,7 @@ private fun FolderScreen(
     var compressing by remember { mutableStateOf<List<String>?>(null) }
 
     // **떠 있는 단추(▶·+)가 덮는 높이.** 목록·격자의 끝에 그만큼 자리를 비운다 — 비우지 않으면 마지막 줄과 격자 오른쪽 아래 칸이
-    // 단추 밑에 깔려 누를 수 없었다. 상수로 맞히지 않고 단추 묶음을 잰다(함정 표 — 글꼴 배율·단추 수에 따라 다르다).
+    // 단추 밑에 깔려 누를 수 없다. 상수로 맞히지 않고 단추 묶음을 잰다(함정 표 — 글꼴 배율·단추 수에 따라 다르다).
     // 단추가 없으면(고르는 중·붙여넣기 바) 0 이다.
     var fabHeight by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
@@ -367,14 +364,13 @@ private fun FolderScreen(
         SelectAll.allSelected(selection, (visible as? VisibleState.Ready)?.entries.orEmpty().map { it.path })
     }
 
-    // 작업 결과는 BrowserScreen 이 한 곳에서 받는다. 여기서는 이 화면에서만 나는
+    // 작업 결과는 `app` 의 Root 가 한 곳에서 받는다. 여기서는 이 화면에서만 나는
     // 오류(이름 바꾸기·새 폴더)만 다룬다.
     val errorMessage = lastError?.let { reasonText(it) }
     LaunchedEffect(errorMessage) {
         if (errorMessage != null) {
             // **보여 준 뒤에 소비한다.** 먼저 소비하면 키(errorMessage)가 null 로 바뀌어
-            // LaunchedEffect 가 재시작되면서 showSnackbar 가 취소된다 — 오류가 화면에
-            // 한 번도 안 뜨는 이유가 이것이었다.
+            // LaunchedEffect 가 재시작되면서 showSnackbar 가 취소된다.
             snackbar.showSnackbar(errorMessage)
             vm.consumeError()
         }
@@ -398,15 +394,9 @@ private fun FolderScreen(
             )
         }
     }
-    // **이어보기 안내를 여기서 그리지 않는다.**
-    //
-    // 예전에는 이 자리에 스낵바가 있었는데 둘 다 틀렸다. 하나는 **자리**다 — 파일 목록은
-    // 재생을 보는 화면이 아니라서, 사용자는 목록을 넘기는 내내 재생 이야기를 읽고 있어야
-    // 했다. 다른 하나는 **수명**이다 — `showSnackbar` 에 `actionLabel` 을 주면 기간이
-    // `Indefinite` 가 되므로(Material 3 의 기본값) 누르거나 밀기 전에는 사라지지 않았다.
-    // 사용자가 "제한시간 없이 계속 노출된다" 고 지적한 것이 그것이다.
-    //
-    // 지금은 재생 화면·재생목록에서만 3초간 묻는다(`PlayerScreen`).
+    // **이어보기 안내를 여기서 그리지 않는다.** 파일 목록은 재생을 보는 화면이 아니고, `showSnackbar` 에
+    // `actionLabel` 을 주면 기간이 `Indefinite` 가 되어(Material 3 의 기본값) 누르거나 밀기 전에는 사라지지
+    // 않는다. 재생 화면·재생목록에서만 3초간 묻는다(`PlayerScreen`).
 
     Scaffold(
         modifier = modifier,
@@ -521,8 +511,8 @@ private fun FolderScreen(
                 // 관행이고, 무엇보다 **둘 다 언제나 보인다** — 자리를 교대하면 사용자가
                 // 방금 있던 단추를 찾아 헤맨다.
                 //
-                // **크기를 같게 한다.** 위를 작은 FAB 으로 두었더니 둘이 들쭉날쭉해 보였다
-                // (사용자가 지적했다). 둘 다 같은 격의 동작이라 격을 나눌 이유가 없다.
+                // **크기를 같게 한다.** 둘 다 같은 격의 동작이라 격을 나눌 이유가 없고, 다르면
+                // 들쭉날쭉해 보인다.
                 //
                 // 섞기·반복은 여기 두지 않는다. FAB 을 길게 눌러야 나오는 기능은
                 // 발견될 수단이 없다 — 그 둘은 재생 화면의 단추다.
@@ -592,7 +582,7 @@ private fun FolderScreen(
             }
         },
     ) { inner ->
-        // **당겨서 새로고침**(사용자 요청). 목록을 비우지 않는다 — 다시 읽는 동안 옛 목록이 그대로 있고
+        // **당겨서 새로고침.** 목록을 비우지 않는다 — 다시 읽는 동안 옛 목록이 그대로 있고
         // (`ListingHold`) 표시만 위에 뜬다. **고르는 중에는 끈다** — 다시 읽혀 줄이 움직이면 다른 줄을 누르게 된다.
         RefreshableBox(
             refreshing = pullRefreshing,
@@ -658,7 +648,7 @@ private fun FolderScreen(
                                         // 미디어는 곧바로 튼다. 재생은 서비스에서 도므로
                                         // 이 화면을 떠나도 이어진다.
                                         //
-                                        // **누른 하나가 아니라 폴더를 큐로 만든다**(10단계).
+                                        // **누른 하나가 아니라 폴더를 큐로 만든다.**
                                         // 그래야 알림과 재생 화면의 '다음/이전' 이 뜻을 갖는다.
                                         // 목록은 **지금 보이는 것 그대로**다 — 걸러 놓았으면
                                         // 걸러진 것만 듣는다. 사진 뷰어가 같은 규칙이다.
@@ -684,7 +674,7 @@ private fun FolderScreen(
                                         // (압축 화면의 그림 항목을 탭하면 그때 만화로 연다.)
                                         TapRoute.COMIC -> onOpenComic(e.path)
                                         TapRoute.ARCHIVE -> onOpenArchive(e)
-                                        // 문서는 `app` 이 연다(뷰어 교체). 편집기가 쪽을
+                                        // 문서는 `app` 이 연다. 편집기가 쪽을
                                         // 그리는 형식(한글·오피스·ODF·이전 오피스 형식과 한글 서식)은
                                         // 편집기의 보기 모드로, PDF·EPUB 은 문서 뷰어로.
                                         //
@@ -692,12 +682,11 @@ private fun FolderScreen(
                                         // `.mobi`·`.rtf` 처럼 우리가 못 여는 것이 섞여 있어도 **문서
                                         // 뷰어가 '이 앱이 다루지 않는 문서입니다' 와 '다른 앱으로
                                         // 열기' 로 정확히 말하기** 때문이다. 목록이 확장자로 미리
-                                        // 거르면 그 판정이 두 곳으로 갈리고, 그것은 이 저장소가
-                                        // 여러 번 겪은 형태다.
+                                        // 거르면 그 판정이 두 곳으로 갈린다.
                                         TapRoute.DOCUMENT -> onOpenDocument(e.path)
                                         // **이 앱에 뷰어가 없는 파일은 다른 앱으로 연다**(APK 는 설치 관리자).
                                         // 누른 그대로 여는 길이라 Mode.VIEW 다 — 기본 앱이 있으면 묻지 않는다.
-                                        // 못 열었으면(이 형식을 아는 앱이 없다·넘길 수 없는 자리) 예전처럼 정보
+                                        // 못 열었으면(이 형식을 아는 앱이 없다·넘길 수 없는 자리) 정보
                                         // 시트를 띄우고 까닭을 거기에도 적는다(`DetailRequest.notice`). 앞의 것이면
                                         // 시트의 '다른 앱으로 열기' 가 모든 앱에서 고르는 창으로 간다. `.mts` 는 내용으로
                                         // 먼저 가른다([byContent]) — TypeScript 면 텍스트 뷰어다.
@@ -955,7 +944,7 @@ private fun BrowserAppBar(
                     singleLine = true,
                     placeholder = { Text(stringResource(R.string.browser_search_hint)) },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                    // **검색 키는 키보드를 내린다**(아무 일도 없이 키보드가 목록을 가린 채 남았다). 거르기는 칠 때마다
+                    // **검색 키는 키보드를 내린다**(아니면 키보드가 목록을 가린 채 남는다). 거르기는 칠 때마다
                     // 이미 됐으므로 남은 일은 결과를 보는 것뿐이다. 거르기는 켜 둔다 — 끄는 것은 ✕ 다.
                     keyboardActions = KeyboardActions(
                         onSearch = {
@@ -1001,7 +990,7 @@ private fun BrowserAppBar(
                 ) { ViewModeGlyph(viewMode) }
                 // **⋮ 단추와 메뉴를 한 상자에 담는다.** Compose 의 Popup 은 자기를 감싼 **부모
                 // 레이아웃 노드**를 앵커로 삼는다. `actions` 에 형제로 두면 앵커가 아이콘 줄
-                // 전체가 되어 메뉴가 맨 왼쪽 아이콘 아래에서 시작한다(사용자가 지적했다).
+                // 전체가 되어 메뉴가 맨 왼쪽 아이콘 아래에서 시작한다.
                 // `offset` 으로 보정하지 마라 — 화면 폭·글꼴 배율에서 다시 어긋난다.
                 Box {
                     IconButton(onClick = { menuOpen = true }) {
@@ -1086,8 +1075,7 @@ private fun CheckItem(labelRes: Int, checked: Boolean, onClick: () -> Unit) {
 private fun ViewModeGlyph(mode: ViewMode) {
     val color = MaterialTheme.colorScheme.onSurface
     // **24dp 로 고정한다.** `fillMaxSize` 로 두면 글리프가 48dp 짜리 터치 영역을 통째로
-    // 채워, 옆의 24dp 아이콘들보다 눈에 띄게 크고 물결 효과의 둥근 모서리에 잘려 보인다
-    // (사용자가 지적했다).
+    // 채워, 옆의 24dp 아이콘들보다 눈에 띄게 크고 물결 효과의 둥근 모서리에 잘려 보인다.
     androidx.compose.foundation.Canvas(Modifier.size(24.dp)) {
         val w = size.width
         val h = size.height
@@ -1391,7 +1379,7 @@ private fun DetailRow(label: String, value: String) {
 }
 
 /**
- * [e] 부터 **폴더를 큐로** 튼다(10단계). 그래야 알림과 재생 화면의 '다음/이전' 이 뜻을 갖는다. 목록은 **지금 보이는 것
+ * [e] 부터 **폴더를 큐로** 튼다. 그래야 알림과 재생 화면의 '다음/이전' 이 뜻을 갖는다. 목록은 **지금 보이는 것
  * 그대로**다 — 걸러 놓았으면 걸러진 것만 듣는다. 사진 뷰어가 같은 규칙이다. TypeScript 로 판정된 `.ts` 는 큐에서 뺀다
  * ([AmbiguousStreams.playable]).
  */
@@ -1405,13 +1393,11 @@ private fun playFolderFrom(
         context,
         FolderQueue.plan(AmbiguousStreams.playable(entries, streams), e.path),
         // 자막 후보는 **지금 목록에 보이는 것**에서 고른다. 재생을 시작하려고 폴더를 다시 나열하지 않는다 — 그 값이
-        // 1만 개 폴더에서 394ms 다(3단계 실측).
+        // 1만 개 폴더에서 394ms 다(실측).
         entries.filter { SubtitleNames.isSubtitle(it.name) },
     )
-    // **영상이든 소리든 재생 화면으로 간다.**
-    //
-    // 예전에는 영상만 열었다. 그러면 소리 파일은 미니 바만 뜨는데, 이어보기 제안이 재생 화면·재생목록에만 있으므로
-    // **소리에는 그 제안이 닿지 않았다**(사용자가 지적했다).
+    // **영상이든 소리든 재생 화면으로 간다.** 소리 파일에 미니 바만 띄우면, 이어보기 제안이 재생 화면·재생목록에만
+    // 있으므로 **소리에는 그 제안이 닿지 않는다.**
     //
     // 소리는 목록을 펼친 채로 연다 — 그 화면에는 볼 것이 제목 한 줄뿐이라 목록이 가릴 것이 없고, 오히려 그것이 본체다.
     // 영상은 반대라 false 다(`PlayerLauncher.open` 의 주석).

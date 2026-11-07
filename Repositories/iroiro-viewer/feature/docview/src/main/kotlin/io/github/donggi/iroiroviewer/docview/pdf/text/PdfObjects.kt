@@ -35,8 +35,7 @@ internal class PdfObjects(
 
     /**
      * 지금 푸는 중인 번호들 — **되돌아오는 참조를 끊는다.** 객체 스트림의 `/Length` 가 그 스트림 안의 객체를 가리키면
-     * `objStream → resolve → load → objStream` 이 끝없이 돌아 스택이 넘쳤다(복호기의 해석기에는 깊이 16 의
-     * 문턱이 있었고 여기에는 없었다). 이미 푸는 중인 것을 다시 만나면 '없다' 로 친다.
+     * `objStream → resolve → load → objStream` 이 끝없이 돌아 스택이 넘친다. 이미 푸는 중인 것을 다시 만나면 '없다' 로 친다.
      */
     private val loading = HashSet<Int>()
     private val loadingStreams = HashSet<Int>()

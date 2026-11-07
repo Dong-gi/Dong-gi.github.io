@@ -14,8 +14,7 @@ import java.nio.ByteBuffer
 import java.nio.channels.SeekableByteChannel
 
 /**
- * 머리를 훑는 아카이브(tar·cpio·ar)의 **이름 상한**. 세 형식이 같은 바탕([EntryScannerBase])에서 같은 값을 쓴다 — 14단계가
- * tar 에서 세운 값이라 `TarLimits` 에 있었는데, cpio·ar 가 그것을 빌려 쓰면서 이름이 거짓말을 하게 되어 옮겼다. 여러 포맷이
+ * 머리를 훑는 아카이브(tar·cpio·ar)의 **이름 상한**. 세 형식이 같은 바탕([EntryScannerBase])에서 같은 값을 쓴다. 여러 포맷이
  * 함께 쓰는 예산(`ParseLimits`)이 아니라 **이 바탕만 아는** 구조 상한이라 여기 둔다(`TarLimits` 와 같은 까닭).
  */
 internal object EntryNameLimits {
@@ -82,7 +81,7 @@ internal class ChannelScanSource(private val channel: SeekableByteChannel) : Sca
         val at = channel.position()
         // 자료가 파일보다 길다고 적힌 머리. 자리만 옮기면 조용히 끝을 넘어 다음 읽기가 EOF 가 된다 —
         // 스트림 쪽과 같은 말(잘린 파일)을 하게 여기서 끊는다. **뺄셈으로 견준다** — 적힌 크기는 `Long` 의 끝까지 올 수 있어
-        // `at + n` 이 넘쳐 음수가 되면 검사를 지나 `position(음수)` 가 `IllegalArgumentException` 을 냈다.
+        // `at + n` 이 넘쳐 음수가 되면 검사를 지나 `position(음수)` 가 `IllegalArgumentException` 을 낸다.
         if (n > channel.size() - at) throw EOFException("아카이브가 중간에 끝났다")
         channel.position(at + n)
         n
@@ -150,7 +149,7 @@ internal interface EntryScanner {
 
 /**
  * [EntryScanner] 의 공통 바탕 — 자리 세기, 남은 자료·채움 건너뛰기(자리 옮기기이거나 풀어서 버리기), 훑는 양의 상한,
- * 이름의 상한. **형식마다 다른 것은 머리를 읽는 [next] 하나다.** 14단계의 tar 가 세운 판단을 cpio·ar 가 그대로 탄다.
+ * 이름의 상한. **형식마다 다른 것은 머리를 읽는 [next] 하나다.**
  *
  * @param scanCap 원본에서 소비할 수 있는 최대 바이트(머리·자료·채움 전부). 압축한 tar 에서 한 항목에 닿거나 목록을 만드는
  *   비용의 상한이다 — 7z 의 '건너뛸 양' 과 같은 뜻이라 같은 상한 이름(`maxTotalOutput`)으로 끊는다.
@@ -226,7 +225,7 @@ internal abstract class EntryScannerBase(
      * 메타 자료(이름·이름 표·PAX 머리) [size] 바이트를 읽는다. 적힌 크기는 공격자의 값이라 **읽기 전에** 두 가지를 본다:
      *
      * 1. 원본이 파일이고 **남은 것보다 길다고 적혔으면 깨진 머리다**(EOF). 상한을 먼저 보면 700바이트 cpio 의 이름 길이
-     *    `FFFFFFFF` 가 '너무 크다' 로 보였다 — 사실은 깨진 파일이고, 화면의 말(크기 상한)과 권하는 일(다른 앱으로 열기)이
+     *    `FFFFFFFF` 가 '너무 크다' 로 보인다 — 사실은 깨진 파일이고, 화면의 말(크기 상한)과 권하는 일(다른 앱으로 열기)이
      *    달라진다.
      * 2. 그다음 [cap] 을 넘으면 상한이다. 풀린 스트림은 남은 길이를 모르므로(`ScanSource.remaining` 이 -1) 이것만 본다.
      */
@@ -282,7 +281,7 @@ internal abstract class EntryScannerBase(
 
     /**
      * **뺄셈으로 견준다.** tar 의 크기는 256진·PAX 로 `Long` 의 끝 가까이 올 수 있고(그 위는 `TarFormat` 이 깨진 것으로 거른다),
-     * `position + n` 이 넘쳐 음수가 되면 상한이 꺼진다 — 0 폭탄을 붙인 `.tar.bz2` 가 1 GiB 상한을 지나 스트림 끝까지 풀렸다.
+     * `position + n` 이 넘쳐 음수가 되면 상한이 꺼진다 — 0 폭탄을 붙인 `.tar.bz2` 가 1 GiB 상한을 지나 스트림 끝까지 풀린다.
      * [position] 은 언제나 [scanCap] 이하라(넘기 전에 던진다) 뺄셈은 넘치지 않는다.
      */
     private fun checkCap(n: Long) {
@@ -302,8 +301,7 @@ internal abstract class EntryScannerBase(
 
 /**
  * 머리와 자료가 번갈아 놓인 아카이브(tar·cpio·ar)를 읽는 바탕. 형식마다 다른 것은 머리를 읽는 [EntryScanner] 하나이고,
- * 목록·항목 열기·순차 추출·진행률의 규칙은 여기 한 벌이다(14단계가 tar 로 세운 것을 cpio·ar 가 함께 쓴다 — 두 벌이면
- * 한쪽만 고쳐진다).
+ * 목록·항목 열기·순차 추출·진행률의 규칙은 여기 한 벌이다(두 벌이면 한쪽만 고쳐진다).
  *
  * ## 두 모양이 비용을 가른다
  *

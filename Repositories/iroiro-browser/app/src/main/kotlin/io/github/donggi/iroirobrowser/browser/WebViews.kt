@@ -40,7 +40,7 @@ object WebViews {
             // 이 앱의 파일·다른 앱의 content: 를 쪽이 읽지 못하게(기본값은 content 켜짐).
             allowFileAccess = false
             allowContentAccess = false
-            // 세이프 브라우징은 쓰지 않는다(사용자 결정, 2026-10-04 — Play 서비스가 프록시 밖에서 묻는다). 매니페스트의 meta-data 도 끈다.
+            // 세이프 브라우징은 쓰지 않는다(사용자 결정 — Play 서비스가 프록시 밖에서 묻는다). 매니페스트의 meta-data 도 끈다.
             safeBrowsingEnabled = false
             // 새 창(window.open·target=_blank)은 새 탭으로. **사용자가 누르지 않은 팝업은 앱이 막고 알린다**(PageChrome.onCreateWindow —
             // 사이트마다 허용할 수 있다). 이것을 끄면 크로미움이 그런 팝업을 소리 없이 막아 앱이 알 길이 없다.
@@ -71,10 +71,10 @@ object WebViews {
     }
 
     /**
-     * 앱의 정체를 덜 드러낸다(사용자 요청, 2026-10-16 — CLAUDE.md '더할 만한 기능 검토' 의 1번).
+     * 앱의 정체를 덜 드러낸다.
      * - **WebView Media Integrity API 를 끈다** — 기본값(켜짐)이면 쪽의 스크립트가 그 API 로 이 앱의 꾸러미 이름을 받는다(androidx 의
      *   `WEBVIEW_MEDIA_INTEGRITY_API_ENABLED` 문서). `X-Requested-With` 를 비운 까닭('개인 앱의 이름이 곧 사람을 가리킨다')과 같다.
-     * - **파비콘을 받지 않는다** — 이 앱은 파비콘을 쓰지 않는데 WebView 는 쪽마다 받아 왔다(요청 하나씩 — 프록시·셀룰러를 쓴다).
+     * - **파비콘을 받지 않는다** — 이 앱은 파비콘을 쓰지 않는데 WebView 는 쪽마다 받는다(요청 하나씩 — 프록시·셀룰러를 쓴다).
      * 그 기능을 모르는 WebView 면 그 줄만 건너뛴다.
      */
     private fun hideIdentity(settings: WebSettings) {
@@ -101,7 +101,7 @@ object WebViews {
     }
 
     /**
-     * **일반화된 User-Agent**(사용자 결정, 2026-10-05). 글은 크롬의 줄인 꼴([UserAgents.generalize] — `wv`·기기 모델이 빠진다), 클라이언트
+     * **일반화된 User-Agent**(사용자 결정). 글은 크롬의 줄인 꼴([UserAgents.generalize] — `wv`·기기 모델이 빠진다), 클라이언트
      * 힌트(`Sec-CH-UA*`·`navigator.userAgentData`)는 WebView 의 값에서 **`Android WebView` 상표와 기기 모델을 뺀다**. 글만 바꾸고 힌트를
      * 두면 WebView 는 낮은 엔트로피의 힌트만 보내는데 그 상표 목록에 WebView 가 남는다(androidx.webkit 의 문서) — 그래서 둘 다 정한다.
      *

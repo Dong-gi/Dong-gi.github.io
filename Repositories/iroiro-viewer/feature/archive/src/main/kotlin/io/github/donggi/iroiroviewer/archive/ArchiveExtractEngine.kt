@@ -42,7 +42,7 @@ import java.io.OutputStream
  * 같은 코드다. 중간에 죽어도 반쯤 쓰인 파일이 제 이름으로 남지 않는다.
  *
  * **3. 부분 실패를 되돌리지 않는다.** 200개 중 150번째에서 실패했을 때 앞의 149개를
- * 지우는 것은 '실패했으니 사용자 파일을 지운다' 이고, 4단계 치명 넷이 전부 그 형태였다.
+ * 지우는 것은 '실패했으니 사용자 파일을 지운다' 이다.
  * 대신 **어디까지 했는지를 결과에 싣는다.**
  *
  * **4. 거부한 것을 말한다.** 위험한 이름·링크·암호 항목은 조용히 건너뛰지 않고
@@ -93,8 +93,8 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
         var outcome: FileOpEngine.Outcome = FileOpEngine.Outcome.Done(0, 0, 0)
         try {
             // **여는 것부터 푸는 것까지 한 경계 안이다.** 해제는 블로킹이라 협조적 취소가 닿지 않는다 — 인터럽트로
-            // 바꿔 리더의 스트림 안에서 보게 한다. 예전에는 푸는 한 줄만 이 안에 있었는데, 압축한 tar 는 **목록을
-            // 읽는 것 자체가** 스트림을 끝까지 푸는 일이라(아래) 그동안 취소가 몇십 초씩 듣지 않았다.
+            // 바꿔 리더의 스트림 안에서 보게 한다. 압축한 tar 는 **목록을 읽는 것 자체가** 스트림을 끝까지 푸는
+            // 일이라(아래) 푸는 줄만 이 안에 두면 그동안 취소가 몇십 초씩 듣지 않는다.
             runInterruptible(IroDispatchers.io) {
                 Archives.open(FileDocumentSource(archive), limits, budget, request.password).use { reader ->
                     val selected = request.entryIndices?.toHashSet()
@@ -262,8 +262,8 @@ class ArchiveExtractEngine(private val context: Context) : ExtractSupport.Runner
             if (entry.isDirectory) {
                 // 진짜 디렉터리 엔트리는 미리 만들어 둔다. 빈 폴더도 아카이브의 내용이다.
                 //
-                // **파일과 같은 이름 계산을 지난다**([ExtractNames.relPathOf]). 예전에는 다듬지 않은 `safeName` 으로
-                // 만들어, `a?b/` 같은 폴더 엔트리는 `a?b` 로, 그 안의 파일은 `a_b/` 로 갔다 — 빈 폴더가 하나 더 생기고
+                // **파일과 같은 이름 계산을 지난다**([ExtractNames.relPathOf]). 다듬지 않은 `safeName` 으로 만들면
+                // `a?b/` 같은 폴더 엔트리는 `a?b` 로, 그 안의 파일은 `a_b/` 로 가서 빈 폴더가 하나 더 생기고
                 // 폴더 시각이 엉뚱한 곳에 걸린다.
                 val rel = ExtractNames.relPathOf(entry)
                 if (rel == null) {

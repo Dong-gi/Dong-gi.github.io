@@ -28,8 +28,8 @@ object Streams {
     }
 
     /**
-     * [input] 의 [offset] 부터 [length] 바이트만 내주는 흐름 — 범위를 물었는데 서버가 통째로(200) 줄 때 그 범위만 읽는다(앞 판은 몸을 다
-     * 읽은 뒤 `offset.toInt()` 로 잘라 2 GB 넘는 자리에서 음수로 뒤집혔다). 그 전에 끝나면 [EOFException] — 범위가 몸 밖이다.
+     * [input] 의 [offset] 부터 [length] 바이트만 내주는 흐름 — 범위를 물었는데 서버가 통째로(200) 줄 때 그 범위만 읽는다. 그 전에 끝나면
+     * [EOFException] — 범위가 몸 밖이다.
      */
     fun slice(input: InputStream, offset: Long, length: Long): InputStream {
         require(offset >= 0 && length >= 0) { "negative range" }

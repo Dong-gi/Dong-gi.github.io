@@ -28,7 +28,7 @@ import io.github.donggi.iroiroviewer.playback.PlaybackConnection
  *
  * media3 에도 자막 뷰(`SubtitleView`)가 있지만 그것은 **View 기반**이라 Compose 화면에
  * `AndroidView` 로 끼워 넣어야 하고, 그러려면 `media3-ui` 의존을 새로 들여야 한다.
- * 10단계의 전제가 '새 의존을 들이지 않는다' 이고, 우리가 그리는 것은 **글 몇 줄**이다.
+ * 새 의존을 들일 만한 일이 아니다 — 우리가 그리는 것은 **글 몇 줄**이다.
  *
  * ## 무엇을 존중하고 무엇을 버리는가
  *
@@ -48,7 +48,7 @@ fun BoxScope.SubtitleLayer(
     modifier: Modifier = Modifier,
     /**
      * 아래 자막을 이만큼 더 올린다 — 조작부 판이 영상의 아래쪽을 덮는 동안 그 위로(가로 영상에서 판이 자막을
-     * 덮었다). 판이 덮는 높이는 부르는 쪽이 잰다(불변식 3 — 상수로 맞히지 않는다). 위에 붙는 자막(`\an8`)은 옮기지 않는다.
+     * 덮는다). 판이 덮는 높이는 부르는 쪽이 잰다(불변식 3 — 상수로 맞히지 않는다). 위에 붙는 자막(`\an8`)은 옮기지 않는다.
      */
     bottomLift: Dp = 0.dp,
 ) {

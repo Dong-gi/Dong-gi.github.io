@@ -5,8 +5,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * WebRTC 가드([PageScripts.WEBRTC_GUARD])의 꼴 — 쪽이 바꿀 수 있는 내장 함수를 나중에 부르지 않는가(2026-10-16 보안 점검 — 에뮬레이터에서
- * `Object.getOwnPropertyNames`·`RegExp.prototype.test` 를 바꾼 뒤 만든 빈 틀에 `RTCPeerConnection` 이 남았다). 실제로 지우는지는 기기에서 본다
+ * WebRTC 가드([PageScripts.WEBRTC_GUARD])의 꼴 — 쪽이 바꿀 수 있는 내장 함수를 나중에 부르지 않는가(쪽이
+ * `Object.getOwnPropertyNames`·`RegExp.prototype.test` 를 바꾼 뒤 만든 빈 틀에 `RTCPeerConnection` 이 남는다 — 에뮬레이터에서 재현). 실제로 지우는지는 기기에서 본다
  * (CLAUDE.md '쪽의 결정·UA·DRM' 과 실험 webrtc2).
  */
 class WebRtcGuardTest {
@@ -35,7 +35,7 @@ class WebRtcGuardTest {
 
     @Test
     fun 그_뒤로는_쪽이_바꿀_수_있는_것을_부르지_않는다() {
-        // 앞 판이 부르던 것 — 쪽이 미리 바꿔 두면 새 틀의 RTC 가 남거나(앞의 셋) 훑기가 끝나지 않았다(pop).
+        // 쪽이 미리 바꿔 두면 새 틀의 RTC 가 남거나(앞의 셋) 훑기가 끝나지 않는다(pop).
         for (bad in listOf(".forEach(", ".push(", ".pop(", ".apply(", ".call(", ".test(", ".has(", ".add(", "Object.", "Reflect.", "WeakSet",
             "RegExp", "new RegExp", "/^(")) {
             assertFalse(bad in body, bad)
@@ -60,7 +60,7 @@ class WebRtcGuardTest {
         assertTrue("var d = bare();" in body)
         assertTrue(Regex("var nd = bare\\(\\);").findAll(body).count() == 3)
         assertTrue("var o = bare();" in body)
-        // 앞 판의 객체 글자({ value: …}·{ get: …}) 설명을 쓰지 않는다.
+        // 객체 글자({ value: …}·{ get: …})로 설명을 짓지 않는다.
         assertFalse("{ value:" in body)
         assertFalse("{ get:" in body)
         assertFalse("{ childList:" in body)

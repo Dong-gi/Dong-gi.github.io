@@ -18,7 +18,7 @@ import java.io.File
 import kotlin.random.Random
 
 /**
- * **이 앱이 잠근 ZIP 을 이 앱의 풀기가 연다** — 기기에서(2026-10-16). 묶기는 'ZIP으로 압축' 의 실체([ZipMaker], 암호를 넣은 길), 풀기는
+ * **이 앱이 잠근 ZIP 을 이 앱의 풀기가 연다** — 기기에서. 묶기는 'ZIP으로 압축' 의 실체([ZipMaker], 암호를 넣은 길), 풀기는
  * 압축 화면의 실체([ArchiveExtractEngine])다. JVM 의 왕복(`AesZipRoundTripTest`)과 달리 기기의 JCE(AES·HMAC — PBKDF2 는 그 HMAC 으로 우리가 돈다),
  * 앱 전용 외부 폴더(FUSE) 위의 위치 지정 쓰기(머리 고쳐 쓰기)·`O_EXCL` 이름 맡기·임시본을 함께 탄다.
  */

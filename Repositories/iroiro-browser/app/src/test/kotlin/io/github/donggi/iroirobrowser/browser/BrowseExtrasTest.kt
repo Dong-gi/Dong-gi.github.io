@@ -9,7 +9,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * 2026-10-16 의 작은 넷 — 정체 감추기(Media Integrity·파비콘), 링크를 새 탭에서 열면 곧바로 그 탭으로, 살아 있는 탭 수 설정, 고른 글 검색,
+ * 작은 기능들 — 정체 감추기(Media Integrity·파비콘), 링크를 새 탭에서 열면 곧바로 그 탭으로, 살아 있는 탭 수 설정, 고른 글 검색,
  * 복사한 링크 열기. 판단은 순수 함수로, 화면·WebView 의 이음새는 소스로 본다(메뉴·클립보드는 기기에서).
  */
 class BrowseExtrasTest {
@@ -99,7 +99,7 @@ class BrowseExtrasTest {
         val search = body(activity, "private fun searchSelection(tab: Tab, mode: ActionMode)")
         // 고른 글을 다 읽은 뒤에 메뉴를 닫는다 — 먼저 닫으면 고르기가 풀려 글이 빈다.
         assertTrue(search.indexOf("bridge.selectedText") in 0 until search.indexOf("mode.finish()"), search)
-        assertTrue("openInNewTab(tab, app.settings.searchEngine.searchUrl(query))" in search, search)
+        assertTrue("openInNewTab(tab, SearchEngine.searchUrl(query))" in search, search)
         val bridge = main("kotlin/io/github/donggi/iroirobrowser/browser/PageBridge.kt")
         assertTrue("frame.proxy.executeJavaScript(SelectionSearch.SCRIPT" in bridge)
         assertTrue(Regex("<item name=\"menu_search_selection\" type=\"id\" */>").containsMatchIn(main("res/values/strings_browse.xml")))

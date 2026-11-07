@@ -22,7 +22,7 @@ import java.util.zip.ZipException
  *
  * ## 순서가 곧 방어다
  *
- * 1. ZIP 으로 연다 — 엔트리 수·압축비·경로 탈출은 8단계의 리더가 이미 막는다.
+ * 1. ZIP 으로 연다 — 엔트리 수·압축비·경로 탈출은 `format:archive` 의 리더가 이미 막는다.
  * 2. ZIP 자체에 암호가 걸린 엔트리가 하나라도 있으면 **거기서 끝낸다.** 복호화하지 않는다.
  * 3. `META-INF/encryption.xml` 이 있으면 **무엇이 어떤 방식으로 걸렸는지** 본다
  *    ([EpubEncryption]). 본문이 잠겼거나 모르면 끝내고, 글꼴 난독화면 풀 준비를 하고 계속한다
@@ -34,8 +34,7 @@ import java.util.zip.ZipException
  *
  * 명세는 `mimetype` 이 **압축되지 않은 채 첫 엔트리**여야 한다고 적지만, 실물에는 그
  * 규칙을 어긴 파일이 흔하다(만드는 도구가 그냥 압축해 넣는다). 그것으로 거절하면
- * 멀쩡히 읽히는 책을 '깨졌다' 고 말하게 된다 — 8단계가 ZIP 엔트리 수 상계로 겪은
- * 형태다. **읽어서 다르면 경고만 남기고 계속한다.**
+ * 멀쩡히 읽히는 책을 '깨졌다' 고 말하게 된다. **읽어서 다르면 경고만 남기고 계속한다.**
  */
 class EpubOpener(
     private val limits: ParseLimits = ParseLimits.DEFAULT,
@@ -140,8 +139,7 @@ class EpubOpener(
             // **ZIP 이 깨졌으면 '입출력 실패' 가 아니라 '깨진 파일' 이다.** `ZipException` 은 `IOException` 을
             // 이어 공용 `toOpenFailure()` 가 `Io` 로 옮기는데, 그러면 덜 받은 책·ZIP 이 아닌 파일이
             // '입출력이 실패했습니다' 로 떠 **디스크가 고장 난 것처럼** 읽힌다(PDF·CFB 가 같은 이유로 따로
-            // 가린다 — CLAUDE.md). 실세계 말뭉치를 반으로 자른 책이 전부 이 길로 갔다.
-            // 여기 오는 것은 중앙 디렉터리가 없거나 압축이 깨진 경우다 — 진짜 입출력 오류는 `ZipException` 이 아니다.
+            // 가린다 — CLAUDE.md). 여기 오는 것은 중앙 디렉터리가 없거나 압축이 깨진 경우다 — 진짜 입출력 오류는 `ZipException` 이 아니다.
             return OpenOutcome.Failed(OpenFailure.Corrupt("ZIP 구조가 깨졌다"))
         } catch (t: Throwable) {
             return OpenOutcome.Failed(t.toOpenFailure())

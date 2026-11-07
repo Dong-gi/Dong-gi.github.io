@@ -8,7 +8,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * m3u8 열쇠 오류 고침(2026-10-16)의 배선을 **소스와 자원으로** 박는다 — 기기 없이 볼 수 있는 것만. 판단(주소 풀기·열쇠 후보·쪽의 머리 고르기)은
+ * m3u8 열쇠 받기의 배선을 **소스와 자원으로** 박는다 — 기기 없이 볼 수 있는 것만. 판단(주소 풀기·열쇠 후보·쪽의 머리 고르기)은
  * `:core` 의 시험(UriRefsTest·HlsKeysTest·PageRequestsTest)이 본다.
  */
 class HlsKeyWiringTest {
@@ -33,7 +33,7 @@ class HlsKeyWiringTest {
         assertTrue(center.contains("DashManifest.parse(fetched.bytes.decodeToString(), fetched.url)"))
         assertFalse(center.contains("HlsPlaylist.parse(bytes.decodeToString(), url)"), "처음 주소에 대어 푼다")
         assertFalse(center.contains("DashManifest.parse(bytes.decodeToString(), url)"), "처음 주소에 대어 푼다")
-        // 찾은 미디어의 미리 읽기도 같다(그쪽은 처음부터 그랬다).
+        // 찾은 미디어의 미리 읽기도 같다.
         assertTrue(source("browser/MediaProbe.kt").contains("HlsPlaylist.parse(bytes.decodeToString(), r.url)"))
     }
 
@@ -48,7 +48,7 @@ class HlsKeyWiringTest {
         val pump = body(center, "private fun pump(")
         assertTrue(pump.contains("HlsKeys.pick("))
         assertTrue(pump.contains("SequenceInputStream(ByteArrayInputStream(probe.bytes), body)"), "읽은 앞머리를 이어 쓴다(다시 받지 않는다)")
-        // 정확히 16바이트만 받던 옛 검사가 남지 않았다.
+        // 정확히 16바이트만 받는 검사가 없다(너그러운 후보로 간다).
         assertFalse(center.contains("it.size != 16"))
     }
 

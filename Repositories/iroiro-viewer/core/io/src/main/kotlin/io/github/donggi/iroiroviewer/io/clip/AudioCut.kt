@@ -37,8 +37,7 @@ internal sealed interface CutPlan {
     data object Empty : CutPlan
 
     /**
-     * 고른 구간이 너무 길다 — 담을 프레임 수가 상한을 넘었다. 형식 탓이 아니므로 [Unsupported] 와 가른다(예전에는 '이 형식은 저장할 수
-     * 없습니다' 였다). 더 짧게 고르면 된다.
+     * 고른 구간이 너무 길다 — 담을 프레임 수가 상한을 넘었다. 형식 탓이 아니므로 [Unsupported] 와 가른다. 더 짧게 고르면 된다.
      */
     data object TooLong : CutPlan
 }
@@ -76,8 +75,8 @@ internal class ArraySource(private val bytes: ByteArray, private val size: Int =
  * 부르면 시스템 호출이 바이트 수만큼 난다.
  *
  * 길이는 만들 때 한 번 읽는다. **그 뒤에 파일이 줄면**(다른 앱이 잘라 다시 썼다) 줄어든 자리를 파일 밖으로 본다 — 창을 채우지 못하면
- * [u8] 은 -1, [read] 는 읽은 만큼이다. 예전에는 빈 창에서 [u8] 이 지난 창의 바이트를, [read] 가 진행 없이 끝없이 돌았다(FLAC 훑기가
- * 취소도 닿지 않은 채 멈춰 뒤의 파일 작업이 모두 막혔다).
+ * [u8] 은 -1, [read] 는 읽은 만큼이다 — 그러지 않으면 [read] 가 진행 없이 끝없이 돌아 취소도 닿지 않고
+ * 뒤의 파일 작업이 모두 막힌다.
  */
 internal class WindowReader(private val raf: RandomAccessFile, windowSize: Int = 64 * 1024) : ByteSource {
     override val length: Long = raf.length()
@@ -158,7 +157,7 @@ internal class IntArrayList(initial: Int = 1024) {
 
 /**
  * 프레임 차례마다의 자리를 **성기게** 기억한다 — MP3 목차(Xing 100칸)는 1% 마다 한 자리만 쓰는데, 프레임마다 Long 을 들면 긴 구간에서
- * 수십 MB 였다(자르기는 그 위에 한 벌을 더 지었다). [capacity] 칸이 차면 하나 걸러 버리고 간격을 두 배로 늘린다 — 몇
+ * 수십 MB 다. [capacity] 칸이 차면 하나 걸러 버리고 간격을 두 배로 늘린다 — 몇
  * 프레임이든 그 칸 수만큼만 든다. 칸 사이의 자리는 앞뒤 칸을 잇는 선으로 어림한다(고정 비트율이면 정확하고, 가변이어도 어긋남이 간격
  * 하나의 바이트 — 프레임 수의 [capacity] 분의 2 — 를 넘지 않아 목차 한 칸(1%)보다 훨씬 작다). 프레임이 [capacity] 개 이하면 그대로다.
  */

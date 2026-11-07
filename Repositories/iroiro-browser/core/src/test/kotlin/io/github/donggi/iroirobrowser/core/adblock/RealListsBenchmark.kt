@@ -62,7 +62,7 @@ class RealListsBenchmark {
         println("요청 $n 개: ${(t4 - t3) / 1_000_000} ms(하나에 ${(t4 - t3) / n / 1000.0} µs), 막음 $blocked")
         assertTrue(blocker.shouldBlock(urls[0], page, RequestType.SCRIPT) != null, "adsbygoogle 를 막지 않았다")
         assertTrue(blocker.shouldBlock(urls[4], page, RequestType.SCRIPT) == null, "보통 스크립트를 막았다")
-        // 종류를 모르는 제3자 요청을 막지 않는다 — 앞 판은 EasyPrivacy 의 `*$ping,third-party` 로 이것들을 막아 fast.com 이 0 을 보였다(2026-10-05).
+        // 종류를 모르는 제3자 요청을 막지 않는다 — EasyPrivacy 의 `*$ping,third-party` 로 이것들을 막으면 fast.com 이 0 을 보인다.
         val thirdParty = listOf(
             "https://fast.com/" to "https://ipv4-c024-mia006-ix.1.oca.nflxvideo.net/speedtest/range/0-2048?c=us&n=1&v=1&e=1&t=x",
             "https://www.youtube.com/watch?v=x" to "https://rr1---sn-abc.googlevideo.com/videoplayback?expire=1&id=o-x&itag=18",
@@ -77,7 +77,7 @@ class RealListsBenchmark {
     }
 
     /**
-     * 정규식 규칙(2026-10-16 — 되짚지 않는 엔진 [ListRegex]). 목록의 정규식 줄은 java.util.regex 가 받는 것을 모두 받아야 하고, 같은 답이어야
+     * 정규식 규칙(되짚지 않는 엔진 [ListRegex]). 목록의 정규식 줄은 java.util.regex 가 받는 것을 모두 받아야 하고, 같은 답이어야
      * 하며, 일부러 지은 긴 주소에서도 걸음 예산 안이어야 한다(넘으면 그 규칙이 꺼진다 — 쪽이 목록의 규칙을 끌 수 없어야 한다).
      */
     private fun regexRules(files: List<File>, sampleUrls: List<String>) {

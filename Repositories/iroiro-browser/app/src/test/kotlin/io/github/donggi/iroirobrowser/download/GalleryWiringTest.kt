@@ -9,12 +9,12 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * 갤러리 받기(pixiv·hitomi)의 배선을 **소스와 매니페스트로** 박는다 — 기기 없이 볼 수 있는 것만. 사용자 결정(2026-10-11)과 그 권고:
+ * 갤러리 받기(pixiv·hitomi)의 배선을 **소스와 매니페스트로** 박는다 — 기기 없이 볼 수 있는 것만. 사용자 결정과 그 권고:
  *
  * - 사이트에 묻는 것도 파일을 받는 것도 내려받기의 길(`DownloadCenter.fetcher()` = `NetworkPath.httpRoute()`)뿐이다 — 세 번째 '바로 나감' 이 없다.
  *   해석기(`GalleryResolver`)와 그것에 주는 fetch 는 내려받기 센터에서만 짓는다.
  * - 다른 앱의 VIEW 인텐트로 주소를 받지 않는다(이 브라우저 안에서 연 페이지뿐 — 사용자 결정 '다른 앱의 링크 받기 — 보류' 그대로).
- * - 화면의 글은 짧다(사용자: '설명이 너무 장황합니다').
+ * - 화면의 글은 짧다(사용자 결정).
  */
 class GalleryWiringTest {
 
@@ -26,7 +26,7 @@ class GalleryWiringTest {
         // HttpFetcher 를 짓는 곳은 fetcher() 하나이고 그 길은 NetworkPath.httpRoute() 다.
         assertEquals(1, Regex("""HttpFetcher\(""").findAll(center).count())
         assertTrue(Regex("""HttpFetcher\(\s*network\.httpRoute\(\)""").containsMatchIn(center))
-        // 해석기에 주는 fetch 는 siteFetch(getBytes — 같은 fetcher)뿐이다. Referer 는 사이트가 정한 값을 처음 홉에만(2026-10-16 — 넘겨주기 뒤는
+        // 해석기에 주는 fetch 는 siteFetch(getBytes — 같은 fetcher)뿐이다. Referer 는 사이트가 정한 값을 처음 홉에만(넘겨주기 뒤는
         // strict-origin-when-cross-origin, DownloadRefererTest).
         val resolvers = Regex("""GalleryResolver\(([^)]*)""").findAll(center).map { it.groupValues[1].trim() }.toList()
         assertEquals(2, resolvers.size, "계획 읽기와 받기 — 둘")

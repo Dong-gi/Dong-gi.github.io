@@ -189,7 +189,7 @@ class PageChrome(private val host: PageHost, private val tab: Tab) : WebChromeCl
     }
 
     override fun onCreateWindow(view: WebView, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message): Boolean {
-        // 사용자가 누르지 않은 팝업은 열지 않는다 — 그 사이트를 허용했으면 연다. 막으면 알린다(앞 판은 소리 없이 막았다).
+        // 사용자가 누르지 않은 팝업은 열지 않는다 — 그 사이트를 허용했으면 연다. 막으면 알린다.
         if (!isUserGesture && !host.popupAllowed(tab)) {
             host.onPopupBlocked(tab)
             return false
@@ -216,7 +216,7 @@ class PageChrome(private val host: PageHost, private val tab: Tab) : WebChromeCl
     ): Boolean = host.pickFiles(filePathCallback, fileChooserParams)
 
     /**
-     * **보호된 미디어(DRM 재생)만 준다**(사용자 결정, 2026-10-05 — 'DRM 영상 재생을 지원합시다'). 쪽이 EME 로 라이선스를 청하려면 이것이
+     * **보호된 미디어(DRM 재생)만 준다**(사용자 결정). 쪽이 EME 로 라이선스를 청하려면 이것이
      * 있어야 한다(Widevine 은 출처마다 기기 식별자를 쓴다). 카메라·마이크는 이 앱에 그 권한이 없고 주지 않는다 — 함께 청하면 모두 거절한다.
      * DRM 이 걸린 영상은 재생만 되고 받기·가로채기·녹화는 하지 않는다.
      */
@@ -231,7 +231,7 @@ class PageChrome(private val host: PageHost, private val tab: Tab) : WebChromeCl
     }
 
     /**
-     * 위치는 주지 않는다. 테더링을 합친 뒤로(2026-10-10) 앱이 위치 권한(Wi-Fi Direct 에 드는 — 12 이하)을 가질 수 있다 — 이 거절과 WebViews 의
+     * 위치는 주지 않는다. 테더링 때문에 앱이 위치 권한(Wi-Fi Direct 에 드는 — 12 이하)을 가질 수 있다 — 이 거절과 WebViews 의
      * `setGeolocationEnabled(false)` 가 OS 권한이라는 바깥 겹 없이 지키는 선이다.
      */
     override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {

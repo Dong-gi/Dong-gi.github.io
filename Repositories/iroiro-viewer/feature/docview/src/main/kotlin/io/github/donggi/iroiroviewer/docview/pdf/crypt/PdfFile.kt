@@ -197,8 +197,8 @@ internal class PdfFile private constructor(
          *   뒤로 가기도 닿지 않는다.
          */
         fun open(src: PdfSource, checkCancelled: () -> Unit = {}): PdfFile {
-            // **다시 세우기는 한 번만 한다.** 예전에는 `readXref ?: rebuild` 가 던지면 catch 에서
-            // 또 `rebuild` 를 불러, 뿌리 없는 큰 파일을 두 번 통째로 훑었다.
+            // **다시 세우기는 한 번만 한다.** `readXref ?: rebuild` 가 던진 catch 에서 또 `rebuild` 를
+            // 부르면 뿌리 없는 큰 파일을 두 번 통째로 훑는다.
             val viaXref = try {
                 readXref(src, checkCancelled)?.takeIf { it.headersMatch() }
             } catch (e: PdfSyntaxException) {

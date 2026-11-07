@@ -39,7 +39,7 @@ class ContentSniffTest {
 
     @Test
     fun `패킷 한가운데서 시작하는 녹화도 알아본다`() {
-        // 잘라 낸 녹화 — 첫 동기 바이트가 100번째 자리다. 예전 판정(0번 자리만)은 이것을 글로 보냈다.
+        // 잘라 낸 녹화 — 첫 동기 바이트가 100번째 자리다. 0번 자리만 보면 이것을 글로 보낸다.
         val cut = ts(10, fill = 0x11, skip = 88)
         assertEquals(0x11, cut[0].toInt())
         assertTrue(ContentSniff.isMpegTs(cut))

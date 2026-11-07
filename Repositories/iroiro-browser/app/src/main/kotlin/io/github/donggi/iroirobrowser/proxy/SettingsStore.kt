@@ -6,7 +6,6 @@ import io.github.donggi.iroirobrowser.core.Bypass
 import io.github.donggi.iroirobrowser.core.LiveTabs
 import io.github.donggi.iroirobrowser.core.ProxySettings
 import io.github.donggi.iroirobrowser.core.Retention
-import io.github.donggi.iroirobrowser.core.SearchEngine
 
 /**
  * 설정 파일 하나(SharedPreferences `web`). 비밀번호만 [SecretBox] 로 잠가 둔다 — 나머지(호스트·포트·사용자·예외)는 평문이다(앱의 사적
@@ -52,13 +51,9 @@ class SettingsStore(context: Context) {
             .commit()
     }
 
-    var searchEngine: SearchEngine
-        get() = SearchEngine.byId(prefs.getString(K_SEARCH, null))
-        set(value) = prefs.edit().putString(K_SEARCH, value.id).apply()
-
     /**
-     * 전체 화면 — 상태 표시줄과 막대를 숨기고 페이지가 화면을 채운다(화면 맨 위에서 아래로 밀면 함께 나타난다). 기본 켬(사용자 요청,
-     * 2026-10-08). 프록시 설정처럼 곧바로 쓴다(commit) — 바꾸자마자 앱이 끝나도 남게.
+     * 전체 화면 — 상태 표시줄과 막대를 숨기고 페이지가 화면을 채운다(화면 맨 위에서 아래로 밀면 함께 나타난다). 기본 켬(사용자 결정).
+     * 프록시 설정처럼 곧바로 쓴다(commit) — 바꾸자마자 앱이 끝나도 남게.
      */
     var fullscreen: Boolean
         get() = prefs.getBoolean(K_FULLSCREEN, true)
@@ -68,8 +63,8 @@ class SettingsStore(context: Context) {
         }
 
     /**
-     * 항상 확대 허용 — 사이트가 뷰포트로 막아 둔 두 손가락 확대를 푼다(`PageScripts.FORCE_ZOOM`). 기본 켬(사용자 요청, 2026-10-09 — '사이트
-     * 설정과 무관하게 확대하여 볼 수 있게'). 전체 화면처럼 곧바로 쓴다.
+     * 항상 확대 허용 — 사이트가 뷰포트로 막아 둔 두 손가락 확대를 푼다(`PageScripts.FORCE_ZOOM`). 기본 켬(사용자 결정).
+     * 전체 화면처럼 곧바로 쓴다.
      */
     var forceZoom: Boolean
         get() = prefs.getBoolean(K_FORCE_ZOOM, true)
@@ -79,36 +74,14 @@ class SettingsStore(context: Context) {
         }
 
     /**
-     * 토렌트를 Wi-Fi(요금제가 아닌 망)에서만 받는다 — 사용자 결정(2026-10-09): 설정은 두되 **기본 끔**. 켜면 엔진의 망 조건 훅이 거짓이 되어 토렌트가
-     * '망 조건 기다림' 으로 멈춘다. 곧바로 쓴다(commit) — 바꾸자마자 앱이 끝나도 남게.
-     */
-    var torrentWifiOnly: Boolean
-        get() = prefs.getBoolean(K_TORRENT_WIFI_ONLY, false)
-        @SuppressLint("ApplySharedPref") // 일부러 commit — 위 주석
-        set(value) {
-            prefs.edit().putBoolean(K_TORRENT_WIFI_ONLY, value).commit()
-        }
-
-    /**
-     * 토렌트를 처음 쓸 때의 안내('프록시를 거치지 않고 이 기기의 IP 로 받습니다 · 저작권 책임' — 사용자 결정 ㉓)를 보였는가. 한 번만 보인다.
-     * 곧바로 쓴다 — 안내를 보고 받기를 누른 직후 앱이 죽어도 다시 묻지 않게.
-     */
-    var torrentNoticeSeen: Boolean
-        get() = prefs.getBoolean(K_TORRENT_NOTICE, false)
-        @SuppressLint("ApplySharedPref") // 일부러 commit — 위 주석
-        set(value) {
-            prefs.edit().putBoolean(K_TORRENT_NOTICE, value).commit()
-        }
-
-    /**
-     * 살아 있는 탭의 수 — 넘으면 가장 오래 안 본 탭을 접는다(WebView 를 없애고 뒤로·앞으로 기록만 메모리에 — 고르면 되살린다). 기본 5. 사용자
-     * 요청(2026-10-16 — '별 문제 없다면 설정에서 조절할 수 있게'). 저장값은 [LiveTabs.clamp] 로 범위 안에 맞춘다.
+     * 살아 있는 탭의 수 — 넘으면 가장 오래 안 본 탭을 접는다(WebView 를 없애고 뒤로·앞으로 기록만 메모리에 — 고르면 되살린다). 기본 5.
+     * 저장값은 [LiveTabs.clamp] 로 범위 안에 맞춘다.
      */
     var liveTabs: Int
         get() = LiveTabs.clamp(prefs.getInt(K_LIVE_TABS, LiveTabs.DEFAULT))
         set(value) = prefs.edit().putInt(K_LIVE_TABS, LiveTabs.clamp(value)).apply()
 
-    /** 방문 기록 보관 기간(일, 0 = 기간 없음 — 최근 1만 곳까지). 고를 수 있는 값([Retention.HISTORY_DAYS]) 밖이면 기간 없음. 사용자 요청(2026-10-16). */
+    /** 방문 기록 보관 기간(일, 0 = 기간 없음 — 최근 1만 곳까지). 고를 수 있는 값([Retention.HISTORY_DAYS]) 밖이면 기간 없음. */
     var historyDays: Int
         get() = prefs.getInt(K_HISTORY_DAYS, 0).takeIf { it in Retention.HISTORY_DAYS } ?: 0
         set(value) = prefs.edit().putInt(K_HISTORY_DAYS, value.takeIf { it in Retention.HISTORY_DAYS } ?: 0).apply()
@@ -145,10 +118,7 @@ class SettingsStore(context: Context) {
         const val K_BYPASS_PRIVATE = "bypass_private"
         const val K_BYPASS_SIMPLE = "bypass_simple"
         const val K_EXIT_URL = "exit_url"
-        const val K_SEARCH = "search_engine"
         const val K_FULLSCREEN = "fullscreen"
         const val K_FORCE_ZOOM = "force_zoom"
-        const val K_TORRENT_WIFI_ONLY = "torrent_wifi_only"
-        const val K_TORRENT_NOTICE = "torrent_notice_seen"
     }
 }

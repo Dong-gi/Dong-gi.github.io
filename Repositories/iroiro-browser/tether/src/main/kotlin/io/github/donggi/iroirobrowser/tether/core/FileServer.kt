@@ -9,21 +9,21 @@ import java.net.URLDecoder
 /**
  * Wi-Fi Direct 의 손님이 브라우저로 폰의 폴더 하나([SharedTree])를 오르내리는 작은 HTTP 서버. [BASE_PORT](8080)부터 [PORT_ATTEMPTS] 개
  * (8080…8089)를 차례로 해 보아 비어 있는 첫 포트에 묶는다 — 모두 차 있을 때만 [StartError.PORT_TAKEN]. 실제 포트([actualPort])를 화면이
- * 보이고, `Host` 검사는 포트를 가리지 않는다(아래 2). **옮기는 것은 사용자 결정이다**(2026-10-10 — [HttpProxyServer] 의 머리말).
- * 위험은 남는다 — 이 폰의 다른 앱이 8080 을 먼저 쥐면 손님이 익숙한 주소(…:8080)로 그 앱의 가짜 화면을 열고 올린 파일을 그
- * 앱에 넘길 수 있다. 사용자가 감수했고, 화면의 '공유 폴더' 설명이 위 상태 줄의 실제 포트를 쓰라고 적는다.
+ * 보이고, `Host` 검사는 포트를 가리지 않는다(아래 2). **옮기는 것은 사용자 결정이다**([HttpProxyServer] 의 머리말). 위험은 남는다 — 이
+ * 폰의 다른 앱이 8080 을 먼저 쥐면 손님이 익숙한 주소(…:8080)로 그 앱의 가짜 화면을 열고 올린 파일을 그 앱에 넘길 수 있다. 사용자가
+ * 감수했고, 화면의 '공유 폴더' 설명이 위 상태 줄의 실제 포트를 쓰라고 적는다.
  *
  * ## 왜 브라우저인가
  *
- * 손님에 아무것도 깔지 않아도 되고, 폰이 그룹 오너라 주소가 `192.168.49.1` 로 정해져 찾을 것도 없다. 프록시 둘과 같은 층에 셋째 서버를 얹었다.
+ * 손님에 아무것도 깔지 않아도 되고, 폰이 그룹 오너라 주소가 `192.168.49.1` 로 정해져 찾을 것도 없다.
  *
  * ## 누가 닿는가
  *
  * 1. [PeerGate] 를 프록시와 **똑같이** 쓴다 — 핫스팟이 꺼져 있으면, 폰이 붙은 보통 Wi-Fi 에서는, 그리고 **폰 안의 다른 앱은** 닿지 못한다.
  *    마지막이 중요하다: 이 서버는 SAF 로 받은 폴더 권한을 HTTP 로 바꿔 주므로, 폰 안에 인증 없이 열려 있으면 다른 앱이 저장소 제한을 비켜 가는
  *    통로가 된다.
- * 2. **`Host` 머리가 [allowedHost](`192.168.49.1`, 포트는 있어도 없어도)가 아니면 421 로 거절한다**(2026-10-10, Web 에 합치며
- *    더했다). 손님이 192.168.49.1 에 프록시 없이 바로 닿는 구성(tun2proxy 의 `--setup`)에서는 손님 PC 의 브라우저가 연 **남의 웹 페이지**가
+ * 2. **`Host` 머리가 [allowedHost](`192.168.49.1`, 포트는 있어도 없어도)가 아니면 421 로 거절한다.** 손님이 192.168.49.1 에 프록시
+ *    없이 바로 닿는 구성(tun2proxy 의 `--setup`)에서는 손님 PC 의 브라우저가 연 **남의 웹 페이지**가
  *    DNS 재바인딩으로 이 서버를 같은 출처처럼 불러 공유 폴더를 읽고 쓸 수 있다고 보았다(추론 — 브라우저가 사설망 요청을 막으면 막힌다).
  *    재바인딩한 요청에는 공격자의 이름이 `Host` 로 실린다. 머리가 없는 요청(HTTP/1.0)도 거절한다 — 브라우저는 늘 싣는다.
  *
@@ -43,7 +43,7 @@ import java.net.URLDecoder
  * 출처의 `fetch`·XHR 은 미리 묻기(OPTIONS)가 필요한데 이 서버는 답하지 않는다(404). 연결 하나에 요청 하나(`Connection: close`) — keep-alive 의
  * 본문 경계를 틀릴 일이 없다. `HEAD` 는 받지 않는다.
  *
- * 상한: 동시 연결 [MAX_SESSIONS](usb-tether 와 같다 — 브라우저는 호스트 하나에 6개 남짓만 연다), 연결마다 스레드 하나([ThreadBudget]).
+ * 상한: 동시 연결 [MAX_SESSIONS](브라우저는 호스트 하나에 6개 남짓만 연다), 연결마다 스레드 하나([ThreadBudget]).
  */
 class FileServer(
     env: TetherEnvironment,
@@ -127,7 +127,7 @@ class FileServer(
         while (true) {
             val line = readLine(input) ?: break
             if (line.isEmpty()) break
-            // 줄을 센다 — 담은 머리 수(이름이 겹치면 덮는다)로 세면 `:` 없는 줄이나 같은 이름이 끝없이 이어져도 걸리지 않았다.
+            // 줄을 센다 — 담은 머리 수(이름이 겹치면 덮는다)로 세면 `:` 없는 줄이나 같은 이름이 끝없이 이어져도 걸리지 않는다.
             if (++lines > MAX_HEADER_COUNT) throw MalformedRequest()
             val separator = line.indexOf(':')
             if (separator <= 0) continue
@@ -271,11 +271,10 @@ class FileServer(
     /**
      * 올리기 — 본문 전체가 파일 내용이 된다. `Content-Length` 를 요구한다(chunked 는 받지 않는다 — 브라우저의 `XMLHttpRequest.send(File)` 은
      * 늘 길이를 붙이고, chunked 를 받으려면 풀개가 필요해 범위를 넘는다). `Transfer-Encoding` 이 있으면 `Content-Length` 와 함께든 아니든 501
-     * 이다 — 예전에는 길이부터 보아 TE 만 오면 411 이었다(문서와 어긋났다). 흘려서 옮긴다 — 본문을 메모리에 모으면 큰 파일에서
-     * 곧바로 OOM 이다.
+     * 이다(길이부터 보면 TE 만 올 때 411 이 된다). 흘려서 옮긴다 — 본문을 메모리에 모으면 큰 파일에서 곧바로 OOM 이다.
      *
      * **임시 이름으로 받고 다 받은 뒤에 바꾼다**([SharedTree] 의 머리말). 끊기거나(손님이 끊음·읽기 시한) 길이가 선언과 다르거나
-     * 쓰기를 열지 못하면 임시만 지운다 — 원래 파일은 그대로다. 예전에는 받기 전에 원래 파일을 지워, 덮어쓰기가 끊기면 둘 다 사라졌다.
+     * 쓰기를 열지 못하면 임시만 지운다 — 원래 파일은 그대로다.
      */
     private fun serveUpload(request: Request, input: InputStream, output: OutputStream) {
         if (!tree.isAvailable()) {
@@ -433,10 +432,10 @@ class FileServer(
         /** 기본 포트. 차 있으면 다음 포트로(클래스 머리말). */
         const val BASE_PORT = 8080
 
-        /** 해 볼 포트 수 — [BASE_PORT] 부터 하나씩(8080…8089). usb-tether·처음 합친 판과 같은 값. */
+        /** 해 볼 포트 수 — [BASE_PORT] 부터 하나씩(8080…8089). */
         const val PORT_ATTEMPTS = 10
 
-        /** 동시 연결 상한(usb-tether 와 같다). 근거는 클래스 머리말. */
+        /** 동시 연결 상한. 근거는 클래스 머리말. */
         const val MAX_SESSIONS = 32
 
         private const val PATH_LIST = "/api/list"

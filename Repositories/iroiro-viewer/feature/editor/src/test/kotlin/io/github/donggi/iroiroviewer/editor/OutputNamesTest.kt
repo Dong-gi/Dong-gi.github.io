@@ -43,7 +43,7 @@ class OutputNamesTest {
         // 글자로는 120자까지.
         assertEquals(120 + ".hwp".length, OutputNames.of("a".repeat(500) + ".hwp", "x.hwp", Kind.HWP).length)
         // 그리고 UTF-8 바이트로 255까지 — 받은 문서를 이 이름으로 앱 캐시에 먼저 쓴다. 한글 120자는 360바이트라 그 파일을 만들지
-        // 못해 저장이 실패했다. 한글은 83자(249바이트) + `.hwp`.
+        // 못한다. 한글은 83자(249바이트) + `.hwp`.
         val long = "가".repeat(500)
         assertEquals("가".repeat(83) + ".hwp", OutputNames.of("$long.hwp", "x.hwp", Kind.HWP))
         // 255바이트 이름의 `.hwp` 를 `.hwpx` 로 저장 — 확장자가 한 바이트 늘어도 넘치지 않는다.

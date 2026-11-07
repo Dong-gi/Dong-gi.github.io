@@ -38,15 +38,15 @@ class OmniboxTest {
 
     @Test
     fun 마그넷은_검색어가_아니라_토렌트() {
-        // 앞 판은 검색어가 되어 info-hash·트래커가 검색 엔진에 갔다(사용자 결정 ⑳).
+        // 검색어가 되면 info-hash·트래커가 검색 엔진에 간다(사용자 결정).
         val m = "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567&dn=a+b&tr=udp%3A%2F%2Ft.example%3A80"
         assertEquals(Target.Magnet(m), Omnibox.classify("  $m "))
         assertEquals(Target.Magnet("MAGNET:?xt=urn:btih:X"), Omnibox.classify("MAGNET:?xt=urn:btih:X"))
-        // 빈칸이 든 이름(복사해 온 날 글)·깨진 마그넷도 검색으로 돌리지 않는다 — 받을지는 토렌트 쪽이 읽고 말한다.
+        // 빈칸이 든 이름(복사해 온 날 글)·깨진 마그넷도 검색으로 돌리지 않는다 — 앱이 다른 앱에 넘길지 묻는다.
         assertEquals(Target.Magnet("magnet:?xt=urn:btih:abc&dn=a b"), Omnibox.classify("magnet:?xt=urn:btih:abc&dn=a b"))
         assertEquals(Target.Magnet("magnet:"), Omnibox.classify("magnet:"))
         // 열 쪽이 없다 — resolve 는 주소를 만들지 않는다(검색 주소도).
-        assertNull(Omnibox.resolve(m, SearchEngine.GOOGLE))
+        assertNull(Omnibox.resolve(m))
     }
 
     @Test
@@ -94,20 +94,13 @@ class OmniboxTest {
     @Test
     fun 빈_글은_없다() {
         assertNull(Omnibox.classify("   "))
-        assertNull(Omnibox.resolve("", SearchEngine.GOOGLE))
+        assertNull(Omnibox.resolve(""))
     }
 
     @Test
-    fun 검색은_엔진의_주소로_부호화한다() {
-        assertEquals("https://www.google.com/search?q=a+b%26c", Omnibox.resolve("a b&c", SearchEngine.GOOGLE))
-        assertEquals("https://duckduckgo.com/?q=%ED%95%9C", Omnibox.resolve("한", SearchEngine.DUCKDUCKGO))
-        assertEquals("https://search.naver.com/search.naver?query=x", Omnibox.resolve("x", SearchEngine.NAVER))
-    }
-
-    @Test
-    fun 엔진은_이름으로_찾고_모르면_기본값() {
-        assertEquals(SearchEngine.BING, SearchEngine.byId("bing"))
-        assertEquals(SearchEngine.DEFAULT, SearchEngine.byId("nope"))
-        assertEquals(SearchEngine.DEFAULT, SearchEngine.byId(null))
+    fun 검색은_구글의_주소로_부호화한다() {
+        assertEquals("https://www.google.com/search?q=a+b%26c", Omnibox.resolve("a b&c"))
+        assertEquals("https://www.google.com/search?q=%ED%95%9C", Omnibox.resolve("한"))
+        assertEquals("https://www.google.com/search?q=x", SearchEngine.searchUrl("x"))
     }
 }

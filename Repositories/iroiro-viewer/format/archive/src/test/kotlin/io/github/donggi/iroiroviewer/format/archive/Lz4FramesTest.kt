@@ -21,8 +21,8 @@ import kotlin.test.assertNull
 /**
  * LZ4 를 **프레임 하나씩** 푸는 고리([Lz4FramesInputStream])와 해제기의 마지막 그물([StackGuardInputStream]).
  *
- * 기기에서 재현한 것: 빈 프레임(11바이트) 20만 개짜리 `x.cbt` 를 둔 폴더를 **열기만 했는데** 표지 썸네일의 판별이
- * commons-compress 의 이어 풀기(`decompressConcatenated = true`)에 들어가 `StackOverflowError` 로 프로세스가 죽었다. 시험은
+ * 빈 프레임(11바이트) 20만 개짜리 `x.cbt` 를 둔 폴더를 **열기만 해도** 표지 썸네일의 판별이 commons-compress 의
+ * 이어 풀기(`decompressConcatenated = true`)에 들어가면 `StackOverflowError` 로 프로세스가 죽는다(기기에서 재현). 시험은
  * **스택이 작은 스레드**([SMALL_STACK])에서 돈다 — 데스크톱 JVM 의 기본 스택이 기기보다 크면 재귀가 남아 있어도 지나가 버린다.
  */
 class Lz4FramesTest {
@@ -77,7 +77,7 @@ class Lz4FramesTest {
     }
 
     /**
-     * 기기에서 재현한 모양 그대로 — 빈 프레임 20만 개짜리 `x.cbt`. 판별·목록·풀기가 모두 정의된 답을 낸다: 판별은 입력 상한(프레임마다
+     * 그 모양 그대로 — 빈 프레임 20만 개짜리 `x.cbt`. 판별·목록·풀기가 모두 정의된 답을 낸다: 판별은 입력 상한(프레임마다
      * 값을 얹는다)에서 멈춰 안을 보지 못한 항목 하나짜리(LZ4)이고, 그 항목은 빈 내용이다.
      */
     @Test

@@ -14,7 +14,7 @@ import io.github.donggi.iroirobrowser.core.sites.SiteTarget
 import io.github.donggi.iroirobrowser.ui.Ui
 
 /**
- * 브라우저 화면에서 갤러리 받기(pixiv 작품·작가, hitomi.la 갤러리 — 사용자 결정 2026-10-11)로 들어가는 길. 브라우저의 ⋮ 메뉴('이 작품 받기'·'이
+ * 브라우저 화면에서 갤러리 받기(pixiv 작품·작가, hitomi.la 갤러리)로 들어가는 길. 브라우저의 ⋮ 메뉴('이 작품 받기'·'이
  * 작가의 작품 모두 받기'·'이 갤러리 받기' — 지금 페이지의 커밋된 주소를 알아볼 때만)와 고리를 길게 눌렀을 때의 같은 줄이 [offer] 를 부른다. 묻는 차례:
  *
  * 1. 같은 대상([SiteTarget.key])이 목록에서 받는 중·멈춤이면 '이미 내려받기 목록에 있습니다'(목록 보기 — 이어받기는 거기서), 받은 적이 있으면 다시
@@ -24,8 +24,8 @@ import io.github.donggi.iroirobrowser.ui.Ui
  * 3. 받을 수 없으면 까닭 한 줄(로그인이 필요하면 할 일까지), 아니면 확인 창(제목·작가·파일 또는 작품 수·저장 자리) → 받기 → '받기 시작했습니다 ·
  *    목록 보기'.
  *
- * '주소로 받기'(붙여 넣기)는 없고, 다른 앱의 VIEW 인텐트도 받지 않는다 — 이 브라우저 안에서 연 페이지뿐이다. 글은 짧게(사용자: '설명이 너무
- * 장황합니다'). 메인 스레드.
+ * '주소로 받기'(붙여 넣기)는 없고, 다른 앱의 VIEW 인텐트도 받지 않는다 — 이 브라우저 안에서 연 페이지뿐이다. 글은 짧게(사용자 요청). 메인
+ * 스레드.
  */
 internal class GalleryPrompt(private val activity: Activity, private val host: Host) {
 

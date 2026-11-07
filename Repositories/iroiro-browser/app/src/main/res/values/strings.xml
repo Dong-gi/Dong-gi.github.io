@@ -25,10 +25,7 @@
     <string name="close_tab_named">%1$s 탭 닫기</string>
     <string name="close_all_tabs">모두 닫기</string>
     <string name="close_all_question">탭 %1$d개를 모두 닫을까요? 메뉴의 \'최근 닫은 탭\' 에서 되살릴 수 있습니다.</string>
-    <string name="tab_closed">탭을 닫았습니다</string>
-    <string name="tabs_closed">탭 %1$d개를 닫았습니다</string>
     <string name="undo">되돌리기</string>
-    <string name="recent_tabs">최근 닫은 탭</string>
     <string name="desktop_site">데스크톱 사이트</string>
     <string name="popup_blocked">팝업을 막았습니다 — %1$s</string>
     <string name="popup_allow">이 사이트 허용</string>
@@ -225,8 +222,6 @@
     <string name="status_proxy">프록시: %1$s</string>
     <string name="status_exit">출구: %1$s (%2$s)</string>
     <string name="status_dns_note">페이지가 미리 찾게 한 이름(dns-prefetch)은 프록시 없이 이 폰의 DNS 로 찾습니다 — 안드로이드의 \'개인 DNS\' 를 켜면 통신사·Wi-Fi 에는 보이지 않습니다.</string>
-    <!-- 연결 상태 창에 늘 보이는 예외(사용자 결정 — 토렌트는 프록시를 거치지 않는다). -->
-    <string name="status_torrent_note">토렌트는 예외입니다 — 프록시 스위치와 상관없이 프록시를 거치지 않고 이 기기의 IP 로 받습니다.</string>
     <string name="check_again">다시 확인</string>
     <string name="recording_ended_by_path">프록시 연결이 바뀌어 페이지를 다시 열었습니다 — 녹화는 받은 데까지 저장합니다</string>
 
@@ -269,6 +264,8 @@
     <string name="login">로그인</string>
     <string name="external_title">다른 앱으로 열까요? (%1$s)</string>
     <string name="external_warning">다른 앱은 이 브라우저의 프록시를 거치지 않습니다.</string>
+    <!-- 주소창의 magnet: — 토렌트를 걷은 뒤(2026-11-07) 다른 앱에 넘길지 묻는다. 검색어로 돌리지 않는다(info-hash 가 검색 엔진에 가지 않게). -->
+    <string name="magnet_suggest">다른 앱으로 열기(검색 엔진에 보내지 않습니다)</string>
     <string name="open_outside">다른 브라우저로 열기</string>
     <string name="open_outside_warning">다른 브라우저는 이 프록시를 거치지 않아 이 폰의 실제 IP 가 보입니다 — 여기서 막히는 페이지(구글 로그인 등)에만 쓰세요.</string>
 
@@ -392,129 +389,6 @@
     <string name="channel_downloads_done">다 받음</string>
     <string name="channel_capture">녹화·가로채기</string>
 
-    <!--
-      토렌트(2026-10-09 — 사용자 결정 CLAUDE.md '토렌트 받기 검토'): 엔진(:torrent)은 기계 말(TorrentState·TorrentError)만 내고 화면의 글은 여기서
-      고른다(TorrentTexts). 토렌트는 프록시를 거치지 않고 이 기기의 IP 로 받는다 — 브라우저의 fail-closed 의 예외(다른 하나는 테더링)라 목록의 머리·알림의 부제·
-      묻는 창·연결 상태·설정이 늘 그것을 말한다.
-    -->
-    <string name="torrent_title">토렌트</string>
-    <string name="torrent_section">토렌트 — 프록시를 거치지 않고 이 기기의 IP 로 받습니다</string>
-    <string name="torrent_direct_note">토렌트는 프록시를 거치지 않고 이 기기의 IP 로 받습니다. 받기만 하고 올리지 않습니다.</string>
-    <string name="torrent_direct_short">프록시 밖 · 이 기기의 IP</string>
-    <string name="torrent_name">%1$s</string>
-    <string name="torrent_unnamed">마그넷 %1$s…</string>
-    <!-- 상태(엔진의 TorrentState) -->
-    <string name="torrent_state_metadata">파일 목록을 받는 중</string>
-    <string name="torrent_state_checking">받아 둔 것을 확인하는 중</string>
-    <string name="torrent_state_downloading">받는 중</string>
-    <string name="torrent_state_waiting">조각이 모자라 기다림</string>
-    <string name="torrent_state_queued">차례를 기다림(동시에 둘까지 받습니다)</string>
-    <string name="torrent_state_network">망 조건 기다림</string>
-    <string name="torrent_state_paused">멈춤</string>
-    <string name="torrent_state_completed">다 받음</string>
-    <string name="torrent_state_error">오류</string>
-    <string name="torrent_wait_no_network">연결된 망이 없습니다</string>
-    <string name="torrent_wait_wifi">Wi-Fi 에서만 받습니다(설정)</string>
-    <string name="torrent_wait_unknown">망을 확인하는 중</string>
-    <!-- 받지 않거나 멈춘 까닭(엔진의 TorrentError) -->
-    <string name="torrent_error_invalid">토렌트 파일이 깨졌거나 규격에 맞지 않습니다</string>
-    <string name="torrent_error_private">비공개(private) 토렌트는 받지 않습니다 — 이 앱은 올리지 않아 초대제 트래커에서 정지될 수 있습니다</string>
-    <string name="torrent_error_v2">BitTorrent v2 전용 토렌트는 지원하지 않습니다(v1 이 함께 든 하이브리드는 받습니다)</string>
-    <string name="torrent_error_too_large">너무 큰 토렌트입니다 — 파일 수·조각 수·경로 길이의 상한을 넘었습니다</string>
-    <string name="torrent_error_magnet">마그넷 주소를 읽지 못했습니다</string>
-    <string name="torrent_error_duplicate">이미 내려받기 목록에 있는 토렌트입니다</string>
-    <string name="torrent_error_unknown">목록에 없는 토렌트입니다</string>
-    <string name="torrent_error_disk_full">저장 공간이 모자랍니다 — 공간을 비운 뒤 이어받으세요</string>
-    <string name="torrent_error_disk">파일을 쓰거나 읽지 못했습니다</string>
-    <string name="torrent_error_engine_closed">토렌트 엔진이 답하지 않습니다 — 다시 해 보세요</string>
-    <string name="torrent_error_other">알 수 없는 오류</string>
-    <!-- 목록의 줄·알림의 글 -->
-    <string name="torrent_choose_needed">받을 파일을 고르세요 — 눌러서 고릅니다</string>
-    <string name="torrent_files_count">파일 %1$d개</string>
-    <string name="torrent_percent">%1$d%%</string>
-    <string name="torrent_of">%1$s / %2$s</string>
-    <string name="torrent_rate">%1$s/s</string>
-    <string name="torrent_size">%1$s</string>
-    <string name="torrent_peers">피어 %1$d</string>
-    <string name="torrent_peers_seeds">피어 %1$d(시드 %2$d)</string>
-    <string name="torrent_web_seeds">웹 시드 %1$d</string>
-    <string name="torrent_in_downloads">‘내려받기’ 폴더로 옮김</string>
-    <string name="torrent_moving">‘내려받기’ 로 옮기는 중 %1$d개</string>
-    <string name="torrent_move_failed_count">옮기지 못한 파일 %1$d개</string>
-    <string name="torrent_active_file">지금: %1$s · %2$d%%</string>
-    <string name="torrent_file_moved">‘내려받기’ 로 옮김</string>
-    <string name="torrent_file_done">다 받음</string>
-    <string name="torrent_file_active">받는 중</string>
-    <string name="torrent_file_waiting">조각이 모자라 미룸</string>
-    <string name="torrent_file_skipped">고르지 않음</string>
-    <string name="torrent_file_queued">차례를 기다림</string>
-    <string name="torrent_file_link">링크 — 만들지 않음</string>
-    <string name="torrent_file_padding">채움 파일</string>
-    <!-- 자세히 -->
-    <string name="torrent_detail_wanted">받을 것: %1$s(파일 %3$d개 가운데 %2$d개)</string>
-    <string name="torrent_detail_downloaded">받은 바이트: %1$s(해시가 틀려 버린 것 포함)</string>
-    <string name="torrent_detail_peers">피어: 연결 %1$d(시드 %2$d) · 아는 피어 %3$d</string>
-    <string name="torrent_detail_sources">피어를 얻은 곳: 트래커 %1$d · DHT %2$d · 마그넷 %3$d</string>
-    <string name="torrent_detail_trackers">트래커 %1$d개(답한 것 %2$d)</string>
-    <string name="torrent_detail_mse">암호화(MSE) 연결 %1$d / 시도 %2$d · 평문으로 다시 붙음 %3$d</string>
-    <string name="torrent_detail_hash_failures">해시가 틀린 조각 %1$d개(보낸 피어는 막았습니다)</string>
-    <string name="torrent_detail_moved">‘내려받기’ 로 옮긴 파일 %1$d개</string>
-    <string name="torrent_move_failed_line">옮기지 못함: %1$s — %2$s</string>
-    <!-- 목록의 할 일 -->
-    <string name="torrent_choose_files">파일 고르기</string>
-    <string name="torrent_choose_intro">파일 목록을 받았습니다. 받을 파일을 고르면 토렌트의 차례대로 하나씩 받습니다.</string>
-    <string name="torrent_choose_apply">고르기 적용</string>
-    <string name="torrent_choose_all">모두 고르기</string>
-    <string name="torrent_choose_none">모두 빼기</string>
-    <string name="torrent_chosen">고른 파일 %1$d개 · %2$s</string>
-    <string name="torrent_file_row_checked">%1$s, %2$s, 고름</string>
-    <string name="torrent_file_row_unchecked">%1$s, %2$s, 고르지 않음</string>
-    <string name="torrent_not_ready">아직 파일 목록이 없습니다 — 잠시 뒤 다시 해 보세요</string>
-    <string name="torrent_retry_moves">‘내려받기’ 로 옮기기 다시 시도</string>
-    <string name="torrent_remove_action">지우기…</string>
-    <string name="torrent_remove_message">토렌트를 지울까요? 앱 안에 받아 둔 것(%1$s)은 지웁니다 — 이어받을 수 없게 됩니다.</string>
-    <string name="torrent_remove_moved">‘내려받기’ 폴더로 옮긴 파일 %1$d개도 지우기</string>
-    <string name="torrent_removed_files">‘내려받기’ 의 파일 %1$d개를 지웠습니다</string>
-    <!-- 묻기(브라우저 화면) -->
-    <string name="torrent_notice_title">토렌트 받기 — 처음 한 번 알립니다</string>
-    <string name="torrent_notice_message">토렌트는 프록시 스위치와 상관없이 프록시를 거치지 않고 이 기기의 IP 로 받습니다 — 같은 토렌트를 주고받는 쪽(과 지켜보는 쪽)에 그 IP 가 보입니다.\n\n받기만 하고 올리지 않습니다. 받은 내용의 저작권 책임은 받는 사람에게 있으니 공개·허락된 것만 받으세요(법률 자문 아님).\n\n다 받은 파일은 ‘내려받기’ 폴더로 옮깁니다. 모바일 데이터를 아끼려면 설정의 ‘Wi-Fi 에서만 받기’ 를 켜세요.</string>
-    <string name="torrent_notice_ok">알겠습니다</string>
-    <string name="torrent_refused_title">받지 않는 토렌트입니다</string>
-    <string name="torrent_file_question">토렌트 파일입니다</string>
-    <string name="torrent_file_detail">%1$s\n%2$s\n\n토렌트로 받으면 이 앱이 프록시를 거치지 않고 이 기기의 IP 로 받습니다. 파일로 저장하면 토렌트 파일만 ‘내려받기’ 폴더에 둡니다.</string>
-    <string name="torrent_as_torrent">토렌트로 받기</string>
-    <string name="torrent_as_file">파일로 저장</string>
-    <string name="torrent_reading">토렌트 파일을 읽는 중…</string>
-    <string name="torrent_fetch_failed">토렌트 파일을 받지 못했습니다</string>
-    <string name="torrent_file_too_big">토렌트 파일이 너무 큽니다(10 MB 넘음)</string>
-    <string name="torrent_ask_summary">%1$s · 파일 %2$d개 · 트래커 %3$d개 · 웹 시드 %4$d개</string>
-    <string name="torrent_magnet_question">마그넷 링크</string>
-    <string name="torrent_magnet_unnamed">이름 없음</string>
-    <string name="torrent_magnet_hash">정보 해시 %1$s</string>
-    <string name="torrent_magnet_sources">트래커 %1$d개 · 웹 시드 %2$d개 · 피어 주소 %3$d개</string>
-    <string name="torrent_magnet_note">이 앱에서 받으면 프록시를 거치지 않고 이 기기의 IP 로 받습니다(파일은 목록을 받은 뒤 고릅니다). 다른 앱으로 열어도 프록시를 거치지 않습니다.</string>
-    <string name="torrent_this_app">이 앱에서 받기</string>
-    <string name="torrent_other_app">다른 앱으로</string>
-    <string name="torrent_started">토렌트를 받기 시작했습니다</string>
-    <string name="torrent_started_magnet">토렌트를 더했습니다 — 파일 목록을 피어에게서 받는 중</string>
-    <string name="torrent_open_list">목록 보기</string>
-    <string name="torrent_suggest">토렌트로 받기(검색 엔진에 보내지 않습니다)</string>
-    <!-- 알림 -->
-    <string name="torrent_many">토렌트 %1$d개 받는 중</string>
-    <string name="torrent_notice_moving">다 받은 파일을 ‘내려받기’ 폴더로 옮기는 중</string>
-    <string name="torrent_notice_preparing">준비하는 중</string>
-    <string name="torrent_notice_finished">다 받았습니다 — 파일은 ‘내려받기’ 폴더로 옮깁니다</string>
-    <string name="torrent_notice_error">받기를 멈췄습니다 — %1$s</string>
-    <string name="torrent_notice_choose">파일 목록을 받았습니다 — 받을 파일을 고르세요(그때까지 멈춰 둡니다)</string>
-    <string name="torrent_notice_move_failed">다 받은 파일을 ‘내려받기’ 로 옮기지 못했습니다 — %1$s. 목록에서 ‘옮기기 다시 시도’ 를 누르세요</string>
-    <string name="torrent_paused_by_notice">멈췄습니다 — 이어받기를 누르면 받은 데서부터 잇습니다</string>
-    <string name="torrent_paused_by_timeout">시스템의 백그라운드 시간 제한(하루 6시간)으로 멈췄습니다 — 이어받기를 누르세요</string>
-    <!-- 옮기기('내려받기' 폴더로) -->
-    <string name="torrent_move_no_space">저장 공간이 모자랍니다 — 옮기는 동안은 두 벌이 필요합니다</string>
-    <string name="torrent_move_create_failed">‘내려받기’ 에 파일을 만들지 못했습니다</string>
-    <string name="torrent_move_copy_failed">‘내려받기’ 로 복사하지 못했습니다</string>
-    <string name="torrent_move_failed_other">알 수 없는 까닭으로 옮기지 못했습니다</string>
-
     <!-- 설정 -->
     <string name="settings_proxy">프록시</string>
     <string name="settings_proxy_switch_note">켜고 끄기는 브라우저 왼쪽 위 스위치로 합니다. 여기서는 프록시를 정합니다.</string>
@@ -544,11 +418,6 @@
     <string name="settings_unsaved_title">저장하지 않았습니다</string>
     <string name="settings_unsaved_question">바꾼 프록시 설정을 저장할까요?</string>
     <string name="settings_discard">버리기</string>
-    <!-- 토렌트(사용자 결정 2026-10-09): 'Wi-Fi 에서만' 은 두되 기본 끔. 프록시를 거치지 않는다는 것을 늘 적는다. -->
-    <string name="settings_torrent">토렌트</string>
-    <string name="settings_torrent_note">토렌트(.torrent·마그넷)는 프록시 스위치와 상관없이 프록시를 거치지 않고 이 기기의 IP 로 받습니다. 받기만 하고, 화면이 꺼져도 받으며, 다 받은 파일은 ‘내려받기’ 폴더로 옮깁니다.</string>
-    <string name="settings_torrent_wifi_only">Wi-Fi 에서만 받기</string>
-    <string name="settings_torrent_wifi_note">켜면 모바일 데이터·요금제 망(휴대폰 핫스팟 등)에서는 받지 않고 기다립니다.</string>
     <!-- 전체 화면(사용자 요청 2026-10-08): 상태 표시줄과 위의 막대를 함께 숨기고, 화면 맨 위에서 아래로 밀면 함께 보인다. 기본 켬. -->
     <string name="settings_display">화면</string>
     <string name="settings_fullscreen">전체 화면</string>
@@ -556,7 +425,6 @@
     <!-- 항상 확대 허용(사용자 요청 2026-10-09): 사이트가 뷰포트로 막아 둔 두 손가락 확대를 푼다. 기본 켬. -->
     <string name="settings_force_zoom">항상 확대 허용</string>
     <string name="settings_force_zoom_note">사이트가 막아 두어도 두 손가락으로 확대할 수 있게 합니다(지도처럼 몸짓을 직접 받는 페이지는 그 페이지를 따릅니다).</string>
-    <string name="settings_search">검색 엔진</string>
     <string name="settings_data">인터넷 사용 기록</string>
     <string name="settings_clear_history">방문 기록 지우기</string>
     <string name="settings_popups">팝업</string>

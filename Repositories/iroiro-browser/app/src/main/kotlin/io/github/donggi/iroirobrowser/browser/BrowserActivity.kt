@@ -86,11 +86,10 @@ import io.github.donggi.iroirobrowser.core.sites.SiteTarget
 import io.github.donggi.iroirobrowser.core.sites.SiteUrls
 import io.github.donggi.iroirobrowser.download.DownloadCenter
 import io.github.donggi.iroirobrowser.core.Omnibox
+import io.github.donggi.iroirobrowser.core.SearchEngine
 import io.github.donggi.iroirobrowser.download.DownloadsActivity
 import io.github.donggi.iroirobrowser.download.GalleryPrompt
 import io.github.donggi.iroirobrowser.download.GalleryRules
-import io.github.donggi.iroirobrowser.download.TorrentPrompt
-import io.github.donggi.iroirobrowser.download.TorrentRules
 import io.github.donggi.iroirobrowser.library.LibraryActivity
 import io.github.donggi.iroirobrowser.proxy.NetworkPath
 import io.github.donggi.iroirobrowser.proxy.NetworkPath.Phase
@@ -106,23 +105,23 @@ import kotlin.math.tanh
 /**
  * 브라우저 화면 — 위의 막대(프록시 스위치·주소창·새로 고침·탭·메뉴), 진행 막대, 알림 띠, 탭의 WebView.
  *
- * **막대의 몸짓**(사용자 요청, 2026-10-05 — 크롬·파이어폭스의 관행대로): 막대를 좌우로 밀면 앞·뒤 탭(손가락을 따라 이웃 탭이 들어온다),
+ * **막대의 몸짓**(크롬·파이어폭스의 관행대로): 막대를 좌우로 밀면 앞·뒤 탭(손가락을 따라 이웃 탭이 들어온다),
  * 아래로 당기면 곧바로 탭 목록([ToolbarGestureLayout]). 주소창을 고치는 중·찾기 줄이 열린 중에는 몸짓을 받지 않는다. 주소창에 치면 방문 기록·
  * 북마크·열린 탭에서 제안하고 아는 주소는 이어 채운다([AddressSuggestions]).
  *
- * **전체 화면**(사용자 요청, 2026-10-08 — 설정의 '전체 화면', 기본 켬): 상태 표시줄과 막대(진행 막대째)를 함께 숨기고 페이지가 화면 맨 위부터
+ * **전체 화면**(설정의 '전체 화면', 기본 켬):상태 표시줄과 막대(진행 막대째)를 함께 숨기고 페이지가 화면 맨 위부터
  * 채운다(노치 자리까지 — `SHORT_EDGES`). 아래 내비게이션 바는 남긴다. **화면 맨 위 가장자리에서 아래로 밀 때만** 둘이 함께 나타나는데([BrowserFrame] —
  * 그 밀기는 페이지로 가지 않는다), 막대는 페이지를 밀어내지 않고 **위에 겹친다**(페이지가 다시 배치되거나 스크롤이 바뀌지 않게). 페이지를 누르거나
  * 막대를 만지지 않은 채 [AUTO_HIDE_MS] 가 지나면 다시 숨는다([BarTimer]) — 주소창을 고치는 중·찾기 줄·메뉴와 창(창이 초점을 잃는다)·막대의 몸짓·
  * 새 탭의 시작 화면 동안은 숨지 않는다. 알림 띠·받기 줄·찾기 줄은 막대 아래의 줄들([TopStrips])이라 막대가 숨으면 화면 맨 위(노치 밑)에서 페이지를
  * 밀어내고, 막대가 나타나면 막대 바로 아래로 내려온다 — 프록시 문제의 띠는 늘 보인다. TalkBack 을 켰거나 화면을 나눠 쓰면 지금까지처럼 그린다.
  *
- * **프록시는 왼쪽 위의 스위치 하나로 켜고 끈다**(사용자 지정, 2026-10-04 — 묻지 않는다, 다른 곳에는 두지 않는다). 스위치 옆 글은 길의 상태다
- * (출구 나라·확인 중·끊김·계정 거절…, [ProxyStatus]) — **스위치와 따로 된 글**이라 누르면 '연결 상태' 가 열린다(앞 판은 스위치 자신의 글이라
- * 뜻을 보려고 누르면 프록시가 꺼졌다). 켜고 끄면 프록시의 주소·계정은 그대로 두고 켜기만 바꾼다.
+ * **프록시는 왼쪽 위의 스위치 하나로 켜고 끈다**(사용자 지정 — 묻지 않는다, 다른 곳에는 두지 않는다). 스위치 옆 글은 길의 상태다
+ * (출구 나라·확인 중·끊김·계정 거절…, [ProxyStatus]) — **스위치와 따로 된 글**이라 누르면 '연결 상태' 가 열린다(스위치 자신의 글이면
+ * 뜻을 보려고 누를 때 프록시가 꺼진다). 켜고 끄면 프록시의 주소·계정은 그대로 두고 켜기만 바꾼다.
  *
- * 주 문서가 열리지 않으면 그 탭 위에 '열지 못함' 덮개([ErrorCover] — 까닭·다시 시도·연결 상태)를 덮는다. 닫은 탭은 되돌릴 수 있다
- * ([ClosedTabs] — 아래의 '탭을 닫았습니다 · 되돌리기', 메뉴의 '최근 닫은 탭'). 쪽 맨 위에서 쪽을 당기면 새로 고친다([PullRefreshLayout]).
+ * 주 문서가 열리지 않으면 그 탭 위에 '열지 못함' 덮개([ErrorCover] — 까닭·다시 시도·연결 상태)를 덮는다.
+ * 쪽 맨 위에서 쪽을 당기면 새로 고친다([PullRefreshLayout]).
  * 탭마다 '데스크톱 사이트'. 사용자가 누르지 않은 팝업은 막고 알린다(사이트마다 허용).
  *
  * **쪽은 길이 걸린 뒤에만 연다**([NetworkPath.whenReady]) — 걸리기 전에 연 쪽은 옛 길(켜던 중이면 직접)로 나간다.
@@ -138,7 +137,7 @@ import kotlin.math.tanh
  * 규칙을, 다 연 뒤(그리고 2.5초·7초 뒤) 쪽이 가진 클래스·id 를 모아 그에 맞는 일반 규칙을 넣는다 — 쪽에 남는 전역 이름은 없다. 메뉴에서
  * 사이트마다 끈다.
  *
- * **요소 숨기기**(사용자 요청, 2026-10-08): 메뉴의 '요소 숨기기'(고리·그림을 길게 눌렀으면 '이 요소 숨기기' — 그 자리부터)로 고르는 상태
+ * **요소 숨기기**: 메뉴의 '요소 숨기기'(고리·그림을 길게 눌렀으면 '이 요소 숨기기' — 그 자리부터)로 고르는 상태
  * ([ElementPicker] — 덮개가 누름을 가로채고, 고르는 스크립트는 페이지가 못 보는 실행 세계에서 고르는 동안만 깬다)에 들어가 고른 요소를 그
  * 사이트에서 숨긴다. 규칙(`사이트##선택자`)은 광고 목록과 따로 저장하고([HiddenElements]) 페이지를 시작할 때 광고 차단의 요소 숨김과 같은 길로
  * 넣는다 — 광고 차단을 끄거나 그 사이트에서 끈 때도 건다. 메뉴의 '이 사이트에서 숨긴 요소 되돌리기' 가 그 사이트의 규칙을 지우고 다시 연다.
@@ -148,17 +147,15 @@ import kotlin.math.tanh
  * [watchNavigation]). 창들은 [MediaChooser] — HLS·DASH 는 목록을 읽어 화질을 고르게 하고(따로 된 소리는 받아 한 파일로 담는다), 실시간
  * 방송이면 '재생 중인 것 받기' 로 잇는다.
  *
- * **재생 중인 것 받기**(7단계 — 사용자: '스트리밍 비디오 직접 다운로드가 어려운 경우 재생 중인 오디오(가능하면 비디오 포함)를 다운로드',
- * 2026-10-05: 'MSE 가로채기·실시간 녹화 둘 다 — 사용자가 선택'): 메뉴나 '찾은 미디어' 에서 가로채기(쪽을 다시 열고 재생기가 받는 바이트를 그대로)·
+ * **재생 중인 것 받기**(MSE 가로채기·실시간 녹화 — 사용자가 고른다): 메뉴나 '찾은 미디어' 에서 가로채기(쪽을 다시 열고 재생기가 받는 바이트를 그대로)·
  * 녹화(지금부터 실시간)·소리만 녹화를 고른다. 막대 아래 줄이 받은 양을 보이고 저장·취소를 둔다([PageBridge]) — 다른 탭에서 받는 중이면 그것을
  * 알리고 탭 단추·탭 목록에도 표시한다. 받는 동안 포그라운드 서비스와 알림([CaptureService]), 탭을 닫으면 묻는다([settleCaptures]), 앱이
  * 정리되어 저장하지 못한 것은 다음에 뜰 때 묻는다([CaptureRecovery]). `blob:` 내려받기도 같은 통로로 받는다.
  *
- * **토렌트**(2026-10-09 — 사용자 결정 ⑱·⑲·⑳): 페이지의 `.torrent` 내려받기는 '토렌트로 받기 / 파일로 저장', 마그넷 고리와 주소창의 `magnet:` 은
- * '이 앱에서 받기 / 다른 앱으로' 를 묻는다([TorrentPrompt] — 주소창의 마그넷은 더 이상 검색어가 되지 않는다). 토렌트는 프록시 스위치와 상관없이
- * 기기에서 바로 받는다 — '연결 상태' 가 그 예외를 늘 말한다.
+ * 마그넷 고리와 주소창의 `magnet:` 은 다른 앱에 넘길지 묻는다(주소창의 마그넷은 검색어가 되지 않는다 — info-hash 가 검색 엔진에 가지
+ * 않게).
  *
- * **갤러리 받기**(2026-10-11 — 사용자: 'pixiv, hitomi 기능을 브라우저에 통합'): 지금 페이지의 커밋된 주소나 길게 누른 고리를 [SiteUrls] 가
+ * **갤러리 받기**: 지금 페이지의 커밋된 주소나 길게 누른 고리를 [SiteUrls] 가
  * 알아보면(pixiv 작품·작가, hitomi 갤러리) ⋮ 메뉴와 길게 누르기 메뉴에 한 줄('이 작품 받기' …)이 생긴다 → [GalleryPrompt]. 받기는 내려받기와 같은
  * 길(프록시·그 탭의 WebView 쿠키)이다. 주소를 붙여 넣어 받는 길과 다른 앱의 VIEW 인텐트는 없다.
  */
@@ -193,11 +190,8 @@ class BrowserActivity : Activity(), PageHost {
     private lateinit var content: PullRefreshLayout
     private lateinit var errorCover: ErrorCover
 
-    /** 아래에 잠깐 뜨는 한 줄('탭을 닫았습니다 · 되돌리기', '팝업을 막았습니다 · 이 사이트 허용'). */
+    /** 아래에 잠깐 뜨는 한 줄('팝업을 막았습니다 · 이 사이트 허용', '숨겼습니다 · 되돌리기'). */
     private lateinit var messages: MessageBar
-
-    /** 닫은 탭(되돌리기·최근 닫은 탭) — 앱이 사는 동안 메모리에만. */
-    private val closed = ClosedTabs()
 
     /** 쪽의 자리 — [content](탭의 WebView·시작 화면)와 그 위에 덮는 것들(밀 때 들어오는 이웃 탭 [peek], 제안 목록). */
     private lateinit var stage: FrameLayout
@@ -221,16 +215,13 @@ class BrowserActivity : Activity(), PageHost {
     /** '찾은 미디어' 의 창들(목록·받기 확인·화질). */
     private lateinit var chooser: MediaChooser
 
-    /** 토렌트로 들어가는 길 — `.torrent` 내려받기·마그넷 고리·주소창의 마그넷을 묻는다(사용자 결정 ⑱·⑲·⑳). */
-    private lateinit var torrentPrompt: TorrentPrompt
-
     /** 갤러리 받기로 들어가는 길 — 메뉴·길게 누르기의 '이 작품 받기' … 를 묻는다(pixiv·hitomi). */
     private lateinit var galleryPrompt: GalleryPrompt
 
     /** 요소 숨기기의 고르는 상태 — 쪽의 자리 위의 덮개와 아래 막대. 화면을 다시 지으면 새로 만든다(고르던 것은 끝낸다). */
     private lateinit var picker: ElementPicker
 
-    /** 탐색 알림(androidx.webkit 의 NavigationListener — 실험 표의 NAVIGATION_LISTENER)을 아는 WebView 인가. 모르면 [onUrlChanged] 가 경계를 옮긴다. */
+    /** 탐색 알림(androidx.webkit 의 NavigationListener)을 아는 WebView 인가. 모르면 [onUrlChanged] 가 경계를 옮긴다. */
     private val navigationListenerSupported by lazy { WebViewFeature.isFeatureSupported(WebViewFeature.NAVIGATION_LISTENER) }
 
     private val tabs = ArrayList<Tab>()
@@ -431,17 +422,6 @@ class BrowserActivity : Activity(), PageHost {
         }
     }
 
-    /** 토렌트의 묻기가 쓰는 것. */
-    private val torrentHost = object : TorrentPrompt.Host {
-        override fun trace(message: String) = this@BrowserActivity.trace(message)
-
-        override fun askNotificationPermission() = this@BrowserActivity.askNotificationPermission()
-
-        override fun showMessage(text: String, action: String, onAction: () -> Unit) {
-            if (!isDestroyed) messages.show(text, action, onAction)
-        }
-    }
-
     /** 갤러리 받기의 묻기가 쓰는 것. */
     private val galleryHost = object : GalleryPrompt.Host {
         override fun trace(message: String) = this@BrowserActivity.trace(message)
@@ -474,7 +454,6 @@ class BrowserActivity : Activity(), PageHost {
         app = WebApp.of(this)
         session = SessionStore(this)
         chooser = MediaChooser(this, chooserHost)
-        torrentPrompt = TorrentPrompt(this, torrentHost)
         galleryPrompt = GalleryPrompt(this, galleryHost)
         CaptureRegistry.host = captureHost
         BackgroundPlayback.controller = playbackController
@@ -635,7 +614,7 @@ class BrowserActivity : Activity(), PageHost {
 
     /**
      * 뒤에서 재생을 잇는 탭이 화면에 그려지지 않는 동안 재생 중이면 화면 밖에 그린다([PageWebView.drawOffscreen]) — 앱이 뒤로 가는 순간(onPause —
-     * 창이 실제로 숨는 onStop 은 0.7초쯤 늦어 그 사이 디코더가 막혔다, 에뮬레이터)부터 돌아올 때까지, 또는 다른 탭을 보는 동안. 그 밖의 탭은
+     * 창이 실제로 숨는 onStop 은 0.7초쯤 늦어 그 사이 디코더가 막힌다)부터 돌아올 때까지, 또는 다른 탭을 보는 동안. 그 밖의 탭은
      * 그리지 않는다.
      */
     private fun syncOffscreen() {
@@ -651,9 +630,9 @@ class BrowserActivity : Activity(), PageHost {
     }
 
     /**
-     * 화면 밖에 그리는 동안 그 탭의 영상 요소를 숨기고 그치면 되돌린다([PageBridge.hideVideos] — 2026-10-16). 숨은 영상은 크로미움이 화면에 내지
+     * 화면 밖에 그리는 동안 그 탭의 영상 요소를 숨기고 그치면 되돌린다([PageBridge.hideVideos]). 숨은 영상은 크로미움이 화면에 내지
      * 않아 WebView 가 다시 그리기를 청하지 않는다 — 숨긴 것이 확인되면 청이 있을 때만 그리게 해([PageWebView.offscreenRequestsOnly]) 화면 밖 그리기가
-     * 거의 선다. 통로가 없으면(그 기능을 모르는 WebView) 숨기지 않고 앞 판처럼 그린다.
+     * 거의 선다. 통로가 없으면(그 기능을 모르는 WebView) 숨기지 않고 그대로 그린다.
      */
     private fun hideVideos(tab: Tab, view: PageWebView, hide: Boolean) {
         val bridge = tab.bridge ?: return
@@ -698,7 +677,6 @@ class BrowserActivity : Activity(), PageHost {
         suggestions.close()
         messages.hide()
         chooser.close()
-        torrentPrompt.close()
         galleryPrompt.close()
         // 받던 녹화·가로채기는 파일째 남긴다 — 다음에 뜰 때 저장할지 묻는다(CaptureRecovery).
         tabs.forEach {
@@ -731,7 +709,7 @@ class BrowserActivity : Activity(), PageHost {
         val night = (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         if (night == builtNight) return
         // 소리 나는 재생 중이면 다시 짓기를 미룬다 — 다시 지으면 쪽(WebView)을 새 화면으로 떼었다 붙여 쪽이 잠깐 숨는데, 유튜브는 그 틈을 보고
-        // 재생을 멈춘다(2026-10-12 에뮬레이터 — 밤 모드가 '자동' 이면 시스템은 화면이 꺼진 동안 바꿔 두고, 켜는 순간 이 화면이 다시 지어졌다).
+        // 재생을 멈춘다(밤 모드가 '자동' 이면 시스템은 화면이 꺼진 동안 바꿔 두고, 켜는 순간 이것이 불린다).
         // 재생이 끝나면 짓는다([maybeRebuild]).
         if (holdsRebuild()) {
             rebuildPending = true
@@ -805,8 +783,8 @@ class BrowserActivity : Activity(), PageHost {
             // 전체 화면이면 쪽 위에 겹친다 — 페이지가 비치지 않게 칠한다(뿌리의 바탕과 같은 빛이라 막대 아래에 쪽을 둘 때는 지금과 같다).
             setBackgroundColor(Ui.themeColor(context, android.R.attr.colorBackground))
         }
-        // 스위치에는 글을 두지 않는다 — 글이 스위치의 것이면 그 글을 누르는 것이 곧 프록시 끄기였다(묻지 않는 스위치라 열린 탭이 모두 직접
-        // 연결로 다시 열렸다). 상태는 옆의 따로 된 글이 보이고, 낭독기는 스위치의 상태 설명으로 듣는다([render]).
+        // 스위치에는 글을 두지 않는다 — 글이 스위치의 것이면 그 글을 누르는 것이 곧 프록시 끄기다(묻지 않는 스위치라 열린 탭이 모두 직접
+        // 연결로 다시 열린다). 상태는 옆의 따로 된 글이 보이고, 낭독기는 스위치의 상태 설명으로 듣는다([render]).
         proxySwitch = Switch(this).apply {
             contentDescription = getString(R.string.proxy_switch)
             setOnCheckedChangeListener { _, on -> if (!rendering) setProxyEnabled(on) }
@@ -1026,9 +1004,9 @@ class BrowserActivity : Activity(), PageHost {
         override fun describe(text: String): AddressSuggestions.Typed? = when (val t = Omnibox.classify(text)) {
             null -> null
             is Omnibox.Target.Url -> AddressSuggestions.Typed(true, t.url)
-            is Omnibox.Target.Search -> AddressSuggestions.Typed(false, app.settings.searchEngine.label)
-            // 마그넷은 열 주소도 검색어도 아니다 — '이동' 줄이 토렌트로 넘긴다는 것을 말한다(Enter 와 같다).
-            is Omnibox.Target.Magnet -> AddressSuggestions.Typed(true, getString(R.string.torrent_suggest))
+            is Omnibox.Target.Search -> AddressSuggestions.Typed(false, SearchEngine.LABEL)
+            // 마그넷은 열 주소도 검색어도 아니다 — '이동' 줄이 다른 앱에 넘길지 묻는다는 것을 말한다(Enter 와 같다).
+            is Omnibox.Target.Magnet -> AddressSuggestions.Typed(true, getString(R.string.magnet_suggest))
         }
 
         override fun open(url: String) = navigateTo(url, typed = true)
@@ -1230,8 +1208,8 @@ class BrowserActivity : Activity(), PageHost {
      * 뷰를 화면에서 뗀다. **쥐고 있던 초점을 먼저 거둔다.** 초점을 쥔 뷰를 떼면 안드로이드가 초점을 처음 만나는 '누르면 초점을 받는'
      * 뷰로 넘기는데(`ViewGroup.removeViewInternal` 의 `rootViewRequestFocus` — 터치 모드에서도 넘긴다), 이 화면에서 그것이 주소창이다.
      * 그러면 쪽을 누르거나 길게 눌러 WebView 가 초점을 쥔 뒤 탭을 바꾸거나 닫을 때마다 주소창이 고치는 상태가 되어 — 글이 모두
-     * 골라지고 제안 목록이 쪽을 덮는다 — 새 탭의 주소도 그리지 못했다(`showUrl` 은 고치는 중이면 손대지 않는다). 사용자가 짚었다:
-     * 길게 눌러 새 탭에서 연 뒤 막대를 밀어 그 탭으로 넘기면. 거두기(`clearFocus`)는 터치 모드에서 초점을 어디에도 넘기지 않는다
+     * 골라지고 제안 목록이 쪽을 덮는다 — 새 탭의 주소도 그리지 못한다(`showUrl` 은 고치는 중이면 손대지 않는다).
+     * 거두기(`clearFocus`)는 터치 모드에서 초점을 어디에도 넘기지 않는다
      * (API 28 부터 — `View.clearFocus` 의 `sAlwaysAssignFocus`). 쪽을 떼는 곳은 모두 이것을 지난다.
      */
     private fun detach(view: View) {
@@ -1550,7 +1528,7 @@ class BrowserActivity : Activity(), PageHost {
 
     /**
      * 막대 아래 줄 — 지금 탭이 받는 중이면 받은 것(녹화는 실제로 담긴 시간, 가로채기는 저장하면 담길 크기)과 저장·취소. 지금 탭은 아니지만 다른
-     * 탭이 받는 중이면 그것을 알리고 '그 탭으로'(다른 탭으로 넘어가면 녹화 중임을 잊기 쉬웠다).
+     * 탭이 받는 중이면 그것을 알리고 '그 탭으로'(다른 탭으로 넘어가면 녹화 중임을 잊기 쉽다).
      */
     private fun renderCaptureBar() {
         val bridge = current?.bridge
@@ -1665,7 +1643,7 @@ class BrowserActivity : Activity(), PageHost {
     }
 
     /**
-     * 저장할 영상 — 가로챈 영상(MediaSource)이 여럿이면 고르게 한다(사이트 안에서 다음 영상으로 갔다 — 앞 판은 가장 큰 하나만 저장했다).
+     * 저장할 영상 — 가로챈 영상(MediaSource)이 여럿이면(사이트 안에서 다음 영상으로 갔다) 고르게 한다.
      * 이름은 그 영상이 처음 잡힌 때의 페이지 제목.
      */
     private fun pickClip(capture: CaptureSession, then: (CaptureSession.Savable) -> Unit) {
@@ -1744,7 +1722,7 @@ class BrowserActivity : Activity(), PageHost {
 
     /**
      * 탭을 닫기 직전 — 그 탭들의 녹화·가로채기를 어떻게 할지 정한 뒤 [close] 를 부른다. **닫는 자리마다 이것을 지난다**(뒤로 가기·탭 목록의 닫기·
-     * 모두 닫기·쪽의 `window.close`). 앞 판은 묻지 않고 버렸다.
+     * 모두 닫기·쪽의 `window.close`).
      *
      * 사용자가 닫는 것이면([ask]) '저장하고 닫기 / 버리고 닫기 / 취소' 를 묻는다. 쪽이 스스로 닫는 것(`window.close`)이면 묻지 않고 **받은 데까지
      * 저장한다** — 쪽이 바뀔 때와 같다. 쪽이 띄우게 한 창이 사용자의 녹화를 지우는 길이 되지 않게(버리는 쪽을 기본으로 하면 쪽 하나가 지울 수 있다).
@@ -2001,9 +1979,8 @@ class BrowserActivity : Activity(), PageHost {
             if (settings.enabled && settings.isComplete) add(getString(R.string.status_proxy, "${settings.host}:${settings.port}"))
             s.exit?.let { add(getString(R.string.status_exit, it.ip, it.country ?: "?")) }
             if (settings.enabled) add(getString(R.string.status_dns_note))
-            // 직접 연결로 넘어가지 않는다는 약속의 예외 — 토렌트는 스위치와 상관없이 늘 바로 나간다(사용자 결정). 켜고 끄는 상태와 상관없이 늘 보인다.
-            add(getString(R.string.status_torrent_note))
-            // 그리고 테더링이 중계하는 다른 기기의 트래픽(:tether 프로세스 — 이 화면은 그 상태를 모른다. 늘 보인다).
+            // 직접 연결로 넘어가지 않는다는 약속의 예외 — 테더링이 중계하는 다른 기기의 트래픽(:tether 프로세스 — 이 화면은 그 상태를 모른다.
+            // 켜고 끄는 상태와 상관없이 늘 보인다).
             add(getString(R.string.status_tether_note))
         }
         val builder = AlertDialog.Builder(this)
@@ -2027,7 +2004,6 @@ class BrowserActivity : Activity(), PageHost {
         menu.menu.add(0, M_FORWARD, 1, R.string.forward).isEnabled = tab?.webView?.canGoForward() == true
         menu.menu.add(0, M_NEW_TAB, 2, R.string.new_tab)
         menu.menu.add(0, M_TABS, 3, getString(R.string.tabs_count, tabs.size))
-        menu.menu.add(0, M_RECENT_TABS, 3, R.string.recent_tabs).isEnabled = !closed.isEmpty
         val pageUrl = tab?.committedUrl.orEmpty()
         val web = pageUrl.startsWith("http://") || pageUrl.startsWith("https://")
         val marked = web && app.library.isBookmarked(pageUrl)
@@ -2059,7 +2035,7 @@ class BrowserActivity : Activity(), PageHost {
         menu.menu.add(0, M_SHARE, 5, R.string.share).isEnabled = !tab?.url.isNullOrEmpty()
         menu.menu.add(0, M_OUTSIDE, 6, R.string.open_outside).isEnabled = tab?.url?.startsWith("http") == true
         menu.menu.add(0, M_STATUS, 7, R.string.status_title)
-        // 테더링(usb-tether 를 합침 — 그 화면은 따로 된 프로세스 :tether 에서 뜬다).
+        // 테더링 — 그 화면은 따로 된 프로세스 :tether 에서 뜬다.
         menu.menu.add(0, M_TETHER, 8, R.string.tether_menu)
         menu.menu.add(0, M_SETTINGS, 8, R.string.settings)
         menu.setOnMenuItemClickListener { item ->
@@ -2070,7 +2046,6 @@ class BrowserActivity : Activity(), PageHost {
                 M_FORWARD -> tab?.webView?.goForward()
                 M_NEW_TAB -> openNewTabForTyping()
                 M_TABS -> showTabs()
-                M_RECENT_TABS -> showRecentTabs()
                 M_DESKTOP -> tab?.let { setDesktop(it, !it.desktop) }
                 M_POPUPS -> {
                     app.popups.setAllowed(pageHost, false)
@@ -2245,7 +2220,7 @@ class BrowserActivity : Activity(), PageHost {
     }
 
     /**
-     * 주 틀의 탐색 알림(androidx.webkit 의 NavigationListener — 실험 표의 NAVIGATION_LISTENER). 찾은 미디어의 **페이지 경계를 커밋 때 옮긴다** —
+     * 주 틀의 탐색 알림(androidx.webkit 의 NavigationListener). 찾은 미디어의 **페이지 경계를 커밋 때 옮긴다** —
      * 다른 문서로의 커밋이면 그 탐색의 시작 시각과 함께(그 뒤 처음 찾은 것은 새 페이지의 것이다 — [FoundMediaLog.commit]). 커밋되지 않은
      * 탐색(첨부 응답·204·취소)은 목록을 건드리지 않는다. 가로채기의 갈고리는 다른 사이트로 가는 탐색 동안 걷어 둔다([PageBridge.onNavigationStarted]).
      * 모르는 WebView 면 [onUrlChanged] 가 경계를 옮긴다(시작 시각 없이).
@@ -2290,7 +2265,7 @@ class BrowserActivity : Activity(), PageHost {
         // 탭을 바꾸면(같은 탭을 다시 붙여도) 고르기는 끝낸다.
         picker.stop()
         // 주소를 고치던 중에 탭을 바꾸면(탭 목록에서 고르기·닫기) 고치던 글을 버린다 — 그대로 두면 [showUrl] 이 고치는 중이라며 손대지 않아 옛 탭에서
-        // 친 글(새 탭이면 빈 칸)이 새 탭의 주소 자리에 남고, 전체 화면에서는 그 초점 때문에 막대가 숨지 않는다(2026-10-08 기기에서 봤다). 새 탭을
+        // 친 글(새 탭이면 빈 칸)이 새 탭의 주소 자리에 남고, 전체 화면에서는 그 초점 때문에 막대가 숨지 않는다. 새 탭을
         // 치려고 연 길([openNewTabForTyping])은 고른 뒤에 초점을 다시 준다.
         if (address.hasFocus()) {
             suggestions.hide()
@@ -2416,29 +2391,19 @@ class BrowserActivity : Activity(), PageHost {
     private fun closeAllTabs() = closeTabs(ArrayList(tabs))
 
     /**
-     * **탭을 닫는 유일한 길** — 하나든 모두든(탭 목록의 ✕·모두 닫기·연 탭으로 돌아가는 뒤로·쪽의 `window.close`). [undoable] 이면 닫은 탭을
-     * 뒤로·앞으로 기록과 함께 [closed] 에 남기고(접은 탭과 같은 `saveState` 묶음) 아래에 '탭을 닫았습니다 · 되돌리기' 를 잠깐 띄운다.
-     * 지금 탭을 닫으면 연 탭(없으면 옆 탭)으로, 다 닫으면 빈 새 탭 하나.
+     * **탭을 닫는 유일한 길** — 하나든 모두든(탭 목록의 ✕·모두 닫기·연 탭으로 돌아가는 뒤로·쪽의 `window.close`). 닫은 탭의 기록은 곧바로
+     * 버린다. 지금 탭을 닫으면 연 탭(없으면 옆 탭)으로, 다 닫으면 빈 새 탭 하나.
      */
-    private fun closeTabs(targets: List<Tab>, undoable: Boolean = true) {
+    private fun closeTabs(targets: List<Tab>) {
         val closing = targets.filter { it in tabs }
         if (closing.isEmpty()) return
         if (picker.tab in closing) picker.stop()
-        // ── 녹화·가로채기 중인 탭을 닫을 때(BR-MEDIA 의 자리): 지금은 아래의 dispose 가 받은 것을 버린다. 묻거나 저장하려면 여기서 그런 탭을
-        //    걸러 물은 뒤 이 함수를 다시 부른다 — 탭을 닫는 길은 여기 하나다.
-        val batch = closed.newBatch()
+        // 녹화·가로채기는 부르는 쪽이 [settleCaptures] 로 먼저 정한다 — 아래의 dispose 는 남은 것을 받은 데까지 저장한다.
         val was = current
         val wasIndex = tabs.indexOf(was)
         if (bgTab != null && bgTab in closing) endBackgroundPlay(pauseMedia = false)
         for (tab in closing) {
-            val index = tabs.indexOf(tab)
-            if (undoable) {
-                closed.push(
-                    ClosedTabs.Entry(tab.committedUrl.ifEmpty { tab.url }, tab.title, snapshot(tab), index, tab.openerId, tab.desktop, batch,
-                        selected = tab == was),
-                )
-            }
-            tabs.removeAt(index)
+            tabs.removeAt(tabs.indexOf(tab))
             tab.bridge?.dispose()
             tab.requests.clear()
             tab.webView?.let {
@@ -2448,77 +2413,21 @@ class BrowserActivity : Activity(), PageHost {
             tab.webView = null
             tab.frozen = null
         }
-        trace("closed tabs=${closing.size} undoable=$undoable")
-        var placeholder: Tab? = null
+        trace("closed tabs=${closing.size}")
         if (was != null && was in closing) {
             current = null
             val next = tabs.firstOrNull { it.id == was.openerId } ?: tabs.getOrNull(wasIndex.coerceAtMost(tabs.size - 1))
-            if (next != null) select(next) else placeholder = newTab(select = true)
+            if (next != null) select(next) else newTab(select = true)
         } else {
             renderTabCount()
             scheduleSave()
         }
-        val count = closed.countOf(batch)
-        if (count > 0) {
-            val text = if (count == 1) getString(R.string.tab_closed) else getString(R.string.tabs_closed, count)
-            messages.show(text, getString(R.string.undo)) { restoreClosed(closed.takeBatch(batch), placeholder) }
-        }
-    }
-
-    /** 닫는 탭의 뒤로·앞으로 기록 — 살아 있으면 WebView 에서, 접혔으면 접어 둔 것, 아직 열지 않았으면 없다(주소로 연다). */
-    private fun snapshot(tab: Tab): Bundle? {
-        tab.frozen?.let { return it }
-        val view = tab.webView ?: return null
-        val state = Bundle()
-        return if (view.saveState(state) != null) state else null
-    }
-
-    /**
-     * 닫은 탭을 되살린다 — 닫을 때의 자리로, 고르면 접은 탭처럼 뒤로·앞으로 기록이 돌아온다. 닫을 때 보던 탭(없으면 마지막 것)을 고른다.
-     * 마지막 탭을 닫아 생긴 빈 새 탭([placeholder])은 아직 쓰지 않았으면 걷는다.
-     */
-    private fun restoreClosed(entries: List<ClosedTabs.Entry>, placeholder: Tab? = null) {
-        if (entries.isEmpty()) return
-        // 자리 차례로(앞 자리부터) 넣어야 뒤의 자리가 맞는다 — ClosedTabs.takeBatch 가 그 차례로 준다.
-        val restored = entries.map { e ->
-            Tab(nextTabId++, null).apply {
-                url = e.url
-                committedUrl = e.url
-                title = e.title
-                frozen = e.state
-                desktop = e.desktop
-                openerId = e.openerId?.takeIf { id -> tabs.any { it.id == id } }
-                lastShown = SystemClock.elapsedRealtime()
-            }.also { tabs.add(e.index.coerceIn(0, tabs.size), it) }
-        }
-        trace("restored closed ${entries.size}")
-        val unused = placeholder?.takeIf { it in tabs && it.url.isEmpty() && it.webView?.canGoBack() != true }
-        select(restored[entries.indexOfFirst { it.selected }.takeIf { it >= 0 } ?: restored.lastIndex])
-        unused?.let { closeTabs(listOf(it), undoable = false) }
-    }
-
-    /** 메뉴의 '최근 닫은 탭' — 새것부터. 고르면 그 탭을 되살린다(기록째). */
-    private fun showRecentTabs() {
-        val entries = closed.all.toList()
-        if (entries.isEmpty()) return
-        val labels = entries.map { e ->
-            val host = Uri.parse(e.url).host.orEmpty()
-            if (host.isEmpty() || e.label == e.url) e.label else "${e.label} · $host"
-        }
-        AlertDialog.Builder(this)
-            .setTitle(R.string.recent_tabs)
-            .setItems(labels.toTypedArray()) { _, which ->
-                val e = entries[which]
-                if (closed.take(e)) restoreClosed(listOf(e))
-            }
-            .setNegativeButton(R.string.close, null)
-            .show()
     }
 
     /**
      * 새 탭을 열고 주소창에 초점과 자판을 준다 — 새 탭은 주소를 치려고 여는 일이 많다(크롬은 초점을 주지 않고 시작 화면만 보이지만, 그러면
      * 주소창을 한 번 더 눌러야 한다). 빈 글로는 제안 목록을 덮지 않아 시작 화면(북마크·자주 간 곳)이 그대로 보이고, 치기 시작하면 목록이
-     * 뜬다(앞 판은 초점만 주어 자판 없이 제안 목록이 시작 화면을 가렸다).
+     * 뜬다.
      */
     private fun openNewTabForTyping() {
         newTab(select = true)
@@ -2541,7 +2450,7 @@ class BrowserActivity : Activity(), PageHost {
     }
 
     private fun showTabs() {
-        // 줄의 '닫기' 가 제목의 탭 수도 고친다 — 목록만 다시 그리면 닫은 뒤에도 연 때의 수가 남았다.
+        // 줄의 '닫기' 가 제목의 탭 수도 고친다 — 목록만 다시 그리면 닫은 뒤에도 연 때의 수가 남는다.
         var dialog: AlertDialog? = null
         val adapter = object : BaseAdapter() {
             override fun getCount() = tabs.size
@@ -2553,7 +2462,7 @@ class BrowserActivity : Activity(), PageHost {
                     orientation = LinearLayout.HORIZONTAL
                     gravity = Gravity.CENTER_VERTICAL
                     setPadding(Ui.dp(context, 20), Ui.dp(context, 6), Ui.dp(context, 4), Ui.dp(context, 6))
-                    // 줄 안의 '닫기' 단추가 초점을 받을 수 있으면 ListView 가 줄 누르기를 넘기지 않는다(탭을 고를 수 없었다). 단추는 초점 없이도 눌린다.
+                    // 줄 안의 '닫기' 단추가 초점을 받을 수 있으면 ListView 가 줄 누르기를 넘기지 않는다. 단추는 초점 없이도 눌린다.
                     descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                 }
                 val texts = LinearLayout(this@BrowserActivity).apply { orientation = LinearLayout.VERTICAL }
@@ -2612,7 +2521,7 @@ class BrowserActivity : Activity(), PageHost {
             select(tabs[position])
             shown.dismiss()
         }
-        // 목록에서 ✕ 로 닫으면 '되돌리기' 는 이 창 뒤에 뜬다(창이 가린다) — 창을 닫은 때부터 다시 센다.
+        // 이 창 뒤에 뜬 아래 알림 줄(팝업을 막았다 …)은 창이 가린다 — 창을 닫은 때부터 다시 센다.
         shown.setOnDismissListener { messages.restartTimer() }
         shown.show()
     }
@@ -2705,7 +2614,7 @@ class BrowserActivity : Activity(), PageHost {
     }
 
     /**
-     * 새 탭을 열어 [url] 을 열고 **곧바로 그 탭으로 간다**(사용자 요청, 2026-10-16 — '새 탭으로 즉시 전환되도록' — 앞 판은 뒤에 열고 알렸다).
+     * 새 탭을 열어 [url] 을 열고 **곧바로 그 탭으로 간다**(사용자 결정).
      * 그 탭에서 뒤로 갈 곳이 없으면 이 탭으로 돌아온다. 이 탭이 소리 나는 유튜브면 뒤에서 이어진다(탭을 떠날 때와 같다).
      */
     private fun openInNewTab(opener: Tab, url: String) {
@@ -2715,7 +2624,7 @@ class BrowserActivity : Activity(), PageHost {
     }
 
     /**
-     * 글 고르기 메뉴의 '검색'([SelectionSearch]) — 고른 글을 지금 검색 엔진으로 새 탭에서 찾는다. 고른 글을 다 읽은 뒤에 메뉴를 닫는다(먼저
+     * 글 고르기 메뉴의 '검색'([SelectionSearch]) — 고른 글을 Google 로 새 탭에서 찾는다. 고른 글을 다 읽은 뒤에 메뉴를 닫는다(먼저
      * 닫으면 고르기가 풀려 글이 빈다).
      */
     private fun searchSelection(tab: Tab, mode: ActionMode) {
@@ -2728,7 +2637,7 @@ class BrowserActivity : Activity(), PageHost {
             if (query == null) {
                 Toast.makeText(this, R.string.search_selection_empty, Toast.LENGTH_SHORT).show()
             } else {
-                openInNewTab(tab, app.settings.searchEngine.searchUrl(query))
+                openInNewTab(tab, SearchEngine.searchUrl(query))
             }
         }
     }
@@ -2800,15 +2709,16 @@ class BrowserActivity : Activity(), PageHost {
         }
         val target = Omnibox.classify(input)
         if (target is Omnibox.Target.Magnet) {
-            // 주소창의 마그넷은 토렌트로(사용자 결정 ⑳) — 앞 판은 검색어가 되어 info-hash 가 검색 엔진에 갔다. 주소창은 지금 쪽의 주소로 되돌린다.
+            // 주소창의 마그넷은 다른 앱에 넘길지 묻는다 — 검색어로 돌리면 info-hash 가 검색 엔진에 간다. 주소창은
+            // 지금 쪽의 주소로 되돌린다.
             suggestions.hide()
             address.clearFocus()
             getSystemService(InputMethodManager::class.java).hideSoftInputFromWindow(address.windowToken, 0)
             showUrl()
-            torrentPrompt.offerMagnet(target.uri) { openExternalApp(target.uri) }
+            askExternal(target.uri)
             return
         }
-        val url = Omnibox.resolve(input, app.settings.searchEngine) ?: return
+        val url = Omnibox.resolve(input) ?: return
         navigateTo(url, typed = target is Omnibox.Target.Url)
     }
 
@@ -2970,7 +2880,7 @@ class BrowserActivity : Activity(), PageHost {
 
     /**
      * 같은 문서 안에서 주소가 바뀌었다(SPA — 유튜브 모바일의 다음 영상 등). 새 문서는 다 연 뒤에 적지만 이 이동에는 '다 열었다' 가 오지 않아
-     * 앞 판은 방문 기록에 남지 않았다. 새로 고침, 조각(`#…`)만 바뀐 것, 문서를 다 열기 전의 이동(다 연 때 마지막 주소를 적는다)은
+     * 여기서 적는다. 새로 고침, 조각(`#…`)만 바뀐 것, 문서를 다 열기 전의 이동(다 연 때 마지막 주소를 적는다)은
      * 적지 않는다. 제목은 지금의 것 — 쪽이 제목을 늦게 바꾸면 [onTitle] 이 고친다.
      */
     override fun onSameDocumentNavigation(tab: Tab, url: String, reload: Boolean) {
@@ -2991,7 +2901,7 @@ class BrowserActivity : Activity(), PageHost {
         if (request.isForMainFrame) {
             tab.mainUrl = url
             // 찾은 미디어는 여기서 비우지 않는다 — 탐색이 커밋될 때 페이지의 경계만 옮긴다(watchNavigation). 요청 때 비우면 커밋되지 않는
-            // 탐색(첨부·204)이 목록을 지웠고, 커밋 전에 옛 재생기가 낸 요청이 새 목록에 들어갔다.
+            // 탐색(첨부·204)이 목록을 지우고, 커밋 전에 옛 재생기가 낸 요청이 새 목록에 들어간다.
             adMainFrame(tab, url)
             return null
         }
@@ -3266,7 +3176,7 @@ class BrowserActivity : Activity(), PageHost {
 
     /**
      * 주 문서가 열리지 않았다 — 그 탭 위에 '열지 못함' 덮개를 둔다(까닭은 오류·중계와 프록시 서버의 표·길의 상태로 고른다 — [PageErrors]).
-     * 앞 판은 WebView 의 영어 오류 쪽이나 빈 쪽뿐이었다. 사용자가 멈췄거나 다른 탐색이 앞선 것은 덮지 않는다.
+     * 사용자가 멈췄거나 다른 탐색이 앞선 것은 덮지 않는다.
      */
     override fun onMainFrameError(tab: Tab, url: String, source: PageErrors.Source) {
         trace("error tab=${tab.id} $source $url")
@@ -3276,8 +3186,7 @@ class BrowserActivity : Activity(), PageHost {
     }
 
     /**
-     * 인증서 오류(넘기지 않는다). **주 문서의 것만** 덮개로 알린다 — 그림 하나의 인증서로 쪽 전체가 막힌 것처럼 보이지 않게(앞 판은 하위
-     * 자원에도 '열지 않았습니다' 토스트를 띄웠다). 덮개는 탭의 것이라 뒤에서 연 탭이면 그 탭으로 갔을 때 보인다. 주 문서인지는 그 탭이 마지막으로
+     * 인증서 오류(넘기지 않는다). **주 문서의 것만** 덮개로 알린다 — 그림 하나의 인증서로 쪽 전체가 막힌 것처럼 보이지 않게. 덮개는 탭의 것이라 뒤에서 연 탭이면 그 탭으로 갔을 때 보인다. 주 문서인지는 그 탭이 마지막으로
      * 청한 주 문서의 주소(넘겨주기를 따라간 것 — [intercept])나 연 주소로 가린다.
      */
     override fun onSslError(tab: Tab, url: String) {
@@ -3315,11 +3224,6 @@ class BrowserActivity : Activity(), PageHost {
     }
 
     override fun askExternal(url: String) {
-        if (TorrentRules.isMagnet(url)) {
-            // 마그넷은 '이 앱에서 받기 / 다른 앱으로' 를 묻는다(사용자 결정 ⑱) — 그 창이 다른 앱은 프록시를 거치지 않는다고도 말한다.
-            torrentPrompt.offerMagnet(url) { openExternalApp(url) }
-            return
-        }
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.external_title, ExternalLinks.label(url)))
             .setMessage(R.string.external_warning)
@@ -3354,7 +3258,7 @@ class BrowserActivity : Activity(), PageHost {
     override fun popupAllowed(opener: Tab): Boolean = app.popups.isAllowed(Request.hostOf(opener.committedUrl))
 
     /**
-     * 사용자가 누르지 않은 팝업을 막았다(누른 뒤 한참 있다 여는 결제 창 등 — 앞 판은 소리 없이 막았다). 아래에 '팝업을 막았습니다 ·
+     * 사용자가 누르지 않은 팝업을 막았다(누른 뒤 한참 있다 여는 결제 창 등). 아래에 '팝업을 막았습니다 ·
      * 이 사이트 허용' 을 띄운다 — 허용하면 그 사이트(등록 도메인)의 팝업을 그 뒤로 연다. 막힌 창은 다시 열 수 없다(WebView 가 그 주소를
      * 알려 주지 않는다) — 쪽에서 다시 해 보게 한다. 같은 쪽에서 거듭 막히면(광고) 한 번만 알린다.
      */
@@ -3373,14 +3277,14 @@ class BrowserActivity : Activity(), PageHost {
         }
     }
 
-    /** 쪽이 스스로 닫았다(`window.close` — 로그인 창 등). 되돌리기는 띄우지 않는다(사용자가 닫은 것이 아니다). */
+    /** 쪽이 스스로 닫았다(`window.close` — 로그인 창 등). */
     override fun closeWindow(tab: Tab) {
-        // 쪽이 스스로 닫는다 — 묻지 않고 받은 데까지 저장한다(settleCaptures 의 머리말). 되돌리기는 띄우지 않는다.
-        settleCaptures(listOf(tab), ask = false) { closeTabs(listOf(tab), undoable = false) }
+        // 쪽이 스스로 닫는다 — 묻지 않고 받은 데까지 저장한다(settleCaptures 의 머리말).
+        settleCaptures(listOf(tab), ask = false) { closeTabs(listOf(tab)) }
     }
 
     /**
-     * **재생 중 화면 켜 두기**(사용자 요청, 2026-10-08 — '미디어 재생 중엔 화면 꺼짐을 방지'). 지금 탭에서 소리가 나는 미디어가 재생 중이거나,
+     * **재생 중 화면 켜 두기**. 지금 탭에서 소리가 나는 미디어가 재생 중이거나,
      * 전체 화면 영상을 보는 동안 영상이 재생 중이면 창에 `FLAG_KEEP_SCREEN_ON` 을 건다([ScreenWake]). 창이 보이는 동안만 듣는 깃발이라 앱을
      * 떠나면 저절로 풀리고, 걷을 때 시스템이 꺼짐 시간을 처음부터 센다(`ON_AFTER_RELEASE`). 틀이 알리지 못하고 사라졌을 때를 위해 틀 하나가
      * 오래되는 때 다시 본다.
@@ -3487,8 +3391,7 @@ class BrowserActivity : Activity(), PageHost {
     }
 
     /**
-     * 렌더러가 사라졌다 — 그 탭의 WebView 를 부순다(앱은 산다). 지금 탭이면 덮개로 까닭과 [다시 시도]를(앞 판은 빈 화면과 토스트뿐이었다),
-     * 뒤의 탭은 고를 때 다시 연다(앞 판과 같이).
+     * 렌더러가 사라졌다 — 그 탭의 WebView 를 부순다(앱은 산다). 지금 탭이면 덮개로 까닭과 [다시 시도]를, 뒤의 탭은 고를 때 다시 연다.
      */
     override fun onRendererGone(tab: Tab, crashed: Boolean) {
         if (picker.tab == tab) picker.stop()
@@ -3534,11 +3437,6 @@ class BrowserActivity : Activity(), PageHost {
             downloads.enqueue(url, name, mimeType?.takeIf { it.isNotBlank() }, userAgent, pageUrl, pageTitle)
             Toast.makeText(this, R.string.download_started, Toast.LENGTH_SHORT).show()
         }
-        if (TorrentRules.isTorrentFile(mimeType, name, url)) {
-            // `.torrent` 는 '토렌트로 받기 / 파일로 저장' 을 묻는다(사용자 결정 ⑲). 파일로 저장은 지금까지의 내려받기다.
-            torrentPrompt.offerFile(name, size, url, userAgent, pageUrl, saveFile)
-            return
-        }
         AlertDialog.Builder(this)
             .setTitle(R.string.download_question)
             .setMessage(getString(R.string.download_detail, name, size))
@@ -3571,7 +3469,7 @@ class BrowserActivity : Activity(), PageHost {
             }
             val mime = offer.type.substringBefore(';').ifBlank { mimeType?.takeIf { it.isNotBlank() } ?: "" }.ifBlank { null }
             val downloads = app.downloads
-            // 고리의 download 속성이 이름이다 — 확장자만 형식에 맞춘다(앞 판은 확장자 없는 이름을 버려 'download.mp4' 였다).
+            // 고리의 download 속성이 이름이다 — 확장자만 형식에 맞춘다(확장자 없는 이름도 버리지 않는다).
             val name = offer.name.takeIf { it.isNotBlank() }?.let { downloads.names.named(it, mime) }
                 ?: downloads.names.choose(contentDisposition, "blob:/download", mime)
             trace("download asked $name")
@@ -3644,9 +3542,8 @@ class BrowserActivity : Activity(), PageHost {
         private const val CONCEAL_MS = 340L
 
         /**
-         * 막대를 부르는 가장자리 띠 — 상태 표시줄의 높이를 모를 때(dp — 창이 화면 맨 위에 닿지 않는다 등). 띠는 상태 표시줄의 높이가 기본이다 —
-         * 시스템이 상태 표시줄을 부르는 밀기도 그 높이에서 시작한 것을 본다(AOSP 12 SystemGesturesPointerEventListener — 위에 노치가 있으면
-         * 조금 더 넓힌다). 24dp 는 안드로이드의 오랜 상태 표시줄 높이다.
+         * 상태 표시줄·노치의 띠 높이를 모를 때(dp — 창이 화면 맨 위에 닿지 않는다 등). 실제 띠는 이것과 화면 높이의 위 20% 가운데 큰
+         * 것이다([FullscreenLayout.edgeBand]). 24dp 는 안드로이드의 오랜 상태 표시줄 높이다.
          */
         private const val EDGE_FALLBACK_DP = 24
 
@@ -3671,7 +3568,6 @@ class BrowserActivity : Activity(), PageHost {
         const val M_FIND = 13
         const val M_ADBLOCK = 14
         const val M_CAPTURE = 15
-        const val M_RECENT_TABS = 16
         const val M_DESKTOP = 17
         const val M_POPUPS = 18
         const val M_HIDE_ELEMENT = 19

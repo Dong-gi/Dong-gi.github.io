@@ -1,7 +1,7 @@
 package io.github.donggi.iroirobrowser.core
 
 /**
- * WebView 의 기본 User-Agent 를 **크롬의 줄인 꼴**(User-Agent Reduction)로 바꾼다(사용자 결정, 2026-10-05 — '일반화된 UA 로').
+ * WebView 의 기본 User-Agent 를 **크롬의 줄인 꼴**(User-Agent Reduction)로 바꾼다(사용자 결정).
  *
  * WebView 의 기본값은 `Mozilla/5.0 (Linux; Android 12; SM-A908N Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko)
  * Version/4.0 Chrome/153.0.8010.36 Mobile Safari/537.36` 처럼 **기기 모델·빌드 번호·`wv`** 를 싣는다. 크롬(안드로이드)은 2023 년부터

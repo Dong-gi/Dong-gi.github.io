@@ -8,13 +8,13 @@ import android.service.quicksettings.TileService
 import io.github.donggi.iroirobrowser.R
 
 /**
- * 퀵 설정 타일 '테더링' — 테더링을 통째로 켜고 끈다(서버 셋과 Wi-Fi Direct 핫스팟을 함께 — 켜기·끄기는 하나, 사용자 결정 2026-10-10).
+ * 퀵 설정 타일 '테더링' — 테더링을 통째로 켜고 끈다(서버 셋과 Wi-Fi Direct 핫스팟을 함께 — 켜기·끄기는 하나, 사용자 결정).
  * `:tether` 프로세스 — 상태([TetherState])가 그 프로세스의 정적 필드라서다. 길게 누르면 시스템 UI 가 테더 화면을 연다
  * ([TilePreferencesActivity] — `QS_TILE_PREFERENCES`).
  *
  * 끄기는 서비스를 곧바로 멈춘다(`stopService` — 뒤에서도 막히지 않는다). 켜기는 바로 보내지 못한다 — 이 앱의 화면이 앞에 없으면
  * `createGroup` 이 BUSY 로 실패하므로 내보내지 않은 트램폴린([HotspotStartActivity])을 띄운다. 누른 직후 '쓸 수 없음' 으로 바꾸고 상태가
- * 바뀌기를 기다린다. 이름(테더링)·부제(SSID·켜는 중·꺼짐)는 들을 때마다 다시 적는다 — 이름은 예전 판의 '테더 핫스팟' 을 시스템 UI 가 들고
+ * 바뀌기를 기다린다. 이름(테더링)·부제(SSID·켜는 중·꺼짐)는 들을 때마다 다시 적는다 — 이름은 옛 이름을 시스템 UI 가 들고
  * 있을 수 있어서다.
  */
 class HotspotTileService : TileService() {

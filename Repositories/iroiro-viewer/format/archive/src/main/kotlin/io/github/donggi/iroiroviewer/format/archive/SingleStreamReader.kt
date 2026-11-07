@@ -24,8 +24,7 @@ import java.util.zip.CRC32
  * 항목은 하나이고 그 이름·크기·시각은 머리와 파일 이름에서 온다. 압축을 끝까지 푸는 것은 사용자가 풀거나 그림을 열 때뿐이다.
  * 목록이 푸는 것은 `Archives` 가 안이 tar 인지 보려고 풀어 보는 **앞 512바이트**다(해제기가 한 번에 푸는 덩이까지 — bzip2 는
  * 블록 하나, 많아야 900 KB). 64 MiB 의 0 을 싼 65 KiB 짜리 폭탄도 그만큼만 푼다. 더 푸는 자리는 하나다 — 그 512바이트가
- * 0 이고 **안의 이름이 `.tar` 로 끝나면** 빈 tar 인지 보려고 1 MiB 까지 더 푼다(`TarArchiveReader.startsLikeTar`). 예전에는
- * 이름을 보지 않아 0 으로 시작하는 본문이면 언제나 1 MiB 를 풀었다. 판별에는 소비할 입력의 상한(4 MiB, `StreamLimits`)이 있고,
+ * 0 이고 **안의 이름이 `.tar` 로 끝나면** 빈 tar 인지 보려고 1 MiB 까지 더 푼다(`TarArchiveReader.startsLikeTar`). 판별에는 소비할 입력의 상한(4 MiB, `StreamLimits`)이 있고,
  * 넘으면 안을 보지 못한 채 이 리더로 연다 — 시각이 아니라 입력이라 같은 파일은 언제나 같은 답이다.
  *
  * ## 크기 — 정직한 것만 보인다
@@ -267,7 +266,7 @@ internal object StreamNames {
  *
  * **이름·주석 칸은 [GzipHeaders.MAX_NAME_BYTES] 까지만 읽는다** — 넘으면 이름 없이 멈춘다(그 길이의 이름은 어차피 쓰지 않는다).
  * 판별이 입력 상한에 걸려 이 리더로 온 파일(끝나지 않는 이름·주석)을 여기서 마감 없이 끝까지 다시 읽으면, 판별에 상한을 둔 뜻이
- * 사라진다 — 목록이 몇 GB 를 읽은 뒤 '깨졌다' 로 끝났다.
+ * 사라진다 — 목록이 몇 GB 를 읽은 뒤 '깨졌다' 로 끝난다.
  */
 internal fun GzipHeaders.firstOf(source: DocumentSource): GzipHeader =
     BufferedInputStream(source.openStream(), 8 * 1024).use { input ->
@@ -324,7 +323,7 @@ internal object XzIndex {
             val index = readAt(ch, pos - 12 - indexSize, indexSize.toInt())
             val (uncompressed, blocks) = parseIndex(index) ?: return -1L
             // **뺄셈으로 견준다.** 블록 자리의 합은 `Long` 의 끝 가까이 올 수 있어 `12 + blocks + indexSize + 12` 가 넘치면 음수가 되어
-            // 검사를 지나고, 그 자리로 옮기는 `position(음수)` 가 `IllegalArgumentException` 을 냈다(입출력 예외가
+            // 검사를 지나고, 그 자리로 옮기는 `position(음수)` 가 `IllegalArgumentException` 을 낸다(입출력 예외가
             // 아니라 아래 `catch` 가 받지 못한다). `indexSize ≤ pos - 24` 라 오른쪽은 음수가 아니다.
             if (blocks > pos - 24 - indexSize) return -1L
             val streamSize = 12 + blocks + indexSize + 12

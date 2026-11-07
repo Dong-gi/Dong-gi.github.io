@@ -44,7 +44,7 @@ class NoticeRateTest {
             clock.advance(1)
         }
         clock.advance(500)
-        // 처음 하나는 곧바로, 그 뒤는 250ms 창마다 하나 — 1초 남짓이면 다섯 번 안팎(예전에는 1,000번).
+        // 처음 하나는 곧바로, 그 뒤는 250ms 창마다 하나 — 1초 남짓이면 다섯 번 안팎.
         assertEquals(5, dispatched)
         assertEquals(0, clock.pending)
     }

@@ -59,7 +59,7 @@ interface ComicSource : AutoCloseable {
     suspend fun bytes(ordinal: Int): ByteArray?
 
     /**
-     * 화면이 **뛰어든 자리**에서 앞쪽을 몇 쪽 함께 띄우는가(14단계, [Spreads.lookBehind]) — 한 쪽 보기면 1, 두 쪽
+     * 화면이 **뛰어든 자리**에서 앞쪽을 몇 쪽 함께 띄우는가([Spreads.lookBehind]) — 한 쪽 보기면 1, 두 쪽
      * 보기면 3. solid 의 창이 그만큼 앞에서 시작해야 앞 칸을 뜨느라 패스가 한 번 더 돌지 않는다. 무작위 접근 소스는
      * 할 일이 없다.
      */
@@ -73,7 +73,7 @@ interface ComicSource : AutoCloseable {
     fun pageFile(ordinal: Int): File? = null
 
     /**
-     * 쪽 **여럿을** 받는다 — 쪽 목록(격자)의 썸네일이 쓴다(14단계). 무엇을 받을지·언제 그만둘지는 [demand] 가 정한다.
+     * 쪽 **여럿을** 받는다 — 쪽 목록(격자)의 썸네일이 쓴다. 무엇을 받을지·언제 그만둘지는 [demand] 가 정한다.
      *
      * [onPage] 는 **블로킹 함수**이고(썸네일 디코딩이 그 안에서 돈다) 해제를 돌리는 스레드에서 불린다. 바이트는 그
      * 호출이 끝나면 버려진다 — **디스크에도 창에도 남기지 않는다.** 읽지 못한 쪽은 null 로 알린다. 받고 싶다고 한
@@ -121,8 +121,8 @@ interface ScanDemand {
 /**
  * 무작위 접근이 싼 아카이브(ZIP·CBZ).
  *
- * 엔트리마다 독립 압축이라 필요한 쪽만 푼다. 8단계 실측에서 ZIP 의 `open()` 반복은
- * 엔트리 수에 **선형**이었다(7z 은 제곱이었다) — 그래서 여기서는 창도 미리 읽기도
+ * 엔트리마다 독립 압축이라 필요한 쪽만 푼다. ZIP 의 `open()` 반복은 엔트리 수에
+ * **선형**이다(7z 은 제곱, 실측) — 그래서 여기서는 창도 미리 읽기도
  * 필요 없고, 화면이 원하는 쪽을 그때그때 준다.
  */
 internal class ArchiveComicSource(
@@ -158,8 +158,7 @@ internal class ArchiveComicSource(
  *
  * ## 왜 창인가
  *
- * `ArchiveReader` 의 주석이 "만화 뷰어는 열 때 한 번에 다 풀어 캐시" 라고 적어 두었지만,
- * 그 문장은 **어디에** 캐시하는지를 말하지 않았다. 디스크는 위 [ComicSource] 의 이유로
+ * 디스크는 위 [ComicSource] 의 이유로
  * 쓰지 않고, 힙에 전부 올리면 300쪽짜리가 수백 MB 다. 그래서 앞에서부터 읽되
  * **바이트 상한에 닿으면 멈추는** 창을 둔다.
  *
@@ -221,15 +220,14 @@ internal class SolidComicSource(
         // **요청한 쪽보다 앞에서 시작한다.** 화면은 보고 있는 쪽만 요청하지 않는다 —
         // 페이저가 앞뒤 한 장씩을 함께 띄우므로, 창을 요청한 쪽에서 정확히 시작하면
         // **바로 다음 요청(이전 쪽)이 반드시 창 밖**이라 방금 만든 창을 버리고 패스를
-        // 한 번 더 돈다. 실측으로 확인했다(15쪽으로 뛰기 = 1683ms + 1021ms).
+        // 한 번 더 돈다.
         //
         // 되돌아가는 중이면 더 앞에서 시작한다. 한 쪽씩 뒤로 넘기는 사람에게는 창이
         // 언제나 '방금 지나온 쪽' 바깥에 있어서, 넘길 때마다 패스가 도는 것을 막는다.
         //
-        // **두 쪽 보기(14단계)는 뛰어든 자리에서 앞 칸이 두 쪽이다**([jumpLookBehind] = 3). 그런데 창 끝에서 **이어
+        // **두 쪽 보기는 뛰어든 자리에서 앞 칸이 두 쪽이다**([jumpLookBehind] = 3). 그런데 창 끝에서 **이어
         // 읽는** 중이면 앞 칸은 이미 떠 있다(화면이 들고 있다) — 거기서도 세 쪽을 물러서면 앞으로 담을 자리만 줄어
-        // 패스가 더 자주 돈다. 그래서 창 끝 바로 뒤의 요청은 한 쪽 보기처럼 한 쪽만 물러선다. 한 쪽 보기는 셋 다 1이라
-        // 9단계 그대로다.
+        // 패스가 더 자주 돈다. 그래서 창 끝 바로 뒤의 요청은 한 쪽 보기처럼 한 쪽만 물러선다. 한 쪽 보기는 셋 다 1이다.
         val base = jumpLookBehind
         val windowEnd = window.keys.maxOrNull() ?: -1
         val lookBehind = when {
@@ -267,8 +265,7 @@ internal class SolidComicSource(
             window.clear()
             windowBytes = 0L
         }
-        // **이 수가 solid 만화의 체감을 정한다.** 2단계가 '만화 뷰어가 실제로 페이지를
-        // 넘길 때라야 의미 있는 수가 나온다' 며 여기까지 미뤄 둔 실측이다.
+        // **이 수가 solid 만화의 체감을 정한다.**
         // 릴리스에서는 호출 지점째 사라진다.
         Iro.d(TAG) {
             val ms = (System.nanoTime() - began) / 1_000_000
@@ -503,7 +500,7 @@ internal fun <T> readOrNull(block: () -> T): T? = try {
  *
  * `readAllBytes`·`readNBytes` 를 쓰지 않는다 — 자바 9 의 함수라 컴파일도 되고 JVM
  * 시험도 통과하는데 **안드로이드에는 API 33 부터** 있어 minSdk 31 기기에서
- * `NoSuchMethodError` 로 앱이 즉사한다(7단계에서 실제로 죽였다).
+ * `NoSuchMethodError` 로 앱이 즉사한다.
  */
 internal fun InputStream.readAllBounded(
     cap: Long = ParseLimits.DEFAULT.maxSingleOutput,

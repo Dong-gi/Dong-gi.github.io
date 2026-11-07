@@ -9,8 +9,8 @@ import java.nio.ByteOrder
 import java.nio.channels.SeekableByteChannel
 
 /**
- * **설치 파일(APK)인가** — 이름(`.apk`)으로, 그리고 **내용**으로(2026-10-16 보안 점검 — '권한 없는 다른 앱이 Files 를 거쳐 APK 설치
- * 창을 띄울 수 있다').
+ * **설치 파일(APK)인가** — 이름(`.apk`)으로, 그리고 **내용**으로. 권한 없는 다른 앱이 Files 를 거쳐 APK 설치
+ * 창을 띄우지 못하게 한다.
  *
  * ## 왜 내용까지 보는가
  *
@@ -53,7 +53,7 @@ object ApkFiles {
 
     /**
      * **다른 앱에 넘기지 않는가** — 다른 앱이 이 앱에 넘긴 파일([received])이 설치 파일([isApk])이면. 파일 목록에서 사용자가 고른 APK 는
-     * 그대로 설치 관리자에 넘긴다(사용자가 되살린 기능 — CLAUDE.md '…Play 프로텍트의 설치 차단'). [isApk] 는 받은 것일 때만 부른다(디스크를 읽는다).
+     * 그대로 설치 관리자에 넘긴다(사용자 결정). [isApk] 는 받은 것일 때만 부른다(디스크를 읽는다).
      */
     fun refusesHandOff(received: Boolean, isApk: () -> Boolean): Boolean = received && isApk()
 

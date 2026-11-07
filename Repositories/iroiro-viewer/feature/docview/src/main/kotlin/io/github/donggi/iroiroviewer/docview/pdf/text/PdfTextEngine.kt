@@ -28,7 +28,7 @@ import kotlin.math.min
  * ## 왜 직접 하는가
  *
  * 레거시 `PdfRenderer`(API 34 이하 — 사용자의 기기)는 쪽의 글자를 주지 않는다. 글을 주는 것은 API 35 의 재구현과 확장 13 의
- * `PdfRendererPreV` 뿐이다(CLAUDE.md 'SDK 확장과 PDF'). 그래서 11단계가 세운 해석기(xref·객체 스트림·복호기) 위에 **글만
+ * `PdfRendererPreV` 뿐이다(CLAUDE.md 'SDK 확장과 PDF'). 그래서 암호 PDF 를 풀려고 세운 해석기(xref·객체 스트림·복호기) 위에 **글만
  * 보는 내용 해석기**를 얹었다 — 색·선·그림은 건너뛰고, 글자의 자리를 정하는 연산자(명세 9.3·9.4)와 그 상태(`q`·`Q`·`cm`)만 돈다.
  *
  * ## 좌표
@@ -148,7 +148,7 @@ internal class PdfTextEngine private constructor(
 
         /**
          * 내용 스트림 하나를 돈다. [initial] 은 시작 상태 — 쪽이면 빈 상태, **폼이면 `Do` 를 부른 자리의 상태**(글꼴·크기·간격을
-         * 물려받는다 — 명세 8.10.1. 처음에는 빈 상태로 시작해 `Do` 앞의 `Tf` 에 기대는 폼의 글이 빠졌다).
+         * 물려받는다 — 명세 8.10.1. 빈 상태로 시작하면 `Do` 앞의 `Tf` 에 기대는 폼의 글이 빠진다).
          */
         private fun run(data: ByteArray, resources: PdfDict?, initial: State, depth: Int) {
             parsedBytes += data.size

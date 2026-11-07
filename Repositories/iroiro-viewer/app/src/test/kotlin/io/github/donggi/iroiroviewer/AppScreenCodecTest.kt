@@ -80,7 +80,7 @@ class AppScreenCodecTest {
 
     /**
      * 편집기의 보기 모드로 연 자리는 경로와 편집기의 형식 글자를 든다 — 글 편집기(`e:`)와 머리가 겹치지 않게 `r:` 다.
-     * 옛 판의 `o:`(앱의 오피스 편집 화면 — 걷었다)는 첫 화면으로 읽는다.
+     * 모르는 머리(`o:` 따위)는 첫 화면으로 읽는다.
      */
     @Test
     fun `편집기로 연 자리는 형식과 경로를 든다`() {
@@ -92,7 +92,7 @@ class AppScreenCodecTest {
         assertEquals(AppScreen.Browser, AppScreenCodec.decode("r:docx:"))
         assertEquals(AppScreen.Browser, AppScreenCodec.decode("r::/a.docx"))
         assertEquals(AppScreen.Browser, AppScreenCodec.decode("r:DOC X:/a.docx"))
-        // 옛 판의 오피스 편집 화면.
+        // 모르는 머리.
         assertEquals(AppScreen.Browser, AppScreenCodec.decode("o:t:docx:/a.docx"))
     }
 
@@ -106,7 +106,7 @@ class AppScreenCodecTest {
         assertEquals(AppScreen.Notice(AppScreen.Browser), AppScreenCodec.decode("n>n>s"))
         assertEquals(AppScreen.Diag(AppScreen.Browser), AppScreenCodec.decode("d>n"))
         assertEquals(AppScreen.Browser, AppScreen.Saver.restore(42))
-        // 걷어 낸 네트워크 저장소 화면(2026-10-05 ~ 10-09)이 남긴 값 — 첫 화면으로 읽는다.
+        // 모르는 값 — 첫 화면으로 읽는다.
         assertEquals(AppScreen.Browser, AppScreenCodec.decode("r"))
     }
 }

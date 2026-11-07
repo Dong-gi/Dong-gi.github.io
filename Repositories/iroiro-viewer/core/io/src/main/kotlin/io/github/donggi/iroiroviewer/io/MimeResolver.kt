@@ -33,8 +33,8 @@ object MimeResolver {
     // 가른다(`ContentSniff.isAmbiguousStream`).
     //
     // **`mts` 는 여기 없다**(기타다). 캠코더(AVCHD)의 `.mts` 는 192바이트 패킷의 M2TS 라 media3 가 틀지 못한다 — 영상으로 적으면
-    // 재생 화면이 실패하고 나서야 다른 앱으로 넘어가고, 폴더의 ▶ 가 전부 실패할 큐를 만든다(이 회차 전에는 기타라
-    // 누르면 곧바로 다른 앱이었다). 그래서 기타로 두고, TypeScript 의 `.mts` 만 누를 때 내용으로 가려 텍스트 뷰어로 보낸다.
+    // 재생 화면이 실패하고 나서야 다른 앱으로 넘어가고, 폴더의 ▶ 가 전부 실패할 큐를 만든다.
+    // 그래서 기타로 두고, TypeScript 의 `.mts` 만 누를 때 내용으로 가려 텍스트 뷰어로 보낸다.
     private val video = setOf(
         "mp4", "mkv", "webm", "avi", "divx", "mov", "qt", "wmv", "flv", "f4v", "m4v", "3gp", "3gpp", "3g2", "ts",
         "m2t", "mpg", "mpeg", "vob", "m2ts", "rmvb", "ogv",
@@ -43,11 +43,10 @@ object MimeResolver {
         "txt", "log", "md", "markdown", "mdown", "mkd", "mkdn", "mdwn", "csv", "tsv", "srt", "ass", "ssa", "vtt", "smi",
         "ttml", "dfxp", "nfo", "ini", "cfg", "conf",
     )
-    // `ts`·`mts` 는 여기 없다 — 영상(MPEG-TS)과 기타(AVCHD)로 본다(위). 두 표에 함께 두었을 때도 먼저 맞는 영상이 이겨(그때는
-    // `when` 이 골랐다) 이 자리는 한 번도 쓰이지 않았다. 겹쳐도 아무도 말하지 않으므로 시험이 겹침을 막는다.
+    // `ts`·`mts` 는 여기 없다 — 영상(MPEG-TS)과 기타(AVCHD)로 본다(위). 겹치면 앞의 표가 말없이 이기므로 시험이 겹침을 막는다.
     //
-    // 줄 둘째부터는 **텍스트 뷰어가 이미 강조하는** 확장자다(`format:text` 의 `TextLanguage`). 목록이 몰라 다른 앱으로
-    // 넘기고 있었다. 두 표가 어긋나지 않게 `app` 의 시험(`TextNamesConsistencyTest`)이 견준다.
+    // 줄 둘째부터는 **텍스트 뷰어가 이미 강조하는** 확장자다(`format:text` 의 `TextLanguage`). 목록이 모르면 다른 앱으로
+    // 넘긴다. 두 표가 어긋나지 않게 `app` 의 시험(`TextNamesConsistencyTest`)이 견준다.
     private val code = setOf(
         "kt", "kts", "java", "js", "mjs", "tsx", "jsx", "py", "rb", "go", "rs", "c", "h", "cpp", "hpp", "cc",
         "cs", "swift", "php", "sh", "bash", "zsh", "bat", "ps1", "sql", "json", "xml", "yaml", "yml", "toml",
@@ -65,7 +64,7 @@ object MimeResolver {
     )
     private val comic = setOf("cbz", "cbr", "cb7", "cbt")
     // 매크로(`m`)·서식(`t`·`x`)·쇼(`pps`) 파일도 같은 종류다. 빠뜨리면 목록이 '기타' 로 그려 **뷰어에 닿지 않는다**
-    // — 여는이(`OoxmlProbe`)는 여는데 누를 길이 없었다.
+    // — 여는 쪽은 열 줄 아는데 누를 길이 없다.
     private val document = setOf("doc", "docx", "docm", "dot", "dotx", "dotm", "odt", "rtf")
     private val sheet = setOf("xls", "xlsx", "xlsm", "xlt", "xltx", "xltm", "ods")
     private val slide = setOf("ppt", "pptx", "pptm", "pot", "potx", "potm", "pps", "ppsx", "ppsm", "odp")
@@ -87,8 +86,7 @@ object MimeResolver {
     internal val codeNameTable: Set<String> get() = codeNames
 
     /**
-     * 종류별 확장자 표. **[kindOf] 가 이 표 하나로 답한다** — 예전에는 `kindOf` 가 같은 차례의 `when` 을 따로 두어,
-     * `when` 에만 더한 갈래는 표를 훑는 시험을 비켜 갔다(두 벌은 한쪽만 고쳐진다). 한 확장자가 두 표에 들면 앞의 것이
+     * 종류별 확장자 표. **[kindOf] 가 이 표 하나로 답한다** — 두 벌을 두면 한쪽에만 더한 갈래가 표를 훑는 시험을 비켜 간다. 한 확장자가 두 표에 들면 앞의 것이
      * 이기고 아무도 말하지 않으므로, 겹침은 JVM 시험(`MimeResolverTableTest`)이 막는다.
      */
     internal val extensionTable: List<Pair<FileKind, Set<String>>> = listOf(
@@ -98,7 +96,7 @@ object MimeResolver {
         FileKind.FONT to font, FileKind.PDF to setOf("pdf"), FileKind.APK to setOf("apk"),
     )
 
-    // 목록의 줄마다 불리므로 표를 한 번 뒤집어 둔다(찾기 한 번). 겹치면 앞의 표가 이긴다 — 예전 `when` 과 같은 답.
+    // 목록의 줄마다 불리므로 표를 한 번 뒤집어 둔다(찾기 한 번). 겹치면 앞의 표가 이긴다.
     private val kindByExtension: Map<String, FileKind> = HashMap<String, FileKind>().apply {
         for ((kind, exts) in extensionTable) for (ext in exts) putIfAbsent(ext, kind)
     }

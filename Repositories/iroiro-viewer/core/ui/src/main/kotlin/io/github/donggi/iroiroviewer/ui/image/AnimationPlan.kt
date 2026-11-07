@@ -4,13 +4,12 @@ import io.github.donggi.iroiroviewer.safety.AnimationLimits
 import io.github.donggi.iroiroviewer.safety.ImageLimits
 
 /**
- * 움직이는 그림을 **어떻게 보여 줄 것인가.** 순수 함수다 — 이미지 뷰어(14단계)가 쓴다. 확대 정책은
+ * 움직이는 그림을 **어떻게 보여 줄 것인가.** 순수 함수다 — 이미지 뷰어가 쓴다. 확대 정책은
  * `ZoomablePainter` 에 적었다(정지 그림과 같은 제스처, 선명화 조각 없음).
  *
  * 답은 둘뿐이다. 틀거나([Plan.Animate], 표본과 함께), 첫 장면만 보여 주되 **왜 그런지를 함께**
- * 준다([Plan.Still]). 까닭을 싣는 것이 요점이다 — `AnimationLimits` 가 적어 둔 약속('거절하면
- * 첫 장면만 보여 주고 그렇게 말한다')과, 6단계 감사가 찾은 결함('첫 장면에서 멈춘 채 아무 말도
- * 하지 않는다')이 같은 자리다.
+ * 준다([Plan.Still]). 까닭을 싣는 것이 요점이다 — `AnimationLimits` 의 약속('거절하면
+ * 첫 장면만 보여 주고 그렇게 말한다')을 지켜, 첫 장면에서 멈춘 채 아무 말도 하지 않는 일이 없게 한다.
  *
  * ## 만화 뷰어와 갈리는 곳 — 흐리게라도 튼다
  *
@@ -28,7 +27,7 @@ import io.github.donggi.iroiroviewer.safety.ImageLimits
  * 이미지 뷰어의 정지 이웃은 그렇게 줄이지 않는다(사진은 원본 그대로 뜰 수 있다 — `ImageIo.decodeFitted`
  * 의 `capBytes = 0`). 그러니 이미지 뷰어에서 이 계획이 약속하는 것은 '합이 예산 안' 이 아니라 **'움직이는
  * 장 하나가 화면 크기 비트맵 한 장(`baseBytes`, 폰에서 9.9 MiB)을 넘지 않는다'** 이다 — 12MP 사진 한 장이
- * 원본 그대로 뜰 때(45.8 MiB)보다 작다. 정지 장의 상한은 6단계부터의 것 그대로다.
+ * 원본 그대로 뜰 때(45.8 MiB)보다 작다. 정지 장의 상한은 바꾸지 않는다.
  */
 object AnimationPlan {
 

@@ -25,7 +25,7 @@ class DocTitleTest {
 
     @Test
     fun 열린_문서는_문서가_준_이름_그대로다() {
-        // 메타데이터의 제목이 있으면 그것이다 — 파일 이름으로 바꾸지 않는다(14단계까지의 모양).
+        // 메타데이터의 제목이 있으면 그것이다 — 파일 이름으로 바꾸지 않는다.
         val book = TestEpub.open("2026년 사업 보고", File(System.getProperty("java.io.tmpdir") ?: "."))
         try {
             assertEquals("2026년 사업 보고", book.title)

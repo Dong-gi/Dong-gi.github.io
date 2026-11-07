@@ -286,7 +286,7 @@ internal class GzipInputStream(private val input: InputStream) : InputStream() {
     private companion object {
         /**
          * 입력을 한 번에 가져오는 양. 8 KiB 로 둔다 — 압축 tar 의 압축비 계산이 해제기가 미리 가져간 입력을 최대 64 KiB 로 본다
-         * (`ScannedArchive.RATIO_SLACK`). commons-compress 의 gzip 이 쓰던 크기와 같다.
+         * (`ScannedArchive.RATIO_SLACK`). commons-compress 의 gzip 과 같은 크기다.
          */
         const val BUFFER = 8 * 1024
     }

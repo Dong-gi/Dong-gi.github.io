@@ -4,12 +4,9 @@ import io.github.donggi.iroiroviewer.safety.ParseLimits
 import io.github.donggi.iroiroviewer.ui.CoverBytes
 
 /**
- * 만화책 목록의 **표지**를 만든다. 8단계가 '목록 썸네일' 로 미뤄 둔 것이다.
+ * 만화책 목록의 **표지**를 만든다.
  *
- * ## 왜 미뤘고 왜 지금 되는가
- *
- * 8단계의 이유는 "solid 아카이브에서 격자 12장은 해제를 12번 되풀이하는 일" 이었다.
- * 지금은 둘이 달라졌다.
+ * ## 목록이 표지를 만들어도 되는 까닭
  *
  * 1. 표지 만들기가 [io.github.donggi.iroiroviewer.ui.CoverSupport] 의 관문으로
  *    **한 줄로 선다.** 7z 리더 셋이 동시에 열려 사전 메모리가 세 배가 되는 일이 없다.

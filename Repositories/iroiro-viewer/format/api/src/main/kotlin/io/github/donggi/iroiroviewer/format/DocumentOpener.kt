@@ -50,9 +50,8 @@ sealed interface OpenOutcome {
  * 호출자는 받은 적이 없어 닫을 수 없고 자원은 GC 를 기다린다. PDF 에서는 그것이 네이티브
  * pdfium 문서와 사용자 파일을 붙든 `ParcelFileDescriptor` 이고, EPUB 에서는 `ZipFile` 이다.
  *
- * **시험으로 잡히지 않는다**(창이 좁아 재현이 안 된다). 9단계가 만화에서 같은 결함을
- * 겪고 `ComicOpen.open(onOpen = …)` 으로 고쳤다 — 여기도 같은 장치를 쓴다:
- * 만든 자리에서 [DocumentOpener.open] 의 `onOpen` 으로 건네고, 호출자는 `finally` 에서
+ * **시험으로 잡히지 않는다**(창이 좁아 재현이 안 된다). 그래서 만화(`ComicOpen.open(onOpen = …)`)와
+ * 같은 장치를 쓴다: 만든 자리에서 [DocumentOpener.open] 의 `onOpen` 으로 건네고, 호출자는 `finally` 에서
  * 닫되 성공 경로에서 주인을 바꾼다.
  */
 interface OpenedDocument : AutoCloseable {
@@ -81,7 +80,7 @@ data class ParseWarning(val code: String, val detail: String)
  *
  * **스레드 안전하다.** EPUB 은 WebView 의 스레드에서 장을 그리며 세고, 화면은 주 스레드에서
  * [snapshot] 을 읽는다. 맵을 잠금 없이 두면 읽는 도중의 쓰기가 `ConcurrentModificationException` 이나
- * 틀린 수를 낸다(11단계의 EPUB 부터 그랬다).
+ * 틀린 수를 낸다.
  */
 class UnsupportedFeatures {
     private val counts = LinkedHashMap<String, Int>()
@@ -107,9 +106,8 @@ class UnsupportedFeatures {
         /** 그림인데 화면이 그릴 수 없는 형식(EMF·WMF·TIFF 등). EPUB 이 센다. */
         const val UNSUPPORTED_IMAGE = "그릴 수 없는 그림"
 
-        // 11단계의 HTML 위생이 쓰는 것. **여기 모아 두는 이유는 2단계와 같다** —
-        // 종류 이름을 문자열로 흩뿌리면 같은 것이 두 이름으로 세어지고, 배지의 숫자가
-        // 무엇의 개수인지 아무도 모르게 된다.
+        // HTML 위생기(`format:html`)가 세는 것. 종류 이름을 흩뿌리면 같은 것이 두 이름으로
+        // 세어지고, 배지의 숫자가 무엇의 개수인지 아무도 모르게 된다.
         const val SCRIPT = "스크립트"
         const val FRAME = "프레임"
         const val REMOTE_REFERENCE = "바깥을 가리키는 참조"

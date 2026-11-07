@@ -93,7 +93,7 @@ class RulesTest {
 
     @Test
     fun 패스프레이즈는_출력_가능한_ASCII_만_받는다() {
-        // WPA2 의 패스프레이즈는 출력 가능한 ASCII 8–63자다 — 예전에는 길이(UTF-16 글자 수)만 보았다.
+        // WPA2 의 패스프레이즈는 출력 가능한 ASCII 8–63자다 — 길이만 보지 않는다.
         for (bad in listOf("한글패스워드입니다", "k7Qm2xPa9Ld4Rté", "k7Qm2xPa\t9Ld4", "k7Qm2xPa9Ld4\u007F", "k7Qm2xPa😀Ld4Rt", "k7Qm2xPa 9Ld4")) {
             assertEquals(Passphrases.Problem.NOT_ASCII, Passphrases.check("x", bad), bad)
             assertEquals(Passphrases.Problem.NOT_ASCII, Passphrases.passphraseProblem(bad), bad)
@@ -178,7 +178,7 @@ class RulesTest {
         // SOCKS5 가 혼자 상한까지 차도 예산 안이고(TCP 128 × 2 + UDP 128 × 3 = 640) 그때도 HTTP 터널 64 개가 남는다.
         val socksAlone = (Socks5Server.MAX_SESSIONS - Socks5Server.MAX_UDP_ASSOCIATIONS) * 2 + Socks5Server.MAX_UDP_ASSOCIATIONS * 3
         assertTrue(socksAlone + 64 * 2 <= ThreadBudget.DEFAULT_LIMIT)
-        // 셋이 함께 차면 usb-tether 의 어림(256 × 3 + 256 × 2 + 32 = 1,312)이었던 것이 예산에서 멈춘다.
+        // 셋이 함께 차도(상한만으로는 256 × 3 + 256 × 2 + 32 = 1,312) 예산에서 멈춘다.
         val oldWorst = Socks5Server.MAX_SESSIONS * 3 + HttpProxyServer.MAX_SESSIONS * 2 + FileServer.MAX_SESSIONS
         assertEquals(1312, oldWorst)
         assertTrue(ThreadBudget.DEFAULT_LIMIT < 1000)

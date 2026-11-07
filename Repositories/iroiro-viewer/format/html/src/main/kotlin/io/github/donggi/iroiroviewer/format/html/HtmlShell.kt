@@ -66,10 +66,10 @@ pre{white-space:pre-wrap;}
      * 문서 맨 앞에 `<!DOCTYPE html>` 을 둔다(이미 있으면 그대로).
      *
      * **없으면 WebView 가 쿼크 모드로 그린다.** 위생기는 DOCTYPE 을 지우고(XHTML 의 DOCTYPE 에는 엔티티
-     * 선언이 섞인다), 제 `<head>` 를 가진 문서(EPUB 의 장)는 위의 두 갈래로 오므로 DOCTYPE 없이 나가
-     * 왔다. 원본 XHTML 은 XML 이라 어느 읽기 프로그램에서도 표준 모드인데, 우리만 `text/html` 로 내주며
-     * 쿼크 모드가 됐다 — 쿼크 모드의 표는 본문의 글자 크기를 물려받지 않는다(크롬에서 실측: 본문
-     * 30px, 표 칸 16px). 글 대조로는 보이지 않는 결함이라 뒤늦게 잡혔다.
+     * 선언이 섞인다), 제 `<head>` 를 가진 문서(EPUB 의 장)는 위의 두 갈래로 오므로 DOCTYPE 없이 나간다.
+     * 원본 XHTML 은 XML 이라 어느 읽기 프로그램에서도 표준 모드인데, `text/html` 로 내주면
+     * 쿼크 모드가 된다 — 쿼크 모드의 표는 본문의 글자 크기를 물려받지 않는다(크롬에서 실측: 본문
+     * 30px, 표 칸 16px). 글 대조로는 보이지 않는 결함이다.
      */
     private fun standards(doc: String): String =
         if (doc.trimStart().startsWith("<!DOCTYPE", ignoreCase = true)) doc else "<!DOCTYPE html>$doc"
@@ -78,7 +78,7 @@ pre{white-space:pre-wrap;}
      * `<html>` 에 언어가 없으면 [lang] 을 단다. 뿌리 요소가 없거나 이미 적혀 있으면 그대로.
      *
      * 언어를 **속성으로 읽는다** — 태그 글자에서 `lang=` 을 찾으면 다른 속성의 값(`title=" lang=x"`)에 속고, 빈 `lang=""`
-     * (위생기가 빈 `xml:lang` 을 옮긴 것)도 '적혀 있다' 로 읽어 책의 언어를 버렸다. 빈 `lang` 은 바꾼다.
+     * (위생기가 빈 `xml:lang` 을 옮긴 것)도 '적혀 있다' 로 읽으면 책의 언어를 버린다. 빈 `lang` 은 바꾼다.
      */
     private fun withLang(doc: String, lang: String?): String {
         if (lang == null) return doc

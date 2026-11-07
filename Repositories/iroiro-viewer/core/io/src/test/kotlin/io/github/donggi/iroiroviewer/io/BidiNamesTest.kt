@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 /**
- * **이 앱이 짓거나 받는 이름에서 글의 방향을 바꾸는 글자를 `_` 로**(2026-10-16 보안 점검). `invoice` + U+202E + `fdp.apk` 가 화면에서
+ * **이 앱이 짓거나 받는 이름에서 글의 방향을 바꾸는 글자를 `_` 로**. `invoice` + U+202E + `fdp.apk` 가 화면에서
  * 'invoicekpa.pdf' 로 보이는 이름을 이 앱이 디스크에 만들지 않는다 — 압축 풀기(조각마다 [PathRules.sanitize]), 다른 앱에서 받은 사본의 이름
  * ([IncomingFiles.nameFor]), 휴지통 되살리기가 그 관문을 지난다. 사용자가 직접 적는 이름([PathRules.validate])은 고쳐 주지 않는다 — 화면에서
  * 드러낸다(`PathNames.forDisplay`).

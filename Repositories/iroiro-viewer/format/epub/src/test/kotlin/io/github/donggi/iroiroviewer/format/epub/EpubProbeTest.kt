@@ -13,8 +13,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 /**
- * EPUB 판별([EpubProbe]). HWPX 는 EPUB 처럼 생겼다(`mimetype` + `META-INF/container.xml`) — 그것을 가리던 HWPX 판별기가 없으므로
- * 이 판별기가 스스로 가린다. 고침을 되돌리면(저장된 `mimetype` 의 내용·`content.hpf` 를 보지 않으면) 'HWPX' 둘이 깨진다.
+ * EPUB 판별([EpubProbe]). HWPX 는 EPUB 처럼 생겼다(`mimetype` + `META-INF/container.xml`) — HWPX 판별기가 없으므로
+ * 이 판별기가 스스로 가린다. 저장된 `mimetype` 의 내용·`content.hpf` 를 보지 않으면 'HWPX' 둘이 깨진다.
  */
 class EpubProbeTest {
 
@@ -88,7 +88,7 @@ class EpubProbeTest {
 
     /**
      * **저장된 `mimetype` 의 내용 하나로 '아니다' 를 정하지 않는다**. 내용이 조금 어긋난 EPUB(앞에 BOM·공백, 끝에 줄바꿈)은
-     * 이름으로 넘어가 `container.xml` 로 맡는다 — 10-09 의 판은 이것을 '이 앱이 다루지 않는 문서' 로 끝냈다(고침을 되돌리면 앞의 둘이 깨진다).
+     * 이름으로 넘어가 `container.xml` 로 맡는다 — 내용만 보고 끝내면 앞의 둘이 '이 앱이 다루지 않는 문서' 가 된다.
      */
     @Test
     fun 내용이_조금_어긋난_mimetype_은_이름으로_본다() {

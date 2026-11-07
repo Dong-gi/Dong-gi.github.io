@@ -7,7 +7,7 @@ package io.github.donggi.iroiroviewer.playback
  *
  * 이 파일이 내놓는 것은 [Descriptor] — **조각들**이다. '한국어 · 스테레오 · AAC' 라는
  * 한 줄을 만드는 일은 [trackLabel] 이 문자열 자원으로 한다. 문구를 여기에 박으면
- * 5단계가 실패 문구를 두 벌 두었다가 한쪽만 고쳐졌던 그 형태가 된다 — 게다가 언어 이름
+ * 문구가 두 벌이 되어 한쪽만 고쳐진다 — 게다가 언어 이름
  * (`kor` → '한국어')은 우리가 표를 만들 것이 아니라 플랫폼의 `Locale` 이 아는 것이다.
  *
  * ## 왜 media3 의 `Format` 을 받지 않는가
@@ -92,7 +92,7 @@ object TrackLabels {
         val mime = mimeType?.lowercase()?.takeIf { it.isNotBlank() } ?: return null
         // **media3 의 속살은 보여 주지 않는다.** [originalMimeOf] 를 거치고도 이 값이
         // 남아 있다면 `codecs` 마저 비어 원래 형식을 알 수 없다는 뜻이다. 그대로 적으면
-        // 화면에 `MEDIA3-CUES` 가 뜬다(고치기 전에 기기에서 실제로 봤다).
+        // 화면에 `MEDIA3-CUES` 가 뜬다.
         if (mime in HIDDEN) return null
         KNOWN[mime]?.let { return it }
         val tail = mime.substringAfter('/', "").removePrefix("x-").takeIf { it.isNotBlank() } ?: return null

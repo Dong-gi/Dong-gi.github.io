@@ -39,7 +39,7 @@ import java.nio.ByteBuffer
  * **그릇만 바꿔 담는다**(다시 인코딩하지 않는다 — 화질이 그대로고 빠르다). 따로 받은 영상과 소리(HLS 의 따로 된 소리·DASH)를 한 파일로 합치고,
  * 가로챈 바이트(MSE)·녹화(MediaRecorder 의 조각난 그릇)를 길이와 찾기 표가 있는 MP4·WebM 으로 만든다.
  *
- * 읽기는 **media3 의 추출기**(사용자 승인, 2026-10-05 — `media3-extractor` 1.11.1: fMP4·MP4·TS·ADTS·MP3·WebM), 쓰기는 플랫폼 `MediaMuxer`.
+ * 읽기는 **media3 의 추출기**(사용자 승인 — `media3-extractor` 1.11.1: fMP4·MP4·TS·ADTS·MP3·WebM), 쓰기는 플랫폼 `MediaMuxer`.
  * 플랫폼의 `MediaExtractor` 를 쓰지 않는 까닭(viewer 의 실측): fMP4 의 `tfdt` 를 읽지 않아 조각 사이의 틈이 사라지고, TS 의 첫 PTS 보다 이른
  * PTS 를 0 으로 누르며, TS 의 AAC 를 ADTS 머리째 넘겨 `MediaMuxer` 가 깨진 파일을 만든다.
  *
@@ -403,7 +403,10 @@ class Remux(sources: List<Source>, private val cancelled: () -> Boolean = { fals
             Container.MP4 -> Mp4Extractor(SubtitleParser.Factory.UNSUPPORTED, 0)
             Container.ADTS -> AdtsExtractor()
             Container.MP3 -> Mp3Extractor()
-            Container.WEBM -> MatroskaExtractor(SubtitleParser.Factory.UNSUPPORTED, 0)
+            // **Cues 를 찾아 되감지 않는다.** 앞에서부터 차례로만 읽으므로 필요 없고, MSE 로 받은 WebM(유튜브)은 머리(SeekHead)가 원본
+            // 파일의 Cues 자리를 가리키는데 가로챈 파일의 그 자리에는 Cluster 가 있다 — 추출기가 Cues 를 찾으러 그 자리로 가 Cluster 를 만나고
+            // 다시 Cues 를 찾으러 가기를 끝없이 되풀이해 저장이 끝나지 않는다.
+            Container.WEBM -> MatroskaExtractor(SubtitleParser.Factory.UNSUPPORTED, MatroskaExtractor.FLAG_DISABLE_SEEK_FOR_CUES)
         }
 
         /** 머리 바이트로 그릇을 가린다(부르는 쪽이 모를 때). */

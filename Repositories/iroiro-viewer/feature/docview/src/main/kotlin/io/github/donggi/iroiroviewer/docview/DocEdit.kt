@@ -30,7 +30,7 @@ internal fun rememberEditorKind(path: String, onEditor: ((String) -> Unit)?): St
 /**
  * ⋮ 의 '편집' 을 누르면 할 일 — 편집기가 그 형식을 다루지 않으면 null(줄이 없다). 누르면 뷰어의 문서를 닫고(두 벌을 들지 않게) [onEditor] 에
  * 편집기의 형식 글자를 넘긴다. 닫은 문서는 `app` 이 다시 연다(`reopen`) — 편집기에서 돌아올 때(형식을 바꿔 곁에 새 파일을 만들었어도 원래
- * 문서를), 그리고 편집기를 띄우지 못했을 때(닫힌 채 '여는 중' 동그라미가 남았다).
+ * 문서를), 그리고 편집기를 띄우지 못했을 때(다시 열지 않으면 닫힌 채 '여는 중' 동그라미가 남는다).
  */
 @Composable
 internal fun rememberEditAction(path: String, closeViewer: () -> Unit, onEditor: ((String) -> Unit)?): (() -> Unit)? {

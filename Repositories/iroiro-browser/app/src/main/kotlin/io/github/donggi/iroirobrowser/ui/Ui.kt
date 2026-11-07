@@ -60,7 +60,7 @@ object Ui {
      */
     fun drawBehindBars(activity: Activity, root: View) {
         val window = activity.window
-        // setContentView 전에 부르므로 장식 뷰를 먼저 만든다 — 없으면 Android 12 의 getInsetsController 가 NPE 를 낸다(기기에서 앱이 죽었다).
+        // setContentView 전에 부르므로 장식 뷰를 먼저 만든다 — 없으면 Android 12 의 getInsetsController 가 NPE 를 낸다.
         window.decorView
         // Android 15 이상은 늘 이렇게 그린다(그래서 폐기 예정) — 12~14 에서 같게 하려고 부른다.
         @Suppress("DEPRECATION")

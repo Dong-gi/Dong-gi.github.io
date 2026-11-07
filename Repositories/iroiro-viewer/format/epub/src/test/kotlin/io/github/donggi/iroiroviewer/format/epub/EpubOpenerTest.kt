@@ -21,8 +21,7 @@ import kotlin.test.assertTrue
  * EPUB 을 여는 길 전체를 JVM 에서 돈다.
  *
  * **에뮬레이터가 필요 없는 것이 이 모듈을 순수 JVM 으로 둔 값이다** — ZIP·XML·문자열뿐이라
- * 초 단위로 돌고, 그래서 깨진 표본을 마음껏 만들어 볼 수 있다. 11단계의 PDF 는 반대로
- * pdfium 이 있어야 해서 같은 종류의 시험을 계측으로 밀어야 했다.
+ * 초 단위로 돌고, 그래서 깨진 표본을 마음껏 만들어 볼 수 있다.
  */
 class EpubOpenerTest {
 
@@ -224,15 +223,14 @@ class EpubOpenerTest {
 
     @Test
     fun EPUB_이_아니면_열지_않는다() = runTest {
-        // **'깨진 파일' 이지 '입출력 실패' 가 아니다.** 예전에는 `Io` 였다 — 화면에 '입출력이 실패했습니다' 가 떠
-        // 디스크가 고장 난 것처럼 읽혔다(PDF·CFB 는 같은 이유로 따로 가린다).
+        // **'깨진 파일' 이지 '입출력 실패' 가 아니다.** `Io` 면 화면에 '입출력이 실패했습니다' 가 떠
+        // 디스크가 고장 난 것처럼 읽힌다(PDF·CFB 는 같은 이유로 따로 가린다).
         assertIs<OpenFailure.Corrupt>(failure("이건 EPUB 이 아니다".toByteArray()))
     }
 
     @Test
     fun 덜_받은_책은_깨진_파일이다() = runTest {
-        // 내려받다 끊긴 책 — ZIP 의 중앙 디렉터리(파일 끝)가 없다. 실세계 말뭉치를 반으로 자른 책이 전부
-        // `Io`('입출력이 실패했습니다')로 끝났다.
+        // 내려받다 끊긴 책 — ZIP 의 중앙 디렉터리(파일 끝)가 없다. `Io` 가 아니라 '깨진 파일' 이어야 한다.
         val whole = TinyEpub.bytes(threeChapters)
         assertIs<OpenFailure.Corrupt>(failure(whole.copyOf(whole.size / 2)))
         assertIs<OpenFailure.Corrupt>(failure(whole.copyOf(whole.size - 1)))
@@ -269,8 +267,8 @@ class EpubOpenerTest {
 
     @Test
     fun 차례에_올라온_그림은_글이_아니라_그림으로_보인다() = runTest {
-        // 만화형 EPUB(IDPF haruko-jpeg)은 JPEG 를 곧바로 차례에 둔다. 예전에는 그 바이트를 UTF-8 글로 읽어
-        // 뜻 없는 글자와 가짜 태그(`<i/>`·`onX=…`)가 화면을 채웠다 — 실세계 말뭉치가 잡았다.
+        // 만화형 EPUB(IDPF haruko-jpeg)은 JPEG 를 곧바로 차례에 둔다. 그 바이트를 UTF-8 글로 읽으면
+        // 뜻 없는 글자와 가짜 태그(`<i/>`·`onX=…`)가 화면을 채운다.
         // 그림 바이트에 `<b onload=x>` 를 일부러 심는다 — 글로 읽으면 그것이 태그로 살아난다.
         val picture = byteArrayOf(0x89.toByte(), 'P'.code.toByte(), 'N'.code.toByte(), 'G'.code.toByte()) +
             "<b onload=x>가짜</b>".toByteArray() + ByteArray(40) { (it * 37).toByte() }
@@ -298,7 +296,7 @@ class EpubOpenerTest {
     @Test
     fun 형식을_모른다고_적은_차례_항목은_내용을_보고_가른다() = runTest {
         // 매니페스트가 `application/octet-stream` 이라 적은 항목을 통째로 '글이 아닌 것' 으로 보면, 형식만
-        // 잘못 적은 XHTML 장이 빈 쪽이 된다(그림 차례를 고치기 전에는 글로 읽혀 보이던 장이다).
+        // 잘못 적은 XHTML 장이 빈 쪽이 된다.
         val png = byteArrayOf(0x89.toByte(), 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A) + ByteArray(24) { 7 }
         val book = open(
             TinyEpub.bytes(
@@ -318,7 +316,7 @@ class EpubOpenerTest {
             val picture = java.util.Base64.getEncoder().encodeToString(png)
             assertTrue("src=\"data:image/png;base64,$picture\"" in assertNotNull(it.chapterHtml(2)))
             assertTrue(it.unsupported.isEmpty, "보인 것을 버린 것으로 셌다: ${it.unsupported.snapshot()}")
-            // 어느 쪽도 아니면 예전처럼(그림 차례를 고친 뒤처럼) 빈 쪽이고 빠진 것이 있다고 센다.
+            // 어느 쪽도 아니면 빈 쪽이고 빠진 것이 있다고 센다.
             assertFalse("UUUU" in assertNotNull(it.chapterHtml(3)), "모르는 바이트가 글로 새어 나왔다")
             assertEquals(1, it.unsupported.snapshot()[UnsupportedFeatures.UNKNOWN_ELEMENT])
         }
@@ -393,8 +391,8 @@ class EpubOpenerTest {
     }
 
     /**
-     * **난독화 방식이 본문에 걸렸는데 열쇠를 못 만들면 열지 않는다.** 예전 판은 그것을 '글꼴을 못
-     * 풀었다' 로 세고 열어, 앞 1040 바이트가 뒤섞인 장을 화면에 보냈다.
+     * **난독화 방식이 본문에 걸렸는데 열쇠를 못 만들면 열지 않는다.** '글꼴을 못 풀었다' 로 세고
+     * 열면 앞 1040 바이트가 뒤섞인 장이 화면에 간다.
      */
     @Test
     fun 열쇠를_못_만드는_난독화_본문은_열지_않는다() = runTest {
@@ -411,8 +409,8 @@ class EpubOpenerTest {
 
     /**
      * **식별자 끝의 유니코드 공백을 벗기지 않는다.** IDPF 열쇠는 XML 공백 넷(U+0020·0009·000D·000A)만
-     * 뺀 식별자의 SHA-1 이다. 예전 판은 코틀린 `trim()` 으로 NBSP 까지 벗겨 열쇠가 틀렸고, 글꼴이
-     * **아무 알림 없이** 깨졌다.
+     * 뺀 식별자의 SHA-1 이다. 코틀린 `trim()` 으로 NBSP 까지 벗기면 열쇠가 틀려 글꼴이
+     * **아무 알림 없이** 깨진다.
      */
     @Test
     fun 식별자_끝의_NBSP_는_열쇠의_일부다() = runTest {

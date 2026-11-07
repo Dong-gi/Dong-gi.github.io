@@ -53,13 +53,13 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 /**
- * PDF 의 **글 고르기**(사용자 요청 'PDF 뷰어에서도 선택·복사'). 길게 누르면 그 낱말이 골라지고, 손잡이로 넓히고,
+ * PDF 의 **글 고르기**. 길게 누르면 그 낱말이 골라지고, 손잡이로 넓히고,
  * 시스템의 떠 있는 도구 막대(복사·모두 선택)로 복사한다 — 안드로이드의 글 고르기 그대로다.
  *
  * ## 한 쪽 안에서만 고른다
  *
  * 선택은 **쪽 하나**의 글자 범위다(`[start, end)`). 쪽을 넘기면 풀린다. 쪽을 넘는 선택은 손잡이를 끌어 페이저를 넘기는 일과
- * 겹쳐서 받지 않았다(구글의 PDF 뷰어도 쪽마다다). '모두 선택' 은 그 쪽의 글 전부다.
+ * 겹쳐서 받지 않는다(구글의 PDF 뷰어도 쪽마다다). '모두 선택' 은 그 쪽의 글 전부다.
  *
  * ## 좌표 셋
  *
@@ -271,7 +271,7 @@ internal fun PdfSelectionOverlay(
 
     val rects = remember(text, selection.start, selection.end) { PdfTextLayout.rects(text, selection.start, selection.end) }
     // **왼쪽 위에서 잰다.** 부르는 쪽(쪽 하나의 상자)은 아이를 가운데 놓는다 — 그 안에 손잡이를 바로 두면 화면 가운데에서
-    // 옮겨진 자리에 그려져 보이지 않았다(기기에서 잡았다).
+    // 옮겨진 자리에 그려져 보이지 않는다.
     Box(Modifier.fillMaxSize()) {
         Canvas(
             Modifier
@@ -281,8 +281,7 @@ internal fun PdfSelectionOverlay(
                     origin = it.positionInRoot()
                 },
         ) {
-            // 사각형의 두 귀퉁이를 층의 좌표로 옮겨 칠한다. 변환이 고른 배율과 옮김뿐이라(돌리지 않는다) 사각형은 사각형으로 간다 —
-            // 예전의 `translate`·`scale` 로 그리던 것과 같은 자리다.
+            // 사각형의 두 귀퉁이를 층의 좌표로 옮겨 칠한다. 변환이 고른 배율과 옮김뿐이라(돌리지 않는다) 사각형은 사각형으로 간다.
             for (r in rects) {
                 val a = PdfSelectionMath.pageToFraction(layout, page, text, r[0], r[1]) ?: continue
                 val b = PdfSelectionMath.pageToFraction(layout, page, text, r[2], r[3]) ?: continue

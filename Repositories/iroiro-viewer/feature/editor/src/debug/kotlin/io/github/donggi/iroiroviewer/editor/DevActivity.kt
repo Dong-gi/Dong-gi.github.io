@@ -99,7 +99,7 @@ class DevActivity : Activity() {
             return
         }
         val kind = Kind.of(data.getStringExtra(EditorContract.EXTRA_KIND))
-        // 형식이 바뀌었으면(예: HWP 를 HWPX 로) 그 확장자의 새 파일로 — Files 도 그렇게 한다(2단계에서 정한다).
+        // 형식이 바뀌었으면(예: HWP 를 HWPX 로) 그 확장자의 새 파일로 — Files 도 그렇게 한다.
         val dest = if (kind != null && kind != Kind.PROBE && kind.ext != original.extension.lowercase()) {
             File(original.parentFile, original.nameWithoutExtension + "." + kind.ext)
         } else {

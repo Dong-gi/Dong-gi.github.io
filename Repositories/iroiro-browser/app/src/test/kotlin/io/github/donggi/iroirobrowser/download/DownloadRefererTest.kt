@@ -19,8 +19,8 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * 내려받기의 Referer 를 **홉마다** 짓는가(2026-10-16 보안 점검). 앞 판은 받기를 넣을 때 처음 주소에 맞춰 한 번 지은 값을 모든 홉(넘겨주기·HLS·DASH 의
- * 조각·재생목록·열쇠)에 실어, 처음 주소가 쪽과 같은 출처면 쪽의 전체 주소(질의 포함)가 다른 출처의 서버에 갔다. 루프백의 두 출처(포트가 다르다)로
+ * 내려받기의 Referer 를 **홉마다** 짓는가. 처음 주소에 맞춰 한 번 지은 값을 모든 홉(넘겨주기·HLS·DASH 의 조각·재생목록·열쇠)에 실으면,
+ * 처음 주소가 쪽과 같은 출처일 때 쪽의 전체 주소(질의 포함)가 다른 출처의 서버에 간다. 루프백의 두 출처(포트가 다르다)로
  * 앱의 HTTP([HttpFetcher])가 홉마다 무엇을 싣는지 보고, DownloadCenter·MediaProbe 의 배선은 소스로 본다(CookieManager·MediaStore 에 묶여 JVM
  * 에서 돌릴 수 없다).
  */
@@ -120,7 +120,7 @@ class DownloadRefererTest {
         val center = source("download/DownloadCenter.kt")
         assertTrue(body(center, "private fun headersFromPage(").contains("Referrer.strictOriginWhenCrossOrigin(page, hop)"))
         assertTrue(body(center, "private fun headersPinned(").contains("Referrer.pinnedFirstHop(chosen, first, hop)"))
-        // 받기를 넣을 때 지은 값을 홉에 싣는 길이 없다 — 보통 파일·조각·재생목록·열쇠·작은 파일·DASH 목록 모두 쪽 주소에서.
+        // 받기를 넣을 때 지은 값을 홉에 싣는 길이 없다 — 보통 파일·조각·재생목록·열쇠·DASH 목록 모두 쪽 주소에서.
         assertFalse(center.contains("headers(item.userAgent, item.referer"), "넣을 때 지은 Referer 를 홉에 싣는다")
         assertFalse(Regex("""headers\(userAgent, referer, u""").containsMatchIn(center))
         assertTrue(body(center, "private fun fetchFileOnce(").contains("headersFromPage(item.userAgent, item.refererSource, u, extra)"))
@@ -137,7 +137,7 @@ class DownloadRefererTest {
         val direct = Regex("""(?<![A-Za-z])headers\((userAgent|item\.userAgent),""").findAll(center).count()
         assertEquals(3, direct, "headers( 를 곧바로 부르는 곳")
         // 받기를 넣는 함수는 미리 지은 Referer 를 받지 않는다(쪽 주소만).
-        for (fn in listOf("fun enqueue(", "fun enqueueHls(", "fun enqueueDash(", "fun inspectHls(", "fun inspectDash(", "fun fetchSmall(")) {
+        for (fn in listOf("fun enqueue(", "fun enqueueHls(", "fun enqueueDash(", "fun inspectHls(", "fun inspectDash(")) {
             val signature = center.substring(center.indexOf(fn)).substringBefore(")")
             assertFalse(signature.contains("referer"), "$fn 이 referer 를 받는다")
         }
@@ -153,7 +153,6 @@ class DownloadRefererTest {
         assertTrue(chooser.contains("probe.playlist(url, userAgent, page)"))
         val activity = source("browser/BrowserActivity.kt")
         assertFalse(activity.contains("Referrer.strictOriginWhenCrossOrigin"), "브라우저 화면이 Referer 를 미리 짓는다")
-        assertTrue(source("download/TorrentPrompt.kt").contains("app.downloads.fetchSmall(url, userAgent, pageUrl, MAX_TORRENT_BYTES)"))
     }
 
     /** 경로마다 답을 정해 두고, 받은 요청의 경로와 Referer 를 적는 루프백 서버(출처 하나 — 포트로 가른다). */

@@ -21,7 +21,7 @@ import java.io.IOException
 import java.io.RandomAccessFile
 
 /**
- * 소리·영상의 한 구간을 **새 파일로** 저장한다(사용자 요청 '구간을 지정해 별도 저장'). **다시 인코딩하지 않는다** —
+ * 소리·영상의 한 구간을 **새 파일로** 저장한다. **다시 인코딩하지 않는다** —
  * 화질·음질이 그대로이고 폰에서도 빠르다. 대가는 자를 수 있는 자리가 형식마다 정해져 있다는 것이다.
  *
  * | 형식 | 누가 자르나 | 자르는 자리 |
@@ -31,7 +31,7 @@ import java.io.RandomAccessFile
  * | FLAC | [FlacCut] | 프레임(보통 약 0.09초) |
  * | MP4·MOV·3GP·MKV·WebM·TS·M4A·AAC·Opus·Ogg Vorbis | [MediaRemux](플랫폼 `MediaMuxer`) | 영상은 시작 앞의 키프레임, 소리는 프레임 |
  *
- * **소리만 뽑기**(사용자 요청 '오디오만 추출하여 별도로 저장') — 영상에서 소리 트랙 하나만 그 소리의 그릇으로 꺼낸다([AudioExtract]).
+ * **소리만 뽑기** — 영상에서 소리 트랙 하나만 그 소리의 그릇으로 꺼낸다([AudioExtract]).
  * 구간을 고르면 그 구간만, 고르지 않으면(끝이 null) 끝까지다.
  *
  * 결과는 원본 곁의 `이름_clip.확장자`(소리만이면 `이름_audio.확장자`)다. 확장자는 담은 그릇을 따른다 — MKV 안의 H.264 는 MP4 로,
@@ -111,8 +111,8 @@ object MediaClipper {
     }
 
     /**
-     * 저장하기 전에 미리 보는 것 — 재생 화면의 구간 칸이 누르기 전에 말한다(기기에서 확인하다 나온 빈자리: 고른 시작이 0:30.1 인데 담긴
-     * 영상은 0:20.8 부터였고, 소리가 FLAC 인 MKV 는 누른 뒤에야 '잘라 저장할 수 없다' 를 들었다).
+     * 저장하기 전에 미리 보는 것 — 재생 화면의 구간 칸이 누르기 전에 말한다(영상은 고른 시작보다 앞의 키프레임부터 담기고, 담지
+     * 못하는 소리(MKV 의 FLAC 등)는 누르기 전에 알아야 한다).
      *
      * @param supported 영상째로(또는 소리 파일 그대로) 담을 수 있는가. 우리가 직접 자르는 소리(WAV·MP3·FLAC)는 머리를 다 읽지 않고
      *   참으로 둔다 — 그 안의 드문 갈래(ADPCM WAV 등)는 저장할 때 말한다.
@@ -227,7 +227,7 @@ object MediaClipper {
 
     /**
      * 플랫폼이 읽고 쓰는 그릇(영상, 그리고 MP4·WebM·Ogg 의 소리). 다시 담지 못하는 **소리만 든** 그릇(MKA 의 FLAC·AC-3·PCM·MP3, 소리만
-     * 든 TS 의 MP2)은 소리 뽑기가 쓴다 — 영상이 없으니 그것이 곧 그 구간이다(그 파일들은 엔진이 쓸 수 있는데 칸이 막았다).
+     * 든 TS 의 MP2)은 소리 뽑기가 쓴다 — 영상이 없으니 그것이 곧 그 구간이다.
      */
     private suspend fun remux(job: Job, startUs: Long, endUs: Long, ext: String): Result {
         val prepared = MediaRemux.prepare(job.src, ext) ?: return extractAudio(job, startUs, endUs, tag = TAG, onlyWithoutVideo = true)

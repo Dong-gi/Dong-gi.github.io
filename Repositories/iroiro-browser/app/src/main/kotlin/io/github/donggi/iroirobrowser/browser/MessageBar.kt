@@ -14,7 +14,7 @@ import android.widget.TextView
 import io.github.donggi.iroirobrowser.ui.Ui
 
 /**
- * 화면 아래에 잠깐 뜨는 한 줄과 단추 하나 — '탭을 닫았습니다 · 되돌리기', '팝업을 막았습니다 · 이 사이트 허용'. 플랫폼 뷰로 짓는다(머티리얼의
+ * 화면 아래에 잠깐 뜨는 한 줄과 단추 하나 — '팝업을 막았습니다 · 이 사이트 허용', '숨겼습니다 · 되돌리기'. 플랫폼 뷰로 짓는다(머티리얼의
  * 스낵바는 새 의존이다). 새 것이 뜨면 앞 것은 사라진다. 화면 낭독기가 읽게 글은 알림 영역(live region)이고, 사라지기까지의 시간은 접근성
  * 설정이 권하는 만큼 늘인다(`getRecommendedTimeoutMillis` — '조작할 시간' 설정).
  */
@@ -98,7 +98,7 @@ class MessageBar(private val activity: Activity) {
     }
 
     private companion object {
-        /** 크롬의 '탭을 닫았습니다' 처럼 몇 초 — 접근성 설정이 더 길게 권하면 그것을 따른다. */
+        /** 몇 초(크롬의 '탭을 닫았습니다' 처럼) — 접근성 설정이 더 길게 권하면 그것을 따른다. */
         const val SHOW_MS = 5_000L
     }
 }

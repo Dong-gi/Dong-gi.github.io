@@ -19,8 +19,7 @@ object PlaybackLimits {
      *
      * **상한을 넘으면 자르되, 사용자가 누른 항목은 반드시 담는다**
      * ([io.github.donggi.iroiroviewer.playback] 의 `FolderQueue` 참고). 누른 것이 빠지면
-     * 다른 파일이 재생되고, 그것은 '내가 고른 것과 다른 것이 열린다' 는 이 저장소가
-     * 8단계에서 치명으로 고친 형태다.
+     * 다른 파일이 재생된다 — '내가 고른 것과 다른 것이 열린다' 는 치명적인 형태다.
      */
     const val MAX_QUEUE_ITEMS = 500
 }

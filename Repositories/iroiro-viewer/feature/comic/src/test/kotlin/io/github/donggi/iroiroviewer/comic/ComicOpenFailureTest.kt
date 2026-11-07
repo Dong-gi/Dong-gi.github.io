@@ -12,8 +12,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 /**
- * 만화를 여는 동안 던져진 것의 종류([openFailureKind]) — 특히 **스택이 넘친 것**(기기에서 재현했다: 빈 LZ4 프레임
- * 20만 개짜리 `.cbt` 를 둔 폴더를 열기만 했는데 표지 썸네일이 이 길을 지나 프로세스가 죽었다).
+ * 만화를 여는 동안 던져진 것의 종류([openFailureKind]) — 특히 **스택이 넘친 것**(빈 LZ4 프레임
+ * 20만 개짜리 `.cbt` 를 둔 폴더를 열기만 해도 표지 썸네일이 이 길을 지난다).
  */
 class ComicOpenFailureTest {
 
@@ -42,7 +42,7 @@ class ComicOpenFailureTest {
     }
 
     /**
-     * 기기에서 재현한 파일 그대로 — 빈 LZ4 프레임 20만 개(11바이트씩)를 이은 `x.cbt`. 프로세스가 죽지 않고 정의된 실패로 끝난다: 판별은
+     * 그 파일 그대로 — 빈 LZ4 프레임 20만 개(11바이트씩)를 이은 `x.cbt`. 프로세스가 죽지 않고 정의된 실패로 끝난다: 판별은
      * 안을 보지 못한 항목 하나짜리 LZ4 로 열고, 그 항목(`x`)은 그림이 아니다.
      */
     @Test

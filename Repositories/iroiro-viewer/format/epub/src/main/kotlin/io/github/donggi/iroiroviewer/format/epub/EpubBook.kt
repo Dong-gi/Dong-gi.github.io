@@ -19,8 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * 들고 있는 것은 **차례와 이름표**뿐이다 — 어떤 엔트리가 몇 번째 장인지, 그 엔트리의
  * MIME 이 무엇인지. **본문은 들고 있지 않는다.** 화면이 보고 있는 장 하나만 그때그때
- * 읽는다. 300쪽짜리 책의 XHTML 을 전부 메모리에 펴 두면 그것만으로 수십 MB이고,
- * 9단계가 만화 쪽을 힙에만 두기로 하면서 '살아 있는 양' 을 예산으로 묶은 것과 같은 문제다.
+ * 읽는다. 300쪽짜리 책의 XHTML 을 전부 메모리에 펴 두면 그것만으로 수십 MB다.
  *
  * ## 이름이 아니라 인덱스로 찾는다
  *
@@ -164,7 +163,7 @@ class EpubBook internal constructor(
         val chapter = spine.getOrNull(index) ?: return null
         // **차례에 글이 아닌 것이 올 수 있다.** 만화형 EPUB 은 JPEG 를 곧바로 차례에 넣는다(IDPF 의
         // haruko-jpeg·page-blanche-bitmaps-in-spine). 그것을 글로 읽으면 JPEG 바이트가 UTF-8 로 풀려
-        // 뜻 없는 글자와 가짜 태그가 화면을 채웠다(실세계 말뭉치가 잡았다).
+        // 뜻 없는 글자와 가짜 태그가 화면을 채운다.
         val type = contentTypeOf(chapter)
         if (isBinary(type)) return binaryChapter(chapter, type, cssFor(null))
         val raw = readText(chapter.path) ?: return null
@@ -294,9 +293,9 @@ class EpubBook internal constructor(
      * 차례 항목을 무엇으로 읽을까. 매니페스트의 `media-type` 을 따르되, **`application/octet-stream`
      * ('모른다')·빈 값만 앞 바이트를 보고 가른다.**
      *
-     * 형식을 모른다고 적은 항목을 통째로 '글이 아닌 것' 으로 보면, 형식만 잘못 적은 XHTML 장이 빈 쪽이 된다
-     * — 그림을 차례에 두는 책을 고치기 전(글로 읽었다)에는 보이던 장이다. 그림 서명이면 그림으로, `<` 로
-     * 시작하면 글로 읽는다. 어느 쪽도 아니면 적힌 대로 둔다(`octet-stream` 은 빈 쪽, 빈 값은 예전처럼 글).
+     * 형식을 모른다고 적은 항목을 통째로 '글이 아닌 것' 으로 보면, 형식만 잘못 적은 XHTML 장이 빈 쪽이 된다.
+     * 그림 서명이면 그림으로, `<` 로 시작하면 글로 읽는다. 어느 쪽도 아니면 적힌 대로 둔다(`octet-stream` 은
+     * 빈 쪽, 빈 값은 글).
      */
     private fun contentTypeOf(chapter: Chapter): String {
         val declared = chapter.mediaType
@@ -410,7 +409,7 @@ class EpubBook internal constructor(
             }
         }
 
-        /** 글로 읽으면 안 되는 차례 항목인가. MIME 이 비었거나 모르는 글 형식이면 예전처럼 글로 읽는다. */
+        /** 글로 읽으면 안 되는 차례 항목인가. MIME 이 비었거나 모르는 글 형식이면 글로 읽는다. */
         fun isBinary(mediaType: String): Boolean =
             (mediaType.startsWith("image/") && mediaType != "image/svg+xml") ||
                 mediaType.startsWith("audio/") || mediaType.startsWith("video/") ||

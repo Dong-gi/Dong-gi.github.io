@@ -114,8 +114,8 @@ class BinarySnifferTest {
     /**
      * **UTF-16 이 아닌 것을 UTF-16 이라고 말하면 안 된다.**
      *
-     * 재현된 결함이다 — UTF-8 한국어·Shift_JIS·GBK 파일이 전부 UTF-16LE 로
-     * 판정됐다. 판정(Text/Binary)은 맞았지만 **힌트가 틀렸고**, 그 힌트를 믿는 쪽은
+     * UTF-8 한국어·Shift_JIS·GBK 파일을 UTF-16LE 로 판정하면 판정(Text/Binary)은
+     * 맞아도 **힌트가 틀리고**, 그 힌트를 믿는 쪽은
      * UTF-8 파일을 UTF-16 으로 읽게 된다. 가장 조용한 실패다.
      */
     @Test

@@ -4,8 +4,7 @@ import java.net.URI
 import java.net.URISyntaxException
 
 /**
- * 뒤에서 재생 잇기(사용자 요청, 2026-10-11: '브라우저 > 유튜브 재생 시 앱/탭이 백그라운드에 있거나 화면이 꺼져도 재생이 유지되도록 해주세요').
- * 이 파일은 판단(화면 밖의 계산 — 시험한다)이다. WebView 를 보이는 채로 두는 것은 [PageWebView.keepWindowVisible]·[PageWebView.backstaged],
+ * 뒤에서 재생 잇기 — 유튜브를 앱·탭이 뒤에 있거나 화면이 꺼져도 잇는다. 이 파일은 판단(화면 밖의 계산 — 시험한다)이다. WebView 를 보이는 채로 두는 것은 [PageWebView.keepWindowVisible]·[PageWebView.backstaged],
  * 그 탭을 고르고 회를 여닫는 것은 BrowserActivity, 알림·잠금 화면·이어폰 단추는 [BackgroundPlayService] 다.
  *
  * **회(session)** — 뒤에서 재생을 잇는 탭 하나와 그 탭의 소리가 멈춘 때. 앱이 뒤로 가거나 그 탭을 떠나는 순간 소리가 나는 유튜브가 재생 중이면
@@ -81,7 +80,7 @@ object BackgroundPlay {
     private const val YOUTUBE_SUFFIX = "- YouTube"
 
     /**
-     * **유튜브가 늘 '보임' 을 읽게 하는 스크립트** — 유튜브의 주 틀, **쪽의 세계**, 문서 시작(사용자 결정 2026-10-12 '추가해주세요' — 브레이브의
+     * **유튜브가 늘 '보임' 을 읽게 하는 스크립트** — 유튜브의 주 틀, **쪽의 세계**, 문서 시작(사용자 결정 — 브레이브의
      * 방식, CLAUDE.md '브레이브와 견줌'). 유튜브 모바일 재생기는 `visibilityState` 가 'visible' 이 아니면(`visibilitychange` 와 `timeupdate` 마다
      * 본다) 재생기를 세운다(`stopVideo` — 프리미엄이 아니면). 뒤에서 재생을 잇는 동안 쪽은 크로미움에 '보임' 이지만, 다른 길로 잠깐이라도 숨으면
      * (화면을 다시 짓기·시스템의 창 전환) 유튜브가 그 틈에 멈춘다. 이 스크립트가 있으면 크로미움이 숨은 동안 영상을 멈췄다가 보이면 저절로 다시
@@ -111,10 +110,10 @@ object BackgroundPlay {
 })();"""
 
     /**
-     * **뒤에서 재생을 잇는 동안 영상 요소를 숨기는 스크립트**(2026-10-16 — 사용자 '한번 해보세요', CLAUDE.md 'CPU — 크롬·브레이브와 견줌').
+     * **뒤에서 재생을 잇는 동안 영상 요소를 숨기는 스크립트**(CLAUDE.md 'CPU — 크롬·브레이브와 견줌').
      * 화면 밖에 그리는 동안([OffscreenDraw]) 틀마다의 **실행 세계**에서 돌린다(`JavaScriptReplyProxy.executeJavaScript` — [PageBridge.hideVideos]).
      * 숨은 영상은 크로미움이 화면에 내지 않고(영상 층의 제출이 서고 크로미움이 프레임을 스스로 흘려보낸다 — 버린 프레임으로 세지 않는다) WebView 가
-     * 다시 그리기를 청하지 않아, 화면 밖 그리기가 거의 선다(에뮬레이터 — 숨기자 청이 0). 소리와 해독은 그대로다.
+     * 다시 그리기를 청하지 않아, 화면 밖 그리기가 거의 선다. 소리와 해독은 그대로다.
      *
      * [HIDE_ID_PLACEHOLDER] 는 이 프로세스의 무작위 이름(스타일 요소의 id), [HIDE_FLAG_PLACEHOLDER] 는 `true`(숨긴다)·`false`(되돌린다). 그 틀의
      * 영상 수를 돌려준다(되돌릴 때는 0). 쪽의 함수는 부르지 않는다(DOM 만 — 쪽도 그 스타일 요소를 볼 수는 있다). 역슬래시·달러를 쓰지 않는다.

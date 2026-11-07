@@ -358,7 +358,7 @@ internal class PdfFont private constructor(
         private fun cidWidths(objs: PdfObjects, descendant: PdfDict?, dw: Double, dw2y: Double): CidWidths {
             data class Run(val start: Int, val end: Int, val values: DoubleArray?, val single: Double)
 
-            // **값의 수를 표 전체로 묶는다.** 같은 간접 배열을 수만 번 가리키는 `/W` 가 몇 KB 로 수십 GB 를 청했다.
+            // **값의 수를 표 전체로 묶는다.** 같은 간접 배열을 수만 번 가리키는 `/W` 는 몇 KB 로 수십 GB 를 청할 수 있다.
             var budget = MAX_W_VALUES
 
             fun runs(arr: List<PdfObj>?, stride: Int): List<Run> {

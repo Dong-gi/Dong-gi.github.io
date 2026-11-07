@@ -48,9 +48,8 @@ class DownloadService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         // **시작 요청마다 곧바로 포그라운드에 선다**(이미 서 있으면 알림만 바뀐다). `startForegroundService` 의 요청마다 시스템은
-        // `startForeground` 를 기다리고, 그 전에 서비스가 내려가면 앱을 죽인다(ForegroundServiceDidNotStartInTimeException — 2026-10-05
-        // 가로채기를 저장한 직후 실험실에서 실제로 죽었다). 예전에는 처음 한 번만 섰다 — [refresh] 가 포그라운드를 내린 뒤에 온 새 요청은
-        // 서지 않은 채 남았다.
+        // `startForeground` 를 기다리고, 그 전에 서비스가 내려가면 앱을 죽인다(ForegroundServiceDidNotStartInTimeException). 처음 한 번만
+        // 서면 [refresh] 가 포그라운드를 내린 뒤에 온 새 요청은 서지 않은 채 남는다.
         lastStartId = startId
         startForeground(ONGOING_ID, ongoing(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
         val target = intent?.getLongExtra(EXTRA_ID, -1)?.let { center.find(it) }
@@ -92,8 +91,8 @@ class DownloadService : Service() {
     }
 
     /**
-     * 받는 중 알림. 하나면 그 진행과 '일시 정지'(이을 수 있는 것만)·'받기 취소(지움)' 단추, 여럿이면 줄마다의 진행(앞 판은 첫 것의 진행만
-     * 보였다)과 '모두 일시 정지'.
+     * 받는 중 알림. 하나면 그 진행과 '일시 정지'(이을 수 있는 것만)·'받기 취소(지움)' 단추, 여럿이면 줄마다의 진행과 '모두 일시
+     * 정지'.
      */
     private fun ongoing(): Notification {
         val active = center.items().filter { it.isActive }
@@ -164,7 +163,7 @@ class DownloadService : Service() {
             .setAutoCancel(true)
         when (item.status) {
             DownloadCenter.Status.DONE -> {
-                // 누르면 기본 앱으로 연다(정해 둔 앱이 없으면 시스템이 고르는 창) — 앞 판은 누를 때마다 앱 고르기 창(chooser)이었다.
+                // 누르면 기본 앱으로 연다(정해 둔 앱이 없으면 시스템이 고르는 창).
                 val open = center.openIntent(item)
                 val tap = if (open != null) {
                     PendingIntent.getActivity(this, item.id.toInt(), open, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -212,7 +211,7 @@ class DownloadService : Service() {
     )
 
     companion object {
-        /** 받는 중·다 받음의 알림 채널 — 토렌트([TorrentService]·[TorrentNotices])도 함께 쓴다(사용자에게는 같은 '내려받기' 다). */
+        /** 받는 중·다 받음의 알림 채널(갤러리 받기도 — 사용자에게는 같은 '내려받기' 다). */
         internal const val CHANNEL_ONGOING = "downloads"
         internal const val CHANNEL_DONE = "downloads-done"
         private const val ONGOING_ID = 1

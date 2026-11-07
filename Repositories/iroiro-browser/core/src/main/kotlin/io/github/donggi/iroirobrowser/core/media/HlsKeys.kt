@@ -11,8 +11,8 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * HLS AES-128 의 열쇠 응답 읽기와 진단(2026-10-16 — m3u8 열쇠 오류 고침). RFC 8216 5.1 은 열쇠 파일을 16바이트로 정하고 앞 판도 정확히 16바이트만
- * 받았다. 쪽의 재생기(hls.js)는 더 너그럽다 — 16바이트보다 긴 응답은 앞 16바이트로 푼다(WebCrypto 가 거절하면 소프트웨어 AES 로 가고, 그것은 늘 앞
+ * HLS AES-128 의 열쇠 응답 읽기와 진단. RFC 8216 5.1 은 열쇠 파일을 16바이트로 정한다. 쪽의 재생기(hls.js)는 더 너그럽다 — 16바이트보다 긴
+ * 응답은 앞 16바이트로 푼다(WebCrypto 가 거절하면 소프트웨어 AES 로 가고, 그것은 늘 앞
  * 네 낱말만 읽는다 — hls.js 의 `aes-decryptor.ts`, 소스로 읽었다). 사이트의 로더가 hex·base64 글로 온 열쇠를 풀어 넘기는 일도 있다.
  *
  * 그래서 16바이트가 아니면 후보를 짓고([candidates]), **첫 조각을 풀어 HLS 조각의 꼴이 맞을 때만** 그 후보를 쓴다([pick]) — 틀린 열쇠로 쓰레기 파일을
@@ -28,7 +28,7 @@ object HlsKeys {
     /** 열쇠 응답의 꼴 — 실패 글의 갈래. */
     enum class BodyKind { EMPTY, HTML, JSON, HEX, BASE64, TEXT, BINARY, TOO_LARGE }
 
-    /** 열쇠 후보 — [exact] 는 16바이트 응답(확인 없이 쓴다 — 앞 판과 같다), [lenient] 는 첫 조각으로 확인해야 쓰는 것. */
+    /** 열쇠 후보 — [exact] 는 16바이트 응답(확인 없이 쓴다), [lenient] 는 첫 조각으로 확인해야 쓰는 것. */
     class Candidates internal constructor(val exact: ByteArray?, val lenient: List<ByteArray>) {
         val isEmpty: Boolean get() = exact == null && lenient.isEmpty()
     }

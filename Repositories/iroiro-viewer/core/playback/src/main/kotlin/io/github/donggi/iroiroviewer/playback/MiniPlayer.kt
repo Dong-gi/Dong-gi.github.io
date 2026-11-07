@@ -84,7 +84,7 @@ fun MiniPlayer(modifier: Modifier = Modifier) {
                 IroProgress(
                     // **람다 안에서 길이를 다시 본다.** `state` 는 위임 속성이라 이 람다는 부를 때마다 **지금의** 값을 읽는다 — 바깥의
                     // `if` 는 구성할 때의 판단이고, 다른 곡을 누르면 길이가 0 이 된 상태를 의미 갱신이 재구성보다 먼저 읽는다.
-                    // 위치와 길이를 한 번 읽은 같은 값에서 꺼내야 짝이 맞는다(2026-10-05 크래시 — `IroProgress` 도 NaN 을 막는다).
+                    // 위치와 길이를 한 번 읽은 같은 값에서 꺼내야 짝이 맞는다(0/0 = NaN 이면 죽는다 — `IroProgress` 도 NaN 을 막는다).
                     progress = {
                         val now = state
                         if (now.durationMs > 0) now.positionMs.toFloat() / now.durationMs else 0f
@@ -98,11 +98,8 @@ fun MiniPlayer(modifier: Modifier = Modifier) {
 }
 
 /**
- * 일시정지 아이콘. 아이콘 core 세트에 `Pause` 가 없어 직접 만든다 —
- * 이것 하나 때문에 수천 개짜리 확장 세트를 넣지 않는다.
- */
-/**
- * 일시정지. **`res/drawable/ic_pip_pause.xml` 이 같은 좌표의 짝이다.**
+ * 일시정지 아이콘. 아이콘 core 세트에 `Pause` 가 없어 직접 만든다(확장 세트를 넣지 않는다).
+ * **`res/drawable/ic_pip_pause.xml` 이 같은 좌표의 짝이다.**
  *
  * PiP 창의 조작은 `RemoteAction` 이고 그것은 `android.graphics.drawable.Icon` 만 받아
  * `ImageVector` 에서 오는 변환 경로가 없다. 그래서 같은 그림을 두 형식으로 든다 —

@@ -110,7 +110,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
  * ## PDF 의 보기는 둘이다
  *
  * **기본은 세로로 이어 보기**([ScrollDocument]) — 쪽을 화면 폭에 맞춰 이어 붙이고 배율이 문서 전체에 걸린다.
- * 예전의 **한 쪽씩 넘기기**([PagedDocument])는 위쪽 막대 ⋮ 의 보기 방식으로 남고, 고른
+ * **한 쪽씩 넘기기**([PagedDocument])는 위쪽 막대 ⋮ 의 보기 방식으로 고르고, 고른
  * 것은 설정에 남는다(`AppPreferences.pdfContinuous`). 두 보기가 VM 의 같은 **쪽**을 세므로 쪽 번호·슬라이더·이어보기·쪽 목록·쪽으로
  * 가기·찾기가 한 벌이다.
  *
@@ -118,14 +118,14 @@ import kotlinx.coroutines.flow.distinctUntilChanged
  *
  * `HorizontalPager(beyondViewportPageCount = 1, key = { it })`, 쪽마다 [ZoomState] 를
  * 두고 정착하지 않은 쪽의 확대를 되돌린다, **바깥 `Scaffold` 를 씌우지 않는다**.
- * 마지막 것이 6·9단계가 같은 이유로 정한 규칙이다 — 막대를 감추면 시스템 바도 함께 숨는데
+ * 마지막 것의 까닭 — 막대를 감추면 시스템 바도 함께 숨는데
  * (`SystemBarsHidden` — 거는 것은 액티비티다) `Scaffold` 의 기본 인셋은 바가 숨고 나타나는 애니메이션 내내 프레임마다
  * 변하고, 그 패딩을 받으면 확대·이동의 기준 상자가 함께 움직여 경계 계산이 어긋난다. 겹치는 막대는 바가 숨어도 변하지
  * 않는 인셋(`…IgnoringVisibility`)을 쓴다. 확대한 채 가장자리에 닿은 뒤 새로 밀면 다음 쪽이다(`ZoomState.claimsDrag`).
  *
  * ## 만화와 다른 것 셋
  *
- * | | 만화 뷰어(9단계) | 문서 뷰어 |
+ * | | 만화 뷰어 | 문서 뷰어 |
  * |---|---|---|
  * | 쪽의 출처 | 아카이브 안의 **바이트** | 파일 하나 안의 **쪽 번호**(무작위 접근이 싸다) |
  * | 방향 | 왼→오 · 오→왼 · 세로 | **왼→오 하나뿐**(PDF 에 읽는 방향이 없다) |
@@ -140,7 +140,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
  * 만화 뷰어는 검은 배경에 그림을 얹지만 문서는 **흰 종이**다. 검정 위의 흰 종이는 대비가
  * 너무 세고, 어두운 모드라고 쪽을 반전하면 그림과 표의 색이 깨진다. 배경만 회색으로 낮춘다.
  *
- * ## 14단계가 더한 것
+ * ## 그 밖의 기능
  *
  * * **읽는 모양**('보기' 판 — [AppearanceSheet]). EPUB 에만 있고, 설정 화면과 같은 값을 쓴다.
  * * **장 안의 자리**. 스크롤의 비율로 기억하고 되살린다([DocLocator]·`LockedWebView`). 장 번호의 이어보기 안내는 그대로다.
@@ -192,12 +192,12 @@ fun DocViewScreen(
     // 문서가 바뀌면 닫는다 — 앞 문서의 찾기 막대·쪽 목록이 새 문서 위에 남지 않게.
     var showGrid by remember(path) { mutableStateOf(false) }
     // 찾기 막대는 **VM 의 찾기가 살아 있으면 열린 채로** 선다. 액티비티가 다시 만들어지면(밤 모드를 바꿨다 — 회전은
-    // `configChanges` 라 다시 만들지 않는다) 결과의 칠은 VM 에 남는데 막대만 사라져, 칠을 걷을 길도 뒤로가 막대를 닫는
-    // 처리기도 없어졌다.
+    // `configChanges` 라 다시 만들지 않는다) 결과의 칠은 VM 에 남으므로, 막대가 사라지면 칠을 걷을 길도 뒤로가 막대를 닫는
+    // 처리기도 없다.
     var searching by remember(path) { mutableStateOf(vm.isSearching(path)) }
     var viewport by remember { mutableStateOf(0 to 0) }
     // 링크·목차가 가리킨 자리(EPUB 의 `#note3`). **여기 둔다** — '처음부터' 는 위의
-    // 사건 수집에서 오므로, 가지 안에 두면 비울 손이 닿지 않아 옛 자리로 떨어졌다.
+    // 사건 수집에서 오므로, 가지 안에 두면 비울 손이 닿지 않아 옛 자리로 떨어진다.
     var linkAnchor by remember(path) { mutableStateOf<String?>(null) }
 
     BackHandler {
@@ -258,7 +258,7 @@ fun DocViewScreen(
     val systemDark = isSystemInDarkTheme()
 
     // **EPUB 은 겹치지 않고 칸으로 나눈다.** 나머지 뷰어는 조작부를 그림 위에 겹치지만
-    // (10단계가 '조작부가 나타날 때마다 영상이 줄었다' 로 고친 그 판단), 글을 읽는
+    // (조작부가 나타날 때마다 그림이 줄지 않게), 글을 읽는
     // 화면에서는 반대다 — 겹치면 **글자가 막대 밑으로 들어가 읽히지 않는다.**
     // 그리고 WebView 는 탭을 스스로 쓰므로(글자 선택·링크) 두드림으로 조작부를 여닫는
     // 길이 없다. 칸으로 나누고 늘 보이게 두는 편이 정직하다.
@@ -269,8 +269,7 @@ fun DocViewScreen(
             ReaderLooks.forEpub(doc.book.allFixedLayout, it, systemDark, 0.0, 0.0).background
         } ?: WHITE_PAPER
         // **알림은 아래 막대 위에 뜬다.** 칸으로 나눈 화면은 `Column` 이라 `SnackbarHost` 를 그 옆에
-        // 두면 부모가 정렬을 모르고 **맨 위**에 그려져 제목 막대를 가렸다(기기에서
-        // 확인했다). 상자로 감싸 아래에 붙인다.
+        // 두면 부모가 정렬을 모르고 **맨 위**에 그려져 제목 막대를 가린다. 상자로 감싸 아래에 붙인다.
         Box(modifier.fillMaxSize()) {
         Column(Modifier.fillMaxSize().background(Color(paper))) {
             DocTopBar(
@@ -384,7 +383,7 @@ fun DocViewScreen(
                         )
                         if (locked != null) {
                             // 채운 단추로 둔다. 글자 단추(파랑)는 어두운 회색 바탕에서 흐려
-                            // 보인다(에뮬레이터 캡처로 확인했다) — 이 화면에서 누를 것은 이것 하나다.
+                            // 보인다 — 이 화면에서 누를 것은 이것 하나다.
                             Button(
                                 onClick = { asking = true },
                                 modifier = Modifier.padding(top = 16.dp),
@@ -567,7 +566,7 @@ fun DocViewScreen(
  *
  * **색을 반투명 검정으로 고정한다.** PDF 는 회색 바탕 위에, EPUB 은 흰 종이 위에 놓이는데
  * 둘 다 이 색에서 글자가 읽힌다. 테마를 따르게 하면 다이나믹 배색에서 `surface` 와
- * 배경이 같은 색이 되어 막대가 보이지 않는 판이 생긴다(10단계가 겪었다).
+ * 배경이 같은 색이 되어 막대가 보이지 않는 판이 생긴다.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -792,7 +791,7 @@ private fun PagedDocument(
             currentMatch = search.currentMatch,
             selection = selection,
             onMessage = onMessage,
-            // 글을 꺼내는 사이 쪽을 넘겼으면 그 쪽의 선택을 세우지 않는다(보이지 않는 선택이 뒤로 가기를 먹었다).
+            // 글을 꺼내는 사이 쪽을 넘겼으면 그 쪽의 선택을 세우지 않는다(보이지 않는 선택이 뒤로 가기를 먹는다).
             isCurrent = { pagerState.settledPage == slot },
         )
     }

@@ -32,14 +32,10 @@ import java.io.IOException
 /**
  * 오픈소스 고지.
  *
- * ## 왜 8단계에서 만들었는가
- *
- * 마감(14단계)에 넣기로 했던 화면이지만, **RAR 읽기가 8단계에서 제품이 됐다.**
  * junrar 가 승계한 UnRAR 라이선스는 배포할 때 고지를 요구하고, 특히 "이 코드는 RAR
  * 호환 압축기를 만드는 데 쓸 수 없다" 는 사실을 문서와 소스 주석에 밝히라고 못 박는다.
- * 기능을 먼저 내고 고지를 나중에 붙이는 것은 순서가 거꾸로다.
  *
- * ## 14단계가 채운 것
+ * ## 무엇을 적는가
  *
  * 릴리스 APK 에 실리는 서드파티 **전부**를 적는다 — 무엇이 어느 라이선스인지, 어디서 확인했는지는 [NoticeCatalog] 에
  * 있다. 그리고 한컴 문서 명세의 사용 조건이 요구하는 문장(편집기에 실린 rhwp 가 그 명세를 참고했다)을 맨
@@ -48,9 +44,8 @@ import java.io.IOException
  * ## 전문을 어디서 가져왔는가
  *
  * **지어내지 않았다.** Apache-2.0 과 Commons 넷의 NOTICE 는 각 jar 의 `META-INF/` 에서, SLF4J 는 그 jar 의
- * `META-INF/LICENSE.txt` 에서, Protocol Buffers 는 DataStore 가 옮겨 담은 jar 의 `LICENSE.txt` 에서 그대로 꺼냈다
- * (14단계는 전부 이 기계의 Gradle 캐시에서 — 내려받지 않았다). UnRAR 라이선스는 junrar 저장소의 `LICENSE`, XZ 는
- * xz-java 저장소의 `COPYING` 에서 8단계가 내려받았다. 모두 `res/raw/` 에 바이트 그대로 들어 있다.
+ * `META-INF/LICENSE.txt` 에서, Protocol Buffers 는 DataStore 가 옮겨 담은 jar 의 `LICENSE.txt` 에서 그대로 꺼냈다.
+ * UnRAR 라이선스는 junrar 저장소의 `LICENSE`, XZ 는 xz-java 저장소의 `COPYING` 에서 가져왔다. 모두 `res/raw/` 에 바이트 그대로 들어 있다.
  *
  * 라이선스 전문은 공개해도 되는 글이므로 이 저장소가 통째로 웹에 올라가는 것과
  * 부딪치지 않는다 — 오히려 그것이 라이선스가 요구하는 바다.

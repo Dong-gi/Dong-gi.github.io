@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-/** 테더의 기계 말을 앱의 글로 — 고르는 일만 본다(자원 번호와 인자). usb-tether 의 영어 글은 모두 여기의 한국어가 되었다. */
+/** 테더의 기계 말을 앱의 글로 — 고르는 일만 본다(자원 번호와 인자). */
 class TetherTextsTest {
 
     @Test
@@ -29,7 +29,7 @@ class TetherTextsTest {
 
     @Test
     fun 서버를_세우지_못한_까닭은_SOCKS5_는_그_포트_HTTP_파일은_해_본_범위를_싣는다() {
-        // SOCKS5 는 1080 하나(옮기지 않는다). HTTP·파일은 기본 포트부터 열 개를 다 해 본 뒤에만 실패한다(사용자 결정 2026-10-10 — +1 씩).
+        // SOCKS5 는 1080 하나(옮기지 않는다). HTTP·파일은 기본 포트부터 열 개를 다 해 본 뒤에만 실패한다(사용자 결정 — +1 씩).
         assertEquals(TetherTexts.Text(R.string.tether_err_socks_port, listOf(1080)), TetherTexts.startError(TetherTexts.Server.SOCKS5, StartError.PORT_TAKEN))
         assertEquals(TetherTexts.Text(R.string.tether_err_http_port, listOf(8282, 8291)), TetherTexts.startError(TetherTexts.Server.HTTP, StartError.PORT_TAKEN))
         assertEquals(TetherTexts.Text(R.string.tether_err_file_port, listOf(8080, 8089)), TetherTexts.startError(TetherTexts.Server.FILES, StartError.PORT_TAKEN))
@@ -119,7 +119,7 @@ class TetherTextsTest {
 
     @Test
     fun 꺼진_테더링은_한_줄이고_꺼진_까닭을_남긴다() {
-        // 켜기·끄기는 하나(사용자 결정 2026-10-10) — 꺼지면 '테더링 꺼짐' 하나. 핫스팟이 서지 못했거나 내려가 꺼졌으면 그 까닭이 남는다.
+        // 켜기·끄기는 하나(사용자 결정) — 꺼지면 '테더링 꺼짐' 하나. 핫스팟이 서지 못했거나 내려가 꺼졌으면 그 까닭이 남는다.
         val off = running.copy(
             serviceRunning = false, socksPort = -1, httpPort = -1, filePort = -1, httpError = null,
             hotspotActive = false, hotspotSsid = null, groupInterface = null,
@@ -153,7 +153,7 @@ class TetherTextsTest {
     fun 오가는_양과_상한으로_닫은_연결은_따로_보인다() {
         val quiet = TetherTexts.Traffic("1 MB", "2 MB", rejected = 0, lastRejection = null, refusedBudget = 0, refusedSessions = 0, refusedUdp = 0)
         assertEquals(listOf(TetherTexts.Text(R.string.tether_status_bytes, listOf("1 MB", "2 MB"))), TetherTexts.traffic(quiet))
-        // 예산·UDP 상한으로 닫은 연결은 예전에 기록 한 줄뿐이었다 — 손님 거르기와 따로 센다.
+        // 예산·UDP 상한으로 닫은 연결은 손님 거르기와 따로 센다.
         val busy = quiet.copy(rejected = 3, lastRejection = PeerRejection(PeerRejection.Reason.NO_GROUP), refusedBudget = 4, refusedSessions = 1, refusedUdp = 2)
         val lines = TetherTexts.traffic(busy)
         assertEquals(R.string.tether_status_rejected, lines[1].res)

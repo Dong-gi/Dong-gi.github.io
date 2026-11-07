@@ -6,7 +6,7 @@ import android.os.Bundle
 
 /**
  * 퀵 설정 타일 '테더링' 을 **길게 누를 때** 시스템 UI 가 여는 화면(`TileService.ACTION_QS_TILE_PREFERENCES` — API 24) — 테더 화면
- * ([TetherActivity])을 열고 곧바로 끝난다(사용자 요청 2026-10-10 — 앱 바로가기 '테더링' 대신). `:tether` 프로세스(테더의 구성 요소는 모두
+ * ([TetherActivity])을 열고 곧바로 끝난다(사용자 결정 — 앱 바로가기 대신). `:tether` 프로세스(테더의 구성 요소는 모두
  * 그 프로세스다 — TetherState).
  *
  * ## 왜 내보낸 화면이 따로 있는가

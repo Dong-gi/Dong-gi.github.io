@@ -8,7 +8,7 @@ import io.github.donggi.iroiroviewer.model.NameSortKey
 import java.io.File
 
 /**
- * 같은 폴더의 **다음 권**을 고른다(14단계). 9단계가 '권 번호를 이름에서 읽는 규칙이 필요하다' 며 미뤄 둔 것이다.
+ * 같은 폴더의 **다음 권**을 고른다.
  *
  * ## 권 번호를 읽지 않는다 — 파일 관리자의 이름 차례를 쓴다
  *
@@ -143,7 +143,7 @@ object NextVolume {
 }
 
 /**
- * 다음 권을 **언제** 권하는가(14단계). 책 한 권 동안의 작은 상태 기계다.
+ * 다음 권을 **언제** 권하는가. 책 한 권 동안의 작은 상태 기계다.
  *
  * `ComicViewModel` 은 Room·DataStore 를 직접 불러 JVM 시험이 닿지 못한다. 그래서 판단만 여기로 떼었다 —
  * [ReadingStart] 와 같은 이유다.

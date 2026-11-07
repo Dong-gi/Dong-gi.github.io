@@ -71,8 +71,8 @@ import io.github.donggi.iroiroviewer.ui.image.RegionOrientation
 import io.github.donggi.iroiroviewer.ui.image.rememberRasterDetail
 
 /**
- * '그리기·메모' 화면 — 그림 위에 손으로 그리고 글 메모를 달아 **원본 곁의 새 파일**로 저장한다(사용자 요청 'pdf가 아니라,
- * 이미지 파일에 대해 할 수 있게'). 구글 포토의 '마크업', 삼성 갤러리의 '그리기' 의 관행을 따른다.
+ * '그리기·메모' 화면 — 그림 위에 손으로 그리고 글 메모를 달아 **원본 곁의 새 파일**로 저장한다.
+ * 구글 포토의 '마크업', 삼성 갤러리의 '그리기' 의 관행을 따른다.
  *
  * ## 도구
  *

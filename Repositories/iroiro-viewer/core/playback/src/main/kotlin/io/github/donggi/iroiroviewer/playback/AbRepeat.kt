@@ -1,11 +1,8 @@
 package io.github.donggi.iroiroviewer.playback
 
 /**
- * A-B 구간 반복의 규칙. **순수 계산이라 JVM 시험으로 박힌다.**
- *
- * 6·9단계가 제스처를 화면 캡처로 판정하려다 여러 번 틀렸고, 10단계는 그래서 계산을
- * [GestureMath]·[FolderQueue] 처럼 밖으로 뺀다. 기기에서 확인하는 것은 **연결이 되었는가**
- * 뿐이다.
+ * A-B 구간 반복의 규칙. **순수 계산이라 JVM 시험으로 박힌다**([GestureMath]·[FolderQueue] 처럼 —
+ * 기기에서 확인하는 것은 **연결이 되었는가** 뿐이다).
  *
  * ## 왜 클리핑이 아니라 되감기인가
  *
@@ -75,7 +72,7 @@ object AbRepeat {
             // **A 에도 꼬리 여유를 건다.** A 를 끝에 찍어 두면 그 뒤에 B 를 찍을 자리가
             // 없어 다음 누름이 반드시 거절당한다. 그리고 A 를 자르지 않으면
             // `maxOf(a, ...)` 같은 보정에서 A 가 그대로 B 로 올라와 꼬리 보호가 통째로
-            // 무력해진다 — 설계 검토가 잡은 결함이 정확히 그것이다.
+            // 무력해진다.
             val a = positionMs.coerceIn(0, durationMs - TAIL_GUARD_MS - MIN_SPAN_MS)
             return Result.Marked(Span(a, null))
         }

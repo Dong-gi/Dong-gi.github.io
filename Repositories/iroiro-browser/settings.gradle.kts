@@ -20,5 +20,4 @@ rootProject.name = "iroiro-browser"
 include(":app")
 include(":net")
 include(":core")
-include(":torrent")
 include(":tether")

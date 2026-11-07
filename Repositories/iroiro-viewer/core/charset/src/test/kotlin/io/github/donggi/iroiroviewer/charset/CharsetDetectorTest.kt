@@ -13,7 +13,7 @@ import kotlin.test.assertTrue
  * 무엇이 잘못됐는지도 모르는 경우다.
  *
  * 표본은 **고정 바이트열**로 만든다. 우리가 고른 charset 으로 써서 같은 것으로 읽는
- * 왕복은 아무것도 증명하지 못한다 — 2단계 적대적 검토에서 배운 교훈이다.
+ * 왕복은 아무것도 증명하지 못한다.
  */
 class CharsetDetectorTest {
 
@@ -153,10 +153,9 @@ class CharsetDetectorTest {
         )
     }
 
-    // ---- ZIP 파일명 판정과 합치며 고친 것 ------------------------------------------------------
+    // ---- 짧은 입력(파일 이름 — `EntryNameDecoder` 도 이 판정을 쓴다) ------------------------------------------
     //
-    // 판정이 두 벌(여기와 `EntryNameDecoder`)이던 것을 하나로 합쳤다. 이름은 짧아서, 긴 글에 맞춘 규칙이 짧은
-    // 입력에서 틀리던 자리가 드러났다 — 아래는 **예전 글 판정이 틀리던** 것들이다(괄호 안이 예전 답).
+    // 긴 글에 맞춘 규칙은 짧은 입력에서 틀리기 쉽다. 괄호 안은 그 규칙들이 없을 때 나오는 틀린 답이다.
 
     /** (Shift_JIS) — `한글` 의 CP949 두 바이트는 Shift_JIS 로 반각 가나 둘이다. 반각 가나를 일본어의 표지로 세지 않는다. */
     @Test
@@ -172,7 +171,7 @@ class CharsetDetectorTest {
         assertEquals(TextEncoding.CP949, d.encoding, "근거: ${d.evidence}")
     }
 
-    /** (CP949) — `é`(C3 A9)는 CP949 로 `챕` 이다. 악센트 글자만 든 UTF-8 글이 통째로 한글이 됐다. */
+    /** (CP949) — `é`(C3 A9)는 CP949 로 `챕` 이다. 악센트 글자만 든 UTF-8 글이 통째로 한글이 된다. */
     @Test
     fun `악센트가 붙은 라틴 글을 한글로 읽지 않는다`() {
         val french = "Le café était très réputé à Genève. Voilà où ça s'arrête: déjà vu, naïve.\n"
@@ -180,7 +179,7 @@ class CharsetDetectorTest {
         assertEquals(TextEncoding.UTF_8, d.encoding, "근거: ${d.evidence}")
     }
 
-    /** (ISO-8859-1) — 깨진 바이트 하나가 64 KiB 창의 엄격 디코드를 전부 떨어뜨려 문서 전체가 `ÇÑ±Û` 로 나왔다. */
+    /** (ISO-8859-1) — 깨진 바이트 하나가 64 KiB 창의 엄격 디코드를 전부 떨어뜨려 문서 전체가 `ÇÑ±Û` 로 나온다. */
     @Test
     fun `깨진 바이트가 하나 섞인 CP949 글은 CP949 로 읽되 확실하지 않다고 한다`() {
         val raw = encoded(KOREAN.repeat(4), TextEncoding.CP949)
@@ -193,7 +192,7 @@ class CharsetDetectorTest {
     /**
      * 위 `악센트가 붙은 라틴 글` 의 규칙이 **흔한 한국어 낱말을 라틴 글자로 만들지 않는다.** 이 낱말들의 CP949 바이트는
      * 그대로 유효한 UTF-8 이다 — `캡처` = `ĸó`, `체크` = `üũ`, `치킨` = `ġŲ`, `호환` = `ȣȯ`. 비ASCII 글자끼리 붙은
-     * 것까지 낱말로 셌더니 넷 다 UTF-8 로 넘어갔다(옛 이름 판정은 넷 다 한글로 읽었다).
+     * 것까지 낱말로 세면 넷 다 UTF-8 로 넘어간다.
      */
     @Test
     fun `UTF-8 로도 읽히는 한국어 낱말을 라틴 글자로 읽지 않는다`() {
@@ -210,8 +209,8 @@ class CharsetDetectorTest {
     }
 
     /**
-     * **기호만 든 CP949 글.** `·`(A1 A4)는 Shift_JIS 로 반각 문장 부호 `｡､` 다. 그것을 일본어의 본토 글자로 세어
-     * `DCIM · Pictures` 같은 이름이 Shift_JIS 로 이겼다. 어느 후보도 글자를 내놓지 않으면 목록의 차례(CP949 가 앞)다.
+     * **기호만 든 CP949 글.** `·`(A1 A4)는 Shift_JIS 로 반각 문장 부호 `｡､` 다. 그것을 일본어의 본토 글자로 세면
+     * `DCIM · Pictures` 같은 이름이 Shift_JIS 로 이긴다. 어느 후보도 글자를 내놓지 않으면 목록의 차례(CP949 가 앞)다.
      */
     @Test
     fun `기호만 든 CP949 글을 반각 문장 부호로 읽지 않는다`() {
@@ -220,7 +219,7 @@ class CharsetDetectorTest {
         assertEquals(CharsetDetector.Detection.Confidence.LOW, d.confidence)
     }
 
-    /** 합치며 바뀌지 않아야 하는 것 — 짧은 일본어, Latin-1 로 적은 서유럽 글. */
+    /** 위 규칙들이 바꾸지 않아야 하는 것 — 짧은 일본어, Latin-1 로 적은 서유럽 글. */
     @Test
     fun `짧은 일본어와 Latin-1 글은 그대로다`() {
         assertEquals(TextEncoding.SHIFT_JIS, CharsetDetector.detect(encoded("テスト資料", TextEncoding.SHIFT_JIS)).encoding)

@@ -177,7 +177,7 @@ class HtmlSanitizerTest {
         assertFalse("ENTITY" in r.html, r.html)
         // 바깥 엔티티는 풀지 않는다 — 글자 그대로 남아 WebView 가 모르는 엔티티로 보인다.
         assertTrue("&xxe;" in r.html, r.html)
-        // 부분집합이 없는 보통의 DOCTYPE 과, 첫 `>` 뒤에 나오는 `[` 는 예전 그대로다.
+        // 부분집합이 없는 보통의 DOCTYPE 과, 첫 `>` 뒤에 나오는 `[` 는 첫 `>` 에서 끝난다.
         assertEquals("<p>가</p>", clean("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"x.dtd\"><p>가</p>").html)
         assertEquals("<p>[나]</p>", clean("<!DOCTYPE html><p>[나]</p>").html)
     }
@@ -208,7 +208,7 @@ class HtmlSanitizerTest {
     @Test
     fun 보이지_않는_문서_정보는_버린_것으로_세지_않는다() {
         // 알림은 보이던 것이 빠졌을 때의 말이다. 실세계 책은 장마다 `<meta charset>` 과 `<link rel="license">`
-        // 를 두는데, 예전에는 그것만으로 '알 수 없는 요소'·'바깥을 가리키는 참조' 가 장 수만큼 쌓였다.
+        // 를 두는데, 그것만으로 '알 수 없는 요소'·'바깥을 가리키는 참조' 가 장 수만큼 쌓이면 안 된다.
         val r = clean(
             """<head><meta charset="utf-8"/><link rel="license" href="http://creativecommons.org/x"/>""" +
                 """<link rel="stylesheet" href="http://x/y.css"/></head><body><p>글</p></body>"""
@@ -228,7 +228,7 @@ class HtmlSanitizerTest {
 
     @Test
     fun 스스로_닫힌_style_이_본문을_삼키지_않는다() {
-        // 예전에는 다음 `</style` 까지(없으면 끝까지)를 CSS 로 읽어 본문이 통째로 `<style>` 안에 들어갔다 —
+        // 다음 `</style` 까지(없으면 끝까지)를 CSS 로 읽으면 본문이 통째로 `<style>` 안에 들어간다 —
         // 글자는 결과에 남지만 WebView 는 그것을 스타일로 읽어 아무것도 그리지 않는다.
         val r = clean("<head><style/></head><body><p>본문이 남는다</p></body>")
         assertEquals("<head></head><body><p>본문이 남는다</p></body>", r.html)
@@ -260,9 +260,9 @@ class HtmlSanitizerTest {
 
     @Test
     fun 되풀이된_DOCTYPE_이_제곱_시간을_만들지_않는다() {
-        // 잰 값: 0.5 MB 에 22초(정규식 판). 부분집합의 끝은 첫 DOCTYPE 에서만, 정해진 폭 안에서만 찾는다.
-        // 입력을 2.2 MB 로 둔다 — 제곱인 옛 판은 이 기계에서 0.56 MB 에 1.5초였으므로 여기서 20초를 넘고, 선형인 지금 판은
-        // 수십 ms 다. 0.56 MB 로는 옛 판도 3초 안에 들어와 시험이 결함을 보지 못했다(되돌려 확인했다).
+        // 끝을 멀리까지 찾는 제곱인 구현은 0.5 MB 에 22초다. 부분집합의 끝은 첫 DOCTYPE 에서만, 정해진 폭 안에서만 찾는다.
+        // 입력을 2.2 MB 로 둔다 — 제곱이면 20초를 넘고 선형이면 수십 ms 다. 0.56 MB 로는 제곱인 구현도 3초 안에 들어와
+        // 시험이 결함을 보지 못한다.
         val input = "<!DOCTYPE a [>".repeat(160_000) + "<p>끝</p>"
         val started = System.nanoTime()
         val out = clean(input).html

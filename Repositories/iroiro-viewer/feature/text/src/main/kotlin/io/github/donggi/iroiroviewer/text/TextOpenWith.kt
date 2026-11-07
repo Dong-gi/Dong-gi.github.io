@@ -15,8 +15,9 @@ import kotlinx.coroutines.launch
  * * **실패 화면**([onFailure]) — '글이 아니다(바이너리)' 와 '읽지 못하는 인코딩(UTF-32)' 에. 이 앱이 보여 줄 수 없을 뿐
  *   파일은 멀쩡하다 — 그림·압축이 확장자만 `.txt` 인 것일 수도 있고, UTF-32 를 읽는 편집기도 있다. **파일에 닿지 못한
  *   것(없다·못 읽는다)에는 두지 않는다** — 받는 앱도 같은 파일에 닿지 못한다.
- * * **⋮ 메뉴**([inMenu]) — **이번 열기에서 파일에 닿은 뒤로는** 언제나. 미리보기(마크다운·HTML) 중에도 원문 파일을 넘긴다
- *   (미리보기는 이 앱이 만든 HTML 이지 파일이 아니다 — HTML 도 위생을 거친 사본이다).
+ * * **⋮ 메뉴**([inMenu]) — **이번 열기에서 파일에 닿은 뒤로는** 언제나. 마크다운 미리보기 중에도 원문 파일을 넘긴다
+ *   (미리보기는 이 앱이 만든 HTML 이지 파일이 아니다).
+ * * **'브라우저로 열기'**([isHtmlName]) — HTML 파일의 ⋮ 에. 이 앱은 HTML 을 글로만 보이고 그린 모양은 브라우저가 보인다.
  *   닿기 전(앞머리를 읽기 전, 수 ms)과 닿지 못한 실패에는 흐리다 —
  *   없는 파일은 `ExternalOpen` 이 '넘길 수 없다' 로 받지만, **있는데 열리지 않는 파일**은 거기서 걸러지지 않고 받는
  *   앱에 넘어가 그 앱이 같은 벽에 부딪힌다. 단추가 있는 실패 갈래에도 메뉴를 둔다(겹쳐 둔다 — 형제 화면과 같은 규칙).
@@ -40,6 +41,12 @@ internal object TextOpenWith {
         is TextViewModel.State.Indexing, is TextViewModel.State.Ready -> true
         is TextViewModel.State.Failed -> onFailure(state.kind)
     }
+
+    /** HTML 파일 이름인가(`.html`·`.htm`·`.xhtml`) — ⋮ 에 '브라우저로 열기' 를 단다. */
+    fun isHtmlName(name: String): Boolean =
+        name.substringAfterLast('.', "").lowercase(java.util.Locale.ROOT) in HTML_EXTENSIONS
+
+    private val HTML_EXTENSIONS = setOf("html", "htm", "xhtml")
 }
 
 /**

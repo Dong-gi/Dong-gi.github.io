@@ -72,20 +72,19 @@ import javax.crypto.spec.SecretKeySpec
  * 켜져 있는데 중계가 없으면 받지 않는다(직접 나가지 않는다). 쪽과 같게 보이도록
  * WebView 의 User-Agent·그 주소의 쿠키·Referer 를 싣는다(쿠키는 넘겨주기의 홉마다 다시 고르고, 넘겨주기가 준 쿠키는 WebView 에 넣는다).
  *
- * **다시 해 보기와 이어받기**(사용자 결정, 2026-10-05 — '한 조각만 실패해도 처음부터 받아야 한다면, 자동 다시시도(3회 실패 시 사용자가
- * 명시적인 이어받기)'). 보통 파일은 끊기면 받은 데서부터 `Range`(+`If-Range` — 그 사이 파일이 바뀌었으면 처음부터)로 이어 받고, 나아감 없이
+ * **다시 해 보기와 이어받기**(사용자 결정). 보통 파일은 끊기면 받은 데서부터 `Range`(+`If-Range` — 그 사이 파일이 바뀌었으면 처음부터)로 이어 받고, 나아감 없이
  * 세 번 실패하면 **멈춤**(받은 것은 감춘 채 남긴다)으로 두어 사용자가 '이어받기' 를 누르게 한다. HLS·DASH 는 조각마다 세 번까지 다시 받고, 그래도
  * 안 되면 다 받은 조각까지 남긴 채 멈춘다. 서버가 4xx(408·429 밖)로 거절하면 다시 해 보지 않고 바로 멈춘다. 목록은 디스크에 두어
  * ([DownloadStore]) 앱이 다시 떠도 멈춘 것을 이어받는다(받던 중에 앱이 죽었으면 멈춤으로 돌아온다).
  *
- * **HLS·DASH 의 따로 된 소리는 영상과 한 파일로 합친다**(사용자 결정, 2026-10-05 — media3, [Remux]). 줄기마다 앱 안의 임시 파일로 받고 다
- * 받으면 그릇만 바꿔 담는다(H.264·AAC 는 MP4, VP9·Opus 는 WebM). 담지 못하는 조합이면 앞 판처럼 따로 된 파일로 남긴다. 줄기가 하나면
+ * **HLS·DASH 의 따로 된 소리는 영상과 한 파일로 합친다**(사용자 결정 — media3, [Remux]). 줄기마다 앱 안의 임시 파일로 받고 다
+ * 받으면 그릇만 바꿔 담는다(H.264·AAC 는 MP4, VP9·Opus 는 WebM). 담지 못하는 조합이면 따로 된 파일로 남긴다. 줄기가 하나면
  * '내려받기' 폴더에 곧바로 잇는다 — TS 는 `.ts`, fMP4 는 `.mp4`(소리만 `.m4a`), 묶음 AAC 는 `.aac`.
  *
- * 잠긴 것: **AES-128 은 풀어서 받는다**(사용자 결정, 2026-10-05 — [HlsCrypto]), `SAMPLE-AES`·DRM(키 형식이 identity 가 아닌 것·
+ * 잠긴 것: **AES-128 은 풀어서 받는다**([HlsCrypto]), `SAMPLE-AES`·DRM(키 형식이 identity 가 아닌 것·
  * `ContentProtection`)은 받지 않는다. 실시간 방송은 받지 않는다. POST 로 받은 내려받기는 GET 으로 다시 받으므로 실패할 수 있다(알려진 한계).
  * 열쇠는 쪽의 재생기가 보낸 요청의 머리를 따라 청하고([PageRequests]), hls.js 처럼 너그럽게 읽되 첫 조각을 풀어 꼴이 맞을 때만 쓴다([HlsKeys]).
- * 그래도 받지 못하면 까닭의 갈래를 글에 싣는다([loadKey] — 2026-10-16, m3u8 열쇠 오류 고침).
+ * 그래도 받지 못하면 까닭의 갈래를 글에 싣는다([loadKey]).
  *
  * 조각은 **받으면서 곧바로 파일에 쓴다**(잠긴 것은 흘려 보내며 푼다) — 통째로 메모리에 올리지 않는다(DASH 의 파일 하나짜리 화질은 수백 MB 다).
  * 시도마다 길을 다시 얻는다([NetworkPath.httpRoute]) — 설정을 바꾸거나 스위치를 눌러 중계가 새 포트로 서면 옛 포트는 닫힌다.
@@ -97,7 +96,7 @@ import javax.crypto.spec.SecretKeySpec
  * 일꾼: 받기는 동시에 둘. 목록 살피기([inspectHls]·[inspectDash])와 가로채기·녹화의 마무리, 취소·지우기의 뒷정리는 받기 수와 따로 돈다 —
  * 받는 것이 둘이어도 화질 창·저장이 그 뒤에 줄 서지 않게.
  *
- * **갤러리 받기**([Kind.SET] — 사용자 결정, 2026-10-11: 'pixiv, hitomi 기능을 브라우저에 통합'). 계획 하나(작품의 쪽들·작가의 작품들·갤러리의
+ * **갤러리 받기**([Kind.SET] — pixiv·hitomi). 계획 하나(작품의 쪽들·작가의 작품들·갤러리의
  * 장들 — `:core` 의 sites 가 읽는다, [planGallery])가 항목 하나다. 사이트에 묻는 것도 파일을 받는 것도 **이 클래스의 같은 길**([fetcher] — 세 번째
  * '바로 나감' 은 없다)이고 pixiv 는 WebView 의 로그인 쿠키로 묻는다(우리는 사용자 대신 로그인하지 않는다). 파일은 '내려받기/<사이트>/<작가>/…' 에
  * 하나씩 드러내고 곁의 기록([DownloadSets])에 적는다. 한 번에 하나, 보통 받기와 따로 된 일꾼에서([runSet]). 그만두면 받던 파일만 지우고 받은
@@ -206,15 +205,15 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
             internal set
 
         /**
-         * 앞 판이 받기를 넣을 때 한 번 지어 적어 둔 Referer(downloads.json 의 `referer`). 지금은 홉마다 쪽 주소([pageUrl])에서 짓고([refererSource]),
-         * 이것은 쪽 주소를 적지 않던 옛 항목만 쓴다. 새 항목은 null.
+         * 옛 항목이 받기를 넣을 때 지어 적어 둔 Referer(downloads.json 의 `referer`). Referer 는 홉마다 쪽 주소([pageUrl])에서 짓고
+         * ([refererSource]), 이것은 쪽 주소를 적지 않던 옛 항목만 쓴다. 새 항목은 null.
          */
         @Volatile var referer: String? = referer
             internal set
 
         /**
          * 이것을 고른 페이지의 주소와 제목 — 주소가 만료되면 '원래 페이지 열기' 로 다시 열고, 같은 페이지에서 같은 미디어를 다시 고르면 이
-         * 항목에 새 주소를 붙여 잇는다(링크 갱신). 모르면 null(앞 판이 남긴 항목·blob·가로채기).
+         * 항목에 새 주소를 붙여 잇는다(링크 갱신). 모르면 null(옛 항목·blob·가로채기).
          */
         @Volatile var pageUrl: String? = pageUrl
             internal set
@@ -223,8 +222,8 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
             internal set
 
         /**
-         * Referer 를 짓는 쪽 주소 — 홉마다 `strict-origin-when-cross-origin`([headersFromPage] — 2026-10-16 보안 점검). 쪽 주소를 적지 않던 옛
-         * 항목은 그때 지어 둔 [referer] 를 쪽으로 본다(그 값은 쪽 주소이거나 그 출처라 홉마다 다시 지어도 옛 판보다 더 내보내지 않는다).
+         * Referer 를 짓는 쪽 주소 — 홉마다 `strict-origin-when-cross-origin`([headersFromPage]). 쪽 주소를 적지 않던 옛 항목은 그때 지어 둔
+         * [referer] 를 쪽으로 본다(그 값은 쪽 주소이거나 그 출처라 홉마다 다시 지어도 그때보다 더 내보내지 않는다).
          */
         internal val refererSource: String? get() = refererSourceOf(pageUrl, referer)
 
@@ -289,7 +288,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
         /**
          * MEDIA(HLS) — 이것을 고른 탭이 쥔 쪽의 요청 머리([PageRequests] — 열쇠를 쪽처럼 받는다). **메모리에만** 둔다 — 값은 토큰일 수 있어
-         * downloads.json 에 쓰지 않는다. 앱이 다시 뜨면 없다(그때는 앞 판처럼 받고, 실패하면 글이 '쪽의 요청 기록 없음' 을 말한다).
+         * downloads.json 에 쓰지 않는다. 앱이 다시 뜨면 없다(그때는 쪽의 머리 없이 받고, 실패하면 글이 '쪽의 요청 기록 없음' 을 말한다).
          */
         @Volatile internal var pageRequests: PageRequests? = null
 
@@ -338,12 +337,6 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         class Failed(val message: String) : HlsInfo()
     }
 
-    /** [fetchSmall] 의 답. */
-    sealed class SmallFile {
-        class Ready(val bytes: ByteArray) : SmallFile()
-        class Failed(val message: String) : SmallFile()
-    }
-
     /** [planGallery] 의 답 — 계획, 또는 받을 수 없는 까닭(우리 문장). */
     sealed class GalleryResult {
         class Ready(val plan: GalleryPlan) : GalleryResult()
@@ -372,7 +365,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
      */
     private val galleryWorker = Executors.newSingleThreadExecutor { r -> Thread(r, "web-download-gallery").apply { isDaemon = true } }
 
-    /** 취소·지우기의 뒷정리 — 받기 줄에 서지 않게(앞 판은 받는 것이 둘이면 기다리는 항목의 취소도 그 뒤에 섰다). */
+    /** 취소·지우기의 뒷정리 — 받기 줄에 서지 않게(받는 것이 둘이어도 기다리는 항목의 취소가 곧바로 되게). */
     private val chores = Executors.newSingleThreadExecutor { r -> Thread(r, "web-download-chores").apply { isDaemon = true } }
     private val pushExecutor = Executors.newSingleThreadExecutor { r -> Thread(r, "web-download-push").apply { isDaemon = true } }
     private val storeExecutor = Executors.newSingleThreadExecutor { r -> Thread(r, "web-download-store").apply { isDaemon = true } }
@@ -639,29 +632,6 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     }
 
     /**
-     * 작은 파일 하나(`.torrent`)를 메모리로 받는다 — **웹 쪽 길**(앱의 HTTP, 중계 — 프록시를 켰는데 중계가 없으면 받지 않는다)로, 그 페이지의
-     * 쿠키·Referer(홉마다 [pageUrl] 에서)·User-Agent 를 싣는다(로그인해야 받는 토렌트 파일이 있다). 토렌트의 내용은 엔진이 기기에서 바로 받지만
-     * 이 파일은 페이지가 건넨 내려받기다. [limit] 바이트를 넘으면 받지 않는다. 살피기 일꾼에서(받기 수와 따로), 답은 메인 스레드로 — [inspectHls]
-     * 와 같은 꼴.
-     */
-    fun fetchSmall(url: String, userAgent: String, pageUrl: String?, limit: Int, done: (SmallFile) -> Unit): Inspection {
-        val job = Inspection()
-        inspector.execute {
-            val result = try {
-                SmallFile.Ready(getBytes(url, userAgent, pageUrl, null, INSPECT, limit) { job.cancelled })
-            } catch (e: Cancelled) {
-                null
-            } catch (e: Streams.TooLarge) {
-                SmallFile.Failed(app.getString(R.string.torrent_file_too_big))
-            } catch (e: IOException) {
-                SmallFile.Failed(NetErrors.describe(e))
-            }
-            if (result != null) main.post { if (!job.cancelled) done(result) }
-        }
-        return job
-    }
-
-    /**
      * 갤러리를 읽어 계획을 짓는다(확인 창에 보일 것과 받을 것) — 살피기 일꾼에서(받기 수와 따로), 답은 메인 스레드로. [inspectHls] 와 같은 꼴이라
      * 그만둘 수 있다. 묻는 길은 내려받기와 같다([siteFetch] — [fetcher], WebView 의 쿠키·[userAgent]). 받을 단위가 없으면 '받을 파일이 없다'.
      * 해석기가 무엇을 던지든 앱을 내리지 않고 까닭 한 줄로 끝낸다(사이트의 이상한 답 하나가 일꾼 스레드를 죽이면 앱이 죽는다).
@@ -739,7 +709,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
     /**
      * 갤러리 받기를 **받은 파일까지** 지우고 목록에서 뺀다 — 곁의 기록에 적은 URI 들(이 앱이 만든 '내려받기' 항목만 지울 수 있다 — 사용자가 옮겼거나
-     * 다른 앱이 바꿨으면 못 지운다)과 받던 파일. 비게 된 폴더는 남는다(이 앱의 권한으로는 폴더를 지울 수 없다 — 토렌트와 같다). [done] 은 메인
+     * 다른 앱이 바꿨으면 못 지운다)과 받던 파일. 비게 된 폴더는 남는다(이 앱의 권한으로는 폴더를 지울 수 없다). [done] 은 메인
      * 스레드에서 — 지운 파일 수.
      */
     fun deleteSetFiles(item: Item, done: (Int) -> Unit) {
@@ -796,8 +766,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     }
 
     /**
-     * 받은 파일을 연다 — **기본 앱으로**(정해 둔 앱이 없으면 시스템이 고르는 창을 띄운다 — '항상' 을 고를 수 있다). 앞 판은 열 때마다 앱 고르기
-     * 창(chooser)을 띄웠다.
+     * 받은 파일을 연다 — **기본 앱으로**(정해 둔 앱이 없으면 시스템이 고르는 창을 띄운다 — '항상' 을 고를 수 있다).
      */
     fun openIntent(item: Item): Intent? {
         val uri = item.savedUri ?: return null
@@ -927,9 +896,9 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         }
 
     /**
-     * 쪽 [page] 에서 낸 요청의 홉 [hop] 머리 — Referer 를 **홉마다** 쪽에서 다시 짓는다(`strict-origin-when-cross-origin` — 2026-10-16 보안 점검).
-     * 앞 판은 받기를 넣을 때 처음 주소에 맞춰 한 번 지은 값을 모든 홉(넘겨주기·HLS·DASH 의 조각·재생목록·열쇠)에 실어, 처음 주소가 쪽과 같은
-     * 출처면 쪽의 전체 주소(질의 포함)가 다른 출처의 서버에 갔다.
+     * 쪽 [page] 에서 낸 요청의 홉 [hop] 머리 — Referer 를 **홉마다** 쪽에서 다시 짓는다(`strict-origin-when-cross-origin`). 처음 주소에 맞춰
+     * 한 번 지은 값을 모든 홉(넘겨주기·HLS·DASH 의 조각·재생목록·열쇠)에 실으면, 처음 주소가 쪽과 같은 출처일 때 쪽의 전체 주소(질의 포함)가
+     * 다른 출처의 서버에 간다.
      */
     private fun headersFromPage(userAgent: String, page: String?, hop: String, extra: Map<String, String> = emptyMap()): Map<String, String> =
         headers(userAgent, Referrer.strictOriginWhenCrossOrigin(page, hop), hop, extra)
@@ -941,8 +910,8 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     private val storeCookies: (String, List<String>) -> Unit = { url, values -> values.forEach { CookieManager.getInstance().setCookie(url, it) } }
 
     /**
-     * 앱의 HTTP — **부를 때마다 지금 길로**(중계의 지금 포트). 설정을 바꾸거나 스위치를 누르면 중계가 새 포트로 서고 옛 포트는 닫힌다 — 앞 판의
-     * HLS·DASH 받기는 처음에 한 번 얻은 것을 끝까지 써서 '연결하지 못했습니다' 로 멈췄다. 길([NetworkPath.httpRoute])은 넘겨주기의 **홉마다**
+     * 앱의 HTTP — **부를 때마다 지금 길로**(중계의 지금 포트). 설정을 바꾸거나 스위치를 누르면 중계가 새 포트로 서고 옛 포트는 닫힌다 — 처음에
+     * 한 번 얻은 것을 끝까지 쓰면 HLS·DASH 받기가 '연결하지 못했습니다' 로 멈춘다. 길([NetworkPath.httpRoute])은 넘겨주기의 **홉마다**
      * 예외 규칙을 보고 바로 또는 중계로 고른다(사설망의 공유기·NAS 에서 받기). 길이 아직 없으면 연결을 열지 않고 [HttpFetcher.NoRoute].
      */
     private fun fetcher(patience: Patience = DOWNLOAD): HttpFetcher = HttpFetcher(
@@ -1269,7 +1238,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
             if (r.code !in 200..299) throw SiteHttpException(r.code, NetErrors.describeStatus(r), NetErrors.isProxyAnswer(r))
             // 이름은 사이트가 지은 것이라 한 번 더 거른다(같은 것을 두 번 걸러도 같다). 형식은 확장자로 — 모르면 octet-stream(이름이 그대로 남는다).
             val name = SafeFileName.clean(file.fileName)
-            val mime = TorrentRules.mimeOf(name) { MimeTypeMap.getSingleton().getMimeTypeFromExtension(it) }
+            val mime = TextParts.mimeOf(name) { MimeTypeMap.getSingleton().getMimeTypeFromExtension(it) }
             val uri = item.pendingUri ?: try {
                 MediaStoreWriter.create(app, name, mime, g.folder)
             } catch (e: IOException) {
@@ -1308,7 +1277,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         }
     }
 
-    private fun text(part: TorrentTexts.Part): String = TorrentTexts.text(app, part)
+    private fun text(part: TextParts.Part): String = TextParts.text(app, part)
 
     // ── HLS·DASH ─────────────────────────────────────────────────────────────────────────────────────────
 
@@ -1397,7 +1366,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
             else -> Triple("ts", "video/mp2t", Remux.Container.TS)
         }
         // 조각 차례 — 초기 조각(fMP4)은 그것을 쓰는 첫 조각 앞에, 바뀔 때마다 한 번. 초기 조각도 잠겼으면 그 MAP 이 나온 자리의 잠금으로 푼다
-        // (RFC 8216 4.3.2.4 — 앞 판은 늘 평문으로 보아 잠긴 초기 조각이면 moov 가 깨졌다). IV 는 RFC 가 적으라 하고, 없으면 hls.js 처럼 0.
+        // (RFC 8216 4.3.2.4 — 늘 평문으로 보면 잠긴 초기 조각의 moov 가 깨진다). IV 는 RFC 가 적으라 하고, 없으면 hls.js 처럼 0.
         val parts = ArrayList<Part>()
         var lastMap: String? = null
         for (seg in media.segments) {
@@ -1459,8 +1428,8 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     private class Prefix(val bytes: ByteArray, val complete: Boolean)
 
     /**
-     * 열쇠 하나를 받는다(2026-10-16 — m3u8 열쇠 오류 고침). 이 탭이 쥔 쪽의 요청([Item.pageRequests])에서 그 열쇠의 요청을 찾으면 쪽이 보낸 Referer·
-     * 스크립트가 단 머리·Origin 을 그대로 싣고(쪽이 질의를 더한 주소면 그 주소로 — [PageRequests.replayFor]), 못 찾으면 앞 판처럼 받는다. 16바이트면
+     * 열쇠 하나를 받는다. 이 탭이 쥔 쪽의 요청([Item.pageRequests])에서 그 열쇠의 요청을 찾으면 쪽이 보낸 Referer·
+     * 스크립트가 단 머리·Origin 을 그대로 싣고(쪽이 질의를 더한 주소면 그 주소로 — [PageRequests.replayFor]), 못 찾으면 다른 요청처럼 받는다. 16바이트면
      * 그것, 아니면 hls.js 처럼 너그러운 후보([HlsKeys.candidates] — 첫 조각으로 확인한 뒤에 쓴다, [pump]). 후보가 하나도 없으면 까닭의 갈래를 실은
      * 글로 끝낸다([Refused] — 다시 해도 같다). 기록에는 꼴과 수만 적는다(주소·머리의 값은 적지 않는다).
      */
@@ -1495,9 +1464,9 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
     /** 열쇠를 받지 못한 글 — '잠금을 풀 열쇠를 받지 못했습니다 — <갈래>'([HlsKeyTexts] — 주소·쿠키·토큰·몸은 싣지 않는다). */
     private fun keyFailure(report: HlsKeys.Report): String =
-        app.getString(R.string.download_key_failed, TorrentTexts.join(app, HlsKeyTexts.parts(report, keySizes)))
+        app.getString(R.string.download_key_failed, TextParts.join(app, HlsKeyTexts.parts(report, keySizes)))
 
-    private val keySizes = TorrentTexts.Sizes { Formatter.formatShortFileSize(app, it) }
+    private val keySizes = TextParts.Sizes { Formatter.formatShortFileSize(app, it) }
 
     /** 앞머리 — [limit] 바이트까지 또는 몸이 끝날 때까지(그러면 [Prefix.complete]). 취소·정지를 본다. */
     private fun readPrefix(item: Item, input: InputStream, limit: Int): Prefix {
@@ -1688,7 +1657,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         } catch (e: Remux.Encrypted) {
             throw Refused(HLS_DRM)
         } catch (e: Remux.Failure) {
-            // 앞 판처럼 따로 된 파일로 남긴다.
+            // 따로 된 파일로 남긴다.
             val saved = item.tracks.mapIndexed { i, t ->
                 val name = if (t.audio) app.getString(R.string.media_audio_name, item.fileName) else item.fileName
                 MediaStoreWriter.copyIn(app, File(dir, "track$i.part"), "$name.${t.extension}", mimeFor(t))
@@ -1704,7 +1673,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         dir.deleteRecursively()
     }
 
-    /** 담는 것 — 줄기들이 소리인지([audio])로. 녹화의 '소리만' 이 '영상과 소리를 한 파일로' 로 나오던 것을 가른다. */
+    /** 담는 것 — 줄기들이 소리인지([audio])로(녹화의 '소리만' 을 '영상과 소리' 와 가른다). */
     private fun finishingOf(audio: List<Boolean>): Finishing = when {
         audio.any { it } && audio.any { !it } -> Finishing.AV
         audio.isNotEmpty() && audio.all { it } -> Finishing.AUDIO
@@ -1794,11 +1763,11 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
             throw Refused("재생목록이 너무 큽니다")
         }
         // 상대 주소(화질·조각·열쇠)는 **넘겨주기 뒤의 주소**에 대어 푼다 — hls.js·ExoPlayer 가 그렇게 풀고, 찾은 미디어의 미리 읽기(MediaProbe)도 그렇다.
-        // 앞 판은 처음 주소에 대어 풀어, 넘겨준 재생목록의 열쇠를 엉뚱한 곳에 청했다(그곳이 200 의 웹 페이지를 주면 '열쇠를 받지 못했습니다').
+        // 처음 주소에 대어 풀면 넘겨준 재생목록의 열쇠를 엉뚱한 곳에 청한다(그곳이 200 의 웹 페이지를 주면 '열쇠를 받지 못했습니다').
         return HlsPlaylist.parse(fetched.bytes.decodeToString(), fetched.url)
     }
 
-    /** 작은 덩이의 몸만 — [getBody] 와 같다(재생목록·DASH 목록처럼 상대 주소를 풀 일이 없는 것: `.torrent`·사이트의 JSON). */
+    /** 작은 덩이의 몸만 — [getBody] 와 같다(재생목록·DASH 목록처럼 상대 주소를 풀 일이 없는 것: 사이트의 JSON). */
     private fun getBytes(
         url: String,
         userAgent: String,
@@ -2138,7 +2107,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
                 t.optJSONArray("partSizes")?.let { a -> for (n in 0 until a.length()) partSizes += a.getLong(n) }
             }
         }
-        // 페이지 주소·제목·만료는 0.9.x 뒤에 더했다 — 앞 판의 파일에는 없다(없으면 null·false). 갤러리(set)는 2026-10-11 에 더했다.
+        // 페이지 주소·제목·만료·갤러리(set)는 옛 파일에 없을 수 있다(없으면 null·false).
         val kind = Kind.valueOf(o.getString("kind"))
         val gallery = if (kind == Kind.SET) galleryFromJson(o.getJSONObject("set")) else null
         return Item(
@@ -2178,7 +2147,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
     /**
      * 한 덩이 받기의 끈기 — 받기는 세 번·넉넉한 시간 제한, 살피기(화질을 고르기 전)는 두 번·짧은 시간 제한(그동안 사용자가 화면 앞에서
-     * 기다린다 — 앞 판은 받기와 같아서 느린 서버면 1분 반 남짓 아무 표시 없이 기다렸다).
+     * 기다린다).
      */
     private class Patience(val attempts: Int, val backoffMs: LongArray, val connectMs: Int, val readMs: Int)
 
@@ -2235,14 +2204,14 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
         /**
          * 받기 항목의 Referer 를 짓는 쪽 주소([Item.refererSource]) — 그것을 고른 쪽([pageUrl]), 쪽 주소를 적지 않던 옛 항목(downloads.json)은 그때
-         * 지어 적어 둔 Referer([stored] — 쪽 주소이거나 그 출처). 그것을 쪽으로 보고 홉마다 다시 지어도 옛 판보다 더 내보내지 않는다.
+         * 지어 적어 둔 Referer([stored] — 쪽 주소이거나 그 출처). 그것을 쪽으로 보고 홉마다 다시 지어도 그때보다 더 내보내지 않는다.
          */
         internal fun refererSourceOf(pageUrl: String?, stored: String?): String? = pageUrl?.takeIf { it.isNotEmpty() } ?: stored
 
         /**
          * 지난 프로세스가 남긴 **감춘 '내려받기' 항목**(IS_PENDING)을 지운다 — 목록(downloads.json)에 기록이 없는 것만. 마무리(가로채기·녹화)와
          * blob 받기는 다시 할 수 없어 받는 동안 목록에 적지 않으므로, 그 도중에 앱이 죽으면 항목이 남아 사용자에게 보이지도 않고 이어받을 수도
-         * 없었다(시스템은 이레 뒤에야 지운다). 이 프로세스가 뜬 뒤에 생긴 것은 건드리지 않는다(지금 받는 것). 목록을 읽지 못하면(깨졌다) 아무것도
+         * 없다(시스템은 이레 뒤에야 지운다). 이 프로세스가 뜬 뒤에 생긴 것은 건드리지 않는다(지금 받는 것). 목록을 읽지 못하면(깨졌다) 아무것도
          * 지우지 않는다. 디스크·MediaStore 를 보므로 일꾼에서 부른다.
          */
         fun sweepOrphans(context: Context) {

@@ -65,8 +65,8 @@ object OutputNames {
     /**
      * 이름 부분에 확장자를 잇되 **UTF-8 바이트로** 255(ext4·F2FS 의 이름 상한 — [PathRules.MAX_NAME_BYTES])를 넘지 않게 이름 부분을 줄인다.
      * 받은 문서·내보낸 파일은 이 이름으로 앱 캐시에 **먼저** 쓰인다([HostBridge]) — 글자 수([MAX])로만 묶으면 한글 120자가
-     * 360바이트라 그 파일을 만들지 못해, 저장이 파일 쪽에 닿기도 전에 까닭 없는 '저장하지 못했습니다' 로 끝났다(255바이트 이름의 `.hwp`·`.doc` 를
-     * `.hwpx`·`.docx` 로 저장할 때도 한 바이트가 넘쳤다). 서로게이트 쌍은 가르지 않는다.
+     * 360바이트라 그 파일을 만들지 못해, 저장이 파일 쪽에 닿기도 전에 까닭 없는 '저장하지 못했습니다' 로 끝난다(255바이트 이름의 `.hwp`·`.doc` 를
+     * `.hwpx`·`.docx` 로 저장할 때도 한 바이트가 넘친다). 서로게이트 쌍은 가르지 않는다.
      */
     private fun withExtension(base: String, ext: String): String {
         val room = PathRules.MAX_NAME_BYTES - ".$ext".toByteArray(Charsets.UTF_8).size

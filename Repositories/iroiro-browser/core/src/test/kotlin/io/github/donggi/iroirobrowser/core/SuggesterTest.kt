@@ -125,7 +125,7 @@ class SuggesterTest {
 
     @Test
     fun 같은_곳은_한_줄() {
-        // 조각·끝의 `/`·`www.`·스킴만 다른 주소는 하나로 — 점수가 높은 것이 남는다(앞 판은 fast.com 과 fast.com/# 을 두 줄로 보였다).
+        // 조각·끝의 `/`·`www.`·스킴만 다른 주소는 하나로 — 점수가 높은 것이 남는다.
         val once = Suggester(listOf(
             e("https://fast.com/", "Fast", daysAgo = 5),
             e("https://fast.com/#", "Fast", daysAgo = 0),

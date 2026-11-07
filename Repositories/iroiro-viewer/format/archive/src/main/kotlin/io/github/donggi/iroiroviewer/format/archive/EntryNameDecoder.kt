@@ -17,15 +17,11 @@ import java.nio.charset.StandardCharsets
  *
  * ## 판정은 `core:charset` 의 것 하나다
  *
- * 7단계부터 판정이 두 벌이었다 — 여기와 `CharsetDetector`. CLAUDE.md 가 '두 곳을 함께 고쳐라' 로 버티던 빚을
- * 갚았다: 합치기 전에 지금의 답을 회귀 표본으로 박고(`EntryNameRegressionTest`), 그 답을 지키도록 `CharsetDetector`
- * 를 짧은 입력에 맞춘 뒤 이 파일은 판정을 **부르기만** 한다. 여기 남은 것은 ZIP 만의 사정 둘 — UTF-8 표시, 그리고
- * 결과를 진단 표지(`nameCharset`)로 옮기는 것 — 이다. 같은 바이트는 이제 글 뷰어와 압축 목록에서 같은 인코딩으로
- * 읽힌다(`EntryNameConsistencyTest` 가 지킨다).
+ * 이 파일은 판정을 **부르기만** 한다 — 판정이 두 벌이면 한쪽만 고쳐진다. 여기 남은 것은 ZIP 만의 사정 둘 —
+ * UTF-8 표시, 그리고 결과를 진단 표지(`nameCharset`)로 옮기는 것 — 이다. 같은 바이트는 글 뷰어와 압축 목록에서
+ * 같은 인코딩으로 읽힌다(`EntryNameConsistencyTest` 가 지킨다. 답은 `EntryNameRegressionTest` 가 박는다).
  *
- * 합치며 바뀐 답(전부 예전이 틀렸던 것): Shift_JIS 이름이 CP949 찌꺼기 대신 일본어로, UTF-8 로 적은 `café` 가
- * `caf챕` 대신 `café` 로, Latin-1 로 적은 `café` 가 `caf�` 대신 `café` 로 읽힌다. 중국어(GB18030) 이름은 예전처럼
- * 한글 찌꺼기로 읽힌다 — 짧은 입력은 한국어로 기운다(`CharsetDetector` 의 '못 하는 것').
+ * 중국어(GB18030) 이름은 한글 찌꺼기로 읽힌다 — 짧은 입력은 한국어로 기운다(`CharsetDetector` 의 '못 하는 것').
  *
  * ## 실측으로 확인한 것
  *

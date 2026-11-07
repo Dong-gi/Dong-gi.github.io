@@ -1,11 +1,11 @@
-"""순수 JVM 모듈(:core·:net·:torrent·:tether)이 부르는 자바 API 가 안드로이드의 minSdk 에 있는지 본다.
+"""순수 JVM 모듈(:core·:net·:tether)이 부르는 자바 API 가 안드로이드의 minSdk 에 있는지 본다.
 
 그 모듈들은 JDK 로 컴파일되므로 컴파일러도 JVM 시험도 안드로이드에 없는 함수를 모른다 — 기기에서 `NoSuchMethodError` 로 앱이 죽는다
 (`URLEncoder.encode(String, Charset)`(API 33) 로 검색하면 죽었다, iroiro-viewer 는 `readNBytes` 로). lint 의 NewApi 는 앱 모듈만 본다
 (`checkDependencies` 를 켜도 JVM 모듈은 보지 않았다 — 되돌려 확인했다). 그래서 컴파일된 클래스의 상수 풀에서 `java/…`·`javax/…` 의
 메서드·필드 참조를 모아 SDK 의 `api-versions.xml`(lint 가 쓰는 표)과 견준다. 상속은 따라 올라가 찾는다.
 
-    ./gradlew :core:classes :net:classes :torrent:classes :tether:classes
+    ./gradlew :core:classes :net:classes :tether:classes
     python tools/check_api_level.py            # 문제가 있으면 끝 코드 1
 
 표준 라이브러리만 쓴다.
@@ -21,7 +21,7 @@ import xml.etree.ElementTree as ET
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 MIN_SDK = 31
-MODULES = ["core", "net", "torrent", "tether"]
+MODULES = ["core", "net", "tether"]
 # invokedynamic 의 부트스트랩(문자열 잇기·람다)은 D8 이 풀어 쓴다 — 안드로이드에서 그대로 부르지 않는다.
 IGNORED_PREFIXES = ("java/lang/invoke/",)
 

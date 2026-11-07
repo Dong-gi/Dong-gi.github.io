@@ -6,9 +6,9 @@ import io.github.donggi.iroirobrowser.core.adblock.Request
 import java.util.Locale
 
 /**
- * 쪽이 낸 하위 요청의 머리 — 탭마다 **메모리에만** 잠깐 쥔다(2026-10-16 — m3u8 열쇠 오류 고침). 열쇠를 받을 때 쪽의 재생기가 그 열쇠에 실제로
- * 보낸 Referer 와 스크립트가 단 머리(hls.js 의 `xhrSetup` 따위)를 그대로 싣는다. 앞 판은 맨 위 쪽의 주소로 Referer 를 지어 모든 요청에 실었고(재생기가
- * 다른 사이트의 틀 안에 있으면 그 틀의 출처와 다르다) Origin 도 스크립트의 머리도 싣지 못했다 — 그런 열쇠 서버는 '200 + 열쇠 아닌 것' 을 준다.
+ * 쪽이 낸 하위 요청의 머리 — 탭마다 **메모리에만** 잠깐 쥔다. 열쇠를 받을 때 쪽의 재생기가 그 열쇠에 실제로 보낸 Referer 와 스크립트가 단
+ * 머리(hls.js 의 `xhrSetup` 따위)를 그대로 싣는다. 맨 위 쪽의 주소로 지은 Referer 는 재생기가 다른 사이트의 틀 안에 있으면 그 틀의 출처와
+ * 다르고, Origin·스크립트의 머리가 없으면 어떤 열쇠 서버는 '200 + 열쇠 아닌 것' 을 준다.
  *
  * WebView 는 `shouldInterceptRequest` 에 그 요청의 머리를 주고 Referer 도 담아 준다(크로미움 `aw_proxying_url_loader_factory.cc` — 소스로 읽었다,
  * 기기의 판에서는 재지 않았다). 쿠키·Origin·Sec-Fetch 는 그 뒤에 망이 붙여 여기에 없다 — Origin 은 Referer 의 출처로 짓는다([Replay.origin]).
@@ -125,7 +125,7 @@ class PageRequests(
 
     /**
      * [keyUrl](재생목록이 가리키는 열쇠)을 쪽처럼 청하는 법. 찾는 차례 — 그 주소 그대로 → 같은 길에 쪽이 질의를 더한 주소(하나일 때만 — 여럿이면 어느
-     * 것인지 모른다) → 같은 길의 다른 질의(우리 주소에 머리만) → 그 재생목록([playlistUrl])의 요청(Referer 만). 없으면 null(앞 판처럼 받는다).
+     * 것인지 모른다) → 같은 길의 다른 질의(우리 주소에 머리만) → 그 재생목록([playlistUrl])의 요청(Referer 만). 없으면 null(쪽의 머리 없이 받는다).
      */
     fun replayFor(keyUrl: String, playlistUrl: String?, nowMs: Long): Replay? {
         val clean = keyUrl.substringBefore('#')

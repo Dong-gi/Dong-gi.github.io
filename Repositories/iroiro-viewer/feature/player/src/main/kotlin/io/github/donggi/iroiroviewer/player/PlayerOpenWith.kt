@@ -92,9 +92,6 @@ internal object PlayerOpenWith {
      * 때 앞 실패를 버린다(`PlaybackConnection.State.carriedFailure`). 그래서 같은 상태 한 벌에서 읽은 `failure` 와 `fileKey` 는
      * 어긋나지 않는다(함정 표의 '서로 다른 흐름에서 받은 값을 짝지어 판단하지 마라').
      *
-     * 예전에는 커넥션이 큐 안에서 넘길 때 실패를 남겼고, 이 화면이 실패의 주인을 적는 객체와 앞 항목의 실패를 지우는 수집으로
-     * 그것을 대신 막았다. 고칠 자리가 커넥션이었다 — 지금은 장치가 하나다.
-     *
      * @param currentKey 지금 항목(`State.fileKey`).
      */
     fun failureTarget(failure: PlaybackFailure?, currentKey: String?): String? =
@@ -131,7 +128,7 @@ internal object PlayerOpenWith {
         currentKey?.takeUnless { inPip || isUnreachable(failure) }
 
     /**
-     * 큐 항목의 URI 에서 **파일 경로**를 꺼낸다. 이 앱의 큐는 `file:` 이다(`PlaybackConnection.itemOf` — 예전에는 네트워크 저장소의 `sftp:` 도 있었다).
+     * 큐 항목의 URI 에서 **파일 경로**를 꺼낸다. 이 앱의 큐는 `file:` 이다(`PlaybackConnection.itemOf`).
      * `file:` 이 아니면 넘기지 않는다 — `ExternalOpen` 은 경로를 받고, 경로가 아닌 것을 경로로 읽으면 엉뚱한 파일이 된다.
      */
     fun fileOf(scheme: String?, path: String?): String? = path?.takeIf { scheme == "file" && it.isNotEmpty() }

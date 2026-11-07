@@ -19,8 +19,8 @@ import java.io.File
 internal object AmbiguousStreams {
 
     /**
-     * 한 폴더에서 새로 읽는 상한. 하나에 8 KiB(`ContentSniff.HEAD_BYTES`)라 1,000개면 8 MB 다 — 7단계가 잰 FUSE 처리량(약 73 MB/s)
-     * 으로 0.1초 남짓에 파일 여는 값이 더해진다(재지 않았다). 넘는 것은 이름대로 둔다 — 누르면 그때 본다.
+     * 한 폴더에서 새로 읽는 상한. 하나에 8 KiB(`ContentSniff.HEAD_BYTES`)라 1,000개면 8 MB 다 — FUSE 처리량(약 73 MB/s)으로
+     * 0.1초 남짓에 파일 여는 값이 더해진다. 넘는 것은 이름대로 둔다 — 누르면 그때 본다.
      */
     const val MAX_SNIFF = 1000
 

@@ -21,8 +21,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 /**
- * 뷰어가 [ViewerWindow] 에 적어 둔 바람을 **이 액티비티의 창**에 건다(예전에는 '그림·만화·PDF 뷰어도 막대를 감춰도 시스템
- * 바가 남는다', '읽는 동안 화면이 꺼진다', '만화를 볼륨 키로 넘길 수 없다' 였다).
+ * 뷰어가 [ViewerWindow] 에 적어 둔 바람을 **이 액티비티의 창**에 건다.
  *
  * ## 액티비티가 쥔다
  *
@@ -34,7 +33,7 @@ import kotlinx.coroutines.launch
  * ## 무엇을 거는가
  *
  * - **바의 아이콘 색** — 어두운 뷰어(그림·만화·문서)가 떠 있으면 밝게, 아니면 테마(밤 모드)를 따른다. 이 창의 테마는 아이콘을
- *   건드리지 않는다(`IroiroTheme(systemBarIcons = false)` — 회전마다 테마가 다시 그려지며 이 값을 덮었다). 3버튼 내비게이션의
+ *   건드리지 않는다(`IroiroTheme(systemBarIcons = false)` — 회전마다 테마가 다시 그려지며 이 값을 덮는다). 3버튼 내비게이션의
  *   바탕(시스템이 대비를 위해 깔아 주는 막)도 그 색을 따라 어두워진다.
  * - **시스템 바 감추기** — 뷰어가 막대를 감추면 함께 감추고, 가장자리를 밀면 잠깐 보인다(`BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE`).
  *   뷰어의 막대는 인셋을 `…IgnoringVisibility` 로 재서 바가 드나들 때 출렁이지 않는다.
@@ -115,8 +114,8 @@ internal class ViewerWindowHost(private val activity: ComponentActivity) {
 
     /**
      * 바의 아이콘을 밝게(어두운 바탕 위) 둘지. 어두운 뷰어거나 밤 모드면 밝게. 내비게이션 바도 함께다 — 3버튼 내비게이션의
-     * 대비 막(`enableEdgeToEdge` 가 켜 둔 `isNavigationBarContrastEnforced`)이 이 값을 따라 희거나 검게 깔린다. 검은 뷰어 아래에
-     * 흰 막이 깔리던 것이 '밝은 막대' 로 보였다.
+     * 대비 막(`enableEdgeToEdge` 가 켜 둔 `isNavigationBarContrastEnforced`)이 이 값을 따라 희거나 검게 깔린다 — 따르지 않으면
+     * 검은 뷰어 아래에 흰 막이 깔린다.
      */
     private fun applyIcons(dark: Boolean) {
         val light = !dark && !systemDark()

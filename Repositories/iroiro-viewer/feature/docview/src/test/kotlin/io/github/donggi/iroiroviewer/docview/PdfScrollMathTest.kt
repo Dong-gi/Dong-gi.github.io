@@ -9,8 +9,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * PDF 이어 보기의 계산. 화면은 목록을 배율 1 로 놓고 층이 키우므로, 좌표가 맞는지는 화면 캡처가 아니라 여기서 잰다
- * (6단계가 확대를 캡처로 판정하다 세 번 틀렸다).
+ * PDF 이어 보기의 계산. 화면은 목록을 배율 1 로 놓고 층이 키우므로, 좌표가 맞는지는 화면 캡처가 아니라 여기서 잰다.
  */
 class PdfScrollMathTest {
 

@@ -12,8 +12,7 @@ import java.util.Locale
  * 있을 때만 실패를 알린다([StartError.PORT_TAKEN]). 실제로 묶인 포트는 [actualPort] 이고 화면·알림이 그것을 보인다. 시스템의 Wi-Fi 별
  * 프록시 설정을 쓰는 손님용이다(안드로이드·윈도의 그 설정은 HTTP 만 받는다).
  *
- * **옮기는 것은 사용자 결정이다**(2026-10-10 — '서버 포트는 기존처럼 +1씩 하도록 해주세요. 핫스팟을 통해서만 연결할 것이므로 문제
- * 없습니다'). 옮겨 서는 위험은 남는다 — PC 는 `HTTP_PROXY=192.168.49.1:8282` 를
+ * **옮기는 것은 사용자 결정이다**(핫스팟으로만 붙으므로 괜찮다고 보았다). 옮겨 서는 위험은 남는다 — PC 는 `HTTP_PROXY=192.168.49.1:8282` 를
  * 고정으로 쓰므로, 이 폰의 다른 앱이 8282 를 먼저 쥐면(0.0.0.0 에 묶으면 핫스팟의 손님도 그 앱에 닿는다) PC 가 그 앱을 프록시로 써 손님
  * 거르기도 없이 평문 요청과 CONNECT 의 호스트를 보인다([Socks5Server] 의 머리말과 같은 틈). 사용자가 감수했다. 그래서 8282 가 아닌 포트에
  * 섰으면 PC 의 설정을 그 포트로 고치라고 화면이 적는다.
@@ -27,7 +26,7 @@ import java.util.Locale
  * 끝이 chunked 가 아닌 TE·겹친 Host·홀로 선 CR)는 400 으로 거절한다([framingChecked]). 막힌 목적지는 403, 풀지 못한 이름은 502 — 둘 다 까닭을
  * 적은 본문으로 답한다.
  *
- * 상한: 동시 연결 [MAX_SESSIONS](usb-tether 그대로 — 이 PC 처럼 시스템·환경 변수의 프록시로 PC 의 앱들이 통째로 지나는 쓰임이 있다). 스레드는
+ * 상한: 동시 연결 [MAX_SESSIONS](넉넉히 — 이 PC 처럼 시스템·환경 변수의 프록시로 PC 의 앱들이 통째로 지나는 쓰임이 있다). 스레드는
  * [ThreadBudget] 이 셋을 함께 묶는다.
  */
 class HttpProxyServer(
@@ -60,7 +59,7 @@ class HttpProxyServer(
             while (true) {
                 val line = readHeaderLine(inp) ?: break
                 if (line.isEmpty()) break
-                // 줄을 센다 — 담은 머리 수로 세면 `:` 없는 줄(걷어 버린다)이 끝없이 이어져도 걸리지 않았다.
+                // 줄을 센다 — 담은 머리 수로 세면 `:` 없는 줄(걷어 버린다)이 끝없이 이어져도 걸리지 않는다.
                 if (++lines > MAX_HEADER_COUNT) throw HeaderTooLargeException()
                 val idx = line.indexOf(':')
                 if (idx <= 0) continue
@@ -113,9 +112,9 @@ class HttpProxyServer(
      * 통신사 IP 로 그런 공격을 세탁해 주는 경유지가 되는 것을 막는다. RFC 7230 3.3.2·3.3.3 그대로:
      *
      * - `Content-Length` 와 `Transfer-Encoding` 을 **함께**(CL.TE/TE.CL) — 400.
-     * - `Content-Length` 가 여럿이거나 한 줄에 쉼표로 여럿이면(2026-10-16 보안 점검) — 모두 같은 십진수면 하나로 줄여 넘기고(3.3.2 가 허락한다 —
+     * - `Content-Length` 가 여럿이거나 한 줄에 쉼표로 여럿이면 — 모두 같은 십진수면 하나로 줄여 넘기고(3.3.2 가 허락한다 —
      *   앞의 0 은 같은 값), 값이 다르거나 수(`1*DIGIT`)가 아닌 것(빈 값·부호·빈칸)이 있으면 400(3.3.3 의 넷째).
-     * - `Transfer-Encoding` 이 둘 이상이면 400(2026-10-16). 하나여도 마지막 코딩이 `chunked` 가 아니거나 `chunked` 가 두 번이거나 빈 코딩이
+     * - `Transfer-Encoding` 이 둘 이상이면 400. 하나여도 마지막 코딩이 `chunked` 가 아니거나 `chunked` 가 두 번이거나 빈 코딩이
      *   있으면 400(3.3.3 의 셋째·3.3.1 — `xchunked`·`chunked, identity` 처럼 서버마다 다르게 읽는 꼴).
      * - **겹친 `Host`**(앞뒤가 다른 Host 를 보고 길을 정해 캐시 오염으로 이어진다) — 400.
      *
@@ -221,9 +220,8 @@ class HttpProxyServer(
     }
 
     /**
-     * 목적지를 풀고 거른다. 막힌 곳이면 403, 이름을 풀지 못했으면 502 — 둘 다 까닭을 적은 본문을 보내고 null. 예전에는 풀이 실패도 403 과
-     * '사설·로컬 주소' 본문이라 오타 난 주소가 프록시의 막기처럼 보였다. 통과한 **주소 객체**를 돌려준다 — 부르는 쪽이 글로 다시
-     * 연결하면 다시 풀려 DNS 재바인딩으로 비켜 갈 수 있다.
+     * 목적지를 풀고 거른다. 막힌 곳이면 403, 이름을 풀지 못했으면 502(403 이면 오타 난 주소가 프록시의 막기처럼 보인다) — 둘 다 까닭을 적은
+     * 본문을 보내고 null. 통과한 **주소 객체**를 돌려준다 — 부르는 쪽이 글로 다시 연결하면 다시 풀려 DNS 재바인딩으로 비켜 갈 수 있다.
      */
     private fun resolveOrReject(client: Socket, host: String): InetAddress? =
         when (val verdict = env.destinations.resolve(host)) {
@@ -276,17 +274,17 @@ class HttpProxyServer(
         /** 기본 포트 — PC 가 이 값(`HTTP_PROXY=192.168.49.1:8282`)을 쓴다. 차 있으면 다음 포트로(클래스 머리말). */
         const val BASE_PORT = 8282
 
-        /** 해 볼 포트 수 — [BASE_PORT] 부터 하나씩(8282…8291). usb-tether·처음 합친 판과 같은 값. */
+        /** 해 볼 포트 수 — [BASE_PORT] 부터 하나씩(8282…8291). */
         const val PORT_ATTEMPTS = 10
 
-        /** 동시 연결 상한(usb-tether 와 같다). 근거는 클래스 머리말. */
+        /** 동시 연결 상한. 근거는 클래스 머리말. */
         const val MAX_SESSIONS = 256
 
         private const val CONNECT_TIMEOUT_MS = 5000
 
         /**
-         * 머리 한 줄의 최대 바이트. 예전 readHeaderLine 은 CRLF 를 만날 때까지 끝없이 담았다 — CR/LF 없는 바이트를 흘리면 글자마다 2바이트로
-         * 자랐고, 읽기가 될 때마다 soTimeout 이 새로 걸려 시간 제한도 없었다. OutOfMemoryError 는 Error 라 catch (Exception) 에 걸리지 않는다.
+         * 머리 한 줄의 최대 바이트. 상한이 없으면 CR/LF 없는 바이트를 흘리는 손님이 메모리를 끝없이 채운다(OutOfMemoryError 는 Error 라
+         * catch (Exception) 에 걸리지 않는다).
          */
         internal const val MAX_HEADER_LINE_BYTES = 8 * 1024
 

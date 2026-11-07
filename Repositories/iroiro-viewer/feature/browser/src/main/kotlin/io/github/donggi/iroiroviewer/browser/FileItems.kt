@@ -121,7 +121,7 @@ fun FileRow(
     }
 }
 
-/** 격자 한 칸. 썸네일은 6단계에서 들어온다 — 지금은 같은 배지를 크게 쓴다. */
+/** 격자 한 칸. */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FileGridItem(

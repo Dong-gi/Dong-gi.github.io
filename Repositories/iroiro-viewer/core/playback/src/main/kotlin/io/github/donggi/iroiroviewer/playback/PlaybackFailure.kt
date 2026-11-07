@@ -21,9 +21,8 @@ sealed interface PlaybackFailure {
      * 컨테이너를 읽지 못했다. [unsupported] 면 그 형식을 읽는 추출기가 없고(WMA·APE·RealMedia — media3 가 모른다),
      * 아니면 파일이 깨졌다.
      *
-     * 예전에는 media3 의 오류 코드 이름(`ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED`)을 그대로 실어 화면에 적었다. 예외
-     * 문구는 아니지만 사람이 읽는 말도 아니다 — 그 곁에 '다른 앱으로 열기' 가 서면서 '형식을 모른다' 와 '깨졌다' 를 우리 말로
-     * 가르는 것이 필요해졌다(형식을 모르면 다른 앱이 열 수 있고, 깨졌으면 대개 저쪽도 못 연다).
+     * media3 의 오류 코드 이름을 화면에 적지 않고 '형식을 모른다' 와 '깨졌다' 를 우리 말로 가른다 — 곁의 '다른 앱으로 열기' 가
+     * 그 구분에 기댄다(형식을 모르면 다른 앱이 열 수 있고, 깨졌으면 대개 저쪽도 못 연다).
      */
     data class BadContainer(val unsupported: Boolean) : PlaybackFailure
 

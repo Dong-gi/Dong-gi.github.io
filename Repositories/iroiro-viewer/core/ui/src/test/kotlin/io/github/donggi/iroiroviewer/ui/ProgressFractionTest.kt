@@ -6,8 +6,8 @@ import kotlin.test.assertEquals
 /**
  * 진행 막대의 값 — **0/0 이 앱을 죽이지 않는가.**
  *
- * 재생 중에 다른 소리 파일을 누르면 미니 바의 진행 람다가 새 항목의 길이 0 을 읽어 0/0 = NaN 을 돌려줬고, `coerceIn` 을 그대로
- * 지난 NaN 을 화면 낭독기용 `ProgressBarRangeInfo` 가 받아 던졌다(릴리스 빌드의 크래시). 막대가 쓰는 값은 언제나
+ * 재생 중에 다른 소리 파일을 누르면 미니 바의 진행 람다가 새 항목의 길이 0 을 읽어 0/0 = NaN 을 돌려줄 수 있고, `coerceIn` 을
+ * 그대로 지난 NaN 을 화면 낭독기용 `ProgressBarRangeInfo` 가 받으면 던진다(앱이 죽는다). 막대가 쓰는 값은 언제나
  * [progressFraction] 을 지난다.
  */
 class ProgressFractionTest {

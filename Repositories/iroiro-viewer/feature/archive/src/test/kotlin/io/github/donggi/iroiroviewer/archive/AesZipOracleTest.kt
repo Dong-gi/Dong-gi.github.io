@@ -24,7 +24,7 @@ import kotlin.test.assertTrue
  * 2. pyzipper 가 잠근 ZIP(`py/manifest.tsv`)을 우리 리더로 풀어 `py-plain/<표본>/` 의 평문과 견준다. 틀린 암호는 '틀렸다' 여야 하고, 한 비트를
  *    바꾼 표본(`py/tampered.tsv`)은 읽다가 실패해야 한다.
  *
- * 순서와 스크립트는 CLAUDE.md '14단계 뒤 — AES 암호 ZIP' 에 적었다. 표본은 전부 이 자리에서 지은 합성 데이터다(실세계 문서가 아니다).
+ * 순서와 스크립트는 CLAUDE.md 의 'AES 암호 ZIP' 절에 적었다. 표본은 전부 이 자리에서 지은 합성 데이터다(실세계 문서가 아니다).
  */
 class AesZipOracleTest {
 

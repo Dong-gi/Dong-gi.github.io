@@ -27,8 +27,7 @@ import java.io.FileInputStream
 import java.io.IOException
 
 /**
- * PDF 를 여는 것. **`DocumentOpener` 계약의 첫 구현이다** — 2단계가 계약만 세워 두고
- * 11단계까지 구현이 하나도 없었다.
+ * PDF 를 여는 것 — `DocumentOpener` 계약의 구현이다.
  *
  * ## 아카이브 안의 PDF 를 열지 않는다
  *
@@ -36,7 +35,7 @@ import java.io.IOException
  * **seekable 한 파일 서술자**를 요구하고(파이프를 주면 `file descriptor not seekable`),
  * 아카이브 엔트리·메모리 바이트에는 그런 것이 없다.
  *
- * 여는 유일한 길은 문서를 통째로 임시 파일에 뽑는 것인데, 그것은 9단계가 만화 쪽을
+ * 여는 유일한 길은 문서를 통째로 임시 파일에 뽑는 것인데, 그것은 만화 뷰어가 쪽을
  * 디스크에 쓰지 않기로 한 판단보다 **더 나쁘다**: 쪽 한 장이 아니라 **문서 전체의 평문
  * 사본**이고, 숨긴 폴더의 문서도 예외가 아니다. 그래서 계약 수준에서 끝낸다 — 이 한 줄이
  * '압축 파일 안의 문서는 풀어서 여세요' 를 코드로 보증한다.
@@ -234,7 +233,7 @@ class PdfOpener(private val password: CharArray? = null) : DocumentOpener {
                     }
                     pending = null // 주인이 바뀐다. 이제 닫는 것은 PdfEngine 이다
                     // **복제본도 주인이 바뀌기 전까지는 여기서 닫는다** — 여는 사이 취소·시간 초과로 던지면 아무도 닫지 않아 평문
-                    // 한 벌(최대 256 MiB)이 GC 를 기다렸다(원본 서술자에서 이미 고친 모양이다).
+                    // 한 벌(최대 256 MiB)이 GC 를 기다린다.
                     try {
                         val attempt = PdfEngine.open(descriptor).toAttempt(forText?.let { PdfTextOrigin.OfDescriptor(it) })
                         if (attempt is Attempt.Ok) forText = null // 이제 문서가 주인이다

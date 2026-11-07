@@ -7,7 +7,7 @@ import java.io.InputStream
 import java.io.InterruptedIOException
 
 /**
- * tar 와 그것을 싼 압축 스트림을 읽는다 — `.tar`·`.tar.gz`/`.tgz`·`.tar.bz2`/`.tbz2`·`.tar.xz`/`.txz`(14단계)와
+ * tar 와 그것을 싼 압축 스트림을 읽는다 — `.tar`·`.tar.gz`/`.tgz`·`.tar.bz2`/`.tbz2`·`.tar.xz`/`.txz` 와
  * `.tar.lz4`·`.tar.lzma`/`.tlz`·`.tar.Z`/`.taz`, 만화 `.cbt`.
  *
  * 목록·항목 열기·순차 추출·진행률의 규칙은 cpio·ar 와 함께 쓰는 [ScannedArchive] 에 있고(두 모양의 비용, 막는 것,
@@ -77,7 +77,7 @@ class TarArchiveReader private constructor(core: ScannedArchive) : ArchiveReader
          *    '압축' 종류다), 그것을 빈 tar 로 보면 '다루지 않는 형식' 대신 '항목 0개' 가 뜬다.
          * 2. 압축 스트림이면 **안의 이름이 tar 다** — 항목 하나로 열었을 때의 이름([StreamNames.of]: gzip 의 FNAME, 없으면 압축
          *    파일 이름에서 지은 것)이 `.tar` 로 끝난다. 0 으로 된 파일을 싼 것(`gzip zero.img`)도 끝까지 0 이라 첫째 조건만으로는
-         *    빈 tar 가 되어, 사용자가 그 파일을 풀 길이 없었다(본문이 1,000,000바이트까지 그랬다). tar 를 싼 쪽은
+         *    빈 tar 가 되어, 사용자가 그 파일을 풀 길이 없다. tar 를 싼 쪽은
          *    이름이 이 모양이다 — `tar -czf x.tar.gz` 는 FNAME 을 적지 않고(파일 이름에서 `x.tar` 를 짓는다), `gzip x.tar` 는
          *    `x.tar` 를 적는다. 이름을 **먼저** 본다 — tar 이름이 아니면 1 MiB 를 풀어 보지 않는다(목록이 푸는 양,
          *    `SingleStreamReader` 의 주석).
@@ -89,8 +89,8 @@ class TarArchiveReader private constructor(core: ScannedArchive) : ArchiveReader
          *
          * [probe] 면 파일에서 소비할 수 있는 압축 입력에 상한을 둔다 — 첫 512바이트까지 [StreamLimits.PROBE_INPUT_BYTES], 빈 tar 의
          * 나머지를 확인하는 데 [StreamLimits.PROBE_ZERO_TAIL_INPUT_BYTES] 더. 넘으면 [ProbeLimitException] 이다(부르는 쪽
-         * `Archives` 가 항목 하나짜리로 연다). 같은 파일이면 언제 열어도 같은 답이다 — 예전의 5초는 기기가 느린 순간에만 다른 답을 냈다
-         * (목록은 TAR.BZ2, 풀기는 항목 하나짜리). 압축하지 않은 tar 에는 걸지 않는다 — 파일에서 많아야 1 MiB 를 읽는다.
+         * `Archives` 가 항목 하나짜리로 연다). 같은 파일이면 언제 열어도 같은 답이다 — 시각으로 끊으면 기기가 느린 순간에만 다른 답을
+         * 낸다(목록은 TAR.BZ2, 풀기는 항목 하나짜리). 압축하지 않은 tar 에는 걸지 않는다 — 파일에서 많아야 1 MiB 를 읽는다.
          */
         internal fun startsLikeTar(
             source: DocumentSource,

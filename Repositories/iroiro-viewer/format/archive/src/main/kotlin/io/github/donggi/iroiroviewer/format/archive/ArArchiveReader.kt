@@ -59,8 +59,8 @@ internal object ArFormat {
 
     /**
      * **항목이 아닌 멤버**(기호 표 `/`·`/SYM64/`·`__.SYMDEF…`, 긴 이름 표 `//`)의 상한. 정적 라이브러리는 기호 표 하나와 긴 이름 표
-     * 하나를 둔다 — 셋을 넘을 일이 없다. 그것들은 항목이 아니라 항목 수 상한(`maxEntries`)에 세지 않았는데, 이름 표를 `__.SYMDEF…` 로
-     * 시작하게 지은 파일이 **머리마다 16 MiB 를 훑으면서도** 어느 상한에도 걸리지 않았다. 넘으면 상한이다.
+     * 하나를 둔다 — 셋을 넘을 일이 없다. 그것들은 항목이 아니라 항목 수 상한(`maxEntries`)에 세지 않으므로, 이것이 없으면 이름 표를 `__.SYMDEF…` 로
+     * 시작하게 지은 파일이 **머리마다 16 MiB 를 훑으면서도** 어느 상한에도 걸리지 않는다. 넘으면 상한이다.
      */
     const val MAX_META_MEMBERS = 16
 
@@ -205,7 +205,7 @@ internal class ArScanner(
     /**
      * GNU 긴 이름 — 표의 [offset] 에서 `/\n`(또는 `\n`·NUL) 까지. **이름 하나의 상한([EntryNameLimits.MAX_LONG_NAME_BYTES])까지만
      * 훑는다** — 표는 16 MiB 까지 오는데, 줄바꿈 없는 표를 가리키는 머리마다 끝까지 훑고 복사하면 600 KB 의 머리 1만 개가 목록을 몇 분
-     * 멈췄다. 상한 안에서 끝나지 않는 이름은 상한이다(BSD 긴 이름 `#1/` 과 같은 값).
+     * 멈춘다. 상한 안에서 끝나지 않는 이름은 상한이다(BSD 긴 이름 `#1/` 과 같은 값).
      */
     private fun gnuLongName(offset: Long): ByteArray {
         val table = longNames ?: throw IOException("ar 긴 이름 표가 없다")

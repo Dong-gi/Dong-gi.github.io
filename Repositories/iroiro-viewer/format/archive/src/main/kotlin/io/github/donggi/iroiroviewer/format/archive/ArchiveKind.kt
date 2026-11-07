@@ -9,7 +9,7 @@ import io.github.donggi.iroiroviewer.format.FormatId
  *
  * [FormatId] 는 `format:api` 의 목록이고 등록소(`FormatRegistry`)가 '무엇으로 여는가' 를 가르는 신원이다.
  * tar 계열에는 거기 자리가 없다 — 아카이브는 등록소가 아니라 목록 화면의 종류(`FileKind`)로 열리므로
- * 신원이 필요한 적이 없었다. 여기는 **읽는 쪽이 아는 사실**(어떤 압축으로 싸였나, 목록을 싸게 읽을 수
+ * 신원이 필요 없다. 여기는 **읽는 쪽이 아는 사실**(어떤 압축으로 싸였나, 목록을 싸게 읽을 수
  * 있나)을 담는다. [formatId] 는 [FormatId] 에 대응하는 값이 있을 때만 채운다.
  *
  * ## 갈래([shape])를 상수마다 적는다

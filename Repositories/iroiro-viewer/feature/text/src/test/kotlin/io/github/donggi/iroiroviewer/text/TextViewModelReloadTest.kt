@@ -60,7 +60,7 @@ class TextViewModelReloadTest {
         vm.open(file.path, 1L)
         val first = withTimeout(TIMEOUT) { vm.state.first { it is TextViewModel.State.Ready } }
 
-        // 밖에서 바뀌었지만 표시가 없다 — 되돌아온 것(새 입장)이라도 옛 색인 그대로다(지금까지의 동작).
+        // 밖에서 바뀌었지만 표시가 없다 — 되돌아온 것(새 입장)이라도 옛 색인 그대로다.
         file.writeText("첫 줄\n둘째 줄\n셋째 줄\n")
         vm.open(file.path, 2L)
         assertSame(first, vm.state.value)

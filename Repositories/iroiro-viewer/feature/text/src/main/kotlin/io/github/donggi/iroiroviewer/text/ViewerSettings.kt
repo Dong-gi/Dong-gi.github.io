@@ -36,7 +36,7 @@ class AppPreferencesTextStore(context: Context) : TextViewerStore {
 /**
  * 이 파일의 설정 갈래 — **파일 목록과 같은 표**로 가른다(`MimeResolver.kindOf`): 목록이 '코드' 로 그리는 것(강조하는 언어의 확장자와
  * `Makefile`·`.gitignore` 같은 이름)은 [TextViewerKind.CODE], 나머지(`.txt`·`.md`·`.log`·자막·이름으로 모르는 파일)는 글이다. 산문을 코드의
- * 기본값(접지 않음·줄 번호)으로 열어 문장이 화면 밖으로 뻗었다.
+ * 기본값(접지 않음·줄 번호)으로 열면 문장이 화면 밖으로 뻗는다.
  */
 internal fun viewerKindOf(path: String): TextViewerKind {
     val name = path.substringAfterLast('/')
@@ -44,12 +44,8 @@ internal fun viewerKindOf(path: String): TextViewerKind {
 }
 
 /**
- * 텍스트 뷰어의 설정 — 줄 접기·줄 번호·글자 크기·줄 끝 표시(14단계).
- *
- * ## 무엇이 바뀌었나
- *
- * 7단계는 넷을 `rememberSaveable` 로 들었다. 회전은 견디지만 **파일을 닫으면 기본값으로** 돌아갔다(7단계가
- * 14단계로 미뤄 둔 것). 이제 바꾸는 즉시 저장소에 쓰고, **새로 연 파일은 저장된 값으로** 시작한다.
+ * 텍스트 뷰어의 설정 — 줄 접기·줄 번호·글자 크기·줄 끝 표시. 바꾸는 즉시 저장소에 쓰고, **새로 연 파일은 저장된 값으로**
+ * 시작한다.
  *
  * ## '새로 열었다' 와 '돌렸다' 를 가르는 표
  *

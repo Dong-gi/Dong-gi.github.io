@@ -28,8 +28,8 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * 판별 — **내용이 이긴다**(`Archives`). 새 매직 일곱(LZ4·`.Z`·cpio 넷·ar)과 매직이 없는 LZMA, 그리고 옛 판별(ZIP·7z·RAR·
- * tar)이 그대로인지.
+ * 판별 — **내용이 이긴다**(`Archives`). 매직 일곱(LZ4·`.Z`·cpio 넷·ar)과 매직이 없는 LZMA, 그리고 ZIP·7z·RAR·
+ * tar 의 판별이 그대로인지.
  */
 class StreamDetectTest {
 
@@ -80,7 +80,7 @@ class StreamDetectTest {
 
     /**
      * **빈 블록마다 사전을 다시 잡지 않는다.** org.tukaani.xz 는 블록을 열 때마다 LZMA2 사전(여기서는 64 MiB)을 새로 잡는다 —
-     * 16바이트짜리 빈 블록 4,000개가 그것만으로 10초 넘게 걸렸다. 목록 화면은 그동안 서 있다: 판별이 앞 512바이트를 찾아 그 블록들을
+     * 16바이트짜리 빈 블록 4,000개가 그것만으로 10초를 넘긴다. 목록 화면은 그동안 서 있다: 판별이 앞 512바이트를 찾아 그 블록들을
      * 다 지나고, 압축 tar 의 목록은 끝까지 푼다. 스트림마다 배열 보관소를 주면 앞 블록의 사전을 다음 블록이 받는다.
      */
     @Test
@@ -102,9 +102,9 @@ class StreamDetectTest {
     }
 
     /**
-     * **판별은 시계를 보지 않는다** — 같은 파일이면 원본이 느려도 같은 모양이다. 예전에는 5초로 끊어, 느린 원본(시험은 이 작업의
-     * 상한을 200 ms 로 줄였다)에서는 같은 파일이 항목 하나짜리(XZ)로, 빠른 원본에서는 TAR.XZ 로 열렸다 — 목록이 TAR.BZ2 로 세운
-     * 파일을 풀기 순간 SD 가 멎으면 '전부 풀기' 가 다른 모양을 풀었다. 원본을 느리게 해도(16바이트마다 1 ms) 답이 같다.
+     * **판별은 시계를 보지 않는다** — 같은 파일이면 원본이 느려도 같은 모양이다. 시간으로 끊으면 느린 원본에서는
+     * 같은 파일이 항목 하나짜리(XZ)로, 빠른 원본에서는 TAR.XZ 로 열려, 목록과 '전부 풀기' 가 다른 모양을 본다. 그래서 여는 시간
+     * 상한을 200 ms 로 줄이고 원본을 느리게 해도(16바이트마다 1 ms) 답이 같아야 한다.
      */
     @Test
     fun `판별은 시계를 보지 않는다 — 느린 원본도 같은 모양이다`() {
@@ -306,7 +306,7 @@ class StreamDetectTest {
         assertNull(Archives.probeKind("0707012345 김철수\n".repeat(20).toByteArray()))
     }
 
-    // ---- 옛 판별은 그대로다 --------------------------------------------------------------
+    // ---- ZIP·7z·RAR·tar --------------------------------------------------------------
 
     @Test
     fun `ZIP·7z·RAR·tar 의 판별은 그대로다`() {
@@ -320,7 +320,7 @@ class StreamDetectTest {
         assertEquals(ArchiveKind.TAR, detect(file("empty.tar", ByteArray(10240))))
         assertNull(Archives.probeKind(byteArrayOf(0x50, 0x4B, 0x07, 0x08) + ByteArray(100)), "분할 ZIP")
         assertNull(detect(file("plain.txt", body)))
-        // 등록소가 쓰는 옛 판별(16바이트)은 새 형식을 모른다고 답한다 — 아카이브는 목록 화면의 종류로 열린다.
+        // 등록소가 쓰는 16바이트 판별(`probeContainer`)은 이 형식들을 모른다고 답한다 — 아카이브는 목록 화면의 종류로 열린다.
         assertNull(Archives.probeContainer(StreamBytes.gzip(body).copyOf(16)))
         assertEquals(FormatId.ZIP, Archives.probeContainer(zip.readBytes().copyOf(16)))
     }

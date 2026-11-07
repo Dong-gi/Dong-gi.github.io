@@ -10,7 +10,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * 쪽이 낸 요청의 머리를 잠깐 쥐고 열쇠 요청에 다시 싣는 일(2026-10-16 — m3u8 열쇠 오류 고침). 주소·머리는 합성한 것이다(`*.test`).
+ * 쪽이 낸 요청의 머리를 잠깐 쥐고 열쇠 요청에 다시 싣는 일. 주소·머리는 합성한 것이다(`*.test`).
  */
 class PageRequestsTest {
 

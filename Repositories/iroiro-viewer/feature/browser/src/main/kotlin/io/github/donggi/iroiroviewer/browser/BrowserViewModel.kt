@@ -73,8 +73,6 @@ import java.util.concurrent.ConcurrentHashMap
  * 넣으려면 임의의 유니코드와 `/` 를 인코딩해야 하고, 그러고도 백스택 항목마다 화면이
  * 새로 만들어져 스크롤 위치를 따로 챙겨야 한다. 경로 목록을 [SavedStateHandle] 에
  * 직접 들고 있는 편이 짧고, 프로세스가 죽었다 살아나도 그대로 복원된다.
- *
- * 뷰어들이 붙는 6단계 이후에 화면이 여럿이 되면 그때 Navigation 을 도입한다.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class BrowserViewModel(
@@ -94,14 +92,12 @@ class BrowserViewModel(
     /**
      * 갤러리·휴지통 표시 여부. **화면이 아니라 여기 둔다.**
      *
-     * `BrowserScreen` 안의 `rememberSaveable` 이었는데, 갤러리에서 사진을 열면 `app` 이
-     * 화면을 `Viewer` 로 바꾸면서 **`BrowserScreen` 이 컴포지션에서 통째로 빠진다.**
-     * `rememberSaveable` 은 구성 변경과 프로세스 재생성은 견디지만 **컴포지션에서 빠지는
-     * 것은 견디지 못한다** — 그래서 뷰어에서 뒤로 나오면 갤러리가 아니라 첫 화면으로
-     * 떨어졌다(사용자가 지적했다).
+     * 갤러리에서 사진을 열면 `app` 이 화면을 `Viewer` 로 바꾸면서 **`BrowserScreen` 이 컴포지션에서 통째로
+     * 빠진다.** `rememberSaveable` 은 구성 변경과 프로세스 재생성은 견디지만 **컴포지션에서 빠지는 것은 견디지
+     * 못한다** — 화면에 두면 뷰어에서 뒤로 나올 때 갤러리가 아니라 첫 화면으로 떨어진다.
      *
      * ViewModel 은 액티비티에 묶여 있어 화면이 바뀌어도 살아 있고, [SavedStateHandle] 에
-     * 얹어 두면 프로세스가 죽었다 살아나도 남는다 — 옛 주석이 지키려던 것까지 지킨다.
+     * 얹어 두면 프로세스가 죽었다 살아나도 남는다.
      */
     private val _subScreen = MutableStateFlow(saved.get<String>(KEY_SUB_SCREEN) ?: SUB_NONE)
     val subScreen: StateFlow<String> = _subScreen.asStateFlow()
@@ -127,7 +123,7 @@ class BrowserViewModel(
      * 만들어진다. 선택은 '지금 보고 있는 것' 에 대한 상태다.
      */
     fun open(path: String) {
-        // 저장 상태에 들어가는 값은 언제나 ArrayList 여야 한다(위 jumpTo 주석 참고).
+        // 저장 상태에 들어가는 값은 언제나 ArrayList 여야 한다(아래 [jumpTo] 주석).
         _stack.value = ArrayList(_stack.value + path)
         saved[KEY_STACK] = _stack.value
         clearSelection()
@@ -239,8 +235,8 @@ class BrowserViewModel(
             }
 
     /**
-     * 화면에 보일 나열. **같은 폴더를 다시 읽는 동안 옛 목록을 붙들어 둔다**([ListingHold.next]) — 예전에는 파일
-     * 하나를 지울 때마다 목록이 '0개 읽는 중' 으로 바뀌었다가 돌아왔다.
+     * 화면에 보일 나열. **같은 폴더를 다시 읽는 동안 옛 목록을 붙들어 둔다**([ListingHold.next]) — 아니면 파일
+     * 하나를 지울 때마다 목록이 '0개 읽는 중' 으로 바뀌었다가 돌아온다.
      */
     private val _held = MutableStateFlow(ListingHold.INITIAL)
 
@@ -317,7 +313,7 @@ class BrowserViewModel(
         _selection.value = if (path in s) s - path else s + path
     }
 
-    /** '전체 선택' — 이미 모두 골랐으면 모두 푼다(다시 눌러도 풀리지 않았다). 판정은 [SelectAll]. */
+    /** '전체 선택' — 이미 모두 골랐으면 모두 푼다. 판정은 [SelectAll]. */
     fun toggleSelectAll(paths: List<String>) { _selection.value = SelectAll.toggled(_selection.value, paths) }
 
     fun clearSelection() { _selection.value = emptySet() }
@@ -360,9 +356,8 @@ class BrowserViewModel(
     val pendingConflicts: StateFlow<PasteConflicts> = _pendingConflicts.asStateFlow()
 
     /**
-     * **엔진과 같은 이름으로 검사한다.** 예전에는 화면이 원래 이름으로 보고 엔진은
-     * `PathRules.sanitize` 를 거친 이름으로 썼다. `a?.txt` 는 리눅스에서 합법이고 실제로
-     * 만들어지는데 엔진은 `a_.txt` 에 쓰므로, 경고 없이 `a_.txt` 가 덮어써졌다.
+     * **엔진과 같은 이름으로 검사한다**(`PathRules.sanitize` 를 거친 이름). `a?.txt` 는 리눅스에서 합법이고
+     * 실제로 만들어지는데 엔진은 `a_.txt` 에 쓰므로, 원래 이름으로 보면 경고 없이 `a_.txt` 를 덮어쓴다.
      */
     fun requestPaste() {
         val clip = _clipboard.value ?: return
@@ -407,9 +402,9 @@ class BrowserViewModel(
      *
      * 화면마다 따로 두면 **결과를 잃는다.** 결과는 채널로 하나씩 흐르는데, 그것을 소비하는
      * 코루틴이 한 화면의 컴포지션에 묶여 있으면 사용자가 다른 화면으로 가는 순간 소비가
-     * 멎고 그 뒤의 모든 결과가 조용히 사라진다 — 3·4단계에서 고친 실패 형태 그대로다.
+     * 멎고 그 뒤의 모든 결과가 조용히 사라진다.
      *
-     * **그래서 새 불변식이 하나 생긴다: 화면마다 이 상태에 붙은 `SnackbarHost` 를 하나씩
+     * **불변식: 화면마다 이 상태에 붙은 `SnackbarHost` 를 하나씩
      * 두어야 한다.** 붙지 않은 화면으로 넘어가면 `showSnackbar` 가 영영 돌아오지 않는다.
      */
     val snackbar = androidx.compose.material3.SnackbarHostState()
@@ -455,9 +450,8 @@ class BrowserViewModel(
                 io.github.donggi.iroiroviewer.io.ShareHelper.shareDir(getApplication()),
             )
             if (copy == null) {
-                // **누른 그 자리(뷰어)에서 말한다**. 예전에는 이름 바꾸기의 오류 칸에 '쓸 수 없는 이름입니다' 를
-                // 넣어, 뷰어에서는 아무 반응이 없다가 파일 목록으로 돌아간 뒤에야 엉뚱한 문장이 떴다 — 다른 앱에서 받은 사진이면
-                // 파일 목록이 없어 아예 뜨지 않았다. 문장은 그것을 아는 뷰어가 고른다.
+                // **누른 그 자리(뷰어)에서 말한다** — 파일 목록의 오류 칸에 넣으면 뷰어에서는 반응이 없고, 다른 앱에서
+                // 받은 사진이면 파일 목록이 없어 아예 뜨지 않는다. 문장은 그것을 아는 뷰어가 고른다.
                 onFailed()
                 return@launch
             }
@@ -534,7 +528,7 @@ class BrowserViewModel(
 
     /**
      * 이름을 바꾼다. **실패한 까닭을 돌려준다** — 이름이 겹쳤으면([FileOpEngine.Reason.EXISTS]) 이름 칸이 닫히지 않고 칸 안에서
-     * 말한다(예전에는 칸이 닫히고 '쓸 수 없는 이름입니다' 가 떠, 글자가 틀린 줄 알고 처음부터 다시 쳤다). 그 밖의
+     * 말한다. 그 밖의
      * 실패는 여느 때처럼 스낵바로 간다([lastError]). 일은 이 ViewModel 의 스코프에서 끝까지 간다 — 칸이 기다리다 사라져도 바뀐다.
      */
     fun rename(path: String, newName: String): Deferred<FileOpEngine.Reason?> = viewModelScope.async {
@@ -667,7 +661,7 @@ class BrowserViewModel(
 
     /**
      * 휴지통에서 원래 자리로 되돌린다. **여럿을 요청 하나로** 넣는다 — 결과도 한 줄이다. 하나씩 넣으면 40장을 되돌릴 때
-     * '1개 완료' 스낵바가 마흔 번 뜬다(스낵바의 '되돌리기' 가 바로 그 모양이었다).
+     * '1개 완료' 스낵바가 마흔 번 뜬다.
      */
     fun restoreFromTrash(uuids: List<String>) {
         if (uuids.isEmpty()) return
@@ -693,22 +687,20 @@ class BrowserViewModel(
     /**
      * 방금 휴지통에 보낸 것을 되돌린다. 스낵바의 '되돌리기' 가 부른다.
      *
-     * **uuid 로 되돌린다.** (부모·이름·최근 삭제시각)으로 되찾는 방법은 쓰지 않는다 —
-     * 그런 질의가 DAO 에 없고, 무엇보다 이 프로젝트는 "신원은 이름이 아니다" 를 아카이브
-     * 엔트리에서 한 번 배워 회귀 시험까지 붙여 막아 두었다.
+     * **uuid 로 되돌린다.** (부모·이름·최근 삭제시각)으로 되찾지 않는다 — 신원은 이름이 아니다.
      */
     fun undoTrash(uuids: List<String>) = restoreFromTrash(uuids)
 
     /**
      * 기간이 지난 항목을 지우고 기록과 파일을 맞춘다.
      *
-     * **파일 작업 큐에 넣는다.** 예전에는 여기서 바로 돌렸는데, 그러면 휴지통으로
+     * **파일 작업 큐에 넣는다.** 여기서 바로 돌리면 휴지통으로
      * 옮기는 중인 파일 — `rename` 은 끝났고 기록은 아직인 파일 — 을 '기록 없는 고아'
      * 로 보게 된다. 큐에 넣으면 두 작업이 겹치는 일 자체가 없다.
      */
     fun reconcileTrash() {
         FileOpManager.enqueue(getApplication(), FileOpManager.Request.Reconcile())
-        // **앱을 켜지 않아도 하루에 한 번 돌게 건다**(B3). 이미 같은 모양으로 걸려 있으면 아무것도 하지 않는다 —
+        // **앱을 켜지 않아도 하루에 한 번 돌게 건다.** 이미 같은 모양으로 걸려 있으면 아무것도 하지 않는다 —
         // 다시 걸면 주기의 시계가 처음부터 가서, 앱을 매일 켜는 사람에게는 영영 돌지 않는다(`TrashPurgeJob.Spec`).
         // 이 함수가 프로세스당 한 번 불리는 자리(`Root`)라 조립을 바꿀 것이 없다.
         viewModelScope.launch(Dispatchers.IO) { TrashPurgeJob.ensureScheduled(getApplication()) }
@@ -717,8 +709,7 @@ class BrowserViewModel(
     // ---- 휴지통의 고르기 ----------------------------------------------------
 
     /**
-     * 휴지통에서 고른 항목(uuid) — 폴더 목록과 같은 고르기(사진 40장을 지운 뒤 되돌리기를 놓치면 줄마다 '되돌리기' 를
-     * 40번 눌러야 했다). 길게 누르면 고르기가 시작되고, 고르는 동안은 누를 때마다 넣고 뺀다.
+     * 휴지통에서 고른 항목(uuid) — 폴더 목록과 같은 고르기. 길게 누르면 고르기가 시작되고, 고르는 동안은 누를 때마다 넣고 뺀다.
      *
      * [SavedStateHandle] 에 넣지 않는다 — 폴더 목록의 선택과 같은 판단이다(1만 개면 번들이 넘친다. 잃어도 휴지통에 그대로 있다).
      * **보이는 선택은 지금 휴지통에 있는 것만**이다([trashSelection]) — 그사이 되돌렸거나 지운 항목이 남아 '3개 선택' 이 거짓말을 하지 않게.
@@ -770,7 +761,7 @@ class BrowserViewModel(
     // ---- 다른 곳에 복원 ----------------------------------------------------
 
     /**
-     * 휴지통 항목을 **고른 폴더로** 되돌리는 중(B4). 붙여넣기 바([clipboard])와 같은 모양이다 — 폴더 피커를 따로
+     * 휴지통 항목을 **고른 폴더로** 되돌리는 중. 붙여넣기 바([clipboard])와 같은 모양이다 — 폴더 피커를 따로
      * 띄우지 않고 브라우저로 원하는 폴더까지 가서 '여기에 복원' 을 누른다.
      *
      * [SavedStateHandle] 에 넣지 않는다. 클립보드와 같은 값이다(프로세스가 죽으면 잃어도 된다 — 휴지통에 그대로 있다).
@@ -916,7 +907,7 @@ class BrowserViewModel(
      * **다시 훑는 동안 격자를 비우지 않으려고 들고 있는다.** [GalleryScanner.scan] 은
      * 언제나 `Scanning(0)` 으로 시작하고, 그것을 그대로 그리면 사진 한 장을 지울 때마다
      * 격자가 통째로 사라졌다가 되돌아온다 — 화면이 깜빡이면 사용자는 무엇이 바뀐 것인지
-     * 읽어 낼 수 없다(10단계가 재생 조작부에서 같은 판단을 했다).
+     * 읽어 낼 수 없다.
      *
      * **flow 바깥의 필드인 것이 요점이다.** `WhileSubscribed` 가 구독이 끊긴 5초 뒤에
      * 상류를 끊으므로, 갤러리 → 사진 → 갤러리로 돌아오는 길에서는 flow 안에 든 값이
@@ -949,7 +940,7 @@ class BrowserViewModel(
      * 폴더 목록을 모으고(썸네일 청소·선택 줄이기는 [onListingArrived]), 보고 있는 폴더를 듣는다.
      */
     init {
-        // **나열을 모으는 것은 여기 하나다.** 화면이 떠나 있어도 모은다(예전의 `listing.collect` 도 그랬다) —
+        // **나열을 모으는 것은 여기 하나다.** 화면이 떠나 있어도 모은다 —
         // 뷰어에서 사진을 지우면 돌아오기 전에 목록이 이미 새것이다.
         viewModelScope.launch {
             taggedListing.collect { t ->
@@ -958,7 +949,7 @@ class BrowserViewModel(
             }
         }
 
-        // **보고 있는 폴더를 듣는다**(B2). 화면이 보일 때만([onFolderShown]) — 멈춘 화면을 위해 다시 읽는 것은
+        // **보고 있는 폴더를 듣는다.** 화면이 보일 때만([onFolderShown]) — 멈춘 화면을 위해 다시 읽는 것은
         // 버리는 일이고, 돌아올 때 수정 시각을 한 번 견주면 된다. 폴더가 바뀌면 `flatMapLatest` 가 앞의 감시를 끊는다.
         viewModelScope.launch {
             combine(_stack, _watching) { stack, on -> if (on) stack.lastOrNull() else null }
@@ -1013,8 +1004,8 @@ class BrowserViewModel(
         if (l !is DirectoryLister.Listing.Ready) return
 
         // **청소를 따로 돌린다.** 나열을 모으는 코루틴 안에서 기다리면 그동안 다음 나열이 화면에 오르지 못한다 —
-        // 폴더 감시·당겨서 새로고침으로 같은 폴더를 자주 다시 읽게 된 뒤로, 목록과 당긴 표시가 캐시 정리를
-        // 기다리는 꼴이 된다. 새 목록이 오면 앞의 청소는 그만둔다(지우는 것은 낡은 캐시뿐이라 다음 목록이 마저 한다).
+        // 폴더 감시·당겨서 새로고침으로 같은 폴더를 자주 다시 읽으므로 목록과 당긴 표시가 캐시 정리를
+        // 기다리게 된다. 새 목록이 오면 앞의 청소는 그만둔다(지우는 것은 낡은 캐시뿐이라 다음 목록이 마저 한다).
         housekeeping?.cancel()
         housekeeping = viewModelScope.launch { sweepThumbnails(folder, l.entries) }
     }
@@ -1028,7 +1019,7 @@ class BrowserViewModel(
         if (removed > 0) Iro.d { "원본이 사라진 썸네일 ${removed}개를 지웠다" }
         // 총량 상한. 다른 앱이 지운 파일이나 이름이 바뀐 폴더의 썸네일은 폴더 단위 청소가 닿지 않으므로 이쪽이
         // 걷어 간다. **폴더를 옮겼을 때만** 돌린다 — 캐시 전체를 stat 하므로, 폴더 감시로 같은 폴더를 자주 다시
-        // 읽게 된 뒤로 그때마다 돌리면 그것이 가장 비싼 일이 된다. 끝난 뒤에 적는다 — 도중에 그만두었으면 다음에 다시 한다.
+        // 읽으므로 그때마다 돌리면 그것이 가장 비싼 일이 된다. 끝난 뒤에 적는다 — 도중에 그만두었으면 다음에 다시 한다.
         if (trimmedFor != folder) {
             ThumbnailStore.trim(getApplication())
             trimmedFor = folder
@@ -1038,7 +1029,7 @@ class BrowserViewModel(
     // ---- 당겨서 새로고침 · 폴더 감시 --------------------------------------
 
     /**
-     * 당겨서 새로고침의 표시(B1, 사용자 요청). **사용자가 당긴 것에만** 켠다 — 폴더 감시나 파일 작업 뒤의 다시
+     * 당겨서 새로고침의 표시. **사용자가 당긴 것에만** 켠다 — 폴더 감시나 파일 작업 뒤의 다시
      * 읽기는 조용히 돈다(목록을 붙들어 두므로 볼 것이 없다).
      */
     private val _pullRefreshing = MutableStateFlow(false)
@@ -1132,9 +1123,8 @@ class BrowserViewModel(
         }
         refresh()
         // **갤러리도 다시 훑는다.** [refresh] 가 미는 것은 폴더 목록(`taggedListing`)뿐이라, 사진을
-        // 지우고 갤러리로 돌아오면 지운 사진이 **빈 칸으로** 그대로 남아 있었다
-        // (`WhileSubscribed` 의 5초 안에 돌아오면 옛 목록이 그대로 나온다). 사용자가
-        // 지적한 '더미' 가 그것이다. 지우기만이 아니라 이동·이름 바꾸기·되돌리기도
+        // 지우고 갤러리로 돌아오면 지운 사진이 **빈 칸으로** 그대로 남는다
+        // (`WhileSubscribed` 의 5초 안에 돌아오면 옛 목록이 그대로 나온다). 지우기만이 아니라 이동·이름 바꾸기·되돌리기도
         // 갤러리가 보는 파일을 옮기므로 종류를 가리지 않고 부른다.
         rescanGallery()
         _contentGeneration.value++
@@ -1153,7 +1143,7 @@ class BrowserViewModel(
     // ---- 폴더로 가기 -----------------------------------------------------
 
     /**
-     * 그 폴더로 간다(B5 — 풀기가 끝난 스낵바의 '열기'). **보통의 탐색과 같은 백스택**을 만든다
+     * 그 폴더로 간다(풀기가 끝난 스낵바의 '열기'). **보통의 탐색과 같은 백스택**을 만든다
      * ([FolderStack.stackFor]) — 첫 화면에서 볼륨을 누르고 한 칸씩 들어간 것과 같아서, 위로 가기가 한 칸씩
      * 올라가고 빵부스러기가 온전하다. 갤러리·휴지통은 닫고, 선택과 이름 필터는 [open] 처럼 지운다.
      *
@@ -1259,7 +1249,7 @@ class BrowserViewModel(
 
     /**
      * 배지를 찾는다. **실패해도 목록을 죽이지 않는다** — 이 흐름은 `stateIn` 의 공유 코루틴이라 예외가 새면
-     * 앱이 내려간다(3·4단계가 `DirectoryIteratorException` 으로 밟은 형태). 취소는 되던진다.
+     * 앱이 내려간다. 취소는 되던진다.
      */
     private suspend fun lookupBadges(path: String?, entries: List<FileEntry>): Map<String, ReadingBadge> = try {
         val db = IroiroDatabase.get(getApplication())
@@ -1309,7 +1299,7 @@ class BrowserViewModel(
 
         /**
          * 폴더 알림을 묶는 시간. 마지막 알림 뒤 0.7초가 조용하면 다시 읽고, 알림이 끊이지 않아도 3초마다는 읽는다
-         * ([io.github.donggi.iroiroviewer.io.SettleRule]). 1만 개 폴더를 한 번 읽는 데 0.48초가 든다(3단계 실측) —
+         * ([io.github.donggi.iroiroviewer.io.SettleRule]). 1만 개 폴더를 한 번 읽는 데 0.48초가 든다(실측) —
          * 그보다 자주 읽으면 읽기가 끝나기 전에 다음 읽기가 앞의 것을 끊는다.
          */
         private const val WATCH_QUIET_MS = 700L

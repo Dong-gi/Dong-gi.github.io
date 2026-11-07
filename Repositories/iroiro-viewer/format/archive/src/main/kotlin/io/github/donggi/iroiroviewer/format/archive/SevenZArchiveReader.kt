@@ -46,7 +46,7 @@ class SevenZArchiveReader(
             //
             // 반드시 KiB 쪽을 쓴다. 이름이 비슷한 setMaxMemoryLimitKb 는 **이름과 달리
             // 바이트를 받아** 1024로 나눈다 — 65536을 넘기면 64MiB 가 아니라 64KiB 가
-            // 되어 정상 7z 도 MemoryLimitException 으로 죽는다(실측으로 밟았다).
+            // 되어 정상 7z 도 MemoryLimitException 으로 죽는다.
             .setMaxMemoryLimitKiB(MAX_HEADER_MEMORY_KIB)
         if (withPassword && password != null) {
             // **라이브러리에 암호를 넘기기 전에** 열쇠 유도 반복을 본다([SevenZKeyGuard]). 넘기면 라이브러리는 잠긴 머리(여는 순간)나
@@ -67,8 +67,8 @@ class SevenZArchiveReader(
      * 틀린 암호로 열면 그냥 '헤더가 없다' 는 `IOException` 이 온다 — 그래서 그때는 암호 없이
      * 한 번 더 열어 보고, 암호를 요구하면 '틀렸다' 로 옮긴다. 깨진 파일과 가르는 길이 그것뿐이다.
      *
-     * **어떤 실패든 사본을 지운다.** 예전 판은 두 예외만 잡아, 라이브러리가 던지는
-     * `RuntimeException`(깨진 헤더)에서는 사본이 지워지지 않은 채 버려졌다.
+     * **어떤 실패든 사본을 지운다.** 라이브러리는 깨진 헤더에 `RuntimeException` 도 던진다 —
+     * 몇 예외만 잡으면 그때 사본이 지워지지 않은 채 버려진다.
      *
      * 열쇠 유도 반복의 거절([SevenZKeyGuard] — '풀지 않는 방식')·취소·상한은 **'틀렸다' 로 옮기지 않는다** — 아래 `IOException` 갈래는
      * 암호 없이 한 번 더 열어 보고 머리가 잠겼으면 '틀렸다' 로 옮기는데, 그 셋은 암호가 틀린 것이 아니다. 그래서 먼저 가른다.
@@ -113,8 +113,7 @@ class SevenZArchiveReader(
             val list = ArrayList<ArchiveEntry>(64)
             // **물리적 위치를 따로 센다.** [open] 과 [extractSequentially] 는 `nextEntry` 를 이 횟수만큼
             // 불러 엔트리를 찾으므로, 번호가 목록 안의 자리(list.size)이면 이름 없는 엔트리
-            // 하나에 둘이 어긋나 **다른 파일의 바이트**가 열린다. 2단계가 ZIP 에서 같은
-            // 형태의 결함(이름을 신원으로 씀)을 이미 한 번 밟았다.
+            // 하나에 둘이 어긋나 **다른 파일의 바이트**가 열린다.
             var position = -1
             for (e in handle.entries) {
                 position++
@@ -170,8 +169,8 @@ class SevenZArchiveReader(
      *   AES 열쇠 유도(SHA-256 2^19 회)를 부른다 — 폴더마다. 틀린 암호면 `CorruptedInputException`.
      * - BCJ2·PPMd·64 MiB 사전 같은 폴더는 **만드는 것 자체가 실패한다.**
      *
-     * 예전 판은 암호를 준 핸들에서 그대로 돌고 예외를 잡지 않아, **암호와 상관없는 Ultra·BCJ2 7z 의
-     * 목록까지 '깨졌다' 로 나갔다**. 이제 암호 없이 연 파일로 돌고 항목마다 예외를
+     * 암호를 준 핸들에서 돌거나 예외를 가르지 않으면 **암호와 상관없는 Ultra·BCJ2 7z 의
+     * 목록까지 '깨졌다' 로 나간다**. 그래서 암호 없이 연 파일로 돌고 항목마다 예외를
      * 가른다 — 암호가 없으면 AES 는 첫 읽기에서 곧바로 `PasswordRequiredException` 을 던지므로 열쇠를
      * 유도하지 않는다.
      *
@@ -268,7 +267,7 @@ class SevenZArchiveReader(
 
     /**
      * **파일을 한 번만 연다.** 이것이 이 클래스에서 [open] 과 가장 크게 다른 점이고,
-     * 엔트리 수의 제곱이던 비용을 선형으로 만드는 유일한 장치다.
+     * 엔트리 수의 제곱이 될 비용을 선형으로 만드는 유일한 장치다.
      *
      * 건너뛰는 엔트리도 **우리가 읽어서 버린다.** 읽지 않고 `nextEntry` 로 넘어가면
      * commons-compress 가 나중 엔트리의 첫 `read` 안에서 한꺼번에 흘려보내는데,
@@ -290,8 +289,8 @@ class SevenZArchiveReader(
                 position++
                 val entry = byIndex[position] ?: continue
                 if (raw.isDirectory) {
-                    // **폴더 항목도 소비자에게 보인다** — ZIP·RAR·tar 와 같은 계약이다. 예전에는 여기서 건너뛰어,
-                    // 7z 를 풀면 빈 폴더가 생기지 않았고 폴더의 수정시각도 되살릴 길이 없었다. 폴더에는 자료가 없으므로
+                    // **폴더 항목도 소비자에게 보인다** — ZIP·RAR·tar 와 같은 계약이다. 여기서 건너뛰면
+                    // 7z 를 풀 때 빈 폴더가 생기지 않고 폴더의 수정시각도 되살릴 길이 없다. 폴더에는 자료가 없으므로
                     // 받을 곳을 주더라도 tar 가 읽을 수 없는 항목에 하는 것처럼 그 항목만 실패로 돌린다.
                     if (sink.begin(entry) != null) {
                         sink.finish(entry, 0L, IllegalArgumentException("읽을 수 없는 항목이다"))

@@ -7,7 +7,7 @@ import android.os.Build
 
 /**
  * 핫스팟(Wi-Fi Direct 그룹 만들기)에 드는 런타임 권한. **테더 화면에서 '테더링 켜기' 를 누를 때만** 청한다 — 앱을 열자마자 묻지 않는다
- * (usb-tether 는 화면을 열자마자 물었다. Web 은 브라우저다 — 브라우저를 열 때 위치를 묻지 않는다).
+ * (브라우저를 열 때 위치를 묻지 않는다).
  *
  * - Android 13 이상: `NEARBY_WIFI_DEVICES`(매니페스트에 `neverForLocation` — 위치를 얻는 데 쓰지 않는다고 밝혀 위치 권한이 필요 없다)
  * - Android 12 이하(사용자 폰 SM-A908N 은 12): **정확한 위치** `ACCESS_FINE_LOCATION` — `WifiP2pManager.createGroup` 이 요구한다. targetSdk 31

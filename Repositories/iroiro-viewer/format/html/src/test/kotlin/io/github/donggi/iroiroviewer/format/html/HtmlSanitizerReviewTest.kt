@@ -10,7 +10,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * HTML 미리보기의 적대적 검토가 위생기에서 찾은 것. EPUB 도 같은 위생기를 지나므로 여기서 박는다.
+ * 적대적 입력에 대한 위생기의 경계 — 짝 없는 닫는 태그, 쓰는 도중의 상한, 문자 참조, CSS 참조, 되풀이로 생기는 제곱 시간.
  */
 class HtmlSanitizerReviewTest {
 
@@ -20,7 +20,7 @@ class HtmlSanitizerReviewTest {
 
     @Test
     fun 짝_없는_닫는_태그가_뒤의_본문을_지우지_않는다() {
-        // 여는 태그로 읽으면 짝을 찾아 문서 끝까지 간다 — `b` 가 사라졌다.
+        // 여는 태그로 읽으면 짝을 찾아 문서 끝까지 간다 — `b` 가 사라진다.
         for (name in listOf("script", "iframe", "object", "template", "noframes", "applet", "frameset", "embed", "frame")) {
             val out = clean("<p>a</p><$name>x</$name></$name><p>b</p>").html
             assertTrue("<p>b</p>" in out, "$name: $out")
@@ -95,7 +95,7 @@ class HtmlSanitizerReviewTest {
         }
         // 문서 안의 주소는 이스케이프를 풀어 리졸버에 묻는다.
         assertTrue("url(\"iro://book/a.png\")" in HtmlSanitizer.sanitizeCss("x{background:\\75 rl(a.png)}", local).html)
-        // 문자열 안의 `url(` 은 주소가 아니다 — 예전에는 `content:"none"` 으로 망가뜨리고 바깥 참조로 셌다.
+        // 문자열 안의 `url(` 은 주소가 아니다 — `content:"none"` 으로 망가뜨리지 않는다.
         val text = HtmlSanitizer.sanitizeCss("x::before{content:\"url(x)\"}", local)
         assertEquals("x::before{content:\"url(x)\"}", text.html)
         assertTrue(text.dropped.isEmpty, text.dropped.snapshot().toString())
@@ -120,8 +120,8 @@ class HtmlSanitizerReviewTest {
     }
 
     /**
-     * 잰 값: `@import;` 가 되풀이되면 0.8 M 자에 1초, 8 MiB 에 135초였다. 규칙마다 끝까지 다시 찾았다. 크기는 **옛 판이 확실히
-     * 넘는 크기로** 잡았다(3.2 M 자 — 옛 판이면 십몇 초, 지금은 1초 안).
+     * 규칙마다 끝까지 다시 찾는 구현은 `@import;` 가 되풀이되면 0.8 M 자에 1초, 8 MiB 에 135초다. 크기는 **그런 구현이 확실히
+     * 넘는 크기로** 잡았다(3.2 M 자 — 제곱이면 십몇 초, 선형이면 1초 안).
      */
     @Test
     fun 되풀이된_import_가_제곱_시간을_만들지_않는다() {

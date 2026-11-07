@@ -72,8 +72,7 @@ class LocalRelayTest {
         }
 
         /**
-         * 데우기 알림이 [n] 번 올 때까지(최대 5초) 기다린 뒤의 수. 중계는 204 를 쓴 **뒤에** 알린다 — 답을 읽은 손님이 알림보다 먼저일 수 있다
-         * (곧바로 세던 시험이 가끔 0 을 읽었다).
+         * 데우기 알림이 [n] 번 올 때까지(최대 5초) 기다린 뒤의 수. 중계는 204 를 쓴 **뒤에** 알린다 — 답을 읽은 손님이 알림보다 먼저일 수 있다.
          */
         fun awaitWarmups(n: Int): Int {
             val end = System.nanoTime() + 5_000_000_000L
@@ -352,7 +351,7 @@ class LocalRelayTest {
 
     @Test
     fun 계정을_보이지_않는_손님이_많아도_진짜_손님을_막지_못한다() {
-        // 같은 기기의 다른 앱이 아무 바이트도 보내지 않는 연결을 잔뜩 연다(앞 판은 받자마자 자리를 잡아 이것으로 모든 길이 막혔다).
+        // 같은 기기의 다른 앱이 아무 바이트도 보내지 않는 연결을 잔뜩 연다 — 그래도 길이 막히지 않아야 한다.
         val up = keep(FakeUpstream())
         val relay = relayTo(up.port, maxClients = 2, maxPending = 4)
         val idle = (1..20).map { connect(relay) }
@@ -533,7 +532,7 @@ class LocalRelayTest {
     @Test
     fun 홀로_선_CR_LF_가_든_요청은_400_으로_거절하고_원격에_보내지_않는다() {
         // 머리는 CRLF 로만 가르므로 줄 안의 홀로 선 CR·LF 가 살아남는다 — 중계가 그 줄을 원격 Squid 에 그대로 다시 쓰면 머리 주입·스머글링의
-        // 재료가 된다(2026-10-16 보안 점검 — 테더의 HTTP 프록시는 같은 것을 400 으로 거절한다). 계정이 맞아도 거절한다.
+        // 재료가 된다(테더의 HTTP 프록시도 같은 것을 400 으로 거절한다). 계정이 맞아도 거절한다.
         val up = keep(FakeUpstream())
         val relay = relayTo(up.port)
         val bad = listOf(
@@ -585,10 +584,9 @@ class LocalRelayTest {
     /** 가짜 원격 프록시(평문). 계정이 맞으면 CONNECT 는 메아리, 절대 주소 요청은 `ok`. 받은 것을 적어 둔다. */
     @Test
     fun 터널을_여는_사이_중계가_닫혀도_일꾼이_죽지_않는다() {
-        // 원격이 CONNECT 에 답하기 전에 중계를 닫는다. 예전에는 원격이 200 을 준 뒤 중계가 내려간 일꾼 풀에 터널을 맡기려다 그
-        // `RejectedExecutionException` 이 일꾼 스레드 밖으로 나가 **앱이 죽었다**(2026-10-04 기기의 크래시 기록). 지금은 닫힌 뒤 온 원격의
-        // 답을 넘기지 않고 끝난다(연결을 끊는 일은 따로 된 스레드가 하므로 답이 그보다 먼저 올 수 있다). 어느 쪽이든 일꾼에서 잡히지 않은
-        // 예외가 없어야 한다 — 이 시험이 모은다.
+        // 원격이 CONNECT 에 답하기 전에 중계를 닫는다. 내려간 일꾼 풀에 터널을 맡기면 `RejectedExecutionException` 이 일꾼 스레드 밖으로
+        // 나가 **앱이 죽는다**. 닫힌 뒤 온 원격의 답은 넘기지 않고 끝나야 한다(연결을 끊는 일은 따로 된 스레드가 하므로 답이 그보다 먼저 올 수
+        // 있다). 어느 쪽이든 일꾼에서 잡히지 않은 예외가 없어야 한다 — 이 시험이 모은다.
         val uncaught = CopyOnWriteArrayList<Throwable>()
         val before = Thread.getDefaultUncaughtExceptionHandler()
         // 중계의 일꾼만 본다(가짜 원격의 스레드가 닫힌 연결에 쓰다 던지는 것은 이 시험의 일이 아니다).
@@ -604,7 +602,7 @@ class LocalRelayTest {
             assertEquals(listOf("CONNECT example.test:443 HTTP/1.1"), up.startLines, "원격이 CONNECT 를 받지 못했다")
             relay.close()
             gate.countDown()
-            // 닫힌 중계는 원격의 200 을 넘기지 않는다 — 손님은 200 없이 끝을 본다(앞 판은 200 을 준 뒤 닫았다). 일꾼이 죽었다면 예외가 남는다.
+            // 닫힌 중계는 원격의 200 을 넘기지 않는다 — 손님은 200 없이 끝을 본다. 일꾼이 죽었다면 예외가 남는다.
             val reply = try {
                 HttpHead.read(s.getInputStream())
             } catch (e: IOException) {

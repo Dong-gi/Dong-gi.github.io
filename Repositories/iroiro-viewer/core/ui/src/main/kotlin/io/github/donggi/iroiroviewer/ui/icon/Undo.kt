@@ -12,8 +12,8 @@ import androidx.compose.ui.unit.dp
  * 되돌리기 — 왼쪽으로 꺾여 돌아가는 화살표(↶). [RedoIcon] 은 그 거울상이다.
  *
  * Material 아이콘 코어 세트에는 되돌리기·다시 하기가 없다(`Undo`·`Redo` 는 확장 세트다 — 코어의 49개를 aar 로 셌다) — 이 둘을 위해
- * 수천 개를 들이지 않고 직접 그린다([RotateRightIcon]·[VisibilityIcon] 과 같은 까닭). 글 편집기(`feature:text`)에서 처음 그렸다.
- * 지금은 글 편집기만 쓰지만 아이콘은 여기 둔다(다른 화면이 되돌리기를 얻으면 같은 모양을 쓴다).
+ * 수천 개를 들이지 않고 직접 그린다([RotateRightIcon]·[VisibilityIcon] 과 같은 까닭).
+ * 지금은 글 편집기(`feature:text`)만 쓰지만 아이콘은 여기 둔다(다른 화면이 되돌리기를 얻으면 같은 모양을 쓴다).
  */
 val UndoIcon: ImageVector by lazy { turnArrow(mirrored = false) }
 

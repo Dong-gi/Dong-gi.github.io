@@ -29,7 +29,7 @@ class ReferrerTest {
 
     @Test
     fun 넘겨주기의_홉마다_쪽에서_다시_고른다() {
-        // 같은 출처의 처음 홉 → 다른 출처로 넘겨줌 → 다시 쪽의 출처로(2026-10-16 보안 점검 — 앞 판은 처음 홉의 값을 모든 홉에 실었다).
+        // 같은 출처의 처음 홉 → 다른 출처로 넘겨줌 → 다시 쪽의 출처로(처음 홉의 값을 모든 홉에 싣지 않는다).
         val page = "https://a.test/watch?v=1&token=secret#t"
         val hops = listOf("https://a.test/dl/file.mp4", "https://cdn.test/x/file.mp4?sig=1", "https://a.test/again", "http://plain.test/f")
         assertEquals(listOf("https://a.test/watch?v=1&token=secret", "https://a.test/", "https://a.test/watch?v=1&token=secret", null), hops.map { ref(page, it) })

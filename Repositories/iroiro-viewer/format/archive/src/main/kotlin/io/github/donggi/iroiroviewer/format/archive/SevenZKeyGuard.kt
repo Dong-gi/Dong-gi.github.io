@@ -21,7 +21,7 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * 7z AES 의 **열쇠 유도 반복을 유도하기 전에** 본다(2026-10-16 보안 점검 — '7z AES 열쇠 유도 반복 횟수에 상한이 없다').
+ * 7z AES 의 **열쇠 유도 반복을 유도하기 전에** 본다 — 라이브러리의 유도에는 반복 횟수 상한이 없다.
  *
  * ## 왜 머리를 따로 읽는가
  *

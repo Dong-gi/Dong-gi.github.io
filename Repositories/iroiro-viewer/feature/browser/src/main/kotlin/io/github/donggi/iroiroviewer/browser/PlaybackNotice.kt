@@ -8,7 +8,7 @@ import androidx.lifecycle.repeatOnLifecycle
  *
  * 재생 실패(`PlaybackConnection.State.failure`)는 읽는 곳이 둘이다 — 재생 화면(`feature:player` 의 `PlayerActivity`)은
  * 그 자리에서 문구와 '다른 앱으로 열기' 를 보이고 **지우지 않는다.** 목록은 스낵바로 한 번 말하고 **지운다**(말한 것을
- * 다시 말하지 않으려고). 둘이 부딪히는 것이 문제였다.
+ * 다시 말하지 않으려고). 둘이 부딪히지 않게 하는 규칙이다.
  *
  * ## 왜 STARTED 가 아니라 RESUMED 인가
  *
@@ -16,7 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
  * 전까지 목록의 액티비티는 PAUSED 이면서 **STARTED** 다. `collectAsStateWithLifecycle` 의 기본값(STARTED)으로 들으면
  * 그 사이에 온 실패가 가려지는 목록의 스낵바에 실리고, 스낵바의 시계는 프레임이 아니라 `delay` 로 도므로 목록이 멈춘
  * 뒤에도 흘러 4초쯤 뒤에 `consumeFailure` 가 불린다. 재생 화면의 문구와 단추가 3~4초 뒤 사라지고, 돌아와도 목록은 이미
- * 말한 셈이라 아무것도 없었다(에뮬레이터에서 확인된 결함).
+ * 말한 셈이라 아무것도 없다.
  *
  * 그래서 목록은 **맨 앞(RESUMED)** 일 때만 듣고 말한다([IN_FRONT]). 맨 앞에서 내려가면(재생 화면·고르는 창·권한 창이
  * 위에 떴다) 보이던 스낵바를 거두고 **지우지 않는다** — 재생 화면이 같은 실패를 말하고 있다. 다시 맨 앞에 서면 실패가

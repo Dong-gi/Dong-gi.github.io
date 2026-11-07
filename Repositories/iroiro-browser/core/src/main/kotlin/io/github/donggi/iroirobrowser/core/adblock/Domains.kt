@@ -15,8 +15,8 @@ object Domains {
     /**
      * [host] 와 그 상위 이름들 — `a.b.example.com` → `a.b.example.com`, `b.example.com`, `example.com`, `com`. IP 는 그 하나만.
      *
-     * [MAX_NAME](DNS 이름의 상한)보다 긴 것은 늘어놓지 않는다(2026-10-16 보안 점검) — 그런 이름은 풀리지 않아 규칙에 맞출 까닭이 없고, 이름이
-     * 수만 개 이어진 호스트(쪽이 지을 수 있다)에서 상위 이름을 다 늘어놓으면 글자가 호스트 길이의 제곱만큼 쌓였다(요청마다 — 광고 차단의 호스트 표).
+     * [MAX_NAME](DNS 이름의 상한)보다 긴 것은 늘어놓지 않는다 — 그런 이름은 풀리지 않아 규칙에 맞출 까닭이 없고, 이름이 수만 개 이어진
+     * 호스트(쪽이 지을 수 있다)에서 상위 이름을 다 늘어놓으면 글자가 호스트 길이의 제곱만큼 쌓인다(요청마다 — 광고 차단의 호스트 표).
      */
     fun suffixes(host: String): List<String> {
         if (host.isEmpty()) return emptyList()

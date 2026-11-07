@@ -5,8 +5,7 @@ import io.github.donggi.iroiroviewer.format.FormatProbe
 import io.github.donggi.iroiroviewer.format.ProbeContext
 
 /**
- * 이것이 EPUB 인가. **`format:api` 의 [FormatProbe] 계약을 쓰는 첫 구현이다** —
- * 2단계가 세워 두고 11단계까지 부르는 코드가 하나도 없었다.
+ * 이것이 EPUB 인가(`format:api` 의 [FormatProbe] 구현).
  *
  * ## 세 갈래로 묻고, 싼 것부터 본다
  *
@@ -24,13 +23,12 @@ import io.github.donggi.iroiroviewer.format.ProbeContext
  * ## HWPX 를 전자책으로 잡지 않는다
  *
  * HWPX 는 EPUB 처럼 생겼다 — `mimetype`(내용 `application/hwp+zip`)과 `META-INF/container.xml` 을 둘 다 갖는다(CLAUDE.md 함정 표).
- * 그것을 먼저 가리던 HWPX 판별기는 없다(한글 문서는 편집기가 연다).
- * 그래서 여기서 가린다 — **첫 엔트리가 저장된 `mimetype` 이고 그 내용이 OCF 가 아닌 알려진 형식([NOT_OCF] — HWPX·ODF)이면 맡지
+ * HWPX 판별기가 따로 없으므로(한글 문서는 편집기가 연다) 여기서 가린다 — **첫 엔트리가 저장된 `mimetype` 이고 그 내용이 OCF 가 아닌 알려진 형식([NOT_OCF] — HWPX·ODF)이면 맡지
  * 않는다**, 이름으로 볼 때는 HWPX 의 꾸러미 파일(`Contents/content.hpf`)이 있으면 맡지 않는다.
  *
  * **저장된 `mimetype` 의 내용 하나로 '아니다' 를 정하지 않는다**. 내용이 EPUB 의 것도 알려진 다른 형식도 아니면(앞에 BOM·공백이
- * 붙었다, 끝에 줄바꿈이 붙었다, 모르는 형식이다) 이름으로 본다 — 예전 판(11단계)도 고정 자리가 맞지 않으면 `container.xml` 로 넘어가 열었다.
- * 10-09 의 판은 내용이 EPUB 이 아니면 곧바로 '아니다' 로 끝내, 그런 EPUB 이 '이 앱이 다루지 않는 문서' 가 됐다.
+ * 붙었다, 끝에 줄바꿈이 붙었다, 모르는 형식이다) 이름으로 본다 — 내용이 EPUB 이 아니라고 곧바로 끝내면 그런 EPUB 이
+ * '이 앱이 다루지 않는 문서' 가 된다.
  */
 object EpubProbe : FormatProbe {
 

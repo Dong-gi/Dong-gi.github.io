@@ -11,7 +11,7 @@ import java.util.zip.ZipOutputStream
  */
 enum class SetupBundle(val assetDir: String, val zipName: String, val topFolder: String, val files: List<String>) {
 
-    /** 설정 › 프록시의 '서버 구성 파일 받기' — 프록시 서버를 세우는 `server/`(옛 chrome-proxy-extension 에서 옮겼다)와 README. */
+    /** 설정 › 프록시의 '서버 구성 파일 받기' — 프록시 서버를 세우는 `server/` 와 README. */
     PROXY_SERVER(
         "setup/proxy-server", "web-proxy-server.zip", "web-proxy-server",
         listOf(

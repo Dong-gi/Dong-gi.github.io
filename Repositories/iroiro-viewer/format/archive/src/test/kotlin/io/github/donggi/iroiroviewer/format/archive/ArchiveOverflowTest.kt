@@ -16,8 +16,8 @@ import kotlin.test.assertTrue
 
 /**
  * **크기 셈의 넘침** — tar 의 크기 칸(256진·PAX)과 xz 끝의 인덱스는 `Long` 의 끝까지 적을 수 있다. 자리 셈(`자리 + 크기`)이 넘쳐
- * 음수가 되면 상한 검사가 꺼지거나(0 폭탄을 끝까지 풀었다) `position(음수)` 가 입출력 예외가 아닌 `IllegalArgumentException` 을
- * 냈다. 2^62 를 넘는 크기는 깨진 머리이고, 견주기는 뺄셈으로 한다.
+ * 음수가 되면 상한 검사가 꺼지거나(0 폭탄을 끝까지 푼다) `position(음수)` 가 입출력 예외가 아닌 `IllegalArgumentException` 을
+ * 낸다. 2^62 를 넘는 크기는 깨진 머리이고, 견주기는 뺄셈으로 한다.
  */
 class ArchiveOverflowTest {
 
@@ -47,7 +47,7 @@ class ArchiveOverflowTest {
     @Test
     fun `PAX 크기가 Long 의 끝 가까이면 깨진 머리다`() {
         val pax = paxLine("size", "9223372036854774784")
-        // 뒤를 0 으로 채운다 — 예전에는 상한이 꺼져 이 0 을 끝까지 풀었다(압축하면 몇 KB 가 수 GB 로 풀리는 자리다).
+        // 뒤를 0 으로 채운다 — 상한이 꺼지면 이 0 을 끝까지 푼다(압축하면 몇 KB 가 수 GB 로 풀리는 자리다).
         val tar = TarBytes().header("PaxHeaders/x", 'x', size = pax.size.toLong()).data(pax)
             .header("x", '0', size = 0).raw(ByteArray(64 * 1024)).end()
         for (f in listOf(file("pax.tar", tar), file("pax.tar.gz", TarBytes.gzip(tar)), file("pax.tar.bz2", TarBytes.bzip2(tar)))) {
@@ -82,8 +82,8 @@ class ArchiveOverflowTest {
     }
 
     /**
-     * xz 끝의 인덱스가 블록 크기를 `Long` 의 끝 가까이 적으면 스트림 크기 셈이 넘쳐 `position(음수)` 가 `IllegalArgumentException` 을
-     * 냈다 — 목록이 크기를 읽다 '입출력 실패' 로 끝났다. 이제 크기를 보이지 않을 뿐이다(-1).
+     * xz 끝의 인덱스가 블록 크기를 `Long` 의 끝 가까이 적으면 스트림 크기 셈이 넘칠 수 있다 — 그러면 `position(음수)` 의
+     * `IllegalArgumentException` 으로 목록이 '입출력 실패' 가 된다. 크기를 보이지 않을 뿐이어야 한다(-1).
      */
     @Test
     fun `xz 인덱스의 터무니없는 블록 크기는 크기를 모르는 것이다`() {

@@ -79,10 +79,9 @@ object ImageLimits {
         val heap = memoryClassMb.toLong() * 1024 * 1024
         val allowance = heap / HEAP_FRACTION
 
-        // **장수를 예산에서 끌어낸다.** 예전에는 `base * LIVE_PAGES` 를 그대로 `liveCap`
-        // 으로 썼는데, 그 값은 '필요한 양' 이지 '써도 되는 양' 이 아니다. 힙이 작은 기기에서
-        // 예산을 넘긴 채로 상한이라고 부르게 되고, 그것을 믿은 호출자가 죽는다.
-        // (9단계가 이 함수의 첫 호출자다 — 그 전까지는 선언만 되어 있었다.)
+        // **장수를 예산에서 끌어낸다.** `base * LIVE_PAGES` 는 '필요한 양' 이지 '써도 되는 양' 이
+        // 아니다 — 그것을 `liveCap` 으로 쓰면 힙이 작은 기기에서 예산을 넘긴 채로 상한이라고
+        // 부르게 되고, 그것을 믿은 호출자가 죽는다.
         val pages = (allowance / base).toInt().coerceIn(MIN_LIVE_PAGES, LIVE_PAGES)
         val live = (base * pages).coerceAtMost(allowance.coerceAtLeast(base))
 
@@ -166,8 +165,7 @@ object ImageLimits {
      *
      * **이름에 포맷을 담지 않는다.** 만화 쪽과 PDF 쪽이 같은 상한을 쓴다 — 둘 다 화면
      * 하나에 한 장이고 페이저가 최악 넷을 든다. 이름이 한 화면에 묶여 있으면 다음 사람이
-     * 같은 함수를 하나 더 만드는데, 이 저장소는 그 빚을 문구(5단계)와 인코딩 판정(7단계)
-     * 에서 이미 두 번 졌다.
+     * 같은 함수를 하나 더 만든다.
      */
     fun pageCap(budget: Budget): Long =
         (budget.liveCap / budget.livePages.coerceAtLeast(1)).coerceAtLeast(1L)

@@ -88,8 +88,7 @@ import io.github.donggi.iroiroviewer.ui.PasswordDialog
  *
  * `randomAccess = false` 인 포맷에서 격자 썸네일 12장은 해제를 12번 되풀이하는 일이다
  * (실측: 7z 는 엔트리마다 여는 비용이 **제곱**으로 는다). 포맷마다 화면이 달라 보이는
- * 것은 더 나쁘므로 세 포맷 모두 만들지 않는다. 만화 뷰어(9단계)가 '열 때 한 번에 다
- * 풀어 캐시' 를 세울 때 함께 정한다.
+ * 것은 더 나쁘므로 어느 포맷에도 만들지 않는다.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,10 +106,8 @@ fun ArchiveScreen(
     /**
      * 아카이브 안의 **그림 항목**을 만화 뷰어로 연다(엔트리 번호를 준다).
      *
-     * 8단계가 '아카이브 안의 파일 미리보기' 를 9단계로 미루면서 든 이유가 "엔트리를
-     * 어딘가에 뽑아야 하는데 그 캐시의 자리·수명·프라이버시가 만화 뷰어의 문제와 같다"
-     * 였다. 만화 뷰어가 **뽑지 않기로**(힙에만 둔다) 결론을 내렸으므로, 그림 미리보기는
-     * 그 뷰어를 그 쪽에서 여는 것으로 끝난다 — 캐시가 아예 없다.
+     * 만화 뷰어는 엔트리를 디스크로 **뽑지 않고** 힙에만 두므로, 그림 미리보기는 그 뷰어를
+     * 그 쪽에서 여는 것으로 끝난다 — 캐시(그 자리·수명·사생활의 문제)가 아예 없다.
      */
     onOpenImageEntry: (entryIndex: Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -180,14 +177,14 @@ fun ArchiveScreen(
                         }
                         // **⋮ 단추와 메뉴를 한 상자에 담는다.** Compose 의 Popup 은 자기를 감싼 **부모
                         // 레이아웃 노드**를 앵커로 삼는다. `actions` 에 형제로 두면 앵커가 아이콘 줄
-                        // 전체가 되어 메뉴가 맨 왼쪽 아이콘 아래에서 시작한다(사용자가 지적했다).
+                        // 전체가 되어 메뉴가 맨 왼쪽 아이콘 아래에서 시작한다.
                         // `offset` 으로 보정하지 마라 — 화면 폭·글꼴 배율에서 다시 어긋난다.
                         Box {
                             IconButton(onClick = { menuOpen = true }) {
                                 Icon(Icons.Filled.MoreVert, stringResource(R.string.archive_more))
                             }
                             DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                                // '전부 풀기' 는 여기 없다 — 아래 막대의 단추다(⋮ 안의 '오픈소스 고지' 곁에 숨어 있었다).
+                                // '전부 풀기' 는 여기 없다 — 아래 막대의 단추다.
                                 // 드문 갈래인 '이 폴더만 풀기' 는 여기 남는다.
                                 if (onExtract != null) DropdownMenuItem(
                                     text = { Text(stringResource(R.string.archive_extract_folder)) },
@@ -391,14 +388,12 @@ private fun EntryNotice(node: ArchiveTree.Node, onDismiss: () -> Unit) {
                         node.unsafe -> R.string.archive_badge_unsafe
                         // 암호로 풀린 항목은 잠긴 것이 아니다 — 아래의 종류별 안내로 간다.
                         node.isEncrypted && !node.decryptable -> R.string.archive_failed_encrypted
-                        // **만화 확장자도 중첩 아카이브다.** 9단계가 cbz·cbr·cb7·cbt 를
-                        // ARCHIVE 에서 COMIC 으로 옮기면서 이 검사가 그 넷을 놓쳤고,
-                        // 권별 cbz 를 zip 하나에 모아 둔 흔한 구성에서 '이 항목을 열 수
-                        // 없습니다' 만 나왔다 — 사용자는 파일이 깨진 줄로 읽는다.
+                        // **만화 확장자도 중첩 아카이브다**(cbz·cbr·cb7·cbt 는 종류가
+                        // COMIC 이다). 놓치면 권별 cbz 를 zip 하나에 모아 둔 흔한 구성에서
+                        // '이 항목을 열 수 없습니다' 만 나오고, 사용자는 파일이 깨진 줄로 읽는다.
                         MimeResolver.kindOf(node.name, false) in NESTED_KINDS ->
                             R.string.archive_preview_nested
-                        // **문서도 풀어서 열어야 한다.** 11단계가 PDF 를 붙이면서
-                        // 이 자리가 생겼다 — pdfium 은 seekable 한 파일 서술자를
+                        // **문서도 풀어서 열어야 한다.** pdfium 은 seekable 한 파일 서술자를
                         // 요구하고 아카이브 엔트리에는 그런 것이 없다. 여는 유일한
                         // 길은 문서를 통째로 임시 파일에 뽑는 것인데, 그것은 쪽 한
                         // 장이 아니라 **문서 전체의 평문 사본**이라 만화 뷰어가
@@ -422,9 +417,8 @@ private fun EntryNotice(node: ArchiveTree.Node, onDismiss: () -> Unit) {
  * 재귀를 막는 것이 상수가 아니라 **구조**라는 점이 중요하다: 엔트리에는 경로가 없어
  * 어느 뷰어에도 넘길 수 없고, 이 목록은 엔트리를 디스크로 뽑지 않는다.
  *
- * `ParseLimits` 에 `maxContainerDepth` 라는 값이 오래 선언되어 있었지만 읽는 코드가
- * 한 줄도 없었고, 11단계가 그것을 지웠다 — 아무것도 막지 못하면서 막는다고 적혀 있는
- * 값이 가장 나쁘다(`ParseLimits` 의 클래스 주석).
+ * 그래서 깊이 상한 상수를 두지 않는다 — 읽는 코드 없이 막는다고 적혀 있는 값이 가장
+ * 나쁘다(`ParseLimits` 의 클래스 주석).
  */
 private val NESTED_KINDS = setOf(FileKind.ARCHIVE, FileKind.COMIC)
 
@@ -517,7 +511,7 @@ private fun EntryRow(
             )
         }
         // 자물쇠는 **지금 못 여는** 항목에만. 암호를 넣은 뒤에도 남아 있으면 풀린 것을
-        // 잠긴 것으로 읽는다(기기에서 봤다 — 배너는 사라지는데 자물쇠가 그대로였다).
+        // 잠긴 것으로 읽는다.
         if (node.isEncrypted && !node.decryptable) {
             Icon(
                 Icons.Filled.Lock,
@@ -604,7 +598,7 @@ private fun SearchBar(query: String, onQuery: (String) -> Unit, onClose: () -> U
                 singleLine = true,
                 placeholder = { Text(stringResource(R.string.archive_search_hint)) },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                // **검색 키는 키보드를 내린다**(아무 일도 없이 키보드가 목록을 가린 채 남았다). 거르기는 칠 때마다
+                // **검색 키는 키보드를 내린다**(내리지 않으면 키보드가 목록을 가린 채 남는다). 거르기는 칠 때마다
                 // 이미 됐다 — 남은 일은 결과를 보는 것이다. 찾기 칸은 열어 둔다(닫는 것은 ✕).
                 keyboardActions = KeyboardActions(
                     onSearch = {

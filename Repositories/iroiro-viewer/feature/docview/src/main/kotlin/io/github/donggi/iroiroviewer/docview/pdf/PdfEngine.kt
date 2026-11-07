@@ -25,14 +25,13 @@ import java.io.File
  * 값(크기·비트맵)뿐이라, 나중에 렌더를 별도 프로세스로 밀어낼 때 경계를 이 함수들 자리에
  * 그대로 끼워 넣을 수 있다 — CLAUDE.md 안전 절이 '렌더 인터페이스는 처음부터 프로세스를
  * 넘길 수 있는 모양으로 짜라' 고 적어 둔 그것이고, AOSP 의 [PdfRenderer] 생성자 javadoc
- * 자신이 신뢰할 수 없는 파일은 격리 프로세스를 권한다. **격리 프로세스는 11단계에 만들지
+ * 자신이 신뢰할 수 없는 파일은 격리 프로세스를 권한다. **격리 프로세스는 아직 만들지
  * 않는다** — 6MB 비트맵을 Binder 로 돌려받는 길(트랜잭션 1MB 한계, SharedMemory)을 한 번도
  * 시험하지 못했고, 확인하지 못한 구조를 넣지 않는 것이 이 저장소의 규칙이다.
  *
  * ## 왜 3분기가 없는가
  *
- * CLAUDE.md 실측표가 오래 '11단계의 3분기(플랫폼 35+ / `PdfRendererPreV`(확장 13+) /
- * 레거시)' 를 예고했지만, 조사 끝에 **분기를 만들지 않기로 했다.**
+ * 플랫폼 35+ / `PdfRendererPreV`(확장 13+) / 레거시의 세 갈래로 **나누지 않는다.**
  *
  * * `android-36.1/data/api-versions.xml` 에서 우리가 쓰는 API 가 전부 `since="21"` 이고
  *   `sdks` 속성이 **없다** — 확장과 무관하게 모든 기기에 있다. 생성자(PFD)·`getPageCount`·
@@ -46,7 +45,7 @@ import java.io.File
  *
  * ## 암호에만 분기가 하나 있다
  *
- * 암호 PDF 를 열기로 하면서(11단계 뒤) 분기가 **하나** 생겼다. 암호를 받는 생성자
+ * 암호를 받는 생성자
  * `PdfRenderer(pfd, LoadParams)` 가 **API 35 의 프레임워크**에만 있기 때문이다
  * (`api-versions.xml`: `since="35"`, 그 생성자에는 `sdks` 가 없다). 확장 13 의
  * `PdfRendererPreV` 는 여전히 쓰지 않는다 — 위 이유 그대로다.
@@ -56,11 +55,11 @@ import java.io.File
  *   [open] 의 서술자 판으로 연다. 두 갈래 **모두 에뮬레이터에서 돈다**(Android_12_Phone ·
  *   Android_15_Tablet) — 위에서 분기를 거절한 이유가 여기서는 성립하지 않는다.
  *
- * 나중에 텍스트 선택·검색을 넣는 사람에게: `PdfRendererPreV` 의 인자 순서를 **javadoc 이
+ * `PdfRendererPreV` 를 쓰게 되면 인자 순서를 **javadoc 이
  * 아니라 javap 로** 확인하라. android-36.1 의 javadoc 예제가 `page.render(bitmap, params,
  * null, null)` 인데 실제 시그니처는 `render(Bitmap, Rect, Matrix, RenderParams)` 다.
  *
- * ## 찾기도 API 35 의 프레임워크에만 있다(14단계)
+ * ## 찾기도 API 35 의 프레임워크에만 있다
  *
  * `PdfRenderer.Page.searchText(String)` 은 `api-versions.xml` 에 `since="35"` 이고 그 메서드에는 `sdks` 가 없다 — 확장 13
  * 이 아니라 **프레임워크 35** 다(암호 생성자와 같은 사정). 그래서 [searchPage] 에 `@RequiresApi(35)` 를 달고, 부르는 쪽은

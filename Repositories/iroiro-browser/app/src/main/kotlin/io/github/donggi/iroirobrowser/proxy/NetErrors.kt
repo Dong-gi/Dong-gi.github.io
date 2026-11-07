@@ -16,7 +16,7 @@ import javax.net.ssl.SSLException
  * 앱의 HTTP(내려받기·광고 목록)가 실패한 까닭을 사람의 말로. 중계가 막은 것(정하지 않음·원격 불통·계정 거절)은 https 면 `CONNECT` 의 502 로,
  * http 면 `X-Iroiro-Relay` 머리가 달린 응답으로 온다 — 둘 다 '프록시를 거치지 못했다' 로 적는다.
  *
- * **플랫폼이 준 영어 글은 그대로 보이지 않는다**(앞 판은 `Connection reset`·`unexpected end of stream` 따위가 목록·알림에 나왔다) — 갈래를
+ * **플랫폼이 준 영어 글(`Connection reset`·`unexpected end of stream` 따위)은 그대로 보이지 않는다** — 갈래를
  * 알 수 있으면 그 말로, 모르면 '연결에 문제가 생겼습니다' 로. 이 앱이 스스로 적은 까닭(한국어)은 그대로 둔다. 순수 함수라 기기 없이 시험한다.
  */
 object NetErrors {

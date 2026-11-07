@@ -6,7 +6,6 @@ import android.webkit.WebView
 import io.github.donggi.iroirobrowser.adblock.AdBlockService
 import io.github.donggi.iroirobrowser.adblock.HiddenElements
 import io.github.donggi.iroirobrowser.download.DownloadCenter
-import io.github.donggi.iroirobrowser.download.TorrentCenter
 import io.github.donggi.iroirobrowser.library.Library
 import io.github.donggi.iroirobrowser.net.RelayAuthenticator
 import io.github.donggi.iroirobrowser.proxy.NetworkPath
@@ -16,7 +15,7 @@ import io.github.donggi.iroirobrowser.sites.SiteList
 import java.net.Authenticator
 
 /**
- * 앱 하나에 하나씩인 것: 설정, 네트워크 길(중계), 내려받기, 토렌트, 연 사이트의 목록, 북마크·방문 기록, 광고 차단, 숨긴 요소. **처음 쓸 때 세운다** — 프로세스가 디버그의 실험 화면 때문에 떴을 때 중계를
+ * 앱 하나에 하나씩인 것: 설정, 네트워크 길(중계), 내려받기, 연 사이트의 목록, 북마크·방문 기록, 광고 차단, 숨긴 요소. **처음 쓸 때 세운다** — 프로세스가 디버그의 실험 화면 때문에 떴을 때 중계를
  * 세우고 출구를 확인하러 나가지 않게.
  */
 class WebApp : Application() {
@@ -32,12 +31,6 @@ class WebApp : Application() {
     }
 
     val downloads: DownloadCenter by lazy { DownloadCenter(this, network) }
-
-    /**
-     * 토렌트 — 엔진 하나(프록시를 거치지 않고 기기에서 바로 — 사용자 결정). 웹 쪽 길([network])을 쓰지 않으므로 그것에 기대지 않는다. 엔진은 쓸 때
-     * 열고 쓰지 않으면 닫는다([TorrentCenter]).
-     */
-    val torrents: TorrentCenter by lazy { TorrentCenter(this) }
 
     val sites: SiteList by lazy { SiteList(this) }
 
@@ -58,10 +51,10 @@ class WebApp : Application() {
     val isMainProcess: Boolean by lazy { Application.getProcessName() == packageName }
 
     // 가로채기·녹화의 임시 폴더(PageBridge.captureRoot)는 앱이 떠도 지우지 않는다 — 앞 프로세스가 남긴 것은 시스템이 앱을 정리해 저장하지 못한
-    // 것이다. 브라우저 화면이 뜰 때 저장할지 묻는다(CaptureRecovery — 앞 판은 여기서 통째로 지워 담은 것이 말없이 사라졌다).
+    // 것이다. 브라우저 화면이 뜰 때 저장할지 묻는다(CaptureRecovery — 여기서 지우면 담은 것이 말없이 사라진다).
     override fun onCreate() {
         super.onCreate()
-        // **브라우저는 주 프로세스에서만 세운다.** 테더 프로세스에는 WebView·중계·프록시 계정·내려받기·토렌트가 올라오지 않는다 — 결함·메모리
+        // **브라우저는 주 프로세스에서만 세운다.** 테더 프로세스에는 WebView·중계·프록시 계정·내려받기가 올라오지 않는다 — 결함·메모리
         // 고갈이 서로 옮지 않게. 그리고 아래의 고아 정리는 '이 프로세스가 뜨기 전에 생긴' 감춘 항목을 지우므로,
         // 테더 프로세스가 브라우저보다 늦게 뜨며 돌리면 **브라우저가 받는 중인 파일**(아직 목록에 적지 않은 blob·합치기)을 지운다.
         // WebView 는 아예 끈다(`disableWebView` — 그 프로세스에서 WebView 를 쓰면 던진다). 그 밖의 것은 [of] 가 막는다.
@@ -75,7 +68,7 @@ class WebApp : Application() {
 
     companion object {
         /**
-         * 브라우저의 것(설정·길·내려받기·토렌트·라이브러리·광고 차단 — 위의 lazy 들)으로 가는 하나뿐인 길. **테더 프로세스에서 부르면 던진다** —
+         * 브라우저의 것(설정·길·내려받기·라이브러리·광고 차단 — 위의 lazy 들)으로 가는 하나뿐인 길. **테더 프로세스에서 부르면 던진다** —
          * 그 프로세스의 코드가 브라우저를 세우면(프록시 계정을 열고 중계를 띄우면) 결함이다. 테더의 코드는 이것을 부르지 않는다(앱의 시험
          * TetherIsolationTest 가 소스를 본다).
          */

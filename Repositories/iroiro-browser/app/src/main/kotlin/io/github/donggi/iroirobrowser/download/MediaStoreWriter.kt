@@ -15,8 +15,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 /**
- * 받은 파일을 공용 '내려받기' 폴더에 넣는다(`MediaStore.Downloads` — 저장소 권한이 필요 없다. 사용자 결정, 2026-10-05: '기본 다운로드
- * 폴더면 충분합니다'). 받는 동안은 `IS_PENDING` 으로 감춰 두고, 다 받으면 드러낸다. 멈춘(이어받을) 것은 감춘 채 남겨 두고 이어 쓴다 — 시스템은
+ * 받은 파일을 공용 '내려받기' 폴더에 넣는다(`MediaStore.Downloads` — 저장소 권한이 필요 없다. 사용자 결정). 받는 동안은 `IS_PENDING` 으로 감춰 두고, 다 받으면 드러낸다. 멈춘(이어받을) 것은 감춘 채 남겨 두고 이어 쓴다 — 시스템은
  * 오래된(이레) 감춘 항목을 지우므로 그때는 처음부터 다시 받는다. 취소·실패하면 지운다. 이름이 겹치면 MediaStore 가 ` (1)` 을 붙인다. 받던 중에
  * 앱이 죽어 목록에 기록이 없는 감춘 항목은 다음에 뜰 때 지운다([pending] — [DownloadCenter.sweepOrphans]).
  */
@@ -25,7 +24,6 @@ internal object MediaStoreWriter {
     /**
      * 감춘 항목을 만든다. [folder] 가 있으면 '내려받기' 아래 그 폴더에(갤러리 받기 — `Download/Pixiv/<작가>/`, 성분은 [GalleryRules.relativePath] 가
      * 한 번 더 거른다). MediaStore 가 그 경로를 받지 않으면(정리한 이름이 그래도 거슬렸다) '내려받기' 바로 아래로 — 파일을 못 받는 것보다 낫다
-     * ([TorrentMover] 의 `insert` 와 같은 꼴).
      */
     fun create(context: Context, displayName: String, mimeType: String, folder: List<String> = emptyList()): Uri {
         val values = ContentValues().apply {

@@ -100,7 +100,7 @@ class HttpFetcherTest {
         Authenticator.setDefault(RelayAuthenticator { relay })
         val places = ArrayList<Scripted>()
         places += keep(Scripted(reply = challenge(relay.realm)))
-        // 127.0.0.2 는 이 PC(윈도)에서 따로 설정 없이 선다(토렌트 시험도 쓴다). 이 자리가 시험의 이빨이다 — 인증기가 사이트의 401 에도 답하게
+        // 127.0.0.2 는 이 PC(윈도)에서 따로 설정 없이 선다. 이 자리가 시험의 이빨이다 — 인증기가 사이트의 401 에도 답하게
         // 되돌려 보면 여기서만 계정이 실린다(되돌려 확인했다). 그래서 건너뛰지 않는다.
         places += keep(Scripted("127.0.0.2", relay.port, challenge(relay.realm)))
         for (place in places) {

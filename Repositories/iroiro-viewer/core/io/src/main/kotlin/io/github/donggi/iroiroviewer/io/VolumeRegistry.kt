@@ -12,7 +12,7 @@ import java.io.File
  * 이 기기에 붙어 있는 저장 볼륨.
  *
  * 내부 저장소와 SD 카드는 **다른 파일시스템**이다. 그래서 둘 사이의 이동은 `rename`
- * 으로 끝나지 않고(EXDEV) 복사+삭제로 내려가야 한다(4단계). 볼륨을 구분해 들고 있는
+ * 으로 끝나지 않고(EXDEV) 복사+삭제로 내려가야 한다. 볼륨을 구분해 들고 있는
  * 것이 그 분기의 출발점이다.
  *
  * 볼륨은 꽂았다 뺐다 한다. 화면이 보일 때마다 다시 읽는 것이 맞다 — 캐시해 두면
@@ -48,7 +48,7 @@ object VolumeRegistry {
             id = v.uuid ?: if (v.isPrimary) "primary" else path,
             // **기본 볼륨의 이름은 우리가 붙인다.** 안드로이드가 주는 설명은
             // `Internal shared storage` 라, 한국어 화면에서 그 한 줄만 영어로 길게
-            // 남는다(사용자가 지적했다). 다른 볼륨은 그대로 둔다 — SD 카드의 이름은
+            // 남는다. 다른 볼륨은 그대로 둔다 — SD 카드의 이름은
             // 기기가 아는 것이고 우리가 더 잘 지을 수 없다.
             label = if (v.isPrimary) {
                 context.getString(R.string.io_volume_internal)

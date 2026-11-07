@@ -57,11 +57,11 @@ class EditorCommitTest {
 
     private fun token(n: Int) = n.toString(16).padStart(32, '0')
 
-    // ---- M1 — 반영마다 따로 된 바이트 ------------------------------------------------------------------------------------------
+    // ---- 반영마다 따로 된 바이트 ------------------------------------------------------------------------------------------
 
     /**
-     * 반영은 `incoming` 을 그 반영만의 파일로 옮긴 뒤 넣는다. 예전에는 모든 반영이 `incoming` 을 그대로 읽어, 앞 요청이 큐에 남은 채 다음 저장이
-     * 그 파일을 자르고 다시 쓰면 앞 요청이 반쯤 쓴 문서를 원본 자리에 놓았다.
+     * 반영은 `incoming` 을 그 반영만의 파일로 옮긴 뒤 넣는다. `incoming` 을 그대로 읽으면, 앞 요청이 큐에 남은 채 다음 저장이
+     * 그 파일을 자르고 다시 쓸 때 앞 요청이 반쯤 쓴 문서를 원본 자리에 놓는다.
      */
     @Test
     fun eachCommitReadsItsOwnBytes() {
@@ -81,9 +81,9 @@ class EditorCommitTest {
         assertNull(EditorSlots.stage(File(dir, "incoming"), "editor-1"))
     }
 
-    // ---- M1 — 답은 참이어야 한다 ------------------------------------------------------------------------------------------------
+    // ---- 답은 참이어야 한다 ------------------------------------------------------------------------------------------------
 
-    /** 줄 서서 기다리다 시간이 넘으면 줄에서 거두고 '바쁘다' 다 — 거둔 요청은 나중에 돌지 않는다(예전에는 '바쁘다' 고 답하고 큐에 남겨 뒀다). */
+    /** 줄 서서 기다리다 시간이 넘으면 줄에서 거두고 '바쁘다' 다 — 거둔 요청은 나중에 돌지 않는다. */
     @Test
     fun aQueuedCommitPastTheWaitIsWithdrawnAndAnsweredBusy() {
         val wait = EditorSlots.ResultWait()
@@ -162,7 +162,7 @@ class EditorCommitTest {
         assertEquals(listOf("c"), p.drain("t2"))
     }
 
-    // ---- m3 — 큐 안에서 견줄 표 ------------------------------------------------------------------------------------------------
+    // ---- 큐 안에서 견줄 표 ------------------------------------------------------------------------------------------------
 
     @Test
     fun plansCarryTheStampTheyExpect() {
@@ -175,14 +175,14 @@ class EditorCommitTest {
         assertEquals(FileStamp(10, 20), again.expected)
     }
 
-    // ---- m8 — 세션의 수명 ---------------------------------------------------------------------------------------------------
+    // ---- 세션의 수명 ---------------------------------------------------------------------------------------------------
 
     /** 상한을 넘으면 가장 오래 **쓰이지 않은** 것부터 걷되, 편집기가 쥔 세션은 걷지 않는다. */
     @Test
     fun evictionSkipsHeldSessionsAndGoesByLastUse() {
         val sessions = (0 until 4).map { session(token(it), openedAt = it * 10L, usedAt = it * 10L) }
         assertEquals(listOf(token(0)), EditorSlots.evictable(sessions, emptySet(), 4))
-        // 가장 먼저 연 세션을 다른 태스크의 편집기가 쥐고 있다 — 그다음 것을 걷는다(예전에는 연 때로 골라 그 편집기의 저장이 모두 실패했다).
+        // 가장 먼저 연 세션을 다른 태스크의 편집기가 쥐고 있다 — 그다음 것을 걷는다.
         assertEquals(listOf(token(1)), EditorSlots.evictable(sessions, setOf(token(0)), 4))
         // 먼저 열었어도 방금 쓰인 세션은 남는다.
         val touched = sessions.map { if (it.token == token(0)) it.copy(usedAt = 1_000) else it }

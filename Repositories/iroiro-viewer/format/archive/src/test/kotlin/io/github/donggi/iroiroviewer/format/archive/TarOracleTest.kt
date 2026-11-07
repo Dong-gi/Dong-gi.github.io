@@ -167,7 +167,7 @@ class TarOracleTest {
     }
 
     /**
-     * tar 가 아닌 gzip 은 **항목 하나짜리**다(14단계까지는 '다루지 않는 형식' 이었다). 이 표본(파이썬 `gzip.compress`)은 머리에
+     * tar 가 아닌 gzip 은 **항목 하나짜리**다. 이 표본(파이썬 `gzip.compress`)은 머리에
      * 이름(FNAME)도 시각도 없다 — 이름은 압축 파일 이름에서 확장자를 뗀 것이다. 압축 tar 의 리더는 여전히 만들 때 거절한다.
      */
     @Test
@@ -195,7 +195,7 @@ class TarOracleTest {
         assertEquals(ArchiveKind.TAR, detect("v7.tar"))
         assertEquals(ArchiveKind.TAR, detect("specials.tar"))
         assertEquals(ArchiveKind.TAR, detect("empty.tar"))
-        // tar 계열은 등록소의 신원이 없다. 옛 판별(ZIP·7z·RAR)은 그대로 모른다고 답한다.
+        // tar 계열은 등록소의 신원이 없다. 16바이트 판별(ZIP·7z·RAR 만 안다)은 모른다고 답한다.
         assertNull(Archives.probeContainer(File(dir, "gnu-long.tar.gz").readBytes().copyOf(16)))
     }
 

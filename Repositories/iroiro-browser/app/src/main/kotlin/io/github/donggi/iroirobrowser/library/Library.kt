@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.os.Handler
 import android.os.Looper
 import io.github.donggi.iroirobrowser.core.Suggester
-import io.github.donggi.iroirobrowser.core.backup.BookmarkEntry
-import io.github.donggi.iroirobrowser.core.backup.HistoryEntry
 import java.util.concurrent.Executors
 
 /**
@@ -169,78 +167,6 @@ class Library(context: Context) {
 
     fun renameBookmark(url: String, title: String, done: () -> Unit = {}) = write(done) {
         helper.writableDatabase.update("bookmarks", ContentValues().apply { put("title", title.ifBlank { url }) }, "url = ?", arrayOf(url))
-    }
-
-    // ── 백업(설정 › 백업 — CLAUDE.md '설정·북마크 백업') ─────────────────────────────────────────────────────────
-
-    /** 방문 기록을 두는 상한 — 가져오기의 확인 창이 '최근 N곳까지만 남는다' 를 말할 때. */
-    val historyCap: Int get() = MAX_HISTORY
-
-    /** 내보낼 것 — 북마크 전부(넣은 차례)와, [withHistory] 면 방문 기록 전부(최근 것부터). */
-    fun exportRows(withHistory: Boolean, done: (Pair<List<BookmarkEntry>, List<HistoryEntry>>) -> Unit) = read(done) {
-        val bookmarks = ArrayList<BookmarkEntry>()
-        helper.readableDatabase.rawQuery("SELECT url, title, created FROM bookmarks ORDER BY created", null).use { c ->
-            while (c.moveToNext()) bookmarks += BookmarkEntry(c.getString(0), c.getString(1), c.getLong(2))
-        }
-        val history = ArrayList<HistoryEntry>()
-        if (withHistory) {
-            helper.readableDatabase.rawQuery("SELECT url, title, last_visit, visits, typed FROM history ORDER BY last_visit DESC", null).use { c ->
-                while (c.moveToNext()) history += HistoryEntry(c.getString(0), c.getString(1), c.getLong(2), c.getInt(3), c.getInt(4))
-            }
-        }
-        bookmarks to history
-    }
-
-    /** 가져오기의 견주기 — 지금 북마크와 방문 기록에 있는 주소. */
-    fun knownUrls(done: (Pair<Set<String>, Set<String>>) -> Unit) = read(done) {
-        val history = HashSet<String>()
-        helper.readableDatabase.rawQuery("SELECT url FROM history", null).use { c ->
-            while (c.moveToNext()) history += c.getString(0)
-        }
-        bookmarked to history
-    }
-
-    /**
-     * 백업에서 더한다(한 트랜잭션). 북마크는 없는 주소만 — 있는 것의 이름·넣은 때는 덮지 않는다. 방문 기록은 없는 주소는 넣고 있는 주소는 간
-     * 횟수·친 횟수·마지막 때를 큰 쪽으로(같은 파일을 두 번 가져와도 늘지 않는다), 제목은 비어 있을 때만 채운다. 넘친 기록은 오래된 것부터
-     * 지운다([MAX_HISTORY]). 주소·제목은 부르는 쪽이 거른 것이다(`BackupRules`).
-     */
-    fun importRows(bookmarks: List<BookmarkEntry>, history: List<HistoryEntry>, done: () -> Unit = {}) = write(done) {
-        if (bookmarks.isEmpty() && history.isEmpty()) return@write
-        suggestCache = null
-        val db = helper.writableDatabase
-        db.beginTransaction()
-        try {
-            db.compileStatement("INSERT OR IGNORE INTO bookmarks (url, title, created) VALUES (?, ?, ?)").use { st ->
-                for (b in bookmarks) {
-                    st.bindString(1, b.url)
-                    st.bindString(2, b.title.ifBlank { b.url })
-                    st.bindLong(3, b.created)
-                    st.executeInsert()
-                }
-            }
-            db.compileStatement(
-                "INSERT INTO history (url, title, last_visit, visits, typed) VALUES (?, ?, ?, ?, ?) ON CONFLICT(url) DO UPDATE SET " +
-                    "last_visit = MAX(last_visit, excluded.last_visit), visits = MAX(visits, excluded.visits), typed = MAX(typed, excluded.typed), " +
-                    "title = CASE WHEN title = '' THEN excluded.title ELSE title END",
-            ).use { st ->
-                for (h in history) {
-                    st.bindString(1, h.url)
-                    st.bindString(2, h.title)
-                    st.bindLong(3, h.lastVisit)
-                    st.bindLong(4, h.visits.toLong())
-                    st.bindLong(5, h.typed.toLong())
-                    st.executeInsert()
-                }
-            }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
-        }
-        if (history.isNotEmpty()) {
-            db.execSQL("DELETE FROM history WHERE url IN (SELECT url FROM history ORDER BY last_visit DESC LIMIT -1 OFFSET $MAX_HISTORY)")
-        }
-        if (bookmarks.isNotEmpty()) reloadBookmarkSet()
     }
 
     // ── 안쪽 ──────────────────────────────────────────────────────────────────────────────────────────────────

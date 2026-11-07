@@ -182,7 +182,7 @@ class BackgroundPlayTest {
 
     @Test
     fun 화면_밖에는_뷰가_다시_그리기를_청할_때만_그린다() {
-        // vsync 마다(초당 60번) 그리면 30 fps 영상에서 앞에서 볼 때의 두 배를 그린다(2026-10-16 에뮬레이터 — 뒤에서 렌더 스레드 21% 대 앞 11%).
+        // vsync 마다(초당 60번) 그리면 30 fps 영상에서 앞에서 볼 때의 두 배를 그린다.
         // 크로미움(AwContents)이 다시 그리기를 청하는 두 길을 모두 받아 화면 밖 그리기에 알린다.
         val page = main("kotlin/io/github/donggi/iroirobrowser/browser/PullToRefresh.kt")
         val invalidate = page.substringAfter("override fun invalidate() {").substringBefore("\n    }\n")
@@ -216,7 +216,7 @@ class BackgroundPlayTest {
 
     @Test
     fun 영상을_숨긴_동안에는_물러서지_않는다() {
-        // 숨은 영상은 다시 그리기를 청하지 않는다 — 그때 물러서면 청이 없다는 까닭으로 vsync 마다 그렸다(2026-10-16 에뮬레이터, 10초에 600번).
+        // 숨은 영상은 다시 그리기를 청하지 않는다 — 그때 물러서면 청이 없다는 까닭으로 vsync 마다 그린다.
         assertFalse(OffscreenDraw.due(requested = false, sinceRequestMs = 10_000, requestsOnly = true))
         assertTrue(OffscreenDraw.due(requested = true, sinceRequestMs = 0, requestsOnly = true))
         // 화면 밖 그리기를 켤 때마다 내린다 — 숨긴 것이 확인되어야 다시 올린다.
@@ -267,7 +267,7 @@ class BackgroundPlayTest {
 
     @Test
     fun 같은_탭을_다시_골라도_밤_모드가_바뀌어도_재생_중인_쪽을_떼지_않는다() {
-        // 쪽을 떼었다 붙이면 쪽이 잠깐 숨고, 유튜브는 그 틈을 보고 재생을 멈춘다(2026-10-12 에뮬레이터 — 화면을 켤 때 밤 모드가 바뀌었다).
+        // 쪽을 떼었다 붙이면 쪽이 잠깐 숨고, 유튜브는 그 틈을 보고 재생을 멈춘다(화면을 켤 때 밤 모드가 바뀌는 때 등).
         val activity = main("kotlin/io/github/donggi/iroirobrowser/browser/BrowserActivity.kt")
         val select = activity.substringAfter("private fun select(tab: Tab) {").substringBefore("\n    }\n")
         assertTrue("leaving == tab -> Unit" in select)
@@ -287,7 +287,7 @@ class BackgroundPlayTest {
 
     @Test
     fun 유튜브의_주_틀은_늘_보임을_읽는다() {
-        // 사용자 결정 2026-10-12 — 브레이브의 방식. 주 틀에서만, 문서의 보임 둘을 '보임' 으로 덮고 사건은 창의 포착 단계에서 멈춘다.
+        // 사용자 결정 — 브레이브의 방식. 주 틀에서만, 문서의 보임 둘을 '보임' 으로 덮고 사건은 창의 포착 단계에서 멈춘다.
         val s = BackgroundPlay.VISIBILITY_SCRIPT
         assertTrue("if (window.top !== window) return;" in s)
         assertTrue("keep('visibilityState', 'visible');" in s)

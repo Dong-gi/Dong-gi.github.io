@@ -10,7 +10,7 @@ import java.io.IOException
 import java.util.Locale
 
 /**
- * 재생기가 **기기 안의 것만** 열게 한다(2026-10-05 — 이 앱이 그때 SFTP 로 `INTERNET` 을 선언했다. 10-09 에 다시 걷었다).
+ * 재생기가 **기기 안의 것만** 열게 한다(`INTERNET` 을 다시 선언하는 날에도 재생 길은 닫혀 있게).
  *
  * media3 의 `DefaultDataSource` 는 스킴을 보고 길을 고른다 — `file`·`content` 말고도 `http`·`https`(기본 HTTP 소스)·`udp`(소켓을 연다)·
  * `rtmp`·`data` 를 연다. 재생 큐에 들어가는 것은 언제나 파일의 경로라 그 갈래에 닿을 일이 없고, `INTERNET` 이 없으니 OS 도 그 갈래를

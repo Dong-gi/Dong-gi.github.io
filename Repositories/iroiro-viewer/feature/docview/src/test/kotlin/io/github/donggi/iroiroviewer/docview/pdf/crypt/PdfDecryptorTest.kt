@@ -279,8 +279,8 @@ class PdfDecryptorTest {
 
     @Test
     fun V4_에_Length_가_없어도_128비트로_푼다() {
-        // 명세는 V4 의 `/Length` 를 요구하지 않는다(표 20·25). 예전에는 없으면 40비트로 쳐서
-        // 맞는 암호가 '틀렸다' 가 됐다.
+        // 명세는 V4 의 `/Length` 를 요구하지 않는다(표 20·25). 없을 때 40비트로 치면
+        // 맞는 암호가 '틀렸다' 가 된다.
         var b = bytes("qpdf-r4-aes.pdf")
         b = sameLength(b, "/CFM /AESV2 /Length 16", "/CFM /AESV2           ")
         b = sameLength(b, "/Filter /Standard /Length 128", "/Filter /Standard            ")
@@ -291,10 +291,9 @@ class PdfDecryptorTest {
 
     @Test
     fun V4_RC4_에_Length_가_없으면_40비트가_아니라_128비트다() {
-        // 위 시험은 AESV2 라 **판별력이 없었다** — AESV2 는 적힌 값과 무관하게 128 로 가므로, `/Length` 가 없을 때의 기본값을
-        // 40 으로 되돌려도 통과했다(11단계 뒤 반증조가 '시험의 빈틈' 으로 적은 것). 기본값이 실제로 쓰이는 것은 RC4(`/V2`)
-        // 필터다. qpdf 12.3 가 이 변형을 같은 암호로 연다(스크래치패드의 `mkcrypt_ko.py`·`verify_ko.py` — pypdf 6.17 은
-        // 40 으로 쳐서 열지 못한다. 두 오라클이 갈리는 자리이고, 우리는 pdfium·qpdf 쪽이다).
+        // 위 시험은 AESV2 라 **판별력이 없다** — AESV2 는 적힌 값과 무관하게 128 로 가므로, `/Length` 가 없을 때의 기본값을
+        // 40 으로 되돌려도 통과한다. 기본값이 실제로 쓰이는 것은 RC4(`/V2`) 필터다. qpdf 12.3 가 이 변형을 같은 암호로 연다
+        // (pypdf 6.17 은 40 으로 쳐서 열지 못한다. 두 오라클이 갈리는 자리이고, 우리는 pdfium·qpdf 쪽이다).
         var b = bytes("qpdf-r4-rc4.pdf")
         b = sameLength(b, "/CFM /V2 /Length 16", "/CFM /V2           ")
         b = sameLength(b, "/Filter /Standard /Length 128", "/Filter /Standard            ")
@@ -316,10 +315,10 @@ class PdfDecryptorTest {
     // ---- R2~R4 의 한글 암호 ----------------------------------------------------------
     //
     // R2~R4 의 암호는 명세상 PDFDocEncoding 이라 한글을 담을 수 없고, 도구마다 제 인코딩으로 넣는다. 그래서 후보를 여럿
-    // 시도한다(`PdfSecurity.legacyCandidates`: latin-1 → UTF-8 → CP949). 11단계 뒤에는 이 후보에 **표본이 하나도 없었다** —
-    // 후보 하나를 지워도 시험이 통과했다. 표본 셋은 pypdf 6.17 이 암호의 **바이트**를 그대로 받아 잠갔고(qpdf 12.3 는
+    // 시도한다(`PdfSecurity.legacyCandidates`: latin-1 → UTF-8 → CP949). 후보마다 표본이 있어야 후보 하나를 지웠을 때
+    // 시험이 깨진다. 표본 셋은 pypdf 6.17 이 암호의 **바이트**를 그대로 받아 잠갔고(qpdf 12.3 는
     // R3·R4 에서 PDFDocEncoding 밖의 암호로 잠그기를 거절한다), 잠근 뒤 qpdf·pypdf 가 **그 인코딩으로만** 열고 다른 인코딩
-    // 으로는 열지 못하는 것을 확인했다(`verify_ko.py`). 그래서 인코딩마다 판별력이 있다.
+    // 으로는 열지 못하는 것을 확인했다. 그래서 인코딩마다 판별력이 있다.
 
     @Test
     fun R2_의_CP949_한글_암호가_풀린다() {
@@ -378,8 +377,8 @@ class PdfDecryptorTest {
 
     @Test
     fun 번호가_큰_객체_하나가_xref_를_부풀리지_않는다() {
-        // 증분 저장으로 `8000000 0 obj null` 하나를 더한다. 예전에는 0 부터 가장 큰 번호까지
-        // 빽빽한 표를 써서 몇 KB 파일이 168 MB 를 요구했다. 지금은 쓴 번호만 소구역으로 적는다.
+        // 증분 저장으로 `8000000 0 obj null` 하나를 더한다. 0 부터 가장 큰 번호까지 빽빽한 표를 쓰면
+        // 몇 KB 파일이 168 MB 를 요구한다 — 쓴 번호만 소구역으로 적어야 한다.
         val orig = bytes("qpdf-r2.pdf")
         val f = PdfFile.open(ByteArraySource(orig))
         val prev = String(orig, Charsets.ISO_8859_1).let { s ->
@@ -403,8 +402,8 @@ class PdfDecryptorTest {
 
     @Test
     fun 예측자의_폭이_데이터보다_넓어도_부풀지_않는다() {
-        // `/Columns` 는 파일이 적는 값이다. 몇 바이트에 64 MiB 폭을 적으면 예전에는 64 MiB 줄 버퍼를
-        // 잡고 0 으로 채워 내보냈다.
+        // `/Columns` 는 파일이 적는 값이다. 몇 바이트에 64 MiB 폭을 적어도 64 MiB 줄 버퍼를
+        // 잡고 0 으로 채워 내보내지 않아야 한다.
         val parms = PdfDict(linkedMapOf(
             "Predictor" to PdfNum("12"), "Columns" to PdfNum("1048576"),
             "Colors" to PdfNum("32"), "BitsPerComponent" to PdfNum("16"),
@@ -426,7 +425,7 @@ class PdfDecryptorTest {
     @Test
     fun 다시_세우는_동안_취소가_닿는다() {
         // 머리는 있지만 뿌리가 없는 큰 파일 — 다시 세우기가 통째로 훑는다. 취소가 닿아야 하고,
-        // 예전처럼 두 번 훑지도 않아야 한다.
+        // 두 번 훑지도 않아야 한다.
         val big = "%PDF-1.7\n".toByteArray(Charsets.ISO_8859_1) + ByteArray(8 shl 20) { 'a'.code.toByte() }
         var calls = 0
         assertFailsWith<java.util.concurrent.CancellationException> {

@@ -61,7 +61,7 @@ class PeerFilterTest {
 
     @Test
     fun 들어온_망을_읽는_길이_없으면_넷째_검사를_건너뛴다() {
-        // 앱은 지금 SO_MARK 를 읽을 공개 API 가 없다(PeerFilter 의 머리말 4) — 읽는 함수를 주지 않으면 주소·그룹·인터페이스만 본다.
+        // 앱은 지금 SO_MARK 를 읽을 공개 API 가 없다(PeerFilter 의 머리말) — 읽는 함수를 주지 않으면 주소·그룹·인터페이스만 본다.
         val noReader = PeerFilter(groupInterface = { "p2p-wlan0-0" }, interfaceName = { "p2p-wlan0-0" })
         assertNull(noReader.check(guest, owner, null))
         assertEquals(PeerRejection.Reason.NO_GROUP, PeerFilter(groupInterface = { null }).check(guest, owner, null)?.reason)
@@ -75,7 +75,7 @@ class PeerFilterTest {
 
     @Test
     fun 우리_그룹이_떠_있지_않으면_p2p_인터페이스여도_거절한다() {
-        // 다른 앱(옛 테더 앱 등)의 그룹도 같은 대역·같은 로컬 망을 쓴다 — 예전에는 이름이 p2p 로 시작하기만 하면 받았다.
+        // 다른 앱(옛 테더 앱 등)의 그룹도 같은 대역·같은 로컬 망을 쓴다 — 이름이 p2p 로 시작한다고 받지 않는다.
         val lookup = Lookup { "p2p-wlan0-0" }
         val marks = AtomicInteger()
         for (group in listOf(null, "")) {
@@ -90,7 +90,7 @@ class PeerFilterTest {
             PeerRejection(PeerRejection.Reason.NOT_GROUP_INTERFACE, interfaceName = "p2p-wlan0-1", groupInterface = "p2p-wlan0-0"),
             filter(lookup = { "p2p-wlan0-1" }).check(guest, owner) { localMark },
         )
-        // 폰이 붙은 다른 Wi-Fi 의 DHCP 가 192.168.49.0/24 를 쓰고 폰에 .1 을 준 경우(usb-tether 에서는 통과했다).
+        // 폰이 붙은 다른 Wi-Fi 의 DHCP 가 192.168.49.0/24 를 쓰고 폰에 .1 을 준 경우.
         assertEquals("wlan0", filter(lookup = { "wlan0" }).check(guest, owner) { localMark }?.interfaceName)
         assertEquals(
             PeerRejection(PeerRejection.Reason.NOT_GROUP_INTERFACE, interfaceName = null, groupInterface = "p2p-wlan0-0"),

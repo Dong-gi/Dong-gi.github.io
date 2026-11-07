@@ -9,7 +9,6 @@ import io.github.donggi.iroiroviewer.model.FileEntry
  *
  * `영화.mkv` 옆의 `영화.srt` 가 그 영화의 자막이라는 보장은 어디에도 없다. 이름 규칙은
  * 관행일 뿐이고, `영화.ko.srt`·`영화.kor.srt`·`영화 (한글).srt` 처럼 갈래가 많다.
- * 9단계의 `ComicPages` 가 '어느 그림이 몇 쪽인가' 를 이름으로 추측한 것과 같은 종류다.
  *
  * 그래서 이 추측은 **'무엇을 기본으로 붙일까' 만** 정한다. 짝이 틀렸거나 못 찾았을 때
  * 막다른 길이 되지 않도록, 화면은 **같은 폴더의 자막 파일을 전부** 목록으로 보여 준다.
@@ -26,7 +25,7 @@ object SubtitleNames {
      *
      * **`.smi`(SAMI)가 없다.** media3 의 파서 열 갈래(`extractor/text/` 아래 cea·dvb·pgs·
      * ssa·subrip·ttml·tx3g·vobsub·webvtt)에 SAMI 가 없기 때문이다. 한국어 자막에 흔한
-     * 형식이지만 직접 파서를 쓰는 것은 이 단계의 범위가 아니다 — 목록에 올려 놓고 붙이면
+     * 형식이지만 직접 파서를 쓰지 않았다 — 목록에 올려 놓고 붙이면
      * 빈 자막이 되는 것보다, **다루지 않는다고 정확히 말하는 편이 낫다.**
      */
     val EXTENSIONS = setOf("srt", "ass", "ssa", "vtt", "ttml", "dfxp")

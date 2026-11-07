@@ -46,8 +46,8 @@ import androidx.compose.ui.unit.dp
 
 /**
  * 이 앱의 슬라이더 — 재생 화면이 정한 **YouTube·VLC 의 모양**: 얇은 트랙 + 둥근 점, 지나온 쪽은 강조색, 남은 쪽은 옅게, 끝점 표시가
- * 없다. 10단계에 재생 막대에서 세웠고(사용자가 Material 3 의 기본 손잡이와 알약 트랙을 '익숙한 형태가 아니라 어색하다' 고 짚었다),
- * 2026-10-03 사용자 요청으로 **앱의 모든 슬라이더**(재생 위치·만화와 문서의 쪽·설정의 크기)가 이것을 쓴다.
+ * 없다(Material 3 의 기본 손잡이와 알약 트랙은 재생기에서 낯설다). 사용자 결정으로 **앱의 모든 슬라이더**(재생 위치·만화와
+ * 문서의 쪽·설정의 크기)가 이것을 쓴다.
  *
  * Material 3 의 [Slider] 에 트랙과 손잡이만 갈아 끼운다 — 손가락 다루기·눈금 맞추기(`steps`)·화면 낭독기의 의미(진행 범위·값 바꾸기)는
  * 그대로다. 눈금 표시는 그리지 않는다(쪽이 수천인 문서에서 트랙이 회색 띠가 된다). 화면 낭독기가 읽을 이름과 지금 값은 부르는 쪽이
@@ -76,7 +76,7 @@ fun IroSlider(
     val pressed by interactionSource.collectIsPressedAsState()
     val dot by animateDpAsState(if (dragging || pressed) THUMB_ACTIVE else THUMB_IDLE, label = "thumb")
     val active = if (enabled) activeColor else activeColor.copy(alpha = DISABLED_ALPHA)
-    // NaN 은 Material 3 가 화면 낭독기용으로 만드는 `ProgressBarRangeInfo` 가 던진다 — [IroProgress] 를 죽인 그 값이다(2026-10-05).
+    // NaN 은 Material 3 가 화면 낭독기용으로 만드는 `ProgressBarRangeInfo` 가 던진다(CLAUDE.md 함정 표).
     // 지금 부르는 쪽은 모두 막고 있지만, 막는 자리를 공용 부품에도 둔다.
     val safeValue = if (value.isNaN()) valueRange.start else value
     val span = valueRange.endInclusive - valueRange.start
@@ -111,8 +111,8 @@ fun IroSlider(
             }
         },
         thumb = {
-            // **재는 상자는 고정하고 안의 점만 키운다.** Material 3 은 트랙을 `constraints.offset(-손잡이 너비)` 로 재므로(10단계에
-            // 바이트코드로 확인) 손잡이의 **측정 크기**를 애니메이션하면 막대의 좌우 여백이 잡을 때마다 함께 흔들린다.
+            // **재는 상자는 고정하고 안의 점만 키운다.** Material 3 은 트랙을 `constraints.offset(-손잡이 너비)` 로 재므로(바이트코드로
+            // 확인) 손잡이의 **측정 크기**를 애니메이션하면 막대의 좌우 여백이 잡을 때마다 함께 흔들린다.
             Box(Modifier.size(THUMB_SLOT), contentAlignment = Alignment.Center) {
                 Box(Modifier.size(dot).background(active, CircleShape))
             }
@@ -122,7 +122,7 @@ fun IroSlider(
 
 /**
  * 이 앱의 진행 막대 — [IroSlider] 의 트랙과 같은 모양(얇고 둥근 막대, 끝점 표시·틈 없음). Material 3 의 `LinearProgressIndicator` 는
- * 채운 쪽과 남은 쪽 사이에 틈을 두고 끝에 점을 찍는다 — 재생기에는 없는 기호라 쓰지 않는다(2026-10-03 사용자 요청으로 통일).
+ * 채운 쪽과 남은 쪽 사이에 틈을 두고 끝에 점을 찍는다 — 재생기에는 없는 기호라 쓰지 않는다.
  *
  * [progress] 가 null 이면 끝을 모르는 진행(옅은 트랙 위를 짧은 막대가 지나간다). 값은 그리는 자리에서 읽는다 — 진행이 바뀔 때마다
  * 다시 구성하지 않는다.

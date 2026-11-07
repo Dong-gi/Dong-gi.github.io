@@ -113,8 +113,8 @@ class TrackLabelsTest {
 
     @Test
     fun 그림_자막은_변환된_뒤에도_걸러진다() {
-        // **이 시험이 없어서 한 번 놓쳤다.** 거르는 조건이 `sampleMimeType` 을 보고 있었는데
-        // 그 값은 언제나 내부 컨테이너라 **절대 참이 되지 않았다** — PGS·VobSub 도 파서를
+        // 거르는 조건이 `sampleMimeType` 을 보면 그 값은 언제나 내부 컨테이너라
+        // **절대 참이 되지 않는다** — PGS·VobSub 도 파서를
         // 지나기 때문이다(`DefaultSubtitleParserFactory.supportsFormat` 에 셋이 다 있다).
         for (mime in listOf("application/pgs", "application/vobsub", "application/dvbsubs")) {
             assertTrue(

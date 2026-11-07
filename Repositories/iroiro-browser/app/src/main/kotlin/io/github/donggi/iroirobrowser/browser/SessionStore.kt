@@ -15,7 +15,7 @@ import java.io.IOException
  */
 class SessionStore(context: Context) {
 
-    /** 탭 하나 — [desktop] 은 '데스크톱 사이트' 를 켠 탭(없으면 꺼짐 — 앞 판의 파일도 그대로 읽는다). */
+    /** 탭 하나 — [desktop] 은 '데스크톱 사이트' 를 켠 탭(없으면 꺼짐 — 옛 파일도 그대로 읽는다). */
     class Saved(val url: String, val title: String, val desktop: Boolean = false)
 
     class Session(val tabs: List<Saved>, val selected: Int)

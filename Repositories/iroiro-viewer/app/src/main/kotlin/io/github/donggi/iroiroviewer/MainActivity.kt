@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
 
     /**
      * 인텐트의 extras 를 ViewModel 의 저장 상태로 넘기지 않는다([withoutIntentArgs]) — 런처 액티비티라 내보내져 있어서, 남의 앱이
-     * extras 로 파일 목록의 자리(`browser.stack`)를 앱 내부 폴더로 지어내거나 모르는 클래스로 프로세스를 죽일 수 있었다.
+     * extras 로 파일 목록의 자리(`browser.stack`)를 앱 내부 폴더로 지어내거나 모르는 클래스로 프로세스를 죽일 수 있다.
      */
     override val defaultViewModelCreationExtras: CreationExtras
         get() = super.defaultViewModelCreationExtras.withoutIntentArgs()
@@ -136,8 +136,7 @@ class MainActivity : ComponentActivity() {
     /**
      * **런처가 얹은 군더더기 인스턴스면 그 자리에서 끝낸다.**
      *
-     * 사용자 지적: "앱 아이콘을 누르면 항상 최초 메인 화면으로 이동하는데, 액티비티가
-     * 정리되지 않았다면 해당 액티비티를 이어서 하면 좋겠습니다."
+     * 앱 아이콘을 누르면 정리되지 않은 화면을 이어서 보여야 한다(사용자 요구).
      *
      * ## 왜 그런 일이 생기는가
      *
@@ -149,7 +148,7 @@ class MainActivity : ComponentActivity() {
      * 런처·바로가기) 둘이 같지 않고, 그러면 `launchMode` 가 standard 인 이 액티비티가
      * **하던 화면 위에 새로 하나 더 쌓인다.**
      *
-     * 에뮬레이터에서 실제로 재현했다 — 태스크가 `[MainActivity, PlayerActivity]` 인 상태에서
+     * 예: 태스크가 `[MainActivity, PlayerActivity]` 인 상태에서
      * 런처 인텐트를 보내면 `[MainActivity, PlayerActivity, MainActivity]` 가 된다.
      *
      * ## 왜 launchMode 로 고치지 않는가
@@ -234,7 +233,7 @@ internal fun Root(modifier: Modifier = Modifier, opened: Opened? = null) {
 
     // ---- 편집기(`feature:editor` — 따로 된 프로세스 :editor) ---------------------------------------------------------
     // 편집기를 띄우는 중이거나 떠 있다(결과가 오기 전) — 그동안 온 문서 누름은 흘려보낸다. `startActivity` 는 받는 화면이
-    // 뜨기 전에 돌아오고(함정 표) `:editor` 프로세스가 차갑게 서는 데 1초 가까이 걸려, 두 번 누르면 편집기가 두 겹 뜨고 앞 세션이 주인을 잃었다.
+    // 뜨기 전에 돌아오고(함정 표) `:editor` 프로세스가 차갑게 서는 데 1초 가까이 걸려, 두 번 누르면 편집기가 두 겹 뜨고 앞 세션이 주인을 잃는다.
     // '다른 앱으로 열기' 처럼 시간(`SETTLE_MS`)으로 막지 않고 결과가 올 때까지 막는 것은 그 서는 시간이 그보다 길 수 있어서다 — 결과는 편집기가
     // 어떻게 끝나든 온다. 저장 상태에 두지 않는다(화면이 다시 서면 편집기가 이미 앞에 있다).
     var editorPending by remember { mutableStateOf(false) }
@@ -252,7 +251,7 @@ internal fun Root(modifier: Modifier = Modifier, opened: Opened? = null) {
     val editorSavedKept = stringResource(io.github.donggi.iroiroviewer.io.R.string.io_saved_doc_kept)
     // 읽는 동안 화면 켜 두기(분) — 편집기의 보기 모드에 실어 보낸다(그 프로세스는 이 설정 저장소를 열지 않는다 — DataStore 는 한 프로세스의 것이다).
     // 띄울 때 첫 값을 기다려 읽는다(`readerKeepScreenMinutes`) — 모아 둔 값을 쓰면 앱이 막 선 때(다른 앱이 넘긴 문서) 아직 초기값이라 설정과 다른 분이
-    // 갔다.
+    // 간다.
     val prefs = remember { AppPreferences(context.applicationContext) }
     // 편집기가 쥔 세션을 붙든다 — 이 프로세스가 거둬졌다 다시 섰으면(표는 저장 상태로 되살아났다) 세션의 개수 상한이 그것을 지우지 않게.
     LaunchedEffect(editorToken) { editorToken?.let(EditorSlots::hold) }
@@ -271,7 +270,7 @@ internal fun Root(modifier: Modifier = Modifier, opened: Opened? = null) {
             val leaving = from == FROM_VIEW && screen is AppScreen.Editor
             when (from) {
                 // 원래 문서를 다시 연다 — 뷰어는 넘기기 전에 문서를 닫았다(`DocEdit`). 편집기가 형식을 바꿔 곁에 새 파일을 만들었어도(PDF → .docx)
-                // 그 새 파일은 이 뷰어가 보이는 형식이 아니다(그것을 열어 '이 앱이 다루지 않는 문서입니다' 가 떴다). 새 파일은 아래 알림이
+                // 그 새 파일은 이 뷰어가 보이는 형식이 아닐 수 있다. 새 파일은 아래 알림이
                 // 말한다. 세션이 없어도(기록을 잃었다) 다시 연다 — 닫힌 채 '여는 중' 으로 남지 않게.
                 FROM_DOC -> {
                     if (screen !is AppScreen.Doc && summary != null) screen = AppScreen.Doc(summary.original)
@@ -290,8 +289,7 @@ internal fun Root(modifier: Modifier = Modifier, opened: Opened? = null) {
                 // 폴더의 '+ 새 문서'.
                 else -> if (summary != null) vm.refresh()
             }
-            // 한 번 말한다 — 새로 만든 파일과, 고치기 전 판을 휴지통에 남긴 것(글 편집기는 저장할 때 말하는데 편집기의 저장은 어디서도 말하지
-            // 않았다).
+            // 한 번 말한다 — 새로 만든 파일과, 고치기 전 판을 휴지통에 남긴 것.
             val notice = summary?.let(EditorSlots::noticeOf) ?: return@launch
             val text = when {
                 notice.newFile != null && notice.trashed -> editorSavedNewKept.format(notice.newFile)
@@ -381,14 +379,14 @@ internal fun Root(modifier: Modifier = Modifier, opened: Opened? = null) {
     }
 
     // **작업 결과를 여기 한 곳에서 받는다.** 화면마다 받으면 그 화면이 사라지는 순간
-    // 소비가 멎고, 그 뒤에 끝난 작업의 성패가 조용히 사라진다(3·4단계가 고친 실패 형태).
+    // 소비가 멎고, 그 뒤에 끝난 작업의 성패가 조용히 사라진다.
     //
     // 그래서 새 불변식이 생긴다 — **Root 가 그릴 수 있는 모든 화면은 `vm.snackbar` 에
     // 붙은 SnackbarHost 를 하나씩 가져야 한다.** 붙지 않은 화면으로 넘어가면
     // `showSnackbar` 가 영영 돌아오지 않아 그 뒤 모든 결과가 막힌다. 그 하나에 기대지
     // 않으려고 시간 상한도 함께 건다 — 보험이 싸다.
     val undoLabel = stringResource(io.github.donggi.iroiroviewer.browser.R.string.browser_undo)
-    // 풀기가 끝나면 푼 폴더로 가는 단추(8단계가 14단계로 미룬 것). 갈 곳이 있는지는 결과가 정한다
+    // 풀기가 끝나면 푼 폴더로 가는 단추. 갈 곳이 있는지는 결과가 정한다
     // (`FileOpManager.Finished.folderToOpen` — 하나도 못 풀고 실패했으면 없다).
     val openFolderLabel = stringResource(io.github.donggi.iroiroviewer.browser.R.string.browser_open_folder)
     // **`context.getString` 을 컴포저블 안에서 부르지 않는다.** 그 값은 구성 변경을
@@ -538,7 +536,7 @@ internal fun Root(modifier: Modifier = Modifier, opened: Opened? = null) {
                             conflict = conflict,
                         )
                     },
-                    // 고지에서 뒤로 가면 이 압축 목록으로 돌아온다(예전에는 첫 화면으로 떨어졌다).
+                    // 고지에서 뒤로 가면 이 압축 목록으로 돌아온다.
                     onOpenNotice = { screen = AppScreen.Notice(back = s) },
                     // 압축 목록의 그림을 탭하면 만화 뷰어가 그 쪽에서 열린다.
                     onOpenImageEntry = { index -> screen = AppScreen.Comic(s.path, index) },
@@ -638,7 +636,7 @@ internal fun Root(modifier: Modifier = Modifier, opened: Opened? = null) {
                 modifier = Modifier.fillMaxSize(),
                 // ⋮ 의 '편집' — 편집기로(지금은 PDF). 받은 사본에는 없다(곁에 쓰면 사용자가 찾아갈 수 없는 앱 캐시다).
                 // 돌아오면 원래 문서를 다시 연다(`docReopen` — 새 파일은 알림이 말한다). 띄우지 못해도 다시 연다 — 뷰어는 넘기기 전에 문서를
-                // 닫았다(`DocEdit` — 예전에는 '여는 중' 동그라미가 남았다).
+                // 닫았다(`DocEdit`).
                 onEditor = if (readOnly) null else { kind -> openInEditor(s.path, kind, FROM_DOC) { docReopen++ } },
                 reopen = docReopen,
             )
@@ -709,7 +707,7 @@ private const val FROM_VIEW = "view"
 
 /**
  * 설정의 '읽는 동안 화면 켜 두기'(분) — **첫 값을 기다린다**. 앱이 막 섰을 때 모아 둔 값은 아직 초기값(10분)이라, 다른 앱이
- * 넘긴 문서의 보기 모드가 '켜 두지 않음' 으로 둔 사람에게도 10분을 실어 갔다. 설정 파일이 끝내 답하지 않으면 초기값으로 — 편집기를 띄우는 길이
+ * 넘긴 문서의 보기 모드가 '켜 두지 않음' 으로 둔 사람에게도 10분을 실어 간다. 설정 파일이 끝내 답하지 않으면 초기값으로 — 편집기를 띄우는 길이
  * 거기서 멈추지 않게.
  */
 private suspend fun readerKeepScreenMinutes(prefs: AppPreferences): Int =
@@ -737,7 +735,7 @@ private fun entryOf(path: String): FileEntry? {
 /**
  * 알림 권한을 한 번 물어본다.
  *
- * **파일 작업 진행 알림에 필요하다.** 재생 알림(5단계)보다 이것이 먼저 쓰이므로 여기서
+ * **파일 작업 진행 알림에 필요하다.** 재생 알림보다 이것이 먼저 쓰이므로 여기서
  * 묻는다. 거부해도 앱은 그대로 돈다 — 진행이 화면 안의 바에만 보이고, 앱을 나가면
  * 무엇이 진행 중인지 알 수 없게 될 뿐이다.
  */

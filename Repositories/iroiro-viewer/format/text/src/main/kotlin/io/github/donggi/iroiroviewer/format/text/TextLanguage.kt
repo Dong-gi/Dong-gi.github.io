@@ -30,7 +30,7 @@ object TextLanguage {
 
     /**
      * 칠하는 확장자와 이름. 목록(`core:io` 의 `MimeResolver`)이 이 파일들을 글·코드로 봐야 텍스트 뷰어에 닿는다 — 두 표가
-     * 어긋나면 뷰어가 칠할 줄 아는 파일이 다른 앱으로 넘어간다(14단계 뒤까지 `.cjs`·`.less`·`.gitignore` 가 그랬다). 두 모듈은
+     * 어긋나면 뷰어가 칠할 줄 아는 파일이 다른 앱으로 넘어간다. 두 모듈은
      * 서로를 볼 수 없어 둘을 다 보는 `app` 의 시험(`TextNamesConsistencyTest`)이 견준다.
      */
     val knownExtensions: Set<String> get() = byExtension.keys

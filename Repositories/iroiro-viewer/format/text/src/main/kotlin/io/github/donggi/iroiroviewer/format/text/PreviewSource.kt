@@ -5,7 +5,7 @@ import io.github.donggi.iroiroviewer.charset.WindowedDecoder
 import java.io.InputStream
 
 /**
- * 미리보기(마크다운·HTML)가 원문을 읽는 한 벌. BOM 은 바이트로 건너뛰고([bomLength]), [maxBytes] 에서 끊는다.
+ * 마크다운 미리보기가 원문을 읽는 길. BOM 은 바이트로 건너뛰고([bomLength]), [maxBytes] 에서 끊는다.
  *
  * 판정은 텍스트 뷰어가 이미 했다 — 여기서는 그 인코딩으로 디코드만 한다(판정은 `feature`, 디코딩은 `format`). 창 단위로 풀어
  * 창 경계의 글자가 깨지지 않는다([WindowedDecoder]). 우리가 읽지 못하는 인코딩이면 빈 글이다.

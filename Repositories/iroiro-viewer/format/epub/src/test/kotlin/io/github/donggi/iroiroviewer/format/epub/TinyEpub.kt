@@ -8,11 +8,11 @@ import java.util.zip.ZipOutputStream
 /**
  * 시험용 EPUB 을 **손으로 쓴다.**
  *
- * 10단계의 `mkvmux.py`, 11단계의 `TinyPdf` 와 같은 판단이다 — 저장소에 바이너리 표본을
+ * `TinyPdf` 와 같은 판단이다 — 저장소에 바이너리 표본을
  * 커밋하지 않으면서(상위 저장소가 GitHub Pages 다) 확인하고 싶은 성질만 정확히 갖춘
  * 파일을 만든다. EPUB 은 ZIP + XML 이라 JDK 만으로 만들 수 있다.
  *
- * **`java.util.zip` 을 쓰는 것은 여기가 시험이기 때문이다.** 제품 코드는 8단계의
+ * **`java.util.zip` 을 쓰는 것은 여기가 시험이기 때문이다.** 제품 코드는
  * `ZipArchiveReader` 로만 ZIP 을 읽는다.
  */
 internal object TinyEpub {

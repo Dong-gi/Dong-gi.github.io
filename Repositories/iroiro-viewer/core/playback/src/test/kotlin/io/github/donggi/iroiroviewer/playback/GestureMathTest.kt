@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 /**
  * 제스처가 값을 얼마나 움직이는가.
  *
- * **화면 캡처로 판정하지 않는다**(CLAUDE.md 함정). 6단계가 그것으로 세 번 틀렸다.
+ * **화면 캡처로 판정하지 않는다**(CLAUDE.md 함정).
  * 계산은 여기서 박고, 기기에서는 연결이 되었는지만 `Iro.d` 로 본다.
  */
 class GestureMathTest {
@@ -83,7 +83,7 @@ class GestureMathTest {
         assertTrue(GestureMath.TAP_FEEDBACK_HOLD_MS <= 1500)
     }
 
-    /** **첫 두드림은 옮기지 않는다** — 그것은 조작부 토글이다. 기본 한 걸음은 큰 재생기들과 같은 10초다(그 전에는 30초). */
+    /** **첫 두드림은 옮기지 않는다** — 그것은 조작부 토글이다. 기본 한 걸음은 큰 재생기들과 같은 10초다. */
     @Test
     fun 두_번째부터_한_걸음씩_기본은_십초() {
         assertEquals(10_000L, GestureMath.DEFAULT_TAP_SEEK_MS)

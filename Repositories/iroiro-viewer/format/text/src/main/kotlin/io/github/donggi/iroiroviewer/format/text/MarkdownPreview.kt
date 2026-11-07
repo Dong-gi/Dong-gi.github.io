@@ -16,7 +16,7 @@ import java.nio.charset.CodingErrorAction
 import java.util.Locale
 
 /**
- * 마크다운 미리보기(14단계). `.md` 를 **읽기 좋은 HTML 한 벌**로 바꾼다.
+ * 마크다운 미리보기. `.md` 를 **읽기 좋은 HTML 한 벌**로 바꾼다.
  *
  * ## 무엇을 하는가
  *
@@ -55,6 +55,25 @@ object MarkdownPreview {
         name.substringAfterLast('.', "").lowercase(Locale.ROOT) in EXTENSIONS
 
     private val EXTENSIONS = setOf("md", "markdown", "mdown", "mkd", "mkdn", "mdwn")
+
+    /**
+     * 그림 파일 이름(확장자)으로 내줄 형식을. 표에 없으면 null — **내용을 보고 짐작하지 않는다**(크롬은 형식이 비었거나 이상한
+     * 파일도 다른 것으로 읽는다). 마지막 점 뒤를 소문자로 본다 — 점으로 시작하는 이름(`.png`)도 그 뒤를 확장자로 본다. 경로를 받으면
+     * 폴더 이름의 점 뒤가 나오지만(`a.d/x` → `d/x`) 그런 확장자는 표에 없다.
+     */
+    fun imageTypeOf(name: String): String? = IMAGE_TYPES[name.substringAfterLast('.', "").lowercase(Locale.ROOT)]
+
+    /** 마크다운 미리보기가 싣는 그림. SVG 는 `<img>` 로만 실리므로 그 안의 스크립트·바깥 참조는 돌지 않는다. */
+    private val IMAGE_TYPES = mapOf(
+        "png" to "image/png",
+        "jpg" to "image/jpeg",
+        "jpeg" to "image/jpeg",
+        "gif" to "image/gif",
+        "webp" to "image/webp",
+        "bmp" to "image/bmp",
+        "svg" to "image/svg+xml",
+        "avif" to "image/avif",
+    )
 
     /**
      * 미리보기 쪽의 경로. **번호가 붙는다** — 글자 크기를 바꿔 다시 만든 쪽을 WebView 가 새로 읽게 하려면

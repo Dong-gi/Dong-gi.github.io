@@ -8,7 +8,7 @@ enum class MediaKind {
     /** HLS 재생목록(`.m3u8`). */
     HLS,
 
-    /** DASH 목록(`.mpd`) — 6단계. */
+    /** DASH 목록(`.mpd`). */
     DASH,
     VIDEO,
     AUDIO,
@@ -33,8 +33,8 @@ object MediaSniffer {
 
     /**
      * 같은 미디어의 요청들을 하나로 묶는 열쇠 — 조각 표시(`#…`)를 떼고, 저지연 HLS 의 전달 지시(`_HLS_msn`·`_HLS_part`·`_HLS_skip` 따위 —
-     * RFC 8216bis 의 `_HLS_` 쿼리)를 뗀다. 재생기가 재생목록을 다시 받을 때마다 그것을 바꿔 달아 같은 재생목록이 줄마다 새로 떴고 마스터 아래로도
-     * 숨지 않았다. 그 밖의 쿼리는 그대로 둔다(범위 요청이 쿼리만 다른 경우는 드물고, 쿼리가 다르면 다른 영상일 수 있다).
+     * RFC 8216bis 의 `_HLS_` 쿼리)를 뗀다 — 재생기가 재생목록을 다시 받을 때마다 바꿔 달아, 떼지 않으면 같은 재생목록이 줄마다 새로 뜨고 마스터
+     * 아래로도 숨지 않는다. 그 밖의 쿼리는 그대로 둔다(범위 요청이 쿼리만 다른 경우는 드물고, 쿼리가 다르면 다른 영상일 수 있다).
      */
     fun key(url: String): String {
         val noFragment = url.substringBefore('#')
@@ -47,7 +47,7 @@ object MediaSniffer {
     /**
      * 번호만 다른 같은 경로의 파일들(`seg-1.mp4`, `seg-2.mp4` …)을 묶는 열쇠 — 마지막 이름의 **마지막 숫자 묶음**을 `#` 로 바꾸고 쿼리·조각
      * 표시를 뗀다(`video_1080p_00012.mp4` 는 `00012` 를). 이름에 숫자가 없으면 null — 그 주소 하나로 친다. 조각을 `.mp4` 로 내는 재생기에서
-     * 조각마다 '영상 · 1.mp4' 줄이 수십 개 쌓였다.
+     * 조각마다 '영상 · 1.mp4' 줄이 수십 개 쌓이지 않게 묶는다.
      */
     fun seriesKey(url: String): String? {
         val path = url.substringBefore('#').substringBefore('?')

@@ -4,8 +4,8 @@ import io.github.donggi.iroirobrowser.core.SafeFileName
 import java.util.Locale
 
 /**
- * hitomi.la — 갤러리 정보(`galleries/{id}.js`)와 그림 주소의 공식(`gg.js`). 데스크톱(iroiro-downloader)에서 옮겼고 2026-10-11 에 사이트의
- * 스크립트와 실제 답으로 다시 확인했다(아래 [chooseExt]·[imageUrl]).
+ * hitomi.la — 갤러리 정보(`galleries/{id}.js`)와 그림 주소의 공식(`gg.js`). 데스크톱(iroiro-downloader)에서 옮겼고 사이트의 스크립트와
+ * 실제 답으로 다시 확인했다(2026-10-11 실측 — 아래 [chooseExt]·[imageUrl]).
  *
  * 주소: `https://<서브도메인>.gold-usergeneratedcontent.net/{b}{g}/{hash}.{ext}` — `g = int(hash 의 끝 1자 + 그 앞 2자, 16)`, `b` 는 gg.js 의
  * 경로 머리(`'1791691201/'` 꼴), 서브도메인은 **확장자의 머리 글자 + (1 + m(g))** — avif 면 `a1`·`a2`, webp 면 `w1`·`w2`.

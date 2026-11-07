@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 /**
- * 실패 까닭의 글([NetErrors]). 플랫폼이 준 영어 글은 목록·알림에 그대로 나가지 않아야 하고(앞 판은 `Connection reset` 따위가 나왔다), 이 앱이
+ * 실패 까닭의 글([NetErrors]). 플랫폼이 준 영어 글은 목록·알림에 그대로 나가지 않아야 하고(`Connection reset` 따위), 이 앱이
  * 스스로 적은 한국어 까닭은 그대로 남아야 한다.
  */
 class NetErrorsTest {

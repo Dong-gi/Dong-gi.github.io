@@ -15,7 +15,7 @@ import kotlin.test.assertTrue
  *   프로세스의 정적 필드라 하나라도 다른 프로세스면 늘 처음 값을 본다. 다른 구성 요소에는 프로세스를 따로 두지 않는다(브라우저는 주 프로세스 하나).
  * - 내보냄: 타일(시스템만 묶는 권한과 함께)과, 타일을 길게 누를 때 시스템 UI 가 띄우는 작은 화면(`QS_TILE_PREFERENCES` — 테더 화면을 열기만
  *   한다, 받은 인텐트를 읽지 않는다). 테더 화면과 트램폴린은 내보내지 않는다 — 다른 앱이 핫스팟을 켜지 못하게.
- * - 앱 바로가기는 없다(사용자가 타일 길게 누르기를 고르며 걷었다 — 2026-10-10).
+ * - 앱 바로가기는 없다(사용자 결정 — 타일 길게 누르기로 갈음).
  * - 테더의 소스는 브라우저의 것(WebApp·프록시·내려받기·WebView …)을 부르지 않는다 — 테더 프로세스에 프록시 계정·중계·WebView 가 올라오지 않게
  *   (부르면 WebApp.of 가 던진다 — 기기에서 그 길을 처음 밟을 때가 아니라 여기서 잡는다). 테더 화면이 부르는 설정 파일 zip(setup/)도 같다.
  * - 위치 권한은 COARSE 와 FINE 을 함께, 13 부터는 빼고(maxSdkVersion 32), 근처 기기는 neverForLocation.
@@ -142,7 +142,7 @@ class TetherIsolationTest {
     /** 브라우저의 것을 부르지 않는가 — 금지어(주석에만 있으면 괜찮다)와, 앱의 import 는 R·BuildConfig·ui.Ui 와 [ownPackages] 뿐인가. */
     private fun assertBrowserFree(file: File, vararg ownPackages: String) {
         val allowedApp = setOf("io.github.donggi.iroirobrowser.R", "io.github.donggi.iroirobrowser.BuildConfig", "io.github.donggi.iroirobrowser.ui.Ui")
-        val forbidden = listOf("WebApp", "android.webkit", "NetworkPath", "SettingsStore", "SecretBox", "LocalRelay", "DownloadCenter", "TorrentCenter")
+        val forbidden = listOf("WebApp", "android.webkit", "NetworkPath", "SettingsStore", "SecretBox", "LocalRelay", "DownloadCenter")
         val text = file.readText()
         for (word in forbidden) assertTrue(!text.contains(word) || isOnlyInComments(text, word), "${file.name} 가 $word 를 부른다")
         val appImports = Regex("^import (io\\.github\\.donggi\\.iroirobrowser\\.[\\w.]+)", RegexOption.MULTILINE).findAll(text)
@@ -154,7 +154,7 @@ class TetherIsolationTest {
 
     @Test
     fun 앱_바로가기는_없다() {
-        // 사용자가 앱 바로가기 대신 타일 길게 누르기를 골랐다(2026-10-10) — 바로가기 자원과 매니페스트의 meta-data 를 걷었다.
+        // 사용자 결정 — 앱 바로가기 대신 타일 길게 누르기. 바로가기 자원과 매니페스트의 meta-data 가 없어야 한다.
         val metas = manifest.getElementsByTagName("meta-data")
         assertTrue((0 until metas.length).none { (metas.item(it) as Element).attr("name") == "android.app.shortcuts" })
         assertFalse(File("src/main/res/xml/shortcuts.xml").exists())

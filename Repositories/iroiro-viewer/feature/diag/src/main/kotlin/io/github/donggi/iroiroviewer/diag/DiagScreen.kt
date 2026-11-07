@@ -26,7 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 /**
- * 2단계의 화면. 겉보기 진척은 느리지만, 여기 적힌 값들이 뒤 열두 단계의 전제다.
+ * 진단 화면. 여기 적힌 값들이 다른 기능의 전제다.
  *
  * 표시 규칙은 하나다 — **측정한 것만 적는다.** 모르는 값은 "모름" 이라고 쓰고
  * 그럴듯한 기본값으로 채우지 않는다.

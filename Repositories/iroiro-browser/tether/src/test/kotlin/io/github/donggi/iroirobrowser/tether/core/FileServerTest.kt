@@ -193,7 +193,6 @@ class FileServerTest {
 
     @Test
     fun 덮어쓰기가_끊겨도_원래_파일은_그대로이고_임시는_남지_않는다() {
-        // 예전에는 본문을 받기 전에 같은 이름의 파일을 지워, 덮어쓰기가 끊기면 원래 파일까지 사라졌다.
         File(root, "keep.txt").writeText("original")
         val s = server()
         Socket(LOOPBACK, s.actualPort).use { sock ->
@@ -248,7 +247,7 @@ class FileServerTest {
         assertEquals(411, put(s.actualPort, "a.txt", "x".toByteArray(), headers = "").status)
         assertEquals(411, put(s.actualPort, "a.txt", "x".toByteArray(), headers = "Content-Length: -1\r\n").status)
         assertEquals(501, put(s.actualPort, "a.txt", "x".toByteArray(), headers = "Content-Length: 1\r\nTransfer-Encoding: chunked\r\n").status)
-        // TE 만 와도 501 이다 — 예전에는 길이부터 보아 411 이었다(문서와 어긋났다).
+        // TE 만 와도 501 이다(411 이 아니다).
         assertEquals(501, put(s.actualPort, "a.txt", "1\r\nx\r\n0\r\n\r\n".toByteArray(), headers = "Transfer-Encoding: chunked\r\n").status)
         assertEquals(400, put(s.actualPort, "nope/a.txt", "x".toByteArray()).status, "부모 폴더는 만들지 않는다")
         assertEquals(400, put(s.actualPort, "dir", "x".toByteArray()).status, "폴더를 파일로 덮지 않는다")
@@ -275,7 +274,7 @@ class FileServerTest {
 
     @Test
     fun 머리_줄은_콜론이_없거나_이름이_겹쳐도_센다() {
-        // 예전에는 담은 머리(이름마다 하나)만 세어 `:` 없는 줄이나 같은 이름이 끝없이 이어져도 걸리지 않았다.
+        // 담은 머리 수가 아니라 줄을 센다 — `:` 없는 줄이나 같은 이름이 끝없이 이어져도 걸린다.
         val s = server()
         for (line in listOf("no-colon", "X-Same: v")) {
             val many = buildString { repeat(FileServer.MAX_HEADER_COUNT + 1) { append(line).append("\r\n") } }
@@ -294,7 +293,7 @@ class FileServerTest {
 
     @Test
     fun 기본_포트가_차_있으면_다음_빈_포트로_가고_모두_차면_실패를_알린다() {
-        // 사용자 결정(2026-10-10) — 8080 이 차 있으면 8081… 로(usb-tether·처음 합친 판처럼).
+        // 사용자 결정 — 8080 이 차 있으면 8081… 로.
         val squatter = closer.keep(squatWithFreeNext())
         val base = squatter.localPort
         val s = closer.keep(FileServer(testEnv(), DirectoryTree(root), { uiBytes }, basePort = base, attempts = 2))

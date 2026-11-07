@@ -33,7 +33,7 @@ import kotlin.test.fail
  *
  * ## 무엇을 기대하는가 — 파일마다 적었다
  *
- * 표본 조사의 초안(`manifest.json` 의 `expected`)을 반증조의 교정을 읽고 다듬은 것이 [expected] 다.
+ * `manifest.json` 의 `expected` 를 다듬은 것이 [expected] 다.
  * 말뭉치에 새 EPUB 이 들어왔는데 표에 없으면 **시험이 실패한다** — 기대값 없이 '열리기만 하면 통과' 는
  * 아무것도 시험하지 않는다.
  *
@@ -55,7 +55,7 @@ class EpubCorpusTest {
         REFUSE_DRM,
     }
 
-    /** 반증조의 교정을 읽고 다듬은 기대값(보고서의 표와 같다). */
+    /** 파일마다의 기대값. */
     private val expected = mapOf(
         "E03" to Expect.OPENS, // 세로쓰기·일본어 파일 이름·미디어 오버레이(소리는 버린다). 16 중 linear=no 1 → 15장
         "E04" to Expect.OPENS, // 세로쓰기, nav 만
@@ -159,7 +159,7 @@ class EpubCorpusTest {
      * 망가진 책 하나. 열리면 모든 장을 읽는다. 허용하지 않는 예외는 그대로 던진다.
      *
      * @return 문제가 있으면 그 문장. **못 열면 '깨진 파일' 이어야 한다** — `Io`('입출력이 실패했습니다')면
-     *   덜 받은 책이 디스크 고장처럼 읽힌다(예전에는 반으로 자른 책이 전부 그랬다).
+     *   덜 받은 책이 디스크 고장처럼 읽힌다.
      */
     private fun brokenOne(file: File): String? {
         var orphan: OpenedDocument? = null

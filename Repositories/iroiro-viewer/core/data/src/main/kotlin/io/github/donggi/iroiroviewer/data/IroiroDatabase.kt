@@ -63,13 +63,13 @@ abstract class IroiroDatabase : RoomDatabase() {
         }
 
         /**
-         * 3 — 문서에서 읽던 자리 표를 더한다(11단계).
+         * 3 — 문서에서 읽던 자리 표를 더한다.
          *
          * **쪽 번호가 nullable 이다** — 쪽이 없는 포맷을 받을 자리다([DocProgressEntity] 주석).
          *
          * `execSQL` 은 **`androidx.sqlite.execSQL` 확장 함수**다. Room 2.8 이 주는 것은
          * `SQLiteConnection` 이고 거기에는 멤버 `execSQL` 이 없다 — import 를 빠뜨리면
-         * "Unresolved reference" 만 뜬다(이 저장소가 두 번 밟은 함정).
+         * "Unresolved reference" 만 뜬다.
          */
         private val MIGRATION_2_3 = object : androidx.room.migration.Migration(2, 3) {
             override fun migrate(connection: androidx.sqlite.SQLiteConnection) {
@@ -83,8 +83,8 @@ abstract class IroiroDatabase : RoomDatabase() {
         }
 
         /**
-         * 4 — 네트워크 저장소(SFTP)의 서버 표를 더한다. 비밀은 이 표에 없었다. 표의 항목 클래스(`RemoteServerEntity`)는 5 에서 표와
-         * 함께 걷었다 — 표의 모양은 아래 SQL 과 `schemas/4.json` 이 남긴다. 3 에 머문 기기가 5 로 올라가는 길에 이것이 돌므로 지우지 않는다.
+         * 4 — 걷은 기능의 서버 표(`remote_server`)를 만든다. 그 표의 항목 클래스는 없다 — 모양은 아래 SQL 과 `schemas/4.json` 이
+         * 남긴다. 3 에 머문 기기가 5 로 올라가는 길에 이것이 돌므로 지우지 않는다.
          */
         private val MIGRATION_3_4 = object : androidx.room.migration.Migration(3, 4) {
             override fun migrate(connection: androidx.sqlite.SQLiteConnection) {
@@ -99,9 +99,7 @@ abstract class IroiroDatabase : RoomDatabase() {
         }
 
         /**
-         * 5 — 네트워크 저장소(SFTP)를 걷었다(사용자, 2026-10-09 — 이 앱은 다시 인터넷이 없다). 서버 표를 지운다. 비밀(잠근 열쇠 파일·기기의
-         * 열쇠)은 이 표에 없었다 — 앱이 설 때 따로 지운다(`app` 의 `LegacyCleanup`). 4 로 올라온 적이 없는 기기(3)는 3→4 가 표를 만들고
-         * 이것이 곧바로 지운다.
+         * 5 — 서버 표(`remote_server`)를 지운다. 4 로 올라온 적이 없는 기기(3)는 3→4 가 표를 만들고 이것이 곧바로 지운다.
          */
         private val MIGRATION_4_5 = object : androidx.room.migration.Migration(4, 5) {
             override fun migrate(connection: androidx.sqlite.SQLiteConnection) {

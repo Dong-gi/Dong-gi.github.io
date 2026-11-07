@@ -15,12 +15,11 @@ import java.util.concurrent.atomic.AtomicInteger
 /**
  * SOCKS5 서버(RFC 1928). **포트 [BASE_PORT](1080) 하나에만** 묶는다 — PC 의 tun2proxy 가 이 포트로 PC 의 트래픽을 통째로 보낸다.
  *
- * **다른 포트로 옮기지 않는다(뜻한 것).** usb-tether 의 예전 판은 1080 이 차 있으면 1081 부터 아홉 개를 훑었고, PC 의 런처는 같은 범위에서
- * SOCKS5 인사에 답하는 첫 포트를 골랐다. 그래서 폰의 악성 앱이 `INTERNET` 권한만으로 1080 을 먼저 잡고 `05 00` 만 답하면 진짜 프록시는 1081
- * 로 밀리고 런처는 그 앱을 골랐다 — **PC 트래픽 전부**가 그 앱을 지난다. 보이는 것은 평문과 TLS 의 SNI 이고, PC 가 믿는 인증서가 없으니 TLS
- * 를 벗기지는 못하지만 연결을 끊거나 엉뚱한 곳으로 잇거나 평문을 바꿀 수 있다. 이제 1080 이 차 있으면 조용히 옮기지 않고 **실패하고
- * 알린다**([StartError.PORT_TAKEN]). PC 의 런처(PC 연결 파일 zip 의 `windows-wifi.bat`·`macos-wifi.sh`)도 1080 만 쓴다. HTTP 프록시·파일 서버는
- * **사용자 결정(2026-10-10)으로 다음 포트로 옮긴다** — 그 머리말들.
+ * **다른 포트로 옮기지 않는다(뜻한 것).** 1080 이 차 있을 때 다음 포트로 옮기고 PC 의 런처가 SOCKS5 인사에 답하는 첫 포트를 고르면, 폰의
+ * 악성 앱이 `INTERNET` 권한만으로 1080 을 먼저 잡고 `05 00` 만 답해 **PC 트래픽 전부**를 지나게 할 수 있다. 보이는 것은 평문과 TLS 의 SNI
+ * 이고, PC 가 믿는 인증서가 없으니 TLS 를 벗기지는 못하지만 연결을 끊거나 엉뚱한 곳으로 잇거나 평문을 바꿀 수 있다. 그래서 1080 이 차 있으면
+ * **실패하고 알린다**([StartError.PORT_TAKEN]). PC 의 런처(PC 연결 파일 zip 의 `windows-wifi.bat`·`macos-wifi.sh`)도 1080 만 쓴다. HTTP
+ * 프록시·파일 서버는 **사용자 결정으로 다음 포트로 옮긴다** — 그 머리말들.
  *
  * CONNECT(TCP)와 UDP ASSOCIATE(RFC 1928 7절)를 한다. 인증은 없다 — 무엇을 내밀든 NO_AUTH 를 고른다(손님을 가르는 것은 [PeerFilter] 와 Wi-Fi
  * Direct 의 패스프레이즈다 — 사용자 결정, CLAUDE.md '테더링').
@@ -118,8 +117,8 @@ class Socks5Server internal constructor(
             return
         }
         try {
-            // BND.ADDR/BND.PORT 는 0.0.0.0:0 으로 답한다. 예전에는 remote 의 로컬 주소, 곧 폰의 **셀룰러 인터페이스 주소**를 그대로 넣었다 —
-            // RFC 가 허락하는 값이지만 손님에게 통신사가 준 IP 를 알려 주는 셈이다. tun2proxy 를 비롯한 보통의 손님은 이 칸을 쓰지 않는다.
+            // BND.ADDR/BND.PORT 는 0.0.0.0:0 으로 답한다. remote 의 로컬 주소(폰의 **셀룰러 인터페이스 주소**)도 RFC 가 허락하지만 손님에게
+            // 통신사가 준 IP 를 알려 주는 셈이다. tun2proxy 를 비롯한 보통의 손님은 이 칸을 쓰지 않는다.
             client.getOutputStream().write(byteArrayOf(VERSION.toByte(), 0, 0, ATYP_IPV4.toByte(), 0, 0, 0, 0, 0, 0))
             client.soTimeout = 0
             relay(client, clientIn, remote)
@@ -131,15 +130,12 @@ class Socks5Server internal constructor(
     /**
      * UDP ASSOCIATE(RFC 1928 7절).
      *
-     * ## 예전 판의 문제
+     * ## 소켓 둘 — 출발 주소로 어림하지 않는다
      *
-     * 소켓 **하나**를 `0.0.0.0` 에 묶어 두 방향에 함께 쓰고, '손님이 보낸 것' 과 '원격의 답' 을 출발 주소로 **어림**했다. 손님은 **처음 온 패킷**의
-     * 출발지로 정했고 `client.inetAddress` 와 견주지 않았다. 그래서 (1) 먼저 패킷을 보낸 쪽이 손님이 되어 PC 의 DNS 질의가 통째로 그쪽에
-     * 넘어갔고(임의 포트라도 전 범위에 하나씩 뿌리면 생기자마자 선점된다), (2) 열린 UDP 프록시가 되었고, (3) 위조한 출발지로 큰 DNS 답을 남에게
-     * 튕기게 할 수 있었고, (4) 아무 호스트나 PC 에 답을 꽂아 DNS 캐시를 더럽힐 수 있었다. 이 길은 실제로 쓰였다 — 런처가 `--dns over-tcp` 를
-     * 빼므로 PC 의 DNS 질의가 모두 여기를 지난다.
-     *
-     * ## 지금 구조 — 소켓 둘
+     * 소켓 **하나**를 `0.0.0.0` 에 묶어 두 방향에 함께 쓰고 '손님이 보낸 것' 과 '원격의 답' 을 출발 주소로 어림하면(손님 = 처음 온 패킷의
+     * 출발지), (1) 먼저 패킷을 보낸 쪽이 손님이 되어 PC 의 DNS 질의가 통째로 그쪽에 넘어가고(임의 포트라도 전 범위에 하나씩 뿌리면 생기자마자
+     * 선점된다), (2) 열린 UDP 프록시가 되고, (3) 위조한 출발지로 큰 DNS 답을 남에게 튕기게 할 수 있고, (4) 아무 호스트나 PC 에 답을 꽂아 DNS
+     * 캐시를 더럽힐 수 있다. 런처가 `--dns over-tcp` 를 빼므로 PC 의 DNS 질의가 모두 여기를 지난다.
      *
      *  - `clientFacing`: `client.localAddress`(192.168.49.1)에만 묶는다 — 다른 인터페이스에서는 닿지도 않는다. 출발 주소가 `client.inetAddress`
      *    가 아니면 버린다(출발지 **고정**). 포트만 첫 패킷에서 배운다.
@@ -159,7 +155,7 @@ class Socks5Server internal constructor(
         val out = client.getOutputStream()
         if (udpAssociations.incrementAndGet() > maxUdpAssociations) {
             udpAssociations.decrementAndGet()
-            // 센다 — 예전에는 기록 한 줄뿐이라 화면에서 보이지 않았다.
+            // 센다 — 기록만으로는 화면에 보이지 않는다.
             noteRefusal(Refusal.UDP_LIMIT, "UDP 묶음 상한($maxUdpAssociations)이라 거절했다")
             sendReply(out, REP_GENERAL_FAILURE)
             return
@@ -325,8 +321,8 @@ class Socks5Server internal constructor(
     /**
      * 이름 목적지를 **캐시에서만** 푼다. 없으면 뒤에서 풀기를 걸고 null — 이 데이터그램은 버린다.
      *
-     * 예전 판은 머리를 읽는 자리에서 `InetAddress.getByName()` 을 그대로 불렀다. 그 스레드는 이 묶음의 손님 → 원격 방향을 맡은 **하나뿐인**
-     * 스레드라 답이 느린 이름 하나가 나머지 UDP 를 모두 막았고, 캐시도 없어 같은 이름을 데이터그램마다 다시 물었다. 버리는 쪽을 고른 까닭: UDP 는
+     * 머리를 읽는 자리에서 풀지 않는다 — 그 스레드는 이 묶음의 손님 → 원격 방향을 맡은 **하나뿐인** 스레드라 답이 느린 이름 하나가 나머지
+     * UDP 를 모두 막는다. 버리는 쪽을 고른 까닭: UDP 는
      * 잃어버림을 전제하고 손님은 다시 보낸다(그때는 캐시가 차 있다). 스스로 이름을 푸는 손님(tun2proxy 포함)은 IP 리터럴을 보내 이 길을 타지
      * 않는다. 폭주 막기: 동시 풀이 [UDP_DNS_MAX_INFLIGHT], 캐시 [UDP_DNS_CACHE_MAX]. 답의 실제 TTL 은 `InetAddress` 로 볼 수 없어
      * [UDP_DNS_TTL_MS] 를 쓴다.
@@ -344,7 +340,7 @@ class Socks5Server internal constructor(
     /**
      * [resolvedOrWarmUp] 의 뒤 풀이. 상한에 걸리면 아무것도 하지 않는다. 상한을 보기 전에 만료된 것을 걷는다 — [resolvedOrWarmUp] 은 **물은
      * 이름만** 만료를 보므로, 그것만으로는 다시 묻지 않는 이름이 만료된 채 자리를 차지해 서로 다른 이름 [UDP_DNS_CACHE_MAX] 개가 한 번 지나간
-     * 뒤로 새 이름이 **영영** 풀리지 않았다.
+     * 뒤로 새 이름이 **영영** 풀리지 않는다.
      *
      * 풀이는 [DestinationPolicy.resolve] 로 한다 — 걸러진 주소만 캐시에 들어간다(보낼 때 [DestinationPolicy.isBlocked] 로 한 번 더 본다).
      */
@@ -401,7 +397,7 @@ class Socks5Server internal constructor(
 
         /**
          * 동시 연결 상한(UDP 묶음 포함). tun2proxy 로 PC 의 트래픽을 통째로 지나게 하면 TCP 연결 하나가 연결 하나다 — 평소의 상한이 아니라
-         * 폭주 막기라 넉넉하게 둔다(usb-tether 와 같은 값).
+         * 폭주 막기라 넉넉하게 둔다.
          */
         const val MAX_SESSIONS = 256
 
@@ -532,9 +528,8 @@ private class ResolvedName(val address: InetAddress, val expiresAtMs: Long)
 /**
  * 1바이트를 읽고 끝이면 예외를 던진다.
  *
- * `InputStream.read()` 는 끝에서 -1 을 돌려주는데 usb-tether 의 예전 핸드셰이크는 그 값을 보지 않고 썼다 — `String(readN(read()), …)` 은
- * `ByteArray(-1)` 로, `(read() shl 8) or read()` 는 어느 쪽이든 -1 이면 결과 전체가 -1 로 더럽혀져(`(-1 shl 8) or -1 == -1`)
- * `InetSocketAddress` 가 던졌다. 둘 다 넓은 catch 에 잡혀 큰 탈은 없었지만 정상 끝을 예외로 보고했다.
+ * `InputStream.read()` 는 끝에서 -1 을 돌려준다 — 그 값을 그대로 쓰면 `String(readN(read()), …)` 은 `ByteArray(-1)` 로,
+ * `(read() shl 8) or read()` 는 어느 쪽이든 -1 이면 결과 전체가 -1 로 더럽혀져(`(-1 shl 8) or -1 == -1`) 정상 끝이 엉뚱한 예외가 된다.
  *
  * @throws EOFException 스트림이 끝났으면
  */

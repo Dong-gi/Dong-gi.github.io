@@ -46,7 +46,7 @@ data class ArchiveEntry(
      *
      * 푼 파일에 되살린다. 되살리지 않으면 아카이브를 풀 때마다 수천 개 파일의 시각이
      * 전부 '지금' 이 되어 날짜 정렬이 무너지고, 이어보기 키(`sha256(크기+이름+수정시각)`)
-     * 도 함께 끊긴다 — 4단계가 복사에서 이미 한 번 고친 실패 형태다.
+     * 도 함께 끊긴다.
      *
      * 모르면 **지어내지 않는다.** 0 이면 푼 쪽이 시각을 건드리지 않는다.
      */
@@ -109,7 +109,7 @@ class ArchivePasswordException(val wrongPassword: Boolean) :
  * [SevenZKeyGuard]). 화면은 '이 앱이 풀지 않는 방식으로 잠긴 …' 을 말한다.
  *
  * **화면은 이 타입으로 가른다.** 예외의 이름(`simpleName` 에 'Encrypt' 가 드는가)으로 가르면 릴리스에서 틀린다 — R8 이 클래스
- * 이름을 줄여(`mp5` 따위) 이름이 남지 않는다(2026-10-16 매핑 파일로 확인). 메시지에 경로를 넣지 않는다.
+ * 이름을 줄여(`mp5` 따위) 이름이 남지 않는다. 메시지에 경로를 넣지 않는다.
  */
 open class ArchiveEncryptionUnsupportedException(message: String) : java.io.IOException(message)
 
@@ -174,15 +174,7 @@ interface ArchiveReader : AutoCloseable {
      * ## 왜 [open] 을 반복하면 안 되는가 — 실측
      *
      * 7z 에서 엔트리마다 [open] 을 부르면 그때마다 파일을 새로 열고 `nextEntry` 를
-     * index 번 돌린다. 개발 PC 에서 잰 값이다.
-     *
-     * | 엔트리 | 하나씩 열기 |
-     * |---|---|
-     * | 60개 | 702 ms |
-     * | 120개 | 2,705 ms (**3.85배**) |
-     *
-     * 두 배로 늘렸는데 네 배가 되었다 — **제곱**이다. ZIP 은 같은 모양의 시험에서
-     * 1.25~1.42배(400개 14 ms → 800개 20 ms)로 선형 이하다.
+     * index 번 돌린다 — 비용이 **제곱**이다(개발 PC: 60개 702 ms, 120개 2,705 ms). ZIP 은 선형이다.
      * 1,000개짜리 7z 를 하나씩 풀면 몇 분이 걸린다.
      *
      * ## 왜 밀어 주는(push) 모양인가
@@ -212,9 +204,9 @@ interface ArchiveReader : AutoCloseable {
 
     /**
      * [extractSequentially] 가 [selected] 를 풀 때 [EntrySink.consumed] 가 닿게 될 값 — **진행률의 분모.**
-     * 모르면 -1 이고, 그러면 푸는 쪽이 예전처럼 선언 크기 합과 쓴 바이트로 센다.
+     * 모르면 -1 이고, 그러면 푸는 쪽이 선언 크기 합과 쓴 바이트로 센다.
      *
-     * 8단계는 분모로 **선언 크기 합**을 썼다. 공격자가 적는 값이고, solid 아카이브에서는 건너뛰는 해제가 진행 바에
+     * **선언 크기 합**은 분모로 약하다 — 공격자가 적는 값이고, solid 아카이브에서는 건너뛰는 해제가 진행 바에
      * 전혀 잡히지 않는다(고르지 않은 앞 항목을 푸는 동안 바가 멎어 있다). 입력을 세면 두 문제가 함께 풀린다 —
      * 다만 형식마다 셀 수 있는 것이 다르다.
      *
@@ -291,8 +283,8 @@ interface EntrySink {
  * **판별의 상한도 여기서 본다 — [limitProbe] 를 불렀을 때만.** 판별(안이 tar 인가 보려고 앞 512바이트를 풀어 보는 것)은 사용자가
  * 시킨 일이 아니라 목록 화면이 여는 길에 끼어 있다. 위의 '입력만 먹는' 파일에서는 그 512바이트가 나오기까지 파일 끝까지 읽는다.
  * 그래서 판별이 **소비한 입력**에 상한을 두고([ProbeLimitException]), 입력은 적게 먹으면서 값이 큰 일(LZ4 의 프레임마다 새로 서는
- * 해제기)은 부르는 쪽이 [charge] 로 값을 얹는다. 예전에는 시각(5초)으로 끊었는데, 같은 파일이 기기가 느린 순간에만 다른 모양으로
- * 열렸다(`StreamLimits.PROBE_INPUT_BYTES`). 풀기·목록에는 걸지 않는다 — 큰 정상 파일이 오래 걸리는 것은 정상이고, 그쪽은 진행이
+ * 해제기)은 부르는 쪽이 [charge] 로 값을 얹는다. 시각으로 끊지 않는다 — 그러면 같은 파일이 기기가 느린 순간에만 다른 모양으로
+ * 열린다(`StreamLimits.PROBE_INPUT_BYTES`). 풀기·목록에는 걸지 않는다 — 큰 정상 파일이 오래 걸리는 것은 정상이고, 그쪽은 진행이
  * 보이고 취소가 닿는다.
  */
 internal class CountingInputStream(input: InputStream) : java.io.FilterInputStream(input) {
@@ -372,7 +364,7 @@ internal class CountingInputStream(input: InputStream) : java.io.FilterInputStre
  * 스트림이 그만큼 길었을 뿐이다. 부르는 쪽(`Archives`)은 '안을 보지 못했다' 로 읽고 항목 하나짜리로 연다. 취소의 말
  * (`InterruptedIOException`)을 상속하지 않는 것은 그래서다 — 상속하면 위의 모든 `catch` 가 사용자 취소로 옮긴다.
  *
- * 상한은 파일의 내용만으로 정해진다 — 같은 파일이면 목록·풀기·만화가 언제 열어도 같은 자리에서 넘는다(시각으로 끊던 때와 다르다).
+ * 상한은 파일의 내용만으로 정해진다 — 같은 파일이면 목록·풀기·만화가 언제 열어도 같은 자리에서 넘는다.
  */
 internal class ProbeLimitException : IOException("판별이 입력 상한을 넘었다")
 
@@ -383,7 +375,7 @@ internal class ProbeLimitException : IOException("판별이 입력 상한을 넘
  *
  * - **엔트리 상한**(`maxSingleOutput`·`maxCompressionRatio`) — 그 항목 하나가 이상한
  *   것이다. 그 항목만 실패로 세고 나머지는 계속 푼다. 폭탄 하나 때문에 멀쩡한 999개를
- *   버리지 않는다(4단계가 '항목 실패가 배치를 끝내지 않는다' 로 이미 고친 형태다).
+ *   버리지 않는다.
  * - **아카이브 상한**(`maxTotalOutput`·`maxEntries`) — 한 번 넘으면 **그 뒤 전부가
  *   반드시 넘는다.** 항목 실패로 세면 9,999번을 더 시도하고 9,999개의 실패를 보고한다.
  *   그래서 위로 던져 그 자리에서 끝낸다.

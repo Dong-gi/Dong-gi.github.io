@@ -6,10 +6,10 @@ import io.github.donggi.iroirobrowser.core.media.PageRequests
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-/** 열쇠를 받지 못한 HLS 의 실패 글 — 고르는 일만 본다(자원 번호와 인자, 2026-10-16). */
+/** 열쇠를 받지 못한 HLS 의 실패 글 — 고르는 일만 본다(자원 번호와 인자). */
 class HlsKeyTextsTest {
 
-    private val sizes = TorrentTexts.Sizes { "${it}B" }
+    private val sizes = TextParts.Sizes { "${it}B" }
 
     private fun report(
         kind: HlsKeys.BodyKind,

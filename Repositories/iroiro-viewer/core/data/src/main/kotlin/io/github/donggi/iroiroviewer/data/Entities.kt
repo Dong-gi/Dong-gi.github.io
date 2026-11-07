@@ -47,13 +47,12 @@ data class ComicProgressEntity(
  *
  * ## 왜 포맷마다 표를 나누지 않는가
  *
- * 나누면 마이그레이션이 포맷 수만큼 늘고, **두 사람이 각자 `version = 3` 을 만들면 합칠
+ * 나누면 마이그레이션이 포맷 수만큼 늘고, **두 갈래가 각자 같은 `version` 을 만들면 합칠
  * 수 없다.** 표 하나·마이그레이션 하나·스키마 json 하나로 못 박는다.
  *
  * ## 왜 쪽 번호가 nullable 인가
  *
- * 쪽이 없는 포맷(그때 계획한 docx·HWP 의 흐름 렌더 — 지금은 없다)을 받으려고 비워 둘 수 있게 했다.
- * `NOT NULL` 로 세웠다면 그런 포맷이 올 때 표를 통째로 다시 만들어야 한다. 지금은 PDF·EPUB 이 모두
+ * 쪽이 없는 포맷을 받을 자리다. `NOT NULL` 이면 그런 포맷이 올 때 표를 통째로 다시 만들어야 한다. 지금은 PDF·EPUB 이 모두
  * [page]·[pageCount] 를 적고(EPUB 은 장 번호), EPUB 은 장 안의 자리를 [locator]·[progress] 에 더 적는다.
  */
 @Entity(tableName = "doc_progress")

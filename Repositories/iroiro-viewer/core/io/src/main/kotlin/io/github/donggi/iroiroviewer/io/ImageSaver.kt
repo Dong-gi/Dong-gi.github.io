@@ -14,7 +14,7 @@ import java.io.IOException
 import java.io.RandomAccessFile
 
 /**
- * 그림의 한 자리를 **새 파일로** 저장한다(사용자 요청 '지정한 직사각형 영역을 별도 저장'). 그리기·메모도
+ * 그림의 한 자리를 **새 파일로** 저장한다. 그리기·메모도
  * 여기를 지난다 — 요청에 [FileOpManager.Request.SaveCrop.overlay] 가 실려 오면 뜨는 쪽이 그 위에 그려 주고, 이름의 꼬리만 다르다
  * ([MARKUP_TAG]). 형식·EXIF·이름 맡기는 아래 그대로다.
  *
@@ -240,8 +240,8 @@ internal object ImageSaver {
      *
      * 던졌는가가 아니라 **결과를 본다.** `ExifInterface.saveAttributes` 는 임시본을 제자리에서 다시 쓴다(`FileOutputStream(이름)` 으로
      * 자르고 처음부터 — exifinterface 1.4.2 바이트코드로 확인). 도중에 던지면 제 사본에서 되살리지만 그 되살리기까지 실패하면 잘린 채
-     * 남고, 마지막 버퍼를 비우는 쓰기(닫을 때)가 실패하면 **던지지도 않는다**(`closeQuietly` 가 삼킨다 — 공간이 찬 때가 그렇다). 예전에는
-     * 던진 것까지 삼키고 저장을 이어, 잘린 파일을 '저장했습니다' 로 놓을 수 있었다.
+     * 남고, 마지막 버퍼를 비우는 쓰기(닫을 때)가 실패하면 **던지지도 않는다**(`closeQuietly` 가 삼킨다 — 공간이 찬 때가 그렇다). 던진 것만
+     * 보면 잘린 파일을 '저장했습니다' 로 놓는다.
      */
     private fun copyDatesIntact(src: File, dst: File, writeDates: (File, File) -> Unit): Boolean {
         // 끝을 뜨지 못하면 손대지 않는다 — 날짜 없이 그대로 놓는다.

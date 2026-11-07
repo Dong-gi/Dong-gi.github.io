@@ -27,13 +27,13 @@ import javax.crypto.spec.SecretKeySpec
  *
  * 푸는 쪽은 `format:archive` 의 `ZipDecryption` 이다. `core:io` 는 그 모듈을 볼 수 없고 그쪽도 이쪽을 볼 수 없다(의존 표). 두 벌이 같은
  * 형식을 말하는지는 셋이 지킨다 — 우리 리더가 읽는다(`feature:archive` 의 `AesZipRoundTripTest`), 독립 구현(JCE 의 PBKDF2·`BigInteger`
- * 계수기)이 읽는다(`AesZipWriterTest`), pyzipper 가 읽는다(CLAUDE.md '14단계 뒤 — AES 암호 ZIP').
+ * 계수기)이 읽는다(`AesZipWriterTest`), pyzipper 가 읽는다(손으로 확인했다).
  *
  * ## 암호의 바이트는 UTF-8
  *
  * 명세는 문자 인코딩을 정하지 않는다. 7-Zip 이 AES ZIP 의 암호를 UTF-8 로 넣는다고 알려져 있어(확인하지 않았다 — 이 기계에 7-Zip 이 없다) 우리도
  * UTF-8 이다. 영문·숫자·기호(ASCII)는 어느 도구에서나 같은 바이트지만 그 밖의 글자는 도구마다 다르다 — **반디집 7.45 는 AES 에서도 한글 암호를
- * CP949 로 넣는다**(2026-10-16 실측: pyzipper 가 CP949 바이트로 잠근 것은 `bz t -p:비밀번호` 가 열고, UTF-8 로 잠근 것과 우리 것은 열지 못했다).
+ * CP949 로 넣는다**(실측: pyzipper 가 CP949 바이트로 잠근 것은 `bz t -p:비밀번호` 가 열고, UTF-8 로 잠근 것과 우리 것은 열지 못했다).
  * 화면이 그때 경고한다([isAscii]). 이 앱의 리더는 UTF-8·CP949·ISO-8859-1 을 차례로 대 보므로 어느 쪽이든 연다. `String` 을 거치지 않고 옮기고
  * 쓴 사본은 덮는다(문자열은 덮을 수 없다).
  */

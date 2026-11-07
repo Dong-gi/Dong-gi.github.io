@@ -45,7 +45,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -96,7 +95,6 @@ import io.github.donggi.iroiroviewer.io.ExternalOpen
 import io.github.donggi.iroiroviewer.format.text.PlainHighlighter
 import io.github.donggi.iroiroviewer.format.text.RowHighlighter
 import io.github.donggi.iroiroviewer.format.text.TextLanguage
-import io.github.donggi.iroiroviewer.webhost.WebHost
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -133,7 +131,7 @@ fun TextViewerScreen(
      *
      * **Root 가 그릴 수 있는 모든 화면은 여기에 붙은 [SnackbarHost] 를 하나씩 가져야
      * 한다.** 붙지 않은 화면으로 넘어가면 파일 작업 결과를 보여 주는 `showSnackbar` 가
-     * 돌아오지 않아 그 뒤 결과가 전부 막힌다(3·4단계 검토가 고친 실패 형태).
+     * 돌아오지 않아 그 뒤 결과가 전부 막힌다.
      */
     snackbar: SnackbarHostState,
     onClose: () -> Unit,
@@ -169,9 +167,9 @@ fun TextViewerScreen(
     }
     // '다른 앱으로 열기'. 넘기는 것은 언제나 화면이 받은 원문 파일이다 — 미리보기 중에도([TextOpenWith]).
     val openWith = rememberOpenWith(path, snackbar)
-    // '브라우저로 열기'(HTML 만) — 같은 파일을 웹 쪽(`text/html`)으로 넘긴다. 이 앱은 인터넷에 닿지 않으므로 바깥의 그림·
-    // 글꼴·스타일까지 보려면 브라우저로 연다(HTML 미리보기에서 인터넷 허용을 걷어 낸 자리).
-    val isHtml = remember(path) { PreviewKind.of(path.substringAfterLast('/')) == PreviewKind.HTML }
+    // '브라우저로 열기'(HTML 만) — 같은 파일을 웹 쪽(`text/html`)으로 넘긴다. 이 앱은 HTML 을 그리지 않는다 — 그린 모양은
+    // 브라우저로 본다.
+    val isHtml = remember(path) { TextOpenWith.isHtmlName(path.substringAfterLast('/')) }
     val openInBrowser = rememberOpenWith(path, snackbar, ExternalOpen.Mode.WEB_PAGE)
     val scope = rememberCoroutineScope()
     val copyMessage = rememberCopyMessages()
@@ -257,8 +255,8 @@ fun TextViewerScreen(
                         )
                     },
                     actions = {
-                        // 마크다운·HTML 이면 원문 ↔ 미리보기. 메뉴 속에 숨기지 않는다 — 이 파일을 연 사람이 가장 먼저 찾는 것이다.
-                        if ((state as? TextViewModel.State.Ready)?.doc?.previewKind != null) {
+                        // 마크다운이면 원문 ↔ 미리보기. 메뉴 속에 숨기지 않는다 — 이 파일을 연 사람이 가장 먼저 찾는 것이다.
+                        if ((state as? TextViewModel.State.Ready)?.doc?.previewable == true) {
                             TextButton(onClick = vm::togglePreview) {
                                 Text(
                                     stringResource(
@@ -291,7 +289,7 @@ fun TextViewerScreen(
                         }
                         // **⋮ 단추와 메뉴를 한 상자에 담는다.** Compose 의 Popup 은 자기를 감싼 **부모
                         // 레이아웃 노드**를 앵커로 삼는다. `actions` 에 형제로 두면 앵커가 아이콘 줄
-                        // 전체가 되어 메뉴가 맨 왼쪽 아이콘 아래에서 시작한다(사용자가 지적했다).
+                        // 전체가 되어 메뉴가 맨 왼쪽 아이콘 아래에서 시작한다.
                         // `offset` 으로 보정하지 마라 — 화면 폭·글꼴 배율에서 다시 어긋난다.
                         Box {
                             IconButton(onClick = { menuOpen = true }) {
@@ -403,11 +401,7 @@ fun TextViewerScreen(
                         previewOn -> PreviewArea(
                             preview = preview,
                             fontSp = settings?.fontSp ?: TextViewerDefaults.DEFAULT_FONT_SP,
-                            html = s.doc.previewKind == PreviewKind.HTML,
                             onShowSource = vm::togglePreview,
-                            onRunScripts = vm::runScripts,
-                            onStopScripts = vm::stopScripts,
-                            onOpenInBrowser = openInBrowser,
                         )
                         else -> RowList(
                             doc = s.doc,
@@ -539,7 +533,7 @@ private fun RowList(
     // '모두 선택' 을 뺀다. 이 목록은 창(400행)만 읽어 두므로 그것이 고르는 것은 **지금 그려진 행뿐**이다 — '모두' 라고 적힌
     // 단추가 파일의 일부만 고르는 것은 거짓말이다.
     // 다른 앱으로 보내기(번역 등 — `PROCESS_TEXT`)도 Compose 의 것을 빼고 우리 것을 단다 — Compose 의 것은 날것의 선택을 상한 없이
-    // 실어 큰 선택에서 앱이 죽었다([RowSend]).
+    // 실어 큰 선택에서 앱이 죽는다([RowSend]).
     Box(
         Modifier
             .fillMaxSize()
@@ -799,7 +793,7 @@ private fun confidenceMark(d: CharsetDetector.Detection?): String = when (d?.con
 }
 
 /**
- * 보기 메뉴. **여기서 바꾼 것은 저장된다** — 다음에 여는 파일도 이 모양이다(14단계). 설정을 읽는 동안([settings] 가
+ * 보기 메뉴. **여기서 바꾼 것은 저장된다** — 다음에 여는 파일도 이 모양이다. 설정을 읽는 동안([settings] 가
  * null)은 고를 것을 흐리게 둔다.
  */
 @Composable
@@ -927,33 +921,15 @@ private fun rememberLineEndMarks(): LineEndMarks {
 // ---- 미리보기 ------------------------------------------------------------------
 
 /**
- * 미리보기(마크다운·HTML)의 자리. 만드는 중·너무 큼·실패는 **말로** 알리고 원문으로 돌아가는 단추를 둔다 — 미리보기가
- * 안 되는 파일에서 사용자가 갇히지 않게. 줄인 것(뒤를 버렸다)과 싣지 않은 것(스크립트·프레임·바깥 자원)도 한 줄씩 말한다 —
- * 스크립트로 그리는 쪽은 비어 보이는데, 말하지 않으면 사용자는 뷰어가 고장 난 줄 안다.
- *
- * 스크립트를 버린 HTML 쪽에는 그 줄에 **'스크립트 실행'** 을 단다 — 보안 메일처럼 스크립트가 곧 내용인 쪽이 있다. 실행 중에는 그
- * 사실과 '멈추기' 를 같은 자리에 둔다(사용자가 지금 무엇을 보고 있는지 늘 보이게). 고른 것은 저장하지 않는다. 위생을 거친 쪽이 너무
- * 크거나 만들어지지 못한 HTML 에도 그 단추를 둔다 — 스크립트를 실행하는 쪽은 파일을 그대로 흘려 내주므로 더 큰 파일도 연다.
- *
- * **이 앱은 인터넷에 닿지 않는다**(사용자가 이 앱의 네트워크 기능을 걷었다). 바깥의 그림·글꼴·스타일까지 보려면 같은
- * 파일을 브라우저로 연다 — HTML 의 알림 줄과 안내에 **'브라우저로 열기'**([onOpenInBrowser])를 단다. 바깥 자원을 버린 쪽에만 줄이
- * 서므로 버린 것이 없는 쪽은 ⋮ 의 같은 줄로 간다.
+ * 마크다운 미리보기의 자리. 만드는 중·너무 큼·실패는 **말로** 알리고 원문으로 돌아가는 단추를 둔다 — 미리보기가
+ * 안 되는 파일에서 사용자가 갇히지 않게. 줄인 것(뒤를 버렸다)도 한 줄로 말한다.
  */
 @Composable
 private fun PreviewArea(
     preview: TextViewModel.Preview,
     fontSp: Int,
-    html: Boolean,
     onShowSource: () -> Unit,
-    onRunScripts: () -> Unit,
-    onStopScripts: () -> Unit,
-    onOpenInBrowser: () -> Unit,
 ) {
-    val runScripts = stringResource(R.string.text_preview_run_scripts)
-    // 스크립트는 클립보드 막음(문서 시작 스크립트)을 걸 수 있는 WebView 에서만 켠다 — 아니면 단추를 내지 않는다(`WebHost.scriptsAllowed`).
-    val scriptsAllowed = remember { WebHost.scriptsAllowed() }
-    val stopScripts = stringResource(R.string.text_preview_live_stop)
-    val browser = stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_in_browser)
     when (preview) {
         TextViewModel.Preview.Off -> Unit
         TextViewModel.Preview.Building -> Centered {
@@ -971,65 +947,33 @@ private fun PreviewArea(
                 (preview.limitBytes / (1024 * 1024)).toInt(),
             ),
             onShowSource = onShowSource,
-            actions = listOfNotNull(
-                (runScripts to onRunScripts).takeIf { scriptsAllowed && html && !preview.live },
-                (browser to onOpenInBrowser).takeIf { html },
-            ),
         )
-        is TextViewModel.Preview.Failed -> PreviewMessage(
+        TextViewModel.Preview.Failed -> PreviewMessage(
             text = stringResource(R.string.text_preview_failed),
             onShowSource = onShowSource,
-            actions = listOfNotNull(
-                (runScripts to onRunScripts).takeIf { scriptsAllowed && html && !preview.live },
-                (browser to onOpenInBrowser).takeIf { html },
-            ),
         )
         is TextViewModel.Preview.Ready -> Column(Modifier.fillMaxSize()) {
             if (preview.truncated) PreviewNote(stringResource(R.string.text_preview_truncated))
-            when {
-                preview.live != null -> PreviewNote(
-                    text = stringResource(R.string.text_preview_live),
-                    actions = listOf(stopScripts to onStopScripts, browser to onOpenInBrowser),
-                )
-                // 위생을 거친 쪽이 무엇을 버렸다. HTML 이면 '브라우저로 열기' 도 단다(마크다운은 우리가 만든 쪽이라 바깥이 없다).
-                preview.withheld -> PreviewNote(
-                    text = stringResource(R.string.text_preview_withheld),
-                    actions = listOfNotNull(
-                        (runScripts to onRunScripts).takeIf { scriptsAllowed && preview.scripted },
-                        (browser to onOpenInBrowser).takeIf { preview.kind == PreviewKind.HTML },
-                    ),
-                )
-            }
             PreviewPane(preview, textZoom = fontSp * 100 / TextViewerDefaults.DEFAULT_FONT_SP, modifier = Modifier.weight(1f))
         }
     }
 }
 
-/** 미리보기 위의 알림 한 줄. [actions] 가 있으면 줄 끝에 단추들(글, 누르면 할 일). */
+/** 미리보기 위의 알림 한 줄. */
 @Composable
-private fun PreviewNote(text: String, actions: List<Pair<String, () -> Unit>> = emptyList()) {
+private fun PreviewNote(text: String) {
     Surface(tonalElevation = 2.dp, modifier = Modifier.fillMaxWidth()) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp, end = if (actions.isEmpty()) 16.dp else 4.dp, top = 6.dp, bottom = 6.dp),
-            )
-            for ((label, onClick) in actions) {
-                TextButton(onClick = onClick, modifier = Modifier.padding(end = 4.dp)) { Text(label) }
-            }
-        }
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
+        )
     }
 }
 
-/**
- * 미리보기를 만들 수 없을 때의 안내. [actions] 의 첫 단추만 채운 모양이다 — 그것이 이 자리의 본 일이다(스크립트 실행). 나머지는
- * 테두리만(브라우저로 열기), 원문으로 돌아가는 단추는 글자만.
- */
+/** 미리보기를 만들 수 없을 때의 안내. 원문으로 돌아가는 단추를 둔다. */
 @Composable
-private fun PreviewMessage(text: String, onShowSource: () -> Unit, actions: List<Pair<String, () -> Unit>> = emptyList()) {
+private fun PreviewMessage(text: String, onShowSource: () -> Unit) {
     Centered {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -1037,9 +981,6 @@ private fun PreviewMessage(text: String, onShowSource: () -> Unit, actions: List
             modifier = Modifier.padding(32.dp),
         ) {
             Text(text, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
-            actions.forEachIndexed { i, (label, onClick) ->
-                if (i == 0) Button(onClick = onClick) { Text(label) } else OutlinedButton(onClick = onClick) { Text(label) }
-            }
             TextButton(onClick = onShowSource) { Text(stringResource(R.string.text_preview_show_source)) }
         }
     }

@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 /**
- * 다음 권 고르기(14단계). **파일 관리자의 이름 차례**(자연 정렬)에서 지금 책 바로 뒤의 권이다.
+ * 다음 권 고르기. **파일 관리자의 이름 차례**(자연 정렬)에서 지금 책 바로 뒤의 권이다.
  */
 class NextVolumeTest {
 

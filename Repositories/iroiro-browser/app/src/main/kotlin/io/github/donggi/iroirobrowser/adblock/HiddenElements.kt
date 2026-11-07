@@ -12,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.Executors
 
 /**
- * 사용자가 숨긴 요소(페이지의 메뉴 '요소 숨기기' — 사용자 요청 2026-10-08)의 저장. 규칙은 광고 목록의 요소 숨김과 같은 꼴(`사이트##선택자`,
+ * 사용자가 숨긴 요소(페이지의 메뉴 '요소 숨기기')의 저장. 규칙은 광고 목록의 요소 숨김과 같은 꼴(`사이트##선택자`,
  * [UserHides])이고 범위는 그 사이트(등록 도메인 어림)다.
  *
  * - **광고 목록과 따로 둔다** — 목록 파일(`files/adblock/`)은 갱신·빼기가 다시 받고 지우지만 이 파일(`files/hidden-elements.txt`)은 사용자만

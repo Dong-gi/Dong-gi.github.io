@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!--
       내려받기의 진행·완료 알림(13 이상은 실행 중에 묻는다)과 받는 동안 앱이 죽지 않게 하는 포그라운드 서비스 — 내려받기(DownloadService)·
-      녹화·가로채기(CaptureService)·토렌트(TorrentService) 모두 dataSync 다. 서비스의 foregroundServiceType 과 이 권한이 짝이 맞아야 한다(어긋나면
+      녹화·가로채기(CaptureService) 모두 dataSync 다. 서비스의 foregroundServiceType 과 이 권한이 짝이 맞아야 한다(어긋나면
       startForeground 가 예외로 앱을 죽인다).
     -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -21,18 +21,15 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--
-      토렌트를 화면이 꺼진 채 받는다(사용자 결정, 2026-10-09 — 보통 권한, 설치 때 주어진다): 받는 동안만 부분 wake lock 과(기본 망이 Wi-Fi 면)
-      Wi-Fi 잠금을 쥔다(TorrentService). 10분 동안 받은 것이 늘지 않으면 놓는다.
+      뒤에서 재생 잇기(2026-10-11 사용자 요청 — 유튜브를 앱이 뒤에 있거나 화면이 꺼진 동안 이어 튼다. CLAUDE.md '뒤에서 재생 잇기'): 그 동안의
+      포그라운드 서비스(BackgroundPlayService)는 mediaPlayback 이다(보통 권한 — 설치 때 주어진다). 재생 중에는 부분 wake lock 과 Wi-Fi 잠금도
+      쥔다(WAKE_LOCK — 보통 권한. 처음에는 토렌트를 화면이 꺼진 채 받으려고 2026-10-09 에 더했다 — 토렌트는 2026-11-07 에 걷었다).
     -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--
-      뒤에서 재생 잇기(2026-10-11 사용자 요청 — 유튜브를 앱이 뒤에 있거나 화면이 꺼진 동안 이어 튼다. CLAUDE.md '뒤에서 재생 잇기'): 그 동안의
-      포그라운드 서비스(BackgroundPlayService)는 mediaPlayback 이다(보통 권한 — 설치 때 주어진다). 재생 중에는 위의 wake lock 도 쥔다.
-    -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <!--
       테더링(2026-10-10 — usb-tether 를 합침, CLAUDE.md '테더링'): 폰이 Wi-Fi Direct 그룹 오너가 되고 붙은 기기의 트래픽을 이 폰의 회선으로
-      중계한다(프록시를 거치지 않는다 — 이 앱의 '바로 나감' 예외 둘째). 서비스는 specialUse 의 포그라운드 서비스다(아래 TetherService 의
+      중계한다(프록시를 거치지 않는다 — 이 앱의 '바로 나감' 예외 — 토렌트를 걷은 2026-11-07 부터 하나뿐이다). 서비스는 specialUse 의 포그라운드 서비스다(아래 TetherService 의
       서브타입 property). Wi-Fi Direct 그룹을 만드는 데 Wi-Fi 상태 읽기·바꾸기와 — 13 이상은 근처 기기(neverForLocation — 위치를 얻는 데 쓰지
       않는다), 12 이하는 **정확한 위치**가 든다. targetSdk 31 이상이 FINE 만 청하면 안드로이드 12 가 그 요청을 무시하므로 COARSE 도 선언하고
       함께 청한다(둘 다 13 부터는 필요 없다 — maxSdkVersion 32). 위치·근처 기기는 테더 화면에서 테더링을 켤 때만 묻는다. 웹 페이지에는 위치를
@@ -141,15 +138,6 @@
             android:exported="false"
             android:foregroundServiceType="mediaPlayback"
             android:stopWithTask="true" />
-
-        <!--
-          토렌트를 받는 동안·다 받은 파일을 '내려받기' 로 옮기는 동안 앱이 정리되지 않게(알림의 일시 정지·이어받기). 내보내지 않는다 — 다른 앱이
-          토렌트를 멈추거나 이어받게 하지 못하게. 다른 앱이 건네는 마그넷·.torrent(VIEW 인텐트)는 받지 않는다(사용자 결정 ㉑ — 인텐트 필터 없음).
-        -->
-        <service
-            android:name=".download.TorrentService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
 
         <!--
           테더링(CLAUDE.md '테더링') — 구성 요소 다섯 모두 따로 된 프로세스 :tether 다. 테더의 상태가 그 프로세스의 정적 필드라(TetherState) 화면·

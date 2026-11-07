@@ -50,8 +50,7 @@
     <string name="text_lines">%1$d줄</string>
 
     <!--
-      미리보기 — 마크다운(14단계)과 HTML(14단계 뒤)이 함께 쓴다. 어느 쪽인지 말하지 않는 문장으로 둔다.
-      상한(MiB)은 종류마다 다르다(마크다운 2, HTML 8).
+      마크다운 미리보기(14단계). HTML 미리보기는 2026-11-07 에 걷었다 - HTML 은 '브라우저로 열기'(core:io 의 io_open_in_browser)로 넘긴다.
     -->
     <string name="text_preview">미리보기</string>
     <string name="text_preview_source">원문</string>
@@ -61,18 +60,6 @@
     <string name="text_preview_failed">미리보기를 만들지 못했습니다</string>
     <string name="text_preview_render_gone">미리보기가 멈췄습니다 — 원문으로 갔다가 다시 열어 보세요</string>
     <string name="text_preview_truncated">문서가 커서 앞부분만 미리 봅니다</string>
-    <!--
-      HTML 미리보기가 버린 것. 스크립트로 그리는 쪽은 비어 보일 수 있다 - 그 까닭을 말한다. 이 앱은 인터넷에 닿지 않는다 -
-      바깥 자원까지 보려면 같은 줄의 '브라우저로 열기'(core:io 의 io_open_in_browser)로 브라우저에 넘긴다.
-    -->
-    <string name="text_preview_withheld">스크립트·프레임·바깥 자원은 싣지 않습니다</string>
-    <!--
-      스크립트를 버린 HTML 쪽에만 붙는 단추(보안 메일처럼 스크립트가 곧 내용인 쪽). 누르면 파일 그대로 스크립트를 켜고 연다 - 인터넷에는
-      닿지 않는다(이 앱에 INTERNET 이 없어 OS 가 막는다). 실행 중에는 아래 줄과 '멈추기' 가 그 자리에 선다.
-    -->
-    <string name="text_preview_run_scripts">스크립트 실행</string>
-    <string name="text_preview_live">스크립트를 실행하는 중 · 인터넷에는 연결하지 않습니다</string>
-    <string name="text_preview_live_stop">멈추기</string>
 
     <string name="text_evidence_bom">파일 앞머리의 BOM이 인코딩을 적어 두었습니다</string>
     <string name="text_evidence_ascii">ASCII 문자만 있어 어느 인코딩으로 읽어도 같습니다</string>

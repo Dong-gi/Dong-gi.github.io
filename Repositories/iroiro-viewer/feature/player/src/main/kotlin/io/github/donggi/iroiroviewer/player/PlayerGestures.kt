@@ -55,7 +55,7 @@ sealed interface GestureFeedback {
  *
  * ## 판정은 화면 캡처로 하지 않는다
  *
- * 6단계가 제스처를 캡처로 판정하려다 세 번 틀렸다. 여기서는 제스처가 정한 값을 [Iro.d] 로
+ * 화면 캡처로는 제스처를 믿을 만하게 판정할 수 없다. 제스처가 정한 값을 [Iro.d] 로
  * 찍고 `logcat` 으로 읽는다. 계산 자체는 `GestureMath` 로 빼서 JVM 시험이 답한다.
  */
 @Composable
