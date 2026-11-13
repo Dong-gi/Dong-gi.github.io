@@ -1,10 +1,13 @@
 package io.github.donggi.iroirobrowser.ui
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -14,6 +17,7 @@ import android.view.WindowInsetsController
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import io.github.donggi.iroirobrowser.R
 
 /** 화면 몇 개가 함께 쓰는 작은 도구. 플랫폼 뷰만 쓴다(새 의존 없이 — 이 앱의 의존은 androidx.webkit 하나다). */
@@ -109,4 +113,13 @@ object Ui {
         }
 
     fun matchWidth(): ViewGroup.LayoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+    /**
+     * '링크 복사' — **이름표에도 주소를 둔다**: 주소창의 '복사한 링크 열기' 가 클립의 내용을 읽기 전에 이름표로 링크인지 본다
+     * (`AddressSuggestions.clipHasLink`). 브라우저 화면과 북마크·방문 기록 화면이 함께 쓴다. 13 이상은 시스템이 복사를 알린다.
+     */
+    fun copyLink(context: Context, url: String) {
+        context.getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText(url, url))
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) Toast.makeText(context, R.string.copied, Toast.LENGTH_SHORT).show()
+    }
 }

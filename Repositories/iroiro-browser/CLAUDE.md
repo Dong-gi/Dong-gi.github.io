@@ -23,7 +23,10 @@
 이력에 있다(걷기 직전의 커밋 `ffe8e8b`). 남은 것 — 주소창의 `magnet:` 은 여전히 검색어로 돌리지 않고 다른 앱에 넘길지 묻는다(아래 '주소창과 제안'),
 `.torrent` 는 보통 파일로 받는다, 알림 번호 3 이 빈다. 토렌트가 앱 안에 남긴 파일(`noBackupFilesDir/torrent`·`torrent-app`)과 옛 설정 키를 지우던 정리 코드도
 걷었다 — 남은 것은 지우지 않는다(읽는 코드도 없다). 사용자가 내보낸 백업 JSON 은 이제 읽지 않는다. 권한은 그대로다 — `WAKE_LOCK` 은 뒤에서 재생 잇기가,
-`FOREGROUND_SERVICE_DATA_SYNC`·`ACCESS_NETWORK_STATE`·`POST_NOTIFICATIONS` 는 내려받기·녹화·광고 목록이 쓴다.
+`FOREGROUND_SERVICE_DATA_SYNC`·`ACCESS_NETWORK_STATE`·`POST_NOTIFICATIONS` 는 내려받기·녹화·광고 목록이 쓴다. 11-14 정리에서 부르는 곳이 없던
+작은 것(`Remux.sniff`·`CaptureSession.totals`·`AdBlocker.skippedCount`·`RequestType.ALL`·`Item.canResume`, 실험실의 `describe`)을 지우고, 여러 곳에
+복사돼 있던 것을 한 곳으로 모았다 — 주소창 고치기 끝내기(`BrowserActivity.endAddressEditing`), 받기의 멈춤 깃발(`DownloadCenter.Item.stopRequested`),
+'링크 복사'(`Ui.copyLink`).
 
 ## 사용자 결정
 
@@ -159,7 +162,7 @@ app/    WebApp(설정·길·내려받기·연 사이트 목록을 처음 쓸 때
         adblock/ AdBlockService(목록·엔진·허용·갱신) · AdBlockActivity(설정 — '숨긴 요소' 절 포함) · AdBlockUpdateJob(하루 한 번 — JobScheduler) ·
                  HiddenElements(사용자가 숨긴 요소 — hidden-elements.txt)
         download/ DownloadCenter(받기·이어받기) · DownloadStore(목록 — downloads.json) · Remux(그릇 바꿔 담기 — media3 추출기 + MediaMuxer) ·
-                  DownloadService · DownloadsActivity · DownloadTexts · HlsKeyTexts(열쇠를 받지 못한 글의 갈래) · MediaStoreWriter   ui/Ui
+                  DownloadService · DownloadsActivity · DownloadTexts · HlsKeyTexts(열쇠를 받지 못한 글의 갈래) · MediaStoreWriter   ui/Ui(화면들의 작은 도구 — '링크 복사' 포함)
         download/ TextParts(글 조각 꼴 Part·Sizes, mimeOf — 갤러리·열쇠 글) · DetailsDialog(목록의 '자세히' 창)
         download/ GalleryRules(갤러리 받기의 판단 — 자리·글·이어받을 자리·건너뛰기와 멈춤, 순수) · GalleryPrompt(묻기) · DownloadSets(곁의 계획·기록 —
                   noBackupFilesDir/download-sets) — 받기 자체는 DownloadCenter 의 SET(`runSet`)
@@ -336,7 +339,7 @@ tools/  check_api_level.py · lab/make_certs.py · lab/labserver.py · lab/labme
 - **복사한 링크 열기.** 주소창을 빈 글로 열면, 클립보드에 링크가 있어 보일 때 맨 위에 '복사한 링크 열기'(→)를 둔다 — 새 탭의 시작 화면 위에서는 그 줄
   하나만(시작 화면을 덮지 않는다). **클립보드의 내용은 누를 때만 읽는다**(안드로이드 12 는 남의 클립을 읽을 때마다 알린다) — 그 전에는 설명만 본다
   (`AddressSuggestions.clipHasLink`): 10분 안에 복사한 것(`ClipDescription.getTimestamp` — `System.currentTimeMillis` 의 시계)이고, 링크 목록
-  (`text/uri-list`)이거나 이름표가 http(s) 주소 하나(이 앱의 '링크 복사' 는 이름표에 주소를 둔다 — 파일 이름을 이름표로 다는 앱이 있어 스킴을 적은
+  (`text/uri-list`)이거나 이름표가 http(s) 주소 하나(이 앱의 '링크 복사' 는 이름표에 주소를 둔다 — 브라우저 화면과 북마크·방문 기록 화면이 함께 쓰는 `Ui.copyLink` 한 곳, 파일 이름을 이름표로 다는 앱이 있어 스킴을 적은
   것만)거나, 글이면 시스템의 글 분류(`getConfidenceScore(TYPE_URL)` 0.9 이상) — **분류가 아직이거나 하지 않았으면 줄을 둔다**(함정 '클립보드의 설명').
   누르면 그 글의 첫 http(s) 링크로 간다(`core/ClipText` — 글 전체가 주소면 그것, 아니면 글 안의 첫 `http(s)://`, 끝의 문장 부호·짝 없는 닫는 괄호·전각
   괄호와 따옴표는 뗀다, `data:`·`about:`·`javascript:`·`magnet:` 은 고르지 않는다. 글이 없는 항목은 http(s) 주소만 — `coerceToText` 는 `content:` 주소면
@@ -1346,7 +1349,7 @@ SharedPreferences **`tether`**(테더 프로세스만 연다 — 브라우저의
 
 테더 화면의 '다른 기기에서' → **'PC 연결 파일 받기'** 가 `web-tether-pc.zip`(README.txt · windows-wifi.bat · macos-wifi.sh)을 공용 '내려받기' 에
 쓴다(아래 '설정 파일 zip'). 원본은 `app/src/main/assets/setup/tether-pc/`. `windows-wifi.bat` 은 관리자 권한으로 저절로 다시 뜨고(`fltmc` 로 판정)
-`tun2proxy.exe --tun USBTether --dns-addr 1.1.1.1 --setup --proxy socks5://192.168.49.1:1080` 을 돌린다 — `--setup` 이 192.168.49.1 로 가는 호스트
+`tun2proxy.exe --tun USBTether --dns-addr 1.0.0.1 --setup --proxy socks5://192.168.49.1:1080` 을 돌린다(DNS 는 1.0.0.1 — 1.1.1.1 과 같은 Cloudflare 해석기다. LG U+ 모바일망은 1.1.1.1 로 가는 길이 없어 PC 의 이름 풀이가 통째로 실패했다) — `--setup` 이 192.168.49.1 로 가는 호스트
 경로를 Wi-Fi 쪽에 남겨 TUN 고리를 막고, UDP ASSOCIATE 가 되므로 `--dns over-tcp` 가 필요 없고, 포트는 훑지 않고 인자로만(`windows-wifi.bat 1085`).
 tun2proxy.exe 가 없거나 오류로 끝나면 창이 멈춘다. `macos-wifi.sh` 는 같은 일 — `exec sudo /bin/bash "$0" "$@"` 로 다시 뜨며 인자를 넘기고(실행
 비트가 없어도 된다), TUN 은 VPN 이 흔히 쓰는 `utun0`–`3` 을 피해 `utun5`, 끝날 때 한 번 경로를 걷고 시스템의 DNS 는 건드리지 않는다. 주석은 영어이고

@@ -46,9 +46,11 @@ if not exist "%~dp0tun2proxy.exe" (
 
 echo [1/1] Starting tun2proxy on socks5://192.168.49.1:%PORT% (requires Administrator for TUN adapter + routing)...
 REM UDP ASSOCIATE is supported, so --dns over-tcp is not needed.
+REM DNS goes to 1.0.0.1 (Cloudflare, same resolver as 1.1.1.1): some mobile carriers
+REM do not route 1.1.1.1 at all, and then every name lookup on the PC fails.
 REM --setup automatically adds a host route for 192.168.49.1 via the Wi-Fi interface,
 REM preventing the proxy traffic itself from looping back into the TUN adapter.
-"%~dp0tun2proxy.exe" --tun USBTether --dns-addr 1.1.1.1 --setup --proxy socks5://192.168.49.1:%PORT%
+"%~dp0tun2proxy.exe" --tun USBTether --dns-addr 1.0.0.1 --setup --proxy socks5://192.168.49.1:%PORT%
 REM The elevated window closes when this script ends - stop on an error so the message can be read.
 if errorlevel 1 pause
 

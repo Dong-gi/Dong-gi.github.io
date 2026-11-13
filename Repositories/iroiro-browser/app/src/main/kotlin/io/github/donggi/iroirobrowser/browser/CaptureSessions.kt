@@ -192,14 +192,6 @@ class CaptureSession(
         if (opened || SystemClock.elapsedRealtime() - metaAt >= META_MS) saveMeta()
     }
 
-    /** 바이트가 버퍼마다 얼마인가 — (영상, 소리). */
-    fun totals(): Pair<Long, Long> {
-        var video = 0L
-        var audio = 0L
-        for (b in buffers.values) if (b.isVideo) video += b.bytes else audio += b.bytes
-        return video to audio
-    }
-
     /** 저장하면 담길 것 — 영상(MediaSource)마다, 많은 것부터. 아직 담긴 것이 없으면 빈 목록. */
     fun savables(): List<Savable> = buffers.values.groupBy { it.ms }.mapNotNull { (ms, list) ->
         val video = list.filter { it.isVideo }.maxOfOrNull { it.savable } ?: 0L

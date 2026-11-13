@@ -26,7 +26,6 @@ class AdBlocker(lists: List<ParsedList>, private val onRegexDisabled: ((NetworkR
 
     val networkRuleCount: Int
     val cosmeticRuleCount: Int
-    val skippedCount: Int = lists.sumOf { it.skipped }
 
     init {
         val bad = HashSet<String>()

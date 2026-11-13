@@ -2,12 +2,9 @@ package io.github.donggi.iroirobrowser.library
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Intent
 import android.graphics.Typeface
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -161,18 +158,13 @@ class LibraryActivity : Activity() {
             .setItems(labels.toTypedArray()) { _, which ->
                 when (labels[which]) {
                     getString(R.string.open_in_new_tab) -> open(entry.url, newTab = true)
-                    getString(R.string.copy_link) -> copy(entry.url)
+                    getString(R.string.copy_link) -> Ui.copyLink(this, entry.url)
                     getString(R.string.rename) -> rename(entry)
                     getString(R.string.delete) ->
                         if (bookmarks) app.library.removeBookmark(entry.url) { load() } else app.library.deleteHistory(entry.url) { load() }
                 }
             }
             .show()
-    }
-
-    private fun copy(url: String) {
-        getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText(url, url))
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
     }
 
     private fun rename(entry: Library.Entry) {

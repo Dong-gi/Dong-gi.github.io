@@ -5,8 +5,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
@@ -1015,9 +1013,7 @@ class BrowserActivity : Activity(), PageHost {
 
         override fun switchTab(id: Long) {
             val tab = tabs.firstOrNull { it.id == id } ?: return
-            suggestions.hide()
-            address.clearFocus()
-            getSystemService(InputMethodManager::class.java).hideSoftInputFromWindow(address.windowToken, 0)
+            endAddressEditing()
             select(tab)
             trace("suggest switch tab=${tab.id}")
         }
@@ -1025,9 +1021,7 @@ class BrowserActivity : Activity(), PageHost {
         override fun showsStartPage(): Boolean = current?.url.isNullOrEmpty()
 
         override fun dismiss() {
-            suggestions.hide()
-            address.clearFocus()
-            getSystemService(InputMethodManager::class.java).hideSoftInputFromWindow(address.windowToken, 0)
+            endAddressEditing()
             trace("suggest dismissed")
         }
     }
@@ -2113,12 +2107,6 @@ class BrowserActivity : Activity(), PageHost {
         startActivity(Intent.createChooser(send, null))
     }
 
-    private fun copy(url: String) {
-        getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText(url, url))
-        // 13 이상은 시스템이 복사를 알린다.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
-    }
-
     /** 다른 브라우저로 — **프록시를 거치지 않는다**. 구글 로그인처럼 WebView 에서 막히는 쪽을 위한 것. 먼저 묻는다. */
     private fun openOutside(url: String) {
         AlertDialog.Builder(this)
@@ -2268,9 +2256,7 @@ class BrowserActivity : Activity(), PageHost {
         // 친 글(새 탭이면 빈 칸)이 새 탭의 주소 자리에 남고, 전체 화면에서는 그 초점 때문에 막대가 숨지 않는다. 새 탭을
         // 치려고 연 길([openNewTabForTyping])은 고른 뒤에 초점을 다시 준다.
         if (address.hasFocus()) {
-            suggestions.hide()
-            address.clearFocus()
-            getSystemService(InputMethodManager::class.java).hideSoftInputFromWindow(address.windowToken, 0)
+            endAddressEditing()
         }
         val leaving = current
         leaving?.webView?.let {
@@ -2435,6 +2421,13 @@ class BrowserActivity : Activity(), PageHost {
         showKeyboard()
     }
 
+    /** 주소창을 고치던 것을 끝낸다 — 제안을 걷고, 초점을 거두고, 자판을 내린다(고른 곳으로 가거나 탭을 바꾸거나 그만둘 때). */
+    private fun endAddressEditing() {
+        suggestions.hide()
+        address.clearFocus()
+        getSystemService(InputMethodManager::class.java).hideSoftInputFromWindow(address.windowToken, 0)
+    }
+
     /** 주소창에 자판을 띄운다 — 창이 아직 초점을 갖지 않았으면(닫히는 창 뒤) 초점을 되찾을 때([onWindowFocusChanged]). */
     private fun showKeyboard() {
         if (!address.hasFocus()) {
@@ -2587,7 +2580,7 @@ class BrowserActivity : Activity(), PageHost {
             }
         }
         menu.add(R.string.copy_link).setOnMenuItemClickListener {
-            copy(url)
+            Ui.copyLink(this, url)
             true
         }
         menu.add(R.string.share_link).setOnMenuItemClickListener {
@@ -2711,9 +2704,7 @@ class BrowserActivity : Activity(), PageHost {
         if (target is Omnibox.Target.Magnet) {
             // 주소창의 마그넷은 다른 앱에 넘길지 묻는다 — 검색어로 돌리면 info-hash 가 검색 엔진에 간다. 주소창은
             // 지금 쪽의 주소로 되돌린다.
-            suggestions.hide()
-            address.clearFocus()
-            getSystemService(InputMethodManager::class.java).hideSoftInputFromWindow(address.windowToken, 0)
+            endAddressEditing()
             showUrl()
             askExternal(target.uri)
             return
@@ -2727,9 +2718,7 @@ class BrowserActivity : Activity(), PageHost {
         val tab = current ?: newTab(select = true)
         tab.typedNavigation = typed
         load(tab, url)
-        suggestions.hide()
-        address.clearFocus()
-        getSystemService(InputMethodManager::class.java).hideSoftInputFromWindow(address.windowToken, 0)
+        endAddressEditing()
     }
 
     private fun load(tab: Tab, url: String) {
@@ -3416,16 +3405,16 @@ class BrowserActivity : Activity(), PageHost {
     }
 
     private fun onDownload(tab: Tab, url: String, userAgent: String, contentDisposition: String?, mimeType: String?, contentLength: Long) {
-        if (url.startsWith("blob:", ignoreCase = true)) {
-            onBlobDownload(tab, url, contentDisposition, mimeType)
-            return
-        }
-        // 내려받기로 끝난 탐색은 화면을 바꾸지 않는다 — 주소창을 지금 쪽으로 되돌리고, Referer 는 그 쪽에서(크롬의 기본 정책 — 받는 쪽이 홉마다
-        // 짓는다).
+        // 내려받기로 끝난 탐색은 화면을 바꾸지 않는다(blob 도) — 주소창을 지금 쪽으로 되돌리고, Referer 는 그 쪽에서(크롬의 기본 정책 — 받는
+        // 쪽이 홉마다 짓는다).
         tab.url = tab.committedUrl
         tab.progress = 100
         if (tab == current) showUrl()
         renderProgress(tab)
+        if (url.startsWith("blob:", ignoreCase = true)) {
+            onBlobDownload(tab, url, contentDisposition, mimeType)
+            return
+        }
         val downloads = app.downloads
         val name = downloads.names.choose(contentDisposition, url, mimeType)
         trace("download asked $name")
@@ -3450,10 +3439,6 @@ class BrowserActivity : Activity(), PageHost {
      * WebView 가 준 Content-Disposition → 형식으로 고른 이름.
      */
     private fun onBlobDownload(tab: Tab, url: String, contentDisposition: String?, mimeType: String?) {
-        tab.url = tab.committedUrl
-        tab.progress = 100
-        if (tab == current) showUrl()
-        renderProgress(tab)
         val bridge = tab.bridge
         if (bridge == null) {
             Toast.makeText(this, R.string.download_blob_unsupported, Toast.LENGTH_LONG).show()

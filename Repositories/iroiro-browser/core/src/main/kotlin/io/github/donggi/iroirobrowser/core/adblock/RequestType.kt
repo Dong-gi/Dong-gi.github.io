@@ -24,8 +24,6 @@ object RequestType {
     /** 종류를 적지 않은 규칙이 걸리는 것 — 주 문서와 팝업은 빼고 다(ABP·uBO 와 같다). */
     const val DEFAULT = SUBDOCUMENT or STYLESHEET or SCRIPT or IMAGE or FONT or MEDIA or OBJECT or XHR or PING or WEBSOCKET or OTHER
 
-    const val ALL = DEFAULT or DOCUMENT or POPUP
-
     /** 규칙의 선택지 이름 → 종류. 모르는 이름이면 null. */
     fun byName(name: String): Int? = when (name) {
         "document", "doc" -> DOCUMENT

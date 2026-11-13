@@ -52,4 +52,6 @@ trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
-"$DIR/tun2proxy" --tun utun5 --dns-addr 1.1.1.1 --setup --proxy socks5://192.168.49.1:$PORT
+# DNS goes to 1.0.0.1 (Cloudflare, same resolver as 1.1.1.1): some mobile carriers
+# do not route 1.1.1.1 at all, and then every name lookup on the Mac fails.
+"$DIR/tun2proxy" --tun utun5 --dns-addr 1.0.0.1 --setup --proxy socks5://192.168.49.1:$PORT

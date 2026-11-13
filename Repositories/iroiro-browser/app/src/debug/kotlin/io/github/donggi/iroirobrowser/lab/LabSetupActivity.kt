@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import io.github.donggi.iroirobrowser.WebApp
 import io.github.donggi.iroirobrowser.core.Bypass
-import io.github.donggi.iroirobrowser.core.ProxySettings
 import io.github.donggi.iroirobrowser.sites.SiteDataActivity
 
 /**
@@ -52,7 +51,4 @@ class LabSetupActivity : Activity() {
         }
         finish()
     }
-
-    @Suppress("unused")
-    private fun describe(s: ProxySettings) = s.toString()
 }

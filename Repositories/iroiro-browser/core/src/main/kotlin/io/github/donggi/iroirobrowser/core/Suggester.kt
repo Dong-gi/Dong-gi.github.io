@@ -133,7 +133,7 @@ class Suggester(entries: Collection<Entry>) {
         }
         val best = candidates.entries.maxWithOrNull(compareBy<Map.Entry<String, Pair<Double, Item>>> { it.value.first }.thenBy { -it.key.length }) ?: return null
         val text = input + best.key.substring(q.length)
-        val url = destination(best.key, best.value.second, full, path)
+        val url = destination(best.value.second, full, path)
         return Inline(text, url)
     }
 
@@ -141,7 +141,7 @@ class Suggester(entries: Collection<Entry>) {
      * 인라인 완성의 갈 곳. 경로까지 채웠으면 그 줄의 주소. 호스트까지만 채웠으면 그 호스트의 첫 쪽이 기록에 있으면 그 주소(가장 자주 간 것 —
      * `#` 이나 끝의 `/` 만 다른 것도 첫 쪽으로 치고 조각은 뗀다), 없으면 가장 나은 줄의 스킴과 호스트(`www.` 그대로)로 지은 첫 쪽.
      */
-    private fun destination(target: String, best: Item, full: Boolean, path: Boolean): String {
+    private fun destination(best: Item, full: Boolean, path: Boolean): String {
         if (full || path) return best.entry.url
         val host = best.host
         val root = items.filter { it.host == host && sameKey(it.entry.url) == host }.maxByOrNull { it.entry.visits + 2 * it.entry.typed }

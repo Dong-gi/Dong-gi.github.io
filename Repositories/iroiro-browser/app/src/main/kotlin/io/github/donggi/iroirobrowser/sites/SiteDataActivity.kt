@@ -109,7 +109,7 @@ class SiteDataActivity : Activity() {
         WebStorage.getInstance().getOrigins(
             ValueCallback { result ->
                 val usage = HashMap<String, Long>()
-                (result as? Map<*, *>)?.values?.forEach { o ->
+                result?.values?.forEach { o ->
                     if (o is WebStorage.Origin) {
                         val host = Uri.parse(o.origin).host?.lowercase(Locale.ROOT)
                         if (!host.isNullOrEmpty()) usage[host] = (usage[host] ?: 0L) + o.usage

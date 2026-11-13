@@ -293,7 +293,9 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         @Volatile internal var pageRequests: PageRequests? = null
 
         val isActive: Boolean get() = status == Status.QUEUED || status == Status.RUNNING
-        val canResume: Boolean get() = status == Status.PAUSED
+
+        /** 받던 일을 멈춰야 하는가 — 취소([cancelled])든 일시 정지([pauseRequested])든. 받는 일꾼이 시도·조각·파일마다 본다. */
+        internal val stopRequested: Boolean get() = cancelled || pauseRequested
 
         /** 멈췄다 이을 수 있는 것(보통 파일·HLS·DASH·갤러리) — 넘겨받는 것(blob)·마무리는 다시 할 수 없다. */
         val pausable: Boolean get() = kind == Kind.FILE || kind == Kind.MEDIA || kind == Kind.SET
@@ -929,8 +931,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     private fun runFile(item: Item) {
         var failures = 0
         while (true) {
-            if (item.cancelled) throw Cancelled()
-            if (item.pauseRequested) throw Cancelled()
+            if (item.stopRequested) throw Cancelled()
             val before = item.received
             try {
                 fetchFileOnce(item)
@@ -1014,7 +1015,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         val buffer = ByteArray(64 * 1024)
         var lastNotice = 0L
         while (true) {
-            if (item.cancelled || item.pauseRequested) throw Cancelled()
+            if (item.stopRequested) throw Cancelled()
             val n = input.read(buffer)
             if (n < 0) break
             try {
@@ -1082,7 +1083,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         dropPending(item)
         changed(item)
         saveSoon()
-        val stop = { item.cancelled || item.pauseRequested }
+        val stop = { item.stopRequested }
         val resolver = GalleryResolver(siteFetch(item.userAgent, item, DOWNLOAD, stop))
         var lastWasWork = false
         while (g.unitsDone < plan.units.size) {
@@ -1170,7 +1171,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         kind: GalleryRules.UnitKind,
         index: Int,
     ): List<GalleryFile>? {
-        val stop = { item.cancelled || item.pauseRequested }
+        val stop = { item.stopRequested }
         val files = try {
             resolver.expand(unit, stop)
         } catch (e: Cancelled) {
@@ -1209,7 +1210,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     private fun saveSetFile(item: Item, g: Gallery, file: GalleryFile, unit: Int, index: Int) {
         var last: IOException? = null
         for (attempt in 0 until RETRIES) {
-            if (item.cancelled || item.pauseRequested) throw Cancelled()
+            if (item.stopRequested) throw Cancelled()
             val before = item.received
             try {
                 saveSetFileOnce(item, g, file, unit, index)
@@ -1392,7 +1393,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         val keyOrder = plan.parts.mapNotNull { it.key?.uri }.distinct()
         val ticker = Ticker(item)
         for (k in track.partsDone until plan.parts.size) {
-            if (item.cancelled || item.pauseRequested) throw Cancelled()
+            if (item.stopRequested) throw Cancelled()
             val part = plan.parts[k]
             val key = part.key?.let { partKey ->
                 val keyUri = partKey.uri ?: throw Refused(HLS_DRM)
@@ -1473,7 +1474,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         val buffer = ByteArray(limit)
         var filled = 0
         while (filled < limit) {
-            if (item.cancelled || item.pauseRequested) throw Cancelled()
+            if (item.stopRequested) throw Cancelled()
             val n = input.read(buffer, filled, limit - filled)
             if (n < 0) return Prefix(buffer.copyOf(filled), complete = true)
             filled += n
@@ -1497,7 +1498,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     ): Long {
         var last: IOException? = null
         for (attempt in 0 until RETRIES) {
-            if (item.cancelled || item.pauseRequested) throw Cancelled()
+            if (item.stopRequested) throw Cancelled()
             try {
                 rewind(out, at)
                 head?.reset()
@@ -1577,7 +1578,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         }
         val buffer = ByteArray(64 * 1024)
         while (true) {
-            if (item.cancelled || item.pauseRequested) throw Cancelled()
+            if (item.stopRequested) throw Cancelled()
             val n = input.read(buffer)
             if (n < 0) break
             if (cipher == null) emit(buffer, n) else cipher.update(buffer, 0, n)?.let { emit(it, it.size) }
@@ -1755,7 +1756,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         page: String?,
         item: Item?,
         patience: Patience = DOWNLOAD,
-        stop: () -> Boolean = { item?.cancelled == true || item?.pauseRequested == true },
+        stop: () -> Boolean = { item?.stopRequested == true },
     ): HlsPlaylist {
         val fetched = try {
             getBody(url, userAgent, page, item, patience, MAX_PLAYLIST_BYTES, stop = stop)
@@ -1776,7 +1777,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         patience: Patience = DOWNLOAD,
         limit: Int = MAX_PLAYLIST_BYTES,
         headersFor: ((String) -> Map<String, String>)? = null,
-        stop: () -> Boolean = { item?.cancelled == true || item?.pauseRequested == true },
+        stop: () -> Boolean = { item?.stopRequested == true },
     ): ByteArray = getBody(url, userAgent, page, item, patience, limit, headersFor = headersFor, stop = stop).bytes
 
     /**
@@ -1801,7 +1802,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         limit: Int = MAX_PLAYLIST_BYTES,
         headersFor: ((String) -> Map<String, String>)? = null,
         keepTooLarge: Boolean = false,
-        stop: () -> Boolean = { item?.cancelled == true || item?.pauseRequested == true },
+        stop: () -> Boolean = { item?.stopRequested == true },
     ): Fetched {
         val forHop: (String) -> Map<String, String> = headersFor ?: { u -> headersFromPage(userAgent, page, u) }
         var last: IOException? = null
@@ -1860,7 +1861,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     private fun pauseFor(item: Item, ms: Long) {
         val end = System.currentTimeMillis() + ms
         while (System.currentTimeMillis() < end) {
-            if (item.cancelled || item.pauseRequested) throw Cancelled()
+            if (item.stopRequested) throw Cancelled()
             Thread.sleep(100)
         }
     }

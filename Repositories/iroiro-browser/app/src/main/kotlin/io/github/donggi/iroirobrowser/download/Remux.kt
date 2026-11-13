@@ -408,29 +408,5 @@ class Remux(sources: List<Source>, private val cancelled: () -> Boolean = { fals
             // 다시 Cues 를 찾으러 가기를 끝없이 되풀이해 저장이 끝나지 않는다.
             Container.WEBM -> MatroskaExtractor(SubtitleParser.Factory.UNSUPPORTED, MatroskaExtractor.FLAG_DISABLE_SEEK_FOR_CUES)
         }
-
-        /** 머리 바이트로 그릇을 가린다(부르는 쪽이 모를 때). */
-        fun sniff(head: ByteArray): Container? {
-            fun at(i: Int) = if (i < head.size) head[i].toInt() and 0xFF else -1
-            fun ascii(i: Int, s: String) = i + s.length <= head.size && s.indices.all { head[i + it].toInt() == s[it].code }
-            return when {
-                at(0) == 0x47 && (head.size < 189 || at(188) == 0x47) -> Container.TS
-                at(0) == 0x1A && at(1) == 0x45 && at(2) == 0xDF && at(3) == 0xA3 -> Container.WEBM
-                ascii(4, "ftyp") || ascii(4, "styp") || ascii(4, "moof") || ascii(4, "moov") || ascii(4, "sidx") ->
-                    if (containsAscii(head, "moof") || containsAscii(head, "mvex")) Container.FMP4 else Container.MP4
-                ascii(0, "ID3") || (at(0) == 0xFF && (at(1) and 0xF6) == 0xF0) -> Container.ADTS
-                at(0) == 0xFF && (at(1) and 0xE0) == 0xE0 -> Container.MP3
-                else -> null
-            }
-        }
-
-        private fun containsAscii(head: ByteArray, s: String): Boolean {
-            val b = s.toByteArray(Charsets.US_ASCII)
-            outer@ for (i in 0..head.size - b.size) {
-                for (k in b.indices) if (head[i + k] != b[k]) continue@outer
-                return true
-            }
-            return false
-        }
     }
 }
