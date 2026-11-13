@@ -10,6 +10,7 @@ import android.graphics.pdf.LoadParams
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.createBitmap
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import kotlinx.coroutines.CancellationException
@@ -216,7 +217,7 @@ internal object PdfEngine {
     suspend fun render(renderer: PdfRenderer, layout: PdfSpreads.Layout, spec: Spec): Bitmap? =
         withContext(IroDispatchers.pdfRender) {
             try {
-                val bitmap = Bitmap.createBitmap(
+                val bitmap = createBitmap(
                     spec.bitmapWidth.coerceAtLeast(1),
                     spec.bitmapHeight.coerceAtLeast(1),
                     // `RGB_565` 는 `Unsupported pixel format` 이다. 고를 수 있는 것이 아니다.

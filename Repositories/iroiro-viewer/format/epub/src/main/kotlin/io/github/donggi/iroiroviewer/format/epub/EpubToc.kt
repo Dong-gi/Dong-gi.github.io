@@ -117,7 +117,7 @@ internal object EpubToc {
 
                 XmlPullParser.END_TAG -> when (parser.name) {
                     "a" -> if (inToc && href != null) {
-                        out.add(Entry(text.toString().trim(), href!!, (listDepth - 1).coerceAtLeast(0)))
+                        out.add(Entry(text.toString().trim(), href, (listDepth - 1).coerceAtLeast(0)))
                         href = null
                     }
 

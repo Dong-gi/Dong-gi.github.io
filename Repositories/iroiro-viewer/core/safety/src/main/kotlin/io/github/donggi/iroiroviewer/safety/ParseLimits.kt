@@ -49,9 +49,6 @@ data class ParseLimits(
     /** 압축비를 보기 시작하는 출력 바이트. 이 아래에서는 비율이 무의미하다. */
     val ratioFloorBytes: Long = 1L * 1024 * 1024,
 
-    /** XML 요소 중첩 깊이. 수천 겹으로 스택을 터뜨리는 문서가 있다. */
-    val maxXmlDepth: Int = 256,
-
     /**
      * XML 문서 하나의 **입력 바이트** 상한.
      *

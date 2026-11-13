@@ -15,7 +15,6 @@ java {
 }
 
 dependencies {
-    implementation(project(":core:model"))
     implementation(project(":core:safety"))
     // 인코딩 판정과 창 단위 디코딩 — 텍스트·자막·zip 파일명이 함께 쓴다(의존 표가 허용한다).
     implementation(project(":core:charset"))

@@ -373,7 +373,7 @@ internal object XingInfo {
         frame.putU32be(at + 4, if (withToc) 7 else 3) // 프레임 수 + 바이트 수 (+ 목차)
         frame.putU32be(at + 8, frames.toLong())
         frame.putU32be(at + 12, bytes)
-        if (withToc) toc!!.copyInto(frame, at + 16)
+        if (withToc) toc.copyInto(frame, at + 16)
     }
 
     /** 목차 100 칸. [offsetOf] 는 프레임 차례 → 머리 프레임 처음에서의 자리. 프레임이 없으면 null. */

@@ -25,7 +25,6 @@ internal object PdfSpreads {
     /** 화면 한 칸에 보이는 것 — 쪽 하나, 또는 펼침 하나. 값으로 견준다(캐시의 열쇠). */
     data class View(val pages: List<Int>) {
         val first: Int get() = pages.first()
-        val isSpread: Boolean get() = pages.size > 1
 
         companion object {
             fun single(page: Int) = View(listOf(page))

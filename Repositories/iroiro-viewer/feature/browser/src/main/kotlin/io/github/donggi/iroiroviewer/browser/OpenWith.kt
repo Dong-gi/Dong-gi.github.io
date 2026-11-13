@@ -102,7 +102,7 @@ internal enum class TapRoute {
  */
 internal data class DetailRequest(
     val entry: FileEntry,
-    @StringRes val notice: Int? = null,
+    @param:StringRes val notice: Int? = null,
 )
 
 /** 다른 앱으로 열기의 순수 규칙. 화면은 이것을 부르기만 한다. */

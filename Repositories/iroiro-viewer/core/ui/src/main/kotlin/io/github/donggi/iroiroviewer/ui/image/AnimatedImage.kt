@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.painter.Painter
 import io.github.donggi.iroiroviewer.model.IroDispatchers
-import io.github.donggi.iroiroviewer.safety.AnimationLimits
 import io.github.donggi.iroiroviewer.safety.ImageLimits
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
@@ -209,19 +208,3 @@ private fun animatedFrom(
         null
     }
 }
-
-/**
- * 이 쪽을 **움직이게 틀 것인가.**
- *
- * 포맷이 맞고([ImageFormats.playsAnimated]) 예산이 허락할 때만([AnimationLimits.canAnimate])
- * 참이다. 둘을 한 자리에서 묻게 해 두면 화면이 한쪽만 보고 결정하는 일이 없다.
- */
-fun shouldAnimate(
-    bytes: ByteArray,
-    offset: Int,
-    length: Int,
-    width: Int,
-    height: Int,
-    budget: ImageLimits.Budget,
-): Boolean = ImageFormats.playsAnimated(bytes, offset, length) &&
-    AnimationLimits.canAnimate(width, height, budget)

@@ -855,25 +855,28 @@ export JAVA_HOME="$HOME/.gradle/jdks/jetbrains_s_r_o_-21-amd64-windows.2"
 빌드와 시험을 통과하고 minSdk 31 기기에서 `NoSuchMethodError` 로 앱을 죽였다. lint 만 그것을 본다. **지금 이 저장소에서 lint 는 오류 0으로
 통과한다** — 새로 뜨는 것만 보면 된다. **`:app:lintRelease` 는 라이브러리 모듈의 문제를 보고하지 않는다**(함정 표) — 모듈을 새로 만들거나 크게
 고치면 `:<모듈>:lintRelease` 를 따로 돌린다. 남은 경고는 전부 옛 줄이다 — `app` 2(`MANAGE_EXTERNAL_STORAGE` 정책 안내 `ScopedStorage`, `targetSdk 36`
-의 `OldTargetApi` — 새 판 알림이 더 뜰 때가 있다), `feature:browser` 5, `feature:image` 3, `feature:docview` 2, `core:io` 1(`ObsoleteSdkInt`),
-`core:playback` 1(`ExportedService` — 재생 서비스), `feature:player` 1·힌트 1. `feature:editor`·`core:webhost`·`feature:text` 는 'No issues'.
+의 `OldTargetApi` — 새 판 알림이 더 뜰 때가 있다), `feature:browser` 5(`ModifierParameter` 1·`FrequentlyChangingValue` 4), `feature:image` 3
+(`ConfigurationScreenWidthHeight` 2·`LocalContextResourcesRead` 1), `core:playback` 1(`ExportedService` — 재생 서비스). 나머지 모듈은 'No issues'
+(2026-11 리팩터링이 `core:io`·`feature:docview`·`feature:player` 의 쉬운 것 — 쓸모없어진 `SDK_INT` 검사, 빈 `super.onCleared`, KTX
+`createBitmap`, `mutableLongStateOf`, 매개변수 차례 — 을 걷었다). `feature:browser`·`feature:image` 의 것은 고치면 동작이 바뀔 수 있어
+두었다(재구성 빈도·화면 크기를 읽는 자리. 화면 함수의 매개변수 차례는 부르는 쪽까지 옮겨야 한다).
 까닭을 적고 끈 것 — `IncomingFiles` 의 `UsableSpace` 둘과 `ZipMaker` 의 하나(남길 공간을 재는 자리라 일부러 보수적인 값을 쓴다), `AesZipCrypto` 의
 `GetInstance`(ECB — 계수기 블록만 암호화하는 CTR 이다).
 **순수 JVM 모듈(`format:*`·`core:model`·`core:safety`·`core:charset`)은 lint 가 보지 않는다** — `tools/check_api_level.py` 가 그 몫이고 지금 0건이다
 (함정 표. 자바 9 의 공변 반환 `ByteBuffer.limit(Int)` 처럼 표에 없는 것도 잡는다 — `Buffer` 로 불러 피한다). **`NewApi` 는 0건이다** — PiP 의
 API 33 짜리 setter 넷(`setTitle`·`setSubtitle`·`setCloseAction`·`setExpandedAspectRatio`)을 부르지 않는다.
 
-**JVM 시험은 1,753건이다**(순수 JVM 626 + 안드로이드 모듈 1,127), 실패 0. 건너뜀은 표본(`samples-local/`)이 있는 저장소에서 3(윈도에서 심볼릭
+**JVM 시험은 1,750건이다**(순수 JVM 625 + 안드로이드 모듈 1,125), 실패 0. 건너뜀은 표본(`samples-local/`)이 있는 저장소에서 3(윈도에서 심볼릭
 링크를 만들 권한이 없다 — `feature:text` 1, 그리고 pyzipper 와 견주는 `feature:archive` 의 `AesZipOracleTest` 2 — 환경 변수 `IROIRO_AESZIP_ORACLE` 이
 있을 때만 돈다, '14단계 뒤 — AES 암호 ZIP'), 표본이 없는 작업 사본에서는 10(`format:epub` 4·`feature:docview` 3·`feature:text` 1·`feature:archive` 2).
 
 | 모듈 | 시험 | 모듈 | 시험 | 모듈 | 시험 |
 |---|---|---|---|---|---|
 | `core:model` | 20 | `format:archive` | 251 | `feature:archive` | 39 |
-| `core:safety` | 69 | `format:epub` | 78 | `feature:browser` | 67 |
+| `core:safety` | 68 | `format:epub` | 78 | `feature:browser` | 67 |
 | `core:charset` | 39 | `format:html` | 75 | `feature:comic` | 120 |
 | `core:io` | 187 | `format:text` | 94 | `feature:docview` | 138 |
-| `core:data` | 29 | `app` | 64 | `feature:editor` | 70 |
+| `core:data` | 29 | `app` | 62 | `feature:editor` | 70 |
 | `core:ui` | 106 | | | `feature:image` | 61 |
 | `core:playback` | 96 | | | `feature:player` | 29 |
 | `core:webhost` | 18 | | | `feature:settings` | 18 |
@@ -1893,6 +1896,7 @@ CSS 문자열 안의 `url(` 은 `none` 으로 바꾸지 않고, 깨진 `url(` �
 | 편집기는 이 앱의 모듈이다 — 같은 APK·같은 UID. 화면(`EditorActivity`)은 **따로 된 프로세스 `:editor`** 에서 돈다 | 큰 웹 편집기의 WebView·렌더러 메모리(수백 MB)를 파일 쪽과 가르고, WebView 자료 폴더도 따로 쓴다(`WebView.setDataDirectorySuffix("editor")` — 한 앱의 두 프로세스가 같은 폴더를 쓰면 WebView 가 던진다). 그 프로세스는 `IroiroApp` 의 조립·정리를 건너뛴다(받은 사본 치우기가 주 프로세스 재생기의 파일을 모르고 지울 수 있다) |
 | 길 — 인텐트(`EditorApp.intent`)·저장 자리(`EditorSlotProvider`, 주 프로세스)·`EditorSaver` | 두 프로세스를 잇는 것이 저장 자리 제공자다. 편집기는 부른 쪽이 이 앱인지 본다(`callingActivity` — 화면을 내보내지 않는다). 아래 '편집기와의 길' |
 | 엔진 묶음은 `vendor/editor/assets`(git 무시) — `tools/editor/` 가 짓는다 | rhwp(MIT)·ONLYOFFICE 편집기와 x2t(AGPL-3.0)·글꼴(OFL·Apache·GUST). 묶음이 없으면 시험 엔진(probe)만 든 빌드가 되고 형식 목록이 비어 아무것도 넘기지 않는다. 고지 화면의 '편집기 엔진' 이 묶음의 licenses 를 펼친다(엔진 명세 문장은 묶음이 든 빌드에만, 상표 문장은 따로 늘 — 그 출처는 확인하지 못했다). 묶음이 든 릴리스 APK 는 약 76 MB 다(거의 다 엔진이다 — 엔진 없이는 약 8 MB) |
+| 엔진 판 — rhwp **0.8.7**, ONLYOFFICE 는 CryptPad 빌드 **9.3.2+3**(편집기·x2t). 새 판은 `python -I tools/editor/check_updates.py` 가 알린다 | rhwp 0.9.0 은 지어 보고 되돌렸다(2026-11-14) — 글꼴이 HYhwpEQ 인 수식(한컴 수식의 기본)의 숫자·기호를 그 글꼴의 사용자 영역 글자로 그려, 그 글꼴이 없는 기기에서 네모로 나왔다(`build_rhwp.py` 머리말). 판을 올리면 수식 문서·옛한글·큰 HWP 를 에뮬레이터에서 먼저 본다. ONLYOFFICE 는 CryptPad 가 새 빌드의 해시를 내야 올린다(`build_onlyoffice.py` 는 그 해시와 견준다) — 본가의 9.4·10.0 보안 고침은 그때 들어온다 |
 | 의존 하나 — `androidx.webkit` 1.17.1(사용자 승인, 브라우저와 같은 판) | 편집기와 바이트를 ArrayBuffer 로 주고받는 WebMessageListener 가 여기 있다. `core:webhost` 는 쓰지 않는다 — 지금은 편집기만 쓴다 |
 | 편집기 화면은 **설정이 바뀌어도 다시 서지 않는다** | 다시 서면 WebView 가 새로 서고 쪽 안의 고친 것이 사라진다(함정 표) |
 
@@ -2166,7 +2170,7 @@ samples-local/            .gitignore 대상. 실세계 문서는 절대 커밋�
 
 **`core:charset` 이 표에 든 경위**(7단계). 모듈 지도는 처음부터 "인코딩 감지. 텍스트·
 자막·zip 파일명이 공유한다" 고 적었는데 zip 파일명 판정은 `format:archive` 에 살아서,
-**지도가 공유하라고 적은 것을 표가 금지하고 있었다.** `core:charset` 은 순수 JVM 이고 `core:model` 만 보는 잎 모듈이라 의존
+**지도가 공유하라고 적은 것을 표가 금지하고 있었다.** `core:charset` 은 순수 JVM 이고 다른 모듈을 보지 않는 잎 모듈이라 의존
 방향이 뒤집히지 않는다. **zip 파일명도 `core:charset` 을 쓴다**(14단계 — 그 전에는 `format/archive/EntryNameDecoder.kt` 가 CP949 후보 탐색과 점수
 판정을 따로 한 벌 더 갖고 있었다). 지금은 UTF-8 표시만 먼저 보고 `CharsetDetector.detect` 를 부른다(유니코드 경로 추가필드는 `ZipArchiveReader`
 가 판정 앞에서 따른다). 합칠 때 바뀐 답은 개선으로 적었다(Shift_JIS·UTF-8 무표시 `café`·Big5). **여전히 틀리는 것** — 짧은 간체 중국어 이름,
@@ -2220,9 +2224,12 @@ ASCII 낱말 끝에 붙은 UTF-8 로도 읽히는 한 글자(`Excel처` → `Exc
 - **내보낸 액티비티(`MainActivity`·`OpenActivity`)는 인텐트 extras 를 ViewModel 의 저장 상태로 넘기지 않는다**(`withoutIntentArgs` — 함정
   표). 새로 액티비티를 내보내면 같은 재정의를 단다. 남이 실은 extras 를 꺼내는 자리(공유의 스트림)는 꺼내다 던지는 것을 잡는다.
 - **파서 방어 상한을 한곳(`core:safety`)에 못 박는다.** 엔트리 10,000 / 단일 해제 256MB /
-  총 해제 1GB / 압축비 100:1 / XML 중첩 256 / 파일당 30초 / **재생 큐 500항목**.
+  총 해제 1GB / 압축비 100:1 / XML 입력 32 MiB / 파일당 30초 / **재생 큐 500항목**.
   **선언된 크기를 믿지 않고 실제 읽은 바이트를 센다.** 오프셋은 `Long` 으로 읽고
   `Math.toIntExact` 로 변환한다.
+  **XML 중첩 깊이 상한은 없다**(2026-11-14 사용자 결정으로 지웠다 — `SafeXml` 의 `nextGuarded`·`nextTagGuarded` 와 `maxXmlDepth`). 이 앱의
+  XML 파서(`EpubPackage`·`EpubToc`·`EpubEncryption`)는 재귀 없이 `parser.next()` 를 고리로 돌아 겹이 깊어도 스택이 자라지 않고, 파서가 드는
+  요소 이름 목록은 입력 32 MiB 상한에 묶인다. **XML 을 재귀로 읽는 파서를 새로 짓는다면** 그 파서에 깊이 상한을 다시 둔다.
   **단서 — 포맷의 구조 상한은 그 포맷 곁에 둔다.** 그 포맷만 아는 상한(tar 의 PAX 머리, 이름 머리의 합, 해제기 사전의 메모리처럼)은
   모듈의 한 파일(`format:archive` 의 `TarLimits`·`EntryNameLimits`·`StreamLimits`)이나 그 클래스의 동반 객체에 모아 둔다. `core:safety` 에
   두면 거기가 모든 포맷의 구조를 알아야 한다. **포맷과 상관없는 예산**(위의 목록, 암호를 푼 평문 한 벌의 `DecryptLimits`)만 `core:safety` 다.

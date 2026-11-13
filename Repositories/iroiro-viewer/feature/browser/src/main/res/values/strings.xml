@@ -53,7 +53,6 @@
     <string name="browser_detail_size">크기</string>
     <string name="browser_detail_modified">수정한 때</string>
     <string name="browser_detail_path">경로</string>
-    <string name="browser_detail_close">닫기</string>
 
     <string name="browser_kind_folder">폴더</string>
     <string name="browser_kind_image">이미지</string>
@@ -195,7 +194,6 @@
     <string name="browser_bookmarks">즐겨찾기</string>
     <string name="browser_bookmark_add">즐겨찾기에 넣기</string>
     <string name="browser_bookmark_remove">즐겨찾기에서 빼기</string>
-    <string name="browser_bookmark_none">폴더를 열고 별을 누르면 여기에 모입니다</string>
     <string name="browser_bookmark_missing">지금은 없는 폴더</string>
     <string name="browser_op_refused">" · %1$d개는 풀지 않았습니다"</string>
 

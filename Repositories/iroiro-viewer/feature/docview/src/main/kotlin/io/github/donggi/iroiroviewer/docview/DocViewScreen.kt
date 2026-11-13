@@ -399,7 +399,7 @@ fun DocViewScreen(
                             // '편집기로 열기'(⋮ 의 '편집' 과 같다)는 편집기라면 그 파일을 볼 수 있는 갈래에만 — PDF 는 깨진 파일뿐이고 그때도
                             // '다른 앱으로 열기' 가 첫 단추다. 오피스·한글은 편집기가 먼저다([DocOpenWith.editorOnFailure]·[DocOpenWith.editorFirst]).
                             val toEditor = editorKind?.takeIf { DocOpenWith.editorOnFailure(s.failure, it) }?.let { edit }
-                            val editorFirst = toEditor != null && editorKind != null && DocOpenWith.editorFirst(editorKind)
+                            val editorFirst = toEditor != null && DocOpenWith.editorFirst(editorKind)
                             val openWithLabel = stringResource(io.github.donggi.iroiroviewer.io.R.string.io_open_with)
                             val editorLabel = stringResource(R.string.doc_open_in_editor)
                             // 첫 단추는 채운 단추, 둘째는 옅은 단추다.

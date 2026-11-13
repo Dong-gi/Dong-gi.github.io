@@ -10,7 +10,6 @@
     <string name="archive_search_hint">이 압축 파일에서 찾기</string>
     <string name="archive_search_close">찾기 닫기</string>
     <string name="archive_cancel">취소</string>
-    <string name="archive_loading">압축 파일을 읽는 중</string>
 
     <string name="archive_failed_unreadable">이 파일을 읽을 수 없습니다</string>
     <string name="archive_failed_corrupt">압축 파일이 깨졌거나 알 수 없는 형식입니다</string>
@@ -58,21 +57,14 @@
     <string name="archive_extract_go">풀기</string>
 
     <!-- 충돌 정책. 브라우저의 붙여넣기 대화상자와 **같은 말**을 쓴다. -->
-    <string name="archive_conflict_title">같은 이름의 파일이 있습니다</string>
     <string name="archive_conflict_keep_both">둘 다 보관</string>
     <string name="archive_conflict_skip">건너뛰기</string>
     <string name="archive_conflict_overwrite">덮어쓰기</string>
 
-    <!-- 결과 -->
-    <string name="archive_result_done">파일 %1$d개를 풀었습니다</string>
-    <string name="archive_result_refused">· %1$d개는 풀지 않았습니다</string>
-
     <!-- 미리보기 -->
     <string name="archive_preview_failed">이 항목을 열 수 없습니다</string>
-    <string name="archive_preview_too_big">미리보기에는 너무 큰 항목입니다. 풀어서 여세요</string>
     <string name="archive_preview_nested">압축 파일 안의 압축 파일은 열지 않습니다. 풀어서 여세요</string>
     <string name="archive_preview_document">압축 파일 안의 문서는 열지 않습니다. 풀어서 여세요</string>
-    <string name="archive_preview_solid_warning">연속 압축이라 앞 항목까지 함께 풀어야 합니다</string>
 
     <!-- 고지 -->
     <string name="archive_notice">오픈소스 고지</string>

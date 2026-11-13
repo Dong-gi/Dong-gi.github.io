@@ -27,15 +27,6 @@ enum class FormatId(val label: String, val category: FormatCategory) {
     AUDIO("오디오", FormatCategory.MEDIA),
     VIDEO("비디오", FormatCategory.MEDIA),
     TEXT("텍스트", FormatCategory.TEXT),
-    ;
-
-    val isZipContainer: Boolean
-        get() = this in ZIP_CONTAINERS
-
-    companion object {
-        /** 실체가 ZIP 인 것들. 판별 2단계(엔트리 이름 보기)가 필요한 집합이다. */
-        val ZIP_CONTAINERS = setOf(ZIP, CBZ, EPUB)
-    }
 }
 
 enum class FormatCategory { ARCHIVE, COMIC, DOCUMENT, IMAGE, MEDIA, TEXT }

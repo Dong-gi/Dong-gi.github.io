@@ -20,7 +20,5 @@ dependencies {
     // api 로 노출한다 — 파서가 OpenFailure 를 만들려면 상한 예외 타입을 알아야 한다.
     api(project(":core:safety"))
     implementation(libs.kotlinx.coroutines.core)
-    // 안드로이드가 런타임에 주는 API 라 컴파일에만 쓴다. APK 에 들어가지 않는다.
-    compileOnly(libs.xmlpull)
     // 시험이 없다 — 시험을 둘 때 시험의 의존도 함께 적는다.
 }

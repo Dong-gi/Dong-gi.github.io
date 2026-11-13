@@ -18,7 +18,6 @@ import io.github.donggi.iroiroviewer.format.text.TextRow
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.io.TextSaver
 import io.github.donggi.iroiroviewer.model.IroDispatchers
-import io.github.donggi.iroiroviewer.safety.TextLimits
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
@@ -652,8 +651,5 @@ class TextViewModel(store: TextViewerStore) : ViewModel() {
 
         private const val PREVIEW_BYTES = 256
         private const val PREVIEW_CHARS = 120
-
-        /** 강조를 켤 수 있는 파일 크기. 화면이 이 값을 사람에게 보여 준다. */
-        val highlightLimitBytes: Long get() = TextLimits.HIGHLIGHT_MAX_BYTES
     }
 }

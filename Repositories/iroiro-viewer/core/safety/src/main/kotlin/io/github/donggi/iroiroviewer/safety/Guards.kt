@@ -230,37 +230,3 @@ class RatioGuard(
         }
     }
 }
-
-/**
- * 중첩 깊이. 컨테이너 안의 컨테이너, XML 요소의 겹침처럼 재귀로 스택이나 메모리를
- * 터뜨리는 구조를 막는다.
- */
-class DepthGuard(private val max: Int, private val limitName: String = "maxDepth") {
-
-    var depth: Int = 0
-        private set
-
-    inline fun <T> around(block: () -> T): T {
-        enter()
-        try {
-            return block()
-        } finally {
-            exit()
-        }
-    }
-
-    /**
-     * 상태를 바꾸기 **전에** 검사한다. 올린 뒤에 던지면 짝이 되는 [exit] 가 불리지
-     * 않아 깊이가 1씩 샌다 — 그렇게 되면 한 번 거부된 뒤로 정상 문서까지 막힌다.
-     */
-    fun enter() {
-        if (depth + 1 > max) {
-            throw ParseLimitExceededException(limitName, "깊이 ${depth + 1} (상한 $max)")
-        }
-        depth++
-    }
-
-    fun exit() {
-        if (depth > 0) depth--
-    }
-}

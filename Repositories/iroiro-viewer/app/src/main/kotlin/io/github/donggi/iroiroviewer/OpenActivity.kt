@@ -282,7 +282,7 @@ internal class OpenViewModel(app: Application, private val saved: SavedStateHand
         /** 받았다. [copy] 면 앱 캐시의 사본이다 — 읽기 전용으로 연다. */
         data class Ready(val path: String, val copy: Boolean, val route: IncomingRoute) : State
 
-        data class Failed(@StringRes val message: Int) : State
+        data class Failed(@param:StringRes val message: Int) : State
     }
 
     private val _state = MutableStateFlow<State>(State.Receiving(0, -1))

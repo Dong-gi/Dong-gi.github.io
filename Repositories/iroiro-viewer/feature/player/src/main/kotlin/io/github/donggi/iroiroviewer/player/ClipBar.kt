@@ -132,7 +132,7 @@ internal object ClipJobs {
 internal sealed interface ClipStart {
     data class Started(val id: String) : ClipStart
 
-    data class Refused(@StringRes val why: Int) : ClipStart
+    data class Refused(@param:StringRes val why: Int) : ClipStart
 }
 
 /** 조작부 안에 펼치는 구간 칸. */

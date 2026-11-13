@@ -74,26 +74,3 @@ object SafeXml {
         return t
     }
 }
-
-/**
- * 깊이를 검사하는 [XmlPullParser.next].
- *
- * 파서가 `next()` 를 직접 부르면 중첩 상한이 걸리지 않는다. **파서 코드에서는
- * 이것만 쓴다** — 수천 겹으로 겹친 요소가 스택을 터뜨리는 것을 여기서 끊는다.
- */
-fun XmlPullParser.nextGuarded(limits: ParseLimits = ParseLimits.DEFAULT): Int {
-    val event = next()
-    if (depth > limits.maxXmlDepth) {
-        throw ParseLimitExceededException("maxXmlDepth", "깊이 $depth (상한 ${limits.maxXmlDepth})")
-    }
-    return event
-}
-
-/** 깊이를 검사하는 [XmlPullParser.nextTag]. */
-fun XmlPullParser.nextTagGuarded(limits: ParseLimits = ParseLimits.DEFAULT): Int {
-    val event = nextTag()
-    if (depth > limits.maxXmlDepth) {
-        throw ParseLimitExceededException("maxXmlDepth", "깊이 $depth (상한 ${limits.maxXmlDepth})")
-    }
-    return event
-}

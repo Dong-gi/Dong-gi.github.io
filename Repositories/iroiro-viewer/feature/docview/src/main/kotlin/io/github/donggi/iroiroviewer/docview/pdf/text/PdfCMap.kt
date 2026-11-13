@@ -44,8 +44,6 @@ internal class PdfCMap private constructor(
 
     val hasUnicode: Boolean get() = chars.isNotEmpty() || ranges.isNotEmpty()
 
-    val hasCids: Boolean get() = cidChars.isNotEmpty() || cidRanges.isNotEmpty()
-
     /** 코드([length] 바이트, 큰 쪽이 앞)의 글자. 모르면 null. */
     fun unicode(code: Long, length: Int): String? {
         chars[key(code, length)]?.let { return it }

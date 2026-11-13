@@ -1,10 +1,8 @@
 package io.github.donggi.iroiroviewer.ui.image
 
-import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
-import android.os.ParcelFileDescriptor
 import androidx.core.graphics.scale
 import androidx.exifinterface.media.ExifInterface
 import io.github.donggi.iroiroviewer.model.IroDispatchers
@@ -15,33 +13,6 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
-
-/**
- * 이미지 파일 하나를 여는 계약.
- *
- * ## 왜 파일 디스크립터를 '인스턴스' 가 아니라 '공장' 으로 넘기는가
- *
- * `ImageDecoder.createSource` 의 오버로드 여덟 개를 실제로 확인했는데
- * **`ParcelFileDescriptor` 를 받는 것이 없다.** 있는 것은
- * `createSource(Callable<AssetFileDescriptor>)` 하나이고, `decodeBitmap` 이
- * try-with-resources 로 감싸 **디코딩 한 번에 그 FD 를 닫는다.**
- *
- * 그래서 한 번 연 FD 를 들고 다니다 두 번째 디코딩에서 "닫힌 디스크립터" 를 만나게 된다.
- * 계약을 **부를 때마다 새로 여는 공장**으로 두면 그 함정이 구조적으로 사라진다.
- */
-fun interface FdFactory {
-    /** 부를 때마다 **새** 디스크립터를 연다. 받는 쪽이 닫는다. */
-    fun open(): AssetFileDescriptor
-}
-
-/** 파일 경로에서 만드는 공장. */
-fun fdFactoryOf(path: String): FdFactory = FdFactory {
-    AssetFileDescriptor(
-        ParcelFileDescriptor.open(File(path), ParcelFileDescriptor.MODE_READ_ONLY),
-        0,
-        AssetFileDescriptor.UNKNOWN_LENGTH,
-    )
-}
 
 /**
  * 파일을 열기 전에 알아야 하는 것.
@@ -73,12 +44,6 @@ data class ImageProbe(
      */
     val isAnimated: Boolean = false,
 ) {
-    val isRotated90: Boolean
-        get() = orientation == ExifInterface.ORIENTATION_ROTATE_90 ||
-            orientation == ExifInterface.ORIENTATION_ROTATE_270 ||
-            orientation == ExifInterface.ORIENTATION_TRANSPOSE ||
-            orientation == ExifInterface.ORIENTATION_TRANSVERSE
-
     /**
      * 영역 디코딩(상세층)을 **곧바로** 써도 되는가 — 바닥층이 방향을 적용했는지 치수로 이미 안다.
      *

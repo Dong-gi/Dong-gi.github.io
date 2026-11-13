@@ -96,9 +96,5 @@ class TextHighlight private constructor(
             }
             return TextHighlight(highlighter, states)
         }
-
-        /** 상태표 없이 곧바로 쓰는 것. 상태가 행을 넘지 않는 언어에만 쓴다. */
-        fun stateless(highlighter: RowHighlighter): TextHighlight =
-            TextHighlight(highlighter, null)
     }
 }

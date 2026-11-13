@@ -9,7 +9,7 @@
       모든 서드파티의 소켓을 OS 수준에서 동시에 막는다.
       2026-10-05 에 네트워크 저장소(SFTP) 때문에 선언했다가 2026-10-09 에 사용자가 이 앱의 네트워크 기능을 걷기로 해 되돌렸다
       (CLAUDE.md 의 'INTERNET 을 다시 걷었다'). 그동안 세운 겹(잠긴 WebView 의 blockNetworkLoads 명시, 재생기의
-      LocalOnlyDataSource, 스크립트 쪽의 CSP)은 그대로 둔다 - 방어는 겹쳐 두어야 한 겹이 무너져도 남는다.
+      LocalOnlyDataSource)은 그대로 둔다 - 방어는 겹쳐 두어야 한 겹이 무너져도 남는다.
       같은 권한을 uses-permission-sdk-23(API 23 부터만 청하는 모양)으로 들여오는 라이브러리도 있다 - 병합기는 그것을 다른 요소로 보아
       위 줄의 remove 가 닿지 않으므로 그 모양으로도 한 줄 둔다. 병합된 매니페스트에 INTERNET 이 남지 않았는지는
       빌드가 본다(app/build.gradle.kts 의 verify…NoInternet - assemble 이 기다린다).

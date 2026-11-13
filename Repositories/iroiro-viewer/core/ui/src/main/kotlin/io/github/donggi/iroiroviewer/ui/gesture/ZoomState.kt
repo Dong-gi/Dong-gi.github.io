@@ -2,11 +2,9 @@ package io.github.donggi.iroiroviewer.ui.gesture
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -207,9 +205,6 @@ class ZoomState {
         )
     }
 }
-
-@Composable
-fun rememberZoomState(key: Any?): ZoomState = remember(key) { ZoomState() }
 
 /**
  * 끌기 하나를 [state] 에 알린다 — 손가락이 닿은 자리와 지금 자리([ZoomState.claimsDrag] 가 방향을 잰다). **`Initial` 단계에서 보고

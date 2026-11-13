@@ -15,7 +15,6 @@ java {
 }
 
 dependencies {
-    implementation(project(":core:model"))
     implementation(project(":core:safety"))
     implementation(project(":format:api"))
     // EPUB 은 ZIP 이다. 안전한 ZIP 리더를 한 벌 더 쓰지 않는다 —

@@ -23,11 +23,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:model"))
-    implementation(project(":core:safety"))
-    // 포맷을 모른다. 자원은 `ResourceProvider` 로 들어온다 — 의존 표가 허락하는 것이
-    // core:model·safety·charset 뿐이고, 같은 호스트를 EPUB·SVG·마크다운 미리보기가
-    // 함께 쓴다.
+    // 포맷을 모른다. 자원은 `ResourceProvider` 로 들어온다 — 같은 호스트를 EPUB·SVG·마크다운 미리보기가
+    // 함께 쓴다. 의존 표가 허락하는 core:model·safety·charset 가운데 어느 것도 쓰지 않는다.
 
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)

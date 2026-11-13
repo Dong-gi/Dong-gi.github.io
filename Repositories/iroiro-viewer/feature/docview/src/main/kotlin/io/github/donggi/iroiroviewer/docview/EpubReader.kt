@@ -170,7 +170,7 @@ fun EpubReader(
                 textZoom = look.textZoom,
                 backgroundColor = look.background,
                 // 고정 레이아웃 쪽은 화면에 맞춰 스크롤할 것이 없다. 세로쓰기는 흐름 장의 일이다.
-                rightToLeft = book.rightToLeft && entry?.fixedLayout != true,
+                rightToLeft = book.rightToLeft && !entry.fixedLayout,
                 startFraction = startFraction,
                 jump = jump,
                 contentKey = look.contentKey,

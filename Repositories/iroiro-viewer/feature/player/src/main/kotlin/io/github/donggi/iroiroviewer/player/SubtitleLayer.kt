@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -104,10 +103,4 @@ private fun CueColumn(cues: List<Cue>, modifier: Modifier = Modifier) {
             )
         }
     }
-}
-
-/** 비디오 표면이 없을 때(소리만) 자막을 가운데에 그린다. */
-@Composable
-fun AudioSubtitleLayer(modifier: Modifier = Modifier) {
-    Box(modifier.fillMaxSize()) { SubtitleLayer() }
 }

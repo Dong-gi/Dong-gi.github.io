@@ -69,6 +69,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import io.github.donggi.iroiroviewer.model.PathNames
 import kotlinx.coroutines.delay
@@ -1220,7 +1221,7 @@ private fun PlayerScreen(
     // **안내에 번호를 붙인다.** 같은 결과를 두 번 내면(`구간이 너무 짧습니다` 를 두 번)
     // 값이 같아 `LaunchedEffect` 의 키가 바뀌지 않고, 그러면 **첫 번째 타이머가 그대로
     // 흘러 두 번째 안내가 곧바로 사라진다.** 함정 표의 `MutableStateFlow` 와 같은 형태다.
-    var noteSeq by remember { mutableStateOf(0L) }
+    var noteSeq by remember { mutableLongStateOf(0L) }
     // 조작부 판이 실제로 차지하는 높이. 재생목록이 그만큼 끝을 비우고, 위에 뜨는
     // 안내들이 그만큼 비켜선다.
     var controlsHeight by remember { mutableStateOf(0.dp) }

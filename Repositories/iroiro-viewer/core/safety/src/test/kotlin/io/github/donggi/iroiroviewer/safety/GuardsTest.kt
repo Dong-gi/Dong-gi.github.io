@@ -138,20 +138,6 @@ class EntryBudgetTest {
     }
 }
 
-class DepthGuardTest {
-
-    @Test
-    fun `깊이를 넘으면 끊고 예외가 나도 깊이가 새지 않는다`() {
-        val g = DepthGuard(max = 2)
-        g.around {
-            g.around {
-                assertFailsWith<ParseLimitExceededException> { g.around { Unit } }
-            }
-        }
-        assertEquals(0, g.depth)
-    }
-}
-
 class ArchivePathTest {
 
     @Test

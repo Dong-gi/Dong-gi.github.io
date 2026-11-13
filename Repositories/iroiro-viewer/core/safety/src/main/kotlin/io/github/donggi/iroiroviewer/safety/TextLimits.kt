@@ -75,15 +75,9 @@ object TextLimits {
      * 앵커 하나가 차지하는 바이트. 성긴 색인의 메모리를 셈할 때 쓴다.
      *
      * `Long`(바이트 오프셋) + `Int`(행) + `Int`(논리 줄) = 16바이트.
+     *
+     * 1 GB·1천만 행이면 앵커가 약 55,000개(바이트 [ANCHOR_BYTES]·행 [ANCHOR_ROWS] 마다 하나) × 16바이트 ≈ **0.9 MB** 다.
+     * 줄마다 오프셋을 들면 같은 파일이 76 MB 이므로, 성기게 두는 것만으로 메모리가 논점에서 빠진다.
      */
     const val ANCHOR_BYTES_IN_MEMORY = 16
-
-    /**
-     * 이 파일에 앵커가 몇 개나 생기는가(대략).
-     *
-     * 1 GB·1천만 행이면 약 55,000개 × 16바이트 ≈ **0.9 MB** 다. 줄마다 오프셋을 들면
-     * 같은 파일이 76 MB 이므로, 성기게 두는 것만으로 메모리가 논점에서 빠진다.
-     */
-    fun estimateAnchors(fileBytes: Long, rows: Long): Long =
-        fileBytes / ANCHOR_BYTES + rows / ANCHOR_ROWS + 1
 }

@@ -3,7 +3,6 @@ package io.github.donggi.iroiroviewer.io
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -888,13 +887,7 @@ object FileOpManager {
      */
     private fun startService(context: Context) {
         val intent = Intent(context, FileOpService::class.java)
-        val ok = runCatching {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(intent)
-            } else {
-                context.startService(intent)
-            }
-        }.isSuccess
+        val ok = runCatching { context.startForegroundService(intent) }.isSuccess
         if (ok) {
             serviceRequested = true
         } else {

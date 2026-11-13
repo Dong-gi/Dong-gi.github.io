@@ -53,23 +53,6 @@ enum class TextEncoding(
         null
     }
 
-    /** 기기가 실제로 쓰는 이름. 진단 화면이 보여 준다 — 우리 라벨과 다를 수 있다. */
-    val platformName: String? get() = charset?.name()
-
-    /**
-     * 한 문자가 최대 몇 바이트인가. **코드포인트 기준**이다.
-     *
-     * `CharsetEncoder.maxBytesPerChar()` 를 쓰면 안 된다 — 그것은 자바 `char` 당 값이라
-     * UTF-8 에 3.0 을 돌려주고, 4바이트 문자는 서러게이트 2개라 6으로 계산된다.
-     * 아래 값은 전 코드포인트를 실제로 인코딩해 잰 것이다.
-     */
-    val maxBytesPerCodePoint: Int
-        get() = when (this) {
-            UTF_8, GB18030, UTF_16LE, UTF_16BE -> 4
-            CP949, SHIFT_JIS, BIG5 -> 2
-            LATIN1 -> 1
-        }
-
     /**
      * 줄바꿈(`0x0A`)이 **멀티바이트 문자의 일부로 나타날 수 있는가.**
      *

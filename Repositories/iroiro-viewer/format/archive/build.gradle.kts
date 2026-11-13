@@ -19,7 +19,6 @@ dependencies {
     implementation(project(":core:safety"))
     // 파일 이름의 인코딩 판정. 글 뷰어와 **같은 판정**을 지나게 한다 — 두 벌이면 한쪽만 고쳐진다(CLAUDE.md).
     implementation(project(":core:charset"))
-    implementation(libs.kotlinx.coroutines.core)
 
     implementation(libs.commons.compress)
     // commons-compress 가 끌고 오는 xz 1.10 을 1.12 로 올린다. LZMA2 해제 경로다.

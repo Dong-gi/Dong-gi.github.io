@@ -1,9 +1,13 @@
 """rhwp(HWP·HWPX 편집기)의 엔진 묶음을 짓는다 — `vendor/editor/assets/engines/rhwp/`(git 무시)로. APK 의 `assets/engines/rhwp/` 이 된다.
 
 판을 고정한다(사용자 승인 2026-10-09):
-- 소스: github.com/edwardkim/rhwp 의 태그 v0.8.7 = 커밋 1a76570e…. 알려진 보안 권고 10건이 모두 이 판에서 고쳐졌다(2026-10-09 확인).
+- 소스: github.com/edwardkim/rhwp 의 태그 v0.8.7 = 커밋 1a76570e…. 공개된 보안 권고 10건이 모두 이 판에서 고쳐졌다(2026-10-09 확인).
   저장소가 3.7 GB 라 필요한 자리만 받는다(깊이 1·blob 은 필요할 때·성긴 체크아웃 — 스튜디오·글꼴·라이선스).
 - wasm: npm 의 `@rhwp/core@0.8.7`. 같은 커밋에서 올렸다(레지스트리 메타데이터의 gitHead, SLSA 출처 증명). 받은 것을 아래 sha512 와 견준다.
+- 0.9.0 은 지어 보고 되돌렸다(2026-11-14): 글꼴이 HYhwpEQ 인 수식(한컴 수식의 기본)의 숫자·기호를 HYhwpEQ 의 사용자 영역 글자(U+E0xx)로
+  그리고, 그 글꼴이 설치돼 있지 않으면 웹 그리개(canvas2d)에 되돌려 읽는 길이 없어 네모로 나온다(되돌리기는 데스크톱 Skia 빌드에만 —
+  `src/renderer/equation/hancom_glyphs.rs` 의 `semantic_fallback_glyph`). 안드로이드에는 그 글꼴이 없다. 다음 판을 올릴 때 수식 문서부터 본다.
+  0.9.0 에 필요했던 준비(SPARSE·FONTS_ALLOWED 의 더한 줄, vite 설정의 AI 도우미 끄기·'로컬 글꼴 감지' 창 빼기)는 남겨 두었다 — 0.8.7 에는 해가 없다.
 - 빌드 도구: 스튜디오의 package-lock.json 그대로 `npm ci --ignore-scripts`(설치 스크립트를 돌리지 않는다). npm 캐시까지 `local/editor/rhwp/` 안에 둔다.
 
 원래 빌드와 다른 것(자세한 것은 `tools/editor/rhwp/vite.config.mjs`):
@@ -46,10 +50,13 @@ OUT = ROOT / "vendor" / "editor" / "assets" / "engines" / "rhwp"
 ADAPTER = ROOT / "feature" / "editor" / "src" / "main" / "assets" / "engines" / "rhwp" / "iroiro-rhwp.js"
 
 REPO = "https://github.com/edwardkim/rhwp.git"
-TAG = "v0.8.7"
+VERSION = "0.8.7"
+TAG = f"v{VERSION}"
 COMMIT = "1a76570e833917d15817415a53c09ad61ab3203f"
-CORE_URL = "https://registry.npmjs.org/@rhwp/core/-/core-0.8.7.tgz"
+CORE_URL = f"https://registry.npmjs.org/@rhwp/core/-/core-{VERSION}.tgz"
 CORE_INTEGRITY = "sha512-qgNpY9aclCvy9D7cPnpuplu42kUFZCCPhdjAS5HBso4Z4XeHG3uchYdUleQBoas/zEuwfJ7H4/ulepqdL/LXDA=="
+# 0.9.0 이면 — COMMIT c9095c5f67632e6721e800ccc7fb43ea49d26682,
+# CORE_INTEGRITY sha512-dEe9gtEM5QXAoJjX+fwgbN5KIo0a6X/wgwEg0LDcq9oY1ga5lD5vNkediFSSX4Xxs8VfFk//dbk71aMQ8J1uAQ== (위 머리말의 까닭으로 되돌렸다)
 
 # 성긴 체크아웃의 자리(gitignore 꼴). e2e 시험·표본 문서는 받지 않는다.
 SPARSE = [
@@ -57,6 +64,9 @@ SPARSE = [
     "/THIRD_PARTY_LICENSES.md",
     "/assets/fonts/",
     "/rhwp-studio/",
+    "/vendor/npm/",  # 0.9.0 부터 스튜디오가 저장소 안의 꾸러미를 file: 로 받는다(ajv)
+    "/rhwp-shared/",  # 0.9.0 부터 스튜디오가 가져온다(양식 동작·PDF 가져오기)
+    "/src/renderer/square_gradient.sksl",  # 스튜디오의 CanvasKit 그리개가 가져온다(우리 빌드는 CanvasKit 을 빼지만 해석은 한다)
     "!/rhwp-studio/e2e/",
     "!/rhwp-studio/public/samples/",
 ]
@@ -65,6 +75,9 @@ SPARSE = [
 FONTS_ALLOWED = (
     "D2Coding-", "GowunBatang-", "GowunDodum-", "LatinModernMath-", "NanumGothic-", "NanumGothicCoding-", "NanumMyeongjo-",
     "NotoSansKR-", "NotoSerifKR-", "Pretendard-", "SourceHanSerifK-", "SpoqaHanSans-",
+    # 0.9.0 에서 더해진 것 — 셋 다 OFL 1.1(rhwp 의 assets/fonts/FONTS.md 와 licenses/): 수식 대체(Noto Sans Math), 옛한글 자모(Source Han
+    # Serif 의 부분 글꼴), 공개 바탕(Google Fonts Batang 을 다른 이름으로 — 특정 제목 글꼴이 없을 때만 고른다).
+    "NotoSansMath-", "RHWPOldHangul-", "RHWPPublicBatang-",
 )
 # 싣지 않는 글꼴 — 라이선스가 '무료 배포' 뿐이다(rhwp 의 assets/fonts/FONTS.md).
 FONTS_DENIED = ("Cafe24", "Happiness")
@@ -147,7 +160,7 @@ def fetch_core() -> pathlib.Path:
     """@rhwp/core 의 묶음을 받아(이미 있으면 그것을) sha512 를 견준다."""
     dl = WORK / "downloads"
     dl.mkdir(parents=True, exist_ok=True)
-    tgz = dl / "rhwp-core-0.8.7.tgz"
+    tgz = dl / f"rhwp-core-{VERSION}.tgz"
     if not tgz.is_file():
         log(f"wasm: {CORE_URL} 를 받는다")
         req = urllib.request.Request(CORE_URL, headers={"User-Agent": "iroiro-viewer-editor-build"})
@@ -159,7 +172,7 @@ def fetch_core() -> pathlib.Path:
     if got != want:
         tgz.unlink()
         sys.exit(f"@rhwp/core 묶음의 {algo} 가 다르다 — 지웠다. 받은 것: {got}")
-    log("wasm: @rhwp/core 0.8.7 sha512 맞음")
+    log(f"wasm: @rhwp/core {VERSION} sha512 맞음")
     return tgz
 
 
@@ -338,7 +351,7 @@ def assemble(node: str, kept_fonts: list[str], audit: dict) -> None:
         "rhwp 엔진 묶음 — tools/editor/build_rhwp.py 가 지었다. 손으로 고치지 않는다.",
         f"지은 때: {time.strftime('%Y-%m-%d %H:%M:%S %z')}",
         f"소스: {REPO} 태그 {TAG} = 커밋 {COMMIT}",
-        f"wasm: @rhwp/core 0.8.7 ({CORE_INTEGRITY})",
+        f"wasm: @rhwp/core {VERSION} ({CORE_INTEGRITY})",
         f"node: {subprocess.run([node, '--version'], capture_output=True, text=True).stdout.strip()}",
         "번들에 든 npm 꾸러미: " + (", ".join(bundled) if bundled else "없음"),
         "실은 글꼴: " + ", ".join(kept_fonts),

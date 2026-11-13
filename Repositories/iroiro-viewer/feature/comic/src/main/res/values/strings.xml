@@ -3,7 +3,6 @@
     <!-- 만화 뷰어. 화면에 나가는 글자는 예외 없이 여기 둔다(저장소 규칙). -->
 
     <string name="comic_close">닫기</string>
-    <string name="comic_loading">여는 중…</string>
     <string name="comic_page_of">%1$d / %2$d</string>
     <string name="comic_settings">읽기 설정</string>
     <string name="comic_done">확인</string>

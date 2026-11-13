@@ -66,7 +66,7 @@ import io.github.donggi.iroiroviewer.playback.playlistEmptyLabel
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PlaylistPanel(currentIndex: Int, bottomInset: Dp = 0.dp, modifier: Modifier = Modifier) {
+fun PlaylistPanel(currentIndex: Int, modifier: Modifier = Modifier, bottomInset: Dp = 0.dp) {
     val queue by PlaybackConnection.queue.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
 

@@ -15,7 +15,6 @@ java {
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
     // 안드로이드가 런타임에 주는 API 라 컴파일에만 건다. APK 에 들어가지 않는다.
     compileOnly(libs.xmlpull)
     // JVM 테스트에는 구현체가 없으므로 kxml2 를 끼운다. 안드로이드의 XmlPullParser

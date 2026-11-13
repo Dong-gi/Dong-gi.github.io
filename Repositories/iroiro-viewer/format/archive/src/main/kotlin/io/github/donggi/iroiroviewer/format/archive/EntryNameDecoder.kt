@@ -43,15 +43,6 @@ object EntryNameDecoder {
     /** 진단 화면이 보여줄, 실제로 찾아낸 이름. 없으면 null. */
     val cp949Name: String? get() = cp949?.name()
 
-    fun findCharset(vararg candidates: String): Charset? {
-        for (name in candidates) {
-            val cs = runCatching { if (Charset.isSupported(name)) Charset.forName(name) else null }
-                .getOrNull()
-            if (cs != null) return cs
-        }
-        return null
-    }
-
     /** 판정 결과. 어떤 근거로 그 인코딩을 골랐는지까지 남긴다(진단과 회귀 시험용). */
     data class Decoded(val name: String, val charsetLabel: String)
 
