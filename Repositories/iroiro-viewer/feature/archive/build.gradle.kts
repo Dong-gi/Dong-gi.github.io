@@ -57,6 +57,9 @@ dependencies {
     // 이름 계산·진행 바·폴더 시각은 순수 계산이라 JVM 에서 돈다. **`kotlin("test-junit")` 이 필요하다** —
     // 안드로이드 라이브러리 모듈에서는 `kotlin("test")` 만으로 러너가 붙지 않는다(함정 표).
     testImplementation(kotlin("test-junit"))
+    // 실패 종류의 시험이 라이브러리의 메모리 상한 예외를 타입 그대로 만든다(ArchiveNamesTest).
+    testImplementation(libs.commons.compress)
+    testImplementation(libs.tukaani.xz)
 
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)

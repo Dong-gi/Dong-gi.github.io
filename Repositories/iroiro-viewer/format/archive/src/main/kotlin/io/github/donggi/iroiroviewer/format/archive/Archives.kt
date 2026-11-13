@@ -210,6 +210,23 @@ object Archives {
      */
     fun verifyPassword(reader: ArchiveReader): Boolean = reader.verifyPassword()
 
+    /**
+     * 해제기의 메모리 상한(7z·xz 사전, commons-compress·XZ for Java 의 `MemoryLimitException`)에 걸린 실패인가.
+     * 화면이 '너무 크다' 로 말할 때 쓴다. **이름으로 보지 않는다** — 릴리스(R8)는 commons-compress 의 클래스 이름을 줄인다.
+     * 감싼 예외도 원인을 몇 겹 따라가 본다.
+     */
+    fun isMemoryLimit(t: Throwable): Boolean {
+        var current: Throwable? = t
+        repeat(MAX_CAUSE_DEPTH) {
+            val e = current ?: return false
+            if (e is org.apache.commons.compress.MemoryLimitException || e is org.tukaani.xz.MemoryLimitException) return true
+            current = e.cause?.takeIf { it !== e }
+        }
+        return false
+    }
+
+    private const val MAX_CAUSE_DEPTH = 8
+
     private fun ByteArray.startsWith(magic: IntArray): Boolean {
         if (size < magic.size) return false
         return magic.indices.all { this[it] == magic[it].toByte() }

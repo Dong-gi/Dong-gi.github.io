@@ -379,6 +379,9 @@ class MarkdownTest {
         assertEquals("b.png", MarkdownPreview.localImagePath("a/../b.png"))
         assertEquals("한글 이름.png", MarkdownPreview.localImagePath("%ED%95%9C%EA%B8%80%20이름.png"))
         assertEquals("100%.png", MarkdownPreview.localImagePath("100%.png"))
+        // BMP 밖의 글자(서로게이트 쌍)는 퍼센트와 섞여도 지킨다. 16진 숫자는 ASCII 만(아랍 숫자 '٣' 는 아니다).
+        assertEquals("😀 그림.png", MarkdownPreview.localImagePath("😀%20그림.png"))
+        assertEquals("a%٣٣.png", MarkdownPreview.localImagePath("a%٣٣.png"))
         assertNull(MarkdownPreview.localImagePath("../a.png"))
         assertNull(MarkdownPreview.localImagePath("a/../../a.png"))
         assertNull(MarkdownPreview.localImagePath("/sdcard/a.png"))

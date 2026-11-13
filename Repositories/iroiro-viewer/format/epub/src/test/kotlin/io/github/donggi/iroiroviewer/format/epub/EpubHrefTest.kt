@@ -60,6 +60,16 @@ class EpubHrefTest {
     fun 잘못된_퍼센트는_글자로_둔다() {
         assertEquals("OEBPS/100%.png", EpubHref.resolve("OEBPS", "100%.png"))
         assertEquals("OEBPS/a%zz.png", EpubHref.resolve("OEBPS", "a%zz.png"))
+        // 부호는 16진 숫자가 아니다 — toIntOrNull(16) 은 `-1` 을 받아 0xFF 를 썼다.
+        assertEquals("OEBPS/a%-1.png", EpubHref.resolve("OEBPS", "a%-1.png"))
+        assertEquals("OEBPS/a%+F.png", EpubHref.resolve("OEBPS", "a%+F.png"))
+    }
+
+    @Test
+    fun BMP_밖의_글자는_퍼센트와_섞여도_지킨다() {
+        // 서로게이트 쌍을 반쪽씩 UTF-8 로 바꾸면 '?' 둘이 된다.
+        assertEquals("OEBPS/😀 그림.png", EpubHref.resolve("OEBPS", "😀%20그림.png"))
+        assertEquals("😀 a", EpubHref.percentDecode("😀%20a"))
     }
 
     @Test

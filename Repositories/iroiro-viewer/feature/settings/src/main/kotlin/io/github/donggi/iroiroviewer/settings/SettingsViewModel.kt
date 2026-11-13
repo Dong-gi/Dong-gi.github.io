@@ -279,7 +279,7 @@ enum class HistoryKind {
     /** 만화·문서에서 읽던 자리(`comic_progress`·`doc_progress`). 만화의 책마다 고른 방향도 여기 산다. */
     READING,
 
-    // `recent_location` 은 지우는 줄을 두지 않는다 — 그 표에 쓰는 코드가 아직 없어(`RecentLocationDao.visit` 호출 0건)
+    // `recent_location` 은 지우는 줄을 두지 않는다 — 그 표에 쓰는 코드가 없어(DAO 도 없다 — `IroiroDatabase`)
     // 지울 것이 언제나 없는 단추가 된다. 최근 위치를 기록하기 시작하는 때에 더한다.
 }
 

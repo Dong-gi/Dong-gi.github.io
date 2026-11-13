@@ -87,9 +87,19 @@ class ArchiveNamesTest {
             ArchiveViewModel.State.Failed.Kind.TOO_BIG,
             failureKindOf(ParseLimitExceededException("maxTotalOutput", "크다")),
         )
-        // xz·7z 의 사전 메모리 상한(라이브러리 예외 — 이름으로 가른다).
+        // xz·7z 의 사전 메모리 상한 — 라이브러리 예외를 **타입으로** 가른다(릴리스는 commons-compress 의 클래스 이름을 줄인다).
+        assertEquals(
+            ArchiveViewModel.State.Failed.Kind.TOO_BIG,
+            failureKindOf(org.apache.commons.compress.MemoryLimitException(70_000L, 65_536)),
+        )
+        assertEquals(ArchiveViewModel.State.Failed.Kind.TOO_BIG, failureKindOf(org.tukaani.xz.MemoryLimitException(70_000, 65_536)))
+        assertEquals(
+            ArchiveViewModel.State.Failed.Kind.TOO_BIG,
+            failureKindOf(IOException("감쌌다", org.tukaani.xz.MemoryLimitException(70_000, 65_536))),
+        )
+        // 이름만 같은 남의 예외는 상한이 아니다 — 이름 보기로 되돌아가면 이 줄이 깨진다.
         class MemoryLimitException : IOException()
-        assertEquals(ArchiveViewModel.State.Failed.Kind.TOO_BIG, failureKindOf(MemoryLimitException()))
+        assertEquals(ArchiveViewModel.State.Failed.Kind.CORRUPT, failureKindOf(MemoryLimitException()))
     }
 
     /**

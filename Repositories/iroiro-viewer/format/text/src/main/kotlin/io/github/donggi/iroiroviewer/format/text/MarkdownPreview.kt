@@ -176,6 +176,13 @@ object MarkdownPreview {
         return true
     }
 
+    private fun hexDigit(c: Char): Int = when (c) {
+        in '0'..'9' -> c - '0'
+        in 'a'..'f' -> c - 'a' + 10
+        in 'A'..'F' -> c - 'A' + 10
+        else -> -1
+    }
+
     /** `%XX` 를 UTF-8 로 푼다. 잘못된 인코딩이면 원문 그대로(`100%.png` 는 그런 이름일 수 있다). */
     private fun percentDecode(s: String): String {
         if ('%' !in s) return s
@@ -185,15 +192,18 @@ object MarkdownPreview {
             val c = s[i]
             if (c == '%') {
                 if (i + 2 >= s.length) return s
-                val hi = Character.digit(s[i + 1], 16)
-                val lo = Character.digit(s[i + 2], 16)
+                // ASCII 16진 숫자만 — Character.digit 은 아랍·전각 숫자까지 받는다.
+                val hi = hexDigit(s[i + 1])
+                val lo = hexDigit(s[i + 2])
                 if (hi < 0 || lo < 0) return s
                 bytes.write(hi * 16 + lo)
                 i += 3
             } else {
-                val enc = c.toString().toByteArray(Charsets.UTF_8)
+                // 서로게이트 쌍은 함께 UTF-8 로 — 반쪽씩 바꾸면 '?' 둘이 된다(이모지 이름).
+                val end = if (Character.isHighSurrogate(c) && i + 1 < s.length && Character.isLowSurrogate(s[i + 1])) i + 2 else i + 1
+                val enc = s.substring(i, end).toByteArray(Charsets.UTF_8)
                 bytes.write(enc, 0, enc.size)
-                i++
+                i = end
             }
         }
         return try {

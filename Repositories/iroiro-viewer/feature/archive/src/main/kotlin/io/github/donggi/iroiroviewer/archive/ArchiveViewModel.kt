@@ -514,7 +514,7 @@ internal fun failureKindOf(t: Throwable): ArchiveViewModel.State.Failed.Kind {
         // 반복(`SevenZKeyGuard`)과 PKWARE 의 강한 암호화가 이 바탕을 잇는다.
         t is ArchiveEncryptionUnsupportedException -> ArchiveViewModel.State.Failed.Kind.ENCRYPTED
         t is ParseLimitExceededException && t.limitName == "maxEntries" -> ArchiveViewModel.State.Failed.Kind.TOO_LARGE
-        t is ParseLimitExceededException || name.contains("MemoryLimit") -> ArchiveViewModel.State.Failed.Kind.TOO_BIG
+        t is ParseLimitExceededException || Archives.isMemoryLimit(t) -> ArchiveViewModel.State.Failed.Kind.TOO_BIG
         name.contains("Password", ignoreCase = true) ||
             name.contains("Encrypt", ignoreCase = true) -> ArchiveViewModel.State.Failed.Kind.ENCRYPTED
         t is IllegalStateException -> ArchiveViewModel.State.Failed.Kind.UNSUPPORTED

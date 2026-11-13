@@ -94,29 +94,6 @@ interface TrashDao {
 }
 
 @Dao
-interface FolderPrefDao {
-
-    @Query("SELECT * FROM folder_pref WHERE path = :path")
-    suspend fun find(path: String): FolderPrefEntity?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(entity: FolderPrefEntity)
-}
-
-@Dao
-interface RecentLocationDao {
-
-    @Query("SELECT * FROM recent_location ORDER BY visited_at DESC LIMIT :limit")
-    fun observeRecent(limit: Int = 20): Flow<List<RecentLocationEntity>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun visit(entity: RecentLocationEntity)
-
-    @Query("DELETE FROM recent_location")
-    suspend fun clear()
-}
-
-@Dao
 interface BookmarkDao {
 
     @Query("SELECT * FROM bookmark ORDER BY added_at ASC")

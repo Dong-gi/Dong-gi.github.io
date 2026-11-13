@@ -816,7 +816,7 @@ WebView·서드파티의 소켓을 한꺼번에 막던 것)이다. 그때는 Web
   읽어 반복을 본다(`SevenZKeyGuard` — '14단계 뒤 — 보안 점검 고침'). 암호가 없으면 유도하지 않는다(유도 전에 `PasswordRequiredException`).
 - **예외를 이름(`simpleName`)으로 가르지 마라 — 릴리스(R8)에서는 이름이 줄어든다.** 압축·만화 화면이 'Encrypt' 가 든 이름으로 '풀지 않는 방식' 을
   갈랐는데 매핑 파일에서 `ZipDecryption$UnsupportedEncryptionException -> mp5` — 릴리스의 PKWARE 강한 암호화 ZIP 은 '깨진 파일' 로 나갔다. 공개된
-  바탕 타입(`ArchiveEncryptionUnsupportedException`)으로 가른다. `MemoryLimit` 이름 보기(commons-compress 의 것)는 아직 이름이다(남은 일).
+  바탕 타입(`ArchiveEncryptionUnsupportedException`)으로 가른다. 메모리 상한도 타입으로 가른다(`Archives.isMemoryLimit` — commons-compress·XZ for Java 의 `MemoryLimitException`, 감싼 원인까지. 2026-11-14 — 그전에는 이름을 봐서 릴리스의 7z 사전 상한이 '깨진 파일' 로 나갔다).
 - **Git Bash 의 `grep` 은 CR 을 보지 못할 수 있다** — `grep -q $'\r'` 로 줄 끝을 쟀더니 CRLF 인 `PathRules.kt` 가 LF 로 나왔다. 줄 끝은
   파이썬으로 바이트를 세어 본다. 이 저장소의 `.kt` 는 대부분 LF 지만 CRLF 파일이 섞여 있다.
 
@@ -888,7 +888,7 @@ API 33 짜리 setter 넷(`setTitle`·`setSubtitle`·`setCloseAction`·`setExpand
 아카이브 4, tar·폴더 시각 5, 단일 압축 스트림·cpio·deb·자기 덮어쓰기 7, PATH_MAX 1, 우리가 잠근 ZIP 을 우리 풀기로 2 — `AesZipExtractTest`),
 `:feature:comic` 12(쪽 디코딩·이어보기 10, 기본 방향·다음 권 2), `:feature:docview` 23(PDF 열기·렌더·타일·닫기 10, 암호 PDF 8, 이어 보기의 쪽 저장 4,
 실세계 PDF 말뭉치 1 — `samples-local/corpus/` 를 기기에 밀어 두었을 때만 돈다), `:core:webhost` 7(가짜 출처의 경로 계약).
-**암호 ZIP 의 계측 다섯**(`ZipMakerTest` 셋 — 머리 칸·빈 암호·취소, `AesZipExtractTest` 둘)은 **컴파일만 했고 기기에서 아직 돌지 않았다.**
+**암호 ZIP 의 계측 다섯**(`ZipMakerTest` 셋 — 머리 칸·빈 암호·취소, `AesZipExtractTest` 둘)은 2026-11-14 폰 에뮬레이터에서 돌아 통과했다(두 클래스 11건 모두).
 `feature:settings` 는 계측이 없다. 암호 아카이브 표본(`format/archive/src/test/resources/archivecrypt/`)과 암호 PDF 표본은 JVM 시험과
 **한 벌을 나눠 쓴다** — `feature/archive/build.gradle.kts`·`feature/docview/build.gradle.kts` 가 `src/test/resources` 를 계측 APK 의 자산으로 붙인다.
 `플랫폼이_암호를_직접_받는다` 는 API 35 전용이라 폰 AVD 에서는 `Assume` 로 건너뛰는데,
@@ -2025,8 +2025,7 @@ site-packages 에 있다) 저장소 밖에서 돌린다. 스크립트(`oracle.py
 디버그 키 서명(사용자 결정). `:editor` 프로세스는 권한 경계가 아니다(같은 앱·같은 UID — 위 '편집기를 안으로'). 폰의 보안 패치 수준(이 앱이 고칠 수 없다).
 
 **남은 일.** 기기 확인(위). 방향 제어 글자를 아직 날것으로 보이는 자리 — 스낵바·대화상자의 문장에 넣는 이름(`‘%1$s’` 꼴), 재생 알림(시스템이 그린다 —
-제목이 메타데이터라 자막 짝짓기에 쓰여 바꾸지 않았다). 압축 화면의 `MemoryLimit` 이름 보기(commons-compress 의 것 — 릴리스에서 이름이 줄어 '깨진 파일'
-이 된다, 그 타입은 `feature:archive` 에서 보이지 않는다).
+제목이 메타데이터라 자막 짝짓기에 쓰여 바꾸지 않았다). (압축·만화 화면의 `MemoryLimit` 이름 보기는 2026-11-14 타입 판정 `Archives.isMemoryLimit` 으로 바꿨다.)
 
 ## 더할 만한 기능 후보 (검토만, 코드 없음 — 사용자가 고르기 전)
 

@@ -81,18 +81,27 @@ object EpubHref {
         while (i < s.length) {
             val c = s[i]
             if (c == '%' && i + 2 < s.length) {
-                val hex = s.substring(i + 1, i + 3)
-                val value = hex.toIntOrNull(16)
-                if (value != null) {
-                    bytes.write(value)
+                // ASCII 16진 숫자 둘만 받는다 — toIntOrNull(16) 은 `%-1`·`%+F` 의 부호까지 받아 엉뚱한 바이트를 썼다.
+                val hi = hexDigit(s[i + 1])
+                val lo = hexDigit(s[i + 2])
+                if (hi >= 0 && lo >= 0) {
+                    bytes.write(hi * 16 + lo)
                     i += 3
                     continue
                 }
             }
-            // ASCII 밖의 글자는 이미 문자열이므로 UTF-8 바이트로 넣는다.
-            bytes.write(c.toString().toByteArray(Charsets.UTF_8))
-            i++
+            // ASCII 밖의 글자는 이미 문자열이므로 UTF-8 바이트로 넣는다. 서로게이트 쌍은 함께 — 반쪽씩 바꾸면 '?' 둘이 된다(이모지 이름).
+            val end = if (Character.isHighSurrogate(c) && i + 1 < s.length && Character.isLowSurrogate(s[i + 1])) i + 2 else i + 1
+            bytes.write(s.substring(i, end).toByteArray(Charsets.UTF_8))
+            i = end
         }
         return bytes.toString(Charsets.UTF_8.name())
+    }
+
+    private fun hexDigit(c: Char): Int = when (c) {
+        in '0'..'9' -> c - '0'
+        in 'a'..'f' -> c - 'a' + 10
+        in 'A'..'F' -> c - 'A' + 10
+        else -> -1
     }
 }

@@ -34,8 +34,8 @@ abstract class IroiroDatabase : RoomDatabase() {
     abstract fun playbackPositions(): PlaybackPositionDao
     abstract fun comicProgress(): ComicProgressDao
     abstract fun trash(): TrashDao
-    abstract fun folderPrefs(): FolderPrefDao
-    abstract fun recentLocations(): RecentLocationDao
+    // `folder_pref`·`recent_location` 표는 남아 있지만 읽고 쓰는 코드가 없다(DAO 는 2026-11-14 걷었다). 표를 지우려면 판을 올리는
+    // 마이그레이션이 든다 — 휴지통 기록이 같은 DB 에 있어 그 위험을 지지 않았다. 다시 쓰게 되면 DAO 를 더한다.
     abstract fun bookmarks(): BookmarkDao
     abstract fun docProgress(): DocProgressDao
 
