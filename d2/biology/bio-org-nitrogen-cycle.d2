@@ -4,7 +4,8 @@
 # N≡N 삼중결합이 너무 강해 거의 모든 생물이 그것을 쓰지 못하기 때문이다.
 # 이 그림의 화살표는 대부분 특정 미생물 무리가 독점하고 있고,
 # 사람이 개입한 자리는 둘(공업적 고정, 비료)이다.
-direction: right
+vars: { d2-config: { layout-engine: elk } }
+direction: down
 
 대기: { label: "대기의 N2\n가장 큰 저장고이지만\n삼중결합이 강해 대부분의 생물이 쓸 수 없다"; style.bold: true }
 
@@ -44,4 +45,5 @@ direction: right
 사람: {
   label: "사람이 바꿔 놓은 것\n· 공업적 고정과 비료로 육상에 들어오는 질소량이 자연 고정에 맞먹는다\n· 남은 질산이 씻겨 내려가 수계에 들어가면 부영양화를 일으킨다\n· 탈질 과정에서 새어 나오는 N2O 는 온실기체다"
   style.stroke-dash: 3
+  near: bottom-center
 }

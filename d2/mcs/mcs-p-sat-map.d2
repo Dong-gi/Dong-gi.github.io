@@ -2,7 +2,7 @@
 #
 # 무엇을 읽어야 하나: 이 장에서 다룬 판정 문제들이 실은 하나의 문제다.
 # 화살표는 ‘이것을 빠르게 풀 수 있으면 저것도 빠르게 풀 수 있다’ 는 뜻이다.
-direction: right
+direction: down
 
 sat: { label: "SAT\n주어진 논리식을 참으로 만드는\n변수 배정이 있는가"; style.bold: true }
 
@@ -26,12 +26,22 @@ pnp: {
 }
 방법 -> pnp: "지수를 다항으로 줄일 수 있을까"
 
-실전: {
-  label: "실전에서는 SAT 해결기(SAT solver)가 변수 수백만 개짜리 식도 곧잘 푼다.\n다만 어떤 식이 잘 풀릴지 예측하기 어렵고, 만족 불가능한 식에서는 훨씬 약하다"
-  shape: text
-}
+# 두 메모는 그림 아래에 위아래로 쌓는다(나란히 두면 그림이 넓어진다).
+메모: {
+  label: ""
+  style.stroke: transparent
+  style.fill: transparent
+  near: bottom-center
+  grid-columns: 1
+  grid-gap: 24
 
-여파: {
-  label: "SAT 를 빠르게 푸는 방법이 나오면 일정 계획·자원 배분·회로 검증이 함께 풀린다.\n동시에 오늘날의 암호가 무너져 온라인 거래와 비밀 통신이 성립하지 않게 된다"
-  shape: text
+  실전: {
+    label: "실전에서는 SAT 해결기(SAT solver)가 변수 수백만 개짜리 식도 곧잘 푼다.\n다만 어떤 식이 잘 풀릴지 예측하기 어렵고, 만족 불가능한 식에서는 훨씬 약하다"
+    shape: text
+  }
+
+  여파: {
+    label: "SAT 를 빠르게 푸는 방법이 나오면 일정 계획·자원 배분·회로 검증이 함께 풀린다.\n동시에 오늘날의 암호가 무너져 온라인 거래와 비밀 통신이 성립하지 않게 된다"
+    shape: text
+  }
 }
