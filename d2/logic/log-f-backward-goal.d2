@@ -40,9 +40,17 @@ direction: right
 논리합 -> 수5
 원자 -> 수6
 
-메모: {
-  label: "다섯 줄에 공통인 것 하나 — 규칙을 고른 순간 목표가 바뀐다.\n증명을 찾는 일은 규칙을 고르는 일이 아니라\n목표를 더 작은 목표로 갈아 치우는 일이다"
-  shape: text
-}
+# 글상자는 그림 아래에 둔다(옆에 두면 폭이 1900px 가까이 된다).
+주석: {
+  label: ""
+  near: bottom-center
+  grid-columns: 1
+  grid-gap: 24
+  style.stroke: transparent
+  style.fill: transparent
 
-수6 -> 메모: { style.opacity: 0 }
+  메모: {
+    label: "다섯 줄에 공통인 것 하나 — 규칙을 고른 순간 목표가 바뀐다.\n증명을 찾는 일은 규칙을 고르는 일이 아니라\n목표를 더 작은 목표로 갈아 치우는 일이다"
+    shape: text
+  }
+}

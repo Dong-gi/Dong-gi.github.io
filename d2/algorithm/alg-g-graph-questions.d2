@@ -2,6 +2,7 @@
 #
 # 무엇을 읽어야 하나: 이 장의 알고리즘은 사실상 탐색 하나뿐이다.
 # 질문이 달라지면 훑는 순서와 기록할 것이 달라질 뿐 비용은 모두 O(V+E) 다.
+vars: { d2-config: { layout-engine: elk } }
 direction: down
 
 질문: { label: "그래프에 무엇을 묻는가"; shape: oval; style.bold: true }
@@ -39,7 +40,12 @@ color: { label: "BFS 로 층을 매기고\n층의 홀짝으로 칠한다\n= 홀�
 순서 -> topo
 이분 -> color
 
+# 보이지 않는 화살표: 다섯 갈래를 두 단으로 나눈다(한 줄로 퍼지면 폭이 커진다).
+dfs -> 순서: { style.opacity: 0 }
+bfs -> 이분: { style.opacity: 0 }
+
 비용: {
   label: "다섯 가지 모두 O(V + E) 다 — 인접 리스트를 쓸 때.\n인접 행렬을 쓰면 이웃을 훑는 것만으로 O(V²) 가 된다.\n표현을 잘못 고르면 알고리즘을 아무리 잘 짜도 소용이 없다"
+  near: bottom-center
   shape: text
 }

@@ -2,7 +2,8 @@
 #
 # 무엇을 읽어야 하나: 분포를 함수 하나로 압축했다가 미분으로 다시 풀어내는 길이다.
 # 7·8·9장이 이 길을 계속 쓴다.
-direction: right
+vars: { d2-config: { layout-engine: elk } }
+direction: down
 
 분포: { label: "분포 f(x) 또는 p(x)"; shape: oval; style.bold: true }
 
@@ -16,8 +17,8 @@ M: { label: "적률생성함수\nM(t) = E[e^tX]"; style.bold: true }
 이차: { label: "2차 → E[X²]\nV(X) = E[X²] − μ²" }
 삼사: { label: "3차·4차 → 왜도·첨도" }
 
-변환: { label: "aX + b 의 적률생성함수는\ne^(bt) 를 곱하고 t 를 at 로 바꾼 것" }
-합: { label: "독립이면 합의 적률생성함수는\n각각의 적률생성함수의 곱이다\n합의 분포를 곱셈으로 얻는다" }
+변환: { label: "aX + b 의 적률생성함수는\ne^(bt) 를 곱하고\nt 를 at 로 바꾼 것" }
+합: { label: "독립이면 합의\n적률생성함수는\n각각의\n적률생성함수의 곱이다\n합의 분포를 곱셈으로 얻는다" }
 유일: { label: "적률생성함수가 같으면\n분포도 같다 (유일성)" }
 
 분포 -> M: "기댓값을 한 번 계산"
@@ -30,12 +31,22 @@ M -> 변환
 M -> 합
 M -> 유일
 
-메모: {
-  label: "존재하지 않을 수도 있다. 꼬리가 두꺼우면\n0 을 품는 어떤 구간에서도 E[e^tX] 가 발산한다.\n그때는 e^tX 대신 복소수를 쓰는 특성함수를 쓴다"
-  shape: text
-}
+# 글상자는 그림 아래에 차례로 쌓는다(옆에 두면 폭이 몇 배가 된다).
+주석: {
+  label: ""
+  near: bottom-center
+  grid-columns: 1
+  grid-gap: 24
+  style.stroke: transparent
+  style.fill: transparent
 
-쓰임: {
-  label: "9장 중심극한정리의 증명 얼개가\n‘합의 M(t) 를 계산해 정규의 M(t) 로 수렴함을 보이는 것’ 이다"
-  shape: text
+  메모: {
+    label: "존재하지 않을 수도 있다. 꼬리가 두꺼우면\n0 을 품는 어떤 구간에서도 E[e^tX] 가 발산한다.\n그때는 e^tX 대신 복소수를 쓰는 특성함수를 쓴다"
+    shape: text
+  }
+
+  쓰임: {
+    label: "9장 중심극한정리의 증명 얼개가\n‘합의 M(t) 를 계산해 정규의 M(t) 로 수렴함을 보이는 것’ 이다"
+    shape: text
+  }
 }

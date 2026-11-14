@@ -3,7 +3,8 @@
 # 무엇을 읽어야 하나: 극한 계산은 요령을 외우는 일이 아니라 순서를 지키는 일이다.
 # 먼저 대입해 보고, 값이 나오면 그것으로 끝이다. 부정형이 나왔을 때에만
 # 아래쪽 갈래로 내려간다. 어느 갈래로 갈지는 식의 모양이 정해 준다.
-direction: right
+vars: { d2-config: { layout-engine: elk } }
+direction: down
 
 시작: { label: "lim 을 구해야 한다"; shape: oval; style.bold: true }
 
@@ -28,12 +29,26 @@ direction: right
 부정형 -> 공식: "삼각함수·지수·로그"
 부정형 -> 샌드위치: "위 넷이 막혔다"
 
-메모: {
-  label: "부정형이라는 말은 ‘값이 없다’ 가 아니라\n‘이 꼴만 보고는 정할 수 없다’ 는 뜻이다.\n같은 0/0 이라도 답은 0 일 수도, ∞ 일 수도 있다"
-  shape: text
-}
+# 보이지 않는 화살표: 다섯 갈래를 두 단으로 나눈다(한 줄로 퍼지면 폭이 커진다).
+인수 -> 공식: { style.opacity: 0 }
+유리화 -> 샌드위치: { style.opacity: 0 }
 
-주의: {
-  label: "대입해서 (0 이 아닌 수)/0 이 나왔다면 부정형이 아니다.\n그때는 발산이고, 좌우 부호를 따로 살펴야 한다"
-  shape: text
+# 글상자는 그림 아래에 차례로 쌓는다(옆에 두면 폭이 몇 배가 된다).
+주석: {
+  label: ""
+  near: bottom-center
+  grid-columns: 1
+  grid-gap: 24
+  style.stroke: transparent
+  style.fill: transparent
+
+  메모: {
+    label: "부정형이라는 말은 ‘값이 없다’ 가 아니라\n‘이 꼴만 보고는 정할 수 없다’ 는 뜻이다.\n같은 0/0 이라도 답은 0 일 수도, ∞ 일 수도 있다"
+    shape: text
+  }
+
+  주의: {
+    label: "대입해서 (0 이 아닌 수)/0 이 나왔다면 부정형이 아니다.\n그때는 발산이고, 좌우 부호를 따로 살펴야 한다"
+    shape: text
+  }
 }

@@ -11,17 +11,27 @@ direction: down
 원식 -> 한칸: "¬ 를 ∀ 안으로"
 한칸 -> 두칸: "¬ 를 ∃ 안으로"
 
-말로: {
-  label: "말로 읽으면\n원식: ‘모든 x 마다 그런 y 가 있다’ 가 아니다\n결과: ‘어떤 x 에 대해서는 어떤 y 도 안 된다’"
-  shape: text
-}
+# 세 메모는 사슬 오른쪽에 위아래로 쌓는다(나란히 두면 그림이 넓어진다).
+메모: {
+  label: ""
+  style.stroke: transparent
+  style.fill: transparent
+  near: center-right
+  grid-columns: 1
+  grid-gap: 32
 
-드모르간: {
-  label: "왜 그런가 — 드모르간 법칙을 무한히 늘린 것이다.\n∀x. P(x) 는 P(d₀) ∧ P(d₁) ∧ … 이고 ∃x. P(x) 는 P(d₀) ∨ P(d₁) ∨ … 이다.\n¬(A ∧ B) ≡ ¬A ∨ ¬B 를 무한 개에 적용하면 위의 규칙이 나온다"
-  shape: text
-}
+  말로: {
+    label: "말로 읽으면\n원식: ‘모든 x 마다 그런 y 가 있다’ 가 아니다\n결과: ‘어떤 x 에 대해서는 어떤 y 도 안 된다’"
+    shape: text
+  }
 
-쓸모: {
-  label: "이 규칙이 반례의 근거다.\n전칭명제 ∀x. P(x) 를 부정하면 ∃x. ¬P(x) 이므로,\n반례 하나를 내놓는 것으로 전칭명제를 무너뜨릴 수 있다"
-  shape: text
+  드모르간: {
+    label: "왜 그런가 — 드모르간 법칙을 무한히 늘린 것이다.\n∀x. P(x) 는 P(d₀) ∧ P(d₁) ∧ … 이고 ∃x. P(x) 는 P(d₀) ∨ P(d₁) ∨ … 이다.\n¬(A ∧ B) ≡ ¬A ∨ ¬B 를 무한 개에 적용하면 위의 규칙이 나온다"
+    shape: text
+  }
+
+  쓸모: {
+    label: "이 규칙이 반례의 근거다.\n전칭명제 ∀x. P(x) 를 부정하면 ∃x. ¬P(x) 이므로,\n반례 하나를 내놓는 것으로 전칭명제를 무너뜨릴 수 있다"
+    shape: text
+  }
 }

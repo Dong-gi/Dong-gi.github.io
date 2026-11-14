@@ -2,14 +2,15 @@
 #
 # 무엇을 읽어야 하나: 두 변수를 함께 적은 결합분포 하나에서 주변·조건부·독립·
 # 공분산이 모두 나온다. 화살표의 방향은 정보가 줄어드는 방향이다.
-direction: right
+vars: { d2-config: { layout-engine: elk } }
+direction: down
 
 결합: { label: "결합분포 f(x, y)\n두 변수를 함께 적은 것"; shape: oval; style.bold: true }
 
-주변X: { label: "주변분포 g(x)\ny 를 더하거나 적분해 지운다" }
-주변Y: { label: "주변분포 h(y)\nx 를 더하거나 적분해 지운다" }
+주변X: { label: "주변분포 g(x)\ny 를 더하거나\n적분해 지운다" }
+주변Y: { label: "주변분포 h(y)\nx 를 더하거나\n적분해 지운다" }
 
-조건부: { label: "조건부분포 f(y|x) = f(x,y)/g(x)\n한 값을 알았을 때의 분포" }
+조건부: { label: "조건부분포\nf(y|x) = f(x,y)/g(x)\n한 값을 알았을 때의 분포" }
 조건부기댓값: { label: "조건부 기댓값 E[X|Y]\n그 자체가 확률변수다\nE[E[X|Y]] = E[X]" }
 
 독립: { label: "독립\nf(x,y) = g(x)h(y) 가\n모든 (x,y) 에서 성립" }
@@ -25,12 +26,22 @@ direction: right
 공분산 -> 선형결합
 독립 -> 공분산: "독립이면 Cov = 0"
 
-메모: {
-  label: "화살표는 한쪽으로만 간다.\n주변분포 둘을 안다고 결합분포를 복원할 수는 없다.\n독립이라는 조건이 붙어야만 곱해서 되돌릴 수 있다"
-  shape: text
-}
+# 글상자는 그림 아래에 차례로 쌓는다(옆에 두면 폭이 몇 배가 된다).
+주석: {
+  label: ""
+  near: bottom-center
+  grid-columns: 1
+  grid-gap: 24
+  style.stroke: transparent
+  style.fill: transparent
 
-주의: {
-  label: "Cov = 0 은 독립을 뜻하지 않는다.\n상관은 직선 관계만 잡기 때문이다"
-  shape: text
+  메모: {
+    label: "화살표는 한쪽으로만 간다.\n주변분포 둘을 안다고 결합분포를 복원할 수는 없다.\n독립이라는 조건이 붙어야만 곱해서 되돌릴 수 있다"
+    shape: text
+  }
+
+  주의: {
+    label: "Cov = 0 은 독립을 뜻하지 않는다.\n상관은 직선 관계만 잡기 때문이다"
+    shape: text
+  }
 }

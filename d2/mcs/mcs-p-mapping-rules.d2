@@ -1,8 +1,11 @@
 # 사상 규칙 — mcs 6장.
 #
 # 무엇을 읽어야 하나: 유한집합의 크기 비교는 함수의 성질로 바꿔 말할 수 있다.
-# 왼쪽 열이 관계의 성질, 가운데가 그때 성립하는 크기 부등호, 오른쪽이 그 쓸모다.
-direction: right
+# 맨 윗줄이 관계의 성질, 가운데 줄이 그때 성립하는 크기 부등호, 그 아래 상자 둘이 쓸모다.
+# 위에서 아래로 읽는다(옆으로 늘어놓으면 폭이 2200px 을 넘는다).
+# ELK 로 배치한다 — dagre 는 쓸모 상자 둘을 한 줄에 놓아 폭이 1600px 을 넘는다.
+vars: { d2-config: { layout-engine: elk } }
+direction: down
 
 surj: { label: "A surj B\nA 에서 B 로 가는 전사 함수가 있다"; style.bold: true }
 inj: { label: "A inj B\nA 에서 B 로 가는 단사인 전관계가 있다"; style.bold: true }
@@ -26,12 +29,22 @@ eq -> bij: "거꾸로도 성립한다"
 eq -> 쓸모1
 le -> 쓸모2: "대우를 취한다"
 
-대칭: {
-  label: "A surj B 와 B inj A 는 같은 말이다.\n관계의 화살표를 모두 거꾸로 돌리면 [≤1 out] 이 [≤1 in] 이 되고 [≥1 in] 이 [≥1 out] 이 되기 때문이다"
-  shape: text
-}
+# 두 메모는 그림 아래에 위아래로 쌓는다(나란히 두면 그림이 넓어진다).
+메모: {
+  label: ""
+  style.stroke: transparent
+  style.fill: transparent
+  near: bottom-center
+  grid-columns: 1
+  grid-gap: 24
 
-무한: {
-  label: "여기까지는 유한집합 이야기다. 무한집합에서는 |A| 를 세는 방법이 없으므로\nsurj·inj·bij 자체를 크기 비교의 정의로 삼는다. 그것이 10장의 출발점이다"
-  shape: text
+  대칭: {
+    label: "A surj B 와 B inj A 는 같은 말이다.\n관계의 화살표를 모두 거꾸로 돌리면 [≤1 out] 이 [≤1 in] 이 되고 [≥1 in] 이 [≥1 out] 이 되기 때문이다"
+    shape: text
+  }
+
+  무한: {
+    label: "여기까지는 유한집합 이야기다. 무한집합에서는 |A| 를 세는 방법이 없으므로\nsurj·inj·bij 자체를 크기 비교의 정의로 삼는다. 그것이 10장의 출발점이다"
+    shape: text
+  }
 }

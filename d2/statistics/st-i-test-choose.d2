@@ -4,7 +4,8 @@
 # 무엇에 대한 주장인가, 표본이 몇 개인가, 모분산을 아는가.
 # 그리고 어느 칸이든 하는 일은 같다 — 귀무가설이 참일 때의 분포를 구해
 # 관측한 통계량이 그 분포에서 얼마나 드문지 재는 것.
-direction: right
+vars: { d2-config: { layout-engine: elk } }
+direction: down
 
 시작: { label: "귀무가설은 무엇에 대한 주장인가"; shape: oval; style.bold: true }
 
@@ -30,7 +31,7 @@ t검정: { label: "t = (x̄ − μ₀)/(s/√n)\n자유도 n − 1"; style.bold:
 짝인가: { label: "짝지어진 자료인가"; shape: diamond }
 두평균 -> 짝인가
 대응t: { label: "대응표본 t\n차이 d 하나로 줄인다"; style.bold: true }
-등분산인가: { label: "두 모분산이 비슷한가"; shape: diamond }
+등분산인가: { label: "두 모분산이\n비슷한가"; shape: diamond }
 짝인가 -> 대응t: "짝지어져 있다"
 짝인가 -> 등분산인가: "독립이다"
 합동t: { label: "합동분산 t\n자유도 n₁ + n₂ − 2"; style.bold: true }
@@ -38,14 +39,14 @@ t검정: { label: "t = (x̄ − μ₀)/(s/√n)\n자유도 n − 1"; style.bold:
 등분산인가 -> 합동t: "비슷하다"
 등분산인가 -> 웰치t: "많이 다르다"
 
-비율개수: { label: "비율이 하나인가 둘인가"; shape: diamond }
+비율개수: { label: "비율이 하나인가\n둘인가"; shape: diamond }
 비율검정 -> 비율개수
 한비율: { label: "z = (p̂ − p₀)/√(p₀(1−p₀)/n)\n분모에 p₀ 을 쓴다"; style.bold: true }
-두비율: { label: "합동비율로 표준오차를 만들고 z" }
+두비율: { label: "합동비율로\n표준오차를 만들고 z" }
 비율개수 -> 한비율: "하나"
 비율개수 -> 두비율: "둘"
 
-분산개수: { label: "분산이 하나인가 둘인가"; shape: diamond }
+분산개수: { label: "분산이 하나인가\n둘인가"; shape: diamond }
 분산검정 -> 분산개수
 카이분산: { label: "χ² = (n−1)s²/σ₀²\n자유도 n − 1"; style.bold: true }
 F분산: { label: "F = s₁²/s₂²\n자유도 (n₁−1, n₂−1)"; style.bold: true }
@@ -54,10 +55,16 @@ F분산: { label: "F = s₁²/s₂²\n자유도 (n₁−1, n₂−1)"; style.bol
 
 표차원: { label: "한 줄인가 표인가"; shape: diamond }
 도수 -> 표차원
-적합도: { label: "적합도 검정\nχ² = ∑(O−E)²/E,  자유도 k − 1 − (추정한 모수 수)"; style.bold: true }
-독립성: { label: "독립성 검정\nE = 행합 × 열합 / 총합,  자유도 (r−1)(c−1)"; style.bold: true }
+적합도: { label: "적합도 검정\nχ² = ∑(O−E)²/E,\n자유도 k − 1 − (추정한 모수 수)"; style.bold: true }
+독립성: { label: "독립성 검정\nE = 행합 × 열합 / 총합,\n자유도 (r−1)(c−1)"; style.bold: true }
 표차원 -> 적합도: "범주 한 줄"
 표차원 -> 독립성: "행 × 열 표"
+
+# 보이지 않는 화살표: 다섯 갈래를 세 단으로 나눈다(한 줄로 퍼지면 폭이 세 배가 된다).
+# 위 단은 평균 하나·비율, 가운데 단은 분산·도수, 아래 단은 평균 두 개.
+z검정 -> 분산검정: { style.opacity: 0 }
+두비율 -> 도수: { style.opacity: 0 }
+카이분산 -> 두평균: { style.opacity: 0 }
 
 꼬리: {
   label: "꼬리를 정하는 것은 대립가설이다.\n‘다르다’ 면 양쪽, ‘크다’ 나 ‘작다’ 면 한쪽.\n자료를 보고 정하면 유의수준이 두 배가 된다"

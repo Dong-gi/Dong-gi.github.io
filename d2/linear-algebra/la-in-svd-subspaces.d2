@@ -3,7 +3,8 @@
 # 무엇을 읽어야 하나: 9장에서는 네 부분공간이 직교로 갈린다는 것만 알았다.
 # SVD 는 그 네 공간의 정규직교기저를 실제로 손에 쥐여 준다. V 의 앞쪽 r 개가
 # 행공간, 뒤쪽이 영공간, U 의 앞쪽 r 개가 열공간, 뒤쪽이 왼쪽 영공간이다.
-direction: right
+vars: { d2-config: { layout-engine: elk } }
+direction: down
 
 정의역: {
   label: "정의역 R^n — x 가 사는 곳"
@@ -25,5 +26,6 @@ direction: right
 
 읽기: {
   label: "랭크 r = 0 이 아닌 특이값의 개수다.\n네 기저가 모두 정규직교라서 사영도 최소제곱도 낮은 계수 근사도 여기서 곧바로 나온다.\nb 를 열공간에 사영하려면 u_1 … u_r 과의 내적만 남기면 되고, 왼쪽 영공간 성분이 잔차다"
+  near: bottom-center
   shape: text
 }

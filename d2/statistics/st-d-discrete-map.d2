@@ -2,8 +2,9 @@
 #
 # 무엇을 읽어야 하나: 일곱 개의 분포는 따로 노는 일곱 개가 아니다.
 # 화살표는 모두 ‘모수를 극단으로 밀면 저쪽이 된다’ 는 뜻이고,
-# 실제 계산에서는 왼쪽 것을 오른쪽 것으로 바꿔 계산해도 좋다는 허락이다.
-direction: right
+# 실제 계산에서는 화살표 꼬리 쪽 것을 머리 쪽 것으로 바꿔 계산해도 좋다는 허락이다.
+vars: { d2-config: { layout-engine: elk } }
+direction: down
 
 베르누이: { label: "베르누이 시행\n한 번의 성공·실패" }
 이항: { label: "이항분포\nb(x; n, p)"; style.bold: true }
@@ -21,12 +22,22 @@ direction: right
 이항 -> 정규: "n 이 크고 np, n(1 − p) ≥ 10\n연속성 수정 ±0.5"
 푸아송 -> 정규: "λ 가 크다"
 
-무기억: {
-  label: "기하분포만 갖는 성질:\nP(X > s + k | X > s) = P(X > k)\n이미 실패한 횟수는 아무 정보도 아니다"
-  shape: text
-}
+# 글상자는 그림 아래에 차례로 쌓는다(옆에 두면 폭이 몇 배가 된다).
+주석: {
+  label: ""
+  near: bottom-center
+  grid-columns: 1
+  grid-gap: 24
+  style.stroke: transparent
+  style.fill: transparent
 
-읽는법: {
-  label: "근사 화살표는 ‘같다’ 가 아니라 ‘가까워진다’ 는 뜻이다.\n근사를 쓰기 전에 조건을 반드시 확인하라"
-  shape: text
+  무기억: {
+    label: "기하분포만 갖는 성질:\nP(X > s + k | X > s) = P(X > k)\n이미 실패한 횟수는 아무 정보도 아니다"
+    shape: text
+  }
+
+  읽는법: {
+    label: "근사 화살표는 ‘같다’ 가 아니라 ‘가까워진다’ 는 뜻이다.\n근사를 쓰기 전에 조건을 반드시 확인하라"
+    shape: text
+  }
 }
