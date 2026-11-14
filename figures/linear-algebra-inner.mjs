@@ -1079,7 +1079,13 @@ add((() => {
         g.push(panel(px, py, pw, ph, '손으로 따라갈 수 있는 네 점', '평균은 원점이다'));
         g.push(axes(f, { xRange: R, yRange: R, xTicks: [1, 3], yTicks: [1, 3] }));
         g.push(dln(f, [[-3.2 * e.v1[0], -3.2 * e.v1[1]], [3.2 * e.v1[0], 3.2 * e.v1[1]]], { stroke: C1, sw: 1, dash: '5 4' }));
-        pts.forEach(p => g.push(pdot(f.X(p[0]), f.Y(p[1]), 'var(--ink)', 4.6)));
+        pts.forEach(p => {
+            const t = (p[0] - mx) * e.v1[0] + (p[1] - my) * e.v1[1];
+            const q = [mx + t * e.v1[0], my + t * e.v1[1]];
+            g.push(dln(f, [p, q], { stroke: CK, sw: 1.4, dash: '3 2' }));
+            g.push(pdot(f.X(q[0]), f.Y(q[1]), C1, 3));
+            g.push(pdot(f.X(p[0]), f.Y(p[1]), 'var(--ink)', 4.6));
+        });
         g.push(varw(f, [mx, my], [mx + sd1 * e.v1[0], my + sd1 * e.v1[1]], { cls: 's1', width: 3 }));
         g.push(varw(f, [mx, my], [mx + sd2 * e.v2[0], my + sd2 * e.v2[1]], { cls: 's2', width: 3 }));
         g.push(txt(f.X(sd1 * e.v1[0]) + 10, f.Y(sd1 * e.v1[1]) - 6, 'PC1', { cls: 'ink bold', size: 'sm' }));
@@ -1112,7 +1118,7 @@ add((() => {
         pts.forEach(p => {
             const t = (p[0] - mx) * e.v1[0] + (p[1] - my) * e.v1[1];
             const q = [mx + t * e.v1[0], my + t * e.v1[1]];
-            g.push(dln(f, [p, q], { stroke: CK, sw: 0.9, dash: '2 3' }));
+            g.push(dln(f, [p, q], { stroke: CK, sw: 1.3, dash: '3 2' }));
             g.push(pdot(f.X(q[0]), f.Y(q[1]), C1, 2.4));
             g.push(pdot(f.X(p[0]), f.Y(p[1]), 'var(--ink)', 3.4));
         });

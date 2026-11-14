@@ -458,10 +458,10 @@ add('mcs-n-adjacency-power', (() => {
     g.push(matrix(40, 62, A));
     g.push(ctxt(345, 58, 'A 를 제곱한 것', CI, { anchor: 'middle', bold: true }));
     g.push(matrix(270, 62, A2, { hl: [0, 2] }));
-    g.push(ctxt(232, 130, '×', CK, { anchor: 'middle', size: null }));
+    g.push(ctxt(253, 130, '× A =', CK, { anchor: 'middle', size: null }));
 
     g.push(panel(490, 62, 210, 150, 'a 에서 c 로 가는 길이 2 보행', '두 개다 — 그래서 칸이 2'));
-    const P = { a: [530, 110], b: [660, 110], d: [530, 180], c: [660, 180] };
+    const P = { a: [530, 122], b: [660, 122], d: [530, 187], c: [660, 187] };
     g.push(edge(P.a, P.b, { col: C2, sw: 2.4, r: 15 }));
     g.push(edge(P.b, P.c, { col: C2, sw: 2.4, r: 15 }));
     g.push(edge(P.a, P.d, { col: C3, sw: 2.4, r: 15 }));

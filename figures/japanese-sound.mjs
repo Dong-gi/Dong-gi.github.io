@@ -60,10 +60,10 @@ const twoErrors = () => {
     const CX = [214, 452], CW = 236, CY = [96, 190], CH = 76;
     b.push(txt(CX[0] + CW / 2, 74, '낱말 첫머리', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     b.push(txt(CX[1] + CW / 2, 74, '낱말 가운데', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    b.push(kana(170, CY[0] + 46, 'か'));
-    b.push(txt(190, CY[0] + 50, '무성', { anchor: 'end', cls: 'ink2', size: 'sm' }));
-    b.push(kana(170, CY[1] + 46, 'が'));
-    b.push(txt(190, CY[1] + 50, '유성', { anchor: 'end', cls: 'ink2', size: 'sm' }));
+    b.push(kana(154, CY[0] + 46, 'か'));
+    b.push(txt(196, CY[0] + 50, '무성', { anchor: 'end', cls: 'ink2', size: 'sm' }));
+    b.push(kana(154, CY[1] + 46, 'が'));
+    b.push(txt(196, CY[1] + 50, '유성', { anchor: 'end', cls: 'ink2', size: 'sm' }));
 
     const cell = (ci, ri, hit, l1, l2) => {
         const x = CX[ci], y = CY[ri];
@@ -259,7 +259,7 @@ const accentParticle = () => {
         b.push(kana(R[2], base + 54, 'が', 'f3'));
         b.push(txt(R[2] + 26, Y(last) + 5, last ? '높다' : '내려간다', { cls: last ? 'f3' : 'f2', size: 'sm' }));
     });
-    b.push(txt(60, 292, '왼쪽 두 줄은 모양이 같다', { cls: 'f2', size: 'sm' }));
+    b.push(txt(60, 310, '왼쪽 두 줄은 모양이 같다', { cls: 'f2', size: 'sm' }));
     return b.join('');
 };
 

@@ -169,7 +169,7 @@ export default [
             title: '같은 문말 표현이 붙는 자리로 갈리는 모양',
             desc: '왼쪽 칸이 무엇인지에 따라 뜻이 달라진다. 사전형에 붙으면 들은 것이고 어간에 붙으면 보이는 것이다.',
             body: J(
-                txt(40, 30, '오른쪽 칸은 같다. 갈리는 것은 왼쪽 칸이 무엇인가다', { cls: 'ink2', size: 'sm' }),
+                txt(40, 30, '붙는 자리의 두 칸 가운데 오른쪽 칸은 같다. 갈리는 것은 왼쪽 칸이 무엇인가다', { cls: 'ink2', size: 'sm' }),
                 txt(60, 58, '붙는 자리', { cls: 'ink2', size: 'sm' }),
                 txt(300, 58, '결과', { anchor: 'middle', cls: 'ink2', size: 'sm' }),
                 txt(560, 58, '무슨 뜻인가', { anchor: 'middle', cls: 'ink2', size: 'sm' }),
