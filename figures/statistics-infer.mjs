@@ -1332,7 +1332,7 @@ add((() => {
     const all = groups.flat();
     const rAll = lsq(all).r;
     const rIn = groups.map(p => (Math.abs(lsq(p).r) < 0.005 ? 0 : lsq(p).r));
-    const g = [txt(370, 24, '왼쪽만 보면 두 변수가 함께 커진다. 오른쪽은 같은 점을 숨은 변수로 나눈 것이다',
+    const g = [txt(370, 24, '왼쪽만 보면 두 변수가 함께 커진다. 가운데는 같은 점을 숨은 변수로 나눈 것이다',
         { anchor: 'middle', cls: 'ink bold' })];
     const mk = (bx, title, sub, colored) => {
         const out = [panel(bx, 44, 274, 212, title, { sub })];

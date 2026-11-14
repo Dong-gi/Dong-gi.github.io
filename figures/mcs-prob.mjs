@@ -675,7 +675,7 @@ add((() => {
 
     g.push(box(28, 282, 604, 62, { stroke: C2, sw: 1.4, rx: 5 }));
     g.push(txt(330, 308, 'Pr[T | F] = Pr[T ∩ F] / Pr[F] = (1/3 + 1/18) / (1/3 + 1/18 + 1/9) = 7/9', { anchor: 'middle', cls: 'ink bold' }));
-    g.push(txt(330, 332, '분자는 두 열에 모두 ● 인 잎, 분모는 오른쪽 열에 ● 인 잎이다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    g.push(txt(330, 332, '분자는 두 열에 모두 ● 인 잎, 분모는 ‘F 1차전승’ 열에 ● 인 잎이다', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
 
     return {
         name: 'mcs-r-hockey-tree',

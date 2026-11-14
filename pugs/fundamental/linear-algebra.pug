@@ -2333,7 +2333,7 @@ include ../../source/skeleton.pug
     p 이다. 풀면 익숙한 공식이 나온다.
     p 식[b = \frac{m\sum x_{i}y_{i} - \left(\sum x_{i}\right)\left(\sum y_{i}\right)}{m\sum x_{i}^{2} - \left(\sum x_{i}\right)^{2}}, \qquad a = \bar{y} - b\bar{x}]식
 
-    +w3img('/figures/linear-algebra/la-in-regression.svg', '왼쪽에서 굵은 세로선이 잔차이고 그 제곱 합이 최소가 된 상태다. 잔차의 합이 0이고 x 와의 내적도 0인데, 그 두 줄이 정규방정식 두 줄 그 자체다. 오른쪽은 최소제곱이 세로 거리를 재지 수직 거리를 재지 않는다는 것을 보인다')
+    +w3img('/figures/linear-algebra/la-in-regression.svg', '왼쪽에서 점마다 붙은 수가 잔차(점과 직선 사이의 세로 거리)이고 그 제곱 합이 최소가 된 상태다. 잔차의 합이 0이고 x 와의 내적도 0인데, 그 두 줄이 정규방정식 두 줄 그 자체다. 오른쪽은 최소제곱이 세로 거리를 재지 수직 거리를 재지 않는다는 것을 보인다')
 
     p 그림의 왼쪽 아래 두 줄을 다시 보자. 정규방정식의 두 줄은 각각 이런 뜻이다.
     ul
@@ -2461,7 +2461,7 @@ include ../../source/skeleton.pug
     p 이렇게 만든 식[\mathbf{u}_{i}]식 는 길이가 1이고(식[\|A\mathbf{v}_{i}\| = \sigma_{i}]식 이므로) 서로 직교한다(위에서 확인했다). 곧 <b>공짜로 정규직교집합이 된다.</b>
     p 식[\sigma_{i} = 0]식 인 자리는 식[A\mathbf{v}_{i} = \mathbf{0}]식 이라 나눌 수 없다. 그 자리는 남겨 두고, 식[U]식 를 정사각으로 채워야 한다면 식[N(A^{T})]식 에서 정규직교기저를 골라 뒤에 붙인다.
 
-    +w3img('/figures/linear-algebra/la-in-svd-shape.svg', '완전형에서는 U 와 V 가 정사각 직교행렬이고 시그마가 A 와 같은 모양이며 대각선 아래위가 0이다. 축소형은 그 0 부분을 잘라낸 것이고 곱하면 같은 A 가 나온다. 맨 아래 두 문장이 SVD 를 대각화와 갈라놓는 지점이다')
+    +w3img('/figures/linear-algebra/la-in-svd-shape.svg', '완전형에서는 U 와 V 가 정사각 직교행렬이고 시그마가 A 와 같은 모양이며 대각선 아래위가 0이다. 축소형은 그 0 부분을 잘라낸 것이고 곱하면 같은 A 가 나온다. 맨 아래 두 줄이 SVD 를 대각화와 갈라놓는 지점이다')
 
     p 두 형태를 구분해 두면 헷갈리지 않는다.
     +table()

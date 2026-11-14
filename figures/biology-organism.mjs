@@ -144,7 +144,7 @@ add((() => {
     b.push(txt(ox + S + 18, oy + 40, 'p 와 q 로 자른 것뿐이다.', { cls: 'ink2', size: 'sm' }));
     b.push(txt(ox + S + 18, oy + 66, '넓이의 합 = 1 이므로', { cls: 'ink', size: 'sm' }));
     b.push(txt(ox + S + 18, oy + 86, 'p² + 2pq + q² = 1', { cls: 'ink bold' }));
-    b.push(txt(ox + S + 18, oy + 116, '가운데 두 칸이 같은', { cls: 'ink2', size: 'sm' }));
+    b.push(txt(ox + S + 18, oy + 116, 'pq 라고 적힌 두 칸이 같은', { cls: 'ink2', size: 'sm' }));
     b.push(txt(ox + S + 18, oy + 134, '이형접합자라 2pq 가 된다.', { cls: 'ink2', size: 'sm' }));
     b.push(txt(30, H - 16, '그림은 p = 0.7, q = 0.3 인 경우. 칸의 넓이가 곧 그 유전자형의 비율이다', { cls: 'ink2', size: 'sm' }));
     return {

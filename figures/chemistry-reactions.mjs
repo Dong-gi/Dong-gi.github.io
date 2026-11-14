@@ -467,7 +467,8 @@ add((() => {
     g.push(txt(365, 70, '1.10 V', { anchor: 'middle', cls: 'ink bold' }));
     g.push(px(210, 100, 300, 100, { cls: 's1', marker: 'ar1', width: 2.4 }));
     g.push(txt(255, 90, 'e⁻ 가 흐른다', { anchor: 'middle', cls: 'ink', size: 'sm' }));
-    g.push(px(520, 100, 440, 100, { cls: 's1', marker: 'ar1', width: 2.4 }));
+    // 전압계 오른쪽에서도 전자는 아연 → 구리(오른쪽)로 간다. 예전에는 이 화살표가 왼쪽을 가리켰다.
+    g.push(px(440, 100, 520, 100, { cls: 's1', marker: 'ar1', width: 2.4 }));
 
     // 염다리
     g.push(line([[240, 300], [240, 174], [490, 174], [490, 300]],
@@ -567,8 +568,9 @@ add((() => {
         const y = Y(e);
         g.push(line([[xa - 30, y], [xa - 18, y]], { stroke: 'var(--ink2)', sw: 1.2 }));
         g.push(line([[xa, y], [xb, y]], { stroke: 'var(--grid)', sw: 1, dash: '3 3' }));
-        g.push(txt(xa, y + 5, name, { cls: 'ink', size: 'sm' }));
-        g.push(txt(xb + 60, y + 5, `${e >= 0 ? '+' : ''}${e.toFixed(2)}`, { anchor: 'end', cls: 'ink', size: 'sm' }));
+        // 글은 줄 바로 위에 — 줄 위에 걸치면 0 V 기준의 진한 실선이 글자를 가로지른다.
+        g.push(txt(xa, y - 4, name, { cls: 'ink', size: 'sm' }));
+        g.push(txt(xb + 60, y - 4, `${e >= 0 ? '+' : ''}${e.toFixed(2)}`, { anchor: 'end', cls: 'ink', size: 'sm' }));
     }
     g.push(txt(xb + 60, yTop - 20, 'E° (V)', { anchor: 'end', cls: 'ink bold' }));
     // 자발 방향 표시
@@ -1457,7 +1459,7 @@ add((() => {
     g.push(txt(cx2, 270, '철보다 무거운 원소는 별의', { cls: 'ink2', size: 'sm' }));
     g.push(txt(cx2, 288, '평범한 연소로 만들어지지 않는다', { cls: 'ink2', size: 'sm' }));
     g.push(txt(20, 32, '핵자 하나당 결합에너지 — 어느 쪽으로 가야 에너지가 나오는가', { cls: 'ink bold' }));
-    g.push(txt(20, H - 12, '양쪽 끝에서 가운데로 가는 변화만 에너지를 내놓는다. 그 가운데가 철이다',
+    g.push(txt(20, H - 12, '양쪽 끝에서 봉우리 쪽으로 가는 변화만 에너지를 내놓는다. 그 봉우리에 철이 있다',
         { cls: 'ink2', size: 'sm' }));
     return {
         name: 'chem-nuc-binding-energy',
