@@ -816,7 +816,9 @@ WebView·서드파티의 소켓을 한꺼번에 막던 것)이다. 그때는 Web
   읽어 반복을 본다(`SevenZKeyGuard` — '14단계 뒤 — 보안 점검 고침'). 암호가 없으면 유도하지 않는다(유도 전에 `PasswordRequiredException`).
 - **예외를 이름(`simpleName`)으로 가르지 마라 — 릴리스(R8)에서는 이름이 줄어든다.** 압축·만화 화면이 'Encrypt' 가 든 이름으로 '풀지 않는 방식' 을
   갈랐는데 매핑 파일에서 `ZipDecryption$UnsupportedEncryptionException -> mp5` — 릴리스의 PKWARE 강한 암호화 ZIP 은 '깨진 파일' 로 나갔다. 공개된
-  바탕 타입(`ArchiveEncryptionUnsupportedException`)으로 가른다. 메모리 상한도 타입으로 가른다(`Archives.isMemoryLimit` — commons-compress·XZ for Java 의 `MemoryLimitException`, 감싼 원인까지. 2026-11-14 — 그전에는 이름을 봐서 릴리스의 7z 사전 상한이 '깨진 파일' 로 나갔다).
+  바탕 타입(`ArchiveEncryptionUnsupportedException`)으로 가른다. 메모리 상한도 타입으로 가른다(`Archives.isMemoryLimit` — commons-compress·XZ for Java 의 `MemoryLimitException`, 감싼 원인까지. 2026-11-14 — 그전에는 이름을 봐서 릴리스의 7z 사전 상한이 '깨진 파일' 로 나갔다), 암호도 그렇다(`Archives.isPasswordProblem` —
+  우리 `ArchivePasswordException` 과 새어 나올 수 있는 commons-compress `PasswordRequiredException`·ZIP 복호화기의 '틀렸다'). 이제 화면에 이름 판정이 없다.
+  시험에 이름만 같은 가짜 예외를 만들어 길을 태우지 않는다 — 실제 바탕 타입을 잇는 것으로 만든다.
 - **Git Bash 의 `grep` 은 CR 을 보지 못할 수 있다** — `grep -q $'\r'` 로 줄 끝을 쟀더니 CRLF 인 `PathRules.kt` 가 LF 로 나왔다. 줄 끝은
   파이썬으로 바이트를 세어 본다. 이 저장소의 `.kt` 는 대부분 LF 지만 CRLF 파일이 섞여 있다.
 

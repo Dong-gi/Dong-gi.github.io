@@ -138,8 +138,10 @@ class ArchiveOpenWithTest {
     @Test
     fun 이_앱이_풀지_않는_잠금에는_단추가_뜬다() {
         // PKWARE 의 강한 암호화는 리더가 `UnsupportedEncryptionException` 으로 알린다(`ZipDecryption`, 모듈 안쪽 타입).
-        // [failureKindOf] 가 이름으로 가르므로 같은 이름의 예외로 그 길을 탄다.
-        class UnsupportedEncryptionException : IOException("풀지 않는 암호화")
+        // 그 타입은 공개된 바탕 [io.github.donggi.iroiroviewer.format.archive.ArchiveEncryptionUnsupportedException] 을 잇고,
+        // [failureKindOf] 는 그 바탕 타입으로 가른다(이름은 릴리스가 줄인다).
+        class UnsupportedEncryptionException :
+            io.github.donggi.iroiroviewer.format.archive.ArchiveEncryptionUnsupportedException("풀지 않는 암호화")
         val kind = failureKindOf(UnsupportedEncryptionException())
         assertEquals(ArchiveViewModel.State.Failed.Kind.ENCRYPTED, kind)
         assertTrue(ArchiveOpenWith.onFailure(kind))
@@ -198,7 +200,8 @@ class ArchiveOpenWithTest {
         assertEquals(ArchiveViewModel.State.Failed.Kind.UNREADABLE, failureKindOf(gone, reachable = false))
         assertFalse(ArchiveOpenWith.onFailure(failureKindOf(gone, reachable = false)))
         // 닿지 못하면 무엇이 던져졌든 읽을 수 없다 — 상한·잠금도.
-        class UnsupportedEncryptionException : IOException("풀지 않는 암호화")
+        class UnsupportedEncryptionException :
+            io.github.donggi.iroiroviewer.format.archive.ArchiveEncryptionUnsupportedException("풀지 않는 암호화")
         for (t in listOf(UnsupportedEncryptionException(), IllegalStateException("분할"), FileNotFoundException("ENOENT"))) {
             assertEquals(ArchiveViewModel.State.Failed.Kind.UNREADABLE, failureKindOf(t, reachable = false), t.toString())
         }

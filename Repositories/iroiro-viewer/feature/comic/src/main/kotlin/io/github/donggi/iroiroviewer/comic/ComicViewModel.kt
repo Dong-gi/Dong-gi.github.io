@@ -336,9 +336,9 @@ class ComicViewModel(app: Application) : AndroidViewModel(app) {
                     when {
                         t is io.github.donggi.iroiroviewer.safety.ParseLimitExceededException ||
                             io.github.donggi.iroiroviewer.format.archive.Archives.isMemoryLimit(t) -> ComicOpen.Kind.TOO_LARGE
-                        // 타입으로 먼저 — 이름 보기는 릴리스(R8 이 이름을 줄인다)에서 듣지 않는다. 받을 수 없는 7z 열쇠 유도 반복도 여기다.
+                        // 타입으로 가른다 — 이름은 릴리스(R8)가 줄인다. 받을 수 없는 7z 열쇠 유도 반복도 여기다.
                         t is io.github.donggi.iroiroviewer.format.archive.ArchiveEncryptionUnsupportedException ||
-                            t.javaClass.simpleName.contains("Encrypt") -> ComicOpen.Kind.ENCRYPTED
+                            io.github.donggi.iroiroviewer.format.archive.Archives.isPasswordProblem(t) -> ComicOpen.Kind.ENCRYPTED
                         else -> ComicOpen.Kind.CORRUPT
                     },
                     // 암호는 파일에만 걸린다. 그새 지워졌으면 넘길 것이 없다.

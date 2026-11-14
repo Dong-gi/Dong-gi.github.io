@@ -225,6 +225,26 @@ object Archives {
         return false
     }
 
+    /**
+     * 암호가 없거나 맞지 않아 실패했는가 — 우리 [ArchivePasswordException] 과, 리더가 옮기지 못하고 새어 나올 수 있는 라이브러리·내부 예외
+     * (commons-compress 의 `PasswordRequiredException`, ZIP 복호화기의 '틀렸다'). 화면이 '암호' 로 말할 때 쓴다.
+     * **이름으로 보지 않는다** — 릴리스(R8)는 클래스 이름을 줄인다. 감싼 예외도 원인을 몇 겹 따라가 본다.
+     */
+    fun isPasswordProblem(t: Throwable): Boolean {
+        var current: Throwable? = t
+        repeat(MAX_CAUSE_DEPTH) {
+            val e = current ?: return false
+            if (e is ArchivePasswordException ||
+                e is org.apache.commons.compress.PasswordRequiredException ||
+                e is ZipDecryption.WrongPasswordException
+            ) {
+                return true
+            }
+            current = e.cause?.takeIf { it !== e }
+        }
+        return false
+    }
+
     private const val MAX_CAUSE_DEPTH = 8
 
     private fun ByteArray.startsWith(magic: IntArray): Boolean {

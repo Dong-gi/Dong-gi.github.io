@@ -508,15 +508,13 @@ internal fun failureKindOf(t: Throwable, reachable: Boolean): ArchiveViewModel.S
  * '너무 크다' 다 — 둘을 한 문장으로 말하면 1 GiB 넘는 `.tar.gz` 에 '항목이 너무 많다' 가 뜬다.
  */
 internal fun failureKindOf(t: Throwable): ArchiveViewModel.State.Failed.Kind {
-    val name = t::class.java.simpleName
     return when {
-        // **타입으로 먼저 가른다** — 아래의 이름 보기는 릴리스에서 듣지 않는다(R8 이 클래스 이름을 줄인다). 7z 의 받을 수 없는 열쇠 유도
-        // 반복(`SevenZKeyGuard`)과 PKWARE 의 강한 암호화가 이 바탕을 잇는다.
+        // **타입으로 가른다** — 이름은 릴리스(R8)가 줄인다. 7z 의 받을 수 없는 열쇠 유도 반복(`SevenZKeyGuard`)과 PKWARE 의 강한 암호화가
+        // 이 바탕을 잇는다.
         t is ArchiveEncryptionUnsupportedException -> ArchiveViewModel.State.Failed.Kind.ENCRYPTED
         t is ParseLimitExceededException && t.limitName == "maxEntries" -> ArchiveViewModel.State.Failed.Kind.TOO_LARGE
         t is ParseLimitExceededException || Archives.isMemoryLimit(t) -> ArchiveViewModel.State.Failed.Kind.TOO_BIG
-        name.contains("Password", ignoreCase = true) ||
-            name.contains("Encrypt", ignoreCase = true) -> ArchiveViewModel.State.Failed.Kind.ENCRYPTED
+        Archives.isPasswordProblem(t) -> ArchiveViewModel.State.Failed.Kind.ENCRYPTED
         t is IllegalStateException -> ArchiveViewModel.State.Failed.Kind.UNSUPPORTED
         t is IOException -> ArchiveViewModel.State.Failed.Kind.CORRUPT
         else -> ArchiveViewModel.State.Failed.Kind.CORRUPT

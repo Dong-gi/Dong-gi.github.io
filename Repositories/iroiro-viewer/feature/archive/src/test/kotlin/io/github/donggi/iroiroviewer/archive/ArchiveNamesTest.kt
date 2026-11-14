@@ -102,6 +102,24 @@ class ArchiveNamesTest {
         assertEquals(ArchiveViewModel.State.Failed.Kind.CORRUPT, failureKindOf(MemoryLimitException()))
     }
 
+    @Test
+    fun `암호 실패는 타입으로 가른다`() {
+        // 리더가 옮기지 못하고 새어 나온 라이브러리의 '암호가 필요하다' 도 암호다(릴리스는 클래스 이름을 줄인다).
+        assertEquals(
+            ArchiveViewModel.State.Failed.Kind.ENCRYPTED,
+            failureKindOf(org.apache.commons.compress.PasswordRequiredException("a.7z")),
+        )
+        assertEquals(
+            ArchiveViewModel.State.Failed.Kind.ENCRYPTED,
+            failureKindOf(IOException("감쌌다", org.apache.commons.compress.PasswordRequiredException("a.7z"))),
+        )
+        // 이름에 'Password'·'Encrypt' 가 든 남의 예외는 암호가 아니다 — 이름 보기로 되돌아가면 이 줄들이 깨진다.
+        class PasswordExpiredException : IOException()
+        class EncryptedFsException : IOException()
+        assertEquals(ArchiveViewModel.State.Failed.Kind.CORRUPT, failureKindOf(PasswordExpiredException()))
+        assertEquals(ArchiveViewModel.State.Failed.Kind.CORRUPT, failureKindOf(EncryptedFsException()))
+    }
+
     /**
      * 압축 tar 의 리더가 tar 가 아니라고 하면 다루지 않는 형식이다 — 입구(`Archives.open`)는 그 경우를 항목 하나짜리로 열므로
      * 화면에 이 실패가 오는 것은 리더를 직접 만든 길뿐이다. 매직이 없는 LZMA 가 풀리지 않는 것도 '아카이브가 아니다' 다.
