@@ -139,9 +139,21 @@ class TetherIsolationTest {
         for (file in sources) assertBrowserFree(file, "io.github.donggi.iroirobrowser.setup.")
     }
 
-    /** 브라우저의 것을 부르지 않는가 — 금지어(주석에만 있으면 괜찮다)와, 앱의 import 는 R·BuildConfig·ui.Ui 와 [ownPackages] 뿐인가. */
+    @Test
+    fun 테더가_부르는_기기_키_도우미도_브라우저의_것을_부르지_않는다() {
+        // TetherSecret 과 브라우저의 SecretBox 가 함께 쓰는 잠그기(crypto/) — 테더 소스가 가져와도 되는 것은 이 패키지뿐이고, 이 패키지도 같은 규칙을 지킨다.
+        val dir = File("src/main/kotlin/io/github/donggi/iroirobrowser/crypto")
+        val sources = dir.listFiles { f -> f.name.endsWith(".kt") }.orEmpty()
+        assertTrue(sources.isNotEmpty(), "기기 키 도우미의 소스를 찾지 못했다: ${dir.absolutePath}")
+        for (file in sources) assertBrowserFree(file, "io.github.donggi.iroirobrowser.crypto.")
+    }
+
+    /** 브라우저의 것을 부르지 않는가 — 금지어(주석에만 있으면 괜찮다)와, 앱의 import 는 R·BuildConfig·ui.Ui·crypto.DeviceKeyCipher 와 [ownPackages] 뿐인가. */
     private fun assertBrowserFree(file: File, vararg ownPackages: String) {
-        val allowedApp = setOf("io.github.donggi.iroirobrowser.R", "io.github.donggi.iroirobrowser.BuildConfig", "io.github.donggi.iroirobrowser.ui.Ui")
+        val allowedApp = setOf(
+            "io.github.donggi.iroirobrowser.R", "io.github.donggi.iroirobrowser.BuildConfig", "io.github.donggi.iroirobrowser.ui.Ui",
+            "io.github.donggi.iroirobrowser.crypto.DeviceKeyCipher",
+        )
         val forbidden = listOf("WebApp", "android.webkit", "NetworkPath", "SettingsStore", "SecretBox", "LocalRelay", "DownloadCenter")
         val text = file.readText()
         for (word in forbidden) assertTrue(!text.contains(word) || isOnlyInComments(text, word), "${file.name} 가 $word 를 부른다")

@@ -9,7 +9,6 @@ import android.os.Looper
 import android.os.Process
 import android.os.SystemClock
 import android.text.format.Formatter
-import android.webkit.CookieManager
 import android.webkit.MimeTypeMap
 import androidx.annotation.OptIn
 import androidx.media3.common.C
@@ -222,7 +221,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
             internal set
 
         /**
-         * Referer 를 짓는 쪽 주소 — 홉마다 `strict-origin-when-cross-origin`([headersFromPage]). 쪽 주소를 적지 않던 옛 항목은 그때 지어 둔
+         * Referer 를 짓는 쪽 주소 — 홉마다 `strict-origin-when-cross-origin`([HopHeaders.fromPage]). 쪽 주소를 적지 않던 옛 항목은 그때 지어 둔
          * [referer] 를 쪽으로 본다(그 값은 쪽 주소이거나 그 출처라 홉마다 다시 지어도 그때보다 더 내보내지 않는다).
          */
         internal val refererSource: String? get() = refererSourceOf(pageUrl, referer)
@@ -884,32 +883,12 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     }
 
     /**
-     * 요청 머리 — WebView 와 같은 User-Agent, 이 홉의 Referer([referer] — 부르는 쪽이 홉마다 지은 것), 그 주소의 쿠키(넘겨주기의 홉마다 다시
-     * 고른다). Referer 를 짓는 길은 둘이다 — 쪽에서 낸 요청은 [headersFromPage], 사이트의 규약이 처음 홉의 값을 정한 요청(갤러리)은
-     * [headersPinned]. 열쇠의 '쪽이 보낸 머리 따라 하기'만 쪽이 실제로 보낸 값을 그대로 싣는다([keyHeaders]).
+     * 사이트의 규약이 처음 홉([first])의 Referer 를 정한 요청(갤러리 받기)의 홉 [hop] 머리 — 넘겨주기 뒤의 홉은 같은 규칙([Referrer.pinnedFirstHop]).
+     * 머리 자체(UA·쿠키·Referer)는 [HopHeaders] — 쪽에서 낸 요청은 [HopHeaders.fromPage], 열쇠의 '쪽이 보낸 머리 따라 하기'만 쪽이 실제로 보낸 값을
+     * 그대로 싣는다([keyHeaders]).
      */
-    private fun headers(userAgent: String, referer: String?, url: String, extra: Map<String, String> = emptyMap()): Map<String, String> =
-        buildMap {
-            put("User-Agent", userAgent)
-            put("Accept", "*/*")
-            referer?.let { put("Referer", it) }
-            CookieManager.getInstance().getCookie(url)?.takeIf { it.isNotEmpty() }?.let { put("Cookie", it) }
-            putAll(extra)
-        }
-
-    /**
-     * 쪽 [page] 에서 낸 요청의 홉 [hop] 머리 — Referer 를 **홉마다** 쪽에서 다시 짓는다(`strict-origin-when-cross-origin`). 처음 주소에 맞춰
-     * 한 번 지은 값을 모든 홉(넘겨주기·HLS·DASH 의 조각·재생목록·열쇠)에 실으면, 처음 주소가 쪽과 같은 출처일 때 쪽의 전체 주소(질의 포함)가
-     * 다른 출처의 서버에 간다.
-     */
-    private fun headersFromPage(userAgent: String, page: String?, hop: String, extra: Map<String, String> = emptyMap()): Map<String, String> =
-        headers(userAgent, Referrer.strictOriginWhenCrossOrigin(page, hop), hop, extra)
-
-    /** 사이트의 규약이 처음 홉([first])의 Referer 를 정한 요청(갤러리 받기)의 홉 [hop] 머리 — 넘겨주기 뒤의 홉은 같은 규칙([Referrer.pinnedFirstHop]). */
     private fun headersPinned(userAgent: String, chosen: String?, first: String, hop: String): Map<String, String> =
-        headers(userAgent, Referrer.pinnedFirstHop(chosen, first, hop), hop)
-
-    private val storeCookies: (String, List<String>) -> Unit = { url, values -> values.forEach { CookieManager.getInstance().setCookie(url, it) } }
+        HopHeaders.of(userAgent, Referrer.pinnedFirstHop(chosen, first, hop), hop)
 
     /**
      * 앱의 HTTP — **부를 때마다 지금 길로**(중계의 지금 포트). 설정을 바꾸거나 스위치를 누르면 중계가 새 포트로 서고 옛 포트는 닫힌다 — 처음에
@@ -973,7 +952,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         } else {
             emptyMap()
         }
-        fetcher().get(item.url, headersFor = { u -> headersFromPage(item.userAgent, item.refererSource, u, extra) }, onSetCookie = storeCookies).use { r ->
+        fetcher().get(item.url, headersFor = { u -> HopHeaders.fromPage(item.userAgent, item.refererSource, u, extra) }, onSetCookie = HopHeaders.storeCookies).use { r ->
             val range = if (r.code == 206) ContentRange.parse(r.header("Content-Range")) else null
             val append = when {
                 resumeAt > 0 && r.code == 206 && range?.start == resumeAt -> true
@@ -1235,7 +1214,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
     }
 
     private fun saveSetFileOnce(item: Item, g: Gallery, file: GalleryFile, unit: Int, index: Int) {
-        fetcher().get(file.url, headersFor = { u -> headersPinned(item.userAgent, file.referer, file.url, u) }, onSetCookie = storeCookies).use { r ->
+        fetcher().get(file.url, headersFor = { u -> headersPinned(item.userAgent, file.referer, file.url, u) }, onSetCookie = HopHeaders.storeCookies).use { r ->
             if (r.code !in 200..299) throw SiteHttpException(r.code, NetErrors.describeStatus(r), NetErrors.isProxyAnswer(r))
             // 이름은 사이트가 지은 것이라 한 번 더 거른다(같은 것을 두 번 걸러도 같다). 형식은 확장자로 — 모르면 octet-stream(이름이 그대로 남는다).
             val name = SafeFileName.clean(file.fileName)
@@ -1453,11 +1432,11 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
 
     /**
      * 열쇠 요청의 머리 — 쪽이 보낸 요청을 찾았으면([replay]) 그 Referer(쪽이 실제로 보낸 값 그대로 — 쪽이 보내지 않았으면 보내지 않는다)·스크립트가
-     * 단 머리(같은 출처에만)·Origin, 못 찾았으면 다른 요청처럼([headersFromPage] — 홉마다 맨 위 쪽에서 지은 Referer). 쿠키는 어느 쪽이든 홉마다
+     * 단 머리(같은 출처에만)·Origin, 못 찾았으면 다른 요청처럼([HopHeaders.fromPage] — 홉마다 맨 위 쪽에서 지은 Referer). 쿠키는 어느 쪽이든 홉마다
      * WebView 에서.
      */
     private fun keyHeaders(item: Item, replay: PageRequests.Replay?, url: String): Map<String, String> =
-        if (replay == null) headersFromPage(item.userAgent, item.refererSource, url) else headers(item.userAgent, replay.referer, url, replay.headersFor(url))
+        if (replay == null) HopHeaders.fromPage(item.userAgent, item.refererSource, url) else HopHeaders.of(item.userAgent, replay.referer, url, replay.headersFor(url))
 
     /** 열쇠가 쪽(그것을 고른 페이지)과 다른 사이트(등록 도메인)에 있는가 — 실패 글의 갈래. 페이지를 모르면 거짓. */
     private fun crossSite(item: Item, url: String): Boolean =
@@ -1505,7 +1484,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
                 progress(0)
                 val range = part.range
                 val extra = range?.let { mapOf("Range" to "bytes=${it.offset}-${it.offset + it.length - 1}") } ?: emptyMap()
-                fetcher().get(part.url, headersFor = { u -> headersFromPage(item.userAgent, item.refererSource, u, extra) }, onSetCookie = storeCookies).use { r ->
+                fetcher().get(part.url, headersFor = { u -> HopHeaders.fromPage(item.userAgent, item.refererSource, u, extra) }, onSetCookie = HopHeaders.storeCookies).use { r ->
                     if (r.code != 200 && r.code != 206) throw httpStatus(r)
                     val body = if (range != null && r.code == 200) Streams.slice(r.body, range.offset, range.length) else r.body
                     return pump(item, part, key, body, out, head, progress)
@@ -1749,7 +1728,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         }
     }
 
-    /** 재생목록 — [page] 는 Referer 를 홉마다 짓는 쪽 주소([headersFromPage]). */
+    /** 재생목록 — [page] 는 Referer 를 홉마다 짓는 쪽 주소([HopHeaders.fromPage]). */
     private fun readPlaylist(
         url: String,
         userAgent: String,
@@ -1790,7 +1769,7 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
      * 작은 덩이(재생목록·열쇠·DASH 목록)를 받는다 — [limit] 바이트까지만([Streams.readAll] — 넘으면 끊는다. 큰 것을 통째로 쥐다 메모리를 다
      * 쓰지 않게). [patience] 만큼 해 본다(4xx 는 한 번). 시도마다 길을 다시 얻는다([fetcher]). [stop] 이 참이면 그만둔다([Cancelled]).
      * [headersFor] 를 주면 홉마다 그 머리로(열쇠 — 쪽이 보낸 머리 [keyHeaders], 갤러리 — [headersPinned]), 아니면 홉마다 쪽 [page] 에서
-     * 지은 Referer 로([headersFromPage]). [keepTooLarge] 면 상한을 넘은 몸을 던지지 않고 [Fetched.tooLarge] 로 돌려준다. 조각은 여기서 받지
+     * 지은 Referer 로([HopHeaders.fromPage]). [keepTooLarge] 면 상한을 넘은 몸을 던지지 않고 [Fetched.tooLarge] 로 돌려준다. 조각은 여기서 받지
      * 않는다 — 받으면서 쓴다([fetchPart]).
      */
     private fun getBody(
@@ -1804,12 +1783,12 @@ class DownloadCenter(context: Context, private val network: NetworkPath) {
         keepTooLarge: Boolean = false,
         stop: () -> Boolean = { item?.stopRequested == true },
     ): Fetched {
-        val forHop: (String) -> Map<String, String> = headersFor ?: { u -> headersFromPage(userAgent, page, u) }
+        val forHop: (String) -> Map<String, String> = headersFor ?: { u -> HopHeaders.fromPage(userAgent, page, u) }
         var last: IOException? = null
         for (attempt in 0 until patience.attempts) {
             if (stop()) throw Cancelled()
             try {
-                fetcher(patience).get(url, headersFor = forHop, onSetCookie = storeCookies).use { r ->
+                fetcher(patience).get(url, headersFor = forHop, onSetCookie = HopHeaders.storeCookies).use { r ->
                     if (r.code != 200 && r.code != 206) throw httpStatus(r)
                     val bytes = try {
                         Streams.readAll(r.body, limit)

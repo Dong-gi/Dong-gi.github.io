@@ -19,6 +19,7 @@ import io.github.donggi.iroirobrowser.R
 import io.github.donggi.iroirobrowser.core.ExitInfo
 import io.github.donggi.iroirobrowser.core.ExitTrace
 import io.github.donggi.iroirobrowser.core.ProxySettings
+import io.github.donggi.iroirobrowser.core.Streams
 import io.github.donggi.iroirobrowser.net.HttpFetcher
 import io.github.donggi.iroirobrowser.net.LocalRelay
 import io.github.donggi.iroirobrowser.net.UpstreamProxy
@@ -374,7 +375,7 @@ class NetworkPath(context: Context, private val store: SettingsStore) {
             val exit = try {
                 HttpFetcher(route, connectTimeoutMs = CHECK_TIMEOUT_MS, readTimeoutMs = CHECK_TIMEOUT_MS)
                     .get(url, headersFor = { mapOf("User-Agent" to agent, "Cache-Control" to "no-cache") })
-                    .use { r -> if (r.code == 200) ExitTrace.parse(readAtMost(r.body, 16 * 1024).decodeToString()) else null }
+                    .use { r -> if (r.code == 200) ExitTrace.parse(Streams.readHead(r.body, 16 * 1024).decodeToString()) else null }
             } catch (e: IOException) {
                 debugLog("exit check failed: ${e.javaClass.simpleName}")
                 null
@@ -390,18 +391,6 @@ class NetworkPath(context: Context, private val store: SettingsStore) {
                 listeners.forEach { it.onState(state) }
             }
         }
-    }
-
-    /** 앞의 [limit] 바이트까지만 읽는다(`readNBytes` 는 API 33 부터다). */
-    private fun readAtMost(input: java.io.InputStream, limit: Int): ByteArray {
-        val out = java.io.ByteArrayOutputStream()
-        val buffer = ByteArray(4096)
-        while (out.size() < limit) {
-            val n = input.read(buffer, 0, minOf(buffer.size, limit - out.size()))
-            if (n < 0) break
-            out.write(buffer, 0, n)
-        }
-        return out.toByteArray()
     }
 
     private fun restartRelay() {

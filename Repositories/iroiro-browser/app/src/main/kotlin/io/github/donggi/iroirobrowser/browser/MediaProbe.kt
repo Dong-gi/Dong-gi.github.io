@@ -2,14 +2,12 @@ package io.github.donggi.iroirobrowser.browser
 
 import android.os.Handler
 import android.os.Looper
-import android.webkit.CookieManager
-import io.github.donggi.iroirobrowser.core.Referrer
+import io.github.donggi.iroirobrowser.core.Streams
 import io.github.donggi.iroirobrowser.core.media.HlsPlaylist
+import io.github.donggi.iroirobrowser.download.HopHeaders
 import io.github.donggi.iroirobrowser.net.HttpFetcher
 import io.github.donggi.iroirobrowser.proxy.NetworkPath
-import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.io.InputStream
 import java.util.concurrent.Executors
 import java.util.concurrent.RejectedExecutionException
 
@@ -19,7 +17,7 @@ import java.util.concurrent.RejectedExecutionException
  *
  * **내려받기와 같은 길**로 묻는다 — 앱의 HTTP, 길은 [NetworkPath.httpRoute](중계, 예외 규칙에 든 사설망 주소는 바로 — 홉마다. 프록시를 켰는데
  * 중계가 없으면 묻지 않는다, 직접 나가지 않는다),
- * 머리는 쪽의 User-Agent·Referer(홉마다 쪽에서 짓는다 — 내려받기와 같다)·그 주소의 쿠키. 내려받기의 일꾼과 따로 돌고(받는
+ * 머리는 내려받기와 같은 [HopHeaders.fromPage] — 쪽의 User-Agent·Referer(홉마다 쪽에서 짓는다)·그 주소의 쿠키. 내려받기의 일꾼과 따로 돌고(받는
  * 중에도 바로 답한다) 다시 해 보지 않으며 시간 제한도 짧다 — 답이 없으면 '모름' 일 뿐이다.
  */
 class MediaProbe(private val network: NetworkPath) {
@@ -32,7 +30,7 @@ class MediaProbe(private val network: NetworkPath) {
      * 본문은 읽지 않는다(범위를 모르는 서버가 통째로 보내도 곧 끊는다). [page] 는 그 미디어를 찾은 쪽 — Referer 를 홉마다 그것에서 짓는다.
      */
     fun size(url: String, userAgent: String, page: String?, done: (Long) -> Unit) = submit(done, -1L) {
-        fetcher().get(url, headersFor = { u -> headers(userAgent, page, u, RANGE_FIRST_BYTE) }, onSetCookie = storeCookies).use { r ->
+        fetcher().get(url, headersFor = { u -> HopHeaders.fromPage(userAgent, page, u, RANGE_FIRST_BYTE) }, onSetCookie = HopHeaders.storeCookies).use { r ->
             when (r.code) {
                 206 -> RANGE_TOTAL.find(r.header("Content-Range").orEmpty())?.groupValues?.get(1)?.toLongOrNull() ?: -1L
                 200 -> r.contentLength
@@ -43,9 +41,14 @@ class MediaProbe(private val network: NetworkPath) {
 
     /** HLS 재생목록을 읽는다 — 읽지 못하면 null. 넘겨주기를 따랐으면 상대 주소는 마지막 주소에 대어 푼다(재생기도 그렇게 푼다). [page] 는 [size] 와 같다. */
     fun playlist(url: String, userAgent: String, page: String?, done: (HlsPlaylist?) -> Unit) = submit(done, null) {
-        fetcher().get(url, headersFor = { u -> headers(userAgent, page, u, emptyMap()) }, onSetCookie = storeCookies).use { r ->
+        fetcher().get(url, headersFor = { u -> HopHeaders.fromPage(userAgent, page, u) }, onSetCookie = HopHeaders.storeCookies).use { r ->
             if (r.code != 200) return@use null
-            val bytes = readAtMost(r.body, MAX_PLAYLIST_BYTES) ?: return@use null
+            // 상한을 넘으면 재생목록이 아니다 — 모름.
+            val bytes = try {
+                Streams.readAll(r.body, MAX_PLAYLIST_BYTES)
+            } catch (e: Streams.TooLarge) {
+                return@use null
+            }
             HlsPlaylist.parse(bytes.decodeToString(), r.url)
         }
     }
@@ -76,29 +79,6 @@ class MediaProbe(private val network: NetworkPath) {
 
     /** 부를 때마다 지금 길로 — 길이 아직 없으면 [HttpFetcher.get] 이 연결을 열지 않고 [HttpFetcher.NoRoute](모름). */
     private fun fetcher(): HttpFetcher = HttpFetcher(network.httpRoute(), connectTimeoutMs = TIMEOUT_MS, readTimeoutMs = TIMEOUT_MS)
-
-    /** 내려받기([io.github.donggi.iroirobrowser.download.DownloadCenter])와 같은 머리 — 쪽과 같게 보이도록. Referer 는 쪽 [page] 에서 이 홉 [url] 로. */
-    private fun headers(userAgent: String, page: String?, url: String, extra: Map<String, String>): Map<String, String> = buildMap {
-        put("User-Agent", userAgent)
-        put("Accept", "*/*")
-        Referrer.strictOriginWhenCrossOrigin(page, url)?.let { put("Referer", it) }
-        CookieManager.getInstance().getCookie(url)?.takeIf { it.isNotEmpty() }?.let { put("Cookie", it) }
-        putAll(extra)
-    }
-
-    private val storeCookies: (String, List<String>) -> Unit = { url, values -> values.forEach { CookieManager.getInstance().setCookie(url, it) } }
-
-    /** [limit] 바이트까지 읽는다 — 넘으면 null(재생목록이 아니다). */
-    private fun readAtMost(input: InputStream, limit: Int): ByteArray? {
-        val out = ByteArrayOutputStream()
-        val buffer = ByteArray(16 * 1024)
-        while (true) {
-            val n = input.read(buffer)
-            if (n < 0) return out.toByteArray()
-            out.write(buffer, 0, n)
-            if (out.size() > limit) return null
-        }
-    }
 
     private companion object {
         const val TIMEOUT_MS = 10_000

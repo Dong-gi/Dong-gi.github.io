@@ -26,7 +26,8 @@
 `FOREGROUND_SERVICE_DATA_SYNC`·`ACCESS_NETWORK_STATE`·`POST_NOTIFICATIONS` 는 내려받기·녹화·광고 목록이 쓴다. 11-14 정리에서 부르는 곳이 없던
 작은 것(`Remux.sniff`·`CaptureSession.totals`·`AdBlocker.skippedCount`·`RequestType.ALL`·`Item.canResume`, 실험실의 `describe`)을 지우고, 여러 곳에
 복사돼 있던 것을 한 곳으로 모았다 — 주소창 고치기 끝내기(`BrowserActivity.endAddressEditing`), 받기의 멈춤 깃발(`DownloadCenter.Item.stopRequested`),
-'링크 복사'(`Ui.copyLink`).
+'링크 복사'(`Ui.copyLink`). 이어서 기기 키로 잠그기(`crypto/DeviceKeyCipher` — SecretBox·TetherSecret 은 별칭과 실패를 잡는 약속만 다르다),
+상한까지 읽기(`Streams.readAll`·`readHead`), 내려받기와 찾은 미디어 미리 읽기의 요청 머리(`download/HopHeaders`)를 모았다.
 
 ## 사용자 결정
 
@@ -79,7 +80,7 @@
 | 기기 | **실기기(SM-A908N)에 깔지 않는다.** 에뮬레이터 `Android_12_Phone`(API 31)만. 태블릿 시험은 하지 않는다(사용자가 양도) |
 | 계정 | 실제 프록시 비밀번호는 **사용자가 넣는다**(Claude 가 넣지 않는다). 로그인하지 않는다. 시험 계정은 `make_certs.py` 가 만든 무작위 값이고 대화에 적지 않는다 |
 | 다른 설정 | 다른 앱·시스템의 보안 설정을 바꾸지 않는다 — 에뮬레이터에 인증서를 깔지 않고, 디버그 빌드의 네트워크 보안 설정이 시험 CA 를 `lab.test` 아래 이름에만 믿는다 |
-| 테더의 프로세스 | 테더의 구성 요소 다섯(화면·트램폴린·서비스·타일·타일을 길게 누를 때의 작은 화면)은 **모두 `android:process=":tether"`** 이고, 그 코드(`tether/`·`app/.../tether/`)는 **브라우저의 것(`WebApp.of` — 설정·길·내려받기, WebView)을 부르지 않는다** — 그 프로세스에서는 `WebApp.of` 가 던지고 WebView 가 꺼져 있다. 내보내는 것은 타일과 그 작은 화면(`TilePreferencesActivity` — 테더 화면을 열기만 하고 받은 인텐트를 읽지 않는다)뿐이다. 앱의 시험 `TetherIsolationTest` 가 매니페스트와 소스를 본다. 아래 '테더링' |
+| 테더의 프로세스 | 테더의 구성 요소 다섯(화면·트램폴린·서비스·타일·타일을 길게 누를 때의 작은 화면)은 **모두 `android:process=":tether"`** 이고, 그 코드(`tether/`·`app/.../tether/`)는 **브라우저의 것(`WebApp.of` — 설정·길·내려받기, WebView)을 부르지 않는다** — 그 프로세스에서는 `WebApp.of` 가 던지고 WebView 가 꺼져 있다. 내보내는 것은 타일과 그 작은 화면(`TilePreferencesActivity` — 테더 화면을 열기만 하고 받은 인텐트를 읽지 않는다)뿐이다. 앱의 시험 `TetherIsolationTest` 가 매니페스트와 소스를 본다(테더 소스가 가져올 수 있는 앱의 것은 R·BuildConfig·`ui.Ui`·`crypto.DeviceKeyCipher` 뿐 — 그 도우미도 같은 규칙). 아래 '테더링' |
 | 테더의 문 | 인증 없는 LAN 서버다(사용자 결정) — **손님 거르기(`PeerFilter` — 그룹 오너 주소·손님 대역·떠 있는 우리 그룹의 인터페이스)·파일 서버의 `Host` 검사·목적지 거르기(`DestinationFilter`)·스레드 예산을 약하게 하지 않는다.** 바깥 소켓은 `Outbound`(`Socket(Proxy.NO_PROXY)`)로만. 목적지·손님의 주소를 기록에 남기지 않는다 |
 | PC 쪽 실행 파일 | PC 연결 파일은 앱의 자산(`app/src/main/assets/setup/tether-pc/` — 시작 스크립트 둘과 README.txt)이고 테더 화면이 zip 으로 내어 준다. tun2proxy·wintun·adb 는 zip 에도 저장소에도 넣지 않고 **이름으로** git 무시다(`.gitignore` — 공개 저장소에 남의 실행 파일을 올리지 않는다). `windows-wifi.bat` 은 ASCII·CRLF(cmd.exe 는 배치 파일을 콘솔의 코드 페이지로 읽는다), 나머지 자산 글은 LF(`SetupAssetsTest`). 서버 구성 파일(`assets/setup/proxy-server/`)에는 프록시의 실제 주소·계정을 적지 않는다 — 예시는 `proxy.example.com`·`myproxyuser` |
 | 사이트 자료 | 갤러리 받기의 시험 자료는 **합성만** — 실제 작품·작가·제목·갤러리 번호를 저장소에 넣지 않는다(공개 저장소). 사이트의 실제 답은 스크래치패드에서 읽기만 하고, hitomi 는 그림을 받지 않는다(`Range: bytes=0-0` 까지 — 에뮬레이터에서도 계획·확인 창까지만, 그 쪽을 열지 않는다) |
@@ -95,7 +96,7 @@ cache 를 껐다** — 디버그 빌드가 시험 CA 파일이 있는지로 네�
 
 ```bash
 export JAVA_HOME="$HOME/.gradle/jdks/jetbrains_s_r_o_-21-amd64-windows.2"
-./gradlew :core:test :net:test :app:testDebugUnitTest --offline        # core 307 · net 37 · app 203
+./gradlew :core:test :net:test :app:testDebugUnitTest --offline        # core 308 · net 37 · app 204
 ./gradlew :tether:test --offline                                       # 테더의 서버·거르개 125건(약 15초, 루프백만)
 ./gradlew :app:lintDebug :app:lintRelease :app:assembleDebug :app:assembleRelease --offline   # lint 오류 0
 ./gradlew :core:classes :net:classes :tether:classes --offline && python tools/check_api_level.py   # 문제 0건
@@ -121,7 +122,7 @@ lint 경고 셋(targetSdk 37·Gradle 9.8·Kotlin 2.4 가 나왔다 — `--offlin
 core/   JVM. Omnibox(주소창) · Suggester(주소창 제안 — 방문 기록·북마크에서) · SearchEngine(Google 고정) · ProxySettings/Bypass(설정·예외 규칙) ·
         BypassMatcher(앱의 HTTP 가 바로 갈 주소 — 예외 규칙을 크로미움처럼, 모르면 프록시) ·
         ExitTrace(출구) · ContentDisposition · DownloadNames · SafeFileName · DataUrl · Referrer · IpLiterals · PercentCoding ·
-        Streams(Long 셈의 범위 읽기) · LinkRenewal(만료된 받기를 새 주소로 잇기) · UserAgents(일반화된 UA·데스크톱 사이트) ·
+        Streams(Long 셈의 범위 읽기·상한까지 읽기 readAll·앞머리만 readHead) · LinkRenewal(만료된 받기를 새 주소로 잇기) · UserAgents(일반화된 UA·데스크톱 사이트) ·
         ClipText(복사한 글의 첫 링크 — '복사한 링크 열기') · LiveTabs(살아 있는 탭 수의 고를 값) · Retention(방문 기록·캐시 보관 기간) ·
         UriRefs(상대 주소를 RFC 3986 대로 풀기·출처 — 재생목록·MPD·쪽의 요청)
         adblock/ FilterParser · UrlPattern · Request · RequestType · Domains · AdBlocker · CosmeticEngine(광고 차단 엔진) ·
@@ -132,7 +133,7 @@ core/   JVM. Omnibox(주소창) · Suggester(주소창 제안 — 방문 기록�
                  HlsKeys(열쇠 응답 읽기 — 너그러운 후보·첫 조각으로 확인·실패의 갈래) · PageRequests(쪽이 낸 요청의 머리 — 탭마다 메모리에만)
         sites/   갤러리 받기의 사이트 로직 — SiteUrls(주소 알아보기 — UrlRecognizer) · GalleryResolver(계획·풀기) · GalleryCodec(계획의 글 — PlanJson) ·
                  Pixiv(웹 AJAX) · Hitomi(갤러리 정보·gg.js·그림 주소) · SiteNames(이름·화면 글) · SiteResponses(실패 가르기) · Json(상한을 둔 읽개).
-                 망은 앱이 주는 SiteFetch 로만 — 아래 '갤러리 받기'. `:core` 시험 307건
+                 망은 앱이 주는 SiteFetch 로만 — 아래 '갤러리 받기'. `:core` 시험 308건
 net/    JVM. LocalRelay(앱 안 중계) · UpstreamProxy · HttpHead · HttpFetcher(앱의 HTTP — 넘겨주기의 홉마다 길을 고른다) · RelayAuthenticator. 시험 37건
 tether/ JVM, 새 의존 없음. 테더링의 서버와 거르개(패키지 tether.core) — 아래 '테더링'. 앱의 tether/ 가 잇는다
         TcpServer(받기·거르기·상한의 몸통 — TetherEnvironment·StartError) · Socks5Server · HttpProxyServer · FileServer(규약 — 폴더는 SharedTree 로 주입)
@@ -142,6 +143,7 @@ tether/ JVM, 새 의존 없음. 테더링의 서버와 거르개(패키지 tethe
         LogThrottle · TetherLog. 시험 125건(루프백)
 app/    WebApp(설정·길·내려받기·연 사이트 목록을 처음 쓸 때 세운다 — 주 프로세스에서만, 테더 프로세스에서는 WebView 를 끄고 of() 가 던진다) · AppUserAgent(앱이 스스로 내는 요청의 UA)
         proxy/   NetworkPath(길을 정하는 유일한 곳) · AppRoute(앱의 HTTP 가 홉마다 고르는 길 — 순수) · SettingsStore · SecretBox(기기 키) · NetErrors
+        crypto/  DeviceKeyCipher(기기 키 AES-256-GCM 잠그기 — 별칭을 받는다, 실패를 잡지 않는다. SecretBox 와 :tether 의 TetherSecret 이 함께)
         browser/ BrowserActivity · Tab · SessionStore · PageClient/PageChrome · WebViews · PageScripts(WebRTC 가드·확대 풀기) · ExternalLinks
         browser/ PageBridge(쪽↔앱 통로 — blob·녹화·가로채기) · BridgeScripts(실행 세계·쪽의 갈고리) · CaptureSessions(가로채기·녹화의 파일)
         browser/ StartPage(새 탭의 시작 화면) · ToolbarGestureLayout(막대의 몸짓) · AddressSuggestions(주소창 제안·인라인 완성)
@@ -163,7 +165,8 @@ app/    WebApp(설정·길·내려받기·연 사이트 목록을 처음 쓸 때
                  HiddenElements(사용자가 숨긴 요소 — hidden-elements.txt)
         download/ DownloadCenter(받기·이어받기) · DownloadStore(목록 — downloads.json) · Remux(그릇 바꿔 담기 — media3 추출기 + MediaMuxer) ·
                   DownloadService · DownloadsActivity · DownloadTexts · HlsKeyTexts(열쇠를 받지 못한 글의 갈래) · MediaStoreWriter   ui/Ui(화면들의 작은 도구 — '링크 복사' 포함)
-        download/ TextParts(글 조각 꼴 Part·Sizes, mimeOf — 갤러리·열쇠 글) · DetailsDialog(목록의 '자세히' 창)
+        download/ TextParts(글 조각 꼴 Part·Sizes, mimeOf — 갤러리·열쇠 글) · DetailsDialog(목록의 '자세히' 창) ·
+                  HopHeaders(내려받기·MediaProbe 가 함께 쓰는 홉마다의 머리 — UA·쿠키·Referer)
         download/ GalleryRules(갤러리 받기의 판단 — 자리·글·이어받을 자리·건너뛰기와 멈춤, 순수) · GalleryPrompt(묻기) · DownloadSets(곁의 계획·기록 —
                   noBackupFilesDir/download-sets) — 받기 자체는 DownloadCenter 의 SET(`runSet`)
         tether/  (모두 :tether 프로세스) TetherService(specialUse — 떠 있는 것이 곧 테더링: 서버 셋·핫스팟·알림 4) · TetherActivity(화면 — 켜기·끄기 하나) ·
@@ -171,7 +174,7 @@ app/    WebApp(설정·길·내려받기·연 사이트 목록을 처음 쓸 때
                  화면만 연다) · WifiHotspot(Wi-Fi Direct 그룹) · TetherState(그 프로세스의 상태·듣개) · TetherSettings·TetherSecret(설정
                  `tether`·기기 키) · SharedFolder(SAF 트리 — DocumentsContract) · TetherPermissions · TetherTexts(기계 말 → 글)   assets/tether/fileman.html
         setup/   (주 프로세스와 :tether 가 함께) SetupZip(묶음 목록·zip 짓기 — 순수) · SetupFiles(자산 → zip → '내려받기')   assets/setup/proxy-server·tether-pc
-app/src/test/   판단을 떼어 낸 순수 함수의 시험(상태 글·오류 까닭·당김·NetErrors·앱의 HTTP 길(AppRoute)·DownloadCenter·PickProtocol·전체 화면·재생 중 화면 켜 두기·테더의 글과 프로세스 경계·설정 파일 zip·유튜브 광고 가리기와 건너뛰기·갤러리 받기의 판단과 곁의 파일과 배선·뒤에서 재생 잇기·주소창과 탭의 작은 것들·m3u8 열쇠 받기의 글과 배선·내려받기의 홉마다 Referer·WebRTC 가드의 꼴) 203건 — `kotlin("test-junit")`
+app/src/test/   판단을 떼어 낸 순수 함수의 시험(상태 글·오류 까닭·당김·NetErrors·앱의 HTTP 길(AppRoute)·DownloadCenter·PickProtocol·전체 화면·재생 중 화면 켜 두기·테더의 글과 프로세스 경계·설정 파일 zip·유튜브 광고 가리기와 건너뛰기·갤러리 받기의 판단과 곁의 파일과 배선·뒤에서 재생 잇기·주소창과 탭의 작은 것들·m3u8 열쇠 받기의 글과 배선·내려받기의 홉마다 Referer·WebRTC 가드의 꼴) 204건 — `kotlin("test-junit")`
 app/src/debug/  lab/LabActivity·LabParams·LabScripts(실험) · lab/LabSetupActivity(시험 도구가 설정을 넣고 사이트별 데이터 화면을 연다) — 둘 다 DUMP 권한
 tools/  check_api_level.py · lab/make_certs.py · lab/labserver.py · lab/labmedia.py(시험 미디어 — 나누기·TS 짜기·담긴 MP4 읽기) ·
         lab/run_lab.py(WebView 의 성질) · lab/run_browser.py(이 앱 — 기대가 낡았다, 아래 '실험실')

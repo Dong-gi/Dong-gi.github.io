@@ -4,16 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
-import android.util.Base64
+import io.github.donggi.iroirobrowser.crypto.DeviceKeyCipher
 import io.github.donggi.iroirobrowser.tether.core.PassphraseVault
 import io.github.donggi.iroirobrowser.tether.core.Passphrases
-import java.security.KeyStore
-import javax.crypto.Cipher
-import javax.crypto.KeyGenerator
-import javax.crypto.SecretKey
-import javax.crypto.spec.GCMParameterSpec
 
 /**
  * 테더의 설정 파일 하나(SharedPreferences [PREFS] — 브라우저의 `web`·`adblock`·`sites`·`popups` 와 겹치지 않는다. 테더 프로세스만 쓰고
@@ -88,55 +81,31 @@ internal class TetherSettings(context: Context) {
 }
 
 /**
- * 핫스팟 패스프레이즈를 **기기 키**(AndroidKeyStore 의 AES-256-GCM, 밖으로 꺼낼 수 없는 키)로 잠근다. 별칭 [ALIAS] 는 브라우저의 프록시
- * 비밀번호 키(`web-proxy-password` — proxy/SecretBox)와 겹치지 않는다 — 키를 함께 쓰지 않는다. 같은 앱(UID)이라 그 키도 이 프로세스가 쓸 수
- * 있는 것은 바뀌지 않는다(프로세스를 나눠도 경계는 UID 다). 사용자 인증(지문·PIN)은 걸지 않는다 — 타일로 켤 때마다 묻게 된다.
+ * 핫스팟 패스프레이즈를 **기기 키**(AndroidKeyStore 의 AES-256-GCM, 밖으로 꺼낼 수 없는 키 — 잠그고 여는 일은 브라우저와 함께 쓰는
+ * [DeviceKeyCipher])로 잠근다. 별칭 `tether-hotspot-passphrase` 는 브라우저의 프록시 비밀번호 키(`web-proxy-password` — proxy/SecretBox)와 겹치지
+ * 않는다 — 키를 함께 쓰지 않는다. 같은 앱(UID)이라 그 키도 이 프로세스가 쓸 수 있는 것은 바뀌지 않는다(프로세스를 나눠도 경계는 UID 다). 사용자
+ * 인증(지문·PIN)은 걸지 않는다 — 타일로 켤 때마다 묻게 된다.
  *
- * 꼴은 브라우저의 SecretBox 와 같다 — Base64(IV 길이 1바이트 + IV + 암호문).
+ * 꼴은 브라우저의 SecretBox 와 같다 — Base64(IV 길이 1바이트 + IV + 암호문). 다른 것은 실패를 다루는 약속뿐이다(아래).
  */
 internal object TetherSecret {
 
-    private const val ALIAS = "tether-hotspot-passphrase"
-    private const val TRANSFORMATION = "AES/GCM/NoPadding"
-    private const val TAG_BITS = 128
+    private val cipher = DeviceKeyCipher("tether-hotspot-passphrase")
 
     /**
      * 잠근 글. 잠그지 못하면 null(키를 만들지 못하는 기기 등). 키 저장소는 `GeneralSecurityException` 밖의 것(`IOException`·`ProviderException`)도
      * 던진다 — 모두 잡는다: 테더 프로세스가 죽으면 PC 의 인터넷이 끊긴다.
      */
     fun seal(plain: String): String? = try {
-        val cipher = Cipher.getInstance(TRANSFORMATION)
-        cipher.init(Cipher.ENCRYPT_MODE, key())
-        val iv = cipher.iv
-        val sealed = cipher.doFinal(plain.toByteArray(Charsets.UTF_8))
-        Base64.encodeToString(byteArrayOf(iv.size.toByte()) + iv + sealed, Base64.NO_WRAP)
+        cipher.seal(plain)
     } catch (e: Exception) {
         null
     }
 
     /** 연 글. 열지 못하면(키가 사라졌다·꼴이 틀렸다) null. */
     fun open(blob: String): String? = try {
-        val bytes = Base64.decode(blob, Base64.NO_WRAP)
-        val ivLength = bytes[0].toInt()
-        val iv = bytes.copyOfRange(1, 1 + ivLength)
-        val cipher = Cipher.getInstance(TRANSFORMATION)
-        cipher.init(Cipher.DECRYPT_MODE, key(), GCMParameterSpec(TAG_BITS, iv))
-        String(cipher.doFinal(bytes.copyOfRange(1 + ivLength, bytes.size)), Charsets.UTF_8)
+        cipher.open(blob)
     } catch (e: Exception) {
         null
-    }
-
-    private fun key(): SecretKey {
-        val store = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
-        (store.getKey(ALIAS, null) as? SecretKey)?.let { return it }
-        val generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
-        generator.init(
-            KeyGenParameterSpec.Builder(ALIAS, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
-                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setKeySize(256)
-                .build(),
-        )
-        return generator.generateKey()
     }
 }

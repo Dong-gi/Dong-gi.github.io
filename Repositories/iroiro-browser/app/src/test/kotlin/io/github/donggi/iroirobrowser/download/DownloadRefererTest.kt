@@ -21,8 +21,8 @@ import kotlin.test.assertTrue
 /**
  * 내려받기의 Referer 를 **홉마다** 짓는가. 처음 주소에 맞춰 한 번 지은 값을 모든 홉(넘겨주기·HLS·DASH 의 조각·재생목록·열쇠)에 실으면,
  * 처음 주소가 쪽과 같은 출처일 때 쪽의 전체 주소(질의 포함)가 다른 출처의 서버에 간다. 루프백의 두 출처(포트가 다르다)로
- * 앱의 HTTP([HttpFetcher])가 홉마다 무엇을 싣는지 보고, DownloadCenter·MediaProbe 의 배선은 소스로 본다(CookieManager·MediaStore 에 묶여 JVM
- * 에서 돌릴 수 없다).
+ * 앱의 HTTP([HttpFetcher])가 홉마다 무엇을 싣는지 보고, HopHeaders·DownloadCenter·MediaProbe 의 배선은 소스로 본다(CookieManager·MediaStore 에
+ * 묶여 JVM 에서 돌릴 수 없다).
  */
 class DownloadRefererTest {
 
@@ -33,7 +33,7 @@ class DownloadRefererTest {
 
     private fun <T : Closeable> keep(c: T): T = c.also { closeables += it }
 
-    /** 홉마다 쪽에서 — DownloadCenter.headersFromPage 와 같은 셈. */
+    /** 홉마다 쪽에서 — HopHeaders.fromPage 와 같은 셈. */
     private fun fetch(page: String?, url: String) =
         HttpFetcher({ Proxy.NO_PROXY }).get(url, headersFor = { hop -> Referrer.strictOriginWhenCrossOrigin(page, hop)?.let { mapOf("Referer" to it) } ?: emptyMap() })
 
@@ -117,25 +117,31 @@ class DownloadRefererTest {
 
     @Test
     fun 내려받기는_홉마다_쪽에서_Referer_를_짓는다() {
+        val hop = source("download/HopHeaders.kt")
+        assertTrue(body(hop, "fun fromPage(").contains("of(userAgent, Referrer.strictOriginWhenCrossOrigin(page, hop), hop, extra)"))
+        // 머리를 짓는 곳은 HopHeaders 하나 — 내려받기·미리 읽기가 따로 짓지 않는다.
+        for (path in listOf("download/DownloadCenter.kt", "browser/MediaProbe.kt")) {
+            val text = source(path)
+            assertFalse(text.contains("put(\"Referer\""), "$path 가 Referer 를 따로 싣는다")
+            assertFalse(text.contains("CookieManager"), "$path 가 쿠키를 따로 싣는다")
+        }
         val center = source("download/DownloadCenter.kt")
-        assertTrue(body(center, "private fun headersFromPage(").contains("Referrer.strictOriginWhenCrossOrigin(page, hop)"))
         assertTrue(body(center, "private fun headersPinned(").contains("Referrer.pinnedFirstHop(chosen, first, hop)"))
         // 받기를 넣을 때 지은 값을 홉에 싣는 길이 없다 — 보통 파일·조각·재생목록·열쇠·DASH 목록 모두 쪽 주소에서.
-        assertFalse(center.contains("headers(item.userAgent, item.referer"), "넣을 때 지은 Referer 를 홉에 싣는다")
-        assertFalse(Regex("""headers\(userAgent, referer, u""").containsMatchIn(center))
-        assertTrue(body(center, "private fun fetchFileOnce(").contains("headersFromPage(item.userAgent, item.refererSource, u, extra)"))
-        assertTrue(body(center, "private fun fetchPart(").contains("headersFromPage(item.userAgent, item.refererSource, u, extra)"))
+        assertFalse(center.contains("HopHeaders.of(item.userAgent, item.referer"), "넣을 때 지은 Referer 를 홉에 싣는다")
+        assertFalse(Regex("""HopHeaders\.of\(userAgent, referer, u""").containsMatchIn(center))
+        assertTrue(body(center, "private fun fetchFileOnce(").contains("HopHeaders.fromPage(item.userAgent, item.refererSource, u, extra)"))
+        assertTrue(body(center, "private fun fetchPart(").contains("HopHeaders.fromPage(item.userAgent, item.refererSource, u, extra)"))
         assertTrue(body(center, "private fun planFor(").contains("readPlaylist(url, item.userAgent, item.refererSource, item)"))
-        assertTrue(body(center, "private fun getBody(").contains("headersFor ?: { u -> headersFromPage(userAgent, page, u) }"))
+        assertTrue(body(center, "private fun getBody(").contains("headersFor ?: { u -> HopHeaders.fromPage(userAgent, page, u) }"))
         // 열쇠 — 쪽이 보낸 요청을 찾았으면 그 값 그대로(쪽이 실제로 보낸 값), 못 찾았으면 홉마다 쪽에서.
         val key = body(center, "private fun keyHeaders(")
-        assertTrue(key.contains("headersFromPage(item.userAgent, item.refererSource, url)"))
-        assertTrue(key.contains("headers(item.userAgent, replay.referer, url, replay.headersFor(url))"))
+        assertTrue(key.contains("HopHeaders.fromPage(item.userAgent, item.refererSource, url)"))
+        assertTrue(key.contains("HopHeaders.of(item.userAgent, replay.referer, url, replay.headersFor(url))"))
         // 갤러리 — 사이트가 정한 값은 처음 홉에만.
         assertTrue(body(center, "private fun saveSetFileOnce(").contains("headersPinned(item.userAgent, file.referer, file.url, u)"))
-        // `headers(` 를 곧바로 부르는 곳은 두 도우미와 열쇠의 따라 하기뿐이다.
-        val direct = Regex("""(?<![A-Za-z])headers\((userAgent|item\.userAgent),""").findAll(center).count()
-        assertEquals(3, direct, "headers( 를 곧바로 부르는 곳")
+        // 지은 Referer 를 곧바로 넘기는 곳(`HopHeaders.of(`)은 갤러리의 도우미와 열쇠의 따라 하기뿐이다.
+        assertEquals(2, Regex("""HopHeaders\.of\(""").findAll(center).count(), "HopHeaders.of( 를 곧바로 부르는 곳")
         // 받기를 넣는 함수는 미리 지은 Referer 를 받지 않는다(쪽 주소만).
         for (fn in listOf("fun enqueue(", "fun enqueueHls(", "fun enqueueDash(", "fun inspectHls(", "fun inspectDash(")) {
             val signature = center.substring(center.indexOf(fn)).substringBefore(")")
@@ -146,7 +152,10 @@ class DownloadRefererTest {
     @Test
     fun 찾은_미디어의_미리_읽기도_홉마다_짓는다() {
         val probe = source("browser/MediaProbe.kt")
-        assertTrue(body(probe, "private fun headers(").contains("Referrer.strictOriginWhenCrossOrigin(page, url)"))
+        // 내려받기와 같은 머리(HopHeaders.fromPage) — 크기와 재생목록 둘 다, 지은 값을 넘기는 길(of)은 없다.
+        assertEquals(2, Regex("""HopHeaders\.fromPage\(userAgent, page, u""").findAll(probe).count())
+        assertFalse(probe.contains("HopHeaders.of("))
+        assertFalse(probe.contains("Referrer."), "미리 읽기가 Referer 를 따로 짓는다")
         val chooser = source("browser/MediaChooser.kt")
         assertFalse(chooser.contains("Referrer."), "고르는 창이 Referer 를 미리 짓는다")
         assertFalse(chooser.contains("request.referer"))

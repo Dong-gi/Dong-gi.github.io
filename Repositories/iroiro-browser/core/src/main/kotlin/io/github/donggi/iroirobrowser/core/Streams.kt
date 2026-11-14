@@ -7,7 +7,7 @@ import java.io.IOException
 import java.io.InputStream
 
 /**
- * 응답의 몸을 **정한 만큼만** 읽는다 — 내려받기가 몸을 통째로 메모리에 올리지 않게. 자리와 길이는 Long 으로 센다(2 GB 넘는 파일의 자리도).
+ * 응답의 몸을 **정한 만큼만** 읽는다 — 내려받기·광고 목록·찾은 미디어의 미리 읽기·출구 확인이 몸을 통째로 메모리에 올리지 않게. 자리와 길이는 Long 으로 센다(2 GB 넘는 파일의 자리도).
  * `readNBytes`·`skipNBytes`(안드로이드 API 33)를 쓰지 않는다.
  */
 object Streams {
@@ -25,6 +25,18 @@ object Streams {
             if (out.size().toLong() + n > limit) throw TooLarge(limit.toLong())
             out.write(buffer, 0, n)
         }
+    }
+
+    /** 앞의 [limit] 바이트까지만 읽고 나머지는 읽지 않는다 — 몸이 더 길어도 실패가 아니다(출구 확인 쪽처럼 앞머리만 보면 되는 것). */
+    fun readHead(input: InputStream, limit: Int): ByteArray {
+        val out = ByteArrayOutputStream()
+        val buffer = ByteArray(4096)
+        while (out.size() < limit) {
+            val n = input.read(buffer, 0, minOf(buffer.size, limit - out.size()))
+            if (n < 0) break
+            out.write(buffer, 0, n)
+        }
+        return out.toByteArray()
     }
 
     /**

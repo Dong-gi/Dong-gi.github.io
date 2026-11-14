@@ -13,6 +13,7 @@ import android.util.AtomicFile
 import android.util.Log
 import io.github.donggi.iroirobrowser.AppUserAgent
 import io.github.donggi.iroirobrowser.BuildConfig
+import io.github.donggi.iroirobrowser.core.Streams
 import io.github.donggi.iroirobrowser.core.adblock.AdBlocker
 import io.github.donggi.iroirobrowser.core.adblock.Domains
 import io.github.donggi.iroirobrowser.core.adblock.FilterParser
@@ -252,7 +253,7 @@ class AdBlockService(context: Context, private val network: NetworkPath) {
                         false
                     }
                     200 -> {
-                        val bytes = readAtMost(r.body, MAX_LIST_BYTES)
+                        val bytes = readList(r.body, MAX_LIST_BYTES)
                         val text = bytes.decodeToString()
                         if (!looksLikeFilterList(text)) throw IOException(ERR_NOT_A_LIST)
                         dir.mkdirs()
@@ -433,16 +434,11 @@ class AdBlockService(context: Context, private val network: NetworkPath) {
             }
         }
 
-        private fun readAtMost(input: java.io.InputStream, limit: Int): ByteArray {
-            val out = java.io.ByteArrayOutputStream()
-            val buffer = ByteArray(64 * 1024)
-            while (true) {
-                val n = input.read(buffer)
-                if (n < 0) break
-                if (out.size() + n > limit) throw IOException("목록이 너무 큽니다")
-                out.write(buffer, 0, n)
-            }
-            return out.toByteArray()
+        /** 목록의 몸 — [limit] 바이트까지([Streams.readAll]). 넘으면 이 화면의 글('목록이 너무 큽니다')로 — 목록의 실패 글에 그대로 남는다. */
+        private fun readList(input: java.io.InputStream, limit: Int): ByteArray = try {
+            Streams.readAll(input, limit)
+        } catch (e: Streams.TooLarge) {
+            throw IOException("목록이 너무 큽니다")
         }
     }
 }

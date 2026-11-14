@@ -52,6 +52,16 @@ class StreamsTest {
         assertFailsWith<Streams.TooLarge> { Streams.readAll(ByteArrayInputStream(data), 999) }
     }
 
+    @Test
+    fun 앞머리만_읽고_나머지는_남긴다() {
+        val input = ByteArrayInputStream(data)
+        assertContentEquals(data.copyOfRange(0, 300), Streams.readHead(input, 300))
+        assertEquals(700, input.available(), "상한 뒤는 읽지 않는다")
+        // 몸이 상한보다 짧으면 있는 만큼(실패가 아니다).
+        assertContentEquals(data, Streams.readHead(ByteArrayInputStream(data), 16 * 1024))
+        assertEquals(0, Streams.readHead(ByteArrayInputStream(data), 0).size)
+    }
+
     private fun at(position: Long): Byte = (position % 251).toByte()
 
     /** [size] 바이트짜리 흐름 — 바이트는 자리로 정한다(메모리에 두지 않는다). */
