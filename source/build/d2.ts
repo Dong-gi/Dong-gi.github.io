@@ -45,6 +45,11 @@ function optimizeD2Svg(raw: string): string {
         raw
             // 불필요 속성 제거
             .replace(/data-d2-version="[^"]+"/, '')
+            // 내장 글꼴(@font-face 의 base64)은 걷어 내되, 굵게·기울임은 남긴다. d2 는 `.text-bold { font-family: "…-font-bold" }`
+            // 처럼 굵기를 **글꼴 이름**으로만 표시하므로, 아래의 일괄 비우기에 그 규칙까지 휩쓸리면 `style.bold` 가 사라진다
+            // (2026-11 까지 그랬다 — 굵게 적은 도식 312개가 보통 글씨로 나갔다). @font-face 쪽 이름은 따옴표가 없다.
+            .replace(/\{[^}]*font-family:\s*"[^"]*-font-bold"[^}]*\}/g, '{font-weight:bold}')
+            .replace(/\{[^}]*font-family:\s*"[^"]*-font-italic"[^}]*\}/g, '{font-style:italic}')
             .replace(/\{[^}]*font-family[^}]*\}/g, '{}')
             .replace(/stroke-width: *0;?/g, '')
             .replace(/ rx="0"/g, '')

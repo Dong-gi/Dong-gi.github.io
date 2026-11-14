@@ -7,8 +7,10 @@
 # 라벨에 아래첨자를 쓰지 않는다. D2 는 첨자를 지원하지 않아 밑줄이 그대로 보인다.
 direction: down
 
-원명제: { label: "원명제\np → q"; style.bold: true }
-대우:   { label: "대우\n¬q → ¬p"; style.bold: true }
+# style.bold 는 글자만 굵게 하는데 d2 는 상자 글자를 원래 굵게 쓰므로 티가 안 난다.
+# 캡션이 '굵은 두 상자' 를 가리키므로 테두리를 굵게 한다
+원명제: { label: "원명제\np → q"; style.bold: true; style.stroke-width: 5 }
+대우:   { label: "대우\n¬q → ¬p"; style.bold: true; style.stroke-width: 5 }
 역:     { label: "역\nq → p" }
 이:     { label: "이\n¬p → ¬q" }
 
