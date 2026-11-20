@@ -1,0 +1,66 @@
+# 빠지는 방식 셋 — 통계학 17장(결측 자료).
+#
+# 무엇을 읽어야 하나: 세 칸 모두 같은 상자 넷(언제나 보이는 변수 X, 빠질 수 있는 값 Y,
+# 우연, 빠짐 여부 R)으로 되어 있고, 다른 것은 R 로 들어오는 화살표뿐이다.
+# 화살표는 인과 그래프 기호가 아니라 '빠짐이 무엇에 따라 정해지나' 를 뜻한다.
+vars: { d2-config: { layout-engine: elk } }
+direction: down
+
+MCAR: "완전무작위결측 (MCAR)" {
+  grid-rows: 2
+  grid-columns: 3
+  horizontal-gap: 30
+  vertical-gap: 70
+  X: "X\n보이는 변수"
+  Y: "Y\n빠질 수 있는 값"
+  U: "우연\n(동전 던지기 같은 것)"
+  빈1: "" { style.opacity: 0 }
+  R: "R\n빠짐 여부" { style.bold: true }
+  빈2: "" { style.opacity: 0 }
+}
+MCAR.U -> MCAR.R: "우연만"
+
+MAR: "무작위결측 (MAR)" {
+  grid-rows: 2
+  grid-columns: 3
+  horizontal-gap: 30
+  vertical-gap: 70
+  X: "X\n보이는 변수"
+  Y: "Y\n빠질 수 있는 값"
+  U: "우연"
+  빈1: "" { style.opacity: 0 }
+  R: "R\n빠짐 여부" { style.bold: true }
+  빈2: "" { style.opacity: 0 }
+}
+MAR.U -> MAR.R
+MAR.X -> MAR.R: "X 에 따라"
+
+MNAR: "비무작위결측 (MNAR)" {
+  grid-rows: 2
+  grid-columns: 3
+  horizontal-gap: 30
+  vertical-gap: 70
+  X: "X\n보이는 변수"
+  Y: "Y\n빠질 수 있는 값"
+  U: "우연"
+  빈1: "" { style.opacity: 0 }
+  R: "R\n빠짐 여부" { style.bold: true }
+  빈2: "" { style.opacity: 0 }
+}
+MNAR.U -> MNAR.R
+MNAR.X -> MNAR.R: "X 에 따라"
+MNAR.Y -> MNAR.R: "빠진 값 자체" { style.stroke-width: 3 }
+
+MCAR -> MAR: { style.opacity: 0 }
+MAR -> MNAR: { style.opacity: 0 }
+
+주석: {
+  label: ""
+  near: bottom-center
+  style.stroke: transparent
+  style.fill: transparent
+  메모: {
+    label: "MCAR 에서는 R 로 들어오는 것이 우연뿐이다.\nMAR 에서는 보이는 X 가 더해진다 — X 가 같은 사람끼리는 빠짐이 우연이다.\nMNAR 에서는 X 를 알아도 빠진 값 Y 자체가 빠짐을 정한다.\n이 화살표는 관측된 자료로 확인할 수 없다"
+    shape: text
+  }
+}

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="720" height="320" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">근무 시간이 다른 두 공장의 사고 수와 사고율</title><desc id="d">근무 시간이 다른 두 공장의 사고 수와 사고율</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<rect x="10" y="10" width="345" height="300" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="182.5" y="30" text-anchor="middle">사고 수</text><text class="ink2 sm" x="182.5" y="47" text-anchor="middle">노출을 무시하면 A 가 더 위험해 보인다</text><rect x="365" y="10" width="345" height="300" rx="6" fill="none" fill-opacity="1" stroke="var(--grid)" stroke-width="1"/><text class="ink bold" x="537.5" y="30" text-anchor="middle">1,000 h 당 사고율</text><text class="ink2 sm" x="537.5" y="47" text-anchor="middle">근무 시간으로 나누면 B 가 두 배</text><path class="ax" marker-end="url(#ark)" d="M60 250 H330"/><path class="ax" marker-end="url(#ark)" d="M60 250 V50"/><path class="gr" d="M60 206.82 H320"/><text class="ink2 sm" x="54" y="210.82" text-anchor="end">5</text><path class="gr" d="M60 163.64 H320"/><text class="ink2 sm" x="54" y="167.64" text-anchor="end">10</text><path class="gr" d="M60 120.45 H320"/><text class="ink2 sm" x="54" y="124.45" text-anchor="end">15</text><path class="gr" d="M60 77.27 H320"/><text class="ink2 sm" x="54" y="81.27" text-anchor="end">20</text><path class="ax" marker-end="url(#ark)" d="M415 250 H685"/><path class="ax" marker-end="url(#ark)" d="M415 250 V50"/><path class="gr" d="M415 199.33 H675"/><text class="ink2 sm" x="409" y="203.33" text-anchor="end">0.2</text><path class="gr" d="M415 148.67 H675"/><text class="ink2 sm" x="409" y="152.67" text-anchor="end">0.4</text><path class="gr" d="M415 98 H675"/><text class="ink2 sm" x="409" y="102" text-anchor="end">0.6</text><rect x="92.5" y="94.55" width="78" height="155.45" rx="1.5" fill="var(--s1)" fill-opacity="0.55" stroke="var(--s1)" stroke-width="1.2"/><text class="ink sm" x="131.5" y="88.55" text-anchor="middle">18건</text><text class="ink sm" x="131.5" y="267" text-anchor="middle">공장 A</text><text class="ink2 sm" x="131.5" y="283" text-anchor="middle">60,000 h</text><rect x="447.5" y="174" width="78" height="76" rx="1.5" fill="var(--s1)" fill-opacity="0.55" stroke="var(--s1)" stroke-width="1.2"/><text class="ink sm" x="486.5" y="168" text-anchor="middle">0.30</text><text class="ink sm" x="486.5" y="267" text-anchor="middle">공장 A</text><text class="ink2 sm" x="486.5" y="283" text-anchor="middle">18 ÷ 60</text><rect x="209.5" y="146.36" width="78" height="103.64" rx="1.5" fill="var(--s2)" fill-opacity="0.55" stroke="var(--s2)" stroke-width="1.2"/><text class="ink sm" x="248.5" y="140.36" text-anchor="middle">12건</text><text class="ink sm" x="248.5" y="267" text-anchor="middle">공장 B</text><text class="ink2 sm" x="248.5" y="283" text-anchor="middle">20,000 h</text><rect x="564.5" y="98" width="78" height="152" rx="1.5" fill="var(--s2)" fill-opacity="0.55" stroke="var(--s2)" stroke-width="1.2"/><text class="ink sm" x="603.5" y="92" text-anchor="middle">0.60</text><text class="ink sm" x="603.5" y="267" text-anchor="middle">공장 B</text><text class="ink2 sm" x="603.5" y="283" text-anchor="middle">12 ÷ 20</text>
+</svg>

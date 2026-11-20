@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">블록 제곱합이 잔차에서 빠진다</title><desc id="d">블록을 넣으면 집단 안 제곱합의 대부분이 블록 몫으로 옮겨 가 잔차가 작아지고 처리 F 가 커진다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="360" y="26" text-anchor="middle">같은 자료, 총제곱합 178 을 어떻게 나누나</text><text class="ink bold" x="140" y="82" text-anchor="end">블록 없이</text><rect x="150" y="60" width="86.29" height="34" fill="var(--s1)" fill-opacity="0.55" stroke="var(--ink2)" stroke-width="1"/><text class="ink sm" x="193.15" y="82" text-anchor="middle">처리 32</text><rect x="236.29" y="60" width="393.71" height="34" fill="var(--s3)" fill-opacity="0.55" stroke="var(--ink2)" stroke-width="1"/><text class="ink sm" x="433.15" y="82" text-anchor="middle">집단 안 146</text><text class="ink2 sm" x="150" y="114" text-anchor="start">잔차 평균제곱 16.22 (자유도 9) → F = 0.99, p값 0.410</text><text class="ink bold" x="140" y="192" text-anchor="end">블록 넣고</text><rect x="150" y="170" width="86.29" height="34" fill="var(--s1)" fill-opacity="0.55" stroke="var(--ink2)" stroke-width="1"/><text class="ink sm" x="193.15" y="192" text-anchor="middle">처리 32</text><rect x="236.29" y="170" width="372.13" height="34" fill="var(--s2)" fill-opacity="0.55" stroke="var(--ink2)" stroke-width="1"/><text class="ink sm" x="422.36" y="192" text-anchor="middle">블록 138</text><rect x="608.43" y="170" width="21.57" height="34" fill="var(--s3)" fill-opacity="0.55" stroke="var(--ink2)" stroke-width="1"/><text class="ink sm" x="634" y="164" text-anchor="start">잔차 8</text><text class="ink2 sm" x="150" y="224" text-anchor="start">잔차 평균제곱 1.33 (자유도 6) → F = 12.00, p값 0.008</text>
+</svg>

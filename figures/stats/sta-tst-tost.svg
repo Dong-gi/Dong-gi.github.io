@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" width="760" height="360" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">동등성 검정의 네 경우</title><desc id="d">동등성 검정의 네 경우</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<text class="ink bold" x="380" y="26" text-anchor="middle">90% 구간이 동등 범위 안에 통째로 들어가야 동등하다</text><rect x="118.33" y="60" width="233.34" height="250" fill="var(--s3)" fill-opacity="0.14" stroke="none" stroke-width="1"/><path fill="none" stroke="var(--s3)" stroke-width="1.5" stroke-dasharray="5 3" d="M118.33 60 L118.33 310"/><path fill="none" stroke="var(--s3)" stroke-width="1.5" stroke-dasharray="5 3" d="M351.67 60 L351.67 310"/><path fill="none" stroke="var(--ink2)" stroke-width="1.2" d="M235 60 L235 310"/><text class="ink sm" x="118.33" y="328" text-anchor="middle">−Δ</text><text class="ink sm" x="351.67" y="328" text-anchor="middle">Δ</text><text class="ink sm" x="235" y="328" text-anchor="middle">0</text><text class="ink2 sm" x="235" y="54" text-anchor="middle">동등 범위</text><path fill="none" stroke="var(--s1)" stroke-width="2.5" stroke-linecap="round"  d="M270 100 L316.67 100"/><circle cx="293.33" cy="100" r="4" class="f1"/><text class="ink bold sm" x="52" y="104" text-anchor="end">[가]</text><text class="ink2 sm" x="500" y="96" text-anchor="start">동등 범위 안, 0 을 품지 않음</text><text class="ink sm" x="500" y="112" text-anchor="start">동등하다 — 차이도 유의하지만 작다</text><path fill="none" stroke="var(--s1)" stroke-width="2.5" stroke-linecap="round"  d="M194.17 150 L287.5 150"/><circle cx="240.83" cy="150" r="4" class="f1"/><text class="ink bold sm" x="52" y="154" text-anchor="end">[나]</text><text class="ink2 sm" x="500" y="146" text-anchor="start">동등 범위 안, 0 을 품음</text><text class="ink sm" x="500" y="162" text-anchor="start">동등하다</text><path fill="none" stroke="var(--s1)" stroke-width="2.5" stroke-linecap="round"  d="M141.67 200 L398.33 200"/><circle cx="270" cy="200" r="4" class="f1"/><text class="ink bold sm" x="52" y="204" text-anchor="end">[다]</text><text class="ink2 sm" x="500" y="196" text-anchor="start">0 을 품지만 범위를 넘음</text><text class="ink sm" x="500" y="212" text-anchor="start">판정할 수 없다 — 자료가 모자란다</text><path fill="none" stroke="var(--s1)" stroke-width="2.5" stroke-linecap="round"  d="M369.17 250 L445 250"/><circle cx="407.08" cy="250" r="4" class="f1"/><text class="ink bold sm" x="52" y="254" text-anchor="end">[라]</text><text class="ink2 sm" x="500" y="246" text-anchor="start">범위 밖, 0 을 품지 않음</text><text class="ink sm" x="500" y="262" text-anchor="start">동등하지 않다 — 차이가 크다</text><text class="ink2 sm" x="60" y="345" text-anchor="start">가로 막대는 차이의 90% 신뢰구간, 점은 추정값이다.</text>
+</svg>

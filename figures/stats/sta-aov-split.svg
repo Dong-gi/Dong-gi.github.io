@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" width="720" height="360" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">편차를 둘로 쪼갠다</title><desc id="d">한 관측값의 전체 평균으로부터의 편차가 집단 간 몫과 집단 안 몫으로 나뉜다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="gr" d="M70 264.29 H590"/><path class="gr" d="M70 228.57 H590"/><path class="gr" d="M70 192.86 H590"/><path class="gr" d="M70 157.14 H590"/><path class="gr" d="M70 121.43 H590"/><path class="gr" d="M70 85.71 H590"/><path class="ax" marker-end="url(#ark)" d="M70 300 H600"/><path class="ax" marker-end="url(#ark)" d="M70 300 V40"/><text class="sm ink2" x="64" y="268.29" text-anchor="end">8</text><text class="sm ink2" x="64" y="232.57" text-anchor="end">10</text><text class="sm ink2" x="64" y="196.86" text-anchor="end">12</text><text class="sm ink2" x="64" y="161.14" text-anchor="end">14</text><text class="sm ink2" x="64" y="125.43" text-anchor="end">16</text><text class="sm ink2" x="64" y="89.71" text-anchor="end">18</text><text class="sm ink2" x="70" y="32" text-anchor="middle">건조 질량 (g)</text><path class="cv s3" stroke-dasharray="6 4" d="M98.89 175 L532.22 175"/><text class="ink sm" x="538.22" y="179" text-anchor="start">전체 평균 13</text><path class="cv s1" d="M113.33 228.57 L200 228.57"/><circle class="f1" cx="130.67" cy="264.29" r="4"/><circle class="f1" cx="148" cy="228.57" r="4"/><circle class="f1" cx="165.33" cy="246.43" r="4"/><circle class="f1" cx="182.67" cy="175" r="4"/><text class="ink2 sm" x="156.67" y="318" text-anchor="middle">대조 (평균 10)</text><path class="cv s1" d="M257.78 175 L344.44 175"/><circle class="f1" cx="275.11" cy="192.86" r="4"/><circle class="f1" cx="292.44" cy="157.14" r="4"/><circle class="f1" cx="309.78" cy="210.71" r="4"/><circle class="f1" cx="327.11" cy="139.29" r="4"/><text class="ink2 sm" x="301.11" y="318" text-anchor="middle">비료 가 (평균 13)</text><path class="cv s1" d="M402.22 121.43 L488.89 121.43"/><circle class="f1" cx="419.56" cy="139.29" r="4"/><circle class="f1" cx="436.89" cy="103.57" r="4"/><circle class="f1" cx="454.22" cy="157.14" r="4"/><circle class="f1" cx="471.56" cy="85.71" r="4"/><text class="ink2 sm" x="445.56" y="318" text-anchor="middle">비료 나 (평균 16)</text><circle class="f2" cx="471.56" cy="85.71" r="6"/><path fill="none" stroke="var(--s3)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar3)" d="M497.56 175 L497.56 124.43"/><path fill="none" stroke="var(--s2)" stroke-width="2" stroke-linecap="round" marker-end="url(#ar2)" d="M497.56 121.43 L497.56 88.71"/><text class="ink sm" x="505.56" y="152.21" text-anchor="start">집단 간 몫 3</text><text class="ink sm" x="505.56" y="107.57" text-anchor="start">집단 안 몫 2</text><text class="ink bold" x="360" y="24" text-anchor="middle">점 하나의 편차 5 = 집단 평균까지 3 + 그 안에서 2</text><rect x="90" y="342" width="14" height="3" rx="1.5" class="f1"/><text class="sm ink2" x="110" y="348">집단 평균 (실선)</text><rect x="260" y="342" width="14" height="3" rx="1.5" class="f3"/><text class="sm ink2" x="280" y="348">전체 평균 (점선)</text>
+</svg>

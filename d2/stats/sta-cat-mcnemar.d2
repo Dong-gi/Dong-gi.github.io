@@ -1,0 +1,35 @@
+# 짝지은 2×2 표의 네 칸 — 13장(범주형 자료) `짝지은 비율`.
+#
+# 무엇을 읽어야 하나: 같은 사람을 두 번 잰 표에서 두 번 다 같은 답을 한 칸(일치 칸)은
+# 앞뒤 비율의 차이에 아무것도 보태지 않는다. 차이는 불일치 칸 b 와 c 에서만 나온다.
+direction: down
+
+표: {
+  label: "같은 100명을 캠페인 앞뒤로 두 번 물었다"
+  grid-rows: 3
+  grid-columns: 3
+  grid-gap: 10
+
+  빈칸: { label: "·"; shape: text; style.font-color: transparent }
+  뒤예: { label: "뒤: 안다"; shape: text }
+  뒤아니오: { label: "뒤: 모른다"; shape: text }
+
+  앞예: { label: "앞: 안다"; shape: text }
+  a: { label: "a = 45\n앞뒤 모두 안다\n(일치 칸)"; style.stroke-dash: 4; style.fill: transparent }
+  b: { label: "b = 5\n알다가 모르게 됨\n(불일치 칸)"; style.bold: true; style.stroke-width: 3 }
+
+  앞아니오: { label: "앞: 모른다"; shape: text }
+  c: { label: "c = 15\n모르다가 알게 됨\n(불일치 칸)"; style.bold: true; style.stroke-width: 3 }
+  d: { label: "d = 35\n앞뒤 모두 모른다\n(일치 칸)"; style.stroke-dash: 4; style.fill: transparent }
+}
+
+차이: {
+  label: "앞 비율 − 뒤 비율 = (a+b)/n − (a+c)/n = (b − c)/n\na 와 d 는 빼는 순간 지워진다"
+}
+
+검정: {
+  label: "귀무가설: 앞뒤 비율이 같다 ⟺ 불일치 b+c 건이 반반으로 갈린다\n맥니마 통계량 (b − c)² / (b + c) = 5.0, 자유도 1 인 카이제곱과 견준다"
+}
+
+표 -> 차이: "불일치 칸만 남는다"
+차이 -> 검정

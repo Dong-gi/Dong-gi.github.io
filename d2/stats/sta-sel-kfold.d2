@@ -1,0 +1,67 @@
+# 다섯 겹 교차검증 — 통계학 16장(모형 선택과 과적합) `자료를 나눠 재는 법`.
+#
+# 무엇을 읽어야 하나: 자료를 다섯 겹으로 나누고, 한 겹씩 돌아가며 검증에 쓴다.
+# 모든 관측이 정확히 한 번 검증(굵은 테두리)에 쓰이고 네 번 훈련에 쓰인다. 다섯 오차의 평균이 추정값이다.
+direction: down
+
+판: {
+  label: ""
+  grid-rows: 5
+  grid-columns: 6
+  grid-gap: 6
+  style.stroke: transparent
+  style.fill: transparent
+
+  r1: { label: "1번째 적합"; shape: text }
+  a11: { label: "검증\n1겹"; style.stroke-width: 4; style.bold: true }
+  a12: { label: "훈련\n2겹" }
+  a13: { label: "훈련\n3겹" }
+  a14: { label: "훈련\n4겹" }
+  a15: { label: "훈련\n5겹" }
+
+  r2: { label: "2번째 적합"; shape: text }
+  a21: { label: "훈련\n1겹" }
+  a22: { label: "검증\n2겹"; style.stroke-width: 4; style.bold: true }
+  a23: { label: "훈련\n3겹" }
+  a24: { label: "훈련\n4겹" }
+  a25: { label: "훈련\n5겹" }
+
+  r3: { label: "3번째 적합"; shape: text }
+  a31: { label: "훈련\n1겹" }
+  a32: { label: "훈련\n2겹" }
+  a33: { label: "검증\n3겹"; style.stroke-width: 4; style.bold: true }
+  a34: { label: "훈련\n4겹" }
+  a35: { label: "훈련\n5겹" }
+
+  r4: { label: "4번째 적합"; shape: text }
+  a41: { label: "훈련\n1겹" }
+  a42: { label: "훈련\n2겹" }
+  a43: { label: "훈련\n3겹" }
+  a44: { label: "검증\n4겹"; style.stroke-width: 4; style.bold: true }
+  a45: { label: "훈련\n5겹" }
+
+  r5: { label: "5번째 적합"; shape: text }
+  a51: { label: "훈련\n1겹" }
+  a52: { label: "훈련\n2겹" }
+  a53: { label: "훈련\n3겹" }
+  a54: { label: "훈련\n4겹" }
+  a55: { label: "검증\n5겹"; style.stroke-width: 4; style.bold: true }
+}
+
+평균: { label: "검증 오차 다섯 개의 평균 = 교차검증 추정값 CV"; style.bold: true }
+
+판 -> 평균: "각 줄: 훈련 네 겹으로 적합하고\n검증 한 겹의 오차를 잰다"
+
+주석: {
+  label: ""
+  near: bottom-center
+  grid-columns: 1
+  grid-gap: 24
+  style.stroke: transparent
+  style.fill: transparent
+
+  메모: {
+    label: "변수 고르기·표준화 같은 모든 준비 단계도 각 줄의 훈련 네 겹 안에서만 한다.\n전체 자료로 먼저 하면 검증 겹의 정보가 훈련으로 새어 들어간다(누수)"
+    shape: text
+  }
+}

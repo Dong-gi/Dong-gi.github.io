@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300" role="img" aria-labelledby="t d" font-family="'Segoe UI', 'Noto Sans KR', system-ui, sans-serif">
+<title id="t">투키 동시 구간</title><desc id="d">세 짝의 평균 차에 대한 동시 구간 가운데 비료 나와 대조의 짝만 0 을 품지 않는다</desc>
+<style>
+svg{--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--ink:#0b0b0b;--ink2:#52514e;--grid:#d8d7d2}
+@media (prefers-color-scheme:dark){svg{--s1:#3987e5;--s2:#d95926;--s3:#199e70;--ink:#ffffff;--ink2:#c3c2b7;--grid:#3a3a38}}
+.ink{fill:var(--ink)}.ink2{fill:var(--ink2)}
+.ax{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.gr{stroke:var(--grid);stroke-width:1;fill:none}
+.s1{stroke:var(--s1)}.s2{stroke:var(--s2)}.s3{stroke:var(--s3)}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}
+.cv{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+text{font-size:13px}
+.sm{font-size:11px}
+.bold{font-weight:600}
+</style>
+<defs>
+<marker id="ar1" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s1)"/></marker>
+<marker id="ar2" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s2)"/></marker>
+<marker id="ar3" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--s3)"/></marker>
+<marker id="ark" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 4 L0 8 z" fill="var(--ink2)"/></marker>
+</defs>
+<path class="gr" d="M230 240 V50"/><path class="gr" d="M350 240 V50"/><path class="gr" d="M410 240 V50"/><path class="gr" d="M470 240 V50"/><path class="gr" d="M530 240 V50"/><path class="gr" d="M590 240 V50"/><path class="ax" marker-end="url(#ark)" d="M170 240 H660"/><path class="ax" marker-end="url(#ark)" d="M290 240 V40"/><text class="sm ink2" x="230" y="255" text-anchor="middle">-2</text><text class="sm ink2" x="350" y="255" text-anchor="middle">2</text><text class="sm ink2" x="410" y="255" text-anchor="middle">4</text><text class="sm ink2" x="470" y="255" text-anchor="middle">6</text><text class="sm ink2" x="530" y="255" text-anchor="middle">8</text><text class="sm ink2" x="590" y="255" text-anchor="middle">10</text><text class="sm ink2" x="664" y="244">평균 차 (g)</text><path class="cv s1" d="M264.88 97.5 L495.12 97.5"/><circle class="f1" cx="380" cy="97.5" r="5"/><text class="ink sm" x="160" y="101.5" text-anchor="end">비료 가 − 대조</text><text class="ink2 sm" x="503.12" y="101.5" text-anchor="start">(-0.84, 6.84)</text><path class="cv s1" d="M264.88 145 L495.12 145"/><circle class="f1" cx="380" cy="145" r="5"/><text class="ink sm" x="160" y="149" text-anchor="end">비료 나 − 비료 가</text><text class="ink2 sm" x="503.12" y="149" text-anchor="start">(-0.84, 6.84)</text><path class="cv s2" d="M354.88 192.5 L585.12 192.5"/><circle class="f2" cx="470" cy="192.5" r="5"/><text class="ink sm" x="160" y="196.5" text-anchor="end">비료 나 − 대조</text><text class="ink2 sm" x="593.12" y="196.5" text-anchor="start">(2.16, 9.84)</text><text class="ink2 sm" x="290" y="255" text-anchor="middle">0</text><text class="ink bold" x="360" y="24" text-anchor="middle">투키 95% 동시 구간 — 반폭 3.948 × √(MSW/4) = 3.84</text><rect x="180" y="280" width="14" height="3" rx="1.5" class="f1"/><text class="sm ink2" x="200" y="286">0 을 품는 짝</text><rect x="360" y="280" width="14" height="3" rx="1.5" class="f2"/><text class="sm ink2" x="380" y="286">0 을 품지 않는 짝</text>
+</svg>

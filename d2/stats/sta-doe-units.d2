@@ -1,0 +1,62 @@
+# 실험 단위와 관측 단위 — 통계학 5장(실험 설계).
+#
+# 무엇을 읽어야 하나: 처리는 화분에 배정되고 잎은 화분 안에서 잰다.
+# 그러므로 반복의 수는 화분 수(처리마다 2)이고 잎 수(처리마다 6)가 아니다.
+# 같은 화분의 잎은 같은 흙·물·햇빛을 나눠 가지므로 서로 독립이 아니다.
+direction: down
+
+배정: { label: "무작위화\n처리를 화분에 배정한다"; shape: oval; style.bold: true }
+
+가: {
+  label: "처리 가"
+  grid-rows: 1
+  grid-columns: 2
+  화분1: {
+    label: "화분 1\n실험 단위"
+    grid-rows: 3
+    grid-columns: 1
+    a: "잎"
+    b: "잎"
+    c: "잎"
+  }
+  화분2: {
+    label: "화분 2\n실험 단위"
+    grid-rows: 3
+    grid-columns: 1
+    a: "잎"
+    b: "잎"
+    c: "잎"
+  }
+}
+
+나: {
+  label: "처리 나"
+  grid-rows: 1
+  grid-columns: 2
+  화분3: {
+    label: "화분 3\n실험 단위"
+    grid-rows: 3
+    grid-columns: 1
+    a: "잎"
+    b: "잎"
+    c: "잎"
+  }
+  화분4: {
+    label: "화분 4\n실험 단위"
+    grid-rows: 3
+    grid-columns: 1
+    a: "잎"
+    b: "잎"
+    c: "잎"
+  }
+}
+
+셈: {
+  label: "반복 = 처리마다 화분 2개\n잎 6장은 관측 단위일 뿐이다\n잎을 반복으로 세면 의사반복"
+  style.bold: true
+}
+
+배정 -> 가: "화분 둘"
+배정 -> 나: "화분 둘"
+가 -> 셈
+나 -> 셈

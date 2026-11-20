@@ -1,0 +1,52 @@
+# 일반화선형모형의 세 부품 — 14장(일반화선형모형) `세 부품`.
+#
+# 무엇을 읽어야 하나: 어느 모형이든 부품은 셋이다. 결과가 어느 분포를 따르는가,
+# 설명변수를 어떻게 한 줄로 더하는가, 그 둘을 무엇으로 잇는가. 아래 세 칸은
+# 부품을 무엇으로 고르느냐만 다를 뿐 같은 틀이다.
+direction: down
+
+부품: {
+  label: "세 부품"
+  grid-rows: 1
+  grid-columns: 3
+  grid-gap: 24
+
+  분포: { label: "① 확률 성분\nYᵢ 가 따르는 분포\n(6장의 지수족)\n평균 μᵢ" }
+  예측자: { label: "② 선형 예측자\nηᵢ = β₀ + β₁xᵢ₁ + … + βₖxᵢₖ\n(11장의 설계행렬 한 행)" }
+  연결: { label: "③ 연결함수\ng(μᵢ) = ηᵢ\n평균을 어떤 눈금에서\n직선으로 보는가" }
+}
+
+예: {
+  label: "같은 틀, 다른 부품"
+  grid-rows: 4
+  grid-columns: 4
+  grid-gap: 8
+
+  h0: { label: "모형"; shape: text; style.bold: true }
+  h1: { label: "① 분포"; shape: text; style.bold: true }
+  h2: { label: "③ 연결함수"; shape: text; style.bold: true }
+  h3: { label: "계수 하나가 뜻하는 것"; shape: text; style.bold: true }
+
+  a0: { label: "선형 모형\n(11장)" }
+  a1: { label: "정규분포" }
+  a2: { label: "항등: g(μ) = μ" }
+  a3: { label: "평균의 차" }
+
+  b0: { label: "로지스틱 회귀" }
+  b1: { label: "베르누이·이항" }
+  b2: { label: "로짓: g(p) = ln(p/(1−p))" }
+  b3: { label: "로그오즈비\n(지수를 씌우면 오즈비)" }
+
+  c0: { label: "푸아송 회귀" }
+  c1: { label: "푸아송" }
+  c2: { label: "로그: g(μ) = ln μ" }
+  c3: { label: "로그 율비\n(지수를 씌우면 율비)" }
+}
+
+부품 -> 예: "부품을 고르면 모형이 정해진다"
+
+메모: {
+  label: "세 모형의 연결함수는 모두 그 분포의 정준 연결이다 — 6장 지수족 꼴의 η 가 곧 선형 예측자가 된다"
+  shape: text
+  near: bottom-center
+}

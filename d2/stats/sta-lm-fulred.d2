@@ -1,0 +1,45 @@
+# 완전 모형과 축소 모형을 견주는 F 검정 — 통계학 11장(선형 모형) `계수를 검정한다`.
+#
+# 무엇을 읽어야 하나: 같은 자료에 모형을 두 번 맞춘다. 계수 q 개를 0 으로 묶은 대가로
+# 늘어난 잔차제곱합을 제약 하나당으로 나누고, 완전 모형의 잔차 평균제곱과 견준 것이 F 다.
+vars: { d2-config: { layout-engine: elk } }
+direction: down
+
+자료: { label: "같은 자료 (관측 n 개)"; shape: oval; style.bold: true }
+
+완전: { label: "완전 모형\n설명변수 k 개, 계수 k + 1 개" }
+축소: { label: "축소 모형\n그 가운데 계수 q 개를 0 으로 묶는다\n(귀무가설이 말하는 모형)" }
+
+SSEF: { label: "SSE(완전)\n자유도 n − k − 1" }
+SSER: { label: "SSE(축소)\n자유도 n − k − 1 + q\n언제나 SSE(완전) 이상" }
+
+분자: { label: "분자: 늘어난 몫을 제약 하나당으로\n[SSE(축소) − SSE(완전)] ÷ q" }
+분모: { label: "분모: 잔차 평균제곱 s²\nSSE(완전) ÷ (n − k − 1)" }
+
+F: { label: "F = 분자 ÷ 분모"; style.bold: true }
+꼬리: { label: "귀무가설과 정규성 아래 F(q, n − k − 1) 분포\n오른쪽 꼬리 넓이 = p값" }
+
+자료 -> 완전: "최소제곱"
+자료 -> 축소: "최소제곱"
+완전 -> SSEF
+축소 -> SSER
+SSER -> 분자
+SSEF -> 분자
+SSEF -> 분모
+분자 -> F
+분모 -> F
+F -> 꼬리
+
+주석: {
+  label: ""
+  near: bottom-center
+  grid-columns: 1
+  grid-gap: 24
+  style.stroke: transparent
+  style.fill: transparent
+
+  메모: {
+    label: "q = 1 이면 F 는 그 계수의 t 통계량의 제곱과 같다.\n축소 모형이 절편만 남긴 것이면 SSE(축소) = SST 이고 이것이 회귀 전체의 F 검정이다"
+    shape: text
+  }
+}
