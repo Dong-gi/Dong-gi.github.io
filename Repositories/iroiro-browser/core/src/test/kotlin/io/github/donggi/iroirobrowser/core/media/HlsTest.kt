@@ -239,4 +239,21 @@ class HlsTest {
         assertNull(MediaCodecs.estimateBytes(0, 60.0))
         assertNull(MediaCodecs.estimateBytes(2_500_000, 0.0))
     }
+
+    @Test
+    fun 지은_주소의_수와_글자_수에_상한() {
+        // 바탕 주소가 주소마다 통째로 붙는다 — 한 글자 줄이 많거나 바탕이 길면 지은 글이 재생목록보다 훨씬 크다(쪽이 고른 재생목록을
+        // 뒤에서 저절로 읽는다 — MediaProbe). 상한을 넘으면 재생목록이 아닌 것으로.
+        val many = "#EXTM3U\n" + "#EXTINF:1,\na\n".repeat(HlsPlaylist.MAX_URIS + 1)
+        assertFailsWith<HlsPlaylist.Invalid> { HlsPlaylist.parse(many, "https://cdn.test/v/i.m3u8") }
+        val longBase = "https://cdn.test/" + "x".repeat(64 * 1024) + "/i.m3u8"
+        val urlLength = longBase.substringBeforeLast('/').length + "/a".length
+        val count = (HlsPlaylist.MAX_URI_CHARS / urlLength).toInt() + 1
+        val long = "#EXTM3U\n" + "#EXTINF:1,\na\n".repeat(count)
+        assertFailsWith<HlsPlaylist.Invalid> { HlsPlaylist.parse(long, longBase) }
+        // 상한 안이면 그대로 읽는다.
+        val fine = "#EXTM3U\n" + "#EXTINF:1,\na\n".repeat(1_000) + "#EXT-X-ENDLIST\n"
+        assertEquals(1_000, assertIs<HlsPlaylist.Media>(HlsPlaylist.parse(fine, "https://cdn.test/v/i.m3u8")).segments.size)
+        assertEquals(count - 1, assertIs<HlsPlaylist.Media>(HlsPlaylist.parse(long.substringBeforeLast("#EXTINF"), longBase)).segments.size)
+    }
 }

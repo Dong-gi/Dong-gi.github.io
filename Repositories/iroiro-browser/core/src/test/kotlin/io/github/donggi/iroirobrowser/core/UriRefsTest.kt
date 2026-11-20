@@ -3,6 +3,7 @@ package io.github.donggi.iroirobrowser.core
 import java.net.URI
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNull
 
@@ -91,6 +92,22 @@ class UriRefsTest {
         assertEquals("skd://key-id", UriRefs.resolve("https://cdn.test/v/i.m3u8", "skd://key-id"))
         // 바탕에 스킴이 없으면 풀 바탕이 없다.
         assertEquals("key.bin", UriRefs.resolve("index.m3u8", "key.bin"))
+    }
+
+    @Test
+    fun 긴_길의_점_마디도_곧은_시간에_걷는다() {
+        // 재생목록의 한 줄은 MB 단위일 수 있고 찾은 재생목록은 쪽이 고른 것을 뒤에서 저절로 읽는다. 남은 길을 마디마다 잘라 새로 만들면 제곱
+        // 시간이다(1 MB 의 마디 50만 개 — 한참 걸린다). 따로 된 스레드에서 돌려 되돌린 판도 시험이 멈추지 않고 깨지게 한다.
+        val ref = "a/".repeat(500_000) + "./b"
+        var got: String? = null
+        val worker = Thread { got = UriRefs.resolve("https://cdn.test/v/i.m3u8", ref) }.apply { isDaemon = true }
+        worker.start()
+        worker.join(5_000)
+        assertFalse(worker.isAlive, "점 마디 걷기가 5초 안에 끝나지 않았다")
+        assertEquals("https://cdn.test/v/" + "a/".repeat(500_000) + "b", got)
+        // 끝의 `/.`·`/..` 는 빗금 하나로 끝난다(RFC 3986 5.2.4).
+        assertEquals("https://cdn.test/v/a/", UriRefs.resolve("https://cdn.test/v/i.m3u8", "a/."))
+        assertEquals("https://cdn.test/v/", UriRefs.resolve("https://cdn.test/v/i.m3u8", "a/.."))
     }
 
     @Test

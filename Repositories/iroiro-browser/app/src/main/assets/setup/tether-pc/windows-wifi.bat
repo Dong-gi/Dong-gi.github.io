@@ -11,7 +11,11 @@ REM   - tun2proxy.exe + wintun.dll in the same folder as this script (see README
 REM --- Auto-elevate to Administrator if not already ---
 REM fltmc succeeds only as Administrator. net session also needs the Server service,
 REM and with that service off it failed even when elevated, so the UAC prompt looped.
-fltmc >nul 2>&1
+REM fltmc and powershell are called by full path: before elevation the current directory
+REM is this script's folder, and cmd.exe looks there before PATH -- a fltmc.exe or
+REM powershell.exe dropped next to the script would run instead (and could raise its own
+REM UAC prompt right when one is expected).
+"%SystemRoot%\System32\fltmc.exe" >nul 2>&1
 if %errorlevel% equ 0 goto :elevated
 
 echo Requesting Administrator privileges...
@@ -21,9 +25,9 @@ REM to 1080 -- and that is the normal path, since this script is nearly always
 REM launched non-elevated. Reverting to 1080 either fails to connect or, worse,
 REM connects to whatever else is sitting on 1080.
 if "%~1"=="" (
-    powershell -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
+    "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
 ) else (
-    powershell -Command "Start-Process -FilePath '%~f0' -Verb RunAs -ArgumentList '%*'"
+    "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -Command "Start-Process -FilePath '%~f0' -Verb RunAs -ArgumentList '%*'"
 )
 exit /b
 

@@ -68,7 +68,7 @@
 | 유튜브의 보임 속이기 | **넣는다** — 유튜브의 주 틀에 **쪽의 세계** 문서 시작 스크립트(`BackgroundPlay.VISIBILITY_SCRIPT`). 이 앱이 쪽의 세계에 상시 두는 둘째 스크립트다(첫째는 WebRTC 가드). `_lact` 갱신('계속 시청하시겠습니까?' 미루기)은 넣지 않았다 |
 | 뒤에서 재생 — 그리기 줄이기 | 화면 밖 그리기는 **WebView 가 다시 그리기를 청할 때만**, 뒤에서 재생하는 동안은 **그 탭의 영상 요소를 숨긴다** |
 | m3u8 열쇠 | 열쇠를 **쪽의 재생기가 실제로 보낸 머리로** 청하고(메모리에만 — 쥘 머리와 상한은 Claude 가 정했다), 재생목록·MPD 를 **넘겨주기 뒤의 주소로** 풀고, **너그럽게 읽되 첫 조각으로 확인**하고, 실패 글에 까닭의 갈래와 '가로채기' 안내. 다음 길(D·F)은 실패 글이 가리킬 때('사용자가 정할 것') |
-| 보안 점검 고침 | 광고 목록의 정규식을 되짚지 않는 엔진으로(`ListRegex`)·무늬·낱말·호스트의 제곱 시간, 내려받기의 Referer 를 홉마다, 중계의 홀로 선 CR·LF 를 400, 테더 HTTP 프록시의 겹친 CL·TE 를 400, WebRTC 가드를 쪽이 바꿀 수 있는 내장 함수에서 떼기(사용자: '수정할 가치가 있는 것들만'). 고치지 않은 것은 '보안 점검 — 알고 둔 것' |
+| 보안 점검 고침 | 광고 목록의 정규식을 되짚지 않는 엔진으로(`ListRegex`)·무늬·낱말·호스트의 제곱 시간, 내려받기의 Referer 를 홉마다, 중계의 홀로 선 CR·LF 를 400, 테더 HTTP 프록시의 겹친 CL·TE 를 400, WebRTC 가드를 쪽이 바꿀 수 있는 내장 함수에서 떼기(사용자: '수정할 가치가 있는 것들만'). 고치지 않은 것과 2차 점검(11-20)은 '보안 점검 — 알고 둔 것' |
 
 ## 지켜야 할 것
 
@@ -96,7 +96,7 @@ cache 를 껐다** — 디버그 빌드가 시험 CA 파일이 있는지로 네�
 
 ```bash
 export JAVA_HOME="$HOME/.gradle/jdks/jetbrains_s_r_o_-21-amd64-windows.2"
-./gradlew :core:test :net:test :app:testDebugUnitTest --offline        # core 308 · net 37 · app 204
+./gradlew :core:test :net:test :app:testDebugUnitTest --offline        # core 311 · net 37 · app 204
 ./gradlew :tether:test --offline                                       # 테더의 서버·거르개 125건(약 15초, 루프백만)
 ./gradlew :app:lintDebug :app:lintRelease :app:assembleDebug :app:assembleRelease --offline   # lint 오류 0
 ./gradlew :core:classes :net:classes :tether:classes --offline && python tools/check_api_level.py   # 문제 0건
@@ -133,7 +133,7 @@ core/   JVM. Omnibox(주소창) · Suggester(주소창 제안 — 방문 기록�
                  HlsKeys(열쇠 응답 읽기 — 너그러운 후보·첫 조각으로 확인·실패의 갈래) · PageRequests(쪽이 낸 요청의 머리 — 탭마다 메모리에만)
         sites/   갤러리 받기의 사이트 로직 — SiteUrls(주소 알아보기 — UrlRecognizer) · GalleryResolver(계획·풀기) · GalleryCodec(계획의 글 — PlanJson) ·
                  Pixiv(웹 AJAX) · Hitomi(갤러리 정보·gg.js·그림 주소) · SiteNames(이름·화면 글) · SiteResponses(실패 가르기) · Json(상한을 둔 읽개).
-                 망은 앱이 주는 SiteFetch 로만 — 아래 '갤러리 받기'. `:core` 시험 308건
+                 망은 앱이 주는 SiteFetch 로만 — 아래 '갤러리 받기'. `:core` 시험 311건
 net/    JVM. LocalRelay(앱 안 중계) · UpstreamProxy · HttpHead · HttpFetcher(앱의 HTTP — 넘겨주기의 홉마다 길을 고른다) · RelayAuthenticator. 시험 37건
 tether/ JVM, 새 의존 없음. 테더링의 서버와 거르개(패키지 tether.core) — 아래 '테더링'. 앱의 tether/ 가 잇는다
         TcpServer(받기·거르기·상한의 몸통 — TetherEnvironment·StartError) · Socks5Server · HttpProxyServer · FileServer(규약 — 폴더는 SharedTree 로 주입)
@@ -1351,7 +1351,8 @@ SharedPreferences **`tether`**(테더 프로세스만 연다 — 브라우저의
 ### PC 쪽 — PC 연결 파일(zip)
 
 테더 화면의 '다른 기기에서' → **'PC 연결 파일 받기'** 가 `web-tether-pc.zip`(README.txt · windows-wifi.bat · macos-wifi.sh)을 공용 '내려받기' 에
-쓴다(아래 '설정 파일 zip'). 원본은 `app/src/main/assets/setup/tether-pc/`. `windows-wifi.bat` 은 관리자 권한으로 저절로 다시 뜨고(`fltmc` 로 판정)
+쓴다(아래 '설정 파일 zip'). 원본은 `app/src/main/assets/setup/tether-pc/`. `windows-wifi.bat` 은 관리자 권한으로 저절로 다시 뜨고(`fltmc` 로 판정 —
+`fltmc`·`powershell` 은 `%SystemRoot%\System32\…` 의 온전한 경로로 부른다: 올리기 전의 현재 폴더는 스크립트의 폴더이고 cmd.exe 는 PATH 보다 그곳을 먼저 찾는다)
 `tun2proxy.exe --tun USBTether --dns-addr 1.0.0.1 --setup --proxy socks5://192.168.49.1:1080` 을 돌린다(DNS 는 1.0.0.1 — 1.1.1.1 과 같은 Cloudflare 해석기다. LG U+ 모바일망은 1.1.1.1 로 가는 길이 없어 PC 의 이름 풀이가 통째로 실패했다) — `--setup` 이 192.168.49.1 로 가는 호스트
 경로를 Wi-Fi 쪽에 남겨 TUN 고리를 막고, UDP ASSOCIATE 가 되므로 `--dns over-tcp` 가 필요 없고, 포트는 훑지 않고 인자로만(`windows-wifi.bat 1085`).
 tun2proxy.exe 가 없거나 오류로 끝나면 창이 멈춘다. `macos-wifi.sh` 는 같은 일 — `exec sudo /bin/bash "$0" "$@"` 로 다시 뜨며 인자를 넘기고(실행
@@ -1668,6 +1669,20 @@ hitomi 는 공개 저장소에 두면 DMCA 통지를 받을 수 있다(2026-03 F
 - **DNS 미리 찾기 누출·테더의 무인증** — 이미 감수로 정한 것(위 '사용자 결정').
 - 열쇠의 '쪽이 보낸 머리 따라 하기' 가 재생목록 요청의 Referer 로 물러선 갈래는 그 값을 다른 출처의 열쇠에도 그대로 싣는다(쪽이 실제로 보낸 값이라
   그대로 두었다 — 위 '내려받기' 의 'Referer 를 홉마다').
+
+**2차 점검(2026-11-20 — 10-16 뒤에 바뀐 것) 고친 것**: 찾은 재생목록을 뒤에서 저절로 읽는 길(쪽 하나면 된다)에서 — `UriRefs` 의 점 마디 걷기가 마디마다
+남은 길을 베껴 제곱 시간(MB 단위 한 줄로 일꾼이 몇 분), `HlsPlaylist.parse` 가 지은 주소에 상한이 없어(주소마다 바탕 주소가 통째로 붙는다) 메모리
+부족으로 앱이 죽을 수 있었다 — 자리로 세어 걷고, 한 재생목록에 주소 10만 개·글자 3,200만(넘으면 재생목록이 아닌 것으로). '복사한 링크 열기' 의
+`ClipText` 가 `lowercase()`(길이가 바뀐다 — `İ`)의 자리를 원래 글에 써서 던졌다(누르면 앱이 죽었다) — 글자마다 소문자로. `windows-wifi.bat` 의 시스템
+도구를 온전한 경로로. 시험 `UriRefsTest`·`HlsTest`·`ClipTextTest`·`SetupAssetsTest` — 고침을 되돌리면 각각 그것만 깨진다.
+
+2차 점검이 고치지 않은 것:
+- **열쇠의 머리 따라 하기와 CSRF** — 쪽이 고른 재생목록의 열쇠 주소에, 쪽이 그 주소로 보낸 스크립트 머리(미리 묻기가 거절됐을 요청의 것이어도 —
+  `intercept` 는 CORS 앞이다)와 그 주소의 쿠키(SameSite 와 상관없이 — 내려받기 전체가 그렇다)를 실은 GET 이 나간다. 사용자가 그 쪽의 HLS 를 받기로
+  골라야 하고 응답은 쪽에 돌아가지 않는다. 막으려면 다른 사이트의 열쇠에는 스크립트 머리를 싣지 않는 길이 있다(사용자가 정할 것).
+- **DASH 의 상한** — 화질마다 조각 5만 개까지지만 화질 수·주소 글자 합에는 상한이 없다. 사용자가 그 MPD 를 받기로 골라야 한다(일꾼은 Throwable 을 잡지만
+  메모리 부족은 다른 스레드에도 닿는다). HLS 처럼 합의 상한을 둘 수 있다.
+- `windows-wifi.bat` 의 권한 올리기는 스크립트의 경로를 PowerShell 의 홑따옴표 글에 넣는다 — 경로에 `'` 가 있으면(사용자 이름 등) 올리기가 실패한다.
 
 ## 사용자가 정할 것
 

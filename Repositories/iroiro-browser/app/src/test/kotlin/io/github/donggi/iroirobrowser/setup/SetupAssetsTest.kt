@@ -122,7 +122,15 @@ class SetupAssetsTest {
         assertTrue(readme.contains("sudo bash macos-wifi.sh"))
         val bat = String(bytes(SetupBundle.TETHER_PC, "windows-wifi.bat"), Charsets.US_ASCII)
         // 관리자 판정은 fltmc — net session 은 Server 서비스가 꺼진 PC 에서 관리자여도 실패해 권한 요청이 되풀이됐다.
-        assertTrue(bat.contains("fltmc >nul 2>&1") && !bat.contains("net session >nul"))
+        assertTrue(bat.contains("fltmc.exe\" >nul 2>&1") && !bat.contains("net session >nul"))
+        // 권한을 올리기 전의 현재 폴더는 스크립트의 폴더이고 cmd.exe 는 PATH 보다 그곳을 먼저 찾는다 — 시스템 도구는 온전한 경로로만 부른다
+        // (곁에 놓인 fltmc.exe·powershell.exe 가 대신 돌지 않게).
+        val commands = bat.lines().map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("REM", ignoreCase = true) }
+        for (tool in listOf("fltmc", "powershell")) {
+            assertTrue(commands.none { it.startsWith(tool, ignoreCase = true) }, "$tool 을 맨 이름으로 부른다")
+        }
+        assertTrue(bat.contains("\"%SystemRoot%\\System32\\fltmc.exe\""))
+        assertTrue(bat.contains("\"%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -Command"))
         // 관리자 창은 스크립트가 끝나면 닫힌다 — tun2proxy 가 없거나 오류로 끝나면 멈춰서 글이 보이게.
         assertTrue(bat.contains("if not exist \"%~dp0tun2proxy.exe\"") && bat.contains("if errorlevel 1 pause"))
         assertFalse(bat.contains("enabledelayedexpansion"), "쓰지 않는데 폴더 경로의 ! 를 지운다")

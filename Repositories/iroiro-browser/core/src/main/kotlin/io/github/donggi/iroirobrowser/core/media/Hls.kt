@@ -100,10 +100,35 @@ sealed class HlsPlaylist {
         fun parse(text: String, baseUrl: String): HlsPlaylist {
             val lines = text.lineSequence().map { it.trim() }.filter { it.isNotEmpty() }.toList()
             if (lines.firstOrNull()?.startsWith("#EXTM3U") != true) throw Invalid("#EXTM3U 가 없다")
-            return if (lines.any { it.startsWith("#EXT-X-STREAM-INF") }) master(lines, baseUrl) else media(lines, baseUrl)
+            val budget = Budget()
+            return if (lines.any { it.startsWith("#EXT-X-STREAM-INF") }) master(lines, baseUrl, budget) else media(lines, baseUrl, budget)
         }
 
-        private fun master(lines: List<String>, base: String): Master {
+        /** 한 재생목록에서 지을 주소의 수 — 2초 조각으로 55시간. */
+        const val MAX_URIS = 100_000
+
+        /** 한 재생목록에서 지을 주소의 글자 수 합. */
+        const val MAX_URI_CHARS = 32L * 1024 * 1024
+
+        /**
+         * 지은 주소의 수와 글자 수를 센다 — 넘으면 [Invalid]. 주소마다 바탕 주소가 통째로 붙으므로 줄이 짧아도 지은 글은 클 수 있다: 바탕 길이가
+         * 4 KB 인 2 MB 재생목록의 한 글자 줄 백만 개는 4 GB 다. 찾은 재생목록은 쪽이 고른 것을 뒤에서 저절로 읽으므로(MediaProbe) 그 쪽 하나가
+         * 앱을 메모리 부족으로 죽였을 것이다.
+         */
+        private class Budget {
+            private var uris = 0
+            private var chars = 0L
+
+            fun resolve(base: String, ref: String): String {
+                if (++uris > MAX_URIS) throw Invalid("주소가 너무 많다")
+                val url = HlsPlaylist.resolve(base, ref)
+                chars += url.length
+                if (chars > MAX_URI_CHARS) throw Invalid("주소가 너무 길다")
+                return url
+            }
+        }
+
+        private fun master(lines: List<String>, base: String, budget: Budget): Master {
             val variants = ArrayList<Variant>()
             val audio = ArrayList<Rendition>()
             val subtitles = ArrayList<Rendition>()
@@ -112,10 +137,10 @@ sealed class HlsPlaylist {
             for (line in lines) {
                 when {
                     line.startsWith("#EXT-X-STREAM-INF:") -> pending = attributes(line.substringAfter(':'))
-                    line.startsWith("#EXT-X-I-FRAME-STREAM-INF:") -> attributes(line.substringAfter(':'))["URI"]?.let { related += resolve(base, it) }
+                    line.startsWith("#EXT-X-I-FRAME-STREAM-INF:") -> attributes(line.substringAfter(':'))["URI"]?.let { related += budget.resolve(base, it) }
                     line.startsWith("#EXT-X-MEDIA:") -> {
                         val a = attributes(line.substringAfter(':'))
-                        val rendition = Rendition(a["GROUP-ID"].orEmpty(), a["NAME"].orEmpty(), a["LANGUAGE"], a["URI"]?.let { resolve(base, it) },
+                        val rendition = Rendition(a["GROUP-ID"].orEmpty(), a["NAME"].orEmpty(), a["LANGUAGE"], a["URI"]?.let { budget.resolve(base, it) },
                             a["DEFAULT"] == "YES")
                         when (a["TYPE"]) {
                             "AUDIO" -> audio += rendition
@@ -126,7 +151,7 @@ sealed class HlsPlaylist {
                     line.startsWith("#") -> Unit
                     pending != null -> {
                         val a = pending
-                        variants += Variant(resolve(base, line), a["BANDWIDTH"]?.toLongOrNull() ?: 0, a["RESOLUTION"], a["CODECS"], a["AUDIO"],
+                        variants += Variant(budget.resolve(base, line), a["BANDWIDTH"]?.toLongOrNull() ?: 0, a["RESOLUTION"], a["CODECS"], a["AUDIO"],
                             a["AVERAGE-BANDWIDTH"]?.toLongOrNull() ?: 0)
                         pending = null
                     }
@@ -136,7 +161,7 @@ sealed class HlsPlaylist {
             return Master(variants.sortedByDescending { it.bandwidth }, audio, subtitles, related)
         }
 
-        private fun media(lines: List<String>, base: String): Media {
+        private fun media(lines: List<String>, base: String, budget: Budget): Media {
             val segments = ArrayList<Segment>()
             var sequence = 0L
             var targetDuration = 0.0
@@ -158,16 +183,16 @@ sealed class HlsPlaylist {
                     line.startsWith("#EXT-X-KEY:") -> {
                         val a = attributes(line.substringAfter(':'))
                         val method = a["METHOD"] ?: "NONE"
-                        key = if (method == "NONE") null else Key(method, a["URI"]?.let { resolve(base, it) }, a["IV"]?.let(::hex), a["KEYFORMAT"])
+                        key = if (method == "NONE") null else Key(method, a["URI"]?.let { budget.resolve(base, it) }, a["IV"]?.let(::hex), a["KEYFORMAT"])
                     }
                     line.startsWith("#EXT-X-MAP:") -> {
                         val a = attributes(line.substringAfter(':'))
-                        map = a["URI"]?.let { InitSection(resolve(base, it), a["BYTERANGE"]?.let { r -> byteRange(r, 0) }, key) }
+                        map = a["URI"]?.let { InitSection(budget.resolve(base, it), a["BYTERANGE"]?.let { r -> byteRange(r, 0) }, key) }
                     }
                     line.startsWith("#") -> Unit
                     else -> {
                         // `#EXT-X-BYTERANGE` 에 시작이 없으면 앞 조각(같은 파일 — RFC 8216 이 그렇게 정한다)의 끝에서 잇는다(위의 byteRange).
-                        segments += Segment(resolve(base, line), duration ?: 0.0, range, key, sequence + segments.size, map, discontinuity)
+                        segments += Segment(budget.resolve(base, line), duration ?: 0.0, range, key, sequence + segments.size, map, discontinuity)
                         nextOffset = range?.let { it.offset + it.length } ?: 0L
                         duration = null
                         range = null

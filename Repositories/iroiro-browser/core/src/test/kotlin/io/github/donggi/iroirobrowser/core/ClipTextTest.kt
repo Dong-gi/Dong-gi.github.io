@@ -59,6 +59,14 @@ class ClipTextTest {
     }
 
     @Test
+    fun 소문자로_길이가_바뀌는_글자가_앞에_있어도_그_링크를_고른다() {
+        // `İ`(U+0130)는 lowercase() 로 두 글자가 된다 — 소문자 글의 자리를 원래 글에 쓰면 어긋나 substring 이 던졌다(누르면 앱이 죽었다).
+        val dotted = Char(0x130).toString()
+        assertEquals("http://a.com", ClipText.firstLink(dotted.repeat(8) + " http://a.com"))
+        assertEquals("https://example.com/x", ClipText.firstLink(dotted.repeat(40) + " 보기 https://example.com/x " + dotted))
+    }
+
+    @Test
     fun 이름표는_스킴을_적은_주소만() {
         assertTrue(ClipText.isExplicitLink("https://example.com/a"))
         assertTrue(ClipText.isExplicitLink(" http://10.0.2.2:8080/ "))

@@ -15,7 +15,7 @@ object ClipText {
     fun firstLink(text: String): String? {
         val t = text.trim()
         if (t.isEmpty() || t.length > MAX_CHARS) return null
-        val lower = t.lowercase(Locale.ROOT)
+        val lower = sameLength(t)
         if (t.none { it.isWhitespace() }) {
             // 글 전체가 주소 — 스킴을 적었으면 끝의 문장 부호를 떼고(`https://example.com/x。`), 스킴이 없으면 주소창처럼 그대로.
             val whole = if (lower.startsWith("http://") || lower.startsWith("https://")) trimTail(t) else t
@@ -54,6 +54,12 @@ object ClipText {
         val lower = t.lowercase(Locale.ROOT)
         return (lower.startsWith("http://") || lower.startsWith("https://")) && isWebUrl(t)
     }
+
+    /**
+     * 글자마다 소문자로 — 길이가 [s] 와 같다. 아래의 자리 셈이 소문자 글의 자리를 원래 글에 그대로 쓰기 때문이다. `lowercase()` 는 길이를 바꿀
+     * 수 있어(`İ` 는 둘이 된다) 자리가 어긋나고, 복사한 글에 그런 글자가 있으면 `substring` 이 던져 앱이 죽었다.
+     */
+    private fun sameLength(s: String): String = String(CharArray(s.length) { s[it].lowercaseChar() })
 
     /** [Omnibox] 가 주소로 보고 그 주소가 http(s) 인가. */
     private fun isWebUrl(s: String): Boolean {
