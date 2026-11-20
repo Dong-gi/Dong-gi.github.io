@@ -24,10 +24,15 @@ REM with no arguments, so an explicit port (windows-wifi.bat 1085) silently reve
 REM to 1080 -- and that is the normal path, since this script is nearly always
 REM launched non-elevated. Reverting to 1080 either fails to connect or, worse,
 REM connects to whatever else is sitting on 1080.
+REM The path and arguments reach PowerShell through environment variables, not
+REM pasted into the command text: a ' in the path (a user name like O'Brien)
+REM ended a '...' literal early and the elevation failed.
+set "WEB_TETHER_SELF=%~f0"
+set "WEB_TETHER_ARGS=%*"
 if "%~1"=="" (
-    "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
+    "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -Command "Start-Process -FilePath $env:WEB_TETHER_SELF -Verb RunAs"
 ) else (
-    "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -Command "Start-Process -FilePath '%~f0' -Verb RunAs -ArgumentList '%*'"
+    "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -Command "Start-Process -FilePath $env:WEB_TETHER_SELF -Verb RunAs -ArgumentList $env:WEB_TETHER_ARGS"
 )
 exit /b
 

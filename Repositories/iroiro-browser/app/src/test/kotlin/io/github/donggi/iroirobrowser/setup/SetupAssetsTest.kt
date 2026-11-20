@@ -131,6 +131,14 @@ class SetupAssetsTest {
         }
         assertTrue(bat.contains("\"%SystemRoot%\\System32\\fltmc.exe\""))
         assertTrue(bat.contains("\"%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -Command"))
+        // 권한을 올릴 때 스크립트의 경로·인자는 환경 변수로 넘긴다 — PowerShell 의 홑따옴표 글에 넣으면 경로의 ' (O'Brien)가 글을 끝낸다.
+        val elevate = commands.filter { it.contains("Start-Process") }
+        assertEquals(2, elevate.size)
+        for (line in elevate) {
+            assertTrue(line.contains("-FilePath \$env:WEB_TETHER_SELF"), line)
+            assertFalse(line.contains("%~f0") || line.contains("%*"), "명령 글에 경로·인자를 붙여 넣는다: $line")
+        }
+        assertTrue(bat.contains("set \"WEB_TETHER_SELF=%~f0\"") && bat.contains("set \"WEB_TETHER_ARGS=%*\""))
         // 관리자 창은 스크립트가 끝나면 닫힌다 — tun2proxy 가 없거나 오류로 끝나면 멈춰서 글이 보이게.
         assertTrue(bat.contains("if not exist \"%~dp0tun2proxy.exe\"") && bat.contains("if errorlevel 1 pause"))
         assertFalse(bat.contains("enabledelayedexpansion"), "쓰지 않는데 폴더 경로의 ! 를 지운다")
