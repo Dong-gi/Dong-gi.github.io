@@ -7,13 +7,13 @@
 vars: { d2-config: { layout-engine: elk } }
 direction: down
 
-시작: { label: "귀무가설은 무엇에 대한 주장인가"; shape: oval; style.bold: true }
+시작: { label: "귀무가설은\n무엇에 대한 주장인가"; shape: oval; style.bold: true }
 
 한평균: { label: "평균 하나"; style.bold: true }
 두평균: { label: "평균 두 개"; style.bold: true }
 비율검정: { label: "비율"; style.bold: true }
 분산검정: { label: "분산"; style.bold: true }
-도수: { label: "도수(범주별 개수)"; style.bold: true }
+도수: { label: "도수\n(범주별 개수)"; style.bold: true }
 
 시작 -> 한평균
 시작 -> 두평균
@@ -23,14 +23,14 @@ direction: down
 
 시그마아는가: { label: "σ 를 아는가"; shape: diamond }
 한평균 -> 시그마아는가
-z검정: { label: "z = (x̄ − μ₀)/(σ/√n)" }
-t검정: { label: "t = (x̄ − μ₀)/(s/√n)\n자유도 n − 1"; style.bold: true }
+z검정: { label: "z = (x̄ − μ₀)/\n(σ/√n)" }
+t검정: { label: "t = (x̄ − μ₀)/\n(s/√n)\n자유도 n − 1"; style.bold: true }
 시그마아는가 -> z검정: "안다"
 시그마아는가 -> t검정: "모른다"
 
-짝인가: { label: "짝지어진 자료인가"; shape: diamond }
+짝인가: { label: "짝지어진\n자료인가"; shape: diamond }
 두평균 -> 짝인가
-대응t: { label: "대응표본 t\n차이 d 하나로 줄인다"; style.bold: true }
+대응t: { label: "대응표본 t\n차이 d 하나로\n줄인다"; style.bold: true }
 등분산인가: { label: "두 모분산이\n비슷한가"; shape: diamond }
 짝인가 -> 대응t: "짝지어져 있다"
 짝인가 -> 등분산인가: "독립이다"
@@ -39,26 +39,26 @@ t검정: { label: "t = (x̄ − μ₀)/(s/√n)\n자유도 n − 1"; style.bold:
 등분산인가 -> 합동t: "비슷하다"
 등분산인가 -> 웰치t: "많이 다르다"
 
-비율개수: { label: "비율이 하나인가\n둘인가"; shape: diamond }
+비율개수: { label: "비율이\n하나인가\n둘인가"; shape: diamond }
 비율검정 -> 비율개수
-한비율: { label: "z = (p̂ − p₀)/√(p₀(1−p₀)/n)\n분모에 p₀ 을 쓴다"; style.bold: true }
-두비율: { label: "합동비율로\n표준오차를 만들고 z" }
+한비율: { label: "z = (p̂ − p₀)/\n√(p₀(1−p₀)/n)\n분모에 p₀ 을 쓴다"; style.bold: true }
+두비율: { label: "합동비율로\n표준오차를\n만들고 z" }
 비율개수 -> 한비율: "하나"
 비율개수 -> 두비율: "둘"
 
-분산개수: { label: "분산이 하나인가\n둘인가"; shape: diamond }
+분산개수: { label: "분산이\n하나인가\n둘인가"; shape: diamond }
 분산검정 -> 분산개수
-카이분산: { label: "χ² = (n−1)s²/σ₀²\n자유도 n − 1"; style.bold: true }
-F분산: { label: "F = s₁²/s₂²\n자유도 (n₁−1, n₂−1)"; style.bold: true }
+카이분산: { label: "χ² =\n(n−1)s²/σ₀²\n자유도 n − 1"; style.bold: true }
+F분산: { label: "F = s₁²/s₂²\n자유도\n(n₁−1, n₂−1)"; style.bold: true }
 분산개수 -> 카이분산: "하나"
 분산개수 -> F분산: "둘"
 
-표차원: { label: "한 줄인가 표인가"; shape: diamond }
+표차원: { label: "한 줄인가\n표인가"; shape: diamond }
 도수 -> 표차원
-적합도: { label: "적합도 검정\nχ² = ∑(O−E)²/E,\n자유도 k − 1 − (추정한 모수 수)"; style.bold: true }
-독립성: { label: "독립성 검정\nE = 행합 × 열합 / 총합,\n자유도 (r−1)(c−1)"; style.bold: true }
-표차원 -> 적합도: "범주 한 줄"
-표차원 -> 독립성: "행 × 열 표"
+적합도: { label: "적합도 검정\nχ² = ∑(O−E)²/E,\n자유도 k − 1 −\n(추정한 모수 수)"; style.bold: true }
+독립성: { label: "독립성 검정\nE = 행합 × 열합\n/ 총합,\n자유도 (r−1)(c−1)"; style.bold: true }
+표차원 -> 적합도: "범주\n한 줄"
+표차원 -> 독립성: "행 × 열\n표"
 
 # 보이지 않는 화살표: 다섯 갈래를 세 단으로 나눈다(한 줄로 퍼지면 폭이 세 배가 된다).
 # 위 단은 평균 하나·비율, 가운데 단은 분산·도수, 아래 단은 평균 두 개.
@@ -67,7 +67,7 @@ z검정 -> 분산검정: { style.opacity: 0 }
 카이분산 -> 두평균: { style.opacity: 0 }
 
 꼬리: {
-  label: "꼬리를 정하는 것은 대립가설이다.\n‘다르다’ 면 양쪽, ‘크다’ 나 ‘작다’ 면 한쪽.\n자료를 보고 정하면 유의수준이 두 배가 된다"
+  label: "꼬리를 정하는 것은 대립가설이다.\n‘다르다’ 면 양쪽, ‘크다’ 나 ‘작다’ 면 한쪽.\n자료를 보고 정하면\n유의수준이 두 배가 된다"
   shape: text
   # 자리를 정해 주지 않으면 시작 → 도수 화살표가 이 글을 가로지른다. 그림 위아래 가운데에 따로 둔다.
   near: top-center

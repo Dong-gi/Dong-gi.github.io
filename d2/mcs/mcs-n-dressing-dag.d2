@@ -1,13 +1,15 @@
 # 옷 입기 DAG 와 병렬 일정 — mcs 12장.
 #
 # 무엇을 읽어야 하나: 상자 하나가 한 단계다. 한 단계 안의 작업들 사이에는 화살표가 없고
-# (그래서 동시에 해도 된다) 화살표는 늘 왼쪽 상자에서 오른쪽 상자로만 간다.
+# (그래서 동시에 해도 된다) 화살표는 늘 앞 단계 상자에서 뒤 단계 상자로만 간다.
 # 셔츠 → 바지 → 벨트 → 재킷 이 크기 4 인 사슬이고, 그래서 4 단계보다 빨리 끝낼 수 없다.
-direction: right
+# 단계를 위에서 아래로 쌓는다(옆으로 늘어놓으면 폭이 1,700px 을 넘는다).
+direction: down
 
 단계1: {
   label: "1단계 — 깊이 0\n먼저 할 일이 없는 것들"
   style.bold: true
+  label.near: outside-top-left
   속옷
   셔츠: { style.bold: true }
   왼양말
@@ -17,6 +19,7 @@ direction: right
 단계2: {
   label: "2단계 — 깊이 1"
   style.bold: true
+  label.near: outside-top-left
   바지: { style.bold: true }
   넥타이
 }
@@ -24,6 +27,7 @@ direction: right
 단계3: {
   label: "3단계 — 깊이 2"
   style.bold: true
+  label.near: outside-top-left
   벨트: { style.bold: true }
   왼구두
   오른구두
@@ -32,6 +36,7 @@ direction: right
 단계4: {
   label: "4단계 — 깊이 3"
   style.bold: true
+  label.near: outside-top-left
   재킷: { style.bold: true }
 }
 
@@ -46,12 +51,21 @@ direction: right
 단계3.벨트 -> 단계4.재킷
 단계2.넥타이 -> 단계4.재킷
 
-사슬: {
-  label: "굵게 적은 셔츠 · 바지 · 벨트 · 재킷 이 임계 경로다.\n넷이 서로 견줄 수 있으므로 어떤 두 개도 같은 단계에 둘 수 없고,\n따라서 프로세서를 무한히 많이 주어도 4 단계가 최소다"
-  shape: text
-}
+주석: {
+  label: ""
+  near: bottom-center
+  grid-columns: 1
+  grid-gap: 24
+  style.stroke: transparent
+  style.fill: transparent
 
-반사슬: {
-  label: "상자 하나가 반사슬이다 — 상자 안의 어떤 두 작업 사이에도 길이 없다.\n상자 수가 곧 최대 사슬의 크기이고, 그것이 최소 병렬 시간이다"
-  shape: text
+  사슬: {
+    label: "굵게 적은 셔츠 · 바지 · 벨트 · 재킷 이 임계 경로다.\n넷이 서로 견줄 수 있으므로 어떤 두 개도 같은 단계에 둘 수 없고,\n따라서 프로세서를 무한히 많이 주어도 4 단계가 최소다"
+    shape: text
+  }
+
+  반사슬: {
+    label: "상자 하나가 반사슬이다 — 상자 안의 어떤 두 작업 사이에도 길이 없다.\n상자 수가 곧 최대 사슬의 크기이고, 그것이 최소 병렬 시간이다"
+    shape: text
+  }
 }

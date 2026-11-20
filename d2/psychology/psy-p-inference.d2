@@ -6,16 +6,17 @@
 #
 # 배치: 3칸 × 6줄. 가운데 칸을 위에서 아래로 따라 읽는다(세상 → 감각 표면 → 후보 → 전제 → 지각 → 착시).
 # 잃는 정보는 감각 표면 옆에, 상향 · 하향 처리는 지각 양옆에 두었다. ‘빈칸’ 은 보이지 않는 자리다.
+# 2026-11 폭을 줄이려 글을 더 접고, 전제 넷과 덧말을 3칸 × 2줄로 접었다.
 direction: down
 grid-rows: 6
 grid-columns: 3
 horizontal-gap: 60
-vertical-gap: 70
+vertical-gap: 50
 
 빈1: { label: ""; style: { fill: transparent; stroke: transparent } }
 
 세상: {
-  label: "바깥 세상\n(우리가 직접 닿을 수 없는 것)"
+  label: "바깥 세상\n(우리가 직접\n닿을 수 없는 것)"
   shape: oval
   style.bold: true
 }
@@ -23,7 +24,7 @@ vertical-gap: 70
 빈2: { label: ""; style: { fill: transparent; stroke: transparent } }
 
 잃음: {
-  label: "여기서 정보가 줄어든다.\n3차원이 2차원으로 눌리고,\n물체의 색과 조명의 색이 한 값으로 섞이고,\n여러 소리가 하나의 파형으로 합쳐진다"
+  label: "여기서 정보가 줄어든다.\n3차원이 2차원으로 눌리고,\n물체의 색과 조명의 색이\n한 값으로 섞이고,\n여러 소리가\n하나의 파형으로 합쳐진다"
   shape: text
 }
 
@@ -37,7 +38,7 @@ vertical-gap: 70
 빈4: { label: ""; style: { fill: transparent; stroke: transparent } }
 
 후보: {
-  label: "같은 감각 입력을 낼 수 있는 바깥 세상"
+  label: "같은 감각 입력을\n낼 수 있는 바깥 세상"
   grid-rows: 2
   grid-columns: 2
   h1: { label: "가까이 있는 작은 것" }
@@ -52,36 +53,38 @@ vertical-gap: 70
 
 전제: {
   label: "고르기를 정하는 전제"
-  grid-columns: 1
-  a: { label: "빛은 대개 위에서 온다" }
-  b: { label: "물체는 대개 단단하고 모양이 변하지 않는다" }
-  c: { label: "가까운 것이 먼 것을 가린다" }
-  d: { label: "같은 결은 멀수록 촘촘해 보인다" }
-  e: { label: "이 전제들은 배워서 아는 것도 있고 아닌 것도 있다.\n어느 쪽인지는 사안마다 다르고 다 정해지지 않았다"; shape: text }
+  grid-rows: 2
+  grid-columns: 3
+  grid-gap: 30
+  a: { label: "빛은 대개\n위에서 온다" }
+  b: { label: "물체는 대개\n단단하고 모양이\n변하지 않는다" }
+  c: { label: "가까운 것이\n먼 것을 가린다" }
+  d: { label: "같은 결은\n멀수록\n촘촘해 보인다" }
+  e: { label: "이 전제들은\n배워서 아는 것도\n있고 아닌 것도 있다.\n어느 쪽인지는\n사안마다 다르고\n다 정해지지 않았다"; shape: text }
 }
 
 빈7: { label: ""; style: { fill: transparent; stroke: transparent } }
 
 상향: {
-  label: "상향 처리\n감각 입력에서 올라오는 것"
+  label: "상향 처리\n감각 입력에서\n올라오는 것"
   style.bold: true
 }
 
 지각: {
-  label: "지각 — 하나로 정해진 결과"
+  label: "지각 —\n하나로 정해진 결과"
   shape: oval
   style.bold: true
 }
 
 하향: {
-  label: "하향 처리\n전제 · 맥락 · 아는 것에서 내려오는 것"
+  label: "하향 처리\n전제 · 맥락 ·\n아는 것에서\n내려오는 것"
   style.bold: true
 }
 
 빈8: { label: ""; style: { fill: transparent; stroke: transparent } }
 
 착시: {
-  label: "　\n착시가 하는 일 — 전제가 틀리도록 짜 놓은 자극이다.\n\n그래서 착시는 지각 체계의 고장이 아니라 이 그림이 맞다는 증거다.\n전제 없이 고르는 체계라면 애초에 어긋날 자리가 없다.\n\n그리고 착시는 알고 나서도 사라지지 않는다. 이 고르기가\n우리가 믿는 것과 따로 돌아간다는 뜻이다"
+  label: "　\n착시가 하는 일 — 전제가 틀리도록 짜 놓은 자극이다.\n\n그래서 착시는 지각 체계의 고장이 아니라\n이 그림이 맞다는 증거다.\n전제 없이 고르는 체계라면\n애초에 어긋날 자리가 없다.\n\n그리고 착시는 알고 나서도 사라지지 않는다.\n이 고르기가 우리가 믿는 것과\n따로 돌아간다는 뜻이다"
   shape: text
 }
 

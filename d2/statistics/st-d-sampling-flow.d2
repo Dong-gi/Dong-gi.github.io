@@ -29,6 +29,15 @@ direction: down
 추론: { label: "10~12장\n통계량을 보고 모수를 되짚는다\n추정 · 검정 · 회귀"; style.bold: true }
 분포 -> 추론: "거꾸로 건넌다"
 
+# 두 메모는 보이지 않는 틀에 위아래로 묶어 그림 아래에 둔다.
+메모: {
+  label: ""
+  near: bottom-center
+  grid-rows: 2
+  grid-columns: 1
+  style.stroke-width: 0
+  style.fill: transparent
+
 주의: {
   label: "표본분포는 ‘표본의 분포’ 가 아니라\n‘통계량의 분포’ 다. 여기서 가장 많이 헷갈린다"
   shape: text
@@ -37,4 +46,5 @@ direction: down
 한마디: {
   label: "우리는 표본 하나만 본다.\n표본분포는 그 하나가 얼마나 흔들릴 수 있었는지를\n계산으로 알려 주는 것이다"
   shape: text
+}
 }
