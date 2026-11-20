@@ -92,9 +92,9 @@ function ln(pts, { stroke = 'var(--ink2)', sw = 1.6, dash } = {}) {
         const a = Z - D;
         const pw = 1 - Phi(a);
         const cm = D + phi(a) / (1 - Phi(a));
-        const fr = frame({ xRange: [-3, 6.2], yRange: [0, 0.46], box: { x: ox, y: 80, w: 300, h: 220 } });
+        const fr = frame({ xRange: [-3, 6.2], yRange: [0, 0.46], box: { x: ox, y: 80, w: 285, h: 220 } });
         const out = [];
-        out.push(txt(ox + 150, 60, `${tag} 참 효과 = ${D} SE (검정력 ${f2(pw)})`, { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+        out.push(txt(ox + 142, 60, `${tag} 참 효과 = ${D} SE (검정력 ${f2(pw)})`, { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
         // 유의한 영역 칠하기
         const pts = []; for (let i = 0; i <= 60; i += 1) { const x = Z + ((6.2 - Z) * i) / 60; pts.push([fr.X(x), fr.Y(phi(x - D))]); }
         out.push(`<path d="M${fr.X(Z)} ${fr.Y(0)} L${pts.map(p => `${r2(p[0])} ${r2(p[1])}`).join(' L')} L${fr.X(6.2)} ${fr.Y(0)} Z" fill="var(--s2)" fill-opacity="0.35"/>`);
@@ -114,7 +114,7 @@ function ln(pts, { stroke = 'var(--ink2)', sw = 1.6, dash } = {}) {
     const body = [];
     body.push(txt(W / 2, 26, '문턱을 넘은 것만 모으면 그 평균은 참값보다 크다 — 검정력이 낮을수록 더', { anchor: 'middle', cls: 'ink bold' }));
     body.push(panel(50, 1, '[가]'));
-    body.push(panel(420, 2.8, '[나]'));
+    body.push(panel(410, 2.8, '[나]')); // 오른쪽 패널의 축 이름 '추정값' 이 화폭 밖으로 잘리지 않게
     body.push(legend(50, 382, [{ slot: 1, name: '추정값의 분포와 참값(세로선)' }, { slot: 2, name: '유의한 부분과 그 평균(세로선)' }]));
     add({ name: 'sta-mul-winner', svg: svg({ width: W, height: H, title: '승자의 저주', body: body.join('') }) });
 }
@@ -145,8 +145,8 @@ function ln(pts, { stroke = 'var(--ink2)', sw = 1.6, dash } = {}) {
     body.push(fa.dot([r20.pw, r20.S]));
     body.push(fa.label([r20.pw, r20.S], `${f2(r20.pw)}: ${f3(r20.S)}`, { dx: 6, dy: -8, cls: 'ink', size: 'sm' }));
     // M 패널
-    const fb = frame({ xRange: [0.05, 1], yRange: [1, 10], box: { x: 440, y: 70, w: 280, h: 230 } });
-    body.push(txt(580, 56, '[나] 유형 M — 부풀림 배율', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
+    const fb = frame({ xRange: [0.05, 1], yRange: [1, 10], box: { x: 440, y: 70, w: 260, h: 230 } }); // 폭 260: 축 이름 '검정력' 이 화폭 안에 들게
+    body.push(txt(570, 56, '[나] 유형 M — 부풀림 배율', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));
     body.push(fb.axes({ xLabel: '검정력', xTicks: [0.2, 0.5, 0.8, 1], yTicks: [2, 4, 6, 8, 10] }));
     body.push(fb.line(rows.filter(r => r.M <= 10).map(r => [r.pw, r.M]), { cls: 's2' }));
     body.push(fb.dot([r20.pw, r20.M], { cls: 'f2' }));

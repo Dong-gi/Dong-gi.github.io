@@ -112,7 +112,12 @@ add((() => {
             const ww = s.n * unit;
             out.push(box(x, y, ww, bh, { fill: COL[s.col], op: s.op, stroke: COL[s.col], sw: 1.4, rx: 2, dash: s.dash }));
             if (ww > 50) out.push(txt(x + ww / 2, y + bh / 2 + 4, s.lab, { anchor: 'middle', cls: s.op > 0.5 ? 'ink bold' : 'ink', size: 'sm' }));
-            else if (ww > 14) out.push(txt(x + ww / 2, y + bh / 2 + 4, String(s.n), { anchor: 'middle', cls: 'ink', size: 'sm' }));
+            else if (ww > 14) {
+                // 좁은 칸: 색만으로 가리지 않도록 이름과 수를 두 줄로
+                const [nm, num] = s.lab.split(' ');
+                out.push(txt(x + ww / 2, y + bh / 2 - 3, nm, { anchor: 'middle', cls: 'ink', size: 'sm' }));
+                out.push(txt(x + ww / 2, y + bh / 2 + 11, num, { anchor: 'middle', cls: 'ink', size: 'sm' }));
+            }
             x += ww;
         }
         const p1 = (36 + w.miss1) / 100;

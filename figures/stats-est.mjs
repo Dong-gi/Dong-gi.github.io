@@ -168,7 +168,8 @@ const lnFact = k => { let s = 0; for (let i = 2; i <= k; i += 1) s += Math.log(i
             b.push(ln([[fr.X(tx), fr.Y(-1.4)], [fr.X(tx), fr.Y(ty)], [fr.X(0), fr.Y(ty)]], { stroke: col, sw: 1, dash: '2 3' }));
         }
         b.push(pdot(fr.X(t0), fr.Y(g(t0)), col, 4));
-        b.push(txt(fr.X(t0) + 12, fr.Y(g(t0)) + (k === 0 ? 34 : -14), lab, { cls: 'ink2', size: 'sm' }));
+        // 라벨은 오른쪽 투영선 바깥, 곡선 아래에 둔다(투영선·접선과 겹치지 않게)
+        b.push(txt(fr.X(c) + 8, fr.Y(g(t0)) + (k === 0 ? 34 : 30), lab, { cls: 'ink2', size: 'sm' }));
     });
     b.push(txt(fr.X(2), fr.Y(-1.4) + 36, '가로축의 띠: θ̂ 의 흩어짐(두 자리 모두 같은 폭 ±0.15)', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     b.push(txt(fr.X(0) + 14, fr.Y(1.45), '세로축의 띠: g(θ̂) 의 흩어짐', { cls: 'ink2', size: 'sm' }));

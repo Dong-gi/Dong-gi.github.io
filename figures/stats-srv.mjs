@@ -105,7 +105,8 @@ const normPdf = (x, mu, sd) => Math.exp(-((x - mu) ** 2) / (2 * sd * sd)) / (sd 
         for (const c of ms) {
             body += fr.curve(r => 1000 / (1 + (c.m - 1) * r), { from: 0, to: 0.2, cls: c.cls });
             const v = 1000 / (1 + (c.m - 1) * 0.2);
-            body += txt(fr.X(0.2) - 2, fr.Y(v) - 6, `m = ${c.m}: ${Math.round(v)}`, { anchor: 'end', cls: 'ink', size: 'sm' });
+            // 선이 오른쪽으로 내려가므로 라벨은 끝점 아래에 두어야 선과 겹치지 않는다
+            body += txt(fr.X(0.2) - 2, fr.Y(v) + 16, `m = ${c.m}: ${Math.round(v)}`, { anchor: 'end', cls: 'ink', size: 'sm' });
         }
         body += pdot(fr.X(0.05), fr.Y(1000 / 2.2), 'var(--s2)', 4);
         body += txt(fr.X(0.05) + 8, fr.Y(1000 / 2.2) - 8, `≈ ${Math.round(1000 / 2.2)}`, { cls: 'ink2', size: 'sm' });
@@ -157,7 +158,7 @@ const normPdf = (x, mu, sd) => Math.exp(-((x - mu) ** 2) / (2 * sd * sd)) / (sd 
         const to = Math.min(1 - L.b / 30, 0.995);
         body += fr.curve(r => L.b / (1 - r), { from: 0.1, to, cls: L.cls });
         const lx = 0.13;
-        body += txt(fr.X(lx), fr.Y(L.b / (1 - lx)) - 10, `편향 ${L.b}%p`, { cls: 'ink', size: 'sm' });
+        body += txt(fr.X(lx), fr.Y(L.b / (1 - lx)) - 14, `편향 ${L.b}%p`, { cls: 'ink', size: 'sm' });
     }
     const pts = [[0.4, 10, 'A'], [0.7, 10, 'B']];
     for (const [r, d, s] of pts) {

@@ -382,7 +382,7 @@ add((() => {
         g.push(pdot(A.X(p), A.Y(f(p)), 'var(--s2)', 4));
     }
     g.push(txt(A.X(-0.33) + 8, A.Y(f(-0.33)) - 6, `φ = −0.33 → ${f(-0.33).toFixed(2)}`, { cls: 'ink', size: 'sm' }));
-    g.push(txt(A.X(0.5) + 8, A.Y(f(0.5)) - 8, `φ = 0.5 → ${f(0.5).toFixed(2)}`, { cls: 'ink', size: 'sm' }));
+    g.push(txt(A.X(0.5) + 8, A.Y(f(0.5)) - 20, `φ = 0.5 → ${f(0.5).toFixed(2)}`, { cls: 'ink', size: 'sm' }));
     g.push(txt(A.X(0.9) - 6, A.Y(f(0.9)) - 22, `φ = 0.9 → ${f(0.9).toFixed(3)}`, { anchor: 'end', cls: 'ink', size: 'sm' }));
     g.push(arw(A.X(0.9) - 6, A.Y(f(0.9)) - 18, A.X(0.9) - 2, A.Y(f(0.9)) - 6, { cls: 's2', width: 1.2 }));
     g.push(ln([[46, 322], [W - 46, 322]], { stroke: 'var(--grid)', sw: 1 }));

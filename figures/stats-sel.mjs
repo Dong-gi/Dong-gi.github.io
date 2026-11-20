@@ -220,11 +220,16 @@ const truth = x => Math.sin(2 * Math.PI * x);
                 pts.push([fr.X(l), fr.Y(f(v, l))]);
             }
             b.push(ln(pts, { stroke: sty[j].stroke, sw: 2.2, dash: sty[j].dash }));
-            b.push(txt(fr.X(0) + 6, fr.Y(v) + (v < 0 ? 16 : -6), `${names[j]} = ${neg(v)}`, { cls: 'ink', size: 'sm' }));
+            // 범례: 곡선 시작점에 붙이면 이웃 곡선과 겹치므로 오른쪽 위 빈 자리에 선 견본과 함께 둔다
+            const ly = fr.Y(3.7) + j * 16;
+            b.push(ln([[fr.X(3.9), ly - 4], [fr.X(4.5), ly - 4]], { stroke: sty[j].stroke, sw: 2.2, dash: sty[j].dash }));
+            b.push(txt(fr.X(4.5) + 6, ly, `${names[j]} (λ=0 에서 ${neg(v)})`, { cls: 'ink', size: 'sm' }));
             if (f === lasso) {
                 const z = 2 * Math.abs(v);
                 b.push(`<circle cx="${fr.X(z)}" cy="${fr.Y(0)}" r="4" fill="none" stroke="${sty[j].stroke}" stroke-width="1.8"/>`);
-                b.push(txt(fr.X(z), fr.Y(0) + (j % 2 ? -10 : 18), `${names[j]}: λ=${r2(z)}`, { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+                // 0 이 되는 자리 이름: 이웃 곡선을 피해 위·아래, 오른쪽으로 비켜 둔다
+                const [ax, dy] = [['start', -8], ['start', 18], ['start', -8], ['middle', 18]][j];
+                b.push(txt(fr.X(z) + (ax === 'start' ? 6 : 0), fr.Y(0) + dy, `${names[j]}: λ=${r2(z)}`, { anchor: ax, cls: 'ink2', size: 'sm' }));
             }
         });
         b.push(txt(ox + 193, 384, f === ridge ? '계수 = 최소제곱 계수 ÷ (1 + λ)' : '계수 = 최소제곱 계수를 λ/2 만큼 0 쪽으로 깎은 것', { anchor: 'middle', cls: 'ink2', size: 'sm' }));

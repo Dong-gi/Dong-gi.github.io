@@ -63,19 +63,21 @@ function ln(pts, { stroke = 'var(--ink2)', sw = 1.6, dash } = {}) {
     const tPow = tail.reduce((s, x) => s + f1[x], 0);
 
     const W = 720; const H = 405;
-    const fr = frame({ xRange: [-0.7, 8.7], yRange: [0, 0.3], box: { x: 70, y: 110, w: 610, h: 230 } });
+    const fr = frame({ xRange: [-0.7, 8.7], yRange: [0, 0.3], box: { x: 70, y: 120, w: 610, h: 220 } });
+    // 축만 그리는 틀: x 범위가 0 을 품지 않게 옮겨 세로축이 x = 0 칸을 가르지 않고 왼쪽 가장자리에 서게 한다
+    const frAx = frame({ xRange: [0.3, 9.7], yRange: [0, 0.3], box: { x: 70, y: 120, w: 610, h: 220 } });
     const body = [];
     body.push(txt(W / 2, 26, 'H₀ 아래 확률은 α 를 쓰는 값, H₁ 아래 확률은 사는 검정력이다', { anchor: 'middle', cls: 'ink bold' }));
-    body.push(fr.axes({ xLabel: 'x', yLabel: '확률', xTicks: [], yTicks: [0.1, 0.2, 0.3] }));
+    body.push(frAx.axes({ xLabel: 'x', yLabel: '확률', xTicks: [], yTicks: [0.1, 0.2, 0.3] }));
     for (let x = 0; x <= n; x += 1) {
         const cx = fr.X(x);
         if (R.has(x)) body.push(rect(cx - 30, fr.Y(0.3), 60, fr.Y(0) - fr.Y(0.3), { fill: 'var(--s3)', op: 0.16 }));
         body.push(rect(cx - 22, fr.Y(f0[x]), 20, fr.Y(0) - fr.Y(f0[x]), { fill: 'var(--s1)', op: 0.85 }));
         body.push(rect(cx + 2, fr.Y(f1[x]), 20, fr.Y(0) - fr.Y(f1[x]), { fill: 'var(--s2)', op: 0.85 }));
         body.push(txt(cx, fr.Y(0) + 16, String(x), { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-        body.push(txt(cx, 92, ratio[x] >= 10 ? ratio[x].toFixed(1) : ratio[x].toFixed(2), { anchor: 'middle', cls: R.has(x) ? 'ink bold' : 'ink2', size: 'sm' }));
+        body.push(txt(cx, 88, ratio[x] >= 10 ? ratio[x].toFixed(1) : ratio[x].toFixed(2), { anchor: 'middle', cls: R.has(x) ? 'ink bold' : 'ink2', size: 'sm' }));
     }
-    body.push(txt(20, 92, '비 f₁/f₀', { cls: 'ink2', size: 'sm' }));
+    body.push(txt(20, 88, '비 f₁/f₀', { cls: 'ink2', size: 'sm' }));
     body.push(txt(20, 62, `기각역(초록 칸) = 비가 큰 칸부터 α ≤ ${alpha} 까지: {${[...R].sort((a, b) => a - b).join(', ')}}`, { cls: 'ink', size: 'sm' }));
     body.push(legend(70, 372, [{ slot: 1, name: 'H₀: Bin(8, 0.5)' }, { slot: 2, name: 'H₁: 0–8 에 고르게' }]));
     body.push(txt(300, 370, `이 기각역: 크기 ${f3(size)}, 검정력 ${f3(power)}`, { cls: 'ink', size: 'sm' }));
@@ -94,7 +96,15 @@ function ln(pts, { stroke = 'var(--ink2)', sw = 1.6, dash } = {}) {
     const fr = frame({ xRange: [-3, 4], yRange: [0, 1], box: { x: 70, y: 60, w: 560, h: 260 } });
     const body = [];
     body.push(txt(W / 2, 26, '오른쪽 한쪽 검정은 오른쪽에서 언제나 위, 왼쪽에서는 α 아래로 무너진다', { anchor: 'middle', cls: 'ink bold' }));
-    body.push(fr.axes({ xLabel: '(μ − μ₀)/SE', yLabel: '기각 확률', xTicks: [-3, -2, -1, 1, 2, 3, 4], yTicks: [0.05, 0.5, 1] }));
+    // 세로축은 μ = μ₀ 자리(가운데)에 그대로 두되, 눈금 글자와 축 이름은 왼쪽 가장자리로 뺀다 —
+    // 가운데 두면 0.05 글자를 두 곡선이 지나간다
+    body.push(fr.axes({ xLabel: '(μ − μ₀)/SE', xTicks: [-3, -2, -1, 1, 2, 3, 4], yTicks: [] }));
+    for (const t of [0.05, 0.5, 1]) {
+        body.push(`<path class="gr" d="M${fr.X(-3)} ${fr.Y(t)} H${fr.X(4)}"/>`);
+        body.push(txt(fr.X(-3) - 6, fr.Y(t) + 4, String(t), { anchor: 'end', cls: 'ink2', size: 'sm' }));
+    }
+    body.push(txt(fr.X(-3) - 6, fr.Y(1) - 14, '기각 확률', { anchor: 'start', cls: 'ink2', size: 'sm' }));
+    body.push(txt(fr.X(0), fr.Y(0) + 15, '0', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     body.push(fr.curve(two, { cls: 's1' }));
     body.push(fr.curve(one, { cls: 's2', dash: '7 4' }));
     body.push(fr.label([2, one(2)], `한쪽(오른쪽) ${f3(one(2))}`, { dx: -10, dy: -6, anchor: 'end', cls: 'ink', size: 'sm' }));
@@ -102,8 +112,8 @@ function ln(pts, { stroke = 'var(--ink2)', sw = 1.6, dash } = {}) {
     body.push(fr.dot([2, two(2)], { cls: 'f1' }));
     body.push(fr.label([2, two(2)], `양쪽 ${f3(two(2))}`, { dx: 10, dy: 16, cls: 'ink', size: 'sm' }));
     body.push(fr.label([-2.9, two(-2.9)], '양쪽', { dx: 4, dy: -8, cls: 'ink2', size: 'sm' }));
-    body.push(fr.label([-1.7, 0.85], '한쪽 검정은 왼쪽에서 거의 0 이다', { cls: 'ink2', size: 'sm' }));
-    body.push(fr.label([-1.7, 0.85], `(μ − μ₀ = −2 SE 에서 ${one(-2).toFixed(4)})`, { dy: 16, cls: 'ink2', size: 'sm' }));
+    body.push(fr.label([-2.3, 0.85], '한쪽 검정은 왼쪽에서 거의 0 이다', { cls: 'ink2', size: 'sm' }));
+    body.push(fr.label([-2.3, 0.85], `(μ − μ₀ = −2 SE 에서 ${one(-2).toFixed(4)})`, { dy: 16, cls: 'ink2', size: 'sm' }));
     body.push(legend(440, 300, [{ slot: 1, name: '양쪽 검정 (|z| ≥ 1.96)' }, { slot: 2, name: '오른쪽 한쪽 검정 (z ≥ 1.645, 점선)' }]));
     add({ name: 'sta-tst-ump', svg: svg({ width: W, height: H, title: '한쪽 검정과 양쪽 검정의 검정력 곡선', body: body.join('') }) });
 }
@@ -139,11 +149,11 @@ function ln(pts, { stroke = 'var(--ink2)', sw = 1.6, dash } = {}) {
     // 기울기(점수): p0 에서의 접선
     const tl = p => rel(p0) + slope * (p - p0);
     body.push(fr.curve(tl, { from: p0 - 0.045, to: p0 + 0.03, cls: 's2', dash: '5 3' }));
-    body.push(fr.label([p0 + 0.03, tl(p0 + 0.03)], `[기울기] 점수: ${score.toFixed(2)}`, { dx: 8, dy: 14, cls: 'ink', size: 'sm' }));
+    body.push(fr.label([p0 + 0.03, tl(p0 + 0.03)], `[기울기] 점수: ${score.toFixed(2)}`, { dx: -8, dy: 18, anchor: 'end', cls: 'ink', size: 'sm' }));
     body.push(fr.dot([ph, 0], { cls: 'f1' }));
     body.push(fr.label([ph, 0], 'p̂ = 0.2 (꼭대기)', { dx: -8, dy: -10, anchor: 'middle', cls: 'ink', size: 'sm' }));
     body.push(fr.dot([p0, rel(p0)], { cls: 'f2' }));
-    body.push(fr.label([p0, -4], 'p₀ = 0.33', { dx: 0, dy: 30, anchor: 'middle', cls: 'ink', size: 'sm' }));
+    body.push(fr.label([p0, rel(p0)], 'p₀ = 0.33', { dx: -10, dy: 20, anchor: 'end', cls: 'ink', size: 'sm' }));
     body.push(txt(80, 420, `세 통계량 모두 귀무가설 아래 근사적으로 χ²(1) 을 따른다(5% 점 3.84). 왈드만 기각한다.`, { cls: 'ink2', size: 'sm' }));
     add({ name: 'sta-tst-three', svg: svg({ width: W, height: H, title: '왈드·점수·가능도비 검정이 로그가능도 곡선에서 재는 것', body: body.join('') }) });
 }

@@ -164,7 +164,7 @@ const crdF = (crdSSB / (crdA - 1)) / crdMSW;
     const top = fDens(1e-9, d1, d2);
     const xStart = Math.log(top / 0.3) * 2 / d1 > 0 ? (() => { let x = 0; while (fDens(x + 1e-9, d1, d2) > 0.3) x += 0.005; return x; })() : 0;
     body += F.curve(x => fDens(x, d1, d2), { cls: 's1', from: xStart, to: 12, steps: 300 });
-    body += F.label([xStart, 0.3], `세로축은 0.3 에서 잘랐다(0 에서 밀도 ${fmt(top, 1)})`, { dx: 10, dy: 4, cls: 'ink2', size: 'sm' });
+    body += F.label([xStart, 0.3], `세로축은 0.3 에서 잘랐다(0 에서 밀도 ${fmt(top, 1)})`, { dx: 14, dy: 19, cls: 'ink2', size: 'sm' });
     body += F.guide([c05, 0], [c05, 0.16]);
     body += F.label([c05, 0.16], `5% 문턱 ${fmt(c05)}`, { dy: -6, anchor: 'middle', cls: 'ink2', size: 'sm' });
     body += F.line([[crdF, 0], [crdF, 0.1]], { cls: 's2' });

@@ -154,10 +154,10 @@ function bisect(f, lo, hi) {
         body += fr.curve(p => rr(or, p), { from: 0, to: 1, cls });
         body += txt(fr.X(1) + 8, fr.Y(or) + 4, `오즈비 ${or} (점선)`, { cls: 'ink', size: 'sm' });
         const lx = cls === 's2' ? 0.2 : 0.6;
-        body += txt(fr.X(lx) + (cls === 's2' ? 8 : 0), fr.Y(rr(or, lx)) + (cls === 's2' ? -10 : 22), `오즈비 ${or} 의 위험비 곡선`, { cls: 'ink', size: 'sm' });
+        body += txt(fr.X(lx) + (cls === 's2' ? 8 : 0), fr.Y(rr(or, lx)) + (cls === 's2' ? -10 : 34), `오즈비 ${or} 의 위험비 곡선`, { cls: 'ink', size: 'sm' });
     }
     // 대표 점
-    for (const [or, p2, cls, dy] of [[2, 0.05, 's1', 18], [2, 0.4, 's1', 18], [4, 0.05, 's2', -10], [4, 0.4, 's2', -10]]) {
+    for (const [or, p2, cls, dy] of [[2, 0.05, 's1', 18], [2, 0.4, 's1', 18], [4, 0.05, 's2', -10], [4, 0.4, 's2', -17]]) {
         const v = rr(or, p2);
         body += pdot(fr.X(p2), fr.Y(v), COL[cls], 4.5);
         body += txt(fr.X(p2) + 7, fr.Y(v) + dy, `${f2(v)}`, { cls: 'ink', size: 'sm' });
@@ -240,8 +240,8 @@ function bisect(f, lo, hi) {
     body += txt(fr.X(obs), fr.Y(pObs) - 24, '관측된 표', { anchor: 'middle', cls: 'ink bold', size: 'sm' });
     body += txt(fr.X(1.3) - 6, fr.Y(0) + 34, '새 처리', { anchor: 'end', cls: 'ink2', size: 'sm' });
     body += txt(fr.X(1.3) - 6, fr.Y(0) + 48, '기존 처리', { anchor: 'end', cls: 'ink2', size: 'sm' });
-    body += legend(fr.X(8.7) - 150, 62, [{ slot: 2, name: '관측보다 드문 표(p값에 넣음)' }, { slot: 1, name: '관측보다 흔한 표' }]);
-    body += txt(W / 2, H - 14, `여백 고정: 행 합 8·7, 열 합 9·6.  양쪽 p값 = 진한 막대의 합 = ${pv.toFixed(4)}`, { anchor: 'middle', cls: 'ink' });
+    body += legend(fr.X(8.7) - 150, 62, [{ slot: 2, name: '관측과 같거나 더 드문 표(p값에 넣음)' }, { slot: 1, name: '관측보다 흔한 표' }]);
+    body += txt(W / 2, H - 14, `여백 고정: 행 합 8·7, 열 합 9·6.  양쪽 p값 = 주황 막대의 합 = ${pv.toFixed(4)}`, { anchor: 'middle', cls: 'ink' });
     add({
         name: 'sta-cat-fisher',
         svg: svg({ width: W, height: H, title: '여백을 고정한 2×2 표 일곱 개와 각 확률', body }),

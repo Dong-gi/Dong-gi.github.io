@@ -250,10 +250,11 @@ add((() => {
     g.push(yaxis(A, [0.5, 2.0], 2, [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]));
     g.push(txt(A.X(32) + 14, A.Y(0.5) + 4, 'ν', { cls: 'ink2' }));
     g.push(txt(A.X(17), A.Y(0.5) + 36, '자료 분포 = 자유도 ν 인 t 분포 (ν 가 작을수록 꼬리가 두껍다)', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    g.push(txt(A.X(2) - 8, A.Y(2.0) - 4, 'ARE', { anchor: 'end', cls: 'ink2', size: 'sm' }));
+    g.push(txt(A.X(2) - 8, A.Y(2.0) - 14, 'ARE', { anchor: 'end', cls: 'ink2', size: 'sm' }));
     // 곡선 이름
     g.push(txt(A.X(3) + 8, A.Y(at(3).wil) + 4, `윌콕슨 대 t  (ν=3 에서 ${at(3).wil.toFixed(2)})`, { cls: 'ink bold', size: 'sm' }));
-    g.push(txt(A.X(3) + 8, A.Y(at(3).sign) + 14, `부호검정 대 t  (ν=3 에서 ${at(3).sign.toFixed(2)})`, { cls: 'ink bold', size: 'sm' }));
+    g.push(ln([[A.X(3) + 4, A.Y(at(3).sign)], [A.X(4.6) - 4, A.Y(at(3).sign)]], { stroke: 'var(--s2)', sw: 1 }));
+    g.push(txt(A.X(4.6), A.Y(at(3).sign) + 4, `부호검정 대 t  (ν=3 에서 ${at(3).sign.toFixed(2)})`, { cls: 'ink bold', size: 'sm' }));
     // 오른쪽: 정규 극한
     g.push(panel(612, 58, 112, 240, '정규일 때'));
     g.push(txt(668, 104, '윌콕슨', { anchor: 'middle', cls: 'ink bold', size: 'sm' }));

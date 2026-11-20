@@ -5,7 +5,7 @@
 # 같은 화분의 잎은 같은 흙·물·햇빛을 나눠 가지므로 서로 독립이 아니다.
 direction: down
 
-배정: { label: "무작위화\n처리를 화분에 배정한다"; shape: oval; style.bold: true }
+배정: { label: "무작위화\n처리를 화분에 배정한다"; shape: oval; style.bold: true; style.font-size: 22 }
 
 가: {
   label: "처리 가"
@@ -15,17 +15,17 @@ direction: down
     label: "화분 1\n실험 단위"
     grid-rows: 3
     grid-columns: 1
-    a: "잎"
-    b: "잎"
-    c: "잎"
+    a: { label: "잎"; style.font-size: 22 }
+    b: { label: "잎"; style.font-size: 22 }
+    c: { label: "잎"; style.font-size: 22 }
   }
   화분2: {
     label: "화분 2\n실험 단위"
     grid-rows: 3
     grid-columns: 1
-    a: "잎"
-    b: "잎"
-    c: "잎"
+    a: { label: "잎"; style.font-size: 22 }
+    b: { label: "잎"; style.font-size: 22 }
+    c: { label: "잎"; style.font-size: 22 }
   }
 }
 
@@ -37,26 +37,27 @@ direction: down
     label: "화분 3\n실험 단위"
     grid-rows: 3
     grid-columns: 1
-    a: "잎"
-    b: "잎"
-    c: "잎"
+    a: { label: "잎"; style.font-size: 22 }
+    b: { label: "잎"; style.font-size: 22 }
+    c: { label: "잎"; style.font-size: 22 }
   }
   화분4: {
     label: "화분 4\n실험 단위"
     grid-rows: 3
     grid-columns: 1
-    a: "잎"
-    b: "잎"
-    c: "잎"
+    a: { label: "잎"; style.font-size: 22 }
+    b: { label: "잎"; style.font-size: 22 }
+    c: { label: "잎"; style.font-size: 22 }
   }
 }
 
 셈: {
   label: "반복 = 처리마다 화분 2개\n잎 6장은 관측 단위일 뿐이다\n잎을 반복으로 세면 의사반복"
   style.bold: true
+  style.font-size: 22
 }
 
-배정 -> 가: "화분 둘"
-배정 -> 나: "화분 둘"
+배정 -> 가: { label: "화분 둘"; style.font-size: 20 }
+배정 -> 나: { label: "화분 둘"; style.font-size: 20 }
 가 -> 셈
 나 -> 셈

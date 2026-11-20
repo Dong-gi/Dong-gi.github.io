@@ -223,13 +223,13 @@ const comb = (n, k) => { let r = 1; for (let i = 1; i <= k; i += 1) r = (r * (n 
     // 오른쪽: 로그오즈
     const tl = logit(lo); const th = logit(hi);
     b.push(panel(400, 10, 370, 360, '로그오즈 눈금 ln(p/(1−p))', `최댓값 자리 ln(0.25) = ${neg(logit(ph).toFixed(3))}`));
-    const f2 = frame({ xRange: [-5, 1], yRange: [0, 1.1], box: { x: 450, y: 70, w: 280, h: 220 } });
-    b.push(axesEdge(f2, { x0: -5, x1: 1, y0: 0, y1: 1.1, xTicks: [-5, -4, -3, -2, -1, 0, 1], yTicks: [0.5, 1], xLabel: 'η' }));
+    const f2 = frame({ xRange: [-5, 1], yRange: [0, 1.1], box: { x: 450, y: 70, w: 250, h: 220 } }); // 축 이름 '로그오즈' 가 화폭 안에 들도록 폭을 줄였다
+    b.push(axesEdge(f2, { x0: -5, x1: 1, y0: 0, y1: 1.1, xTicks: [-5, -4, -3, -2, -1, 0, 1], yTicks: [0.5, 1], xLabel: '로그오즈' }));
     b.push(ln([[f2.X(-5), f2.Y(1 / 8)], [f2.X(1), f2.Y(1 / 8)]], { sw: 1, dash: '5 4' }));
     b.push(curveCol(f2, t => R(expit(t)), -5, 1, { col: 'var(--s1)' }));
     b.push(ln([[f2.X(tl), f2.Y(0) + 32], [f2.X(th), f2.Y(0) + 32]], { stroke: 'var(--s2)', sw: 4 }));
     b.push(txt(585, 345, `1/8 구간 ${neg(tl.toFixed(3))} – ${neg(th.toFixed(3))}`, { anchor: 'middle', cls: 'ink2', size: 'sm' }));
-    b.push(txt(585, 362, '= 왼쪽 구간 끝을 로그오즈로 바꾼 값', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
+    b.push(txt(585, 362, '= p 눈금 칸의 구간 끝을 로그오즈로 바꾼 값', { anchor: 'middle', cls: 'ink2', size: 'sm' }));
     add({
         name: 'sta-lik-reparam',
         svg: svg({ width: W, height: H, title: '같은 가능도를 두 눈금으로', desc: '눈금을 바꾸면 곡선의 모양은 바뀌지만 꼭대기의 높이와 1/8 구간의 끝은 서로 대응한다. 시행 10번 중 성공 2번', body: b.join('') }),

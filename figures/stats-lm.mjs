@@ -82,7 +82,7 @@ function axesEdge(fr, { x0, x1, y0, y1, xTicks = [], yTicks = [], fmtX = neg, fm
     b.push(arw(O[0], O[1], c1[0], c1[1], { c: 's1', width: 2 }));
     b.push(txt(c1[0] + 8, c1[1] - 2, '열 1 (모두 1)', { cls: 'ink2', size: 'sm' }));
     b.push(arw(O[0], O[1], cx[0], cx[1], { c: 's1', width: 2 }));
-    b.push(txt(cx[0] - 70, cx[1] - 6, '열 x', { cls: 'ink2', size: 'sm' }));
+    b.push(txt(cx[0] + 6, cx[1] + 4, '열 x', { cls: 'ink2', size: 'sm' }));
     b.push(pdot(O[0], O[1], 'var(--ink2)', 3));
     b.push(txt(O[0] - 10, O[1] + 4, 'O', { anchor: 'end', cls: 'ink2', size: 'sm' }));
     // y, ŷ, e
@@ -98,7 +98,7 @@ function axesEdge(fr, { x0, x1, y0, y1, xTicks = [], yTicks = [], fmtX = neg, fm
     // 평면 위 다른 점
     b.push(pdot(Z[0], Z[1], 'var(--ink2)', 3.5));
     b.push(ln([Yv, Z], { stroke: 'var(--ink2)', sw: 1.2, dash: '3 4' }));
-    b.push(txt(Z[0] + 4, Z[1] - 10, 'Xb (다른 후보)', { anchor: 'end', cls: 'ink2', size: 'sm' }));
+    b.push(txt(Z[0] - 6, Z[1] - 10, 'Xb (다른 후보)', { anchor: 'end', cls: 'ink2', size: 'sm' }));
     b.push(txt(250, 150, 'y 에서 평면 위 다른 점까지의', { anchor: 'end', cls: 'ink2', size: 'sm' }));
     b.push(txt(250, 166, '거리는 잔차보다 길다', { anchor: 'end', cls: 'ink2', size: 'sm' }));
     add({
@@ -245,10 +245,10 @@ function axesEdge(fr, { x0, x1, y0, y1, xTicks = [], yTicks = [], fmtX = neg, fm
         const D = cook(h, r);
         b.push(pdot(fr.X(h), fr.Y(r), D >= 1 ? 'var(--s2)' : 'var(--s1)', 5));
         if (nm === '가') {
-            b.push(ln([[fr.X(h), fr.Y(r) + 5], [fr.X(0.03), fr.Y(2.15)]], { stroke: 'var(--ink2)', sw: 0.8 }));
+            b.push(ln([[fr.X(h), fr.Y(r) + 5], [fr.X(0.03), fr.Y(2.32)]], { stroke: 'var(--ink2)', sw: 0.8 }));
             b.push(txt(fr.X(0.01), fr.Y(2.0), `${nm}  D = ${f2(D)}`, { cls: 'ink', size: 'sm' }));
         } else {
-            b.push(txt(fr.X(h) + 9, fr.Y(r) - 7, `${nm}  D = ${f2(D)}`, { cls: 'ink', size: 'sm' }));
+            b.push(txt(fr.X(h) + 9, fr.Y(r) - (nm === '라' ? 18 : 7), `${nm}  D = ${f2(D)}`, { cls: 'ink', size: 'sm' }));
         }
     }
     b.push(txt(fr.X(0.62), fr.Y(3.1), '오른쪽 위·아래 바깥:', { cls: 'ink2', size: 'sm' }));
