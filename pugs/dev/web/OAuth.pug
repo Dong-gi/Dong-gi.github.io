@@ -21,7 +21,8 @@ include ../../../source/skeleton.pug
     h1 비신뢰 클라이언트; implicit grant
     ul
         li 비신뢰 클라이언트로 보내진 모든 정보는 public 읽기가 가능하다고 간주해야 한다
-        li 따라서 authorization code를 저장할 수 없고, 단기적 또는 1회용 access code를 발급하여 사용하게 해야 한다
+        li 따라서 client secret을 안전하게 보관할 수 없으므로, authorization code 교환 없이 수명이 짧은 access token을 곧바로 발급한다
+        li (2026 기준: implicit grant는 쓰지 말라고 권고된다 -- #[+asA('https://datatracker.ietf.org/doc/html/rfc9700', 'RFC 9700')]. 토큰이 URL로 전달되어 새기 쉽기 때문이다. 비신뢰 클라이언트도 아래의 authorization code grant + PKCE를 쓴다)
     +w3img('/d2/1.svg')
 
     h1 신뢰 클라이언트; authorization code grant

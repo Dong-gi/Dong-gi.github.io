@@ -83,7 +83,7 @@ include ../../../source/skeleton.pug
         li Expires나 Max-Age를 지정하지 않은 쿠키들은 클라이언트 종료 시 삭제된다
         li SameSite 속성으로 CSRF에 대한 보호를 일부 제공할 수 있다
         ul
-            li SameSite=Lax : 기본값으로, 외부 사이트에서 요청이 발생하는 경우 쿠키가 포함되지 않음. 단, 외부 사이트에서 원본 사이트를 이동하면서 발생하는 요청에는 쿠키 포함
+            li SameSite=Lax : 기본값으로, 외부 사이트에서 요청이 발생하는 경우 쿠키가 포함되지 않음. 단, 외부 사이트에서 원본 사이트로 이동하면서 발생하는 요청(최상위 GET 이동)에는 쿠키 포함
             li SameSite=Strict : 동일 사이트 &amp; 동일 스킴 요청에만 쿠키 포함
             li SameSite=None : 외부 사이트에서 요청이 발생해도 쿠키 포함. 쿠키 설정 시 Secure 옵션도 같이 설정해야 한다
         li 키/값으로 제어 문자를 제외한 US-ASCII 문자열을 이용할 수 있는데, 값으로는 #[+asA('https://developer.mozilla.org/en-US/docs/Glossary/Percent-encoding')]이 보통 이용된다 -- 표준 스펙에 정의하는 사항은 아님
@@ -101,7 +101,7 @@ include ../../../source/skeleton.pug
     h2 캐시
     ul
         li HTTPS 응답 자체를 일시 보관하여 이후 동일 요청 발생 시 사용한다
-        li 캐시를 사용하기에 앞서 먼저 서비스 워커를 설치해야 한다
+        li 요청을 가로채 캐시로 응답하려면(오프라인 지원) 먼저 서비스 워커를 설치해야 한다. Cache API(caches) 자체는 window에서도 쓸 수 있다
             +asCode('JavaScript').
                 if (navigator.serviceWorker != null) {
                     if (navigator.serviceWorker.controller) {
@@ -171,7 +171,7 @@ include ../../../source/skeleton.pug
 
     h2 웹 저장소
     ul
-        li sessionStorage : 브라우저가 열려 있는 동안에만 유지
+        li sessionStorage : 탭(페이지 세션)이 열려 있는 동안에만 유지. 탭을 닫으면 삭제
         li localStorage : 브라우저가 종료돼도 유지
     +codeBtn({
         path: '/Repositories/Single/202411/11-1453.html',
@@ -208,7 +208,7 @@ include ../../../source/skeleton.pug
 
         li IDBDatabase#createObjectStore() 메서드로 객체 저장소(RDB의 테이블에 해당)를 생성한다
         ul
-            li 객체 저장소 생성 시 키 정의가 필수다
+            li 레코드마다 키가 있어야 한다 -- 생성 시 keyPath·autoIncrement로 정하거나, 생략하면 레코드 저장 시 키를 따로 넘긴다
             li 키를 자동으로 순서대로 생성하기 원한다면 autoIncrement 옵션을 true로 설정한다 -- 기본값 false
             li 값 객체로부터 키를 자동으로 구성하기 원한다면 or 자동 생성한 키를 값에 설정하려면 유효한 식별자로 keyPath 옵션을 설정한다 -- 기본값 미설정
             li keyPath를 지정하지 않으면 out-of-line 키를 사용하게 되며, 레코드 저장 시 값과 별도로 저장된다
@@ -302,7 +302,7 @@ include ../../../source/skeleton.pug
         li 연결 유효성 확인을 위해 주기적으로 ping-pong을 주고받는 것이 권장된다
     +asCode('javascript').
         let connection = new WebSocket("ws://host-address/page_or_function_name");
-        // new WebSocket("wss://secure.example.com/chat", {"chat.v1", "chat.v2"});
+        // new WebSocket("wss://secure.example.com/chat", ["chat.v1", "chat.v2"]);
         // connection.readyState === WebSocket.OPEN // CONNECTING, OPEN, CLOSING, CLOSED
         // connection.bufferedAmount : 전송 대기중인 크기
 
@@ -355,7 +355,7 @@ include ../../../source/skeleton.pug
                 li 콜백 방식의 비동기 서버 호출을 지원한다
                 li 이벤트
                     ul
-                        li loadstart : 응답의 첫 번째 바이트를 수신
+                        li loadstart : 요청이 시작될 때(send() 직후)
                         li progress : 응답 수신 중 계속 발생
                         li error : 요청에 에러가 있을 때
                         li abort : abort() 호출로 연결을 종료했을 때
@@ -388,7 +388,7 @@ include ../../../source/skeleton.pug
         ul
             li postMessage()로 웹 워커에 blob을 보낼 수 있다
             li XMLHttpRequest.send()로 blob을 보낼 수 있다
-            li URL.createObjectURL()로 blob:// 주소를 가져올 수 있으며, 이 url은 DOM이나 CSS를 활용할 수 있다
+            li URL.createObjectURL()로 blob:https://origin/uuid 꼴의 blob: URL을 가져올 수 있으며, 이 url은 DOM이나 CSS에서 활용할 수 있다
             p Blob URL 삭제 : URL.revokeObjectURL()
                 +codeBtn('/Repositories/JavaScript/Browser/blob_example.js', 'javascript')
             li FileReader 객체를 사용하면 Blob 내용을 비동기적으로 문자열이나 ArrayBuffer로 추출할 수 있다

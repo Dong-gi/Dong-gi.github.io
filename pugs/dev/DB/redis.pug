@@ -19,6 +19,7 @@ include ../../../source/skeleton.pug
                 li 고가용성 구성을 통해 커밋된 데이터 손실을 최소화(~최대 수 초)하거나
                 li Amazon MemoryDB와 같이 디스크 쓰기까지 완료한 후에 쓰기 성공 ACK를 응답하여 커밋된 데이터 손실을 0으로 줄일 수 있다
         li Valkey는 Redis 상업화를 계기로, 오픈 소스를 유지하기 위해 Redis 7.2.4 -- BSD 라이선스가 적용된 마지막 릴리스를 포크하여 시작된 프로젝트다
+            p (Redis는 7.4부터 RSALv2·SSPLv1로 바꿨다가, Redis 8부터 AGPLv3도 고를 수 있게 했다 -- #[+asA('https://redis.io/legal/licenses/', 'Redis 라이선스')])
 
     h1 CLI
     ul
@@ -303,7 +304,7 @@ include ../../../source/skeleton.pug
 
     h3 가용성
     ul
-        li 클라스터에 파티션이 발생하고, 페일오버 가능하다면 #[+asInlineCode('NODE_TIMEOUT')] + 페일오버(보통 1~2초) 이후 다시 가용 상태가 된다
+        li 클러스터에 파티션이 발생하고, 페일오버 가능하다면 #[+asInlineCode('NODE_TIMEOUT')] + 페일오버(보통 1~2초) 이후 다시 가용 상태가 된다
             p 장애 발생 ~ 복구 중에는 모든 노드가 쓰기 요청을 거부한다
         li 적절한 레플리카가 프라이머리로 페일오버되어야만 클러스터를 유지 가능하다: 소수 노드 장애만 견딜 수 있다
             p 예. 5개 프라이머리 노드가 모두 단일 레플리카를 가진 클러스터에서 임의 2개 노드가 분리된 경우, 1/9 확률로 클러스터는 사용 불가능해진다
@@ -335,7 +336,7 @@ include ../../../source/skeleton.pug
             p 예. #[+asInlineCode('SCAN 0 MATCH {abc}*')]는 #[+asInlineCode('abc')]에 해당하는 슬롯만 스캔
 
     h3 ASK 리다이렉션
-    p 예. 8번 해시 슬롯을 노드 A에서 노드 B로 이전하는 경우, 마이그레이션 하는 동안엔 해당 슬롯의 키가 A 또는 B에 존재하므로 영구적인 MOVE 리다이렉션 대신 일시적인 ASK 리다이렉션이 필요하다
+    p 예. 8번 해시 슬롯을 노드 A에서 노드 B로 이전하는 경우, 마이그레이션 하는 동안엔 해당 슬롯의 키가 A 또는 B에 존재하므로 영구적인 MOVED 리다이렉션 대신 일시적인 ASK 리다이렉션이 필요하다
     ul
         li 정상 클라이언트
             ol
@@ -347,7 +348,7 @@ include ../../../source/skeleton.pug
                     p ASKING으로 A를 거쳤음을 확인한 B가 명령 처리
                 li C -&gt; A : 명령
                     p 8번 해시 슬롯은 A가 처리한다고 기억중
-                li C &lt;- A : MOVE B
+                li C &lt;- A : MOVED B
                     p 해당 슬롯은 완전히 이전됨
                     p 8번 해시 슬롯은 B가 처리한다고 기억
                 li C -&gt; B : 명령
@@ -355,7 +356,7 @@ include ../../../source/skeleton.pug
             ol
                 li C -&gt; B : 명령
                     p 8번 해시 슬롯은 B가 처리한다고 기억중
-                li C &lt;- B : MOVE A
+                li C &lt;- B : MOVED A
                     p A를 거치지 않았음을 확인한 B는 해당 슬롯의 기본 처리자가 A라고 안내
                     p 8번 해시 슬롯은 A가 처리한다고 기억
                 li C -&gt; A : 명령
@@ -378,7 +379,7 @@ include ../../../source/skeleton.pug
             ul
                 li 모든 캐시 활성화한 클라이언트가 읽어간 키를 기억하는 것은 메모리를 너무 많이 점유할 수 있다
                     p 따라서 최대 기억 개수를 초과하면 신규 항목 삽입 시 이전 항목에 대해 무효화 메시지를 발송하고 제거한다
-                li DB 번호를 무시한다. 클라이언트가 Valkey 2에서 키 foo를 캐시하고, 다른 클라이언트가 Valkey 3에서 키 foo의 값을 변경하면, 무효화 메시지가 발송된다
+                li DB 번호를 무시한다. 클라이언트가 DB 2에서 키 foo를 캐시하고, 다른 클라이언트가 DB 3에서 키 foo의 값을 변경하면, 무효화 메시지가 발송된다
                 li 효율적인 로컬 캐시 운용을 위해, 클라이언트가 캐시 여부를 언제든 켜고 끌 수 있다 (#[+goto('CLIENT TRACKING')], #[+goto('CLIENT CACHING')])
         li 브로드캐스팅 모드 : 클라이언트가 접근한 개별 키를 기억하지 않고, 단순히 접두사가 일치하면 무효화 메시지를 뿌린다
         li 클라이언트가 추적을 활성화할 때, 다른 연결의 클라이언트 ID를 지정하여 무효화 메시지를 리다이렉션할 수 있다
@@ -422,7 +423,7 @@ include ../../../source/skeleton.pug
     h3 BITCOUNT
     +asCode() BITCOUNT key [start end [BYTE|BIT]]
     ul
-        li 문자열를 비트열로 간주하고 set bit 개수 반환
+        li 문자열을 비트열로 간주하고 set bit 개수 반환
         li start end
             ul
                 li 전부 생략 시 전체 문자열을 검사한다
@@ -490,7 +491,7 @@ include ../../../source/skeleton.pug
                     ul
                         li diff : srckey1에만 1로 설정된 위치에 1 설정
                         li diff1 : srckey1에 0으로 설정되고, 나머지 소스 중 적어도 하나는 1로 설정된 위치에 1 설정
-                        li andor : srckey1에 1으로 설정되고, 나머지 소스 중 적어도 하나는 1로 설정된 위치에 1 설정
+                        li andor : srckey1에 1로 설정되고, 나머지 소스 중 적어도 하나는 1로 설정된 위치에 1 설정
                         li one : 주어진 소스 중 단 하나만 1로 설정된 위치에 1 설정
 
     +asCode('shell').
@@ -782,7 +783,7 @@ include ../../../source/skeleton.pug
     +asCode() RENAME key newkey
     ul
         li key가 존재하지 않는 경우 에러 발생
-        li 기존 newkey는 덮어씌어진다
+        li 기존 newkey는 덮어써진다
             ul
                 li Valkey : 암시적 #[+goto('UNLINK')]
                 li Redis : 암시적 #[+goto('DEL')]
@@ -1042,24 +1043,24 @@ include ../../../source/skeleton.pug
         &gt; GEOSEARCHSTORE result1 places FROMMEMBER SeoulStation BYRADIUS 5 km ASC
         4
         &gt; ZRANGE result1 0 -1 WITHSCORES
-        이태원역
+        Itaewon
         4077553360321259
-        홍대입구역
+        Hongdae
         4077564662320113
-        서울역
+        SeoulStation
         4077564801261287
-        명동역
+        Myeongdong
         4077564878456366
         &gt; GEOSEARCHSTORE result2 places FROMMEMBER SeoulStation BYRADIUS 5 km ASC STOREDIST
         4
         &gt; ZRANGE result2 0 -1 WITHSCORES
-        서울역
+        SeoulStation
         7.454249397376189e-13
-        명동역
+        Myeongdong
         1.645086449888987
-        이태원역
+        Itaewon
         3.0687583426788456
-        홍대입구역
+        Hongdae
         4.126189741702152
 
     h2 Hash
@@ -1160,6 +1161,7 @@ include ../../../source/skeleton.pug
     h3 HMSET
     +asCode() HMSET key field value [field value ...]
     p 여러 필드 추가
+    p (Redis 4.0부터 폐기 예고 명령이다. 여러 field-value 쌍을 받는 HSET을 쓴다)
 
     h3 HPERSIST
     +asCode() HPERSIST key FIELDS numfields field [field ...]
@@ -1288,6 +1290,7 @@ include ../../../source/skeleton.pug
         LMOVE  source destination &lt;LEFT | RIGHT&gt; &lt;LEFT | RIGHT&gt;
     ul
         li source의 &lt;LEFT | RIGHT&gt; 원소 삭제 -&gt; destination의 &lt;LEFT | RIGHT&gt;에 추가 -&gt; 반환
+        li BRPOPLPUSH, RPOPLPUSH는 Redis 6.2부터 폐기 예고 명령이다 -- RIGHT LEFT를 준 BLMOVE, LMOVE로 대신한다
         li BRPOPLPUSH = BLMOVE RIGHT LEFT
         li RPOPLPUSH = LMOVE RIGHT LEFT
 
@@ -1444,7 +1447,7 @@ include ../../../source/skeleton.pug
         li 읽기 전용 스크립트는 레플리카에서 실행 가능하다 -- 사용하는 모든 커맨드가 읽기 명령으로 분류되어 있어야 한다
         li busy-reply-threshold 5000ms 이상 스크립트가 실행되는 경우
             ul
-                li 스크립트 자체는 중단되지 않는다 -- 원자성 보상에 위배되므로
+                li 스크립트 자체는 중단되지 않는다 -- 원자성 보장에 위배되므로
                 li 다른 동시 명령들에 BUSY 오류 응답
                 li 스크립트가 이미 쓰기 작업을 수행했다면, SHUTDOWN NOSAVE로만 중단 가능
 
@@ -1511,7 +1514,7 @@ include ../../../source/skeleton.pug
         li PUNCTUATION
             ul
                 li 공백 문자에 더해 단어를 분리하는 추가 문자 지정
-                li 기본값 : ,.&lt;&gt;{}[]"':;!@#$%^&amp;\*()-+=~/\|?
+                li 기본값 : ,.&lt;&gt;{}[]"':;!@#$%^&amp;*()-+=~/\|?
                 li 입력 문자열에서 구두점 앞에 \가 있으면 이는 단어의 일부로 취급된다
         li SCORE : RedisSearch와의 호환을 위한 것으로 그냥 생략하면 된다
     h4 Valkey-Search Field Formats
@@ -1582,7 +1585,7 @@ include ../../../source/skeleton.pug
         li DIALECT : 2만 지원됨
         li LIMIT : 결과의 일부만 응답으로 전달
             p 응답 배열의 첫 번째 요소는 일치하는 키의 개수인데, LIMIT 설정의 영향을 받지 않는다
-        li
+        li 반환 내용
             ul
                 li 기본 : 모든 필드 반환
                 li NOCONTENT : 결과에는 키만 반환 -- 값 미포함
@@ -1791,6 +1794,7 @@ include ../../../source/skeleton.pug
     h3 ZREVRANGEBYSCORE
     +asCode() ZRANGE key start stop [BYSCORE|BYLEX] [REV] [LIMIT offset count] [WITHSCORES]
     ul
+        li ZRANGEBYLEX, ZRANGEBYSCORE, ZREVRANGE, ZREVRANGEBYLEX, ZREVRANGEBYSCORE는 Redis 6.2부터 폐기 예고 명령이다 -- 위 ZRANGE의 BYSCORE, BYLEX, REV로 대신한다
         li 기본 동작: 지정한 구간에 포함되는 원소를 오름차순으로 반환
         li start ~ stop 해석
             ul
@@ -1911,7 +1915,7 @@ include ../../../source/skeleton.pug
     h3 XCFGSET
     +asCode() XCFGSET key [IDMP-DURATION idmp-duration] [IDMP-MAXSIZE idmp-maxsize]
     ul
-        li Since Redis 8.2
+        li Since Redis 8.6
         li 스트림의 멱등성 설정을 변경한다. #[+goto('Idempotent message processing')]
 
     h3 XCLAIM
@@ -2015,14 +2019,14 @@ include ../../../source/skeleton.pug
     h3 XREAD
     +asCode() XREAD [COUNT count] [BLOCK milliseconds] STREAMS key [key ...] id [id ...]
     ul
-        li 각 스트림에서 지정한 id보다 큰 entry를 count(기본 1)개 반환
+        li 각 스트림에서 지정한 id보다 큰 entry를 count개 반환. COUNT를 생략하면 모두 반환
         li BLOCK : 모든 스트림이 비어있는 경우, 최대 milliseconds 만큼 대기
         li BLOCK ... $ : 명령 이후 도착하는 것만 반환
 
     h3 XREADGROUP
     +asCode() XREADGROUP GROUP group consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] id [id ...]
     ul
-        li 소비자로써 엔트리 소비 지시
+        li 소비자로서 엔트리 소비 지시
         li
             +goto('XREAD')
             |와 겹치는 옵션은 동일한 의미를 가진다
@@ -2128,16 +2132,17 @@ include ../../../source/skeleton.pug
             OK
             &gt; set key2 bundle-humble
             OK
-            &gt; stralgo lcs keys key1 key2
+            &gt; lcs key1 key2
             "ble-ule"
-            &gt; stralgo lcs strings humble-bundle bundle-humble
-            "ble-ule"
+        p (예전의 STRALGO LCS 명령은 Redis 7.0에서 제거되고 LCS로 바뀌었다. 키 대신 문자열을 직접 넘기던 STRALGO LCS STRINGS 꼴은 LCS에 없다)
         li LEN : 길이만을 원하는 경우
         li IDX : LCS 각 부분 시퀀스의 [시작, 종료] 위치를 역순으로 반환
         li IDX MINMATCHLEN : LCS 부분 시퀀스 중, 최소 길이를 만족하는 것만 반환
         li IDX WITHMATCHLEN : LCS 각 부분 시퀀스의 길이도 반환
         +asCode('shell').
-            &gt; stralgo lcs strings humble-bundle xbundle-humble idx minmatchlen 2
+            &gt; set key3 xbundle-humble
+            OK
+            &gt; lcs key1 key3 idx minmatchlen 2
             1) "matches"
             2) 1) 1) 1) (integer) 11
                      2) (integer) 12
@@ -2224,7 +2229,7 @@ include ../../../source/skeleton.pug
     ul
         li RediSearch : 추가 인덱싱, 쿼리 지원, 전문 검색 등 지원
         li RedisJSON : JSON 모델 지원
-        li RedisGraph : 그래프 모델 지원
+        li RedisGraph : 그래프 모델 지원 (2025-01-31에 지원이 끝났다 -- #[+asA('https://redis.io/blog/redisgraph-eol/', 'EOL 공지')])
         li RedisTimeSeries : 기간을 이용한 쿼리, 집계 쿼리 등 지원
 
     +hoverTemplate()#glob-style-pattern

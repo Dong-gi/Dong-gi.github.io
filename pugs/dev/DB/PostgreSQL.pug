@@ -15,13 +15,13 @@ include ../../../source/skeleton.pug
     h1 시작하기 전에
     ul
         li 최신 공식 문서 : #[+asA('https://www.postgresql.org/docs/current/index.html')]
-        li 별도 표기가 없다면, 이 문서는 PostgreSQL 18 문서 내용임
+        li 별도 표기가 없다면, 이 문서는 PostgreSQL 18 문서 내용임 (2026-11-19 에 PostgreSQL 19 가 나왔다)
         li 출시 노트 : #[+asA('https://www.postgresql.org/docs/release/')]
         li PostgreSQL은 캘리포니아 대학교 버클리 컴퓨터과학부에서 개발한 POSTGRES 버전 4.2를 기반으로 개발되고, 오픈소스로 관리 중인 객체-관계형 데이터베이스 관리 시스템(ORDBMS)이다. 뛰어난 성능과 확장성으로 여러 분야에서 애용하고 있다
 
     h1 기타 토픽
     ul
-        li PostgreSQL 19 예정 사항
+        li PostgreSQL 20 예정 사항 (개발판 문서 기준 — 19 에는 들어가지 않았다)
             p 현재 상태를 재생하기 위한 DDL 동적 생성 가능. pg_get_database_ddl(), pg_get_role_ddl(), pg_get_tablespace_ddl() 등
 
     h1 SQL
@@ -308,7 +308,7 @@ include ../../../source/skeleton.pug
             (1 row)
 
             INSERT 0 1
-        li 기본적으로는 열을 읽을 떄마다 새로 계산되지만 (virtual), 실제로 디스크에 저장하도록 할 수도 있다 (stored)
+        li 기본적으로는 열을 읽을 때마다 새로 계산되지만 (virtual), 실제로 디스크에 저장하도록 할 수도 있다 (stored)
         li 테이블 상속에서 부모 열이 생성된 열이면 자식 열도 동일한 유형이어야 하지만, 표현식은 다를 수 있다
         li create table ... partition of로 생성하는 경우, 정의는 자동으로 복사된다
         li alter table ... attach partition으로 붙이는 경우엔 표현식이 다를 수 있다
@@ -337,8 +337,8 @@ include ../../../source/skeleton.pug
 
     h3 테이블 파티셔닝
     ul
-        li 파티셔닝을 테이블을 물리적으로 쪼갠다
-        li 일반적으로 파티셔닝의 효과적이려면 테이블 크기가 서버의 물리적 메모리 용량을 초과해야 한다
+        li 파티셔닝은 테이블을 물리적으로 쪼갠다
+        li 일반적으로 파티셔닝이 효과적이려면 테이블 크기가 서버의 물리적 메모리 용량을 초과해야 한다
         li 일반 테이블을 나중에 파티션 테이블로 바꾸거나, 그 반대로 변환하는 것은 지원되지 않는다. 한편 파티션을 붙였다 떼는 건 자유롭게 가능하다
             p 파티션을 나중에 추가할 때, 이미 행이 많이 있다면 성능을 위해 다음 사항들을 미리 만들어두는 게 좋다
                 ul
@@ -499,8 +499,8 @@ include ../../../source/skeleton.pug
         li 테이블 함수는 행 집합을 생성하는 함수
         li 구문
             +asCode('sql').
-                function_call                       [with ordinality] [[as] table_alias [(column_alias, [, ...])]]
-                rows from( function_call [, ... ] ) [with ordinality] [[as] table_alias [(column_alias, [, ...])]]
+                function_call                       [with ordinality] [[as] table_alias [(column_alias [, ...])]]
+                rows from( function_call [, ... ] ) [with ordinality] [[as] table_alias [(column_alias [, ...])]]
         li with ordinality : 마지막에 bigint 타입의 ordinality 열이 추가되어 행 번호를 표시한다
         li 특수 테이블 함수 unnest는 임의 개수의 배열 매개변수로 호출할 수 있는데, 개별 배열에 대해 unnest가 호출되고 rows from 구문으로 결합한 것처럼 동작한다
             +asCode('sql').
@@ -793,14 +793,14 @@ include ../../../source/skeleton.pug
         +tds('integer', '4 바이트', '정수', '-2147483648 ~ +2147483647')
         +tds('bigint', '8 바이트', '정수', '-9223372036854775808 ~ +9223372036854775807')
         +tds('decimal, numeric', '가변', '사용자 지정 정밀도. 유리수', '소수점 앞 최대 131072자리, 소수점 뒤 최대 16383자리')
-        +tds('real', '4 바이트', '부동 소수', '소수점 6자리 정밀도')
-        +tds('double precision', '8 바이트', '부동 소수', '소수점 15자리 정밀도')
+        +tds('real', '4 바이트', '부동 소수', '10진 유효숫자 6자리 정밀도')
+        +tds('double precision', '8 바이트', '부동 소수', '10진 유효숫자 15자리 정밀도')
     ul
         li numeric(precision, scale=0) : 최대 precision(1 ~ 1000)개 유효숫자, 최대 scale개 소수점 자릿수(-1000 ~ 1000)
             p SQL 표준은 scale 값으로 0 ~ precision만 허용함에 유의
         li numeric : precision, scale 모두 지정하지 않으면 표에 기재된 최대 제약 조건을 갖는다
             p 제약 조건 없는 numeric은 무한대('Infinity', '-Infinity')를 저장할 수 있다
-        li 가까운 짝수로 반올림하는 real, double precision과 다르게 numeric은 0에서 멀어지는 방향으로 이루어진다
+        li 가까운 짝수로 반올림하는 real, double precision과 다르게 numeric은 반올림이 0에서 멀어지는 방향으로 이루어진다
 
     h3 이진 데이터
     p SQL 표준의 BLOB과 유사한 타입을 bytea로 지원한다
@@ -867,7 +867,7 @@ include ../../../source/skeleton.pug
                 li a | b : a or b
                 li !a : not a
                 li a &lt;-&gt; b : a followed by b
-                li a &lt;N&gt; b : a followed by b within N distance
+                li a &lt;N&gt; b : a followed by b at distance N (정확히 N)
                     p N = 0인 경우 : 두 패턴이 동일한 단어에 매칭돼야함
                 li 접두어 매칭 : 'xxx:*'::tsquery
                 li 정규화 : to_tsquery('original query')
@@ -949,7 +949,7 @@ include ../../../source/skeleton.pug
                                  [3]
                                  3
                                 (6 rows)
-                        li .**{level}, .**(start to end) : 지정 레벨(0부터 시작) 순회 결과만 반환
+                        li .**{level}, .**{start to end} : 지정 레벨(0부터 시작) 순회 결과만 반환
                         li [subscript, ...] : 배열 요소 접근
                             +asCode('sql').
                                 # select jsonb_path_query('[1,2,3,4,5]', '$[0, last, 2 to last-1]');
@@ -1245,11 +1245,11 @@ include ../../../source/skeleton.pug
         li &lt;&gt;는 같지 않음을 비교하는 SQL 표준 표기로, !=는 구문 분석 단계에서 &lt;&gt;로 변환된다
         li 비교 술어
             ul
-                li a between b and c : a &gt;= b and a &lt; c와 동일하다
+                li a between b and c : a &gt;= b and a &lt;= c와 동일하다(양 끝 포함)
                 li a not between b and c
-                li a between symmetric b and c : a가 b와 c 사이의 중간값인지? b와 c의 대소 관계는 결과와 무관하다
+                li a between symmetric b and c : a가 b와 c 사이(양 끝 포함)에 있는지? b와 c의 대소 관계는 결과와 무관하다
                 li a not between symmetric b and c
-                li a is distinct from b : a와 b가 같은지? null도 비교 가능한 값으로 처리
+                li a is distinct from b : a와 b가 다른지? null도 비교 가능한 값으로 처리
                 li a is not distinct from b
                 li a is [not] null
                 li boolean is [not] true, is [not] false, is [not] unknown
@@ -1276,7 +1276,7 @@ include ../../../source/skeleton.pug
     ul
         li a || b : 문자열 연결
         li concat(val1[, val2 ...]) : null을 제외한 모든 인자의 텍스트 표현 연결
-        li concat_ws(seperator, val1[, val2 ...]) : with seperator
+        li concat_ws(separator, val1[, val2 ...]) : with separator
         li a ^@ b, starts_with(a, b) : a는 b로 시작하는지?
         li a like pattern : 전체 a가 pattern과 일치하는지? 패턴에 %(임의 길이 문자열), _(임의 1개 문자) 사용 가능
             ul
@@ -1579,7 +1579,7 @@ include ../../../source/skeleton.pug
         li min(x) : 최솟값
         li mode() within group (order by x) : 최빈값
         li avg(x) : 모든 non-null값에 대한 산술 평균
-        li percentile_disc(percent or percent_agg) within group (order by x) : 지정 백분율의 자료 검색 -- 없으면 가장 가까운 자료
+        li percentile_disc(percent or percent_agg) within group (order by x) : 지정 백분율의 자료 검색 -- 없으면 누적 비율이 지정 백분율 이상이 되는 첫 자료
         li percentile_cont(percent or percent_agg) within group (order by x) : 지정 백분율의 자료 검색 -- 없으면 보간
             +asCode('sql').
                 # select percentile_disc('{0.3,0.6,0.9}'::float[]) within group (order by n)
@@ -1727,7 +1727,7 @@ include ../../../source/skeleton.pug
         li pg_typeof(x) : 타입 반환
         li to_regclass(text), to_regtype(text) 등 : 테이블 등의 이름을 이용해 관련 OID 반환
         li pg_cancel_backend(pid) : 쿼리 실행 취소
-        li pg_terminate_backend(pid) : 쿼리 실행 종료
+        li pg_terminate_backend(pid) : 세션(백엔드 프로세스) 종료. 실행 중인 쿼리만 취소하려면 pg_cancel_backend(pid)
         li 등
 
     h2 인덱스
@@ -1779,7 +1779,7 @@ include ../../../source/skeleton.pug
                 li 예. rats는 사전 중 하나가 복수형으로 인식하므로 rat으로 정규화된다
                 li 예. a, on 등은 너무 자주 등장하는 불용어로 등재되었으므로 무시된다
                 li 예. 공백, 마침표는 어떤 사전에도 실려있지 않으므로 무시된다
-            p 구조화된 문서로부터 tsvector를 생성하는 권장 에시 (기본 가중치 레이블은 D)
+            p 구조화된 문서로부터 tsvector를 생성하는 권장 예시 (기본 가중치 레이블은 D)
             +asCode('sql').
                 setweight(to_tsvector(coalesce(title,'')), 'A')    ||
                 setweight(to_tsvector(coalesce(keyword,'')), 'B')  ||
@@ -1837,7 +1837,7 @@ include ../../../source/skeleton.pug
                 li phantom read
                     ul
                         li 트랜잭션 시작 후 다른 트랜잭션이 커밋한 변경사항을 읽는 현상
-                        li 최초 읽기 후 다음 읽기 사이에 다른 트랜잭션이 변경을 커밋한 경우, 최초 읽은 값 그대로 보여준다
+                        li 같은 조건으로 다시 조회했을 때, 그 사이 다른 트랜잭션이 커밋한 삽입·삭제 때문에 조건을 만족하는 행 집합이 달라진다
                 li serialization anomaly
                     ol
                         li let result ::= 트랜잭션 그룹에 대한 최종 실행 성공 상태
@@ -1956,8 +1956,8 @@ include ../../../source/skeleton.pug
                         li 커밋된 경우 : 직렬화 에러 발생
     h4 Serializable 격리 수준
     ul
-        li 커밋된 모든 트랜잭션들을 하나씩 순차적으로 실행한다
-        li 이걸로 모든 이상 발생 가능성이 차단되는 것은 아니므로, 여전히 직렬화 실패에 대한 대응이 필요하다
+        li 커밋된 모든 트랜잭션들을 하나씩 순차적으로 실행한 것과 같은 결과를 보장한다(실제로 차례로 실행하지는 않는다)
+        li 이를 위해 이상이 생길 수 있는 트랜잭션을 직렬화 실패로 중단시키므로, 직렬화 실패에 대한 대응(재시도)이 필요하다
         li 성능을 위한 유의사항
             ul
                 li 가능한 경우 READ ONLY 명시
@@ -2115,7 +2115,7 @@ include ../../../source/skeleton.pug
                 li rows : 이 노드가 출력할 것으로 예상되는 행 수
                 li width : 이 노드가 출력할 것으로 예상되는 행의 평균 바이트 크기
         li analyze는 무작위 표본을 이용하므로, analyze 실행마다 explain의 추정치가 변경될 수 있다
-        li 순차 스캔은 기본적으로 랜덤 스캔보다
+        li 순차 스캔은 기본적으로 랜덤 스캔보다 페이지당 비용이 낮게 매겨진다(seq_page_cost 1.0, random_page_cost 4.0)
         li limit 사용으로 계획이 달라지는 예시
             ul
                 li limit 없는 경우
@@ -2144,7 +2144,7 @@ include ../../../source/skeleton.pug
                                  Index Cond: (unique2 > 9000)
                                  Filter: (unique1 &lt; 100)
         li materialize 예시
-            p outer join 처리를 위해 tenk1 각 행에 대해 tenk2를 매번 읽는 대신, 한 번 읽은 tenk2 데이터를 메모리에 저장하고 이후 재사용
+            p 중첩 루프 조인에서 바깥쪽 tenk1 각 행에 대해 tenk2를 매번 읽는 대신, 한 번 읽은 tenk2 데이터를 메모리에 저장하고 이후 재사용
             +asCode('sql').
                 EXPLAIN SELECT *
                 FROM tenk1 t1, tenk2 t2
@@ -2199,7 +2199,7 @@ include ../../../source/skeleton.pug
         li pg_stats : 컬럼 통계. 최빈값, 고윳값 비율(n_distinct), 물리적-논리적 배치 상관도(correlation) 등
         li 쿼리 플래너는 일반적으로 각 컬럼은 독립이라고 가정한다. 다변량 통계를 수행하도록 할 수 있지만, 쿼리 계획이 실제와 크게 동떨어져 잘못된 계획이 실행되는 경우에만 생성함이 바람직하다
             ul
-                li create statistics stat_name (dependencies) on col1, col2 from table_name : 컬럼 간 상관계수 계산
+                li create statistics stat_name (dependencies) on col1, col2 from table_name : 컬럼 간 함수적 종속성 정도 계산
                 li create statistics stat_name (ndistinct) on col1, col2 from table_name : 다변량 고윳값 개수 계산
                 li create statistics stat_name (mcv) on col1, col2 from table_name : 다변량 최빈값 계산
 
@@ -2348,7 +2348,7 @@ include ../../../source/skeleton.pug
     ul
         li 최적의 함수 실행 성능을 위해, 가능한 가장 엄격한 값을 함수 정의 시 지정해야 한다
         li STABLE, IMMUTABLE의 '불변 보장'은 개발자가 해야 한다. 옵티마이저는 그러한 보장이 있다는 가정 하에 최적화를 진행한다
-        li STABLE, IMMUTABLE 함수 안의 모든 쿼리들은 함수 실행 시점의 MVCC 스냅샷을 본다
+        li STABLE, IMMUTABLE 함수 안의 모든 쿼리들은 함수를 호출한 쿼리가 시작된 시점의 MVCC 스냅샷을 본다
         li VOLATILE : 기본값
             ul
                 li 데이터베이스를 수정하는 등 무엇이든 가능하다
@@ -2462,7 +2462,7 @@ include ../../../source/skeleton.pug
         li 함수 인자는 이름이나 숫자 중 아무거나 이용해 참조 가능하다
             ul
                 li 이름을 이용해 참조하려면 당연히 함수 정의 시 이름을 지정해야 한다
-                li SQL 문에서 열 이름과 충동하는 경우 열 이름이 우선이므로, #[+asInlineCode('funcion_name.argument_name')]과 같이 지정해야 한다
+                li SQL 문에서 열 이름과 충돌하는 경우 열 이름이 우선이므로, #[+asInlineCode('function_name.argument_name')]과 같이 지정해야 한다
             +asCode('sql').
                 # create or replace function func(num1 int, int) returns text as $$
                 select num1 || ',' || $1 || ',' || $2
@@ -3032,7 +3032,7 @@ include ../../../source/skeleton.pug
         li \p, \print : 현재 쿼리 버퍼를 출력
         li \parse statement_name : 현재 쿼리 버퍼로 준비된 문장 생성
         li \password [username] : 암호 변경
-        li \prompt [text] name : 사용자 입력을 psql 변수 name 할당
+        li \prompt [text] name : 사용자 입력을 psql 변수 name에 할당
         li \pset option [value] : value를 생략하는 경우 옵션에 따라 현재값 출력 | 토글 | 옵션 해제된다
             ul
                 li csv_fieldsep : CSV 출력 형식의 필드 구분자 설정
@@ -3079,7 +3079,7 @@ include ../../../source/skeleton.pug
         li B-트리 연산자 클래스는 해당 타입에 정렬 순서를 강제하므로, PostgreSQL 정렬에 대한 일반적인 표현 및 이해 수단으로 사용된다
     h4.no-marker 연산자 클래스
     ul
-        li 비교 연산자 &lt;, &lt;=, =, =&gt;, &gt;를 제공한다
+        li 비교 연산자 &lt;, &lt;=, =, &gt;=, &gt;를 제공한다
         li = 연산자는 동치 관계여야 한다
             ul
                 li non-null 값들에 대해
@@ -3526,7 +3526,7 @@ include ../../../source/skeleton.pug
     h3 BRIN
     h4.no-marker 개요
     ul
-        li 블록 범위 인덱스(Block Range Index)는 특정 열이 테이블 내 물리적 위치와 상관관계를 가지는 매우 큰 테이블을 처리하게 위해 설계됐다
+        li 블록 범위 인덱스(Block Range Index)는 특정 열이 테이블 내 물리적 위치와 상관관계를 가지는 매우 큰 테이블을 처리하기 위해 설계됐다
         li BRIN은 블록 범위 단위(=테이블에서 물리적으로 인접한 페이지 그룹)로 작동한다: 각 블록 범위에 대한 일부 요약 정보(예. 최대/최솟값)가 인덱스에 저장된다
         li BRIN 검색 시, 쿼리 조건을 일관되게 만족하는 블록 범위에 대해선 페이지의 모든 튜플을 반환한다: 쿼리 실행기가 각 튜플을 나머지 조건들에 대해 재검사한다
             ul
@@ -3592,7 +3592,7 @@ include ../../../source/skeleton.pug
     ul
         li 대소문자 무관한 문자열 타입 제공
             ul
-                li 문자열 저장 시 내부적으로 lower() 수행
+                li 값을 비교할 때 내부적으로 lower() 수행(저장된 값의 대소문자는 그대로)
                 li 다른 연산자 또는 함수와 함께 이용 시 자동으로 다른 피연산자도 lower() 변환
                 li 일부 연산자 또는 함수에 citext 전용 구현 이용. 예: ~와 ~*는 동일한 동작
         li citext 컬럼이나 데이터에 COLLATE 명세를 부착할 수 있지만, 소문자 접기는 항상 LC_CTYPE 설정에 따라 수행되므로 일부 유니코드 특수 사례를 의도에 맞게 처리하지 못할 수 있다

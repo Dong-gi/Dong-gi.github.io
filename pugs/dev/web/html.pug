@@ -76,7 +76,7 @@ include ../../../source/skeleton.pug
         li #{'<body>'}
         p #{'<body>'} 요소는 페이지에 표시할 모든 요소를 포함한다
     h2 head
-    h3 Charactr set
+    h3 Character set
     p #{'<head>'} 요소의 첫 번째 요소로 문자 집합을 지정함으로써, 제목과 이하 문서들을 올바르게 표시할 수 있게 함이 좋다
     +asCode('html') #{'<meta charset="utf-8">'}
 
@@ -97,7 +97,7 @@ include ../../../source/skeleton.pug
     +asCode('html') #{'<meta name="description" content="문서에 대한 짧은 요약">'}
 
     h3 Open Graph Protocol
-    p #[+asA('https://ogp.me/', '공식 사이트')]. 페이지에 대해 보다 풍부한 메타데이터를 일관적으로 외부에 제공하기 위하여 Facebook이 만든 포로토콜. 아래와 같은 정보를 갖춘 페이지 링크를 Facebook 안에 공유하면, 단순한 텍스트 대신 페이지 요약이 함께 표시된다
+    p #[+asA('https://ogp.me/', '공식 사이트')]. 페이지에 대해 보다 풍부한 메타데이터를 일관적으로 외부에 제공하기 위하여 Facebook이 만든 프로토콜. 아래와 같은 정보를 갖춘 페이지 링크를 Facebook 안에 공유하면, 단순한 텍스트 대신 페이지 요약이 함께 표시된다
     +asCode('html').
         #{'<meta property="og:image" content="..." />'}
         #{'<meta property="og:description" content="..." />'}
@@ -119,7 +119,7 @@ include ../../../source/skeleton.pug
     h3 Script
     p 스크립트는 기본적으로 CSS와 마찬가지로 다운로드 및 해석되기 전까지 렌더링이 차단되고, 이에 더해 다른 리소스의 다운로드까지 중지된다. 이러한 지연을 방지하기 위한 속성이 존재한다
     ul
-        li defer : HTML 렌더링을 차단하지 않는다. 스크립트는 렌더링이 완료된 후 실행된다
+        li defer : HTML 파싱을 차단하지 않는다. 스크립트는 문서 파싱이 끝난 뒤, DOMContentLoaded 직전에 실행된다
         li async : 스크립트를 다운로드하는 동안은 HTML 렌더링을 차단하지 않는다. 다운로드 후 스크립트 실행 중에는 차단한다
         li 위 속성들은 외부 스크립트를 사용하는 경우 적용 가능하며, 인라인 스크립트에는 적용되지 않는다
     p 다른 요소의 속성에 스크립트를 작성할 수도 있다
@@ -147,7 +147,7 @@ include ../../../source/skeleton.pug
         +asCode('HTML').
             #{'<link rel="preload" href="main.js" as="script" />'}
             #{'<link rel="preload" href="https://www.example.com/fonts/xxx.woff2" as="font" type="font/woff2" crossorigin />'}
-        +asCode('HTTP', 'HTTP 헤더로도 지시 가능') #{'Link: <https://www.example.com/fonts/xxx.woff2>; rel="preload"'}
+        +asCode('HTTP', 'HTTP 헤더로도 지시 가능') #{'Link: <https://www.example.com/fonts/xxx.woff2>; rel="preload"; as="font"; type="font/woff2"; crossorigin'}
 
         li #{'<link rel="prefetch">'}
         p preload보다는 낮은 우선순위로 리소스 가져오기 후 캐싱
@@ -179,6 +179,7 @@ include ../../../source/skeleton.pug
                 worker-src blob: *.facebook.com data:;
                 block-all-mixed-content;
                 upgrade-insecure-requests;
+        p (2026 기준: block-all-mixed-content는 폐기됐다. 지금 브라우저는 혼합 콘텐츠를 기본으로 막거나 https로 올려 받으므로, 필요하면 upgrade-insecure-requests를 쓴다)
         +asCode('HTML', '<meta> 태그 예').
             #{`<meta http-equiv="Content-Security-Policy" content="default-src 'self'">`}
 
@@ -251,7 +252,7 @@ include ../../../source/skeleton.pug
         +tds("domain.example.com", "img-src domain.example.com", "지정 호스트 로드 허용 -- 스킴, 포트, 경로(prefix) 설정은 선택사항")
         +tds("*.example.com", "img-src *.example.com", "지정 도메인의 모든 서브도메인 로드 허용")
         +tds("'unsafe-inline'", "script-src 'unsafe-inline'", "HTML 인라인 스타일 요소, 인라인 스크립트 요소, 요소의 속성으로 설정된 javascript: URI 등 허용")
-        +tds("'unsafe-eval'", "script-src 'unsafe-eval'", "eval(), setImmediate(), window.execScript() 등을 이용한 코드 동적 실행 허용")
+        +tds("'unsafe-eval'", "script-src 'unsafe-eval'", "eval(), new Function(), 문자열을 넘긴 setTimeout()·setInterval() 등을 이용한 코드 동적 실행 허용")
         +tds("'sha256-'", "script-src 'sha256-xyz...'", "해시가 일치하는 경우에만 스크립트 및 CSS 실행 허용")
         +tds("'nonce-'", "script-src 'nonce-rAnd0m'", "태그의 nonce 속성이 일치하는 경우에만 스크립트 및 CSS 실행 허용")
         +tds("'strict-dynamic'", "script-src 'nonce-rAnd0m' 'strict-dynamic'", "해시 또는 nonce를 통해 명시적으로 허용한 스크립트들은 document.createElement('script') 등을 이용해 허용이 명시되지 않은 출처의 스크립트를 로드할 수 있도록 허용")
@@ -295,7 +296,7 @@ include ../../../source/skeleton.pug
         p tbody 외에는 모두 선택 사항이다. tbody는 HTML로 명시하지 않아도 자동으로 추가된다
         li thead, tbody, tfoot는 tr들로 이루어진다
         li tr은 th와 td들로 이루어진다
-        li colgroup/rowgroup을 이용해 열/행들을 논리적으로 분리할 수 있다
+        li colgroup으로 열을, thead/tbody/tfoot으로 행을 논리적으로 분리할 수 있다
             +asA('https://mdn.github.io/learning-area/html/tables/advanced/items-sold-scope.html', '예시 테이블')
 
     h3 리스트
@@ -335,7 +336,7 @@ include ../../../source/skeleton.pug
             ul
                 li 무손실 래스터 이미지 : 256색상 초과 시 색상은 일부 뭉개짐
                 li 여러 프레임을 지원하므로 애니메이션 표현 가능
-                li 현재로써는 모든 사용 사례에서 다른 포맷들보다 비효율적
+                li 현재로서는 모든 사용 사례에서 다른 포맷들보다 비효율적
         li PNG
             ul
                 li 무손실 래스터 이미지 : 256; 트루컬러에선 1600만 색상 이하
@@ -435,7 +436,7 @@ include ../../../source/skeleton.pug
         p 입력 텍스트가 지정한 정규식을 만족하는지 검사하고, 만족하지 않는 경우 form 제출 시 알림을 보여준다
 
         li type 속성
-        p 어떤 종류의 데이터를 입력받는지 지정한다. 브라우저들은 전용 UI를 이용해 이를 표현하고, 가상 키보드의 경우 키보드의 레이아웃도 이에 맞춰 변경해기도 한다. type에 따라 추가 속성(min, max 등)들이 지원되기도 한다.
+        p 어떤 종류의 데이터를 입력받는지 지정한다. 브라우저들은 전용 UI를 이용해 이를 표현하고, 가상 키보드의 경우 키보드의 레이아웃도 이에 맞춰 변경하기도 한다. type에 따라 추가 속성(min, max 등)들이 지원되기도 한다.
         ul
             li text : 한 줄짜리 텍스트. 줄바꿈 문자를 포함할 수 없다
 
@@ -485,7 +486,7 @@ include ../../../source/skeleton.pug
 
             li 날짜 및 시간 입력
             ul
-                li datetime-local : 로컬 시간대로 날자와 시간을 입력
+                li datetime-local : 로컬 시간대로 날짜와 시간을 입력
                 li month : 년 + 월 입력
                 li time : 날짜 없이 시간만 입력
                 li week : 년 + 몇 번째 주인지 입력
@@ -657,13 +658,13 @@ include ../../../source/skeleton.pug
         li fillRect(x, y, width, height)
         p 지정 사각형을 현재 fillStyle로 채우기 == rect() + fill()
         li strokeRect(x, y, width, height)
-        p 지정 사각형에 현재 strokeStyle로 외각선 그리기 == rect() + stroke()
+        p 지정 사각형에 현재 strokeStyle로 외곽선 그리기 == rect() + stroke()
     h3 텍스트 그리기
     ul
         li fillText(text, x, y[, maxWidth])
         p 텍스트를 그리고 글자 내부는 현재 fillStyle로 채운다
-        li strokeText(text, x, y,[, maxWidth])
-        p 텍스트를 그리고 글자 외각선은 현재 fillStyle로 채운다
+        li strokeText(text, x, y[, maxWidth])
+        p 글자 외곽선을 현재 strokeStyle로 그린다
         li measureText(text)
         p 텍스트를 그린 결과가 어떻게 될지 미리 알 수 있는
             +asA('https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics', 'TextMetrics')
@@ -675,7 +676,7 @@ include ../../../source/skeleton.pug
         li closePath() : path 조각이 하나 이상 추가되었고, 마지막 정점이 시작점과 다른 경우 두 점을 잇는 선분을 추가한다
         li moveTo(x, y) : path 조각의 시작점을 설정
         li lineTo(x, y) : 마지막 정점으로부터 (x, y)까지의 선분을 추가
-        li bazierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
+        li bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
         p 마지막 정점으로부터 (x, y)까지를 잇는, 2개의 조절점을 이용하는
             +asA('https://ko.wikipedia.org/wiki/베지에_곡선', '베지에 곡선')
             |을 추가한다
@@ -709,7 +710,7 @@ include ../../../source/skeleton.pug
                 +asA('https://developer.mozilla.org/en-US/docs/Web/API/Path2D', 'Path2D')
                 |  인스턴스
         li stroke([path])
-        p 현재 또는 지정된 path의 외각선을 그린다(outline)
+        p 현재 또는 지정된 path의 외곽선을 그린다(outline)
         li drawFocusIfNeeded(element)
             br
             |drawFocusIfNeeded(path, element)
@@ -727,7 +728,7 @@ include ../../../source/skeleton.pug
         li isPointInStroke(x, y)
             br
             |isPointInStroke(path, x, y)
-        p 정점이 현재 또는 지정된 path의 외각선 위에 있는지 판별한다
+        p 정점이 현재 또는 지정된 path의 외곽선 위에 있는지 판별한다
     h3 path 스타일
     ul
         li lineWidth : default 1.0
@@ -885,7 +886,7 @@ include ../../../source/skeleton.pug
 
     h2 모바일 접근성
     ul
-        li 과거 모바일 브라우저들은 데스크톱과 다른 웨 빅술을 사용하여, 프론트엔드 개발자들은 브라우저 감지를 통해 별도의 사이트를 제공해야 했다
+        li 과거 모바일 브라우저들은 데스크톱과 다른 웹 기술을 사용하여, 프론트엔드 개발자들은 브라우저 감지를 통해 별도의 사이트를 제공해야 했다
         li 현재는 주요 모바일 브라우저들은 웹 표준을 잘 지원하며, 데스크톱 브라우저와 동일한 버전이 매겨진다
 
     h1 페이지 성능
@@ -900,6 +901,7 @@ include ../../../source/skeleton.pug
         li FCP(First Contentful Paint) : 페이지의 첫 번째 컨텐츠를 렌더링하는 데 걸린 시간
         li TBT(Total Blocking Time) : 사용자 입력에 반응하지 못하는 총 시간
         li LCP(Largest Contentful Paint) : 표시 영역에서 가장 큰 컨텐츠 요소가 렌더링되기까지의 시간
+        li INP(Interaction to Next Paint) : 사용자 입력(클릭·탭·키 입력)부터 다음 화면이 그려지기까지의 지연. 2024년 3월부터 FID를 대신해 Core Web Vitals에 들어갔다
 
     h2 측정 도구
     ul

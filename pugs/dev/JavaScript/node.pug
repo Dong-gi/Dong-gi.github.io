@@ -31,7 +31,7 @@ include ../../../source/skeleton.pug
     ul
         li 객체들은 히든 클래스를 가지며 이것이 최적화의 주요 재료가 되기 때문에, 자료 구조와 접근 패턴을 고정할수록 최적화에 따른 실행 성능이 좋아진다
             ul
-                li 객체 프로퍼티 할당은 포로토타입 체인 생성을 유발하고, 이 순서가 중요하다 =&gt; 동적으로 프로퍼티를 설정하는 것을 지양하고, undefined를 이용해서라도 초기화하는 것이 좋다 #[+codeBtn({ path:'/Repositories/Single/202605/26-1349.mjs', lan:'JavaScript' })]
+                li 객체 프로퍼티 할당은 히든 클래스 전이(transition) 체인 생성을 유발하고, 이 순서가 중요하다 =&gt; 동적으로 프로퍼티를 설정하는 것을 지양하고, undefined를 이용해서라도 초기화하는 것이 좋다 #[+codeBtn({ path:'/Repositories/Single/202605/26-1349.mjs', lan:'JavaScript' })]
                 li 호출 지점의 히든 클래스가 고정된다면, 프로퍼티를 동적으로 조회하는 대신 정해진 offset 지점을 바로 참조하도록 최적화가 진행된다 =&gt; 가능하다면 함수 호출 인자의 히든 클래스를 모든 호출 지점에서 동일하게 유지하는 것이 좋다
         li 코드 최적화는 실행 통계를 기반으로 여러 단계에 걸쳐 (투기적인 가정을 세워) 점진적으로 진행되는데, 기반이 되는 가정에 위배되는 상황이 발생하면 역최적화가 발생해 이전 최적화 단계의 코드로 되돌아간다
             ul
@@ -56,7 +56,7 @@ include ../../../source/skeleton.pug
         p 0이 아닌 최초 버전의 하위 버전 변경 모두를 포함
         li ~1.2.2 : [1.2.2, 1.3) 호환
         p 지정된 버전의 상위 버전 변경 전까지 모두를 포함
-        li 1.2.2-1.4.4 : 직접 지정
+        li 1.2.2 - 1.4.4 : 직접 지정(하이픈 양옆에 공백 필요)
         p >=1.2.2 &lt;=1.4.4와 동일
         li 1.2.x : 와일드카드
 
@@ -93,7 +93,7 @@ include ../../../source/skeleton.pug
                 "type": "git",
                 "url": "git@github.com:mongodb/node-mongodb-native.git"
             },
-            "bugs": {             // url 또는 email 하나만 적용
+            "bugs": {             // url, email 중 하나 또는 둘 다 지정
                 "url": "https://github.com/mongodb/node-mongodb-native/issues"
             },
             "license": "Apache-2.0",
@@ -108,7 +108,7 @@ include ../../../source/skeleton.pug
             "dependencies": {     // 의존 패키지
                 "bl": "^2.2.0",
             },
-            "peerDependencies": { // 의존 관계 X. 같이 사용될 수 있는 패키지
+            "peerDependencies": { // 같이 사용될 수 있는 패키지(호스트 패키지). npm 7부터는 자동으로 설치된다
                 "kerberos": "^1.1.0",
             },                    // 패키지 테스트, 문서화에 필요한 패키지; 모듈 사용만 하는 경우엔 불필요한 패키지
             "devDependencies": {
@@ -233,7 +233,7 @@ include ../../../source/skeleton.pug
             $ npx tsc file-name.ts --target es6
         li 타입스크립트에서는 생성자 매개변수 앞에 public/private 접근한정자가 있으면 자동으로 클래스의 속성으로 선언한다
         li VS Code의 타입스크립트 컴파일러를 npm 패키지로 설정
-        p "typescript.tsdk": "C:/Users/name/AppData/Roaming/npm/node_modules/typescript/bin/tsc"
+        p "typescript.tsdk": "C:/Users/name/AppData/Roaming/npm/node_modules/typescript/lib"
 
     h1 디버깅
     ul
@@ -241,9 +241,8 @@ include ../../../source/skeleton.pug
         +asCode('javascript') debugger;
         li node 실행 시 디버깅 켜기
         +asCode('shell').
-            $ node debug app.js
-            # 또는
             $ node inspect app.js
+            # 옛 node debug 명령은 v15.0.0에서 제거됐다
         li 자동으로 디버깅 포트를 열며, chrome://inspect 등으로도 이용 가능
         li 명령어
         ol
@@ -260,7 +259,7 @@ include ../../../source/skeleton.pug
     h1 Lib/Cluster
     ul
         li 멀티 코어 CPU의 성능을 이용하기 위해, 동일한 로직을 이용하는 멀티 프로세스 생성/관리 기능 제공
-        li 프로세스는 마스터(cluster.isMaster)와 워커로 구성
+        li 프로세스는 프라이머리(cluster.isPrimary -- v16 이전 이름은 isMaster)와 워커로 구성
         li 자식(워커) 프로세스들은 부모 프로세스와 TCP 연결을 공유할 수 있다
         +codeBtn('/Repositories/Node/cluster.test.js', 'javascript')
 
@@ -338,11 +337,11 @@ include ../../../source/skeleton.pug
             const { on, EventEmitter } = require('events');
             (async () => { //...
                 for await (const event of on(emitter, 'foo')) {}
-            })
+            })()
 
     h1 Lib/Globals
     ul
-        li this == global
+        li CommonJS 모듈 최상위에서 this == module.exports (REPL에서는 global)
         li TextDecoder Since 11 == util.TextDecoder
         li TextEncoder Since 11 == util.TextEncoder
         li URL == url.URL
@@ -357,7 +356,7 @@ include ../../../source/skeleton.pug
         li setTimeout, clearTimeout, setInterval, clearInterval, setImmediate, clearImmediate : timer 관련
             ul
                 li 타이머나 지원하는 핸들에서 unref()를 호출하면 이 핸들은 이벤트 루프가 계속 활성 상태에 머물도록 하지 않게 된다 -- 이 핸들이 실행되지 않아도 프로세스가 종료할 수 있게 한다
-                li process.getActiveResourcesInfo() Since 24 를 이용하면 이벤트 루프가 계속 활성 상태에 있도록 하는 리소스들을 확인할 수 있다
+                li process.getActiveResourcesInfo() Since 17.3 를 이용하면 이벤트 루프가 계속 활성 상태에 있도록 하는 리소스들을 확인할 수 있다
         li queueMicrotask(Function callback) Since 11
         p "microtask queue"는 V8 엔진이 관리하며, 동작은 process.nextTick()과 유사하다. 이벤트 루프 어느 페이즈에서든지 "next tick queue"가 항상 "microtask queue"보다 먼저 실행된다
 
@@ -371,8 +370,9 @@ include ../../../source/skeleton.pug
 
             const app = express()
 
-            app.get('/**', (req, res, next) => {
-                let url = req.params.url
+            // 예: GET /proxy?url=https://... -- 아무 URL이나 대신 받아오므로 실제로 쓸 때는 허용 목록으로 제한한다(SSRF)
+            app.get('/proxy', (req, res, next) => {
+                let url = String(req.query.url ?? '')
 
                 if (url.startsWith('https')) {
                     https.get(url, {
@@ -417,7 +417,7 @@ include ../../../source/skeleton.pug
             li 모듈 사이에 require() 사이클이 존재하는 경우, 초기화 완료되지 않은 exports 객체를 반환하여 무한 반복을 방지한다
             li 모듈을 /usr/lib/node_modules/{name}/{version} 경로로 관리하면 효율적인 require() 가능
             li require
-                +asA('https://nodejs.org/dist/latest-v12.x/docs/api/modules.html#modules_all_together', '알고리즘')
+                +asA('https://nodejs.org/api/modules.html#all-together', '알고리즘')
             p 확장자 없는 파일 X, X.js 파일, X.json 파일, X.node 파일, X/index.js 디렉터리, X/package.json 디렉터리 등을 적절히 처리
             li 선두 '/', './', '../' 없이 요구된 모듈
             ol
@@ -447,6 +447,7 @@ include ../../../source/skeleton.pug
         li Event 'exit'
         p 정상 종료 및 process.exit() 호출 시 process.exitCode를 인자로 콜백이 호출된다. 콜백은 동기적 연산만 수행해야 한다
         li Event 'multipleResolves' Since 10.12
+        p (2026 기준: v18에서 폐기 예고, v25.0.0에서 제거됐다 -- DEP0160)
         ul
             li 임의 Promise의 두 번째 resolve 또는 reject 호출부터 콜백이 호출된다
             p Promise.race() 호출처럼, 경우에 따라서 이 이벤트 발생이 에러가 아닐수도 있다
@@ -469,6 +470,7 @@ include ../../../source/skeleton.pug
 
     h1 3rd/CryptoJS
     p 해싱, 암/복호화, 인코딩/디코딩 관련 함수 제공
+    p (2026 기준: CryptoJS는 개발이 중단됐다. Node의 crypto 모듈이나 브라우저의 Web Crypto API를 쓴다)
     ul
         li: +asA('https://www.npmjs.com/package/crypto-js', 'npm - crypto-js')
         li: +asA('https://cryptojs.gitbook.io/', 'CryptoJS document')
@@ -521,7 +523,7 @@ include ../../../source/skeleton.pug
         +asCode('javascript') res.render(view[, data][, callback])
         li Middleware : 요청 처리 체인의 앞부분에서 전처리를 하며, 다음으로 넘어갈지 결정
         +asCode('javascript').
-            function (req, res, next) {
+            function middleware(req, res, next) {
                 // Do something
                 next();
             }
@@ -536,6 +538,7 @@ include ../../../source/skeleton.pug
         p cookie-parser, express-session 모듈 이용
 
     h1 3rd/forever : 종료 시 자동 재시작
+    p (2026 기준: forever는 커뮤니티 유지보수에 맡겨져 있고, README는 새로 설치한다면 pm2나 nodemon을 권한다)
     ul
         li 스크립트 영구 실행
         li forever 모듈을 코드에서 호출하는 경우, forever-monitor가 도움이 된다

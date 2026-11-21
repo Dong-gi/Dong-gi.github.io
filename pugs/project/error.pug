@@ -51,6 +51,7 @@ include ../../source/skeleton.pug
         li 아래 명령으로 컨테이너의 잔존 메타데이터를 지우면 다시 시작할 수 있다
         +asCode('shell') docker-containerd-ctr --namespace moby --address /var/run/docker/containerd/docker-containerd.sock c rm [container_id]
         p container_id는 전체를 넘겨줘야 하고, address 옵션값은 정확한 경로로 넘겨줘야 한다
+        p (2026 기준: 지금의 Docker 는 따로 설치된 containerd 를 쓰므로 #[+asInlineCode('ctr --namespace moby --address /run/containerd/containerd.sock c rm [container_id]')] 꼴이 된다)
 
     h1 Eclipse
     h2 자동완성 불가; No Java Proposals
@@ -244,7 +245,7 @@ include ../../source/skeleton.pug
     h1 PostgreSQL
     h2 AWS Redshift와 드라이버 충돌
     p Connection url에
-        +asA('https://www.simba.com/products/Redshift/doc/JDBC_InstallGuide/content/jdbc/re/options/opensourcesubprotocoloverride.htm', 'OpenSourceSubProtocolOverride=true')
+        +asA('https://documentation.insightsoftware.com/simba-redshift-jdbc-driver-with-sql-connector-installation-and-configuration-guide/content/jdbc/re/options/opensourcesubprotocoloverride.htm', 'OpenSourceSubProtocolOverride=true')
         |  추가
     h2 remaining connection slots are reserved for non-replication superuser connections
     ol
@@ -265,7 +266,7 @@ include ../../source/skeleton.pug
                 +tds('File', 'sync', 'sync')
                 +tds('TTY', 'async', 'sync')
                 +tds('Pipe and Socket', 'sync', 'async')
-        li Node의 writable.write()는 'drain' 이벤트를 대기하는 동안에는 false를 반환하고 쓰기를 수행하지 않는다
+        li Node의 writable.write()는 내부 버퍼가 highWaterMark를 넘으면 false를 반환한다('drain' 이벤트를 기다리라는 신호). 데이터는 버퍼에 쌓였다가 나중에 쓰이므로, 비동기 쓰기가 끝나기 전에 process.exit()를 호출하면 남은 데이터가 버려진다
         li 이로 인해 스트림을 파일에 쓸 때와, 다른 프로세스로 파이프할 때 결과가 다를 수 있다
             +asCode('shell').
                 $ node -e "console.log('@'.repeat(128 * 1024)); process.exit(0);" | wc -c
@@ -334,7 +335,7 @@ include ../../source/skeleton.pug
         &lt;user_name> hard nofile 500000
     ul
         li 리눅스에서는 소켓 연결도 파일이다(프로세스가 아닌 건 대부분 파일이다)
-        li RHEL 7 기준, limis.conf 적용 후 /etc/security/limits.d/20-nproc.conf의 설정으로 값이 변경될 수 있으니, 같이 수정 필요하다고 함
+        li RHEL 7 기준, limits.conf 적용 후 /etc/security/limits.d/20-nproc.conf의 설정으로 값이 변경될 수 있으니, 같이 수정 필요하다고 함
         li 별개로 전체 시스템의 파일 수 제한도 확인
         +asCode('shell') $ sysctl fs.file-max
         li 시스템 backlog 조정 // 웹서버에서 별도로 설정이 필요할 수 있음
@@ -346,5 +347,5 @@ include ../../source/skeleton.pug
         li
             +asA('https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/performance_tuning_guide/s-network-dont-adjust-defaults', '참고')
             |에 따르면, 소켓 송수신 크기는 동적으로 조절되므로 수동으로 편집할 일은 드물다고 한다
-        li 분석을 통해 수신 버퍼가 매우 느리게 소진되는 게 드러난 경우, rmem_default(/proc/sys/net/core/rmem_default) 값(바이트 단위)을 ─ 필요하다면 rmem_max도 같이 늘리면 된다.
+        li 분석을 통해 수신 버퍼가 매우 느리게 소진되는 게 드러난 경우, rmem_default(/proc/sys/net/core/rmem_default) 값(바이트 단위)을 늘리면 된다. 필요하다면 rmem_max도 같이 늘린다.
         +asCode('shell') $ sysctl -w net.core.rmem_default=16000000

@@ -51,8 +51,8 @@ include ../../source/skeleton.pug
 
     h1 Nox ADB 연결
     ul
-        li nox_adb.exe connect 127.0.0.1:5037
-        li 5037 포트는 안드로이드 ADB 기본 포트
+        li nox_adb.exe connect 127.0.0.1:62001
+        li 62001 포트는 Nox 첫 번째 기기의 ADB 포트(5037 은 PC 쪽 adb 서버 자신의 포트라 연결 대상이 아니다)
 
     h1 PostgreSQL
     h2 upsert 수행 시 삽입/변경된 행의 개수 확인하기
@@ -184,7 +184,7 @@ include ../../source/skeleton.pug
     ul
         li ssl=true : 보안 연결 사용
         li sslmode=no-verify 또는 sslfactory=org.postgresql.ssl.NonValidatingFactory : 서버측 인증서의 유효성을 검증하지 않음
-        li sslrootcert=name.pem : 서버측 인증서의 유효성을 검증할 수 있는 키 파일 지정
+        li sslrootcert=name.pem : 서버측 인증서의 유효성을 검증할 수 있는 루트(CA) 인증서 파일 지정
         li stringtype=unspecified : JSONB 쓰기에 오류가 발생하지 않도록 설정
 
     h2 dead tuple 수 확인
@@ -192,7 +192,7 @@ include ../../source/skeleton.pug
         select relname, n_dead_tup, last_vacuum, last_autovacuum
         from pg_stat_all_tables
         where n_dead_tup &gt; 0
-    p 단, vaccum full 수행 시 n_dead_tup이 즉시 갱신되지 않을 수 있음에 유의 -- analyze 실행하면 반영 (참조 : #[+asA('https://pskbigstar.tistory.com/entry/PostgreSQL-dead-tuple-%EB%AA%A8%EB%8B%88%ED%84%B0%EB%A7%81-%EC%8B%9C-%EC%A3%BC%EC%9D%98vacuum-full')])
+    p 단, vacuum full 수행 시 n_dead_tup이 즉시 갱신되지 않을 수 있음에 유의 -- analyze 실행하면 반영 (참조 : #[+asA('https://pskbigstar.tistory.com/entry/PostgreSQL-dead-tuple-%EB%AA%A8%EB%8B%88%ED%84%B0%EB%A7%81-%EC%8B%9C-%EC%A3%BC%EC%9D%98vacuum-full')])
 
     h2 대략적인 행 개수 확인
     +asCode('sql') select relname, reltuples from pg_class order by 1
@@ -323,6 +323,7 @@ include ../../source/skeleton.pug
     ul
         li: +asA('https://certbot.eff.org/')
         li 무료 SSL 인증서(3개월) 제공
+            p (2026 기준: 기본 90일이 2027-02-10 부터 64일, 2028-02-16 부터 45일로 줄어든다 — 자동 갱신을 전제로 한다. #[+asA('https://letsencrypt.org/2025/12/02/from-90-to-45/', 'Let’s Encrypt 공지')])
         li 저장 위치 : /etc/letsencrypt/
         li DNS 레코드를 이용한 인증서 발급
         +asCode('shell') $ sudo certbot certonly -d *.4joy.link --manual --preferred-challenges dns
@@ -333,7 +334,7 @@ include ../../source/skeleton.pug
             li 만료 30일 미만인 (모든) 인증서 갱신
             li 인증서 이름은 certbot certificates로 확인 가능
             li --pre-hook "service nginx stop" --post-hook "service nginx start"
-            p 인증서를 하나라도 갱신해야 하는 경우, 각 갱신 전후에 실행. hook가 실패해도 인증서 갱신은 계속 진행된다
+            p 인증서를 하나라도 갱신해야 하는 경우에만, 첫 갱신 전과 마지막 갱신 후에 한 번씩 실행(같은 hook은 한 번만 실행). hook가 실패해도 인증서 갱신은 계속 진행된다
             li --deploy-hook DEPLOY_HOOK
             p 갱신에 성공한 각 경우에만 실행
             li --force-renewal
@@ -382,7 +383,8 @@ include ../../source/skeleton.pug
 
     h1 VS Code
     ul
-        p 를 설치하면, Ctrl + Shift + I를 이용해 곧바로 날짜 문자열을 입력할 수 있다
+        li.marker 단축키로 날짜 입력
+        p #[+asA('https://marketplace.visualstudio.com/items?itemName=jsynowiec.vscode-insertdatestring', 'Insert Date & Time')] 확장을 설치하면, Ctrl + Shift + I를 이용해 곧바로 날짜 문자열을 입력할 수 있다
         li.marker 파일 탐색 뷰에서 현재 문서 자동 추적 중지: 설정 &gt; Explorer: Auto Reveal
         li.marker 특정 언어 포매터 설정
         p Ctrl + Shift + P &gt; Preferences: Configure Language Specific Settings &gt; "editor.defaultFormatter": "redhat.java"
@@ -405,7 +407,7 @@ include ../../source/skeleton.pug
         li.marker 시작 프로그램 등록
         ol
             li shell:startup 실행
-            p C:\Users\%USER_NAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+            p C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
             li exe 바로가기 붙여넣기
 
         li.marker 부트매니저 설정
@@ -578,7 +580,7 @@ include ../../source/skeleton.pug
     h1 코드 조각
     h2 JSDoc &gt; .d.ts 생성
     p 참고자료 : #[+asA('https://www.typescriptlang.org/ko/docs/handbook/declaration-files/dts-from-js.html')]
-    +asCode('shell', 'CLI 실행 예시') npx typescript src/**/*.js --declaration --allowJs --emitDeclarationOnly --outDir dist/types
+    +asCode('shell', 'CLI 실행 예시') npx -p typescript tsc src/**/*.js --declaration --allowJs --emitDeclarationOnly --outDir dist/types
 
     h2 JSDoc &gt; 마크다운 유사 구문
     +codeBtn({ path: '/Repositories/Single/202509/22-1353.js', lan: 'javascript' })
@@ -633,7 +635,7 @@ include ../../source/skeleton.pug
             li shift 연산 이용
                 +asCode('java') x &lt;&lt; (32 - n) &gt;&gt;&gt; (32 - n)
             li and 연산 이용; (2^n - 1)는 사전에 계산되어 있어야 빠르다
-                +asCode('java') x &amp; (2^n - 1)
+                +asCode('java') x &amp; ((1 &lt;&lt; n) - 1)
 
     h2 소수 찾기
     ul

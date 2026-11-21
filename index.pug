@@ -85,8 +85,9 @@ include ./source/skeleton.pug
                 }
 
                 server {
-                    listen       443 ssl http2;
-                    listen       [::]:443 ssl http2;
+                    listen       443 ssl;
+                    listen       [::]:443 ssl;
+                    http2        on;    # nginx 1.25.1 부터. 그 전 판은 listen 443 ssl http2;
                     server_name  free.4joy.link;
 
                     include /etc/nginx/default.d/*.conf;

@@ -113,7 +113,7 @@ include ../../../source/skeleton.pug
         +asCode('css') .post :is(h1, h2, h3) { line-height: 1.2; }
         li :has(relative-selector-list)
         p 특정 조건을 만족하는 자식 요소를 갖는 부모를 필터링한다
-        +asCode('css', '바로 아래에 p 자식을 갖는 h1을 선택하는 경우의 예') h1:has(+ p) { /* style */ }
+        +asCode('css', '바로 뒤에 p 형제가 오는 h1을 선택하는 경우의 예') h1:has(+ p) { /* style */ }
 
     h3.fake 의사 요소
     ul
@@ -288,7 +288,7 @@ include ../../../source/skeleton.pug
                 title: '<- 코드'
             })
             li size
-            p 인라인 및 블록 방향 모두에 대해 크기를 이용한 컨테이너를 사용할 수 있다  -- 컨테이너 width/height 모두 자식 요소와 독립
+            p 인라인 및 블록 방향 모두에 대해 크기를 이용한 컨테이너 쿼리를 사용할 수 있다  -- 컨테이너 width/height 모두 자식 요소와 독립
             +codeBtn({
                 path: '/Repositories/Single/202411/08-1150.html',
                 lan: 'nohighlight',
@@ -326,8 +326,8 @@ include ../../../source/skeleton.pug
         li em : 상속된 폰트 크기
         li rem : 루트 요소의 폰트 크기(기본값 16px)
         li cap : 대문자 크기
-        li ch : 반각문자 평균 너비
-        li ic : 전각문자 평균 너비
+        li ch : 글리프 "0"의 너비
+        li ic : 글리프 "水"의 너비(전각문자 너비의 대표값)
         li lh : 요소의 줄 간격
         li rlh : 루트 요소의 줄 간격
         li vw : 표시영역 너비의 1%
@@ -426,7 +426,7 @@ include ../../../source/skeleton.pug
         li table-column-group : #{'<colgroup>'}에 대응
         li table-column : #{'<col>'}에 대응
         li table-caption : #{'<caption>'}에 대응
-        li ruby-base : #{'<ruby>'}에 대응
+        li ruby-base : #{'<rb>'}에 대응
         li ruby-text : #{'<rt>'}에 대응
         li ruby-base-container : 익명 박스 생성
         li ruby-text-container : #{'<rtc>'}에 대응
@@ -684,12 +684,12 @@ include ../../../source/skeleton.pug
         li 디자인과 관련된 환경변수를 획득한다
         li #[+asInlineCode('env(safe-area-inset-top, 20px)', 'css')]와 같이, 변수가 정의되지 않은 경우를 대비한 기본값도 설정 가능하다
         li 예를 들어, 노치와 같은 영역에 의해 HTML 문서가 가려지지 않도록 하려면 안전 영역에만 컨텐츠가 표시되도록 해야 한다
-            +asCode('css') padding: env(safe-area-inset-top, 50px) env(safe-area-inset-right, 50px) env(safe-area-inset-bottom, 50px) env(SAFE-AREA-INSET-LEFT, 50px);
+            +asCode('css') padding: env(safe-area-inset-top, 50px) env(safe-area-inset-right, 50px) env(safe-area-inset-bottom, 50px) env(safe-area-inset-left, 50px);
 
     h2 #{`var( <custom-property-name>, <declaration-value>?)`}
     ol
         li 변수 선언
-        +asCode('css') root { --var1: 12px; --my-var2: blue; }
+        +asCode('css') :root { --var1: 12px; --my-var2: blue; }
         li 변수 사용
         +asCode('css') p { color: var(--my-var2); }
         li 첫 번째 콤마 뒤의 모든 문자열이 fallback 값이다

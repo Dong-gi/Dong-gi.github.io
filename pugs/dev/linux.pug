@@ -10,7 +10,7 @@ include ../../source/skeleton.pug
             ul
                 li: +asA('https://tldp.org/guides.html', 'LDP Guides')
                     ol
-                        li: +asA('https://tldp.org/LDP/abs/html/index.html', 'Advancd Bash-Scripting Guide; 03/2014')
+                        li: +asA('https://tldp.org/LDP/abs/html/index.html', 'Advanced Bash-Scripting Guide; 03/2014')
                             p Public Domain. No copyright!
                         li: +asA('https://tldp.org/LDP/Bash-Beginners-Guide/html/index.html', 'Bash Guide for Beginners; 12/2008')
                             details
@@ -103,7 +103,7 @@ include ../../source/skeleton.pug
         li -c : 대기중인 shutdown 취소
         li time : now | +
             i number
-            |  | yymmddhhmm
+            |  | hh:mm
             p +number 단위(기본: 분)를 지정하려면 접미사 "s", "sec", "m", "min", "h", "hour" 이용
         li warning-message : 로그인한 유저들에게 보낼 브로드캐스팅 메시지
 
@@ -130,7 +130,7 @@ include ../../source/skeleton.pug
     h2 디렉터리 구조
     +table()
         +ths('디렉터리', '내용')
-        +tds('/bin', '시스템, 관리자, 일반 사용가 모두가 공유하는 명령어')
+        +tds('/bin', '시스템, 관리자, 일반 사용자 모두가 공유하는 명령어')
         +tds('/boot', '시동에 필요한 파일')
         +tds('/dev', '주변장치파일')
         +tds('/etc', '환경설정')
@@ -379,14 +379,16 @@ include ../../source/skeleton.pug
                             cat &lt;&lt;END
                             Hello~
                             x=$x
-                            END    # x=3
+                            END
+                            # 출력 : x=3
                     li limit string을 따옴표로 감싸면 parameter substitution을 수행하지 않는다
                         +asCode('bash').
                             x=3
-                            cat &lt;&lt;END
+                            cat &lt;&lt;'END'
                             Hello~
                             x=$x
-                            END    # x=$x
+                            END
+                            # 출력 : x=$x
                     li 동일 스크립트 내의 함수 입력으로 사용할 수 있다
                         +asCode('bash').
                             set_variables ()
@@ -472,7 +474,7 @@ include ../../source/skeleton.pug
                 set +x # stop debugging
         li 현재 셸에서 직접 플래그 조정
             ul
-                li set -f : disable file name generation using metacaracters
+                li set -f : disable file name generation using metacharacters
                 li set -v : print shell input lines
                 li set -x : print command traces before executing command
 
@@ -513,19 +515,19 @@ include ../../source/skeleton.pug
         li 변수 선언
             +asCode('shell').
                 $ varName="value"
-                $ let varName="value"
+                $ let varName="1 + 2"    # let은 산술식을 계산한다(varName=3)
         li 환경 변수로 전달
             +asCode('shell').
                 # child process에서 사용할 수 있게 된다
                 $ export varName
                 $ export varName="value"
-                $ export PATH="$PATH:/usr/java/jdk-13.0.2/bin
+                $ export PATH="$PATH:/usr/java/jdk-13.0.2/bin"
 
     h3 예약 변수
     +table()
         +ths('name', 'definition')
         +tds('BASH', 'bash의 절대경로')
-        +tds('BASH_ENV', '로그인 셸에서, 파일로 설정된 경우, 셸 스크립트를 실행하기 전에 먼저 읽는다')
+        +tds('BASH_ENV', '비대화형 셸(스크립트 실행)에서, 파일로 설정된 경우, 셸 스크립트를 실행하기 전에 먼저 읽는다')
         +tds('BASHPID', '현재 bash PID')
         +tds('BASH_SUBSHELL', 'subshell level Since bash 3')
         +tds('BASH_VERSION', 'bash 버전')
@@ -769,7 +771,7 @@ include ../../source/skeleton.pug
 
                 $ echo "$IFS"
                 123
-                $ IFS=' \t\n'
+                $ IFS=$' \t\n'
                 $ echo $str
                 a1b2c3d4e5
         li File name expansion
@@ -832,7 +834,7 @@ include ../../source/skeleton.pug
                 +tds('[ -h FILE ]', 'FILE 존재 && symbolic link')
                 +tds('[ -k FILE ]', 'FILE 존재 && sticky bit set; 파일에 설정된 경우, 빠른 접근을 위해 캐시 메모리에 저장된다. 디렉터리에 설정된 경우, 해당 디렉터리에 쓰기 권한을 가진 유저(디렉터리 소유자, root 제외)는 자기가 소유한 파일에 대해서만 변경 가능하다')
                 +tds('[ -p FILE ]', 'FILE 존재 && pipe')
-                +tds('[ -r FILE ]', 'FILE 존재 && redable')
+                +tds('[ -r FILE ]', 'FILE 존재 && readable')
                 +tds('[ -s FILE ]', 'FILE 존재 && size > 0')
                 tr
                     td [ -t FD ]
@@ -869,7 +871,7 @@ include ../../source/skeleton.pug
                 +tds('[ -n "$a" ] or [ "$a" ]', '문자열 길이 > 0')
                 +tds('[ -o OPTIONNAME ]', '셸 옵션이 켜 있음')
                 +tds('[ ! EXPRESSION ]', 'not EXPRESSION')
-                +tds('[ (EXPRESSION) ]', '연산 우선순위 조정 가능')
+                +tds('[ \\( EXPRESSION \\) ]', '연산 우선순위 조정 가능')
                 +tds('[ EXPRESSION1 -a EXPRESSION2 ], [[ EXPRESSION1 && EXPRESSION2 ]]', 'and; &&는 short-circuit')
                 +tds('[ EXPRESSION1 -o EXPRESSION2 ], [[ EXPRESSION1 || EXPRESSION2 ]]', 'or; ||는 short-circuit')
     h3 if - Advanced
@@ -888,8 +890,8 @@ include ../../source/skeleton.pug
                 (( 0 &amp;&amp; 1 ))
                 echo $?                # 1
                 let "x = (( 0 &amp;&amp; 1))"
-                echo $x                # 0
                 echo $?                # 1
+                echo $x                # 0
         li else
             +asCode('bash') if ...; then ... else ... fi
         li elif
@@ -953,7 +955,7 @@ include ../../source/skeleton.pug
     h3 shift
     +asCode('bash').
         shift   # $1 인자 버려짐
-        shift 3 # $1, $2 인자 버려짐
+        shift 3 # $1, $2, $3 인자 버려짐
 
         while (( "$#" ));
         do
@@ -986,7 +988,7 @@ include ../../source/skeleton.pug
     h3 Signal
     +table()
         +tds('SIGHUP', '1', 'Hangup')
-        +tds('SIGINT', '2', 'Interrupt frmo keyboard; Ctrl+C')
+        +tds('SIGINT', '2', 'Interrupt from keyboard; Ctrl+C')
         +tds('SIGKILL', '9', 'Kill; 강제 종료')
         +tds('SIGTERM', '15', 'Termination; 정상 종료')
         +tds('SIGSTOP', '17, 19, 23', 'Stop')
@@ -1199,7 +1201,7 @@ include ../../source/skeleton.pug
     h3 cat, tac
     ul
         li cat : 파일을 순서대로 위-&gt;아래 라인 순으로 표준 출력
-            p -n(줄 번호), -E(줄 끝에 $), -s(반복적인 빈 라인 생략), -T(탭을 ^T로 표기)
+            p -n(줄 번호), -E(줄 끝에 $), -s(반복적인 빈 라인 생략), -T(탭을 ^I로 표기)
             +asCode('shell') $ cat file1 file2 file3 &gt; file123
         li tac : 파일을 순서대로 아래-&gt;위 라인 순으로 표준 출력
 
@@ -1308,12 +1310,13 @@ include ../../source/skeleton.pug
         $ date -s "2019-01-01 12:34:56"
 
     h3
-        +asA('https://nxmnpg.lemoda.net/8/ntpdate', 'ntpdate')
+        +asA('https://www.ntp.org/documentation/4.2.8-series/ntpdate/', 'ntpdate')
         |  : 시각 동기화
     +asCode('shell').
         $ ntpdate server    # 동기화
         $ ntpdate -d server # 오차 출력
     p NTP : Network Time Protocol. 시간 동기화를 위한 프로토콜
+    p (2026 기준: ntpdate는 낡은 도구다. 지금 배포판은 chrony(#[+asInlineCode('chronyc makestep')])나 systemd-timesyncd(#[+asInlineCode('timedatectl')])로 시각을 맞춘다)
         +asA('https://zetawiki.com/wiki/공용_NTP_서버_목록')
 
     h3 cal : 달력 출력
@@ -1417,8 +1420,8 @@ include ../../source/skeleton.pug
     h4 개요
     p 스트림 편집 프로그램; 및 프로그래밍 언어
     +asCode('shell').
-        $ awk { PROGRAM } inputFile(s)        # 각 파일 모든 라인들에 대해 PROGRAM 실행
-        $ awk '/REGEX/(gmi) { PROGRAM } inputFile(s) # 각 파일 REGEX 일치 라인들에 대해 PROGRAM 실행
+        $ awk '{ PROGRAM }' inputFile(s)        # 각 파일 모든 라인들에 대해 PROGRAM 실행
+        $ awk '/REGEX/ { PROGRAM }' inputFile(s) # 각 파일 REGEX 일치 라인들에 대해 PROGRAM 실행
         $ awk -f programFile inputFile(s)
 
     h4 print
@@ -1451,9 +1454,11 @@ include ../../source/skeleton.pug
     h3 ssh : Secure shell
 
     h3 ifconfig : 네트워크 인터페이스 정보
+    p (2026 기준: ifconfig·netstat가 든 net-tools는 낡았다. 대신 iproute2의 #[+asInlineCode('ip addr')], #[+asInlineCode('ss')]를 쓴다)
 
     h3 netstat : 네트워크 사용 정보
     +asCode('shell') $ netstat -anp | grep 10080
+    +asCode('shell', 'ss로 같은 일') $ ss -anp | grep 10080
 
     h2 산술
     h3 factor : 소인수분해
@@ -1520,6 +1525,7 @@ include ../../source/skeleton.pug
         li Commands : clean(캐시 삭제), check-update, downgrade, erase, info, install, list, reinstall, search, update, version, 등...
 
     h3 EPEL(Extra Packages for Enterprise Linux) 허용
+    p (2026 기준: CentOS 6·7은 지원이 끝났고(CentOS 7은 2024-06-30), RHEL 7도 같은 날 일반 유지 지원이 끝나 유료 연장 지원만 남았다. 지금은 Rocky Linux·AlmaLinux 같은 RHEL 9·10 계열에서 yum 대신 dnf로 #[+asInlineCode('dnf install epel-release')])
     ol
         li 서드 파티 패키지를 설치하려면 EPEL을 허용해야 한다
         li RHEL 6.x / CentOS 6.x
@@ -1530,14 +1536,17 @@ include ../../source/skeleton.pug
             +asCode('shell') $ yum install epel-release.noarch
 
     h1 FTP Server : vsftpd
+    p (2026 기준: FTP는 계정 암호와 파일을 평문으로 보낸다. 가능하면 OpenSSH의 SFTP를 쓰고, vsftpd를 써야 한다면 ssl_enable=YES로 FTPS를 켠다)
     ol
         li 설치
             +asCode('shell') $ yum install vsftpd
 
-        li 설정 : /etc/vsftpd/vsftpd.conf
+        li 설정 : /etc/vsftpd/vsftpd.conf (주석은 줄 맨 앞의 #만 인정된다 -- 값 뒤에 붙이면 설정 오류)
             +asCode('properties').
-                anonymous_enable=NO # 익명 차단
-                listen_ipv6=NO # IPv4 사용
+                # 익명 차단
+                anonymous_enable=NO
+                # IPv4 사용
+                listen_ipv6=NO
 
         li 방화벽 허용
             +asCode('shell').
@@ -1559,6 +1568,7 @@ include ../../source/skeleton.pug
     ul
         li root 로그인 허용
             p /etc/vsftpd/ftpusers, /etc/vsftpd/user_list에서 root 제거
+            p (권하지 않는다: 평문 FTP에서는 root 암호가 그대로 노출된다. 일반 계정으로 접속하고 필요한 권한만 준다)
 
         li 사용자 홈 디렉터리 외부 접근 허용
             p /etc/vsftpd/chroot_list : chroot_list_enable=YES
@@ -1578,7 +1588,7 @@ include ../../source/skeleton.pug
 
     h1 SELinux
     ol
-        li SELinux 모드 : enforce, permissive, disable
+        li SELinux 모드 : enforcing, permissive, disabled
             p setenforce 1 # enforce로 임시 변경
                 br
                 |setenforce 0 # permissive로 임시 변경
@@ -1586,7 +1596,7 @@ include ../../source/skeleton.pug
                 |getenforce # 모드 확인
         li 부팅시 사용되는 기본 모드는 /etc/selinux/config에 정의돼있다
         li SELinux 로그 위치 : /var/log/audit/audit.log
-        li SELinux 로그 분석 유티릴티 : setroubleshoot
+        li SELinux 로그 분석 유틸리티 : setroubleshoot
             +asCode('shell').
                 $ yum install setroubleshoot
                 $ sealert -a /var/log/audit/audit.log

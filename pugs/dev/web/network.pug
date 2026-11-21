@@ -73,7 +73,7 @@ include ../../../source/skeleton.pug
             li 데이터 링크 계층의 이더넷 : type 필드 이용 -- 0x0800(IPv4), ...
             li 네트워크 계층의 IP : protocol 필드 이용 -- 6(TCP), 17(UDP), ...
 
-        li 에러검출에 사용되는 체크섬은 자기 계층에서 붙인 비트열만 대상으로 한다 -- 상위 계층의 메시지는 체크섬에 포함하지 않는다
+        li 에러검출에 사용되는 체크섬이 덮는 범위는 계층마다 다르다 -- IPv4 헤더 체크섬은 IP 헤더만 대상으로 하지만, TCP·UDP 체크섬은 의사 헤더·헤더·데이터를, 이더넷 FCS는 프레임 전체를 대상으로 한다
 
 
     h1 IP
@@ -93,7 +93,7 @@ include ../../../source/skeleton.pug
     ul
         li 128bit : [0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]
         li 접두 0은 제거할 수 있다 + 반복 적용 가능; 0123:A:0123 == 123:A:123
-        li 0:0(:0)*은 :으로 축약할 수 있다 + 전체 주소에 대해 1회만 적용 가능; A:0:0:B == A::B
+        li 0:0(:0)*은 ::으로 축약할 수 있다 + 전체 주소에 대해 1회만 적용 가능; A:0:0:B == A::B
 
     h1 UDP; User Datagram Protocol
     h2 특징
@@ -103,7 +103,7 @@ include ../../../source/skeleton.pug
         li 신뢰성 없음
         p 확인응답 없음 + 데이터그램 오류 탐지 시 단순 폐기
     h2 Datagram
-    p Source port 16비트 | Destination port 16비트 | Total length(최대 65507바이트) 16비트 | Checksum 16비트 | Data
+    p Source port 16비트 | Destination port 16비트 | Length(헤더 8바이트 포함, 최대 65535바이트 -- IPv4에서 실을 수 있는 데이터는 최대 65507바이트) 16비트 | Checksum 16비트 | Data
 
 
     h1 TCP; Transmission Control Protocol
@@ -211,6 +211,7 @@ include ../../../source/skeleton.pug
 
     h2 HTTP/2
         +asA('https://datatracker.ietf.org/doc/html/rfc7540')
+    p (2026 기준: RFC 7540은 2022년 #[+asA('https://datatracker.ietf.org/doc/html/rfc9113', 'RFC 9113')]으로 대체됐다. 아래 PRIORITY 프레임의 우선순위 체계는 RFC 9113에서 폐기됐고, 서버 푸시(PUSH_PROMISE)는 Chrome 등 주요 브라우저가 지원을 걷어냈다)
     ul
         li 요청 헤더 압축 지원
         li 동일 서버에 대해 하나의 커넥션으로 여러 요청 동시 수행 가능
@@ -262,11 +263,11 @@ include ../../../source/skeleton.pug
             |)으로 전환
         ul
             li HTTP/2가 동일 연결을 사용한 요청 멀티플렉싱으로 애플리케이션 계층의 HOL 문제를 해소했지만, 여전히 TCP 자체의 HOL 문제는 남아있었다
-            p 한 요청의 패킷만 손실되도 전체 요청이 영향을 받는다 -- HTTP/2는 HTTP 교환을 각 스트림으로 구별할 수 있지만, TCP는 그러한 추상화에 대해 알지 못하므로 전체 스트림이 정확한 순서로 도달할 때까지 대기한다
+            p 한 요청의 패킷만 손실돼도 전체 요청이 영향을 받는다 -- HTTP/2는 HTTP 교환을 각 스트림으로 구별할 수 있지만, TCP는 그러한 추상화에 대해 알지 못하므로 전체 스트림이 정확한 순서로 도달할 때까지 대기한다
             li QUIC은 네이티브 멀티플렉싱으로 위와 같은 문제가 발생하지 않는다
             li QUIC 연결은 IP에 독립적이므로, WiFi와 셀룰러 네트워크 사이의 전환이 발생하는 모바일 환경에 유용
         li TCP가 제공하는 혼잡 제어 등의 기능이 커널 공간에서 동작하는 반면, HTTP/3은 유저 공간에서 실행하는 대신 알고리즘을 자주 업데이트 가능
-        li TLS 대신 이에 상응하는 DTLS를 이용해 보안 통신 수행. 이에 더해, QUIC은 암호화되지 않은 연결을 지원하지 않는다
+        li QUIC은 TLS 1.3 핸드셰이크를 프로토콜 안에 통합해 보안 통신을 수행한다(DTLS가 아니다 -- #[+asA('https://datatracker.ietf.org/doc/html/rfc9001', 'RFC 9001')]). 이에 더해, QUIC은 암호화되지 않은 연결을 지원하지 않는다
         li UDP 공격에 대한 방어 : QUIC 초기 패킷은 최소 1200바이트여야 한다; 서버가 ACK 패킷을 받지 못한 경우, 요청 크기의 3배 이상을 보내지 않는다
 
     h2 MIME 타입
@@ -274,6 +275,7 @@ include ../../../source/skeleton.pug
         p 형식 : Type/SubType; variable=value
         li application/*
         p /http, /octet-stream, /pdf, /xml, /zip, /x-tar, /x-gtar(GNU tar), /x-gzip, /x-javascript, ...
+        p (2026 기준: 자바스크립트는 text/javascript(RFC 9239)가, gzip은 application/gzip(RFC 6713)이 표준이다)
         li audio/*
         p /midi, /mpeg, /x-wav, ...
         li image/*
@@ -293,7 +295,7 @@ include ../../../source/skeleton.pug
         +asCode('html') &lt;link rel="preconnect" href="//...com" crossorigin&gt;
         li 리다이렉션하지 않기
         li 클라이언트에 캐싱하기
-        li onload 이벤트 전에 js가 실행되야 하는 경우
+        li onload 이벤트 전에 js가 실행돼야 하는 경우
         +asCode('html') &lt;script async src="...js"&gt;
         li DOM 로드 후에 js를 실행해도 되는 경우
         +asCode('html') &lt;script defer src="...js"&gt;
@@ -336,16 +338,16 @@ include ../../../source/skeleton.pug
     +asCode('txt', 'Facebook 응답 헤더 예시').
         content-security-policy: default-src data: blob: 'self' https://*.fbsbx.com 'unsafe-inline' *.facebook.com 'unsafe-eval' *.fbcdn.net;script-src *.facebook.com *.fbcdn.net *.facebook.net *.google-analytics.com *.google.com 127.0.0.1:* 'unsafe-inline' 'unsafe-eval' blob: data: 'self' connect.facebook.net;style-src fonts.googleapis.com *.fbcdn.net data: *.facebook.com 'unsafe-inline';connect-src *.facebook.com facebook.com *.fbcdn.net *.facebook.net wss://*.facebook.com:* wss://*.whatsapp.com:* attachment.fbsbx.com ws://localhost:* blob: *.cdninstagram.com 'self' wss://gateway.facebook.com wss://edge-chat.facebook.com wss://snaptu-d.facebook.com wss://kaios-d-test.facebook.com/ wss://kaios-d.facebook.com/ v.whatsapp.net *.fbsbx.com *.fb.com https://api.mapbox.com https://*.tiles.mapbox.com;font-src data: *.gstatic.com *.facebook.com *.fbcdn.net *.fbsbx.com;img-src *.fbcdn.net *.facebook.com data: https://*.fbsbx.com *.tenor.co media.tenor.com facebook.com *.cdninstagram.com fbsbx.com fbcdn.net *.giphy.com connect.facebook.net *.carriersignal.info blob: android-webview-video-poster: googleads.g.doubleclick.net www.googleadservices.com *.whatsapp.net *.fb.com *.oculuscdn.com;media-src *.cdninstagram.com blob: *.fbcdn.net *.fbsbx.com www.facebook.com *.facebook.com https://*.giphy.com data:;frame-src *.doubleclick.net *.google.com *.facebook.com www.googleadservices.com *.fbsbx.com fbsbx.com data: www.instagram.com *.fbcdn.net https://paywithmybank.com;worker-src blob: *.facebook.com data:;block-all-mixed-content;upgrade-insecure-requests;
     +table()
-        +tds('data:', 'keyword "none"', 'data 스킴 비허용')
+        +tds('data:', '스킴 소스 "data:"', 'data: URL 리소스 허용')
         +tds("blob: 'self'", 'keyword "self"', 'blob 스킴은 현재 origin과 동일한 경우 허용')
         +tds("https://*.fbsbx.com 'unsafe-inline'", 'keyword "unsafe-inline"', '인라인 script, style 사용 허용')
-        +tds("*.facebook.com 'unsafe-eval'", 'keyword "unsafe-eval"', '동적 코드 평가 eval(), setImmediate(), window.execScript() 허용')
+        +tds("*.facebook.com 'unsafe-eval'", 'keyword "unsafe-eval"', '동적 코드 평가 eval(), new Function(), 문자열을 넘긴 setTimeout() 등 허용')
 
     h3 HTTP 기본 인증
     ol
         li 기본 인증을 안전하게 이용하는 유일한 방법은 SSL과 결합해서 사용하는 것
         li 클라이언트 최초 GET 요청
-        +asCode() GET /family/jeff.jpt HTTP/1.0
+        +asCode() GET /family/jeff.jpg HTTP/1.0
         li 서버 401 Unauthorized 응답
         +asCode().
             HTTP/1.0 401 Authorization Required
@@ -354,7 +356,7 @@ include ../../../source/skeleton.pug
         li 클라이언트 인증 GET 요청
         +asCode().
             GET /family/jeff.jpg HTTP/1.0
-            Authorization: Basic "ID:base-64_encoded_password"
+            Authorization: Basic BASE64("ID:password")
         p Authorization 헤더 : 인증 알고리즘, 사용자 이름, 비밀번호
         li 200 OK
 
@@ -369,24 +371,24 @@ include ../../../source/skeleton.pug
         +asCode().
             HTTP/1.1 401 Unauthorized
             WWW-Authenticate: Digest
-                realm="Shopping Cart"
-                qop="auth,auth-int"
+                realm="Shopping Cart",
+                qop="auth,auth-int",
                 nonce="66C4EF58..."
         li 클라이언트 인증 GET 요청
         +asCode().
             GET /cgi-bin/checkout?cart=17854 HTTP/1.1
             Authorization: Digest
-                username="bri"
-                realm="Shoppint Cart"
-                nonce="66C4EF58..."
-                uri="/cgi-bin/checkout?cart=17854"
-                qop="auth"
-                nc=0000001,
+                username="bri",
+                realm="Shopping Cart",
+                nonce="66C4EF58...",
+                uri="/cgi-bin/checkout?cart=17854",
+                qop=auth,
+                nc=00000001,
                 cnonce="CFA920710..."
         li 계산
         ol
             li H(d) := 단방향 해시 함수
-            li KD(s, d) := 요약 함수 // s : sccret, d : data
+            li KD(s, d) := 요약 함수 // s : secret, d : data
             li RFC 2617에서 제안된 알고리즘은 MD5(기본), MD5-sess
             li H(d) = MD5(d), KD(s, d) = MD5(s:d)
             li nonce = BASE64(timestamp H(timestamp":"ETag":"private_key))
@@ -397,7 +399,7 @@ include ../../../source/skeleton.pug
         li: +goto('전자 서명', '/posts/fundamental/algorithm.html')
         li 디지털 인증서
         p 신뢰할 수 있는 조직에 의해 서명되고 검증된 신원 확인 정보
-        li 암호(chipher)
+        li 암호(cipher)
         p 보통 연결을 수립할 때는 느린 공개키 암호를 사용하고, 이후 메시지 전송에는 빠른 대칭키 암호를 사용
 
     h3 Clear-Site-Data 응답 헤더
