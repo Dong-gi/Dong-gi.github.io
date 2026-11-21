@@ -876,7 +876,7 @@ export JAVA_HOME="$HOME/.gradle/jdks/jetbrains_s_r_o_-21-amd64-windows.2"
 minSdk 를 읽는다 — 2.0.0 부터 36). **`NewApi` 는 0건이다.** PiP 의 API 33 짜리 setter 넷(`setTitle`·`setSubtitle`·`setCloseAction`·
 `setExpandedAspectRatio`)은 minSdk 36 이라 쓸 수 있게 되었으나 부르지 않는다(제목에 파일 이름을 싣는 것은 사용자가 정할 일 — '2.0.0 — minSdk 36').
 
-**JVM 시험은 1,900건이다**(순수 JVM 636 + 안드로이드 모듈 1,264 — 2026-11-21, Files에 저장·`.smi` 자막과 그 검토 뒤), 실패 0. 건너뜀은 표본(`samples-local/`)이 있는 저장소에서 3(윈도에서 심볼릭
+**JVM 시험은 1,911건이다**(순수 JVM 636 + 안드로이드 모듈 1,275 — 2026-11-21, 영상 화면 캡처·프레임 넘기기 뒤), 실패 0. 건너뜀은 표본(`samples-local/`)이 있는 저장소에서 3(윈도에서 심볼릭
 링크를 만들 권한이 없다 — `feature:text` 1, 그리고 pyzipper 와 견주는 `feature:archive` 의 `AesZipOracleTest` 2 — 환경 변수 `IROIRO_AESZIP_ORACLE` 이
 있을 때만 돈다, '14단계 뒤 — AES 암호 ZIP'), 표본이 없는 작업 사본에서는 11(`format:epub` 4·`feature:docview` 4·`feature:text` 1·`feature:archive` 2).
 
@@ -885,10 +885,10 @@ minSdk 를 읽는다 — 2.0.0 부터 36). **`NewApi` 는 0건이다.** PiP 의 
 | `core:model` | 27 | `format:archive` | 251 | `feature:archive` | 40 |
 | `core:safety` | 68 | `format:epub` | 79 | `feature:browser` | 75 |
 | `core:charset` | 39 | `format:html` | 75 | `feature:comic` | 124 |
-| `core:io` | 226 | `format:text` | 97 | `feature:docview` | 165 |
+| `core:io` | 231 | `format:text` | 97 | `feature:docview` | 165 |
 | `core:data` | 31 | `app` | 63 | `feature:editor` | 70 |
 | `core:ui` | 107 | | | `feature:image` | 61 |
-| `core:playback` | 140 | | | `feature:player` | 41 |
+| `core:playback` | 146 | | | `feature:player` | 41 |
 | `core:webhost` | 18 | | | `feature:settings` | 18 |
 | | | | | `feature:text` | 85 |
 
@@ -2307,6 +2307,31 @@ JVM 시험과 옛 확인에 기댄다), 잘라 저장·그리기의 `expectedOri
 **확인하지 못한 것** — 실기기, 사진 앱(Google 포토)·메신저에서의 공유(시스템 파일 앱으로만), 실제로 응답하지 않는 제공자, SD 카드에 저장, 저장 중 화면이 시스템에 의해 끝난 경우(남은 항목이 '못 읽음'
 으로 끝날 것 — 코드로만), 공간 부족의 기기 동작(JVM·코드만), 1,000개 상한(셸은 URI 목록을 실을 수 없다), 다른 파일 작업 뒤에 줄 선 경우의 '기다리는 중' 화면.
 
+### 2.0.0 뒤 — 영상 화면 캡처·프레임 넘기기
+
+후보 '영상 도구' 의 둘이다(사용자 선택). 새 의존 없이 플랫폼 `PixelCopy` 와 media3 의 정확 탐색만 쓴다.
+
+| 무엇 | 왜 그렇게 했나 |
+|---|---|
+| **화면 캡처**는 재생 화면 ⋮ → '화면 캡처'(영상이 보일 때만) — 표면에서 받는다(`FrameCapture` — `PixelCopy.request(SurfaceView, …)`) | 뷰가 아니라 디코더가 표면에 넣은 마지막 버퍼를 받으므로 **확대·화면 비율과 상관없이 영상 크기로** 받고, 자막·조작부는 담기지 않는다. 크기는 `core:io` 의 `FrameShot.sizeOf` — 화소가 정사각형이 아니면 좁은 쪽을 늘리고(줄이면 원본 화소를 버린다), 잘라 저장의 상한(`ImageSaver.maxPixels`)을 넘으면 비율을 지켜 줄인다 |
+| 쓰기는 **파일 작업 큐**(`Request.SaveFrame` → `ImageSaver.saveFrame`, `Kind.CAPTURE`) — 결과는 구간 저장과 같은 길(`ClipJobs`) | 잘라 저장과 같은 까닭(같은 폴더를 두 작업이 동시에 만지지 않게, 임시본 → fsync → `NewFiles.place` 의 `O_EXCL`). 비트맵을 요청에 실어 보내고 쓰는 쪽이 놓는다(줄 선 채 거둔 것은 GC). 받기는 화면이 한다 — 표면이 화면에 있다 |
+| 이름은 `이름_capture_0m12.345s.jpg`(한 시간 넘으면 `1h02m03.456s`) | 1000분의 1초까지 — 프레임 넘기기로 한 초 안의 여러 장을 받으면 초까지만으로는 `(2)` 가 붙어 차례를 모른다. 꼬리는 다른 새 파일(`_crop`·`_clip`·`_audio`)처럼 영어 |
+| 형식은 **JPEG 95**, EXIF 없음 | 영상 프레임은 이미 손실 압축을 거쳐 PNG 는 크기만 서너 배다. 영상에는 옮길 찍은 날·기기 태그가 없다 |
+| 다른 앱이 넘긴 사본이면 **메뉴가 없다** — 판정은 구간 저장과 한 함수(`refusalBeside` — `IncomingFiles.isCopy`·`ClipSource.isAppCopy`) | **메뉴를 펼 때** 본다 — 화면이 처음 설 때 `remember(fileKey)` 로 재면 경로를 묻는 컨트롤러(`ItemPaths`)가 아직 붙지 않아 늘 거짓이었다(에뮬레이터에서 메뉴가 안 섰다). 누를 때 다시 보고 거절하면 까닭을 말한다 |
+| 실패는 까닭을 말한다 | `ERROR_SOURCE_NO_DATA`(첫 프레임 전)·표면이 사라졌다 → '아직 받을 화면이 없습니다', `ERROR_SOURCE_INVALID` → '이 화면은 읽을 수 없습니다'(보호된 표면 — 이 앱은 DRM 영상을 틀지 않으므로 대개 표면이 막 사라진 것), 나머지 → '화면을 캡처하지 못했습니다' |
+| **프레임 넘기기**는 가운데 큰 재생 단추의 **양옆**에(‹ ›, 멈췄을 때만) | 처음에 조작부 둘째 줄의 ⋮ 앞에 두었더니 1080 px 폰에서 줄이 넘쳐 ⋮ 가 화면 밖(가로 스크롤)으로 밀렸다(에뮬레이터). 자리는 재생 중에도 비워 두어 가운데 단추가 움직이지 않는다. 화살표는 쓰기 방향을 따라 뒤집힌다 |
+| `MediaController` 에 프레임 명령이 없어 **정확 탐색**으로(`PlaybackConnection.stepFrame` — 재생 중이면 먼저 멈춘다) | 플레이어의 `SeekParameters` 는 기본값 `EXACT` 그대로다(앱 어디서도 바꾸지 않는다 — **바꾸면 이 기능이 깨진다**). 정확 탐색은 표시 시각이 탐색 자리 이상인 첫 프레임을 보인다 |
+| 다음 자리의 셈은 순수 함수(`FrameStep`, `core:playback`) — **프레임 j 앞 ¼ 프레임**으로 간다 | 프레임 사이 끝에 붙이면 밀리초·90 kHz 반올림이 한 프레임을 건너뛰게 한다. ¼ 이면 아래로 ¼·위로 ¾ 의 여유가 남고, 지금 프레임은 위치에서 반올림으로 되읽힌다(상태가 없다). 프레임 길이는 고른 영상 트랙의 `Format.frameRate`, 모르면 1/30초, 240 fps 위는 240 으로(¼ 프레임이 1 ms 를 넘어야 한다). 23.976~240 fps 에서 3,000번 앞·뒤로, 한 시간 뒤에서도 어긋나지 않는다(`FrameStepTest`) |
+
+**한계.** 프레임 시각을 `k × 길이` 로 본다 — 가변 프레임율이나 첫 프레임이 0초가 아닌 영상은 한 프레임을 건너뛰거나 되풀이할 수 있다. 재생하다 멈춘 자리에서의
+첫 걸음은 보이는 프레임을 반올림으로 짐작해 한 프레임 어긋날 수 있다(둘째부터는 우리가 고른 자리라 맞는다). 넘긴 뒤 캡처한 파일 이름의 시각은
+그 프레임의 표시 시각보다 ¼ 프레임 앞선다(탐색한 자리를 적는다). 앞의 저장이 줄 서 있거나 도는 동안은 '화면 캡처' 가 꺼진다 — 비트맵이 큐에 쌓이지 않게.
+
+**에뮬레이터에서 본 것**(Android 16, 릴리스) — `screenrecord --size 1280x720` 합성 영상(약 5.8초, 끝나면 지웠다)에서 멈추면 ‹ › 가 서고, 끝에서 ›
+는 아무것도 하지 않으며 ‹ 넷·› 둘이 세션 위치로 5,762 → 5,640 → 5,722 ms(한 걸음 약 41 ms — 이 표본의 프레임율 값)로 대칭이었다. ⋮ → '화면 캡처'
+가 `sample_capture_0m05.722s.jpg`(1280×720, 58 KB — 조작부·안내 없이 영상만)를 곁에 쓰고 '화면을 저장했습니다: …' 를 띄웠다. **확인하지 못한 것** —
+회전 메타가 있는 세로 영상(표면 버퍼의 변환을 `PixelCopy` 가 적용하는지), 화소 비율이 1 이 아닌 영상, 8K 의 줄임, 실기기.
+
 ## 더할 만한 기능 후보 (검토만, 코드 없음 — 사용자가 고르기 전)
 
 비슷한 앱들(MiXplorer·Solid Explorer·Material Files·Files by Google·VLC·MX Player·Moon+ Reader·Perfect Viewer·Mihon·Xodo 등)의 공식 자료로 고른
@@ -2328,7 +2353,7 @@ JVM 시험과 옛 확인에 기댄다), 잘라 저장·그리기의 `expectedOri
 다툰다 — 첫 판은 화면이 켜진 동안만. 'EPUB 미디어 오버레이는 넣지 않는다' 와 같은 묶임이라 **사용자 결정**. 읽는 글이 TTS 엔진 앱으로 넘어간다),
 만화의 여백 자르기·넓은 쪽 나누기·밝기(Mihon·Perfect Viewer — 나누면 쪽 번호와 칸 번호가 갈려 이어보기 셈을 고친다), 이미지 도구(~~왼쪽 회전·뒤집기 —
 EXIF 2·4·5·7·8 은 무손실~~ — **했다**('2.0.0 뒤 — 왼쪽 회전·뒤집기'), 슬라이드쇼, 배경화면 `getCropAndSetWallpaperIntent` — 권한 없이, 크기·형식 바꾸기, 사진 여러 장 → PDF `PdfDocument`),
-영상 도구(화면 캡처 `PixelCopy`, 프레임 넘기기, 무손실 회전 저장 `MediaMuxer.setOrientationHint`), 소리 효과(`Equalizer`·`LoudnessEnhancer`·
+영상 도구(~~화면 캡처 `PixelCopy`, 프레임 넘기기~~ — **했다**('2.0.0 뒤 — 영상 화면 캡처·프레임 넘기기'), 무손실 회전 저장 `MediaMuxer.setOrientationHint`), 소리 효과(`Equalizer`·`LoudnessEnhancer`·
 `DynamicsProcessing` — 권한 없음, 삼성의 음향 효과와 겹칠 수 있다), 오디오(지금 곡의 태그·앨범 아트, `.m3u`·`.m3u8` 저장·열기 — `#EXT-X-` 면 HLS,
 큐 편집. 태그 고치기는 뒤로 — jaudiotagger 는 LGPL·옛 API 문제), Web 과 함께 우고이라 움직이게(Web 이 `ugoira_meta` 의 프레임 시간을 곁 파일로),
 16진수 보기, 색인 없는 내용 찾기, 폴더 한쪽 맞추기(SD·USB — 미리보기, 지울 것은 휴지통), PDF 쪽 뽑기·합치기·돌리기(L — 암호 PDF 를 다시 쓰는
@@ -2371,7 +2396,7 @@ core/
   model/   [순수 JVM]     FileEntry 등 값 타입 + IroDispatchers + DayBucket(날짜 묶기) + PathNames + ExifOrientation(방향 합성)
   safety/  [순수 JVM] 2   상한·스트림 가드·SafeXml·ImageLimits·ComicLimits·PdfLimits·DecryptLimits — 방어 상한의 유일한 지점
   charset/ [순수 JVM] 7   인코딩 감지. 판정을 부르는 곳은 아래 문단
-  io/      [Android]      볼륨·권한·나열·파일조작·휴지통 · ZIP 만들기(암호 ZIP 의 쓰개 `AesZipWriter` 포함)·잘라 저장의 쓰기·구간 저장과 소리만 뽑기(`clip/`) · 글 저장·새 글 파일(`TextSaver`)
+  io/      [Android]      볼륨·권한·나열·파일조작·휴지통 · ZIP 만들기(암호 ZIP 의 쓰개 `AesZipWriter` 포함)·잘라 저장의 쓰기·구간 저장과 소리만 뽑기(`clip/`) · 글 저장·새 글 파일(`TextSaver`) · 영상 화면 캡처의 쓰기(`FrameShot`·`ImageSaver.saveFrame`)
                           · 다른 앱으로 열기(`ExternalOpen`)·다른 앱에서 받기(`IncomingFiles`)
                           · 편집기와의 약속(`EditorApp`)·편집기가 돌려준 문서의 저장(`EditorSaver`)·새 문서의 서식(`BlankDocuments`·`NewDocuments`)
   data/    [Android]  2   Room + DataStore + 크래시 기록(`CrashLog`)

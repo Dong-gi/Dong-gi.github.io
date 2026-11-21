@@ -272,6 +272,7 @@ fun OperationBar(
                                 FileOpManager.Kind.MARKUP -> IoR.string.io_op_markup
                                 FileOpManager.Kind.CLIP -> IoR.string.io_op_clipping
                                 FileOpManager.Kind.AUDIO -> IoR.string.io_op_audio
+                                FileOpManager.Kind.CAPTURE -> IoR.string.io_op_capturing
                                 // 글 편집의 저장·새 글 파일도 그 작업을 만든 `core:io` 의 문장이다.
                                 FileOpManager.Kind.SAVE_TEXT -> IoR.string.io_op_saving_text
                                 FileOpManager.Kind.NEW_TEXT -> IoR.string.io_op_creating_text

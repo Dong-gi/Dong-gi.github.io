@@ -294,6 +294,26 @@ object FileOpManager {
         }
 
         /**
+         * 영상 화면 캡처 — 재생 화면이 표면에서 받아 온 한 장([bitmap])을 영상 곁에 `이름_capture_0m12.345s.jpg` 로 쓴다
+         * ([ImageSaver.saveFrame]). 받는 일은 화면이(표면은 화면에 있다), 쓰는 일은 이 큐가 한다(잘라 저장과 같은 까닭). 비트맵은 쓰는 쪽이
+         * 놓는다 — 줄 선 채 거둔 요청의 비트맵은 GC 가 거둔다.
+         *
+         * @param positionMs 받은 화면의 영상 시각 — 이름에 적는다.
+         */
+        class SaveFrame(
+            override val id: String,
+            val path: String,
+            val bitmap: android.graphics.Bitmap,
+            val positionMs: Long,
+            override val sink: ResultSink? = null,
+        ) : Request {
+            override val label get() = path
+
+            // 경로를 `toString`(로그·예외)에 싣지 않는다.
+            override fun toString(): String = "SaveFrame(id=$id)"
+        }
+
+        /**
          * 고친 글을 **그 파일에** 쓴다(글·코드 파일 편집). 원본을 고치는 일이라 이 큐를 지난다(같은 파일을 복사·이동과
          * 동시에 만지지 않게, 결과 보고를 그대로 얻게). 실체는 [TextSaver.save] — 임시본 → fsync → 원자적 rename, 고치기 전 판을
          * 휴지통에, 연 뒤에 밖에서 바뀌었으면 쓰지 않는다.
@@ -500,7 +520,7 @@ object FileOpManager {
         fun offer(finished: Finished): Boolean
     }
 
-    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, SHARE_ZIP, RECEIVE, CROP, MARKUP, CLIP, AUDIO, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC }
+    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, SHARE_ZIP, RECEIVE, CROP, MARKUP, CLIP, AUDIO, CAPTURE, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC }
 
     private val _state = MutableStateFlow<State>(State.Idle)
     val state: StateFlow<State> = _state.asStateFlow()
@@ -915,6 +935,13 @@ object FileOpManager {
                 }
                 result.outcome
             }
+            is Request.SaveFrame -> {
+                val result = ImageSaver.saveFrame(request, MediaIndex(context), onProgress) { r ->
+                    r.path?.let { onExtra(Extra.Saved(it, r.note)) }
+                    onPlaced(r.outcome)
+                }
+                result.outcome
+            }
             // 글 편집. 쓴 뒤에 온 취소가 '저장을 취소했습니다' 를 말하지 않게 놓은 자리에서 알린다(위 셋과 같다).
             is Request.SaveText -> TextSaver.save(request, volumes, trash, MediaIndex(context), onExtra, onPlaced)
             is Request.CreateText -> TextSaver.create(request, MediaIndex(context), onExtra, onPlaced)
@@ -951,6 +978,7 @@ object FileOpManager {
         is Request.SaveIncoming -> Kind.RECEIVE
         is Request.SaveCrop -> if (r.overlay != null) Kind.MARKUP else Kind.CROP
         is Request.SaveClip -> if (r.audioOnly) Kind.AUDIO else Kind.CLIP
+        is Request.SaveFrame -> Kind.CAPTURE
         is Request.SaveText -> Kind.SAVE_TEXT
         is Request.CreateText -> Kind.NEW_TEXT
         is Request.SaveFromEditor -> Kind.SAVE_DOC

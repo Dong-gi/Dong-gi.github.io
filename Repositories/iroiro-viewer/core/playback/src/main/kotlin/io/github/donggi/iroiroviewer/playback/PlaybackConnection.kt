@@ -1024,6 +1024,32 @@ object PlaybackConnection {
     }
 
     /**
+     * 한 프레임 앞([forward]) 또는 뒤로([FrameStep]). 재생 중이면 먼저 멈춘다 — 흐르는 영상에서 한 프레임은 뜻이 없다. 프레임 길이는
+     * 고른 영상 트랙의 프레임율에서, 모르면 1/30초. 갈 곳이 없으면(첫 프레임에서 뒤로·끝에서 앞으로) 아무것도 하지 않는다.
+     * 메인 스레드에서 부른다(컨트롤러의 스레드다).
+     */
+    fun stepFrame(forward: Boolean) {
+        val c = controller ?: return
+        if (c.playWhenReady) c.pause()
+        val fps = c.currentTracks.groups
+            .firstOrNull { g -> g.type == C.TRACK_TYPE_VIDEO && g.isSelected }
+            ?.let { g -> (0 until g.length).firstOrNull { g.isTrackSelected(it) }?.let { g.getTrackFormat(it).frameRate } }
+            ?: -1f
+        val to = FrameStep.target(c.currentPosition.coerceAtLeast(0), FrameStep.frameUs(fps), c.duration, forward) ?: return
+        c.seekTo(to)
+    }
+
+    /**
+     * 화면 캡처가 받을 크기(`core:io` 의 `FrameShot.sizeOf` 에 넣을 원본 치수와 화소 비율). 영상 크기를 아직 모르면
+     * null. 메인 스레드에서 부른다.
+     */
+    fun videoPixels(): Triple<Int, Int, Float>? {
+        val size = controller?.videoSize ?: return null
+        if (size.width <= 0 || size.height <= 0) return null
+        return Triple(size.width, size.height, size.pixelWidthHeightRatio)
+    }
+
+    /**
      * 지금 위치 — 컨트롤러에서 곧바로 읽는다. 상태의 위치([State.positionMs])는 티커가 500 ms 마다 밀어 넣는 값이라, 그것을 쓰면 '끝을
      * 여기로' 를 누를 때 그만큼 앞의 자리가 잡힌다. 메인 스레드에서 부른다(컨트롤러의 스레드다).
      */

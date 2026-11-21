@@ -135,6 +135,7 @@ class FileOpService : Service() {
                 FileOpManager.Kind.MARKUP -> R.string.io_op_markup
                 FileOpManager.Kind.CLIP -> R.string.io_op_clipping
                 FileOpManager.Kind.AUDIO -> R.string.io_op_audio
+                FileOpManager.Kind.CAPTURE -> R.string.io_op_capturing
                 FileOpManager.Kind.SAVE_TEXT -> R.string.io_op_saving_text
                 FileOpManager.Kind.NEW_TEXT -> R.string.io_op_creating_text
                 FileOpManager.Kind.SAVE_DOC -> R.string.io_op_saving_doc

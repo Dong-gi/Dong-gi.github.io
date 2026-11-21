@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
@@ -53,6 +54,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
@@ -125,6 +128,7 @@ import io.github.donggi.iroiroviewer.io.ExternalOpen
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.FileOpManager
 import io.github.donggi.iroiroviewer.io.FileOpText
+import io.github.donggi.iroiroviewer.io.FrameShot
 import io.github.donggi.iroiroviewer.io.IncomingFiles
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.io.MediaClipper
@@ -543,6 +547,8 @@ class PlayerActivity : ComponentActivity() {
                     onOpenWith = ::openWithOtherApp,
                     onClip = ::startClip,
                     onClipPreview = ::previewClip,
+                    canSaveBeside = ::canSaveBeside,
+                    onCapture = ::startCapture,
                 )
             }
         }
@@ -576,15 +582,41 @@ class PlayerActivity : ComponentActivity() {
      */
     private fun startClip(mediaId: String, startMs: Long, endMs: Long?, audioOnly: Boolean): ClipStart {
         val path = itemPaths.pathOf(mediaId) ?: return ClipStart.Refused(R.string.player_clip_no_path)
-        // 다른 앱이 넘겨 앱 캐시에 둔 사본은 그 곁에 저장해도 사용자가 찾아갈 수 없다(읽기 전용 사본 — `IncomingFiles`).
-        if (IncomingFiles.isCopy(this, path)) return ClipStart.Refused(R.string.player_clip_copy)
-        // 앱 캐시의 공유 폴더 아래는 **모두** 같다 — 받은 사본이 아니어도 그 곁에 저장한 파일은 캐시에 남는다. 까닭을
-        // 말한다([ClipSource]).
-        if (ClipSource.isAppCopy(path, ShareHelper.shareDir(this))) return ClipStart.Refused(R.string.player_clip_app_copy)
+        refusalBeside(path)?.let { return ClipStart.Refused(it) }
         val id = java.util.UUID.randomUUID().toString()
         // 넣기 **전에** 신원을 적는다 — 곧바로 끝난 결과가 먼저 오면 신원이 영영 '기다리는 중' 에 남는다.
         ClipJobs.started(id)
         FileOpManager.enqueue(this, FileOpManager.Request.SaveClip(id, path, startMs, endMs, audioOnly, ClipJobs.sink))
+        return ClipStart.Started(id)
+    }
+
+    /** [path] 의 곁에 새 파일(구간·소리·화면 캡처)을 만들면 안 되는 까닭. 되면 null. */
+    private fun refusalBeside(path: String): Int? = when {
+        // 다른 앱이 넘겨 앱 캐시에 둔 사본은 그 곁에 저장해도 사용자가 찾아갈 수 없다(읽기 전용 사본 — `IncomingFiles`).
+        IncomingFiles.isCopy(this, path) -> R.string.player_clip_copy
+        // 앱 캐시의 공유 폴더 아래는 **모두** 같다 — 받은 사본이 아니어도 그 곁에 저장한 파일은 캐시에 남는다. 까닭을
+        // 말한다([ClipSource]).
+        ClipSource.isAppCopy(path, ShareHelper.shareDir(this)) -> R.string.player_clip_app_copy
+        else -> null
+    }
+
+    /** ⋮ 의 '화면 캡처' 를 세울 것인가 — 다른 앱이 넘긴 사본이면 메뉴가 없다(곁에 저장할 수 없다 — 구간 저장과 같은 규칙). */
+    private fun canSaveBeside(mediaId: String): Boolean = itemPaths.pathOf(mediaId)?.let { refusalBeside(it) == null } == true
+
+    /**
+     * 받아 온 화면 한 장([bitmap])을 큐 항목([mediaId]) 곁에 저장하라고 큐에 넣는다(화면 캡처 — [FrameCapture]). 결과는 구간 저장과
+     * 같은 길([ClipJobs])로 이 화면이 말한다. 못 넣으면 비트맵을 놓는다.
+     */
+    private fun startCapture(mediaId: String, bitmap: android.graphics.Bitmap, positionMs: Long): ClipStart {
+        val path = itemPaths.pathOf(mediaId)
+        val why = if (path == null) R.string.player_clip_no_path else refusalBeside(path)
+        if (path == null || why != null) {
+            bitmap.recycle()
+            return ClipStart.Refused(why ?: R.string.player_clip_no_path)
+        }
+        val id = java.util.UUID.randomUUID().toString()
+        ClipJobs.started(id)
+        FileOpManager.enqueue(this, FileOpManager.Request.SaveFrame(id, path, bitmap, positionMs, ClipJobs.sink))
         return ClipStart.Started(id)
     }
 
@@ -1192,6 +1224,10 @@ private fun PlayerScreen(
     onClip: (String, Long, Long?, Boolean) -> ClipStart,
     /** 큐 항목의 구간을 미리 잰다(담을 수 있는가, 영상이면 실제 시작). 경로를 못 찾으면 null. */
     onClipPreview: suspend (String, Long) -> MediaClipper.Preview?,
+    /** 큐 항목(`mediaId`) 곁에 새 파일을 만들어도 되는가(다른 앱이 넘긴 사본이 아닌가). */
+    canSaveBeside: (String) -> Boolean,
+    /** 받아 온 화면 한 장을 큐 항목 곁에 저장하라고 넣는다 — (항목, 비트맵, 영상 시각). */
+    onCapture: (String, android.graphics.Bitmap, Long) -> ClipStart,
 ) {
     val state by PlaybackConnection.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -1216,6 +1252,8 @@ private fun PlayerScreen(
     // 이 화면이 넣은 저장 가운데 아직 끝나지 않은 것(줄 서 있는 것 포함) — 진행 줄을 보이고 저장 단추를 끈다. 큐의 진행은 진행 줄이
     // 스스로 읽는다([ClipProgress]) — 여기서 들면 다른 작업의 진행마다 화면 전체가 다시 그려진다.
     val clipPending by ClipJobs.pending.collectAsStateWithLifecycle()
+    // 영상 표면 — 화면 캡처가 그것에서 받는다([FrameCapture]). 상태가 아니다(바뀌어도 다시 그릴 것이 없다).
+    val surfaceView = remember { java.util.concurrent.atomic.AtomicReference<SurfaceView?>(null) }
     // 고른 시작이 바뀌면 다시 잰다 — 끌어 옮기는 동안 여러 번 열지 않게 잠깐 기다린다.
     var clipPreview by remember { mutableStateOf<MediaClipper.Preview?>(null) }
     LaunchedEffect(clip?.key, clip?.startMs) {
@@ -1384,6 +1422,35 @@ private fun PlayerScreen(
     val saveClipAudio: () -> Unit = {
         clip?.takeIf { it.valid }?.let { c -> panelRequest = startSave(c.key, c.startMs, endOf(c), true) }
     }
+    // 화면 캡처 — 표면에서 받고([FrameCapture]) 큐에 넣는다. 누른 순간의 시각을 이름에 적는다. 못 받았으면 까닭을 잠깐 띄운다.
+    val capture: (String) -> Unit = capture@{ key ->
+        // 앞의 저장이 줄 서 있거나 도는 동안은 받지 않는다 — 비트맵(한 장에 힙의 셋째 몫까지)이 큐에 여럿 쌓인다. 메뉴도 꺼져 있지만
+        // 펼쳐 둔 사이에 넣었을 수 있다.
+        if (ClipJobs.pending.value.isNotEmpty()) return@capture
+        val view = surfaceView.get()
+        val size = PlaybackConnection.videoPixels()?.let { (w, h, par) -> FrameShot.sizeOf(w, h, par) }
+        val at = PlaybackConnection.positionNow()
+        if (view == null || size == null) {
+            handoffNote = R.string.player_capture_no_frame
+            noteSeq++
+        } else {
+            FrameCapture.request(view, size) { r ->
+                val why = when (r) {
+                    is FrameCapture.Result.Ok -> if (ClipJobs.pending.value.isNotEmpty()) {
+                        r.bitmap.recycle()
+                        null
+                    } else {
+                        (onCapture(key, r.bitmap, at) as? ClipStart.Refused)?.why
+                    }
+                    is FrameCapture.Result.Failed -> r.why
+                }
+                if (why != null) {
+                    handoffNote = why
+                    noteSeq++
+                }
+            }
+        }
+    }
 
     // 다른 앱으로 넘긴다. 띄웠으면 말할 것이 없고(STARTED), 못 띄웠으면 우리 문장을 잠깐 띄운다.
     val openWith: (String) -> Unit = { key ->
@@ -1501,7 +1568,8 @@ private fun PlayerScreen(
                         },
                 ) {
                     VideoSurface(
-                        (
+                        onView = { surfaceView.set(it) },
+                        modifier = (
                             if (containerW > 0 && containerH > 0) {
                                 with(density) { Modifier.requiredSize(videoBox.width.toDp(), videoBox.height.toDp()) }
                             } else {
@@ -1739,9 +1807,18 @@ private fun PlayerScreen(
         // **가운데 큰 재생/일시정지 단추**(큰 재생기의 관행). 영상이 보일 때만, 판 위의 남은 자리 가운데에 — 판이
         // 덮는 높이를 빼고 가운데에 두어야 가로 화면에서 판과 겹치지 않는다(불변식 3 — 잰 높이를 쓴다). 아래 줄의 단추는 그대로
         // 둔다 — 소리 화면에는 이 단추가 없고, 이전·다음과 나란히 있는 자리를 찾는 손도 있다.
+        //
+        // **프레임 넘기기는 그 양옆에** — 멈춰 있을 때만(흐르는 영상에서 한 프레임은 뜻이 없다). 둘째 줄에 두었더니 1080 px 폰에서 줄이
+        // 넘쳐 ⋮ 가 화면 밖으로 밀렸다(에뮬레이터). 자리는 재생 중에도 비워 두어 가운데 단추가 움직이지 않게 한다. 셈은 `FrameStep`.
         if (showingVideo) {
             Box(Modifier.fillMaxSize().padding(bottom = controlsHeight), contentAlignment = Alignment.Center) {
-                CenterPlayButton(playing = state.isPlaying, onClick = { PlaybackConnection.togglePlayPause() })
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    FrameStepButton(visible = !state.isPlaying, forward = false)
+                    Spacer(Modifier.width(CENTER_STEP_GAP))
+                    CenterPlayButton(playing = state.isPlaying, onClick = { PlaybackConnection.togglePlayPause() })
+                    Spacer(Modifier.width(CENTER_STEP_GAP))
+                    FrameStepButton(visible = !state.isPlaying, forward = true)
+                }
             }
         }
 
@@ -2101,6 +2178,16 @@ private fun PlayerScreen(
                             } else {
                                 null
                             },
+                            // 화면 캡처 — 영상이 보일 때만, 다른 앱이 넘긴 사본이면 서지 않는다(곁에 저장할 수 없다). 사본인지는 메뉴를 펼 때
+                            // 본다 — 화면이 처음 설 때는 경로를 묻는 컨트롤러가 아직 붙지 않아 늘 '모른다' 였다(에뮬레이터).
+                            // 저장이 줄 서 있으면 끈다(소리만 저장과 같다 — 비트맵이 쌓이지 않게).
+                            onCapture = if (showingVideo && clipPending.isEmpty()) {
+                                { capture(key) }
+                            } else {
+                                null
+                            },
+                            canCapture = { canSaveBeside(key) },
+                            itemKey = key,
                         )
                     }
                 }
@@ -2157,6 +2244,9 @@ private fun PlayerMoreMenu(
     onOpenWith: () -> Unit,
     onClip: (() -> Unit)?,
     onSaveAudio: (() -> Unit)?,
+    onCapture: (() -> Unit)?,
+    canCapture: () -> Boolean,
+    itemKey: String,
 ) {
     var open by remember { mutableStateOf(false) }
     LaunchedEffect(open) { onExpandedChange(open) }
@@ -2166,6 +2256,17 @@ private fun PlayerMoreMenu(
             Icon(Icons.Filled.MoreVert, stringResource(R.string.player_more), tint = tint)
         }
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+            // 펼 때마다 한 번 본다(내용은 펼쳐 있는 동안만 컴포지션에 있다).
+            val captureShown = onCapture != null && remember(itemKey) { canCapture() }
+            if (onCapture != null && captureShown) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.player_capture)) },
+                    onClick = {
+                        open = false
+                        onCapture()
+                    },
+                )
+            }
             if (onClip != null) {
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.player_clip)) },
@@ -2264,15 +2365,21 @@ private val AB_MARKER_HEIGHT = 12.dp
  * 소리가 이어지는 이유다.
  */
 @Composable
-private fun VideoSurface(modifier: Modifier = Modifier) {
+private fun VideoSurface(onView: (SurfaceView?) -> Unit, modifier: Modifier = Modifier) {
     AndroidView(
         modifier = modifier,
         factory = { context ->
-            SurfaceView(context).also { PlaybackConnection.attachSurface(it) }
+            SurfaceView(context).also {
+                PlaybackConnection.attachSurface(it)
+                onView(it)
+            }
         },
     )
     DisposableEffect(Unit) {
-        onDispose { PlaybackConnection.attachSurface(null) }
+        onDispose {
+            PlaybackConnection.attachSurface(null)
+            onView(null)
+        }
     }
 }
 
@@ -2329,6 +2436,38 @@ private fun CenterPlayButton(playing: Boolean, onClick: () -> Unit) {
         )
     }
 }
+
+/**
+ * 가운데 단추 옆의 프레임 넘기기 단추. [visible] 이 거짓이어도 자리는 차지한다 — 가운데 단추가 재생·멈춤에 따라 옮겨 가지 않게.
+ * 화살표는 쓰기 방향을 따라 뒤집힌다(진행 바도 RTL 에서 뒤집힌다).
+ */
+@Composable
+private fun FrameStepButton(visible: Boolean, forward: Boolean) {
+    Box(Modifier.size(CENTER_STEP_SIZE)) {
+        if (!visible) return@Box
+        IconButton(
+            onClick = { PlaybackConnection.stepFrame(forward) },
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(CircleShape)
+                .background(Color(0x66000000)),
+        ) {
+            Icon(
+                imageVector = if (forward) {
+                    Icons.AutoMirrored.Filled.KeyboardArrowRight
+                } else {
+                    Icons.AutoMirrored.Filled.KeyboardArrowLeft
+                },
+                contentDescription = stringResource(if (forward) R.string.player_frame_forward else R.string.player_frame_back),
+                tint = Color.White,
+            )
+        }
+    }
+}
+
+/** 프레임 넘기기 단추의 크기와 가운데 단추와의 틈. */
+private val CENTER_STEP_SIZE = 48.dp
+private val CENTER_STEP_GAP = 24.dp
 
 /**
  * 터치 잠금 중의 화면 — 무엇을 눌러도 아래에 닿지 않고, 두드리면 잠금 풀기 단추가 [PlayerChrome.UNLOCK_HINT_MS] 동안 뜬다.

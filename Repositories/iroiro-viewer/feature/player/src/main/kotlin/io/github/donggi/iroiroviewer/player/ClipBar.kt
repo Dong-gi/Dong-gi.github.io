@@ -265,11 +265,14 @@ internal fun ClipProgress(pending: Set<String>, tint: Color) {
     val p = running?.progress
     val fraction = if (p != null && p.bytesTotal > 0) (p.bytesDone.toFloat() / p.bytesTotal).coerceIn(0f, 1f) else null
     val audio = running?.kind == FileOpManager.Kind.AUDIO
+    val capture = running?.kind == FileOpManager.Kind.CAPTURE
     Column(Modifier.fillMaxWidth().padding(top = 4.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = when {
                     running == null -> stringResource(R.string.player_clip_waiting)
+                    // 화면 캡처는 한 장을 쓰는 순간이라 퍼센트가 없다 — 그 작업을 만든 `core:io` 의 문장.
+                    capture -> stringResource(io.github.donggi.iroiroviewer.io.R.string.io_op_capturing)
                     fraction != null -> stringResource(
                         if (audio) R.string.player_clip_audio_saving else R.string.player_clip_saving,
                         (fraction * 100).toInt(),

@@ -17,6 +17,7 @@
     <string name="io_op_cropping">잘라 낸 그림을 저장하는 중</string>
     <string name="io_op_clipping">구간을 저장하는 중</string>
     <string name="io_op_audio">소리를 저장하는 중</string>
+    <string name="io_op_capturing">화면을 저장하는 중</string>
 
     <!--
       파일 작업이 실패한 까닭(FileOpText.reasonRes). 그것을 만드는 FileOpEngine.Reason 곁에 한 벌 - 파일 목록과 재생 화면(구간 저장)이
@@ -49,6 +50,8 @@
     <string name="io_saved_audio">소리를 저장했습니다: %1$s (%2$s ~ %3$s)</string>
     <string name="io_saved_audio_dropped">" · 다른 소리 트랙 %1$d개는 담지 않았습니다"</string>
     <string name="io_saved_plain">저장했습니다: %1$s</string>
+    <!-- 영상 화면 캡처(재생 화면 ⋮). -->
+    <string name="io_saved_capture">화면을 저장했습니다: %1$s</string>
     <string name="io_save_cancelled">저장을 취소했습니다</string>
     <!-- 'Files에 저장'(FileOpText.receivedMessage). 앞에 붙는 조각은 큰따옴표로 감싼다 - 앞 공백이 지워진다(함정 표). -->
     <string name="io_received_one">%1$s에 저장했습니다: %2$s</string>

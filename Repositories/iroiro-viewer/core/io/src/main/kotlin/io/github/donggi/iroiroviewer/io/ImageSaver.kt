@@ -160,6 +160,50 @@ internal object ImageSaver {
         }
     }
 
+    /**
+     * 영상 화면 캡처 — 재생 화면이 표면에서 받아 온 비트맵([FileOpManager.Request.SaveFrame.bitmap])을 영상 곁에
+     * `이름_capture_0m12.345s.jpg` 로 쓴다. 쓰는 길(임시본 → fsync → `O_EXCL` 로 이름 맡기)은 잘라 저장과 같다. EXIF 는 쓰지 않는다 —
+     * 영상에는 옮길 찍은 날·기기 태그가 없다. 비트맵은 끝나면 놓는다(실패·취소여도).
+     */
+    suspend fun saveFrame(
+        request: FileOpManager.Request.SaveFrame,
+        media: MediaIndex?,
+        onProgress: (FileOpEngine.Progress) -> Unit,
+        onPlaced: (Result) -> Unit = {},
+    ): Result = withContext(IroDispatchers.io) {
+        val bitmap = request.bitmap
+        try {
+            val src = File(request.path)
+            if (!src.isFile) return@withContext failed(FileOpEngine.Reason.NOT_FOUND, src.name)
+            val dir = src.parentFile ?: return@withContext failed(FileOpEngine.Reason.IO, src.name)
+            onProgress(FileOpEngine.Progress(0, 0, 0, 1, src.name))
+            val output = Output(Encoding.JPEG, JPEG_QUALITY, FrameShot.EXTENSION, copyDates = false)
+            val name = NewFiles.derivedName(src.name, FrameShot.tag(request.positionMs), output.extension)
+            AtomicFileWriter.sweepPartials(dir)
+            val pending = try {
+                AtomicFileWriter.begin(File(dir, name), 0L)
+            } catch (e: IOException) {
+                return@withContext failed(NewFiles.reasonOf(e), name)
+            }
+            try {
+                encode(bitmap, output, pending, dir)
+                val target = NewFiles.place(pending, dir, name, media) { t ->
+                    onPlaced(Result(FileOpEngine.Outcome.Done(1, 0, 0), t.absolutePath))
+                }
+                Result(FileOpEngine.Outcome.Done(1, 0, 0), target.absolutePath)
+            } catch (e: CancellationException) {
+                withContext(NonCancellable) { pending.abort() }
+                Result(FileOpEngine.Outcome.Cancelled, null)
+            } catch (t: Throwable) {
+                withContext(NonCancellable) { pending.abort() }
+                Iro.e(message = "화면 캡처 저장이 실패했다: ${t::class.java.simpleName}")
+                failed(NewFiles.reasonOf(t), name)
+            }
+        } finally {
+            bitmap.recycle()
+        }
+    }
+
     private fun failed(reason: FileOpEngine.Reason, name: String) = Result(FileOpEngine.Outcome.Failed(reason, name), null)
 
     /** 비트맵을 임시본에 쓴다 — **닫지 않고 비우기만 한다**(흐름은 `NewFiles.place` 가 fsync 한 뒤에 닫는다). */

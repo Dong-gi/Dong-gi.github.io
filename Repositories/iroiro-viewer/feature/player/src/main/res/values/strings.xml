@@ -30,6 +30,16 @@
     <string name="player_clip_no_path">이 항목의 파일을 찾지 못했습니다</string>
     <string name="player_clip_copy">다른 앱에서 받은 사본은 따로 저장할 수 없습니다 — 원래 폴더에서 열어 주세요</string>
     <string name="player_save_audio">소리만 저장</string>
+    <!--
+      화면 캡처(⋮)와 프레임 넘기기(멈췄을 때 가운데 재생 단추 양옆). 캡처는 표면의 마지막 프레임을 받는다 - 첫 프레임 전이거나 표면이
+      사라졌으면 받을 것이 없다.
+    -->
+    <string name="player_capture">화면 캡처</string>
+    <string name="player_capture_no_frame">아직 받을 화면이 없습니다</string>
+    <string name="player_capture_unreadable">이 화면은 읽을 수 없습니다</string>
+    <string name="player_capture_failed">화면을 캡처하지 못했습니다</string>
+    <string name="player_frame_back">한 프레임 뒤로</string>
+    <string name="player_frame_forward">한 프레임 앞으로</string>
     <string name="player_clip_video_unsupported_audio_ok">영상째로는 저장할 수 없는 형식입니다 · 소리만 저장할 수 있습니다</string>
     <string name="player_clip_audio_none_suffix">" · 소리 트랙이 없습니다"</string>
     <string name="player_clip_audio_unsupported_suffix">" · 소리만 따로 저장할 수 없는 형식입니다"</string>

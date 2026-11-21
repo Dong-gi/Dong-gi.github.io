@@ -38,7 +38,7 @@ object FileOpText {
     }
 
     /**
-     * 잘라 저장·그리기·메모·구간 저장·소리만 뽑기의 결과 한 줄. 그 밖의 작업이면 null(화면이 제 문구로 말한다). 결과는 채널로 오므로
+     * 잘라 저장·그리기·메모·구간 저장·소리만 뽑기·화면 캡처의 결과 한 줄. 그 밖의 작업이면 null(화면이 제 문구로 말한다). 결과는 채널로 오므로
      * 컴포지션 밖에서 부른다 — `context.getString` 을 쓴다.
      */
     fun savedMessage(context: Context, f: FileOpManager.Finished): String? {
@@ -80,6 +80,7 @@ object FileOpText {
                         when (f.kind) {
                             FileOpManager.Kind.CROP -> R.string.io_saved_crop
                             FileOpManager.Kind.MARKUP -> R.string.io_saved_markup
+                            FileOpManager.Kind.CAPTURE -> R.string.io_saved_capture
                             else -> R.string.io_saved_plain
                         },
                         name,
@@ -196,12 +197,13 @@ object FileOpText {
         }
     }
 
-    /** [savedMessage] 가 말하는 작업 — 원본 곁에 새 파일을 만드는 넷. */
+    /** [savedMessage] 가 말하는 작업 — 원본 곁에 새 파일을 만드는 다섯. */
     private val SAVED_KINDS = setOf(
         FileOpManager.Kind.CROP,
         FileOpManager.Kind.MARKUP,
         FileOpManager.Kind.CLIP,
         FileOpManager.Kind.AUDIO,
+        FileOpManager.Kind.CAPTURE,
     )
 }
 
