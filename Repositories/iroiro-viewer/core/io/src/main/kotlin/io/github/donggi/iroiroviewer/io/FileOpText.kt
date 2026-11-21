@@ -23,6 +23,7 @@ object FileOpText {
         FileOpEngine.Reason.INVALID_NAME -> R.string.io_error_invalid_name
         FileOpEngine.Reason.TARGET_INSIDE_SOURCE -> R.string.io_error_target_inside
         FileOpEngine.Reason.TOO_MANY_ITEMS -> R.string.io_error_too_many_items
+        FileOpEngine.Reason.TOO_LARGE -> R.string.io_error_too_large
         FileOpEngine.Reason.UNSUPPORTED -> R.string.io_error_unsupported
         FileOpEngine.Reason.CHANGED -> R.string.io_error_changed
         FileOpEngine.Reason.EMPTY_RANGE -> R.string.io_error_empty_range

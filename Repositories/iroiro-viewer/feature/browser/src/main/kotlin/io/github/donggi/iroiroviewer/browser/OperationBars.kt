@@ -263,6 +263,8 @@ fun OperationBar(
                                 FileOpManager.Kind.ROTATE -> R.string.browser_op_rotating
                                 FileOpManager.Kind.EXTRACT -> R.string.browser_op_extracting
                                 FileOpManager.Kind.COMPRESS -> R.string.browser_op_compressing
+                                // 묶어 보내기의 문구는 그 작업을 만든 `core:io` 에 있다(알림과 같은 문장).
+                                FileOpManager.Kind.SHARE_ZIP -> IoR.string.io_op_share_zip
                                 // 잘라 저장·구간 저장의 문구는 그 작업을 만든 `core:io` 에 있다(재생 화면도 같은 문장을 쓴다).
                                 FileOpManager.Kind.CROP -> IoR.string.io_op_cropping
                                 FileOpManager.Kind.MARKUP -> IoR.string.io_op_markup

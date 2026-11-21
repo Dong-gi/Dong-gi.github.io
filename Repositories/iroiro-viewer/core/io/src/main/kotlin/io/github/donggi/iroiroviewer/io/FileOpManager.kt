@@ -200,6 +200,28 @@ object FileOpManager {
         }
 
         /**
+         * 고른 것들을 ZIP 하나로 묶어 **다른 앱에 보낼 준비**를 한다(파일 목록의 공유에 폴더가 섞였을 때). 사용자 저장소가 아니라 앱 캐시에
+         * 만든다 — 실체는 [ShareZips](자리·한계·지우는 때). 묶는 것은 [ZipMaker] 그대로라 이 큐를 지나 진행·취소·포그라운드 서비스를 얻는다.
+         * 다 묶으면 결과([Extra.ShareReady])가 ZIP 의 경로를 싣고, 결과를 받는 화면이 공유 창을 띄운다.
+         *
+         * @param folderName 고른 것들이 있는 폴더의 **화면 이름**(여럿을 골랐을 때 ZIP 의 이름 — 볼륨 맨 위면 '내부 저장소').
+         * @param fallbackName 이름을 지을 수 없을 때의 이름(화면의 문구).
+         * @param showHidden 목록의 '숨김 파일 보기' — 꺼져 있으면 점으로 시작하는 이름을 담지 않는다([ShareZips.excludes]).
+         */
+        data class ShareZip(
+            override val id: String,
+            val sources: List<String>,
+            val folderName: String,
+            val fallbackName: String,
+            val showHidden: Boolean,
+        ) : Request {
+            override val label get() = folderName
+
+            // 경로를 `toString`(로그·예외)에 싣지 않는다.
+            override fun toString(): String = "ShareZip(id=$id, sources=${sources.size})"
+        }
+
+        /**
          * 그림의 한 자리를 **새 파일로** 저장한다('지정한 직사각형 영역을 별도 저장'). 원본 곁에 `이름_crop.확장자` 로
          * 쓴다. 사용자 저장소에 새 파일을 쓰는 일이라 이 큐를 지난다. 뜨는 것은 [CropSupport.renderer], 쓰는 것은 [ImageSaver] 다.
          *
@@ -407,6 +429,9 @@ object FileOpManager {
         /** 만든 ZIP 의 실제 경로. 고른 이름과 다를 수 있다([Request.Compress]). [locked] 는 암호를 걸었는가(결과 문구가 말한다). */
         data class Compressed(val path: String, val locked: Boolean = false) : Extra
 
+        /** 묶어 보내기([Request.ShareZip])가 앱 캐시에 만든 ZIP. 결과를 받는 화면이 이것을 공유 창에 싣는다. */
+        data class ShareReady(val path: String) : Extra
+
         /**
          * 잘라 저장·그리기·메모·구간 저장이 만든 파일의 실제 경로(`(2)` 가 붙었을 수 있다)와, 고른 것과 **다르게 된 점**([note]) —
          * 화면이 숨기지 않고 말한다.
@@ -447,7 +472,7 @@ object FileOpManager {
         fun offer(finished: Finished): Boolean
     }
 
-    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, CROP, MARKUP, CLIP, AUDIO, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC }
+    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, SHARE_ZIP, CROP, MARKUP, CLIP, AUDIO, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC }
 
     private val _state = MutableStateFlow<State>(State.Idle)
     val state: StateFlow<State> = _state.asStateFlow()
@@ -811,6 +836,16 @@ object FileOpManager {
                 }
                 result.outcome
             }
+            is Request.ShareZip -> {
+                // 놓인 뒤에 온 취소는 결과를 버리지만 ZIP 은 거기 있다 — 놓은 자리에서 알린다(위와 같다).
+                val result = ShareZips.make(
+                    context, request.sources, request.folderName, request.fallbackName, request.showHidden, onProgress,
+                ) { r ->
+                    r.path?.let { onExtra(Extra.ShareReady(it)) }
+                    onPlaced(r.outcome)
+                }
+                result.outcome
+            }
             is Request.SaveCrop -> {
                 // 꽂히지 않았으면 **실패로 끝낸다**(풀기와 같은 판단) — 조용히 성공을 말하면 잘라 낸(그린) 그림이 있는 줄 안다.
                 // 그리기·메모도 이 갈래다([Request.SaveCrop.overlay]).
@@ -867,6 +902,7 @@ object FileOpManager {
         is Request.RotateExif -> Kind.ROTATE
         is Request.Extract -> Kind.EXTRACT
         is Request.Compress -> Kind.COMPRESS
+        is Request.ShareZip -> Kind.SHARE_ZIP
         is Request.SaveCrop -> if (r.overlay != null) Kind.MARKUP else Kind.CROP
         is Request.SaveClip -> if (r.audioOnly) Kind.AUDIO else Kind.CLIP
         is Request.SaveText -> Kind.SAVE_TEXT

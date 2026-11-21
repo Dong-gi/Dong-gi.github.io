@@ -341,3 +341,44 @@ fun ConflictDialog(
         },
     )
 }
+
+/**
+ * 공유에 폴더가 섞였을 때 묻는다([ShareFolders]). 폴더는 공유에 실을 수 없다 — 묶어 보내거나, 파일만 보내거나(폴더가 빠진다는 것을
+ * 문장이 말한다), 그만둔다. 버튼은 한 열로 세운다([ConflictDialog] 와 같은 까닭 — 셋이 한 줄에 들어가지 않는다).
+ *
+ * @param onFilesOnly '파일만 보내기'. null 이면 단추가 없다(폴더만 골랐다).
+ */
+@Composable
+fun ShareFoldersDialog(
+    folders: Int,
+    files: Int,
+    onZip: () -> Unit,
+    onFilesOnly: (() -> Unit)?,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.browser_share_folders_title)) },
+        text = {
+            Text(
+                if (files > 0) stringResource(R.string.browser_share_folders_body_mixed, folders)
+                else stringResource(R.string.browser_share_folders_body)
+            )
+        },
+        confirmButton = {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                TextButton(onClick = onZip, modifier = Modifier.align(Alignment.End)) {
+                    Text(stringResource(R.string.browser_share_as_zip))
+                }
+                if (onFilesOnly != null) {
+                    TextButton(onClick = onFilesOnly, modifier = Modifier.align(Alignment.End)) {
+                        Text(stringResource(R.string.browser_share_files_only))
+                    }
+                }
+                TextButton(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) {
+                    Text(stringResource(R.string.browser_dialog_cancel))
+                }
+            }
+        },
+    )
+}

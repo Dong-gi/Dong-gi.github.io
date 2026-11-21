@@ -53,6 +53,11 @@
     <string name="browser_detail_size">크기</string>
     <string name="browser_detail_modified">수정한 때</string>
     <string name="browser_detail_path">경로</string>
+    <!-- 폴더 정보. 수는 묶음 쉼표로(1,234). '일부 세지 못함' 은 들어갈 수 없는 폴더(Android/data 등)·깊이 상한이 있었다는 뜻이다. -->
+    <string name="browser_detail_contents">내용</string>
+    <string name="browser_detail_contents_value">파일 %1$,d개 · 폴더 %2$,d개</string>
+    <string name="browser_detail_counting">세는 중…</string>
+    <string name="browser_detail_partial">일부 세지 못함</string>
 
     <string name="browser_kind_folder">폴더</string>
     <string name="browser_kind_image">이미지</string>
@@ -243,4 +248,18 @@
     <string name="browser_new_pptx_name">새 프레젠테이션</string>
     <string name="browser_new_hwpx_name">새 한글 문서</string>
     <string name="browser_dialog_will_create">‘%1$s’ · 이 이름으로 만듭니다</string>
+
+    <!-- 공유에 폴더가 섞였을 때. 폴더는 공유에 실을 수 없어 묻는다 - ZIP 으로 묶어 보내기(앱 캐시에 만든다) / 파일만 보내기 / 취소. -->
+    <string name="browser_share_folders_title">폴더는 그대로 보낼 수 없습니다</string>
+    <string name="browser_share_folders_body">ZIP으로 묶어 보낼 수 있습니다.</string>
+    <string name="browser_share_folders_body_mixed">ZIP으로 묶어 보낼 수 있습니다. 파일만 보내면 폴더 %1$d개는 빠집니다.</string>
+    <string name="browser_share_as_zip">ZIP으로 묶어 보내기</string>
+    <string name="browser_share_files_only">파일만 보내기</string>
+    <string name="browser_share_zip_nothing">보낼 것이 없습니다</string>
+    <!-- 빠진 것의 조각. 0 인 조각은 말하지 않는다 - 'ZIP에서 빠진 것' 뒤에 ' · ' 로 잇는다. 숨김 파일도 '건너뜀' 에 든다. -->
+    <string name="browser_share_zip_left_out">ZIP에서 빠진 것</string>
+    <string name="browser_share_zip_skipped">%1$d개 건너뜀</string>
+    <string name="browser_share_zip_unreadable">%1$d개 못 읽음</string>
+    <string name="browser_share_zip_gone">묶은 ZIP이 지워졌습니다 — 다시 묶어 보내세요</string>
+    <string name="browser_share_failed">공유 창을 띄우지 못했습니다</string>
 </resources>

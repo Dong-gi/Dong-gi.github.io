@@ -66,6 +66,8 @@ import io.github.donggi.iroiroviewer.browser.BrowserScreen
 import io.github.donggi.iroiroviewer.comic.ComicScreen
 import io.github.donggi.iroiroviewer.browser.BrowserViewModel
 import io.github.donggi.iroiroviewer.data.AppPreferences
+import io.github.donggi.iroiroviewer.browser.ShareZipHandoff
+import io.github.donggi.iroiroviewer.browser.finishShareZip
 import io.github.donggi.iroiroviewer.browser.opResultMessage
 import io.github.donggi.iroiroviewer.diag.DiagScreen
 import io.github.donggi.iroiroviewer.docview.DocViewScreen
@@ -394,14 +396,44 @@ internal fun Root(modifier: Modifier = Modifier, opened: Opened? = null) {
     // **`context.getString` 을 컴포저블 안에서 부르지 않는다.** 그 값은 구성 변경을
     // 따라가지 않아 언어를 바꿔도 옛 문자열이 남는다(lint `LocalContextGetResourceValueCall`).
     val appName = stringResource(R.string.app_name)
+    // 묶어 보내기가 끝나면 띄우는 공유 창의 제목(파일 목록의 '공유' 와 같다).
+    val shareTitle = stringResource(io.github.donggi.iroiroviewer.browser.R.string.browser_action_share)
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner) {
         // **앞에 있을 때만 받는다.** 결과는 한 줄(`FileOpManager.results`)을 나눠 받는 것이라, 가려진 액티비티가 받으면 보이지 않는
         // 스낵바에 떴다 사라진다 — 다른 앱에서 연 화면(OpenActivity)이 푼 압축의 결과가 뒤에 깔린 파일 목록으로 가는 것이 그
         // 모양이다. 앞에 아무도 없는 동안 끝난 것은 줄에 남았다가 돌아왔을 때 뜬다(CLAUDE.md 함정 표의 '값을 지우는 소비자를 …').
+        // 묶어 보내기 — 다 묶었으면 공유 창을 띄운다. 말할 것(실패·취소·지워짐)이 있을 때만 스낵바다. 빠진 것은 공유 창을 닫고 돌아와서
+        // 말한다 — 공유 창이 뜨면 이 블록이 멈추며 막 띄운 스낵바가 걷힌다(`deferredNotice`). **파일 목록에서만** 띄운다 — 다른 앱에서 연
+        // 화면은 맡겨 두고(`ShareZipHandoff`), 파일 목록이 앞에 설 때 꺼낸다.
+        // 공유 창을 띄웠으면 참이다 — 그때 부른 쪽은 이번 RESUMED 동안 더 나아가지 않는다(곧 멈춘다). 나아가면 방금 미룬 '빠진 것' 이
+        // 공유 창 밑에서 깜빡이고, 줄에 남은 다른 묶어 보내기가 공유 창을 하나 더 겹쳐 띄운다.
+        suspend fun handleShareZip(finished: FileOpManager.Finished): Boolean {
+            val follow = finishShareZip(context, finished, shareTitle)
+            follow.later?.let(vm::deferNotice)
+            follow.now?.let { text -> withTimeoutOrNull(10_000) { vm.snackbar.showSnackbar(text) } }
+            return follow.now == null
+        }
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            if (opened == null) {
+                // 다른 앱에서 연 화면이 맡겨 둔 것 — 하나씩(공유 창이 뜨면 이 블록이 멈추고, 나머지는 다음에 선 때).
+                ShareZipHandoff.poll()?.let { if (handleShareZip(it)) kotlinx.coroutines.awaitCancellation() }
+                // 떠나 있는 동안 미뤄 둔 한 줄(묶어 보내기의 '빠진 것') — 돌아온 지금 띄우고, 보여 준 뒤에 지운다.
+                vm.deferredNotice.value?.let { text ->
+                    withTimeoutOrNull(10_000) { vm.snackbar.showSnackbar(text) }
+                    vm.consumeDeferredNotice(text)
+                }
+            }
             vm.opResults.collect { finished ->
                 vm.onOperationFinished(finished)
+                if (finished.kind == FileOpManager.Kind.SHARE_ZIP) {
+                    if (opened != null) {
+                        ShareZipHandoff.hold(finished)
+                    } else if (handleShareZip(finished)) {
+                        kotlinx.coroutines.awaitCancellation()
+                    }
+                    return@collect
+                }
                 val trashed = (finished.extra as? FileOpManager.Extra.Trashed)?.uuids
                 // 푼 폴더로 가는 단추는 파일 목록이 있는 쪽에서만 — 다른 앱에서 연 화면에는 목록이 없다.
                 val openable = if (opened == null) vm.folderToOpen(finished) else null

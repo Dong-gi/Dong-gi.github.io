@@ -562,6 +562,40 @@ class BrowserViewModel(
         FileOpManager.enqueue(getApplication(), FileOpManager.Request.Compress(newOpId(), paths, dest, name, password))
     }
 
+    /**
+     * 화면이 돌아왔을 때 띄울 한 줄 — 묶어 보내기의 '빠진 것'([ShareZipFollowUp.later]). 공유 창이 떠 있는 동안 띄운 스낵바는 결과를 받는 화면이
+     * 멈추면서 걷히므로 여기 두었다가 돌아와서 띄운다(`app` 의 Root). **보여 준 뒤에 지운다**([consumeDeferredNotice]) — 보이는 중에 다시
+     * 떠나면 다음에 다시 띄운다.
+     */
+    private val _deferredNotice = MutableStateFlow<String?>(null)
+    val deferredNotice: StateFlow<String?> = _deferredNotice.asStateFlow()
+
+    fun deferNotice(text: String) {
+        _deferredNotice.value = text
+    }
+
+    /** [text] 를 보여 주었다. 그새 다른 것으로 바뀌었으면 그것은 남긴다. */
+    fun consumeDeferredNotice(text: String) {
+        _deferredNotice.compareAndSet(text, null)
+    }
+
+    /**
+     * 고른 것(폴더 포함)을 ZIP 하나로 묶어 보낸다 — 공유에 폴더가 섞였을 때의 'ZIP으로 묶어 보내기'. 앱 캐시에 묶는 일이 큐로 가고, 다 묶으면
+     * 결과를 받는 쪽(`app` 의 Root)이 공유 창을 띄운다([FileOpManager.Request.ShareZip]).
+     *
+     * @param folderName 지금 폴더의 **화면 이름**(볼륨 맨 위면 '내부 저장소' — 경로의 끝 조각 `0` 이 아니다).
+     * @param fallbackName 이름을 지을 수 없을 때의 ZIP 이름(화면의 문구).
+     */
+    fun shareAsZip(paths: List<String>, folderName: String, fallbackName: String) {
+        if (currentPath == null || paths.isEmpty()) return
+        clearSelection()
+        FileOpManager.enqueue(
+            getApplication(),
+            // 숨김 파일 보기는 누른 그때의 것 — 묶는 동안 바꿔도 사용자가 본 목록의 규칙으로 묶는다.
+            FileOpManager.Request.ShareZip(newOpId(), ArrayList(paths), folderName, fallbackName, showHidden.value),
+        )
+    }
+
     /** 새 폴더. 실패한 까닭을 돌려준다 — 이름이 겹쳤으면 칸이 닫히지 않는다([rename] 과 같다). */
     fun createFolder(name: String): Deferred<FileOpEngine.Reason?> = viewModelScope.async {
         val parent = currentPath ?: return@async null

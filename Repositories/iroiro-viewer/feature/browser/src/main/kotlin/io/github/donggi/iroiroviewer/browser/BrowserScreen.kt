@@ -54,6 +54,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -87,8 +88,10 @@ import io.github.donggi.iroiroviewer.io.ExternalOpen
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.FileOpManager
 import io.github.donggi.iroiroviewer.io.FileOpText
+import io.github.donggi.iroiroviewer.io.FolderStats
 import io.github.donggi.iroiroviewer.io.ZipMaker
 import io.github.donggi.iroiroviewer.io.ShareHelper
+import io.github.donggi.iroiroviewer.io.ShareZips
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.model.PathNames
 import io.github.donggi.iroiroviewer.playback.FolderQueue
@@ -269,6 +272,61 @@ fun opResultMessage(context: android.content.Context, f: FileOpManager.Finished)
     } + refusedSuffix(context, f)
 
 /**
+ * 묶어 보내기가 끝난 뒤 말할 것. [now] 는 곧바로(공유 창을 띄우지 않았다 — 실패·취소·담을 것 없음), [later] 는 **공유 창을 닫고
+ * 돌아왔을 때**(ZIP 에서 빠진 것). 공유 창이 뜨면 결과를 받는 화면이 멈추어(RESUMED 를 잃는다) 그 자리에서 띄운 스낵바는 함께 걷힌다 —
+ * 그래서 미뤄 두었다가 돌아와서 띄운다(`BrowserViewModel.deferNotice`).
+ */
+data class ShareZipFollowUp(val now: String?, val later: String?)
+
+/**
+ * 묶어 보내기([FileOpManager.Kind.SHARE_ZIP])가 끝났다 — 다 묶었으면 **공유 창을 띄우고**, 말할 것을 돌려준다([ShareZipFollowUp]). 할 일은
+ * [ShareFolders.after] 가 정한다.
+ *
+ * [context] 는 결과를 받는 액티비티다 — 공유 창이 그 위에 뜬다. 결과는 그 화면이 앞에 있을 때만 오므로(`app` 의 Root) 보이지 않는 화면
+ * 뒤에서 공유 창이 뜨지 않는다.
+ */
+fun finishShareZip(context: android.content.Context, f: FileOpManager.Finished, chooserTitle: String): ShareZipFollowUp {
+    val ready = f.extra as? FileOpManager.Extra.ShareReady
+    return when (ShareFolders.after(f.outcome, f.extra)) {
+        ShareFolders.After.CANCELLED -> ShareZipFollowUp(context.getString(R.string.browser_op_cancelled), null)
+        ShareFolders.After.FAILED -> ShareZipFollowUp(
+            context.getString(reasonStringId((f.outcome as FileOpEngine.Outcome.Failed).reason)),
+            null,
+        )
+        ShareFolders.After.NOTHING -> ShareZipFollowUp(context.getString(R.string.browser_share_zip_nothing), null)
+        ShareFolders.After.SHARE, ShareFolders.After.SHARE_WITH_SKIPS -> {
+            // 지울 때를 공유한 때부터 다시 센다 — 묶고 한참 뒤에 돌아와 띄운 공유가 곧바로 지워지지 않게(`ShareZips.touch`).
+            ready?.let { ShareZips.touch(it.path) }
+            when {
+                // 그새 지워졌다(띄우지 않은 묶음은 이 프로세스에서 지우지 않지만, 시스템이 캐시를 비웠을 수 있다).
+                ready == null || !File(ready.path).isFile ->
+                    ShareZipFollowUp(context.getString(R.string.browser_share_zip_gone), null)
+                !ShareHelper.share(context, listOf(ready.path), chooserTitle) ->
+                    ShareZipFollowUp(context.getString(R.string.browser_share_failed), null)
+                else -> {
+                    val done = f.outcome as FileOpEngine.Outcome.Done
+                    val parts = ShareFolders.leftOut(done.skipped, done.failed).map { (kind, n) ->
+                        context.getString(
+                            when (kind) {
+                                ShareFolders.LeftOut.SKIPPED -> R.string.browser_share_zip_skipped
+                                ShareFolders.LeftOut.UNREADABLE -> R.string.browser_share_zip_unreadable
+                            },
+                            n,
+                        )
+                    }
+                    val later = if (parts.isEmpty()) {
+                        null
+                    } else {
+                        (listOf(context.getString(R.string.browser_share_zip_left_out)) + parts).joinToString(" · ")
+                    }
+                    ShareZipFollowUp(null, later)
+                }
+            }
+        }
+    }
+}
+
+/**
  * 풀기가 **거부한 것**을 결과 한 줄에 덧붙인다.
  *
  * 조용히 삼키면 사용자는 아카이브 안의 파일 수와 푼 파일 수가 다른 것을 보고도 이유를
@@ -329,6 +387,7 @@ private fun FolderScreen(
     // **`context.getString` 을 컴포저블 안에서 부르지 않는다.** 그 값은 구성 변경을 따라가지 않는다
     // (lint `LocalContextGetResourceValueCall` 이 오류로 잡는다).
     val shareTitle = stringResource(R.string.browser_action_share)
+    val fallbackZipName = stringResource(R.string.browser_compress_fallback_name)
 
     var detail by remember { mutableStateOf<DetailRequest?>(null) }
     // + 단추의 '무엇을 만들까'.
@@ -343,6 +402,8 @@ private fun FolderScreen(
     var nameBusy by remember { mutableStateOf(false) }
     var confirmDelete by remember { mutableStateOf(false) }
     var compressing by remember { mutableStateOf<List<String>?>(null) }
+    // 공유에 폴더가 섞였다 — 'ZIP으로 묶어 보내기 / 파일만 보내기' 를 묻는 동안 그 갈래([ShareFolders.Split]). 메뉴를 누른 때의 선택을 붙든다.
+    var sharing by remember { mutableStateOf<ShareFolders.Split?>(null) }
 
     // **떠 있는 단추(▶·+)가 덮는 높이.** 목록·격자의 끝에 그만큼 자리를 비운다 — 비우지 않으면 마지막 줄과 격자 오른쪽 아래 칸이
     // 단추 밑에 깔려 누를 수 없다. 상수로 맞히지 않고 단추 묶음을 잰다(함정 표 — 글꼴 배율·단추 수에 따라 다르다).
@@ -358,6 +419,10 @@ private fun FolderScreen(
     // 재구성마다 훑지 않도록 선택과 목록이 바뀔 때만 다시 찾는다.
     val singleFile = remember(selection, visible) {
         OpenWithRules.singleFile(selection, (visible as? VisibleState.Ready)?.entries.orEmpty())
+    }
+    // 선택 메뉴의 '정보' 가 겨눌 것 — 하나를 골랐을 때만 있다. 폴더도 된다(시트가 안의 수와 크기를 센다).
+    val singleEntry = remember(selection, visible) {
+        OpenWithRules.singleEntry(selection, (visible as? VisibleState.Ready)?.entries.orEmpty())
     }
     // '전체 선택' 이 지금 켜져 있는가(다시 누르면 모두 푼다 — [SelectAll]). 같은 까닭으로 선택과 목록이 바뀔 때만 다시 센다.
     val allSelected = remember(selection, visible) {
@@ -422,9 +487,9 @@ private fun FolderScreen(
                                 }
                             }
                         },
-                        // 누르면 다른 앱으로 가는 파일(APK·모르는 형식)은 이 길이 아니면 정보를 볼 수 없다.
+                        // 누르면 다른 앱으로 가는 파일(APK·모르는 형식)과 폴더(누르면 들어간다)는 이 길이 아니면 정보를 볼 수 없다.
                         // 선택은 남긴다 — 시트는 위에 잠깐 뜨는 것이고, 닫으면 고르던 자리로 돌아온다.
-                        onInfo = singleFile?.let { entry -> { detail = DetailRequest(entry) } },
+                        onInfo = singleEntry?.let { entry -> { detail = DetailRequest(entry) } },
                         // 지금 고른 것을 붙든다 — 대화상자가 떠 있는 동안 선택이 바뀌어도 묶는 것은 메뉴를 누른 때의 것이다.
                         onCompress = { compressing = selection.toList() },
                     )
@@ -479,12 +544,17 @@ private fun FolderScreen(
                         onDelete = { confirmDelete = true },
                         onRename = { renaming = selection.firstOrNull() },
                         onShare = {
-                            ShareHelper.share(
-                                context,
-                                selection.toList(),
-                                shareTitle,
-                            )
-                            vm.clearSelection()
+                            // 폴더는 공유에 실을 수 없다 — 섞였으면 묻는다([ShareFolders]). 아니면 예전처럼 곧바로 보낸다.
+                            val split = ShareFolders.split(
+                                selection,
+                                (visible as? VisibleState.Ready)?.entries.orEmpty(),
+                            ) { File(it).isDirectory }
+                            if (split.needsChoice) {
+                                sharing = split
+                            } else {
+                                ShareHelper.share(context, split.files, shareTitle)
+                                vm.clearSelection()
+                            }
                         },
                     )
                 } else {
@@ -709,6 +779,8 @@ private fun FolderScreen(
         ModalBottomSheet(onDismissRequest = { detail = null }) {
             DetailSheet(
                 entry = shown.entry,
+                // 폴더 정보의 셈도 목록과 같은 숨김 규칙을 따른다(목록에 보이는 수와 맞게).
+                showHidden = showHidden,
                 notice = shown.notice,
                 // **언제나 고르게 한다**(Mode.CHOOSE). 기본 앱이 정해져 있어도 묻는다 — '다른 앱으로' 를 누른 사람은
                 // 방금 기본 앱이 아닌 것을 원한다고 말했다. 폴더·휴지통 안의 것에는 단추가 없다.
@@ -875,6 +947,28 @@ private fun FolderScreen(
             onDismiss = { password.clear(); compressing = null },
             extra = { ZipPasswordFields(password) },
             extraOk = zipPasswordOk(password),
+        )
+    }
+
+    sharing?.let { split ->
+        ShareFoldersDialog(
+            folders = split.folders.size,
+            files = split.files.size,
+            // 묶는 것은 큐가 앱 캐시에 한다 — 진행·취소는 아래 막대, 다 묶으면 결과를 받는 쪽(Root)이 공유 창을 띄운다.
+            onZip = {
+                vm.shareAsZip(split.all, displayName(path, volumes), fallbackZipName)
+                sharing = null
+            },
+            onFilesOnly = if (split.files.isNotEmpty()) {
+                {
+                    ShareHelper.share(context, split.files, shareTitle)
+                    vm.clearSelection()
+                    sharing = null
+                }
+            } else {
+                null
+            },
+            onDismiss = { sharing = null },
         )
     }
 
@@ -1331,7 +1425,7 @@ private fun FailureNote(reason: DirectoryLister.Reason) {
  * @param onOpenWith '다른 앱으로 열기'. null 이면 단추가 없다(폴더·휴지통 안).
  */
 @Composable
-private fun DetailSheet(entry: FileEntry, @StringRes notice: Int?, onOpenWith: (() -> Unit)?) {
+private fun DetailSheet(entry: FileEntry, showHidden: Boolean, @StringRes notice: Int?, onOpenWith: (() -> Unit)?) {
     Column(Modifier.padding(start = 24.dp, end = 24.dp, bottom = 32.dp)) {
         Text(PathNames.forDisplay(entry.name), style = MaterialTheme.typography.titleMedium)
         if (notice != null) {
@@ -1346,7 +1440,9 @@ private fun DetailSheet(entry: FileEntry, @StringRes notice: Int?, onOpenWith: (
         }
         HorizontalDivider(Modifier.padding(vertical = 12.dp))
         DetailRow(stringResource(R.string.browser_detail_kind), kindLabel(entry.kind))
-        if (!entry.isDirectory) {
+        if (entry.isDirectory) {
+            FolderCountRows(entry.path, showHidden)
+        } else {
             DetailRow(
                 stringResource(R.string.browser_detail_size),
                 io.github.donggi.iroiroviewer.io.Format.size(entry.size),
@@ -1362,6 +1458,43 @@ private fun DetailSheet(entry: FileEntry, @StringRes notice: Int?, onOpenWith: (
                 FilledTonalButton(onClick = onOpenWith) { Text(stringResource(IoR.string.io_open_with)) }
             }
         }
+    }
+}
+
+/**
+ * 폴더의 크기와 안의 수. **시트가 떠 있는 동안만 센다** — 시트를 닫으면 모으는 코루틴이 끝나 훑기에 취소가 닿는다(`FolderStats`). 세는
+ * 동안 중간값을 보이고 '세는 중…' 을 붙인다. 읽지 못한 것이 있었으면 '일부 세지 못함' 을 남긴다.
+ */
+@Composable
+private fun FolderCountRows(path: String, showHidden: Boolean) {
+    val count by produceState<FolderStats.Count?>(null, path, showHidden) {
+        FolderStats.count(path, showHidden).collect { value = it }
+    }
+    val c = count
+    val counting = c == null || !c.done
+    val note = when {
+        counting -> stringResource(R.string.browser_detail_counting)
+        c.partial -> stringResource(R.string.browser_detail_partial)
+        else -> null
+    }
+    DetailRow(
+        stringResource(R.string.browser_detail_size),
+        c?.let { io.github.donggi.iroiroviewer.io.Format.size(it.bytes) } ?: "",
+    )
+    DetailRow(
+        stringResource(R.string.browser_detail_contents),
+        c?.let { stringResource(R.string.browser_detail_contents_value, it.files, it.folders) } ?: "",
+    )
+    if (note != null) {
+        Text(
+            note,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .padding(vertical = 4.dp)
+                // 다 세면 글이 바뀐다 — 화면 낭독기가 그것을 읽게.
+                .semantics { liveRegion = LiveRegionMode.Polite },
+        )
     }
 }
 

@@ -79,6 +79,9 @@ class FileOpEngine(private val media: MediaIndex) {
         /** 항목이 너무 많다(ZIP 만들기의 상한 — [ZipMaker.MAX_ENTRIES], 이 앱이 다시 열 수 있는 수). */
         TOO_MANY_ITEMS,
 
+        /** 담을 것이 너무 크다(묶어 보내기의 상한 — [ShareZips.MAX_INPUT_BYTES]). */
+        TOO_LARGE,
+
         /** 이 형식은 별도로 저장할 수 없다(그림 잘라 저장·구간 저장·소리만 뽑기 — 플랫폼이 쓰지 못하는 코덱·컨테이너, 잠긴 미디어). */
         UNSUPPORTED,
 

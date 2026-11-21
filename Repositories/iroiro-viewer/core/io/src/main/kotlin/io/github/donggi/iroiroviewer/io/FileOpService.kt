@@ -129,6 +129,7 @@ class FileOpService : Service() {
                 FileOpManager.Kind.ROTATE -> R.string.io_op_rotating
                 FileOpManager.Kind.EXTRACT -> R.string.io_op_extracting
                 FileOpManager.Kind.COMPRESS -> R.string.io_op_compressing
+                FileOpManager.Kind.SHARE_ZIP -> R.string.io_op_share_zip
                 FileOpManager.Kind.CROP -> R.string.io_op_cropping
                 FileOpManager.Kind.MARKUP -> R.string.io_op_markup
                 FileOpManager.Kind.CLIP -> R.string.io_op_clipping

@@ -65,6 +65,8 @@ class IroiroApp : Application() {
         // 다른 앱이 넘겨 재생기에 맡긴 사본은 화면이 끝나도 남는다. 프로세스가 설 때 하루 지난 것을 치운다 — 받을 때만 치우면
         // 다음에 무엇을 받기 전까지 수 GB 의 영상 사본이 남는다. 이때는 아무것도 재생하고 있지 않다.
         io.github.donggi.iroiroviewer.io.IncomingFiles.purgeStaleLater(this)
+        // 묶어 보내기의 ZIP 도 — 놓은 지 한 시간 지난 것(`ShareZips`). 받는 앱이 언제 다 읽는지 모르므로 곧바로 지우지 않았다.
+        io.github.donggi.iroiroviewer.io.ShareZips.purgeStaleLater(this)
     }
 
     private companion object {

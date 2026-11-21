@@ -116,16 +116,23 @@ internal object OpenWithRules {
         !entry.isDirectory && entry.kind != FileKind.FOLDER && !TrashStore.isTrashPath(entry.path)
 
     /**
-     * 선택 모드의 '다른 앱으로 열기'·'정보' 가 겨눌 항목. **정확히 하나를 골랐고 그것이 넘길 수 있는 파일일 때만**
+     * 선택 모드의 '다른 앱으로 열기' 가 겨눌 항목('정보' 는 [singleEntry]). **정확히 하나를 골랐고 그것이 넘길 수 있는 파일일 때만**
      * 그 항목이고, 아니면 null(메뉴 항목이 꺼진다 — '이름 바꾸기' 가 하나일 때만 켜지는 것과 같다).
      *
      * [entries] 는 **지금 보이는 목록**이다. 이름 필터로 가려진 것은 여기 없어 null 이 된다 — 보이지 않는 파일을
      * 다른 앱에 넘기게 두지 않는다.
      */
-    fun singleFile(selection: Set<String>, entries: List<FileEntry>): FileEntry? {
+    fun singleFile(selection: Set<String>, entries: List<FileEntry>): FileEntry? =
+        singleEntry(selection, entries)?.takeIf(::canHandOff)
+
+    /**
+     * 선택 모드의 '정보' 가 겨눌 항목 — 정확히 하나를 골랐고 **보이는** 것이면 파일이든 폴더든 그 항목이다(폴더면 시트가 안의 수와 크기를
+     * 센다 — `FolderStats`). 휴지통 안의 것은 빼지 않는다 — 정보는 밖으로 나가지 않는다(목록은 휴지통을 내보이지도 않는다).
+     */
+    fun singleEntry(selection: Set<String>, entries: List<FileEntry>): FileEntry? {
         if (selection.size != 1) return null
         val path = selection.first()
-        return entries.firstOrNull { it.path == path }?.takeIf(::canHandOff)
+        return entries.firstOrNull { it.path == path }
     }
 
     /**

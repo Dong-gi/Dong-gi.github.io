@@ -1,9 +1,6 @@
 package io.github.donggi.iroiroviewer.io
 
 import android.annotation.SuppressLint
-import android.system.ErrnoException
-import android.system.Os
-import android.system.OsConstants
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.ParseLimits
 import kotlinx.coroutines.NonCancellable
@@ -90,6 +87,29 @@ object ZipMaker {
             get() = items.sumOf { if (it.isDirectory) 0L else it.size }
     }
 
+    /**
+     * 묶기 전에 보는 한계(묶어 보내기 — [ShareZips]).
+     *
+     * @param maxInputBytes 담을 파일 바이트의 합의 상한.
+     * @param reserveBytes 다 쓴 뒤에도 남겨 둘 공간.
+     */
+    data class Limits(val maxInputBytes: Long, val reserveBytes: Long)
+
+    /**
+     * 묶어도 되는가 — 안 되면 그 까닭. [inputBytes] 는 담을 파일 바이트의 합이고, 결과는 그보다 크지 않다고 본다(압축은 줄이고, '저장' 은
+     * 그대로에 머리 몫이 붙는다 — 머리 몫은 [Limits.reserveBytes] 가 덮는다). [usable] 이 0 이하면 잴 수 없었던 것이라 막지 않는다 — 쓰는
+     * 동안의 공간 지킴이 그대로 돈다.
+     */
+    internal fun admit(inputBytes: Long, usable: Long, limits: Limits): FileOpEngine.Reason? = when {
+        inputBytes > limits.maxInputBytes -> FileOpEngine.Reason.TOO_LARGE
+        usable > 0 && usable - limits.reserveBytes < inputBytes -> FileOpEngine.Reason.NO_SPACE
+        else -> null
+    }
+
+    /** 남은 공간. 보수적인 값이 맞는 자리다 — 아래 [SpaceGuard] 와 같은 까닭으로 lint 를 끈다. */
+    @SuppressLint("UsableSpace")
+    private fun usableSpaceOf(dir: File): Long = dir.usableSpace
+
     /** 결과. 성공이면 [path] 가 실제로 만든 파일이다. */
     data class Result(val outcome: FileOpEngine.Outcome, val path: String?)
 
@@ -112,13 +132,22 @@ object ZipMaker {
      * 이미 있으면 `(2)` 를 붙인 다음 이름이다 — 실제로 맡는 것은 묶기가 끝날 때다.
      */
     fun suggestName(sources: List<File>, destDir: File, fallback: String): String {
+        val name = baseName(sources, destDir.name, fallback)
+        return runCatching { PathRules.nextAvailable(destDir, name) }.getOrDefault(name)
+    }
+
+    /**
+     * 고른 것의 ZIP 이름 — [suggestName] 에서 `(2)` 를 붙이기 전의 것. 묶어 보내기([ShareZips])는 이것을 쓴다(제 폴더에 만드므로 겹칠
+     * 것이 없다). [folderName] 은 고른 것들이 있는 폴더의 이름이다(여럿이면 그 이름 — 묶어 보내기는 화면의 이름을 준다. 볼륨 맨 위면
+     * `0` 이 아니라 '내부 저장소').
+     */
+    fun baseName(sources: List<File>, folderName: String, fallback: String): String {
         val base = when {
             sources.size == 1 && sources[0].isDirectory -> sources[0].name
             sources.size == 1 -> sources[0].name.substringBeforeLast('.').ifEmpty { sources[0].name }
-            else -> destDir.name
+            else -> folderName
         }.ifEmpty { fallback }
-        val name = zipName(base) ?: zipName(fallback) ?: "archive.zip"
-        return runCatching { PathRules.nextAvailable(destDir, name) }.getOrDefault(name)
+        return zipName(base) ?: zipName(fallback) ?: "archive.zip"
     }
 
     /**
@@ -135,6 +164,10 @@ object ZipMaker {
         media: MediaIndex?,
         onProgress: (FileOpEngine.Progress) -> Unit,
         password: CharArray? = null,
+        /** 훑은 뒤 묶기 전에 크기와 남은 공간을 본다([admit]). null 이면 보지 않는다(폴더에 묶기 — 쓰는 동안의 공간 지킴만). */
+        limits: Limits? = null,
+        /** 담지 않을 이름(마지막 조각) — 묶어 보내기의 숨김 규칙([ShareZips.excludes]). 뺀 것은 '건너뜀' 에 든다. null 이면 거르지 않는다(ZIP 만들기). */
+        exclude: ((String) -> Boolean)? = null,
         /** ZIP 을 놓은 순간에 불린다(`NewFiles.place`) — 그 뒤에 온 취소가 결과를 버려도 큐가 '놓였다' 를 안다. */
         onPlaced: (Result) -> Unit = {},
     ): Result = withContext(IroDispatchers.io) {
@@ -155,13 +188,18 @@ object ZipMaker {
         // 죽은 프로세스가 남긴 임시본을 걷는다(복사와 같다 — 한 시간 넘은 것만).
         AtomicFileWriter.sweepPartials(dir)
 
-        val plan = plan(sources.map(::File))
+        val plan = plan(sources, exclude = exclude)
         if (plan.tooMany) {
             return@withContext Result(FileOpEngine.Outcome.Failed(FileOpEngine.Reason.TOO_MANY_ITEMS, zipName), null)
         }
         if (plan.items.isEmpty()) {
             // 담을 것이 하나도 없다(링크만 골랐다). 빈 ZIP 을 만들지 않는다.
             return@withContext Result(FileOpEngine.Outcome.Done(0, plan.skipped, plan.unreadable), null)
+        }
+        if (limits != null) {
+            admit(plan.workOnce, usableSpaceOf(dir), limits)?.let { reason ->
+                return@withContext Result(FileOpEngine.Outcome.Failed(reason, zipName), null)
+            }
         }
 
         val pending = try {
@@ -372,62 +410,44 @@ object ZipMaker {
     // ---- 계획 -------------------------------------------------------------------
 
     /**
-     * 담을 것을 훑는다. **링크는 따라가지 않는다**, 같은 (장치, inode) 를 두 번 들어가지 않는다, 깊이는 64 까지 —
-     * 복사의 훑기(`FileOpEngine.walk`)와 같은 세 겹이다.
+     * 담을 것을 훑는다 — [TreeWalk] 의 세 겹(링크를 따라가지 않는다, 같은 (장치, inode) 를 두 번 들어가지 않는다, 깊이 64)이고, 복사의
+     * 훑기(`FileOpEngine.walk`)와 같은 규칙이다. 폴더 정보([FolderStats])도 같은 훑기를 쓴다.
      */
-    internal suspend fun plan(sources: List<File>): Plan {
+    internal suspend fun plan(
+        sources: List<String>,
+        fs: TreeWalk.Fs = PosixTree,
+        exclude: ((String) -> Boolean)? = null,
+    ): Plan {
         val items = ArrayList<Item>()
-        val visited = HashSet<Long>()
         var skipped = 0
         var unreadable = 0
         var tooMany = false
-
-        suspend fun visit(file: File, name: String, depth: Int) {
-            currentCoroutineContext().ensureActive()
-            if (tooMany) return
-            if (depth > MAX_DEPTH) {
-                skipped++
-                return
-            }
-            val st = try {
-                Os.lstat(file.absolutePath)
-            } catch (e: ErrnoException) {
-                unreadable++
-                return
-            }
-            val mode = st.st_mode
-            if (OsConstants.S_ISLNK(mode) || !(OsConstants.S_ISDIR(mode) || OsConstants.S_ISREG(mode))) {
-                skipped++
-                return
-            }
-            if (!visited.add(st.st_dev * 1_000_003L + st.st_ino)) {
-                skipped++
-                return
-            }
-            if (items.size >= MAX_ENTRIES) {
-                tooMany = true
-                return
-            }
-            val modified = st.st_mtime * 1000L
-            if (OsConstants.S_ISDIR(mode)) {
-                items += Item(file, "$name/", isDirectory = true, size = 0, modified = modified)
-                val children = file.listFiles()
-                if (children == null) {
-                    unreadable++
-                    return
+        val visitor = object : TreeWalk.Visitor {
+            override fun entry(path: String, relative: String, stat: TreeWalk.Stat, depth: Int): Boolean {
+                if (items.size >= MAX_ENTRIES) {
+                    tooMany = true
+                    return false
                 }
-                // 이름 차례로 담는다 — 같은 폴더를 두 번 묶으면 같은 차례가 나오고, 푸는 쪽의 목록도 읽기 좋다.
-                for (child in children.sortedBy { it.name }) visit(child, "$name/${child.name}", depth + 1)
-            } else {
-                items += Item(file, name, isDirectory = false, size = st.st_size, modified = modified)
+                items += if (stat.type == TreeWalk.Type.DIRECTORY) {
+                    Item(File(path), "$relative/", isDirectory = true, size = 0, modified = stat.modifiedMillis)
+                } else {
+                    Item(File(path), relative, isDirectory = false, size = stat.size, modified = stat.modifiedMillis)
+                }
+                return true
+            }
+
+            override fun skipped(why: TreeWalk.Skip) {
+                skipped++
+            }
+
+            override fun unreadable() {
+                unreadable++
             }
         }
-
-        for (s in sources) visit(s, s.name, 0)
+        // 이름 차례로 담는다 — 같은 폴더를 두 번 묶으면 같은 차례가 나오고, 푸는 쪽의 목록도 읽기 좋다.
+        TreeWalk.walk(sources, fs, visitor, sorted = true, exclude = exclude, excludeRoots = true)
         return Plan(items, skipped, unreadable, tooMany)
     }
-
-    private const val MAX_DEPTH = 64
 
     // ---- 항목 -------------------------------------------------------------------
 

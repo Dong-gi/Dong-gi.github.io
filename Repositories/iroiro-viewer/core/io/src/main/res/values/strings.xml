@@ -12,6 +12,7 @@
     <string name="io_op_rotating">회전하는 중</string>
     <string name="io_op_extracting">압축을 푸는 중</string>
     <string name="io_op_compressing">압축하는 중</string>
+    <string name="io_op_share_zip">보낼 ZIP을 묶는 중</string>
     <string name="io_op_cropping">잘라 낸 그림을 저장하는 중</string>
     <string name="io_op_clipping">구간을 저장하는 중</string>
     <string name="io_op_audio">소리를 저장하는 중</string>
@@ -27,6 +28,7 @@
     <string name="io_error_invalid_name">쓸 수 없는 이름입니다</string>
     <string name="io_error_target_inside">폴더를 자기 안으로 옮길 수 없습니다</string>
     <string name="io_error_too_many_items">항목이 너무 많아 압축하지 않았습니다</string>
+    <string name="io_error_too_large">2 GB가 넘어 묶어 보내지 않았습니다</string>
     <string name="io_error_unsupported">이 형식은 별도로 저장할 수 없습니다</string>
     <string name="io_error_changed">파일이 그사이 바뀌었습니다 — 다시 열어 고르세요</string>
     <string name="io_error_empty_range">고른 구간에 담을 것이 없습니다</string>
