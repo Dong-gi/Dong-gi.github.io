@@ -240,17 +240,21 @@ class HttpProxyServerTest {
     @Test
     fun 원격에_닿지_못하면_502() {
         val p = proxy()
-        val reply = rawHttp(p.actualPort, ascii("CONNECT 127.0.0.1:${closedPort()} HTTP/1.1\r\n\r\n"), timeoutMs = 15_000)
+        // 듣지 않는 소켓이 쥔 포트 — 시험 동안 아무도 그 포트에서 듣지 못하고 서버의 바깥 연결도 그 포트를 받지 못한다([refusingPort]).
+        val dead = closer.keep(refusingPort()).localPort
+        val reply = rawHttp(p.actualPort, ascii("CONNECT 127.0.0.1:$dead HTTP/1.1\r\n\r\n"), timeoutMs = 15_000)
         assertEquals(502, reply.status)
+        // 절대 URI 전달도.
+        assertEquals(502, rawHttp(p.actualPort, ascii("GET http://127.0.0.1:$dead/ HTTP/1.1\r\n\r\n"), timeoutMs = 15_000).status)
     }
 
     @Test
     fun 기본_포트가_차_있으면_다음_빈_포트로_가고_모두_차면_실패를_알린다() {
-        // 사용자 결정 — 8282 가 차 있으면 8283… 로.
-        val squatter = closer.keep(squatWithFreeNext())
-        val base = squatter.localPort
+        // 사용자 결정 — 8282 가 차 있으면 8283… 로. 다음 포트는 시험이 쥐고 있다가 세우기 바로 앞에서 놓는다([PortPair]).
+        val ports = closer.keep(PortPair.squat())
+        val base = ports.base
         val p = closer.keep(HttpProxyServer(testEnv(), basePort = base, attempts = 2))
-        assertEquals(base + 1, p.start())
+        assertEquals(base + 1, ports.handOver { p.start() })
         assertEquals(base + 1, p.actualPort)
         assertNull(p.lastError)
         // 옮겨 선 포트에서 정말 이 프록시가 답한다(쥔 소켓은 답하지 않는다).

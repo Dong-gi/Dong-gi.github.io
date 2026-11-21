@@ -61,6 +61,7 @@
 | 정체 감추기 | WebView Media Integrity API 를 끄고 파비콘을 받지 않는다. `Sec-GPC: 1` 은 넣지 않았다('사용자가 정할 것') |
 | 앱의 HTTP 와 예외 규칙 | **따른다** — 내려받기·HLS·DASH·찾은 미디어 미리 읽기·광고 목록이 WebView 와 같은 예외 규칙으로 바로 간다(크로미움처럼 읽고, 다르게 읽힐 수 있는 꼴은 프록시로). 출구 확인은 늘 중계 |
 | 테더링 | usb-tether 를 **합친다**(목적은 '앱 하나 줄기'). **인증은 더하지 않는다**(Wi-Fi Direct 로 붙은 기기만 닿는다) — 대신 그 전제를 코드로 단단히 한다(손님 거르기·파일 서버의 `Host` 검사·스레드 예산). 손님의 트래픽은 프록시를 거치지 않는다 — '바로 나감' 예외. 포트·SSID 앞머리·192.168.49.x 는 그대로(PC 의 스크립트·Wi-Fi 프로필이 쓴다). **켜기·끄기 하나**(서버 셋과 핫스팟 — 핫스팟이 서지 못하거나 내려가면 통째로 끄고 까닭을 남긴다, 서버 하나가 포트를 못 얻은 것은 끄지 않는다) · **HTTP·파일 포트는 차 있으면 +1 씩**(이 폰의 다른 앱이 8282·8080 을 먼저 쥐면 PC·손님이 그 앱에 붙는 위험을 감수했다. SOCKS5 는 1080 고정) · **타일을 길게 누르면 테더 화면**(앱 바로가기는 두지 않는다) · **재부팅 뒤 저절로 켜지 않는다** |
+| 테더 파일 서버(NAS 꼴) | **시놀로지·QNAP File Station·Nextcloud 꼴**(11-21 승인) — 바깥 JS·CSS·CDN·새 Gradle 의존 없음, 화면은 한국어·설명은 짧게. 읽기 쪽(나무·목록/격자·정렬·거르기·보이는 줄만·섬네일·보기·여러 개 고르기·zip 흘려 받기·올리기 대기열·저장 공간·단축키)은 늘, **관리 기능**(폴더 만들기·이름 바꾸기·옮기기·복사·지우기 = 숨은 휴지통으로·휴지통·폴더째 올리기)은 테더 화면의 **'관리 허용'(기본 끔)** 이 켜졌을 때만(서버가 요청마다 본다). 바꾸는 요청은 PUT·JSON POST 뿐 — 아래 '테더링' 의 '서버의 세부'. 11-21 더 정한 것: **올리기의 덮어쓰기는 관리 허용과 상관없이 그대로 두되 같은 이름이면 한 번 묻는다**(서버는 `overwrite=1` 이 없으면 409) · **관리 허용은 테더링 켜기·끄기와 별개**(끌 때 저절로 끄지 않는다) · **휴지통 보관 기간을 고른다 — 7·30(기본)·90일·비우지 않음**(테더 화면, 지난 것은 `:tether` 가 저절로 비운다) · **휴지통에 `.nomedia`**. 11-21 그 뒤 더 정한 것: **'모든 파일에 적용'**(윈도의 덮어쓰기 창처럼 — 겹치는 파일이 여럿이면 첫 물음에서 한 번, 겹치는 수를 알면 '(겹치는 파일 N개)', 그 묶음 안에서만) · **폴더와 같은 이름이면 '덮어쓰기' 를 고를 수 없다**(흐리게 + '같은 이름의 폴더가 있습니다', 서버는 `overwrite=1` 이어도 409 `folder`, '모든 파일에 적용' 으로 덮어쓰기를 골랐으면 그런 것은 새 이름으로) · **새 이름의 제어·방향·폭 없는 글자는 거절하지 않고 뺀다**(올리기·폴더 만들기·이름 바꾸기·겹쳐 짓는 새 이름·폴더째 올리기의 새 성분, 같은 이름 검사도 뺀 뒤로, 답에 실제 이름) · **zip·받기의 쓰기 시한은 두지 않는다** · **덮어쓴 원래 파일은 휴지통으로**(관리 허용과 상관없이 — 옮기지 못하면 덮지 않는다. 휴지통 보기·되살리기는 관리 허용이 필요하다) · **덮어쓸 때 원래 파일이 0바이트면 휴지통에 넣지 않는다**(11-21 — 그냥 새 것으로 바꾼다. 크기는 서버가 실제 항목에서, 판정 뒤 원래 것이 커지면 휴지통으로, 덮어쓰기만 — 관리의 지우기는 그대로) · 관리가 꺼진 손님의 반복 덮어쓰기로 **휴지통이 커지는 것은 지금은 다루지 않는다**(11-21) |
 | 설정 파일 zip | 설정 › 프록시의 **'서버 구성 파일 받기'**(`web-proxy-server.zip`), 테더링 › 다른 기기에서의 **'PC 연결 파일 받기'**(`web-tether-pc.zip`) — 둘 다 공용 '내려받기'. 남의 실행 파일(tun2proxy·wintun)은 담지 않고 README 가 받는 곳을 적는다 |
 | 갤러리 받기 | **pixiv·hitomi**(사이트는 사용자가 골랐고 나머지는 검토의 권고대로) — pixiv 는 **이 브라우저의 로그인 쿠키 + 웹 AJAX**(데스크톱의 OAuth·앱 API·비밀 보관을 옮기지 않았다, Claude 는 로그인하지 않는다), 모든 요청은 내려받기의 길(세 번째 '바로 나감' 없음), 자리 `Download/Pixiv/<작가>/`·`Download/Hitomi/<작가>/<번호_제목>/`, 우고이라는 zip 그대로, 들어가는 길은 ⋮ 메뉴와 고리 길게 누르기('주소로 받기' 없음), wake lock 없음, 시험 자료는 합성만 |
 | 유튜브 광고 | **B1(가리고 소리 끄기)과 B2(건너뛸 수 있게 되면 앱이 진짜 터치로 누르기 — 앞·뒤·화면 꺼짐·다른 탭 무관).** B3(끝으로 감기)는 넣지 않는다 — 건너뛸 수 없는 광고는 가리고 끈 채 끝까지 간다. 켜는 조건은 광고 차단(그 사이트에서 끄면 꺼진다 — 탈출구), 새 설정 스위치는 없다 |
@@ -96,8 +97,8 @@ cache 를 껐다** — 디버그 빌드가 시험 CA 파일이 있는지로 네�
 
 ```bash
 export JAVA_HOME="$HOME/.gradle/jdks/jetbrains_s_r_o_-21-amd64-windows.2"
-./gradlew :core:test :net:test :app:testDebugUnitTest --offline        # core 311 · net 37 · app 204
-./gradlew :tether:test --offline                                       # 테더의 서버·거르개 125건(약 15초, 루프백만)
+./gradlew :core:test :net:test :app:testDebugUnitTest --offline        # core 311 · net 37 · app 216
+./gradlew :tether:test --offline                                       # 테더의 서버·거르개 182건(약 20초, 루프백만)
 ./gradlew :app:lintDebug :app:lintRelease :app:assembleDebug :app:assembleRelease --offline   # lint 오류 0
 ./gradlew :core:classes :net:classes :tether:classes --offline && python tools/check_api_level.py   # 문제 0건
 ```
@@ -139,8 +140,10 @@ tether/ JVM, 새 의존 없음. 테더링의 서버와 거르개(패키지 tethe
         TcpServer(받기·거르기·상한의 몸통 — TetherEnvironment·StartError) · Socks5Server · HttpProxyServer · FileServer(규약 — 폴더는 SharedTree 로 주입)
         PeerFilter(손님 — 그룹 오너 주소·손님 대역·우리 그룹의 인터페이스, 조회 주입) · DestinationFilter(목적지 — 사설·로컬 대역) · IpAddress
         Outbound(바깥 문 — Socket(Proxy.NO_PROXY)) · ThreadBudget(서버 셋의 스레드 예산) · ConnectionRegistry · DeadlineInputStream · ByteRange · Json ·
-        SharedPaths(경로 검사·MIME·filename* 부호) · Passphrases·PassphraseVault(SSID·패스프레이즈 규칙과 보관) · GroupWatch · ChangeCoalescer ·
-        LogThrottle · TetherLog. 시험 125건(루프백)
+        SharedPaths(경로 검사·이름 규칙·휴지통 이름·MIME·filename* 부호) · SharedOps(파일 서버의 관리 기능·휴지통·zip 의 차례 — SharedTree 위) ·
+        JsonReader(관리 기능의 JSON 몸 — 엄격) · Thumbnails·ThumbnailCache(섬네일의 형식 보기·디스크 캐시) ·
+        Passphrases·PassphraseVault(SSID·패스프레이즈 규칙과 보관) · GroupWatch · ChangeCoalescer · LogThrottle · TetherLog. 시험 182건(루프백 —
+        시험 소스의 DevFileServer 는 PC 에서 화면을 보는 개발용 실행기)
 app/    WebApp(설정·길·내려받기·연 사이트 목록을 처음 쓸 때 세운다 — 주 프로세스에서만, 테더 프로세스에서는 WebView 를 끄고 of() 가 던진다) · AppUserAgent(앱이 스스로 내는 요청의 UA)
         proxy/   NetworkPath(길을 정하는 유일한 곳) · AppRoute(앱의 HTTP 가 홉마다 고르는 길 — 순수) · SettingsStore · SecretBox(기기 키) · NetErrors
         crypto/  DeviceKeyCipher(기기 키 AES-256-GCM 잠그기 — 별칭을 받는다, 실패를 잡지 않는다. SecretBox 와 :tether 의 TetherSecret 이 함께)
@@ -172,10 +175,12 @@ app/    WebApp(설정·길·내려받기·연 사이트 목록을 처음 쓸 때
         tether/  (모두 :tether 프로세스) TetherService(specialUse — 떠 있는 것이 곧 테더링: 서버 셋·핫스팟·알림 4) · TetherActivity(화면 — 켜기·끄기 하나) ·
                  HotspotStartActivity(타일의 트램폴린) · HotspotTileService(퀵 설정 타일 '테더링') · TilePreferencesActivity(타일을 길게 누를 때 — 내보냄, 테더
                  화면만 연다) · WifiHotspot(Wi-Fi Direct 그룹) · TetherState(그 프로세스의 상태·듣개) · TetherSettings·TetherSecret(설정
-                 `tether`·기기 키) · SharedFolder(SAF 트리 — DocumentsContract) · TetherPermissions · TetherTexts(기계 말 → 글)   assets/tether/fileman.html
+                 `tether`·기기 키·관리 허용) · SharedFolder(SAF 트리 — DocumentsContract, 섬네일) · TetherPermissions · TetherTexts(기계 말 → 글)
+                 assets/tether/fileman.html·fileman.js·fileman.css(파일 서버의 화면)
         setup/   (주 프로세스와 :tether 가 함께) SetupZip(묶음 목록·zip 짓기 — 순수) · SetupFiles(자산 → zip → '내려받기')   assets/setup/proxy-server·tether-pc
-app/src/test/   판단을 떼어 낸 순수 함수의 시험(상태 글·오류 까닭·당김·NetErrors·앱의 HTTP 길(AppRoute)·DownloadCenter·PickProtocol·전체 화면·재생 중 화면 켜 두기·테더의 글과 프로세스 경계·설정 파일 zip·유튜브 광고 가리기와 건너뛰기·갤러리 받기의 판단과 곁의 파일과 배선·뒤에서 재생 잇기·주소창과 탭의 작은 것들·m3u8 열쇠 받기의 글과 배선·내려받기의 홉마다 Referer·WebRTC 가드의 꼴) 204건 — `kotlin("test-junit")`
-app/src/debug/  lab/LabActivity·LabParams·LabScripts(실험) · lab/LabSetupActivity(시험 도구가 설정을 넣고 사이트별 데이터 화면을 연다) — 둘 다 DUMP 권한
+app/src/test/   판단을 떼어 낸 순수 함수의 시험(상태 글·오류 까닭·당김·NetErrors·앱의 HTTP 길(AppRoute)·DownloadCenter·PickProtocol·전체 화면·재생 중 화면 켜 두기·테더의 글과 프로세스 경계·설정 파일 zip·유튜브 광고 가리기와 건너뛰기·갤러리 받기의 판단과 곁의 파일과 배선·뒤에서 재생 잇기·주소창과 탭의 작은 것들·m3u8 열쇠 받기의 글과 배선·내려받기의 홉마다 Referer·WebRTC 가드의 꼴·파일 서버의 화면 자산과 관리 허용 배선·올리기의 덮어쓰기 묻기·휴지통 보관 기간 배선·모든 파일에 적용과 폴더와 같은 이름·화면과 서버가 빼는 글자) 216건 — `kotlin("test-junit")`
+app/src/debug/  lab/LabActivity·LabParams·LabScripts(실험) · lab/LabSetupActivity(시험 도구가 설정을 넣고 사이트별 데이터 화면을 연다) ·
+                lab/TetherFolderProbeActivity(:tether — 파일 서버의 SAF 쪽·관리 기능을 기기에서 돌려 logcat `WebProbe` 에, `do=screen` 이면 테더 화면) — 모두 DUMP 권한
 tools/  check_api_level.py · lab/make_certs.py · lab/labserver.py · lab/labmedia.py(시험 미디어 — 나누기·TS 짜기·담긴 MP4 읽기) ·
         lab/run_lab.py(WebView 의 성질) · lab/run_browser.py(이 앱 — 기대가 낡았다, 아래 '실험실')
 ```
@@ -1106,7 +1111,7 @@ null). pixiv — `/artworks/{id}`, `/{언어}/artworks/{id}`, `/users/{id}`(+`/i
 |---|---|---|
 | SOCKS5(RFC 1928) | **1080 고정** | CONNECT·**UDP ASSOCIATE**. PC 는 tun2proxy 로 트래픽을 통째로 보낸다(아래 'PC 쪽') |
 | HTTP 프록시 | **8282**, 차 있으면 8283…8291 | `CONNECT`(터널)와 절대 URI 전달. 시스템·앱의 프록시 설정(이 PC 의 `HTTP_PROXY=192.168.49.1:8282`) |
-| 파일 서버 | **8080**, 차 있으면 8081…8089 | 폰의 폴더 하나(SAF)를 손님의 브라우저로 — 목록·받기(Range)·올리기(PUT)·`fileman.html` |
+| 파일 서버 | **8080**, 차 있으면 8081…8089 | 폰의 폴더 하나(SAF)를 손님의 브라우저로 — NAS(File Station) 꼴의 화면: 폴더 나무·목록/격자·섬네일·보기·zip 받기·올리기 대기열, '관리 허용' 이면 폴더 만들기·이름 바꾸기·옮기기·복사·휴지통(아래 '서버의 세부') |
 
 셋 다 `0.0.0.0`(실기기에서는 듀얼스택 `::`)에 묶고 accept 직후 손님을 거른다. 화면·알림은 **실제로 묶인 포트**를 보인다.
 
@@ -1132,8 +1137,8 @@ null). pixiv — `/artworks/{id}`, `/{언어}/artworks/{id}`, `/users/{id}`(+`/i
 
 | 어디 | 무엇 |
 |---|---|
-| `:tether`(순수 JVM, 패키지 `tether.core`) | 안드로이드에 기대지 않는 것 — 서버 셋의 규약(`TcpServer` 몸통 + `Socks5Server`·`HttpProxyServer`·`FileServer`), 거르개(`PeerFilter`·`DestinationFilter`·`IpAddress`), `Outbound`·`ThreadBudget`·`ConnectionRegistry`·`DeadlineInputStream`, 파일 서버의 조각(`ByteRange`·`Json`·`SharedPaths`), `Passphrases`·`PassphraseVault`, 그룹 판정 `GroupWatch`, 알림·기록 묶기(`ChangeCoalescer`·`LogThrottle`). 로그는 주입한 `TetherLog`(앱이 `android.util.Log` 로 잇는다). **기계 말만 낸다**(`StartError`·`PeerRejection`·`Passphrases.Problem`) — 글은 앱이 고른다 |
-| 앱 `tether/`(모두 `:tether` 프로세스) | `TetherService`(specialUse 포그라운드 서비스 — 떠 있는 것이 곧 테더링: 서버 셋·핫스팟·알림) · `TetherActivity`(화면 — 켜기·끄기 하나) · `HotspotStartActivity`(타일의 트램폴린) · `HotspotTileService`(퀵 설정 타일 '테더링') · `TilePreferencesActivity`(타일을 길게 누를 때 시스템 UI 가 여는 작은 화면 — 내보냄, 테더 화면만 연다) · `WifiHotspot` · `TetherState`(그 프로세스의 정적 상태·듣개) · `TetherSettings`·`TetherSecret` · `SharedFolder`(SAF — `DocumentsContract`) · `TetherPermissions` · `TetherTexts` · `assets/tether/fileman.html` · `res/values/strings_tether.xml` |
+| `:tether`(순수 JVM, 패키지 `tether.core`) | 안드로이드에 기대지 않는 것 — 서버 셋의 규약(`TcpServer` 몸통 + `Socks5Server`·`HttpProxyServer`·`FileServer`), 거르개(`PeerFilter`·`DestinationFilter`·`IpAddress`), `Outbound`·`ThreadBudget`·`ConnectionRegistry`·`DeadlineInputStream`, 파일 서버의 조각(`ByteRange`·`Json`·`SharedPaths`), `Passphrases`·`PassphraseVault`, 그룹 판정 `GroupWatch`, 알림·기록 묶기(`ChangeCoalescer`·`LogThrottle`), 파일 서버의 관리 기능·휴지통·zip 의 차례(`SharedOps`)·JSON 읽개(`JsonReader`)·섬네일 캐시(`ThumbnailCache`). 로그는 주입한 `TetherLog`(앱이 `android.util.Log` 로 잇는다). **기계 말만 낸다**(`StartError`·`PeerRejection`·`Passphrases.Problem`) — 글은 앱이 고른다 |
+| 앱 `tether/`(모두 `:tether` 프로세스) | `TetherService`(specialUse 포그라운드 서비스 — 떠 있는 것이 곧 테더링: 서버 셋·핫스팟·알림) · `TetherActivity`(화면 — 켜기·끄기 하나) · `HotspotStartActivity`(타일의 트램폴린) · `HotspotTileService`(퀵 설정 타일 '테더링') · `TilePreferencesActivity`(타일을 길게 누를 때 시스템 UI 가 여는 작은 화면 — 내보냄, 테더 화면만 연다) · `WifiHotspot` · `TetherState`(그 프로세스의 정적 상태·듣개) · `TetherSettings`·`TetherSecret` · `SharedFolder`(SAF — `DocumentsContract`, 섬네일) · `TetherPermissions` · `TetherTexts` · `assets/tether/fileman.html`·`.js`·`.css` · `res/values/strings_tether.xml` |
 
 - 구성 요소 다섯(화면·트램폴린·서비스·타일·타일을 길게 누를 때의 작은 화면)은 **모두 `android:process=":tether"`** — 테더의 상태(`TetherState`)가 그
   프로세스의 정적 필드라 하나라도 다른 프로세스면 늘 처음 값을 본다. 서로는 브로드캐스트가 아니라 **같은 프로세스의 듣개**로 알린다(내보낸 수신기의
@@ -1202,7 +1207,10 @@ on-link 접두**(`wlan`·`eth`·`p2p`·`swlan`·`ap`·`softap`·`rndis`·`usb`·
 | SOCKS5 동시 연결 | 256 | tun2proxy 는 PC 의 TCP 연결 하나가 연결 하나다 |
 | 그 가운데 UDP 묶음 | **128** | 묶음 하나가 스레드 셋과 64 KiB 버퍼 둘(힙) — 128 이면 16 MiB. tun2proxy 는 DNS 질의마다 묶음을 연다고 보아 넉넉히(확인하지 않았다) |
 | HTTP 프록시 동시 연결 | 256 | 앱들이 통째로 HTTP 프록시를 지나는 쓰임을 줄이지 않으려고 |
-| 파일 서버 동시 연결 | 32 | |
+| 파일 서버 동시 연결 | 32 | zip·섬네일·복사도 그 연결의 스레드에서 돈다(스레드를 더 띄우지 않는다 — 예산 1) |
+| 파일 서버 — zip | 동시에 흘리기 **2** · 기다리는 표 4(60초, 한 번 쓴다) · 담는 항목 **1만**(폴더 안까지)·깊이 32 | 표를 줄 때 미리 펴서 넘으면 받기 전에 413. 연결 하나를 끝까지 쥐므로 동시 수를 묶는다. 표 수 상한은 **펴 보기 전에** 본다(뒤에서 보면 표가 찬 동안 몰아 보낸 요청마다 폴더를 펴 SAF 질의를 쏟는다 — 11-21, 넣기 전에 한 번 더 본다) |
+| 파일 서버 — 섬네일 | 동시에 짓기 2(차례 20초) · 하나 512 KiB · 캐시 3,000개·48 MiB(cacheDir, 오래 안 쓴 것부터) | 동영상 장면 풀기는 무겁다. 캐시 파일 이름은 열쇠의 SHA-256 — 손님의 글이 경로에 들지 않는다 |
+| 파일 서버 — 목록·관리 | 목록 2만 항목(넘으면 자르고 `truncated`) · 한 번에 고른 것 1,000 · JSON 몸 512 KiB · 손으로 짓는 복사 1만 항목 · 관리 동작은 하나씩(차례 30초 — 폴더째 올리기의 폴더 만들기도) | 화면은 보이는 줄만 그린다(3,000개 폴더에서 줄 35개). **JSON 몸은 관리 잠금 밖에서 다 읽은 뒤에 잠근다** — 잠금 안에서 읽으면 몸을 한 바이트씩 흘리는 손님 하나가 다른 모든 관리 동작을 503 으로, 폴더째 올리기를 끝없는 기다림으로 묶었다(11-21 검토에서 고침) |
 | 머리를 다 받기까지 | SOCKS5·HTTP 10초, 파일 30초 — **머리 전체의 마감**(`DeadlineInputStream` — 읽기마다 남은 시간을 soTimeout 으로 건다) | 읽기마다 다시 거는 soTimeout 이면 한 바이트씩 흘리는 손님이 일꾼을 끝없이 쥔다. 중계가 시작되면 0(무한 — 조용한 WebSocket·SSH 를 끊지 않는다. 쌓이는 것은 위 상한이 막는다). 파일 서버의 올리기 본문은 읽기 하나에 30초(큰 파일은 오래 걸리므로 전체 마감이 없다) |
 | 머리 줄 | HTTP 한 줄 8 KiB · 100 줄, 파일 64 줄 — **`:` 없는 줄·겹친 이름도 센다** | 넘으면 431(파일 서버는 400) |
 | UDP 이름 풀이 | 캐시 256 · 60초 · 동시 8 | 중계 스레드에서 풀지 않는다(첫 패킷은 버리고 뒤에서 푼다) |
@@ -1228,15 +1236,121 @@ on-link 접두**(`wlan`·`eth`·`p2p`·`swlan`·`ap`·`softap`·`rndis`·`usb`·
   빈칸·`0x`) 400, `Transfer-Encoding` 이 둘 이상이거나 마지막 코딩이 `chunked` 가 아니거나 `chunked` 가 두 번이거나 빈 코딩이 있으면 400
   (`xchunked`·`chunked, identity` 처럼 서버마다 다르게 읽는 꼴). 이 프록시는 본문을 읽지 않고 흘리므로 경계를 읽는 것은 원격과 그 앞의 CDN 이다 —
   그 사이에서 갈리는 꼴을 세탁해 주지 않으려는 것이다. 인증 없음.
-- **파일 서버**: `GET /`(화면) · `GET /api/list?path=`(JSON — 폴더 먼저, 이름 차례) · `GET /api/file?path=`(Range 하나 — `bytes=a-b`·`a-`·`-n`, 여러
-  구간은 416 — 와 RFC 6266 `filename*`) · `PUT /api/file?path=`(본문이 그대로 내용 — **숨은 임시 이름 `.이름.part` 로 다 받은 뒤에** 같은 이름의
-  파일을 지우고 그 이름으로 바꾼다. 끊기거나 길이가 다르거나 쓰기를 열지 못하면 **임시만** 지운다 — 원래 파일은 그대로, 빈 파일도 남기지 않는다).
-  연결 하나에 요청 하나. `HEAD`·`OPTIONS` 는 404. 올리기는 `Transfer-Encoding` 이 있으면(CL 과 함께든 아니든) 501, `Content-Length` 가 없으면 411, 흘려서
-  쓴다. SAF 쪽(`SharedFolder`)은 임시를 `renameDocument` 로 바꾸므로 **이름 바꾸기를 하는 제공자**여야 한다(`FLAG_SUPPORTS_RENAME` — 못 하면 받기 전에
-  500). 원래 것을 지운 뒤 이름 바꾸기가 실패하면 받은 내용이 임시에 남는다(지우지 않는다). 올리기가 PUT 인 것은 HTML 폼(GET/POST 만)으로 일으킬 수
-  없게. 폴더는 만들지·지우지·이름 바꾸지 않는다. 경로는 공유 폴더를 맨 위로 하는 상대 경로 — 절대·`.`·`..`·빈 성분·역슬래시·NUL·32 성분 넘음은
-  거절하고(`SharedPaths.split`), **성분마다 자식만 찾아 내려간다**(`SharedTree` 의 계약 — SAF 의 문서 ID 로만). 화면은 `http://` 라 secure context 가
-  아니어서 받기는 `<a download>` 로(파일 전체를 메모리에 올리지 않는다).
+- **파일 서버**(2026-11-21 NAS 꼴로 다듬음 — 본보기는 시놀로지·QNAP File Station·Nextcloud. 바깥 JS·CSS·CDN·새 Gradle 의존 없음). API:
+
+  | 요청 | 하는 일 |
+  |---|---|
+  | `GET /` · `/fileman.js` · `/fileman.css` | 화면(앱의 자산 셋 — `FileServer.UI_FILES` 밖의 이름은 묻지 않는다) |
+  | `GET /api/info` | 폴더 이름·`manage`(관리 허용)·저장 공간(`free`·`total` — 얻지 못하면 null)·상한 |
+  | `GET /api/list?path=[&dirs=1]` | 목록 JSON(폴더 먼저·이름 차례, 휴지통은 감춘다, 2만에서 자르고 `truncated`). `dirs=1` 은 폴더만(나무·옮길 곳) |
+  | `GET /api/file?path=[&inline=1]` | 받기 — Range 하나(`bytes=a-b`·`a-`·`-n`, 여러 구간은 416), RFC 6266 `filename*`. 늘 `attachment` — `inline=1` 은 **PDF 만** |
+  | `GET /api/thumb?path=&size=` | 섬네일(160·320). 머리 바이트로 JPEG·PNG·WebP·GIF 만(`Thumbnails.sniff`), 없으면 404 |
+  | `PUT /api/file?path=[&overwrite=1][&parents=1]` | 올리기(아래). **덮어쓰기는 `overwrite=1` 일 때만** — 없거나 `0` 이면 같은 이름(대소문자 무시, 폴더도)에 409 `exists`, 다른 값은 400. 같은 이름이 **폴더면 `overwrite=1` 이어도 409**(`folder: true`). 덮을 때 원래 파일은 휴지통으로(답의 `trashed`) — 0바이트면 휴지통 없이 바꾼다. 답의 `name` 은 실제로 둔 이름. `parents=1`(없는 폴더를 만들며 — 폴더째 올리기)은 관리 |
+  | `POST /api/zip` `{base, names}` → `GET /api/zip?id=` | 여러 개·폴더를 zip 으로 **흘려** 받기 — 표를 줄 때 차례를 미리 펴(항목 1만·깊이 32 넘으면 413), 표는 60초·한 번. 이미 눌린 형식(그림·영상·소리·압축·PDF)은 누르지 않고 나머지는 수준 1, 파일마다 내보낸다. 길이 없이 보내고 연결을 닫아 끝을 알린다. 중간에 못 읽으면 연결을 끊는다(브라우저는 실패로 — 반쯤 된 zip 을 '완료' 로 보이지 않게) |
+  | `PUT /api/folder?path=` | 폴더 만들기(관리) — 같은 이름(대소문자 무시) 409 |
+  | `POST /api/rename` `{path, name}` | 이름 바꾸기(관리) — 맨 위(공유 폴더 자체)는 400, 대소문자만 바꾸기는 겹침이 아니다 |
+  | `POST /api/move`·`/api/copy` `{base, names, to, conflict}` | 옮기기·복사(관리). **폴더를 자기 안으로**(대상이 그 폴더이거나 그 아래)는 아무것도 하지 않고 400. `conflict` 는 `ask`(기본 — 하나라도 겹치면 409 `conflicts` 로 이름들, 화면이 묻는다)·`skip`·`rename`(`이름 (1).확장자`). 같은 폴더로 옮기기는 건너뜀, 같은 폴더로 복사는 사본 |
+  | `POST /api/delete` `{base, names}` | **휴지통으로 옮기기**(관리) |
+  | `GET /api/trash` · `POST /api/trash/restore` `{ids}` · `POST /api/trash/purge` `{ids}`·`{all:true}` | 휴지통 보기(`retentionDays` — 보관 기간, 0 은 비우지 않음)·되살리기·영구 삭제·비우기(관리 — 비우기는 휴지통 폴더와 `.nomedia` 를 남긴다) |
+
+  - **바꾸는 요청은 PUT 과 `Content-Type: application/json` 몸의 POST 뿐**(다른 사이트의 쪽이 사전 확인 없이 보낼 수 없는 꼴 — `OPTIONS` 는 404 그대로).
+    JSON 몸은 매개변수가 붙은 `application/json` 만(아니면 415 — 폼·`text/plain`·multipart), TE 501, 길이 없음 411, 512 KiB 넘음 413, 엄격한 읽개
+    (`JsonReader` — 겹친 이름·찌꺼기·깊이 8·홀로 선 서로게이트 거절). 덧붙여 바꾸는 요청에 `Origin` 이 있으면 `http://192.168.49.1[:포트]` 여야 하고
+    `Sec-Fetch-Site` 가 있으면 `same-origin`·`none` 이어야 한다(아니면 403). `Host`·`Origin`·`Content-Type`·`Content-Length`·`Transfer-Encoding`·
+    `Sec-Fetch-Site`·`Range` 가 둘이면 400. **GET 은 아무것도 바꾸지 않는다.**
+  - **관리 허용**(`tether` 설정의 `manage_allowed`, 기본 끔 — 테더 화면의 '공유 폴더' 절 스위치): 서버가 **요청마다** 람다로 읽는다(끄면 다음 요청부터
+    403 과 `manageOff` 와 까닭). 관리 동작은 하나씩(잠금 — 두 손님이 같은 것을 함께 옮기거나 지우는 틈을 두지 않는다). 파일 올리기(같은 이름 덮어쓰기
+    포함)는 예전부터의 기능이라 스위치와 상관없다(사용자 결정 11-21) — 덮인 원래 파일은 스위치가 꺼져 있어도 휴지통으로 간다(아래 '올리기'). 관리 허용은 테더링 켜기·끄기와 별개다 — 끌 때 저절로 끄는 코드는 없다(사용자 결정).
+  - **휴지통**: 공유 폴더 맨 위의 숨은 폴더 `.web-trash` 에, 지운 것 하나마다 칸 폴더 `t<ms>-<8 hex>`(그 안에 지운 항목이 이름 그대로)와 기록
+    `<id>.json`(원래 이름·원래 폴더 경로·지운 때·폴더인가·크기 — 칸 밖이라 지운 항목의 이름과 겹치지 않는다). 되살리기는 기록의 자리로(그 폴더가 사라졌으면
+    다시 만들고, 같은 이름이 있으면 칸 안에서 먼저 `이름 (1)` 로 바꾼 뒤 옮긴다). 비우기·영구 삭제만 정말 지운다(`deleteDocument` — 폴더는 안의 것까지).
+    **보통의 길은 휴지통에 닿지 않는다** — 맨 위 성분이 그 이름(대소문자 무시, **끝의 점·공백을 떼고** — `SharedPaths.isTrashName`)이면 목록·받기·섬네일·옮기기는 404, 올리기는 400, 새 이름으로도 받지
+    않는다(`SharedPaths.isHidden`) — 옮기기·복사로 하위 폴더의 `.web-trash` 를 맨 위로 가져와 휴지통 자리에 앉히는 것도 그 항목의
+    실패로 거절한다(휴지통이 아직 없으면 겹침이 없어 그대로 휴지통이 됐다 — 11-21 2차 검토에서 고침). 목록·나무·zip 에서 감춘다(하위 폴더의 같은 이름은 감추지 않는다 — 맨 위의 것만 휴지통이다). 끝의 점을 떼는 까닭:
+    윈도(이 PC 의 시험 — `File(".web-trash.")` 가 `.web-trash` 를 만든다)와 리눅스의 vfat·exfat(SD 카드 — 코드로만 보았다)는 끝의 점을 떼고 만들어,
+    스위치가 꺼져 있어도 되는 올리기로 `.web-trash.` 파일을 휴지통 자리에 앉히면 지우기가 모두 409 가 되고 API 로는 치울 수 없었다(11-21 검토에서 고침).
+    대소문자 밖의 겹침(유니코드 접기·무시되는 글자 — ext4 casefold)은 따로 막지 않았다.
+    휴지통 안에는 빈 파일 **`.nomedia`**(`SharedOps.NO_MEDIA`)를 둔다 — 폰의 갤러리(MediaStore)가 지운 사진·영상을 보이지 않게(사용자 결정 11-21). 휴지통을
+    만들 때·지우기(휴지통으로)마다·휴지통 손보기마다 없으면 더한다(옛 판이 만든 휴지통도). 칸도 기록도 아니라 목록·되살리기·영구 삭제에 나오지 않고,
+    비우기(`{all:true}`)는 그것과 휴지통 폴더를 남기고 나머지를 지운다(전에는 휴지통 폴더째 지웠다). 더하기의 실패는 삼킨다.
+    **보관 기간**(사용자 결정 11-21 — 테더 화면의 '휴지통 보관': 7·30(기본)·90일·비우지 않음, `tether` 설정의 `trash_days`): `FileServer` 가 선 뒤
+    15초에 한 번(테더링을 켤 때마다 — 서버는 테더링과 함께 서고 내린다)과 그 뒤 하루마다, 그리고 화면에서 기간을 바꾸면 곧바로 한 번
+    (`TetherService` 가 설정을 듣고 `requestTrashSweep`) `SharedOps.maintainTrash` 를 돌린다 — `:tether` 프로세스의 스레드 하나(`file-server-trash`,
+    연결이 아니라 스레드 예산 밖), 관리 동작과 같은 잠금(30초 안에 차례가 오지 않으면 이번은 건너뛴다), **관리 허용과 상관없다**. 지우는 것은
+    **기록의 '지운 때' 와 칸 이름의 시각이 둘 다** 기간보다 오래된 칸뿐이다(딱 기간인 것은 아직) — 기록이 없거나 읽지 못하거나 '지운 때' 가 없으면
+    지우지 않는다(데이터를 잃지 않게). 칸 이름의 시각이 기간 안이면 기록을 읽지도 않는다(휴지통이 커도 SAF 질의는 지난 것만큼). 칸을 지우지 못하면
+    기록을 남겨 다음에 다시 하고, 실패는 기록(로그)만 한다. 휴지통 API 를 부를 때 하지 않은 까닭: 휴지통을 열지 않으면 영영 비우지 않는다(기간의 뜻은
+    공간을 돌려받는 것), GET 은 아무것도 바꾸지 않는다는 규칙도 있다. 더 자주 하지 않은 까닭: 손볼 때마다 휴지통 목록과 지난 칸의 기록을 SAF 로 읽는다.
+  - **경로**는 공유 폴더를 맨 위로 하는 상대 경로 — 절대·`.`·`..`·빈 성분·역슬래시·NUL·32 성분 넘음은 거절하고(`SharedPaths.split`), **성분마다 자식만
+    찾아 내려간다**(`SharedTree` 의 계약 — SAF 의 문서 ID 로만). 새로 짓는 이름(만들기·바꾸기·올리기)은 **먼저 보이지 않는 글자를 빼고**
+    (`SharedPaths.cleanName` — 사용자 결정 11-21: C0·DEL·C1 `U+0000–001F·007F–009F`, 방향 제어 `U+061C·200E·200F·202A–202E·2066–2069`, 폭 없는 글자
+    `U+180E·200B–200D·2060–2064·FEFF`, 줄·문단 나눔 `U+2028·2029` — 소프트 하이픈·태그 글자(국기 이모지)는 두고, ZWJ 를 빼므로 이어 붙인 이모지는
+    낱자로 갈린다) 그 이름을 `SharedPaths.isValidName`(공백만·`.`·`..`·`/`·역슬래시·255 바이트 넘음 거절)과 맨 위의 휴지통 이름으로 본다
+    (`SharedOps.newName` — 같은 이름 검사도 뺀 뒤의 이름으로, 답에 실제 이름). 빼는 곳은 올리기의 파일 이름·폴더 만들기·이름 바꾸기·옮기기/복사에서
+    겹쳐 새로 짓는 이름(`이름 (1)` — 겹치지 않으면 이름 그대로 옮긴다)·폴더째 올리기의 **없는** 성분(그 이름 그대로의 폴더가 있으면 그것 — 다른 앱이
+    지은 이름은 다듬지 않는다). 이미 있는 폴더를 가리키는 경로 성분은 다듬지 않는다. 경로의 NUL 은 지금처럼 경로 검사(`split`)에서 400 — 브라우저의
+    파일 이름에는 없고 화면은 미리 뺀다. 화면(`fileman.js` 의 `STRIP_RE`)은 같은 글자를 미리 빼 보이기만 한다(`FileManTest` 가 BMP 전체로 둘을 견준다). 여러 항목은 늘 `base` 폴더 + 한 성분 이름들(1,000 까지, 겹치면 400). `SharedOps` 가 이 규칙과 겹침·자기 안으로·
+    상한·휴지통을 맡고 `SharedTree` 는 바탕 동작(만들기·이름 바꾸기·옮기기·복사·지우기)만 한다 — 앱의 SAF 와 시험의 임시 폴더가 같은 규칙을 탄다.
+    SAF 의 옮기기(`moveDocument`)·복사(`copyDocument`)는 제공자가 그 깃발을 세운 것만, 아니면 손으로(복사 — 반쯤 지은 사본은 지운다, 옮기기 — 복사가
+    다 된 뒤에만 원래 것을 지운다 — 지우기가 실패하면 원래 것이 반쯤 지워졌을 수 있으므로 **사본을 지우지 않는다**: 휴지통으로 옮기기는 그때 칸과 기록을
+    남기고 실패로 알린다(전에는 칸을 치워 온전한 것이 하나도 남지 않을 수 있었다 — 11-21 검토에서 고침). 옮기기는 이름을 고르지 못하므로 새 이름이 필요하면 원래 폴더에서 숨은 임시 이름으로 바꾸고 옮긴 뒤 새 이름으로 바꾼다.
+  - **올리기**: 본문이 그대로 내용 — **숨은 임시 이름 `.이름.part` 로 다 받은 뒤에** 그 이름으로 바꾼다. 끊기거나 길이가 다르거나
+    쓰기를 열지 못하면 **임시만** 지운다(원래 파일은 그대로, 빈 파일도 남기지 않는다). TE 가 있으면 501, CL 이 없으면 411, 흘려서 쓴다. SAF 쪽은 임시를
+    `renameDocument` 로 바꾸므로 **이름 바꾸기를 하는 제공자**여야 한다(`FLAG_SUPPORTS_RENAME` — 못 하면 받기 전에 500). 이름 바꾸기가 실패하면 받은
+    내용이 임시에 남는다(지우지 않는다). **같은 이름은 `overwrite=1` 일 때만 덮는다**(사용자 결정 11-21 — 묻지 않은 요청이
+    조용히 덮지 않게): 없거나 `0` 이면 받기 전에 409 `exists`, 받는 동안 다른 손님이 그 이름을 만들었으면 두기 직전에 다시 보고 받은 것(임시)을 버리고
+    409. **두기(`SharedTree.commitUpload`)는 같은 이름(대소문자 무시)을 지우지 않는다** — 있으면 임시를 지우고 실패(예전에는 지우고 바꿨다 — 확인과
+    두기 사이의 틈에 생긴 것을 덮을 수 있었고, 덮어쓰기가 휴지통을 비켜 갔다). 기기 저장소의 제공자는 그 사이에 생긴 이름에 겹치지 않는 이름을
+    고른다(FileSystemProvider — 답의 `name` 이 그것). **같은 이름이 폴더면 `overwrite=1` 이어도 받기 전에 409 `folder`**(한 폴더에 같은 이름의 파일과
+    폴더는 둘 수 없다 — 파일 시스템의 제약, 대소문자를 가리지 않는 곳에서는 `Photos` 폴더와 `photos` 파일도). **덮어쓰기(사용자 결정 11-21)**: 다
+    받은 뒤 관리 동작과 같은 잠금(30초 — 안 오면 503, 임시를 지우고 원래 것 그대로)을 쥐고 **원래 파일을 휴지통으로 옮긴 뒤에**(`SharedOps.trashReplaced`
+    — 지우기와 같은 칸·기록이라 되살리기·보관 기간·`.nomedia` 가 같다, **관리 허용과 상관없다**) 둔다. 휴지통으로 옮기지 못하면(휴지통 자리에 파일·
+    제공자가 거절) **덮지 않고** 받은 임시를 지운 뒤 500 '원래 파일을 휴지통으로 옮기지 못해 덮어쓰지 않았습니다 — 원래 파일은 그대로입니다'. 옮긴 뒤
+    두기가 실패하면 원래 것을 휴지통에서 되살려 본다(그 틈에 같은 이름이 생겨 `이름 (1)` 로 되살렸으면 답이 그 이름을 적는다 — 전에는 '그대로' 라 했다,
+    11-21 3차 검토). 휴지통으로 옮기기(`trashOne` — 지우기와 함께)가 실패를 알려도 **칸에 그 항목이 있고 제자리에 없으면 옮겨진 것으로 친다**(SAF 의
+    `moveDocument` 가 된 뒤 다시 읽기가 실패한 꼴 — 전에는 칸을 지워 하나뿐인 원래 것을 지웠다, 11-21 3차 검토. 알 수 없으면 칸과 기록을 남긴다). 답의 `trashed`. 관리가 꺼진 손님이 덮어쓴 것은 휴지통에 남지만 **보기·되살리기는 관리 허용이
+    필요하다**(휴지통 API 는 관리 — 지금 규칙 그대로). 그래서 휴지통이 커질 수 있다 — 지금은 다루지 않는다(사용자 결정 11-21).
+    **원래 파일이 0바이트면 휴지통에 넣지 않는다**(사용자 결정 11-21 — 덮어쓰기만, 관리의 지우기·폴더째 지우기는 그대로 휴지통): 잠금 안에서 방금
+    읽은 실제 항목으로 판정한다(`SharedOps.isEmptyFile` — 크기 0 **이고 열어 읽은 바이트가 없음**. 앱의 SAF 는 `COLUMN_SIZE` 가 null 이면 크기를
+    0 으로 적으므로 크기만 보면 내용 있는 파일을 지울 수 있다 — 열지 못하면 비지 않은 것으로). 두기는 같은 이름을 지우지 않으므로 원래 것을 같은
+    폴더의 숨은 이름 `.이름.replacing-<8 hex>` 로 비켜 두고(`setAside` — 지우지 않는다) 둔 뒤에 치운다(`discardAside` — **지우기 직전에 다시 보고**
+    그새 커졌거나 지우지 못하면 원래 이름으로 휴지통에, 답의 `trashed` 가 true). 두기가 실패하면 비켜 둔 것을 원래 이름으로 돌린다(그새 같은 이름이
+    생겼으면 `이름 (1)` — 답이 그 이름을 적는다). 비켜 두지 못하면(이름이 너무 길어짐·제공자 거절) 휴지통 길로 간다. 남는 틈: 다시 본 뒤 지우기까지
+    사이에 다른 앱이 쓰는 것은 막지 못한다(지우기가 조건부가 아니다), 비켜 둔 뒤 프로세스가 죽으면 숨은 0바이트 파일이 남는다(`.part` 임시처럼).
+  - **답의 머리**: 모두 `X-Content-Type-Options: nosniff`·`Referrer-Policy: no-referrer`·`Cross-Origin-Resource-Policy: same-origin`·`Connection: close`.
+    화면은 CSP `default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; media-src 'self'; connect-src 'self'; base-uri 'none';
+    form-action 'none'; frame-ancestors 'none'`(인라인 스크립트·스타일 없음 — 화면은 HTML·JS·CSS 세 파일, 스크립트는 CSSOM 으로 크기·위치만) +
+    `X-Frame-Options: DENY`. 그 밖(JSON·파일·섬네일·zip)은 `default-src 'none'; sandbox; frame-ancestors 'none'`. 브라우저로 여는 PDF 만 sandbox 없이
+    (`frame-ancestors 'none'` — 크로미움의 PDF 보기가 sandbox 문서에서 막힌다). **HTML·SVG 를 이 출처의 문서로 여는 길이 없다** — 받기는 늘 attachment,
+    미리 보기는 그림·영상·소리를 요소로(요소는 attachment 를 보지 않는다), 글은 앞 256 KiB 를 Range 로 받아 `<pre>` 의 글로(UTF-8, 아니면 EUC-KR).
+  - **섬네일은 남이 올린 그림을 `:tether` 프로세스에서 풀지 않는다**(그 프로세스는 프록시 계정에 닿는 UID 다 — 그림 풀개의 결함이 곧 그 위험).
+    `SharedFolder.thumbnail`: 그림은 제공자의 섬네일 바이트를 그대로(`openTypedAssetFileDescriptor(…, "image/*", EXTRA_SIZE)` — 기기 저장소의 제공자는
+    **EXIF 섬네일**을, 없으면 원본 전체를 준다 — 512 KiB 를 넘으면 버린다), 동영상은 `MediaMetadataRetriever.getScaledFrameAtTime`(풀기는 시스템의
+    미디어 프로세스 — 받은 화소를 JPEG 로 담기만), 소리는 파일에 든 앨범 그림 바이트 그대로. `BitmapFactory`·`ImageDecoder`·`loadThumbnail`·
+    `getDocumentThumbnail` 을 부르지 않는다(`FileManTest`). 서버의 섬네일이 없는 그림은 화면이 3 MB 이하일 때 원본을 `<img>` 로 대신 그린다(손님의
+    브라우저가 푼다). 캐시는 `cacheDir/tether-thumbs`.
+  - **화면**(`assets/tether/fileman.*` — 바닐라 JS 하나): 머리(폴더 이름·남은 공간 막대·'관리 켜짐/꺼짐') · 도구 막대(위로·새로 고침·올리기(파일·폴더째)·
+    새 폴더·받기·이름 바꾸기·옮기기·복사·지우기·정보·휴지통·거르기·정렬·목록/격자·단축키) · 길(빵 부스러기) · 왼쪽 폴더 나무(펼칠 때 읽는다) + 오른쪽 목록
+    (보이는 줄만 그린다) · 아래 줄(항목 수·고른 것의 수와 크기). 760 px 아래(폰)는 한 칸 — 나무는 ☰ 의 서랍, 크기·때는 이름 아래 줄. 정렬은 이름(숫자는
+    수로, 라틴 다음 한글)·크기·때·종류, 폴더는 늘 먼저. 고르기 — 누르기·Ctrl·Shift·Ctrl+A·네모, 터치에서는 누르면 열고 고른 것이 있으면 누르기가 고르기.
+    보기 — 그림(앞·뒤·휠·두 손가락 확대·끌기·밀어 넘기기)·동영상·소리·글, PDF 는 새 탭. 올리기 대기열(파일마다 진행·속도·그만두기·다시, 동시에 둘, 끌어다
+    놓기는 폴더까지). **같은 이름이면 '…에 이미 있습니다. 덮어쓸까요?' 를 한 번 묻는다**('건너뛰기·새 이름으로·덮어쓰기', 기본 단추(Enter)는 '새 이름으로',
+    창을 닫으면 건너뛰기) — 그 묶음(한 번 고르거나 끌어다 놓은 것)에 겹치는 것이 더 있으면 체크 상자 **'모든 파일에 적용 (겹치는 파일 N개)'**(윈도의
+    덮어쓰기 창처럼 — 처음 물을 때 묶음이 올릴 폴더를 다 읽어 이 파일까지 센다, 폴더가 16개를 넘으면 세지 않고 정하지 않은 것이 남았으면 수 없이),
+    그 답은 **그 묶음 안에서만** 산다(다음 올리기·'다시' 는 새 묶음이라 다시 묻는다 — '다시' 는 고른 덮어쓰기·새 이름도 지운다. 새 묶음은 올릴 폴더의
+    이름을 새로 읽는다). **같은 이름이 폴더면** '덮어쓸까요?' 없이 '같은 이름의 폴더가 있습니다' 한 줄, '덮어쓰기' 는 흐리게(title 에 같은 까닭 — 기본
+    단추가 되지 않는다). '모든 파일에 적용' 으로 덮어쓰기를 고른 묶음에서 폴더와 겹친 것은 **새 이름으로** 올린다(건너뛰면 그 파일이 올라가지 않는다 —
+    내용을 버리지 않는 쪽, 줄에 '새 이름(같은 이름의 폴더)'). 올릴 이름(과 폴더째 올리기의 성분)은 보이지 않는 글자를 뺀 이름으로 살피고 보내며(빼면
+    틀린 이름이면 그 줄은 곧바로 실패), 서버가 준 실제 이름을 쓴다. 끝난 줄에 '이름 다듬음'·'원래 것은 휴지통에'. 새 폴더·이름 바꾸기의 창은 입력
+    아래에 '보이지 않는 글자를 빼고 ‘…’ 로 씁니다' 를 미리 보인다. 올리기는 늘 `overwrite` 를 밝히고 `1` 은 그 파일에
+    '덮어쓰기' 를 고른 뒤에만, 받은 409 는 다시 묻는다. 묻기는 한 번에 하나다(동시에 살피는 둘이 함께 물으면 뒤의 창이 앞의 창을 덮어 앞의 것이 영영
+    '살피는 중' 에 남았다 — 11-21 헤드리스에서 보고 고침). **창(대화)도 한 번에 하나** — 열린 창이 있으면 닫힌 뒤에 연다(`dialog` 가
+    줄을 세운다 — 묻기가 떠 있는 동안 옮기기의 '같은 이름' 창이 뜨면 묻기의 약속이 풀리지 않아 대기열이 영영 멈췄다, 11-21 2차 검토에서 헤드리스로 재현하고 고침). 휴지통 보기에는 '보관 기간 N일 — 지난 것은 저절로 비워집니다'(0 이면 '보관 기간 없음 —
+    저절로 비우지 않습니다') 한 줄. 관리가 꺼져 있으면 관리 단추를 흐리게 하고 title 에 까닭.
+    오류 글은 서버가 준 한국어. 단축키는 화면의 '?'. 파일 이름은 늘 `textContent` 로 — 글을 HTML 로 끼워 넣는 길이 스크립트에 없다(`FileManTest`).
+    받기·zip 은 `<a download>`(secure context 가 아니다 — 파일 전체를 메모리에 올리지 않는다).
+  - **PC 에서 화면 보기**: 시험 소스의 `DevFileServer`(개발용 실행기 — 손님 거르기를 거기서만 루프백 허용으로, `Host`·`Origin` 은 `127.0.0.1`, 관리
+    허용은 스위치 파일이 있는 동안)로 임시 폴더를 띄우고 Edge 헤드리스(`--remote-debugging-port` + CDP)로 넓은 창·폰 폭(390)을 떠 본다.
 - **멈추면 실제로 끊긴다**: 듣는 소켓 → 적어 둔 연결(`ConnectionRegistry` — `read()` 에 막힌 일꾼은 인터럽트를 무시한다) → 일꾼 풀. 멈춘 서버는 다시
   세우지 않는다(`StartError.TERMINATED`). 실패한 서버는 들고 있지 않아 다음 시작 요청이 다시 해 본다. **받기 고리가 죽으면**(accept 가 던짐 — stop()
   이 닫은 것이 아니면 — 이나 고리 밖으로 나간 Error) 서버를 그 자리에서 내린다 — 듣는 소켓을 닫아 포트를 놓고 연결을 끊고 `StartError.DIED` 로
@@ -1333,7 +1447,9 @@ on-link 접두**(`wlan`·`eth`·`p2p`·`swlan`·`ap`·`softap`·`rndis`·`usb`·
 양·거절한 연결 수와 마지막 까닭·상한으로 닫은 연결 수, 1초마다 — 같은 글이면 손대지 않는다, 함정 '늘 바쁜 화면') · **'테더링 켜기' / '테더링 끄기'
 하나**(켜기는 넣은 값 검사 → 권한 → 서비스, 끄기는 서비스를 멈춘다. 켜는 중에도 '끄기') · (그 문제일 때만) 위치 설정·앱 설정 · 짧은 설명(켜기·끄기·
 포트·권한) · 핫스팟 — SSID·패스프레이즈(보이기 — 화면 상태 저장과 **자동 완성에서 빠진다**)·실제 SSID(켜진 동안(켜는 중 포함) 둘 다 잠긴다) · 공유
-폴더 고르기/그만두기 · 다른 기기에서 쓰는 법 · 알아 둘 것(배터리 최적화의 지금 상태와 설정 열기). 서비스가 설 때 주고받은 양·거절·상한의 수를 0
+폴더 고르기/그만두기와 **'관리 허용' 스위치**(기본 끔 — 설명 한 문장 '핫스팟에 붙은 기기가 공유 폴더를 바꾸고 지울 수 있습니다.', 파일 서버가 요청마다 본다)·
+**'휴지통 보관: 30일 (기본)' 단추**(누르면 7일·30일 (기본)·90일·비우지 않음을 고르는 창 — 브라우저 설정의 보관 기간과 같은 꼴, 설명 한 문장 '지운 지 이 기간이 지난 것은 휴지통에서 저절로 비웁니다.') ·
+다른 기기에서 쓰는 법 · 알아 둘 것(배터리 최적화의 지금 상태와 설정 열기). 서비스가 설 때 주고받은 양·거절·상한의 수를 0
 으로(`TetherState.resetCounters`) — 꺼진 뒤에는 다음에 켤 때까지 남는다. 설명은 짧게 둔다(사용자 — 포트
 범위·권한의 까닭 같은 세부는 이 문서에만).
 
@@ -1341,7 +1457,7 @@ on-link 접두**(`wlan`·`eth`·`p2p`·`swlan`·`ap`·`softap`·`rndis`·`usb`·
 
 SharedPreferences **`tether`**(테더 프로세스만 연다 — 브라우저의 `web`·`adblock`·`sites`·`popups` 와 겹치지 않는다. SharedPreferences 는 여러 프로세스가
 함께 쓰는 것을 지키지 않는다): `ssid` · `passphrase_sealed`(기기 키 **`tether-hotspot-passphrase`** — AndroidKeyStore AES-256-GCM, 사용자 인증 없음 —
-타일로 켤 때마다 묻게 된다, 브라우저의 `web-proxy-password` 와 따로) · `tree_uri`(공유 폴더 — 영속 SAF 권한 읽기·쓰기). 곧바로 쓴다(commit). 백업·기기
+타일로 켤 때마다 묻게 된다, 브라우저의 `web-proxy-password` 와 따로) · `tree_uri`(공유 폴더 — 영속 SAF 권한 읽기·쓰기) · `manage_allowed`(파일 서버의 관리 허용 — 기본 끔) · `trash_days`(휴지통 보관 기간 — 7·30·90·0, 기본 30, 고를 값 밖이면 30). 곧바로 쓴다(commit). 백업·기기
 이전에서 빠진다(`allowBackup=false`, `data_extraction_rules` 가 sharedpref 를 통째로 뺀다). 패스프레이즈는 화면과 서비스가 **같은 프로세스의 보관소
 하나**(`PassphraseVault` — 마지막으로 정하거나 연 값을 메모리에 든다)를 쓴다: 기기 키로 잠그지 못해도 이 프로세스에서는 화면에 넣은 값으로 그룹을
 만들고('저장하지 못했다' 를 알린다 — 앞의 저장값은 지우지 않는다), 잠근 값이 있는데 열지 못하면 새 난수로 **덮어쓰지 않고** 화면(칸을 비우고 까닭)·
@@ -1353,8 +1469,8 @@ SharedPreferences **`tether`**(테더 프로세스만 연다 — 브라우저의
 테더 화면의 '다른 기기에서' → **'PC 연결 파일 받기'** 가 `web-tether-pc.zip`(README.txt · windows-wifi.bat · macos-wifi.sh)을 공용 '내려받기' 에
 쓴다(아래 '설정 파일 zip'). 원본은 `app/src/main/assets/setup/tether-pc/`. `windows-wifi.bat` 은 관리자 권한으로 저절로 다시 뜨고(`fltmc` 로 판정 —
 `fltmc`·`powershell` 은 `%SystemRoot%\System32\…` 의 온전한 경로로 부른다: 올리기 전의 현재 폴더는 스크립트의 폴더이고 cmd.exe 는 PATH 보다 그곳을 먼저 찾는다)
-`tun2proxy.exe --tun USBTether --dns-addr 1.0.0.1 --setup --proxy socks5://192.168.49.1:1080` 을 돌린다(DNS 는 1.0.0.1 — 1.1.1.1 과 같은 Cloudflare 해석기다. LG U+ 모바일망은 1.1.1.1 로 가는 길이 없어 PC 의 이름 풀이가 통째로 실패했다) — `--setup` 이 192.168.49.1 로 가는 호스트
-경로를 Wi-Fi 쪽에 남겨 TUN 고리를 막고, UDP ASSOCIATE 가 되므로 `--dns over-tcp` 가 필요 없고, 포트는 훑지 않고 인자로만(`windows-wifi.bat 1085`).
+`tun2proxy.exe --tun USBTether --dns-addr 1.0.0.1 --setup --proxy socks5://192.168.49.1:1080` 을 돌린다(DNS 는 1.0.0.1 — 1.1.1.1 과 같은 Cloudflare 해석기다. LG U+ 모바일망은 1.1.1.1 로 가는 길이 없어 PC 의 이름 풀이가 통째로 실패했다) — TUN 고리는 생기지 않는다(`--setup` 은 프록시 주소가 사설이면 호스트 경로를 더하지 않는다 —
+tproxy-config 7.0.9 의 `windows.rs` 를 읽은 것. 192.168.49.0/24 가 Wi-Fi 쪽 on-link 경로라 기본 경로보다 좁아 이긴다), UDP ASSOCIATE 가 되므로 `--dns over-tcp` 가 필요 없고, 포트는 훑지 않고 인자로만(`windows-wifi.bat 1085`).
 tun2proxy.exe 가 없거나 오류로 끝나면 창이 멈춘다. `macos-wifi.sh` 는 같은 일 — `exec sudo /bin/bash "$0" "$@"` 로 다시 뜨며 인자를 넘기고(실행
 비트가 없어도 된다), TUN 은 VPN 이 흔히 쓰는 `utun0`–`3` 을 피해 `utun5`, 끝날 때 한 번 경로를 걷고 시스템의 DNS 는 건드리지 않는다. 주석은 영어이고
 배치 파일은 **ASCII 로만**(cmd.exe 는 배치 파일을 콘솔의 코드 페이지로 읽는다)·CRLF, 셸 스크립트는 LF. WinTun 어댑터 이름은 예전 그대로
@@ -1370,6 +1486,74 @@ tun2proxy.exe 가 없거나 오류로 끝나면 창이 멈춘다. `macos-wifi.sh
 의 이름을 `tun2proxy(.exe)` 로 바꿔야 스크립트가 찾는다. wintun 은 32비트·ARM 윈도일 때만 `https://www.wintun.net/builds/wintun-0.14.1.zip`. 공식
 배포본인지 — `Get-AuthenticodeSignature`(wintun.dll: WireGuard LLC), tun2proxy 는 릴리스의 build provenance. 라이선스 — tun2proxy MIT, Wintun 의 서명된
 DLL 은 'Wintun Prebuilt Binaries License'(법률 자문 아님).
+
+### PC 도우미 — WebTether.exe(Windows 트레이)
+
+`windows-wifi.bat` 을 대신하는 **트레이 상주 exe 하나**(2026-11-21, 사용자 승인). 소스는 `pc-windows/`(C# 5 + WinForms, .NET Framework 4.8 —
+윈도에 든 `csc.exe`, NuGet·외부 라이브러리 없음, 아무것도 설치하지 않는다). zip 의 배치 파일은 그대로 둔다(맥·도우미 없이 쓰는 길).
+
+```bash
+python -I pc-windows/build.py [--deploy C:/…/WebTether.exe]   # 받고(한 번) 확인하고 짓는다 → pc-windows/out/
+pc-windows/out/WebTether-tests.exe --scratch <폴더> > out.txt     # 시험 84건(루프백·가짜·스크래치만) — 출력을 파일로(아래 함정)
+pc-windows/out/WebTether-tests.exe --shots <폴더>                  # 창을 PNG 로(화면 밖에 투명하게 잠깐)
+python -I pc-windows/build.py --check                            # 최신 tun2proxy·asset digest·보안 권고(보여 주기만)
+python -I pc-windows/build.py --update                           # 고정 판을 최신으로 바꾸고 다시 짓는다
+```
+
+| 무엇 | 어떻게·왜 |
+|---|---|
+| 산출 | `out/WebTether.exe`(실제 판 — 매니페스트 `requireAdministrator`, `--setup` 에 필요), `WebTether-test.exe`(시험 판 — `asInvoker`, **늘 dry-run**: tun2proxy 를 띄우지 않고 명령줄만 적고, 경로·Wi-Fi·작업 스케줄러는 기록만. `--home <폴더>`(없으면 `%LOCALAPPDATA%\WebTether-test` — '이 사용자 전용' 권한)·`--exit-after <초>` — 실제 판처럼 뜨면 저절로 연결한다(dry-run)), `WebTether-tests.exe`·`ctrlc-child.exe`. `out/` 은 **git 무시**(완성 exe 가 남의 실행 파일을 싣는다 — `.gitignore` 의 `pc-windows/out/`·`pc-windows/**/*.exe`. exe 무시는 `pc-windows/` 아래로만 — 저장소의 다른 곳에 커밋된 exe 는 없다) |
+| 상태 폴더(`SecureFs`) | 관리자가 쓰고 읽는 것(설정·업데이트·연결 상태·끊어 둔 표시·로그·풀어 둔 실행 파일)은 모두 **`%ProgramData%\WebTether\`**(`SpecialFolder.CommonApplicationData` — 환경 변수가 아니다). 예전 판은 `%APPDATA%`·`%LOCALAPPDATA%` 에 썼다 — 같은 사용자의 프로그램이 접합점·심볼릭 링크로 관리자의 지우기·쓰기를 돌리거나 설정·상태 파일을 고쳐 관리자 동작(프록시 주소·넣고 지울 경로)을 정할 수 있었다. 만들 때 상속을 끊고 주인 Administrators, 권한은 Administrators·SYSTEM 모두 권한뿐(사용자는 읽기도 없다 — 로그는 앱의 '로그' 창이 관리자로 읽는다). 이미 있으면 링크를 따라가지 않는 핸들로 열어 재분석 지점·주인·정책 밖 SID 의 쓰기 같은 권한(상속만 하는 줄도)을 보고, 어긋나면(ProgramData 는 사용자도 하위 폴더를 만든다) 쓰지 않고 `WebTether.untrusted-<때>` 로 비킨 뒤(링크면 링크 자체가 옮겨진다) 새로 만든다 — 못 비키면 오류 창을 띄우고 시작하지 않는다. 쥔 핸들(`FILE_LIST_DIRECTORY`, `FILE_SHARE_DELETE` 없음)로 도는 동안 그 폴더의 이름 바꾸기·지우기를 막는다. 그 아래에 쓰기 전에(로그 돌려쓰기 포함) 뿌리부터 그 파일까지 재분석 지점이 없는지 보고, 설정·상태는 임시 파일에 다 쓴 뒤 바꿔 끼운다(`SafeFs`). 다시 풀 때 bin 지우기는 링크를 따라 들어가지 않는다(`SecureDir.DeleteTree`). **옛 자리(`%APPDATA%\WebTether`)는 읽지 않는다** — 처음 한 번 가져오던 `Migration` 은 걷었다(사용자 결정 11-21 — 코드는 git 이력에). 옛 파일도, 걷은 사용량 통계가 남긴 `usage` 파일도 지우지 않는다(읽지 않을 뿐) |
+| 고정 판 | **tun2proxy 0.8.7**(2026-10-31) `tun2proxy-x86_64-pc-windows-msvc.zip` SHA-256 `801396ff…f863` — GitHub API 의 asset digest 와 같다. 본체 `tun2proxy-bin.exe` 와 `wintun.dll`(서명 WireGuard LLC 를 빌드가 본다)만 꺼내 각 SHA-256 도 `build.py` 에 박는다. `tun2proxy.dll`·`udpgw-server.exe` 는 넣지 않는다. 문제 있는 판은 `T2P_SKIPPED`(새 판으로 치지 않고 도우미도 알리지 않는다) |
+| 내장과 확인 | 둘을 gzip 자원으로 싣고, 연결할 때마다 `%ProgramData%\WebTether\bin\<묶음 id>\` 에 (없거나 다르면) 풀어 **SHA-256 을 확인한 핸들을 tun2proxy 가 끝날 때까지 쥔다**(`FileShare.Read` — 그동안 바꾸기·지우기·그 폴더와 위 폴더의 이름 바꾸기가 막힌다, 시험). 다르면 다시 풀고 그래도 다르면 띄우지 않는다. 폴더에 낯선 파일이 있으면 지우고 다시 푼다 — 관리자 tun2proxy 는 제 폴더에서 DLL 과 `route.exe`·`netsh` 를 먼저 찾는다. 관리자로 돌면 그 폴더의 주인을 Administrators 로, 다른 이의 쓰기를 막는다(`IsLockedDown` 이 확인). 확인·띄우기는 그 폴더를 지우기·이름 바꾸기를 막은 채 열어 얻은 **실제 경로**로 한다 — 사용자 경로의 `bin` 을 접합점으로 두고 확인 뒤 대상을 바꾸면 글로 된 경로가 끼워 넣은 exe 를 가리켰다(시험 — 지금은 관리자 전용 폴더라 끼울 수 없지만 둔다. `bin` 이 재분석 지점이면 풀지 않고 오류) |
+| 명령줄 | 셸 없이, 인자는 `CommandLineToArgvW` 규칙으로 싼다(시험이 API 와 실제 자식으로 되돌려 본다). 현재 폴더는 System32 — tun2proxy 는 시작할 때 현재 폴더와 그 위에서 `.env` 를 읽는다(dotenvy). 자식 환경에서 `RUST_*` 를 뺀다. 기본값은 배치 파일과 같은 뜻(`--dns direct --verbosity info` 를 밝혀 적을 뿐) |
+| 끊기 | 자식의 (보이지 않는) 콘솔에 잠깐 붙어 Ctrl+C(`AttachConsole`→`GenerateConsoleCtrlEvent`→`FreeConsole`) — tun2proxy 0.8.7 은 ctrlc2 4.0.0 으로 Ctrl+C·Ctrl+Break 를 듣고 `--setup` 을 스스로 걷는다. 5초 안에 안 끝나면 강제로 끝내고 도우미가 걷는다. **도우미가 죽으면**: tun2proxy 를 띄운 곧바로 작업 개체(`JobObject` — `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE`, 이름 없음, 핸들은 상속되지 않음)에 넣어 도우미가 어떻게 끝나든 커널이 핸들을 닫으며 tun2proxy 도 끝난다(시험 — 도우미 대역을 강제로 끝내면 손자가 끝난다) — 남은 경로는 다음 실행이 상태 파일로 걷고, '다른 tun2proxy' 로 막히지 않는다. 멈춘 채 띄우지 못해(Process.Start) 띄운 직후 넣는다 — 그 몇 ms 에 tun2proxy 가 띄운 자식은 작업 밖에 남을 수 있다(추론 — `--setup` 의 route·netsh 는 TUN 을 세운 뒤라 늦다고 보았다). 넣지 못하면 로그에 적고 띄운 채 둔다 |
+| 걷기(`Routes.CleanupPlan`) | 0.8.7 의 `--setup`(tproxy-config 7.0.9): `route add 0.0.0.0 mask 0.0.0.0 10.0.0.1 metric 6`, `--bypass` 마다 원래 게이트웨이로 metric 1, TUN 의 DNS. 정상 종료는 **기본 경로를 모두 지우고** 원래 게이트웨이로 metric 200 을 다시 넣는다 — 그 사이에 죽으면 기본 경로가 없다. 그래서 연결 전에 기본 경로와 **이미 있던 같은 우회 경로**(`kept=` — 사용자가 미리 둔 것)를 상태 파일(`%ProgramData%\WebTether\connection-state`)에 적고, 끝난 뒤·다음 실행 때 ① **TUN 어댑터에 걸린** 10.0.0.1 기본 경로(같은 10.0.0.1 이라도 다른 어댑터면 그대로 — 지우기에 `if <어댑터>` 를 붙인다, 없으면 route.exe 가 모든 어댑터에서 지운다) ② 우리가 넘긴 우회 경로(다음 홉이 그때의 게이트웨이인 것만, 연결 전부터 있던 것은 빼고 — tun2proxy 자신의 Ctrl+C 걷기가 그것을 지우는지는 확인하지 않았다) ③ TUN 밖 기본 경로가 하나도 없으면 적어 둔 것을 metric 200 으로(그 어댑터가 있을 때만) — `System32\route.exe` 로. **tun2proxy 가 하나라도 떠 있으면 아무것도 건드리지 않는다**. 걷기는 **일꾼 스레드에서** 돌고(화면이 멈추지 않게), 도는 동안은 Tick 이 쉬고 새 연결이 그 끝을 기다린다(걷는 사이 새 tun2proxy 가 경로를 넣어 섞이지 않게). 시작할 때의 흔적 걷기도 같다 |
+| 연결 | 다른 tun2proxy 가 떠 있으면 띄우지 않는다(배치 파일의 것과 TUN 이 부딪친다) → 192.168.49.2–254 를 가진 어댑터(없고 Wi-Fi 프로필을 적었으면 `netsh wlan connect name="…"` 뒤 15초) → 폰 프록시 확인(SOCKS5 `05 01 00`→`05 00`, http 는 `CONNECT 127.0.0.1:9` 에 HTTP/1.x 답 — 폰은 403) → 풀기·확인 → 띄움 → 2초 살고 TUN 어댑터가 보이면 '연결됨'. **30초 안에 TUN 어댑터가 나타나지 않으면** 끄고 걷고 오류(다시 하지 않는다 — `ConnectTimeoutSeconds`). 기다리는 사이(Wi-Fi·폰 프록시 확인·풀기) 끊으면 거기서 그만둔다. 끊는 일은 자식마다 하나 — 핫스팟이 사라져 끊는 사이 '끊기' 를 눌러도 Ctrl+C·걷기를 두 번 하지 않고, 사용자가 끊었으면 그 뒤 '오류·대기' 로 덮지 않는다. 핫스팟이 사라지거나 자식이 끝나면 풍선을 띄우고 간격마다 다시(핫스팟이 없으면 횟수를 쓰지 않고 기다린다, 1분 넘게 붙어 있었을 때만 횟수를 0 으로). 걷지 못했으면(tun2proxy 가 남았다) 상태 파일을 남긴다 |
+| 자동 연결(사용자 결정 11-21) | **뜨면 저절로 연결한다 — 사용자가 '끊기'(트레이·상태 창)를 누른 경우에만 꺼진 채로 둔다.** '끊기' 는 `%ProgramData%\WebTether\user-disconnected` 를 남기고(`Controller.DisconnectAsync`), 다음 실행은 그 표시가 있으면 연결하지 않고 '꺼짐 — 직접 끊음'(툴팁도), '연결' 이 표시를 지운다(`ConnectAsync`). 오류·핫스팟 사라짐·다시 연결 포기·'끝내기'·로그오프·도우미가 죽음은 그 길을 지나지 않아 끊음이 아니다(**'끝내기' 도 끊음이 아니다** — 다음에 켜면 연결된다는 쪽으로 정했다). 실행할 때(`AutoConnectAsync`) 앞 연결의 흔적 걷기가 끝난 뒤 연결하고, **처음 180초**(`StartupWaitSeconds`)는 핫스팟·폰 프록시가 없어도 횟수를 쓰지 않고 '다시 연결' 설정과 상관없이 5초(`StartupRetrySeconds` — '다시 연결 간격' 이 더 짧으면 그것)마다 다시 본다('다시 연결 대기 · … — 기다리는 중') — 로그온 직후에는 Wi-Fi 가 늦게 붙는다. 그 뒤는 늘 쓰는 규칙: '다시 연결' 이 켜져 있으면 핫스팟이 없는 동안 횟수 없이 계속 기다리고(Wi-Fi 프로필이 있으면 netsh 시도마다 횟수), 꺼져 있으면 오류와 풍선('저절로 연결하지 못했습니다'). tun2proxy 를 띄운 뒤의 실패(자식이 끝남 등)는 처음부터 늘 쓰는 규칙이다. 다른 tun2proxy·틀린 설정은 지금처럼 곧바로 오류. 표시를 쓰지 못하면 로그만 |
+| 단추 '정리 중' | 트레이·상태 창의 '연결/끊기' 는 `Controller.Toggle` 하나로 정한다 — 자식이 돌거나 연결 중·대기면 '끊기', **자식은 끝났는데 경로 걷기나 끊기의 마무리가 아직이면 '정리 중'(누를 수 없음)**, 그 밖은 '연결'. 예전에는 끊은 직후 걷는 몇 ms~몇 초 동안 상태가 '연결됨' 인 채 자식이 없어 '연결' 로 보였다. 그때 눌러도 새 시도는 끝내기·걷기가 끝나길 기다렸지만(`Attempt` — 끝내는 중이면 그것부터, 이어 `pendingCleanup`) 끊는 쪽의 마무리(핫스팟 사라짐의 대기, 끊기의 '꺼짐')가 새 시도를 덮을 수 있었다 — 지금은 새 시도가 돌면 덮지 않는다. 걷기가 끝나면 `Changed` 로 알려 트레이 메뉴도 돌아오고, 메뉴를 열 때 다시 정한다. 누른 때 다시 정하므로 낡은 글을 눌러도 '정리 중' 이면 아무것도 하지 않는다. **자식이 끝났는데 그 알림이 아직 UI 스레드에 닿지 않았으면**(`child` 가 남았다) '끊기' 이고 '연결' 은 아무것도 하지 않는다(11-21 3차 검토 — 그 틈에 '연결' 로 보여 새 tun2proxy 가 앞 자식의 걷기보다 먼저 서고, 앞 자식은 걷히지 않은 채 잊혔다) |
+| 설정 | `%ProgramData%\WebTether\settings`(한 줄 한 키, 아는 키만, 값마다 검사 — 틀린 키만 버린다). 칸마다 '기본값'. 'Windows 시작 시 실행' 은 켤 때만 exe 를 `Program Files\WebTether\` 로 복사하고 그것을 '가장 높은 권한' 작업(XML — 이스케이프, 그 XML 도 `%TEMP%` 가 아니라 설치 폴더에 잠깐 둔다 — 다 쓴 뒤 **읽기만 하는 핸들**로 다시 열어 쥔 채 schtasks 를 부른다: 쓰기 권한을 쥔 채였더니 공유 Read 로 여는 schtasks 가 '다른 프로세스가 파일을 사용 중' 으로 실패해 켜지지 않았다 — 11-21 사용자 기기, 아래 함정)으로 등록한다. 실패하면 어느 단계(설치본 복사·XML 쓰기·schtasks 등록)인지와 코드를 창과 로그('시작 시 실행')에 적고, 저장 전체를 되돌린다(그 칸은 꺼진 채 — 다른 칸의 고침도 저장되지 않는다). 작업은 바꿨는데 설정 파일을 쓰지 못하면 작업도 되돌린다(11-21 3차 검토 — 칸은 꺼짐인데 로그온마다 뜨는 어긋남, 되돌리지도 못하면 창에 적는다) — 사용자 폴더의 exe 를 로그온 때 관리자로 돌리면 다른 프로그램이 그 exe 를 바꿔 권한을 얻는다. **복사는 경로로 하지 않는다**(`SelfImage`·`Installer`): 돌고 있는 exe 도 이름은 바뀌므로(시험) 같은 사용자의 프로그램이 내려받기 폴더의 exe 를 바꿔치기하면 경로 복사가 그것을 Program Files 로 옮겼다. 시작할 때 `GetMappedFileName` 으로 **지금 돌고 있는 이미지 파일**을 공유 모드 Read 만으로 열어 쥐고(연 핸들의 실제 경로가 그 뒤 다시 얻은 이미지 이름과 같아야 한다 — 쥔 동안 이름 바꾸기가 막혀 같으면 같은 파일), 그 핸들의 바이트를 설치 폴더의 임시 이름에 써 SHA-256 을 견준 뒤 옮기고(옛 파일은 지우고 옮긴다 — `File.Replace` 는 옛 권한을 남긴다) 한 번 더 견준다. 같은 바이트면 쓰지 않는다. 설치 폴더도 관리자 전용 ACL 이어야 한다 — 주인이 Administrators·SYSTEM 이고 링크가 아니면(그 위 Program Files 는 사용자가 쓰지 못한다) 권한만 고쳐 쓰고, 아니면 비키고 새로 만든다 |
+| 그 밖 | 하나만 실행(`Global\WebTether-instance` 뮤텍스·`Global\WebTether-show` 이벤트 — 관리자 전용 보안 설명자로 만든다. 이미 있는데 주인이 Administrators·SYSTEM 이 아니거나 같은 이름의 다른 종류 객체면(예전에는 던져 도우미가 뜨지 못했다) 보통 권한의 프로그램이 먼저 잡은 것이라 창으로 알리고 뜬다 — 그 이벤트는 쓰지 않는다. 시험 판은 `Local\…-test`, 둘째는 첫째의 상태 창을 부른다. **둘째 겹은 상태 폴더의 `instance.lock`** 을 공유 없이 쥐는 것(`InstanceFile` — 관리자 전용 폴더라 남이 먼저 잡지 못한다, 쥐고 있으면 '이미 실행 중' 으로 끝난다, 11-21 3차 검토: 표지만 믿지 못한 채 뜨면 둘째 도우미도 떠 둘이 함께 저절로 연결하고 같은 상태 파일·경로를 다뤘다)), 로그(고리 3000 줄 + `%ProgramData%\WebTether\logs\webtether.log` 1 MB 돌려쓰기), `Process` 객체는 다 쓰면 닫는다(자식·explorer·자기 자신), 아이콘은 코드로(모양도 다르다 — 빈 고리·반 고리·체크·느낌표), 정보 창에 두 라이선스 글(`pc-windows/licenses/`). **속도·트래픽 통계와 데이터 한도 알림은 걷었다**(사용자 결정 11-21 — 상태 창의 '지금 속도'·'오늘'·'이번 달', `Usage.cs`, 설정의 한도 칸). 남은 `usage` 파일은 읽지도 지우지도 않고, 설정 파일의 `limit_on`·`limit_day_gb`·`limit_month_gb` 는 문제로 적지 않고 버린다(`Settings.RemovedKeys` — 다음 저장에서 사라진다) |
+
+**업데이트 알림 — 알리기만 한다**(사용자 승인). 연결된 동안 설정한 간격(매일·**매주**(기본)·매월)마다 한 번, GitHub API 의 tun2proxy 최신 릴리스와 보안
+권고(GHSA 전역 `advisories?ecosystem=rust&affects=tun2proxy` + 저장소의 `security-advisories` — RustSec 은 GHSA 가 들여와 따로 보지 않는다, wintun 은 zip 을
+따라간다)를 묻는다. 이 판에 걸리는 권고가 있으면 경고 풍선과 트레이 메뉴 맨 위 빨간 줄, 새 판이면 풍선과 '새 판 x.y.z — 변경 내역 보기'·'이 판은 알리지
+않기'. 실패는 로그에만 남기고 다음 간격에. 상태는 `%ProgramData%\WebTether\update`. 남의 서버가 준 글이라 답 하나 1 MB, **확인 한 번(요청 셋을 합쳐) 전체 15초**(`TotalTimeoutMs` — 마감이 지나면 요청을 끊고(Abort) 남은 요청을 하지 않는다. 읽기 한 번마다의 시한이면 한 바이트씩 흘리는 서버가 끝없이 붙잡는다 — 시험), TLS 1.2 이상, 넘겨주기 따르지 않음,
+JSON 은 쓰는 칸만, 화면 글은 제어·방향 제어 문자를 걸러 자르고, 여는 주소는 `https://github.com/` 만(관리자 권한을 물려주지 않게 `explorer.exe` 에 넘긴다).
+**왜 알림만인가** — exe 의 안전은 '빌드 때 고정해 확인한 SHA-256 의 바이트만 관리자로 돈다' 에 걸려 있다. 도우미가 스스로 받아 바꾸면 그 확인이 'GitHub 이
+그때 준 것' 으로 바뀌어 릴리스나 계정이 털렸을 때 곧바로 모든 PC 의 관리자 권한이 된다(공급망). 새 판은 사람이 `build.py --update`(받은 zip 이 API digest 와
+같아야 고친다, 태그 이름이 판 꼴 `v1.2.3[-pre]` 가 아니면 멈춘다 — build.py 소스에 그대로 쓰이므로, wintun 서명자는 주체의 `O=` 가 정확히 WireGuard LLC 인지 본다)로 짓고 시험을 다시 돌린다.
+
+**시험**(`WebTether-tests.exe` 84건 — 실제 망·경로·Wi-Fi·작업 스케줄러·ProgramData·Program Files·전역 이름에 손대지 않는다): 설정 읽기·쓰기·검사(걷은 한도 키는 문제로 적지 않음), 명령줄 싸기(공백·따옴표·`&`·끝의
+역슬래시·한글), 내장 실행 파일(풀기·바뀐 것·끼워 넣은 DLL·깨진 내장본·위 폴더의 접합점 바꾸기·실제 0.8.7 을 쥔 채 `--version`), Ctrl+C(듣는 자식은 정리하고 0 으로, 듣지 않는 자식은
+강제로), 작업 개체(띄운 자식이 들었는가·도우미 대역 `--job-parent` 를 강제로 끝내면 손자가 끝나는가), 가짜 SOCKS5·HTTP(루프백), 걷기 계획(합성 경로 표 — 지우기는 어댑터로 좁힌다)·이 PC 의 경로 표 읽기, 상태 기계(dry-run — 연결·핫스팟 사라짐·자식 끝남·횟수
+상한(연결됨 직후 죽기를 되풀이해도)·연결 도중 끊기(트레이·상태 창)·걷지 못하면 상태 파일 남기기·다른 tun2proxy·Wi-Fi 프로필·지난번 흔적·TUN 시간 제한·핫스팟 사라짐과 끊기가 겹침·걷기는 일꾼 스레드에서·이미 있던 우회 경로·bin 접합점·끊은 뒤 걷는 동안과 시작 걷기 동안의 '정리 중'과 그 사이의 연결), 자동 연결(표시가 없으면 연결·'끊기' 만 표시를 남기고 '연결' 이 지움·끝내기·핫스팟 사라짐·다른 tun2proxy·포기는 끊음이 아님·시작 직후의 너그러운 기다림과 그 상한), 업데이트(판 견주기·범위 표기·글 거르기·답 읽기·간격·건너뛴 판·한 번만 묻기·실패·한 바이트씩 흘리는 루프백 서버의 전체 마감·요청 셋의 전체 상한),
+상태 폴더(**스크래치를 뿌리로 '이 사용자 전용' 정책** — 새로 만들기의 ACL·쥔 동안 이름 바꾸기 막힘·남이 쓸 수 있는 폴더·접합점을 비키기·그 아래 접합점으로 쓰지 않기, 관리자 전용 정책은 거절하는 길만), 시작 시 실행(이 시험 exe 를 쥐면 이름 바꾸기가 막히고 놓으면 바뀐다·쥔 핸들에서 복사·권한 고치기·접합점 폴더), 하나만 실행(먼저 잡은 보통 권한의 표지·다른 종류 객체를 알아챔·상태 폴더의 잠금 파일), 작업 XML 을 읽기만 하는 핸들로 쥐기(schtasks 의 열기 흉내), 띄우자마자 끝난 자식의 알림을 늦게 구독해도 받기, 끝남 알림 전의 '연결', 설정을 못 쓰면 시작 시 실행 되돌리기. 고친 것 22가지는 하나씩 되돌려 겨눈 시험만 깨지는 것을 봤다(11-21 자동 연결·'정리 중'·걷은 한도 키의 8가지와 3차 검토의 셋도). `--update` 는 고정 판을
+0.8.6 으로 바꾼 사본에서 끝까지 돌려 0.8.7 로 되돌아오는 것을 봤다.
+
+**확인하지 못한 것**(이 PC 의 인터넷이 그 길이라 실제로 띄우지 않았다): 관리자로 실제 tun2proxy 를 띄우고 끊기(그 Ctrl+C 가 실제로 `--setup` 을 걷는지),
+강제 종료 뒤의 걷기, 폴더 잠그기(관리자 판만), 작업 스케줄러 등록·지우기, `netsh wlan connect`, 로그온 직후의 실제 자동 연결(Wi-Fi 가 180초 안에 붙는지), 연결된 동안의 업데이트
+확인(망 길은 `--live-update` 로 한 번 봤다), 로그오프·종료 때(tun2proxy 가 ctrlc2 의 termination 으로 스스로 걷는다고 보았다 — 추론), 높은 DPI.
+**관리자 판에서만 되는 것**(2026-11-21 — 관리자 권한으로 아무것도 돌리지 않았다): `%ProgramData%\WebTether` 를 주인 Administrators 로 만들기와 그 ACL,
+끊어 둔 표시(`user-disconnected`) 쓰고 지우기, Program Files 사본 만들기(권한 고치기 포함)와 해시 대조, `Global\` 뮤텍스·이벤트를 관리자 전용으로 만들기, 실제 tun2proxy 를
+작업 개체에 넣기(관리자 자식), 도우미가 죽은 뒤 wintun 어댑터가 함께 사라지는지(SwDevice — 추론). 사용자가 볼 것: `icacls "%ProgramData%\WebTether"`
+(Administrators·SYSTEM 만, `(OI)(CI)(F)`, 상속 없음)·`icacls "%ProgramData%\WebTether\logs"`, 도우미를 띄운 채 작업 관리자에서 `WebTether.exe` 를 끝내면
+`tun2proxy-bin.exe` 도 사라지는지(인터넷이 그 길이면 끊긴다 — 다시 띄우면 '지난번 연결의 흔적' 을 걷는다).
+
+| 함정 | 내용 |
+|---|---|
+| 스마트 앱 컨트롤 | 켜져 있으면 csc 로 지은 서명 없는 exe 도, 평판이 아직 없는 tun2proxy 0.8.7 도 막힌다("An Application Control policy has blocked this file" — CodeIntegrity 3077). 2026-11-21 사용자가 껐다 |
+| Ctrl+C 무시 깃발은 물려 간다 | `SetConsoleCtrlHandler(NULL, TRUE)` 를 켠 채 띄운 자식은 Ctrl+C 를 받지 못했다(ctrlc2 는 그 깃발을 끄지 않는다). 삼키는 처리기만 두면 보내는 쪽이 `STATUS_CONTROL_C_EXIT` 로 죽었다. 깃발을 켜 두고 **자식을 띄우는 동안만** 끈다(`ConsoleCtrl.WithCtrlCInheritable` — 보내기와 같은 자물쇠) |
+| 시험 exe 의 콘솔 | Ctrl+C 시험이 시험 exe 를 제 콘솔에서 뗀다 — 출력은 파일로 돌려 받는다(결과는 `<scratch>\results.txt` 에도) |
+| 보이지 않은 창의 DrawToBitmap | 자식 컨트롤을 그리지 않는다 — 화면 밖(-20000)에 `Opacity 0` 으로 잠깐 띄운다 |
+| `python -I` | `PYTHONIOENCODING` 을 보지 않는다 — `build.py` 가 출력을 UTF-8 로 다시 건다(파이프가 cp949 면 '—' 에서 죽었다) |
+| 옛 csc | C# 5 까지(`$""`·`?.`·`nameof` 없음), 소스가 BOM 없는 UTF-8 이라 `/codepage:65001` 이 없으면 한글이 깨진다 |
+| 속성만 청한 핸들 | `FILE_READ_ATTRIBUTES`·`READ_CONTROL` 만 청한 핸들은 공유 모드 검사에 끼지 않는다 — `FILE_SHARE_DELETE` 를 빼도 그 폴더의 이름 바꾸기를 막지 못했다(시험). 막으려면 `FILE_LIST_DIRECTORY` 같은 데이터 권한을 함께 청한다 |
+| `BY_HANDLE_FILE_INFORMATION` | FILETIME 은 DWORD 둘(4 바이트 정렬)이다 — `long` 으로 적으면 틈이 생겨 링크 수가 917504 로 읽혔다(시험) |
+| 돌고 있는 exe 의 이름 | 실행 중인 exe 도 이름은 바꿀 수 있다(이미지 섹션은 지우기·쓰기만 막는다) — 경로로 자기를 복사하면 바꿔치기한 파일을 옮긴다 |
+| schtasks 가 읽는 파일 | schtasks `/XML` 은 파일을 공유 Read 로 연다(남의 쓰기를 막는다) — 쓰기 권한이 있는 핸들이 열려 있으면 '다른 프로세스가 파일을 사용 중' 으로 실패한다. 스크래치의 틀린 XML 로 재현했다(작업은 만들어지지 않는다) |
+| 띄우자마자 끝난 자식 | `Process.Exited` 는 `Start` 가 돌아오기 전에도 온다 — 그 뒤에 구독하면 알림을 잃어 '연결 중' 에 멈췄다. `ChildProcess.Exited` 는 이미 끝났으면 구독하는 자리에서 부른다 |
+| 뮤텍스를 열 때 | 이미 있는 이름이면 `new Mutex(…, MutexSecurity)` 의 보안 설명자는 무시되고 남의 것이 열린다 — 주인을 따로 본다(`InstanceLock`) |
 
 ### 사용자가 폰에서 할 일 — 옮겨 오지 않는 것과 차례
 
@@ -1395,21 +1579,59 @@ DLL 은 'Wintun Prebuilt Binaries License'(법률 자문 아님).
 
 ### 시험
 
-`:tether:test` 125건(모두 루프백 — 바깥 망에 아무것도 나가지 않는다): `Socks5ServerTest`(인사·CONNECT 의 세 주소 꼴·이름은 한 번 풀고 그 주소로·
+`:tether:test` 182건(모두 루프백 — 바깥 망에 아무것도 나가지 않는다): `Socks5ServerTest`(인사·CONNECT 의 세 주소 꼴·이름은 한 번 풀고 그 주소로·
 막힌 목적지·풀지 못한 이름은 4·요청 뒤에 붙여 보낸 바이트·전체 마감·반쯤 닫은 뒤의 늦은 답·UDP ASSOCIATE 의 감싸기·출발 포트 고정·UDP 묶음 상한·
 포트를 옮기지 않음·스레드 예산·멈추면 끊김) · `HttpProxyServerTest`(CONNECT·머리와 함께 온 바이트·origin-form 과 hop-by-hop·스머글링 400(값이 다른 CL·TE 여럿·끝이 chunked 가 아닌 TE 포함)·같은 값의 CL 은 하나로·431·`:` 없는
 줄도 셈·전체 마감·403 본문·풀지 못한 이름 502·차 있으면 다음 빈 포트, 모두 차면 실패·반쯤 닫은 뒤의 늦은 답) · `FileServerTest`(Host 421·목록·한글·
-경로 벗어나기 404·Range·덮어쓰기가 끊겨도 원래 파일 그대로·TE 만이어도 501·머리 줄·전체 마감·옮겨 선 포트의 `Host`) · `PeerFilterTest`(우리 그룹의
+경로 벗어나기 404·Range·덮어쓰기가 끊겨도 원래 파일 그대로·TE 만이어도 501·머리 줄·전체 마감·옮겨 선 포트의 `Host`) · `FileServerManageTest`(관리
+스위치가 꺼지면 관리 길 아홉이 모두 403 이고 요청마다 본다·단순 POST(text/plain·폼·multipart·Content-Type 없음)는 415·다른 출처의 Origin·
+Sec-Fetch-Site 는 403·GET·OPTIONS·DELETE 로는 관리 길이 없다·폴더 만들기와 이름 바꾸기(겹침·틀린 이름·맨 위·휴지통 이름)·옮기기와 복사·**폴더를
+자기 안으로**는 거절하고 아무것도 바꾸지 않음·같은 이름은 묻고(409)·건너뛰고·새 이름으로·제공자가 옮기기를 못 하면 복사 뒤 지우기·손으로 짓는 복사의
+상한과 반쯤 지은 사본 지우기·지우기는 휴지통으로 — 되살리면 사라진 폴더도 다시 만들고 겹치면 새 이름·비우기와 하나씩·**휴지통은 보통의 길로 닿지
+않는다**·폴더째 올리기는 관리일 때만·**덮어쓰기는 `overwrite=1` 로 밝힌 요청만**(없거나 0 이면 409, 폴더와 같은 이름도)·**받는 동안 같은 이름이 생기면
+덮지 않고 409**·JSON 몸의 꼴과 상한·**몸을 흘리는 손님이 다른 관리 동작을 막지 않음**·끝에 점·공백을 붙인
+휴지통 이름·하위 폴더의 `.web-trash` 를 맨 위로 옮기거나 복사해도 휴지통이 되지 않음(11-21 2차 검토)·손으로 옮겨 휴지통에 넣다가 원래 것을 다 지우지 못하면 사본을 남김 — 뒤의 셋은 11-21 검토의 고침, 하나씩 되돌려 그 시험만 깨지는 것을 보았다·
+**휴지통의 `.nomedia`**(만들 때·옛 휴지통에도, 목록·되살리기·영구 삭제·비우기에 나오지 않고 남는다)·**보관 기간**(지난 것만 — 딱 기간은 아직, 관리 허용과
+상관없음·기록이 없거나 깨졌거나 지운 때가 없거나 칸 이름과 기록 가운데 하나라도 기간 안이면 지우지 않음·'비우지 않음'·칸을 지우지 못하면 기록을 남겨
+다음에·서버가 서면 손보고 설정을 바꾸면 곧바로)·**11-21 그 뒤 결정**(폴더와 같은 이름은 `overwrite=1` 이어도 409 `folder`·덮어쓴 원래 파일은
+관리가 꺼져 있어도 휴지통으로 — `.nomedia`·되살리기·대소문자만 다른 원래 것·휴지통으로 옮기지 못하면 덮지 않고 임시도 남기지 않음·덮어쓰기는 관리
+잠금을 쥔다·새 이름의 제어·방향·폭 없는 글자는 빼고 쓰고 답에 실제 이름(올리기·폴더 만들기·이름 바꾸기, 빼면 비거나 `..`·휴지통 이름이면 400 —
+맨 위 휴지통 자리에 아무것도 앉지 않음)·폴더째 올리기는 이름 그대로의 폴더를 찾고 없는 성분만 빼고 만듦·옮기기/복사의 겹쳐 짓는 새 이름 — 휴지통
+옮기기·폴더 409·글자 빼기·잠금 넷을 하나씩 되돌려 겨눈 시험만 깨지는 것을 보았다)·**11-21 3차 검토**(옮기기가 된 뒤 실패를 알려도 휴지통 칸을 지우지
+않음·덮어쓰기의 두기가 실패하면 되살린 자리를 알림 — 둘을 하나씩 되돌려 겨눈 시험만 깨지는 것을 보았다)·**11-21 빈 원래 파일**(0바이트 원래 것은
+휴지통 없이 바꿈 — 대소문자만 다른 것·1바이트는 휴지통·빈 것을 빈 것으로·관리의 지우기는 그대로 휴지통·크기를 0 으로 적는 제공자의 파일은 열어 보고
+휴지통으로·비켜 둔 뒤 커지면 원래 이름으로 휴지통에·두기가 실패하면 원래 자리로(그새 같은 이름이 생기면 `이름 (1)`)·비켜 두지 못하면 휴지통 길 —
+열어 보기·다시 보기·비켜 두기 셋을 되돌려 겨눈 시험이 깨지는 것을 보았다. 4차 검토가 더한 셋 — 열지 못하거나 읽다 실패하면 휴지통·비켜 둔 빈 것을
+지우지 못하면 원래 이름으로 휴지통·커졌는데 휴지통에 넣지 못하면 지우지 않고 숨은 이름으로 남김, 넷을 되돌려 각각 겨눈 시험만 깨졌다)) · `RulesTest` 의 빼는 글자(BMP 전체가 정한 목록과 같다) · `FileServerReadTest`(화면 세 파일과 CSP·nosniff·받기는 늘 attachment
+이고 sandbox, PDF 만 inline·정보(저장 공간·스위치)·목록은 휴지통을 감추고 폴더만도·zip 의 내용과 한 번 쓰는 표·항목 수 상한은 받기 전에 413·**흘려
+보낸다**(둘째 파일에서 막혀도 첫 파일이 이미 왔다)·동시에 둘·섬네일은 머리로 형식을 보고(이름만 그림인 HTML 은 404) 캐시하고 캐시 이름은 해시뿐·캐시
+상한·JSON 읽개의 엄격함·**zip 표가 다 찼으면 폴더를 펴 보기 전에 503**) · `PeerFilterTest`(우리 그룹의
 인터페이스·STA 로 들어오면 netId 로 거절(모듈의 판정)·그룹이 없으면 거절·답 2초 기억) · `DestinationFilterTest`(대역·폰 자신의 주소·LAN 의 on-link
 접두와 셀룰러·넓은 접두 버림·풀지 못함은 거절이 아님·재바인딩) · `TcpServerTest`(받기 고리가 죽으면 포트를 놓고 알림·stop 의 멱등·상한·기록 묶기) ·
 `NoticeRateTest` · `PassphraseVaultTest` · `RulesTest` · `LoopbackIntegrationTest`(셋을 한 환경으로 — 기록에 목적지가 없는지, 바깥 문은 JVM 의
 `ProxySelector` 를 묻지 않는다(맨 `Socket()` 은 묻고 죽은 SOCKS 로 간다 — 대조)). 시험마다 서버 스레드에서 잡히지 않고 나간 예외가 0 인지 본다.
 
+**포트를 쓰는 시험은 시험이 포트를 쥔다**(11-21 — `HttpProxyServerTest` 가 가끔 실패한다는 보고, 재현은 못 함). 포트 옮기기 시험(HTTP·파일·SOCKS5)은
+`PortPair` — 임시 포트 범위 밖(20000–29999)의 이어진 두 포트를 둘 다 쥐고 있다가 다음 포트를 서버를 세우기 바로 앞에서 놓는다(`handOver`). 예전
+`squatWithFreeNext` 는 `ServerSocket(0)` 자리의 다음 포트를 열어 보고 곧 닫았는데, 이 PC(윈도)는 임시 포트를 차례로 주어 그 포트가 곧 다음
+`ServerSocket(0)` 의 것이었다 — 그 틈에 `ServerSocket(0)` 하나를 끼우면 옛 꼴은 20번에 20번 졌고 새 꼴은 0번이었다(Gradle 이 다른 모듈의 시험을 함께
+돌린다 — `org.gradle.parallel`). 바깥 연결의 임시 포트는 윈도에서 듣는 소켓의 묶기를 막지 않았다. '닿지 못하는 원격'(HTTP 502·SOCKS5 의 거부·죽은
+SOCKS)은 `refusingPort` — 듣지 않는 소켓으로 묶어 쥔 루프백 포트(쥔 동안 남이 묶지 못하고 임시 포트로도 나가지 않는다, 잇기는 거절 — 바깥 망으로
+나가지 않는다). 예전 `closedPort` 는 묶었다 곧 놓은 번호였다. `:net:test :core:test :tether:test` 를 함께 `--rerun` 으로 다섯 번 — 모두 통과.
+
 앱의 테더 시험(`:app:testDebugUnitTest` 의 일부): `TetherTextsTest`(포트 범위·DIED·라이브 영역의 상태 줄에 1초마다 바뀌는 수가 없음·꺼진 테더링은 한
 줄과 까닭·켜짐 판정·상한으로 닫은 연결) · `TetherIsolationTest`(프로세스 다섯·내보냄·길게 누르기 화면은 받은 인텐트를 읽지 않음·specialUse·위치
 권한·테더 소스의 import·앱 바로가기 없음) · `TetherWiringTest`(안드로이드에 기대어 JVM 에서 돌릴 수 없는 이음새를 소스·자원으로 — 그룹 인터페이스를
 거르개에·숨은 API 없음·수신기 내보내지 않음과 ChannelListener·바뀜 합치기·보관소 하나·자동 완성·라이브 영역·단추 하나·통째로 끄기·끄기의 세 길·
-타일 이름·포트 설명·macOS 스크립트). 고친 것마다 그 고침을 잠깐 되돌려 겨눈 시험만 깨지는지 보았다.
+타일 이름·포트 설명·macOS 스크립트) · `FileManTest`(서버가 묻는 화면 자산 셋이 다 있고 그뿐·HTML 에 인라인 스크립트·스타일·이벤트 속성 없음·바깥
+주소 없음·이름을 HTML 로 그리는 길 없음·바꾸는 요청은 PUT 과 JSON 의 POST 뿐·관리 허용은 기본 끔이고 서버는 요청마다 읽음·섬네일은 그림 풀개를
+부르지 않고 `java.io.File` 을 쓰지 않음·올리기는 늘 `overwrite` 를 밝히고 `1` 은 '덮어쓰기' 를 고른 뒤에만·'나머지에도 적용' 은 묶음 안에서만·'다시' 는
+새 묶음·묻는 창의 기본 단추는 덮어쓰기가 아님·묻기는 하나씩·휴지통 보관 기간은 기본 30일이고 서버가 손볼 때마다 읽고 바꾸면 곧바로·'관리 허용' 곁의
+단추·설명 한 문장·화면의 한 줄·창은 한 번에 하나(11-21 2차 검토)·'모든 파일에 적용 (겹치는 파일 N개)'·폴더와 겹치면 '덮어쓰기' 흐리게와 그 글이 서버와
+같음·흐린 단추는 기본 단추가 아님·적용으로 덮어쓰기면 폴더와 겹친 것은 새 이름·서버가 준 이름을 씀·**화면의 `STRIP_RE` 와 서버의 빼는 글자가 BMP
+전체에서 같음**). 고친 것마다 그 고침을 잠깐 되돌려 겨눈 시험만 깨지는지 보았다(파일 서버의 NAS 꼴은 여섯 — 다른 출처·단순 POST·휴지통 감추기·관리 스위치·자기
+안으로·zip 의 파일마다 내보내기 — 를 한꺼번에 되돌려 겨눈 시험이 모두 깨지는 것을 보았다. 11-21 사용자 결정의 고침 여섯 — 서버의 덮어쓰기 기본·두기
+직전의 다시 보기·`.nomedia`·기록 없는 칸 남기기·zip 표 상한의 차례·서버가 설 때 손보기 — 도 하나씩 되돌려 겨눈 시험만 깨지는 것을 보았다).
 
 ### 확인한 것·확인하지 못한 것
 
@@ -1418,6 +1640,36 @@ DLL 은 'Wintun Prebuilt Binaries License'(법률 자문 아님).
 포트 +1(`nc` 로 8282·8080 을 쥔 채), 거르기(`adb forward` 는 '핫스팟 밖에서 온 연결', 폰 안의 `nc` 는 '이 폰 안에서 온 연결' — 기록에 주소 없음), 타일과
 길게 누르기(서비스는 서지 않는다), 앱 바로가기 없음, 최근 앱에서 지워도 그대로, 릴리스(R8). `am crash` 로 프로세스를 죽이면 시스템이 서비스를 다시
 세우지만 그룹은 이미 내려갔고 화면이 앞에 없어 `createGroup` 이 실패해 **테더링이 통째로 꺼진다**(서버만 남지 않는다 — '사용자가 정할 것').
+
+**파일 서버의 NAS 꼴(2026-11-21)에서 본 것**: PC — `DevFileServer` 와 Edge 헤드리스(CDP)로 넓은 창(1400)·폰 폭(390, 터치 흉내)에서 목록·격자·
+섬네일(원본 대신 그리기 포함)·나무와 서랍·보기(앞뒤·확대·밀어 넘기기·글·EUC-KR·HTML 은 글로 — 쪽 제목이 바뀌지 않음)·고르기(누르기·Ctrl·Shift·네모)·
+3,000개 폴더에서 DOM 의 줄 35개·거르기·정보·단축키·새 폴더·이름 바꾸기·같은 이름 묻기 → '새 이름으로'·느린 망(2 MB/s)에서 대기열의 진행·속도·그만두기·
+다시·옮길 곳 고르기·여러 개 zip(1.1 MB 를 받아 풀림)·휴지통으로·휴지통 보기·되살리기·**쓰는 중에 관리 스위치를 끄면 다음 요청이 403 이고 화면이 '관리
+꺼짐' 과 까닭**·PDF 는 Edge 의 PDF 보기로·HTML 에 `inline=1` 을 붙여도 받기. 콘솔 오류(CSP 위반 포함) 0, 폰 폭에서 가로 넘침 없음. 에뮬레이터(API 31) —
+'관리 허용' 스위치가 보이고 누르면 `manage_allowed` 가 곧바로 바뀐다(true → false 로 되돌려 둠), 디버그 탐침(`TetherFolderProbeActivity`)으로 실제 SAF
+(`Download/web-share-test`)에서: 저장 공간(남은 4.6 GB / 10.4 GB), 섬네일 — EXIF 섬네일이 든 JPEG 는 제공자가 **EXIF 섬네일(3.3 KB)** 을, 작은 PNG 는
+원본을, 512 KiB 넘는 PNG 는 없음, 동영상은 미디어 서버의 장면(1.6 KB JPEG, 0.1–0.3초), 앨범 그림 없는 WAV 는 없음 — 만들기·이름 바꾸기·복사(제공자의
+`copyDocument`)·같은 폴더로 복사(사본)·새 이름으로 옮기기·자기 안으로 거절·휴지통·되살리기·영구 삭제. 테더링 켜기는 위치 권한을 주지 않아 보지 않았다
+(테더 프로세스는 죽지 않았다).
+
+**11-21 사용자 결정(덮어쓰기 묻기·보관 기간·`.nomedia`)에서 본 것**: PC — `DevFileServer` 와 Edge 헤드리스로 셋을 한꺼번에 끌어다 놓으면(둘이 겹침)
+첫 물음에 '이 올리기의 나머지에도 적용' 이 있고 기본 초점이 '새 이름으로', 건너뛰기 + 적용이면 둘 다 그대로·새 것만 올라감, 다음 올리기는 다시 묻고
+하나뿐이면 '나머지에도' 가 없음, 덮어쓰기를 고르고 그만둔 뒤 '다시' 는 다시 묻고 원래 파일 그대로, Enter 는 새 이름(`new (1).txt`), 휴지통 보기의
+'보관 기간 30일 — 지난 것은 저절로 비워집니다'(넓은 창·폰 폭, 가로 넘침 없음·나가면 사라짐), 콘솔 오류 0. 처음 돌렸을 때 동시에 살피던 둘이 함께 물어
+앞의 것이 영영 '살피는 중' 에 남는 것을 보고 묻기를 하나씩으로 고쳤다. 에뮬레이터(API 31) — 테더 화면의 '휴지통 보관: 30일 (기본)' 과 고르는 창,
+7일을 고르면 `trash_days` 가 곧바로 7(30 으로 되돌려 둠), 디버그 탐침으로 실제 SAF(`Download/web-share-test`)에서 휴지통에 `.nomedia` 가 **그 이름
+그대로** 생기고(제공자가 확장자를 붙이지 않았다) 손보기(30일)가 새 칸을 지우지 않고, 비우기 뒤 휴지통에 `.nomedia` 만 남는다. 보지 못한 것: 갤러리가
+`.nomedia` 를 보고 휴지통의 사진을 실제로 감추는지(MediaStore 의 다시 훑기), 하루 차례가 실제로 하루 뒤에 도는지(시험은 간격을 짧게 주입), 테더링을
+켠 채 설정을 바꿨을 때 곧바로 도는지(위치 권한을 주지 않아 테더링을 켜지 않았다 — JVM 시험만).
+
+**11-21 그 뒤 결정(모든 파일에 적용·폴더와 같은 이름·글자 빼기·덮어쓴 것은 휴지통)에서 본 것**: PC — `DevFileServer` 와 Edge 헤드리스로 다섯을
+한꺼번에 끌어다 놓으면(파일 셋 + 폴더 `Photos` 와 같은 이름) 첫 물음에 '모든 파일에 적용 (겹치는 파일 4개)', 기본 초점 '새 이름으로', 적용 + 덮어쓰기면
+파일 셋은 덮이고 원래 것 셋은 휴지통 칸으로(`.nomedia` 함께, 관리 꺼짐), `Photos` 는 `Photos (1)` 로(줄에 '새 이름(같은 이름의 폴더)'), 새 파일은 그대로.
+폴더와 같은 이름 하나(`photos`)는 '같은 이름의 폴더가 있습니다' 와 흐린 '덮어쓰기'(title 같은 글), Enter 는 새 이름. `사진<RLO>gpj.exe`·폭 없는 글자 든
+이름은 뺀 이름으로 올라가고 줄에 '이름 다듬음', 새 폴더 창의 미리 보기 한 줄, 관리를 켜면 휴지통에 덮인 셋이 원래 자리와 함께 보인다. 폰 폭(390)의 묻는 창 —
+가로 넘침 없음. 콘솔 오류 0. 보지 못한 것: 폴더째 올리기에서 성분을 뺀 경로로 겹침을 세는 것(헤드리스에서 끌어다 놓은 폴더를 만들지 못한다 — JVM
+시험과 소스만), 실제 SAF 제공자에서 덮어쓰기의 휴지통 옮기기(`moveDocument`)와 두기가 같은 이름을 지우지 않는 것(에뮬레이터는 돌리지 않았다), SAF
+제공자가 방향·폭 없는 글자가 든 이름을 어떻게 다루는지(이제 서버가 빼므로 새로 생기지는 않는다).
 
 **사용자 폰(SM-A908N, 12)에서만 될 것**: 실제 Wi-Fi Direct 칩의 그룹 만들기·BUSY, **그룹 인터페이스의 이름**(상태 줄에 보인다)과 손님이 그 검사를
 지나는지, 연결 변경 방송이 오는지, 사용자 폰의 `rp_filter`(`adb shell cat /proc/sys/net/ipv4/conf/{all,default,wlan0}/rp_filter` — 1(엄격)이면 폰이 붙은
@@ -1430,7 +1682,11 @@ DLL 은 'Wintun Prebuilt Binaries License'(법률 자문 아님).
 인터페이스 조회의 비용, 스레드 예산 768 이 무거운 쓰임에 모자라지 않은지(넘으면 새 연결을 닫는다 — 화면에 수가 보인다), 삼성 One UI 의 퀵 설정이 길게
 누르기에 `QS_TILE_PREFERENCES` 를 쓰는지, 한글 패스프레이즈의 안내(adb 로 한글을 칠 수 없어 JVM 시험만), 자동 완성의 '저장할까요?', TalkBack, 위치
 서비스 꺼짐 안내(시스템 설정을 바꿔야 한다), 받는 중에 테더 프로세스가 처음 뜰 때 받던 파일이 지워지지 않는지(코드로만 — `WebApp.onCreate` 가 정리를
-돌리기 **전에** 돌아간다), 파일 서버의 실제 주고받기·올리기의 임시 파일(JVM 시험만). tun2proxy 의 UDP 묶음 수(DNS 질의마다인지)와 동시 세션 200 은 기억으로
+돌리기 **전에** 돌아간다), 파일 서버의 실제 주고받기·올리기의 임시 파일(JVM 시험만), **파일 서버의 새 화면을 실제 PC↔폰(Wi-Fi Direct)으로 쓰기**
+— PC 브라우저(크롬·엣지·파이어폭스)의 `<a download>` 로 받는 zip 이 4 GB·6만 5천 항목을 넘을 때(Zip64 — JDK·안드로이드의 `ZipOutputStream` 이 저절로
+쓴다고 보았다, 재지 않았다), 폴더째 올리기의 끌어다 놓기(크로미움 `webkitGetAsEntry` — 헤드리스에서는 지은 File 로만 보았다), 사용자 폰의 저장소 제공자가
+`FLAG_SUPPORTS_MOVE`·`COPY`·`THUMBNAIL` 을 세우는지(삼성), SD 카드 공유 폴더의 저장 공간(볼륨의 자리를 statvfs — 에뮬레이터는 기기 저장소만), 실제
+카메라 사진의 EXIF 섬네일, 큰 폴더(수만 항목)에서 SAF 목록 질의의 시간. tun2proxy 의 UDP 묶음 수(DNS 질의마다인지)와 동시 세션 200 은 기억으로
 적었다.
 
 **남은 위험**:
@@ -1439,7 +1695,7 @@ DLL 은 'Wintun Prebuilt Binaries License'(법률 자문 아님).
   붙은 망의 주소로 온 연결·다른 앱의 그룹은 막힌다(1–3).
 - HTTP·파일 포트를 옮긴다(사용자가 감수 — 위 '무엇을 하나'). SOCKS5(PC 트래픽 전부)는 옮기지 않으므로 그 틈이 없다.
 - 경계는 UID 다 — 테더 코드의 파일 읽기·쓰기 결함은 곧 브라우저의 비밀로 이어진다. 인증 없는 LAN 서버라 그룹의 손님은 폴더를 읽고 덮어쓸 수 있다
-  (사용자 결정 — 패스프레이즈가 유일한 문).
+  (사용자 결정 — 패스프레이즈가 유일한 문 — 덮인 원래 것은 휴지통으로 가고 보관 기간이 지나면 정말 지워진다). '관리 허용' 을 켜 두면 옮기고 지울 수도 있다(지우기는 휴지통으로 — 비우기와 보관 기간(기본 30일)이 지난 것은 정말 지운다).
 - UID 단위 망 정책이 둘을 묶는다 — 데이터 사용량·앱별 VPN·백그라운드 데이터 제한·배터리 예외가 브라우저와 테더에 함께 걸린다.
 - 브라우저는 실기기에서 검증된 적이 없다 — 테더를 쓰려고 브라우저 전체를 실기기에 처음 깔게 된다.
 - usb-tether 의 '알려진 한계' 는 그대로다 — UDP 의 NAT 표 없음·요청 DST 무시, HTTP 프록시는 TCP 만, 사용자 공간 처리라 폰 CPU 가 수백 Mbps 에서 한계,
@@ -1725,6 +1981,12 @@ hitomi 는 공개 저장소에 두면 DMCA 통지를 받을 수 있다(2026-03 F
   - 프로세스가 죽어 시스템이 서비스를 다시 세울 때(sticky) 핫스팟도 다시 켜 볼지 — 지금은 켜 본다. 에뮬레이터에서는 그룹이 이미 내려갔고 화면이 앞에
     없어 `createGroup` 이 실패해 통째로 꺼졌다. 다른 길: 다시 세울 때는 켜 보지 않고 끄고 까닭만 남기기(PC 가 저절로 다시 붙을 기회를 버린다)
   - 알림의 '테더링 끄기' 단추(지금 있다 — 잘못 누르면 PC 의 인터넷이 끊긴다) — 원치 않으면 걷는다
+  - **파일 서버(NAS 꼴)의 판단 거리**(11-21, Claude 가 정한 것 — ①–④ 는 사용자가 정했다: 덮어쓰기는 그대로 두되 묻기, 관리 허용은 테더링과 별개,
+    휴지통 보관 기간(기본 30일), `.nomedia` — 위 '사용자 결정'·'서버의 세부'. 거기서 Claude 가 정한 것: 비우는 때는 서버가 설 때·하루마다·설정을
+    바꿀 때(휴지통 API 를 부를 때는 아니다), 딱 기간인 것은 아직 지우지 않음, 비우기가 휴지통 폴더와 `.nomedia` 를 남김, 폴더와 같은 이름으로 올리면
+    묻고 '덮어쓰기' 를 골라도 400(폴더를 파일로 덮지 않는다), 묻는 창의 기본 단추 '새 이름으로') ⑤ 섬네일을 이 프로세스에서 풀지 않기로 해서 **EXIF 섬네일이 없는 큰 그림**(스크린샷 PNG 등 512 KiB
+    넘음)은 서버 섬네일이 없다 — 화면이 3 MB 까지는 원본으로 대신 그리고 그 위는 아이콘. 다음 길은 `isolatedProcess` 서비스(따로 된 샌드박스 UID — 앱
+    자료에 닿지 못한다)에서 풀기다(새 구성 요소·프로세스) ⑥ 바꾸는 요청에 `Origin` 이 없으면 받는다(curl 등 — 브라우저는 늘 싣는다)
 - **m3u8 열쇠**(위 '찾은 미디어·HLS·DASH' 의 '열쇠 받기'): 실패 글이 '쪽이 보낸 머리를 실음' 인데도 열쇠 대신 HTML·JSON·빈 응답을 말하면 조사의 F — 그
   틀의 실행 세계에서 열쇠를 `fetch`(Origin·쿠키·Sec-Fetch·지문까지 쪽과 같다. 탭이 그 쪽에 있어야 하고 사이트가 보는 요청이 하나 더 나간다 — 실험실에서
   실행 세계의 Origin·CORS·CSP 부터 잰다). 실패가 한참 받은 뒤에 나면 조사의 D — 모든 줄기의 첫 열쇠를 조각보다 먼저 받고, 늦은 열쇠가 실패하면

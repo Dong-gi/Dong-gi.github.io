@@ -45,3 +45,9 @@ udpgw-server
 udpgw-server.exe
 adb
 adb.exe
+
+# 윈도 테더 연결 도우미(pc-windows/)가 받고 짓는 것 — 받은 tun2proxy 릴리스 zip·꺼낸 실행 파일·자원·완성 exe·시험 exe.
+# 완성 exe 는 tun2proxy·wintun 을 안에 싣는다 — 위와 같은 까닭으로 올리지 않는다.
+# exe 는 pc-windows/ 아래만 막는다(저장소 전체의 exe 무시가 되지 않게 — 2026-11-21 커밋된 exe 는 없다).
+pc-windows/out/
+pc-windows/**/*.exe

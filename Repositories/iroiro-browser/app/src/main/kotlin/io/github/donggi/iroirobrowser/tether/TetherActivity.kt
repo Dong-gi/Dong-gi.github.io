@@ -20,6 +20,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import android.window.OnBackInvokedDispatcher
@@ -28,11 +29,12 @@ import io.github.donggi.iroirobrowser.setup.SetupBundle
 import io.github.donggi.iroirobrowser.setup.SetupFiles
 import io.github.donggi.iroirobrowser.tether.core.PassphraseVault
 import io.github.donggi.iroirobrowser.tether.core.Passphrases
+import io.github.donggi.iroirobrowser.tether.core.SharedOps
 import io.github.donggi.iroirobrowser.ui.Ui
 
 /**
  * 테더링 화면 — 상태(포트·핫스팟·주고받은 양·거절한 연결)와 **하나뿐인 켜기·끄기**('테더링 켜기'·'테더링 끄기' — 서버 셋과 핫스팟을 함께,
- * 사용자 결정), 핫스팟(Wi-Fi Direct)의 SSID·패스프레이즈, 공유 폴더. 브라우저의 ⋮ 메뉴 '테더링'·알림·퀵 설정 타일을 길게 누르기
+ * 사용자 결정), 핫스팟(Wi-Fi Direct)의 SSID·패스프레이즈, 공유 폴더와 그 '관리 허용'(파일 서버의 관리 기능 — 기본 끔)·'휴지통 보관'(기본 30일). 브라우저의 ⋮ 메뉴 '테더링'·알림·퀵 설정 타일을 길게 누르기
  * ([TilePreferencesActivity] 를 거쳐)에서 연다. **`:tether` 프로세스** — 상태([TetherState])가 그 프로세스의 정적 필드다. 브라우저의
  * 것(WebApp.of)을 부르지 않는다(그 프로세스에서는 막혀 있다 — WebApp).
  *
@@ -137,6 +139,17 @@ class TetherActivity : Activity() {
         folderName = note(column, 0, "").apply { alpha = 1f }
         button(column, R.string.tether_pick_folder) { pickFolder() }
         forgetButton = button(column, R.string.tether_forget_folder) { confirmForget() }
+        // 관리 허용(기본 끔) — 파일 서버가 요청마다 이 값을 본다(끄면 다음 요청부터 403). 같은 프로세스의 설정이라 곧바로 듣는다.
+        column.addView(padded(Switch(this).apply {
+            text = getString(R.string.tether_manage)
+            textSize = 16f
+            isChecked = settings.manageAllowed
+            setOnCheckedChangeListener { _, on -> settings.manageAllowed = on }
+        }))
+        note(column, R.string.tether_manage_note)
+        // 휴지통 보관 기간(기본 30일) — 고르는 즉시 저장하고, 테더링이 켜져 있으면 서비스가 듣고 곧바로 한 번 비운다.
+        trashChoice(column)
+        note(column, R.string.tether_trash_note)
 
         section(column, R.string.tether_section_pc)
         note(column, R.string.tether_pc_note)
@@ -386,6 +399,33 @@ class TetherActivity : Activity() {
         }
         column.addView(padded(b))
         return b
+    }
+
+    /** '휴지통 보관: 30일' 단추 — 누르면 고르는 창(브라우저 설정의 보관 기간과 같은 꼴), 고르는 즉시 저장한다. */
+    private fun trashChoice(column: LinearLayout) {
+        val choices = SharedOps.TRASH_RETENTION_CHOICES
+        val label = { days: Int ->
+            when (days) {
+                0 -> getString(R.string.tether_trash_never)
+                SharedOps.DEFAULT_TRASH_DAYS -> getString(R.string.tether_trash_days_default, days)
+                else -> getString(R.string.tether_trash_days, days)
+            }
+        }
+        val button = Button(this)
+        val render = { button.text = getString(R.string.tether_trash_keep, label(settings.trashDays)) }
+        render()
+        button.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.tether_trash_keep_title)
+                .setSingleChoiceItems(choices.map(label).toTypedArray(), choices.indexOf(settings.trashDays)) { d, which ->
+                    settings.trashDays = choices[which]
+                    render()
+                    d.dismiss()
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+        column.addView(padded(button))
     }
 
     private fun padded(view: View): View {

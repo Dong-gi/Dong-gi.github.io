@@ -181,10 +181,13 @@ class FileServerTest {
     fun 올리기는_덮어쓰고_자르고_임시를_남기지_않는다() {
         File(root, "doc.txt").writeText("a much longer previous content")
         val s = server()
-        val reply = put(s.actualPort, "doc.txt", "short".toByteArray())
+        val reply = put(s.actualPort, "doc.txt&overwrite=1", "short".toByteArray())
         assertEquals(200, reply.status)
-        assertEquals("""{"ok":true,"name":"doc.txt","bytes":5}""", reply.text)
+        assertEquals("""{"ok":true,"name":"doc.txt","bytes":5,"trashed":true}""", reply.text)
         assertEquals("short", File(root, "doc.txt").readText())
+        // 덮인 원래 것은 휴지통의 칸에 그대로(사용자 결정 11-21).
+        val slots = File(root, SharedPaths.TRASH_NAME).listFiles().orEmpty().filter { it.isDirectory }
+        assertEquals(listOf("a much longer previous content"), slots.map { File(it, "doc.txt").readText() })
         val sub = File(root, "d").apply { mkdir() }
         assertEquals(200, put(s.actualPort, "d/${enc("새 파일.txt")}", "새".toByteArray()).status)
         assertEquals("새", File(sub, "새 파일.txt").readText())
@@ -197,7 +200,7 @@ class FileServerTest {
         val s = server()
         Socket(LOOPBACK, s.actualPort).use { sock ->
             sock.soTimeout = 5000
-            sock.getOutputStream().write("PUT /api/file?path=keep.txt HTTP/1.1\r\nHost: 192.168.49.1\r\nContent-Length: 100\r\n\r\n12345".toByteArray())
+            sock.getOutputStream().write("PUT /api/file?path=keep.txt&overwrite=1 HTTP/1.1\r\nHost: 192.168.49.1\r\nContent-Length: 100\r\n\r\n12345".toByteArray())
             sock.shutdownOutput()
             val reply = parseReply(readAll(sock.getInputStream()))
             assertEquals(400, reply.status)
@@ -214,7 +217,7 @@ class FileServerTest {
         val s = server()
         Socket(LOOPBACK, s.actualPort).use { sock ->
             sock.soTimeout = 5000
-            sock.getOutputStream().write("PUT /api/file?path=live.txt HTTP/1.1\r\nHost: 192.168.49.1\r\nContent-Length: 10\r\n\r\nnew".toByteArray())
+            sock.getOutputStream().write("PUT /api/file?path=live.txt&overwrite=1 HTTP/1.1\r\nHost: 192.168.49.1\r\nContent-Length: 10\r\n\r\nnew".toByteArray())
             sock.getOutputStream().flush()
             waitUntil { leftovers().isNotEmpty() }
             assertEquals("original", String(get(s.actualPort, "/api/file?path=live.txt").body))
@@ -233,7 +236,7 @@ class FileServerTest {
             override fun openWrite(file: SharedEntry): OutputStream? = null
         }
         val s = server(tree = broken)
-        assertEquals(500, put(s.actualPort, "same.txt", "x".toByteArray()).status)
+        assertEquals(500, put(s.actualPort, "same.txt&overwrite=1", "x".toByteArray()).status)
         assertEquals(500, put(s.actualPort, "new.txt", "x".toByteArray()).status)
         assertEquals("original", File(root, "same.txt").readText())
         assertFalse(File(root, "new.txt").exists())
@@ -250,7 +253,7 @@ class FileServerTest {
         // TE 만 와도 501 이다(411 이 아니다).
         assertEquals(501, put(s.actualPort, "a.txt", "1\r\nx\r\n0\r\n\r\n".toByteArray(), headers = "Transfer-Encoding: chunked\r\n").status)
         assertEquals(400, put(s.actualPort, "nope/a.txt", "x".toByteArray()).status, "부모 폴더는 만들지 않는다")
-        assertEquals(400, put(s.actualPort, "dir", "x".toByteArray()).status, "폴더를 파일로 덮지 않는다")
+        assertEquals(409, put(s.actualPort, "dir&overwrite=1", "x".toByteArray()).status, "폴더를 파일로 덮지 않는다")
         assertEquals(400, put(s.actualPort, "../a.txt", "x".toByteArray()).status)
         assertEquals(400, put(s.actualPort, "", "x".toByteArray()).status)
         assertFalse(File(root, "a.txt").exists())
@@ -294,10 +297,10 @@ class FileServerTest {
     @Test
     fun 기본_포트가_차_있으면_다음_빈_포트로_가고_모두_차면_실패를_알린다() {
         // 사용자 결정 — 8080 이 차 있으면 8081… 로.
-        val squatter = closer.keep(squatWithFreeNext())
-        val base = squatter.localPort
+        val ports = closer.keep(PortPair.squat())
+        val base = ports.base
         val s = closer.keep(FileServer(testEnv(), DirectoryTree(root), { uiBytes }, basePort = base, attempts = 2))
-        assertEquals(base + 1, s.start())
+        assertEquals(base + 1, ports.handOver { s.start() })
         assertEquals(base + 1, s.actualPort)
         assertNull(s.lastError)
         // 옮겨 선 포트로 온 Host(`192.168.49.1:<그 포트>`)도 받는다 — Host 검사는 포트를 가리지 않는다.

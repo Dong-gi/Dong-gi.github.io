@@ -157,6 +157,7 @@ abstract class TcpServer internal constructor(
         lastError = null
         env.log.i(tag, "포트 $actualPort 에서 듣는다")
         thread(name = "$tag-accept", isDaemon = true) { acceptLoop(socket) }
+        onStarted()
         return actualPort
     }
 
@@ -188,6 +189,9 @@ abstract class TcpServer internal constructor(
 
     /** [stop] 의 끝에 — 서버마다 따로 쥔 것(이름 풀이 캐시 등)을 비운다. */
     protected open fun onStopped() {}
+
+    /** [start] 가 포트를 묶고 받기를 시작한 뒤에(한 번) — 서버마다 따로 도는 일(파일 서버의 휴지통 손보기)을 건다. */
+    protected open fun onStarted() {}
 
     protected val isRunning: Boolean get() = running.get()
 

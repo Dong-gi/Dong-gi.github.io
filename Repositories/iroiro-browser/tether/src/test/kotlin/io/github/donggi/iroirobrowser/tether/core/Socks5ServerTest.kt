@@ -169,7 +169,7 @@ class Socks5ServerTest {
         val s = greet(srv.actualPort)
         // 윈도의 루프백은 닫힌 포트의 거부를 몇 초 뒤에 준다 — 서버의 연결 시간 제한(5초)보다 넉넉히 기다린다.
         s.soTimeout = 15_000
-        assertEquals(5, request(s, 1, 1, byteArrayOf(127, 0, 0, 1), closedPort())[1].toInt())
+        assertEquals(5, request(s, 1, 1, byteArrayOf(127, 0, 0, 1), closer.keep(refusingPort()).localPort)[1].toInt())
     }
 
     @Test
@@ -356,12 +356,12 @@ class Socks5ServerTest {
 
     @Test
     fun 포트를_옮기지_않고_차_있으면_실패를_알린다() {
-        val squatter = closer.keep(squatWithFreeNext())
-        val srv = closer.keep(Socks5Server(testEnv(), port = squatter.localPort))
-        assertEquals(-1, srv.start())
+        val ports = closer.keep(PortPair.squat())
+        val srv = closer.keep(Socks5Server(testEnv(), port = ports.base))
+        assertEquals(-1, ports.handOver { srv.start() })
         assertEquals(StartError.PORT_TAKEN, srv.lastError)
         assertEquals(-1, srv.actualPort)
-        assertTrue(isFree(squatter.localPort + 1), "다음 포트를 잡지 않았다")
+        assertTrue(isFree(ports.base + 1), "다음 포트를 잡지 않았다")
     }
 
     @Test

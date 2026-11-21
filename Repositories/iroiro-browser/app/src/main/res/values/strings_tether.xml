@@ -104,6 +104,14 @@
     <string name="tether_forget_question">이 폴더의 공유를 그만둘까요? 파일은 그대로 둡니다.</string>
     <string name="tether_folder_picker_missing">폴더를 고를 앱이 없습니다</string>
     <string name="tether_folder_failed">그 폴더의 권한을 받지 못했습니다</string>
+    <string name="tether_manage">관리 허용</string>
+    <string name="tether_manage_note">핫스팟에 붙은 기기가 공유 폴더를 바꾸고 지울 수 있습니다.</string>
+    <string name="tether_trash_keep_title">휴지통 보관</string>
+    <string name="tether_trash_keep">휴지통 보관: %1$s</string>
+    <string name="tether_trash_days">%1$d일</string>
+    <string name="tether_trash_days_default">%1$d일 (기본)</string>
+    <string name="tether_trash_never">비우지 않음</string>
+    <string name="tether_trash_note">지운 지 이 기간이 지난 것은 휴지통에서 저절로 비웁니다.</string>
 
     <!-- 화면 — PC·알아 둘 것 -->
     <string name="tether_section_pc">다른 기기에서</string>

@@ -7,11 +7,12 @@ import android.net.Uri
 import io.github.donggi.iroirobrowser.crypto.DeviceKeyCipher
 import io.github.donggi.iroirobrowser.tether.core.PassphraseVault
 import io.github.donggi.iroirobrowser.tether.core.Passphrases
+import io.github.donggi.iroirobrowser.tether.core.SharedOps
 
 /**
  * 테더의 설정 파일 하나(SharedPreferences [PREFS] — 브라우저의 `web`·`adblock`·`sites`·`popups` 와 겹치지 않는다. 테더 프로세스만 쓰고
  * 브라우저 프로세스는 열지 않는다 — SharedPreferences 는 여러 프로세스가 함께 쓰는 것을 지키지 않는다). SSID, 잠근 패스프레이즈, 공유 폴더의
- * 트리 URI. 백업·기기 이전에서 빠진다(`allowBackup=false`, `data_extraction_rules` 가 sharedpref 를 통째로 뺀다).
+ * 트리 URI, 파일 서버의 관리 허용과 휴지통 보관 기간. 백업·기기 이전에서 빠진다(`allowBackup=false`, `data_extraction_rules` 가 sharedpref 를 통째로 뺀다).
  *
  * 곧바로 쓴다(commit) — 핫스팟을 켜자마자 앱이 죽어도 바꾼 값이 남게(브라우저의 설정과 같은 까닭).
  *
@@ -53,6 +54,42 @@ internal class TetherSettings(context: Context) {
             prefs.edit().apply { if (value == null) remove(K_TREE) else putString(K_TREE, value.toString()) }.commit()
         }
 
+    /**
+     * 파일 서버의 **관리 허용**(폴더 만들기·이름 바꾸기·옮기기·복사·지우기·휴지통·폴더째 올리기) — 기본 끔. 파일 서버가 **요청마다** 읽는다
+     * (같은 프로세스의 SharedPreferences 는 메모리의 값이라 화면에서 바꾼 것이 곧바로 보인다).
+     */
+    var manageAllowed: Boolean
+        get() = prefs.getBoolean(K_MANAGE, false)
+        @SuppressLint("ApplySharedPref") // 일부러 commit — 머리말
+        set(value) {
+            prefs.edit().putBoolean(K_MANAGE, value).commit()
+        }
+
+    /**
+     * 파일 서버의 **휴지통 보관 기간**(일) — [SharedOps.TRASH_RETENTION_CHOICES] 가운데 하나, 0 은 비우지 않음, 기본 [SharedOps.DEFAULT_TRASH_DAYS]
+     * (사용자 결정). 고를 값 밖의 저장값은 기본으로 읽는다. 파일 서버가 휴지통을 손볼 때마다 읽는다.
+     */
+    var trashDays: Int
+        get() = SharedOps.trashDays(prefs.getInt(K_TRASH_DAYS, SharedOps.DEFAULT_TRASH_DAYS))
+        @SuppressLint("ApplySharedPref") // 일부러 commit — 머리말
+        set(value) {
+            prefs.edit().putInt(K_TRASH_DAYS, SharedOps.trashDays(value)).commit()
+        }
+
+    /**
+     * 휴지통 보관 기간이 바뀌면 [onChange](메인 스레드)를 부르는 듣개를 걸고 돌려준다 — SharedPreferences 는 듣개를 약하게 쥐므로 **부르는 쪽이
+     * 쥐고 있다가** [stopListening] 으로 걷는다. 같은 프로세스의 화면이 값을 바꾸면 곧바로 온다.
+     */
+    fun listenTrashDays(onChange: () -> Unit): SharedPreferences.OnSharedPreferenceChangeListener {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key -> if (key == K_TRASH_DAYS) onChange() }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        return listener
+    }
+
+    fun stopListening(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        prefs.unregisterOnSharedPreferenceChangeListener(listener)
+    }
+
     /** 잠근 블롭은 이 설정 파일에, 자물쇠는 기기 키([TetherSecret]). 잠그지 못하면 평문으로 두지 않는다. */
     private class PrefsStore(private val prefs: SharedPreferences) : PassphraseVault.Store {
         override fun readSealed(): String? = prefs.getString(K_PASSPHRASE, null)
@@ -70,6 +107,8 @@ internal class TetherSettings(context: Context) {
         const val K_SSID = "ssid"
         const val K_PASSPHRASE = "passphrase_sealed"
         const val K_TREE = "tree_uri"
+        const val K_MANAGE = "manage_allowed"
+        const val K_TRASH_DAYS = "trash_days"
 
         /** 프로세스에 하나 — 화면과 서비스가 따로 지은 TetherSettings 도 이것을 함께 쓴다. */
         @Volatile

@@ -25,8 +25,9 @@ class SharedEntry(
  * ## 올리기는 임시 이름으로 받고 다 받은 뒤에 바꾼다
  *
  * 올릴 자리를 만들 때 같은 이름의 파일을 지우면 덮어쓰기 올리기가 중간에 끊길 때 **원래 파일까지 사라진다**. 그래서 [createUploadTemp] 가
- * 숨은 임시 파일을 만들고(원래 파일은 건드리지 않는다), 본문을 다 받은 뒤에야 [commitUpload] 가 원래 것을 지우고 임시를 그 이름으로
- * 바꾼다. 끊기면 임시만 지운다.
+ * 숨은 임시 파일을 만들고(원래 파일은 건드리지 않는다), 본문을 다 받은 뒤에야 [commitUpload] 가 임시를 그 이름으로 바꾼다. 끊기면 임시만
+ * 지운다. 덮어쓰기면 파일 서버가 그 앞에 원래 것을 **휴지통으로 옮긴다**([SharedOps.trashReplaced]) — [commitUpload] 는 같은 이름을 지우지
+ * 않는다(지우면 휴지통을 비켜 간다). 원래 것이 0바이트면 휴지통 대신 숨은 이름으로 비켜 두고 둔 뒤에 지운다([SharedOps.setAside]).
  */
 interface SharedTree {
     /** 지금 실제로 쓸 수 있는가 — 고르지 않았거나, 권한이 사라졌거나(사용자가 거둠·앱 다시 깔기·SD 카드 뺌) 폴더가 아니면 false. */
@@ -55,12 +56,48 @@ interface SharedTree {
     fun openWrite(file: SharedEntry): OutputStream?
 
     /**
-     * 다 받은 임시 파일 [temp] 를 [path] 의 이름으로 둔다 — 같은 이름의 파일이 있으면 그것을 지운 **뒤에** 이름을 바꾼다. 둔 항목(제공자가 이름을
-     * 다듬을 수 있어 실제 이름은 다를 수 있다), 못 했으면 null. 원래 파일을 지우기 전에 실패하면(그 이름이 그새 폴더가 됨·지우지 못함) 임시를
-     * 지우고, 원래 것을 지운 뒤 이름 바꾸기가 실패하면 **임시를 남긴다**(받은 내용이 거기에만 있다).
+     * 다 받은 임시 파일 [temp] 를 [path] 의 이름으로 둔다(이름 바꾸기). **같은 이름(대소문자 무시 — 파일이든 폴더든)이 있으면 지우지 않고**
+     * 임시를 지운 뒤 null — 덮어쓰기는 부르는 쪽이 원래 것을 휴지통으로 옮긴 뒤에 부른다. 둔 항목(제공자가 이름을 다듬거나 겹치지 않게 바꿀 수
+     * 있어 실제 이름은 다를 수 있다), 못 했으면 null. 이름 바꾸기 자체가 실패하면 **임시를 남긴다**(어디까지 됐는지 모른다).
      */
     fun commitUpload(temp: SharedEntry, path: List<String>): SharedEntry?
 
-    /** 지운다(끊긴 올리기의 임시를 남기지 않으려고). */
-    fun delete(file: SharedEntry)
+    /**
+     * 지운다 — 폴더면 안의 것까지(되살릴 수 없다). 끊긴 올리기의 임시를 남기지 않으려고, 그리고 휴지통을 비울 때 쓴다. 사용자가 고른 것을
+     * '지우기' 는 이것이 아니라 휴지통으로 옮기기다([SharedOps.trash]). 지웠으면 true.
+     */
+    fun delete(entry: SharedEntry): Boolean
+
+    // ── 관리 기능의 바탕(SharedOps 가 쓴다 — 이름 검사·겹침·휴지통은 그쪽이 한다) ─────────────────────────────────────────────
+
+    /** [parent] 안에 폴더 [name] 을 만든다. 만든 항목(제공자가 이름을 다듬으면 실제 이름이 다를 수 있다). 못 하면 던진다. */
+    fun createDirectory(parent: SharedEntry, name: String): SharedEntry
+
+    /** [parent] 안에 빈 파일 [name] 을 만든다(휴지통의 기록). 못 하면 던진다. */
+    fun createFile(parent: SharedEntry, name: String): SharedEntry
+
+    /** 같은 폴더 안에서 이름만 바꾼다. 바뀐 항목(열쇠가 바뀔 수 있다 — SAF 의 문서 ID). 못 하면 던진다. */
+    fun rename(entry: SharedEntry, newName: String): SharedEntry
+
+    /**
+     * [entry] 를 [fromParent] 에서 [toParent] 로 옮긴다(이름 그대로 — 겹치지 않는 것은 부르는 쪽이 맞춘다). 옮긴 항목. 제공자가 옮기기를 하지
+     * 않으면 null — 부르는 쪽이 복사한 뒤 지운다. 하려다 실패하면 던진다.
+     */
+    fun move(entry: SharedEntry, fromParent: SharedEntry, toParent: SharedEntry): SharedEntry?
+
+    /** [entry] 를(폴더면 통째로) [toParent] 로 복사한다. 제공자가 복사를 하지 않으면 null — 부르는 쪽이 한 항목씩 짓는다. 실패하면 던진다. */
+    fun copy(entry: SharedEntry, toParent: SharedEntry): SharedEntry?
+
+    /** 공유 폴더가 있는 저장소의 남은 공간·전체. 모르면 null. */
+    fun storage(): Storage? = null
+
+    /**
+     * 섬네일 — 한 변이 대략 [sizePx] 인 그림의 바이트. 없거나 만들 수 없으면 null(화면은 아이콘을 그린다). 구현은 **남이 올린 그림을 이
+     * 프로세스에서 풀지 않는 길**을 고른다(앱 — 제공자가 준 섬네일 바이트를 그대로, 동영상은 미디어 서버가 푼 장면) — 파일 서버는 받은
+     * 바이트의 머리로 형식을 보고 모르는 것은 내보내지 않는다([Thumbnails.sniff]).
+     */
+    fun thumbnail(entry: SharedEntry, sizePx: Int): ByteArray? = null
 }
+
+/** 저장소의 공간(바이트). */
+class Storage(val free: Long, val total: Long)

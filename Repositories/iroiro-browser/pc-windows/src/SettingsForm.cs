@@ -1,0 +1,264 @@
+// 설정 창 — 칸마다 '기본값'. 저장할 때 모두 검사하고 첫 문제의 칸으로 간다.
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.Windows.Forms;
+
+namespace WebTether
+{
+    public sealed class SettingsForm : Form
+    {
+        readonly Controller ctl;
+        readonly ISystemOps ops;
+        readonly string exePath;
+        readonly Dictionary<string, Control> fields = new Dictionary<string, Control>();
+        readonly TableLayoutPanel grid = new TableLayoutPanel();
+        readonly Label message = new Label();
+
+        TextBox tHost, tDns, tTun, tBypass, tWifi;
+        NumericUpDown nPort, nInterval, nMax;
+        ComboBox cKind, cDnsMode, cVerb;
+        CheckBox kSetup, kReconnect, kAuto, kUpdate;
+        ComboBox cUpdate;
+        static readonly string[] IntervalLabels = { "매일", "매주", "매월" };
+
+        public SettingsForm(Controller ctl, ISystemOps ops, string exePath)
+        {
+            this.ctl = ctl;
+            this.ops = ops;
+            this.exePath = exePath;
+            Ui.Prepare(this, AppInfo.Name + " — 설정");
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            grid.ColumnCount = 3;
+            grid.AutoSize = true;
+            grid.Dock = DockStyle.Fill;
+            grid.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 250));
+            grid.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+
+            var d = new Settings();
+            Section("폰 프록시");
+            tHost = AddText("proxy_host", "주소", () => tHost.Text = Settings.DefaultHost);
+            cKind = AddCombo("proxy_type", "종류", new[] { "socks5", "http" }, () => cKind.SelectedIndex = 0);
+            nPort = AddNumber("proxy_port", "포트", 1, 65535, 0, () => nPort.Value = Settings.DefaultPortFor(KindOf()));
+            cKind.SelectedIndexChanged += (s, e) =>
+            {
+                // 다른 종류의 기본 포트를 쓰고 있었으면 이 종류의 기본 포트로.
+                var other = KindOf() == ProxyKind.Http ? Settings.DefaultSocksPort : Settings.DefaultHttpPort;
+                if ((int)nPort.Value == other) nPort.Value = Settings.DefaultPortFor(KindOf());
+                Hint();
+            };
+
+            Section("tun2proxy");
+            tDns = AddText("dns_addr", "DNS 서버", () => tDns.Text = Settings.DefaultDnsAddr);
+            cDnsMode = AddCombo("dns_mode", "DNS 방식", Settings.DnsModes, () => cDnsMode.SelectedItem = Settings.DefaultDnsMode);
+            cDnsMode.SelectedIndexChanged += (s, e) => Hint();
+            tTun = AddText("tun_name", "TUN 이름", () => tTun.Text = Settings.DefaultTunName);
+            kSetup = AddCheck("setup", "경로·DNS 자동 설정(--setup)", () => kSetup.Checked = true);
+            tBypass = AddText("bypass", "우회 목록", () => tBypass.Text = "");
+            cVerb = AddCombo("verbosity", "로그 수준", Settings.Verbosities, () => cVerb.SelectedItem = Settings.DefaultVerbosity);
+
+            Section("다시 연결");
+            kReconnect = AddCheck("reconnect", "끊기면 다시 연결", () => kReconnect.Checked = true);
+            nInterval = AddNumber("reconnect_interval", "간격(초)", 3, 600, 0, () => nInterval.Value = Settings.DefaultReconnectInterval);
+            nMax = AddNumber("reconnect_max", "횟수 상한", 1, 1000, 0, () => nMax.Value = Settings.DefaultReconnectMax);
+            tWifi = AddText("wifi_profile", "Wi-Fi 프로필", () => tWifi.Text = "");
+
+            Section("그 밖");
+            kAuto = AddCheck("autostart", "Windows 시작 시 실행", () => kAuto.Checked = false);
+            kUpdate = AddCheck("update_check", "tun2proxy 업데이트 확인(알리기만)", () => kUpdate.Checked = true);
+            cUpdate = AddCombo("update_interval", "확인 간격", IntervalLabels, () => cUpdate.SelectedIndex = (int)UpdateInterval.Weekly);
+
+            message.AutoSize = true;
+            message.MaximumSize = new Size(520, 0);
+            message.Margin = new Padding(3, 8, 3, 0);
+            grid.Controls.Add(message);
+            grid.SetColumnSpan(message, 3);
+
+            var bSave = Ui.Button("저장", (s, e) => { if (Save() && !ctl.ChildRunning) Hide(); });
+            var bCancel = Ui.Button("취소", (s, e) => Hide());
+            AcceptButton = bSave;
+            CancelButton = bCancel;
+            var buttons = Ui.ButtonRow(bCancel, bSave);
+            grid.Controls.Add(buttons);
+            grid.SetColumnSpan(buttons, 3);
+            Controls.Add(grid);
+
+            var tip = new ToolTip();
+            tip.SetToolTip(tBypass, "터널 밖으로 보낼 IPv4·CIDR. 쉼표로 가릅니다. 예: 10.0.0.0/8");
+            tip.SetToolTip(tWifi, "핫스팟이 없을 때 netsh wlan connect 로 붙을 프로필 이름. 비우면 하지 않습니다.");
+            FormClosing += (s, e) => { if (e.CloseReason == CloseReason.UserClosing) { e.Cancel = true; Hide(); } };
+            VisibleChanged += (s, e) => { if (Visible) LoadFrom(ctl.Settings); };
+            LoadFrom(ctl.Settings);
+        }
+
+        ProxyKind KindOf() { return cKind.SelectedIndex == 1 ? ProxyKind.Http : ProxyKind.Socks5; }
+
+        void Section(string title)
+        {
+            var l = Ui.Text(title);
+            l.Font = Ui.Bold;
+            l.Margin = new Padding(3, grid.Controls.Count == 0 ? 0 : 10, 3, 2);
+            grid.Controls.Add(l);
+            grid.SetColumnSpan(l, 3);
+        }
+
+        void Row(string key, string label, Control c, Action reset)
+        {
+            var l = Ui.Text(label);
+            c.Margin = new Padding(3, 3, 3, 3);
+            c.Dock = DockStyle.Fill;
+            grid.Controls.Add(l);
+            grid.Controls.Add(c);
+            var b = new Button { Text = "기본값", AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Margin = new Padding(3, 2, 3, 2) };
+            b.Click += (s, e) => { reset(); message.Text = ""; };
+            grid.Controls.Add(b);
+            fields[key] = c;
+        }
+
+        TextBox AddText(string key, string label, Action reset)
+        {
+            var t = new TextBox();
+            Row(key, label, t, reset);
+            return t;
+        }
+
+        NumericUpDown AddNumber(string key, string label, int min, int max, int decimals, Action reset)
+        {
+            var n = new NumericUpDown { Minimum = min, Maximum = max, DecimalPlaces = decimals, Increment = decimals > 0 ? 0.5m : 1 };
+            Row(key, label, n, reset);
+            return n;
+        }
+
+        ComboBox AddCombo(string key, string label, string[] items, Action reset)
+        {
+            var c = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+            c.Items.AddRange(items);
+            Row(key, label, c, reset);
+            return c;
+        }
+
+        CheckBox AddCheck(string key, string label, Action reset)
+        {
+            var c = new CheckBox { Text = label, AutoSize = true };
+            Row(key, "", c, reset);
+            return c;
+        }
+
+        static decimal Clamp(NumericUpDown n, double v)
+        {
+            var d = (decimal)v;
+            return d < n.Minimum ? n.Minimum : (d > n.Maximum ? n.Maximum : d);
+        }
+
+        public void LoadFrom(Settings s)
+        {
+            tHost.Text = s.ProxyHost;
+            cKind.SelectedIndex = s.Kind == ProxyKind.Http ? 1 : 0;
+            nPort.Value = Clamp(nPort, s.ProxyPort);
+            tDns.Text = s.DnsAddr;
+            cDnsMode.SelectedItem = s.DnsMode;
+            tTun.Text = s.TunName;
+            kSetup.Checked = s.Setup;
+            tBypass.Text = s.Bypass;
+            cVerb.SelectedItem = s.Verbosity;
+            kReconnect.Checked = s.Reconnect;
+            nInterval.Value = Clamp(nInterval, s.ReconnectInterval);
+            nMax.Value = Clamp(nMax, s.ReconnectMax);
+            tWifi.Text = s.WifiProfile;
+            kAuto.Checked = s.AutoStart;
+            kUpdate.Checked = s.UpdateCheck;
+            cUpdate.SelectedIndex = (int)s.UpdateEvery;
+            message.Text = "";
+            Hint();
+        }
+
+        public Settings Collect()
+        {
+            return new Settings
+            {
+                ProxyHost = tHost.Text.Trim(),
+                Kind = KindOf(),
+                ProxyPort = (int)nPort.Value,
+                DnsAddr = tDns.Text.Trim(),
+                DnsMode = (string)cDnsMode.SelectedItem ?? "",
+                TunName = tTun.Text.Trim(),
+                Setup = kSetup.Checked,
+                Bypass = tBypass.Text.Trim(),
+                Verbosity = (string)cVerb.SelectedItem ?? "",
+                Reconnect = kReconnect.Checked,
+                ReconnectInterval = (int)nInterval.Value,
+                ReconnectMax = (int)nMax.Value,
+                WifiProfile = tWifi.Text,
+                AutoStart = kAuto.Checked,
+                UpdateCheck = kUpdate.Checked,
+                UpdateEvery = (UpdateInterval)Math.Max(0, cUpdate.SelectedIndex),
+            };
+        }
+
+        void Hint()
+        {
+            if (KindOf() == ProxyKind.Http && (string)cDnsMode.SelectedItem == "direct")
+            {
+                message.ForeColor = Color.FromArgb(0xB2, 0x6A, 0x00);
+                message.Text = "http 프록시는 UDP 를 넘기지 못합니다 — DNS 방식을 over-tcp 로 두십시오.";
+            }
+            else if (message.ForeColor != Color.Firebrick) message.Text = "";
+        }
+
+        /// <summary>저장 — 성공하면 true(시험이 부른다).</summary>
+        public bool Save()
+        {
+            var s = Collect();
+            var errs = s.Validate();
+            if (errs.Count > 0)
+            {
+                message.ForeColor = Color.Firebrick;
+                message.Text = errs[0].Value;
+                Control c;
+                if (fields.TryGetValue(errs[0].Key, out c)) c.Focus();
+                return false;
+            }
+            var old = ctl.Settings;
+            bool startupChanged = s.AutoStart != old.AutoStart;
+            if (startupChanged)
+            {
+                string err;
+                bool ok = s.AutoStart ? ops.EnableStartup(exePath, out err) : ops.DisableStartup(out err);
+                if (!ok)
+                {
+                    message.ForeColor = Color.Firebrick;
+                    message.Text = "시작 시 실행을 바꾸지 못했습니다: " + err;
+                    kAuto.Checked = old.AutoStart;
+                    return false;
+                }
+            }
+            try
+            {
+                ctl.SaveSettings(s);
+            }
+            catch (Exception ex)
+            {
+                message.ForeColor = Color.Firebrick;
+                message.Text = "저장하지 못했습니다: " + ex.Message;
+                if (startupChanged)
+                {
+                    // 작업은 바꿨는데 설정은 옛 값 — 그대로 두면 칸은 꺼짐인데 로그온마다 뜨거나(그 반대) 한다. 작업을 되돌린다.
+                    string back;
+                    bool undone = old.AutoStart ? ops.EnableStartup(exePath, out back) : ops.DisableStartup(out back);
+                    kAuto.Checked = old.AutoStart;
+                    if (!undone) message.Text += "\r\n시작 시 실행도 되돌리지 못했습니다(" + back + ") — 작업 스케줄러의 " + SystemOps.TaskName + " 를 확인하십시오.";
+                }
+                return false;
+            }
+            ctl.ApplySettings(s);
+            message.ForeColor = SystemColors.ControlText;
+            message.Text = ctl.ChildRunning ? "저장했습니다. 다음 연결부터 적용됩니다." : "저장했습니다.";
+            return true;
+        }
+    }
+}

@@ -37,8 +37,22 @@ class RulesTest {
         assertEquals("\"\\n\\r\\t\\u0001\\u001f\"", Json.quote("\n\r\t\u0001\u001f"))
         assertEquals("\"한글 이름.txt\"", Json.quote("한글 이름.txt"))
         assertEquals("""{"error":"x"}""", Json.error("x"))
-        assertEquals("""{"ok":true,"name":"a.bin","bytes":12}""", Json.uploaded("a.bin", 12))
+        assertEquals("""{"ok":true,"name":"a.bin","bytes":12,"trashed":false}""", Json.uploaded("a.bin", 12))
         assertTrue(Json.folderMissing().contains("\"needsFolder\":true"))
+    }
+
+    @Test
+    fun 새_이름에서_빼는_글자는_제어_방향_폭_없는_줄_나눔뿐() {
+        val stripped = (0..0xFFFF).filter { SharedPaths.isStrippedChar(it.toChar()) }
+        val expected = (0x00..0x1F) + (0x7F..0x9F) + listOf(0x061C, 0x180E) + (0x200B..0x200F) + (0x2028..0x2029) +
+            (0x202A..0x202E) + (0x2060..0x2064) + (0x2066..0x2069) + listOf(0xFEFF)
+        assertEquals(expected.sorted(), stripped)
+        assertEquals("사진gpj.exe", SharedPaths.cleanName("사진\u202Egpj.exe"))
+        assertEquals("a b.txt", SharedPaths.cleanName("\u200Ba\u0000\u0085 b\u2060.txt\uFEFF"))
+        // 서로게이트 짝(이모지)·한글·소프트 하이픈·국기의 태그 글자는 그대로 둔다.
+        val keep = "가\uD83D\uDE00\u00AD\uDB40\uDC67.txt"
+        assertEquals(keep, SharedPaths.cleanName(keep))
+        assertEquals("", SharedPaths.cleanName("\u200E\u200F"))
     }
 
     @Test
@@ -94,7 +108,7 @@ class RulesTest {
     @Test
     fun 패스프레이즈는_출력_가능한_ASCII_만_받는다() {
         // WPA2 의 패스프레이즈는 출력 가능한 ASCII 8–63자다 — 길이만 보지 않는다.
-        for (bad in listOf("한글패스워드입니다", "k7Qm2xPa9Ld4Rté", "k7Qm2xPa\t9Ld4", "k7Qm2xPa9Ld4\u007F", "k7Qm2xPa😀Ld4Rt", "k7Qm2xPa 9Ld4")) {
+        for (bad in listOf("한글패스워드입니다", "k7Qm2xPa9Ld4Rté", "k7Qm2xPa\t9Ld4", "k7Qm2xPa9Ld4\u007F", "k7Qm2xPa\uD83D\uDE00Ld4Rt", "k7Qm2xPa 9Ld4")) {
             assertEquals(Passphrases.Problem.NOT_ASCII, Passphrases.check("x", bad), bad)
             assertEquals(Passphrases.Problem.NOT_ASCII, Passphrases.passphraseProblem(bad), bad)
         }

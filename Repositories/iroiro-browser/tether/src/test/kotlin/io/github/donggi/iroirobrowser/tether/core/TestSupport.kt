@@ -12,6 +12,7 @@ import java.net.DatagramSocket
 import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
+import java.nio.file.Files
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
@@ -281,23 +282,59 @@ internal class OriginServer(private val body: String = "origin-body") : Closeabl
     }
 }
 
-/** 비어 있는 포트 하나(닫은 뒤의 번호 — 시험이 '닫힌 포트' 로 쓴다). */
-internal fun closedPort(): Int = ServerSocket(0, 1, LOOPBACK).use { it.localPort }
+/**
+ * '닿지 못하는 원격' 으로 쓰는 루프백 포트 — **듣지 않는 소켓으로 묶어 쥔다**(쥔 소켓을 돌려준다 — 시험이 [Closer] 로 닫는다). 쥐고 있는 동안
+ * 그 포트는 아무도 묶지 못하고 OS 의 임시 포트로도 나가지 않으며, 거기로 잇기는 거절된다(루프백 — 바깥 망으로 나가지 않는다).
+ *
+ * 예전에는 묶었다 곧 놓은 번호를 썼다 — 놓은 뒤에는 그 포트가 다시 아무의 것이 될 수 있어, 그 틈에 누가 그 포트에서 듣거나 서버의 바깥
+ * 연결이 그 포트를 제 임시 포트로 받아 자기 자신에 이어지면(TCP 동시 열기) '닿지 못함' 이 이어져 버린다.
+ */
+internal fun refusingPort(): Socket = Socket(java.net.Proxy.NO_PROXY).apply { bind(java.net.InetSocketAddress(LOOPBACK, 0)) }
 
 /** 그 포트가 비어 있는가(묶어 보고 곧 닫는다) — SOCKS5 의 '옮기지 않는다' 시험이 다음 포트를 건드리지 않았는지 본다. */
 internal fun isFree(port: Int): Boolean = runCatching { ServerSocket(port, 1, LOOPBACK).close() }.isSuccess
 
 /**
- * 어떤 포트를 쥔 채 그 다음 포트도 비어 있는 자리 — 포트 옮기기 시험용. SOCKS5 는 옮기지 않아야 하므로 다음 포트가 비어 있어야 '옮겼다'
- * 는 되돌림이 드러나고, HTTP·파일은 옮겨야 하므로 다음 포트가 비어 있어야 그리로 간다. 쥔 소켓을 돌려준다.
+ * 포트 옮기기 시험의 자리 — [squatter] 가 [base] 를 쥐고(남의 앱 흉내), 그 다음 포트도 **시험이 쥐고 있다가** 서버를 세우기 바로 앞에서
+ * 놓는다([handOver]). SOCKS5 는 옮기지 않아야 하므로 다음 포트가 비어 있어야 '옮겼다' 는 되돌림이 드러나고, HTTP·파일은 옮겨야 하므로 다음
+ * 포트가 비어 있어야 그리로 간다.
+ *
+ * 자리는 **OS 의 임시 포트 범위 밖**(20000–29999 — 윈도 49152–65535·리눅스 32768–60999 의 아래)에서 고른다. 예전 꼴(`ServerSocket(0)`
+ * 의 자리 + 다음 포트를 열어 보고 곧 닫기)은 윈도에서 다음 포트가 **곧 이 PC 가 다음에 나눠 줄 임시 포트**였다(임시 포트를 차례로 준다 —
+ * 그 자리 다음의 연결이 100번에 100번 base+1 을 받았다, 2026-11-21). 놓은 뒤 서버가 묶기까지의 틈에 다른 곳의 `ServerSocket(0)` 이 끼면
+ * (Gradle 이 다른 모듈의 시험을 함께 돌린다 — `org.gradle.parallel`) 그 듣는 소켓이 base+1 을 가져가 서버가 서지 못했다 — 그 틈에
+ * `ServerSocket(0)` 하나를 끼운 시험에서 옛 꼴은 20번에 20번 졌고 이 꼴은 0번이었다(HttpProxyServerTest 가 가끔 실패한 까닭으로 본다. 바깥
+ * 연결의 임시 포트는 윈도에서 듣는 소켓의 묶기를 막지 않았다). 범위 밖의 포트는 누가 그 번호를 일부러 묶지 않는 한 남에게 가지 않는다.
+ * 묶지 못하는 번호(쓰는 중·윈도의 예약 범위)는 건너뛴다.
  */
-internal fun squatWithFreeNext(): ServerSocket {
-    repeat(50) {
-        val first = ServerSocket(0, 1, LOOPBACK)
-        if (first.localPort < 65535 && isFree(first.localPort + 1)) return first
-        first.close()
+internal class PortPair private constructor(val squatter: ServerSocket, private var next: ServerSocket?) : java.io.Closeable {
+    val base: Int get() = squatter.localPort
+
+    /** 쥔 다음 포트를 놓고 곧바로 [start] 를 부른다(서버를 세우기). */
+    fun <T> handOver(start: () -> T): T {
+        next?.close()
+        next = null
+        return start()
     }
-    error("다음 포트가 빈 자리를 찾지 못했다")
+
+    override fun close() {
+        next?.close()
+        squatter.close()
+    }
+
+    companion object {
+        fun squat(): PortPair {
+            val random = java.util.Random()
+            repeat(500) {
+                val port = 20_000 + random.nextInt(10_000)
+                val first = runCatching { ServerSocket(port, 1, LOOPBACK) }.getOrNull() ?: return@repeat
+                val second = runCatching { ServerSocket(port + 1, 1, LOOPBACK) }.getOrNull()
+                if (second != null) return PortPair(first, second)
+                first.close()
+            }
+            error("이어진 빈 포트 둘을 찾지 못했다")
+        }
+    }
 }
 
 /** [condition] 이 설 때까지 기다린다. */
@@ -379,7 +416,7 @@ internal fun parseReply(all: ByteArray): HttpReply {
 }
 
 /** 시험의 공유 폴더 — 임시 폴더 위의 [SharedTree]. 성분마다 자식만 찾아 내려간다(앱의 SAF 구현과 같은 꼴). */
-internal class DirectoryTree(private val root: File, var available: Boolean = true) : SharedTree {
+internal class DirectoryTree(private val root: File, var available: Boolean = true, var nativeMove: Boolean = true) : SharedTree {
     override fun isAvailable(): Boolean = available && root.isDirectory
 
     override fun rootName(): String = root.name
@@ -413,19 +450,70 @@ internal class DirectoryTree(private val root: File, var available: Boolean = tr
 
     override fun openWrite(file: SharedEntry): OutputStream = FileOutputStream(File(file.ref), false)
 
+    /** 같은 이름(대소문자 무시)이 있으면 지우지 않고 임시를 지운 뒤 null(계약 — 덮어쓰기는 파일 서버가 휴지통으로 옮긴 뒤에 부른다). */
     override fun commitUpload(temp: SharedEntry, path: List<String>): SharedEntry? {
         val parent = find(path.dropLast(1))
-        val target = parent?.let { File(it.ref, path.last()) }
-        if (target == null || target.isDirectory || (target.exists() && !target.delete())) {
+        val taken = parent == null || File(parent.ref).listFiles()?.any { it.name.equals(path.last(), ignoreCase = true) } != false
+        if (taken) {
             File(temp.ref).delete()
             return null
         }
-        return if (File(temp.ref).renameTo(target)) entry(target) else null
+        val target = File(parent!!.ref, path.last())
+        return try {
+            // 바꿔 끼우지 않는 옮기기 — 그새 생긴 같은 이름을 덮지 않는다(File.renameTo 는 리눅스에서 덮는다).
+            Files.move(File(temp.ref).toPath(), target.toPath())
+            entry(target)
+        } catch (e: java.io.IOException) {
+            null
+        }
     }
 
-    override fun delete(file: SharedEntry) {
-        File(file.ref).delete()
+    override fun delete(entry: SharedEntry): Boolean = File(entry.ref).deleteRecursively()
+
+    override fun createDirectory(parent: SharedEntry, name: String): SharedEntry {
+        val dir = File(parent.ref, name)
+        check(!dir.exists() && dir.mkdir()) { "폴더를 만들지 못했다" }
+        return entry(dir)
     }
+
+    override fun createFile(parent: SharedEntry, name: String): SharedEntry {
+        val file = File(parent.ref, name)
+        check(file.createNewFile()) { "파일을 만들지 못했다" }
+        return entry(file)
+    }
+
+    override fun rename(entry: SharedEntry, newName: String): SharedEntry {
+        val from = File(entry.ref)
+        val to = File(from.parentFile, newName)
+        check(!to.exists() || to.canonicalPath == from.canonicalPath) { "같은 이름이 있다" }
+        check(from.renameTo(to)) { "이름을 바꾸지 못했다" }
+        return entry(to)
+    }
+
+    /** 제공자의 옮기기 흉내 — [nativeMove] 가 꺼져 있으면 null(복사 뒤 지우기 길을 시험한다). 같은 이름이 있으면 던진다(SAF 처럼). */
+    override fun move(entry: SharedEntry, fromParent: SharedEntry, toParent: SharedEntry): SharedEntry? {
+        if (!nativeMove) return null
+        val to = File(toParent.ref, entry.name)
+        check(!to.exists()) { "같은 이름이 있다" }
+        check(File(entry.ref).renameTo(to)) { "옮기지 못했다" }
+        return entry(to)
+    }
+
+    /** 제공자의 복사는 하지 않는 꼴 — 늘 손으로 짓는 길을 탄다. */
+    override fun copy(entry: SharedEntry, toParent: SharedEntry): SharedEntry? = null
+
+    override fun storage(): Storage? = Storage(free = 5_000_000_000, total = 64_000_000_000)
+
+    /** 작은 그림 파일은 그대로 섬네일로(시험·개발용 — 앱은 제공자의 섬네일). */
+    override fun thumbnail(entry: SharedEntry, sizePx: Int): ByteArray? {
+        val file = File(entry.ref)
+        val ext = file.name.substringAfterLast('.', "").lowercase()
+        if (ext !in setOf("jpg", "jpeg", "png", "gif", "webp") || file.length() > Thumbnails.MAX_BYTES) return null
+        thumbnailCalls.incrementAndGet()
+        return file.readBytes()
+    }
+
+    val thumbnailCalls = AtomicInteger()
 
     private fun entry(f: File) = SharedEntry(f.path, f.name, f.isDirectory, if (f.isDirectory) 0 else f.length(), f.lastModified())
 }

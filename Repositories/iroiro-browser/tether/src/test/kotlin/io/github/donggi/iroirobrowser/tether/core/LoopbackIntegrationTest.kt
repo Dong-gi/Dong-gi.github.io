@@ -155,7 +155,7 @@ class LoopbackIntegrationTest {
     fun 바깥_문은_JVM_의_프록시_설정을_타지_않는다() {
         val echo = closer.keep(EchoServer())
         val asked = AtomicInteger()
-        val dead = closedPort()
+        val dead = closer.keep(refusingPort()).localPort
         val original = ProxySelector.getDefault()
         // 모든 연결을 죽은 SOCKS 프록시로 보내는 선택기 — 맨 Socket() 은 이것을 묻는다.
         ProxySelector.setDefault(object : ProxySelector() {

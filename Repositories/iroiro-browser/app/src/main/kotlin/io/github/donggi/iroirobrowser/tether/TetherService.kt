@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
 import android.net.wifi.p2p.WifiP2pGroup
 import android.net.wifi.p2p.WifiP2pInfo
@@ -32,6 +33,7 @@ import io.github.donggi.iroirobrowser.tether.core.StartError
 import io.github.donggi.iroirobrowser.tether.core.TcpServer
 import io.github.donggi.iroirobrowser.tether.core.TetherEnvironment
 import io.github.donggi.iroirobrowser.tether.core.TetherLog
+import io.github.donggi.iroirobrowser.tether.core.ThumbnailCache
 import io.github.donggi.iroirobrowser.tether.core.ThreadBudget
 
 /**
@@ -72,6 +74,9 @@ class TetherService : Service() {
     private lateinit var settings: TetherSettings
     private val main = Handler(Looper.getMainLooper())
 
+    /** 휴지통 보관 기간이 바뀌면 파일 서버가 곧바로 한 번 손본다 — SharedPreferences 가 듣개를 약하게 쥐므로 여기서 쥔다. */
+    private var trashListener: SharedPreferences.OnSharedPreferenceChangeListener? = null
+
     /** 서버 셋이 함께 쓰는 스레드 예산(ThreadBudget 의 머리말). */
     private val budget = ThreadBudget()
 
@@ -99,6 +104,7 @@ class TetherService : Service() {
     override fun onCreate() {
         super.onCreate()
         settings = TetherSettings(this)
+        trashListener = settings.listenTrashDays { files?.requestTrashSweep() }
         ensureChannel(this)
         TetherState.resetCounters()
         val filter = IntentFilter(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)
@@ -175,7 +181,16 @@ class TetherService : Service() {
             if (TetherState.httpPort > 0) http = h
         }
         if (files == null) {
-            val f = FileServer(env, SharedFolder(this, settings), ui = { assets.open(UI_ASSET).use { it.readBytes() } })
+            // 화면 자산은 FileServer.UI_FILES 의 이름만 묻는다. 관리 허용은 요청마다 설정을 본다(같은 프로세스의 SharedPreferences — 화면의
+            // 스위치를 끄면 다음 요청부터 403). 섬네일 캐시는 이 프로세스의 cacheDir 아래(시스템이 모자라면 지울 수 있는 자리).
+            val f = FileServer(
+                env, SharedFolder(this, settings),
+                ui = { name -> assets.open("$UI_DIR/$name").use { it.readBytes() } },
+                manageAllowed = { settings.manageAllowed },
+                thumbnails = ThumbnailCache(java.io.File(cacheDir, THUMB_DIR)),
+                // 휴지통 보관 기간 — 파일 서버가 선 뒤 한 번과 하루마다 지난 것을 비운다(이 프로세스에서만). 바꾸면 곧바로 한 번 더(trashListener).
+                trashRetentionDays = { settings.trashDays },
+            )
             TetherState.filePort = f.start()
             TetherState.fileError = f.lastError
             if (TetherState.filePort > 0) files = f
@@ -346,6 +361,8 @@ class TetherService : Service() {
         } catch (e: IllegalArgumentException) {
             // 걸지 못했다(onCreate 가 중간에 던짐) — 걷을 것이 없다.
         }
+        trashListener?.let { settings.stopListening(it) }
+        trashListener = null
         // 끄기는 핫스팟과 서버를 함께 내린다(켜기·끄기는 하나). 그룹을 내린 결과는 이 서비스가 내려간 뒤에 온다 —
         // 내리지 못했고 그룹이 정말 남았으면(WifiHotspot.stop 이 조회로 확인한다) 까닭을 남긴다. 그 사이 테더링을 다시 켰으면 덮지 않는다.
         val hs = hotspot
@@ -426,8 +443,11 @@ class TetherService : Service() {
 
         private const val CHANNEL = "tether"
 
-        /** 파일 서버의 화면(`GET /`). */
-        private const val UI_ASSET = "tether/fileman.html"
+        /** 파일 서버의 화면 자산 폴더(`GET /`·`/fileman.js`·`/fileman.css` — FileServer.UI_FILES). */
+        private const val UI_DIR = "tether"
+
+        /** 섬네일 캐시 — cacheDir 아래. */
+        private const val THUMB_DIR = "tether-thumbs"
 
         /** 알림의 '테더링 끄기'. 켜기에는 액션이 없다 — 시작 요청은 모두 켜기다. */
         private const val ACTION_STOP = "io.github.donggi.iroirobrowser.action.TETHER_STOP"
