@@ -260,6 +260,205 @@ namespace WebTether.Tests
                 Run(r.C.DisconnectAsync());
             });
 
+            T("SSID(11-21 고침 2): 저절로 하는 시도가 도는 중에 누른 '연결'(끊기 → 연결)은 묻히지 않는다 — 그 시도가 남의 망을 만나면 묻고, tun2proxy 는 하나", () =>
+            {
+                foreach (var answer in new[] { true, false })
+                {
+                    var r = Make("ssid-upgrade-" + answer, new Settings { Reconnect = false });
+                    r.Hotspot = Hs(Foreign);
+                    var started = new ManualResetEventSlim(false);
+                    var gate = new ManualResetEventSlim(false);
+                    r.C.HotspotFinder = p => { started.Set(); gate.Wait(10000); return r.Hotspot; };
+                    int asked = 0;
+                    r.C.AskConnect = (h, p) => { Interlocked.Increment(ref asked); return answer; };
+                    var auto = r.C.AutoConnectAsync();
+                    A.True(started.Wait(3000), "자동 시도가 핫스팟을 살피는 중");
+                    StatusForm.DoToggle(r.C);          // '끊기' — 시도는 아직 돈다
+                    A.Eq(TetherState.Off, r.C.State, "꺼짐");
+                    A.Eq(ToggleAction.Connect, r.C.Toggle, "단추는 '연결'");
+                    StatusForm.DoToggle(r.C);          // '연결' — 예전에는 도는 시도에 묻혔다
+                    Run(r.C.ConnectAsync());           // 한 번 더 눌러도 새 시도를 띄우지 않는다
+                    gate.Set();
+                    Run(auto);
+                    A.Eq(1, asked, "한 번 물음(" + answer + ")");
+                    A.Eq(answer ? 1 : 0, r.F.CommandLines.Count, "띄운 수(" + answer + ")");
+                    if (answer)
+                    {
+                        A.Eq(TetherState.Connecting, r.C.State, "연결 중");
+                        Run(r.C.DisconnectAsync());
+                    }
+                    else A.Eq(TetherState.Off, r.C.State, "'아니요' — 꺼짐: " + r.C.Detail);
+                }
+
+                // 누른 뒤 다시 '끊기' 를 누르면 그 뜻은 사라진다 — 묻지도 띄우지도 않는다.
+                var r2 = Make("ssid-upgrade-cancel", new Settings { Reconnect = false });
+                r2.Hotspot = Hs(Foreign);
+                var s2 = new ManualResetEventSlim(false);
+                var g2 = new ManualResetEventSlim(false);
+                r2.C.HotspotFinder = p => { s2.Set(); g2.Wait(10000); return r2.Hotspot; };
+                int asked2 = 0;
+                r2.C.AskConnect = (h, p) => { asked2++; return true; };
+                var auto2 = r2.C.AutoConnectAsync();
+                A.True(s2.Wait(3000), "살피는 중");
+                Run(r2.C.DisconnectAsync());
+                Run(r2.C.ConnectAsync());
+                Run(r2.C.DisconnectAsync());
+                g2.Set();
+                Run(auto2);
+                A.Eq(0, asked2, "묻지 않음");
+                A.Eq(0, r2.F.CommandLines.Count, "띄우지 않음");
+                A.Eq(TetherState.Off, r2.C.State, "꺼짐");
+
+                // 그 뜻은 그 시도까지만 — 다음 저절로 하는 시도는 다시 묻지 않는다.
+                var r3 = Make("ssid-upgrade-once", new Settings { ReconnectInterval = 3 });
+                r3.Hotspot = null;
+                var s3 = new ManualResetEventSlim(false);
+                var g3 = new ManualResetEventSlim(false);
+                r3.C.HotspotFinder = p => { s3.Set(); g3.Wait(10000); return r3.Hotspot; };
+                int asked3 = 0;
+                r3.C.AskConnect = (h, p) => { asked3++; return true; };
+                r3.C.StartupWaitSeconds = 0;
+                var auto3 = r3.C.AutoConnectAsync();
+                A.True(s3.Wait(3000), "살피는 중");
+                Run(r3.C.DisconnectAsync());
+                Run(r3.C.ConnectAsync());
+                g3.Set();
+                Run(auto3);
+                A.Eq(TetherState.Waiting, r3.C.State, "핫스팟 없음 — 대기");
+                r3.Hotspot = Hs(Foreign);
+                Thread.Sleep(3100);
+                Tick(r3);
+                A.Eq(0, asked3, "다음 시도(저절로)는 묻지 않음");
+                A.Eq(0, r3.F.CommandLines.Count, "띄우지 않음");
+                Run(r3.C.DisconnectAsync());
+
+                // 위는 1초 점검이 남의 망을 보고 시도를 띄우지 않아 새는지를 보지 못한다(검토 r5) — 1초 점검은 우리 망으로 보고 시도를
+                // 띄우되 그 시도(Attempt 의 새로 보기)가 남의 망을 만나게 한다. 뜻이 새면 여기서 묻는다.
+                var r4 = Make("ssid-upgrade-noleak", new Settings { ReconnectInterval = 3 });
+                var s4 = new ManualResetEventSlim(false);
+                var g4 = new ManualResetEventSlim(false);
+                int fromAttempt = 0, gated = 1;
+                r4.C.ForgetWifiNames = () => Interlocked.Exchange(ref fromAttempt, 1); // Attempt 만 새로 보기 전에 부른다
+                r4.C.HotspotFinder = p =>
+                {
+                    bool attempt = Interlocked.Exchange(ref fromAttempt, 0) == 1;
+                    if (Volatile.Read(ref gated) == 1) { s4.Set(); g4.Wait(10000); return null; }
+                    return attempt ? Hs(Foreign) : Hs(Mine);
+                };
+                int asked4 = 0;
+                r4.C.AskConnect = (h, p) => { Interlocked.Increment(ref asked4); return true; };
+                r4.C.StartupWaitSeconds = 0;
+                var auto4 = r4.C.AutoConnectAsync();
+                A.True(s4.Wait(3000), "살피는 중");
+                Run(r4.C.DisconnectAsync());
+                Run(r4.C.ConnectAsync());          // 손 시도로 올림 — 이 시도는 핫스팟 없음으로 끝난다(묻는 자리에 닿지 않는다)
+                Volatile.Write(ref gated, 0);
+                g4.Set();
+                Run(auto4);
+                A.Eq(TetherState.Waiting, r4.C.State, "핫스팟 없음 — 대기: " + r4.C.Detail);
+                Thread.Sleep(3100);
+                Tick(r4);                          // 1초 점검은 우리 망 → 저절로 하는 시도 → 그 안에서 남의 망
+                A.Eq(0, asked4, "다음 저절로 하는 시도는 묻지 않음(뜻이 새지 않음)");
+                A.Eq(0, r4.F.CommandLines.Count, "띄우지 않음");
+                A.True(r4.C.Detail.Contains("DIRECT-UT-") && r4.C.Detail.Contains(Foreign), "거절의 까닭: " + r4.C.Detail);
+                Run(r4.C.DisconnectAsync());
+            });
+
+            T("SSID(11-21 고침 1): 묻는 창이 떠 있는 동안 누른 '연결' 은 그 창을 다시 앞으로 부른다(새 시도·새 창 없음)", () =>
+            {
+                var r = Make("ssid-reshow", null);
+                r.Hotspot = Hs(Foreign);
+                int reshow = 0, asked = 0;
+                r.C.ReshowAsk = () => reshow++;
+                string during = null;
+                r.C.AskConnect = (h, p) =>
+                {
+                    asked++;
+                    during = r.C.Detail;
+                    var d = r.C.DisconnectAsync();  // 묻는 사이 '끊기' …
+                    StatusForm.DoToggle(r.C);       // … 그리고 '연결'
+                    StatusForm.DoToggle(r.C);       // 거듭 눌러도 새 시도·새 창은 없다
+                    var c = r.C.ConnectAsync();
+                    return true;
+                };
+                Run(r.C.ConnectAsync());
+                A.Eq(1, asked, "한 번만 물음");
+                A.True(during != null && during.Contains("묻는 중"), "묻는 동안의 상태: " + during);
+                A.True(reshow >= 1, "다시 앞으로(" + reshow + ")");
+                A.Eq(1, r.F.CommandLines.Count, "'예' — 하나만 띄움");
+                Run(r.C.DisconnectAsync());
+
+                var r2 = Make("ssid-reshow-none", null);
+                int reshow2 = 0;
+                r2.C.ReshowAsk = () => reshow2++;
+                Run(r2.C.ConnectAsync());
+                Thread.Sleep(2100);
+                Tick(r2);
+                A.Eq(TetherState.Connected, r2.C.State, "연결됨");
+                Run(r2.C.ConnectAsync());
+                A.Eq(0, reshow2, "묻는 창이 없으면 부르지 않음");
+                Run(r2.C.DisconnectAsync());
+            });
+
+            T("SSID(11-21 고침 3): 이름을 모른 채 허락해 연결한 망이 남의 이름으로 확인되면 끊고 까닭을 남긴다 — 모르는 동안은 그대로, 우리 이름이면 기억한다", () =>
+            {
+                var r = Make("ssid-unknown-later", new Settings { ReconnectInterval = 3 });
+                r.Hotspot = Hs(null);
+                r.C.AskConnect = (h, p) => true;
+                Run(r.C.ConnectAsync());
+                Thread.Sleep(2100);
+                Tick(r);
+                A.Eq(TetherState.Connected, r.C.State, "연결됨(이름 모름)");
+                var first = r.F.Last;
+                Tick(r);
+                A.Eq(TetherState.Connected, r.C.State, "여전히 모르면 그대로");
+                A.True(!first.HasExited, "끊지 않음");
+                r.Hotspot = Hs(Foreign);
+                Tick(r);
+                A.WaitUntil(() => r.C.State == TetherState.Waiting, 5000, "남의 이름 — 끊고 대기");
+                A.True(first.HasExited, "자식을 끝냄");
+                A.True(r.C.Detail.Contains("이름을 모른 채") && r.C.Detail.Contains(Foreign), "까닭: " + r.C.Detail);
+                lock (r.Notices) A.True(r.Notices.Any(n => n.Contains("이름을 모른 채") && n.Contains(Foreign) && n.Contains("DIRECT-UT-")), "풍선: " + string.Join("|", r.Notices.ToArray()));
+                Thread.Sleep(3100);
+                Tick(r);
+                A.Eq(1, r.F.CommandLines.Count, "남의 망으로는 다시 연결하지 않음");
+                Run(r.C.DisconnectAsync());
+
+                var r2 = Make("ssid-unknown-later-mine", new Settings { ReconnectInterval = 3 });
+                r2.Hotspot = Hs(null);
+                r2.C.AskConnect = (h, p) => true;
+                Run(r2.C.ConnectAsync());
+                Thread.Sleep(2100);
+                Tick(r2);
+                A.Eq(TetherState.Connected, r2.C.State, "연결됨(이름 모름)");
+                r2.Hotspot = Hs(Mine);
+                Tick(r2);
+                A.Eq(TetherState.Connected, r2.C.State, "우리 이름 — 그대로");
+                lock (r2.Log) A.True(r2.Log.Any(l => l.Contains("이름을 확인함") && l.Contains(Mine)), "기억함");
+                r2.Hotspot = Hs(Foreign);
+                Tick(r2);
+                A.WaitUntil(() => r2.C.State == TetherState.Waiting, 5000, "그 뒤 바뀌면 끊음");
+                A.True(r2.C.Detail.Contains("다른 망"), r2.C.Detail);
+                Run(r2.C.DisconnectAsync());
+
+                // 이 실행에서 '예' 라고 한 남의 이름이면 끊지 않는다.
+                var r3 = Make("ssid-unknown-later-approved", new Settings { ReconnectInterval = 3 });
+                r3.Hotspot = Hs(Foreign);
+                r3.C.AskConnect = (h, p) => true;
+                Run(r3.C.ConnectAsync());
+                A.Eq(1, r3.F.CommandLines.Count, "허락한 남의 이름으로 연결");
+                Run(r3.C.DisconnectAsync());
+                r3.Hotspot = Hs(null);
+                Run(r3.C.ConnectAsync());
+                Thread.Sleep(2100);
+                Tick(r3);
+                A.Eq(TetherState.Connected, r3.C.State, "연결됨(이름 모름)");
+                r3.Hotspot = Hs(Foreign);
+                Tick(r3);
+                A.Eq(TetherState.Connected, r3.C.State, "허락한 이름 — 그대로");
+                Run(r3.C.DisconnectAsync());
+            });
+
             T("SSID: 접두어는 설정으로 바꾼다(대소문자를 가린다)", () =>
             {
                 var r = Make("ssid-prefix", new Settings { SsidPrefix = "MYPHONE-", Reconnect = false });
@@ -465,6 +664,65 @@ namespace WebTether.Tests
         }
     }
 
+    /// <summary>초점을 빼앗지 않고 화면 밖에 투명하게 뜨는 보통 창(묻는 창의 z 차례 시험).</summary>
+    sealed class QuietForm : Form
+    {
+        public QuietForm()
+        {
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.Manual;
+            Location = new System.Drawing.Point(-20000, -20000);
+            Size = new System.Drawing.Size(120, 80);
+            Opacity = 0;
+        }
+        protected override bool ShowWithoutActivation { get { return true; } }
+    }
+
+    /// <summary>시험만 쓰는 창 다루기 — 활성화하지 않는다.</summary>
+    static class Win
+    {
+        delegate bool EnumProc(IntPtr hwnd, IntPtr lParam);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern bool SetWindowPos(IntPtr hWnd, IntPtr after, int x, int y, int cx, int cy, uint flags);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern IntPtr GetWindow(IntPtr hWnd, uint cmd);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern bool EnumThreadWindows(uint threadId, EnumProc fn, IntPtr lParam);
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern uint GetCurrentThreadId();
+        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
+        static extern int GetClassNameW(IntPtr hWnd, StringBuilder name, int max);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern bool PostMessageW(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+        const uint SWP_NOSIZE = 0x1, SWP_NOMOVE = 0x2, SWP_NOZORDER = 0x4, SWP_NOACTIVATE = 0x10;
+        const uint GW_HWNDNEXT = 2;
+
+        public static void MoveAway(IntPtr h) { SetWindowPos(h, IntPtr.Zero, -20000, -20000, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE); }
+
+        /// <summary>보통 창을 (보통 창들 가운데) 맨 위로 — 활성화하지 않는다.</summary>
+        public static void RaiseNoActivate(IntPtr h) { SetWindowPos(h, IntPtr.Zero, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE); }
+
+        /// <summary>z 차례에서 a 가 b 보다 위인가(a 에서 아래로 내려가며 b 를 만나는가).</summary>
+        public static bool IsAbove(IntPtr a, IntPtr b)
+        {
+            for (var h = GetWindow(a, GW_HWNDNEXT); h != IntPtr.Zero; h = GetWindow(h, GW_HWNDNEXT))
+                if (h == b) return true;
+            return false;
+        }
+
+        /// <summary>이 스레드의 대화 상자 모두에 '아니요'(시험이 멈추지 않게 하는 마지막 길).</summary>
+        public static void AnswerAllDialogs()
+        {
+            EnumThreadWindows(GetCurrentThreadId(), (h, l) =>
+            {
+                var cls = new StringBuilder(64);
+                GetClassNameW(h, cls, cls.Capacity);
+                if (cls.ToString() == "#32770") PostMessageW(h, 0x111, new IntPtr(7), IntPtr.Zero);
+                return true;
+            }, IntPtr.Zero);
+        }
+    }
+
     // ------------------------------------------------------------------ SSID 읽기·설정
     static class SsidTests
     {
@@ -578,6 +836,60 @@ namespace WebTether.Tests
                 A.True(WifiName.CachedCount >= 1, "기억함");
                 WifiName.Forget();
                 A.Eq(0, WifiName.CachedCount, "Forget 은 모두 버린다");
+            });
+
+            T("묻는 창(11-21 고침 1): MB_TOPMOST 로 늘 위 무리에 뜬다 — 뒤에 맨 위로 올린 보통 창보다 위, 다시 앞으로 부르기(짧게 띄우고 닫는다)", () =>
+            {
+                A.True((TopAsk.Flags & 0x40000) != 0, "MB_TOPMOST");
+                A.True((TopAsk.Flags & 0x10000) != 0, "MB_SETFOREGROUND");
+                A.True((TopAsk.Flags & 0x100) != 0 && (TopAsk.Flags & 0x4) != 0, "예/아니요, 기본 '아니요'");
+                A.True(!TopAsk.IsOpen && !TopAsk.BringToFront(false), "떠 있지 않으면 부를 것이 없다");
+                bool found = false, topmost = false, above = false, aboveAgain = false, refront = false, open = false;
+                int ticks = 0;
+                var before = SynchronizationContext.Current;
+                var other = new QuietForm();
+                try
+                {
+                    other.Show(); // 보통 창 — 초점을 빼앗지 않고 화면 밖에 투명하게
+                    using (var timer = new System.Windows.Forms.Timer { Interval = 20 })
+                    {
+                        timer.Tick += (s, e) =>
+                        {
+                            ticks++;
+                            var h = TopAsk.Find();
+                            if (h == IntPtr.Zero)
+                            {
+                                if (ticks > 250) { timer.Stop(); Win.AnswerAllDialogs(); } // 못 찾으면 그래도 닫는다(시험이 멈추지 않게)
+                                return;
+                            }
+                            timer.Stop();
+                            found = true;
+                            Win.MoveAway(h);                 // 사용자 화면에서 곧바로 비킨다
+                            open = TopAsk.IsOpen;
+                            topmost = TopAsk.IsTopmost(h);
+                            Win.RaiseNoActivate(other.Handle); // 다른 보통 창이 맨 위로 올라와도
+                            above = Win.IsAbove(h, other.Handle);
+                            refront = TopAsk.BringToFront(false);
+                            Win.RaiseNoActivate(other.Handle);
+                            aboveAgain = Win.IsAbove(h, other.Handle);
+                            TopAsk.AnswerForTest(h, false);
+                        };
+                        timer.Start();
+                        bool yes = TopAsk.Ask("시험 — 곧 저절로 닫힙니다", false);
+                        A.True(!yes, "'아니요' 로 닫힘");
+                    }
+                }
+                finally
+                {
+                    other.Dispose();
+                    SynchronizationContext.SetSynchronizationContext(before);
+                }
+                A.True(found, "창을 찾음(" + ticks + " 번째)");
+                A.True(open, "떠 있는 동안 IsOpen");
+                A.True(topmost, "WS_EX_TOPMOST");
+                A.True(above, "맨 위로 올린 보통 창보다 위");
+                A.True(refront && aboveAgain, "다시 앞으로 부름");
+                A.True(!TopAsk.IsOpen && TopAsk.Find() == IntPtr.Zero && !TopAsk.BringToFront(false), "닫힌 뒤에는 없음");
             });
 
             T("SSID: 설정의 접두어 — 기본 DIRECT-UT-, 쓰고 읽기, 비움·앞뒤 빈칸·제어 글자·32바이트 넘음은 거절", () =>

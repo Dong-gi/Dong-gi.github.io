@@ -169,6 +169,15 @@ namespace WebTether
         /// null 이면 묻지 않고 연결하지 않는다.
         /// </summary>
         public Func<HotspotInfo, string, bool> AskConnect;
+        /// <summary>묻는 창이 떠 있는 동안 '연결' 을 다시 누르면 부른다 — 그 창을 다시 맨 앞으로(UI 스레드). null 이면 아무것도 하지 않는다.</summary>
+        public Action ReshowAsk;
+        /// <summary>AskConnect 가 떠 있는 동안 참.</summary>
+        bool asking;
+        /// <summary>
+        /// 시도가 도는 동안(busy) 사용자가 누른 '연결' — 새 시도를 띄우지 않고(tun2proxy 를 둘 세우지 않게) 도는 시도를 손 시도로 올린다:
+        /// 그 시도가 Wi-Fi 이름을 접두어 밖(또는 모름)으로 보면 거절하지 않고 묻는다. 시도가 끝나면 지운다(검토 11-21 — 전에는 묻혔다).
+        /// </summary>
+        bool manualRequested;
         /// <summary>이 실행에서 사용자가 물음에 '예' 라고 한 접두어 밖의 SSID — 그 이름이면 다시 연결도 저절로 한다(메모리에만).</summary>
         string approvedSsid;
         /// <summary>지금 연결이 붙은 SSID(모르면 null) — 연결된 동안 이름이 바뀌면 핫스팟이 사라진 것으로 친다.</summary>
@@ -278,7 +287,8 @@ namespace WebTether
 
         /// <summary>
         /// 사용자의 '연결'. Wi-Fi 이름이 접두어 밖이거나 모르면 AskConnect 로 한 번 묻는다(사용자의 뜻이므로).
-        /// 기다릴 수 있는 꼴(시험). 시도가 이미 도는 중이면 그 시도가 이어 간다(그사이 끊기를 눌렀어도).
+        /// 기다릴 수 있는 꼴(시험). 시도가 이미 도는 중이면 그 시도가 이어 간다(그사이 끊기를 눌렀어도) — 손 시도로 올려(manualRequested)
+        /// 이름이 접두어 밖이면 묻게 한다. 묻는 창이 떠 있으면 그 창을 다시 앞으로(ReshowAsk).
         /// </summary>
         public Task ConnectAsync()
         {
@@ -286,7 +296,22 @@ namespace WebTether
             // 끝났지만 알림을 아직 받지 않은 자식도 — 그 걷기(OnChildExited)가 먼저다. 그 뒤는 다시 연결 규칙이 잇는다.
             if (child != null) return Task.FromResult(0);
             userWantsOn = true;
-            if (busy) return Task.FromResult(0);
+            if (busy)
+            {
+                retries = 0;
+                if (asking)
+                {
+                    log.Write("Wi-Fi", "묻는 창이 떠 있습니다 — 다시 앞으로");
+                    var reshow = ReshowAsk;
+                    if (reshow != null) reshow();
+                }
+                else if (!manualRequested)
+                {
+                    manualRequested = true;
+                    log.Write("시작", "도는 시도를 사용자의 '연결' 로 잇습니다");
+                }
+                return Task.FromResult(0);
+            }
             retries = 0;
             return Attempt(true);
         }
@@ -387,9 +412,20 @@ namespace WebTether
                 var refusal = StatusText.Refusal(hs, prefix, approvedSsid);
                 if (refusal != null)
                 {
+                    // 저절로 하는 시도가 도는 사이 사용자가 '연결' 을 눌렀다 — 그 뜻을 묻는 데까지 잇는다(새 시도를 띄우지 않았다).
+                    if (!manual && manualRequested)
+                    {
+                        manual = true;
+                        log.Write("Wi-Fi", refusal + " — 사용자가 '연결' 을 눌러 묻습니다");
+                    }
+                    manualRequested = false;
                     if (!manual) { Fail(refusal, true, true); return; }
                     var ask = AskConnect;
-                    bool yes = ask != null && ask(hs, prefix);
+                    Set(TetherState.Connecting, "묻는 중 — Wi-Fi 이름");
+                    bool yes = false;
+                    asking = true;
+                    try { yes = ask != null && ask(hs, prefix); }
+                    finally { asking = false; }
                     log.Write("Wi-Fi", refusal + " — 물어서 " + (yes ? "연결합니다" : "연결하지 않습니다"));
                     if (Cancelled(null)) return;
                     if (!yes)
@@ -471,6 +507,7 @@ namespace WebTether
             finally
             {
                 busy = false;
+                manualRequested = false;
             }
         }
 
@@ -701,11 +738,24 @@ namespace WebTether
             return version != v || child != c || stopping || busy || settling > 0 || !pendingCleanup.IsCompleted;
         }
 
-        /// <summary>연결된 동안 — 핫스팟이 사라졌거나 Wi-Fi 이름이 연결할 때와 달라졌으면 그 까닭(모르게 된 것은 그대로 둔다).</summary>
-        string LostWhy(HotspotInfo hs)
+        /// <summary>
+        /// 연결된 동안 — 핫스팟이 사라졌거나 Wi-Fi 이름이 연결할 때와 달라졌으면 그 까닭(모르게 된 것은 그대로 둔다).
+        /// 이름을 모르는 채 허락해 붙은 망(connectedSsid 없음)은 이름이 알려지면 다시 본다 — 접두어 밖이고 허락한 이름도 아니면 끊고,
+        /// 맞으면 그 이름을 기억해 그 뒤 바뀌는 것을 잡는다. 여전히 모르는 동안은 그대로 둔다(검토 11-21).
+        /// </summary>
+        string LostWhy(HotspotInfo hs, string prefix)
         {
             if (hs == null) return "폰 핫스팟이 사라졌습니다";
-            if (hs.Ssid != null && connectedSsid != null && hs.Ssid != connectedSsid)
+            if (hs.Ssid == null) return null;
+            if (connectedSsid == null)
+            {
+                if (StatusText.Refusal(hs, prefix, approvedSsid) != null)
+                    return "이름을 모른 채 연결한 Wi-Fi 가 " + StatusText.Ssid(hs.Ssid) + " 로 확인됨 — " + prefix + " 로 시작하지 않음";
+                connectedSsid = hs.Ssid;
+                log.Write("Wi-Fi", "연결한 Wi-Fi 의 이름을 확인함 — " + StatusText.Ssid(hs.Ssid));
+                return null;
+            }
+            if (hs.Ssid != connectedSsid)
                 return "Wi-Fi 가 다른 망으로 바뀌었습니다(" + StatusText.Ssid(hs.Ssid) + ")";
             return null;
         }
@@ -747,7 +797,7 @@ namespace WebTether
                     var finder = HotspotFinder;
                     var hs = await Probe(() => finder(prefix));
                     if (!hs.Ok || Stale(v, c)) return;
-                    var lost = LostWhy(hs.Value);
+                    var lost = LostWhy(hs.Value, prefix);
                     if (lost != null) HotspotLost(lost);
                     else if (s.UpdateCheck && !updateRunning && Updates.Due(now, s.UpdateEvery)) CheckUpdates();
                 }
