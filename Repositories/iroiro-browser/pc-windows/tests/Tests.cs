@@ -84,6 +84,7 @@ namespace WebTether.Tests
             ControllerTests.Add(T);
             SsidTests.Add(T);
             StartupTaskTests.Add(T);
+            ControllerTests.AddStartupCopy(T);
             UpdateTests.Add(T);
             UpdateTests.AddTimeouts(T);
             SecurityTests.Add(T);
@@ -1543,6 +1544,23 @@ namespace WebTether.Tests
             });
             var sf3 = new SettingsForm(ctl, ops, "x.exe");
             Save(sf3, dir, "settings-http-hint.png", () => sf3.LoadFrom(new Settings { Kind = ProxyKind.Http, ProxyPort = 8282 }));
+            var stale = new DryRunOps(null) { StartupState = true, CopyState = new CopyCheck { Status = CopyStatus.Stale } };
+            var ctl4 = new Controller(paths, log, stale, new DryRunChildFactory(), null, true, false, new Settings { AutoStart = true });
+            var sf4 = new SettingsForm(ctl4, stale, "x.exe");
+            Save(sf4, dir, "settings-copy-stale.png", () =>
+            {
+                var t = sf4.RefreshCopyNoteAsync();
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                while (!t.IsCompleted && sw.ElapsedMilliseconds < 5000) { Application.DoEvents(); Thread.Sleep(10); }
+            });
+            stale.CopyState = new CopyCheck { Status = CopyStatus.Stale, InstalledRunning = true };
+            var sf5 = new SettingsForm(ctl4, stale, "x.exe");
+            Save(sf5, dir, "settings-copy-old-running.png", () =>
+            {
+                var t = sf5.RefreshCopyNoteAsync();
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                while (!t.IsCompleted && sw.ElapsedMilliseconds < 5000) { Application.DoEvents(); Thread.Sleep(10); }
+            });
 
             Save(new LogForm(log, paths.LogFile), dir, "log.png");
             Save(new AboutForm(true), dir, "about.png");

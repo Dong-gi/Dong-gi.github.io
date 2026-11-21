@@ -177,6 +177,10 @@ namespace WebTether
             {
                 if (inst.Status == InstanceStatus.Another)
                 {
+#if !TEST_BUILD
+                    // 떠 있는 것이 로그온 때 뜬 옛 사본이고 이 exe 와 다르면 — 그대로 끝나면 사용자는 옛 판이 왜 남는지 모른다.
+                    if (TellIfOldCopyRunning()) return 0;
+#endif
                     if (inst.Show != null) inst.Show.Set();
                     return 0;
                 }
@@ -203,6 +207,9 @@ namespace WebTether
                 if (busy)
                 {
                     rootHold.Dispose();
+#if !TEST_BUILD
+                    if (TellIfOldCopyRunning()) return 0;
+#endif
                     MessageBox.Show("도우미가 이미 실행 중입니다 — 알림 영역의 아이콘을 쓰십시오.", AppInfo.Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return 0;
                 }
@@ -254,6 +261,25 @@ namespace WebTether
                 }
             }
             return 0;
+        }
+
+        /// <summary>
+        /// 이미 떠 있는 도우미 때문에 끝나는 둘째 — '시작 시 실행' 사본이 다른 프로세스로 돌고 있고 이 exe 와 내용이 다르면(로그온 때 뜬 옛 판)
+        /// 맨 앞 창으로 '옛 판을 끝낸 뒤 다시 실행' 을 알리고 참. 견주기(schtasks 물음·해시)는 일꾼 스레드에서, 20초까지만 기다린다.
+        /// </summary>
+        static bool TellIfOldCopyRunning()
+        {
+            string err;
+            using (var self = SelfImage.Open(out err))
+            {
+                if (self == null) return false;
+                var ops = new SystemOps(self, null);
+                var check = System.Threading.Tasks.Task.Run(() => ops.CheckStartupCopy());
+                if (!check.Wait(20000)) return false;
+                if (StartupCopy.Decide(check.Result) != CopyPrompt.OldRunning) return false;
+            }
+            TopAsk.Tell(StartupCopy.OldRunningText, StartupCopy.Title, true);
+            return true;
         }
     }
 }

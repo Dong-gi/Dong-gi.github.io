@@ -18,11 +18,17 @@ namespace WebTether
         bool StartupEnabled();
     }
 
-    public sealed class DryRunOps : ISystemOps
+    public sealed class DryRunOps : ISystemOps, IStartupCopy
     {
         readonly Action<string> log;
         public readonly List<string> Calls = new List<string>();
         public bool StartupState;
+        /// <summary>시험이 정한다 — null 이면 작업이 있으면 같음, 없으면 꺼짐.</summary>
+        public CopyCheck CopyState;
+        /// <summary>시험이 정한다 — 사본 바꾸기의 실패 글(null 이면 성공).</summary>
+        public string CopyError;
+        /// <summary>견주기·바꾸기를 부른 스레드(시험).</summary>
+        public volatile int CopyThread;
 
         public DryRunOps(Action<string> log) { this.log = log; }
 
@@ -63,12 +69,29 @@ namespace WebTether
         }
 
         public bool StartupEnabled() { return StartupState; }
+
+        public CopyCheck CheckStartupCopy()
+        {
+            CopyThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            var c = CopyState;
+            return c ?? new CopyCheck { Status = StartupState ? CopyStatus.Same : CopyStatus.Off };
+        }
+
+        public bool RefreshStartupCopy(out string error)
+        {
+            CopyThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            Note("사본 바꾸기 " + SystemOps.InstalledExe);
+            error = CopyError;
+            if (error != null) return false;
+            CopyState = new CopyCheck { Status = CopyStatus.Same };
+            return true;
+        }
     }
 
     /// <summary>System32 의 도구를 돌린다 — 끝 코드(시간 초과면 -1)와 출력.</summary>
     public delegate int ToolRunner(string exe, string args, int timeoutMs, out string output);
 
-    public sealed class SystemOps : ISystemOps
+    public sealed class SystemOps : ISystemOps, IStartupCopy
     {
         public const string TaskName = "WebTether";
         public const int TimedOut = -1;
@@ -80,6 +103,14 @@ namespace WebTether
         public ToolRunner RunTool = Run;
         /// <summary>schtasks 가 시간 초과로 끊긴 뒤 작업이 있는지 묻기 전에 쉬는 시간 — 끊긴 요청을 작업 스케줄러가 마저 끝낼 틈.</summary>
         public int SettleDelayMs = 1000;
+        /// <summary>사본의 자리 — 시험은 스크래치로 바꾼다(실제 판은 InstalledExe).</summary>
+        public string Target = InstalledExe;
+        /// <summary>설치 폴더의 정책 — 시험은 '이 사용자 전용'.</summary>
+        public DirPolicy Policy = DirPolicy.AdminOnly();
+        /// <summary>사본이 다른 프로세스로 돌고 있는가 — 시험이 바꾼다.</summary>
+        public Func<string, bool> IsRunning = StartupCopy.IsRunningElsewhere;
+        /// <summary>쥔 exe(self.Stream 의 자리)와 사본 쓰기를 하나씩 — 뜰 때의 바꾸기와 설정 저장이 겹칠 수 있다.</summary>
+        readonly object copyLock = new object();
 
         /// <summary>self: 시작할 때 쥔 이 exe(SelfImage.Open) — '시작 시 실행' 의 사본은 그 핸들에서만 만든다. null 이면 켜지 못한다.</summary>
         public SystemOps(SelfImage self, Action<string> note)
@@ -203,17 +234,14 @@ namespace WebTether
             string step = "준비";
             try
             {
-                var target = InstalledExe;
+                var target = Target;
                 if (self == null || self.Stream == null)
                     return Failed("시작할 때 이 exe 를 쥐지 못해 복사하지 않습니다", "로그의 '이 exe 를 쥐지 못함' 을 보십시오", out error);
                 // 경로(exePath)로 복사하지 않는다 — 쥔 핸들의 바이트를 관리자 전용 폴더에 쓰고 해시를 견준다. 이미 같으면 쓰지 않는다
                 // (설치본에서 돌고 있으면 같은 바이트다).
                 step = "설치본 복사(" + target + ")";
-                var notes = new List<string>();
                 string cerr;
-                bool copied = Installer.CopyVerified(self.Stream, target, DirPolicy.AdminOnly(), notes, out cerr);
-                if (note != null) foreach (var n in notes) note(n);
-                if (!copied) return Failed("설치본을 만들지 못했습니다(" + target + ")", cerr, out error);
+                if (!CopySelf(target, out cerr)) return Failed("설치본을 만들지 못했습니다(" + target + ")", cerr, out error);
                 string sid;
                 using (var id = WindowsIdentity.GetCurrent()) sid = id.User.Value;
                 var xmlPath = TaskXmlPath(target);
@@ -252,7 +280,7 @@ namespace WebTether
             if (note != null) note("껐습니다 — 작업 " + TaskName);
             try
             {
-                var target = InstalledExe;
+                var target = Target;
                 string me;
                 using (var cur = Process.GetCurrentProcess()) me = cur.MainModule.FileName;
                 if (File.Exists(target) && !string.Equals(me, target, StringComparison.OrdinalIgnoreCase))
@@ -285,6 +313,98 @@ namespace WebTether
             if (code == 0) return true;
             if (code == TimedOut) return null;
             return false;
+        }
+
+        /// <summary>쥔 핸들의 바이트를 사본 자리로(Installer.CopyVerified — 같으면 쓰지 않는다). 사본이 돌고 있어 실패했으면 그렇게 적는다.</summary>
+        bool CopySelf(string target, out string error)
+        {
+            var notes = new List<string>();
+            bool ok;
+            lock (copyLock) ok = Installer.CopyVerified(self.Stream, target, Policy, notes, out error);
+            if (note != null) foreach (var n in notes) note(n);
+            if (!ok)
+            {
+                bool running = false;
+                try { running = IsRunning(target); } catch (Exception) { }
+                if (running) error = StartupCopy.OldRunningShort + " (" + error + ")";
+            }
+            return ok;
+        }
+
+        static string HashOf(string path)
+        {
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) return Binaries.Sha256(fs);
+        }
+
+        /// <summary>
+        /// 작업이 우리 사본을 돌리는가(schtasks /Query /XML — 읽기만, Exec 명령 하나가 Target), 지금 도는 것이 사본이 아니고, 내용이 다른가.
+        /// 다르면 사본이 다른 프로세스로 돌고 있는지도 본다. 던지지 않는다(모르면 Unknown).
+        /// </summary>
+        public CopyCheck CheckStartupCopy()
+        {
+            var c = new CopyCheck { Status = CopyStatus.Unknown };
+            try
+            {
+                var target = Target;
+                if (self == null || self.Stream == null) { c.Detail = "이 exe 를 쥐지 못함"; return c; }
+                if (StartupCopy.SamePath(self.Path, target)) { c.Status = CopyStatus.RunningInstalled; return c; }
+                string output;
+                int code;
+                try { code = RunTool("schtasks.exe", "/Query /TN " + TaskName + " /XML", 10000, out output); }
+                catch (Exception ex) { c.Detail = "작업을 묻지 못함: " + ex.Message; return c; }
+                if (code == TimedOut) { c.Detail = "작업 물음이 시간 안에 끝나지 않음"; return c; }
+                if (code != 0) { c.Status = CopyStatus.Off; c.Detail = "작업 없음(코드 " + code + ")"; return c; }
+                var cmds = StartupCopy.TaskCommands(output);
+                if (cmds == null) { c.Detail = "작업 XML 을 읽지 못함"; return c; }
+                if (cmds.Count != 1 || !StartupCopy.SamePath(cmds[0], target))
+                {
+                    c.Status = CopyStatus.OtherTarget;
+                    c.Detail = "작업이 " + target + " 가 아닌 것을 돌림";
+                    return c;
+                }
+                string want;
+                lock (copyLock)
+                {
+                    self.Stream.Position = 0;
+                    want = Binaries.Sha256(self.Stream);
+                }
+                if (!File.Exists(target)) { c.Status = CopyStatus.Stale; c.Missing = true; }
+                else c.Status = HashOf(target) == want ? CopyStatus.Same : CopyStatus.Stale;
+                if (c.Status == CopyStatus.Stale)
+                {
+                    try { c.InstalledRunning = IsRunning(target); }
+                    catch (Exception ex) { c.Detail = "사본이 돌고 있는지 보지 못함: " + ex.Message; }
+                }
+                return c;
+            }
+            catch (Exception ex)
+            {
+                c.Status = CopyStatus.Unknown;
+                c.Detail = ex.Message;
+                return c;
+            }
+        }
+
+        /// <summary>사본을 이 판으로 — '시작 시 실행' 을 켤 때와 같은 복사(CopySelf). 작업은 그대로(경로가 같다). 사본이 돌고 있으면 하지 않는다.</summary>
+        public bool RefreshStartupCopy(out string error)
+        {
+            error = null;
+            var target = Target;
+            try
+            {
+                if (self == null || self.Stream == null)
+                    return Failed("시작할 때 이 exe 를 쥐지 못해 복사하지 않습니다", "로그의 '이 exe 를 쥐지 못함' 을 보십시오", out error);
+                if (StartupCopy.SamePath(self.Path, target)) return Failed("지금 도는 것이 사본입니다", null, out error);
+                if (IsRunning(target)) return Failed(StartupCopy.OldRunningShort, null, out error);
+                string cerr;
+                if (!CopySelf(target, out cerr)) return Failed("사본을 바꾸지 못했습니다(" + target + ")", cerr, out error);
+                if (note != null) note("사본을 이 판으로 바꿨습니다 — " + target + " (작업은 그대로)");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return Failed("사본을 바꾸지 못했습니다(" + target + ")", ex.Message, out error);
+            }
         }
 
         /// <summary>작업 등록(schtasks /Create /XML). 시간 초과면 한 번 물어 실제 상태로 맞춘다(Settle).</summary>

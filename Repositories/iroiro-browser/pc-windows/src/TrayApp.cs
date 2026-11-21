@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WebTether
@@ -28,6 +29,8 @@ namespace WebTether
         TetherState shownState = (TetherState)(-1);
         string shownTip;
         bool exiting;
+        /// <summary>'시작 시 실행' 사본이 옛 판인지 뜰 때 한 번 본다(StartupCopy).</summary>
+        readonly StartupCopyFlow copyFlow;
 
         public TrayApp(Controller ctl, Log log, AppPaths paths, ISystemOps ops, EventWaitHandle showSignal)
         {
@@ -88,6 +91,31 @@ namespace WebTether
                     }
                 }) { IsBackground = true, Name = "show-signal" };
                 t.Start();
+            }
+
+            var copy = ops as IStartupCopy;
+            if (copy != null)
+            {
+                copyFlow = new StartupCopyFlow(copy, m => log.Write("시작 시 실행", m))
+                {
+                    // 묻는 사이 '끝내기' 를 눌렀으면 '예' 여도 바꾸지 않는다(끝내기가 기다리지 않은 복사가 임시 파일을 남기지 않게).
+                    Ask = text => TopAsk.Ask(text, StartupCopy.Title, true) && !exiting,
+                    Tell = text => TopAsk.Tell(text, StartupCopy.Title, true),
+                    Notify = (text, warn) =>
+                    {
+                        balloonUrl = null;
+                        tray.ShowBalloonTip(warn ? 10000 : 5000, StartupCopy.Title, text, warn ? ToolTipIcon.Warning : ToolTipIcon.Info);
+                    },
+                    Busy = () => TopAsk.IsOpen,
+                    Stopping = () => exiting,
+                };
+                // 메시지 고리가 돈 뒤에(트레이 아이콘이 선 뒤) — 견주기·바꾸기는 일꾼 스레드, 묻기만 이 스레드.
+                invoker.BeginInvoke(new Action(() =>
+                {
+                    if (exiting) return;
+                    copyFlow.RunAsync().ContinueWith(x => log.Write("시작 시 실행", "사본 견주기 오류: " + x.Exception.GetBaseException().Message),
+                                                     TaskContinuationOptions.OnlyOnFaulted);
+                }));
             }
         }
 
@@ -177,6 +205,11 @@ namespace WebTether
             {
                 try { await settings.PendingSave; } catch (Exception ex) { log.Write("끝", "설정 저장을 기다리지 못함: " + ex.Message); }
             }
+            // 사본을 바꾸는 중이면 끝나기를 기다린다 — Program Files 에 임시 파일을 남기지 않게.
+            if (copyFlow != null)
+            {
+                try { await copyFlow.Pending; } catch (Exception ex) { log.Write("끝", "사본 바꾸기를 기다리지 못함: " + ex.Message); }
+            }
             await ctl.ShutdownAsync();
             log.Write("끝", "도우미를 끝냅니다");
             tray.Visible = false;
@@ -227,31 +260,57 @@ namespace WebTether
         [DllImport("user32.dll")]
         static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        /// <summary>알리기만 하는 창 — 확인 단추 하나, 같은 '맨 앞'.</summary>
+        public const uint TellFlags = MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TOPMOST;
+        const uint MB_ICONINFORMATION = 0x40;
+        const int IDOK = 1;
+
         /// <summary>떠 있는 창의 스레드(없으면 0).</summary>
         static uint thread;
+        /// <summary>떠 있는(마지막으로 띄운) 창의 제목 — Find 가 찾는다.</summary>
+        static string shownTitle = Title;
 
         public static bool IsOpen { get { return thread != 0; } }
 
         /// <summary>묻는다 — '예' 면 참. 기본 단추는 '아니요'.</summary>
         public static bool Ask(string text)
         {
-            return Ask(text, true);
+            return Ask(text, Title, true);
         }
 
         /// <summary>foreground: 앞 창이 되어 보는가(시험은 사용자의 초점을 빼앗지 않게 끈다 — 맨 앞에 그리는 것은 같다).</summary>
         public static bool Ask(string text, bool foreground)
         {
-            if (thread != 0) return false; // 겹쳐 묻지 않는다(시도는 하나씩이라 오지 않는다)
+            return Ask(text, Title, foreground);
+        }
+
+        /// <summary>제목을 골라 묻는다('시작 시 실행' 사본 물음 — StartupCopy.Title). 다른 창이 떠 있으면 묻지 않고 거짓.</summary>
+        public static bool Ask(string text, string title, bool foreground)
+        {
+            return Show(text, title, foreground ? Flags : Flags & ~MB_SETFOREGROUND) == IDYES;
+        }
+
+        /// <summary>알리기만 한다(확인 단추 하나). 다른 창이 떠 있으면 띄우지 않는다.</summary>
+        public static void Tell(string text, string title, bool foreground)
+        {
+            Show(text, title, foreground ? TellFlags : TellFlags & ~MB_SETFOREGROUND);
+        }
+
+        static int Show(string text, string title, uint flags)
+        {
+            if (thread != 0) return 0; // 겹쳐 묻지 않는다(시도는 하나씩이라 오지 않는다)
             thread = GetCurrentThreadId();
-            try { return MessageBoxW(IntPtr.Zero, text, Title, foreground ? Flags : Flags & ~MB_SETFOREGROUND) == IDYES; }
+            shownTitle = title;
+            try { return MessageBoxW(IntPtr.Zero, text, title, flags); }
             finally { thread = 0; }
         }
 
-        /// <summary>떠 있는 묻는 창(없으면 Zero) — 그 스레드의 보이는 대화 상자(#32770) 가운데 제목이 Title 인 것.</summary>
+        /// <summary>떠 있는 묻는 창(없으면 Zero) — 그 스레드의 보이는 대화 상자(#32770) 가운데 제목이 띄운 제목인 것.</summary>
         public static IntPtr Find()
         {
             var t = thread;
             if (t == 0) return IntPtr.Zero;
+            var want = shownTitle;
             var found = IntPtr.Zero;
             EnumThreadWindows(t, (h, l) =>
             {
@@ -261,7 +320,7 @@ namespace WebTether
                 if (cls.ToString() != "#32770") return true;
                 var title = new StringBuilder(256);
                 GetWindowTextW(h, title, title.Capacity);
-                if (title.ToString() != Title) return true;
+                if (title.ToString() != want) return true;
                 found = h;
                 return false;
             }, IntPtr.Zero);
@@ -297,6 +356,13 @@ namespace WebTether
         public static void AnswerForTest(IntPtr h, bool yes)
         {
             PostMessageW(h, WM_COMMAND, new IntPtr(yes ? IDYES : IDNO), IntPtr.Zero);
+        }
+
+        /// <summary>시험 판만 — 알리는 창의 '확인'(그 단추의 번호가 무엇이든 — Esc 와 같은 IDCANCEL 도 함께).</summary>
+        public static void CloseForTest(IntPtr h)
+        {
+            PostMessageW(h, WM_COMMAND, new IntPtr(IDOK), IntPtr.Zero);
+            PostMessageW(h, WM_COMMAND, new IntPtr(2), IntPtr.Zero);
         }
 #endif
     }

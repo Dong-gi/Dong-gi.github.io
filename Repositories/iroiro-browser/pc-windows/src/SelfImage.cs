@@ -36,7 +36,7 @@ namespace WebTether
         const uint GENERIC_READ = 0x80000000, FILE_SHARE_READ = 0x1, OPEN_EXISTING = 3;
         const uint VOLUME_NAME_DOS = 0x0, VOLUME_NAME_NT = 0x2;
 
-        /// <summary>쥔 exe — 처음부터 읽으려면 Position 을 0 으로(여러 스레드가 쓰지 않는다 — 설정 창의 저장에서만).</summary>
+        /// <summary>쥔 exe — 처음부터 읽으려면 Position 을 0 으로(설정 저장·뜰 때의 사본 견주기·바꾸기가 일꾼 스레드에서 쓴다 — SystemOps 의 copyLock 안에서만).</summary>
         public FileStream Stream { get; private set; }
         /// <summary>연 파일의 실제 경로(DOS 꼴).</summary>
         public string Path { get; private set; }

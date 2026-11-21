@@ -17,6 +17,10 @@ namespace WebTether
         readonly Dictionary<string, Control> fields = new Dictionary<string, Control>();
         readonly TableLayoutPanel grid = new TableLayoutPanel();
         readonly Label message = new Label();
+        /// <summary>'시작 시 실행' 아래 한 줄 — 사본이 옛 판이면(StartupCopy).</summary>
+        readonly Label copyNote = new Label();
+        CopyCheck lastCopy;
+        int copyGen;
 
         TextBox tHost, tDns, tTun, tBypass, tWifi, tSsid;
         NumericUpDown nPort, nInterval, nMax;
@@ -79,7 +83,18 @@ namespace WebTether
             tWifi = AddText("wifi_profile", "Wi-Fi 프로필", () => tWifi.Text = "");
 
             Section("그 밖");
-            kAuto = AddCheck("autostart", "Windows 시작 시 실행", () => kAuto.Checked = false);
+            // 칸과 그 아래 한 줄을 한 칸(가운데 열)에 — 표에 줄을 따로 두면 숨겼다 보일 때 칸 배치가 어긋났다.
+            kAuto = new CheckBox { Text = "Windows 시작 시 실행", AutoSize = true, Margin = Padding.Empty };
+            copyNote.AutoSize = true;
+            copyNote.MaximumSize = new Size(244, 0);
+            copyNote.ForeColor = Color.FromArgb(0xB2, 0x6A, 0x00);
+            copyNote.Margin = new Padding(0, 2, 0, 0);
+            copyNote.Visible = false;
+            var autoBox = new FlowLayoutPanel { FlowDirection = FlowDirection.TopDown, WrapContents = false, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink };
+            autoBox.Controls.Add(kAuto);
+            autoBox.Controls.Add(copyNote);
+            Row("autostart", "", autoBox, () => kAuto.Checked = false);
+            kAuto.CheckedChanged += (s, e) => ShowCopyNote();
             kUpdate = AddCheck("update_check", "tun2proxy 업데이트 확인(알리기만)", () => kUpdate.Checked = true);
             cUpdate = AddCombo("update_interval", "확인 간격", IntervalLabels, () => cUpdate.SelectedIndex = (int)UpdateInterval.Weekly);
 
@@ -111,8 +126,40 @@ namespace WebTether
                 e.Cancel = true;
                 if (!saving) Hide(); // 저장 중에는 닫지 않는다 — 끝나면 결과를 보인다
             };
-            VisibleChanged += (s, e) => { if (Visible) LoadFrom(ctl.Settings); };
+            VisibleChanged += (s, e) =>
+            {
+                if (!Visible) return;
+                LoadFrom(ctl.Settings);
+                var unused = RefreshCopyNoteAsync();
+            };
             LoadFrom(ctl.Settings);
+        }
+
+        /// <summary>사본을 견주어(일꾼 스레드) 한 줄을 고친다. 늦게 온 옛 결과·창이 없어진 뒤의 결과는 버린다.</summary>
+        public async Task RefreshCopyNoteAsync()
+        {
+            var copy = ops as IStartupCopy;
+            if (copy == null) return;
+            int gen = ++copyGen;
+            CopyCheck c;
+            try { c = await Task.Run(() => copy.CheckStartupCopy()); }
+            catch (Exception) { return; }
+            if (IsDisposed || gen != copyGen) return;
+            lastCopy = c;
+            ShowCopyNote();
+        }
+
+        /// <summary>시험이 본다 — 보이는 한 줄(없으면 null).</summary>
+        public string CopyNoteText { get { return copyNoteShown ? copyNote.Text : null; } }
+        bool copyNoteShown; // Control.Visible 은 창이 숨어 있으면 늘 거짓이다
+
+        void ShowCopyNote()
+        {
+            var what = StartupCopy.Decide(lastCopy);
+            bool show = kAuto.Checked && what != CopyPrompt.None;
+            copyNoteShown = show;
+            copyNote.Text = what == CopyPrompt.OldRunning ? StartupCopy.FormNoteRunning : StartupCopy.FormNote;
+            copyNote.Visible = show;
         }
 
         ProxyKind KindOf() { return cKind.SelectedIndex == 1 ? ProxyKind.Http : ProxyKind.Socks5; }
@@ -237,6 +284,10 @@ namespace WebTether
             public string Message;
             /// <summary>'시작 시 실행' 칸을 옛 값으로 되돌린다.</summary>
             public bool RevertAuto;
+            /// <summary>옛 판이던 사본을 이 판으로 바꿨다.</summary>
+            public bool CopyRefreshed;
+            /// <summary>사본이 옛 판인데 바꾸지 못한 까닭(설정은 저장됐다).</summary>
+            public string CopyWarning;
         }
 
         /// <summary>
@@ -272,6 +323,13 @@ namespace WebTether
             {
                 message.ForeColor = SystemColors.ControlText;
                 message.Text = ctl.ChildRunning ? "저장했습니다. 다음 연결부터 적용됩니다." : "저장했습니다.";
+                if (r.CopyRefreshed) message.Text += " 시작 시 실행 사본도 이 판으로 바꿨습니다.";
+                if (r.CopyWarning != null)
+                {
+                    message.ForeColor = Color.FromArgb(0xB2, 0x6A, 0x00);
+                    message.Text += "\r\n사본은 바꾸지 못했습니다: " + r.CopyWarning;
+                }
+                var unused = RefreshCopyNoteAsync();
             }
             else
             {
@@ -312,7 +370,10 @@ namespace WebTether
             try
             {
                 ctl.SaveSettings(s);
-                return new SaveOutcome { Saved = true };
+                var ok = new SaveOutcome { Saved = true };
+                // 켜 둔 채 저장하면 사본이 옛 판인지 보고 바꾼다(그 칸을 껐다 켤 필요 없이). 막 켠 것은 EnableStartup 이 이미 복사했다.
+                if (s.AutoStart && !startupChanged) RefreshCopyIfStale(ok);
+                return ok;
             }
             catch (Exception ex)
             {
@@ -329,6 +390,23 @@ namespace WebTether
                 }
                 return r;
             }
+        }
+
+        /// <summary>일꾼 스레드 — 사본이 옛 판이면 바꾼다. 던지지 않는다(설정은 이미 저장됐다 — 까닭만 돌려준다).</summary>
+        void RefreshCopyIfStale(SaveOutcome r)
+        {
+            var copy = ops as IStartupCopy;
+            if (copy == null) return;
+            try
+            {
+                var what = StartupCopy.Decide(copy.CheckStartupCopy());
+                if (what == CopyPrompt.None) return;
+                if (what == CopyPrompt.OldRunning) { r.CopyWarning = StartupCopy.OldRunningShort; return; }
+                string err;
+                if (copy.RefreshStartupCopy(out err)) r.CopyRefreshed = true;
+                else r.CopyWarning = err;
+            }
+            catch (Exception ex) { r.CopyWarning = ex.Message; }
         }
     }
 }

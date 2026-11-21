@@ -717,7 +717,11 @@ namespace WebTether.Tests
             {
                 var cls = new StringBuilder(64);
                 GetClassNameW(h, cls, cls.Capacity);
-                if (cls.ToString() == "#32770") PostMessageW(h, 0x111, new IntPtr(7), IntPtr.Zero);
+                if (cls.ToString() == "#32770")
+                {
+                    PostMessageW(h, 0x111, new IntPtr(7), IntPtr.Zero); // 아니요
+                    PostMessageW(h, 0x111, new IntPtr(2), IntPtr.Zero); // 취소(확인 하나뿐인 창)
+                }
                 return true;
             }, IntPtr.Zero);
         }
