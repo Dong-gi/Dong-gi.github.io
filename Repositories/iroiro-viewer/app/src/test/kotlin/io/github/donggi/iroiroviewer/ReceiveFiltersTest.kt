@@ -114,4 +114,40 @@ class ReceiveFiltersTest {
         // 선언하는 줄(remove 가 없는 것)은 없다 — INTERNET 을 적은 요소는 모두 걷는 줄이다.
         for (e in internet) assertTrue("tools:node=\"remove\"" in e.value, e.value)
     }
+
+    /** 'Files에 저장'(`SaveActivity`)의 필터 — 하나이고, 공유 둘(SEND·SEND_MULTIPLE)만 받는다. */
+    private val saveFilter: String by lazy {
+        val activity = Regex("""<activity\b[^>]*android:name="\.SaveActivity".*?</activity>""", RegexOption.DOT_MATCHES_ALL)
+            .find(withoutComments)?.value ?: error("SaveActivity 를 찾지 못했다")
+        Regex("""<intent-filter>.*?</intent-filter>""", RegexOption.DOT_MATCHES_ALL).findAll(activity).map { it.value }.single()
+    }
+    private val save by lazy { Regex("""android:mimeType="([^"]+)"""").findAll(saveFilter).map { it.groupValues[1] }.toSet() }
+
+    /** 안드로이드의 대조처럼 — 인텐트의 형식이 별표 둘이면 무엇이든 하나라도 적혀 있으면, 계열 전체면 그 계열이 하나라도 있으면 맞는다. */
+    private fun Set<String>.takesIntent(mime: String): Boolean = when {
+        mime == "*/*" -> isNotEmpty()
+        mime.endsWith("/*") -> any { it.startsWith(mime.dropLast(1)) }
+        else -> takes(mime)
+    }
+
+    /**
+     * 사진·영상·소리·문서·압축·설치 파일·여러 형식이 섞인 공유를 받고, **`text/plain` 은 받지 않는다** — 글만 실은 공유(브라우저의 주소)마다
+     * 이 줄이 서지 않게. 내보낸 화면이 늘지 않게 VIEW 는 없다. 형식은 소문자이고 스킴은 없다(공유에는 데이터 URI 가 없다).
+     */
+    @Test
+    fun `Files에 저장은 공유만 받고 text plain 은 받지 않는다`() {
+        assertTrue("android.intent.action.SEND\"" in saveFilter && "android.intent.action.SEND_MULTIPLE\"" in saveFilter)
+        assertFalse("android.intent.action.VIEW" in saveFilter)
+        assertFalse("android:scheme" in saveFilter)
+        for (mime in listOf(
+            "image/jpeg", "video/mp4", "audio/mpeg", "application/pdf", "application/zip",
+            "application/vnd.android.package-archive", "application/octet-stream", "font/ttf", "text/csv", "text/html",
+            "*/*", "image/*", "text/*", "application/*",
+        )) {
+            assertTrue(save.takesIntent(mime), mime)
+        }
+        assertFalse(save.takesIntent("text/plain"))
+        assertFalse("*/*" in save || "text/*" in save || "*" in save)
+        for (mime in save) assertEquals(mime.lowercase(), mime)
+    }
 }

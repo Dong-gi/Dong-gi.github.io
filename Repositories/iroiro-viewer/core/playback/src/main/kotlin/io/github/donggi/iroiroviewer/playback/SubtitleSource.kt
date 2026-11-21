@@ -84,15 +84,15 @@ private class SubtitleDataSource(private val inner: DataSource) : DataSource {
         val whole = DataSpec.Builder().setUri(dataSpec.uri).build()
         val raw = readAll(whole) ?: return inner.open(dataSpec)
 
-        // 싱크를 옮겼으면 그 값이 주소의 질의에 실려 온다([SubtitleShift]). 바꾼 뒤의 글에서 시각만 고쳐 쓴다.
+        // 싱크를 옮겼으면 그 값이 주소의 질의에 실려 온다([SubtitleShift]). SAMI 는 SRT 로 바꾸고, 바꾼 뒤의 글에서 시각만
+        // 고쳐 쓴다 — 둘 다 [SubtitleRewrite] 한 곳이다. 재생기가 읽기를 취소하면(로더가 스레드를 끊는다) 바꾸기를 멈춘다.
         val shift = SubtitleShift.parse(dataSpec.uri.getQueryParameter(SubtitleShift.PARAM))
-        val utf8 = toUtf8(raw, name).let { bytes ->
-            if (shift == 0L) {
-                bytes
-            } else {
-                SubtitleShift.apply(String(bytes, Charsets.UTF_8), SubtitleNames.extensionOf(name), shift)
-                    .toByteArray(Charsets.UTF_8)
+        val utf8 = try {
+            SubtitleRewrite.apply(toUtf8(raw, name), SubtitleNames.extensionOf(name), shift) {
+                Thread.currentThread().isInterrupted
             }
+        } catch (e: java.util.concurrent.CancellationException) {
+            throw java.io.InterruptedIOException()
         }
         converted = utf8
         position = dataSpec.position.toInt().coerceIn(0, utf8.size)

@@ -247,6 +247,63 @@
         </activity>
 
         <!--
+          'Files에 저장' - 다른 앱의 공유로 온 파일을 사용자가 고른 폴더에 복사해 둔다(SaveActivity 의 KDoc). 보는 화면(OpenActivity)과
+          따로 둔 공유 대상이라 공유 목록에 이름(label)이 따로 선다. 태스크·회전·singleTop 은 OpenActivity 와 같은 까닭이다.
+          받는 형식: 그림·영상·소리·application 계열 전체·글꼴·3D 모델, 그리고 text/plain 을 뺀 글 형식. **text/plain 은 적지 않는다** - 글만
+          실은 공유(브라우저의 주소 공유 등)마다 이 줄이 서면 거슬린다. 그 대가로 text/plain 으로 오는 .txt 파일은 이 줄에 서지 않는다
+          (CLAUDE.md 'Files에 저장'). 공유가 여러 형식을 섞으면 형식이 */* 나 text/* 로 오는데, 그것도 이 필터에 맞는다(IntentFilter 는
+          */* 를 '무엇이든 하나라도 적혀 있으면' 으로, 계열/* 를 '그 계열이 하나라도 적혀 있으면' 으로 본다).
+          설치 파일(application/vnd.android.package-archive)도 application/* 로 받는다 - 저장만 하고 열지 않는다(공유만 받고 VIEW 는 받지
+          않으므로 우리 '다른 앱으로 열기' 가 우리를 다시 고르는 고리도 없다). 이 앱의 공유 창은 우리를 뺀다(ShareHelper.ownHandlers).
+          형식은 소문자로만(함정 표). 스킴을 적지 않는다 - 공유는 데이터 URI 가 없고, 스킴을 적으면 맞지 않는다.
+        -->
+        <activity
+            android:name=".SaveActivity"
+            android:label="@string/save_label"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:autoRemoveFromRecents="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="application/*" />
+                <data android:mimeType="font/*" />
+                <data android:mimeType="model/*" />
+                <data android:mimeType="text/csv" />
+                <data android:mimeType="text/comma-separated-values" />
+                <data android:mimeType="text/tab-separated-values" />
+                <data android:mimeType="text/html" />
+                <data android:mimeType="text/xml" />
+                <data android:mimeType="text/markdown" />
+                <data android:mimeType="text/x-markdown" />
+                <data android:mimeType="text/rtf" />
+                <data android:mimeType="text/richtext" />
+                <data android:mimeType="text/calendar" />
+                <data android:mimeType="text/x-vcalendar" />
+                <data android:mimeType="text/vcard" />
+                <data android:mimeType="text/x-vcard" />
+                <data android:mimeType="text/css" />
+                <data android:mimeType="text/javascript" />
+                <data android:mimeType="text/x-python" />
+                <data android:mimeType="text/x-java" />
+                <data android:mimeType="text/x-c" />
+                <data android:mimeType="text/x-c++" />
+                <data android:mimeType="text/x-kotlin" />
+                <data android:mimeType="text/x-sh" />
+                <data android:mimeType="text/x-log" />
+                <data android:mimeType="text/x-subrip" />
+                <data android:mimeType="text/vtt" />
+                <data android:mimeType="message/rfc822" />
+            </intent-filter>
+        </activity>
+
+        <!--
           편집기(feature:editor - 따로 된 프로세스 :editor)의 저장 자리(EditorSlotProvider - EditorSlots). 주 프로세스에서 돈다. 내보내지
           않는다 - 이 앱만 닿는다. 편집기가 쓴 것을 반영하라고 부르면 파일 작업 큐로 원본을 바꿔 쓴다(첫 저장이면 고치기 전 판을
           휴지통에). 편집기는 원본에 직접 쓰지 않는다.

@@ -340,7 +340,7 @@ object IncomingFiles {
 
     // ---- 우리 자신 -----------------------------------------------------------------------------
 
-    private fun isOwnProvider(context: Context, authority: String?): Boolean {
+    internal fun isOwnProvider(context: Context, authority: String?): Boolean {
         if (authority.isNullOrEmpty()) return true
         val own = context.packageName
         if (authority == own || authority.startsWith("$own.")) return true

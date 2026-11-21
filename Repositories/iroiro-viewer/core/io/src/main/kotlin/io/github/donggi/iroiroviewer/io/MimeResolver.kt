@@ -40,7 +40,7 @@ object MimeResolver {
         "m2t", "mpg", "mpeg", "vob", "m2ts", "rmvb", "ogv",
     )
     private val text = setOf(
-        "txt", "log", "md", "markdown", "mdown", "mkd", "mkdn", "mdwn", "csv", "tsv", "srt", "ass", "ssa", "vtt", "smi",
+        "txt", "log", "md", "markdown", "mdown", "mkd", "mkdn", "mdwn", "csv", "tsv", "srt", "ass", "ssa", "vtt", "smi", "sami",
         "ttml", "dfxp", "nfo", "ini", "cfg", "conf",
     )
     // `ts`·`mts` 는 여기 없다 — 영상(MPEG-TS)과 기타(AVCHD)로 본다(위). 겹치면 앞의 표가 말없이 이기므로 시험이 겹침을 막는다.

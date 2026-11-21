@@ -258,4 +258,16 @@ class AppPreferencesTest {
         prefs.updateTextViewer { it.copy(fontSp = 12) }
         assertEquals(inherited.copy(showLineEnds = false), prefs.proseViewer.first())
     }
+
+    /** 'Files에 저장' 의 마지막 폴더 — 처음에는 없고(받는 화면이 내려받기로 시작), 적으면 남고, 빈 값은 없는 것으로 읽는다. */
+    @Test
+    fun `마지막으로 저장한 폴더는 처음에 없고 적으면 남는다`() = runTest {
+        assertEquals(null, prefs.lastSaveDir.first())
+        prefs.setLastSaveDir("/storage/emulated/0/Pictures/받은 것")
+        assertEquals("/storage/emulated/0/Pictures/받은 것", prefs.lastSaveDir.first())
+        prefs.setLastSaveDir("")
+        assertEquals(null, prefs.lastSaveDir.first())
+        // 다른 칸을 건드리지 않는다.
+        assertEquals(false, prefs.showHidden.first())
+    }
 }

@@ -23,12 +23,13 @@ object SubtitleNames {
     /**
      * 우리가 자막으로 **읽을 수 있는** 확장자. 소문자, 점 없음.
      *
-     * **`.smi`(SAMI)가 없다.** media3 의 파서 열 갈래(`extractor/text/` 아래 cea·dvb·pgs·
-     * ssa·subrip·ttml·tx3g·vobsub·webvtt)에 SAMI 가 없기 때문이다. 한국어 자막에 흔한
-     * 형식이지만 직접 파서를 쓰지 않았다 — 목록에 올려 놓고 붙이면
-     * 빈 자막이 되는 것보다, **다루지 않는다고 정확히 말하는 편이 낫다.**
+     * **`.smi`·`.sami`(SAMI)는 media3 가 읽지 못한다**(파서 열 갈래 cea·dvb·pgs·ssa·subrip·ttml·tx3g·vobsub·webvtt 에 없다).
+     * 바이트가 들어가는 길에서 SRT 로 바꿔 넘긴다([SamiToSrt] — [SubtitleRewrite]).
      */
-    val EXTENSIONS = setOf("srt", "ass", "ssa", "vtt", "ttml", "dfxp")
+    val EXTENSIONS = setOf("srt", "ass", "ssa", "vtt", "ttml", "dfxp", "smi", "sami")
+
+    /** SAMI 의 확장자. 이 자막은 SRT 로 바꿔 넘긴다([SubtitleRewrite]). */
+    val SAMI_EXTENSIONS = setOf("smi", "sami")
 
     fun isSubtitle(name: String): Boolean = extensionOf(name) in EXTENSIONS
 
@@ -39,14 +40,14 @@ object SubtitleNames {
      */
     fun needsTranscoding(name: String): Boolean = extensionOf(name) in TRANSCODED
 
-    private val TRANSCODED = setOf("srt", "ass", "ssa", "vtt")
+    private val TRANSCODED = setOf("srt", "ass", "ssa", "vtt", "smi", "sami")
 
     /**
      * media3 에 넘길 MIME. 확장자로 정한다 — 내용으로 보려면 파일을 열어야 하고,
-     * 자막을 고르는 시트는 목록을 그리는 자리다.
+     * 자막을 고르는 시트는 목록을 그리는 자리다. SAMI 는 SRT 로 바뀌어 들어가므로 SRT 의 것이다.
      */
     fun mimeOf(name: String): String = when (extensionOf(name)) {
-        "srt" -> "application/x-subrip"
+        "srt", "smi", "sami" -> "application/x-subrip"
         "ass", "ssa" -> "text/x-ssa"
         "vtt" -> "text/vtt"
         // media3 의 TTML 파서(`extractor/text/ttml`)가 받는 이름이다. DFXP 는 TTML 의 옛 이름이고 모양이 같다.
@@ -91,10 +92,18 @@ object SubtitleNames {
     fun candidatesFor(mediaName: String, siblings: List<FileEntry>): List<FileEntry> {
         val subs = siblings.filter { !it.isDirectory && !it.isLocked && isSubtitle(it.name) }
         val (matched, rest) = subs.partition { matches(mediaName, it.name) }
-        return matched.sortedBy { it.name } + rest.sortedBy { it.name }
+        return matched.sortedWith(SAMI_LAST.thenBy { it.name }) + rest.sortedBy { it.name }
     }
 
-    /** 기본으로 붙일 자막. 짝이 맞는 것이 없으면 null — 아무것이나 고르지 않는다. */
+    /**
+     * 기본으로 붙일 자막. 짝이 맞는 것이 없으면 null — 아무것이나 고르지 않는다.
+     *
+     * 짝이 맞는 것 가운데 **SAMI 는 뒤로 민다** — `영화.srt` 와 `영화.smi` 가 함께 있으면 이름 차례로는 `.smi` 가 먼저인데, SAMI 는
+     * 바꿔 넣는 길이라 언어 하나만·서식 없이 보인다([SamiToSrt]). 원래 형식이 있으면 그것이 낫다. 나머지는 폴더가 준 차례 그대로다.
+     */
     fun defaultFor(mediaName: String, siblings: List<FileEntry>): FileEntry? =
-        siblings.firstOrNull { !it.isDirectory && !it.isLocked && matches(mediaName, it.name) }
+        siblings.filter { !it.isDirectory && !it.isLocked && matches(mediaName, it.name) }.sortedWith(SAMI_LAST).firstOrNull()
+
+    /** SAMI 가 아닌 것이 먼저(안정 정렬이라 그 밖의 차례는 남는다). */
+    private val SAMI_LAST: Comparator<FileEntry> = compareBy { extensionOf(it.name) in SAMI_EXTENSIONS }
 }

@@ -223,6 +223,27 @@ object FileOpManager {
         }
 
         /**
+         * 다른 앱의 공유로 받은 파일([uris])을 사용자가 고른 폴더([destDir])에 **복사해 둔다**('Files에 저장' — `app` 의 `SaveActivity`).
+         * 실체는 [IncomingSaves.save] — 항목마다 임시본에 다 쓰고 끝에 `O_EXCL` 로 이름을 맡는다(있으면 ` (2)`). 결과는 [Extra.Received].
+         *
+         * URI 의 읽기 권한은 **받은 화면이 살아 있는 동안만** 있다(시스템이 그 액티비티에 준다) — 받는 화면은 저장이 끝날 때까지 끝나지 않는다.
+         *
+         * @param destLabel 고른 폴더의 화면 이름(결과 문구 — 볼륨 맨 위면 '내부 저장소').
+         */
+        class SaveIncoming(
+            override val id: String,
+            val uris: List<android.net.Uri>,
+            val destDir: String,
+            val destLabel: String,
+            override val sink: ResultSink? = null,
+        ) : Request {
+            override val label get() = destLabel
+
+            // URI·경로를 `toString`(로그·예외)에 싣지 않는다.
+            override fun toString(): String = "SaveIncoming(id=$id, items=${uris.size})"
+        }
+
+        /**
          * 그림의 한 자리를 **새 파일로** 저장한다('지정한 직사각형 영역을 별도 저장'). 원본 곁에 `이름_crop.확장자` 로
          * 쓴다. 사용자 저장소에 새 파일을 쓰는 일이라 이 큐를 지난다. 뜨는 것은 [CropSupport.renderer], 쓰는 것은 [ImageSaver] 다.
          *
@@ -436,6 +457,9 @@ object FileOpManager {
         /** 묶어 보내기([Request.ShareZip])가 앱 캐시에 만든 ZIP. 결과를 받는 화면이 이것을 공유 창에 싣는다. */
         data class ShareReady(val path: String) : Extra
 
+        /** 'Files에 저장'([Request.SaveIncoming])이 놓은 파일들의 실제 경로(지금까지 — 중간에 취소돼도 이미 놓은 것)와 그 폴더. */
+        data class Received(val dir: String, val dirLabel: String, val paths: List<String>) : Extra
+
         /**
          * 잘라 저장·그리기·메모·구간 저장이 만든 파일의 실제 경로(`(2)` 가 붙었을 수 있다)와, 고른 것과 **다르게 된 점**([note]) —
          * 화면이 숨기지 않고 말한다.
@@ -476,7 +500,7 @@ object FileOpManager {
         fun offer(finished: Finished): Boolean
     }
 
-    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, SHARE_ZIP, CROP, MARKUP, CLIP, AUDIO, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC }
+    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, SHARE_ZIP, RECEIVE, CROP, MARKUP, CLIP, AUDIO, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC }
 
     private val _state = MutableStateFlow<State>(State.Idle)
     val state: StateFlow<State> = _state.asStateFlow()
@@ -865,6 +889,8 @@ object FileOpManager {
                 }
                 result.outcome
             }
+            // 받은 파일 저장 — 마지막 항목을 놓은 자리에서 알린다(위와 같다). 중간에 취소되면 지금까지 놓은 것이 [Extra.Received] 에 남는다.
+            is Request.SaveIncoming -> IncomingSaves.save(context, request, MediaIndex(context), onProgress, onExtra, onPlaced)
             is Request.SaveCrop -> {
                 // 꽂히지 않았으면 **실패로 끝낸다**(풀기와 같은 판단) — 조용히 성공을 말하면 잘라 낸(그린) 그림이 있는 줄 안다.
                 // 그리기·메모도 이 갈래다([Request.SaveCrop.overlay]).
@@ -922,6 +948,7 @@ object FileOpManager {
         is Request.Extract -> Kind.EXTRACT
         is Request.Compress -> Kind.COMPRESS
         is Request.ShareZip -> Kind.SHARE_ZIP
+        is Request.SaveIncoming -> Kind.RECEIVE
         is Request.SaveCrop -> if (r.overlay != null) Kind.MARKUP else Kind.CROP
         is Request.SaveClip -> if (r.audioOnly) Kind.AUDIO else Kind.CLIP
         is Request.SaveText -> Kind.SAVE_TEXT

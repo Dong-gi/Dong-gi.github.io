@@ -13,6 +13,7 @@
     <string name="io_op_extracting">압축을 푸는 중</string>
     <string name="io_op_compressing">압축하는 중</string>
     <string name="io_op_share_zip">보낼 ZIP을 묶는 중</string>
+    <string name="io_op_receiving">받은 파일을 저장하는 중</string>
     <string name="io_op_cropping">잘라 낸 그림을 저장하는 중</string>
     <string name="io_op_clipping">구간을 저장하는 중</string>
     <string name="io_op_audio">소리를 저장하는 중</string>
@@ -49,6 +50,13 @@
     <string name="io_saved_audio_dropped">" · 다른 소리 트랙 %1$d개는 담지 않았습니다"</string>
     <string name="io_saved_plain">저장했습니다: %1$s</string>
     <string name="io_save_cancelled">저장을 취소했습니다</string>
+    <!-- 'Files에 저장'(FileOpText.receivedMessage). 앞에 붙는 조각은 큰따옴표로 감싼다 - 앞 공백이 지워진다(함정 표). -->
+    <string name="io_received_one">%1$s에 저장했습니다: %2$s</string>
+    <string name="io_received_many">%1$s에 %2$d개 저장했습니다</string>
+    <string name="io_received_none">저장하지 못했습니다</string>
+    <string name="io_received_kept">" · %1$d개는 저장했습니다"</string>
+    <string name="io_received_unreadable">" · %1$d개 못 읽음"</string>
+    <string name="io_received_left">" · %1$d개 남음"</string>
 
     <!-- 기본 볼륨의 이름. 안드로이드가 주는 `Internal shared storage` 를 대신한다. -->
     <string name="io_volume_internal">내부 저장소</string>

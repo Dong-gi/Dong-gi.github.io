@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import io.github.donggi.iroiroviewer.model.SortKey
 import io.github.donggi.iroiroviewer.model.SortSpec
@@ -107,6 +108,9 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
         val readerKeepScreenMinutes = intPreferencesKey("reader_keep_screen_minutes")
         val comicVolumeKeys = booleanPreferencesKey("comic_volume_keys")
         val pdfContinuous = booleanPreferencesKey("pdf_continuous")
+
+        // 'Files에 저장' 이 마지막으로 저장한 폴더.
+        val lastSaveDir = stringPreferencesKey("last_save_dir")
 
         // 텍스트 뷰어의 **글 파일** 기본값([TextViewerKind.TEXT]). 위의 `text_*` 넷은 코드 파일의 것이다(글 파일이 아직
         // 적히지 않았으면 그 일부를 물려받는다 — 아래 [readProseViewer]).
@@ -319,6 +323,16 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
 
     suspend fun setPdfContinuous(on: Boolean) {
         store.edit { it[Keys.pdfContinuous] = on }
+    }
+
+    /**
+     * 'Files에 저장'(다른 앱의 공유로 받은 파일)이 **마지막으로 저장한 폴더**. 다음에 받는 화면이 거기서 시작한다. 없으면 null(내려받기 폴더).
+     * 경로는 우리가 쓴 값이지만 받는 화면이 쓰기 전에 다시 본다(지워졌거나 SD 를 뺐으면 내려받기로).
+     */
+    val lastSaveDir: Flow<String?> = data.map { p -> p[Keys.lastSaveDir]?.takeIf { it.isNotEmpty() } }
+
+    suspend fun setLastSaveDir(path: String) {
+        store.edit { it[Keys.lastSaveDir] = path }
     }
 
     private fun readTextViewer(p: Preferences) = TextViewerDefaults(

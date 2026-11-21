@@ -144,6 +144,58 @@ object FileOpText {
         else -> reasonRes(reason)
     }
 
+    /**
+     * 'Files에 저장'([FileOpManager.Kind.RECEIVE])의 결과 한 줄. 그 밖의 작업이면 null. 받는 화면이 직접 받아 알림(토스트)으로 말하고, 그 화면이
+     * 사라진 뒤에 끝난 것은 파일 목록의 결과 줄이 말한다.
+     */
+    fun receivedMessage(context: Context, f: FileOpManager.Finished): String? = when (val s = receivedSummary(f)) {
+        null -> null
+        is ReceivedSummary.Cancelled ->
+            context.getString(R.string.io_save_cancelled) + keptSuffix(context, s.saved)
+        is ReceivedSummary.Failed ->
+            context.getString(reasonRes(s.reason)) + keptSuffix(context, s.saved) + unreadableSuffix(context, s.unreadable) +
+                (if (s.remaining > 0) context.getString(R.string.io_received_left, s.remaining) else "")
+        is ReceivedSummary.Saved -> when {
+            s.count == 0 -> context.getString(R.string.io_received_none)
+            s.onlyName != null -> context.getString(R.string.io_received_one, s.dirLabel, s.onlyName)
+            else -> context.getString(R.string.io_received_many, s.dirLabel, s.count)
+        } + unreadableSuffix(context, s.unreadable)
+    }
+
+    private fun keptSuffix(context: Context, saved: Int): String =
+        if (saved > 0) context.getString(R.string.io_received_kept, saved) else ""
+
+    private fun unreadableSuffix(context: Context, unreadable: Int): String =
+        if (unreadable > 0) context.getString(R.string.io_received_unreadable, unreadable) else ""
+
+    /** [receivedMessage] 가 말할 것 — 문장을 고르는 판단만(JVM 시험). */
+    sealed interface ReceivedSummary {
+        /** 취소했다. [saved] 는 그 전에 이미 놓은 수(남아 있다). */
+        data class Cancelled(val saved: Int) : ReceivedSummary
+
+        /** 작업 전체가 멈췄다(공간·자리). 그 전에 놓은 수, 못 읽은 수, 멈춘 항목부터 저장하지 못하고 남은 수([remaining])를 함께 말한다. */
+        data class Failed(val reason: FileOpEngine.Reason, val saved: Int, val unreadable: Int, val remaining: Int = 0) : ReceivedSummary
+
+        /** 끝났다. 하나만 놓았으면 그 이름([onlyName]), 여럿이면 수. */
+        data class Saved(val dirLabel: String, val count: Int, val onlyName: String?, val unreadable: Int) : ReceivedSummary
+    }
+
+    fun receivedSummary(f: FileOpManager.Finished): ReceivedSummary? {
+        if (f.kind != FileOpManager.Kind.RECEIVE) return null
+        val received = f.extra as? FileOpManager.Extra.Received
+        val saved = received?.paths?.size ?: 0
+        return when (val o = f.outcome) {
+            is FileOpEngine.Outcome.Cancelled -> ReceivedSummary.Cancelled(saved)
+            is FileOpEngine.Outcome.Failed -> ReceivedSummary.Failed(o.reason, saved, o.failed, o.skipped)
+            is FileOpEngine.Outcome.Done -> ReceivedSummary.Saved(
+                dirLabel = received?.dirLabel.orEmpty(),
+                count = saved,
+                onlyName = received?.paths?.singleOrNull()?.let { File(it).name },
+                unreadable = o.failed,
+            )
+        }
+    }
+
     /** [savedMessage] 가 말하는 작업 — 원본 곁에 새 파일을 만드는 넷. */
     private val SAVED_KINDS = setOf(
         FileOpManager.Kind.CROP,

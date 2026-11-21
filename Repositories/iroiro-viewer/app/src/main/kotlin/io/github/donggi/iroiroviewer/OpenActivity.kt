@@ -157,8 +157,8 @@ class OpenActivity : ComponentActivity() {
 }
 
 /**
- * **인텐트의 extras 를 ViewModel 의 저장 상태 기본값으로 넘기지 않는** 생성 정보. 내보낸 두 액티비티([OpenActivity]·[MainActivity])가
- * 쓴다.
+ * **인텐트의 extras 를 ViewModel 의 저장 상태 기본값으로 넘기지 않는** 생성 정보. 내보낸 세 액티비티([OpenActivity]·[MainActivity]·
+ * [SaveActivity])가 쓴다.
  *
  * AndroidX 의 기본값(`ComponentActivity.defaultViewModelCreationExtras`)은 인텐트 extras 를 `DEFAULT_ARGS_KEY` 로 실어, 새로 만드는
  * `SavedStateHandle` 을 그것으로 채운다(내비게이션이 인자를 넘기는 길이다). 내보낸 액티비티에서는 그것이 구멍이다 — 남의 앱이 extras

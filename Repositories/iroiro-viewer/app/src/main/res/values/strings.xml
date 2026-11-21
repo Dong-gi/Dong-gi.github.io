@@ -14,6 +14,25 @@
     <string name="permission_button">설정 열기</string>
     <string name="permission_unavailable">이 기기에는 해당 설정 화면이 없습니다.</string>
 
+    <!--
+      'Files에 저장' - 다른 앱의 공유 목록에 서는 이름(SaveActivity 의 label)과 그 화면. 조사는 붙여 쓴다(다른 화면의 'ZIP으로' 와 같다).
+    -->
+    <string name="save_label">Files에 저장</string>
+    <string name="save_summary_many">%1$s 외 %2$d개</string>
+    <string name="save_here">여기에 저장</string>
+    <string name="save_cancel">취소</string>
+    <string name="save_up">.. (위 폴더)</string>
+    <string name="save_no_folders">하위 폴더가 없습니다</string>
+    <string name="save_no_permission">모든 파일 접근 권한이 없어 저장할 수 없습니다. 설정에서 켠 뒤 돌아오세요.</string>
+    <string name="save_grant">설정 열기</string>
+    <string name="save_nothing">저장할 파일이 없습니다</string>
+    <string name="save_too_many">한 번에 %1$d개까지 저장합니다</string>
+    <string name="save_busy">앞의 저장이 끝난 뒤에 다시 보내세요</string>
+    <string name="save_waiting">앞의 파일 작업이 끝나기를 기다리는 중</string>
+    <string name="save_saving_to">%1$s에 저장하는 중</string>
+    <string name="save_progress">%1$d / %2$d</string>
+    <string name="save_closes_when_done">끝나면 저절로 닫힙니다</string>
+
     <string name="diag_screen_title">진단</string>
 
     <string name="notice_title">오픈소스 고지</string>

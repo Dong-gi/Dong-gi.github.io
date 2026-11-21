@@ -12,7 +12,7 @@ import java.util.Locale
  * ([SubtitleDataSourceFactory] — 이미 인코딩을 바꾸려고 통째로 읽는다)에서 **시각 글자를 고쳐 쓴다.** 옮긴 값은 자막 주소의
  * 질의([PARAM])에 실려 항목과 함께 다닌다 — 큐에 그 항목이 있는 동안은 다음 곡으로 갔다 돌아와도 남는다.
  *
- * **글 자막만**(SRT·VTT·ASS·SSA — [SubtitleNames.needsTranscoding])이다. TTML 은 그 길을 지나지 않고, 영상 안 자막은 밖이다.
+ * **글 자막만**(SRT·VTT·ASS·SSA, 그리고 SRT 로 바뀌어 들어가는 SAMI — [SubtitleNames.needsTranscoding])이다. TTML 은 그 길을 지나지 않고, 영상 안 자막은 밖이다.
  *
  * android.* 를 쓰지 않는다 — 시각 고쳐 쓰기는 JVM 시험이 답한다.
  */

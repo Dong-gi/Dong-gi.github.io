@@ -40,10 +40,17 @@ class SubtitleNamesTest {
         assertFalse(SubtitleNames.isSubtitle(".srt"))
     }
 
-    /** media3 에 SAMI 파서가 없다. 붙일 수 있는 척하지 않는다. */
+    /** media3 에 SAMI 파서가 없어 SRT 로 바꿔 넘긴다 — 자막이고, 짝을 찾고, SRT 의 MIME 으로 붙고, 바이트 길을 지난다. */
     @Test
-    fun smi_는_자막으로_보지_않는다() {
-        assertFalse(SubtitleNames.isSubtitle("영화.smi"))
+    fun smi_는_SRT_로_바꿔_붙는_자막이다() {
+        for (name in listOf("영화.smi", "영화.SMI", "영화.ko.sami")) {
+            assertTrue(SubtitleNames.isSubtitle(name), name)
+            assertTrue(SubtitleNames.needsTranscoding(name), name)
+            assertEquals("application/x-subrip", SubtitleNames.mimeOf(name), name)
+            assertTrue(SubtitleShift.supports(name), name)
+        }
+        assertTrue(SubtitleNames.matches("영화.mkv", "영화.smi"))
+        assertEquals(setOf("smi", "sami"), SubtitleNames.SAMI_EXTENSIONS)
     }
 
     @Test
@@ -109,6 +116,21 @@ class SubtitleNamesTest {
         }
         assertTrue(SubtitleNames.matches("영화.mkv", "영화.ttml"))
         for (name in listOf("a.srt", "a.ASS", "a.ssa", "a.vtt")) assertTrue(SubtitleNames.needsTranscoding(name), name)
-        assertFalse(SubtitleNames.needsTranscoding("a.smi"))
+        assertTrue(SubtitleNames.needsTranscoding("a.smi"))
+    }
+
+    /** 짝이 맞는 것 가운데 SAMI 는 뒤다 — 이름 차례로는 `.smi` 가 `.srt` 보다 먼저지만 원래 형식이 낫다(바꿔 넣으면 언어 하나·서식 없음). */
+    @Test
+    fun 짝이_맞는_SAMI_는_원래_형식_뒤로_민다() {
+        val siblings = listOf(f("영화.smi"), f("영화.srt"), f("영화.ko.sami"), f("영화.ass"), f("다른.srt"))
+        assertEquals("영화.srt", SubtitleNames.defaultFor("영화.mkv", siblings)?.name)
+        assertEquals(
+            listOf("영화.ass", "영화.srt", "영화.ko.sami", "영화.smi", "다른.srt"),
+            SubtitleNames.candidatesFor("영화.mkv", siblings).map { it.name },
+        )
+        // SAMI 뿐이면 그것이 붙는다.
+        assertEquals("영화.smi", SubtitleNames.defaultFor("영화.mkv", listOf(f("영화.smi"), f("다른.srt")))?.name)
+        // SAMI 가 아닌 것끼리는 폴더가 준 차례 그대로다(예전과 같다).
+        assertEquals("영화.srt", SubtitleNames.defaultFor("영화.mkv", listOf(f("영화.srt"), f("영화.ass")))?.name)
     }
 }
