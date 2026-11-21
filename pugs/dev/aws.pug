@@ -893,7 +893,7 @@ include ../../source/skeleton.pug
     h2 CDK(Cloud Development Kit)
     p 고급 프로그래밍 언어를 이용해 인프라 작성 > CloudFormation 템플릿 자동 생성 > 스택 배포
     h2.fake 예시 :
-        +asA('https://docs.aws.amazon.com/cdk/v2/guide/hello_world.html')
+        +asA('https://docs.aws.amazon.com/cdk/v2/guide/hello-world.html')
     ol
         li CDK 설치 :
             +asA('https://docs.aws.amazon.com/cdk/v2/guide/cli.html')
@@ -925,7 +925,7 @@ include ../../source/skeleton.pug
                     }
                 }
 
-            module.exports = { HelloCdkStack }
+                module.exports = { HelloCdkStack }
         li CloudFormation 템플릿 생성
             +asCode('shell') cdk synth
             p YAML 포맷의 템플릿이 출력되며, cdk.out 디렉터리에 JSON 포맷 템플릿도 작성된다
@@ -1019,7 +1019,7 @@ include ../../source/skeleton.pug
             +asA('https://alas.aws.amazon.com/', 'Amazon Linux Security Center')
         li 라이브 패치 제공: 재부팅, 가동 중단 없이 커널 패치 가능
             p x86_64 아키텍처 &amp;&amp; 커널 버전 4.14.165-131.185 이상에 한하여 지원.
-                +asA('https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/al2-live-patching.html#working-with-live-patching', '커널 라이브 패치 적용 절차')
+                +asA('https://docs.aws.amazon.com/ko_kr/linux/al2/ug/al2-live-patching.html#working-with-live-patching', '커널 라이브 패치 적용 절차')
         li EPEL(Extra Packages for Enterprise Linux) 저장소 활성화
             +asCode('shell') $ sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-${version}.noarch.rpm
         li Amazon Linux 2부터 Extras Library 사용 가능
@@ -1182,10 +1182,10 @@ include ../../source/skeleton.pug
     h4.fake 사용자 데이터 및 cloud-init
     ul
         li
-            +asA('https://cloudinit.readthedocs.io/en/latest/', 'cloud-init')
+            +asA('https://docs.cloud-init.io/en/latest/', 'cloud-init')
             |패키지는 클라우드 컴퓨팅 환경에서 이미지 부트스트랩을 수행하는 데 사용된다. 인스턴스 시작 시 "사용자 데이터" 필드에 작성한 작업을 cloud-init에 전달하여 초기화를 수행할 수 있다
-        li: +asA('https://cloudinit.readthedocs.io/en/latest/topics/format.html', '사용자 데이터 포맷')
-        li: +asA('https://cloudinit.readthedocs.io/en/latest/topics/examples.html', '예제')
+        li: +asA('https://docs.cloud-init.io/en/latest/explanation/format/index.html', '사용자 데이터 포맷')
+        li: +asA('https://docs.cloud-init.io/en/latest/reference/examples.html', '예제')
         li 콘솔 캡처
             +asCode('yaml', '#cloud-config') output : { all : '| tee -a /var/log/cloud-init-output.log' }
 
@@ -1199,7 +1199,7 @@ include ../../source/skeleton.pug
             +asCode('shell') $ curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/
         li 동적 데이터 검색
             +asCode('shell') $ curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/dynamic/
-        li: +asA('https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/instancedata-data-categories.html', '데이터 카테고리')
+        li: +asA('https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-categories', '데이터 카테고리')
 
     h4.fake 사용 제한
     ul
@@ -2332,6 +2332,6 @@ include ../../source/skeleton.pug
                 li HTTP/3이 활성화되어도 추가 지연이 발생하는 것은 마찬가지(2023-07-28 테스트)
             p: +w3img('/imgs/202308/2023-08-28 172044.png')
         li 각 응답 캐시 시간을 Cache-Control: max-age 헤더로 조정
-            +asA('https://aws.amazon.com/ko/premiumsupport/knowledge-center/cloudfront-cache-files-time/')
+            +asA('https://repost.aws/ko/knowledge-center/cloudfront-cache-files-time')
         li 쿼리 스트링 캐시 정책 조정
             +asA('https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/QueryStringParameters.html')

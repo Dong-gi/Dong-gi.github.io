@@ -42,7 +42,7 @@ include ../../source/skeleton.pug
             System.Net.ServicePointManager.ServerCertificateValidationCallback = ((sender, cert, chain, errors) => true);
             // validate cert by calling a function
             ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, cert, chain, policyErrors) => true);
-        li: +asA('https://docs.microsoft.com/ko-kr/dotnet/fundamentals/code-analysis/quality-rules/ca5359', '.NET 권장사항')
+        li: +asA('https://learn.microsoft.com/ko-kr/dotnet/fundamentals/code-analysis/quality-rules/ca5359', '.NET 권장사항')
 
     h1 Docker
     h2 컨테이너 에러 종료 후 재시작 불가
@@ -339,7 +339,7 @@ include ../../source/skeleton.pug
         +asCode('shell') $ sysctl fs.file-max
         li 시스템 backlog 조정 // 웹서버에서 별도로 설정이 필요할 수 있음
         +asCode('shell') $ sysctl -w net.core.netdev_max_backlog="2048"
-        li: +asA('https://serverfault.com/questions/361416/increasing-the-number-of-outbound-tcp-connections', 참고)
+        li: +asA('https://serverfault.com/questions/361416/increasing-the-number-of-outbound-tcp-connections', '참고')
 
     h1 수신한 패킷이 버려짐
     ul

@@ -1,4 +1,691 @@
-<!DOCTYPE html><html lang="ko-KR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"><title>개발자 경력 관리</title><link rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js" async></script><script id="default-js" src="/source/default.min.js" defer></script></head><body><aside class="w3-rightbar w3-medium" id="sidebar"><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details><summary>LICENSE</summary><ul><li>This Site: <a href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT</a></li><li><a href="https://www.w3schools.com/w3css">w3css</a>: No license</li><li><a href="https://highlightjs.org/">highlight.js 11.11.1</a>: <a href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause</a></li><li><a href="https://github.com/mathjax/MathJax">MathJax 4.1.3</a>: <a href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a> (수식은 빌드 시점에 조판)</li><li><a href="https://ctan.org/pkg/newcomputermodern">New Computer Modern</a> (C) 2019-2021 Antonis Tsolomitis: <a href="https://ctan.org/license/gfl">GUST Font License</a></li><li><a href="https://github.com/terrastruct/d2">D2 0.7.1</a>: <a href="https://github.com/terrastruct/d2/blob/master/LICENSE.txt">MPL-2.0</a></li></ul></details><hr></aside><main id="main"><nav class="w3-bar w3-blue" id="nav"><button class="w3-bar-item w3-button" id="nav-toggle-btn" type="button">&#9776;</button><a class="w3-bar-item w3-button" href="/">Home</a><form role="search"><input class="w3-bar-item" id="query" type="search" placeholder="search" style="max-width:35%"></form></nav><article id="contents"><h1>참고 도서 정보</h1><div class="book-info"><div><figure class="w3-margin-bottom w3-center"><img class="w3-round" src="https://www.hanbit.co.kr/data/books/B7155705626_l.jpg" alt="표지 이미지" loading="lazy" style="max-height:210px;"/><figcaption class="w3-padding">&lt;표지 이미지&gt;</figcaption></figure></div><div><table class="w3-table-all w3-card w3-small"><tr><td>표제</td><td>(JAVA) 프로그래밍 면접 이렇게 준비한다</td></tr><tr><td>저자</td><td>노엘 마크엄</td></tr><tr><td>ISBN</td><td>978-89-6848-152-9 [93000]</td></tr><tr><td>출판사</td><td>한빛미디어</td></tr><tr><td>발행일</td><td>2015년 02월 01일</td></tr></table></div></div><h2 class="no-marker">책의 오류</h2><ul><li>80p 정수 타입 배열에는 final 키워드를 사용할 수 없다<p>-> 배열 원소의 타입과 무관하게 final 키워드 사용 가능하며, 해당 변수 초기화 이후 재할당은 불가하다</p></li></ul><div class="book-info"><div><figure class="w3-margin-bottom w3-center"><img class="w3-round" src="https://www.hanbit.co.kr/data/books/B9005920688_l.jpg" alt="표지 이미지" loading="lazy" style="max-height:210px;"/><figcaption class="w3-padding">&lt;표지 이미지&gt;</figcaption></figure></div><div><table class="w3-table-all w3-card w3-small"><tr><td>표제</td><td>프로그래밍 면접 이렇게 준비한다</td></tr><tr><td>저자</td><td>존 몽건,노아 킨들러,에릭 기게리</td></tr><tr><td>ISBN</td><td>979-11-6224-199-8 [93000]</td></tr><tr><td>출판사</td><td>한빛미디어</td></tr><tr><td>발행일</td><td>2019년 07월 04일</td></tr></table></div></div><div class="book-info"><div><figure class="w3-margin-bottom w3-center"><img class="w3-round" src="https://image.yes24.com/goods/44305533/800x0" alt="표지 이미지" loading="lazy" style="max-height:210px;"/><figcaption class="w3-padding">&lt;표지 이미지&gt;</figcaption></figure></div><div><table class="w3-table-all w3-card w3-small"><tr><td>표제</td><td>코딩 인터뷰 완전 분석</td></tr><tr><td>저자</td><td>게일 라크만 맥도웰</td></tr><tr><td>ISBN</td><td>978-89-6626-308-0 [13560]</td></tr><tr><td>출판사</td><td>인사이트</td></tr><tr><td>발행일</td><td>2017년 08월 14일</td></tr></table></div></div><h1>경력</h1><ol><li>자신의 경력을 사업으로 생각하자<p>구직은 곧 고객을 찾는 것이다</p></li></ol><h1>이력서</h1><ol><li>전문성과 기술을 어필</li><li>2p 이내로 요약하는 것이 좋다<p><strong>↓ text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text"># 지원 동기와 현재까지 경력을 요약한 첫 문단
+<!DOCTYPE html>
+<html lang="ko-KR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"><title>개발자 경력 관리</title><link rel="stylesheet" href="/source/default.css"><script id="highlight-js" src="/source/highlight.pack.js" async=""></script><script id="default-js" src="/source/default.min.js" defer=""></script><meta name="mathjax-prerender" content="1"><style id="MJX-CHTML-styles">
+mjx-container[overflow="scroll"][display] {
+  overflow: auto clip;
+  min-width: initial !important;
+}
+
+mjx-container[overflow="truncate"][display] {
+  overflow: hidden clip;
+  min-width: initial !important;
+}
+
+mjx-container[display] {
+  display: block;
+  text-align: center;
+  justify-content: center;
+  margin: .7em 0;
+  padding: .3em 2px;
+}
+
+mjx-container[display][width="full"] {
+  display: flex;
+}
+
+mjx-container[justify="left"] {
+  text-align: left;
+  justify-content: left;
+}
+
+mjx-container[justify="right"] {
+  text-align: right;
+  justify-content: right;
+}
+
+mjx-container[jax="CHTML"] {
+  white-space: nowrap;
+}
+
+mjx-mo > mjx-c, mjx-mi > mjx-c, mjx-mn > mjx-c, mjx-ms > mjx-c, mjx-mtext > mjx-c {
+  clip-path: padding-box polygon(-1em -2px, calc(100% + 1em) -2px, calc(100% + 1em) calc(100% + 2px), -1em calc(100% + 2px));
+}
+
+mjx-stretchy-h {
+  clip-path: padding-box polygon(0 -2px, 100% -2px, 100% calc(100% + 2px), 0 calc(100% + 2px));
+  display: inline-block;
+}
+
+mjx-stretchy-v {
+  clip-path: padding-box polygon(-2px 0, calc(100% + 2px) 0, calc(100% + 2px) 100%, -2px 100%);
+  display: inline-block;
+  text-align: center;
+}
+
+mjx-container [space="1"] {
+  margin-left: .111em;
+}
+
+mjx-container [space="2"] {
+  margin-left: .167em;
+}
+
+mjx-container [space="3"] {
+  margin-left: .222em;
+}
+
+mjx-container [space="4"] {
+  margin-left: .278em;
+}
+
+mjx-container [space="5"] {
+  margin-left: .333em;
+}
+
+mjx-container [rspace="1"] {
+  margin-right: .111em;
+}
+
+mjx-container [rspace="2"] {
+  margin-right: .167em;
+}
+
+mjx-container [rspace="3"] {
+  margin-right: .222em;
+}
+
+mjx-container [rspace="4"] {
+  margin-right: .278em;
+}
+
+mjx-container [rspace="5"] {
+  margin-right: .333em;
+}
+
+mjx-container [size="s"] {
+  font-size: 70.7%;
+}
+
+mjx-container [size="ss"] {
+  font-size: 50%;
+}
+
+mjx-container [size="Tn"] {
+  font-size: 60%;
+}
+
+mjx-container [size="sm"] {
+  font-size: 85%;
+}
+
+mjx-container [size="lg"] {
+  font-size: 120%;
+}
+
+mjx-container [size="Lg"] {
+  font-size: 144%;
+}
+
+mjx-container [size="LG"] {
+  font-size: 173%;
+}
+
+mjx-container [size="hg"] {
+  font-size: 207%;
+}
+
+mjx-container [size="HG"] {
+  font-size: 249%;
+}
+
+mjx-container [width="full"] {
+  width: 100%;
+}
+
+mjx-box {
+  display: inline-block;
+}
+
+mjx-block {
+  display: block;
+}
+
+mjx-itable {
+  display: inline-table;
+}
+
+mjx-row {
+  display: table-row;
+}
+
+mjx-row > mjx-cell, mjx-row > mjx-base, mjx-row > mjx-under, mjx-row > mjx-over, mjx-row > mjx-den {
+  display: table-cell;
+}
+
+mjx-container [inline-breaks] {
+  display: inline;
+}
+
+mjx-container .mjx-selected {
+  outline: 2px solid black;
+}
+
+@media (prefers-color-scheme: dark) {
+  mjx-container .mjx-selected {
+    outline: 2px solid #C8C8C8;
+  }
+}
+
+mjx-mtext {
+  display: inline-block;
+}
+
+mjx-mstyle {
+  display: inline-block;
+}
+
+mjx-merror {
+  display: inline-block;
+  color: red;
+  background-color: yellow;
+}
+
+mjx-mphantom {
+  visibility: hidden;
+}
+
+mjx-assistive-mml {
+  position: absolute !important;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: polygon(0 0, 0 1px, 1px 1px, 1px 0);
+  padding: 1px 0px 0px 0px !important;
+  border: 0px !important;
+  display: block !important;
+  width: auto !important;
+  overflow: hidden !important;
+  text-indent: 0px ! important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+mjx-assistive-mml[display="block"] {
+  width: 100% !important;
+}
+
+mjx-math {
+  display: inline-block;
+  text-align: left;
+  line-height: 0;
+  text-indent: 0;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 100%;
+  font-size-adjust: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  word-spacing: normal;
+  direction: ltr;
+  padding: 1px 0;
+}
+
+mjx-container[jax="CHTML"][display="true"] mjx-math {
+  padding: 0;
+}
+
+mjx-math[breakable] {
+  display: inline;
+}
+
+mjx-container[jax="CHTML"] mjx-break {
+  white-space: normal;
+  line-height: 0;
+  clip-path: rect(0 0 0 0);
+  font-family: MJX-BRK !important;
+}
+
+mjx-break[size="0"] {
+  letter-spacing: -0.999em;
+}
+
+mjx-break[size="1"] {
+  letter-spacing: -0.889em;
+}
+
+mjx-break[size="2"] {
+  letter-spacing: -0.833em;
+}
+
+mjx-break[size="3"] {
+  letter-spacing: -0.778em;
+}
+
+mjx-break[size="4"] {
+  letter-spacing: -0.722em;
+}
+
+mjx-break[size="5"] {
+  letter-spacing: -0.667em;
+}
+
+mjx-mi {
+  display: inline-block;
+  text-align: left;
+}
+
+mjx-c {
+  display: inline-block;
+  width: 0;
+  text-align: right;
+}
+
+mjx-utext {
+  display: inline-block;
+  padding: .75em 0 .2em 0;
+}
+
+mjx-mo {
+  display: inline-block;
+  text-align: left;
+}
+
+mjx-stretchy-h > mjx-beg, mjx-stretchy-h > mjx-ext, mjx-stretchy-h > mjx-end, mjx-stretchy-h > mjx-mid {
+  display: inline-block;
+  width: 0;
+  text-align: right;
+}
+
+mjx-stretchy-h > mjx-ext {
+  clip-path: padding-box polygon(0 -1em, 100% -1em, 100% calc(100% + 1em), 0 calc(100% + 1em));
+  width: 100%;
+  border: 0px solid transparent;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+mjx-stretchy-v > mjx-beg, mjx-stretchy-v > mjx-ext, mjx-stretchy-v > mjx-end, mjx-stretchy-v > mjx-mid {
+  display: block;
+  height: 0;
+  margin: 0 auto;
+}
+
+mjx-stretchy-v > mjx-ext > mjx-spacer {
+  display: block;
+}
+
+mjx-stretchy-v > mjx-ext {
+  clip-path: padding-box polygon(-1em 0, calc(100% + 1em) 0, calc(100% + 1em) 100%, -1em 100%);
+  height: 100%;
+  border: 0.1px solid transparent;
+  box-sizing: border-box;
+  white-space: pre;
+}
+
+mjx-mark {
+  display: inline-block;
+  height: 0;
+}
+
+mjx-msup {
+  display: inline-block;
+  text-align: left;
+}
+
+mjx-msubsup {
+  display: inline-block;
+  text-align: left;
+}
+
+mjx-script {
+  display: inline-block;
+  padding-right: .05em;
+  padding-left: .033em;
+}
+
+mjx-script > mjx-spacer {
+  display: block;
+}
+
+mjx-mn {
+  display: inline-block;
+  text-align: left;
+}
+
+mjx-container[jax="CHTML"] > mjx-math.NCM-N[breakable] > * {
+  font-family: MJX-NCM-ZERO, MJX-NCM-N;
+}
+
+.NCM-N {
+  font-family: MJX-NCM-ZERO, MJX-NCM-N;
+}
+
+.NCM-B {
+  font-family: MJX-NCM-ZERO, MJX-NCM-B;
+}
+
+.NCM-I {
+  font-family: MJX-NCM-ZERO, MJX-NCM-I;
+}
+
+.NCM-BI {
+  font-family: MJX-NCM-ZERO, MJX-NCM-BI;
+}
+
+.NCM-DS {
+  font-family: MJX-NCM-ZERO, MJX-NCM-DS;
+}
+
+.NCM-F {
+  font-family: MJX-NCM-ZERO, MJX-NCM-F;
+}
+
+.NCM-FB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-FB;
+}
+
+.NCM-SS {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SS;
+}
+
+.NCM-SSB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SSB;
+}
+
+.NCM-SSI {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SSI;
+}
+
+.NCM-SSBI {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SSBI;
+}
+
+.NCM-M {
+  font-family: MJX-NCM-ZERO, MJX-NCM-M;
+}
+
+.NCM-SO {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SO;
+}
+
+.NCM-LO {
+  font-family: MJX-NCM-ZERO, MJX-NCM-LO;
+}
+
+.NCM-S3 {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S3;
+}
+
+.NCM-S4 {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S4;
+}
+
+.NCM-S5 {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S5;
+}
+
+.NCM-S6 {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S6;
+}
+
+.NCM-S7 {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S7;
+}
+
+.NCM-MI {
+  font-family: MJX-NCM-ZERO, MJX-NCM-MI;
+}
+
+.NCM-C {
+  font-family: MJX-NCM-ZERO, MJX-NCM-C;
+}
+
+.NCM-CB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-CB;
+}
+
+.NCM-OS {
+  font-family: MJX-NCM-ZERO, MJX-NCM-OS;
+}
+
+.NCM-OB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-OB;
+}
+
+.NCM-V {
+  font-family: MJX-NCM-ZERO, MJX-NCM-V;
+}
+
+.NCM-LT {
+  font-family: MJX-NCM-ZERO, MJX-NCM-LT;
+}
+
+.NCM-RB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-RB;
+}
+
+.NCM-EM {
+  font-family: MJX-NCM-ZERO, MJX-NCM-EM;
+}
+
+.NCM-B-a {
+  font-family: MJX-NCM-ZERO, MJX-NCM-B-a;
+}
+
+.NCM-U {
+  font-family: MJX-NCM-ZERO, MJX-NCM-U;
+}
+
+.NCM-U-a {
+  font-family: MJX-NCM-ZERO, MJX-NCM-U-a;
+}
+
+.NCM-S {
+  font-family: MJX-NCM-ZERO, MJX-NCM-S;
+}
+
+.NCM-SB {
+  font-family: MJX-NCM-ZERO, MJX-NCM-SB;
+}
+
+@font-face /* MJX-NCM-ZERO */ {
+  font-family: MJX-NCM-ZERO;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-zero.woff2") format("woff2");
+}
+
+@font-face /* MJX-BRK */ {
+  font-family: MJX-BRK;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-brk.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-N */ {
+  font-family: MJX-NCM-N;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-n.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-B */ {
+  font-family: MJX-NCM-B;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-b.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-I */ {
+  font-family: MJX-NCM-I;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-i.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-BI */ {
+  font-family: MJX-NCM-BI;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-bi.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-DS */ {
+  font-family: MJX-NCM-DS;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ds.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-F */ {
+  font-family: MJX-NCM-F;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-f.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-FB */ {
+  font-family: MJX-NCM-FB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-fb.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SS */ {
+  font-family: MJX-NCM-SS;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ss.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SSB */ {
+  font-family: MJX-NCM-SSB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ssb.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SSI */ {
+  font-family: MJX-NCM-SSI;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ssi.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SSBI */ {
+  font-family: MJX-NCM-SSBI;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ssbi.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-M */ {
+  font-family: MJX-NCM-M;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-m.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SO */ {
+  font-family: MJX-NCM-SO;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-so.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-LO */ {
+  font-family: MJX-NCM-LO;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-lo.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S3 */ {
+  font-family: MJX-NCM-S3;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s3.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S4 */ {
+  font-family: MJX-NCM-S4;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s4.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S5 */ {
+  font-family: MJX-NCM-S5;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s5.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S6 */ {
+  font-family: MJX-NCM-S6;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s6.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S7 */ {
+  font-family: MJX-NCM-S7;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s7.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-MI */ {
+  font-family: MJX-NCM-MI;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-mi.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-C */ {
+  font-family: MJX-NCM-C;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-c.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-CB */ {
+  font-family: MJX-NCM-CB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-cb.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-OS */ {
+  font-family: MJX-NCM-OS;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-os.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-OB */ {
+  font-family: MJX-NCM-OB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-ob.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-V */ {
+  font-family: MJX-NCM-V;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-v.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-LT */ {
+  font-family: MJX-NCM-LT;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-lt.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-RB */ {
+  font-family: MJX-NCM-RB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-rb.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-EM */ {
+  font-family: MJX-NCM-EM;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-em.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-B-a */ {
+  font-family: MJX-NCM-B-a;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-b-a.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-U */ {
+  font-family: MJX-NCM-U;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-u.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-U-a */ {
+  font-family: MJX-NCM-U-a;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-u-a.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-S */ {
+  font-family: MJX-NCM-S;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-s.woff2") format("woff2");
+}
+
+@font-face /* MJX-NCM-SB */ {
+  font-family: MJX-NCM-SB;
+  src: url("/fonts/mathjax-newcm/mjx-ncm-sb.woff2") format("woff2");
+}
+
+mjx-c.mjx-c1D442 {
+  padding: 0.705em 0.763em 0.022em 0;
+}
+
+mjx-c.mjx-c28 {
+  padding: 0.748em 0.389em 0.248em 0;
+}
+
+mjx-c.mjx-c1D45B {
+  padding: 0.442em 0.6em 0.011em 0;
+}
+
+mjx-c.mjx-c32 {
+  padding: 0.666em 0.5em 0 0;
+}
+
+mjx-c.mjx-c22C5 {
+  padding: 0.303em 0.278em 0 0;
+}
+
+mjx-c.mjx-c21 {
+  padding: 0.716em 0.278em 0 0;
+}
+
+mjx-c.mjx-c29 {
+  padding: 0.748em 0.389em 0.248em 0;
+}
+</style></head><body><aside class="w3-rightbar w3-medium" id="sidebar"><hr><div id="marker-list"></div><hr><div id="post-list"></div><hr><details><summary>LICENSE</summary><ul><li>This Site: <a href="https://github.com/Dong-gi/Dong-gi.github.io/blob/master/LICENSE">MIT</a></li><li><a href="https://www.w3schools.com/w3css">w3css</a>: No license</li><li><a href="https://highlightjs.org/">highlight.js 11.11.1</a>: <a href="https://github.com/highlightjs/highlight.js/blob/main/LICENSE">BSD-3-Clause</a></li><li><a href="https://github.com/mathjax/MathJax">MathJax 4.1.3</a>: <a href="https://github.com/mathjax/MathJax/blob/master/LICENSE">Apache-2.0</a> (수식은 빌드 시점에 조판)</li><li><a href="https://ctan.org/pkg/newcomputermodern">New Computer Modern</a> (C) 2019-2021 Antonis Tsolomitis: <a href="https://ctan.org/license/gfl">GUST Font License</a></li><li><a href="https://github.com/terrastruct/d2">D2 0.7.1</a>: <a href="https://github.com/terrastruct/d2/blob/master/LICENSE.txt">MPL-2.0</a></li></ul></details><hr></aside><main id="main"><nav class="w3-bar w3-blue" id="nav"><button class="w3-bar-item w3-button" id="nav-toggle-btn" type="button">☰</button><a class="w3-bar-item w3-button" href="/">Home</a><form role="search"><input class="w3-bar-item" id="query" type="search" placeholder="search" style="max-width:35%"></form></nav><article id="contents"><h1>참고 도서 정보</h1><div class="book-info"><div><figure class="w3-margin-bottom w3-center"><img class="w3-round" src="https://www.hanbit.co.kr/data/books/B7155705626_l.jpg" alt="표지 이미지" loading="lazy" style="max-height:210px;"><figcaption class="w3-padding">&lt;표지 이미지&gt;</figcaption></figure></div><div><table class="w3-table-all w3-card w3-small"><tr><td>표제</td><td>(JAVA) 프로그래밍 면접 이렇게 준비한다</td></tr><tr><td>저자</td><td>노엘 마크엄</td></tr><tr><td>ISBN</td><td>978-89-6848-152-9 [93000]</td></tr><tr><td>출판사</td><td>한빛미디어</td></tr><tr><td>발행일</td><td>2015년 02월 01일</td></tr></table></div></div><h2 class="no-marker">책의 오류</h2><ul><li>80p 정수 타입 배열에는 final 키워드를 사용할 수 없다<p>-&gt; 배열 원소의 타입과 무관하게 final 키워드 사용 가능하며, 해당 변수 초기화 이후 재할당은 불가하다</p></li></ul><div class="book-info"><div><figure class="w3-margin-bottom w3-center"><img class="w3-round" src="https://www.hanbit.co.kr/data/books/B9005920688_l.jpg" alt="표지 이미지" loading="lazy" style="max-height:210px;"><figcaption class="w3-padding">&lt;표지 이미지&gt;</figcaption></figure></div><div><table class="w3-table-all w3-card w3-small"><tr><td>표제</td><td>프로그래밍 면접 이렇게 준비한다</td></tr><tr><td>저자</td><td>존 몽건,노아 킨들러,에릭 기게리</td></tr><tr><td>ISBN</td><td>979-11-6224-199-8 [93000]</td></tr><tr><td>출판사</td><td>한빛미디어</td></tr><tr><td>발행일</td><td>2019년 07월 04일</td></tr></table></div></div><div class="book-info"><div><figure class="w3-margin-bottom w3-center"><img class="w3-round" src="https://image.yes24.com/goods/44305533/800x0" alt="표지 이미지" loading="lazy" style="max-height:210px;"><figcaption class="w3-padding">&lt;표지 이미지&gt;</figcaption></figure></div><div><table class="w3-table-all w3-card w3-small"><tr><td>표제</td><td>코딩 인터뷰 완전 분석</td></tr><tr><td>저자</td><td>게일 라크만 맥도웰</td></tr><tr><td>ISBN</td><td>978-89-6626-308-0 [13560]</td></tr><tr><td>출판사</td><td>인사이트</td></tr><tr><td>발행일</td><td>2017년 08월 14일</td></tr></table></div></div><h1>경력</h1><ol><li>자신의 경력을 사업으로 생각하자<p>구직은 곧 고객을 찾는 것이다</p></li></ol><h1>이력서</h1><ol><li>전문성과 기술을 어필</li><li>2p 이내로 요약하는 것이 좋다<p><strong>↓ text</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="text"># 지원 동기와 현재까지 경력을 요약한 첫 문단
 
 # 경력 사항
 - 업무 기간, 장소, 수행 역할, 성과
@@ -30,7 +717,7 @@ void permutation(String str, String prefix) {
             permutation(remain, prefix + str.charAt(i));
         }
     }
-}</div><ol><li>permutation(String, String) 호출 트리를 그려보면, 총 n!개의 단말 노드가 존재한다</li><li>호출 트리의 깊이는 O(n)이므로, 총 노드의 개수는 O(n*n!)</li><li>각 단말 노드는 출력 작업 O(n), 내부 노드들은 문자열 연결 작업 O(n)을 수행한다</li><li>따라서 총 수행 시간은 식[O(n^2 \cdot n!)]식을 넘지 않는다</li></ol></li></ul><h2>코드 작성 시 유의 사항</h2><ul><li>발생 가능한 예외, 경계조건에서의 동작 확인</li><li>단위 테스트 꼭 작성</li></ul><h1>Java 질문</h1><ol><li>Comparable, Comparator 인터페이스의 차이?<p>Comparable은 클래스의 자연스러운 정렬 순서를, @FunctionalInterface Comparator는 필요에 따른 임의 정렬 순서를 의미한다</p></li><li>서로 다른 키 객체의 hashCode() 결과가 동일한데도 HashSet, HashMap이 여전히 잘 작동하는 이유?<p>hashCode()에 대응하는 버킷 리스트의 각 버킷은 여전히 키 객체를 저장하고 있으므로 2차적인 비교를 통해 구별이 가능하기 때문</p></li><li>String interning?<p>서로 다른 위치에 존재하는 같은 내용의 String 리터럴이 상수 풀의 단일 String 객체를 참조하는 것</p></li><li>Vector, Hashtable 클래스가 이미 있는데 ArrayList, HashMap이 추가된 이유?<ul><li>Vector, Hashtable은 동기화되어 병렬 처리에 적합하지만, 병렬 처리할 일이 없다면 불필요한 오버헤드만 발생한다</li><li>따라서 스레드-안전할 필요가 없다면 각각 ArrayList, HashMap를 이용하는 것이 좋다</li><li>추가적으로, 높은 병렬성이 요구된다면 ConcurrentHashMap을 이용하는 것이 좋다</li></ul></li><li>병렬로 실행되는 코드를 테스트하려면?<ul><li>방법1. 모든 작업이 테스트 스레드에서 실행되도록 Executor 변경<p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">@Test
+}</div><ol><li>permutation(String, String) 호출 트리를 그려보면, 총 n!개의 단말 노드가 존재한다</li><li>호출 트리의 깊이는 O(n)이므로, 총 노드의 개수는 O(n*n!)</li><li>각 단말 노드는 출력 작업 O(n), 내부 노드들은 문자열 연결 작업 O(n)을 수행한다</li><li>따라서 총 수행 시간은 <mjx-container class="MathJax" jax="CHTML" overflow="overflow" style="font-size: 113.1%; position: relative;"><mjx-math data-latex="O(n^2 \cdot n!)" breakable="true" class="NCM-N" aria-hidden="true"><mjx-mi data-latex="O"><mjx-c class="mjx-c1D442">𝑂</mjx-c></mjx-mi><mjx-mo data-latex="("><mjx-c class="mjx-c28">(</mjx-c></mjx-mo><mjx-msup data-latex="n^2"><mjx-mi data-latex="n"><mjx-c class="mjx-c1D45B">𝑛</mjx-c></mjx-mi><mjx-script style="vertical-align: 0.363em;"><mjx-mn size="s" data-latex="2"><mjx-c class="mjx-c32">2</mjx-c></mjx-mn></mjx-script></mjx-msup><mjx-break size="3"> </mjx-break><mjx-mo data-latex="\cdot"><mjx-c class="mjx-c22C5">⋅</mjx-c></mjx-mo><mjx-mi space="3" data-latex="n"><mjx-c class="mjx-c1D45B">𝑛</mjx-c></mjx-mi><mjx-mo data-latex="!"><mjx-c class="mjx-c21">!</mjx-c></mjx-mo><mjx-mo data-latex=")"><mjx-c class="mjx-c29">)</mjx-c></mjx-mo></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="O(n^2 \cdot n!)"><mi data-latex="O">O</mi><mo data-latex="(" stretchy="false">(</mo><msup data-latex="n^2"><mi data-latex="n">n</mi><mn data-latex="2">2</mn></msup><mo data-latex="\cdot">⋅</mo><mi data-latex="n">n</mi><mo data-latex="!">!</mo><mo data-latex=")" stretchy="false">)</mo></math></mjx-assistive-mml></mjx-container>을 넘지 않는다</li></ol></li></ul><h2>코드 작성 시 유의 사항</h2><ul><li>발생 가능한 예외, 경계조건에서의 동작 확인</li><li>단위 테스트 꼭 작성</li></ul><h1>Java 질문</h1><ol><li>Comparable, Comparator 인터페이스의 차이?<p>Comparable은 클래스의 자연스러운 정렬 순서를, @FunctionalInterface Comparator는 필요에 따른 임의 정렬 순서를 의미한다</p></li><li>서로 다른 키 객체의 hashCode() 결과가 동일한데도 HashSet, HashMap이 여전히 잘 작동하는 이유?<p>hashCode()에 대응하는 버킷 리스트의 각 버킷은 여전히 키 객체를 저장하고 있으므로 2차적인 비교를 통해 구별이 가능하기 때문</p></li><li>String interning?<p>서로 다른 위치에 존재하는 같은 내용의 String 리터럴이 상수 풀의 단일 String 객체를 참조하는 것</p></li><li>Vector, Hashtable 클래스가 이미 있는데 ArrayList, HashMap이 추가된 이유?<ul><li>Vector, Hashtable은 동기화되어 병렬 처리에 적합하지만, 병렬 처리할 일이 없다면 불필요한 오버헤드만 발생한다</li><li>따라서 스레드-안전할 필요가 없다면 각각 ArrayList, HashMap를 이용하는 것이 좋다</li><li>추가적으로, 높은 병렬성이 요구된다면 ConcurrentHashMap을 이용하는 것이 좋다</li></ul></li><li>병렬로 실행되는 코드를 테스트하려면?<ul><li>방법1. 모든 작업이 테스트 스레드에서 실행되도록 Executor 변경<p><strong>↓ java</strong></p><div class="as-code code-div w3-leftbar w3-border-green" lan="java">@Test
 void test() {
     final var executor = new Executor() {
         @Override

@@ -940,7 +940,7 @@ include ../../../source/skeleton.pug
         li 두 지점 간 거리 반환
         li 지점이 하나라도 저장되지 않은 경우 null 반환
 
-    h3 GETPOS
+    h3 GEOPOS
     +asCode() GEOPOS key [member [member ...]]
     ul
         li 지정한 순서대로 ([경도, 위도] | null)[] 반환
@@ -1559,7 +1559,7 @@ include ../../../source/skeleton.pug
                 li INITIAL_CAP : 초기 인덱스 크기
                 li SORTABLE : 호환성을 위한 부분으로, 아무 효과 없음
 
-    h3 FT.CREATE
+    h3 FT.SEARCH
     +asCode().
         FT.SEARCH &lt;index&gt; &lt;query&gt;
           [ALLSHARDS | SOMESHARDS]

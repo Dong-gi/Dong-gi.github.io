@@ -157,12 +157,12 @@ include ../../../source/skeleton.pug
         li CLOSE WAIT : 서버가 ESTABLISHED 상태에서 1번째 FIN 수신 -> ACK 전송 -> 애플리케이션의 소켓 연결 종료 대기
         li LAST ACK : CLOSE WAIT 상태에서 연결 종료 결정 -> 2번째 FIN 전송 -> ACK 대기
 
-        h3 RST 세그먼트
-        ul
-            li 연결 요청 거부 -> 즉시 CLOSED 천이
-            li 기존 연결 중단 -> 즉시 CLOSED 천이
-            li 휴지 상태 연결 종료 -> 즉시 CLOSED 천이
-            li RST 세그먼트를 수신한 쪽도 즉시 CLOSED 천이
+    h3 RST 세그먼트
+    ul
+        li 연결 요청 거부 -> 즉시 CLOSED 천이
+        li 기존 연결 중단 -> 즉시 CLOSED 천이
+        li 휴지 상태 연결 종료 -> 즉시 CLOSED 천이
+        li RST 세그먼트를 수신한 쪽도 즉시 CLOSED 천이
 
     h1 SO_REUSEADDR, SO_REUSEPORT
     ul
