@@ -122,7 +122,6 @@ internal object TetherTexts {
         HotspotProblem.SSID_TOO_LONG -> Text(R.string.tether_credential_ssid_long)
         HotspotProblem.SECRET_UNREADABLE -> Text(R.string.tether_hotspot_secret_unreadable)
         HotspotProblem.WIFI_OFF -> Text(R.string.tether_hotspot_wifi_off)
-        HotspotProblem.LOCATION_OFF -> Text(R.string.tether_hotspot_location_off)
         HotspotProblem.P2P_DISABLED -> Text(R.string.tether_hotspot_p2p_disabled)
         HotspotProblem.INVALID_CONFIG -> Text(R.string.tether_hotspot_invalid, listOf(detail.orEmpty()))
         HotspotProblem.PERMISSION -> Text(R.string.tether_hotspot_permission)

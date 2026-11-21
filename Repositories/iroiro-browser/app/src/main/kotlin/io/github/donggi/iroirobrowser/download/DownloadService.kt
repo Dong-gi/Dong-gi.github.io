@@ -229,7 +229,7 @@ class DownloadService : Service() {
             try {
                 context.startForegroundService(Intent(context, DownloadService::class.java))
             } catch (e: IllegalStateException) {
-                // 앱이 뒤에 있을 때 시스템이 포그라운드 서비스를 열어 주지 않을 수 있다(Android 12 의 '뒤에서 시작하기' 제한 —
+                // 앱이 뒤에 있을 때 시스템이 포그라운드 서비스를 열어 주지 않을 수 있다('뒤에서 시작하기' 제한(12 부터) —
                 // `ForegroundServiceStartNotAllowedException`). 앱을 죽이지 않는다 — 받기는 일꾼에서 그대로 돌고, 그동안 프로세스가 죽으면
                 // 받던 것은 '멈춤' 으로 돌아와 이어받을 수 있다.
             }

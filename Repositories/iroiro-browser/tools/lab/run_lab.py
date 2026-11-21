@@ -5,7 +5,7 @@
     python tools/lab/make_certs.py                     # 실험용 인증서·시험 계정·디버그 NSC
     ./gradlew :app:assembleDebug                       # nsc_lab 이 걸린 디버그 APK
     env -u HTTP_PROXY -u HTTPS_PROXY -u NO_PROXY -u http_proxy -u https_proxy -u no_proxy \\
-        emulator -avd Android_12_Phone -no-snapshot-load -dns-server 127.0.0.1
+        emulator -avd Android_16_Phone -no-snapshot-load -dns-server 127.0.0.1
 
 ``-dns-server 127.0.0.1`` 은 에뮬레이터의 DNS 를 이 실험실(127.0.0.1:53)로 받는다. **프록시 환경변수를 지우고 띄운다** — 에뮬레이터는
 ``http_proxy`` 가 있으면 손님의 TCP 를 전부 그 프록시로 보낸다(이 PC 에는 폰 테더링의 프록시가 걸려 있고, 그 프록시는 사설 주소를
@@ -16,7 +16,8 @@
     python tools/lab/run_lab.py                # 전부
     python tools/lab/run_lab.py auth dns       # 묶음만 — 묶음 이름이나 실험 이름(아래 plan)
 
-**에뮬레이터에만 깐다** — ``adb devices`` 에서 ``Android_12_Phone`` 에뮬레이터를 골라 확인하고, 실기기에는 손대지 않는다.
+**에뮬레이터에만 깐다** — ``adb devices`` 에서 ``Android_16_Phone`` 에뮬레이터를 골라 확인하고, 실기기에는 손대지 않는다(앱의 minSdk 가
+36 이다 — ``Android_12_Phone`` 에는 깔리지 않고, 그 안의 옛 앱에는 사용자의 실제 프록시가 있다).
 실험 하나는 앱 프로세스 하나다(``am start -S``). 앱은 본 것을 logcat ``IROLAB`` 에, 서버는 받은 것을 사건으로 적는다.
 둘을 시각으로 맞춰 판정한다.
 
@@ -45,7 +46,7 @@ LAB = labserver.LAB
 PKG = "io.github.donggi.iroirobrowser"
 ACTIVITY = f"{PKG}/.lab.LabActivity"
 APK = ROOT / "app" / "build" / "outputs" / "apk" / "debug" / "app-debug.apk"
-AVD = "Android_12_Phone"
+AVD = "Android_16_Phone"
 PROXY_HOST = "proxy.lab.test"
 CLOSED_PORT = 18999  # 아무것도 듣지 않는 포트 — 프록시가 죽은 경우
 
@@ -103,7 +104,7 @@ def wait_for_emulator(limit: float = 240) -> bool:
 
 
 def pick_emulator() -> str:
-    """``Android_12_Phone`` 에뮬레이터만 고른다. 실기기는 목록에 있어도 쓰지 않는다."""
+    """``Android_16_Phone`` 에뮬레이터만 고른다. 실기기는 목록에 있어도 쓰지 않는다."""
     out = subprocess.run([ADB, "devices"], capture_output=True, text=True).stdout
     serials = [line.split()[0] for line in out.splitlines()[1:] if line.strip().endswith("\tdevice") or line.strip().endswith(" device")]
     for s in serials:

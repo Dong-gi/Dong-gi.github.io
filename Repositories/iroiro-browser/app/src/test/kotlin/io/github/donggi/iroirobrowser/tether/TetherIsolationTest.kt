@@ -18,7 +18,7 @@ import kotlin.test.assertTrue
  * - 앱 바로가기는 없다(사용자 결정 — 타일 길게 누르기로 갈음).
  * - 테더의 소스는 브라우저의 것(WebApp·프록시·내려받기·WebView …)을 부르지 않는다 — 테더 프로세스에 프록시 계정·중계·WebView 가 올라오지 않게
  *   (부르면 WebApp.of 가 던진다 — 기기에서 그 길을 처음 밟을 때가 아니라 여기서 잡는다). 테더 화면이 부르는 설정 파일 zip(setup/)도 같다.
- * - 위치 권한은 COARSE 와 FINE 을 함께, 13 부터는 빼고(maxSdkVersion 32), 근처 기기는 neverForLocation.
+ * - 위치 권한은 청하지 않는다(minSdk 36 — 12 의 Wi-Fi Direct 가 요구하던 것을 걷었다), 근처 기기는 neverForLocation.
  */
 class TetherIsolationTest {
 
@@ -112,14 +112,15 @@ class TetherIsolationTest {
     }
 
     @Test
-    fun 위치는_COARSE_와_FINE_을_함께_12_까지만이고_근처_기기는_위치에_쓰지_않는다() {
+    fun 위치_권한은_청하지_않고_근처_기기는_위치에_쓰지_않는다() {
         val permissions = permissions()
-        assertEquals("32", permissions.getValue("android.permission.ACCESS_COARSE_LOCATION").attr("maxSdkVersion"))
-        assertEquals("32", permissions.getValue("android.permission.ACCESS_FINE_LOCATION").attr("maxSdkVersion"))
-        assertEquals("neverForLocation", permissions.getValue("android.permission.NEARBY_WIFI_DEVICES").attr("usesPermissionFlags"))
+        for (location in listOf("ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION", "ACCESS_BACKGROUND_LOCATION")) {
+            assertTrue("android.permission.$location" !in permissions.keys, location)
+        }
+        val nearby = permissions.getValue("android.permission.NEARBY_WIFI_DEVICES")
+        assertEquals("neverForLocation", nearby.attr("usesPermissionFlags"))
+        assertEquals("", nearby.attr("maxSdkVersion"))
         assertTrue("android.permission.ACCESS_WIFI_STATE" in permissions.keys && "android.permission.CHANGE_WIFI_STATE" in permissions.keys)
-        // 백그라운드 위치는 청하지 않는다.
-        assertTrue("android.permission.ACCESS_BACKGROUND_LOCATION" !in permissions.keys)
     }
 
     @Test

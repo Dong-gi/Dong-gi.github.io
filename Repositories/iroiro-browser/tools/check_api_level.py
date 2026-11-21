@@ -1,9 +1,13 @@
 """순수 JVM 모듈(:core·:net·:tether)이 부르는 자바 API 가 안드로이드의 minSdk 에 있는지 본다.
 
 그 모듈들은 JDK 로 컴파일되므로 컴파일러도 JVM 시험도 안드로이드에 없는 함수를 모른다 — 기기에서 `NoSuchMethodError` 로 앱이 죽는다
-(`URLEncoder.encode(String, Charset)`(API 33) 로 검색하면 죽었다, iroiro-viewer 는 `readNBytes` 로). lint 의 NewApi 는 앱 모듈만 본다
-(`checkDependencies` 를 켜도 JVM 모듈은 보지 않았다 — 되돌려 확인했다). 그래서 컴파일된 클래스의 상수 풀에서 `java/…`·`javax/…` 의
+(minSdk 31 때 `URLEncoder.encode(String, Charset)`(API 33) 로 검색하면 죽었다, iroiro-viewer 는 `readNBytes` 로). lint 의 NewApi 는 앱 모듈만
+본다(`checkDependencies` 를 켜도 JVM 모듈은 보지 않았다 — 되돌려 확인했다). 그래서 컴파일된 클래스의 상수 풀에서 `java/…`·`javax/…` 의
 메서드·필드 참조를 모아 SDK 의 `api-versions.xml`(lint 가 쓰는 표)과 견준다. 상속은 따라 올라가 찾는다.
+
+기준은 앱의 minSdk 다 — `app/build.gradle.kts` 의 `minSdk = N` 을 읽는다(2026-11-21 부터 36). 표의 판은 '36.1' 꼴(분기 판)도 있어 소수로
+견준다 — 36.1 에 들어온 것은 36.0 기기에 없으므로 문제로 친다. 그 판까지 SDK 에서 빠진 것(`removed` — 예: API 36 의 `Thread.stop(Throwable)`)도
+문제로 친다.
 
     ./gradlew :core:classes :net:classes :tether:classes
     python tools/check_api_level.py            # 문제가 있으면 끝 코드 1
@@ -20,7 +24,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-MIN_SDK = 31
+
 MODULES = ["core", "net", "tether"]
 # invokedynamic 의 부트스트랩(문자열 잇기·람다)은 D8 이 풀어 쓴다 — 안드로이드에서 그대로 부르지 않는다.
 IGNORED_PREFIXES = ("java/lang/invoke/",)
@@ -34,6 +38,18 @@ def sdk_dir() -> pathlib.Path:
     return pathlib.Path(m.group(1).strip().replace("\\:", ":").replace("\\\\", "\\"))
 
 
+def min_sdk() -> int:
+    """앱의 minSdk — app/build.gradle.kts 의 `minSdk = N`(도구와 빌드가 어긋나지 않게 한 곳에서만 정한다)."""
+    gradle = (ROOT / "app" / "build.gradle.kts").read_text(encoding="utf-8")
+    found = re.findall(r"^\s*minSdk\s*=\s*(\d+)\s*$", gradle, re.M)
+    if len(found) != 1:
+        sys.exit("app/build.gradle.kts 에서 minSdk 를 하나로 읽지 못했다")
+    return int(found[0])
+
+
+MIN_SDK = min_sdk()
+
+
 def api_versions() -> pathlib.Path:
     platforms = sorted((sdk_dir() / "platforms").glob("android-*/data/api-versions.xml"))
     if not platforms:
@@ -42,35 +58,44 @@ def api_versions() -> pathlib.Path:
 
 
 class Api:
-    """api-versions.xml — 클래스마다 처음 들어온 판, 멤버마다 처음 들어온 판, 부모들."""
+    """api-versions.xml — 클래스마다 처음 들어온 판, 멤버마다 (처음 들어온 판, 빠진 판), 부모들(빠진 부모는 뺀다)."""
 
     def __init__(self, path: pathlib.Path):
         # 판은 '37.0'·'36.1' 꼴도 있다 — 소수로 읽는다.
-        self.classes: dict[str, tuple[float, dict[str, float], list[str]]] = {}
+        self.classes: dict[str, tuple[float, dict[str, tuple[float, float | None]], list[str]]] = {}
         for _, el in ET.iterparse(path, events=("end",)):
             if el.tag != "class":
                 continue
             name = el.get("name")
             since = float(el.get("since", "1"))
-            members: dict[str, float] = {}
+            gone = el.get("removed")
+            if gone and float(gone) <= MIN_SDK:
+                # 그 판까지 통째로 빠진 클래스 — 없는 것으로 친다(그 멤버는 '안드로이드에 없다').
+                el.clear()
+                continue
+            members: dict[str, tuple[float, float | None]] = {}
             parents: list[str] = []
             for child in el:
+                removed = child.get("removed")
                 if child.tag in ("method", "field"):
-                    members[child.get("name")] = float(child.get("since", str(since)))
-                elif child.tag in ("extends", "implements"):
+                    members[child.get("name")] = (float(child.get("since", str(since))), float(removed) if removed else None)
+                elif child.tag in ("extends", "implements") and not (removed and float(removed) <= MIN_SDK):
                     parents.append(child.get("name"))
             self.classes[name] = (since, members, parents)
             el.clear()
 
     def since(self, cls: str, member: str, seen: set[str] | None = None) -> float | None:
-        """멤버가 그 클래스(또는 조상)에 들어온 판. 어디에도 없으면 None."""
+        """멤버가 그 클래스(또는 조상)에 들어온 판. 어디에도 없거나 minSdk 까지 빠졌으면 None."""
         seen = seen or set()
         if cls in seen or cls not in self.classes:
             return None
         seen.add(cls)
         class_since, members, parents = self.classes[cls]
         if member in members:
-            return max(class_since, members[member])
+            added, removed = members[member]
+            if removed is None or removed > MIN_SDK:
+                return max(class_since, added)
+            # 이 클래스에서는 빠졌다(재정의만 빠진 것일 수 있다) — 부모에서 물려받는지 아래에서 찾는다.
         found = [s for p in parents if (s := self.since(p, member, seen)) is not None]
         return max(class_since, min(found)) if found else None
 

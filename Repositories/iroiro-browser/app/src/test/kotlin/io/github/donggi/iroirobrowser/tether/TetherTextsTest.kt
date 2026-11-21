@@ -132,8 +132,8 @@ class TetherTextsTest {
             ),
             TetherTexts.status(off.copy(hotspotProblem = HotspotProblem.GROUP_LOST)),
         )
-        // 시간 안에 서지 않았다·위치 서비스 — 어느 까닭이든 같은 꼴.
-        for (problem in listOf(HotspotProblem.NOT_FORMED, HotspotProblem.LOCATION_OFF, HotspotProblem.BUSY_NO_GROUP)) {
+        // 시간 안에 서지 않았다·Wi-Fi 꺼짐 — 어느 까닭이든 같은 꼴.
+        for (problem in listOf(HotspotProblem.NOT_FORMED, HotspotProblem.WIFI_OFF, HotspotProblem.BUSY_NO_GROUP)) {
             assertEquals(R.string.tether_status_hotspot_problem, TetherTexts.status(off.copy(hotspotProblem = problem)).last().res, problem.name)
         }
         assertEquals(R.string.tether_status_denied, TetherTexts.status(off.copy(foregroundDenied = true)).first().res)

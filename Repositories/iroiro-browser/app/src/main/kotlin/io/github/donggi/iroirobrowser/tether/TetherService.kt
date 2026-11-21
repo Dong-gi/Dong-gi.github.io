@@ -14,11 +14,9 @@ import android.content.pm.ServiceInfo
 import android.net.wifi.p2p.WifiP2pGroup
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
-import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
 import io.github.donggi.iroirobrowser.BuildConfig
@@ -50,7 +48,7 @@ import io.github.donggi.iroirobrowser.tether.core.ThreadBudget
  * 서버의 줄에 까닭이 보인다. 돌던 서버의 받기 고리가 죽으면 그 서버는 포트를 놓고 내려가며 여기서 상태를 내리고 다음 시작 요청에서 다시 세운다.
  * 자격 증명은 인텐트에 싣지 않고 이 서비스가 설정([TetherSettings])에서 읽는다.
  *
- * **핫스팟이 서지 못하거나(권한·위치·Wi-Fi 꺼짐·BUSY·15초 안에 서지 않음 …) 켜진 뒤 밖에서 내려가면(Wi-Fi 끄기·Channel 을 잃음) 테더링을
+ * **핫스팟이 서지 못하거나(권한·Wi-Fi 꺼짐·BUSY·15초 안에 서지 않음 …) 켜진 뒤 밖에서 내려가면(Wi-Fi 끄기·Channel 을 잃음) 테더링을
  * 통째로 끈다**([endTethering]) — 핫스팟 없는 서버는 어떤 손님도 받지 못한다(손님 거르기 — 우리 그룹이 없으면 NO_GROUP). 까닭은
  * [TetherState.hotspotProblem] 에 남아 화면이 보인다.
  *
@@ -58,7 +56,7 @@ import io.github.donggi.iroirobrowser.tether.core.ThreadBudget
  * 테더링을 끈다. 손님 거르개는 그 그룹의 인터페이스 이름([TetherState.groupInterface])과 견줘 우리 그룹이 떠 있을 때만 받는다.
  *
  * `START_STICKY` 이고 매니페스트의 `stopWithTask="false"` 와 [onTaskRemoved] 로 최근 앱에서 밀어 없애도 다시 선다.
- * 시스템이 다시 세우는 sticky 포그라운드 서비스는 안드로이드 12 의 '뒤에서 포그라운드 서비스 시작하기' 제한의 예외다. 시작 요청은 모두 '켜기'
+ * 시스템이 다시 세우는 sticky 포그라운드 서비스는 '뒤에서 포그라운드 서비스 시작하기' 제한(12 부터)의 예외다. 시작 요청은 모두 '켜기'
  * 라 그 재시작도 핫스팟을 다시 켜 본다 — 이 앱의 화면이 앞에 없어 BUSY 면 떠 있는 우리 그룹을 다시 쓰고(같은 SSID·패스프레이즈), 그것도 없으면
  * 테더링을 끄고 까닭을 남긴다.
  *
@@ -86,12 +84,12 @@ class TetherService : Service() {
     /** 테더링을 끄기로 했고 시스템이 이 서비스를 내릴 참이다 — 알림을 다시 내걸지 않는다. 다음 시작 요청이 오면 되돌린다. */
     private var ending = false
 
-    /** Wi-Fi Direct 의 연결 변경 — 그룹이 서고 내려가는 소식. 내보내지 않는다(13 이상 — 12 이하는 시스템만 보낼 수 있는 보호된 방송이다). */
+    /** Wi-Fi Direct 의 연결 변경 — 그룹이 서고 내려가는 소식. 내보내지 않는다(`RECEIVER_NOT_EXPORTED` — 시스템만 보낼 수 있는 보호된 방송이기도 하다). */
     private val p2pReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action != WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION) return
-            val info = intent.parcelable<WifiP2pInfo>(WifiP2pManager.EXTRA_WIFI_P2P_INFO)
-            val group = intent.parcelable<WifiP2pGroup>(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
+            val info = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO, WifiP2pInfo::class.java)
+            val group = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_GROUP, WifiP2pGroup::class.java)
             onP2pChanged(
                 formed = info?.groupFormed == true,
                 owner = info?.isGroupOwner == true && group?.isGroupOwner == true,
@@ -108,12 +106,7 @@ class TetherService : Service() {
         ensureChannel(this)
         TetherState.resetCounters()
         val filter = IntentFilter(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(p2pReceiver, filter, RECEIVER_NOT_EXPORTED)
-        } else {
-            // 12 이하에는 깃발이 없다 — 이 방송은 시스템만 보낼 수 있다(보호된 방송).
-            registerReceiver(p2pReceiver, filter)
-        }
+        registerReceiver(p2pReceiver, filter, RECEIVER_NOT_EXPORTED)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -146,12 +139,7 @@ class TetherService : Service() {
      * '다시 켜세요' 를 보인다. 테더 프로세스가 죽으면 PC 의 인터넷이 끊기므로 여기서 던지게 두지 않는다.
      */
     private fun goForeground(): Boolean = try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startForeground(NOTICE_ID, notice(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
-        } else {
-            // 14 밑에서는 매니페스트의 종류(specialUse)를 그대로 쓴다.
-            startForeground(NOTICE_ID, notice())
-        }
+        startForeground(NOTICE_ID, notice(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
         TetherState.foregroundDenied = false
         true
     } catch (e: IllegalStateException) {
@@ -496,14 +484,5 @@ class TetherService : Service() {
             val text = TetherTexts.hotspot(problem, detail)
             Toast.makeText(context, context.getString(text.res, *text.args.toTypedArray()), Toast.LENGTH_LONG).show()
         }
-
-        /** 방송의 덧붙임 — 형식 있는 판은 14 부터 쓴다(13 의 그 판에는 결함이 있다 — AndroidX IntentCompat 이 같은 까닭으로 가른다). */
-        private inline fun <reified T : Parcelable> Intent.parcelable(name: String): T? =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                getParcelableExtra(name, T::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                getParcelableExtra(name) as? T
-            }
     }
 }

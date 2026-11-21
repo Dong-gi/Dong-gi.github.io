@@ -102,7 +102,6 @@ object UriRefs {
 
     /**
      * RFC 3986 5.2.4 — 점 마디를 걷는다. 나간 마디는 앞의 빗금과 함께 목록에 쌓고 `..` 는 마지막 하나를 뺀다(뿌리 위로는 가지 않는다).
-     * 목록의 끝을 뺄 때 `removeAt(size - 1)` 을 쓴다 — `removeLast` 는 JDK 21 로 컴파일하면 안드로이드 12 에 없는 함수를 부른다.
      *
      * RFC 의 '입력 버퍼' 는 남은 글을 잘라 새로 만들지 않고 자리([i])로 센다 — 잘라 만들면 마디마다 남은 길을 통째로 베껴 제곱 시간이 된다
      * (재생목록의 한 줄은 MB 단위일 수 있고 찾은 재생목록은 쪽이 고른 것을 뒤에서 저절로 읽는다 — 그 쪽 하나로 앱의 일꾼이 몇 분씩 묶였다).
@@ -125,10 +124,10 @@ object UriRefs {
                 }
                 path.startsWith("/../", i) -> {
                     i += 3
-                    if (out.isNotEmpty()) out.removeAt(out.size - 1)
+                    if (out.isNotEmpty()) out.removeLast()
                 }
                 left == 3 && path.startsWith("/..", i) -> {
-                    if (out.isNotEmpty()) out.removeAt(out.size - 1)
+                    if (out.isNotEmpty()) out.removeLast()
                     out += "/"
                     i = n
                 }

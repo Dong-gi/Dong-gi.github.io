@@ -2,7 +2,6 @@ package io.github.donggi.iroirobrowser.tether
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.LocationManager
 import android.net.wifi.WifiManager
 import android.net.wifi.p2p.WifiP2pConfig
 import android.net.wifi.p2p.WifiP2pGroup
@@ -18,8 +17,8 @@ import io.github.donggi.iroirobrowser.tether.core.Passphrases
  * 셋이 `0.0.0.0` 에서 듣고 [io.github.donggi.iroirobrowser.tether.core.PeerFilter] 가 **이 그룹의 인터페이스**([groupInterface])로 들어온 손님만
  * 받는다.
  *
- * 사용자가 정한 SSID·패스프레이즈(`WifiP2pConfig.Builder` — API 29)로 만든다. 권한: Android 13 이상은 `NEARBY_WIFI_DEVICES`(neverForLocation),
- * 12 이하는 **정확한 위치**(`ACCESS_FINE_LOCATION`) — 그리고 `CHANGE_WIFI_STATE`. 권한을 청하는 것은 테더 화면에서 테더링을 켤 때뿐이다.
+ * 사용자가 정한 SSID·패스프레이즈(`WifiP2pConfig.Builder` — API 29)로 만든다. 권한: `NEARBY_WIFI_DEVICES`(neverForLocation — 위치 권한도 위치
+ * 서비스도 필요 없다)와 `CHANGE_WIFI_STATE`. 권한을 청하는 것은 테더 화면에서 테더링을 켤 때뿐이다.
  *
  * ## 켜짐은 그룹이 선 것을 확인한 뒤에
  *
@@ -113,14 +112,12 @@ internal class WifiHotspot(
     }
 
     /**
-     * 그 자리의 환경 점검. Wi-Fi 가 꺼져 있으면 Wi-Fi Direct 그룹을 만들 수 없다(인터넷 연결은 필요 없다). 위치 서비스가 꺼져 있으면 안드로이드가
-     * Wi-Fi Direct 를 막는다(13 이상의 neverForLocation 에서도 필요한지는 확인하지 않았다).
+     * 그 자리의 환경 점검. Wi-Fi 가 꺼져 있으면 Wi-Fi Direct 그룹을 만들 수 없다(인터넷 연결은 필요 없다). 위치 서비스는 보지 않는다 —
+     * `neverForLocation` 으로 근처 기기 권한만 쥔 앱의 그룹 만들기·연결 변경 방송에는 필요 없다(minSdk 36 — 12 에서는 필요했다).
      */
     private fun checkEnvironment(): HotspotProblem? {
         val wifi = appContext.getSystemService(WifiManager::class.java)
         if (wifi != null && !wifi.isWifiEnabled) return HotspotProblem.WIFI_OFF
-        val location = appContext.getSystemService(LocationManager::class.java)
-        if (location != null && !location.isLocationEnabled) return HotspotProblem.LOCATION_OFF
         return null
     }
 

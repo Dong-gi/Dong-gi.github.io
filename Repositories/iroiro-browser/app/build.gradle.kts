@@ -8,11 +8,12 @@ android {
 
     defaultConfig {
         applicationId = "io.github.donggi.iroirobrowser"
-        minSdk = 31
+        // Android 16 부터(2026-11-21 — 사용자의 메인 폰이 16 이 됐다. 옛 12 폰은 마지막 0.9.0 릴리스를 그대로 쓴다).
+        minSdk = 36
         // 반드시 적는다 — 없으면 AGP 9 가 조용히 compileSdk(37)로 채운다(iroiro-viewer 의 함정 표).
         targetSdk = 36
-        versionCode = 9
-        versionName = "0.9.0"
+        versionCode = 10
+        versionName = "1.0.0"
     }
 
     buildTypes {
@@ -38,8 +39,8 @@ android {
     }
 
     lint {
-        // :core·:net·:tether 는 순수 JVM 모듈이라 JDK 의 API 로 컴파일된다 — 안드로이드 12(API 31)에 없는 것을 써도
-        // 컴파일러는 모른다(예: URLEncoder.encode(String, Charset)). lint 는 이것을 켜도 그 모듈들을 보지 않는다 — 그 모듈들의
+        // :core·:net·:tether 는 순수 JVM 모듈이라 JDK 의 API 로 컴파일된다 — 안드로이드 16(API 36)에 없는 것을 써도
+        // 컴파일러는 모른다(minSdk 31 때의 예: URLEncoder.encode(String, Charset) — API 33). lint 는 이것을 켜도 그 모듈들을 보지 않는다 — 그 모듈들의
         // API 수준은 tools/check_api_level.py 가 본다(CLAUDE.md '툴체인과 확인 명령').
         checkDependencies = true
     }

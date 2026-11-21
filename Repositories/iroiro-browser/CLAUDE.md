@@ -12,7 +12,8 @@
 프로세스 `:tether`(아래 '테더링'). 브라우저 자신의 요청(WebView·내려받기·출구 확인·광고 목록)은 그것과 섞이지 않는다.
 
 - **iroiro-viewer 와 따로 된 앱이다**(사용자 결정). `INTERNET` 은 앱(UID) 단위라 같은 앱이면 모든 파일 권한을 가진 뷰어도 네트워크에 닿는다.
-- 이름 **Web**, 아이콘은 지구본(사용자 지정 — `drawable/ic_launcher_foreground.xml`, 크기는 viewer 아이콘과 같은 기준). 판은 **0.9.0**.
+- 이름 **Web**, 아이콘은 지구본(사용자 지정 — `drawable/ic_launcher_foreground.xml`, 크기는 viewer 아이콘과 같은 기준). 판은 **1.0.0**(versionCode 10). **Android 16(API 36) 부터**
+  깔린다(2026-11-21 — 사용자의 메인 폰이 16 이 됐다. 옛 12 폰(SM-A908N)은 마지막 0.9.0 릴리스를 그대로 쓴다 — 아래 'Android 16 으로 올리며').
 - 기능 — 브라우저(아래 '브라우저 — 무엇을 왜 그렇게 하나': 길·광고 차단·요소 숨기기·내려받기·찾은 미디어·재생 중인 것 받기·유튜브 광고 가리기와
   건너뛰기·뒤에서 재생 잇기 …), pixiv·hitomi 갤러리 받기('갤러리 받기' — 데스크톱 다운로더에서 옮겼다, 다운로더에는 YouTube 만 남았다), 테더링('테더링' —
   따로 된 앱이던 usb-tether 를 합쳤다), 설정 파일 zip('설정 파일 zip' — 프록시 서버 구성과 PC 연결 파일. 옛 PC 용 크롬 확장과 usb-tether 저장소를 대신한다).
@@ -29,12 +30,59 @@
 '링크 복사'(`Ui.copyLink`). 이어서 기기 키로 잠그기(`crypto/DeviceKeyCipher` — SecretBox·TetherSecret 은 별칭과 실패를 잡는 약속만 다르다),
 상한까지 읽기(`Streams.readAll`·`readHead`), 내려받기와 찾은 미디어 미리 읽기의 요청 머리(`download/HopHeaders`)를 모았다.
 
+## Android 16 으로 올리며 (1.0.0 — 2026-11-21)
+
+사용자의 메인 폰이 Android 16 이 되어 **minSdk 31 → 36**, 판 **0.9.0(9) → 1.0.0(10)**. targetSdk 36·compileSdk 37 은 그대로다. 옛 12 폰은 마지막
+0.9.0 릴리스(`Downloads/Web-0.9.0-release.apk` — 지우지 않는다)를 그대로 쓴다. 이 판은 12~15 에 깔리지 않는다.
+
+| 버전 때문에 갈랐던 것 | 1.0.0 |
+|---|---|
+| 뒤로 — 13 이상 `OnBackInvokedCallback`, 12 `onBackPressed`(+ lint `GestureBackNavigation` 막기) | 콜백 하나(브라우저·설정 화면). 테더 화면은 콜백을 걷었다 — 하는 일이 시스템의 기본(끝내기)과 같아 걸지 않아야 16 의 뒤로 미리 보기 애니메이션이 보인다. 매니페스트의 `tools:targetApi` 도 걷었다 |
+| 알림 권한 — 13 이상만 묻기 | 늘 묻는다(받기·녹화·테더를 켤 때 — 그 자리 그대로) |
+| 테더의 연결 변경 수신기 — 13 이상 `RECEIVER_NOT_EXPORTED` | 그 하나 |
+| 테더의 포그라운드 — 14 이상만 `startForeground(…, SPECIAL_USE)` | 그 하나 |
+| 방송의 덧붙임 — 14 이상 형식 있는 `getParcelableExtra` | 그 하나(도우미 함수를 걷었다) |
+| 타일의 트램폴린 — 14 이상 `startActivityAndCollapse(PendingIntent)` | 그 하나 |
+| 테더 권한 — 12 위치(FINE·COARSE, maxSdkVersion 32)·'대략적인 위치' 안내, 13 이상 근처 기기 | **근처 기기 하나**. 위치 권한·'위치 서비스 꺼짐' 검사(`HotspotProblem.LOCATION_OFF`)·'위치 설정 열기' 단추와 그 글을 걷었다 |
+| '링크 복사' 의 토스트 — 12 만(13 부터 시스템이 알린다) | 걷었다(글 `copied` 도) |
+| 막대 아래까지 그리기 — `setDecorFitsSystemWindows(false)`·투명한 `statusBarColor`·`navigationBarColor`(12~14 를 15 와 같게) | 걷었다 — targetSdk 35 부터 시스템이 늘 그렇게 그리고 그 셋은 듣지 않는다(폐기) |
+| `Remux` 의 MP4 — 14 이상만 AV1 | AV1 을 늘 넣는다(`MP4_MIMES`). **가로채기의 AV1 거절은 그대로** — 16 의 `MediaMuxer` 도 MP4 에 Opus 를, WebM 에 AV1 을 담지 못한다(아래 '재생 중인 것 받기' 의 '유튜브') |
+| 순수 JVM 모듈이 피하던 API 33 의 것 | `URLEncoder.encode`·`URLDecoder.decode` 의 `Charset` 판, `InputStream.readNBytes`(`Streams.readHead`·`SharedOps.readUpTo`), `removeLast`(API 35 — `UriRefs`). `Streams.readAll` 은 상한을 넘는 순간 끊는 꼴이라 그대로 |
+| `tools/check_api_level.py` — `MIN_SDK = 31` | `app/build.gradle.kts` 의 minSdk 를 읽는다(36). 36 까지 SDK 에서 빠진 것(`removed`)도 문제로 친다 |
+| 실험실 실행기 — `Android_12_Phone` 만 | `Android_16_Phone` 만(`run_lab.py` 의 `AVD`) |
+
+**13~16 의 동작 변경 가운데 이 앱에 닿는 것**(developer.android.com 의 behavior-changes 13·14·15·16·로컬 망 권한·Wi-Fi 권한·FGS 시한
+문서로 확인):
+- **고쳤다** — 위 표(뒤로·알림·수신기 깃발·PendingIntent 타일·위치 권한·복사 토스트·막대 그리기).
+- **이미 맞다(targetSdk 36 이라 0.9.0 도 그랬다)** — 포그라운드 서비스의 종류(14)와 `dataSync` 의 하루 6시간(15 — `DownloadService`·`CaptureService` 의
+  `onTimeout`), mediaPlayback·specialUse 는 시한 없음, 내보낸 것과 명시적 인텐트(14 'safer intents' — 내부 서비스·화면은 모두 명시적이고 내보내지 않는다),
+  예측 뒤로 가기(16 — targetSdk 36 이면 `onBackPressed`·KEYCODE_BACK 이 오지 않는다. 이 앱은 처음부터 콜백이다), 엣지 투 엣지 강제(15)와 16 의
+  `windowOptOutEdgeToEdgeEnforcement` 무효(이 앱은 쓰지 않았다).
+- **보고만** — ① **로컬 망 보호**: targetSdk 36 에서는 강제되지 않는다(문서 — 17(API 37) 부터, `ACCESS_LOCAL_NETWORK`). targetSdk 를 37 로 올리면 테더
+  서버가 **들어오는 연결을 받는 것**과 앱의 HTTP·WebView 가 사설망에 닿는 것(예외 규칙의 사설망)에 그 권한이 든다 — 올릴 때 함께 정한다. ② **노치 모드**:
+  15 부터(targetSdk 35+) 창이 아닌 화면의 `SHORT_EDGES`·`DEFAULT` 는 `ALWAYS` 로 읽힌다 — 전체 화면 영상 동안 노치 모드를 기본값으로 돌리는 것
+  (아래 '전체 화면' 표)은 듣지 않는다(영상이 노치 자리까지 그려질 수 있다 — 이 AVD 에는 노치가 없어 보지 못했다, 0.9.0 도 15 이상 폰에서는 같았다).
+  ③ **Wi-Fi 잠금**: 14 부터 `WIFI_MODE_FULL_HIGH_PERF` 는 `LOW_LATENCY` 로 바뀌고 앞에 있고 화면이 켜진 동안만 듣는다 — 뒤에서 재생 잇기의 Wi-Fi 잠금은
+  사실상 듣지 않는다(해가 없어 뒀다). ④ **16 의 일감 몫**: 포그라운드 서비스와 함께 도는 일감도 실행 몫을 따른다 — 광고 목록 갱신(`AdBlockUpdateJob`,
+  하루 한 번·짧다)에는 문제가 없을 것으로 본다(추론). ⑤ **16 의 인텐트 넘겨주기 보호**(모든 앱): 이 앱은 받은 인텐트의 덧붙임에 든 인텐트를 띄우지
+  않는다(`intent:` 고리는 `parseUri` 로 지어 컴포넌트·셀렉터를 지운다) — 닿지 않는다고 본다. ⑥ WebView·미디어 세션·타일에 16 의 변경은 문서에 없다.
+
+**에뮬레이터 `Android_16_Phone`**(2026-11-21 만듦 — `system-images;android-36;google_apis;x86_64` r7, `avdmanager` 가 없어(SDK 에 cmdline-tools 가
+없다) 이미지를 저장소 목록(`sys-img2-4.xml`)의 주소에서 받아 SHA-1 을 견주고 풀어 `package.xml` 을 짓고, AVD 파일(`config.ini` — 픽셀 8 꼴 1080×2400·420
+dpi·RAM 4 GB, 노치 없음)을 손으로 지었다. 그 이미지의 WebView 는 **133** 이다 — 사용자 폰(늘 최신)보다 낡았다. Play 판이 아니라 올릴 수 없다).
+띄우기: `env -u HTTP_PROXY … emulator.exe -avd Android_16_Phone -gpu host -feature -Vulkan`. 본 것(디버그·릴리스 판, 프록시 끔·광고 차단 끔) — 쪽 열기
+(example.com·고리 따라가기), 전체 화면의 위 가장자리 밀기, 뒤로(쪽 뒤로 → 할 일이 없으면 홈으로 — 화면은 남는다), 내려받기(묻기 → 알림 권한 묻기 →
+'내려받기' 에 107 B), 설정·테더 화면의 뒤로, 테더링(근처 기기 권한 하나 → **위치 서비스를 끈 채** 그룹 `DIRECT-UT-USBTether`·`p2p-wlan0-0` 이 서고
+서버 셋이 섬, 연결 변경 방송이 위치를 끈 채 닿음(`dumpsys activity broadcasts`), Wi-Fi 를 끄면 '핫스팟이 내려갔습니다' 로 통째로 꺼짐, `adb forward` 로
+들어온 연결은 '핫스팟 밖에서 온 연결' 로 거절), 퀵 설정 타일(`cmd statusbar click-tile` — PendingIntent 트램폴린으로 켜고 끄기), 공유 폴더(SAF 고르기 →
+디버그 탐침으로 저장 공간·만들기·이름 바꾸기·복사·옮기기·자기 안으로 거절·휴지통·`.nomedia`·되살리기·비우기). 시험 파일과 폴더는 지웠다.
+
 ## 사용자 결정
 
 | 무엇 | 결정 |
 |---|---|
 | 앱 | 뷰어와 **따로 된 앱**, `Repositories/iroiro-browser`, 이름 Web, 웹 브라우저 느낌의 아이콘 |
-| 의존·권한 | 의존은 `androidx.webkit` 1.17.1·`androidx.media3:media3-extractor` 1.11.1 둘(**승인**). 폰의 Android System WebView 는 늘 최신. 권한 — `INTERNET`·알림·포그라운드 서비스(`dataSync`·`mediaPlayback`·테더의 `specialUse`)·`ACCESS_NETWORK_STATE`(보통 권한 — JobScheduler)·`WAKE_LOCK`(보통 권한 — 뒤에서 재생 잇기), 테더링의 Wi-Fi 상태 읽기·바꾸기·**위치(12 이하 — COARSE·FINE)**·근처 기기(13 이상) — 아래 '테더링' 의 '권한' |
+| 의존·권한 | 의존은 `androidx.webkit` 1.17.1·`androidx.media3:media3-extractor` 1.11.1 둘(**승인**). 폰의 Android System WebView 는 늘 최신. 권한 — `INTERNET`·알림·포그라운드 서비스(`dataSync`·`mediaPlayback`·테더의 `specialUse`)·`ACCESS_NETWORK_STATE`(보통 권한 — JobScheduler)·`WAKE_LOCK`(보통 권한 — 뒤에서 재생 잇기), 테더링의 Wi-Fi 상태 읽기·바꾸기·근처 기기(`neverForLocation`). **위치 권한은 없다**(1.0.0 에서 걷었다) — 아래 '테더링' 의 '권한' |
 | 길 | **중계 하나로** — WebView·내려받기·출구 확인이 모두 앱 안 중계(`LocalRelay`)를 거친다(예외 규칙에 든 주소만 바로). 원격 계정은 중계만 안다 |
 | DNS 미리 찾기 누출 | **감수한다**(앱 전용 VPN 으로만 막을 수 있다 — 하지 않는다). 연결 상태 대화가 그 사실과 '개인 DNS' 를 알린다 |
 | 세이프 브라우징 | **쓰지 않는다**(Play 서비스가 프록시 밖에서 묻는다) — 설정과 매니페스트 meta-data 둘 다 끈다 |
@@ -78,7 +126,7 @@
 | 서드파티 | 보안에 취약한 서드파티 라이브러리를 쓰지 않는다(사용자: '개인용이라고 보안에 취약한 3자 라이브러리를 이용해선 안 됩니다'). 의존은 **`androidx.webkit` 1.17.1 과 `androidx.media3:media3-extractor` 1.11.1 둘**(둘 다 사용자 승인 — 끌려오는 것은 아래 '재생 중인 것 받기' 의 '의존'). **화면은 플랫폼 뷰로 짓는다** — Compose 등은 새 의존이라 승인이 필요하다. 새 의존·내려받기는 승인을 받는다 |
 | 공개 저장소 | 부모 저장소는 GitHub Pages 로 **통째 공개**된다. 개인 문서·keystore·서드파티 바이너리·**프록시의 주소와 계정**을 커밋하지 않는다. 실험실의 인증서·시험 계정·결과는 `local/`(git 무시), 디버그 빌드가 믿는 시험 CA 와 NSC(`app/src/debug/res/raw/lab_ca.pem`·`xml/nsc_lab.xml`)도 git 무시다 |
 | 커밋 | 사용자가 청할 때만 |
-| 기기 | **실기기(SM-A908N)에 깔지 않는다.** 에뮬레이터 `Android_12_Phone`(API 31)만. 태블릿 시험은 하지 않는다(사용자가 양도) |
+| 기기 | **실기기에 깔지 않는다**(사용자의 Android 16 폰도, 옛 SM-A908N 도). 에뮬레이터는 **`Android_16_Phone`(API 36, google_apis x86_64 — 픽셀 8 꼴)만**. `Android_12_Phone`(API 31)은 쓰지 않는다 — minSdk 36 이라 깔리지 않고, 그 안의 옛 앱에 사용자의 실제 프록시가 있다. 새 AVD 의 앱에는 실제 프록시 주소·계정을 넣지 않는다(프록시는 꺼 둔다). 태블릿 시험은 하지 않는다(사용자가 양도) |
 | 계정 | 실제 프록시 비밀번호는 **사용자가 넣는다**(Claude 가 넣지 않는다). 로그인하지 않는다. 시험 계정은 `make_certs.py` 가 만든 무작위 값이고 대화에 적지 않는다 |
 | 다른 설정 | 다른 앱·시스템의 보안 설정을 바꾸지 않는다 — 에뮬레이터에 인증서를 깔지 않고, 디버그 빌드의 네트워크 보안 설정이 시험 CA 를 `lab.test` 아래 이름에만 믿는다 |
 | 테더의 프로세스 | 테더의 구성 요소 다섯(화면·트램폴린·서비스·타일·타일을 길게 누를 때의 작은 화면)은 **모두 `android:process=":tether"`** 이고, 그 코드(`tether/`·`app/.../tether/`)는 **브라우저의 것(`WebApp.of` — 설정·길·내려받기, WebView)을 부르지 않는다** — 그 프로세스에서는 `WebApp.of` 가 던지고 WebView 가 꺼져 있다. 내보내는 것은 타일과 그 작은 화면(`TilePreferencesActivity` — 테더 화면을 열기만 하고 받은 인텐트를 읽지 않는다)뿐이다. 앱의 시험 `TetherIsolationTest` 가 매니페스트와 소스를 본다(테더 소스가 가져올 수 있는 앱의 것은 R·BuildConfig·`ui.Ui`·`crypto.DeviceKeyCipher` 뿐 — 그 도우미도 같은 규칙). 아래 '테더링' |
@@ -91,7 +139,7 @@
 
 Gradle 9.6.0(viewer 의 래퍼를 복사), AGP 9.4.1, **내장 Kotlin** 2.3.20(`android.builtInKotlin=true` — 외부 `org.jetbrains.kotlin.android` 를
 적용하면 AGP 9.4 의 새 DSL 과 충돌해 설정이 죽는다), JBR 21, compileSdk 37, **targetSdk 36 을 반드시 적는다**(없으면 AGP 9 가 조용히 37 로
-채운다), minSdk 31, Java 17(순수 JVM 모듈은 `jvmToolchain` 을 쓰지 않는다 — JDK 17 을 따로 내려받게 된다. 바이트코드만 17). **configuration
+채운다), **minSdk 36**(1.0.0 부터 — 앞은 31), Java 17(순수 JVM 모듈은 `jvmToolchain` 을 쓰지 않는다 — JDK 17 을 따로 내려받게 된다. 바이트코드만 17). **configuration
 cache 를 껐다** — 디버그 빌드가 시험 CA 파일이 있는지로 네트워크 보안 설정을 고른다(`app/build.gradle.kts` 의 manifestPlaceholders). 캐시가
 켜져 있으면 인증서를 만든 뒤에도 옛 판단이 남는다.
 
@@ -107,15 +155,16 @@ export JAVA_HOME="$HOME/.gradle/jdks/jetbrains_s_r_o_-21-amd64-windows.2"
 읽는 것**(`TetherIsolationTest`·`TetherWiringTest`·`SetupAssetsTest`)을 위해 `app/build.gradle.kts` 가 시험 과제의 입력에 매니페스트·`src/main/kotlin`·
 `res/values`·`src/main/assets` 를 적는다 — 그 파일만 바꿔도 시험이 다시 돈다.
 
-**`tools/check_api_level.py` 를 매번 돌린다.** `:core`·`:net`·`:tether` 는 순수 JVM 이라 JDK 의 API 로 컴파일된다 — 안드로이드 12 에
-없는 함수를 써도 컴파일러도 JVM 시험도 모른다(`URLEncoder.encode(String, Charset)`(API 33)로 **검색하면 앱이 죽었다**). lint 의 `NewApi` 는 앱
+**`tools/check_api_level.py` 를 매번 돌린다.** `:core`·`:net`·`:tether` 는 순수 JVM 이라 JDK 의 API 로 컴파일된다 — minSdk 에
+없는 함수를 써도 컴파일러도 JVM 시험도 모른다(minSdk 31 때 `URLEncoder.encode(String, Charset)`(API 33)로 **검색하면 앱이 죽었다**). 기준은
+`app/build.gradle.kts` 의 `minSdk` 를 읽는다(지금 36 — 분기 판 '36.1' 에 들어온 것과 36 까지 SDK 에서 빠진 것(`removed`)도 문제로 친다). lint 의 `NewApi` 는 앱
 모듈만 보고 `checkDependencies` 를 켜도 JVM 모듈은 보지 않았다(되돌려 확인했다). 이 도구는 컴파일된 클래스의 상수 풀에서 `java/…`·`javax/…`
-참조를 모아 SDK 의 `api-versions.xml`(lint 가 쓰는 표)과 견준다 — 같은 결함 둘(`URLEncoder`·`readNBytes`)을 되돌려 넣으면 둘 다 잡는다.
+참조를 모아 SDK 의 `api-versions.xml`(lint 가 쓰는 표)과 견준다 — minSdk 31 때 같은 결함 둘(`URLEncoder`·`readNBytes`)을 되돌려 넣으면 둘 다 잡았다(36 에서는 둘 다 있는 API 다).
 
 lint 경고 셋(targetSdk 37·Gradle 9.8·Kotlin 2.4 가 나왔다 — `--offline` 이면 Gradle·Kotlin 의 둘은 뜨지 않을 수 있다)은 viewer 와 같은 선택이라 그대로 둔다(올리려면 내려받기 승인이 필요하다). `MissingOnRenderProcessGone`(androidx.webkit 1.17 의 lint)은
 **오탐**이라 막았다 — Kotlin 의 상위 생성자 호출 `WebViewClient()` 을 맨 WebViewClient 를 만드는 것으로 읽는다(세 클래스 모두
-`onRenderProcessGone` 을 구현하고 true 를 돌려준다). `GestureBackNavigation` 도 막았다 — 13 이상은 플랫폼의 `OnBackInvokedCallback`, 12 는
-`onBackPressed`(AndroidX 의 디스패처는 새 의존이다). AAPT2 데몬이 한 번 'Universal C Runtime' 을 탓하며 못 뜬 적이 있다 — 다시 돌리면 된다.
+`onRenderProcessGone` 을 구현하고 true 를 돌려준다). 뒤로는 플랫폼의 `OnBackInvokedCallback` 하나다(1.0.0 — 12 의 `onBackPressed` 갈래와 그
+`GestureBackNavigation` 막기를 걷었다. AndroidX 의 디스패처는 새 의존이다). AAPT2 데몬이 한 번 'Universal C Runtime' 을 탓하며 못 뜬 적이 있다 — 다시 돌리면 된다.
 
 ## 모듈
 
@@ -294,8 +343,8 @@ tools/  check_api_level.py · lab/make_certs.py · lab/labserver.py · lab/labme
   않는다(쪽이 바꿔 원래 함수를 빼내지 못하게). 꼴은 JVM 시험 `WebRtcGuardTest`, 시험 쪽은 스크래치패드에만. `X-Requested-With` 빈 값(1.17 의
   `Profile.addCustomHeader` — 쪽이 스스로 단 값은 그대로라 AJAX 판정이 깨지지 않는다), 세이프 브라우징 끔, 파일·content 접근 끔(서비스 워커도 — 따로
   설정이고 기본값은 켜짐), 혼합 콘텐츠 막음, 서드파티 쿠키 막음(기본), 카메라·마이크·위치 거절. **웹 페이지에는 위치를 주지 않는다** — WebView 의 위치
-  API 를 끄고(`setGeolocationEnabled(false)`) 위치 요청을 늘 거절한다(`PageChrome.onGeolocationPermissionsShowPrompt`). 테더링 때문에 앱이 위치 권한을
-  갖게 되어 이 둘이 OS 권한이라는 바깥 겹 없이 지키는 선이다(두 곳에 그 주석을 달았다).
+  API 를 끄고(`setGeolocationEnabled(false)`) 위치 요청을 늘 거절한다(`PageChrome.onGeolocationPermissionsShowPrompt`). 앱은 위치 권한도 갖지 않는다
+  (1.0.0 — 12 의 테더링이 요구하던 위치 권한을 걷어 OS 권한이 다시 바깥 겹이다).
 - **정체 감추기.** **WebView Media Integrity API 를 끈다** — 기본값(켜짐)이면 쪽의 스크립트가
   `window.android.webview.getExperimentalMediaIntegrityTokenProvider` 로 Play 의 무결성 토큰을 받고 그 토큰에 이 앱의 꾸러미 이름이 실린다(androidx 의
   `WEBVIEW_MEDIA_INTEGRITY_API_ENABLED` 문서) — `X-Requested-With` 를 비운 까닭과 같다. **파비콘을 받지 않는다**(`setDownloadFaviconsEnabled(false)` — 이
@@ -345,7 +394,7 @@ tools/  check_api_level.py · lab/make_certs.py · lab/labserver.py · lab/labme
     때 센다. 검색은 세지 않는다.
 - 새 탭은 주소창 초점과 자판을 함께 띄운다(새 탭은 주소를 치려고 여는 일이 많다).
 - **복사한 링크 열기.** 주소창을 빈 글로 열면, 클립보드에 링크가 있어 보일 때 맨 위에 '복사한 링크 열기'(→)를 둔다 — 새 탭의 시작 화면 위에서는 그 줄
-  하나만(시작 화면을 덮지 않는다). **클립보드의 내용은 누를 때만 읽는다**(안드로이드 12 는 남의 클립을 읽을 때마다 알린다) — 그 전에는 설명만 본다
+  하나만(시작 화면을 덮지 않는다). **클립보드의 내용은 누를 때만 읽는다**(시스템은 남의 클립을 읽을 때마다 알린다 — 12 부터) — 그 전에는 설명만 본다
   (`AddressSuggestions.clipHasLink`): 10분 안에 복사한 것(`ClipDescription.getTimestamp` — `System.currentTimeMillis` 의 시계)이고, 링크 목록
   (`text/uri-list`)이거나 이름표가 http(s) 주소 하나(이 앱의 '링크 복사' 는 이름표에 주소를 둔다 — 브라우저 화면과 북마크·방문 기록 화면이 함께 쓰는 `Ui.copyLink` 한 곳, 파일 이름을 이름표로 다는 앱이 있어 스킴을 적은
   것만)거나, 글이면 시스템의 글 분류(`getConfidenceScore(TYPE_URL)` 0.9 이상) — **분류가 아직이거나 하지 않았으면 줄을 둔다**(함정 '클립보드의 설명').
@@ -550,7 +599,7 @@ B1 만 남는다), 사용자의 프록시(미국 출구)에서의 실제 광고,
 | **유튜브는 늘 '보임' 을 읽는다**(사용자 결정 — `BackgroundPlay.VISIBILITY_SCRIPT`). 유튜브 출처(`YtGuard.ORIGIN_RULES`)의 **주 틀**에만, **쪽의 세계**에 문서 시작 스크립트(`addDocumentStartJavaScript` — `WebViews.create`). 문서 객체의 `visibilityState`·`hidden`(크로미움에 있으면 접두어 붙은 둘도)을 '보임' 으로 덮고(열거되지 않는 접근자), `visibilitychange` 를 창의 포착 단계에서 멈춘다(쪽의 스크립트보다 먼저 건 듣개 — 창·문서의 쪽 듣개에 닿지 않는다). 쪽의 함수는 감싸지 않는다(브레이브의 탭 도우미는 `document.addEventListener` 를 바꿔 끼운다) | 위의 둘은 우리가 아는 숨김을 없앨 뿐이다 — 쪽이 잠깐이라도 숨으면(우리가 모르는 시스템의 창 전환·앞으로 생길 길) 유튜브가 재생기를 세운다. 이것이 있으면 크로미움은 숨은 동안 영상을 멈췄다가 보이면 저절로 다시 틀고(`paused_when_hidden`) 유튜브는 모른다. 앱의 실행 세계(통로·B1·B2)는 문서 객체가 따로라 실제 값을 읽고, 그 세계의 스크립트는 이 사건을 듣지 않는다. 숨은 채 60초 쉬면 360p 로 내리는 상한도 걸리지 않는다 |
 | **알림·잠금 화면·이어폰 단추** — 포그라운드 서비스(`BackgroundPlayService`, `mediaPlayback`, 알림 5, 채널 '재생' — 중요도 낮음)와 플랫폼 `MediaSession`(꼬리표 `Web`). `MediaStyle` 알림에 제목·'유튜브'·재생/일시 정지·닫기, 누르면 브라우저. 알림은 회가 있고 **앱이 뒤에 있거나 그 탭을 보지 않을 때만**(`serviceWanted`) — 앞에서 그 탭을 보면 걷는다 | 서비스 없이 화면을 끄자 재생이 멈췄다(에뮬레이터). 서비스는 앱이 막 뒤로 가는 순간에 세운다 — 뒤에서는 포그라운드 서비스를 세우지 못한다(그 실패는 삼킨다). 내보내지 않는다 |
 | 제목 — 실행 세계(BRIDGE)가 유튜브에서만 **화면의 제목 칸**(`.ytVideoMetadataViewModelTitle`)을 읽어 미디어 알림에 싣고, 앱이 다듬어 든다(`cleanText` — 제어 문자는 빈칸, 방향 제어 문자는 빼고, 200 코드 포인트). 없으면 쪽 제목에서 ' - YouTube' 를 뗀 것 | 유튜브 모바일 웹은 쪽 제목이 'YouTube' 뿐이고(본문에 둔 두 번째 `<title>`·og:title 은 처음 연 영상의 것으로 남는다), **WebView 에는 미디어 세션 API 가 없다**(함정 표). 재생 중인 틀의 것만 받고 바뀌면(다음 영상) 알림을 고친다. 유튜브가 그 클래스를 바꾸면 쪽 제목('YouTube')으로 물러선다 |
-| 재생 중인 동안 부분 wake lock(`Web:background-play`, 10분 제한, 1분마다 다시 건다)과 Wi-Fi 잠금(`WIFI_MODE_FULL_HIGH_PERF`). 멈추면 놓는다 | 화면을 끈 채 망이 끊기지 않게 |
+| 재생 중인 동안 부분 wake lock(`Web:background-play`, 10분 제한, 1분마다 다시 건다)과 Wi-Fi 잠금(`WIFI_MODE_FULL_HIGH_PERF`). 멈추면 놓는다 | 화면을 끈 채 망이 끊기지 않게. 단 14 부터 플랫폼이 HIGH_PERF 를 LOW_LATENCY 로 바꿔 끼고 그 잠금은 앱이 앞에 있고 화면이 켜진 동안만 듣는다(문서) — 뒤에서는 사실상 듣지 않는다(해가 없어 둔다) |
 | 단추는 통로로 — 앱이 그 탭의 모든 틀에 `media-control` 을 보내고 실행 세계가 재생 중인 요소를 멈추며 기억했다가 다시 튼다(기억이 없으면 마지막으로 재생한 요소) | 쪽의 세계를 건드리지 않는다 |
 | 멈춘 뒤 **10분**(`PAUSE_GRACE_MS`)은 회를 남긴다 — 알림·잠금 화면·이어폰으로 다시 튼다. 지나면 닫는다(그 탭은 여느 뒤의 탭 — `onPause`·떼기) | 멈춘 채 쪽을 '보임' 으로 두면 자원을 쓴다. Handler 의 시계는 기기가 잠든 동안 서므로 회가 조금 길어질 수 있다 |
 | 회가 닫히는 때 — 알림의 '닫기'·잠금 화면·이어폰의 정지(미디어도 멈춘다), 그 탭이 유튜브를 떠남, 탭을 닫음, 렌더러가 죽음, 길이 바뀌어 탭을 접음(끔 → 켬), 앞에서 그 탭으로 돌아옴(알림만 걷힌다 — 재생은 그대로), 화면이 사라짐, 최근 앱에서 밀어 없앰(`stopWithTask`) | |
@@ -586,7 +635,10 @@ WebView 의 보임·그리기와 알림은 기기에서 본다 — 에뮬레이�
 - **앞**: 크롬보다 10% 안팎 더 쓴다. 앱의 기능(중계·광고 차단·스크립트) 탓이 아니다 — 맨 WebView(WebView Shell)도 같거나 더 썼다. 까닭은 WebView 의
   구조다(크로미움·AOSP 소스): 크롬은 영상을 SurfaceControl 층으로 디스플레이 하드웨어(HWC)에 넘기는데(`kAndroidSurfaceControl`), 안드로이드 12 의 WebView
   는 그 길이 꺼져 있어(`kWebViewSurfaceControl` 기본 꺼짐, HWUI 의 `debug.hwui.webview_overlays_enabled` 기본 false — 13 부터 true) 영상 프레임마다 앱이
-  WebView 전체를 다시 합성한다. 에뮬레이터에서는 크롬도 오버레이를 못 쓰므로 폰에서는 차이가 더 클 것이다(추측).
+  WebView 전체를 다시 합성한다. 에뮬레이터에서는 크롬도 오버레이를 못 쓰므로 폰에서는 차이가 더 클 것이다(추측). **이 견줌은 12 에서 잰 것이다** — 13 부터는
+  HWUI 의 WebView 오버레이가 켜져 있어 WebView 도 영상을 오버레이로 넘길 수 있다(크로미움 쪽 기능이 그 기기·판에서 켜지는지는 확인하지 않았다). 그러면 앞의
+  차이는 줄고, 오버레이로 넘긴 영상은 화면 밖 그리기(`OffscreenDraw` — 뷰의 `draw`)에 실리지 않으므로 뒤의 그리기·디코더 막힘도 달라질 수 있다 — 16 에서 다시
+  재지 않았다(아래 '확인하지 못한 것').
 - **뒤**: 화면 밖 그리기를 vsync 마다(화면이 꺼져도 55–60 Hz) 하면 30 fps 영상에서 앞의 두 배를 그려 앞보다 더 쓴다 → 청할 때만 그리고, 영상 요소를
   숨기면 그리기가 거의 0 이 되어 뒤(홈)·화면 끔이 앞의 절반쯤이다(버린 프레임 0, 화질 그대로). 그래도 쪽을 실제로 숨기는 브레이브가 뒤에서 훨씬 적게
   쓸 것이다(재지 못했다). 크롬은 뒤에서 재생하지 않는다.
@@ -600,12 +652,13 @@ WebView 의 보임·그리기와 알림은 기기에서 본다 — 에뮬레이�
   고정·절전 끔·충전기 뺌·배터리 30–90%, 앞에서 30분씩(Web·크롬·브레이브 — 차례를 바꿔 두 번), 화면을 끈 채 뒤에서 30분씩(Web·브레이브 — 백그라운드 재생
   켬), 시작과 끝의 배터리 % 를 본다(앱별 숫자에는 하드웨어 해독·HWC·GPU 가 고르게 잡히지 않는 것으로 본다 — 추정).
 
-**확인하지 못한 것.** 사용자 기기에서 지금 판(화면 밖 그리기가 그 GPU 에서 되는지 — 실패가 이어지면 그만두고 예전처럼 끊긴다, 화면이 꺼진 동안의
+**확인하지 못한 것.** **Android 16 에서 다시 잰 적이 없다**(CPU·끊김·화질 — 13 부터 HWUI 의 WebView 오버레이가 켜져 '보이되 그려지지 않는 WebView'
+와 화면 밖 그리기의 전제가 달라질 수 있다, 위 'CPU' 의 '앞'). 사용자 기기에서 지금 판(화면 밖 그리기가 그 GPU 에서 되는지 — 실패가 이어지면 그만두고 예전처럼 끊긴다, 화면이 꺼진 동안의
 vsync, 전력, 남은 화질 상한), 실기기(삼성 One UI 의 배터리 관리가 뒤의 앱을 정리하는지, 잠금 화면의 모양, 진짜 블루투스·유선 이어폰 단추 — 에뮬레이터에는
 셸이 넣은 키뿐이다), 10분 뒤 닫힘, 알림의 '닫기' 단추 자체(같은 길인 정지 키로 봤다), 유튜브가 오래 만지지 않은 재생을 스스로 멈추는지('계속
 시청하시겠습니까?' — 다루지 않는다), 데스크톱 사이트(www)·music.youtube.com 의 제목, 회의 탭을 남긴 채 다른 탭을 오래 쓸 때의 메모리, 1080p·60 fps 영상,
 영상 트랙이 없는 재생(청이 없어 물러서기로 vsync 마다 그린다), 뒤에서 영상을 숨긴 채의 실제 광고(숨기는 것은 영상뿐이라 건너뛰기 단추는 보이고 눌릴
-것이다), 돌아올 때 영상 자리가 잠깐 비는지, Android 13 이상에서 알림 권한을 거절한 때(서비스는 서지만 알림이 보이지 않는다), TalkBack.
+것이다), 돌아올 때 영상 자리가 잠깐 비는지, 알림 권한을 거절한 때(서비스는 서지만 알림이 보이지 않는다), TalkBack.
 
 ### 내려받기
 
@@ -761,7 +814,7 @@ vsync, 전력, 남은 화질 상한), 실기기(삼성 One UI 의 배터리 관�
   TS 의 시각을 누르기 때문이다. 줄기(영상·소리)마다 덩이들을 차례로 읽어 트랙 하나를 뽑고 **시각 차례로 엇갈려** 담는다(한 줄기를 다 담고 다음을
   담으면 `MediaMuxer` 가 메모리에 쌓는다). 시작은 맞춘다 — 줄기들의 첫 시각이 2초 안에서 갈리면 같은 시계(TS 의 PTS·fMP4 의 tfdt·묶음 AAC 의 ID3
   시각 `Id3Timestamp`)로 보고 가장 이른 것을 0 으로, 더 갈리면 줄기마다 제 첫 시각을 0 으로. 그릇은 코덱이 정한다 — 모두 VP8·VP9·Opus·Vorbis 면
-  WebM, 모두 H.264·H.265·AAC(14 이상은 AV1)면 MP4, 그 밖은 담지 못한다(그때는 **따로 된 파일**로 남기고 목록·알림에 까닭을 적는다). DRM 으로 잠긴
+  WebM, 모두 H.264·H.265·MPEG-4·AV1·AAC 면 MP4(`Remux.MP4_MIMES` — minSdk 36 이라 AV1 을 판으로 가르지 않는다), 그 밖은 담지 못한다(그때는 **따로 된 파일**로 남기고 목록·알림에 까닭을 적는다). DRM 으로 잠긴
   표본이 보이면 담지 않는다. HLS·DASH 의 따로 된 소리는 줄기마다 앱 안의 임시 파일(`noBackupFilesDir/downloads/<번호>`)로 받은 뒤 한 파일로
   담는다. TS 는 **조각마다 따로** 읽는다(함정 '따로 만든 TS 조각의 연속성 카운터'). 줄기가 하나면 '내려받기' 폴더에 곧바로 잇는다(TS 는 `.ts` 그대로).
 - **의존**(사용자 승인). `androidx.media3:media3-extractor:1.11.1` 이 끌어오는 것 — media3-common·container·decoder, **Guava 33.3.1-android**
@@ -780,9 +833,10 @@ vsync, 전력, 남은 화질 상한), 실기기(삼성 One UI 의 배터리 관�
     추출기가 JVM 의 android.jar 에서 `Build.FINGERPRINT`·`TextUtils` 로 깨진다 — 기본값을 켜도 트랙을 읽지 못했다).
   - **가로채는 동안 AV1 은 '틀 수 없다' 고 답한다** — `MSE_HOOK` 이 `MediaSource.isTypeSupported`·`canPlayType`·`mediaCapabilities.decodingInfo` 에서
     `av01` 만 거절한다(가로채기를 고른 탭·그동안만). 이 WebView 에 유튜브는 AV1(+ Opus)을 고르는데, AV1 + Opus 는 `Remux` 가 한 그릇에 담지 못해(WebM 의
-    코덱 목록에 AV1 이, MP4 의 목록에 Opus 가 없다 — MP4 의 AV1 도 14 부터) 영상·소리 두 파일이 됐다. 거절하면 유튜브가 VP9 + Opus 를 골라 WebM 한 파일이
-    된다. **안드로이드 14 이상도 거절한다** — MP4 가 AV1 을 받아도 `mp4Mimes` 에 Opus 가 없어 AV1 + Opus 는 그대로 두 파일이다(14 이상을 가르려면 Opus 도
-    함께 다뤄야 한다 — '사용자가 정할 것').
+    코덱 목록에 AV1 이, MP4 의 목록에 Opus 가 없다) 영상·소리 두 파일이 됐다. 거절하면 유튜브가 VP9 + Opus 를 골라 WebM 한 파일이 된다. **minSdk 36 에서도
+    거절한다** — 플랫폼 `MediaMuxer` 가 MP4 에 Opus 를, WebM 에 AV1 을 담지 못한다(Android 16 — `android-16.0.0_r1` 의 `MPEG4Writer::getFourCCForMime` 은
+    소리가 AMR·AAC 뿐, `WebmWriter` 는 VP8·VP9·Opus·Vorbis 뿐, `MediaMuxer` 문서의 표도 Opus 는 WebM·OGG 만, AV1 은 MP4 만(34 부터)). 2026-11-21 에 소스로
+    확인했다 — 담지 못하므로 에뮬레이터 확인은 하지 않았다. 풀려면 다시 인코딩하거나 소리를 따로 두는 것을 받아들여야 한다('사용자가 정할 것').
   - 이름이 `youtube.com` 이 될 수 있다 — 그 영상이 처음 잡힌 때의 제목이 비어 있었다(되살린 저장이라 그런지는 보지 않았다).
   - 보지 않은 것 — 화질 전환, 광고 섞임(광고 차단이 켜져 있었다), 긴 영상·배속, 프록시로 볼 때의 봇 확인, 워커 MSE.
 
@@ -809,7 +863,7 @@ vsync, 전력, 남은 화질 상한), 실기기(삼성 One UI 의 배터리 관�
 | 숨지 않는 때 — 주소창 초점, 찾기 줄, 창이 초점을 잃었을 때(메뉴·탭 목록·대화상자·길게 누르기 메뉴), 막대 몸짓 중, **새 탭의 시작 화면** | 붙잡힌 동안 4초마다 다시 본다(풀렸다는 알림을 놓쳐도 결국 숨는다) |
 | 찾기 줄·받기 줄·알림 띠는 `TopStrips` 로 — 막대가 숨으면 화면 맨 위(노치만큼 띄운다), 나타나면 그 아래로 | 프록시 문제의 알림 띠는 늘 보인다 |
 | 막대가 숨은 동안 3dp 진행 막대가 화면 맨 위에 | 페이지를 여는 중인지 보인다 |
-| 앱을 떠났다 돌아오면 숨긴 상태(주소창을 고치던 중·찾기·시작 화면이면 보이는 채), 전체 화면 영상 동안만 노치 모드를 기본값으로 | 회전은 이 화면이 스스로 받는다(`configChanges`) — 인셋을 다시 맞춘다. 전체 화면 영상 동안은 `SCREEN_ORIENTATION_SENSOR`(회전 잠금을 켠 폰에서도 영상을 가로로 — 영상의 방향은 스크립트 없이 알 수 없어 회전 잠금만 무시한다) |
+| 앱을 떠났다 돌아오면 숨긴 상태(주소창을 고치던 중·찾기·시작 화면이면 보이는 채), 전체 화면 영상 동안만 노치 모드를 기본값으로(15 부터 targetSdk 35+ 는 `DEFAULT`·`SHORT_EDGES` 가 `ALWAYS` 로 읽혀 이 되돌림은 듣지 않는다 — 'Android 16 으로 올리며') | 회전은 이 화면이 스스로 받는다(`configChanges`) — 인셋을 다시 맞춘다. 전체 화면 영상 동안은 `SCREEN_ORIENTATION_SENSOR`(회전 잠금을 켠 폰에서도 영상을 가로로 — 영상의 방향은 스크립트 없이 알 수 없어 회전 잠금만 무시한다) |
 
 **확인하지 못한 것** — **노치**(이 에뮬레이터에서는 노치 흉내를 켜지 않는다 — 함정 표. 사용자 폰(위쪽 물방울 노치)과 One UI 의 앱별 '카메라 컷아웃'
 설정에서의 모습은 사용자가 볼 것), 전체 화면 영상 뒤, 알림 띠가 뜬 채, TalkBack, 분할 화면, 삼성 키보드. **알림 창을 내리려면 두 번 밀어야 한다**(첫
@@ -1370,17 +1424,18 @@ on-link 접두**(`wlan`·`eth`·`p2p`·`swlan`·`ap`·`softap`·`rndis`·`usb`·
   길이보다 먼저 본다) 8–63자이고 **뻔한 값**(`12345678`·`password`·서로 다른 글자 둘 이하·오름·내림 차례)은 거절한다 — 그룹에 들어온 기기는 인증 없이
   프록시와 공유 폴더에 닿으므로. 처음에는 기기마다 다른 **20자 난수**(헷갈리는 0/O·1/l/I 를 뺀 57자 — 약 116비트)를 만들어 채운다. 저장한 값이
   약하거나 규칙에 맞지 않으면 없는 것으로 친다.
-- 만들기 전에 Wi-Fi 꺼짐·위치 서비스 꺼짐·Wi-Fi Direct 꺼짐(모바일 핫스팟 등)을 할 수 있는 말로 알린다. **BUSY** 면 떠 있는 그룹이 **SSID 와
+- 만들기 전에 Wi-Fi 꺼짐·Wi-Fi Direct 꺼짐(모바일 핫스팟 등)을 할 수 있는 말로 알린다. **BUSY** 면 떠 있는 그룹이 **SSID 와
   패스프레이즈가 모두 같을 때만** 다시 쓴다(그룹 오너이기만 하면 받아들이면 남의·약한 그룹을 제 것으로 보인다). Channel 은 인스턴스마다 새로 만들고
   버릴 때 닫는다. 만들지 못한 인스턴스는 `removeGroup` 없이 Channel 만 닫는다(남의 그룹을 내리지 않게). 늦게 온 결과는 거른다.
 - **'켜짐' 은 우리 그룹이 선 것을 확인한 뒤**: `createGroup` 의 성공은 '요청을 받았다' 일 뿐이라, 그 뒤 그룹 조회를 0.5초마다 되풀이해 우리 그룹(이
   폰이 오너이고 이름이 우리 SSID — `GroupWatch`)이 인터페이스 이름과 함께 보이면 켜짐이고 그 이름을 `TetherState.groupInterface` 에 둔다. 15초 안에
   서지 않으면 그 그룹을 내리고 실패('핫스팟이 서지 않았습니다' — 테더링을 끈다). 그동안 화면·타일·알림은 '켜는 중'(화면의 단추는 이미 '테더링
   끄기').
-- **밖에서 내려가는 것**: 서비스가 `WIFI_P2P_CONNECTION_CHANGED_ACTION` 을 **동적으로** 받고(13 이상은 `RECEIVER_NOT_EXPORTED`, 12 이하는 깃발이
-  없지만 시스템만 보낼 수 있는 보호된 방송이다 — 매니페스트에는 수신기를 두지 않는다) Channel 을 잃는 것(`ChannelListener` — 우리가 닫은 것은 빼고)도
-  본다. 우리 그룹이 없다는 방송은 늦게 온 옛 방송일 수 있어 **조회로 확인한 뒤** 테더링을 통째로 끄고 '핫스팟이 내려갔습니다' 를 남긴다. 방송은 12 에서
-  위치 권한(FINE)과 위치 서비스가 켜져 있어야 온다 — 그룹을 만들 때와 같은 조건이다.
+- **밖에서 내려가는 것**: 서비스가 `WIFI_P2P_CONNECTION_CHANGED_ACTION` 을 **동적으로** 받고(`RECEIVER_NOT_EXPORTED` — 시스템만 보낼 수 있는 보호된
+  방송이기도 하다, 매니페스트에는 수신기를 두지 않는다) Channel 을 잃는 것(`ChannelListener` — 우리가 닫은 것은 빼고)도
+  본다. 우리 그룹이 없다는 방송은 늦게 온 옛 방송일 수 있어 **조회로 확인한 뒤** 테더링을 통째로 끄고 '핫스팟이 내려갔습니다' 를 남긴다. 방송은 근처 기기 권한으로
+  온다 — **위치 서비스가 꺼져 있어도**(16 에뮬레이터: 시스템이 `NEARBY_WIFI_DEVICES`+`ACCESS_WIFI_STATE` 를 요구하는 판과 위치를 요구하는 판을 따로 보내고,
+  위치를 끈 채 우리 수신기에 앞의 것이 닿았다).
 - **끄기**(화면의 단추·알림의 단추·타일 — `TetherService.stop`)는 켜져 있을 때만 부른다(`TetherState.tetheringOn` — 서비스가 떠 있고 핫스팟이
   켜졌거나 켜는 중, 판정은 `TetherTexts.isOn` 하나). 그때는 서비스가 이미 포그라운드로 섰으므로 `stopService` 가 막 청한 시작을 끊어 앱을 죽이는 일이
   없다. 사용자가 끄면 지난 까닭을 지우고(`TetherState.clearProblem`), 실패로 꺼진 것만 까닭이 남는다. 서비스가 내려가며 그룹을 내린다. `removeGroup` 이
@@ -1393,7 +1448,7 @@ on-link 접두**(`wlan`·`eth`·`p2p`·`swlan`·`ap`·`softap`·`rndis`·`usb`·
   실패해 끄기로 했으면 `START_NOT_STICKY`. 시스템이 뒤에서 포그라운드 서비스를 막으면(`ForegroundServiceStartNotAllowedException`) 앱을 죽이지 않고
   화면이 '다시 켜세요' 를 보인다(sticky 재시작과 배터리 최적화에서 뺀 앱은 그 제한의 예외다).
 - `createGroup` 은 **이 앱의 화면이 앞에 있지 않으면 BUSY 로 실패한다**(usb-tether 때 실기기) — 그래서 타일은 켤 때 내보내지 않은 투명 트램폴린을
-  띄운다(14 이상은 `startActivityAndCollapse(PendingIntent)` — Intent 판은 targetSdk 34 부터 던진다). 끌 때는 서비스를 곧바로 멈춘다(`stopService` —
+  띄운다(`startActivityAndCollapse(PendingIntent)` — Intent 판은 targetSdk 34 부터 던진다). 끌 때는 서비스를 곧바로 멈춘다(`stopService` —
   뒤에서도 막히지 않는다). 런처 화면(내보냄)이 인텐트의 액션만 보고 핫스팟을 켜면 **아무 앱이나** 사용자 모르게 켤 수 있다 — 켜는 일은 내보내지 않은
   트램폴린과 테더 화면의 단추만 한다.
 - 재부팅 뒤 저절로 켜지 않는다(사용자: 필요 없다). START_STICKY·`stopWithTask=false` — 최근 앱에서 밀어 없애도 테더링은 그대로다.
@@ -1404,11 +1459,10 @@ on-link 접두**(`wlan`·`eth`·`p2p`·`swlan`·`ap`·`softap`·`rndis`·`usb`·
 |---|---|---|
 | `FOREGROUND_SERVICE_SPECIAL_USE` | 테더 서비스의 종류(specialUse — 서브타입 property `userspace_socks5_and_http_proxy_for_wifi_direct_tethering`: 손님의 IP 패킷을 넘기지 않고 프록시가 내용만 옮긴다, VpnService 를 쓰지 않는다). dataSync 의 하루 6시간 한도와 상관없다 | 설치 때 |
 | `ACCESS_WIFI_STATE`·`CHANGE_WIFI_STATE` | Wi-Fi 가 켜졌는지·Wi-Fi Direct 그룹 만들기 | 설치 때 |
-| `ACCESS_FINE_LOCATION`·`ACCESS_COARSE_LOCATION`(둘 다 `maxSdkVersion 32`) | 12 이하에서 `createGroup` 이 **정확한 위치**를 요구한다. targetSdk 31 이상이 FINE 만 청하면 안드로이드 12 가 그 요청을 무시한다고 문서에 있어 **둘을 함께** 청한다. '대략적인 위치' 만 받으면 켤 수 없다 — 화면이 앱 설정으로 안내한다 | **테더 화면에서 '테더링 켜기' 를 누를 때만**(타일은 권한이 없으면 켜지 않고 테더 화면을 연다) |
-| `NEARBY_WIFI_DEVICES`(`neverForLocation`) | 13 이상의 `createGroup` — 위치를 얻는 데 쓰지 않는다고 밝혀 위치 권한이 필요 없다 | 위와 같다(알림 권한도 함께 — 거절해도 켠다) |
+| `NEARBY_WIFI_DEVICES`(`neverForLocation`) | `createGroup` 과 연결 변경 방송 — 위치를 얻는 데 쓰지 않는다고 밝혀 위치 권한도 위치 서비스도 필요 없다(16 에뮬레이터에서 위치를 끈 채 그룹이 서고 방송이 왔다) | **테더 화면에서 '테더링 켜기' 를 누를 때만**(알림 권한도 함께 — 거절해도 켠다. 타일은 권한이 없으면 켜지 않고 테더 화면을 연다) |
 
-앱이 위치 권한을 갖게 되어 웹 페이지의 위치 막기(위 '쪽의 결정')가 OS 겹 없이 지키는 선이 되었다. 카메라·마이크는 여전히 이 앱에 권한이 없다. 위치
-서비스가 꺼져 있으면 켜라고 알린다(화면에 '위치 설정 열기'). 13 이상에서도 위치 서비스를 보는 것은 usb-tether 그대로다(필요한지는 확인하지 않았다).
+**위치 권한은 걷었다**(1.0.0 — 12 의 `createGroup` 이 요구하던 `ACCESS_FINE/COARSE_LOCATION`(maxSdkVersion 32)과 '대략적인 위치' 안내, '위치 서비스
+꺼짐' 검사와 '위치 설정 열기' 단추). 이 앱에는 위치·카메라·마이크 권한이 없다 — 웹 페이지의 위치 막기(위 '쪽의 결정')에 OS 겹이 다시 있다.
 
 ### 알림 번호 — 앱 전체
 
@@ -1445,7 +1499,7 @@ on-link 접두**(`wlan`·`eth`·`p2p`·`swlan`·`ap`·`softap`·`rndis`·`usb`·
 화면(`TetherActivity` — 플랫폼 뷰): 상태 줄(**라이브 영역** — 켜져 있으면 서버의 실제 포트 셋과 세우지 못한 서버의 까닭·핫스팟과 그 그룹 인터페이스,
 꺼져 있으면 '테더링 꺼짐' 한 줄과 — 실패로 꺼졌으면 — '핫스팟 — 까닭'. 글이 실제로 바뀔 때만 다시 쓴다) · 오가는 양의 줄(라이브 영역 밖 — 주고받은
 양·거절한 연결 수와 마지막 까닭·상한으로 닫은 연결 수, 1초마다 — 같은 글이면 손대지 않는다, 함정 '늘 바쁜 화면') · **'테더링 켜기' / '테더링 끄기'
-하나**(켜기는 넣은 값 검사 → 권한 → 서비스, 끄기는 서비스를 멈춘다. 켜는 중에도 '끄기') · (그 문제일 때만) 위치 설정·앱 설정 · 짧은 설명(켜기·끄기·
+하나**(켜기는 넣은 값 검사 → 권한 → 서비스, 끄기는 서비스를 멈춘다. 켜는 중에도 '끄기') · (그 문제일 때만) 앱 설정 · 짧은 설명(켜기·끄기·
 포트·권한) · 핫스팟 — SSID·패스프레이즈(보이기 — 화면 상태 저장과 **자동 완성에서 빠진다**)·실제 SSID(켜진 동안(켜는 중 포함) 둘 다 잠긴다) · 공유
 폴더 고르기/그만두기와 **'관리 허용' 스위치**(기본 끔 — 설명 한 문장 '핫스팟에 붙은 기기가 공유 폴더를 바꾸고 지울 수 있습니다.', 파일 서버가 요청마다 본다)·
 **'휴지통 보관: 30일 (기본)' 단추**(누르면 7일·30일 (기본)·90일·비우지 않음을 고르는 창 — 브라우저 설정의 보관 기간과 같은 꼴, 설명 한 문장 '지운 지 이 기간이 지난 것은 휴지통에서 저절로 비웁니다.') ·
@@ -1572,8 +1626,7 @@ Program Files 사본 만들기(권한 고치기 포함)와 해시 대조, 옛 �
 3. **옛 앱이 떠 있으면 먼저 멈춘다**(설정 › 앱 › Hotspot › 강제 중지 — 그 서비스는 최근 앱에서 밀어도 다시 뜬다). **이 순간 PC 의 인터넷이 끊긴다.** 옛
    앱이 떠 있으면 새 앱의 SOCKS5(1080)는 서지 않고 HTTP·파일은 8283·8081 로 옮겨 서며(이 PC 의 8282 는 옛 앱으로 간다), 같은 자격 증명의 그룹이면 새 앱이
    옛 앱의 그룹을 다시 쓰게 된다.
-4. **테더링 켜기** → 권한(12: 위치 — **'정확한 위치'** 를 고른다, 13+: 근처 기기) → 위치 서비스가 꺼져 있으면 테더링이 곧바로 꺼지고 '위치 설정 열기' 가
-   보인다 → '서버 켜짐 · SOCKS5 1080 · HTTP 8282 · 파일 8080' 과 '핫스팟 켜짐 · DIRECT-UT-… · 이 폰은 192.168.49.1(**이름**)' 인지 본다. HTTP·파일이 기본
+4. **테더링 켜기** → 권한(근처 기기 — 위치는 묻지 않는다) → '서버 켜짐 · SOCKS5 1080 · HTTP 8282 · 파일 8080' 과 '핫스팟 켜짐 · DIRECT-UT-… · 이 폰은 192.168.49.1(**이름**)' 인지 본다. HTTP·파일이 기본
    포트가 아니면 이 폰의 다른 앱이 그 포트를 쥔 것이다 — 그 앱을 멈추고 껐다 켜거나, PC·손님의 설정을 화면의 포트로 고친다. SOCKS5 에 줄표가 보이면 그
    앱을 멈추고 껐다 켠다. PC 가 안 되면 '거절한 연결' 줄의 까닭을 받는다(PeerFilter 를 고친다).
 5. **공유 폴더를 다시 고른다**(SAF 권한은 앱마다다). **퀵 설정 타일 '테더링' 을 다시 더한다**(옛 'Hotspot' 타일은 옛 앱과 함께 사라진다. 삼성 One UI 의
@@ -1677,17 +1730,16 @@ SOCKS)은 `refusingPort` — 듣지 않는 소켓으로 묶어 쥔 루프백 포
 시험과 소스만), 실제 SAF 제공자에서 덮어쓰기의 휴지통 옮기기(`moveDocument`)와 두기가 같은 이름을 지우지 않는 것(에뮬레이터는 돌리지 않았다), SAF
 제공자가 방향·폭 없는 글자가 든 이름을 어떻게 다루는지(이제 서버가 빼므로 새로 생기지는 않는다).
 
-**사용자 폰(SM-A908N, 12)에서만 될 것**: 실제 Wi-Fi Direct 칩의 그룹 만들기·BUSY, **그룹 인터페이스의 이름**(상태 줄에 보인다)과 손님이 그 검사를
+**사용자 폰(이제 Android 16 폰)에서만 될 것**: 실제 Wi-Fi Direct 칩의 그룹 만들기·BUSY, **그룹 인터페이스의 이름**(상태 줄에 보인다)과 손님이 그 검사를
 지나는지, 연결 변경 방송이 오는지, 사용자 폰의 `rp_filter`(`adb shell cat /proc/sys/net/ipv4/conf/{all,default,wlan0}/rp_filter` — 1(엄격)이면 폰이 붙은
 남의 Wi-Fi 에서 경로를 넣는 길(손님 거르기 4)을 커널이 막는다)·`tcp_fwmark_accept`·`ip rule`(SO_MARK 길을 켤지 정할 때), 공유 폴더의 제공자가 이름
 바꾸기를 하는지, PC 의 tun2proxy·HTTP 프록시·UDP(DNS) 중계, 파일 서버(`http://192.168.49.1:8080`), 화면을 오래 끈 채(Doze)·셀룰러, 옛 앱에서 넘어갈 때의
 끊김. **손님이 붙는 길은 에뮬레이터 하나로는 만들 수 없다** — 그룹에 들 다른 기기가 없고, 폰 안에서 붙으면 출발 주소가 `.1` 이라 거르개가 막는다.
 
 **확인하지 못한 것**: 사용자가 '잘 작동합니다' 라고 했지만 무엇을 어디까지 보았는지(손님의 종류·그룹 인터페이스 이름·거절 줄)는 받지 못했다. 특히 사용자
-폰의 프레임워크가 그룹 인터페이스 이름을 주는지(비면 15초 뒤 '핫스팟이 서지 않았습니다' — 테더링이 꺼진다), 13 이상에서 위치 서비스가 필요한지, 연결마다의
+폰의 프레임워크가 그룹 인터페이스 이름을 주는지(비면 15초 뒤 '핫스팟이 서지 않았습니다' — 테더링이 꺼진다), 연결마다의
 인터페이스 조회의 비용, 스레드 예산 768 이 무거운 쓰임에 모자라지 않은지(넘으면 새 연결을 닫는다 — 화면에 수가 보인다), 삼성 One UI 의 퀵 설정이 길게
-누르기에 `QS_TILE_PREFERENCES` 를 쓰는지, 한글 패스프레이즈의 안내(adb 로 한글을 칠 수 없어 JVM 시험만), 자동 완성의 '저장할까요?', TalkBack, 위치
-서비스 꺼짐 안내(시스템 설정을 바꿔야 한다), 받는 중에 테더 프로세스가 처음 뜰 때 받던 파일이 지워지지 않는지(코드로만 — `WebApp.onCreate` 가 정리를
+누르기에 `QS_TILE_PREFERENCES` 를 쓰는지, 한글 패스프레이즈의 안내(adb 로 한글을 칠 수 없어 JVM 시험만), 자동 완성의 '저장할까요?', TalkBack, 받는 중에 테더 프로세스가 처음 뜰 때 받던 파일이 지워지지 않는지(코드로만 — `WebApp.onCreate` 가 정리를
 돌리기 **전에** 돌아간다), 파일 서버의 실제 주고받기·올리기의 임시 파일(JVM 시험만), **파일 서버의 새 화면을 실제 PC↔폰(Wi-Fi Direct)으로 쓰기**
 — PC 브라우저(크롬·엣지·파이어폭스)의 `<a download>` 로 받는 zip 이 4 GB·6만 5천 항목을 넘을 때(Zip64 — JDK·안드로이드의 `ZipOutputStream` 이 저절로
 쓴다고 보았다, 재지 않았다), 폴더째 올리기의 끌어다 놓기(크로미움 `webkitGetAsEntry` — 헤드리스에서는 지은 File 로만 보았다), 사용자 폰의 저장소 제공자가
@@ -1713,7 +1765,7 @@ SOCKS)은 `refusingPort` — 듣지 않는 소켓으로 묶어 쥔 루프백 포
 |---|---|
 | `setSingleLine` 과 비밀번호 칸 | 입력 종류(비밀번호)를 건 **뒤에** `isSingleLine = true` 를 부르면 글자 바꾸기가 한 줄 꼴로 갈아 끼워져 비밀번호 가리기가 풀린다 — 패스프레이즈가 '보이기' 를 끈 채 그대로 보였다. 한 줄을 먼저 걸고 입력 종류를 나중에 건다 |
 | SO_MARK 를 읽을 길 | `Os.getsockoptInt` 는 SDK 에 없다(컴파일 오류), 반사는 `MAX_TARGET_O` 로 막힌다 — 숨은 API 를 부르지 않는다(`TetherWiringTest` 가 본다) |
-| `createGroup` 과 앞 화면 | 이 앱의 화면이 앞에 없으면 BUSY — 타일은 트램폴린을 띄운다. 14 이상은 `startActivityAndCollapse(PendingIntent)` |
+| `createGroup` 과 앞 화면 | 이 앱의 화면이 앞에 없으면 BUSY — 타일은 트램폴린을 띄운다(`startActivityAndCollapse(PendingIntent)`) |
 | 길게 누르기의 화면은 내보내야 한다 | 시스템 UI 가 자기 uid 로 띄운다 — 그래서 그 화면은 받은 인텐트를 읽지 않고 테더 화면만 연다 |
 | 타일의 클래스 이름 | 바꾸면 사용자가 더해 둔 타일이 사라진다 |
 | MSYS 의 `cp` | 받아 둔 `adb`·`tun2proxy`(확장자 없는 맥·리눅스 판)를 Git Bash 의 `cp` 로 옮기면 같은 폴더의 `.exe` 를 덮어쓴다 — PowerShell 의 `Copy-Item` 으로 |
@@ -1754,7 +1806,7 @@ SOCKS)은 `refusingPort` — 듣지 않는 소켓으로 묶어 쥔 루프백 포
 ```bash
 python tools/lab/make_certs.py      # 한 번: 시험 CA·서버 인증서(*.lab.test, 10.0.2.2), 시험 계정, 디버그 NSC → 그 뒤 assembleDebug
 env -u HTTP_PROXY -u HTTPS_PROXY -u NO_PROXY -u http_proxy -u https_proxy -u no_proxy \
-    "$LOCALAPPDATA/Android/Sdk/emulator/emulator.exe" -avd Android_12_Phone -no-snapshot-load -gpu auto -dns-server 127.0.0.1
+    "$LOCALAPPDATA/Android/Sdk/emulator/emulator.exe" -avd Android_16_Phone -no-snapshot-load -gpu host -feature -Vulkan -dns-server 127.0.0.1
 python tools/lab/run_browser.py                 # 이 앱 — 기대가 낡았다(아래). 시나리오 이름을 주면 그것만(ready 를 함께)
 python tools/lab/run_lab.py                     # WebView 의 성질(60건, 약 15분) — 묶음·실험 이름을 주면 그것만, --repeat N
 ```
@@ -1767,7 +1819,7 @@ PC 의 루프백에 서는 것(에뮬레이터 안에서 `10.0.2.2` 가 PC 의 `
 연결을 이어 쓴다)·18080(평문 대조군), **목적지** 8080·8443(탐침 쪽들 — 내려받기·쿠키·출구 확인 `/cdn-cgi/trace` 포함), **웹소켓** 8081, **DNS**
 53/udp(`*.lab.test`·`labhost` → `10.0.2.2`, **나머지는 NXDOMAIN** — 누가 무엇을 찾았는지 다 적는다), **STUN** 3478–3492/udp(WebRTC 의 길마다 포트
 하나). 시험 프록시는 `*.lab.test`·`labhost` 만 잇고 나머지는 403 으로 거절하며 적는다. 실험 하나는 앱 프로세스 하나다(`am start -S`, 프록시 설정이
-프로세스 전체라서). 두 실행기는 `Android_12_Phone` 에뮬레이터인지 확인하고서야 깐다. **시험 미디어**는 `maker` 시나리오가 처음 한 번 기기의
+프로세스 전체라서). 두 실행기는 `Android_16_Phone` 에뮬레이터인지 확인하고서야 깐다(1.0.0 부터 — 앞은 `Android_12_Phone`. 그 AVD 의 옛 앱에는 사용자의 실제 프록시가 있다). **시험 미디어**는 `maker` 시나리오가 처음 한 번 기기의
 MediaRecorder 로 만든다(캔버스의 숫자·사인파 — 저작물이 아니다). 실험실이 받아 `local/lab/media/`(git 무시)에 두고, `labmedia.py` 가 나눠 DASH·HLS
 fMP4 를 짓고 같은 표본으로 TS(PAT·PMT·PES)와 묶음 AAC(ID3 시각 + ADTS)를 짠다(따로 만든 조각처럼 연속성 카운터가 조각마다 처음부터다). 잠긴 HLS 의
 조각은 openssl 로 실제로 잠근다.
@@ -1958,8 +2010,8 @@ hitomi 는 공개 저장소에 두면 DMCA 통지를 받을 수 있다(2026-03 F
 - 광고 목록의 **'Wi-Fi 에서만 자동 갱신'**(지금 꺼짐). List-KR·filterslists-KO 는 주소를 확인하지 못했다(설정에서 주소로 더한다)
 - **실시간 방송 받기**('멈출 때까지 받기') — 지금은 실시간 방송이면 받지 않는다(재생하며 녹화·가로채기로는 담긴다)
 - 가로채기에서 **화질이 바뀐 구간** — 지금은 바이트가 가장 많은 화질만 담는다. 여러 화질을 한 파일로 하려면 다시 인코딩이 필요하다
-- **가로채기의 AV1 거절을 안드로이드 14 이상에서 풀지** — 지금은 판과 상관없이 거절한다. 14 이상의 `MediaMuxer` 는 MP4 에 AV1 을 담지만 유튜브는 AV1 에
-  Opus 를 붙이므로, 풀려면 `Remux` 의 MP4 에 Opus 를 더하거나 소리를 따로 두는 것을 받아들여야 한다(위 '재생 중인 것 받기' 의 '유튜브')
+- **가로채기의 AV1 거절을 풀지** — 지금은 늘 거절한다. 16 의 `MediaMuxer` 도 MP4 에 Opus 를, WebM 에 AV1 을 담지 못해(소스로 확인 — 위 '재생 중인
+  것 받기' 의 '유튜브') AV1 + Opus 는 한 파일이 되지 않는다. 풀려면 소리를 다시 인코딩(Opus → AAC)하거나 두 파일을 받아들여야 한다
 - 녹화의 화질(지금 5 Mbps·160 kbps)과, 재생 중인 요소가 여럿일 때 고르는 화면(지금은 재생 중·영상·큰 것을 저절로)
 - **서비스 워커가 내는 요청의 UA**(기기 모델·`wv` 가 그대로 간다 — 실측). 고를 길: ① 감수(권고 — 출구 IP 가 이미 사용자 하나의 것이다), ② 서비스
   워커의 네트워크 요청을 막는다(`ServiceWorkerWebSettings.setBlockNetworkLoads` — 오프라인·푸시를 쓰는 사이트가 깨질 수 있다), ③ 서비스 워커의 GET 을
@@ -2000,7 +2052,7 @@ hitomi 는 공개 저장소에 두면 DMCA 통지를 받을 수 있다(2026-03 F
 
 ## 남은 일
 
-- **실기기** — 브라우저는 실기기에서 검증된 적이 없다(사용자가 깐다). 실제 폰(SM-A908N)의 WebView 판·셀룰러에서의 속도, 삼성 One UI·삼성 키보드에서의 꼴
+- **실기기** — 브라우저는 실기기에서 검증된 적이 없다(사용자가 깐다). 실제 폰(이제 Android 16 폰)의 WebView 판·셀룰러에서의 속도, 삼성 One UI·삼성 키보드에서의 꼴
   (글 고르기 메뉴의 '검색' 자리, '복사한 링크 열기' 가 삼성의 글 분류에서 뜨는지, 인라인 완성)
 - **테더링** — 지금 판을 사용자 폰에 다시 깐다(위 '사용자가 폰에서 할 일'), 특히 삼성 One UI 에서 타일을 길게 누르면 테더 화면이 열리는지(AOSP 는 그
   액션을 찾고 없으면 앱 정보를 연다). 손님이 붙는 길은 사용자 폰에서만. 사용자가 확인한 뒤 폰의 옛 usb-tether 앱을 지운다

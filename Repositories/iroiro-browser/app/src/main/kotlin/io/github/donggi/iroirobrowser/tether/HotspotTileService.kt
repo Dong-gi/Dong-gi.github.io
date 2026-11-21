@@ -2,7 +2,6 @@ package io.github.donggi.iroirobrowser.tether
 
 import android.app.PendingIntent
 import android.content.Intent
-import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import io.github.donggi.iroirobrowser.R
@@ -46,18 +45,13 @@ class HotspotTileService : TileService() {
         launchTrampoline()
     }
 
-    /** 내보내지 않은 트램폴린을 띄우고 패널을 접는다. 14 이상은 PendingIntent 판만 된다(Intent 판은 targetSdk 34 부터 던진다). */
+    /** 내보내지 않은 트램폴린을 띄우고 패널을 접는다 — PendingIntent 판(Intent 판은 targetSdk 34 부터 던진다). */
     private fun launchTrampoline() {
         val intent = Intent(this, HotspotStartActivity::class.java)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            startActivityAndCollapse(
-                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE),
-            )
-        } else {
-            @Suppress("DEPRECATION", "StartActivityAndCollapseDeprecated")
-            startActivityAndCollapse(intent)
-        }
+        startActivityAndCollapse(
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE),
+        )
     }
 
     private fun syncTile() {

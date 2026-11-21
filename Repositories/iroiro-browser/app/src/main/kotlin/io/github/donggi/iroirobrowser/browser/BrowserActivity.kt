@@ -1,7 +1,6 @@
 package io.github.donggi.iroirobrowser.browser
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
@@ -15,7 +14,6 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -469,9 +467,10 @@ class BrowserActivity : Activity(), PageHost {
             // 처음: 프록시를 켰는데 정하지 않았으면 아무 쪽도 열리지 않는다(중계가 막는다). 설정으로 먼저 보낸다 — 정하거나, 돌아와 스위치로 끈다.
             openSettings()
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT) { handleBack() }
-        }
+        // 뒤로는 플랫폼의 OnBackInvokedCallback 하나로 받는다(매니페스트의 enableOnBackInvokedCallback — 16 은 targetSdk 36 이면 그것이 기본이고
+        // onBackPressed·KEYCODE_BACK 이 오지 않는다). 늘 걸어 두므로 시스템의 '홈으로 돌아가기' 미리 보기 애니메이션은 보이지 않는다 —
+        // 할 일이 없을 때의 moveTaskToBack 은 시스템의 기본(뿌리 화면은 끝내지 않고 뒤로 보낸다)과 같다.
+        onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT) { handleBack() }
         offerLeftoverCaptures()
     }
 
@@ -686,16 +685,6 @@ class BrowserActivity : Activity(), PageHost {
         if (CaptureRegistry.host === captureHost) CaptureRegistry.host = null
         CaptureRegistry.publish(emptyList())
         super.onDestroy()
-    }
-
-    /**
-     * Android 12 이하의 뒤로. 13 이상은 [onCreate] 에서 건 플랫폼의 `OnBackInvokedCallback` 이 받는다(그때는 이것이 불리지 않는다).
-     * lint 는 AndroidX 의 OnBackPressedDispatcher 를 권하지만 새 의존 없이 플랫폼 둘로 같은 일을 한다.
-     */
-    @SuppressLint("GestureBackNavigation")
-    @Deprecated("Android 12 이하의 뒤로 — 13 이상은 OnBackInvokedCallback")
-    override fun onBackPressed() {
-        handleBack()
     }
 
     /**
@@ -3492,7 +3481,6 @@ class BrowserActivity : Activity(), PageHost {
     }
 
     private fun askNotificationPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
         if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) return
         requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQ_NOTIFICATIONS)
     }

@@ -231,8 +231,8 @@ class PageChrome(private val host: PageHost, private val tab: Tab) : WebChromeCl
     }
 
     /**
-     * 위치는 주지 않는다. 테더링 때문에 앱이 위치 권한(Wi-Fi Direct 에 드는 — 12 이하)을 가질 수 있다 — 이 거절과 WebViews 의
-     * `setGeolocationEnabled(false)` 가 OS 권한이라는 바깥 겹 없이 지키는 선이다.
+     * 위치는 주지 않는다 — 이 거절과 WebViews 의 `setGeolocationEnabled(false)`. 앱은 위치 권한도 갖지 않는다(minSdk 36 — 12 의 Wi-Fi
+     * Direct 가 요구하던 위치 권한을 걷었다) — OS 권한이 바깥 겹이다.
      */
     override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
         callback.invoke(origin, false, false)

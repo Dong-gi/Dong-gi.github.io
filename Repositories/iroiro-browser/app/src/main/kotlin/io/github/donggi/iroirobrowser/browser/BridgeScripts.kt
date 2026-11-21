@@ -519,8 +519,9 @@ object BridgeScripts {
     wrap(SB.prototype, 'changeType', function (args) { post({ op: 'type', sb: idOf(this), mime: String(args[0]) }); });
   }
   if (window.HTMLMediaElement) wrap(HTMLMediaElement.prototype, 'setMediaKeys', function (args) { if (args[0]) post({ op: 'drm' }); });
-  // AV1 은 '틀 수 없다' 고 답한다 — 안드로이드 13 이하의 MediaMuxer 는 AV1 을 담지 못해 영상·소리가 두 파일로 남는다(2026-11-07 유튜브 실험:
-  // AV1 + Opus). 재생기가 VP9·H.264 를 고르면 다시 인코딩 없이 한 파일이 된다. 가로채는 동안 이 쪽에만 걸린다.
+  // AV1 은 '틀 수 없다' 고 답한다 — 유튜브는 AV1 에 Opus 를 붙이는데 MediaMuxer 는 그 둘을 한 그릇에 담지 못해(MP4 는 AV1 만 — Opus 가 없다,
+  // WebM 은 Opus 만 — AV1 이 없다. Android 16 의 MPEG4Writer·WebmWriter 소스로 확인) 영상·소리가 두 파일로 남는다(2026-11-07 유튜브 실험).
+  // 재생기가 VP9·H.264 를 고르면 다시 인코딩 없이 한 파일이 된다. 가로채는 동안 이 쪽에만 걸린다.
   function av1(t) {
     var s = String(t).toLowerCase().split(' ').join('');
     return s.indexOf('av01') >= 0 || s.indexOf('codecs="av1') >= 0 || s.indexOf('codecs=av1') >= 0;

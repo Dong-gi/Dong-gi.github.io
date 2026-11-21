@@ -12,6 +12,5 @@ object SearchEngine {
 
     private const val PREFIX = "https://www.google.com/search?q="
 
-    // 문자 집합을 이름("UTF-8")으로 준다 — Charset 을 받는 겹은 안드로이드 13(API 33)부터다(12 에서 부르면 앱이 죽는다).
-    fun searchUrl(query: String): String = PREFIX + URLEncoder.encode(query, "UTF-8")
+    fun searchUrl(query: String): String = PREFIX + URLEncoder.encode(query, Charsets.UTF_8)
 }

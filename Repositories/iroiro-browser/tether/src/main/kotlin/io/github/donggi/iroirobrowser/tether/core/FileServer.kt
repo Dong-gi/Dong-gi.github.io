@@ -237,8 +237,8 @@ class FileServer(
                 if (key != name) continue
                 val raw = pair.substringAfter('=', "")
                 return try {
-                    // UTF-8 퍼센트 풀기(한글 이름). 문자 집합은 이름으로 준다 — (String, Charset) 판은 API 33 부터다.
-                    URLDecoder.decode(raw, "UTF-8")
+                    // UTF-8 퍼센트 풀기(한글 이름).
+                    URLDecoder.decode(raw, Charsets.UTF_8)
                 } catch (_: Exception) {
                     null
                 }

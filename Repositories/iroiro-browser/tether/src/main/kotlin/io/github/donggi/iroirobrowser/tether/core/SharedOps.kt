@@ -665,17 +665,8 @@ class SharedOps(
     }
 
     companion object {
-        /** [limit] 바이트까지 읽는다(그보다 길면 거기서 멈춘다 — 부르는 쪽이 길이로 넘침을 안다). `readNBytes` 는 API 33 이라 쓰지 않는다. */
-        internal fun readUpTo(input: java.io.InputStream, limit: Int): ByteArray {
-            val out = java.io.ByteArrayOutputStream()
-            val buffer = ByteArray(8192)
-            while (out.size() < limit) {
-                val n = input.read(buffer, 0, minOf(buffer.size, limit - out.size()))
-                if (n == -1) break
-                out.write(buffer, 0, n)
-            }
-            return out.toByteArray()
-        }
+        /** [limit] 바이트까지 읽는다(그보다 길면 거기서 멈춘다 — 부르는 쪽이 길이로 넘침을 안다). */
+        internal fun readUpTo(input: java.io.InputStream, limit: Int): ByteArray = input.readNBytes(limit)
 
         /** 한 번에 다루는 항목 수 상한(고른 것). */
         const val MAX_BATCH = 1000

@@ -193,7 +193,9 @@ class BackgroundPlayService : Service() {
             wake.acquire(WAKE_TIMEOUT_MS)
             wakeRefreshedAt = now
         }
-        @Suppress("DEPRECATION") // 12 에서는 문서대로, 14 부터는 플랫폼이 LOW_LATENCY 로 바꿔 낀다
+        // 14 부터 플랫폼이 HIGH_PERF 를 LOW_LATENCY 로 바꿔 끼고, 그 잠금은 앱이 앞에 있고 화면이 켜진 동안만 듣는다(문서) — 뒤에서 잇는 동안은
+        // 사실상 듣지 않는다(Wi-Fi 는 잠금 없이도 붙어 있다). 해가 없어 그대로 둔다.
+        @Suppress("DEPRECATION")
         val wifi = wifiLock ?: getSystemService(WifiManager::class.java)?.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, WAKE_TAG)
             ?.apply { setReferenceCounted(false) }
             ?.also { wifiLock = it }

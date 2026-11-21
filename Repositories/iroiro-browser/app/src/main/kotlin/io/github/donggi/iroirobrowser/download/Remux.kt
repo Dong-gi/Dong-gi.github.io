@@ -2,7 +2,6 @@ package io.github.donggi.iroirobrowser.download
 
 import android.media.MediaCodec
 import android.media.MediaMuxer
-import android.os.Build
 import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.DataReader
@@ -47,7 +46,7 @@ import java.nio.ByteBuffer
  * 다음 줄기를 담으면 `MediaMuxer` 가 메모리에 쌓는다). 시작은 맞춘다: 줄기들의 첫 시각이 [ALIGN_LIMIT_US] 안에서 갈리면 같은 시계로 보고
  * 가장 이른 것을 0 으로(TS 의 PTS·fMP4 의 tfdt·묶음 AAC 의 ID3 시각), 더 갈리면 시계가 다르다고 보고 줄기마다 제 첫 시각을 0 으로.
  *
- * 담는 그릇은 코덱이 정한다 — 모두 WebM 의 것(VP8·VP9·Opus·Vorbis)이면 WebM, 모두 MP4 의 것(H.264·H.265·AAC, 14 이상은 AV1)이면 MP4,
+ * 담는 그릇은 코덱이 정한다 — 모두 WebM 의 것(VP8·VP9·Opus·Vorbis)이면 WebM, 모두 MP4 의 것(H.264·H.265·MPEG-4·AV1·AAC)이면 MP4,
  * 그 밖은 [Unsupported](부르는 쪽이 따로 된 파일로 남긴다). DRM 으로 잠긴 것은 [Encrypted].
  */
 @OptIn(UnstableApi::class)
@@ -94,7 +93,7 @@ class Remux(sources: List<Source>, private val cancelled: () -> Boolean = { fals
         val p = when {
             mimes.all { it in WEBM_MIMES } ->
                 Plan(MediaMuxer.OutputFormat.MUXER_OUTPUT_WEBM, "webm", if (video != null) "video/webm" else "audio/webm", video, audio)
-            mimes.all { it in mp4Mimes() } ->
+            mimes.all { it in MP4_MIMES } ->
                 Plan(MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4, if (video != null) "mp4" else "m4a", if (video != null) "video/mp4" else "audio/mp4", video, audio)
             else -> throw Unsupported("이 코덱 조합(${mimes.joinToString()})은 한 파일로 담지 못합니다")
         }
@@ -376,11 +375,9 @@ class Remux(sources: List<Source>, private val cancelled: () -> Boolean = { fals
 
         private val WEBM_MIMES = setOf(MimeTypes.VIDEO_VP8, MimeTypes.VIDEO_VP9, MimeTypes.AUDIO_OPUS, MimeTypes.AUDIO_VORBIS)
 
-        private fun mp4Mimes(): Set<String> = buildSet {
-            addAll(listOf(MimeTypes.VIDEO_H264, MimeTypes.VIDEO_H265, MimeTypes.VIDEO_MP4V, MimeTypes.AUDIO_AAC))
-            // MediaMuxer 의 MP4 는 14(API 34)부터 AV1 을 담는다.
-            if (Build.VERSION.SDK_INT >= 34) add(MimeTypes.VIDEO_AV1)
-        }
+        // MediaMuxer 의 MP4 가 담는 것(Android 16 의 MPEG4Writer — AV1 은 14 부터). Opus 는 담지 못한다 — 그래서 AV1 + Opus(유튜브)는 한 그릇에
+        // 들지 않는다(WebM 은 AV1 을 담지 못한다). 가로채기가 AV1 을 거절하는 까닭(BridgeScripts 의 MSE_HOOK).
+        private val MP4_MIMES = setOf(MimeTypes.VIDEO_H264, MimeTypes.VIDEO_H265, MimeTypes.VIDEO_MP4V, MimeTypes.VIDEO_AV1, MimeTypes.AUDIO_AAC)
 
         /** 덩이 하나의 첫 표본 시각([type] 트랙) — 읽지 못하거나 그 트랙이 없으면 null. 가로채기가 덩이를 시각 차례로 놓을 때 쓴다. */
         fun firstTimeUs(run: Run, type: Int): Long? = try {

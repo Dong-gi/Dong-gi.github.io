@@ -57,11 +57,9 @@
     <string name="tether_passphrase_unreadable">저장한 패스프레이즈를 열지 못했습니다(지우지 않았습니다) — 새 값을 넣고 켜면 그 값을 씁니다. PC 의 Wi-Fi 프로필도 바꾸세요.</string>
     <string name="tether_passphrase_not_saved">패스프레이즈를 저장하지 못했습니다 — 앱이 다시 뜰 때까지만 씁니다</string>
     <string name="tether_show_passphrase">패스프레이즈 보이기</string>
-    <string name="tether_open_location_settings">위치 설정 열기</string>
     <string name="tether_open_app_settings">앱 설정 열기(권한)</string>
-    <string name="tether_permission_note">권한(위치·근처 기기)은 Wi-Fi Direct 에 필요해서 묻습니다 — 위치는 읽지 않습니다.</string>
-    <string name="tether_permission_precise">‘대략적인 위치’ 만 받았습니다 — Wi-Fi Direct 에는 ‘정확한 위치’ 가 필요합니다. 앱 설정 › 권한 › 위치에서 켜세요.</string>
-    <string name="tether_permission_denied">권한이 없어 켤 수 없습니다 — 앱 설정 › 권한에서 위치(13 이상은 근처 기기)를 허용하세요.</string>
+    <string name="tether_permission_note">권한(근처 기기)은 Wi-Fi Direct 에 필요해서 묻습니다 — 위치는 읽지 않습니다.</string>
+    <string name="tether_permission_denied">권한이 없어 켤 수 없습니다 — 앱 설정 › 권한에서 근처 기기를 허용하세요.</string>
 
     <!-- 핫스팟을 켜거나 끄지 못한 까닭 — 켜지 못했거나 내려갔으면 테더링이 통째로 꺼진다 -->
     <string name="tether_hotspot_p2p_unavailable">이 기기에서는 Wi-Fi Direct 를 쓸 수 없습니다</string>
@@ -71,7 +69,6 @@
     <string name="tether_credential_ssid_long">SSID 가 너무 깁니다 — DIRECT-UT- 를 포함해 32바이트(한글 한 자는 3바이트) 안이어야 합니다</string>
     <string name="tether_hotspot_secret_unreadable">저장한 패스프레이즈를 열지 못했습니다 — 테더링 화면에서 다시 넣고 켜세요</string>
     <string name="tether_hotspot_wifi_off">Wi-Fi 가 꺼져 있습니다 — 켜 주세요(어느 망에 붙을 필요는 없습니다)</string>
-    <string name="tether_hotspot_location_off">위치 서비스가 꺼져 있습니다 — Wi-Fi Direct 에 필요합니다</string>
     <string name="tether_hotspot_p2p_disabled">Wi-Fi Direct 가 꺼져 있습니다 — 모바일 핫스팟 등 Wi-Fi Direct 를 쓰는 앱을 끄고 다시 해 보세요</string>
     <string name="tether_hotspot_invalid">SSID 나 패스프레이즈를 시스템이 받지 않았습니다(%1$s)</string>
     <string name="tether_hotspot_permission">권한이 없습니다 — 테더링 화면에서 켜세요</string>

@@ -184,7 +184,6 @@ internal enum class HotspotProblem {
     SECRET_UNREADABLE,
 
     WIFI_OFF,
-    LOCATION_OFF,
 
     /** Wi-Fi Direct 가 꺼져 있다(모바일 핫스팟이 켜져 있는 등). */
     P2P_DISABLED,
@@ -192,7 +191,7 @@ internal enum class HotspotProblem {
     /** 프레임워크가 SSID·패스프레이즈를 받지 않았다(덧말: 예외의 글). */
     INVALID_CONFIG,
 
-    /** 권한이 없다(위치·근처 기기). */
+    /** 권한이 없다(근처 기기). */
     PERMISSION,
 
     /** createGroup 이 ERROR — 다른 핫스팟·Wi-Fi Direct 앱. */

@@ -52,7 +52,7 @@ object WebViews {
             loadWithOverviewMode = true
             mediaPlaybackRequiresUserGesture = true
             mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
-            // 위치 API 를 끈다 — 앱이 테더링(Wi-Fi Direct) 때문에 위치 권한을 가질 수 있어도 페이지에는 주지 않는다(PageChrome 도 거절한다).
+            // 위치 API 를 끈다 — 페이지에는 위치를 주지 않는다(PageChrome 도 거절한다. 앱도 위치 권한을 갖지 않는다).
             setGeolocationEnabled(false)
         }
         rememberDefaults(view.settings)

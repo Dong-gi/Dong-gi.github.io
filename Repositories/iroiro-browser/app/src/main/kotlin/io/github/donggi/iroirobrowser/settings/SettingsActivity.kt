@@ -1,10 +1,8 @@
 package io.github.donggi.iroirobrowser.settings
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.view.Gravity
@@ -189,16 +187,8 @@ class SettingsActivity : Activity() {
         val webView = WebViewCompat.getCurrentWebViewPackage(this)?.versionName ?: "?"
         note(column, 0, getString(R.string.settings_about_text, BuildConfig.VERSION_NAME, webView))
         setContentView(scroll)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT) { leave() }
-        }
-    }
-
-    /** Android 12 이하의 뒤로 — 13 이상은 [onCreate] 에서 건 `OnBackInvokedCallback`(BrowserActivity 와 같은 까닭). */
-    @SuppressLint("GestureBackNavigation")
-    @Deprecated("Android 12 이하의 뒤로 — 13 이상은 OnBackInvokedCallback")
-    override fun onBackPressed() {
-        leave()
+        // 뒤로는 저장하지 않은 것을 묻는다(BrowserActivity 와 같은 플랫폼 콜백).
+        onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT) { leave() }
     }
 
     /** 나간다 — 바꾼 것이 저장되지 않았으면 먼저 묻는다. */

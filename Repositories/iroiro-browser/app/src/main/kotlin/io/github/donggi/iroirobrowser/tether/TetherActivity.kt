@@ -1,12 +1,10 @@
 package io.github.donggi.iroirobrowser.tether
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,7 +21,6 @@ import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import android.window.OnBackInvokedDispatcher
 import io.github.donggi.iroirobrowser.R
 import io.github.donggi.iroirobrowser.setup.SetupBundle
 import io.github.donggi.iroirobrowser.setup.SetupFiles
@@ -63,7 +60,6 @@ class TetherActivity : Activity() {
     private lateinit var passphrase: EditText
     private lateinit var passphraseUnreadable: TextView
     private lateinit var effectiveSsid: TextView
-    private lateinit var locationButton: Button
     private lateinit var appSettingsButton: Button
     private lateinit var folderName: TextView
     private lateinit var forgetButton: Button
@@ -101,8 +97,7 @@ class TetherActivity : Activity() {
         // 1초마다 바뀌는 수 — 라이브 영역 밖.
         traffic = note(column, 0, "").apply { textSize = 13f }
         toggleButton = button(column, R.string.tether_toggle_start) { toggle() }
-        // 꺼진 까닭이 위치 서비스·권한이면 그 설정으로 가는 단추(그 문제일 때만 보인다).
-        locationButton = button(column, R.string.tether_open_location_settings) { open(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
+        // 꺼진 까닭이 권한이면 앱 설정으로 가는 단추(그 문제일 때만 보인다).
         appSettingsButton = button(column, R.string.tether_open_app_settings) { openAppSettings() }
         note(column, R.string.tether_toggle_note)
         note(column, R.string.tether_server_note)
@@ -162,18 +157,9 @@ class TetherActivity : Activity() {
         button(column, R.string.tether_open_battery_settings) { open(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)) }
 
         setContentView(scroll)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT) { finish() }
-        }
+        // 뒤로는 콜백을 걸지 않는다 — 시스템의 기본(이 화면을 끝낸다)과 같은 일이라, 걸지 않아야 16 의 뒤로 미리 보기 애니메이션이 보인다.
         render()
         renderSlow()
-    }
-
-    /** Android 12 이하의 뒤로 — 13 이상은 [onCreate] 에서 건 `OnBackInvokedCallback`(브라우저의 화면들과 같은 까닭). */
-    @SuppressLint("GestureBackNavigation")
-    @Deprecated("Android 12 이하의 뒤로 — 13 이상은 OnBackInvokedCallback")
-    override fun onBackPressed() {
-        finish()
     }
 
     override fun onResume() {
@@ -212,7 +198,7 @@ class TetherActivity : Activity() {
         // 잠가 두지 못해도 이 프로세스의 서비스는 이 값을 쓴다 — 알리기만 한다.
         if (!settings.save(typedSsid, typedPassphrase)) Toast.makeText(this, R.string.tether_passphrase_not_saved, Toast.LENGTH_LONG).show()
         passphraseUnreadable.visibility = View.GONE
-        // 꼭 필요한 권한이 없을 때만 묻는다(13 이상은 알림도 함께 — 알림은 거절해도 켠다).
+        // 꼭 필요한 권한(근처 기기)이 없을 때만 묻는다(알림도 함께 — 알림은 거절해도 켠다).
         if (!TetherPermissions.hasHotspotPermission(this)) {
             requestPermissions(TetherPermissions.toRequest(this), REQ_HOTSPOT)
             return
@@ -232,8 +218,6 @@ class TetherActivity : Activity() {
         if (requestCode != REQ_HOTSPOT) return
         when {
             TetherPermissions.hasHotspotPermission(this) -> startTethering()
-            // 12 이하에서 '대략적인 위치' 만 받았다 — Wi-Fi Direct 는 정확한 위치가 있어야 한다.
-            TetherPermissions.onlyCoarse(this) -> explainPermission(R.string.tether_permission_precise)
             else -> explainPermission(R.string.tether_permission_denied)
         }
     }
@@ -332,9 +316,7 @@ class TetherActivity : Activity() {
         passphrase.isEnabled = !on
         val effective = getString(R.string.tether_ssid_effective, Passphrases.normalizeSsid(ssid.text.toString()))
         if (effectiveSsid.text.toString() != effective) effectiveSsid.text = effective
-        locationButton.visibility = if (TetherState.hotspotProblem == HotspotProblem.LOCATION_OFF) View.VISIBLE else View.GONE
-        appSettingsButton.visibility =
-            if (TetherState.hotspotProblem == HotspotProblem.PERMISSION || TetherPermissions.onlyCoarse(this)) View.VISIBLE else View.GONE
+        appSettingsButton.visibility = if (TetherState.hotspotProblem == HotspotProblem.PERMISSION) View.VISIBLE else View.GONE
     }
 
     /** 1초마다 고치지 않는 것 — 공유 폴더(제공자에 묻는 IPC)와 배터리 최적화. 돌아올 때와 바꾼 뒤에만. */

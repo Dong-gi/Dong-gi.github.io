@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
       웹 브라우저라 인터넷을 쓴다. 파일 관리자(iroiro-viewer)와 **다른 앱**으로 둔 까닭이 이것이다 — 인터넷 권한은 앱(UID) 단위라,
@@ -8,7 +7,7 @@
     -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!--
-      내려받기의 진행·완료 알림(13 이상은 실행 중에 묻는다)과 받는 동안 앱이 죽지 않게 하는 포그라운드 서비스 — 내려받기(DownloadService)·
+      내려받기의 진행·완료 알림(실행 중에 묻는다)과 받는 동안 앱이 죽지 않게 하는 포그라운드 서비스 — 내려받기(DownloadService)·
       녹화·가로채기(CaptureService) 모두 dataSync 다. 서비스의 foregroundServiceType 과 이 권한이 짝이 맞아야 한다(어긋나면
       startForeground 가 예외로 앱을 죽인다).
     -->
@@ -30,24 +29,17 @@
     <!--
       테더링(2026-10-10 — usb-tether 를 합침, CLAUDE.md '테더링'): 폰이 Wi-Fi Direct 그룹 오너가 되고 붙은 기기의 트래픽을 이 폰의 회선으로
       중계한다(프록시를 거치지 않는다 — 이 앱의 '바로 나감' 예외 — 토렌트를 걷은 2026-11-07 부터 하나뿐이다). 서비스는 specialUse 의 포그라운드 서비스다(아래 TetherService 의
-      서브타입 property). Wi-Fi Direct 그룹을 만드는 데 Wi-Fi 상태 읽기·바꾸기와 — 13 이상은 근처 기기(neverForLocation — 위치를 얻는 데 쓰지
-      않는다), 12 이하는 **정확한 위치**가 든다. targetSdk 31 이상이 FINE 만 청하면 안드로이드 12 가 그 요청을 무시하므로 COARSE 도 선언하고
-      함께 청한다(둘 다 13 부터는 필요 없다 — maxSdkVersion 32). 위치·근처 기기는 테더 화면에서 테더링을 켤 때만 묻는다. 웹 페이지에는 위치를
-      주지 않는다(WebViews 의 setGeolocationEnabled(false)·PageChrome 의 거절).
+      서브타입 property). Wi-Fi Direct 그룹을 만드는 데 Wi-Fi 상태 읽기·바꾸기와 근처 기기(neverForLocation — 위치를 얻는 데 쓰지 않는다. 그래서
+      위치 권한도 위치 서비스도 필요 없다)가 든다. 근처 기기는 테더 화면에서 테더링을 켤 때만 묻는다. 위치 권한은 갖지 않는다(minSdk 36 — 12 의
+      Wi-Fi Direct 가 요구하던 ACCESS_FINE/COARSE_LOCATION 을 걷었다). 웹 페이지에도 위치를 주지 않는다(WebViews 의
+      setGeolocationEnabled(false)·PageChrome 의 거절).
     -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission
-        android:name="android.permission.ACCESS_COARSE_LOCATION"
-        android:maxSdkVersion="32" />
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION"
-        android:maxSdkVersion="32" />
-    <uses-permission
         android:name="android.permission.NEARBY_WIFI_DEVICES"
-        android:usesPermissionFlags="neverForLocation"
-        tools:targetApi="33" />
+        android:usesPermissionFlags="neverForLocation" />
 
     <!--
       네트워크 보안 설정은 빌드마다 다르다(app/build.gradle.kts 의 자리표시자): 릴리스는 시스템 인증서만 믿고 평문 http 쪽을 허락한다
@@ -58,7 +50,6 @@
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
-        tools:targetApi="33"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="${networkSecurityConfig}"

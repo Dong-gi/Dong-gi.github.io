@@ -5,9 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Configuration
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -17,7 +15,6 @@ import android.view.WindowInsetsController
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import io.github.donggi.iroirobrowser.R
 
 /** 화면 몇 개가 함께 쓰는 작은 도구. 플랫폼 뷰만 쓴다(새 의존 없이 — 이 앱의 의존은 androidx.webkit 하나다). */
@@ -42,7 +39,7 @@ object Ui {
         }
 
     /**
-     * 막대 아래까지 그리고(edge-to-edge — Android 15 이상은 강제), 막대·키보드·노치만큼 [root] 에 안쪽 여백을 준다. 막대 글자색은 낮·밤에 맞춘다.
+     * 막대 아래까지 그리고(edge-to-edge — targetSdk 35 부터 강제), 막대·키보드·노치만큼 [root] 에 안쪽 여백을 준다. 막대 글자색은 낮·밤에 맞춘다.
      * [inset] 이 false 를 돌려주는 동안은 여백을 주지 않는다(전체 화면 영상).
      */
     fun edgeToEdge(activity: Activity, root: View, inset: () -> Boolean = { true }) {
@@ -64,15 +61,10 @@ object Ui {
      */
     fun drawBehindBars(activity: Activity, root: View) {
         val window = activity.window
-        // setContentView 전에 부르므로 장식 뷰를 먼저 만든다 — 없으면 Android 12 의 getInsetsController 가 NPE 를 낸다.
+        // setContentView 전에 부르므로 장식 뷰를 먼저 만든다 — 없으면 getInsetsController 가 NPE 를 낸다(12 에서 겪었다).
         window.decorView
-        // Android 15 이상은 늘 이렇게 그린다(그래서 폐기 예정) — 12~14 에서 같게 하려고 부른다.
-        @Suppress("DEPRECATION")
-        window.setDecorFitsSystemWindows(false)
-        @Suppress("DEPRECATION")
-        window.statusBarColor = Color.TRANSPARENT
-        @Suppress("DEPRECATION")
-        window.navigationBarColor = Color.TRANSPARENT
+        // 막대 아래까지 그리기·투명한 막대는 따로 걸지 않는다 — targetSdk 35 부터 시스템이 늘 그렇게 그린다(setDecorFitsSystemWindows·
+        // statusBarColor·navigationBarColor 는 듣지 않고 폐기됐다, minSdk 36). 3단추 내비게이션의 반투명 막은 시스템의 기본 그대로.
         val light = if (isNight(activity)) 0 else WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS or
             WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
         window.insetsController?.setSystemBarsAppearance(
@@ -116,10 +108,9 @@ object Ui {
 
     /**
      * '링크 복사' — **이름표에도 주소를 둔다**: 주소창의 '복사한 링크 열기' 가 클립의 내용을 읽기 전에 이름표로 링크인지 본다
-     * (`AddressSuggestions.clipHasLink`). 브라우저 화면과 북마크·방문 기록 화면이 함께 쓴다. 13 이상은 시스템이 복사를 알린다.
+     * (`AddressSuggestions.clipHasLink`). 브라우저 화면과 북마크·방문 기록 화면이 함께 쓴다. 복사했다는 알림은 시스템이 띄운다(토스트를 따로 두지 않는다).
      */
     fun copyLink(context: Context, url: String) {
         context.getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText(url, url))
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) Toast.makeText(context, R.string.copied, Toast.LENGTH_SHORT).show()
     }
 }
