@@ -9,6 +9,9 @@
     <string name="image_delete">삭제</string>
     <string name="image_info">정보</string>
     <string name="image_rotate">오른쪽으로 회전</string>
+    <string name="image_rotate_left">왼쪽으로 회전</string>
+    <string name="image_flip_horizontal">좌우 뒤집기</string>
+    <string name="image_flip_vertical">상하 뒤집기</string>
     <string name="image_more">더보기</string>
     <string name="image_failed">이 이미지를 열 수 없습니다</string>
     <string name="image_position">%1$d / %2$d</string>
@@ -32,7 +35,7 @@
     <string name="image_exif_serial">일련번호</string>
     <string name="image_exif_owner">소유자</string>
     <string name="image_share_sanitized">메타데이터 제거하고 공유</string>
-    <string name="image_rotate_unsupported">이 형식은 회전을 파일에 저장할 수 없습니다</string>
+    <string name="image_rotate_unsupported">이 형식은 회전·뒤집기를 파일에 저장할 수 없습니다</string>
     <!--
       '메타데이터 제거하고 공유' 가 사본을 만들지 못했을 때 - 뷰어가 그 자리에서 띄운다. 메뉴는 지울 수 있는 형식에서만 켜지므로
       여기 오는 것은 형식이 아니라 사본 만들기(읽기·쓰기·태그 고치기)가 실패한 경우다 - '이 형식은' 이라고 말하지 않는다.

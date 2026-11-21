@@ -546,11 +546,11 @@ internal fun Root(modifier: Modifier = Modifier, opened: Opened? = null) {
                 },
                 onShareSanitized = { entry, onFailed -> vm.shareSanitized(context, entry.path, onFailed) },
                 onDelete = if (readOnly) null else { entry -> vm.trash(listOf(entry.path)) },
-                onRotate = if (readOnly) null else { entry, degrees -> vm.rotate(entry.path, degrees) },
+                onReorient = if (readOnly) null else { entry, op -> vm.reorient(entry.path, op) },
                 // 잘라 낸 그림은 원본 곁에 쓴다 — 받은 사본(앱 캐시)의 곁은 사용자가 찾아갈 수 없는 자리다.
-                onCrop = if (readOnly) null else { entry, rect, w, h -> vm.crop(entry.path, rect, w, h) },
+                onCrop = if (readOnly) null else { entry, rect, w, h, o -> vm.crop(entry.path, rect, w, h, o) },
                 // 그린 그림도 원본 곁에 쓴다 — 같은 까닭으로 읽기 전용 사본에는 내지 않는다.
-                onMarkup = if (readOnly) null else { path, overlay, w, h -> vm.markup(path, overlay, w, h) },
+                onMarkup = if (readOnly) null else { path, overlay, w, h, o -> vm.markup(path, overlay, w, h, o) },
                 modifier = Modifier.fillMaxSize(),
             )
         }

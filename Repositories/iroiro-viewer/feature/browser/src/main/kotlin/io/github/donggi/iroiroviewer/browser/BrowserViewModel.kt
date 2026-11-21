@@ -463,25 +463,31 @@ class BrowserViewModel(
         }
     }
 
-    /** 사진을 EXIF 방향 태그만 고쳐 돌린다. 뷰어가 부른다. */
-    fun rotate(path: String, degrees: Int) {
+    /** 사진을 EXIF 방향 태그만 고쳐 돌리거나 뒤집는다. 뷰어가 부른다. */
+    fun reorient(path: String, op: io.github.donggi.iroiroviewer.model.ExifOrientation.Op) {
         val id = newOpId()
-        // 회전은 파일 내용을 바꾼다. 수정시각은 보존하므로 **키가 그대로**이고,
+        // 회전·뒤집기는 파일 내용을 바꾼다. 수정시각은 보존하므로 **키가 그대로**이고,
         // 그래서 옛 썸네일이 살아남는다 — 반드시 여기서 지워야 한다.
         rememberThumbKeys(id, listOf(path))
-        FileOpManager.enqueue(getApplication(), FileOpManager.Request.RotateExif(id, path, degrees))
+        FileOpManager.enqueue(
+            getApplication(),
+            FileOpManager.Request.RotateExif(id, path, io.github.donggi.iroiroviewer.model.ExifOrientation.of(op)),
+        )
     }
 
     /**
      * 사진의 한 자리를 **새 파일로** 저장한다(뷰어의 '잘라서 저장'). 원본은 그대로다 — 썸네일을 지울 것도 없다. 결과(실제 이름)는
      * 여느 작업처럼 앱의 결과 소비자가 말한다.
      *
-     * @param rect 화면 방향의 원본 화소 `[왼, 위, 오른, 아래]`. [width]·[height] 는 고를 때 본 원본의 화면 방향 치수다.
+     * @param rect 화면 방향의 원본 화소 `[왼, 위, 오른, 아래]`. [width]·[height] 는 고를 때 본 원본의 화면 방향 치수, [orientation] 은
+     *   그때의 EXIF 방향이다 — 그사이 파일이 바뀌었으면 큐가 거절한다.
      */
-    fun crop(path: String, rect: IntArray, width: Int, height: Int) {
+    fun crop(path: String, rect: IntArray, width: Int, height: Int, orientation: Int) {
         FileOpManager.enqueue(
             getApplication(),
-            FileOpManager.Request.SaveCrop(newOpId(), path, rect[0], rect[1], rect[2], rect[3], width, height),
+            FileOpManager.Request.SaveCrop(
+                newOpId(), path, rect[0], rect[1], rect[2], rect[3], width, height, expectedOrientation = orientation,
+            ),
         )
     }
 
@@ -489,12 +495,18 @@ class BrowserViewModel(
      * 그림 위에 그린 것을 **새 파일로** 저장한다(뷰어의 '그리기·메모'). 잘라 저장과 같은 요청에 그릴 것을 싣는다 — 그림
      * 전체를 원본 해상도로 뜨고 그 위에 그려 `이름_markup` 으로 쓴다. 원본은 그대로다.
      *
-     * @param width·[height] 그릴 때 본 원본의 화면 방향 치수 — 그사이 파일이 바뀌었으면 큐가 거절한다.
+     * @param width·[height] 그릴 때 본 원본의 화면 방향 치수, [orientation] 은 그때의 EXIF 방향 — 그사이 파일이 바뀌었으면 큐가 거절한다.
      */
-    fun markup(path: String, overlay: io.github.donggi.iroiroviewer.io.CropSupport.Overlay, width: Int, height: Int) {
+    fun markup(
+        path: String,
+        overlay: io.github.donggi.iroiroviewer.io.CropSupport.Overlay,
+        width: Int,
+        height: Int,
+        orientation: Int,
+    ) {
         FileOpManager.enqueue(
             getApplication(),
-            FileOpManager.Request.SaveCrop(newOpId(), path, 0, 0, width, height, width, height, overlay),
+            FileOpManager.Request.SaveCrop(newOpId(), path, 0, 0, width, height, width, height, overlay, orientation),
         )
     }
 

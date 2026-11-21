@@ -67,13 +67,18 @@ import kotlin.math.roundToInt
  *
  * **이 화면 안에서는 확대하지 않는다.** 큰 그림의 아주 작은 자리를 고르기는 어렵다 — 손가락 하나가 원본 화소 수십 개를 덮는다.
  * 남긴 빈자리다(CLAUDE.md).
+ *
+ * **보이는 그림과 함께 그 EXIF 방향을 잰다** — 뜨기 앞뒤로 재어 같을 때만 그 그림을 쓰고, 저장할 때 그 방향을 실어 보낸다(`onSave` 의
+ * 둘째 값). 뷰어가 쥔 방향은 이 화면이 뜬 파일보다 오래된 것일 수 있다 — 그사이 저장된 뒤집기를 보며 고른 자리가 옛 방향과 견주어져
+ * 통과하면 거울 자리가 저장된다. 큐가 돌 때 그 방향이 파일과 다르면 거절한다.
  */
 @Composable
 internal fun CropScreen(
     path: String,
     probe: ImageProbe,
     onCancel: () -> Unit,
-    onSave: (IntArray) -> Unit,
+    /** (고른 자리, 그 자리를 고른 그림의 EXIF 방향). */
+    onSave: (IntArray, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BackHandler { onCancel() }
@@ -84,9 +89,18 @@ internal fun CropScreen(
     val window = LocalWindowInfo.current.containerSize
     val targetLongest = maxOf(window.width, window.height)
     // 뷰어의 바닥층과 같은 디코더로 화면에 맞게 뜬다 — 보이는 방향이 뷰어와 같다.
-    val preview by produceState<ImageBitmap?>(null, path, targetLongest) {
-        value = ImageIo.decodeFitted(path, targetLongest)?.asImageBitmap()
+    val shown by produceState<Pair<ImageBitmap, Int>?>(null, path, targetLongest) {
+        // 뜨는 사이에 방향이 바뀌었으면(저장이 막 끝났다) 다시 뜬다. 세 번 다 어긋나면 그림 없이 둔다 — 저장 단추도 서지 않는다.
+        repeat(3) {
+            val before = ImageIo.probe(path)?.orientation ?: return@produceState
+            val bitmap = ImageIo.decodeFitted(path, targetLongest) ?: return@produceState
+            if (ImageIo.probe(path)?.orientation == before) {
+                value = bitmap.asImageBitmap() to before
+                return@produceState
+            }
+        }
     }
+    val preview = shown?.first
     var box by remember(path) { mutableStateOf(CropMath.full(w, h)) }
     var ratio by remember(path) { mutableStateOf(CropRatio.FREE) }
     val areaDescription = stringResource(R.string.image_crop_area)
@@ -115,7 +129,10 @@ internal fun CropScreen(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
             )
-            TextButton(onClick = { onSave(CropMath.toPixels(box, probe.displayWidth, probe.displayHeight)) }) {
+            TextButton(
+                onClick = { shown?.let { onSave(CropMath.toPixels(box, probe.displayWidth, probe.displayHeight), it.second) } },
+                enabled = shown != null,
+            ) {
                 Text(
                     text = stringResource(R.string.image_crop_save),
                     color = MaterialTheme.colorScheme.inversePrimary,

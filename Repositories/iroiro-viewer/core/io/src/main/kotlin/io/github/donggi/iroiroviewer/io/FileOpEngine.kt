@@ -7,6 +7,7 @@ import android.system.ErrnoException
 import android.system.Os
 import android.system.OsConstants
 import androidx.exifinterface.media.ExifInterface
+import io.github.donggi.iroiroviewer.model.ExifOrientation
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import java.io.File
 import java.io.FileInputStream
@@ -557,7 +558,7 @@ class FileOpEngine(private val media: MediaIndex) {
     }
 
     /**
-     * 사진을 **EXIF 방향 태그만 고쳐** 돌린다. 픽셀을 다시 인코딩하지 않는다.
+     * 사진을 **EXIF 방향 태그만 고쳐** 돌리거나 뒤집는다. 픽셀을 다시 인코딩하지 않는다.
      *
      * ## 왜 재인코딩하지 않는가
      *
@@ -577,13 +578,13 @@ class FileOpEngine(private val media: MediaIndex) {
      * 임시 이름은 반드시 [PART_PREFIX]·[PART_SUFFIX] 규약을 따른다. 다른 이름을 쓰면
      * [sweepPartials] 가 걷어 가지 못해 **사진 원본 크기의 사본이 사용자 폴더에 영영 남는다.**
      *
-     * @param degrees 시계 방향 90의 배수.
+     * @param transform 지금 보이는 모양에 더할 변환을 EXIF 방향 값으로(오른쪽 회전 6, 왼쪽 회전 8, 좌우 뒤집기 2, 상하 뒤집기 4 —
+     *   [ExifOrientation.of]). 새 방향은 `transform∘지금 방향` 이다([ExifOrientation.compose]). 1(정방향)이면 파일을 열지 않는다.
      */
-    suspend fun rotateExif(path: String, degrees: Int): Outcome = withContext(IroDispatchers.io) {
+    suspend fun reorientExif(path: String, transform: Int): Outcome = withContext(IroDispatchers.io) {
         val src = File(path)
         if (!src.isFile) return@withContext Outcome.Failed(Reason.NOT_FOUND, src.name)
-        val turns = ((degrees / 90) % 4 + 4) % 4
-        if (turns == 0) return@withContext Outcome.Done(1, 0, 0)
+        if (ExifOrientation.normalize(transform) == ExifOrientation.NORMAL) return@withContext Outcome.Done(1, 0, 0)
         // **마지막 관문이다.** 화면이 판정을 빠뜨려도 여기서 막는다 — 이 함수 뒤에는
         // 사용자 파일을 다시 쓰는 코드밖에 없다.
         if (!canRotateFile(src)) return@withContext Outcome.Failed(Reason.INVALID_NAME, src.name)
@@ -603,13 +604,18 @@ class FileOpEngine(private val media: MediaIndex) {
                 }
 
                 // ② 임시본의 방향 태그만 고친다. 우리 파일 위라 여기서 실패해도 잃을 것이 없다.
+                val tailBefore = jpegTailOf(tmp)
                 val exif = ExifInterface(tmp.absolutePath)
                 val current = exif.getAttributeInt(
                     ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_NORMAL,
                 )
-                exif.setAttribute(ExifInterface.TAG_ORIENTATION, rotated(current, turns).toString())
+                // 태그가 없거나 0(정의 안 됨)·깨진 값이면 정방향으로 친다 — 디코더도 그렇게 그렸다(화면이 본 것).
+                val next = ExifOrientation.compose(transform, current)
+                exif.setAttribute(ExifInterface.TAG_ORIENTATION, next.toString())
                 exif.saveAttributes()
+                // saveAttributes 는 디스크가 차면 **말없이 잘린 파일**을 남긴다(함정 표). 잘린 임시본을 원본 자리에 놓지 않는다.
+                if (!rewrittenWhole(tmp, tailBefore)) throw IOException("EXIF 를 다시 쓴 파일이 잘렸다")
 
                 // ③ 내용을 디스크에. saveAttributes 는 스스로 sync 하지 않는다.
                 FileOutputStream(tmp, true).use { it.fd.sync() }
@@ -664,6 +670,72 @@ class FileOpEngine(private val media: MediaIndex) {
             else -> false
         }
 
+    /**
+     * JPEG 의 끝 — 화소 자료(SOS 부터)의 마지막 [EXIF_TAIL_BYTES] 바이트. JPEG 이 아니거나 읽지 못하면 null.
+     * JPEG 의 `saveAttributes` 는 SOI · 새 EXIF · 나머지를 글자 그대로 옮기므로 다시 쓴 뒤에도 끝이 같아야 한다(`ImageSaver.JpegTail` 과
+     * 같은 셈 — 거기는 길이도 보지만, 여기는 방향 태그를 고치며 EXIF 가 줄 수도 있어 끝만 본다). **SOS 앞(EXIF 가 있는 머리)을 끝에 넣지
+     * 않는다** — 4 KiB 보다 작은 JPEG 에서 파일 전체를 끝으로 뜨면 고친 EXIF 가 들어가 온전한 파일을 잘린 것으로 읽는다(계측 시험이 잡았다).
+     * SOS 를 찾지 못하면 빈 끝(견주지 않는다)이다.
+     */
+    private fun jpegTailOf(file: File): ByteArray? = try {
+        java.io.RandomAccessFile(file, "r").use { raf ->
+            val n = raf.length()
+            if (n <= 4) return@use null
+            if (raf.read() != 0xFF || raf.read() != 0xD8) return@use null
+            // 머리 조각을 건너 SOS(FF DA)의 자리를 찾는다. 길이가 없는 표지(RSTn·TEM)와 채움 FF 는 두 바이트·한 바이트씩.
+            var pos = 2L
+            var sos = -1L
+            var steps = 0
+            while (pos + 4 <= n && steps++ < 1024) {
+                raf.seek(pos)
+                if (raf.read() != 0xFF) break
+                val marker = raf.read()
+                when {
+                    marker == 0xFF -> pos += 1
+                    marker == 0xDA -> { sos = pos; break }
+                    marker == 0x01 || marker in 0xD0..0xD7 -> pos += 2
+                    else -> pos += 2 + ((raf.read() shl 8) or raf.read())
+                }
+            }
+            if (sos < 0) return@use ByteArray(0)
+            val k = minOf(n - sos, EXIF_TAIL_BYTES.toLong()).toInt()
+            ByteArray(k).also {
+                raf.seek(n - k)
+                raf.readFully(it)
+            }
+        }
+    } catch (e: IOException) {
+        null
+    }
+
+    /**
+     * `saveAttributes` 가 다시 쓴 [file] 이 온전한가. JPEG 은 끝이 [tailBefore] 와 같은가, WebP 는 RIFF 머리의 크기만큼 파일이
+     * 있는가(EXIF 청크가 끝에 붙는 그릇이라 끝을 견줄 수 없다 — 잘리면 머리가 말한 길이보다 짧다). 읽지 못하면 false.
+     */
+    private fun rewrittenWhole(file: File, tailBefore: ByteArray?): Boolean = try {
+        java.io.RandomAccessFile(file, "r").use { raf ->
+            val n = raf.length()
+            if (tailBefore != null) {
+                if (n < tailBefore.size + 2) return@use false
+                val now = ByteArray(tailBefore.size)
+                raf.seek(n - now.size)
+                raf.readFully(now)
+                return@use now.contentEquals(tailBefore)
+            }
+            if (n < 12) return@use false
+            val head = ByteArray(12)
+            raf.readFully(head)
+            if (String(head, 0, 4, Charsets.US_ASCII) != "RIFF" || String(head, 8, 4, Charsets.US_ASCII) != "WEBP") {
+                return@use false
+            }
+            val size = (head[4].toLong() and 0xFF) or ((head[5].toLong() and 0xFF) shl 8) or
+                ((head[6].toLong() and 0xFF) shl 16) or ((head[7].toLong() and 0xFF) shl 24)
+            n >= size + 8
+        }
+    } catch (e: IOException) {
+        false
+    }
+
     /** 움직이는 WebP 인가. RIFF 청크 머리만 훑는다 — 픽셀은 읽지 않는다. */
     private fun isAnimatedWebp(file: File): Boolean = runCatching {
         java.io.RandomAccessFile(file, "r").use { raf ->
@@ -699,29 +771,6 @@ class FileOpEngine(private val media: MediaIndex) {
     }.getOrDefault(false)
 
     /**
-     * 지금 방향에서 90° 씩 [turns] 번 돌린 방향.
-     *
-     * **거울상(2·4·5·7)도 제대로 돌린다.** 정방향 넷만 다루고 나머지를 `NORMAL` 로
-     * 뭉개면, 좌우가 뒤집힌 사진을 한 번 돌리는 순간 뒤집힘이 조용히 사라진다.
-     */
-    private fun rotated(orientation: Int, turns: Int): Int {
-        // 각 방향을 (회전각, 거울여부)로 풀고 다시 조립한다.
-        val table = mapOf(
-            ExifInterface.ORIENTATION_NORMAL to (0 to false),
-            ExifInterface.ORIENTATION_ROTATE_90 to (90 to false),
-            ExifInterface.ORIENTATION_ROTATE_180 to (180 to false),
-            ExifInterface.ORIENTATION_ROTATE_270 to (270 to false),
-            ExifInterface.ORIENTATION_FLIP_HORIZONTAL to (0 to true),
-            ExifInterface.ORIENTATION_TRANSPOSE to (90 to true),
-            ExifInterface.ORIENTATION_FLIP_VERTICAL to (180 to true),
-            ExifInterface.ORIENTATION_TRANSVERSE to (270 to true),
-        )
-        val back = table.entries.associate { (k, v) -> v to k }
-        val (angle, mirrored) = table[orientation] ?: (0 to false)
-        return back[(angle + turns * 90) % 360 to mirrored] ?: ExifInterface.ORIENTATION_NORMAL
-    }
-
-    /**
      * 새 폴더. 이름을 맡는 것과 만드는 것이 한 번의 `mkdir(2)` 다([reserveName]) — 그 답의 까닭을 그대로 말한다. 이미 있으면
      * [Reason.EXISTS], 못 만들면 권한·공간·입출력 가운데 실제 까닭이다.
      */
@@ -749,6 +798,9 @@ class FileOpEngine(private val media: MediaIndex) {
          */
         val PART_PREFIX = AtomicFileWriter.PART_PREFIX
         val PART_SUFFIX = AtomicFileWriter.PART_SUFFIX
+
+        /** EXIF 를 다시 쓴 JPEG 이 잘리지 않았는지 견줄 끝의 길이(`ImageSaver.JpegTail` 과 같은 값). */
+        private const val EXIF_TAIL_BYTES = 4096
 
         /**
          * 예외를 이유로 옮긴다. ZIP 만들기([ZipMaker])도 같은 판단을 쓴다.

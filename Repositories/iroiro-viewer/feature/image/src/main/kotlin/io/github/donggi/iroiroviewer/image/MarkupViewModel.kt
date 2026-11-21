@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.donggi.iroiroviewer.io.Iro
+import io.github.donggi.iroiroviewer.model.ExifOrientation
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.ui.image.ImageIo
 import io.github.donggi.iroiroviewer.ui.image.ImageProbe
@@ -219,7 +220,7 @@ internal class MarkupViewModel(app: Application) : AndroidViewModel(app) {
             draft { it.delete() }
             return
         }
-        val data = MarkupDraft.Data(s.path, s.fileLength, s.fileModified, s.width, s.height, marks)
+        val data = MarkupDraft.Data(s.path, s.fileLength, s.fileModified, s.width, s.height, s.probe.orientation, marks)
         draft { file ->
             file.parentFile?.mkdirs()
             // 다 쓴 뒤 이름을 바꾼다 — 쓰는 도중에 죽으면 반쯤 쓴 초안이 아니라 앞의 초안(또는 없음)이 남는다.
@@ -234,7 +235,7 @@ internal class MarkupViewModel(app: Application) : AndroidViewModel(app) {
 
     /**
      * 프로세스가 죽었다 살아났다 — 화면이 저장 상태에 남긴 [path] 의 초안을 되살린다. 초안이 없거나, 다른 그림의 것이거나, 원본이
-     * 그사이 바뀌었으면(크기·수정 시각·치수) 되살리지 않고 초안을 지운다.
+     * 그사이 바뀌었으면(크기·수정 시각·치수·EXIF 방향) 되살리지 않고 초안을 지운다.
      *
      * @return 되살렸는가.
      */
@@ -261,9 +262,10 @@ internal class MarkupViewModel(app: Application) : AndroidViewModel(app) {
         return true
     }
 
-    /** 초안을 적을 때의 그 원본인가 — 정지 그림이고, 보이는 방향의 치수·크기·수정 시각이 같다. */
+    /** 초안을 적을 때의 그 원본인가 — 정지 그림이고, 보이는 방향의 치수·EXIF 방향·크기·수정 시각이 같다. */
     private suspend fun sameImage(path: String, probe: ImageProbe, data: MarkupDraft.Data): Boolean {
         if (probe.isAnimated || probe.displayWidth != data.width || probe.displayHeight != data.height) return false
+        if (ExifOrientation.normalize(probe.orientation) != ExifOrientation.normalize(data.orientation)) return false
         return withContext(IroDispatchers.io) {
             File(path).let { it.length() == data.fileLength && it.lastModified() == data.fileModified }
         }

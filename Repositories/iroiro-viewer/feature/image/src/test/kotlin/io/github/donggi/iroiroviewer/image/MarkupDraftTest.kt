@@ -23,7 +23,7 @@ class MarkupDraftTest {
     )
 
     private fun data(marks: List<Mark> = this.marks) =
-        MarkupDraft.Data("/storage/emulated/0/DCIM/사진.jpg", 123_456L, 1_700_000_000_000L, 4000, 3000, marks)
+        MarkupDraft.Data("/storage/emulated/0/DCIM/사진.jpg", 123_456L, 1_700_000_000_000L, 4000, 3000, 7, marks)
 
     private fun bytesOf(d: MarkupDraft.Data): ByteArray = ByteArrayOutputStream().also { MarkupDraft.write(it, d) }.toByteArray()
 
@@ -37,6 +37,7 @@ class MarkupDraftTest {
         assertEquals(1_700_000_000_000L, back.fileModified)
         assertEquals(4000, back.width)
         assertEquals(3000, back.height)
+        assertEquals(7, back.orientation)
         assertEquals(marks.size, back.marks.size)
         for ((a, b) in marks.zip(back.marks)) {
             assertEquals(a.id, b.id)
@@ -72,8 +73,9 @@ class MarkupDraftTest {
         val whole = bytesOf(data())
         // 표지가 다르다.
         assertNull(read(whole.copyOf().also { it[0] = 0 }))
-        // 판이 다르다.
+        // 판이 다르다 — 방향을 적지 않던 옛 판(1)도 되살리지 않는다.
         assertNull(read(whole.copyOf().also { it[7] = 9 }))
+        assertNull(read(whole.copyOf().also { it[7] = 1 }))
         // 뒤에 남는 것이 있다.
         assertNull(read(whole + byteArrayOf(0)))
     }
@@ -82,12 +84,13 @@ class MarkupDraftTest {
     private fun forged(body: DataOutputStream.() -> Unit): ByteArray = ByteArrayOutputStream().also { out ->
         DataOutputStream(out).apply {
             writeInt(0x49524D4B)
-            writeInt(1)
+            writeInt(2)
             writeUTF("/a.jpg")
             writeLong(1)
             writeLong(2)
             writeInt(100)
             writeInt(100)
+            writeInt(1)
             body()
             flush()
         }

@@ -109,6 +109,7 @@ internal object ImageSaver {
                 expectedHeight = request.expectedHeight,
                 maxPixels = maxPixels(),
                 overlay = request.overlay,
+                expectedOrientation = request.expectedOrientation,
             )
         )
         val ok = when (rendered) {

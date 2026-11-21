@@ -125,7 +125,7 @@ object FileOpManager {
         }
 
         /**
-         * EXIF 방향 태그만 고쳐 사진을 돌린다. **픽셀을 다시 인코딩하지 않는다.**
+         * EXIF 방향 태그만 고쳐 사진을 돌리거나 뒤집는다. **픽셀을 다시 인코딩하지 않는다.**
          *
          * 이것이 원본을 고치는 작업이므로 이 큐를 지난다 — 복사·이동과 직렬화되지 않으면
          * 같은 파일을 두 작업이 동시에 만진다.
@@ -133,7 +133,8 @@ object FileOpManager {
         data class RotateExif(
             override val id: String,
             val path: String,
-            val degrees: Int,
+            /** 지금 보이는 모양에 더할 변환(EXIF 방향 값 — `ExifOrientation.of`). [FileOpEngine.reorientExif] 를 본다. */
+            val transform: Int,
         ) : Request {
             override val label get() = path
         }
@@ -233,6 +234,8 @@ object FileOpManager {
          * @param expectedWidth·expectedHeight 고를 때 본 원본의 화면 방향 치수 — 그사이 파일이 바뀌었으면 거절한다
          *   ([FileOpEngine.Reason.CHANGED]).
          * @param overlay 뜬 그림 위에 그릴 것(그리기·메모). null 이면 잘라 저장이다.
+         * @param expectedOrientation 고를 때 본 파일의 EXIF 방향 — 그사이 뒤집기·180° 회전이 저장됐으면(치수가 그대로라 치수로는 모른다)
+         *   거절한다. null 이면 보지 않는다.
          */
         data class SaveCrop(
             override val id: String,
@@ -244,6 +247,7 @@ object FileOpManager {
             val expectedWidth: Int,
             val expectedHeight: Int,
             val overlay: CropSupport.Overlay? = null,
+            val expectedOrientation: Int? = null,
         ) : Request {
             override val label get() = path
         }
@@ -478,6 +482,15 @@ object FileOpManager {
     val state: StateFlow<State> = _state.asStateFlow()
 
     /**
+     * 회전·뒤집기 저장([Request.RotateExif])이 줄 서 있거나 도는 파일의 경로. 넣을 때 들고, 끝나거나 버려질 때([settle]) 뺀다.
+     * 이미지 뷰어가 이것이 비지 않은 파일의 잘라 저장·그리기를 끈다([PathsInFlight] 머리말).
+     */
+    private val reorientingLock = Any()
+    private val reorientingIds = PathsInFlight()
+    private val _reorienting = MutableStateFlow<Set<String>>(emptySet())
+    val reorienting: StateFlow<Set<String>> = _reorienting.asStateFlow()
+
+    /**
      * 끝난 작업. **버퍼가 무제한이고 소비자가 하나씩 받는다** — 화면이 없는 동안 끝난
      * 것도 다음에 화면이 붙을 때 그대로 전해진다.
      */
@@ -558,6 +571,9 @@ object FileOpManager {
      */
     fun enqueue(context: Context, request: Request) {
         val entry = Entry(request, context.applicationContext, epoch.get())
+        if (request is Request.RotateExif) synchronized(reorientingLock) {
+            _reorienting.value = reorientingIds.add(request.id, request.path)
+        }
         if (!request.silent) waiting[request.id] = entry
         queued.incrementAndGet()
         queue.trySend(entry)
@@ -645,7 +661,7 @@ object FileOpManager {
     /**
      * 요청이 끝났거나 버려질 때 부른다. 붙든 비밀(풀기의 아카이브 암호·묶기의 ZIP 암호)을 0 으로 덮고, 끝을 기다리는 쪽
      * (예약된 휴지통 비우기)에 알린다. 두 번 불러도 된다 — 덮은 배열을 다시 덮고, 완료된 신호는
-     * 다시 완료되지 않는다.
+     * 다시 완료되지 않는다. 회전·뒤집기면 그 경로를 [reorienting] 에서 뺀다(없는 신원이면 아무 일도 없다).
      *
      * @param ran 끝까지 돌았는가. 돌지 않고 버려진 길이면 false.
      */
@@ -653,6 +669,9 @@ object FileOpManager {
         if (this is Request.Extract) password?.fill('\u0000')
         if (this is Request.Compress) password?.fill('\u0000')
         if (this is Request.Reconcile) done?.complete(ran)
+        if (this is Request.RotateExif) synchronized(reorientingLock) {
+            reorientingIds.remove(id)?.let { _reorienting.value = it }
+        }
     }
 
     /** [FileOpService] 가 `startForeground` 를 마치고 부른다. */
@@ -811,7 +830,7 @@ object FileOpManager {
             is Request.RestoreTo ->
                 trash.restoreTo(request.uuids, request.dest, request.conflict, volumes, engine, onProgress)
             is Request.Purge -> trash.purge(request.uuids, volumes, engine).toOutcome()
-            is Request.RotateExif -> engine.rotateExif(request.path, request.degrees)
+            is Request.RotateExif -> engine.reorientExif(request.path, request.transform)
             is Request.Extract -> {
                 // 꽂히지 않았으면 **실패로 끝낸다.** 조용히 성공을 보고하면 사용자가
                 // '풀었다' 고 믿고 원본 아카이브를 지울 수 있다.

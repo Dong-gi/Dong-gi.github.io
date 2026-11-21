@@ -19,18 +19,23 @@ import java.io.OutputStream
  *
  * ## 꼴
  *
- * 머리(표지·판·원본의 경로·크기·수정 시각·보이는 방향의 치수) 뒤에 그린 것을 차례로 적는다. 읽을 때는 **우리가 쓴 파일이라도 믿지
+ * 머리(표지·판·원본의 경로·크기·수정 시각·보이는 방향의 치수·EXIF 방향) 뒤에 그린 것을 차례로 적는다. 읽을 때는 **우리가 쓴 파일이라도 믿지
  * 않는다** — 쓰다 잘렸거나(쓰는 중에 죽었다) 판이 다르면 버린다. 수·길이에 상한을 두고 실수는 유한한지 본다.
  */
 internal object MarkupDraft {
 
-    /** 되살릴 것. [fileLength]·[fileModified]·[width]·[height] 가 지금의 원본과 같을 때만 되살린다(그사이 바뀌었으면 자리가 어긋난다). */
+    /**
+     * 되살릴 것. [fileLength]·[fileModified]·[width]·[height]·[orientation] 이 지금의 원본과 같을 때만 되살린다(그사이 바뀌었으면 자리가
+     * 어긋난다). 방향을 따로 적는 것은 회전·뒤집기 저장이 수정 시각을 지키고, 뒤집기·180° 는 치수도 그대로라서다 — 넷만 보면 뒤집힌
+     * 파일에 옛 획이 얹힌다.
+     */
     class Data(
         val path: String,
         val fileLength: Long,
         val fileModified: Long,
         val width: Int,
         val height: Int,
+        val orientation: Int,
         val marks: List<Mark>,
     ) {
         override fun toString(): String = "MarkupDraft.Data(${marks.size})"
@@ -47,6 +52,7 @@ internal object MarkupDraft {
         out.writeLong(data.fileModified)
         out.writeInt(data.width)
         out.writeInt(data.height)
+        out.writeInt(data.orientation)
         out.writeInt(data.marks.size)
         for (m in data.marks) {
             when (m) {
@@ -91,6 +97,7 @@ internal object MarkupDraft {
         val width = input.readInt()
         val height = input.readInt()
         if (width <= 0 || height <= 0) return null
+        val orientation = input.readInt()
         val count = input.readInt()
         if (count !in 0..MAX_MARKS) return null
         val marks = ArrayList<Mark>(count)
@@ -107,7 +114,7 @@ internal object MarkupDraft {
         }
         // 뒤에 남는 것이 있으면 우리가 쓴 꼴이 아니다.
         if (input.read() != -1) return null
-        return Data(path, length, modified, width, height, marks)
+        return Data(path, length, modified, width, height, orientation, marks)
     }
 
     private fun readStroke(input: DataInputStream): Stroke? {
@@ -150,7 +157,8 @@ internal object MarkupDraft {
     private const val MAX_MARKS = 20_000
 
     private const val MAGIC = 0x49524D4B // "IRMK"
-    private const val VERSION = 1
+    // 2 — EXIF 방향을 더했다. 1 은 읽지 않는다(되살리지 않을 뿐이다).
+    private const val VERSION = 2
     private const val TYPE_STROKE = 1
     private const val TYPE_NOTE = 2
 }

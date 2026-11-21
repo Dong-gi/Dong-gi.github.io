@@ -75,7 +75,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.donggi.iroiroviewer.io.CropSupport
+import io.github.donggi.iroiroviewer.io.FileOpManager
 import io.github.donggi.iroiroviewer.io.Iro
+import io.github.donggi.iroiroviewer.model.ExifOrientation
 import io.github.donggi.iroiroviewer.model.FileEntry
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.ImageLimits
@@ -84,6 +86,7 @@ import io.github.donggi.iroiroviewer.ui.gesture.DismissMath
 import io.github.donggi.iroiroviewer.ui.gesture.DismissState
 import io.github.donggi.iroiroviewer.ui.gesture.ZoomState
 import io.github.donggi.iroiroviewer.ui.gesture.dragToDismiss
+import io.github.donggi.iroiroviewer.ui.icon.FlipIcon
 import io.github.donggi.iroiroviewer.ui.icon.RotateRightIcon
 import io.github.donggi.iroiroviewer.ui.image.AnimationPlan
 import io.github.donggi.iroiroviewer.ui.image.ExifReader
@@ -153,8 +156,14 @@ import java.io.File
  *
  * ⋮ 의 '잘라서 저장' 이 그림 위에 사각형을 고르는 화면([CropScreen])을 덮는다. 저장은 원본 곁의 새 파일이고 파일 작업 큐가 한다
  * ([onCrop] → `FileOpManager.Request.SaveCrop`) — 결과(실제 이름)는 앱의 결과 소비자가 이 화면의 스낵바로 말한다. **정지 그림만**
- * 자른다(움직이는 그림·SVG·못 연 장은 메뉴가 꺼진다). 회전을 저장하는 중이면 끈다 — 화면은 이미 돌았는데 파일은 아직이라, 고른
- * 자리가 저장될 때의 파일과 어긋난다.
+ * 자른다(움직이는 그림·SVG·못 연 장은 메뉴가 꺼진다). 회전·뒤집기를 저장하는 중이면 끈다 — 화면은 이미 돌았는데 파일은 아직이라,
+ * 고른 자리가 저장될 때의 파일과 어긋난다. 고를 때 본 치수와 EXIF 방향을 요청에 실어, 그사이 바뀌었으면 큐가 거절한다.
+ *
+ * ## 회전·뒤집기
+ *
+ * ⋮ 의 넷(오른쪽·왼쪽 회전, 좌우·상하 뒤집기)은 화면에서 **곧바로** 그 모양이 되고, 저장되는 형식(JPEG·정지 WebP)이면 EXIF 방향
+ * 태그만 고치는 요청이 큐로 간다([onReorient] → `FileOpManager.Request.RotateExif`). 아직 저장되지 않은 몫은 장마다 EXIF 방향 값
+ * 하나로 든다(`ExifOrientation` — 저장과 같은 합성 셈). 파일이 다시 읽히면([generation]) 정방향으로 돌아간다.
  *
  * ## 그리기·메모
  *
@@ -189,18 +198,18 @@ fun ImageViewerScreen(
      * 전용이다(`IncomingFiles` — 보낸 쪽의 원본이 아니고, 캐시는 사용자가 찾아갈 수 없는 자리다).
      */
     onDelete: ((FileEntry) -> Unit)?,
-    onRotate: ((FileEntry, Int) -> Unit)?,
+    onReorient: ((FileEntry, ExifOrientation.Op) -> Unit)?,
     modifier: Modifier = Modifier,
     /**
      * 고른 자리를 새 파일로 저장한다 — (장, 화면 방향의 원본 화소 `[왼, 위, 오른, 아래]`, 고를 때 본 원본의 화면 방향 폭·높이).
      * **null 이면 메뉴에 내지 않는다**(읽기 전용 사본 — [onDelete] 와 같은 까닭).
      */
-    onCrop: ((FileEntry, IntArray, Int, Int) -> Unit)? = null,
+    onCrop: ((FileEntry, IntArray, Int, Int, Int) -> Unit)? = null,
     /**
      * 그린 것을 새 파일로 저장한다 — (원본 경로, 그릴 것, 그릴 때 본 원본의 화면 방향 폭·높이). **null 이면 메뉴에 내지 않는다**
      * ([onCrop] 과 같은 까닭). 장이 아니라 경로를 받는 것은 프로세스가 죽었다 되살린 그리기가 지금 목록에 없는 그림일 수 있어서다.
      */
-    onMarkup: ((String, CropSupport.Overlay, Int, Int) -> Unit)? = null,
+    onMarkup: ((String, CropSupport.Overlay, Int, Int, Int) -> Unit)? = null,
 ) {
     if (entries.isEmpty()) {
         LaunchedEffect(Unit) { onClose() }
@@ -218,10 +227,14 @@ fun ImageViewerScreen(
     var menuOpen by remember { mutableStateOf(false) }
     var rotateNotice by remember { mutableStateOf(false) }
 
-    // 화면에서 먼저 돌리고, 파일 쓰기는 뒤에서 한다. 저장이 끝나면 [generation] 이 올라
-    // 다시 디코딩되므로 이 값을 0 으로 되돌린다 — 그러지 않으면 **두 번 돌아간다.**
-    val displayRotation = remember { mutableStateMapOf<String, Int>() }
-    LaunchedEffect(generation) { displayRotation.clear() }
+    // 화면에서 먼저 돌리고·뒤집고, 파일 쓰기는 뒤에서 한다. 장마다 아직 저장되지 않은 몫(EXIF 방향 값 — 없으면 정방향). 저장이 끝나면
+    // [generation] 이 올라 다시 디코딩되므로 비운다 — 그러지 않으면 **두 번 돌아간다.**
+    val pendingOrientation = remember { mutableStateMapOf<String, Int>() }
+    LaunchedEffect(generation) { pendingOrientation.clear() }
+    fun pendingOf(e: FileEntry?): Int = e?.let { pendingOrientation[it.path] } ?: ExifOrientation.NORMAL
+    // 회전·뒤집기 저장이 줄 서 있거나 도는 파일. 미저장 몫(위)은 저장 하나가 끝날 때마다 통째로 비고, 좌우 두 번처럼 합성이 정방향이면
+    // 처음부터 정방향이라 그것만으로는 '아직 저장 중' 을 모른다 — 큐가 요청의 신원으로 든 것을 본다.
+    val reorienting by FileOpManager.reorienting.collectAsStateWithLifecycle()
 
     // 끌어 닫기는 화면에 하나다 — 끄는 것은 한 장이지만 막대의 불투명도도 따라가야 한다.
     val dismiss = remember { DismissState() }
@@ -267,7 +280,7 @@ fun ImageViewerScreen(
     // 잘라 저장·그리기가 **함께 쓰는** 조건 — 정지 그림으로 열렸고(원본 치수를 쟀다), 화면에서 돌려 두고 아직 저장하지 않은 동안이
     // 아니다(화면은 이미 돌았는데 파일은 아직이라 고른 자리·그린 자리가 저장될 때의 파일과 어긋난다). 되면 그 장의 원본 치수, 아니면 null.
     fun editableProbe(e: FileEntry?): ImageProbe? =
-        e?.takeIf { (displayRotation[it.path] ?: 0) == 0 }?.let { croppable[it.path] }
+        e?.takeIf { pendingOf(it) == ExifOrientation.NORMAL && it.path !in reorienting }?.let { croppable[it.path] }
 
     // 그리기·메모. 그린 것은 ViewModel 이 든다 — 저장 상태 번들에 싣지 않는다(크기). 액티비티에 매여 밤 모드를 건너 산다.
     val markupVm: MarkupViewModel = viewModel()
@@ -358,7 +371,7 @@ fun ImageViewerScreen(
                     ImagePage(
                         path = entry.path,
                         generation = generation,
-                        extraRotation = displayRotation[entry.path] ?: 0,
+                        pending = pendingOf(entry),
                         zoomState = zoom,
                         budget = budget,
                         active = page == pagerState.settledPage,
@@ -432,30 +445,30 @@ fun ImageViewerScreen(
                             Icon(Icons.Filled.MoreVert, stringResource(R.string.image_more))
                         }
                         DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                            if (onRotate != null) DropdownMenuItem(
-                                leadingIcon = {
-                                    Icon(RotateRightIcon, null)
-                                },
-                                text = { Text(stringResource(R.string.image_rotate)) },
+                            if (onReorient != null) {
                                 // SVG 장은 WebView 가 그려 화면에서도 돌지 않는다. 켜 두면 '저장할 수 없다' 만 떠서 화면에서는
                                 // 돈 것처럼 읽힌다.
-                                enabled = current?.let { !SvgSupport.isSvgName(it.name) } != false,
-                                onClick = {
-                                    menuOpen = false
-                                    current?.let { e ->
-                                        // 화면은 **언제나** 즉시 돈다. 저장은 되는 형식에서만.
-                                        displayRotation[e.path] = ((displayRotation[e.path] ?: 0) + 90) % 360
-                                        if (ExifReader.canRotate(File(e.path))) {
-                                            onRotate(e, 90)
-                                        } else {
-                                            // 파일에 못 남긴다는 사실을 숨기지 않는다. 숨기면
-                                            // 사용자는 돌려 놓고 앱을 껐다 켠 뒤 원래대로인
-                                            // 사진을 보며 앱이 고장났다고 생각한다.
-                                            rotateNotice = true
+                                val canTurn = current?.let { !SvgSupport.isSvgName(it.name) } != false
+                                for (item in ReorientItem.entries) DropdownMenuItem(
+                                    leadingIcon = { item.MenuIcon() },
+                                    text = { Text(stringResource(item.label)) },
+                                    enabled = canTurn,
+                                    onClick = {
+                                        menuOpen = false
+                                        current?.let { e ->
+                                            // 화면은 **언제나** 즉시 바뀐다. 저장은 되는 형식에서만.
+                                            pendingOrientation[e.path] = ExifOrientation.apply(pendingOf(e), item.op)
+                                            if (ExifReader.canRotate(File(e.path))) {
+                                                onReorient(e, item.op)
+                                            } else {
+                                                // 파일에 못 남긴다는 사실을 숨기지 않는다. 숨기면 사용자는 돌려 놓고 앱을 껐다 켠 뒤
+                                                // 원래대로인 사진을 보며 앱이 고장났다고 생각한다.
+                                                rotateNotice = true
+                                            }
                                         }
-                                    }
-                                },
-                            )
+                                    },
+                                )
+                            }
                             if (onCrop != null) DropdownMenuItem(
                                 text = { Text(stringResource(R.string.image_crop)) },
                                 // 정지 그림으로 열린 장만. 회전을 저장하는 중이면 끈다(머리말 — 고른 자리가 파일과 어긋난다).
@@ -560,8 +573,8 @@ fun ImageViewerScreen(
                 path = entry.path,
                 probe = probe,
                 onCancel = { cropping = null },
-                onSave = { rect ->
-                    onCrop?.invoke(entry, rect, probe.displayWidth, probe.displayHeight)
+                onSave = { rect, orientation ->
+                    onCrop?.invoke(entry, rect, probe.displayWidth, probe.displayHeight, orientation)
                     cropping = null
                 },
             )
@@ -575,7 +588,7 @@ fun ImageViewerScreen(
                     session = s,
                     budget = budget,
                     onSave = { overlay ->
-                        onMarkup(s.path, overlay, s.width, s.height)
+                        onMarkup(s.path, overlay, s.width, s.height, s.probe.orientation)
                         markupVm.close()
                         markupPath = null
                     },
@@ -630,7 +643,8 @@ private fun StillNotice(reason: AnimationPlan.StillReason, modifier: Modifier = 
 private fun ImagePage(
     path: String,
     generation: Int,
-    extraRotation: Int,
+    /** 아직 저장되지 않은 회전·뒤집기(EXIF 방향 값). 정방향이면 아무것도 입히지 않는다. */
+    pending: Int,
     zoomState: ZoomState,
     budget: ImageLimits.Budget,
     /** 자리 잡은 장인가. 움직이는 그림은 이때만 튼다. */
@@ -718,8 +732,8 @@ private fun ImagePage(
                 ZoomablePainter(
                     painter = painter,
                     state = zoomState,
-                    // 저장이 끝나기 전까지의 **화면상 회전**(GIF 는 저장하지 못한다 — 고지가 따로 뜬다).
-                    modifier = Modifier.fillMaxSize().graphicsLayer { rotationZ = extraRotation.toFloat() },
+                    // 저장이 끝나기 전까지의 **화면상 회전·뒤집기**(GIF 는 저장하지 못한다 — 고지가 따로 뜬다).
+                    modifier = Modifier.fillMaxSize().pendingOrientation(pending),
                     onTap = onTap,
                     // 프레임은 예산에 맞춰 줄여 떴을 수 있다. 최대 배율은 원본으로 잰다.
                     originalWidth = st.probe.displayWidth,
@@ -758,8 +772,9 @@ private fun ImagePage(
                 ZoomableImage(
                     bitmap = st.bitmap.asImageBitmap(),
                     state = zoomState,
-                    // 저장이 끝나기 전까지의 **화면상 회전**. 파일이 다시 읽히면 0 으로 돌아간다.
-                    modifier = Modifier.fillMaxSize().graphicsLayer { rotationZ = extraRotation.toFloat() },
+                    // 저장이 끝나기 전까지의 **화면상 회전·뒤집기**. 파일이 다시 읽히면 정방향으로 돌아간다. 확대 조각은 이 겹 안에서
+                    // 바닥층과 함께 돌고 뒤집힌다 — 조각 자신의 방향(파일의 EXIF)은 `RegionOrientation` 이 따로 맞춘다.
+                    modifier = Modifier.fillMaxSize().pendingOrientation(pending),
                     onTap = onTap,
                     detail = detail,
                     // 최대 배율은 **원본의 2배**다. 원본을 모르면 바닥층으로 친다.
@@ -839,4 +854,33 @@ private sealed interface PageState {
         val drawable: AnimatedImageDrawable,
         val probe: ImageProbe,
     ) : PageState
+}
+
+/**
+ * 아직 저장되지 않은 회전·뒤집기를 겹으로 입힌다 — **바깥 겹이 돌리고 안쪽 겹이 좌우로 뒤집는다**(`ExifOrientation.layerOf`). 한 겹에
+ * 회전과 `scaleX = -1` 을 함께 주면 플랫폼이 어느 쪽을 먼저 하는지에 답이 달린다 — 나눠 두면 차례가 모양으로 정해진다.
+ */
+private fun Modifier.pendingOrientation(orientation: Int): Modifier {
+    val layer = ExifOrientation.layerOf(orientation)
+    if (layer.degrees == 0 && !layer.mirrored) return this
+    return graphicsLayer { rotationZ = layer.degrees.toFloat() }
+        .graphicsLayer { scaleX = if (layer.mirrored) -1f else 1f }
+}
+
+/** ⋮ 의 회전·뒤집기 넷. 차례가 메뉴의 차례다. */
+private enum class ReorientItem(val op: ExifOrientation.Op, val label: Int) {
+    RIGHT(ExifOrientation.Op.ROTATE_RIGHT, R.string.image_rotate),
+    LEFT(ExifOrientation.Op.ROTATE_LEFT, R.string.image_rotate_left),
+    HORIZONTAL(ExifOrientation.Op.FLIP_HORIZONTAL, R.string.image_flip_horizontal),
+    VERTICAL(ExifOrientation.Op.FLIP_VERTICAL, R.string.image_flip_vertical),
+    ;
+
+    /** 왼쪽 회전은 오른쪽 회전 아이콘의 거울상, 상하 뒤집기는 좌우 뒤집기 아이콘을 90° 돌린 것. */
+    @Composable
+    fun MenuIcon() = when (this) {
+        RIGHT -> Icon(RotateRightIcon, null)
+        LEFT -> Icon(RotateRightIcon, null, Modifier.graphicsLayer { scaleX = -1f })
+        HORIZONTAL -> Icon(FlipIcon, null)
+        VERTICAL -> Icon(FlipIcon, null, Modifier.graphicsLayer { rotationZ = 90f })
+    }
 }

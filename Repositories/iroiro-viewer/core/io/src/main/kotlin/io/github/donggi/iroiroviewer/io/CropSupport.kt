@@ -24,6 +24,8 @@ object CropSupport {
      *   자리가 어긋나므로 [Rendered.Changed] 로 거절한다.
      * @param maxPixels 결과 한 장의 화소 상한. 넘으면 줄여 뜨고 [Rendered.Ok.downscaled] 를 켠다 — 말없이 줄이지 않는다.
      * @param overlay 뜬 자리 위에 그릴 것(그리기·메모). null 이면 잘라 저장 그대로다.
+     * @param expectedOrientation 고를 때 본 파일의 EXIF 방향. 다르면 [Rendered.Changed] — 뒤집기·180° 회전은 치수를 바꾸지 않아
+     *   치수로는 모른다. null 이면 보지 않는다.
      */
     data class Ask(
         val path: String,
@@ -35,6 +37,7 @@ object CropSupport {
         val expectedHeight: Int,
         val maxPixels: Long,
         val overlay: Overlay? = null,
+        val expectedOrientation: Int? = null,
     )
 
     /**

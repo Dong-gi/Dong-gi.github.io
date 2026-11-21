@@ -19,6 +19,7 @@ import org.junit.Assume.assumeNotNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import io.github.donggi.iroiroviewer.model.ExifOrientation
 import java.io.File
 
 /**
@@ -550,7 +551,7 @@ class FileOpEngineTest {
         val f = jpegWithOrientation(work, "세로사진.jpg", 1)
         val before = f.length()
 
-        val outcome = engine.rotateExif(f.absolutePath, 90)
+        val outcome = engine.reorientExif(f.absolutePath, ExifOrientation.ROTATE_90)
 
         assertTrue("회전이 실패했다: $outcome", outcome is FileOpEngine.Outcome.Done)
         assertEquals(androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_90, orientationOf(f))
@@ -569,7 +570,7 @@ class FileOpEngineTest {
         val past = System.currentTimeMillis() - 500L * 24 * 3600 * 1000
         assertTrue(f.setLastModified(past))
 
-        engine.rotateExif(f.absolutePath, 180)
+        engine.reorientExif(f.absolutePath, ExifOrientation.ROTATE_180)
 
         assertTrue(
             "수정시각이 바뀌었다: ${f.lastModified()} vs $past",
@@ -587,15 +588,15 @@ class FileOpEngineTest {
         val flip = androidx.exifinterface.media.ExifInterface.ORIENTATION_FLIP_HORIZONTAL
         val f = jpegWithOrientation(work, "거울상.jpg", flip)
 
-        engine.rotateExif(f.absolutePath, 90)
+        engine.reorientExif(f.absolutePath, ExifOrientation.ROTATE_90)
 
-        // FLIP_HORIZONTAL(0°, 거울) 을 90° 돌리면 TRANSPOSE(90°, 거울) 다.
+        // 좌우가 뒤집힌 그림을 시계 방향으로 돌리면 TRANSVERSE(7)다 — 옛 셈은 TRANSPOSE(5)를 써서 다시 읽으면 180° 어긋났다.
         assertEquals(
-            androidx.exifinterface.media.ExifInterface.ORIENTATION_TRANSPOSE,
+            androidx.exifinterface.media.ExifInterface.ORIENTATION_TRANSVERSE,
             orientationOf(f),
         )
         // 네 번 돌리면 제자리.
-        repeat(3) { runBlocking { engine.rotateExif(f.absolutePath, 90) } }
+        repeat(3) { runBlocking { engine.reorientExif(f.absolutePath, ExifOrientation.ROTATE_90) } }
         assertEquals(flip, orientationOf(f))
         Unit
     }
@@ -613,7 +614,7 @@ class FileOpEngineTest {
         stale.writeBytes(ByteArray(1024))
         assertTrue(stale.setLastModified(System.currentTimeMillis() - 3 * 60 * 60 * 1000L))
 
-        engine.rotateExif(f.absolutePath, 90)
+        engine.reorientExif(f.absolutePath, ExifOrientation.ROTATE_90)
 
         assertFalse("죽은 임시 파일이 남았다", stale.exists())
         val leftovers = work.listFiles { x -> x.name.startsWith(FileOpEngine.PART_PREFIX) }.orEmpty()
@@ -629,7 +630,7 @@ class FileOpEngineTest {
         val before = f.readBytes()
         val modified = f.lastModified()
 
-        val outcome = engine.rotateExif(f.absolutePath, 90)
+        val outcome = engine.reorientExif(f.absolutePath, ExifOrientation.ROTATE_90)
 
         assertTrue("실패로 끝나야 한다: $outcome", outcome is FileOpEngine.Outcome.Failed)
         assertTrue("원본이 바뀌었다", before.contentEquals(f.readBytes()))
@@ -638,12 +639,53 @@ class FileOpEngineTest {
         Unit
     }
 
+    /**
+     * **뒤집기도 태그만** 바꾸고 수정시각을 지킨다. 좌우 → 상하 → 왼쪽 회전을 차례로 하면 표대로(1 → 2 → 3 → 6) 간다.
+     */
+    @Test
+    fun 뒤집기와_왼쪽_회전이_표대로_태그를_쓴다() = runBlocking {
+        val f = jpegWithOrientation(work, "뒤집기.jpg", 1)
+        val past = System.currentTimeMillis() - 30L * 24 * 3600 * 1000
+        assertTrue(f.setLastModified(past))
+
+        engine.reorientExif(f.absolutePath, ExifOrientation.of(ExifOrientation.Op.FLIP_HORIZONTAL))
+        assertEquals(ExifOrientation.FLIP_HORIZONTAL, orientationOf(f))
+        engine.reorientExif(f.absolutePath, ExifOrientation.of(ExifOrientation.Op.FLIP_VERTICAL))
+        assertEquals(ExifOrientation.ROTATE_180, orientationOf(f))
+        val outcome = engine.reorientExif(f.absolutePath, ExifOrientation.of(ExifOrientation.Op.ROTATE_LEFT))
+        assertTrue("실패했다: $outcome", outcome is FileOpEngine.Outcome.Done)
+        assertEquals(ExifOrientation.ROTATE_90, orientationOf(f))
+        assertTrue("수정시각이 바뀌었다", Math.abs(f.lastModified() - past) < 3000)
+        Unit
+    }
+
+    /**
+     * **정지 WebP 도 저장된다** — 다시 쓴 파일이 잘렸는가를 RIFF 머리의 크기로 보는 지킴(`rewrittenWhole`)이 온전한 WebP 를 잘린 것으로
+     * 읽으면 WebP 회전·뒤집기가 늘 실패한다. EXIF 가 없던 WebP 에 처음 붙이는 길과 이미 있는 것을 고치는 길을 둘 다 지난다.
+     */
+    @Test
+    fun 정지_WebP_의_방향을_저장한다() = runBlocking {
+        work.mkdirs()
+        val f = File(work, "그림.webp")
+        val bmp = android.graphics.Bitmap.createBitmap(64, 48, android.graphics.Bitmap.Config.ARGB_8888)
+        f.outputStream().use { bmp.compress(android.graphics.Bitmap.CompressFormat.WEBP_LOSSY, 80, it) }
+
+        val first = engine.reorientExif(f.absolutePath, ExifOrientation.of(ExifOrientation.Op.FLIP_HORIZONTAL))
+        assertTrue("실패했다: $first", first is FileOpEngine.Outcome.Done)
+        assertEquals(ExifOrientation.FLIP_HORIZONTAL, orientationOf(f))
+        val second = engine.reorientExif(f.absolutePath, ExifOrientation.of(ExifOrientation.Op.ROTATE_RIGHT))
+        assertTrue("실패했다: $second", second is FileOpEngine.Outcome.Done)
+        assertEquals(ExifOrientation.TRANSVERSE, orientationOf(f))
+        assertNotNull("다시 쓴 WebP 를 디코더가 읽지 못한다", android.graphics.BitmapFactory.decodeFile(f.absolutePath))
+        Unit
+    }
+
     /** 0도 회전은 파일을 건드리지 않는다. */
     @Test
     fun 회전_0도는_파일을_열지도_않는다() = runBlocking {
         val f = jpegWithOrientation(work, "그대로.jpg", 1)
         val before = f.readBytes()
-        val outcome = engine.rotateExif(f.absolutePath, 360)
+        val outcome = engine.reorientExif(f.absolutePath, ExifOrientation.NORMAL)
         assertTrue(outcome is FileOpEngine.Outcome.Done)
         assertTrue(before.contentEquals(f.readBytes()))
         Unit

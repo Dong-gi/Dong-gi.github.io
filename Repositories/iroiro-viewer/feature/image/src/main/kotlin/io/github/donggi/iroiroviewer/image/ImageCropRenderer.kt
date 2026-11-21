@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import io.github.donggi.iroiroviewer.io.CropSupport
 import io.github.donggi.iroiroviewer.io.Iro
+import io.github.donggi.iroiroviewer.model.ExifOrientation
 import io.github.donggi.iroiroviewer.ui.image.ImageIo
 import io.github.donggi.iroiroviewer.ui.image.RegionMath
 import io.github.donggi.iroiroviewer.ui.image.RegionOrientation
@@ -38,6 +39,11 @@ object ImageCropRenderer : CropSupport.Renderer {
         // 움직이는 그림은 자르지 않는다 — 첫 장면만 남는 것을 '잘라 낸 그림' 이라 부를 수 없다(화면도 메뉴를 끈다).
         if (probe.isAnimated) return CropSupport.Rendered.Unsupported
         if (probe.displayWidth != ask.expectedWidth || probe.displayHeight != ask.expectedHeight) {
+            return CropSupport.Rendered.Changed
+        }
+        // 뒤집기·180° 회전이 그사이 저장됐다 — 치수가 같아 위에서 걸리지 않는다. 고른 자리가 거울에 비친 자리가 된다.
+        val seen = ask.expectedOrientation
+        if (seen != null && ExifOrientation.normalize(seen) != ExifOrientation.normalize(probe.orientation)) {
             return CropSupport.Rendered.Changed
         }
         val dw = probe.displayWidth
