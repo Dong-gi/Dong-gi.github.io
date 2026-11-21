@@ -146,7 +146,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
  * * **읽는 모양**('보기' 판 — [AppearanceSheet]). EPUB 에만 있고, 설정 화면과 같은 값을 쓴다.
  * * **장 안의 자리**. 스크롤의 비율로 기억하고 되살린다([DocLocator]·`LockedWebView`). 장 번호의 이어보기 안내는 그대로다.
  * * **PDF 두 쪽 보기**(가로 화면에서만, `PdfSpreads`)와 **쪽 목록**([PdfGridSheet]).
- * * **PDF 찾기**(`PdfSearch` — 플랫폼의 `searchText`)와 **문서 안 링크**(`PdfLinks` — 두드리면 그 쪽으로).
+ * * **PDF 찾기**(`PdfSearch` — 플랫폼의 `searchText`)와 **문서 안 링크**(`PdfLinks` — 두드리면 그 쪽으로), **목차**([PdfOutlineSheet]
+ *   — 글 꺼내기의 해석기가 읽는다, 목차가 있는 문서에만 단추가 뜬다).
  *
  * ## 장을 손가락으로 넘긴다
  *
@@ -190,8 +191,9 @@ fun DocViewScreen(
     var showToc by remember { mutableStateOf(false) }
     var showNotice by remember { mutableStateOf(false) }
     var showAppearance by remember { mutableStateOf(false) }
-    // 문서가 바뀌면 닫는다 — 앞 문서의 찾기 막대·쪽 목록이 새 문서 위에 남지 않게.
+    // 문서가 바뀌면 닫는다 — 앞 문서의 찾기 막대·쪽 목록·목차가 새 문서 위에 남지 않게.
     var showGrid by remember(path) { mutableStateOf(false) }
+    var showOutline by remember(path) { mutableStateOf(false) }
     // 찾기 막대는 **VM 의 찾기가 살아 있으면 열린 채로** 선다. 액티비티가 다시 만들어지면(밤 모드를 바꿨다 — 회전은
     // `configChanges` 라 다시 만들지 않는다) 결과의 칠은 VM 에 남으므로, 막대가 사라지면 칠을 걷을 길도 뒤로가 막대를 닫는
     // 처리기도 없다.
@@ -344,6 +346,7 @@ fun DocViewScreen(
     val spreadWanted by vm.spread.collectAsStateWithLifecycle()
     val continuous by vm.continuous.collectAsStateWithLifecycle()
     val search by vm.search.collectAsStateWithLifecycle()
+    val outline by vm.outline.collectAsStateWithLifecycle()
     val landscape = viewport.first > viewport.second
     val pdfSpread = spreadWanted && landscape
     Box(
@@ -528,6 +531,8 @@ fun DocViewScreen(
                     onSeek = { vm.onPageChanged(it) },
                     onJump = { showJump = true },
                     onGrid = { showGrid = true },
+                    // 목차가 있는 문서에만(`PdfOutline` — 뒤에서 읽으므로 연 뒤 잠시 있다가 뜰 수 있다).
+                    onOutline = if (outline.isEmpty) null else ({ showOutline = true }),
                     onSpread = { vm.setSpread(!spreadWanted) },
                 )
             }
@@ -546,6 +551,18 @@ fun DocViewScreen(
                 vm.onPageChanged(it)
             },
             onDismiss = { showGrid = false },
+        )
+    }
+
+    if (showOutline && pdfDoc != null && !outline.isEmpty) {
+        PdfOutlineSheet(
+            outline = outline,
+            current = current,
+            onPick = {
+                showOutline = false
+                vm.onPageChanged(it)
+            },
+            onDismiss = { showOutline = false },
         )
     }
 
@@ -1078,6 +1095,8 @@ private fun BottomBar(
     onJump: () -> Unit,
     onGrid: () -> Unit,
     onSpread: () -> Unit,
+    /** 목차. null 이면 단추가 없다(목차가 없는 문서). */
+    onOutline: (() -> Unit)? = null,
 ) {
     Column(
         Modifier
@@ -1122,6 +1141,7 @@ private fun BottomBar(
                 color = Color.White,
             )
             TextButton(onClick = onJump) { Text(stringResource(R.string.doc_jump)) }
+            if (onOutline != null) TextButton(onClick = onOutline) { Text(stringResource(R.string.doc_outline)) }
             TextButton(onClick = onGrid) { Text(stringResource(R.string.doc_grid)) }
             if (canSpread) {
                 // 지금 모양이 아니라 **누르면 될 모양**을 적는다.

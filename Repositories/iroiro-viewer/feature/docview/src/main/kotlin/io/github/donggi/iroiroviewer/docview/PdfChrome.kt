@@ -10,19 +10,25 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsIgnoringVisibility
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -48,8 +54,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import io.github.donggi.iroiroviewer.docview.pdf.PdfOutline
 import io.github.donggi.iroiroviewer.docview.pdf.PdfPageStore
 import io.github.donggi.iroiroviewer.docview.pdf.PdfSearch
 
@@ -135,6 +144,97 @@ private fun GridCell(store: PdfPageStore, page: Int, selected: Boolean, onClick:
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.padding(top = 4.dp),
         )
+    }
+}
+
+/**
+ * **목차**([PdfOutline]) — 접고 펼치는 나무. 누르면 그 쪽으로 간다(쪽 넘김·이어 보기 둘 다 — VM 의 쪽이 바뀐다).
+ *
+ * 펼침 상태는 이 판이 든다 — 처음 상태는 문서가 펼친 채로 저장한 항목과 **지금 쪽이 속한 항목의 조상**이고, 목록은 그 항목에서
+ * 열린다. 목적지를 풀지 못한 항목은 지우지 않고 흐리게 둔다(EPUB 목차와 같은 판단 — 목차의 모양이 문서가 말한 그대로여야 한다).
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun PdfOutlineSheet(
+    outline: PdfOutline,
+    current: Int,
+    onPick: (Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val here = remember(outline, current) { outline.currentFor(current) }
+    var expanded by remember(outline) { mutableStateOf(outline.initiallyOpen() + outline.ancestorsOf(here)) }
+    val rows = remember(outline, expanded) { outline.visible(expanded) }
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+    ) {
+        Text(
+            stringResource(R.string.doc_outline),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+        )
+        val listState = rememberLazyListState(initialFirstVisibleItemIndex = rows.indexOf(here).coerceAtLeast(0))
+        LazyColumn(state = listState, modifier = Modifier.fillMaxWidth()) {
+            items(count = rows.size, key = { rows[it] }) { k ->
+                val i = rows[k]
+                val open = i in expanded
+                OutlineRow(
+                    entry = outline.entries[i],
+                    isCurrent = i == here,
+                    open = open,
+                    onToggle = { expanded = if (open) expanded - i else expanded + i },
+                    onPick = onPick,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun OutlineRow(
+    entry: PdfOutline.Entry,
+    isCurrent: Boolean,
+    open: Boolean,
+    onToggle: () -> Unit,
+    onPick: (Int) -> Unit,
+) {
+    val page = entry.page
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 48.dp)
+            .then(if (page != null) Modifier.clickable { onPick(page) } else Modifier)
+            // 들여쓰기는 여섯 겹까지만 — 더 깊으면 제목이 들어갈 자리가 없다.
+            .padding(start = (8 + entry.depth.coerceAtMost(6) * 16).dp, end = 24.dp),
+    ) {
+        if (entry.hasChildren) {
+            IconButton(onClick = onToggle) {
+                Icon(
+                    if (open) Icons.Filled.KeyboardArrowDown else Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    stringResource(if (open) R.string.doc_outline_collapse else R.string.doc_outline_expand),
+                )
+            }
+        } else {
+            Spacer(Modifier.size(48.dp))
+        }
+        Text(
+            text = entry.title.ifBlank { stringResource(R.string.doc_outline_untitled) },
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = if (isCurrent) FontWeight.Bold else null,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            color = if (page != null) Color.Unspecified else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+            modifier = Modifier.weight(1f).padding(vertical = 8.dp),
+        )
+        if (page != null) {
+            Text(
+                stringResource(R.string.doc_grid_page, page + 1),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(start = 12.dp),
+            )
+        }
     }
 }
 

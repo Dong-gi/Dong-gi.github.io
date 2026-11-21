@@ -71,6 +71,12 @@
     <string name="doc_grid">쪽 목록</string>
     <string name="doc_grid_page">%d</string>
 
+    <!-- PDF 목차(문서의 책갈피 — PdfOutline). 목차가 있는 문서에만 단추가 뜬다. 펼치기·접기는 화면 낭독기가 읽는 이름이다. -->
+    <string name="doc_outline">목차</string>
+    <string name="doc_outline_expand">펼치기</string>
+    <string name="doc_outline_collapse">접기</string>
+    <string name="doc_outline_untitled">제목 없음</string>
+
     <!-- PDF 찾기(플랫폼의 searchText). -->
     <string name="doc_search">찾기</string>
     <string name="doc_search_hint">문서에서 찾기</string>

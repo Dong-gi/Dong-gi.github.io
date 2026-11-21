@@ -44,9 +44,12 @@ function bundledPackages() {
 // font 를 가로채 모르는 가족을 대체 사슬로 바꾸므로(wasm-bridge.ts 의 installCanvasFontSubstitution → substituteCssFontFamily), 그 이름이
 // 살아남으려면 등록된 웹 글꼴(REGISTERED_FONTS = 글꼴 목록)이어야 한다. 그래서 font-loader.ts 의 글꼴 목록에 두 줄을 더하고, 문서 없이도
 // 처음에 싣는 목록(CRITICAL_FONTS — 첫 쪽을 그리기 전에 init 이 기다린다)에 넣는다. 기기에 진짜 글꼴이 있으면 로더가 그것을 쓴다(OS 글꼴 감지).
+// 셋째 'RHWP Hancom Legacy Equation' 은 버전 문자열이 빈 옛 수식의 표시 가족이다(legacy_glyphs.rs·layout/legacy.rs — PUA 가 아니라 본래
+// 글자를 표의 폭 자리에 그린다). 등록되지 않으면 같은 까닭으로 기본 글꼴로 바뀌어 글자 사이가 벌어진다. 짝은 build_rhwp.py 의 EQFONT_FACES.
 const EQUATION_FONTS = [
-  { name: 'HyhwpEQ', file: 'fonts/HyhwpEQ-iroiro.woff2' },
-  { name: 'HancomEQN', file: 'fonts/HancomEQN-iroiro.woff2' },
+  { name: 'HyhwpEQ', file: 'fonts/HyhwpEQ-iroiro.woff2', id: 'HyhwpEQ' },
+  { name: 'HancomEQN', file: 'fonts/HancomEQN-iroiro.woff2', id: 'HancomEQN' },
+  { name: 'RHWP Hancom Legacy Equation', file: 'fonts/LegacyEQ-iroiro.woff2', id: 'LegacyEQ' },
 ];
 
 function equationFonts() {
@@ -62,7 +65,7 @@ function equationFonts() {
       if (code.split(LIST).length !== 2 || code.split(CRITICAL).length !== 2) {
         this.error('font-loader.ts 의 FONT_LIST·CRITICAL_FONTS 줄이 바뀌었다 — 수식 대체 글꼴을 싣는 자리를 다시 찾을 것(vite.config.mjs)');
       }
-      const entries = EQUATION_FONTS.map((f) => ({ ...f, format: 'woff2', ruleId: `iroiro.equation-substitute.${f.name}` }));
+      const entries = EQUATION_FONTS.map(({ name, file, id }) => ({ name, file, format: 'woff2', ruleId: `iroiro.equation-substitute.${id}` }));
       const names = EQUATION_FONTS.map((f) => `'${f.name}'`).join(', ');
       patched = true;
       return {

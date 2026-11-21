@@ -11,6 +11,9 @@
 - 같은 파일의 `measure` — HYhwpEQ 는 그리스·큰 연산자를 이 길로 보내지 않는다(그 둘은 HancomEQN 에만 담는다), 정체·ASCII 연산자는
   기준선을 옮겨 그린다(그만큼 글리프를 거꾸로 옮겨 둔다 — 아니면 그 글자만 숫자보다 높이 뜬다).
 - `hancom_eqn_metrics.rs` 의 CODES·HMTX — HancomEQN 의 전진 폭.
+- 옛 수식(버전 문자열이 빈 것)의 표시 가족 'RHWP Hancom Legacy Equation' — `legacy_glyphs.rs`(fn advance·measure)와 `layout/legacy.rs`
+  (fn glyph_width·괄호 칸). 이 가족은 PUA 가 아니라 본래 글자를 표의 폭(UPM 1000)으로 매긴 자리에 하나씩 그린다 — 대체 글꼴이 없으면 기본
+  글꼴로 그려져 글자 사이가 벌어진다('E quation'). 그래서 곧은 원 글리프를 같은 코드에, 그 칸의 가운데에 담는다(read_legacy_table).
 표의 꼴이 바뀌면(역할이 늘었다, 갈래의 모양이 다르다, 배열 길이가 다르다) 짐작하지 않고 멈춘다 — 그때는 새 판의 소스를 읽고 이 도구를 고친다.
 
 원 글꼴 — STIX Two Math 2.13(github.com/stipub/stixfonts 태그 v2.13 = 커밋 37308d44…, `fonts/static_ttf_woff2/STIXTwoMath-Regular.woff2`,
@@ -21,8 +24,8 @@ HYhwpEQ 처럼 Times 계열의 세리프이고, 곧은 라틴·숫자·연산자
 
     local/editor/eqfont/venv/Scripts/python -I tools/editor/make_eq_font.py <rhwp 소스 폴더> <써 낼 폴더>
 
-받은 원 글꼴은 local/editor/eqfont/downloads/(git 무시)에 둔다. 쓰는 것 — <써 낼 폴더>/HyhwpEQ-iroiro.woff2·HancomEQN-iroiro.woff2,
-EQ-SUBSTITUTE-FONTS.txt(고지), STIXTwoMath-OFL.txt(원 글꼴의 OFL). fontTools·Brotli 는 가상 환경에만 둔다(eqfont-requirements.txt).
+받은 원 글꼴은 local/editor/eqfont/downloads/(git 무시)에 둔다. 쓰는 것 — <써 낼 폴더>/HyhwpEQ-iroiro.woff2·HancomEQN-iroiro.woff2·
+LegacyEQ-iroiro.woff2, EQ-SUBSTITUTE-FONTS.txt(고지), STIXTwoMath-OFL.txt(원 글꼴의 OFL). fontTools·Brotli 는 가상 환경에만 둔다(eqfont-requirements.txt).
 """
 
 from __future__ import annotations
@@ -72,7 +75,7 @@ class TableChanged(SystemExit):
 
 
 def changed(what: str) -> TableChanged:
-    return TableChanged(f"rhwp 의 수식 글리프 표의 꼴이 바뀌었다 — {what}. 새 판의 hancom_glyphs.rs 를 읽고 make_eq_font.py 를 고칠 것")
+    return TableChanged(f"rhwp 의 수식 글리프 표의 꼴이 바뀌었다 — {what}. 새 판의 수식 소스(hancom_glyphs.rs·legacy_glyphs.rs·layout/legacy.rs)를 읽고 make_eq_font.py 를 고칠 것")
 
 
 # ---------------------------------------------------------------------------------------------------------------------- 표 읽기
@@ -230,6 +233,125 @@ def read_table(rhwp_src: pathlib.Path) -> tuple[str, list[Entry], dict[str, floa
     return family, entries, shifts, dict(zip(codes, hmtx))
 
 
+def char_alternatives(pattern: str, what: str) -> list[str]:
+    """`'a' | 'b'..='d'` → [a, b, c, d]. 글자 상수·범위가 아닌 갈래가 있으면 멈춘다."""
+    out = []
+    for alt in pattern.split(" | "):
+        r = re.fullmatch(rf"{CHAR}..={CHAR}", alt)
+        if r:
+            lo, hi = rust_char(r.group(1)), rust_char(r.group(2))
+            out.extend(chr(c) for c in range(ord(lo), ord(hi) + 1))
+            continue
+        c = re.fullmatch(CHAR, alt)
+        if not c:
+            raise changed(f"{what} 의 갈래 {alt!r}")
+        out.append(rust_char(c.group(1)))
+    return out
+
+
+def read_legacy_table(rhwp_src: pathlib.Path) -> tuple[str, list[Entry]]:
+    """옛 수식(버전 문자열이 빈 것)의 표시 가족 — (CSS 가족 이름, 그릴 글자 목록(UPM 1000)).
+
+    rhwp 는 이 가족을 PUA 로 그리지 않는다. 두 길이 있다:
+    - `legacy_glyphs.rs` 의 `measure` — 런의 **본래 글자**를 하나씩, 표(`fn advance`)의 폭으로 매긴 자리에 그린다(`glyphs: text.to_owned()`,
+      기준선 이동 0). 기울인 변수는 대·소문자 모두 곧은 윤곽에 0.333 기울임 행렬을 건다 — 그래서 라틴 글자는 곧은 글리프 하나씩이고, 글리프의
+      폭은 곧은 표(UPPER·LOWER — 원본 프로그램의 d1 과 같다는 주석)를 따른다. 기울인 표(ITALIC_*)는 다음 글자의 자리를 매길 뿐이다.
+    - `layout/legacy.rs` 의 옛 줄·괄호 — 같은 가족(`FAMILY` 의 첫 이름)으로 숫자·연산자·괄호를 한 글자씩 FontGlyph 로 그린다(`fn glyph_width`,
+      괄호 칸은 parentheses 의 0.375·0.387 em).
+    두 길이 같은 글자에 다른 폭을 매기면 멈춘다(글리프를 어느 칸 가운데 둘지 정할 수 없다)."""
+    path = rhwp_src / "src" / "renderer" / "equation" / "legacy_glyphs.rs"
+    layout_path = rhwp_src / "src" / "renderer" / "equation" / "layout" / "legacy.rs"
+    for p in (path, layout_path):
+        if not p.is_file():
+            sys.exit(f"rhwp 소스에 {p.relative_to(rhwp_src)} 가 없다 — build_rhwp.py 의 SPARSE 를 볼 것")
+    text = strip_comments(path.read_text(encoding="utf-8"))
+    family = one(r'pub\(super\) const FONT_FAMILY: &str = "([^"]+)";', text, "legacy_glyphs.rs 의 FONT_FAMILY").group(1)
+    upper = number_array(text, "UPPER", "u16")
+    lower = number_array(text, "LOWER", "u16")
+    for name in ("ITALIC_UPPER", "ITALIC_LOWER"):
+        number_array(text, name, "u16")  # 있어야 한다 — fn advance 가 가리킨다
+    if len(upper) != 26 or len(lower) != 26:
+        raise changed("legacy_glyphs.rs 의 UPPER·LOWER 길이")
+
+    body = one(r"fn advance\(character: char, role: Role\) -> Option<u16> \{(.*?)\n\}\n", text, "legacy_glyphs.rs 의 fn advance",
+               re.S).group(1)
+    for role, case, table in (("italic: true", "uppercase", "ITALIC_UPPER"), ("italic: true", "lowercase", "ITALIC_LOWER"),
+                              (r"\.\.", "uppercase", "UPPER"), (r"\.\.", "lowercase", "LOWER")):
+        first = "A" if case == "uppercase" else "a"
+        one(rf"Role::Variable \{{ {role} \}} if character\.is_ascii_{case}\(\) => \{{\s*Some\({table}\[character as usize - '{first}' as usize\]\)\s*\}}",
+            body, f"legacy_glyphs.rs 의 {table} 갈래", re.S)
+    widths: dict[str, int] = {}
+
+    def put(chars: list[str], units: int, where: str) -> None:
+        for ch in chars:
+            if widths.setdefault(ch, units) != units:
+                raise changed(f"옛 수식 글자 {ch!r} 의 폭이 두 가지({widths[ch]}·{units}, {where})")
+
+    number = one(r"Role::Number if character\.is_ascii_digit\(\) \|\| character == '\.' => Some\((\d+)\),", body,
+                 "legacy_glyphs.rs 의 숫자 갈래")
+    put([*"0123456789."], int(number.group(1)), "숫자")
+    literal = one(rf"Role::LegacyLiteral if matches!\(character, ((?:{CHAR}(?: \| )?)+)\) => Some\((\d+)\),", body,
+                  "legacy_glyphs.rs 의 옛 기호 갈래")
+    put(char_alternatives(literal.group(1), "옛 기호"), int(literal.group(literal.re.groups)), "옛 기호")
+    ops = one(r"Role::Operator => match character \{(.*?)\n\s*_ => None,\s*\},", body, "legacy_glyphs.rs 의 연산자 갈래", re.S)
+    op_arms = 0
+    for line in ops.group(1).splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        a = re.fullmatch(r"(.+?) => Some\((\d+)\),", line)
+        if not a:
+            raise changed(f"legacy_glyphs.rs 의 연산자 갈래 {line!r}")
+        put(char_alternatives(a.group(1), "연산자"), int(a.group(2)), "연산자")
+        op_arms += 1
+    # 위 조각들만 찾으면 새 갈래(예: 그리스 문자)가 생겨도 그냥 지나간다 — 그 글자는 말없이 기본 글꼴로 그려진다.
+    if len(re.findall(r"Some\(", body)) != 4 + 2 + op_arms or len(re.findall(r"Role::", body)) != 4 + 3:
+        raise changed("legacy_glyphs.rs 의 fn advance 에 읽지 않은 갈래가 있다")
+
+    measure = re.sub(r"\s+", " ", one(r"pub\(super\) fn measure\((.*?)\n\}\n", text, "legacy_glyphs.rs 의 fn measure", re.S).group(1))
+    # 이 셋이 그대로여야 '본래 글자를, 곧은 윤곽으로, 기준선을 옮기지 않고' 가 맞다.
+    one(re.escape("shears.push(if matches!(role, Role::Variable { italic: true }) { 0.333 } else { 0.0 });"), measure,
+        "옛 수식의 기울임(대·소문자 모두 곧은 윤곽에 행렬)")
+    one(re.escape("glyphs: text.to_owned(),"), measure, "옛 수식이 본래 글자를 그린다")
+    one(re.escape("baseline_shift: 0.0,"), measure, "옛 수식의 기준선 이동")
+
+    layout = strip_comments(layout_path.read_text(encoding="utf-8"))
+    chain = one(r'const FAMILY: &str = "([^"]+)";', layout, "layout/legacy.rs 의 FAMILY").group(1)
+    if chain.split(",")[0].strip() != family:
+        raise changed(f"layout/legacy.rs 의 FAMILY 첫 이름({chain!r})이 legacy_glyphs.rs 의 가족과 다르다")
+    gw = one(r"fn glyph_width\(character: char\) -> Option<f64> \{\s*match character \{(.*?)\n\s*_ => None,\s*\}\s*\}", layout,
+             "layout/legacy.rs 의 fn glyph_width", re.S)
+    gw_arms = 0
+    for line in gw.group(1).splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        a = re.fullmatch(r"(.+?) => Some\(([0-9.]+)\),", line)
+        if not a:
+            raise changed(f"layout/legacy.rs 의 glyph_width 갈래 {line!r}")
+        put(char_alternatives(a.group(1), "옛 줄"), round(float(a.group(2)) * 1000), "옛 줄")
+        gw_arms += 1
+    if len(re.findall(r"Some\(", gw.group(1))) != gw_arms:
+        raise changed("layout/legacy.rs 의 glyph_width 에 읽지 않은 갈래가 있다")
+    one(re.escape('font_glyph( if ch == \'−\' { "-".to_owned() } else { ch.to_string() },'), re.sub(r"\s+", " ", layout),
+        "옛 줄이 그리는 글자")
+    one(re.escape('matches!((left.as_str(), right.as_str()), ("(", ")") | ("[", "]"))'), layout, "옛 괄호의 종류")
+    slots = set(re.findall(r'if left == "\[" \{ ([0-9.]+) \} else \{ ([0-9.]+) \}', layout))
+    if len(slots) != 1:
+        raise changed(f"layout/legacy.rs 의 괄호 칸({sorted(slots)})")
+    square, round_ = (round(float(v) * 1000) for v in slots.pop())
+    put(["[", "]"], square, "옛 괄호")
+    put(["(", ")"], round_, "옛 괄호")
+
+    entries = []
+    for i in range(26):
+        entries.append(Entry(ord("A") + i, chr(ord("A") + i), "Variable", False, upper[i], False))
+        entries.append(Entry(ord("a") + i, chr(ord("a") + i), "Variable", False, lower[i], False))
+    for ch, units in sorted(widths.items()):
+        entries.append(Entry(ord(ch), ch, "Legacy", False, units, False))
+    return family, entries
+
+
 # ---------------------------------------------------------------------------------------------------------------------- 원 글꼴
 
 
@@ -272,16 +394,17 @@ def source_char(e: Entry) -> str:
 # ---------------------------------------------------------------------------------------------------------------------- 짓기
 
 
-def build_font(css_family: str, entries: list[Entry], shift_em: float, advances: dict[int, int], src: TTFont,
-               notice: str, out: pathlib.Path) -> tuple[int, list[str]]:
-    """한 가족의 글꼴 — 코드마다 원 글리프를 전진 폭 가운데에 두고, rhwp 가 옮겨 그리는 글자는 그만큼 거꾸로 옮긴다."""
+def build_font(label: str, entries: list[Entry], shift_em: float, advances: dict[int, int], src: TTFont,
+               notice: str, out: pathlib.Path, upm: int = UPM) -> tuple[int, list[str]]:
+    """한 가족의 글꼴 — 코드마다 원 글리프를 전진 폭 가운데에 두고, rhwp 가 옮겨 그리는 글자는 그만큼 거꾸로 옮긴다.
+    `upm` 은 그 가족의 표가 쓰는 단위다(한컴 PUA 표 1024, 옛 수식 표 1000) — 전진 폭을 반올림 없이 그대로 적는다."""
     cmap_src = src.getBestCmap()
     glyph_set = src.getGlyphSet()
-    scale = UPM / src["head"].unitsPerEm
+    scale = upm / src["head"].unitsPerEm
     order, cmap, glyphs, metrics, notes = [".notdef"], {}, {}, {}, []
 
     pen = TTGlyphPen(None)  # .notdef — 빈 상자(바깥 윤곽은 시계 방향, 안쪽은 반대)
-    w = UPM // 2
+    w = upm // 2
     for points in (((50, 0), (50, 700), (w - 50, 700), (w - 50, 0)), ((100, 50), (w - 100, 50), (w - 100, 650), (100, 650))):
         pen.moveTo(points[0])
         for p in points[1:]:
@@ -300,7 +423,7 @@ def build_font(css_family: str, entries: list[Entry], shift_em: float, advances:
             sys.exit(f"U+{e.code:04X}({e.char}) 의 전진 폭을 모른다")
         src_adv = glyph_set[name_src].width * scale
         dx = (advance - src_adv) / 2  # 원 글리프의 좌우 여백을 그대로 두고 새 폭의 가운데로
-        dy = shift_em * UPM if e.shifted else 0.0  # rhwp 가 fs·shift(음수 — 위로)만큼 옮겨 그린다 — 글리프는 그만큼 아래로
+        dy = shift_em * upm if e.shifted else 0.0  # rhwp 가 fs·shift(음수 — 위로)만큼 옮겨 그린다 — 글리프는 그만큼 아래로
         rec = DecomposingRecordingPen(glyph_set)
         glyph_set[name_src].draw(rec)
         tt = TTGlyphPen(None)
@@ -311,9 +434,9 @@ def build_font(css_family: str, entries: list[Entry], shift_em: float, advances:
         cmap[e.code] = name
         metrics[name] = (advance, 0)
         notes.append(f"U+{e.code:04X} ← {e.role}{'(기울임)' if e.italic else ''} {e.char!r} = 원 글꼴 U+{ord(ch):04X} {name_src}, "
-                     f"폭 {advance}/1024" + (f", 아래로 {-dy:.1f}" if e.shifted else ""))
+                     f"폭 {advance}/{upm}" + (f", 아래로 {-dy:.1f}" if e.shifted else ""))
 
-    fb = FontBuilder(UPM, isTTF=True)
+    fb = FontBuilder(upm, isTTF=True)
     fb.font.recalcTimestamp = False
     fb.setupGlyphOrder(order)
     fb.setupCharacterMap(cmap)
@@ -328,7 +451,6 @@ def build_font(css_family: str, entries: list[Entry], shift_em: float, advances:
     y_min = min((getattr(glyf[n], "yMin", 0) for n in order), default=0)
     ascent, descent = round(src["hhea"].ascent * scale), round(src["hhea"].descent * scale)
     fb.setupHorizontalHeader(ascent=ascent, descent=descent)
-    label = "Iroiro EQ Substitute " + ("N" if css_family == "HancomEQN" else "H")
     copyright_line = (src["name"].getDebugName(0) or "").strip()
     names = {
         "copyright": f"{copyright_line}. Portions copyright 1998-2003 by MicroPress, Inc. Modified version (glyph subset re-encoded) "
@@ -365,6 +487,7 @@ def main() -> None:
         sys.exit("쓰는 법: make_eq_font.py <rhwp 소스 폴더> <써 낼 폴더>")
     rhwp_src, out_dir = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
     family, entries, shifts, eqn_hmtx = read_table(rhwp_src)
+    legacy_family, legacy_entries = read_legacy_table(rhwp_src)
 
     seen: dict[int, Entry] = {}
     for e in entries:
@@ -379,6 +502,9 @@ def main() -> None:
     notice = ("Substitute for the equation glyph codes that the rhwp HWP editor draws in the HYhwpEQ/HancomEQN equation fonts. "
               "Glyphs are taken from an SIL OFL 1.1 font and placed at those code points; this is not the Hancom font and is not "
               "affiliated with Hancom Inc.")
+    legacy_notice = ("Substitute for the legacy equation display face that the rhwp HWP editor requests for old-format equations. "
+                     "Glyphs are taken from an SIL OFL 1.1 font and centred in rhwp's advance slots; this is not a Hancom font and is "
+                     "not affiliated with Hancom Inc.")
 
     report = []
     for css_family, keep, advances in (
@@ -391,9 +517,15 @@ def main() -> None:
             if keep(e):
                 chosen.setdefault(e.code, e)
         path = out_dir / f"{css_family}-iroiro.woff2"
-        count, notes = build_font(css_family, list(chosen.values()), shifts[css_family], advances, src, notice, path)
+        label = "Iroiro EQ Substitute " + ("N" if css_family == "HancomEQN" else "H")
+        count, notes = build_font(label, list(chosen.values()), shifts[css_family], advances, src, notice, path)
         report.append((css_family, path, count, notes))
         print(f"{css_family}: 글자 {count}개 → {path.name} {path.stat().st_size:,} 바이트 (정체·ASCII 연산자 {shifts[css_family]:+.4f}em 보정)")
+    # 옛 수식 — 본래 글자 그대로의 코드, 표의 단위(1000)로, 기준선을 옮기지 않는다. 이름은 build_rhwp.py 의 EQFONT_FACES 와 같다.
+    path = out_dir / "LegacyEQ-iroiro.woff2"
+    count, notes = build_font("Iroiro EQ Substitute L", legacy_entries, 0.0, {}, src, legacy_notice, path, upm=1000)
+    report.append((legacy_family, path, count, notes))
+    print(f"{legacy_family}: 글자 {count}개 → {path.name} {path.stat().st_size:,} 바이트 (곧은 글리프를 표의 칸 가운데에)")
 
     shutil.copy2(sources["OFL.txt"], out_dir / "STIXTwoMath-OFL.txt")
     lines = [
@@ -408,10 +540,14 @@ def main() -> None:
         "  저작권: Copyright 2001-2021 The STIX Fonts Project Authors (https://github.com/stipub/stixfonts);",
         "          Portions copyright 1998-2003 by MicroPress, Inc., with Reserved Font Name TM Math.",
         "  라이선스: SIL Open Font License 1.1 — 전문은 STIXTwoMath-OFL.txt(원 저장소의 OFL.txt 그대로)와 OFL-1.1.txt.",
-        "  STIX Fonts 는 IEEE 의 상표다. 지은 글꼴의 이름(Iroiro EQ Substitute H·N)은 원 글꼴의 이름·Reserved Font Name 을 쓰지 않는다.",
+        "  STIX Fonts 는 IEEE 의 상표다. 지은 글꼴의 이름(Iroiro EQ Substitute H·N·L)은 원 글꼴의 이름·Reserved Font Name 을 쓰지 않는다.",
         "바꾼 것: 글리프 일부를 골라 다른 코드 자리에 두고, 전진 폭을 rhwp 의 표(UPM 1024)에 맞춰 가운데로 옮기고, rhwp 가 기준선을 옮겨",
         "         그리는 글자(정체 라틴·ASCII 연산자·일부 옛 기호)는 그만큼 반대로 옮겼다. 윤곽 자체는 바꾸지 않았다(배율만 1000 → 1024).",
         f"표의 출처: rhwp 소스의 src/renderer/equation/hancom_glyphs.rs(fn glyph)·hancom_eqn_metrics.rs(CODES·HMTX)",
+        f"옛 수식 가족 '{legacy_family}'(LegacyEQ-iroiro.woff2, 이름표 Iroiro EQ Substitute L): rhwp 가 버전 문자열이 빈 옛 수식을 그릴 때",
+        "  청하는 표시 가족이다. PUA 가 아니라 본래 글자를 쓰므로 원 글리프를 같은 코드에 두고, 전진 폭은 rhwp 의 표(UPM 1000)대로 글리프를",
+        "  그 칸 가운데에 두었다(배율 1000 → 1000). 기울인 글자는 rhwp 가 곧은 윤곽에 기울임 행렬을 걸므로 곧은 글리프만 담았다.",
+        "  표의 출처: legacy_glyphs.rs(fn advance — 곧은 라틴은 UPPER·LOWER)·layout/legacy.rs(fn glyph_width·괄호 칸)",
         "",
     ]
     for css_family, path, count, notes in report:

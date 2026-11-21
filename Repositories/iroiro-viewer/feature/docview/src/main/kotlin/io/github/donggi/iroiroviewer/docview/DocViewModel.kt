@@ -9,6 +9,7 @@ import io.github.donggi.iroiroviewer.data.DocProgressEntity
 import io.github.donggi.iroiroviewer.data.IroiroDatabase
 import io.github.donggi.iroiroviewer.data.ReaderAppearance
 import io.github.donggi.iroiroviewer.docview.pdf.PdfDocument
+import io.github.donggi.iroiroviewer.docview.pdf.PdfOutline
 import io.github.donggi.iroiroviewer.docview.pdf.PdfPageStore
 import io.github.donggi.iroiroviewer.docview.pdf.PdfSearch
 import io.github.donggi.iroiroviewer.format.Documents
@@ -283,6 +284,14 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
     private var searchJob: Job? = null
 
     /**
+     * PDF 의 목차(`PdfOutline`). 문서를 연 뒤 **뒤에서** 읽는다 — 읽는 동안에도 쪽은 그려진다. 비어 있으면 막대에 '목차' 단추가 없다.
+     * 문서가 바뀌거나 닫히면 비운다.
+     */
+    private val _outline = MutableStateFlow(PdfOutline.EMPTY)
+    internal val outline: StateFlow<PdfOutline> = _outline.asStateFlow()
+    private var outlineJob: Job? = null
+
+    /**
      * 버린 것과 경고.
      *
      * **`UnsupportedFeatures` 를 화면이 직접 보게 두면 배지가 뜨지 않는다.** 그것은
@@ -340,6 +349,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         // **앞 문서의 상태를 여기서 끊는다.** 아래 코루틴이 실패로 끝나도 남지 않는다.
         openJob?.cancel()
         clearSearch()
+        clearOutline()
         closeDocument()
         opened = want
         key = null
@@ -461,6 +471,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
                     }
                     // 여는 동안 나온 경고는 지금 이미 안다. 버린 것은 장을 읽어야 는다.
                     if (doc is Doc.Epub) _notice.value = Notice(doc.book.warnings, emptyMap())
+                    if (doc is Doc.Pdf) loadOutline(doc)
                 }
             }
         } finally {
@@ -633,6 +644,25 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
      */
     fun isSearching(path: String): Boolean = opened?.first == path && _search.value.active
 
+    /**
+     * 목차를 뒤에서 읽는다(여는 일과 따로 — 여는 코루틴이 쥔 암호 배열은 여는 대로 지운다). 글 꺼내기의 해석기를 이때 함께 열어 두므로
+     * 첫 두드림이 링크를 읽으려고 xref 를 세우며 기다리지 않는다.
+     */
+    private fun loadOutline(doc: Doc.Pdf) {
+        outlineJob?.cancel()
+        outlineJob = viewModelScope.launch {
+            val read = doc.store.outline()
+            // 그사이 다른 문서가 열렸으면 버린다.
+            if (((_state.value as? State.Ready)?.doc as? Doc.Pdf)?.store === doc.store) _outline.value = read
+        }
+    }
+
+    private fun clearOutline() {
+        outlineJob?.cancel()
+        outlineJob = null
+        _outline.value = PdfOutline.EMPTY
+    }
+
     /** 찾기를 닫는다. */
     fun clearSearch() {
         searchJob?.cancel()
@@ -711,6 +741,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         openJob?.cancel()
         saveJob?.cancel()
         clearSearch()
+        clearOutline()
         val closing = document
         val doc = (_state.value as? State.Ready)?.doc
         val entity = key?.let { k -> doc?.let { entityOf(k, it) } }

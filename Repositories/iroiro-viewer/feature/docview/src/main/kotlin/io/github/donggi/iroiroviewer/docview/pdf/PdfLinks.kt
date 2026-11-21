@@ -8,12 +8,12 @@ package io.github.donggi.iroiroviewer.docview.pdf
  * 두드린 자리가 링크 위면 그 쪽으로 간다(쪽 넘김·이어 보기 둘 다). 링크가 아니면 두드림은 예전대로 막대를 여닫는다.
  *
  * **플랫폼은 `/A << /S /GoTo /D … >>` 꼴의 링크만 준다** — 같은 상자를 `/Dest [쪽 /XYZ …]` 로 적은 링크 주석은 빈 목록이었다(Android 16
- * 에뮬레이터, 합성 표본 둘로 견줬다). 그 꼴은 두드려도 막대가 여닫힐 뿐이다. 채우려면 우리 해석기로 `/Annots` 를 읽어야 한다(CLAUDE.md
- * '더할 만한 기능 후보' 1). 쪽 번호는 0부터, 상자는 왼쪽 위가 원점이다(같은 실측).
+ * 에뮬레이터, 합성 표본 둘로 견줬다). 쪽 번호는 0부터, 상자는 왼쪽 위가 원점이다(같은 실측). 그 꼴(직접 목적지·이름 목적지)은 **글 고르기의
+ * 해석기가 `/Annots` 를 읽어 채운다**(`text/PdfNavigation` — 플랫폼과 같은 좌표로 옮긴다). 둘을 [merge] 가 합친다 — 같은 쪽을 가리키며
+ * 상자가 겹치는 것은 플랫폼의 것 하나만 남긴다. 그 해석기가 원본을 갖지 못하는 문서(플랫폼이 직접 푼 암호 문서)에서는 `/Dest` 꼴이 없다.
  *
  * **바깥 주소(`getLinkContents` — 웹 링크)는 따르지 않는다.** 이 앱은 네트워크를 쓰지 않고, 문서가 심은 주소를 누름 한 번에
- * 브라우저로 넘기면 읽던 사람이 모르는 사이 문서가 고른 곳이 열린다. 문서 전체의 목차(outline)는 `PdfRenderer` 에 그것을 주는
- * API 가 없어 만들지 않았다.
+ * 브라우저로 넘기면 읽던 사람이 모르는 사이 문서가 고른 곳이 열린다. 문서 전체의 목차는 `PdfOutline`.
  *
  * ## 좌표
  *
@@ -60,6 +60,29 @@ internal object PdfLinks {
         }
         return best
     }
+
+    /**
+     * 플랫폼의 링크([platform])에 우리가 읽은 `/Dest` 꼴([ours])을 더한다. 같은 쪽을 가리키고 상자가 겹치는 것은 **이미 있는 것**으로
+     * 친다 — `/Dest` 와 `/A` 를 함께 적은 주석(명세가 금하지만 있다)은 양쪽에서 온다. 합친 수는 [MAX_PER_PAGE] 에서 끊는다.
+     */
+    fun merge(platform: List<Link>, ours: List<Link>): List<Link> {
+        if (ours.isEmpty()) return platform
+        val out = ArrayList<Link>(platform.size + ours.size)
+        out += platform.take(MAX_PER_PAGE)
+        for (o in ours) {
+            if (out.size >= MAX_PER_PAGE) break
+            val same = platform.any { p ->
+                p.targetPage == o.targetPage && p.boxes.any { pb -> o.boxes.any { ob -> overlaps(pb, ob) } }
+            }
+            if (!same) out += o
+        }
+        return out
+    }
+
+    /** 두 상자가 넓이를 나누는가. 자리를 모르는 상자(NaN)는 어느 것과도 겹치지 않는다 — 비교가 모두 거짓이다. */
+    private fun overlaps(a: PdfSearch.Box, b: PdfSearch.Box): Boolean =
+        minOf(a.left, a.right) < maxOf(b.left, b.right) && minOf(b.left, b.right) < maxOf(a.left, a.right) &&
+            minOf(a.top, a.bottom) < maxOf(b.top, b.bottom) && minOf(b.top, b.bottom) < maxOf(a.top, a.bottom)
 
     /** [link] 가 가리키는 쪽. 문서에 없는 쪽(망가진 링크)이면 null — 누름은 여느 두드림이 된다. */
     fun targetOf(link: Link, pageCount: Int): Int? = link.targetPage.takeIf { it in 0 until pageCount }

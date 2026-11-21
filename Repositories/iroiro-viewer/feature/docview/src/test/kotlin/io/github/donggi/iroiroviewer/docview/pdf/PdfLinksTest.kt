@@ -72,5 +72,30 @@ class PdfLinksTest {
         assertSame(fine, PdfLinks.hit(listOf(broken, fine), 15f, 15f, slope()))
     }
 
+    @Test
+    fun 플랫폼에_있는_링크는_우리_것으로_겹쳐_넣지_않는다() {
+        val p = link(4, PdfSearch.Box(10f, 100f, 200f, 112f))
+        // 같은 쪽을 가리키고 상자가 겹친다 — `/Dest` 와 `/A` 를 함께 적은 주석이다.
+        val same = link(4, PdfSearch.Box(12f, 101f, 190f, 111f))
+        // 같은 쪽이지만 다른 자리, 같은 자리지만 다른 쪽.
+        val elsewhere = link(4, PdfSearch.Box(10f, 300f, 200f, 312f))
+        val otherPage = link(5, PdfSearch.Box(10f, 100f, 200f, 112f))
+        // 가장자리만 닿는 것은 겹친 것이 아니다.
+        val touching = link(4, PdfSearch.Box(200f, 100f, 260f, 112f))
+        assertEquals(listOf(p, elsewhere, otherPage, touching), PdfLinks.merge(listOf(p), listOf(same, elsewhere, otherPage, touching)))
+        assertEquals(listOf(elsewhere), PdfLinks.merge(emptyList(), listOf(elsewhere)))
+        assertSame(listOf(p).let { l -> PdfLinks.merge(l, emptyList()) }.first(), p)
+        // 자리를 모르는 상자는 겹치지 않는다 — 넣되 `hit` 이 건너뛴다.
+        val nan = link(4, PdfSearch.Box(Float.NaN, 100f, 200f, 112f))
+        assertEquals(listOf(p, nan), PdfLinks.merge(listOf(p), listOf(nan)))
+    }
+
+    @Test
+    fun 합친_수는_쪽당_상한에서_끊는다() {
+        val many = (0 until PdfLinks.MAX_PER_PAGE).map { link(1, PdfSearch.Box(0f, it.toFloat(), 1f, it + 0.5f)) }
+        val extra = link(2, PdfSearch.Box(500f, 500f, 510f, 510f))
+        assertEquals(PdfLinks.MAX_PER_PAGE, PdfLinks.merge(many, listOf(extra)).size)
+    }
+
     private fun slope() = 0f
 }

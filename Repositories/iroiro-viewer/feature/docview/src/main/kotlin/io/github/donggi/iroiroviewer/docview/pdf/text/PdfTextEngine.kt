@@ -1,5 +1,7 @@
 package io.github.donggi.iroiroviewer.docview.pdf.text
 
+import io.github.donggi.iroiroviewer.docview.pdf.PdfLinks
+import io.github.donggi.iroiroviewer.docview.pdf.PdfOutline
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.ByteArraySource
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfArray
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfCursor
@@ -47,11 +49,62 @@ import kotlin.math.min
 internal class PdfTextEngine private constructor(
     private val objs: PdfObjects,
     private val pages: List<PageInfo>,
+    /** 문서 카탈로그(`/Root`). 목차·이름 목적지가 여기서 시작한다([PdfNavigation]). */
+    private val root: PdfDict?,
 ) {
     val pageCount: Int get() = pages.size
 
-    /** 쪽 하나의 사정 — 물려받은 자원·상자·회전을 펴 둔 것. */
-    private class PageInfo(val dict: PdfDict, val resources: PdfDict?, val box: DoubleArray, val rotate: Int)
+    /**
+     * 쪽 하나의 사정 — 물려받은 자원·상자·회전을 펴 둔 것. [num] 은 쪽 객체의 번호(목적지가 쪽을 가리키는 열쇠 — 쪽이 간접 객체가
+     * 아니면 -1).
+     */
+    class PageInfo(val dict: PdfDict, val resources: PdfDict?, val box: DoubleArray, val rotate: Int, val num: Int) {
+        /** 보이는 쪽의 크기(포인트) — `[폭, 높이]`. 회전하면 둘이 바뀐다. */
+        val displayWidth: Double get() = if (rotate == 90 || rotate == 270) box[3] - box[1] else box[2] - box[0]
+        val displayHeight: Double get() = if (rotate == 90 || rotate == 270) box[2] - box[0] else box[3] - box[1]
+
+        /**
+         * 사용자 공간의 점 → **보이는 쪽**(자르기 상자의 왼쪽 위가 원점, 아래가 +y, `/Rotate` 를 돌린 뒤). 글자의 자리와 링크의 상자가
+         * 같은 셈을 쓴다 — 두 벌로 두지 않는다.
+         */
+        fun display(x: Double, y: Double): DoubleArray {
+            val b = box
+            return when (rotate) {
+                90 -> doubleArrayOf(y - b[1], x - b[0])
+                180 -> doubleArrayOf(b[2] - x, y - b[1])
+                270 -> doubleArrayOf(b[3] - y, b[2] - x)
+                else -> doubleArrayOf(x - b[0], b[3] - y)
+            }
+        }
+    }
+
+    /** 목차와 쪽의 링크 주석을 읽는 것. 글 꺼내기와 객체·캐시를 나눠 쓴다(같은 잠금 아래에서만 부른다). */
+    private val navigation by lazy { PdfNavigation(objs, pages, root) }
+
+    /**
+     * 문서의 목차(`/Outlines`). 없거나 읽지 못하면 빈 목차. **한 번에 하나만 부른다**([page] 와 같은 잠금).
+     *
+     * @param checkCancelled 마디 수백 개마다 부른다. 취소면 여기서 던져라.
+     */
+    fun outline(checkCancelled: () -> Unit = {}): PdfOutline {
+        this.checkCancelled = checkCancelled
+        objs.checkCancelled = checkCancelled
+        return navigation.outline(checkCancelled)
+    }
+
+    /**
+     * 쪽 [index] 의 링크 주석 가운데 **같은 문서의 쪽을 가리키는 것**. [withActions] 가 거짓이면 `/Dest` 꼴만(플랫폼의
+     * `getGotoLinks` 가 주지 않는 것 — `PdfLinks`), 참이면 `/A GoTo` 꼴도(말뭉치 시험이 오라클과 견줄 때). 범위 밖이면 빈 목록.
+     */
+    fun annotationLinks(
+        index: Int,
+        withActions: Boolean = false,
+        checkCancelled: () -> Unit = {},
+    ): List<PdfLinks.Link> {
+        this.checkCancelled = checkCancelled
+        objs.checkCancelled = checkCancelled
+        return navigation.links(index, withActions, checkCancelled)
+    }
 
     /**
      * 읽어 둔 글꼴 — **못 읽은 것도**(null) 기억하고, 수를 묶는다. 쪽마다 같은 글꼴을 다시 읽지 않고, 망가진 글꼴을 참조마다 다시
@@ -84,11 +137,7 @@ internal class PdfTextEngine private constructor(
         return PageText(w.toFloat(), h.toFloat(), collector.glyphs)
     }
 
-    private fun displaySize(p: PageInfo): Pair<Double, Double> {
-        val w = p.box[2] - p.box[0]
-        val h = p.box[3] - p.box[1]
-        return if (p.rotate == 90 || p.rotate == 270) h to w else w to h
-    }
+    private fun displaySize(p: PageInfo): Pair<Double, Double> = p.displayWidth to p.displayHeight
 
     /** `/Contents` — 스트림 하나 또는 배열. 배열이면 이어 붙인다(명세는 스트림 사이의 경계에 뜻을 두지 않는다). */
     private fun contentData(obj: PdfObj?): ByteArray? {
@@ -341,17 +390,7 @@ internal class PdfTextEngine private constructor(
         private fun toPage(trm: DoubleArray, x: Double, y: Double): DoubleArray {
             val ux = trm[0] * x + trm[2] * y + trm[4]
             val uy = trm[1] * x + trm[3] * y + trm[5]
-            return display(ux, uy)
-        }
-
-        private fun display(x: Double, y: Double): DoubleArray {
-            val b = page.box
-            return when (page.rotate) {
-                90 -> doubleArrayOf(y - b[1], x - b[0])
-                180 -> doubleArrayOf(b[2] - x, y - b[1])
-                270 -> doubleArrayOf(b[3] - y, b[2] - x)
-                else -> doubleArrayOf(x - b[0], b[3] - y)
-            }
+            return page.display(ux, uy)
         }
 
         /** 폼 XObject 를 따라 들어간다. 그림은 건너뛴다. */
@@ -456,7 +495,7 @@ internal class PdfTextEngine private constructor(
             }
             val objs = if (security == null) probe else PdfObjects(file, security, checkCancelled)
             val pages = pageTree(objs, file.trailer, checkCancelled)
-            return PdfTextEngine(objs, pages)
+            return PdfTextEngine(objs, pages, objs.dict(file.trailer["Root"]))
         }
 
         /** 쪽 나무를 편다 — 물려받는 것(자원·상자·회전)을 쪽마다 적어 둔다. pdfium 이 세는 차례와 같다(나무의 차례). */
@@ -492,7 +531,7 @@ internal class PdfTextEngine private constructor(
                     doubleArrayOf(max(c[0], media[0]), max(c[1], media[1]), min(c[2], media[2]), min(c[3], media[3]))
                 }?.takeIf { it[2] > it[0] && it[3] > it[1] } ?: media
                 val rot = ((objs.number(here.rotate)?.toInt() ?: 0) % 360 + 360) % 360
-                out += PageInfo(node, objs.dict(here.resources), crop, if (rot % 90 == 0) rot else 0)
+                out += PageInfo(node, objs.dict(here.resources), crop, if (rot % 90 == 0) rot else 0, (nodeRef as? PdfRef)?.num ?: -1)
             }
 
             walk(root["Pages"], Inherit(null, null, null, null), 0)

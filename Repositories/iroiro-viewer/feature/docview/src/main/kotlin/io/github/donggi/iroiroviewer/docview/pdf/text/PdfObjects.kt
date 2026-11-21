@@ -8,7 +8,9 @@ import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfFilters
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfName
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfNum
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfObj
+import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfParser
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfRef
+import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfStr
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfSecurity
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfSyntaxException
 import java.io.ByteArrayOutputStream
@@ -81,7 +83,7 @@ internal class PdfObjects(
             when (val e = file.entries[ref.num] ?: discoveredEntry(ref.num)) {
                 // 머리의 번호가 참조와 다르면 없는 것이다(복호기와 같은 판단 — xref 가 밀린 파일).
                 is PdfFile.InFile -> try {
-                    file.readAt(e.offset)?.takeIf { it.num == ref.num }?.value
+                    file.readAt(e.offset)?.takeIf { it.num == ref.num }?.let { plainStrings(it.value, it.num, it.gen, 0) }
                 } catch (x: PdfSyntaxException) {
                     null
                 }
@@ -97,6 +99,33 @@ internal class PdfObjects(
         }
         cache[ref.num] = value
         return value
+    }
+
+    /**
+     * 파일에 바로 놓인 객체 안의 **문자열을 푼다**(암호가 걸린 문서만 — 명세 7.6.2). 목차의 제목·이름 목적지의 열쇠가 문자열이다
+     * (글 꺼내기는 문자열을 스트림 안에서만 읽어 이것 없이도 돌았다). 객체 스트림 속 객체는 스트림째 풀었으므로 따로 풀지 않는다.
+     * 서명의 `/Contents` 는 두다(복호기의 `decryptValue` 와 같은 규칙). 못 푼 문자열은 빈 문자열이다 — 암호문을 글자로 읽히지 않게.
+     */
+    private fun plainStrings(v: PdfObj, num: Int, gen: Int, depth: Int): PdfObj {
+        val sec = security ?: return v
+        if (depth > PdfParser.MAX_DEPTH) return v
+        return when (v) {
+            is PdfStr -> try {
+                PdfStr(sec.decrypt(num, gen, sec.methodFor(PdfSecurity.Kind.STRING), v.bytes))
+            } catch (e: Exception) {
+                // 암호기의 실패(잘린 AES 블록 등). 이 문자열만 버린다.
+                PdfStr(ByteArray(0))
+            }
+            is PdfArray -> PdfArray(v.items.mapTo(ArrayList(v.items.size)) { plainStrings(it, num, gen, depth + 1) })
+            is PdfDict -> {
+                val isSig = v.name("Type") == "Sig" || v.name("Type") == "DocTimeStamp" ||
+                    (v["ByteRange"] != null && v["Contents"] is PdfStr)
+                val out = LinkedHashMap<String, PdfObj>(v.map.size)
+                for ((k, x) in v.map) out[k] = if (isSig && k == "Contents") x else plainStrings(x, num, gen, depth + 1)
+                PdfDict(out)
+            }
+            else -> v
+        }
     }
 
     /** [ref] 가 가리키는 것이 스트림이면 그 자리. */
@@ -303,8 +332,8 @@ internal class PdfObjects(
      */
     private fun discoveredEntry(num: Int): PdfFile.Entry? {
         if (!file.rebuilt) return null
+        // **다 훑은 뒤에만 적는다** — 훑다가 취소되면(목차 10초·두드림 2초) 반쯤 찬 표가 남아 나머지 객체가 이 문서에서 영영 '없다' 가 된다.
         val table = discovered ?: HashMap<Int, PdfFile.InStream>().also { t ->
-            discovered = t
             for ((n, e) in file.entries) {
                 checkCancelled()
                 if (e !is PdfFile.InFile) continue
@@ -313,6 +342,7 @@ internal class PdfObjects(
                 val objs = objStream(n) ?: continue
                 objs.numbers().forEachIndexed { i, member -> t.putIfAbsent(member, PdfFile.InStream(n, i)) }
             }
+            discovered = t
         }
         return table[num]
     }

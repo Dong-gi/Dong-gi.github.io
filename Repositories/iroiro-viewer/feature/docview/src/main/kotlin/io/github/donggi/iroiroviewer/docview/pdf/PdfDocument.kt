@@ -126,13 +126,30 @@ class PdfDocument internal constructor(
         }
     }
 
-    /** 쪽 하나의 문서 안 링크([PdfEngine.gotoLinks]). 잠금은 [search] 와 같다. 닫혔거나 범위 밖이면 null. */
-    internal suspend fun links(ordinal: Int): List<PdfLinks.Link>? {
+    /**
+     * 쪽 하나의 문서 안 링크 — 플랫폼의 것([PdfEngine.gotoLinks] — `/A GoTo` 꼴)에 글 꺼내기의 해석기가 읽은 `/Dest` 꼴을 더한 것
+     * ([PdfLinks.merge]). 플랫폼 쪽 잠금은 [search] 와 같고, 우리 쪽은 글 꺼내기의 잠금을 [LINK_TIMEOUT_MS] 까지만 기다린다 — 두드림이
+     * 이것을 기다린다. 그 안에 못 읽으면 플랫폼의 것만 주고 [PageLinks.complete] 를 거짓으로 둔다(부르는 쪽이 기억하지 않게).
+     * 닫혔거나 범위 밖이거나 플랫폼이 읽지 못하면 null.
+     */
+    internal suspend fun links(ordinal: Int): PageLinks? {
         if (closed.get() || ordinal !in 0 until pageCount) return null
-        return lock.withLock {
+        val platform = lock.withLock {
             if (closed.get()) null else PdfEngine.gotoLinks(renderer, ordinal)
+        } ?: return null
+        return when (val ours = useText(LINK_TIMEOUT_MS) { engine, check -> engine.annotationLinks(ordinal, checkCancelled = check) }) {
+            is TextRead.Ok -> PageLinks(PdfLinks.merge(platform, ours.value), complete = true)
+            TextRead.Unavailable -> PageLinks(platform, complete = true)
+            TextRead.Late -> PageLinks(platform, complete = false)
         }
     }
+
+    /**
+     * 문서의 목차([PdfOutline] — 플랫폼에 API 가 없어 글 꺼내기의 해석기가 읽는다). 읽을 수 없으면(원본이 없다 — 플랫폼이 직접 푼 암호
+     * 문서·구조를 못 읽는다·쪽 수가 플랫폼과 다르다·[OUTLINE_TIMEOUT_MS] 를 넘었다) 빈 목차.
+     */
+    internal suspend fun outline(): PdfOutline =
+        (useText(OUTLINE_TIMEOUT_MS) { engine, check -> engine.outline(check) } as? TextRead.Ok)?.value ?: PdfOutline.EMPTY
 
     // ---- 글 고르기 ------------------------------------------------------------------
 
@@ -161,37 +178,60 @@ class PdfDocument internal constructor(
      */
     internal suspend fun pageText(ordinal: Int): PageText? {
         if (closed.get() || textOrigin == null || ordinal !in 0 until pageCount) return null
+        // **쪽 하나에 시간 상한을 건다**(파일당 30초 — `ParseLimits`). 넘으면 이 쪽만 못 고른 것으로 하고 잠금을 놓는다 —
+        // 잠금을 쥔 채 몇 시간을 돌면 닫기도 기다린다.
+        val read = useText(ParseLimits.DEFAULT.openTimeoutMs) { engine, check ->
+            textCache[ordinal] ?: engine.page(ordinal, check).also { textCache[ordinal] = it }
+        }
+        return (read as? TextRead.Ok)?.value
+    }
+
+    /** 글 꺼내기의 해석기를 쓴 결과. */
+    private sealed interface TextRead<out T> {
+        data class Ok<T>(val value: T) : TextRead<T>
+
+        /** 쓸 수 없다 — 원본이 없다·열지 못했다·닫혔다·이번 일이 실패했다. 다시 해 봐도 같다(실패는 대개 같은 자리에서 또 난다). */
+        data object Unavailable : TextRead<Nothing>
+
+        /** 시간 상한을 넘었다(잠금을 기다리다가, 또는 일이 길어서). 다음에 다시 해 볼 수 있다. */
+        data object Late : TextRead<Nothing>
+    }
+
+    /**
+     * 글 꺼내기의 해석기로 [block] 을 돈다 — 잠금 하나(해석기가 글꼴·객체를 기억해 두고 나눠 쓴다), 처음이면 연다([openText]),
+     * 시간 상한 [timeoutMs](잠금을 기다리는 시간도 든다). 해석기의 실패는 [TextRead.Unavailable] 로 옮긴다 — 스택이 넘치거나
+     * 메모리가 모자라면 해석기를 놓고 이 문서에서는 다시 쓰지 않는다.
+     */
+    private suspend fun <T : Any> useText(timeoutMs: Long, block: (PdfTextEngine, () -> Unit) -> T): TextRead<T> {
+        if (closed.get() || textOrigin == null) return TextRead.Unavailable
         return withContext(IroDispatchers.parsing) {
-            textLock.withLock {
-                if (closed.get() || textFailed) return@withLock null
-                textCache[ordinal]?.let { return@withLock it }
-                // **쪽 하나에 시간 상한을 건다**(파일당 30초 — `ParseLimits`). 넘으면 이 쪽만 못 고른 것으로 하고 잠금을 놓는다 —
-                // 잠금을 쥔 채 몇 시간을 돌면 닫기도 기다린다.
-                withTimeoutOrNull(ParseLimits.DEFAULT.openTimeoutMs) {
+            withTimeoutOrNull(timeoutMs) {
+                textLock.withLock {
+                    if (closed.get() || textFailed) return@withLock TextRead.Unavailable
                     val ctx = currentCoroutineContext()
                     val check = { ctx.ensureActive() }
                     try {
-                        val engine = textEngine ?: openText(check) ?: return@withTimeoutOrNull null
-                        engine.page(ordinal, check).also { textCache[ordinal] = it }
+                        val engine = textEngine ?: openText(check) ?: return@withLock TextRead.Unavailable
+                        TextRead.Ok(block(engine, check))
                     } catch (e: CancellationException) {
                         throw e
                     } catch (e: IOException) {
-                        Iro.d { "글을 꺼내지 못했다: ${e::class.java.simpleName}" }
-                        null
+                        Iro.d { "글 꺼내기가 실패했다: ${e::class.java.simpleName}" }
+                        TextRead.Unavailable
                     } catch (e: RuntimeException) {
-                        Iro.d { "글을 꺼내지 못했다: ${e::class.java.simpleName}" }
-                        null
+                        Iro.d { "글 꺼내기가 실패했다: ${e::class.java.simpleName}" }
+                        TextRead.Unavailable
                     } catch (e: StackOverflowError) {
                         // 해석기의 깊이 문턱을 비켜 간 문서다. 그 엔진은 다시 쓰지 않는다.
                         dropText()
-                        null
+                        TextRead.Unavailable
                     } catch (e: OutOfMemoryError) {
                         // 엔진과 그 캐시를 함께 놓는다 — 남겨 두면 다음 쪽에서 또 넘친다.
                         dropText()
-                        null
+                        TextRead.Unavailable
                     }
                 }
-            }
+            } ?: TextRead.Late
         }
     }
 
@@ -261,8 +301,20 @@ class PdfDocument internal constructor(
 
     private companion object {
         const val TEXT_CACHE_PAGES = 4
+
+        /**
+         * 두드림이 우리 쪽 링크를 기다리는 시간. 잠금이 목차 읽기·글 고르기에 쥐여 있으면 그만큼 막대가 늦게 반응하므로 짧게 둔다 —
+         * 넘으면 그 두드림은 플랫폼의 링크만 본다.
+         */
+        const val LINK_TIMEOUT_MS = 2_000L
+
+        /** 목차를 읽는 시간 상한(여는 대로 뒤에서 읽는다 — 그동안 글 고르기가 잠금을 기다린다). */
+        const val OUTLINE_TIMEOUT_MS = 10_000L
     }
 }
+
+/** 쪽 하나의 링크([PdfDocument.links]). [complete] 가 거짓이면 `/Dest` 꼴을 이번에 읽지 못했다 — 다음 두드림에 다시 읽는다. */
+internal class PageLinks(val links: List<PdfLinks.Link>, val complete: Boolean)
 
 /** 글을 꺼낼 원본 — pdfium 이 그리는 것과 **같은 바이트**여야 한다. */
 internal sealed interface PdfTextOrigin {

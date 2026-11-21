@@ -52,7 +52,8 @@ import java.io.File
  *   만들고 [open] 의 서술자 판으로 연다(`PdfOpener`).
  * * **찾기** — `Page.searchText`([searchPage]).
  * * **문서 안 링크** — `Page.getGotoLinks`([gotoLinks]). 바깥 주소(`getLinkContents`)는 쓰지 않는다. 문서 전체의 목차
- *   (outline)를 주는 API 는 `PdfRenderer` 에 없다(2026-11 의 공개 문서 — `getGotoLinks` 는 쪽 위의 상자를 줄 뿐이다).
+ *   (outline)를 주는 API 는 `PdfRenderer` 에 없다(2026-11 의 공개 문서 — `getGotoLinks` 는 쪽 위의 상자를 줄 뿐이다). 목차와
+ *   플랫폼이 주지 않는 `/Dest` 꼴 링크는 글 꺼내기의 해석기가 읽는다(`PdfOutline`·`text/PdfNavigation`).
  *
  * `PdfRendererPreV` 를 쓰게 되면 인자 순서를 **javadoc 이
  * 아니라 javap 로** 확인하라. android-36.1 의 javadoc 예제가 `page.render(bitmap, params,

@@ -871,16 +871,16 @@ export JAVA_HOME="$HOME/.gradle/jdks/jetbrains_s_r_o_-21-amd64-windows.2"
 minSdk 를 읽는다 — 2.0.0 부터 36). **`NewApi` 는 0건이다.** PiP 의 API 33 짜리 setter 넷(`setTitle`·`setSubtitle`·`setCloseAction`·
 `setExpandedAspectRatio`)은 minSdk 36 이라 쓸 수 있게 되었으나 부르지 않는다(제목에 파일 이름을 싣는 것은 사용자가 정할 일 — '2.0.0 — minSdk 36').
 
-**JVM 시험은 1,763건이다**(순수 JVM 626 + 안드로이드 모듈 1,137 — 2026-11-21, 2.0.0 의 독립 검토 뒤), 실패 0. 건너뜀은 표본(`samples-local/`)이 있는 저장소에서 3(윈도에서 심볼릭
+**JVM 시험은 1,783건이다**(순수 JVM 626 + 안드로이드 모듈 1,157 — 2026-11-21, PDF 목차·`/Dest` 꼴 링크와 그 독립 검토 뒤), 실패 0. 건너뜀은 표본(`samples-local/`)이 있는 저장소에서 3(윈도에서 심볼릭
 링크를 만들 권한이 없다 — `feature:text` 1, 그리고 pyzipper 와 견주는 `feature:archive` 의 `AesZipOracleTest` 2 — 환경 변수 `IROIRO_AESZIP_ORACLE` 이
-있을 때만 돈다, '14단계 뒤 — AES 암호 ZIP'), 표본이 없는 작업 사본에서는 10(`format:epub` 4·`feature:docview` 3·`feature:text` 1·`feature:archive` 2).
+있을 때만 돈다, '14단계 뒤 — AES 암호 ZIP'), 표본이 없는 작업 사본에서는 11(`format:epub` 4·`feature:docview` 4·`feature:text` 1·`feature:archive` 2).
 
 | 모듈 | 시험 | 모듈 | 시험 | 모듈 | 시험 |
 |---|---|---|---|---|---|
 | `core:model` | 20 | `format:archive` | 251 | `feature:archive` | 40 |
 | `core:safety` | 68 | `format:epub` | 79 | `feature:browser` | 67 |
 | `core:charset` | 39 | `format:html` | 75 | `feature:comic` | 124 |
-| `core:io` | 187 | `format:text` | 94 | `feature:docview` | 145 |
+| `core:io` | 187 | `format:text` | 94 | `feature:docview` | 165 |
 | `core:data` | 29 | `app` | 62 | `feature:editor` | 70 |
 | `core:ui` | 106 | | | `feature:image` | 61 |
 | `core:playback` | 96 | | | `feature:player` | 29 |
@@ -1498,7 +1498,7 @@ format-corpus(CC0), IDPF·W3C 의 EPUB 시험(CC BY-SA — 로컬에서만 쓴�
 파일마다 원래 이름·주소·라이선스·만든 도구·기대 동작을 `manifest.json` 에 적었다. 오라클을 만드는 스크립트는 말뭉치 곁
 (`samples-local/corpus/tools/`)에 둔다 — 세션의 스크래치패드에 두면 세션이 끝난 뒤 오라클을 다시 만들 수 없다.
 
-**시험이 스스로 돈다** — `EpubCorpusTest`·`PdfCorpusTest`·`PdfTextCorpusTest`(JVM)·`PdfCorpusDeviceTest`(계측). 말뭉치가 없으면 건너뛴다.
+**시험이 스스로 돈다** — `EpubCorpusTest`·`PdfCorpusTest`·`PdfTextCorpusTest`·`PdfNavigationCorpusTest`(JVM)·`PdfCorpusDeviceTest`(계측). 말뭉치가 없으면 건너뛴다.
 오라클 파일만 없으면 판별·여는 결과·암호 흐름·구조 단언은 돌고 낱말 점수·복호화 해시 비교는 건너뛴다(확인했다).
 
 오라클은 pikepdf(qpdf 12.3.2)·pypdf 6.17, EPUB 은 zipfile + lxml 로 OPF·nav·NCX·본문을 따로 읽은 것, 그리고 말뭉치가 스스로 공개한
@@ -1905,7 +1905,7 @@ CSS 문자열 안의 `url(` 은 `none` 으로 바꾸지 않고, 깨진 `url(` �
 | 편집기는 이 앱의 모듈이다 — 같은 APK·같은 UID. 화면(`EditorActivity`)은 **따로 된 프로세스 `:editor`** 에서 돈다 | 큰 웹 편집기의 WebView·렌더러 메모리(수백 MB)를 파일 쪽과 가르고, WebView 자료 폴더도 따로 쓴다(`WebView.setDataDirectorySuffix("editor")` — 한 앱의 두 프로세스가 같은 폴더를 쓰면 WebView 가 던진다). 그 프로세스는 `IroiroApp` 의 조립·정리를 건너뛴다(받은 사본 치우기가 주 프로세스 재생기의 파일을 모르고 지울 수 있다) |
 | 길 — 인텐트(`EditorApp.intent`)·저장 자리(`EditorSlotProvider`, 주 프로세스)·`EditorSaver` | 두 프로세스를 잇는 것이 저장 자리 제공자다. 편집기는 부른 쪽이 이 앱인지 본다(`callingActivity` — 화면을 내보내지 않는다). 아래 '편집기와의 길' |
 | 엔진 묶음은 `vendor/editor/assets`(git 무시) — `tools/editor/` 가 짓는다 | rhwp(MIT)·ONLYOFFICE 편집기와 x2t(AGPL-3.0)·글꼴(OFL·Apache·GUST). 묶음이 없으면 시험 엔진(probe)만 든 빌드가 되고 형식 목록이 비어 아무것도 넘기지 않는다. 고지 화면의 '편집기 엔진' 이 묶음의 licenses 를 펼친다(엔진 명세 문장은 묶음이 든 빌드에만, 상표 문장은 따로 늘 — 그 출처는 확인하지 못했다). 묶음이 든 릴리스 APK 는 약 85 MB 다(거의 다 엔진이다 — 엔진 없이는 약 8 MB. rhwp 0.9.1 로 올리며 약 9 MB 늘었다 — wasm 이 커졌다) |
-| 엔진 판 — rhwp **0.9.1**, ONLYOFFICE 는 CryptPad 빌드 **9.3.2+3**(편집기·x2t). 새 판은 `python -I tools/editor/check_updates.py` 가 알린다 | rhwp 0.9 는 글꼴이 HYhwpEQ·HancomEQN 인 수식(한컴 수식의 기본)의 숫자·기호·기울인 글자를 그 글꼴의 사용자 영역 글자로 그려, 그 글꼴이 없는 기기에서 네모로 나왔다(0.9.0 은 그래서 되돌렸다 — 2026-11-14). 0.9.1 은 **수식 대체 글꼴**과 함께 올렸다(2026-11-21): `tools/editor/make_eq_font.py` 가 빌드 때 rhwp 소스의 표(`hancom_glyphs.rs`·`hancom_eqn_metrics.rs`)를 읽어 STIX Two Math 2.13(OFL 1.1)의 글리프를 그 코드 자리에 담은 woff2 둘(각 10~15 KB — 전진 폭은 표대로, rhwp 가 기준선을 옮겨 그리는 글자는 반대로 옮긴다)을 짓고, 스튜디오의 웹 글꼴 목록·처음 싣는 목록에 'HyhwpEQ'·'HancomEQN' 으로 넣는다(`vite.config.mjs` 의 `equationFonts` — 스튜디오가 캔버스의 font 를 가로채 등록되지 않은 가족을 지우기 때문이다), 인쇄 쪽(`print.html`)에도 @font-face 를 둔다. 표의 알려진 꼴이 바뀌거나 코드 갈래가 늘면 빌드가 멈춘다(기준선 이동은 rhwp 가 런 단위로 정하고 글꼴은 글자 단위로 굳혔다 — 연산자가 한 글자씩 런인 동안만 같다). fontTools 는 `local/editor/eqfont/venv`(git 무시) 안에만 둔다(`tools/editor/eqfont-requirements.txt` — 판과 바퀴의 SHA-256 을 고정하고 `--require-hashes` 로 깐다. 윈도 x64 CPython 3.12~3.14 의 바퀴만 적었다 — 다른 기계면 pip 이 멈추고 해시를 보인다. 같은 venv·같은 소스로 다시 지으면 woff2 가 바이트까지 같다 — 독립 검토가 확인). 옛 수식(가족 'RHWP Hancom Legacy Equation' — PUA 가 아니라 네모는 아니다)은 대체 글꼴이 없어 기본 글꼴로 그려지고 글자 사이가 벌어진다. 판을 올리면 수식 문서·옛한글·큰 HWP 를 에뮬레이터에서 먼저 본다. ONLYOFFICE 는 CryptPad 가 새 빌드의 해시를 내야 올린다(`build_onlyoffice.py` 는 그 해시와 견준다) — 본가의 9.4·10.0 보안 고침은 그때 들어온다 |
+| 엔진 판 — rhwp **0.9.1**, ONLYOFFICE 는 CryptPad 빌드 **9.3.2+3**(편집기·x2t). 새 판은 `python -I tools/editor/check_updates.py` 가 알린다 | rhwp 0.9 는 글꼴이 HYhwpEQ·HancomEQN 인 수식(한컴 수식의 기본)의 숫자·기호·기울인 글자를 그 글꼴의 사용자 영역 글자로 그려, 그 글꼴이 없는 기기에서 네모로 나왔다(0.9.0 은 그래서 되돌렸다 — 2026-11-14). 0.9.1 은 **수식 대체 글꼴**과 함께 올렸다(2026-11-21): `tools/editor/make_eq_font.py` 가 빌드 때 rhwp 소스의 표(`hancom_glyphs.rs`·`hancom_eqn_metrics.rs`)를 읽어 STIX Two Math 2.13(OFL 1.1)의 글리프를 그 코드 자리에 담은 woff2 둘(각 10~15 KB — 전진 폭은 표대로, rhwp 가 기준선을 옮겨 그리는 글자는 반대로 옮긴다)을 짓고, 스튜디오의 웹 글꼴 목록·처음 싣는 목록에 'HyhwpEQ'·'HancomEQN' 으로 넣는다(`vite.config.mjs` 의 `equationFonts` — 스튜디오가 캔버스의 font 를 가로채 등록되지 않은 가족을 지우기 때문이다), 인쇄 쪽(`print.html`)에도 @font-face 를 둔다. 표의 알려진 꼴이 바뀌거나 코드 갈래가 늘면 빌드가 멈춘다(기준선 이동은 rhwp 가 런 단위로 정하고 글꼴은 글자 단위로 굳혔다 — 연산자가 한 글자씩 런인 동안만 같다). fontTools 는 `local/editor/eqfont/venv`(git 무시) 안에만 둔다(`tools/editor/eqfont-requirements.txt` — 판과 바퀴의 SHA-256 을 고정하고 `--require-hashes` 로 깐다. 윈도 x64 CPython 3.12~3.14 의 바퀴만 적었다 — 다른 기계면 pip 이 멈추고 해시를 보인다. 같은 venv·같은 소스로 다시 지으면 woff2 가 바이트까지 같다 — 독립 검토가 확인). 옛 수식(버전 문자열이 빈 것)이 청하는 가족 'RHWP Hancom Legacy Equation' 은 PUA 가 아니라 **본래 글자**를 표의 폭(UPM 1000)으로 매긴 자리에 하나씩 그린다(`legacy_glyphs.rs` 의 `fn advance` — 기울인 변수는 곧은 윤곽에 0.333 기울임, `layout/legacy.rs` 의 `glyph_width`·괄호 칸) — 대체 글꼴이 없을 때는 기본 글꼴로 그려져 'E quation' 처럼 벌어졌다. 같은 도구가 셋째 woff2(`LegacyEQ-iroiro.woff2`, 글자 82 — 곧은 라틴 52·숫자·연산자·괄호·옛 기호, 6.7 KB, 이름표 'Iroiro EQ Substitute L')를 짓는다 — 곧은 STIX 글리프를 그 글자의 곧은 칸(UPPER·LOWER 등) 가운데에 두고 기준선은 옮기지 않는다. 두 표가 같은 글자에 다른 폭을 매기거나 갈래가 늘면 멈춘다(2026-11-21, S02 의 벌어짐이 사라지고 HyhwpEQ·HancomEQN 그림은 화소까지 같다). 남은 것: 기울인 글자의 자리는 rhwp 가 기울인 표(ITALIC_*)로 매기는데 글리프는 곧은 칸 가운데라, 두 표가 다른 글자(a·n·t 등) 뒤가 조금 벌어지거나 좁다 — 글꼴 하나로는 역할마다 다르게 둘 수 없다. 판을 올리면 수식 문서·옛한글·큰 HWP 를 에뮬레이터에서 먼저 본다. ONLYOFFICE 는 CryptPad 가 새 빌드의 해시를 내야 올린다(`build_onlyoffice.py` 는 그 해시와 견준다) — 본가의 9.4·10.0 보안 고침은 그때 들어온다 |
 | 의존 하나 — `androidx.webkit` 1.17.1(사용자 승인, 브라우저와 같은 판) | 편집기와 바이트를 ArrayBuffer 로 주고받는 WebMessageListener 가 여기 있다. `core:webhost` 는 쓰지 않는다 — 지금은 편집기만 쓴다 |
 | 편집기 화면은 **설정이 바뀌어도 다시 서지 않는다** | 다시 서면 WebView 가 새로 서고 쪽 안의 고친 것이 사라진다(함정 표) |
 
@@ -2047,7 +2047,7 @@ Android 12 폰은 1.0.0 릴리스를 계속 쓴다.
 | 자리 | 1.0.0(minSdk 31) | 2.0.0(minSdk 36) |
 |---|---|---|
 | PDF 찾기(`Page.searchText`, API 35) | 35 아래에서 단추가 없었다(`@RequiresApi` + `SDK_INT`) | 언제나 있다. **플랫폼으로 지었다** — 그리는 것과 같은 pdfium 이 글자를 읽어 강조가 그림에 앉고, 플랫폼이 직접 푼 암호 문서에서도 찾으며, 쪽마다 우리 해석기를 돌리지 않는다(`PdfSearch` 머리말). 쪽마다 찾기·진행·취소·쪽당 상한(200)·문서 상한(5,000)·강조·다음/이전은 35 갈래에 이미 있던 것 그대로 |
-| 문서 안 링크(`Page.getGotoLinks`, API 35) | 없었다 | **두드리면 그 쪽으로**(쪽 넘김·이어 보기 — `PdfLinks`, `linkTargetAt`). 링크가 아니면 막대를 여닫는다. 쪽마다 기억한다(64쪽). **`/A GoTo` 꼴만 플랫폼이 준다** — `/Dest` 꼴은 빈 목록(실측). 바깥 주소(`getLinkContents`)는 따르지 않는다. 목차(outline)는 `PdfRenderer` 에 API 가 없어 없다 |
+| 문서 안 링크(`Page.getGotoLinks`, API 35) | 없었다 | **두드리면 그 쪽으로**(쪽 넘김·이어 보기 — `PdfLinks`, `linkTargetAt`). 링크가 아니면 막대를 여닫는다. 쪽마다 기억한다(64쪽). **`/A GoTo` 꼴만 플랫폼이 준다** — `/Dest` 꼴은 빈 목록(실측). 그 꼴과 목차는 우리 해석기가 읽는다(아래 '2.0.0 뒤 — PDF 목차와 `/Dest` 꼴 링크'). 바깥 주소(`getLinkContents`)는 따르지 않는다 |
 | 암호 PDF | 35 이상은 플랫폼, 아래는 우리가 풀어 memfd | 언제나 플랫폼 먼저(`PdfOpener`) — 우리 복호화기는 플랫폼이 거절한 암호를 우리 후보로 한 번 더 해 볼 때·빈 암호로 풀리는 문서에서만. '구조를 못 읽는다'·'memfd 상한을 넘는다' 로 묻지 않던 두 길이 사라졌다(플랫폼이 받는다) |
 | 뒤로 가기(편집기) | 12 는 `onBackPressed`, 13+ 는 `OnBackInvokedCallback` | 콜백 하나. targetSdk 36 이 16 에서 돌면 미리 보는 뒤로 가기가 기본이라 `onBackPressed`·`KEYCODE_BACK` 이 오지 않는다 |
 | 알림 권한 | 12 는 묻지 않았다 | 언제나 묻는다(처음 한 번) |
@@ -2097,6 +2097,51 @@ HWPX·DOCX), PDF 찾기(강조가 글자에 앉는다 — 원점 왼쪽 위 확�
 수식 대체 글꼴의 pip 설치에 해시를 고정했다(엔진 판 줄). 보고만 한 것 — 쪽 전체를 덮는 GoTo 링크가 있는 쪽에서는 두드림이 늘 넘어가 막대를 열 수
 없다(뒤로 가기는 된다), 링크 하나의 상자 수는 플랫폼이 준 그대로다.
 
+### 2.0.0 뒤 — PDF 목차와 `/Dest` 꼴 링크
+
+`PdfRenderer` 에 목차 API 가 없고 `getGotoLinks` 는 `/A GoTo` 꼴만 준다. 둘 다 **글 꺼내기의 해석기**(`PdfTextEngine` — 암호 PDF 를 풀려고
+세우고 말뭉치로 검증한 xref·객체 읽기)가 읽는다 — 새 해석기가 아니다(`text/PdfNavigation`). 막대의 '목차' 단추는 목차가 있는 문서에만 뜨고(문서를
+연 뒤 뒤에서 읽는다 — `DocViewModel.loadOutline`), 판은 접고 펼치는 나무다(`PdfOutlineSheet` — 처음엔 문서가 펼쳐 저장한 항목과 지금 쪽의 조상을
+펼치고 그 줄에서 연다, 목적지를 못 푼 항목은 흐리게 남긴다). 누르면 그 쪽으로(쪽 넘김·이어 보기 둘 다 — VM 의 쪽).
+
+| 무엇 | 왜 그렇게 했나 |
+|---|---|
+| 목차를 **앞차례로 편 목록 + 깊이**로 든다(`PdfOutline`) | 화면은 접힌 항목의 자손만 건너뛰면 된다(`visible`). 펼침 상태는 판이 든다 — 쪽을 옮겨도 맞춰 줄 것이 없다 |
+| 되부르지 않고 **스택으로** 돈다 · 방문 집합 · 항목 1만 · 깊이 32 · 방문 4만 | 악성 파일 — `/Next` 가 앞으로 돌아가는 순환, `/First` 가 뿌리를 가리키는 순환, 수만 겹 사슬, 풀리지 않는 참조만 이어진 사슬. 상한에서 끊고 거기까지 쓴다 |
+| 목적지 넷을 **한 함수**가 푼다(`pageOf`) | 쪽 참조 배열, 정수(pdfium 처럼 0부터의 쪽), 이름(옛 `/Dests` 사전), 문자열(`/Names` → `/Dests` 이름 나무) — 나무를 먼저(pdfium 의 차례). 값이 `/D` 를 든 사전이면 따라간다(6번까지) |
+| 이름 나무를 **펴지 않고 `/Limits` 로 내려간다** | TeX 문서는 이름이 수천~수만이다. 찾은 이름만 기억한다(4,096). 방문 집합·깊이 32·한 번에 1만 마디 |
+| 제목 — UTF-16BE(BOM)·UTF-8(BOM, PDF 2.0)·PDFDocEncoding, 명세 밖 UTF-16LE 도 | 언어 표지(`ESC 말 ESC`)를 지우고 제어 글자는 빈칸, 빈칸은 하나로, 300자에서 자른다(대리 쌍 반쪽은 버린다). PDFDocEncoding 표는 pypdf 6.17 의 것과 견줬다 |
+| 링크는 **`/Dest` 꼴만** 앱이 쓴다 · 플랫폼 것과 **합친다**(`PdfLinks.merge`) | `/A GoTo` 꼴은 플랫폼이 준다. `/Dest` 와 `/A` 를 함께 적은 주석(명세가 금하지만 있다)은 같은 쪽·겹치는 상자면 하나로 |
+| `/Rect` 를 **글자의 좌표와 같은 셈**으로 옮긴다(`PageInfo.display`) | 자르기 상자(미디어 상자 안으로 자른 것)의 왼쪽 위가 원점, `/Rotate` 를 돌린 뒤 — 글 고르기가 이미 pdfium 과 맞춘 셈을 한 벌로 쓴다. 쪽 안으로 자르고, 수가 아니거나(NaN·무한) 넓이가 없으면 버린다. 에뮬레이터에서 90도 돈 쪽의 상자가 그려진 테두리와 화소까지 맞았다 |
+| 두드림은 우리 쪽을 **2초까지만** 기다린다 | 글 꺼내기의 잠금을 목차 읽기·글 고르기와 나눠 쓴다. 넘으면 그 두드림은 플랫폼 것만 보고, 그 쪽은 기억하지 않는다(`PageLinks.complete`). 목차는 10초 |
+| 문자열을 **객체째 푼다**(`PdfObjects.plainStrings`) | 소유자 암호만 걸린 문서는 pdfium 이 스스로 열지만 파일은 암호문이다 — 제목·이름 나무의 열쇠·`/Dest` 문자열이 암호문이다. 파일에 바로 놓인 객체만(객체 스트림 속 것은 스트림째 풀었다), 서명의 `/Contents` 는 두고, 못 푼 문자열은 빈 문자열 |
+| 해석기가 쓰는 **취소 확인을 일마다 바꿔 끼운다** | 목차를 읽은 코루틴의 확인이 링크 읽기에 남아 있었다 — 그 코루틴이 끝난 뒤 그것이 취소 예외를 던져 **두드림이 소리 없이 사라졌다**(로그도 막대도 없다 — 에뮬레이터에서 잡았다. JVM 시험은 확인을 비워 두어 못 잡았다 → `앞 일의 취소 확인을 다음 일에 쓰지 않는다`, 되돌리면 그 시험만 깨진다) |
+
+**암호 PDF.** 플랫폼이 사용자 암호로 직접 푼 문서는 평문이 우리 손에 없어 목차·`/Dest` 꼴 링크가 **없다**(평문을 메모리에 두지 않는 설계 그대로 — 사용자
+확인). 빈 사용자 암호 문서는 둘 다 **된다** — pdfium 이 스스로 열면 우리 해석기가 빈 암호로 원본을 풀어 읽고(`OfFile` + 보안 처리기), pdfium 이 거절해
+우리가 풀면 이미 그리기에 쓰는 메모리 파일의 평문을 읽는다(`OfDescriptor` — 새 평문 사본을 만들지 않는다). 글 고르기와 같은 원본·같은 판정이다
+(쪽 수가 플랫폼과 다르면 끈다).
+
+**시험.** JVM 20건 — `PdfNavigationTest` 13(목적지 넷·제목 인코딩 셋과 언어 표지·90도 돈 쪽과 자르기 상자·쪽 밖·무한한 좌표·넓이 없는 상자·순환·깊이
+200 사슬·1만 500 형제·스스로를 품은 이름 나무·소유자 암호만 걸린 표본 둘 — `pdfcrypt/nav-owner-aes128.pdf`·`nav-owner-rc4.pdf`, pypdf 6.17 이
+잠갔다), `PdfOutlineTest` 4, `PdfLinksTest` 의 합치기 2, 그리고 말뭉치 대조 `PdfNavigationCorpusTest`(오라클 pypdf 6.17 —
+`samples-local/corpus/tools/oracle_pdf_nav.py` → `oracle/PDF-XX.nav.json`): 목차 항목 66(PDF-09·14·19·26 — PDF-19 는 소유자 암호만)과 링크
+482(PDF-26 의 TeX 이름 목적지 480 포함 — 말뭉치에 `/Dest` 꼴이 없어 `/A` 의 목적지로 같은 `pageOf` 를 견준다)가 모두 같았다. 문자열 풀기를 끄면
+암호 표본 시험이 깨진다(확인했다).
+
+**Android 16 에뮬레이터에서 본 것**(디버그 빌드, 합성 표본 — 세 겹 한글 목차, 배열·이름 나무·옛 사전 `/Dest` 링크, 90도 돈 쪽). 목차 단추와 나무
+(펼치기·접기, 지금 항목 굵게, 쪽 밖 항목 흐리게), 목차에서 쪽으로(이어 보기·쪽 넘김), `/Dest` 링크 셋과 돈 쪽의 링크(쪽 넘김·이어 보기 — 플랫폼은
+0개를 주고 합친 것이 3개), 소유자 암호만 걸린 판(목차·링크 모두 됨), 사용자 암호 판(목차 단추 없음), TeX 말뭉치 문서의 목차(가로 화면 — 막대의
+단추 넷이 들어간다). 확인하지 못한 것 — 실기기, 목차가 수천 항목인 실물 문서의 읽는 시간, 이름 나무가 깊은 실물 문서에서 두드림이 2초 안에 끝나는가.
+
+**독립 검토(2026-11-21)가 고친 것.** ① 이름 나무는 마디 수로만 취소를 봐서, 마디 **하나**의 거대한 `/Names`·`/Kids`(해석기 상한 400만 칸,
+칸마다 참조를 풀 수 있다)를 훑는 동안 시간 상한(10초·2초)이 닿지 않았다 — 칸 256 개마다 본다(`이름 나무 마디 하나를 훑는 동안에도 취소가 닿는다`).
+② xref 를 다시 세운 파일의 객체 스트림 번호표(`PdfObjects.discoveredEntry`)를 **훑기 전에** 적어 두어, 훑다가 취소되면 반쯤 찬 표가 남아 나머지
+객체가 그 문서에서 영영 '없다' 가 됐다(옛 결함이지만 짧은 상한 둘이 닿게 만들었다) — 다 훑은 뒤에 적는다(`객체 스트림 번호표를 훑다 취소되어도 다음에
+다시 찾는다`). 둘 다 고침을 되돌리면 그 시험만 깨진다. 90 도만 보던 좌표 시험에 180·270·0 과 원점이 0 이 아닌 자르기 상자를 더했다. 보고만 한 것 —
+글 꺼내기의 해석기를 여는 데(xref 다시 세우기) 2초를 넘는 큰 망가진 파일에서는 링크 읽기가 매번 열다 끊겨 **두드릴 때마다 2초** 늦고 그 쪽은 기억되지
+않는다(목차 10초 안에 열지 못하면 계속), 목차 제목은 16 MiB 문자열도 통째로 풀어 300자로 자른다(시간 상한이 결국 끊는다).
+
 ## 더할 만한 기능 후보 (검토만, 코드 없음 — 사용자가 고르기 전)
 
 비슷한 앱들(MiXplorer·Solid Explorer·Material Files·Files by Google·VLC·MX Player·Moon+ Reader·Perfect Viewer·Mihon·Xodo 등)의 공식 자료로 고른
@@ -2105,7 +2150,7 @@ HWPX·DOCX), PDF 찾기(강조가 글자에 앉는다 — 원점 왼쪽 위 확�
 
 | 순위 | 후보 | 규모 | 메모 |
 |---|---|---|---|
-| 1 | **PDF 목차·남은 문서 안 링크**(찾기와 `/A GoTo` 링크는 2.0.0 이 플랫폼으로 했다 — '2.0.0 — minSdk 36') | S~M | `PdfRenderer` 에 목차(outline)를 주는 API 가 없다 — 검증한 해석기(11단계·글 꺼내기) 위에 `/Outlines` 사슬(방문 집합·개수 상한)을 읽는다. 플랫폼의 `getGotoLinks` 가 주지 않는 `/Dest` 꼴 링크도 같은 해석기로 `/Annots` 를 읽어 채울 수 있다(플랫폼이 직접 푼 암호 문서는 평문이 없어 빠진다). 읽기만 |
+| 1 | ~~PDF 목차·남은 문서 안 링크~~ — **했다**('2.0.0 뒤 — PDF 목차와 `/Dest` 꼴 링크') | — | 플랫폼이 직접 푼 암호 문서는 평문이 없어 둘 다 빠진다(그대로 둔다 — 평문을 메모리에 두지 않는 설계) |
 | 2 | **재생 작은 묶음** — 수면 타이머, 미니 바 이전·다음, 자막 크기·위치, 외부 자막 싱크(±0.1초 — `SubtitleSource` 가 바이트를 이미 가로챈다, 내장 자막은 밖), `.smi`(SAMI → SRT), 화면 비율·확대 | 대부분 S, .smi M | VLC·MX Player 의 관행. ASS 서식을 조판하지 않는다는 결정은 그대로 |
 | 3 | **저장소 훑기 엔진** 하나로 셋 — 용량 분석(폴더 크기 나무·큰 파일·종류별), 저장소 전체 찾기와 최근 받은 것(MediaStore 로 빠르게 + 훑어 채우기), 중복 찾기(크기 → 앞뒤 64 KiB → SHA-256, 남길 것을 고르고 나머지는 휴지통) | M×3 | 결과는 메모리에만(색인을 디스크에 두지 않는다 — '전문검색 인덱스' 와 다르다). `Os.lstat` 훑기(1만 개 394 ms)와 ZIP 만들기의 세 겹(링크·inode·깊이 64)을 다시 쓴다. `/Android/data` 는 셀 수 없어 '보이지 않는 몫' 으로. '용량 분석' 은 1단계 제외 항목(영구 아님). Web 의 큰 받기·` (1)` 사본에 쓸모 |
 | 4 | **기본기 묶음** — 표 둘 살리기(폴더별 정렬·최근 위치), 폴더 정보(크기·항목 수), 경로 복사, 파일 즐겨찾기·지우기 전에 묻기(지금은 길게 누르면 곧바로 지운다), 폴더 공유 → 'ZIP 으로 묶어 보내기'(지금은 폴더가 말없이 빠진다), 홈 화면 바로가기(`requestPinShortcut` — 내보낸 화면으로 들어오는 경로를 `/storage` 아래·휴지통 밖으로 검증), 앱 테마 스위치, 체크섬(MD5·SHA-1·SHA-256·CRC32 와 곁의 `*.sha256` 대조), 썸네일 넓히기(APK 아이콘·앨범 아트·PDF 첫 쪽 — PDF 는 메모리에만, 암호 PDF 는 빼고) | 각 S, 합쳐 M | — |
@@ -2174,7 +2219,7 @@ format/    ★ 전부 java-library(순수 JVM). android.* 가 컴파일 단계�
   archive/ 8·14(tar)·14 뒤(단일 압축 스트림·cpio·ar)   text/ 7·14(마크다운)
   html/ 11(위생·껍데기·`HtmlWriter`)   epub/ 11
 feature/   browser(3·4·즐겨찾기·갤러리) image(6 — 잘라 저장의 고르는 화면·뜨는 쪽 · 그리기·메모) text(7 · 글 편집기) archive(8) comic(9)
-           player(10 — 구간 저장 칸) docview(11 — `pdf/text` 는 PDF 글 꺼내기) diag(2) settings(14)
+           player(10 — 구간 저장 칸) docview(11 — `pdf/text` 는 PDF 글 꺼내기·목차·`/Dest` 링크) diag(2) settings(14)
            editor(편집기 — rhwp·ONLYOFFICE 를 WebView 에 띄운다, 따로 된 프로세스 `:editor`. `core:io` 만 본다)
            ※ `feature:docview` 가 보는 포맷 모듈은 **`format:epub` 하나뿐이다** — PDF 는
              `android.graphics.pdf` 라 순수 JVM 인 `format/` 에 둘 수 없고, 계약
@@ -2502,7 +2547,7 @@ ASCII 낱말 끝에 붙은 UTF-8 로도 읽히는 한 글자(`Excel처` → `Exc
 | 미룬 것 | 어디로 | 왜 |
 |---|---|---|
 | **글자 선택·복사·문서 안 찾기** | **했다** — 고르기·복사는 우리 글 꺼내기, 찾기는 플랫폼의 `Page.searchText`(1.0.0 은 API 35 에서만, 2.0.0 은 minSdk 36 이라 언제나) | 레거시 `PdfRenderer` 는 글자를 주지 않는다(확장 13 이상의 `PdfRendererPreV.selectPageText` 가 그것이고, 12 폰은 확장 1이었다) |
-| **목차(outline)와 문서 안 링크** | 링크는 **2.0.0 에서 플랫폼으로 했다**(`Page.getGotoLinks` — `/A GoTo` 꼴만, `/Dest` 꼴은 플랫폼이 주지 않는다 — 실측). 목차는 아직 | `PdfRenderer` 에 목차를 주는 API 가 없다. 쪽 이동은 슬라이더·`쪽으로 가기`·쪽 목록·링크로 한다('더할 만한 기능 후보' 1) |
+| **목차(outline)와 문서 안 링크** | **했다** — `/A GoTo` 링크는 플랫폼(`Page.getGotoLinks`), `/Dest` 꼴 링크와 목차는 글 꺼내기의 해석기('2.0.0 뒤 — PDF 목차와 `/Dest` 꼴 링크') | `PdfRenderer` 에 목차를 주는 API 가 없고 `getGotoLinks` 는 `/Dest` 꼴을 주지 않는다(실측) |
 | **주석·폼을 그리는가** | 확인하지 않았다 | `RENDER_MODE_FOR_DISPLAY` 로 그리므로 플랫폼이 정하는 대로 나온다. 표본을 만들어 확인하기 전에는 '그린다' 도 '안 그린다' 도 적지 않는다 |
 
 ### 10단계가 착수하며 정한 것
@@ -2673,8 +2718,8 @@ ASCII 낱말 끝에 붙은 UTF-8 로도 읽히는 한 글자(`Excel처` → `Exc
 - **`.mobi`·`.azw`·`.fb2` 를 열지 않는다.** 목록에서 종류는 '전자책' 으로 보이지만
   (확장자로 정하므로) 열면 '이 앱이 다루지 않는 문서입니다' 와 '다른 앱으로 열기' 로 끝난다. `.rtf` 도 같다.
 - **PDF 의 글은 쪽 하나 안에서만 고른다**(위 '글 고르기' 절). 플랫폼이 직접 푼 암호 문서(2.0.0 의 암호 PDF 대부분)는 고르지 못한다 — 찾기는 된다.
-  **목차가 없다**(`PdfRenderer` 가 주지 않는다). 문서 안 링크는 `/A GoTo` 꼴만 따른다 — `/Dest` 꼴(주석에 목적지를 곧바로 적은 것)은
-  플랫폼의 `getGotoLinks` 가 주지 않아(Android 16 에뮬레이터 실측) 두드려도 막대가 여닫힐 뿐이다. 바깥 주소(웹 링크)는 따르지 않는다.
+  그 문서들에는 **목차와 `/Dest` 꼴 링크도 없다**(우리 해석기가 읽을 평문이 없다 — `/A GoTo` 꼴 링크는 플랫폼이 준다). 링크의 자리(`/XYZ` 의
+  좌표)는 쓰지 않고 그 쪽의 처음으로 간다. 바깥 주소(웹 링크)·다른 파일(`GoToR`)·스크립트 동작은 따르지 않는다.
   주석·폼을 그리는지는 확인하지 않았다(`RENDER_MODE_FOR_DISPLAY` — 플랫폼이 정하는 대로다).
 - **인증서로 잠긴 PDF 와 전용 처리기로 잠긴 PDF 를 열지 않는다.** 앞의 것(공개 키 처리기)은
   암호가 아니라 받는 사람의 인증서를 요구하고, 뒤의 것은 방식이 공개되지 않았다. 둘 다

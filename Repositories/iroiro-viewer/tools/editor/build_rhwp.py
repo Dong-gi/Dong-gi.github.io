@@ -8,7 +8,9 @@
   (`src/renderer/equation/hancom_glyphs.rs`). 그 글꼴은 한컴의 상용 글꼴이라 기기에 없고, 웹 그리개(canvas2d)에는 되돌려 읽는 길이 없어
   (데스크톱 Skia 빌드의 `semantic_fallback_glyph` 만 있다) 네모로 나왔다 — 0.9.0 은 그래서 되돌렸다(2026-11-14). 지금은 자유 글꼴(STIX Two
   Math, OFL)의 글리프를 그 코드 자리에 담은 **대체 글꼴**을 빌드 때 지어(`make_eq_font.py` — rhwp 소스의 표를 읽는다, 꼴이 바뀌면 멈춘다)
-  스튜디오의 웹 글꼴 목록에 'HyhwpEQ'·'HancomEQN' 으로 싣는다(vite.config.mjs 의 equationFonts). 판을 올리면 수식 문서·옛한글·큰 HWP 를 본다.
+  스튜디오의 웹 글꼴 목록에 'HyhwpEQ'·'HancomEQN' 으로 싣는다(vite.config.mjs 의 equationFonts). 옛 수식(버전 문자열이 빈 것)이 쓰는 가족
+  'RHWP Hancom Legacy Equation'(`legacy_glyphs.rs`·`layout/legacy.rs` — PUA 가 아니라 본래 글자를 표의 폭 자리에 하나씩 그린다)도 같은 길로
+  하나 더 짓는다. 판을 올리면 수식 문서·옛한글·큰 HWP 를 본다.
 - 0.9.0 에 필요했던 준비(SPARSE·FONTS_ALLOWED 의 더한 줄, vite 설정의 AI 도우미 끄기·'로컬 글꼴 감지' 창 빼기)는 그대로 쓴다.
 - 빌드 도구: 스튜디오의 package-lock.json 그대로 `npm ci --ignore-scripts`(설치 스크립트를 돌리지 않는다). npm 캐시까지 `local/editor/rhwp/` 안에 둔다.
   대체 글꼴은 fontTools 가 필요하다 — `local/editor/eqfont/venv`(git 무시)의 파이썬으로 부른다(없으면 만드는 법을 말하고 멈춘다,
@@ -68,7 +70,13 @@ CORE_INTEGRITY = "sha512-jMLOubFHp5MocnbyYNoPwcUDAIqzF47hBv420i0prnN4+hk0iX/f4RP
 EQFONT_VENV = ROOT / "local" / "editor" / "eqfont" / "venv"
 EQFONT_TOOL = ROOT / "tools" / "editor" / "make_eq_font.py"
 EQFONT_OUT = WORK / "eqfont"
-EQFONT_FILES = ("HyhwpEQ-iroiro.woff2", "HancomEQN-iroiro.woff2")  # vite.config.mjs 의 EQUATION_FONTS 와 같은 이름
+# CSS 가족 → 파일. vite.config.mjs 의 EQUATION_FONTS 와 같은 짝이어야 한다(인쇄 쪽의 @font-face 도 이 짝으로 짓는다).
+EQFONT_FACES = {
+    "HyhwpEQ": "HyhwpEQ-iroiro.woff2",
+    "HancomEQN": "HancomEQN-iroiro.woff2",
+    "RHWP Hancom Legacy Equation": "LegacyEQ-iroiro.woff2",  # 옛 수식(빈 버전 문자열)의 표시 가족 — legacy_glyphs.rs
+}
+EQFONT_FILES = tuple(EQFONT_FACES.values())
 EQFONT_NOTICES = ("EQ-SUBSTITUTE-FONTS.txt", "STIXTwoMath-OFL.txt")
 
 # 성긴 체크아웃의 자리(gitignore 꼴). e2e 시험·표본 문서는 받지 않는다.
@@ -82,6 +90,8 @@ SPARSE = [
     "/src/renderer/square_gradient.sksl",  # 스튜디오의 CanvasKit 그리개가 가져온다(우리 빌드는 CanvasKit 을 빼지만 해석은 한다)
     "/src/renderer/equation/hancom_glyphs.rs",  # 수식 대체 글꼴의 표(make_eq_font.py 가 읽는다)
     "/src/renderer/equation/hancom_eqn_metrics.rs",
+    "/src/renderer/equation/legacy_glyphs.rs",  # 옛 수식 가족(RHWP Hancom Legacy Equation)의 전진 폭 표
+    "/src/renderer/equation/layout/legacy.rs",  # 같은 가족으로 그리는 옛 수식 줄·괄호의 글자와 폭
     "!/rhwp-studio/e2e/",
     "!/rhwp-studio/public/samples/",
 ]
@@ -356,7 +366,7 @@ def assemble(node: str, kept_fonts: list[str], audit: dict) -> None:
     page = printing.read_text(encoding="utf-8")
     if page.count("</head>") != 1:
         sys.exit("print.html 의 </head> 가 하나가 아니다")
-    faces = "".join(f'@font-face{{font-family:"{n.split("-")[0]}";src:url("fonts/{n}") format("woff2")}}' for n in EQFONT_FILES)
+    faces = "".join(f'@font-face{{font-family:"{family}";src:url("fonts/{n}") format("woff2")}}' for family, n in EQFONT_FACES.items())
     if "iroiro-equation-fonts" not in page:
         page = page.replace("</head>", f'  <style id="iroiro-equation-fonts">{faces}</style>\n</head>')
     printing.write_text(page, encoding="utf-8")

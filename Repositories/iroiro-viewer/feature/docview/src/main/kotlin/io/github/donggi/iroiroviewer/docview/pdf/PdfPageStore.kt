@@ -391,14 +391,18 @@ class PdfPageStore(
     /**
      * 쪽 하나의 문서 안 링크. 두드렸을 때 묻고 **쪽마다 기억한다** — 모든 두드림(막대 여닫기도)이 이것을 지나므로, 묻는 일이 렌더와 같은
      * 잠금·디스패처에 줄을 서면 확대 조각·찾기가 도는 동안 막대가 늦게 반응한다. 같은 쪽의 두 번째 두드림부터는 잠금을 건너뛴다.
-     * 읽지 못한 것(null)은 기억하지 않는다(닫히는 중일 수 있다). 읽지 못하면 빈 목록.
+     * 읽지 못한 것(null)·덜 읽은 것은 기억하지 않는다(닫히는 중일 수 있다). 읽지 못하면 빈 목록.
      */
     internal suspend fun links(ordinal: Int): List<PdfLinks.Link> {
         synchronized(linkCache) { linkCache[ordinal] }?.let { return it }
         val read = doc.links(ordinal) ?: return emptyList()
-        synchronized(linkCache) { linkCache[ordinal] = read }
-        return read
+        // `/Dest` 꼴을 이번에 읽지 못했으면(시간 상한) 기억하지 않는다 — 다음 두드림에 다시 읽는다.
+        if (read.complete) synchronized(linkCache) { linkCache[ordinal] = read.links }
+        return read.links
     }
+
+    /** 문서의 목차. 읽을 수 없으면 빈 목차(`PdfDocument.outline`). */
+    internal suspend fun outline(): PdfOutline = doc.outline()
 
     /** 쪽마다 읽은 링크(최근 [LINK_CACHE_PAGES] 쪽). 링크는 쪽 위의 상자 몇 개라 작다. */
     private val linkCache = object : LinkedHashMap<Int, List<PdfLinks.Link>>(16, 0.75f, true) {
