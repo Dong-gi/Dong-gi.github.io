@@ -68,6 +68,13 @@ fun MiniPlayer(modifier: Modifier = Modifier) {
                         color = MaterialTheme.colorScheme.onSecondaryContainer,
                     )
                 }
+                // **이전·다음은 큐가 있을 때만**(재생 화면과 같다). 끝에 닿아 갈 곳이 없으면 흐리게 — 섞기면 끝에서도 다음이 있다
+                // (`State.canNext`). 자리를 지키려고 숨기지 않고 흐리게 둔다 — 단추가 사라지면 바로 옆 재생 단추가 손가락 밑에서 옮겨 간다.
+                if (state.hasQueue) {
+                    IconButton(onClick = { PlaybackConnection.previous() }, enabled = state.canPrevious) {
+                        Icon(SkipPreviousIcon, stringResource(R.string.playback_previous))
+                    }
+                }
                 IconButton(onClick = { PlaybackConnection.togglePlayPause() }) {
                     Icon(
                         imageVector = if (state.isPlaying) PauseIcon else Icons.Filled.PlayArrow,
@@ -75,6 +82,11 @@ fun MiniPlayer(modifier: Modifier = Modifier) {
                             if (state.isPlaying) R.string.playback_pause else R.string.playback_play
                         ),
                     )
+                }
+                if (state.hasQueue) {
+                    IconButton(onClick = { PlaybackConnection.next() }, enabled = state.canNext) {
+                        Icon(SkipNextIcon, stringResource(R.string.playback_next))
+                    }
                 }
                 IconButton(onClick = { PlaybackConnection.stop() }) {
                     Icon(Icons.Filled.Close, stringResource(R.string.playback_stop))

@@ -103,6 +103,13 @@ object PlaybackConnection {
          * 함께 실어 보내면 그런 짝이 생기지 않는다.
          */
         val currentKind: FileKind? = null,
+        /** 큐에 앞·뒤 항목이 있는가 — 미니 바의 이전·다음을 흐리게 할지. 한 곡짜리면 둘 다 거짓이다([advancedTo]). */
+        val canPrevious: Boolean = false,
+        val canNext: Boolean = false,
+        /** 지금 항목에 싱크를 옮길 수 있는 외부 자막(글 자막 파일)이 붙어 있는가([SubtitleShift.supports]). */
+        val canShiftSubtitle: Boolean = false,
+        /** 그 자막을 옮긴 양(ms). 양수면 늦게 뜬다. 누른 값은 다시 세우기 전에도 곧바로 보인다([shiftSubtitle]). */
+        val subtitleShiftMs: Long = 0,
     ) {
         val hasItem: Boolean get() = fileKey != null
         val hasQueue: Boolean get() = queueSize > 1
@@ -196,6 +203,12 @@ object PlaybackConnection {
                 // **다른 항목의 실패는 들고 가지 않는다**([carriedFailure]). 구간을 파는 것과 같은 까닭이다 —
                 // 실패도 '이 파일의 것' 이다.
                 failure = carriedFailure(key),
+                // **섞기가 켜져 있으면 끝에서도 다음이 있다** — [next] 가 섞인 차례가 아니라 우리 뽑기([ShuffleHistory])로 간다.
+                // 앞은 플레이어의 차례 그대로다([previous]).
+                canPrevious = frame.queueSize > 1 && frame.playerHasPrevious,
+                canNext = frame.queueSize > 1 && (frame.shuffle || frame.playerHasNext),
+                canShiftSubtitle = frame.canShiftSubtitle,
+                subtitleShiftMs = if (frame.canShiftSubtitle) frame.subtitleShiftMs else 0,
             )
         }
     }
@@ -300,6 +313,13 @@ object PlaybackConnection {
 
     /** 지금 손으로 붙여 둔 자막 파일의 경로. 이름 추측으로 붙은 것은 여기 들지 않는다. */
     private var attachedSubtitle: String? = null
+
+    /**
+     * 누른 싱크 값 가운데 아직 항목에 싣지 않은 것. 누를 때마다 항목을 다시 세우면(영상이 잠깐 멎는다) 0.1초씩 다섯 번 누르는 데
+     * 다섯 번 멎는다 — 누르기가 멎은 뒤 한 번 세운다([SHIFT_SETTLE_MS]). 그동안 화면은 이 값을 본다.
+     */
+    private var pendingShift: Long? = null
+    private var shiftJob: Job? = null
 
     /** 트랙 선택을 되돌릴 기준이 되는 항목. **전환 이유가 아니라 이 값으로 가른다**([resetTracksIfItemChanged]). */
     private var trackResetKey: String? = null
@@ -695,6 +715,8 @@ object PlaybackConnection {
         // 손으로 붙인 자막은 **그 항목의 것**이다. 다음 항목에는 이름 추측이 붙인 자막이
         // 따로 걸려 있으므로, 표시만 남아 있으면 목록의 체크가 거짓말을 한다.
         attachedSubtitle = null
+        // 싣지 못한 싱크 값도 앞 항목의 것이다 — 다음 항목에 실으면 다른 영상의 자막이 밀린다.
+        cancelPendingShift()
         val c = controller ?: return
         val p = c.trackSelectionParameters
         // 되돌릴 것이 없으면 건드리지 않는다 — 바인더 호출과 불필요한 이벤트를 아낀다.
@@ -817,6 +839,15 @@ object PlaybackConnection {
      * 재생이 멈춘 채 다시 시작되지 않는 것을 본다.
      */
     private fun rebuildCurrentItem(sub: FileEntry?) {
+        // 다른 파일(또는 없음)로 바꾸면 그 싱크는 0 에서 다시 시작한다 — 옮긴 값은 앞 파일의 것이다.
+        cancelPendingShift()
+        rebuildCurrentItem { if (sub == null) emptyList() else listOf(subtitleConfigOf(sub, selected = true)) }
+    }
+
+    /** 지금 항목의 자막 구성을 [configs] 가 돌려준 것으로 바꿔 다시 세운다. 받는 것은 지금 항목의 구성이다. */
+    private fun rebuildCurrentItem(
+        configs: (List<MediaItem.SubtitleConfiguration>) -> List<MediaItem.SubtitleConfiguration>,
+    ) {
         val c = controller ?: return
         val at = c.currentMediaItemIndex
         val n = c.mediaItemCount
@@ -829,9 +860,7 @@ object PlaybackConnection {
                 item
             } else {
                 item.buildUpon()
-                    .setSubtitleConfigurations(
-                        if (sub == null) emptyList() else listOf(subtitleConfigOf(sub, selected = true))
-                    )
+                    .setSubtitleConfigurations(configs(item.localConfiguration?.subtitleConfigurations.orEmpty()))
                     .build()
             }
         }
@@ -843,6 +872,62 @@ object PlaybackConnection {
         c.playWhenReady = wasReady
         refreshQueue()
         push()
+    }
+
+    /**
+     * 외부 자막의 싱크를 [deltaMs] 만큼 옮긴다(양수 = 늦게). 값은 곧바로 화면에 보이고, 누르기가 [SHIFT_SETTLE_MS] 멎으면
+     * 자막 주소에 실어 항목을 한 번 다시 세운다([SubtitleShift] — 자막 바이트를 읽는 길이 시각을 고쳐 쓴다). 영상 안 자막은 밖이다.
+     */
+    fun shiftSubtitle(deltaMs: Long) {
+        val now = _state.value
+        if (!now.canShiftSubtitle) return
+        setPendingShift(SubtitleShift.step(now.subtitleShiftMs, deltaMs))
+    }
+
+    /** 싱크를 0 으로 되돌린다. */
+    fun resetSubtitleShift() {
+        if (!_state.value.canShiftSubtitle) return
+        setPendingShift(0)
+    }
+
+    private fun setPendingShift(value: Long) {
+        pendingShift = value
+        _state.value = _state.value.copy(subtitleShiftMs = value)
+        shiftJob?.cancel()
+        shiftJob = scope.launch {
+            delay(SHIFT_SETTLE_MS)
+            val target = pendingShift ?: return@launch
+            // 이미 실린 값과 같으면(+0.1 → −0.1, 끝에서 누름) 다시 세우지 않는다 — 다시 세우면 영상이 잠깐 멎는다.
+            val loaded = SubtitleShift.parse(
+                shiftableSubtitle(controller?.currentMediaItem)?.uri?.getQueryParameter(SubtitleShift.PARAM),
+            )
+            if (target == loaded) {
+                pendingShift = null
+                push()
+                return@launch
+            }
+            rebuildCurrentItem { configs ->
+                configs.map { cfg ->
+                    if (!SubtitleShift.supports(cfg.uri.lastPathSegment)) return@map cfg
+                    val bare = cfg.uri.buildUpon().clearQuery().build()
+                    val uri = if (target == 0L) {
+                        bare
+                    } else {
+                        bare.buildUpon().appendQueryParameter(SubtitleShift.PARAM, target.toString()).build()
+                    }
+                    cfg.buildUpon().setUri(uri).build()
+                }
+            }
+            // 다시 세운 항목이 이제 그 값을 들고 있다 — [push] 가 주소에서 읽는다.
+            pendingShift = null
+            push()
+        }
+    }
+
+    private fun cancelPendingShift() {
+        shiftJob?.cancel()
+        shiftJob = null
+        pendingShift = null
     }
 
     /** 재생을 멈춘다. 항목과 큐는 그대로다 — 끝내는 것은 [stop] 이다. */
@@ -999,6 +1084,7 @@ object PlaybackConnection {
         subtitleFiles = emptyList()
         attachedSubtitle = null
         trackResetKey = null
+        cancelPendingShift()
         shuffleHistory.clear()
     }
 
@@ -1075,6 +1161,9 @@ object PlaybackConnection {
     /** 위치를 밀어 주는 기본 간격. */
     private const val TICK_MS = 500L
 
+    /** 싱크 단추를 놓고 이만큼 지나면 항목을 다시 세운다([shiftSubtitle]). */
+    private const val SHIFT_SETTLE_MS = 700L
+
     /**
      * 컨트롤러를 한 번 읽어 상태를 새로 민다. **읽는 일만 여기서 하고, 무엇을 들고 갈지는 [State.advancedTo] 가 정한다** — 그
      * 판단(이어보기 제안·구간·실패를 버리는가, 영상 여부를 무엇으로 정하는가)은 컨트롤러 없이 JVM 시험이 박는다
@@ -1088,6 +1177,7 @@ object PlaybackConnection {
         resetTracksIfItemChanged(key)
         val groups = c.currentTracks.groups
         val index = c.currentMediaItemIndex
+        val shiftable = shiftableSubtitle(item)
         _state.value = previous.advancedTo(
             Frame(
                 key = key,
@@ -1107,8 +1197,34 @@ object PlaybackConnection {
                 shuffle = c.shuffleModeEnabled,
                 repeatMode = c.repeatMode,
                 speed = c.playbackParameters.speed,
+                playerHasPrevious = c.hasPreviousMediaItem(),
+                playerHasNext = c.hasNextMediaItem(),
+                canShiftSubtitle = shiftable != null,
+                subtitleShiftMs = pendingShift ?: SubtitleShift.parse(shiftable?.uri?.getQueryParameter(SubtitleShift.PARAM)),
             )
         )
+    }
+
+    /** 항목에 붙은 외부 자막 가운데 싱크를 옮길 수 있는 첫 것. 항목은 언제나 자막 하나만 붙인다([itemOf]·[rebuildCurrentItem]). */
+    private fun shiftableSubtitle(item: MediaItem?): MediaItem.SubtitleConfiguration? =
+        item?.localConfiguration?.subtitleConfigurations?.firstOrNull {
+            SubtitleShift.supports(it.uri.lastPathSegment) && fitsShift(it.uri.path)
+        }
+
+    /** 마지막으로 잰 자막 파일과 그 답 — [push] 는 자주 불리므로 같은 파일을 매번 재지 않는다. */
+    private var fitsShiftCache: Pair<String, Boolean>? = null
+
+    /**
+     * 싱크를 옮길 수 있는 크기인가. [SubtitleDataSourceFactory.MAX_BYTES] 를 넘는 자막은 바이트를 바꾸는 길이 원본을 그대로 흘려
+     * 싱크가 듣지 않는다 — 그런 파일에는 싱크 줄을 두지 않는다(글꼴을 품은 ASS 가 흔히 넘는다).
+     */
+    private fun fitsShift(path: String?): Boolean {
+        if (path == null) return false
+        fitsShiftCache?.let { (p, fits) -> if (p == path) return fits }
+        // 꼭 상한 크기인 파일도 읽는 쪽([SubtitleDataSourceFactory])은 '넘쳤다' 로 본다(버퍼를 꽉 채우면 끝을 보지 못한다) — 그래서 `<`.
+        val fits = File(path).length() < SubtitleDataSourceFactory.MAX_BYTES
+        fitsShiftCache = path to fits
+        return fits
     }
 
     /**
@@ -1134,6 +1250,10 @@ object PlaybackConnection {
         val shuffle: Boolean,
         val repeatMode: Int,
         val speed: Float,
+        val playerHasPrevious: Boolean = false,
+        val playerHasNext: Boolean = false,
+        val canShiftSubtitle: Boolean = false,
+        val subtitleShiftMs: Long = 0,
     )
 
     /**

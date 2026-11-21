@@ -173,6 +173,25 @@ class AppPreferencesTest {
     }
 
     @Test
+    fun `자막 크기와 높이는 기본값에서 시작하고 눈금 밖을 누른다`() = runTest {
+        assertEquals(AppPreferences.DEFAULT_SUBTITLE_SIZE_SP, prefs.subtitleSizeSp.first())
+        assertEquals(0, prefs.subtitleLiftPercent.first())
+        prefs.setSubtitleSizeSp(26)
+        prefs.setSubtitleLiftPercent(15)
+        assertEquals(26, prefs.subtitleSizeSp.first())
+        assertEquals(15, prefs.subtitleLiftPercent.first())
+        // 쓸 때도 읽을 때도 눈금 밖은 기본값이다.
+        prefs.setSubtitleLiftPercent(12)
+        assertEquals(0, prefs.subtitleLiftPercent.first())
+        store.edit { it[intPreferencesKey("subtitle_size_sp")] = 200 }
+        assertEquals(AppPreferences.DEFAULT_SUBTITLE_SIZE_SP, prefs.subtitleSizeSp.first())
+        // 한 칸만 바꾼다 — 두 번 두드림의 걸음은 그대로.
+        prefs.setTapSeekSeconds(30)
+        prefs.setSubtitleSizeSp(14)
+        assertEquals(30, prefs.tapSeekSeconds.first())
+    }
+
+    @Test
     fun `읽는 화면의 설정은 기본값에서 시작하고 범위를 누른다`() = runTest {
         // 화면 켜 두기 10분, 볼륨 키 끔(소리 조절을 빼앗지 않는다), PDF 는 이어 보기.
         assertEquals(AppPreferences.KEEP_SCREEN_DEFAULT_MINUTES, prefs.readerKeepScreenMinutes.first())

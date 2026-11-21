@@ -64,6 +64,15 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
         /** [tapSeekSeconds] 의 기본값 — 큰 재생기들(YouTube·MX·VLC)의 기본이 10초다. */
         const val DEFAULT_TAP_SEEK_SECONDS = 10
 
+        /** [subtitleSizeSp] 가 고를 수 있는 값(sp) — 재생 화면 자막의 글자 크기. */
+        val SUBTITLE_SIZES_SP: List<Int> = listOf(14, 16, 18, 22, 26, 32)
+
+        /** [subtitleSizeSp] 의 기본값 — 처음부터 쓰던 크기다. */
+        const val DEFAULT_SUBTITLE_SIZE_SP = 18
+
+        /** [subtitleLiftPercent] 가 고를 수 있는 값 — 아래 자막을 영상 높이의 몇 % 만큼 올리는가. */
+        val SUBTITLE_LIFTS_PERCENT: List<Int> = listOf(0, 5, 10, 15, 20, 25, 30)
+
         /** [readerKeepScreenMinutes] 의 기본값(분). '마지막 조작 뒤 5~10분' 의 긴 쪽이다. */
         const val KEEP_SCREEN_DEFAULT_MINUTES = 10
 
@@ -91,6 +100,8 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
         val pdfSpread = booleanPreferencesKey("pdf_spread")
         val resumeOnBluetooth = booleanPreferencesKey("resume_on_bluetooth")
         val tapSeekSeconds = intPreferencesKey("tap_seek_seconds")
+        val subtitleSizeSp = intPreferencesKey("subtitle_size_sp")
+        val subtitleLiftPercent = intPreferencesKey("subtitle_lift_percent")
 
         // 읽는 화면: 화면 켜 두기·만화의 볼륨 키·PDF 의 보기 방식.
         val readerKeepScreenMinutes = intPreferencesKey("reader_keep_screen_minutes")
@@ -259,6 +270,24 @@ class AppPreferences internal constructor(private val store: DataStore<Preferenc
     }
 
     private fun tapSeekOrDefault(seconds: Int?): Int = seconds?.takeIf { it in TAP_SEEK_CHOICES } ?: DEFAULT_TAP_SEEK_SECONDS
+
+    /** 재생 화면 자막의 글자 크기(sp). 자막 시트에서 고른다. [SUBTITLE_SIZES_SP] 밖의 값은 기본값으로 읽는다. */
+    val subtitleSizeSp: Flow<Int> = data.map { p ->
+        p[Keys.subtitleSizeSp]?.takeIf { it in SUBTITLE_SIZES_SP } ?: DEFAULT_SUBTITLE_SIZE_SP
+    }
+
+    suspend fun setSubtitleSizeSp(sp: Int) {
+        store.edit { it[Keys.subtitleSizeSp] = sp.takeIf { v -> v in SUBTITLE_SIZES_SP } ?: DEFAULT_SUBTITLE_SIZE_SP }
+    }
+
+    /** 아래 자막을 영상 높이의 몇 % 올리는가. [SUBTITLE_LIFTS_PERCENT] 밖의 값은 0 으로 읽는다. */
+    val subtitleLiftPercent: Flow<Int> = data.map { p ->
+        p[Keys.subtitleLiftPercent]?.takeIf { it in SUBTITLE_LIFTS_PERCENT } ?: 0
+    }
+
+    suspend fun setSubtitleLiftPercent(percent: Int) {
+        store.edit { it[Keys.subtitleLiftPercent] = percent.takeIf { v -> v in SUBTITLE_LIFTS_PERCENT } ?: 0 }
+    }
 
     // ---- 읽는 화면 ------------------------------------------------------------------
 

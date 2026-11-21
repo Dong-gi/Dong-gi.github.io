@@ -5,6 +5,11 @@ import android.media.AudioManager
 import android.view.WindowManager
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateCentroid
+import androidx.compose.foundation.gestures.calculatePan
+import androidx.compose.foundation.gestures.calculateZoom
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -32,6 +37,7 @@ sealed interface GestureFeedback {
     data class Seek(val targetMs: Long, val deltaMs: Long) : GestureFeedback
     data class Brightness(val level: Float) : GestureFeedback
     data class Volume(val level: Float, val steps: Int, val max: Int) : GestureFeedback
+    data class Zoom(val scale: Float) : GestureFeedback
 }
 
 /**
@@ -45,6 +51,7 @@ sealed interface GestureFeedback {
  * | 한 번 두드리기 | 조작부 여닫기 |
  * | 오른쪽 두 번 이상 | 두 번째부터 한 걸음씩 앞으로(설정 — 기본 10초) |
  * | 왼쪽 두 번 이상 | 두 번째부터 한 걸음씩 뒤로 |
+ * | 두 손가락 | 영상 확대·이동(손가락 하나가 움직이기 전에 둘째가 닿았을 때만) |
  *
  * ## 중재를 형제 순서에 기대지 않는다
  *
@@ -67,6 +74,12 @@ fun Modifier.playerGestures(
     positionMs: () -> Long,
     onToggleControls: () -> Unit,
     onFeedback: (GestureFeedback?) -> Unit,
+    /**
+     * 두 손가락 한 프레임 — (배율, 이동 x·y, 두 손가락 가운데 x·y — 이 상자의 왼쪽 위 기준). null 이면 확대를 받지 않는다(영상이 없다).
+     * 손을 다 떼면 [onZoomEnd].
+     */
+    onZoom: ((Float, Float, Float, Float, Float) -> Unit)? = null,
+    onZoomEnd: () -> Unit = {},
 ): Modifier {
     val context = LocalContext.current
     val activity = context as? Activity
@@ -76,6 +89,9 @@ fun Modifier.playerGestures(
     // `PointerInputScope` 도 코루틴 스코프가 아니다. 컴포지션에 묶인 스코프를 쓴다 —
     // 화면이 사라지면 미뤄 둔 토글도 함께 취소된다.
     val scope = androidx.compose.runtime.rememberCoroutineScope()
+    // 인식기는 세워질 때의 람다를 쥔다(함정 표) — 바뀌는 콜백은 지금 값으로 읽는다.
+    val zoomTo by rememberUpdatedState(onZoom)
+    val zoomEnd by rememberUpdatedState(onZoomEnd)
     if (!enabled) return this
 
     return this.pointerInput(durationMs, enabled, tapSeekMs) {
@@ -106,6 +122,23 @@ fun Modifier.playerGestures(
 
             while (true) {
                 val event = awaitPointerEvent()
+                // **둘째 손가락은 아직 아무것도 정하지 않았을 때만 확대가 된다.** 탐색·밝기·소리로 정한 뒤에 닿은 손가락은 무시한다 —
+                // 한 제스처 안에서 하는 일을 바꾸지 않는다는 규칙 그대로다.
+                if (mode == Mode.UNDECIDED && zoomTo != null && event.changes.count { it.pressed } >= 2) {
+                    mode = Mode.ZOOM
+                    pendingToggle?.cancel()
+                    clearFeedback?.cancel()
+                    Iro.d(TAG) { "제스처 시작 ZOOM" }
+                }
+                if (mode == Mode.ZOOM) {
+                    // 손가락 하나만 남아도 확대가 이어진다(하나로는 이동만). 다 떼면 끝.
+                    if (event.changes.none { it.pressed }) break
+                    val c = event.calculateCentroid(useCurrent = true)
+                    val pan = event.calculatePan()
+                    zoomTo?.invoke(event.calculateZoom(), pan.x, pan.y, c.x, c.y)
+                    event.changes.forEach { it.consume() }
+                    continue
+                }
                 val change: PointerInputChange = event.changes.firstOrNull { it.id == down.id } ?: break
                 if (!change.pressed) break
 
@@ -131,7 +164,8 @@ fun Modifier.playerGestures(
                 }
 
                 when (mode) {
-                    Mode.UNDECIDED -> Unit
+                    // 확대는 위에서 `continue` 로 돌아 여기 닿지 않는다.
+                    Mode.UNDECIDED, Mode.ZOOM -> Unit
                     Mode.SEEK -> {
                         val delta = GestureMath.seekDeltaMs(dx, w)
                         val target = GestureMath.clampPosition(seedPosition + delta, durationMs)
@@ -162,6 +196,7 @@ fun Modifier.playerGestures(
                     onFeedback(null)
                 }
                 Mode.BRIGHTNESS, Mode.VOLUME -> onFeedback(null)
+                Mode.ZOOM -> zoomEnd()
                 Mode.UNDECIDED -> {
                     // 움직이지 않았으면 두드림이다.
                     val now = System.currentTimeMillis()
@@ -194,7 +229,7 @@ fun Modifier.playerGestures(
     }
 }
 
-private enum class Mode { UNDECIDED, SEEK, BRIGHTNESS, VOLUME }
+private enum class Mode { UNDECIDED, SEEK, BRIGHTNESS, VOLUME, ZOOM }
 
 /**
  * 지금 창의 밝기.
@@ -252,6 +287,10 @@ fun GestureNote(feedback: GestureFeedback, modifier: Modifier = Modifier) {
         is GestureFeedback.Seek -> seekLabel(feedback.targetMs, feedback.deltaMs)
         is GestureFeedback.Brightness -> brightnessLabel(feedback.level)
         is GestureFeedback.Volume -> volumeLabel(feedback.steps, feedback.max)
+        is GestureFeedback.Zoom -> androidx.compose.ui.res.stringResource(
+            R.string.player_zoom,
+            String.format(java.util.Locale.ROOT, "%.1f", feedback.scale),
+        )
     }
     androidx.compose.material3.Text(
         text = text,

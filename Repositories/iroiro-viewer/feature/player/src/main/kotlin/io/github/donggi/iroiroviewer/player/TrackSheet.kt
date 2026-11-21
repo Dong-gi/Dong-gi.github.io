@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -17,6 +18,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import io.github.donggi.iroiroviewer.data.AppPreferences
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -60,8 +66,16 @@ import io.github.donggi.iroiroviewer.playback.unsupportedTrackLabel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TrackSheet(onDismiss: () -> Unit) {
+fun TrackSheet(
+    onDismiss: () -> Unit,
+    /** 자막 글자 크기(sp)와 높이(%) — 화면이 들고 설정에 적는다(바꾸면 곧바로 영상 위 자막이 따른다). */
+    subtitleSizeSp: Int,
+    onSubtitleSizeSp: (Int) -> Unit,
+    subtitleLiftPercent: Int,
+    onSubtitleLiftPercent: (Int) -> Unit,
+) {
     val choices by PlaybackConnection.tracks.collectAsStateWithLifecycle()
+    val playback by PlaybackConnection.state.collectAsStateWithLifecycle()
     // **자막이 꺼져 있으면 어느 자막 줄에도 표시를 하지 않는다.** 끈 채로 파일이 체크되어
     // 있으면 '붙어 있는데 안 나온다' 로 읽힌다 — 붙어 있는 것은 사실이지만 지금 보이는
     // 것은 아니다. 체크는 '지금 이것을 보고 있다' 는 뜻이어야 한다.
@@ -133,7 +147,89 @@ fun TrackSheet(onDismiss: () -> Unit) {
                     )
                 }
             }
+
+            // **자막 모양** — 크기·높이는 모든 자막에, 싱크는 외부 자막 파일(글 자막)에만(`SubtitleShift`). 영상 안 자막은 시각을 옮길 수 없다.
+            if (choices.text.isNotEmpty() || choices.files.isNotEmpty()) {
+                SectionHeader(stringResource(R.string.player_subtitle_style))
+                val sizes = AppPreferences.SUBTITLE_SIZES_SP
+                StepRow(
+                    label = stringResource(R.string.player_subtitle_size),
+                    value = subtitleSizeSp.toString(),
+                    minusLabel = stringResource(R.string.player_subtitle_smaller),
+                    plusLabel = stringResource(R.string.player_subtitle_larger),
+                    canMinus = SubtitleStyle.canStep(sizes, subtitleSizeSp, -1),
+                    canPlus = SubtitleStyle.canStep(sizes, subtitleSizeSp, 1),
+                    onMinus = { onSubtitleSizeSp(SubtitleStyle.step(sizes, subtitleSizeSp, -1)) },
+                    onPlus = { onSubtitleSizeSp(SubtitleStyle.step(sizes, subtitleSizeSp, 1)) },
+                )
+                val lifts = AppPreferences.SUBTITLE_LIFTS_PERCENT
+                StepRow(
+                    label = stringResource(R.string.player_subtitle_lift),
+                    value = stringResource(R.string.player_subtitle_lift_value, subtitleLiftPercent),
+                    minusLabel = stringResource(R.string.player_subtitle_lower),
+                    plusLabel = stringResource(R.string.player_subtitle_higher),
+                    canMinus = SubtitleStyle.canStep(lifts, subtitleLiftPercent, -1),
+                    canPlus = SubtitleStyle.canStep(lifts, subtitleLiftPercent, 1),
+                    onMinus = { onSubtitleLiftPercent(SubtitleStyle.step(lifts, subtitleLiftPercent, -1)) },
+                    onPlus = { onSubtitleLiftPercent(SubtitleStyle.step(lifts, subtitleLiftPercent, 1)) },
+                )
+                if (playback.canShiftSubtitle) {
+                    val shift = playback.subtitleShiftMs
+                    StepRow(
+                        label = stringResource(R.string.player_subtitle_sync),
+                        value = stringResource(R.string.player_subtitle_sync_value, SubtitleStyle.syncText(shift)),
+                        minusLabel = stringResource(R.string.player_subtitle_earlier),
+                        plusLabel = stringResource(R.string.player_subtitle_later),
+                        canMinus = shift > -io.github.donggi.iroiroviewer.playback.SubtitleShift.MAX_MS,
+                        canPlus = shift < io.github.donggi.iroiroviewer.playback.SubtitleShift.MAX_MS,
+                        onMinus = { PlaybackConnection.shiftSubtitle(-io.github.donggi.iroiroviewer.playback.SubtitleShift.STEP_MS) },
+                        onPlus = { PlaybackConnection.shiftSubtitle(io.github.donggi.iroiroviewer.playback.SubtitleShift.STEP_MS) },
+                        trailing = {
+                            TextButton(onClick = { PlaybackConnection.resetSubtitleShift() }, enabled = shift != 0L) {
+                                Text(stringResource(R.string.player_subtitle_sync_reset))
+                            }
+                        },
+                    )
+                }
+            }
         }
+    }
+}
+
+/**
+ * '이름  [−] 값 [+]' 한 줄. 값은 늘 적는다(배속 단추와 같은 까닭 — 기본이 아닌 채로 잊지 않게). 끝에 닿은 쪽 단추는 흐리게.
+ */
+@Composable
+private fun StepRow(
+    label: String,
+    value: String,
+    minusLabel: String,
+    plusLabel: String,
+    canMinus: Boolean,
+    canPlus: Boolean,
+    onMinus: () -> Unit,
+    onPlus: () -> Unit,
+    trailing: @Composable () -> Unit = {},
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(start = 24.dp, end = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(label, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+        TextButton(onClick = onMinus, enabled = canMinus, modifier = Modifier.semantics { contentDescription = minusLabel }) {
+            Text(stringResource(R.string.player_step_minus), style = MaterialTheme.typography.titleMedium)
+        }
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            modifier = Modifier.widthIn(min = 56.dp),
+        )
+        TextButton(onClick = onPlus, enabled = canPlus, modifier = Modifier.semantics { contentDescription = plusLabel }) {
+            Text(stringResource(R.string.player_step_plus), style = MaterialTheme.typography.titleMedium)
+        }
+        trailing()
     }
 }
 

@@ -1,7 +1,7 @@
 package io.github.donggi.iroiroviewer.player
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -50,6 +50,13 @@ fun BoxScope.SubtitleLayer(
      * 덮는다). 판이 덮는 높이는 부르는 쪽이 잰다(불변식 3 — 상수로 맞히지 않는다). 위에 붙는 자막(`\an8`)은 옮기지 않는다.
      */
     bottomLift: Dp = 0.dp,
+    /** 글자 크기(sp) — 자막 시트에서 고른 값(설정 `subtitle_size_sp`). */
+    fontSizeSp: Int = 18,
+    /**
+     * 아래 자막을 이 상자 높이의 몇 분의 일 올린다(설정 `subtitle_lift_percent`). 조작부를 비키는 [bottomLift] 와는 **더하지 않고
+     * 큰 쪽을 쓴다** — 이미 판 위로 올려 둔 사람의 자막이 판이 뜰 때 그만큼 더 뛰어오르지 않게.
+     */
+    liftFraction: Float = 0f,
 ) {
     val cues by PlaybackConnection.cues.collectAsStateWithLifecycle()
     if (cues.isEmpty()) return
@@ -57,12 +64,13 @@ fun BoxScope.SubtitleLayer(
     val top = cues.filter { it.isTop }
     val bottom = cues.filterNot { it.isTop }
 
-    Box(modifier.matchParentSize()) {
+    BoxWithConstraints(modifier.matchParentSize()) {
+        val userLift = maxHeight * liftFraction.coerceIn(0f, 1f)
         if (top.isNotEmpty()) {
-            CueColumn(top, Modifier.align(Alignment.TopCenter).padding(top = 24.dp))
+            CueColumn(top, fontSizeSp, Modifier.align(Alignment.TopCenter).padding(top = 24.dp))
         }
         if (bottom.isNotEmpty()) {
-            CueColumn(bottom, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp + bottomLift))
+            CueColumn(bottom, fontSizeSp, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp + maxOf(bottomLift, userLift)))
         }
     }
 }
@@ -77,7 +85,7 @@ private val Cue.isTop: Boolean
     get() = lineType == Cue.LINE_TYPE_FRACTION && line != Cue.DIMEN_UNSET && line < 0.5f
 
 @Composable
-private fun CueColumn(cues: List<Cue>, modifier: Modifier = Modifier) {
+private fun CueColumn(cues: List<Cue>, fontSizeSp: Int, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -88,7 +96,7 @@ private fun CueColumn(cues: List<Cue>, modifier: Modifier = Modifier) {
             Text(
                 text = text,
                 color = Color.White,
-                fontSize = 18.sp,
+                fontSize = fontSizeSp.sp,
                 textAlign = when (cue.textAlignment) {
                     android.text.Layout.Alignment.ALIGN_OPPOSITE -> TextAlign.End
                     android.text.Layout.Alignment.ALIGN_NORMAL -> TextAlign.Start

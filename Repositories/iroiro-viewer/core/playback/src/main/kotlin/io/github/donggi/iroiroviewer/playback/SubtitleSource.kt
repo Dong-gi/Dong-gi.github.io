@@ -84,7 +84,16 @@ private class SubtitleDataSource(private val inner: DataSource) : DataSource {
         val whole = DataSpec.Builder().setUri(dataSpec.uri).build()
         val raw = readAll(whole) ?: return inner.open(dataSpec)
 
-        val utf8 = toUtf8(raw, name)
+        // 싱크를 옮겼으면 그 값이 주소의 질의에 실려 온다([SubtitleShift]). 바꾼 뒤의 글에서 시각만 고쳐 쓴다.
+        val shift = SubtitleShift.parse(dataSpec.uri.getQueryParameter(SubtitleShift.PARAM))
+        val utf8 = toUtf8(raw, name).let { bytes ->
+            if (shift == 0L) {
+                bytes
+            } else {
+                SubtitleShift.apply(String(bytes, Charsets.UTF_8), SubtitleNames.extensionOf(name), shift)
+                    .toByteArray(Charsets.UTF_8)
+            }
+        }
         converted = utf8
         position = dataSpec.position.toInt().coerceIn(0, utf8.size)
         remaining = if (dataSpec.length == androidx.media3.common.C.LENGTH_UNSET.toLong()) {

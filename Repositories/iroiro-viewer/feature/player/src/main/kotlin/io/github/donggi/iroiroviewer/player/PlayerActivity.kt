@@ -43,7 +43,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
@@ -75,6 +75,8 @@ import io.github.donggi.iroiroviewer.model.PathNames
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -85,6 +87,7 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -1250,6 +1253,50 @@ private fun PlayerScreen(
     val prefs = remember(context) { AppPreferences(context.applicationContext) }
     val tapSeekSeconds by prefs.tapSeekSeconds.collectAsStateWithLifecycle(AppPreferences.DEFAULT_TAP_SEEK_SECONDS)
 
+    // **자막의 크기·높이**(설정). 누른 값은 이 화면이 먼저 든다 — DataStore 는 줄 선 쓰기 사이에 옛 값을 돌려주어(함정 표), 빠르게
+    // 두 번 누르면 한 번이 사라진다. 한 번 누른 뒤로는 이 화면의 값이 이긴다.
+    val prefScope = rememberCoroutineScope()
+    val storedSubtitleSize by prefs.subtitleSizeSp.collectAsStateWithLifecycle(AppPreferences.DEFAULT_SUBTITLE_SIZE_SP)
+    val storedSubtitleLift by prefs.subtitleLiftPercent.collectAsStateWithLifecycle(0)
+    var pickedSubtitleSize by rememberSaveable { mutableStateOf<Int?>(null) }
+    var pickedSubtitleLift by rememberSaveable { mutableStateOf<Int?>(null) }
+    val subtitleSizeSp = pickedSubtitleSize ?: storedSubtitleSize
+    val subtitleLiftPercent = pickedSubtitleLift ?: storedSubtitleLift
+
+    // **화면 비율·두 손가락 확대**([VideoFit]). 비율 방식은 이 화면이 사는 동안 남고(설정으로 남기지 않는다), 확대는 항목이 바뀌거나
+    // 방식을 바꾸면 풀린다. PiP 창에는 언제나 맞춤·확대 없음이다 — 창의 비율이 영상의 비율이다.
+    var aspectMode by rememberSaveable { mutableStateOf(AspectMode.FIT) }
+    var zoom by remember { mutableStateOf(VideoFit.NO_ZOOM) }
+    LaunchedEffect(state.fileKey) { zoom = VideoFit.NO_ZOOM }
+    var containerW by remember { mutableIntStateOf(0) }
+    var containerH by remember { mutableIntStateOf(0) }
+    val effectiveMode = if (inPip) AspectMode.FIT else aspectMode
+    val videoBox = VideoFit.boxOf(effectiveMode, containerW.toFloat(), containerH.toFloat(), state.videoAspect)
+    val visibleBox = VideoFit.visibleOf(videoBox, containerW.toFloat(), containerH.toFloat())
+    val shownZoom = if (inPip) VideoFit.NO_ZOOM else zoom
+    // 회전하거나(이 화면은 회전에 다시 서지 않는다) 영상 비율이 늦게 알려져 상자가 바뀌면 이동을 새 범위로 누른다.
+    // PiP 동안은 누르지 않는다 — 그 창의 작은 범위로 누르면 돌아왔을 때 밀어 둔 자리가 가운데로 당겨져 있다.
+    LaunchedEffect(containerW, containerH, videoBox, inPip) {
+        if (inPip) return@LaunchedEffect
+        zoom = VideoFit.clamp(zoom, videoBox, containerW.toFloat(), containerH.toFloat())
+    }
+    // PiP 출발 사각형은 언제나 **맞춤 상자**다 — PiP 창 안은 맞춤이고 창의 비율이 영상의 비율이라, 채움·늘림·확대의 상자를 주면 진입
+    // 애니메이션이 튄다. 보이는 상자의 가운데(창 좌표)에 맞춤 크기를 놓는다.
+    var videoCenterInWindow by remember { mutableStateOf<androidx.compose.ui.geometry.Offset?>(null) }
+    val fitBox = VideoFit.boxOf(AspectMode.FIT, containerW.toFloat(), containerH.toFloat(), state.videoAspect)
+    LaunchedEffect(videoCenterInWindow, fitBox) {
+        val c = videoCenterInWindow ?: return@LaunchedEffect
+        if (fitBox.width <= 0f || fitBox.height <= 0f) return@LaunchedEffect
+        onVideoBounds(
+            Rect(
+                (c.x - fitBox.width / 2f).toInt(),
+                (c.y - fitBox.height / 2f).toInt(),
+                (c.x + fitBox.width / 2f).toInt(),
+                (c.y + fitBox.height / 2f).toInt(),
+            )
+        )
+    }
+
     // **조작부를 저절로 거둔다**. 거둘 수 있는 동안 [PlayerChrome.AUTO_HIDE_MS]
     // 를 재고, 무엇이든 하는 중이면(손가락이 닿아 있다·막대를 끈다·메뉴·시트·배속 눈금·구간 칸이 열려 있다·저장이 돈다) 멈췄다가 끝나면
     // 처음부터 다시 잰다 — 효과의 키가 바뀌면 앞의 기다림이 취소되는 것이 곧 '만지면 시계를 다시 잰다' 다. 판정은 [PlayerChrome].
@@ -1382,7 +1429,28 @@ private fun PlayerScreen(
                     positionMs = { PlaybackConnection.state.value.positionMs },
                     onToggleControls = onToggleControls,
                     onFeedback = { feedback = it },
-                ),
+                    // 확대는 영상이 보일 때만. 손가락 가운데는 이 상자(화면 전체)의 왼쪽 위 기준이라 가운데 기준으로 옮겨 넘긴다.
+                    onZoom = if (showingVideo) {
+                        { factor, panX, panY, cx, cy ->
+                            zoom = VideoFit.apply(
+                                zoom, factor, panX, panY,
+                                cx - containerW / 2f, cy - containerH / 2f,
+                                videoBox, containerW.toFloat(), containerH.toFloat(),
+                            )
+                            feedback = GestureFeedback.Zoom(zoom.scale)
+                        }
+                    } else {
+                        null
+                    },
+                    onZoomEnd = {
+                        zoom = VideoFit.settle(zoom)
+                        feedback = null
+                    },
+                )
+                .onSizeChanged {
+                    containerW = it.width
+                    containerH = it.height
+                },
             contentAlignment = Alignment.Center,
         ) {
             // **목록이 덮고 있으면 영상 표면을 아예 두지 않는다.**
@@ -1401,20 +1469,21 @@ private fun PlayerScreen(
             // 어차피 보이지 않는 표면이므로 빼도 잃는 것이 없다. 목록을 닫으면
             // `AndroidView` 가 표면을 새로 만들고 `attachSurface` 가 다시 붙인다.
             if (state.hasVideo && !playlistOpen) {
-                // **비율을 지킨다.** `fillMaxSize` 로 두면 표면이 화면을 꽉 채우느라
+                // **비율을 지킨다**(맞춤이 기본). `fillMaxSize` 로 두면 표면이 화면을 꽉 채우느라
                 // 영상을 늘여, 세로 화면에서 가로 영상이 위아래로 잡아당겨진다.
-                // 비율을 아직 모르면(첫 프레임 전) 채워 두었다가 알게 되면 맞춘다.
-                //
-                // **`fillMaxWidth` 를 앞에 두지 않는다**. 폭을 화면에 못 박으면 `aspectRatio` 가 높이에
-                // 맞추는 길을 잃어, 20:9 폰을 가로로 눕힌 화면(2400×1080)에서 16:9 영상이 2400×1350 이 되어 위아래가 잘린다 — 그 상자 안의
-                // 자막도 함께 잘린다. `aspectRatio` 만 두면 폭에 맞춰 보고 넘치면 높이에 맞춘다(부모 `Box` 는 최소 크기를 0 으로 넘긴다).
+                // 비율을 아직 모르면(첫 프레임 전) 채워 두었다가 알게 되면 맞춘다. 맞춤은 폭에 맞춰 보고 넘치면 높이에 맞춘다 —
+                // 20:9 폰을 가로로 눕힌 화면(2400×1080)에서 16:9 영상이 2400×1350 이 되어 위아래가 잘리지 않게(`VideoFitTest`).
                 //
                 // **자막을 이 상자 안에 넣는다.** 밖에 두면 세로 영상 아래의 빈 여백에
                 // 자막이 뜨고, 영상과 글이 멀어져 함께 보기 어렵다.
+                //
+                // **비율 방식**([AspectMode])이 상자를 정한다 — 크기는 화면을 재어 셈한다([VideoFit.boxOf]). 바깥 상자는 **화면에 보이는
+                // 몫**(채움이 넘친 쪽을 자른 것)이라 자막·자막 올리기가 그것을 쓰고(PiP 출발 사각형은 그 가운데의 맞춤 상자), 표면만 넘치는 크기로 그 안에 놓는다.
+                // 두 손가락 확대도 표면에만 건다 — 자막은 키우지 않는다(읽는 글이다).
                 Box(
                     modifier = (
-                        if (state.videoAspect > 0f) {
-                            Modifier.aspectRatio(state.videoAspect)
+                        if (containerW > 0 && containerH > 0) {
+                            with(density) { Modifier.requiredSize(visibleBox.width.toDp(), visibleBox.height.toDp()) }
                         } else {
                             Modifier.fillMaxSize()
                         }
@@ -1425,23 +1494,37 @@ private fun PlayerScreen(
                         // 어긋나 애니메이션이 튄다. 값이 실제로 바뀔 때만 시스템을 부르는
                         // 것은 받는 쪽(`PipPlan`)이 `data class` 라 저절로 된다.
                         .onGloballyPositioned { coords ->
-                            val r = coords.boundsInWindow()
-                            onVideoBounds(
-                                Rect(
-                                    r.left.toInt(),
-                                    r.top.toInt(),
-                                    r.right.toInt(),
-                                    r.bottom.toInt(),
-                                )
-                            )
+                            // 가운데만 적는다 — 사각형은 위의 효과가 맞춤 크기로 짓는다.
+                            videoCenterInWindow = coords.boundsInWindow().center
                             // 자막을 판 위로 올릴 높이를 재는 데 쓴다(위 `subtitleLift`). 판의 높이와 같은 좌표계(루트)로 잰다.
                             videoBottomPx = coords.boundsInRoot().bottom
                         },
                 ) {
-                    VideoSurface(Modifier.fillMaxSize())
+                    VideoSurface(
+                        (
+                            if (containerW > 0 && containerH > 0) {
+                                with(density) { Modifier.requiredSize(videoBox.width.toDp(), videoBox.height.toDp()) }
+                            } else {
+                                Modifier.fillMaxSize()
+                            }
+                            )
+                            .align(Alignment.Center)
+                            .graphicsLayer {
+                                scaleX = shownZoom.scale
+                                scaleY = shownZoom.scale
+                                translationX = shownZoom.offsetX
+                                translationY = shownZoom.offsetY
+                            },
+                    )
                     // PiP 창에는 **영상 말고 아무것도 두지 않는다**(공식 문서). 작은 창에
                     // 자막을 얹으면 글자가 뭉개져 읽히지도 않는다.
-                    if (!inPip) SubtitleLayer(bottomLift = subtitleLift)
+                    if (!inPip) {
+                        SubtitleLayer(
+                            bottomLift = subtitleLift,
+                            fontSizeSp = subtitleSizeSp,
+                            liftFraction = subtitleLiftPercent / 100f,
+                        )
+                    }
                 }
             } else if (!state.hasVideo && !inPip) {
                 // **PiP 창에는 영상 말고 아무것도 두지 않는다**(공식 문서). 소리 가지에도
@@ -1456,7 +1539,7 @@ private fun PlayerScreen(
                     modifier = Modifier.padding(32.dp),
                 )
                 // 소리 파일에도 자막이 붙을 수 있다(내장 자막이 든 음성).
-                if (!playlistOpen || !state.hasQueue) SubtitleLayer()
+                if (!playlistOpen || !state.hasQueue) SubtitleLayer(fontSizeSp = subtitleSizeSp, liftFraction = subtitleLiftPercent / 100f)
             }
             if (!inPip) feedback?.let { GestureNote(it, Modifier.align(Alignment.Center)) }
             if (playlistOpen && state.hasQueue && !inPip) {
@@ -1629,7 +1712,21 @@ private fun PlayerScreen(
         // **시트는 조작부보다 앞에 둔다.** 뒤에 두면 조작부를 감춘 순간 시트가 컴포지션에서
         // 통째로 빠져, 제스처까지 꺼 둔 상태에서는 **되돌릴 수 없는 화면**이 남는다.
         // 시트는 자기 창이라 여기 있어도 자리를 차지하지 않는다.
-        if (trackSheetOpen) TrackSheet(onDismiss = { trackSheetOpen = false })
+        if (trackSheetOpen) {
+            TrackSheet(
+                onDismiss = { trackSheetOpen = false },
+                subtitleSizeSp = subtitleSizeSp,
+                onSubtitleSizeSp = { v ->
+                    pickedSubtitleSize = v
+                    prefScope.launch { prefs.setSubtitleSizeSp(v) }
+                },
+                subtitleLiftPercent = subtitleLiftPercent,
+                onSubtitleLiftPercent = { v ->
+                    pickedSubtitleLift = v
+                    prefScope.launch { prefs.setSubtitleLiftPercent(v) }
+                },
+            )
+        }
 
         // **터치 잠금은 맨 위에 깐다** — 실패 문구·안내 알약의 단추까지 손이 닿지 않게. 두드리면 잠금 풀기 단추만 잠깐 뜬다.
         if (touchLocked && !inPip) {
@@ -1910,6 +2007,25 @@ private fun PlayerScreen(
                         )
                     }
 
+                    // **화면 비율** — 지금 방식을 글로 적는다(배속과 같다). 누르면 다음 방식으로 돌고 확대를 푼다.
+                    if (showingVideo) {
+                        val aspectDescription = stringResource(R.string.player_aspect)
+                        TextButton(
+                            onClick = {
+                                aspectMode = VideoFit.next(aspectMode)
+                                zoom = VideoFit.NO_ZOOM
+                            },
+                            modifier = Modifier.semantics { contentDescription = aspectDescription },
+                        ) {
+                            Text(
+                                text = stringResource(aspectLabelOf(aspectMode)),
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = if (aspectMode == AspectMode.FIT) FontWeight.Normal else FontWeight.Bold,
+                                color = if (aspectMode == AspectMode.FIT) onBackground else MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
+
                     // **고를 것이 있을 때만** 뜬다. 소리 트랙 하나짜리 mp3 에서 '트랙' 단추를
                     // 눌러 줄이 하나뿐인 것은 아무것도 가르치지 않는다.
                     if (state.canChooseTracks) {
@@ -2014,6 +2130,14 @@ private fun PlayerScreen(
             }
         }
     }
+}
+
+private fun aspectLabelOf(mode: AspectMode): Int = when (mode) {
+    AspectMode.FIT -> R.string.player_aspect_fit
+    AspectMode.FILL -> R.string.player_aspect_fill
+    AspectMode.STRETCH -> R.string.player_aspect_stretch
+    AspectMode.R16_9 -> R.string.player_aspect_16_9
+    AspectMode.R4_3 -> R.string.player_aspect_4_3
 }
 
 /**
