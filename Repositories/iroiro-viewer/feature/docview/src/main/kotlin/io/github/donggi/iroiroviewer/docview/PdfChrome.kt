@@ -139,7 +139,7 @@ private fun GridCell(store: PdfPageStore, page: Int, selected: Boolean, onClick:
 }
 
 /**
- * PDF 찾기 막대(API 35 이상에서만 뜬다 — `PdfSearch` 의 주석). 위쪽 막대 자리에 선다.
+ * PDF 찾기 막대(`PdfSearch` 의 주석). 위쪽 막대 자리에 선다.
  *
  * 입력칸은 **저장하지 않는 상태**로 든다(`remember`) — 찾을 글은 암호가 아니지만, 회전해도 남길 까닭도 없다. 결과는 VM 이
  * 들고 있어 회전을 견딘다.

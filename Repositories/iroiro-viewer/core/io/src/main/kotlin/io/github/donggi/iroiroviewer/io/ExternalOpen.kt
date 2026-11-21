@@ -339,10 +339,8 @@ object ExternalOpen {
             .mapNotNull { info -> info.activityInfo?.let { ComponentName(it.packageName, it.name) } }
             .toTypedArray()
 
-    // `ResolveInfoFlags` 를 받는 판은 API 33 부터다(minSdk 31). 정수 판은 뜻이 같고 33 이후에도 돈다.
-    @Suppress("DEPRECATION")
     private fun query(context: Context, intent: Intent): List<ResolveInfo> =
-        context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        context.packageManager.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong()))
 
     /**
      * 저장 볼륨 안이어도 넘기지 않는 경로 — 휴지통(`TrashStore.DIR_NAME`)과 그 안. 휴지통의 파일은 uuid 이름에 확장자가

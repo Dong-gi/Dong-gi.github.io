@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
-import android.os.Build
 import androidx.compose.foundation.text.contextmenu.builder.TextContextMenuBuilderScope
 import androidx.compose.foundation.text.contextmenu.builder.item
 import androidx.compose.foundation.text.selection.SelectionState
@@ -49,13 +48,7 @@ internal object RowSend {
     fun activities(context: Context): List<ResolveInfo> {
         val pm = context.packageManager
         val intent = Intent(Intent.ACTION_PROCESS_TEXT).setType(PLAIN)
-        val all = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            pm.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(0))
-        } else {
-            @Suppress("DEPRECATION")
-            pm.queryIntentActivities(intent, 0)
-        }
-        return all.filter { usable(context, it) }
+        return pm.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(0)).filter { usable(context, it) }
     }
 
     private fun usable(context: Context, info: ResolveInfo): Boolean {

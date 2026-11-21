@@ -102,7 +102,7 @@ private class SubtitleDataSource(private val inner: DataSource) : DataSource {
         var total = 0
         var full = false
         while (total < buffer.size) {
-            // **`readNBytes` 를 쓰지 않는다** — API 33 이고 minSdk 는 31 이다(함정 표).
+            // media3 의 `DataSource` 다(`InputStream` 이 아니다) — 한 번에 요청보다 적게 줄 수 있어 채울 때까지 돈다.
             val n = inner.read(buffer, total, buffer.size - total)
             if (n == androidx.media3.common.C.RESULT_END_OF_INPUT) { full = true; break }
             if (n <= 0) break

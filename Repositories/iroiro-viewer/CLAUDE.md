@@ -30,7 +30,7 @@
 
 | | |
 |---|---|
-| 대상 | minSdk 31(Android 12). 실기기는 Android 12 폰(SM-A908N) 하나 — 확인은 폰 에뮬레이터로만 한다(아래 '에뮬레이터') |
+| 대상 | **minSdk 36(Android 16)** — 2.0.0 부터(2026-11-21, 사용자의 메인 폰이 Android 16 이 되었다). 옛 Android 12 폰(SM-A908N)은 마지막 1.0.0 릴리스(`Files-1.0.0-release.apk`)를 계속 쓴다 — 2.0.0 은 그 폰에 깔리지 않는다. 확인은 폰 에뮬레이터로만 한다(아래 '에뮬레이터') |
 | 저장소 접근 | `MANAGE_EXTERNAL_STORAGE` (모든 파일 접근) |
 | 의존 정책 | AndroidX·Kotlin 공식 + **네이티브 코드 없는 성숙한 순수 JVM 오픈소스**까지 |
 | 파일 관리 | 복사·이동·삭제·이름변경·새폴더·다중선택·정렬·숨김파일 + **휴지통** |
@@ -88,8 +88,8 @@ WebView·서드파티의 소켓을 한꺼번에 막던 것)이다. 그때는 Web
 | 데몬 JDK | 21 (JBR) | `gradle/gradle-daemon-jvm.properties`. 시스템 java 는 25 지만 데몬은 21 로 통일한다 |
 | Kotlin | 2.3.20 | KSP 2.3.12 의 POM 이 요구하는 짝. IDE 번들은 2.3.10(같은 2.3 라인) |
 | compileSdk | 37 | Compose BOM 2026.09.00 이 `minCompileSdk=37` 을 요구한다 |
-| targetSdk | 36 | **반드시 명시한다.** 안 적으면 AGP 9 가 조용히 compileSdk(37)로 채운다 |
-| minSdk | 31 | |
+| targetSdk | 36 | **반드시 명시한다.** 안 적으면 AGP 9 가 조용히 compileSdk(37)로 채운다. 37 로 올리지 않는다 — Android 17 의 동작 변화를 확인할 기기가 없다 |
+| minSdk | 36 | 2.0.0(판 코드 3)부터 — 모든 모듈(`app` 과 라이브러리 열다섯)이 같은 값이다. `tools/check_api_level.py` 는 `app/build.gradle.kts` 의 값을 읽는다. 1.0.0(판 코드 2)은 31 이었다 — 아래 '2.0.0 — minSdk 36' |
 
 ### 함정 — 다시 밟지 마라
 
@@ -145,9 +145,9 @@ WebView·서드파티의 소켓을 한꺼번에 막던 것)이다. 그때는 Web
   사실 다른 사진이었다. **배율 같은 내부 값은 `Iro.d` 로 찍어 logcat 으로 읽어라.**
   그 로그는 릴리스에서 호출 지점째 사라진다.
 - **`InputStream.readNBytes` 는 안드로이드에 API 33부터 있다.** 자바 9 의 함수라 컴파일도
-  되고 JVM 시험도 통과하는데, minSdk 31 기기에서 `NoSuchMethodError` 로 **앱이 즉사한다.**
-  7단계에서 실제로 죽였다. `java.io`·`java.nio` 의 최신 함수를 쓰기 전에 API 수준을
-  확인하고, 매 단계 `:app:lintRelease` 를 돌린다(`NewApi` 가 이것만 잡는다).
+  되고 JVM 시험도 통과하는데, 그보다 낮은 기기에서는 `NoSuchMethodError` 로 **앱이 즉사한다.**
+  7단계(minSdk 31)에서 실제로 죽였다 — 2.0.0(minSdk 36)부터는 쓴다. 규칙은 그대로다: `java.io`·`java.nio` 의 최신 함수를
+  쓰기 전에 API 수준을 확인하고(36 을 넘는 것 — `api-versions.xml` 의 `36.1` 처럼 소수인 판도), 매 단계 lint 를 돌린다(`NewApi`).
 - **순수 JVM 모듈은 lint 의 `NewApi` 가 보지 않는다.** 자바 10 의 `ByteArrayOutputStream.toString(Charset)`(API 33)이 빌드·JVM 시험·모듈 lint 를
   모두 지나 기기에서 앱을 죽인 적이 있다. 순수 JVM 모듈을 고치면 `tools/check_api_level.py` 로 그 모듈의 클래스를 SDK 의 `api-versions.xml` 과
   견준다(문제가 있으면 끝 코드 1). 바이트를 글로 바꿀 때는 `String(bytes, Charsets.UTF_8)` 이다.
@@ -677,7 +677,7 @@ WebView·서드파티의 소켓을 한꺼번에 막던 것)이다. 그때는 Web
   (왼쪽 위 정렬) 안에 둔다.
 - **클립보드에 큰 글을 넣으면 앱이 죽는다.** 바인더 한 번에 1 MB 를 넘으면 `TransactionTooLargeException` 이고, Compose 의 복사는 그것을
   잡지 않는다(넣는 코루틴이 그대로 던진다). 넣는 쪽이 길이를 끊는다(20만 자 — 글 고르기 절). 그리고 **안드로이드 13 부터는 시스템이
-  '복사했다' 를 보여 준다** — 앱은 12 이하에서만 띄운다(공식 안내가 겹쳐 알리지 말라고 한다).
+  '복사했다' 를 보여 준다** — 앱은 띄우지 않는다(공식 안내가 겹쳐 알리지 말라고 한다. 1.0.0 은 12 에서만 띄웠고 2.0.0 이 그 문구를 걷었다).
 - **WebView 에서 링크 위를 길게 누르면 고르기가 시작되지 않는다** — 브라우저의 관례다. 기기에서 고르기를 확인할 때 링크가 아닌 글을 누른다
   (EPUB 의 목차 장은 전부 링크라 처음에 '안 된다' 로 보였다).
 - **`rememberSelectionState()` 는 저장되는 상태다**(`rememberSaveable` + `SelectionState.Saver`, 바이트코드로 확인). 고른 글을 강조의 색까지
@@ -743,7 +743,9 @@ WebView·서드파티의 소켓을 한꺼번에 막던 것)이다. 그때는 Web
   그 사이 런처를 누르면 그 태스크가 전체 화면으로 돌아온다. 그래서 `isTaskRoot` 는 PiP 를 오가며 바뀐다 — 다시 설 때마다 본다.
 - **API 31 의 자동 PiP(영상을 트는 중에 홈)는 `onUserLeaveHint` 를 부르지 않는다** — `onPictureInPictureModeChanged(true)` 만 온다(로그로
   실측). 홈을 '사용자가 떠났다' 로 읽는 일은 모드 콜백에서도 해야 한다(재생 화면의 '보낸 앱으로' 표시가 그것을 놓쳐 홈으로 튕겼다). 같은 까닭으로
-  `onUserLeaveHint` 에 둔 'PiP 첫 프레임 미리 접기'(10단계)는 그 길에서 돌지 않는다 — 첫 프레임에 조작부가 찍히는지는 확인하지 않았다.
+  `onUserLeaveHint` 에 둔 'PiP 첫 프레임 미리 접기'(10단계)는 그 길에서 돌지 않았다 — 2.0.0(minSdk 36)부터 진입 시작 콜백
+  (`onPictureInPictureUiStateChanged` 의 `isTransitioningToPip`, API 35)이 접는다. 이 둘(태스크·콜백 차례)이 API 36 에서도 같은지는 아래
+  '2.0.0 — minSdk 36' 의 에뮬레이터 확인을 본다.
 - **재생 화면이 태스크의 뿌리일 수 있다.** 다른 앱이 넘긴 파일로 이 앱이 처음 뜨면 파일 목록이 없고, 그 태스크로 런처가 와도 `MainActivity` 는
   군더더기로 끝나(위 '런처 인텐트는 …') 재생 화면이 그대로 보인다. 거기서 그냥 끝내면 홈으로 떨어진다 — 뒤로 가기가 파일 목록을 연다
   (`PlayerSupport.openFileList`, 아래 '`.ts` 되감기·재생 화면의 뒤로 가기' 절). 그 파일 목록은 **이름만 가리킨 인텐트**로 연다 — 런처 인텐트로 열면
@@ -854,7 +856,7 @@ export JAVA_HOME="$HOME/.gradle/jdks/jetbrains_s_r_o_-21-amd64-windows.2"
 ```
 
 **lint 를 매 단계 돌리는 이유는 `NewApi` 하나다.** 컴파일러는 `java.io` 의 함수가 minSdk 에 있는지 모른다 — `InputStream.readNBytes`(API 33)가
-빌드와 시험을 통과하고 minSdk 31 기기에서 `NoSuchMethodError` 로 앱을 죽였다. lint 만 그것을 본다. **지금 이 저장소에서 lint 는 오류 0으로
+빌드와 시험을 통과하고 minSdk 31 기기에서 `NoSuchMethodError` 로 앱을 죽였다(1.0.0 때 — 지금은 minSdk 36 이라 36 을 넘는 것을 본다). lint 만 그것을 본다. **지금 이 저장소에서 lint 는 오류 0으로
 통과한다** — 새로 뜨는 것만 보면 된다. **`:app:lintRelease` 는 라이브러리 모듈의 문제를 보고하지 않는다**(함정 표) — 모듈을 새로 만들거나 크게
 고치면 `:<모듈>:lintRelease` 를 따로 돌린다. 남은 경고는 전부 옛 줄이다 — `app` 2(`MANAGE_EXTERNAL_STORAGE` 정책 안내 `ScopedStorage`, `targetSdk 36`
 의 `OldTargetApi` — 새 판 알림이 더 뜰 때가 있다), `feature:browser` 5(`ModifierParameter` 1·`FrequentlyChangingValue` 4), `feature:image` 3
@@ -865,26 +867,27 @@ export JAVA_HOME="$HOME/.gradle/jdks/jetbrains_s_r_o_-21-amd64-windows.2"
 까닭을 적고 끈 것 — `IncomingFiles` 의 `UsableSpace` 둘과 `ZipMaker` 의 하나(남길 공간을 재는 자리라 일부러 보수적인 값을 쓴다), `AesZipCrypto` 의
 `GetInstance`(ECB — 계수기 블록만 암호화하는 CTR 이다).
 **순수 JVM 모듈(`format:*`·`core:model`·`core:safety`·`core:charset`)은 lint 가 보지 않는다** — `tools/check_api_level.py` 가 그 몫이고 지금 0건이다
-(함정 표. 자바 9 의 공변 반환 `ByteBuffer.limit(Int)` 처럼 표에 없는 것도 잡는다 — `Buffer` 로 불러 피한다). **`NewApi` 는 0건이다** — PiP 의
-API 33 짜리 setter 넷(`setTitle`·`setSubtitle`·`setCloseAction`·`setExpandedAspectRatio`)을 부르지 않는다.
+(함정 표. 자바 9 의 공변 반환 `ByteBuffer.limit(Int)` 처럼 표에 없는 것도 잡는다 — `Buffer` 로 불러 피한다. 기준 API 는 `app/build.gradle.kts` 의
+minSdk 를 읽는다 — 2.0.0 부터 36). **`NewApi` 는 0건이다.** PiP 의 API 33 짜리 setter 넷(`setTitle`·`setSubtitle`·`setCloseAction`·
+`setExpandedAspectRatio`)은 minSdk 36 이라 쓸 수 있게 되었으나 부르지 않는다(제목에 파일 이름을 싣는 것은 사용자가 정할 일 — '2.0.0 — minSdk 36').
 
-**JVM 시험은 1,750건이다**(순수 JVM 625 + 안드로이드 모듈 1,125), 실패 0. 건너뜀은 표본(`samples-local/`)이 있는 저장소에서 3(윈도에서 심볼릭
+**JVM 시험은 1,763건이다**(순수 JVM 626 + 안드로이드 모듈 1,137 — 2026-11-21, 2.0.0 의 독립 검토 뒤), 실패 0. 건너뜀은 표본(`samples-local/`)이 있는 저장소에서 3(윈도에서 심볼릭
 링크를 만들 권한이 없다 — `feature:text` 1, 그리고 pyzipper 와 견주는 `feature:archive` 의 `AesZipOracleTest` 2 — 환경 변수 `IROIRO_AESZIP_ORACLE` 이
 있을 때만 돈다, '14단계 뒤 — AES 암호 ZIP'), 표본이 없는 작업 사본에서는 10(`format:epub` 4·`feature:docview` 3·`feature:text` 1·`feature:archive` 2).
 
 | 모듈 | 시험 | 모듈 | 시험 | 모듈 | 시험 |
 |---|---|---|---|---|---|
-| `core:model` | 20 | `format:archive` | 251 | `feature:archive` | 39 |
-| `core:safety` | 68 | `format:epub` | 78 | `feature:browser` | 67 |
-| `core:charset` | 39 | `format:html` | 75 | `feature:comic` | 120 |
-| `core:io` | 187 | `format:text` | 94 | `feature:docview` | 138 |
+| `core:model` | 20 | `format:archive` | 251 | `feature:archive` | 40 |
+| `core:safety` | 68 | `format:epub` | 79 | `feature:browser` | 67 |
+| `core:charset` | 39 | `format:html` | 75 | `feature:comic` | 124 |
+| `core:io` | 187 | `format:text` | 94 | `feature:docview` | 145 |
 | `core:data` | 29 | `app` | 62 | `feature:editor` | 70 |
 | `core:ui` | 106 | | | `feature:image` | 61 |
 | `core:playback` | 96 | | | `feature:player` | 29 |
 | `core:webhost` | 18 | | | `feature:settings` | 18 |
 | | | | | `feature:text` | 85 |
 
-**계측 테스트는 여섯 모듈에 167건이다** — `:core:io` 90(파일 조작·휴지통·EXDEV 25, 다른 곳에 복원 7, ZIP 만들기 9(암호 ZIP 3), 구간 저장·소리만
+**계측 테스트는 여섯 모듈에 167건이다**(2.0.0 — Android 16 에뮬레이터에서 163 통과·4 건너뜀, '2.0.0 — minSdk 36') — `:core:io` 90(파일 조작·휴지통·EXDEV 25, 다른 곳에 복원 7, ZIP 만들기 9(암호 ZIP 3), 구간 저장·소리만
 저장 20, 잘라 저장 5, 큐의 취소 4·줄 선 요청 거두기 1, 이름 겹침과 여럿 되돌리기 2, 글 저장 10(`TextSaverTest`), 그린 것 얹어 저장 1, 새 문서 서식 4
 (`NewDocumentsTest`), 편집기 저장 2(`EditorSaverTest`)), `:feature:image` 6(그리기·메모 — `MarkupRenderTest`), `:feature:archive` 29(풀기 10, 암호
 아카이브 4, tar·폴더 시각 5, 단일 압축 스트림·cpio·deb·자기 덮어쓰기 7, PATH_MAX 1, 우리가 잠근 ZIP 을 우리 풀기로 2 — `AesZipExtractTest`),
@@ -893,9 +896,8 @@ API 33 짜리 setter 넷(`setTitle`·`setSubtitle`·`setCloseAction`·`setExpand
 **암호 ZIP 의 계측 다섯**(`ZipMakerTest` 셋 — 머리 칸·빈 암호·취소, `AesZipExtractTest` 둘)은 2026-11-14 폰 에뮬레이터에서 돌아 통과했다(두 클래스 11건 모두).
 `feature:settings` 는 계측이 없다. 암호 아카이브 표본(`format/archive/src/test/resources/archivecrypt/`)과 암호 PDF 표본은 JVM 시험과
 **한 벌을 나눠 쓴다** — `feature/archive/build.gradle.kts`·`feature/docview/build.gradle.kts` 가 `src/test/resources` 를 계측 APK 의 자산으로 붙인다.
-`플랫폼이_암호를_직접_받는다` 는 API 35 전용이라 폰 AVD 에서는 `Assume` 로 건너뛰는데,
-AGP 의 XML 보고서는 그것을 `<failure>` 요소(`AssumptionViolatedException`)로 적는다 —
-빌드는 통과한다. 실패로 읽지 마라.
+`플랫폼이_암호를_직접_받는다` 는 1.0.0 때 API 35 전용이라 12 폰 AVD 에서 `Assume` 로 건너뛰었다(AGP 의 XML 보고서는 그것을 `<failure>`
+요소 `AssumptionViolatedException` 으로 적는다 — 실패로 읽지 마라). 2.0.0 은 minSdk 36 이라 그 `Assume` 를 걷었다 — 언제나 돈다.
 
 **EPUB 은 계측이 0건이다.** ZIP·XML·문자열뿐이라 전부 순수 JVM 에서 돈다 — 그것이
 `format:epub`·`format:html` 을 `format/` 에 둔 값이다. 깨진 표본을 마음껏 만들어
@@ -911,21 +913,26 @@ AGP 의 XML 보고서는 그것을 `<failure>` 요소(`AssumptionViolatedExcepti
 
 ### 에뮬레이터
 
-AVD 둘이 있다. **폰 하나만 쓴다** — 사용자가 태블릿을 양도해 태블릿 에뮬레이터 시험이 필요 없어졌다(사용자). 계측 시험·기기 확인·릴리스
-스모크는 `Android_12_Phone` 에서만 돈다.
+**폰 하나만 쓴다** — 사용자가 태블릿을 양도해 태블릿 에뮬레이터 시험이 필요 없어졌다(사용자). 2.0.0(minSdk 36)부터 계측 시험·기기 확인·
+릴리스 스모크는 `Android_16_Phone` 에서 돈다. `Android_12_Phone` 은 쓰지 않는다 — 2.0.0 이 깔리지 않는다(1.0.0 을 다시 고칠 일이 생기면 그때 그 AVD 와 1.0.0 의 커밋으로).
 
 | AVD | API | 화면 | 쓰임 |
 |---|---|---|---|
-| `Android_12_Phone` | 31 | 1080×2400 | 하한 검증. 일상 개발. **유일한 확인 기기** |
+| `Android_16_Phone` | 36 | 1080×2400 | **유일한 확인 기기**(2.0.0 부터). Web(iroiro-browser) 작업자가 시스템 이미지를 받아 만들었다 — 두 앱이 함께 쓴다 |
+| `Android_12_Phone` | 31 | 1080×2400 | 1.0.0 의 확인 기기. 2.0.0 에는 쓰지 않는다 |
 | `Android_15_Tablet` | 35 | 2560×1600 | 쓰지 않는다. AVD 는 지우지 않았다 |
 
-**그래서 기기에서 확인되지 않는 것** — API 33 이상에서만 도는 갈래다. 플랫폼이 암호 PDF 를 받는 길(`PdfRenderer` 의
-`LoadParams`, API 35)과 그 위의 PDF 찾기(`Page.searchText`), 계측 시험 `플랫폼이_암호를_직접_받는다`(폰에서는 `Assume` 으로 건너뛴다),
-앱 언어를 따로 두는 시험(`cmd locale set-app-locales`, API 33+). 사용자의 기기(Android 12)에서는 그 갈래들이 돌지 않는다
-(넓은 화면의 배치는 폰을 가로로 눕혀 본다) — 그대로 두되, 고칠 때 JVM 시험 말고는 지켜 줄 것이 없다는 것을 안다.
+**에뮬레이터는 두 앱(Files·Web)이 나눠 쓴다** — `C:\Users\hidon\Downloads\emu-lock` 을 배타적으로 만들어 잡았을 때만 띄우고(있으면 다른 작업자가 쓰는
+중이다 — 기다린다), 끝나면 에뮬레이터를 끄고 지운다. 띄울 때 PC 의 프록시 환경 변수를 뺀다(에뮬레이터가 물려받으면 `10.0.2.2` 에 닿지 못한다):
+`env -u HTTP_PROXY -u HTTPS_PROXY -u NO_PROXY -u http_proxy -u https_proxy -u no_proxy "$LOCALAPPDATA/Android/Sdk/emulator/emulator.exe" -avd
+Android_16_Phone -gpu host -feature -Vulkan`(Vulkan 을 끄는 것은 크롬 영상에서 qemu 가 죽은 일 때문이다).
+
+1.0.0 때 기기에서 확인되지 않던 API 33·35 의 갈래(플랫폼이 암호 PDF 를 받는 길, PDF 찾기, `플랫폼이_암호를_직접_받는다`, 앱 언어를 따로 두는 시험)는
+2.0.0 에서 **유일한 길**이 되었고 Android 16 에뮬레이터에서 돈다(넓은 화면의 배치는 폰을 가로로 눕혀 본다).
 
 ```bash
-"$ANDROID_HOME/emulator/emulator.exe" -avd Android_12_Phone -no-snapshot-load -gpu auto &
+env -u HTTP_PROXY -u HTTPS_PROXY -u NO_PROXY -u http_proxy -u https_proxy -u no_proxy \
+  "$LOCALAPPDATA/Android/Sdk/emulator/emulator.exe" -avd Android_16_Phone -gpu host -feature -Vulkan &
 adb install -r C:/.../app/build/outputs/apk/release/app-release.apk
 adb shell appops set io.github.donggi.iroiroviewer MANAGE_EXTERNAL_STORAGE allow
 adb shell am start -n io.github.donggi.iroiroviewer/.MainActivity
@@ -1032,10 +1039,10 @@ S 확장 = 1, R 확장 = 1 → **레거시 `PdfRenderer` 경로**(암호 PDF 불
 `sdks` 속성이 없다. 즉 **우리가 부르는 API 는 확장 수준과 무관하게 같은 것 하나**이고, 분기를 넣어 봐야 같은 호출을
 세 번 적는 일이 된다. 확장 13 이상이 주는 것은 암호 PDF 열기(`loadParams`)와 폼·주석 편집이다.
 
-**암호 PDF 때문에 분기가 하나 있다** — 암호를 받는 생성자 `PdfRenderer(pfd, LoadParams)` 는 **API 35 프레임워크**에만 있다(그 생성자에는
-`sdks` 가 없다). 35 이상은 플랫폼이 풀고, 그 아래는 우리가 풀어 메모리 파일로 넘긴다(아래 '암호가 걸린 파일'). 확장 13 의
-`PdfRendererPreV` 는 쓰지 않는다. 두 갈래 모두 에뮬레이터에서 돌려 확인했다(35 갈래는 태블릿 AVD — 지금은 기기에서 돌지 않는다, 위
-'에뮬레이터'). `@RequiresApi(35)` + `SDK_INT` 검사라 `NewApi` 는 0건이다.
+**1.0.0 은 암호 PDF 때문에 분기가 하나 있었다** — 암호를 받는 생성자 `PdfRenderer(pfd, LoadParams)` 는 **API 35 프레임워크**에만 있다(그
+생성자에는 `sdks` 가 없다). 35 이상은 플랫폼이 풀고, 그 아래는 우리가 풀어 메모리 파일로 넘겼다(아래 '암호가 걸린 파일'). **2.0.0(minSdk 36)은
+그 갈래를 걷었다** — 플랫폼이 먼저 받고, 우리 복호화기는 플랫폼이 거절한 암호를 우리 후보로 한 번 더 해 볼 때와 빈 암호로 풀리는 문서에만 돈다.
+같은 프레임워크 35 의 `Page.searchText`(찾기)·`Page.getGotoLinks`(문서 안 링크)도 갈래 없이 쓴다. 확장 13 의 `PdfRendererPreV` 는 쓰지 않는다.
 
 ### 목록 성능 (Android 12 에뮬레이터, 파일 10,000개 폴더)
 
@@ -1291,7 +1298,7 @@ Room 을 왕복하는 이어보기·읽는 방향만 계측이다.
 | PiP 는 **자동과 단추 둘 다** | 자동 진입은 '계속 보려고 나간다' 는 추측이라 `isPlaying` 을 조건에 넣고, 단추는 명시라 넣지 않는다. 목록이 펼쳐져 있으면 둘 다 들어가지 않는다 — 그 상태에서는 표면이 컴포지션에 없어 **영상 없는 창**이 뜬다. 그 판정이 컴포지션 안에 있으면 목록이 열릴 때 함께 사라지므로 목록 여닫음은 **액티비티가 든다** |
 | PiP 에서 큐가 소리로 넘어가면 **창을 닫는다** | 판정을 `hasVideo` 로 하지 않는다 — PiP 의 '다음' 을 눌러 영상 → 영상으로 넘기기만 해도 창이 사라진다. 큐가 실어 보내는 종류(`State.currentKind`)는 **항목이 실제로 바뀔 때만** 달라진다 |
 | '들어가려 한다' 와 '들어가 있다' 를 가른다 | 그리기용 낙관값(`pipCollapsing`)과 확인된 상태를 한 값이 겸하면 진입이 거절된 순간에도 창 판정이 참이 된다 |
-| PiP 진입 **전에** 위층을 접는다 | `onPictureInPictureModeChanged` 는 애니메이션이 끝난 뒤 오고 시작 시점 콜백은 API 35 다. minSdk 31 에서 첫 프레임에 조작부가 찍히는 것을 막을 방법은 우리가 먼저 접는 것뿐이다. 진입이 거절된 길은 `onResume` 이 편다 — **되돌리는 코드가 없으면 조작부도 제스처도 없는 화면이 남는다** |
+| PiP 진입 **전에** 위층을 접는다 | `onPictureInPictureModeChanged` 는 애니메이션이 끝난 뒤 온다. 단추로 들어갈 때는 부르기 전에 우리가 접고, 자동 진입(홈)은 시작 시점 콜백(`onPictureInPictureUiStateChanged` 의 `isTransitioningToPip`, API 35)이 접는다 — 1.0.0(minSdk 31)은 그 콜백이 없어 자동 진입의 첫 프레임을 지키지 못했다. 진입이 거절된 길은 `onResume` 이 편다 — **되돌리는 코드가 없으면 조작부도 제스처도 없는 화면이 남는다** |
 
 **재생목록이 보여야 한다 — 사용자가 VLC 를 들어 지적한 것이다.** '만들어 놓고 차례로 트는 것' 뿐이면 다음/이전으로만 움직일 수 있고,
 18곡짜리 폴더에서 16번째를 들으려면 열다섯 번을 눌러야 한다. VLC 를 비롯한 재생기들이 **재생목록을 화면 본체로 두는** 이유가 그것이다 —
@@ -1427,7 +1434,7 @@ Room 을 왕복하는 이어보기·읽는 방향만 계측이다.
 
 | 무엇 | 왜 그렇게 했나 |
 |---|---|
-| 복호화기를 **직접 쓴다**(`docview/pdf/crypt/`, 순수 코틀린) | API 34 이하의 `PdfRenderer` 는 암호를 받지 않는다. PdfBox-Android 는 채택하지 않기로 한 목록에 있다 |
+| 복호화기를 **직접 쓴다**(`docview/pdf/crypt/`, 순수 코틀린) | API 34 이하의 `PdfRenderer` 는 암호를 받지 않는다(1.0.0 의 대상). 2.0.0(minSdk 36)에서는 플랫폼이 거절한 암호를 우리 후보로 한 번 더 해 볼 때·빈 암호로 풀리는 문서·글 고르기만 이것을 지난다. PdfBox-Android 는 채택하지 않기로 한 목록에 있다 |
 | 암호 PDF 를 **평문 PDF 로 다시 쓴다** | pdfium 은 우리 복호화 함수를 부를 수 없다. 문자열·스트림만 풀고 나머지는 글자 그대로 옮긴 뒤 `/Encrypt` 를 빼고 xref 를 새로 쓴다. 스트림은 **압축된 채로** 옮긴다(풀면 메모리 파일이 몇 배로 부푼다) |
 | 쓰는 곳은 **memfd** | 평문을 저장소에 쓰지 않는다(아래 '암호가 걸린 파일'). `Os.memfd_create` 는 API 30 부터이고 앱 샌드박스(untrusted_app)에서 돈다(계측 시험 `메모리_파일_경로가_이_기기에서_돈다`). 렌더 디스패처에 줄 선 채 취소되면 블록이 돌지 않으므로, 받지 않은 서술자는 닫는다 |
 | API 35 는 **플랫폼 먼저** | `PdfRenderer(pfd, LoadParams)` — 평문 사본이 없다. 거절하면 우리 것으로 한 번 더(후보가 더 많다). 그 뒤의 실패는 '틀렸다' 다 |
@@ -1509,11 +1516,11 @@ format-corpus(CC0), IDPF·W3C 의 EPUB 시험(CC BY-SA — 로컬에서만 쓴�
 | 설정(`feature:settings`, 새 모듈) | 파일 목록·텍스트 뷰어 기본값·만화의 새 책 방향·문서 보기(글자 70~200%·여백·바탕 넷)·기록 지우기(확인 대화상자)·크래시 기록·정보(판·고지·진단). 쓰기는 `Deferred<Boolean>` 을 돌려주고 화면이 기다려 알린다 — 사건 채널로 두면 화면이 사라진 뒤 끝난 결과가 다음에 설정을 열 때 뜬다. 고지·진단에 다녀오면 설정 화면이 컴포지션에서 빠지므로 스크롤 자리를 액티비티에 묶인 VM 에 맡긴다 |
 | 크래시 기록(`core:data` 의 `CrashLog`) | `attachBaseContext` 에서 걸고 앞의 처리기를 잇는다(두 번 불려도 한 겹, 어느 길로도 던지지 않는다). `filesDir/crash/` 에 최근 5건·한 건 64 KiB, 임시 파일 → fsync → rename. 절대경로와 `content:`·`file:` 주소는 `<경로>` 로 지운다. **화면에는 건수와 마지막 시각만** 보이고, 공유는 캐시의 사본으로 한다(잠근 채로 덮어쓰고, 만드는 동안 단추를 막는다) |
 | 고지(`app` 의 `NoticeScreen`·`NoticeCatalog`) | 릴리스 런타임 클래스패스의 좌표. 라이선스는 Gradle 캐시의 POM·jar 에서만 읽었다(Apache-2.0 · 0BSD(XZ) · UnRAR · MIT(SLF4J API) · BSD 3-Clause(DataStore 의 protobuf), Commons 넷의 NOTICE). **한컴 문서 명세의 고지 문장**을 싣는다 — 함정 표의 '명세가 요구한 문장'. 편집기 엔진의 고지는 아래 '…뷰어 교체' |
-| 릴리스 | 1.0.0(판 코드 2). 서명은 그대로 디버그 키다 — 바꾸면 설치된 앱을 지우고 깔아야 해 기록이 사라진다. 사용자가 정할 때 한 번 |
+| 릴리스 | 1.0.0(판 코드 2) — Android 12 폰의 마지막 판. **2.0.0(판 코드 3)** 은 minSdk 36(아래 '2.0.0 — minSdk 36'). 서명은 그대로 디버그 키다 — 바꾸면 설치된 앱을 지우고 깔아야 해 기록이 사라진다. 사용자가 정할 때 한 번 |
 | 파일 관리자 | **당겨서 새로고침**(목록·격자·갤러리·휴지통. `PullToRefreshBox` 가 아니라 `Modifier.pullToRefresh` 다 — material3 1.4.0 의 상자에는 `enabled` 가 없어 고르는 중에 끌 수 없다. 짧은 목록에서도 당겨진다)과 ⋮ 메뉴의 '새로고침'(화면 낭독기로는 몸짓을 찾을 수 없다). 폴더 감시(`FolderWatch` — `FileObserver` + 디바운스, 우리 임시 파일은 무시)와, 앞으로 돌아올 때 폴더의 수정 시각이 바뀌었을 때만 다시 읽기(실패한 나열의 시각도 들어 막힌 폴더를 매번 다시 읽지 않는다). 휴지통 자동 비우기(JobScheduler — `TrashPurgeJob`, 하루 한 번·유휴 조건, 조용한 작업이라 포그라운드 서비스를 띄우지 않는다). '다른 곳에 복원'. 풀기 뒤 '열기'. 목록의 읽던 쪽 배지(`12/30쪽`·`50%`·`다 읽음` — 이어보기 키로 찾고 경로를 쓰지 않는다. 자리가 하나뿐인 문서에는 달지 않는다) |
 | 텍스트 | 기본값을 설정에서 시작하고 바꾸면 적는다. 찾기 진행률(찾을 말을 바꾸면 돌던 찾기를 멈추고 번호를 바꾼다, 색인이 아는 행까지만 훑는다 — 자라는 로그에서도 끝난다). 줄 끝 표시(LF `↓`·CRLF `⏎`·CR `←`, 찾기·강조 좌표 밖). **마크다운 미리보기** — `format:text` 의 순수 JVM 변환기(CommonMark 줄 알고리즘·구분자 쌓기 + GFM 표·취소선·할 일). 날것의 HTML 은 글자로 보이고(명세와 다르다), 누를 수 있는 것은 `#자리` 뿐이며, 그림은 그 폴더 아래의 상대 경로만 보인다. 문서와 같은 잠긴 WebView 에서 돌고, 글자 크기는 `textZoom` 으로 그 자리에서 건다(다시 만들면 읽던 자리가 맨 위로 간다). 공백은 명세대로 공백·탭·줄 끝만 벗긴다(코틀린의 `trim()` 은 전각 공백·NBSP 까지 벗겨 일본어의 전각 들여쓰기가 사라졌다) |
 | 만화 | 새 책의 기본 방향(책의 기록이 이긴다 — `ReadingStart.decide`). 두 쪽 보기(한 쪽·두 쪽·자동. 표지는 혼자 서고, 짝은 쪽 번호만으로 정하며, 오→왼이면 앞 쪽이 오른쪽. 반쪽 하나의 몫이 `pageCap/2` 라 펼침 넷이 한 장짜리 넷과 같은 바이트다. 반쪽은 자리에 맞춘 크기로 뜬다 — `SpreadMath.halfSize`, 2의 거듭제곱 표본이면 1.2~1.8배 늘어나 흐리다. 두 쪽으로 뛰면 뛰어든 자리에서 세 쪽 물러서 창을 연다 — 페이저가 앞 칸 두 쪽을 함께 띄운다). 쪽 목록(격자. 디스크에 쓰지 않고, solid 는 아카이브 차례로 한 번 훑는다). 다음 권(파일 관리자의 이름 차례에서 지금 책 바로 뒤 — 권 번호를 이름에서 읽지 않는다. ⋮ 메뉴와, 끝에 닿았을 때의 알림) |
-| 문서 뷰어 | 읽기 모양(글자는 `textZoom` — 책의 CSS 와 싸우지 않고 다시 읽지도 않는다, 여백·바탕은 위생을 거친 CSS)과 뷰어 안의 '보기'. 장 안쪽 위치(`locator` = `장:비율`, 경로·글을 적지 않는다 — 비율이라 글꼴 크기를 바꾸면 조금 어긋난다. CFI 는 만들지 않았다). 고정 레이아웃 EPUB(쪽의 뷰포트 — 없으면 OPF 의 `rendition:viewport` — 로 화폭을 정하고 화면에 맞춘다. 한 번 알린다). PDF 두 쪽 보기·쪽 목록·**API 35 에서만** 찾기 |
+| 문서 뷰어 | 읽기 모양(글자는 `textZoom` — 책의 CSS 와 싸우지 않고 다시 읽지도 않는다, 여백·바탕은 위생을 거친 CSS)과 뷰어 안의 '보기'. 장 안쪽 위치(`locator` = `장:비율`, 경로·글을 적지 않는다 — 비율이라 글꼴 크기를 바꾸면 조금 어긋난다. CFI 는 만들지 않았다). 고정 레이아웃 EPUB(쪽의 뷰포트 — 없으면 OPF 의 `rendition:viewport` — 로 화폭을 정하고 화면에 맞춘다. 한 번 알린다). PDF 두 쪽 보기·쪽 목록·찾기(1.0.0 은 API 35 에서만 — 2.0.0 은 언제나)·문서 안 링크(2.0.0) |
 | 압축 | **tar 계열**(`.tar`·`.tar.gz`/`.tgz`·`.tar.bz2`/`.tbz2`·`.tar.xz`/`.txz`, 그리고 `.cbt` 만화). 머리는 우리가 읽고 해제기만 라이브러리를 쓴다 — commons-compress 의 `TarArchiveInputStream` 은 메타 머리(긴 이름·PAX)를 적힌 크기만큼 모으고, 이름의 원본 바이트를 주지 않고, 링크의 크기 칸을 믿는다. 이름 상한은 머리 하나에 64 KiB, 한 번 훑는 동안의 합 16 MiB(이어 붙인 PAX 의 희소 열쇠까지). PAX 시각은 64자·밀리초 범위를 넘으면 머리의 시각을 쓴다(`BigDecimal.toLong` 은 넘쳐도 말하지 않는다). 압축 안 한 tar 는 번호로 열고, 압축 tar 는 흐름이라 solid 7z 와 같은 길이다(목록·건너뛰기가 총량 상한에 묶인다 — 풀린 크기가 1 GiB 를 넘는 `.tar.gz` 는 '풀어야 할 양이 너무 커서 열지 않았습니다'). 링크·장치·희소 파일은 풀지 않고 링크로 센다. 풀기 뒤 **폴더 수정 시각**(이번 풀기가 만든 폴더 가운데 아카이브에 시각이 적힌 것만, 깊은 것부터 마지막에 — 원래 있던 폴더의 시각은 사용자의 것이다). **진행률의 분모**는 아카이브에서 실제로 읽은 바이트다(RAR 은 선언값, 미검증). **인코딩 판정을 하나로** — `EntryNameDecoder` 가 `core:charset` 의 `CharsetDetector` 를 부른다(아래 '모듈 구조') |
 | 이미지 | 이미지 뷰어가 GIF·애니WebP 를 튼다 — 자리 잡은 장 하나만 돌고, 버퍼 셋이 한 화면 크기 비트맵에 들 때까지 표본을 줄이며, 그래도 안 들면 첫 장면과 까닭을 보인다(까닭 문구는 그것을 만드는 `AnimationPlan.StillReason` 곁 `core:ui` 에 한 벌 — 만화 뷰어의 APNG 문구도 그것을 쓴다). 확대도 된다(`ZoomablePainter` — hwui 는 드로어블을 표시 목록에 한 번 기록하고 프레임은 RenderThread 가 넘긴다. 만화 뷰어는 그대로 막는다). APNG 은 첫 장면과 고지. **아래로 끌어 닫기**(배율 1 에서만, 인식기 하나가 터치 슬롭에서 축을 한 번 정한다. 뷰포트의 15% 를 넘기거나 1000 dp/s 로 튕기면 닫는다. 되돌리는 애니메이션은 장이 아니라 상태가 든다 — `DismissState`. 만화 뷰어에는 넣지 않았다). 썸네일 부정 캐시가 일시·영구·불확실을 가른다(`ThumbnailFailures` — 영구는 디코더가 바이트를 거절한 것뿐, OOM·입출력은 2초부터 두 배씩 10분까지 물러난다). 확대 조각이 EXIF 여덟 방향을 다 옮긴다 — 디코더가 방향을 적용했는지는 조각이 처음 필요할 때 두 디코더로 작게 떠 견준다(`OrientationMatch` — 한쪽이 뚜렷할 때만 답하고, 모르면 조각 없이 흐리게 둔다) |
 
@@ -1691,7 +1698,7 @@ CSS 문자열 안의 `url(` 은 `none` 으로 바꾸지 않고, 깨진 `url(` �
 | 화면은 **같은 `Root`** 를 그 뷰어에서 시작한다(`Opened`) | 뷰어를 따로 이으면 `Root` 의 배선(스낵바 불변식·작업 결과·고지·압축에서 만화로)이 두 벌이 된다. 닫으면 끝난다 — 받은 압축에서 연 만화만 그 압축 목록으로 돌아간다. 파일 목록에 속한 일(권한 화면·알림 권한·휴지통 정리·푼 폴더로 가기)은 하지 않는다 |
 | **제자리 먼저, 아니면 사본** | 뷰어가 전부 경로를 받는다(pdfium 은 되감는 서술자, 압축·만화는 임의 접근). 저장소 문서·내려받기·미디어 저장소는 경로를 정해진 모양으로 적어 제자리로 연다(모든 파일 접근 권한이 있을 때). 남의 제공자는 URI 안에 `/storage/…` 가 통째로 있고 이름·크기가 같을 때만 믿는다. 그 밖은 `cacheDir/share/inbox/<uuid>/` 에 복사한다. 이름이 종류를 말하지 않고 형식은 알면 **그 자리에서** 복사해 확장자를 붙인다(`file:`·content 둘 다) |
 | 사본은 **읽기 전용**이고 화면이 끝나면 지운다 | 지우기·회전·풀기를 내지 않는다 — 보낸 쪽의 원본이 아니고, 캐시는 사용자가 찾아갈 수 없는 자리다. 공유·다른 앱으로 열기는 된다(`share/` 아래라 FileProvider 가 내준다). 메일의 명세서 같은 첨부가 캐시에 쌓이지 않게 지운다. 다 만드는 그 순간 경로를 넘기고(`onCopied`) 취소를 한 번 더 본다 — 받은 쪽이 끝났으면 거기서 지운다. 재생기에 넘긴 사본만 남기고 하루 뒤(그리고 프로세스가 설 때) 치운다 — 재생기가 지금 든 파일(`FileKey` 로 견준다)은 남긴다 |
-| 받는 형식은 그림·소리·영상·글의 계열, 이 앱(과 편집기)이 여는 문서·압축·만화, `octet-stream`. **APK·글꼴은 받지 않는다** — 그래도 **설치 파일이 오면 열지 않는다**(이름이든 내용이든 — `refusalOf`, '14단계 뒤 — 보안 점검 고침') | 받으면 우리 '다른 앱으로 열기' 가 우리를 다시 고른다. 필터는 이름을 가리킨 인텐트에 듣지 않고(안드로이드 12) 이름을 바꾼 APK 는 다른 형식으로 온다 — 받은 APK 를 설치 관리자에 넘기면 보낸 앱이 이 앱의 설치 권한을 빌려 쓴다. 공유(SEND)는 문서·압축·만화와 `octet-stream` 만 받는다 — 사진·영상의 공유 목록은 메신저로 보내는 자리라 뷰어가 끼면 거슬리고, `text/plain` 을 받으면 브라우저의 주소 공유마다 이 앱이 선다. 옛 오피스·ODF 여섯(doc·xls·ppt·odt·ods·odp)도 VIEW·SEND 로 받는다 — 편집기가 보기 모드로 연다(`ReceiveFiltersTest` 가 편집기 형식 표와 견준다) |
+| 받는 형식은 그림·소리·영상·글의 계열, 이 앱(과 편집기)이 여는 문서·압축·만화, `octet-stream`. **APK·글꼴은 받지 않는다** — 그래도 **설치 파일이 오면 열지 않는다**(이름이든 내용이든 — `refusalOf`, '14단계 뒤 — 보안 점검 고침') | 받으면 우리 '다른 앱으로 열기' 가 우리를 다시 고른다. 필터는 이름을 가리킨 인텐트에 듣지 않고(16 의 `intentMatchingFlags` 는 받는 앱이 켜야 하고 이 앱은 켜지 않았다) 이름을 바꾼 APK 는 다른 형식으로 온다 — 받은 APK 를 설치 관리자에 넘기면 보낸 앱이 이 앱의 설치 권한을 빌려 쓴다. 공유(SEND)는 문서·압축·만화와 `octet-stream` 만 받는다 — 사진·영상의 공유 목록은 메신저로 보내는 자리라 뷰어가 끼면 거슬리고, `text/plain` 을 받으면 브라우저의 주소 공유마다 이 앱이 선다. 옛 오피스·ODF 여섯(doc·xls·ppt·odt·ods·odp)도 VIEW·SEND 로 받는다 — 편집기가 보기 모드로 연다(`ReceiveFiltersTest` 가 편집기 형식 표와 견준다) |
 | 우리를 **빼는** 자리 | `ExternalOpen` 이 곧바로 여는 길(시스템의 '다음으로 열기' 에서는 우리를 뺄 수 없어, 우리가 그 MIME 을 받으면 우리를 뺀 고르는 창으로 간다 — `ownTakes`, `.mts`·`.psd` 처럼 '기타' 인데 영상·그림 형식인 것)과 공유 창(`ShareHelper`) |
 | 내보낸 두 액티비티는 **인텐트 extras 를 저장 상태로 넘기지 않는다**(`withoutIntentArgs`) | 함정 표 'AndroidX 의 ViewModel 은 인텐트 extras 를 …'. 되살린 경로는 입출력 스레드에서 한 번 더 본다(`IncomingFiles.stillUsable` — 사본이면 우리 사본 폴더 안, 제자리면 지금도 제자리). 권한자 앞의 사용자 번호(`0@`)는 떼고 견준다(`IncomingFiles.authorityOf` — 아니면 '우리 제공자 거절' 을 비켜 간다) |
 | 작업 결과를 **앞에 있을 때만** 받는다 | 함정 표의 '`FileOpManager.results` 는 한 줄을 나눠 받는다'. 앞에 아무도 없는 동안 끝난 결과는 줄에 남았다가 돌아오면 뜬다. 지울 썸네일 키는 프로세스에 하나로 둔다(`BrowserViewModel` 의 companion — 다른 액티비티가 결과를 받아도 무효화를 놓치지 않는다) |
@@ -1712,7 +1719,7 @@ CSS 문자열 안의 `url(` 은 `none` 으로 바꾸지 않고, 깨진 `url(` �
 | ″ 복사 | 받은 글을 쓰지 않고 **조각 목록으로 다시 잇는다**(`RowCopy`, `RowClipboard` 가 `LocalClipboard` 를 가로챈다) | Compose 는 `Text` 마다의 조각을 줄바꿈 하나로 잇는다(함정 표). 행의 글에 문자열 주석(표시의 자리·잇는 행)을 달고 `SelectionState.selectedTexts`(조각마다 주석이 살아 있다)로 잇는다. 빈 조각에도 주석이 남는 것은 JVM 시험이 박는다 |
 | ″ '모두 선택' | 막대에서 **뺐다**(`filterTextContextMenuComponents`) | 이 목록은 창(400행)만 읽어 두어 그것이 고르는 것은 지금 그려진 행뿐이다. '모두' 라고 적힌 단추가 파일의 일부만 고르면 거짓말이다 |
 | ″ 창이 옮겨 간 행 | 칸마다 마지막으로 그린 행을 든다(`HeldRow`) | 붙들린 행이 VM 의 창 밖이 되면 `rowAt` 이 null 이 되어 고른 글이 조용히 빠진다 |
-| PDF | **우리가 쪽의 글자와 자리를 꺼낸다**(`docview/pdf/text` — 순수 코틀린, 11단계의 해석기 위). 길게 누른 자리의 낱말 → 손잡이 둘 → 시스템의 떠 있는 막대(`LocalTextToolbar` — 복사·모두 선택) | 레거시 `PdfRenderer`(API 34 이하 — 사용자의 기기)는 글자를 주지 않는다. 내용 스트림에서 글자의 자리를 정하는 연산자(`BT`·`Tf`·`Td`·`Tm`·`TJ`·`cm`·`q`/`Q`·`Do`)만 돌고 색·선·그림은 건너뛴다. 글꼴은 `/ToUnicode` → `/Differences`(글리프 이름) → 기본 인코딩 → 미리 정의된 CMap 의 문자 인코딩(`KSCms-UHC-H` 는 CP949 로 읽는다) 차례로 글자를 찾고, 폭은 `/Widths`·`/W` 로 잰다. 폼은 `Do` 를 부른 자리의 상태를 복사해 행렬만 바꿔 시작한다(명세 8.10.1). 누른 자리 찾기는 띄어쓰기를 건너뛴다 |
+| PDF | **우리가 쪽의 글자와 자리를 꺼낸다**(`docview/pdf/text` — 순수 코틀린, 11단계의 해석기 위). 길게 누른 자리의 낱말 → 손잡이 둘 → 시스템의 떠 있는 막대(`LocalTextToolbar` — 복사·모두 선택) | 레거시 `PdfRenderer`(API 34 이하 — 1.0.0 의 대상이던 Android 12 폰)는 글자를 주지 않는다. 2.0.0(minSdk 36)부터 플랫폼의 `getTextContents`·`selectContent` 도 있으나 고르기는 이 길로 남겼다(말뭉치로 검증한 길 — 바꾸면 손잡이·낱말·복사를 새로 세운다). 내용 스트림에서 글자의 자리를 정하는 연산자(`BT`·`Tf`·`Td`·`Tm`·`TJ`·`cm`·`q`/`Q`·`Do`)만 돌고 색·선·그림은 건너뛴다. 글꼴은 `/ToUnicode` → `/Differences`(글리프 이름) → 기본 인코딩 → 미리 정의된 CMap 의 문자 인코딩(`KSCms-UHC-H` 는 CP949 로 읽는다) 차례로 글자를 찾고, 폭은 `/Widths`·`/W` 로 잰다. 폼은 `Do` 를 부른 자리의 상태를 복사해 행렬만 바꿔 시작한다(명세 8.10.1). 누른 자리 찾기는 띄어쓰기를 건너뛴다 |
 | ″ 좌표 | 보이는 쪽의 포인트(자르기 상자의 왼쪽 위, `/Rotate` 반영) → 가상 쪽의 비율 → 화면 | pdfium 이 쪽을 그리는 상자·방향과 같아야 상자가 글자에 앉는다. 화면 변환은 `ZoomableImage`·`SearchHighlights` 와 같은 식이다(`PdfSelectionMath`, JVM 시험). 손잡이 층은 제 `Box(fillMaxSize)` 안에 둔다(함정 표) |
 | ″ 범위 | 쪽 하나 안에서만. 쪽을 넘기면 풀린다. 두드리면 풀린다(막대를 여닫지 않는다). 뒤로 가기가 먼저 푼다. 꺼낸 뒤 그 칸이 아직 자리 잡은 칸일 때만 세운다 | 쪽을 넘는 선택은 손잡이를 끌어 페이저를 넘기는 일과 겹친다(구글의 PDF 뷰어도 쪽마다다) |
 | ″ 원본 | 평문 PDF 는 그 파일, 우리가 푼 암호 PDF 는 **메모리 파일의 복제 서술자**(문서가 닫을 때 닫는다 — 주인이 바뀌기 전까지 `finally` 가 닫는다), 소유자 암호만 걸린 파일은 글 꺼내기가 빈 암호로 푼다 | API 35 에서 **플랫폼이 직접 푼** 암호 문서는 평문이 우리 손에 없어 고를 수 없다 — '이 문서에서는 글을 고를 수 없습니다' |
@@ -1721,8 +1728,8 @@ CSS 문자열 안의 `url(` 은 `none` 으로 바꾸지 않고, 깨진 `url(` �
 | EPUB | **고칠 것이 없었다** — WebView 가 처음부터 길게 눌러 고르고 복사한다 | 기기에서 확인했다(가로쓰기·세로쓰기 모두). 링크 위를 길게 누르면 고르기가 시작되지 않는다 — 브라우저의 관례다 |
 
 복사는 두 뷰어 모두 **20만 자**에서 끊는다(넘으면 넣지 않고 말한다) — 클립보드는 바인더로 건너가 1 MB 를 넘으면
-`TransactionTooLargeException` 이고, Compose 의 복사는 그것을 잡지 않아 앱이 죽는다. '복사했습니다' 는 **안드로이드 12 이하에서만**
-띄운다 — 13 부터는 시스템이 클립보드에 넣는 순간 스스로 보여 준다(공식 안내가 앱이 겹쳐 알리지 말라고 한다).
+`TransactionTooLargeException` 이고, Compose 의 복사는 그것을 잡지 않아 앱이 죽는다. '복사했습니다' 는 **띄우지 않는다** — 13 부터는
+시스템이 클립보드에 넣는 순간 스스로 보여 준다(공식 안내가 앱이 겹쳐 알리지 말라고 한다. 1.0.0 은 12 에서만 띄웠고 2.0.0 이 그 문구를 걷었다).
 
 **ZIP 만들기**(`core:io` 의 `ZipMaker`, 큐의 `Request.Compress`). 파일 목록에서 고른 것들 → ⋮ → 'ZIP으로 압축' → 이름(하나면 그 이름, 여럿이면
 지금 폴더의 이름) → 큐가 돈다(진행·취소·포그라운드 서비스는 복사와 같다) → '압축했습니다: 이름.zip'.
@@ -1897,8 +1904,8 @@ CSS 문자열 안의 `url(` 은 `none` 으로 바꾸지 않고, 깨진 `url(` �
 |---|---|
 | 편집기는 이 앱의 모듈이다 — 같은 APK·같은 UID. 화면(`EditorActivity`)은 **따로 된 프로세스 `:editor`** 에서 돈다 | 큰 웹 편집기의 WebView·렌더러 메모리(수백 MB)를 파일 쪽과 가르고, WebView 자료 폴더도 따로 쓴다(`WebView.setDataDirectorySuffix("editor")` — 한 앱의 두 프로세스가 같은 폴더를 쓰면 WebView 가 던진다). 그 프로세스는 `IroiroApp` 의 조립·정리를 건너뛴다(받은 사본 치우기가 주 프로세스 재생기의 파일을 모르고 지울 수 있다) |
 | 길 — 인텐트(`EditorApp.intent`)·저장 자리(`EditorSlotProvider`, 주 프로세스)·`EditorSaver` | 두 프로세스를 잇는 것이 저장 자리 제공자다. 편집기는 부른 쪽이 이 앱인지 본다(`callingActivity` — 화면을 내보내지 않는다). 아래 '편집기와의 길' |
-| 엔진 묶음은 `vendor/editor/assets`(git 무시) — `tools/editor/` 가 짓는다 | rhwp(MIT)·ONLYOFFICE 편집기와 x2t(AGPL-3.0)·글꼴(OFL·Apache·GUST). 묶음이 없으면 시험 엔진(probe)만 든 빌드가 되고 형식 목록이 비어 아무것도 넘기지 않는다. 고지 화면의 '편집기 엔진' 이 묶음의 licenses 를 펼친다(엔진 명세 문장은 묶음이 든 빌드에만, 상표 문장은 따로 늘 — 그 출처는 확인하지 못했다). 묶음이 든 릴리스 APK 는 약 76 MB 다(거의 다 엔진이다 — 엔진 없이는 약 8 MB) |
-| 엔진 판 — rhwp **0.8.7**, ONLYOFFICE 는 CryptPad 빌드 **9.3.2+3**(편집기·x2t). 새 판은 `python -I tools/editor/check_updates.py` 가 알린다 | rhwp 0.9.0 은 지어 보고 되돌렸다(2026-11-14) — 글꼴이 HYhwpEQ 인 수식(한컴 수식의 기본)의 숫자·기호를 그 글꼴의 사용자 영역 글자로 그려, 그 글꼴이 없는 기기에서 네모로 나왔다(`build_rhwp.py` 머리말). 판을 올리면 수식 문서·옛한글·큰 HWP 를 에뮬레이터에서 먼저 본다. ONLYOFFICE 는 CryptPad 가 새 빌드의 해시를 내야 올린다(`build_onlyoffice.py` 는 그 해시와 견준다) — 본가의 9.4·10.0 보안 고침은 그때 들어온다 |
+| 엔진 묶음은 `vendor/editor/assets`(git 무시) — `tools/editor/` 가 짓는다 | rhwp(MIT)·ONLYOFFICE 편집기와 x2t(AGPL-3.0)·글꼴(OFL·Apache·GUST). 묶음이 없으면 시험 엔진(probe)만 든 빌드가 되고 형식 목록이 비어 아무것도 넘기지 않는다. 고지 화면의 '편집기 엔진' 이 묶음의 licenses 를 펼친다(엔진 명세 문장은 묶음이 든 빌드에만, 상표 문장은 따로 늘 — 그 출처는 확인하지 못했다). 묶음이 든 릴리스 APK 는 약 85 MB 다(거의 다 엔진이다 — 엔진 없이는 약 8 MB. rhwp 0.9.1 로 올리며 약 9 MB 늘었다 — wasm 이 커졌다) |
+| 엔진 판 — rhwp **0.9.1**, ONLYOFFICE 는 CryptPad 빌드 **9.3.2+3**(편집기·x2t). 새 판은 `python -I tools/editor/check_updates.py` 가 알린다 | rhwp 0.9 는 글꼴이 HYhwpEQ·HancomEQN 인 수식(한컴 수식의 기본)의 숫자·기호·기울인 글자를 그 글꼴의 사용자 영역 글자로 그려, 그 글꼴이 없는 기기에서 네모로 나왔다(0.9.0 은 그래서 되돌렸다 — 2026-11-14). 0.9.1 은 **수식 대체 글꼴**과 함께 올렸다(2026-11-21): `tools/editor/make_eq_font.py` 가 빌드 때 rhwp 소스의 표(`hancom_glyphs.rs`·`hancom_eqn_metrics.rs`)를 읽어 STIX Two Math 2.13(OFL 1.1)의 글리프를 그 코드 자리에 담은 woff2 둘(각 10~15 KB — 전진 폭은 표대로, rhwp 가 기준선을 옮겨 그리는 글자는 반대로 옮긴다)을 짓고, 스튜디오의 웹 글꼴 목록·처음 싣는 목록에 'HyhwpEQ'·'HancomEQN' 으로 넣는다(`vite.config.mjs` 의 `equationFonts` — 스튜디오가 캔버스의 font 를 가로채 등록되지 않은 가족을 지우기 때문이다), 인쇄 쪽(`print.html`)에도 @font-face 를 둔다. 표의 알려진 꼴이 바뀌거나 코드 갈래가 늘면 빌드가 멈춘다(기준선 이동은 rhwp 가 런 단위로 정하고 글꼴은 글자 단위로 굳혔다 — 연산자가 한 글자씩 런인 동안만 같다). fontTools 는 `local/editor/eqfont/venv`(git 무시) 안에만 둔다(`tools/editor/eqfont-requirements.txt` — 판과 바퀴의 SHA-256 을 고정하고 `--require-hashes` 로 깐다. 윈도 x64 CPython 3.12~3.14 의 바퀴만 적었다 — 다른 기계면 pip 이 멈추고 해시를 보인다. 같은 venv·같은 소스로 다시 지으면 woff2 가 바이트까지 같다 — 독립 검토가 확인). 옛 수식(가족 'RHWP Hancom Legacy Equation' — PUA 가 아니라 네모는 아니다)은 대체 글꼴이 없어 기본 글꼴로 그려지고 글자 사이가 벌어진다. 판을 올리면 수식 문서·옛한글·큰 HWP 를 에뮬레이터에서 먼저 본다. ONLYOFFICE 는 CryptPad 가 새 빌드의 해시를 내야 올린다(`build_onlyoffice.py` 는 그 해시와 견준다) — 본가의 9.4·10.0 보안 고침은 그때 들어온다 |
 | 의존 하나 — `androidx.webkit` 1.17.1(사용자 승인, 브라우저와 같은 판) | 편집기와 바이트를 ArrayBuffer 로 주고받는 WebMessageListener 가 여기 있다. `core:webhost` 는 쓰지 않는다 — 지금은 편집기만 쓴다 |
 | 편집기 화면은 **설정이 바뀌어도 다시 서지 않는다** | 다시 서면 WebView 가 새로 서고 쪽 안의 고친 것이 사라진다(함정 표) |
 
@@ -1923,7 +1930,7 @@ CSS 문자열 안의 `url(` 은 `none` 으로 바꾸지 않고, 깨진 `url(` �
 | 목록에서 누른 한글·OOXML(과 그 판)·ODF·옛 오피스(doc·xls·ppt …) → 편집기의 **보기 모드**(`EditorApp.viewKindFor` → `MainActivity` 의 `openDocument`) | 편집기는 쪽을 PC 처럼 그린다(rhwp 의 조판, ONLYOFFICE). 걷은 흐름 변환기는 쪽을 버리고 글을 다시 흘렸다 — 사용자의 말로 '확연히 나쁜' 쪽이다. 묶음 없이 지은 빌드면 문서 뷰어로 간다('다루지 않는 문서' 와 '다른 앱으로 열기') |
 | 빼는 것 — PDF·글·CSV(`EditorApp.OWN_VIEWERS`), EPUB | PDF 는 이 앱의 pdfium 뷰어가 이미 쪽 그대로 그리고(편집기는 PDF 를 고칠 수 있는 docx 로 **바꿔** 연다 — 쪽 모양이 달라진다), 글·CSV 는 텍스트 뷰어의 것이다. EPUB 은 편집기가 다루지 않는다 |
 | 보기 모드의 **떠 있는 단추 묶음**(`EditorActivity.refreshFloatingBar` — 무엇을 띄울지는 `EditorRules.floating`) | 파일 쪽이 보기 모드에도 저장 자리를 준다. 오른쪽 아래(엔진의 아래 막대를 가리지 않게 72dp 위)에 ⋮ 와 주 단추 — 문서 앱들의 보기 화면이 연필을 두는 자리다. 주 단추는 보기 모드에서 문서를 열었고 저장 자리가 있으면 '편집', 암호 물음을 닫아 열지 못했으면 '다시 열기', 그 밖의 실패면 '다른 앱으로 열기'. ⋮ 는 보기 모드에서 문서를 연 뒤나 열지 못했을 때 있고(고치는 동안과 **여는 동안에는 없다** — 여는 동안 엔진이 띄우는 암호 칸의 오른쪽 끝을 가렸다), 머리에 파일 이름(누를 수 없다), 줄에 '다른 앱으로 열기'(`core:io` 의 문구 — 받은 사본도 된다, 두 번 누름은 700ms 막는다). 자판이 뜨면 숨긴다. **'편집' 을 누르면** 원본을 다시 읽어 떠 둔 사본과 바이트로 견주고(`DocumentStore.sameAs` — FileProvider URI 로는 수정 시각을 알 수 없다) 바뀌었으면 지금 파일로 열고 '보던 사이 파일이 바뀌어 지금 파일로 엽니다' 를 말한다(읽지 못하면 보기 그대로). 쪽에 읽던 자리를 물어(`where`, 800ms) 편집 쪽 첫 쪽 주소의 `at` 에 싣는다 — rhwp 는 `s:위,왼쪽`(스크롤 비율 — 스튜디오가 쪽 번호를 밖에 내지 않는다), ONLYOFFICE 는 `p:쪽`·`c:시트,행,열`. WebView 는 새로 세운다(엔진들이 처음 열 때 모드를 정한다 — rhwp 어댑터의 입력 막기, ONLYOFFICE 의 `editorConfig.mode`). 받은 사본(읽기 전용)에는 '편집' 이 없다. 암호 문서는 엔진이 다시 묻는다(암호는 어디에도 두지 않는다). 플랫폼 뷰로 그린다(Material 구성 요소를 들이지 않는다) |
-| **열지 못한 문서**(`open-failed`) | 엔진이 문서를 열지 못하면 어댑터가 인사(`ready`) 대신 `open-failed` 를 보내고 까닭을 쪽에 적는다. 앱은 '편집' 단추를 띄우지 않고 '다른 앱으로 열기'(받은 content URI 를 읽기 권한과 함께 고르는 창으로 — 이 앱의 `OpenActivity` 는 뺀다)를 단다. **rhwp 는 열지 못하면 빈 새 문서를 대신 연다**(`openBlankDocumentIfIdle`) — 그것을 넘겨받은 문서로 알면 '편집' 단추가 뜨고, 고쳐 저장하면 빈 문서가 원본 자리에 쓰일 뻔했다(풀 수 없는 방식으로 잠긴 HWP). 어댑터가 스튜디오의 오류 기록('[main] 파일 로드 실패')으로 알아채 저장을 막고 그 빈 문서를 덮는다 — 스튜디오가 그 글을 바꾸면 알아채지 못한다. `open-failed` 는 갈래(`reason`)를 싣는다 — `cancelled`(암호 물음을 닫았다 → 앱이 '다시 열기' — WebView 를 새로 세우고 원본을 다시 떠 온다)·`locked`(풀 수 없는 잠금·DRM)·`corrupt`·`other`. rhwp 는 암호 창을 닫아도 실패 기록 없이 빈 문서를 열므로 '[WasmBridge] 새 문서 생성' 기록과 암호 칸(`#hwp-password-input`)이 나타났는지를 함께 본다(rhwp v0.8.7 의 기록 글에 기댄다). ONLYOFFICE 는 x2t 가 빈 결과를 낸 것을, 편집기의 문서가 비었을 때만 원본(OOXML·ODF)을 다시 받아 견줘 잡는다(원본에 내용이 있었으면 `corrupt`). 오류 화면의 단추는 `EditorRules.actions` — 엔진 없음·WebView·너무 큼은 '다른 앱으로 열기', 읽지 못함·렌더러 죽음은 '다시 열기' + '다른 앱으로 열기', 부른 앱·인텐트·저장 자리를 믿을 수 없으면 '닫기' 뿐 |
+| **열지 못한 문서**(`open-failed`) | 엔진이 문서를 열지 못하면 어댑터가 인사(`ready`) 대신 `open-failed` 를 보내고 까닭을 쪽에 적는다. 앱은 '편집' 단추를 띄우지 않고 '다른 앱으로 열기'(받은 content URI 를 읽기 권한과 함께 고르는 창으로 — 이 앱의 `OpenActivity` 는 뺀다)를 단다. **rhwp 는 열지 못하면 빈 새 문서를 대신 연다**(`openBlankDocumentIfIdle`) — 그것을 넘겨받은 문서로 알면 '편집' 단추가 뜨고, 고쳐 저장하면 빈 문서가 원본 자리에 쓰일 뻔했다(풀 수 없는 방식으로 잠긴 HWP). 어댑터가 스튜디오의 오류 기록('[main] 파일 로드 실패')으로 알아채 저장을 막고 그 빈 문서를 덮는다 — 스튜디오가 그 글을 바꾸면 알아채지 못한다. `open-failed` 는 갈래(`reason`)를 싣는다 — `cancelled`(암호 물음을 닫았다 → 앱이 '다시 열기' — WebView 를 새로 세우고 원본을 다시 떠 온다)·`locked`(풀 수 없는 잠금·DRM)·`corrupt`·`other`. rhwp 는 암호 창을 닫아도 실패 기록 없이 빈 문서를 열므로 '[WasmBridge] 새 문서 생성' 기록과 암호 칸(`#hwp-password-input`)이 나타났는지를 함께 본다(rhwp v0.8.7 의 기록 글에 기댄다 — 0.9.1 의 묶음에도 세 글이 그대로 있다). ONLYOFFICE 는 x2t 가 빈 결과를 낸 것을, 편집기의 문서가 비었을 때만 원본(OOXML·ODF)을 다시 받아 견줘 잡는다(원본에 내용이 있었으면 `corrupt`). 오류 화면의 단추는 `EditorRules.actions` — 엔진 없음·WebView·너무 큼은 '다른 앱으로 열기', 읽지 못함·렌더러 죽음은 '다시 열기' + '다른 앱으로 열기', 부른 앱·인텐트·저장 자리를 믿을 수 없으면 '닫기' 뿐 |
 | 보기 모드도 읽는 화면 — **화면 켜 두기** | 파일 쪽 설정('읽는 동안 › 화면 켜 두기')의 분을 인텐트에 실어 보내고(`EditorApp.EXTRA_KEEP_SCREEN_MINUTES` — 편집기의 프로세스는 이 앱의 DataStore 를 열지 않는다, 한 프로세스의 것이다) 편집기가 마지막 조작(`onUserInteraction`) 뒤 그 시간까지 창에 `FLAG_KEEP_SCREEN_ON` 을 건다. 편집으로 바꾸면 푼다(글 편집기와 같은 판단 — 치는 동안은 그 조작이 화면을 깨워 둔다). 띄울 때 설정을 읽어 보낸다(`first()`, 2초 상한 — 넘으면 기본값. 앱이 막 섰을 때 아직 읽지 못한 값을 보내지 않게) |
 | 편집기를 띄우는 동안 누름을 흘려보낸다(`editorPending`) | 띄우기 시작부터 결과가 올 때까지 문서 누름·편집기 열기를 흘려보낸다 — 오피스 문서를 빠르게 두 번 누르면 편집기가 두 겹 쌓였다. 시간이 아니라 결과까지인 것은 `:editor` 프로세스가 차갑게 서는 시간이 `SETTLE_MS` 보다 길 수 있어서다. 실패·취소 길에서도 풀린다. 문서 뷰어에서 편집기를 띄우지 못하면 문서를 다시 연다(`docReopen` — '여는 중' 동그라미가 남았다) |
 | 다른 앱이 넘긴 문서(`OpenActivity`) | 편집기가 그 형식을 보이면 `AppScreen.Editor`(코덱 `r:<형식>:<경로>` — 옛 판의 `o:` 는 첫 화면으로 읽는다)로 편집기를 한 번만 띄우고(저장 상태의 표시 — 회전·프로세스 재생성 때 두 번 띄우지 않게), 편집기가 닫히면 받은 화면도 끝난다(`home`). 못 띄우면 문서 뷰어로 물러난다. VIEW·SEND 필터에 doc·xls·ppt·odt·ods·odp 의 MIME 도 있다 — 편집기가 보이는 형식을 모두 받는다(`ReceiveFiltersTest` 가 편집기 형식 표와 견준다) |
@@ -2009,7 +2016,7 @@ site-packages 에 있다) 저장소 밖에서 돌린다. 스크립트(`oracle.py
 | **잠긴 머리 안의 내용 폴더까지 본다** | 머리를 잠근 열쇠의 반복은 평문이지만 내용 폴더의 속성은 잠긴 머리 안이다 — 머리가 정상이고 내용이 62 면 라이브러리는 머리를 연 뒤 첫 항목에서 멎는다. 암호를 받았으면 머리를 우리가 푼다(같은 유도 — 반복을 덩이로 묶어 해시해 라이브러리보다 빠르다, 덩이마다 취소를 본다). 압축만 된 머리(7-Zip 의 LZMA·py7zr 의 LZMA2)는 암호 없이도 푼다. 머리를 푸는 사슬은 복사·LZMA·LZMA2·AES 만 안다 — 그 밖이고 암호를 받았으면 열지 않는다 |
 | 암호를 넘기는 **모든 열기**(목록·확인·항목·풀기·만화의 패스 — `openFile`) 앞에서 다시 본다 · 암호 없는 목록에 받을 수 없는 반복이 보이면 잠긴 항목은 `lockedForGood` · 머리가 잠겼고 그 열쇠가 상한 밖이면 묻지 않고 '풀지 않는 방식' | 그 사이 파일이 바뀔 수 있다. 물어도 소용없는 암호를 묻지 않는다('암호가 걸린 파일' 의 규칙). 어느 폴더의 것인지 가르지 않고 잠긴 항목 전부다 — 7-Zip 이 만든 파일에는 그런 값이 없다 |
 | **'풀지 않는 방식' 을 타입으로 가른다**(`ArchiveEncryptionUnsupportedException` — 7z 의 거절과 ZIP 의 PKWARE 강한 암호화가 잇는다) | 압축·만화 화면이 이름으로 갈랐는데 R8 이 이름을 줄여 릴리스에서는 '깨진 파일' 이었다(함정 표) |
-| **다른 앱이 넘긴 설치 파일(APK)은 열지 않는다**(`app` 의 `refusalOf`·`core:io` 의 `ApkFiles`). 이름(`.apk`)이나 **내용**으로 보고, 받을 때·되살릴 때 둘 다, 사본은 곧바로 지운다. 받은 화면은 '다른 앱이 보낸 설치 파일은 열지 않습니다' 와 '닫기' 뿐 | 넘긴 APK 를 '다른 앱으로 열기' 로 설치 관리자에 넘기면 설치 관리자는 **이 앱이 보낸 것**으로 받는다 — 권한 없는 앱이 이 앱의 설치 권한과 '출처를 알 수 없는 앱' 허용을 빌려 쓴다. 안드로이드 12 는 이름을 가리킨 인텐트에 필터를 보지 않는다. 이름을 바꾼 APK 는 모르는 형식이면 '모든 앱에서 고르기'(모든 형식 — 형식을 하나라도 적은 필터에 다 맞는다)로 가고 거기 설치 관리자도 선다 — 그래서 받는 자리에서 어느 화면으로도 보내지 않는다(뷰어의 실패 화면·'보여 줄 화면이 없다'·재생기·편집기의 '다른 앱으로 열기' 가 함께 막힌다). 내용 판별은 설치 관리자(libziparchive)의 차례 — 끝에서 끝 레코드(주석 64 KiB, 끝에 가까운 것), ZIP64 위치표, 가운데 목록의 이름을 바이트로(뿌리의 `AndroidManifest.xml` 만) — 가운데 목록이 상한(64 MiB·100만 항목)을 넘으면 APK 로 친다. 겹으로 `ExternalOpen.open`·`ShareHelper.share` 가 받은 사본의 APK 를 넘기지 않는다. 파일 목록에서 고른 APK 는 그대로다(사용자가 되살린 기능). 매니페스트의 `octet-stream` 은 그대로다. 안드로이드 라이브러리 묶음(`.aar`)도 APK 로 보인다 |
+| **다른 앱이 넘긴 설치 파일(APK)은 열지 않는다**(`app` 의 `refusalOf`·`core:io` 의 `ApkFiles`). 이름(`.apk`)이나 **내용**으로 보고, 받을 때·되살릴 때 둘 다, 사본은 곧바로 지운다. 받은 화면은 '다른 앱이 보낸 설치 파일은 열지 않습니다' 와 '닫기' 뿐 | 넘긴 APK 를 '다른 앱으로 열기' 로 설치 관리자에 넘기면 설치 관리자는 **이 앱이 보낸 것**으로 받는다 — 권한 없는 앱이 이 앱의 설치 권한과 '출처를 알 수 없는 앱' 허용을 빌려 쓴다. 이름을 가리킨 인텐트에는 필터가 듣지 않는다(16 의 '더 안전한 인텐트' `intentMatchingFlags` 는 받는 앱이 켜야 하고 이 앱은 켜지 않았다 — '2.0.0 — minSdk 36'). 이름을 바꾼 APK 는 모르는 형식이면 '모든 앱에서 고르기'(모든 형식 — 형식을 하나라도 적은 필터에 다 맞는다)로 가고 거기 설치 관리자도 선다 — 그래서 받는 자리에서 어느 화면으로도 보내지 않는다(뷰어의 실패 화면·'보여 줄 화면이 없다'·재생기·편집기의 '다른 앱으로 열기' 가 함께 막힌다). 내용 판별은 설치 관리자(libziparchive)의 차례 — 끝에서 끝 레코드(주석 64 KiB, 끝에 가까운 것), ZIP64 위치표, 가운데 목록의 이름을 바이트로(뿌리의 `AndroidManifest.xml` 만) — 가운데 목록이 상한(64 MiB·100만 항목)을 넘으면 APK 로 친다. 겹으로 `ExternalOpen.open`·`ShareHelper.share` 가 받은 사본의 APK 를 넘기지 않는다. 파일 목록에서 고른 APK 는 그대로다(사용자가 되살린 기능). 매니페스트의 `octet-stream` 은 그대로다. 안드로이드 라이브러리 묶음(`.aar`)도 APK 로 보인다 |
 | **이름의 방향 제어 글자**(U+061C·200E·200F·202A~202E·2066~2069 — `core:model` 의 `PathNames.isBidiControl`) — 짓거나 받는 이름에서는 `_`(`PathRules.sanitize` — 풀기·받은 사본·되살리기, 편집기가 댄 이름 `EditorSlots.cleanName`·`OutputNames` — 둘이 같은 자리에서), 화면에서는 이미 있는 이름의 그 글자를 U+FFFD 로(`PathNames.forDisplay`) | `invoice` + U+202E + `fdp.apk` 가 'invoicekpa.pdf' 로 보인다. 실제 이름은 바꾸지 않는다(찾고 열고 넘기는 데는 원래 이름 — 그런 이름의 문서를 편집기로 고쳐도 제자리에 저장된다). 화면은 목록·격자·정보 시트·받은 화면·뷰어 넷과 그림 뷰어·EXIF 시트·글 편집기의 제목·압축 안의 항목·재생 화면·재생목록·미니 바·편집기의 ⋮ 머리·내보내기 알림이다. 사용자가 적는 이름(`validate`)은 고쳐 주지 않는다 — 화면이 드러낸다 |
 | **편집기의 그림 넣기·내보내기는 돌려받은 주소를 거른다**(`feature:editor` 의 `EditorRules.acceptsReturnedUri`) — `content` 이고 권한자가 이 앱의 것이 아닐 때만(사용자 번호 `0@` 를 떼고, 꾸러미 이름·`꾸러미.` 로 시작·제공자의 주인이 이 앱이면 거절, 대소문자 무관). 거르면 '이 앱의 파일은 넣을 수 없습니다'·'그 자리에는 내보낼 수 없습니다' | 고르개 자리에 선 제3자 앱이 `file:///data/user/0/<이 앱>/…` 나 이 앱의 FileProvider·저장 자리 주소를 돌려주면 이 앱이 제 신원으로 읽거나(내부 파일이 문서에 실려 나간다) 쓴다(내부 파일이나 — 모든 파일 접근 권한으로 — 사용자 파일을 덮는다) |
 
@@ -2029,16 +2036,76 @@ site-packages 에 있다) 저장소 밖에서 돌린다. 스크립트(`oracle.py
 **남은 일.** 기기 확인(위). 방향 제어 글자를 아직 날것으로 보이는 자리 — 스낵바·대화상자의 문장에 넣는 이름(`‘%1$s’` 꼴), 재생 알림(시스템이 그린다 —
 제목이 메타데이터라 자막 짝짓기에 쓰여 바꾸지 않았다). (압축·만화 화면의 `MemoryLimit` 이름 보기는 2026-11-14 타입 판정 `Archives.isMemoryLimit` 으로 바꿨다.)
 
+### 2.0.0 — minSdk 36(Android 16)
+
+사용자의 메인 폰이 Android 16 이 되었다(2026-11-21). 2.0.0(판 코드 3)은 **모든 모듈의 minSdk 를 31 → 36** 으로 올리고, 31 때문에 우회하거나
+생략한 것을 36 기준으로 고쳤다. targetSdk 36·compileSdk 37 은 그대로다(37 로 올리면 확인할 기기가 없는 Android 17 의 동작을 떠안는다).
+Android 12 폰은 1.0.0 릴리스를 계속 쓴다.
+
+**버전 갈래 — 전 → 후.**
+
+| 자리 | 1.0.0(minSdk 31) | 2.0.0(minSdk 36) |
+|---|---|---|
+| PDF 찾기(`Page.searchText`, API 35) | 35 아래에서 단추가 없었다(`@RequiresApi` + `SDK_INT`) | 언제나 있다. **플랫폼으로 지었다** — 그리는 것과 같은 pdfium 이 글자를 읽어 강조가 그림에 앉고, 플랫폼이 직접 푼 암호 문서에서도 찾으며, 쪽마다 우리 해석기를 돌리지 않는다(`PdfSearch` 머리말). 쪽마다 찾기·진행·취소·쪽당 상한(200)·문서 상한(5,000)·강조·다음/이전은 35 갈래에 이미 있던 것 그대로 |
+| 문서 안 링크(`Page.getGotoLinks`, API 35) | 없었다 | **두드리면 그 쪽으로**(쪽 넘김·이어 보기 — `PdfLinks`, `linkTargetAt`). 링크가 아니면 막대를 여닫는다. 쪽마다 기억한다(64쪽). **`/A GoTo` 꼴만 플랫폼이 준다** — `/Dest` 꼴은 빈 목록(실측). 바깥 주소(`getLinkContents`)는 따르지 않는다. 목차(outline)는 `PdfRenderer` 에 API 가 없어 없다 |
+| 암호 PDF | 35 이상은 플랫폼, 아래는 우리가 풀어 memfd | 언제나 플랫폼 먼저(`PdfOpener`) — 우리 복호화기는 플랫폼이 거절한 암호를 우리 후보로 한 번 더 해 볼 때·빈 암호로 풀리는 문서에서만. '구조를 못 읽는다'·'memfd 상한을 넘는다' 로 묻지 않던 두 길이 사라졌다(플랫폼이 받는다) |
+| 뒤로 가기(편집기) | 12 는 `onBackPressed`, 13+ 는 `OnBackInvokedCallback` | 콜백 하나. targetSdk 36 이 16 에서 돌면 미리 보는 뒤로 가기가 기본이라 `onBackPressed`·`KEYCODE_BACK` 이 오지 않는다 |
+| 알림 권한 | 12 는 묻지 않았다 | 언제나 묻는다(처음 한 번) |
+| `getParcelableExtra`·`queryIntentActivities`·`resolveContentProvider`·`getActivityInfo` | 12 를 위해 deprecated 정수 판 + `@Suppress` | 플래그 객체·타입 판(33) |
+| PiP 리시버 | `ContextCompat.registerReceiver`(31 에 상수가 없어서) | 플랫폼 `registerReceiver(…, RECEIVER_NOT_EXPORTED)` |
+| PiP 첫 프레임 | 자동 진입(홈)은 접을 길이 없었다 | `onPictureInPictureUiStateChanged` 의 `isTransitioningToPip`(35)이 접는다 |
+| 파일 작업 FGS | 34 미만은 타입 없는 `startForeground` | 언제나 `FOREGROUND_SERVICE_TYPE_DATA_SYNC` |
+| '복사했습니다' | 12 에서만 띄웠다 | 띄우지 않는다(13+ 는 시스템이 알린다) — 문구 둘을 걷었다 |
+| `readNBytes`(33)·범위 `Arrays.equals`(33) | 손으로 돈 고리 | 그 함수(만화 `readAllBounded`·글 편집 `readBounded`·텍스트 `readFully`·편집기 `DocumentStore`) |
+| 편집기 창 | `setDecorFitsSystemWindows(false)` | 걷었다 — 15+ 는 가장자리까지가 강제라 무시되는 호출이다 |
+| 진단 화면 | 'API 35 면 플랫폼' 갈래 | 한 줄 |
+| `tools/check_api_level.py` | `MIN_SDK = 31` 고정 | `app/build.gradle.kts` 의 minSdk 를 읽는다 |
+
+**바꾸지 않은 것**(판단과 함께). `MediaMuxer` 가 MP4 에 받는 AV1(34)·Dolby Vision(33)·APV(36)는 구간 저장에 넣지 않았다 — 표본을 만들 도구가 없어
+확인할 수 없다(`RemuxPlan` 머리말). `Canvas` 의 비트맵 상한은 100 MiB 그대로(`ImageLimits` — 36 의 값을 재지 않았다). PDF 글 고르기는 우리 해석기 그대로
+(플랫폼의 `getTextContents`·`selectContent` 로 바꾸지 않았다) — 그래서 **플랫폼이 직접 푼 암호 PDF 는 글을 고를 수 없다**(1.0.0 의 12 폰에서는 우리가 풀어
+골랐다. 2.0.0 에서 암호 PDF 대부분이 그렇게 된다 — 찾기는 된다). PiP 의 33 setter(`setTitle` 등)는 부르지 않는다(파일 이름을 PiP 창에 싣는 일).
+
+**Android 13~16 의 동작 변경 — 이 앱에 닿는 것**(공식 'behavior changes' 문서로 확인, 2026-11).
+
+| 변경 | 판 | 이 앱 |
+|---|---|---|
+| 가장자리까지 강제(`windowOptOutEdgeToEdgeEnforcement` 무시) | 15(target 35) · 16 은 opt-out 폐지 | 앱은 이미 `enableEdgeToEdge`. **권한 화면의 제목이 상태 표시줄과 겹쳐 있었다**(16 에뮬레이터) — `safeDrawing` 인셋으로 고쳤다. 편집기의 `setDecorFitsSystemWindows` 를 걷었다 |
+| 미리 보는 뒤로 가기 — `onBackPressed`·`KEYCODE_BACK` 이 오지 않는다 | 16(target 36) | 편집기의 `onBackPressed` 를 걷고 콜백만. 나머지는 AndroidX `OnBackPressedDispatcher`·`BackHandler` 라 그대로 돈다(16 에뮬레이터에서 편집기·뷰어의 뒤로 가기 확인) |
+| 포그라운드 서비스 타입 필수 · `dataSync` 24시간에 6시간 · 부팅 방송에서 `dataSync`·`mediaPlayback` 시작 금지 | 14 · 15 | 둘 다 타입·권한 선언이 있고 `onTimeout` 이 있다. 부팅 방송을 받는 수신기가 없다(`RECEIVE_BOOT_COMPLETED` 는 `JobScheduler` 의 예약 유지용) |
+| 오디오 포커스는 앞에 있거나 FGS 일 때만 | 15(target 35) | **보고만** — 블루투스 이어 재생(`BluetoothResume`)이 재생 서비스가 포그라운드를 놓은 뒤(오래 멈춰 있었다) 틀면 포커스가 거절될 수 있다. 블루투스는 에뮬레이터로 못 낸다 |
+| 문맥 등록 리시버의 내보냄 깃발 | 14(target 34) | PiP 리시버가 `RECEIVER_NOT_EXPORTED`(위 표) |
+| 암시적 인텐트는 내보낸 구성 요소에만 · 변경 가능 `PendingIntent` 는 대상 명시 | 14(target 34) | 앱 안의 인텐트는 이름·꾸러미를 적는다(PiP 는 `setPackage`) |
+| '더 안전한 인텐트'(`intentMatchingFlags`) | 16 — 받는 앱이 켜야 한다 | **켜지 않았다** — 켜도 이름을 바꾼 APK 는 다른 형식으로 와 `refusalOf` 가 여전히 필요하고, 남의 앱이 보내는 이름 가리킨 인텐트가 깨질 수 있다. 사용자가 정할 일로 둔다 |
+| 인텐트 리디렉션 강화 | 16(모든 앱) | 받은 인텐트 안의 인텐트를 그대로 띄우는 길이 없다 |
+| 큰 화면에서 방향·크기 고정 무시 | 16(target 36, sw600dp 이상) | 폰은 해당 없다. 재생 화면의 `SCREEN_ORIENTATION_SENSOR` 는 원래 대상이 아니다(위 '세로 고정을 무시하는 가로 재생') |
+| `JobScheduler` 할당량 | 16 | 휴지통 비우기는 하루 한 번·유휴 조건 — 닿지 않는다 |
+| `MANAGE_EXTERNAL_STORAGE` · `READ_MEDIA_*` · 사진 일부 고르기 | 13·14 | 모든 파일 접근 하나만 쓴다 — 바뀐 것이 없다(16 에뮬레이터: '설정 열기' → 'All files access' → 켜고 돌아오면 목록) |
+| 사이드로드·Play 프로텍트 | — | 공식 문서에 16 의 변경이 없다. 사용자 폰의 '유해한 앱' 차단('Play 프로텍트의 설치 차단')은 그대로일 것이다 — 16 폰에서도 설치 때 검사를 잠시 꺼야 할 수 있다(확인은 사용자) |
+| 16 KB 쪽 크기 | 15+ 기기 · Play 는 2027-02 부터 | **통과** — 릴리스 APK 의 `.so` 여덟(AndroidX `graphics.path`·DataStore 공유 계수기, 네 ABI)이 모두 LOAD 정렬 0x4000 이고 `zipalign -c -P 16` 이 통과한다(저장 방식). 편집기 엔진은 `.wasm`(자산)이라 해당 없다. `graphics.path` 의 RELRO 끝이 16 KB 경계가 아니다(8 KB) — 적재는 되고 RELRO 보호가 그만큼 덜 덮일 뿐이다(AndroidX 의 것). 이 기계의 NDK 에 `llvm-objdump` 가 없어 ELF 머리는 파이썬으로 읽었다. 16 에뮬레이터는 4 KB 쪽이라 실제 16 KB 기기에서 돌려 보지는 않았다(`pageSizeCompat=0`) |
+
+**Android 16 에뮬레이터에서 본 것**(`Android_16_Phone`, 릴리스·디버그 빌드, 합성 표본). 모든 파일 권한 화면 → 시스템 설정 → 켜고 돌아오기, 알림 권한 물음,
+목록, 그림, 소리 재생(포그라운드 `mediaPlayback`·미디어 알림), 영상(`screenrecord` 로 지은 것 — 화면에 그려지고 메타데이터 트랙은 '일부 트랙을 재생할 수
+없습니다' 로 알렸다), 홈으로 나가면 자동 PiP(조작부 없는 창), EPUB, ZIP 목록·풀기(180 MB 풀기에 `dataSync` 서비스), 만화(CBZ), 편집기(HWPX — rhwp,
+DOCX — ONLYOFFICE, `:editor` 프로세스)와 그 뒤로 가기·'다른 앱으로 열기'(IntentResolver 의 고르는 창), 다른 앱에서 열기(`am start` VIEW — PDF·영상·ZIP·CBZ·
+HWPX·DOCX), PDF 찾기(강조가 글자에 앉는다 — 원점 왼쪽 위 확인)·이전/다음, 문서 안 링크(쪽 넘김·이어 보기 둘 다 — 쪽 번호 0부터·원점 왼쪽 위 확인,
+`/Dest` 꼴은 빈 목록). 계측 시험 여섯 모듈 167건 — 163 통과, 4 건너뜀(이 AVD 에 SD 볼륨이 없어 EXDEV 셋, 말뭉치 하나 — 말뭉치를 올려 따로 돌린
+`PdfCorpusDeviceTest` 는 25건 통과). **SD 볼륨이 없는 AVD 라 볼륨 간 이동(EXDEV)은 16 에서 확인하지 않았다.** 블루투스·실기기 메모리·16 KB 기기는 못 본다.
+
+**독립 검토(2026-11-21)가 고친 것** — `PdfLinks.hit` 이 좌표가 NaN 인 상자를 거리 0 으로 읽어 쪽 어디를 두드려도 그 링크로 갔다(NaN 상자를
+건너뛴다 — `PdfLinksTest`, 고침을 되돌리면 그 시험만 깨진다). `readAllBounded`(만화, `readNBytes` 로 바꾼 것)에 경계 시험을 더했다(`ReadAllBoundedTest`).
+수식 대체 글꼴의 pip 설치에 해시를 고정했다(엔진 판 줄). 보고만 한 것 — 쪽 전체를 덮는 GoTo 링크가 있는 쪽에서는 두드림이 늘 넘어가 막대를 열 수
+없다(뒤로 가기는 된다), 링크 하나의 상자 수는 플랫폼이 준 그대로다.
+
 ## 더할 만한 기능 후보 (검토만, 코드 없음 — 사용자가 고르기 전)
 
 비슷한 앱들(MiXplorer·Solid Explorer·Material Files·Files by Google·VLC·MX Player·Moon+ Reader·Perfect Viewer·Mihon·Xodo 등)의 공식 자료로 고른
 후보다. 모두 **INTERNET 없이** 되고 상위 묶음에는 위험 권한이 없다(Play 프로텍트 판정에 새 재료를 주지 않는다 — 추론). 코드로 확인한 빈자리 —
-`recent_location` 표에 쓰는 코드가 없고(`visit` 호출 0건), `folder_pref`(폴더별 정렬·보기)도 DAO 만 있다, 미니 재생 바에 이전·다음 단추가 없다,
-폰(API 31)에는 PDF 찾기가 없다(`Page.searchText` 는 API 35).
+`recent_location` 표에 쓰는 코드가 없고(`visit` 호출 0건), `folder_pref`(폴더별 정렬·보기)도 DAO 만 있다, 미니 재생 바에 이전·다음 단추가 없다.
 
 | 순위 | 후보 | 규모 | 메모 |
 |---|---|---|---|
-| 1 | **PDF 찾기(API 31 에서도)·목차·문서 안 링크** | M | 검증한 글 꺼내기(18문서 재현율·정밀도 1.0) 위에 쪽마다 찾기(진행·취소, 쪽당 상한 그대로), `/Outlines` 사슬(방문 집합·개수 상한)과 `/Link` 주석. 읽기만. 11단계 '미룬 것' |
+| 1 | **PDF 목차·남은 문서 안 링크**(찾기와 `/A GoTo` 링크는 2.0.0 이 플랫폼으로 했다 — '2.0.0 — minSdk 36') | S~M | `PdfRenderer` 에 목차(outline)를 주는 API 가 없다 — 검증한 해석기(11단계·글 꺼내기) 위에 `/Outlines` 사슬(방문 집합·개수 상한)을 읽는다. 플랫폼의 `getGotoLinks` 가 주지 않는 `/Dest` 꼴 링크도 같은 해석기로 `/Annots` 를 읽어 채울 수 있다(플랫폼이 직접 푼 암호 문서는 평문이 없어 빠진다). 읽기만 |
 | 2 | **재생 작은 묶음** — 수면 타이머, 미니 바 이전·다음, 자막 크기·위치, 외부 자막 싱크(±0.1초 — `SubtitleSource` 가 바이트를 이미 가로챈다, 내장 자막은 밖), `.smi`(SAMI → SRT), 화면 비율·확대 | 대부분 S, .smi M | VLC·MX Player 의 관행. ASS 서식을 조판하지 않는다는 결정은 그대로 |
 | 3 | **저장소 훑기 엔진** 하나로 셋 — 용량 분석(폴더 크기 나무·큰 파일·종류별), 저장소 전체 찾기와 최근 받은 것(MediaStore 로 빠르게 + 훑어 채우기), 중복 찾기(크기 → 앞뒤 64 KiB → SHA-256, 남길 것을 고르고 나머지는 휴지통) | M×3 | 결과는 메모리에만(색인을 디스크에 두지 않는다 — '전문검색 인덱스' 와 다르다). `Os.lstat` 훑기(1만 개 394 ms)와 ZIP 만들기의 세 겹(링크·inode·깊이 64)을 다시 쓴다. `/Android/data` 는 셀 수 없어 '보이지 않는 몫' 으로. '용량 분석' 은 1단계 제외 항목(영구 아님). Web 의 큰 받기·` (1)` 사본에 쓸모 |
 | 4 | **기본기 묶음** — 표 둘 살리기(폴더별 정렬·최근 위치), 폴더 정보(크기·항목 수), 경로 복사, 파일 즐겨찾기·지우기 전에 묻기(지금은 길게 누르면 곧바로 지운다), 폴더 공유 → 'ZIP 으로 묶어 보내기'(지금은 폴더가 말없이 빠진다), 홈 화면 바로가기(`requestPinShortcut` — 내보낸 화면으로 들어오는 경로를 `/storage` 아래·휴지통 밖으로 검증), 앱 테마 스위치, 체크섬(MD5·SHA-1·SHA-256·CRC32 와 곁의 `*.sha256` 대조), 썸네일 넓히기(APK 아이콘·앨범 아트·PDF 첫 쪽 — PDF 는 메모리에만, 암호 PDF 는 빼고) | 각 S, 합쳐 M | — |
@@ -2434,8 +2501,8 @@ ASCII 낱말 끝에 붙은 UTF-8 로도 읽히는 한 글자(`Excel처` → `Exc
 
 | 미룬 것 | 어디로 | 왜 |
 |---|---|---|
-| **글자 선택·복사·문서 안 찾기** | 찾기는 **API 35 에서**, **고르기·복사는 모든 판에서 했다**(우리 글 꺼내기) | 레거시 `PdfRenderer` 는 글자를 주지 않는다(확장 13 이상의 `PdfRendererPreV.selectPageText` 가 그것이고, 이 기기는 확장 1이다). API 35 의 `Page.searchText` 로 찾기와 강조 상자를 붙였고 그 아래에서는 단추가 아예 없다(`@RequiresApi` + `SDK_INT`, `NewApi` 0건). API 34 이하의 찾기는 글 꺼내기(`docview/pdf/text`) 위에 지을 수 있다 |
-| **목차(outline)와 문서 안 링크** | 필요해지면 | 같은 이유로 레거시 API 가 주지 않는다. 쪽 이동은 슬라이더와 `쪽으로 가기` 로 한다 |
+| **글자 선택·복사·문서 안 찾기** | **했다** — 고르기·복사는 우리 글 꺼내기, 찾기는 플랫폼의 `Page.searchText`(1.0.0 은 API 35 에서만, 2.0.0 은 minSdk 36 이라 언제나) | 레거시 `PdfRenderer` 는 글자를 주지 않는다(확장 13 이상의 `PdfRendererPreV.selectPageText` 가 그것이고, 12 폰은 확장 1이었다) |
+| **목차(outline)와 문서 안 링크** | 링크는 **2.0.0 에서 플랫폼으로 했다**(`Page.getGotoLinks` — `/A GoTo` 꼴만, `/Dest` 꼴은 플랫폼이 주지 않는다 — 실측). 목차는 아직 | `PdfRenderer` 에 목차를 주는 API 가 없다. 쪽 이동은 슬라이더·`쪽으로 가기`·쪽 목록·링크로 한다('더할 만한 기능 후보' 1) |
 | **주석·폼을 그리는가** | 확인하지 않았다 | `RENDER_MODE_FOR_DISPLAY` 로 그리므로 플랫폼이 정하는 대로 나온다. 표본을 만들어 확인하기 전에는 '그린다' 도 '안 그린다' 도 적지 않는다 |
 
 ### 10단계가 착수하며 정한 것
@@ -2501,8 +2568,8 @@ ASCII 낱말 끝에 붙은 UTF-8 로도 읽히는 한 글자(`Excel처` → `Exc
   사본(ZIP AES — 풀기와 묶기 모두. 묶기는 작업 내내 암호로 열쇠를 건 HMAC 하나를 든다), junrar 가 열쇠를 유도할 때마다 만드는 `String` 은 우리가 덮을 수 없다. 우리 코드가
   만드는 사본(ZIP 암호의 바이트 후보·유도한 열쇠·PBKDF2 중간값)은 `String` 을 거치지 않고 만들어 덮는다.
   줄일 수 있는 데까지 줄인 것이다 — 그렇게 적어 두고 약속하지 않는다.
-- **평문을 저장소에 쓰지 않는다.** 플랫폼이 암호를 받지 않는 API 34 이하에서는 우리가 풀어
-  **memfd**(경로 없는 tmpfs 파일)에 평문 PDF 한 벌을 만들고 그 서술자를 pdfium 에 준다
+- **평문을 저장소에 쓰지 않는다.** 우리가 풀 때(1.0.0 의 API 34 이하 갈래, 2.0.0 에서는 플랫폼이 거절한 암호를 한 번 더 해 볼 때와
+  빈 암호로 풀리는 문서) **memfd**(경로 없는 tmpfs 파일)에 평문 PDF 한 벌을 만들고 그 서술자를 pdfium 에 준다
   (`MemfdSink`). 문서 크기만큼 RAM 을 쓰므로 256 MiB 상한이 있다(`PdfLimits.MAX_DECRYPTED_BYTES` = `DecryptLimits.MAX_BYTES`).
 - **물어도 소용없는 암호를 묻지 않는다.** pdfium 은 '암호가 필요하다' 와 '모르는 처리기다' 를
   같은 예외로 말한다. `/Encrypt` 를 우리가 읽어(`PdfDecryptor.inspect`) 가른다 — 인증서·전용
@@ -2605,9 +2672,10 @@ ASCII 낱말 끝에 붙은 UTF-8 로도 읽히는 한 글자(`Excel처` → `Exc
   난독화된 책은 **연다**.
 - **`.mobi`·`.azw`·`.fb2` 를 열지 않는다.** 목록에서 종류는 '전자책' 으로 보이지만
   (확장자로 정하므로) 열면 '이 앱이 다루지 않는 문서입니다' 와 '다른 앱으로 열기' 로 끝난다. `.rtf` 도 같다.
-- **PDF 의 글은 쪽 하나 안에서만 고른다**(위 '글 고르기' 절). API 35 에서 플랫폼이 직접 푼 암호 문서는 고르지 못한다.
-  **API 34 이하에서는 문서 안에서 찾지 못한다** — 찾기는 API 35 에서만 있다(글 꺼내기 위에 지을 수 있다). 목차와 문서 안 링크도 없다 —
-  쪽 이동은 슬라이더·`쪽으로 가기`·쪽 목록이다. 주석·폼을 그리는지는 확인하지 않았다(`RENDER_MODE_FOR_DISPLAY` — 플랫폼이 정하는 대로다).
+- **PDF 의 글은 쪽 하나 안에서만 고른다**(위 '글 고르기' 절). 플랫폼이 직접 푼 암호 문서(2.0.0 의 암호 PDF 대부분)는 고르지 못한다 — 찾기는 된다.
+  **목차가 없다**(`PdfRenderer` 가 주지 않는다). 문서 안 링크는 `/A GoTo` 꼴만 따른다 — `/Dest` 꼴(주석에 목적지를 곧바로 적은 것)은
+  플랫폼의 `getGotoLinks` 가 주지 않아(Android 16 에뮬레이터 실측) 두드려도 막대가 여닫힐 뿐이다. 바깥 주소(웹 링크)는 따르지 않는다.
+  주석·폼을 그리는지는 확인하지 않았다(`RENDER_MODE_FOR_DISPLAY` — 플랫폼이 정하는 대로다).
 - **인증서로 잠긴 PDF 와 전용 처리기로 잠긴 PDF 를 열지 않는다.** 앞의 것(공개 키 처리기)은
   암호가 아니라 받는 사람의 인증서를 요구하고, 뒤의 것은 방식이 공개되지 않았다. 둘 다
   '암호로는 열 수 없는 방식으로 잠긴 문서입니다' 로 끝난다 — **암호를 묻지 않는다**(물어도

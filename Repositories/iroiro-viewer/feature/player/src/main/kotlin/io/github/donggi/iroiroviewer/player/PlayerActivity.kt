@@ -104,7 +104,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -249,10 +248,10 @@ class PlayerActivity : ComponentActivity() {
     /**
      * **첫 프레임을 깨끗하게 만들려고 미리 접었다.** 아직 창 안이라는 뜻이 아니다.
      *
-     * `onPictureInPictureModeChanged` 는 애니메이션이 끝난 뒤에 오고 시작 시점 콜백은
-     * API 35 다. minSdk 31 에서 조작부가 첫 프레임에 찍히는 것을 막을 방법은 우리가 먼저
-     * 접는 것뿐인데, 그 낙관을 [pipActive] 에 섞으면 위의 판정들이 함께 거짓말을 한다.
-     * 화면이 그리기를 줄일 때만 이 값을 본다.
+     * `onPictureInPictureModeChanged` 는 애니메이션이 끝난 뒤에 온다. 그래서 단추로 들어갈 때는
+     * 부르기 전에 우리가 접고, 자동 진입은 시작 시점 콜백(`onPictureInPictureUiStateChanged` 의
+     * `isTransitioningToPip`, API 35 — minSdk 36 이라 갈래 없이 받는다)이 접는다. 그 낙관을
+     * [pipActive] 에 섞으면 위의 판정들이 함께 거짓말을 한다. 화면이 그리기를 줄일 때만 이 값을 본다.
      */
     private val pipCollapsing = MutableStateFlow(false)
 
@@ -648,9 +647,9 @@ class PlayerActivity : ComponentActivity() {
      * PiP 창의 조작을 받는다. **동적 리시버**이고 화면이 서 있는 동안만 등록된다.
      *
      * PiP 중에도 액티비티는 STARTED 로 남으므로(정지가 아니라 일시정지다) 창이 사는 내내
-     * 등록돼 있다. `RECEIVER_NOT_EXPORTED` 상수는 API 33 부터라 직접 쓸 수 없고,
-     * 그냥 `registerReceiver(r, f)` 로 두면 targetSdk 36 인 앱이 Android 14+ 기기에서
-     * `SecurityException` 으로 죽는다 — `ContextCompat` 의 것을 쓴다(이미 있는 의존이다).
+     * 등록돼 있다. 깃발 없이 `registerReceiver(r, f)` 로 두면 targetSdk 34 이상인 앱이
+     * `SecurityException` 으로 죽는다 — 플랫폼의 `RECEIVER_NOT_EXPORTED`(API 33)를 준다
+     * (minSdk 36. 1.0.0 은 그 상수가 없는 31 때문에 `ContextCompat` 을 거쳤다).
      */
     override fun onStart() {
         super.onStart()
@@ -660,7 +659,7 @@ class PlayerActivity : ComponentActivity() {
             addAction(ACTION_PIP_NEXT)
             addAction(ACTION_PIP_PREVIOUS)
         }
-        ContextCompat.registerReceiver(this, pipReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+        registerReceiver(pipReceiver, filter, RECEIVER_NOT_EXPORTED)
         // **PiP 인 채로 다시 섰다 = 창을 닫은 것이 아니다.** 화면을 껐다 켜면 PiP 창이
         // 사라졌다 돌아오는데, 그 사이 [onStop] 이 세워 둔 표시를 지우지 않으면 **한참
         // 뒤에 전체화면으로 되돌릴 때** 그것을 '창을 닫았다' 로 읽어 재생을 멈춘다.
@@ -726,19 +725,26 @@ class PlayerActivity : ComponentActivity() {
      * **보낸 앱으로 돌아가는 길을 거둔다**([fromOutside]) — 다음에 런처로 돌아온 사람에게 뒤로 가기는 파일 목록이다. 우리가 다른
      * 앱을 띄운 길([handingOff])은 빼고, 화면이 꺼진 것은 여기 오지 않는다.
      *
-     * **API 31 의 자동 PiP(영상을 트는 중에 홈)는 이 콜백을 부르지 않는다** — 모드 콜백만 온다(로그로 확인). 그래서
-     * PiP 에 들어가는 길은 [onPictureInPictureModeChanged] 가 따로 거둔다. 같은 까닭으로 아래의 '미리 접기' 는 그 길에서 돌지
-     * 않는다 — 그 길을 위해 둔 것이다: 모드 콜백은 애니메이션이 **끝난 뒤** 오고 시작 시점을 알려 주는
-     * `PictureInPictureUiState.isTransitioningToPip()` 는 API 35 라, 첫 프레임에 조작부가 찍히지 않게 하려면 우리가 먼저 접어야
-     * 한다. 계획이 자동 진입인데 이 콜백이 오는 길이 API 31 에 남아 있는지는 확인하지 않았다(오면 접고, 다시 서면 [onResume] 이
-     * 편다). 계획이 자동 진입이 아닐 때는 접지 않는다 — 소리 파일이나 목록을 펼친 상태에서 홈을 눌러도 화면이 공연히 접히면
-     * 돌아왔을 때 한 프레임이 비어 보인다.
+     * **API 31 의 자동 PiP(영상을 트는 중에 홈)는 이 콜백을 부르지 않았다** — 모드 콜백만 왔다(로그로 확인). 그래서
+     * PiP 에 들어가는 길은 [onPictureInPictureModeChanged] 가 따로 거둔다. 첫 프레임을 위한 '미리 접기' 는 자동 진입의 시작
+     * 시점 콜백([onPictureInPictureUiStateChanged])이 맡고, 여기서도 계획이 자동 진입이면 접는다(이 콜백이 먼저 오면 먼저 접고,
+     * 다시 서면 [onResume] 이 편다). 계획이 자동 진입이 아닐 때는 접지 않는다 — 소리 파일이나 목록을 펼친 상태에서 홈을 눌러도
+     * 화면이 공연히 접히면 돌아왔을 때 한 프레임이 비어 보인다.
      */
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
         Iro.d { "사용자가 떠난다 — 자동PiP=${lastPipPlan.autoEnter} 넘기는중=$handingOff" }
         if (lastPipPlan.autoEnter) pipCollapsing.value = true
         if (!handingOff) forgetSender()
+    }
+
+    /**
+     * **PiP 로 들어가는 애니메이션이 시작된다**(API 35 — 1.0.0 은 minSdk 31 이라 받지 못했다). 모드 콜백은 애니메이션이 끝난 뒤에
+     * 오므로, 자동 진입(홈)의 첫 프레임에 조작부가 찍히지 않게 여기서 접는다. 진입이 끝나지 않고 돌아오면 [onResume] 이 편다.
+     */
+    override fun onPictureInPictureUiStateChanged(pipState: android.app.PictureInPictureUiState) {
+        super.onPictureInPictureUiStateChanged(pipState)
+        if (pipState.isTransitioningToPip) pipCollapsing.value = true
     }
 
     override fun onPictureInPictureModeChanged(

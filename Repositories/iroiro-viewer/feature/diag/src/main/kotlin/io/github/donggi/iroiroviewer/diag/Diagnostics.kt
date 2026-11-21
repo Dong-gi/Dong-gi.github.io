@@ -144,9 +144,8 @@ object Diagnostics {
     // ---- ③ SDK 확장 -------------------------------------------------------
 
     /**
-     * 암호 PDF 를 **누가 푸는가**가 API 수준으로 갈린다. 35 이상은 플랫폼이 암호를 받고
-     * (`PdfRenderer(pfd, LoadParams)`), 그 아래는 우리가 풀어 메모리 파일로 넘긴다.
-     * 어느 쪽이든 암호 PDF 는 열린다.
+     * 암호 PDF 는 플랫폼이 먼저 받는다(`PdfRenderer(pfd, LoadParams)`, API 35 — 2.0.0 은 minSdk 36). 1.0.0 은 API 수준으로
+     * 갈렸다(34 이하는 우리가 풀어 메모리 파일로 넘겼다). 지금 우리 복호화기는 플랫폼이 거절한 암호를 한 번 더 해 볼 때만 돈다.
      *
      * 확장 수준은 **이 앱의 경로를 가르지 않는다** — 확장 13 의 `PdfRendererPreV` 를 쓰지
      * 않기로 했다(`PdfEngine` 의 주석). 그래도 값을 보여 주는 것은 기기가 무엇을 가졌는지
@@ -155,10 +154,8 @@ object Diagnostics {
     private fun sdkExtensions(): Section {
         val s = runCatching { SdkExtensions.getExtensionVersion(Build.VERSION_CODES.S) }.getOrNull()
         val r = runCatching { SdkExtensions.getExtensionVersion(Build.VERSION_CODES.R) }.getOrNull()
-        val pdf = when {
-            Build.VERSION.SDK_INT >= 35 -> "플랫폼이 암호를 받는다(LoadParams)"
-            else -> "우리가 풀어 메모리 파일(memfd)로 넘긴다"
-        }
+        // minSdk 36 — 언제나 플랫폼이 먼저 받는다(1.0.0 의 API 31 은 우리가 풀었다). 거절한 암호만 우리 후보로 한 번 더.
+        val pdf = "플랫폼이 암호를 받는다(LoadParams) · 거절하면 우리가 한 번 더"
         return Section(
             "SDK 확장",
             listOf(

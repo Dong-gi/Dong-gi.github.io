@@ -1,7 +1,6 @@
 package io.github.donggi.iroiroviewer.docview
 
 import android.content.ClipData
-import android.os.Build
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -331,7 +330,6 @@ internal fun PdfSelectionOverlay(
     val toolbar = LocalTextToolbar.current
     val clipboard = LocalClipboard.current
     val scope = rememberCoroutineScope()
-    val copied = stringResource(R.string.doc_text_copied)
     val tooLong = stringResource(R.string.doc_text_too_long, "%,d".format(Locale.ROOT, PdfTextLayout.MAX_COPY_CHARS))
     val failed = stringResource(R.string.doc_text_copy_failed)
     val latestMessage by rememberUpdatedState(onMessage)
@@ -357,8 +355,7 @@ internal fun PdfSelectionOverlay(
                     scope.launch {
                         try {
                             clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("text", t)))
-                            // 안드로이드 13 부터는 시스템이 스스로 알린다(겹쳐 알리지 않는다 — 텍스트 뷰어와 같다).
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) latestMessage(copied)
+                            // '복사했다' 는 시스템이 스스로 알린다(안드로이드 13 부터 — 겹쳐 알리지 않는다, 텍스트 뷰어와 같다).
                         } catch (e: CancellationException) {
                             throw e
                         } catch (e: RuntimeException) {

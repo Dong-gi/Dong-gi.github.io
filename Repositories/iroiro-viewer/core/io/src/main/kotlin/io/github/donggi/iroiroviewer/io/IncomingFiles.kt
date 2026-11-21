@@ -344,8 +344,8 @@ object IncomingFiles {
         if (authority.isNullOrEmpty()) return true
         val own = context.packageName
         if (authority == own || authority.startsWith("$own.")) return true
-        @Suppress("DEPRECATION") // ProviderInfoFlags 판은 API 33 부터다(minSdk 31). 정수 판은 뜻이 같다.
-        val owner = context.packageManager.resolveContentProvider(authority, 0)?.packageName
+        val owner = context.packageManager
+            .resolveContentProvider(authority, android.content.pm.PackageManager.ComponentInfoFlags.of(0))?.packageName
         return owner == own
     }
 

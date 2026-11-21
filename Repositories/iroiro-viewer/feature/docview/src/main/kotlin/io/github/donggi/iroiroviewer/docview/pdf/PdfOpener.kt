@@ -1,6 +1,5 @@
 package io.github.donggi.iroiroviewer.docview.pdf
 
-import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.system.ErrnoException
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.FileChannelSource
@@ -51,10 +50,10 @@ import java.io.IOException
  * 2. pdfium 이 `SecurityException` 을 내면 **우리가 `/Encrypt` 를 읽어 가른다**
  *    ([PdfDecryptor.inspect]). pdfium 은 '암호가 필요하다' 와 '모르는 처리기다' 를 같은 예외로
  *    말하기 때문이다.
- * 3. 암호를 받으면 API 35 이상은 플랫폼이 직접 받고([PdfEngine.openWithPassword]), 그 아래는
- *    우리가 풀어 **메모리 파일**에 평문 한 벌을 만든 뒤 연다([MemfdSink]). 평문을 저장소에
- *    쓰지 않는다.
- * 4. API 35 에서 플랫폼이 거절해도 **우리 것으로 한 번 더** 해 본다. 우리 쪽은 암호를
+ * 3. 암호를 받으면 플랫폼이 직접 받는다([PdfEngine.openWithPassword] — API 35, minSdk 36 이라 언제나).
+ *    1.0.0(minSdk 31)의 34 이하 갈래 — 우리가 풀어 **메모리 파일**에 평문 한 벌을 만든 뒤 연다([MemfdSink]) — 는
+ *    아래 4·빈 암호 길로만 남았다. 평문을 저장소에 쓰지 않는다.
+ * 4. 플랫폼이 거절해도 **우리 것으로 한 번 더** 해 본다. 우리 쪽은 암호를
  *    바이트로 옮기는 후보가 더 많다(R2~R4 의 CP949 — 한글 암호를 옛 도구가 그렇게 적었다).
  *
  * **이 객체는 암호를 지우지 않는다.** 암호 배열의 주인은 부르는 쪽(`DocViewModel`)이고,
@@ -135,25 +134,16 @@ class PdfOpener(private val password: CharArray? = null) : DocumentOpener {
         } catch (e: IOException) {
             // 플랫폼이 '깨졌다' 고 했고 우리도 못 읽는다 — 그 판정이 맞다.
             if (!platformSaysLocked) return opened.toAttempt(null)
-            // pdfium 은 잠겼다고 하는데 우리는 구조를 못 읽는다. 35 이상이면 플랫폼이
-            // 암호를 받아 줄 수 있으니 묻고, 그 아래는 받아도 풀 길이 없으니 여기서 끝낸다.
+            // pdfium 은 잠겼다고 하는데 우리는 구조를 못 읽는다. 플랫폼이 암호를 받아 줄 수 있으니 묻는다
+            // (1.0.0 의 34 이하 갈래는 받아도 풀 길이 없어 여기서 '깨졌다' 로 끝냈다).
             Iro.d(TAG) { "잠긴 PDF 의 구조를 읽지 못했다: ${e::class.java.simpleName}" }
-            return if (Build.VERSION.SDK_INT >= 35) {
-                Attempt.Failed(OpenFailure.PasswordRequired("암호가 필요한 문서"))
-            } else {
-                Attempt.Failed(OpenFailure.Corrupt("잠긴 문서의 구조를 읽지 못했다"))
-            }
+            return Attempt.Failed(OpenFailure.PasswordRequired("암호가 필요한 문서"))
         }
         Iro.d(TAG) { "잠긴 PDF? $inspection (플랫폼: ${opened.cause::class.java.simpleName})" }
         return when (inspection) {
-            // 35 아래에서 상한을 넘는 문서는 **암호를 묻지 않는다.** 맞는 암호를 넣어도 우리가
-            // 메모리 파일에 담을 수 없으니, 물으면 쓸모없는 암호를 받는 셈이다.
+            // 플랫폼이 암호를 받으므로 크기와 상관없이 묻는다(1.0.0 의 34 이하 갈래는 메모리 파일 상한을 넘으면 묻지 않았다).
             is PdfDecryptor.Inspection.NeedsPassword ->
-                if (Build.VERSION.SDK_INT < 35 && file.length() > PdfLimits.MAX_DECRYPTED_BYTES) {
-                    Attempt.Failed(OpenFailure.TooLarge("복호화 상한을 넘는다"))
-                } else {
-                    Attempt.Failed(OpenFailure.PasswordRequired("암호가 필요한 문서"))
-                }
+                Attempt.Failed(OpenFailure.PasswordRequired("암호가 필요한 문서"))
             // 빈 암호로 풀리는데 pdfium 이 거절했다 — 우리가 빈 암호로 풀어 넘긴다.
             is PdfDecryptor.Inspection.OpenWithoutPassword -> decryptAndOpen(file, CharArray(0))
             is PdfDecryptor.Inspection.Unsupported ->
@@ -171,24 +161,21 @@ class PdfOpener(private val password: CharArray? = null) : DocumentOpener {
 
     /** 사용자가 넣은 암호로. */
     private suspend fun openLocked(file: File, password: CharArray): Attempt {
-        if (Build.VERSION.SDK_INT >= 35) {
-            val opened = PdfEngine.openWithPassword(file, password)
-            if (opened !is PdfEngine.Opened.Error || opened.cause !is SecurityException) {
-                // 플랫폼이 직접 풀었다 — 평문이 우리 손에 없어 글을 꺼낼 수 없다(암호는 여는 대로 지운다).
-                return opened.toAttempt(null)
-            }
-            Iro.d(TAG) { "플랫폼이 암호를 거절했다. 우리 후보로 한 번 더" }
-            // **플랫폼이 거절한 뒤의 실패는 '틀렸다' 다.** 우리 길은 한 번 더 해 보는 것일 뿐이라,
-            // 거기서 난 '너무 크다'·'구조를 못 읽는다' 로 끝내면 오타 하나에 암호 창이 사라지고
-            // 맞는 암호로는 플랫폼이 열었을 문서가 막다른 실패로 남는다.
-            val ours = decryptAndOpen(file, password)
-            return if (ours is Attempt.Ok) {
-                ours
-            } else {
-                Attempt.Failed(OpenFailure.PasswordRequired("암호가 맞지 않다", wrongPassword = true))
-            }
+        val opened = PdfEngine.openWithPassword(file, password)
+        if (opened !is PdfEngine.Opened.Error || opened.cause !is SecurityException) {
+            // 플랫폼이 직접 풀었다 — 평문이 우리 손에 없어 글을 꺼낼 수 없다(암호는 여는 대로 지운다).
+            return opened.toAttempt(null)
         }
-        return decryptAndOpen(file, password)
+        Iro.d(TAG) { "플랫폼이 암호를 거절했다. 우리 후보로 한 번 더" }
+        // **플랫폼이 거절한 뒤의 실패는 '틀렸다' 다.** 우리 길은 한 번 더 해 보는 것일 뿐이라,
+        // 거기서 난 '너무 크다'·'구조를 못 읽는다' 로 끝내면 오타 하나에 암호 창이 사라지고
+        // 맞는 암호로는 플랫폼이 열었을 문서가 막다른 실패로 남는다.
+        val ours = decryptAndOpen(file, password)
+        return if (ours is Attempt.Ok) {
+            ours
+        } else {
+            Attempt.Failed(OpenFailure.PasswordRequired("암호가 맞지 않다", wrongPassword = true))
+        }
     }
 
     /**

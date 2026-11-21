@@ -9,7 +9,6 @@ import android.graphics.Rect
 import android.graphics.pdf.LoadParams
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
-import androidx.annotation.RequiresApi
 import androidx.core.graphics.createBitmap
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.model.IroDispatchers
@@ -39,32 +38,25 @@ import java.io.File
  *   `openPage`·`Page.getWidth/getHeight`·`render(Bitmap, Rect, Matrix, Int)` 가 그렇다.
  * * 확장 13+ 가 내려 주는 `PdfRendererPreV`·`LoadParams`·`RenderParams` 가 더하는 것은
  *   **암호·폼·텍스트 선택·검색·링크**다. 폼 이하는 범위 밖이고, 남는 일이 '쪽을 비트맵에
- *   그리기' 하나라 레거시 한 벌이 minSdk 31 부터 compileSdk 37 까지 전부를 덮는다.
- * * 그리고 **확장 13 이상 기기가 이 저장소에 없다**(에뮬레이터 R=1·S=1). 분기를 만들면
- *   두 갈래를 한 줄도 실행해 보지 못한 채 두게 된다 — '에뮬레이터로 검증되지 않는 것은
- *   문서에 남긴다' 가 여기서는 **'코드를 쓰지 않는다'** 로 읽히는 것이 맞다.
+ *   그리기' 하나라 레거시 한 벌이 모든 판을 덮는다. 2.0.0 부터 minSdk 36 이라 확장 13 의 판(`PdfRendererPreV`)이
+ *   덮던 기기는 하나도 남지 않았다 — 같은 기능이 프레임워크 35 의 `PdfRenderer` 에 있다.
  *
- * ## 암호에만 분기가 하나 있다
+ * ## API 35 의 프레임워크가 주는 것 — 2.0.0 부터 갈래 없이 쓴다
  *
- * 암호를 받는 생성자
- * `PdfRenderer(pfd, LoadParams)` 가 **API 35 의 프레임워크**에만 있기 때문이다
- * (`api-versions.xml`: `since="35"`, 그 생성자에는 `sdks` 가 없다). 확장 13 의
- * `PdfRendererPreV` 는 여전히 쓰지 않는다 — 위 이유 그대로다.
+ * 1.0.0(minSdk 31)은 아래를 `@RequiresApi(35)` + `SDK_INT` 로 갈라 34 이하 기기(사용자의 Android 12 폰)에서 끄거나
+ * 우리 것으로 대신했다. minSdk 36 이라 갈래를 걷었다(`api-versions.xml` 의 `since="35"`, `sdks` 없음 — 확장이 아니라
+ * 프레임워크다).
  *
- * * **API 35 이상** — [openWithPassword]. pdfium 이 스스로 푼다. 평문 사본이 없다.
- * * **그 아래** — 우리가 풀어(`crypt/PdfDecryptor`) 메모리 파일에 평문 한 벌을 만들고
- *   [open] 의 서술자 판으로 연다. 두 갈래 **모두 에뮬레이터에서 돈다**(Android_12_Phone ·
- *   Android_15_Tablet) — 위에서 분기를 거절한 이유가 여기서는 성립하지 않는다.
+ * * **암호** — `PdfRenderer(pfd, LoadParams)`([openWithPassword]). pdfium 이 스스로 푼다. 평문 사본이 없다. 플랫폼이
+ *   거절했을 때·빈 암호로 풀리는데 pdfium 이 거절했을 때만 우리가 풀어(`crypt/PdfDecryptor`) 메모리 파일에 평문 한 벌을
+ *   만들고 [open] 의 서술자 판으로 연다(`PdfOpener`).
+ * * **찾기** — `Page.searchText`([searchPage]).
+ * * **문서 안 링크** — `Page.getGotoLinks`([gotoLinks]). 바깥 주소(`getLinkContents`)는 쓰지 않는다. 문서 전체의 목차
+ *   (outline)를 주는 API 는 `PdfRenderer` 에 없다(2026-11 의 공개 문서 — `getGotoLinks` 는 쪽 위의 상자를 줄 뿐이다).
  *
  * `PdfRendererPreV` 를 쓰게 되면 인자 순서를 **javadoc 이
  * 아니라 javap 로** 확인하라. android-36.1 의 javadoc 예제가 `page.render(bitmap, params,
  * null, null)` 인데 실제 시그니처는 `render(Bitmap, Rect, Matrix, RenderParams)` 다.
- *
- * ## 찾기도 API 35 의 프레임워크에만 있다
- *
- * `PdfRenderer.Page.searchText(String)` 은 `api-versions.xml` 에 `since="35"` 이고 그 메서드에는 `sdks` 가 없다 — 확장 13
- * 이 아니라 **프레임워크 35** 다(암호 생성자와 같은 사정). 그래서 [searchPage] 에 `@RequiresApi(35)` 를 달고, 부르는 쪽은
- * `SDK_INT` 로 가른다. 34 이하 기기에서는 찾기 단추가 없다(`PdfSearch` 의 주석).
  */
 internal object PdfEngine {
 
@@ -117,7 +109,7 @@ internal object PdfEngine {
     }
 
     /**
-     * 암호를 넣어 연다. **API 35 의 프레임워크에만 있는 생성자다.**
+     * 암호를 넣어 연다(API 35 의 프레임워크 생성자).
      *
      * 암호가 틀려도 암호가 없을 때와 같은 `SecurityException` 이 온다 — 부르는 쪽은 암호를
      * 넣었다는 사실로 '틀렸다' 를 안다.
@@ -125,7 +117,6 @@ internal object PdfEngine {
      * 암호가 `String` 으로 건너간다(`LoadParams.Builder.setPassword` 가 그것만 받는다).
      * `String` 은 지울 수 없으므로 이 함수 안에서만 만들고 곧바로 놓는다.
      */
-    @RequiresApi(35)
     suspend fun openWithPassword(file: File, password: CharArray): Opened = openWith(
         { ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY) },
     ) { pfd ->
@@ -279,7 +270,6 @@ internal object PdfEngine {
      * 결과가 [PdfSearch.MAX_PER_PAGE] 를 넘으면 앞의 것만 싣는다. 실패(닫힌 문서·깨진 쪽)는 빈 목록이 아니라 null —
      * 부르는 쪽이 '없다' 와 '못 읽었다' 를 가를 수 있게.
      */
-    @RequiresApi(35)
     suspend fun searchPage(renderer: PdfRenderer, ordinal: Int, query: String): List<PdfSearch.Match>? =
         withContext(IroDispatchers.pdfRender) {
             try {
@@ -296,6 +286,31 @@ internal object PdfEngine {
                 throw e
             } catch (t: Throwable) {
                 Iro.d { "쪽에서 찾지 못했다 #$ordinal: ${t::class.java.simpleName}" }
+                null
+            }
+        }
+
+    /**
+     * 쪽 하나의 **문서 안 링크**(`Page.getGotoLinks` — 목차 쪽의 '3장 → 41쪽', 책갈피가 쪽 위에 남긴 상자). 사각형은
+     * [searchPage] 와 같은 쪽 좌표(포인트)다. 가리키는 쪽은 플랫폼이 준 번호 그대로다 — 범위 밖이면 부르는 쪽이 버린다
+     * ([PdfLinks.targetOf]). [PdfLinks.MAX_PER_PAGE] 를 넘으면 앞의 것만. 실패는 null(그 쪽에는 링크가 없는 것으로 친다).
+     */
+    suspend fun gotoLinks(renderer: PdfRenderer, ordinal: Int): List<PdfLinks.Link>? =
+        withContext(IroDispatchers.pdfRender) {
+            try {
+                currentCoroutineContext().ensureActive()
+                renderer.openPage(ordinal).use { page ->
+                    page.gotoLinks.take(PdfLinks.MAX_PER_PAGE).map { link ->
+                        PdfLinks.Link(
+                            boxes = link.bounds.map { r -> PdfSearch.Box(r.left, r.top, r.right, r.bottom) },
+                            targetPage = link.destination.pageNumber,
+                        )
+                    }
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (t: Throwable) {
+                Iro.d { "쪽의 링크를 읽지 못했다 #$ordinal: ${t::class.java.simpleName}" }
                 null
             }
         }

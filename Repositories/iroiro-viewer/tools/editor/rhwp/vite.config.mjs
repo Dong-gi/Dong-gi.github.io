@@ -6,6 +6,7 @@
 // - CanvasKit(기본이 아닌 그리기 엔진, wasm 7 MB)을 빈 것으로 바꾼다 — 기본은 canvas2d 이고, 앱은 그리기 엔진을 고르는 질의를 넘기지 않는다.
 // - 개발 서버 설정이 없다.
 // - 번들에 든 npm 꾸러미의 이름을 bundled-packages.json 으로 남긴다 — build_rhwp.py 가 그 라이선스를 싣는다.
+// - 한컴 수식 글자의 대체 글꼴을 웹 글꼴 목록에 더한다(아래 equationFonts).
 //
 // 'vite' 를 import 하지 않는다 — 이 파일은 작업 폴더에서 돌고, 설정은 평범한 객체면 된다.
 
@@ -34,6 +35,45 @@ function bundledPackages() {
         fileName: 'bundled-packages.json',
         source: JSON.stringify([...names].sort(), null, 1),
       });
+    },
+  };
+}
+
+// 한컴 수식 글자의 대체 글꼴(build_rhwp.py 가 make_eq_font.py 로 지어 public/fonts 에 둔다). rhwp 0.9 는 수식 글꼴이 HYhwpEQ·HancomEQN 이면
+// 글자를 그 글꼴의 사용자 영역 코드로 캔버스에 그리며 CSS 가족 이름을 'HyhwpEQ'·'HancomEQN' 으로 준다(hancom_glyphs.rs). 스튜디오는 캔버스의
+// font 를 가로채 모르는 가족을 대체 사슬로 바꾸므로(wasm-bridge.ts 의 installCanvasFontSubstitution → substituteCssFontFamily), 그 이름이
+// 살아남으려면 등록된 웹 글꼴(REGISTERED_FONTS = 글꼴 목록)이어야 한다. 그래서 font-loader.ts 의 글꼴 목록에 두 줄을 더하고, 문서 없이도
+// 처음에 싣는 목록(CRITICAL_FONTS — 첫 쪽을 그리기 전에 init 이 기다린다)에 넣는다. 기기에 진짜 글꼴이 있으면 로더가 그것을 쓴다(OS 글꼴 감지).
+const EQUATION_FONTS = [
+  { name: 'HyhwpEQ', file: 'fonts/HyhwpEQ-iroiro.woff2' },
+  { name: 'HancomEQN', file: 'fonts/HancomEQN-iroiro.woff2' },
+];
+
+function equationFonts() {
+  const LIST = 'const FONT_LIST: readonly FontEntry[] = FONT_RULE_WEBFONT_ENTRIES;';
+  const CRITICAL = "const CRITICAL_FONTS = new Set(['함초롬바탕', '함초롬돋움', 'RHWP Old Hangul']);";
+  let patched = false;
+  return {
+    name: 'iroiro-equation-fonts',
+    enforce: 'pre',
+    transform(code, id) {
+      if (!id.replace(/\\/g, '/').endsWith('/src/core/font-loader.ts')) return null;
+      // 고칠 줄이 꼭 하나씩이어야 한다 — 새 판에서 꼴이 바뀌면 짐작하지 않고 빌드를 멈춘다.
+      if (code.split(LIST).length !== 2 || code.split(CRITICAL).length !== 2) {
+        this.error('font-loader.ts 의 FONT_LIST·CRITICAL_FONTS 줄이 바뀌었다 — 수식 대체 글꼴을 싣는 자리를 다시 찾을 것(vite.config.mjs)');
+      }
+      const entries = EQUATION_FONTS.map((f) => ({ ...f, format: 'woff2', ruleId: `iroiro.equation-substitute.${f.name}` }));
+      const names = EQUATION_FONTS.map((f) => `'${f.name}'`).join(', ');
+      patched = true;
+      return {
+        code: code
+          .split(LIST).join(`const FONT_LIST: readonly FontEntry[] = [...FONT_RULE_WEBFONT_ENTRIES, ...${JSON.stringify(entries)}];`)
+          .split(CRITICAL).join(`const CRITICAL_FONTS = new Set(['함초롬바탕', '함초롬돋움', 'RHWP Old Hangul', ${names}]);`),
+        map: null,
+      };
+    },
+    buildEnd(error) {
+      if (!error && !patched) this.error('font-loader.ts 를 만나지 못했다 — 수식 대체 글꼴이 실리지 않는다');
     },
   };
 }
@@ -67,5 +107,5 @@ export default {
     // 큰 wasm 을 data: 로 끼워 넣지 않는다(CSP 가 data: 스크립트를 막지는 않지만 커진다).
     assetsInlineLimit: 0,
   },
-  plugins: [bundledPackages()],
+  plugins: [equationFonts(), bundledPackages()],
 };

@@ -1,0 +1,20 @@
+# make_eq_font.py 가 쓰는 것 — local/editor/eqfont/venv(git 무시) 안에만 설치한다. 시스템 파이썬에는 넣지 않는다.
+#
+#     python -I -m venv local/editor/eqfont/venv
+#     local/editor/eqfont/venv/Scripts/python -I -m pip install --require-hashes --only-binary=:all: -r tools/editor/eqfont-requirements.txt
+#
+# fontTools(MIT) — 글꼴 읽기·짓기. Brotli(MIT) — WOFF2 를 읽고 쓰는 데 fontTools 가 부른다.
+# 둘 다 빌드 도구라 APK 에 실리지 않는다. 판을 올리면 make_eq_font.py 로 지어 보고 그림을 다시 견준다.
+#
+# 판과 함께 바퀴(wheel)의 SHA-256 을 고정한다(PyPI 의 그 판 파일 목록에서 옮겼다, 2026-11-21) — 같은 판에 나중에 올라온 바퀴나
+# 바꿔치기된 색인이 들어오지 못한다. 적은 것은 윈도 x64 의 CPython 3.12~3.14 와 fontTools 의 순수 파이썬 바퀴뿐이다 — 다른 기계·판이면
+# pip 이 '해시가 없다' 로 멈추고 그 바퀴의 해시를 보여 준다. PyPI 의 같은 판 목록에서 그 파일의 해시를 확인해 더한다.
+fonttools==4.68.0 \
+    --hash=sha256:d76f8fdcb6936f5e1045a0c9dd721a4bf11112e60d1e243bfa1d39f06a8b3104 \
+    --hash=sha256:fedc183bdbc3fdbfbdca26e0e04566d089cbb404712509a4e824608e9304cc77 \
+    --hash=sha256:6ed796b220654b4d37ad20af73419ec7969b669dd678cab88afb602c5683a331 \
+    --hash=sha256:1782f2cf952eb262c4126b1f57b5f0e027e71bf2b632350a033dec526f448428
+brotli==1.2.1 \
+    --hash=sha256:f5342b8256476554b4045db8b7bf4dc4044d0405485f220f0cd80764bc0d7faf \
+    --hash=sha256:e6c4fa55eab6b5684b33239597876a18a35ce1280b63ab960164032afbb8783f \
+    --hash=sha256:972a2e19dbaab47d0aa77c1d07f71c930bdc53538f2b33decc905e92a4be5cbd

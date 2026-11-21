@@ -3,7 +3,6 @@ package io.github.donggi.iroiroviewer.docview.pdf
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
-import androidx.annotation.RequiresApi
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.FileChannelSource
 import io.github.donggi.iroiroviewer.docview.pdf.text.PageText
 import io.github.donggi.iroiroviewer.docview.pdf.text.PdfTextEngine
@@ -115,16 +114,23 @@ class PdfDocument internal constructor(
     }
 
     /**
-     * 쪽 하나에서 글을 찾는다(API 35 이상). 닫혔거나 범위 밖이면 null.
+     * 쪽 하나에서 글을 찾는다(플랫폼의 `searchText`, API 35). 닫혔거나 범위 밖이면 null.
      *
      * 그리기와 **같은 잠금**을 지난다 — 찾기도 쪽을 연다('한 번에 한 쪽'). 문서 전체를 훑는 동안 그리기가 쪽마다 끼어들 수
      * 있게, 잠금은 쪽 하나를 찾는 동안만 쥔다.
      */
-    @RequiresApi(35)
     internal suspend fun search(ordinal: Int, query: String): List<PdfSearch.Match>? {
         if (closed.get() || ordinal !in 0 until pageCount) return null
         return lock.withLock {
             if (closed.get()) null else PdfEngine.searchPage(renderer, ordinal, query)
+        }
+    }
+
+    /** 쪽 하나의 문서 안 링크([PdfEngine.gotoLinks]). 잠금은 [search] 와 같다. 닫혔거나 범위 밖이면 null. */
+    internal suspend fun links(ordinal: Int): List<PdfLinks.Link>? {
+        if (closed.get() || ordinal !in 0 until pageCount) return null
+        return lock.withLock {
+            if (closed.get()) null else PdfEngine.gotoLinks(renderer, ordinal)
         }
     }
 

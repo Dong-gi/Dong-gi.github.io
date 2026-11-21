@@ -129,8 +129,10 @@ object EditorApp {
     private var cachedKinds: Set<String>? = null
 
     private fun readKinds(context: Context): Set<String> = try {
-        @Suppress("DEPRECATION") // 플래그 객체를 받는 판은 API 33 부터다(minSdk 31).
-        val info = context.packageManager.getActivityInfo(ComponentName(context.packageName, ACTIVITY), PackageManager.GET_META_DATA)
+        val info = context.packageManager.getActivityInfo(
+            ComponentName(context.packageName, ACTIVITY),
+            PackageManager.ComponentInfoFlags.of(PackageManager.GET_META_DATA.toLong()),
+        )
         parseKinds(info.metaData?.getString(META_KINDS))
     } catch (e: PackageManager.NameNotFoundException) {
         emptySet()

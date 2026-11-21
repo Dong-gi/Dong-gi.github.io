@@ -3,7 +3,6 @@ package io.github.donggi.iroiroviewer
 import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.Toast
@@ -16,10 +15,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -737,11 +739,10 @@ private fun entryOf(path: String): FileEntry? {
  *
  * **파일 작업 진행 알림에 필요하다.** 재생 알림보다 이것이 먼저 쓰이므로 여기서
  * 묻는다. 거부해도 앱은 그대로 돈다 — 진행이 화면 안의 바에만 보이고, 앱을 나가면
- * 무엇이 진행 중인지 알 수 없게 될 뿐이다.
+ * 무엇이 진행 중인지 알 수 없게 될 뿐이다. (minSdk 36 이라 언제나 묻는다 — 1.0.0 은 그 권한이 없는 12 를 건너뛰었다.)
  */
 @Composable
 private fun NotificationPermissionGate() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
     LaunchedEffect(Unit) {
@@ -759,6 +760,9 @@ private fun PermissionScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
+            // 창은 가장자리까지다(`enableEdgeToEdge`, Android 15+ 는 강제) — 상태 표시줄 밑으로 제목이 들어가지 않게 민다(Android 16
+            // 에뮬레이터에서 제목이 시계와 겹쳐 보였다).
+            .windowInsetsPadding(WindowInsets.safeDrawing)
             .padding(24.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),

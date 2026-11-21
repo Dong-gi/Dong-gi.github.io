@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -188,12 +187,7 @@ internal class IncomingRequest(val uri: Uri, val type: String?) {
          */
         private fun streamOf(intent: Intent): Uri? {
             val extra = try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    intent.getParcelableExtra(Intent.EXTRA_STREAM) as? Uri
-                }
+                intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
             } catch (e: RuntimeException) {
                 null
             }
@@ -206,8 +200,9 @@ internal class IncomingRequest(val uri: Uri, val type: String?) {
  * 받은 파일을 **열지 않는 까닭** — 설치 파일(APK — 이름이든 내용이든, `ApkFiles`)이면 그 문장, 아니면 null(연다). 판단만(JVM 시험).
  *
  * 다른 앱이 넘긴 APK 를 이 앱이 '다른 앱으로 열기' 로 설치 관리자에 넘기면 설치 관리자는 그것을 **이 앱이 보낸 것**으로 받는다 — 권한 없는
- * 앱이 이 앱의 설치 권한과 '출처를 알 수 없는 앱' 허용을 빌려 쓴다. 안드로이드 12 는 이름을 가리킨 인텐트에 필터를
- * 보지 않으므로 필터에 APK 형식을 적지 않은 것으로는 막지 못한다. 그래서 받은 것을 **어느 화면으로도 보내지 않는다** — 이름을 바꾼 APK 가
+ * 앱이 이 앱의 설치 권한과 '출처를 알 수 없는 앱' 허용을 빌려 쓴다. 이름을 가리킨 인텐트는 필터를 보지
+ * 않으므로(안드로이드 16 의 '더 안전한 인텐트'(`intentMatchingFlags`)는 받는 앱이 켜야 듣고 이 앱은 켜지 않았다 — 켜도 이름을 바꾼
+ * APK 는 다른 형식으로 온다) 필터에 APK 형식을 적지 않은 것으로는 막지 못한다. 그래서 받은 것을 **어느 화면으로도 보내지 않는다** — 이름을 바꾼 APK 가
  * 다른 갈래(뷰어의 실패 화면·'보여 줄 화면이 없다'·재생기·편집기)로 빠져 '다른 앱으로 열기'·공유에 닿는 길이 함께 막힌다. 파일 목록에서
  * 사용자가 고른 APK 는 이 길을 지나지 않는다. 디스크를 읽는다(입출력 스레드).
  */

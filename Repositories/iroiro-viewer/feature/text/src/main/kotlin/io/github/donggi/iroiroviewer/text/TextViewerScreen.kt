@@ -1,6 +1,5 @@
 package io.github.donggi.iroiroviewer.text
 
-import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.horizontalScroll
@@ -632,18 +631,17 @@ private fun rememberSendMessages(): (RowSend.Outcome) -> String {
 /**
  * 복사의 결과를 알림 문장으로. null 이면 말하지 않는다.
  *
- * **안드로이드 13(API 33)부터는 '복사했다' 를 말하지 않는다** — 시스템이 클립보드에 넣는 순간 스스로 보여 주고, 공식 안내가
- * 앱이 겹쳐 알리지 말라고 한다. 그 아래(사용자의 기기 Android 12)에서는 아무것도 보이지 않으므로 우리가 말한다.
+ * **'복사했다' 는 말하지 않는다** — 안드로이드 13 부터 시스템이 클립보드에 넣는 순간 스스로 보여 주고, 공식 안내가 앱이 겹쳐 알리지
+ * 말라고 한다(minSdk 36. 1.0.0 은 아무것도 보이지 않는 12 에서만 말했다).
  */
 @Composable
 private fun rememberCopyMessages(): (RowCopy.Outcome) -> String? {
-    val copied = stringResource(R.string.text_copied)
     val tooLong = stringResource(R.string.text_copy_too_long, "%,d".format(Locale.ROOT, RowCopy.MAX_CHARS))
     val failed = stringResource(R.string.text_copy_failed)
-    return remember(copied, tooLong, failed) {
+    return remember(tooLong, failed) {
         { outcome ->
             when (outcome) {
-                is RowCopy.Outcome.Copied -> copied.takeIf { Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU }
+                is RowCopy.Outcome.Copied -> null
                 RowCopy.Outcome.TooLong -> tooLong
                 RowCopy.Outcome.Failed -> failed
             }

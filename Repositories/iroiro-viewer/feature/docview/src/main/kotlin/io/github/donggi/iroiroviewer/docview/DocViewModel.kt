@@ -2,9 +2,6 @@ package io.github.donggi.iroiroviewer.docview
 
 import android.app.Application
 import android.content.Context
-import android.os.Build
-import androidx.annotation.ChecksSdkIntAtLeast
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.donggi.iroiroviewer.data.AppPreferences
@@ -280,14 +277,10 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /** PDF 찾기(API 35 이상). */
+    /** PDF 찾기(플랫폼의 `searchText` — API 35, minSdk 36 이라 언제나 있다). */
     private val _search = MutableStateFlow(PdfSearch.State())
     internal val search: StateFlow<PdfSearch.State> = _search.asStateFlow()
     private var searchJob: Job? = null
-
-    /** 이 기기에서 PDF 찾기가 되는가. 화면이 단추를 띄울지 정한다. */
-    @get:ChecksSdkIntAtLeast(api = 35)
-    val canSearchPdf: Boolean get() = Build.VERSION.SDK_INT >= 35
 
     /**
      * 버린 것과 경고.
@@ -593,7 +586,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         scheduleSave()
     }
 
-    // ---- PDF 찾기(API 35 이상) -----------------------------------------------------------------------
+    // ---- PDF 찾기 -----------------------------------------------------------------------------------------
 
     /**
      * [raw] 를 찾는다. 보고 있는 쪽부터 끝까지, 그다음 처음부터 — 첫 결과가 '다음' 이다([PdfSearch.order]).
@@ -602,12 +595,6 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
      * 문서를 닫으면 앞의 찾기를 취소한다 — 쪽 하나를 찾는 도중에는 취소가 닿지 않지만(렌더와 같다) 다음 쪽 전에 멈춘다.
      */
     fun search(raw: String) {
-        // 갈래를 함수 하나로 가른다 — 코루틴 람다 안의 호출은 lint 가 바깥의 `SDK_INT` 검사를 보지 못한다(NewApi 0 을 지킨다).
-        if (Build.VERSION.SDK_INT >= 35) searchFrom35(raw)
-    }
-
-    @RequiresApi(35)
-    private fun searchFrom35(raw: String) {
         val pdf = (_state.value as? State.Ready)?.doc as? Doc.Pdf ?: return
         val query = PdfSearch.normalize(raw)
         searchJob?.cancel()

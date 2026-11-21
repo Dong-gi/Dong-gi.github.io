@@ -21,7 +21,18 @@ import sys
 import xml.etree.ElementTree as ET
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-MIN_SDK = 31
+
+
+def app_min_sdk() -> int:
+    """기준은 앱의 minSdk 다(`app/build.gradle.kts`) — 손으로 적어 두면 판을 올릴 때 이 도구만 옛 값을 본다."""
+    text = (ROOT / "app" / "build.gradle.kts").read_text(encoding="utf-8")
+    m = re.search(r"^\s*minSdk\s*=\s*(\d+)\s*$", text, re.M)
+    if not m:
+        sys.exit("app/build.gradle.kts 에서 minSdk 를 찾지 못했다")
+    return int(m.group(1))
+
+
+MIN_SDK = app_min_sdk()
 # 순수 JVM 모듈 전부(settings.gradle.kts 에서 `kotlin.jvm`·`java-library` 를 쓰는 것). 새로 만들면 여기 더한다.
 MODULES = [
     "core/model", "core/safety", "core/charset",
@@ -32,8 +43,8 @@ KNOWN_HIDDEN_PARENT = {
     ("java/lang/StringBuilder", "setLength(I)V"),
     ("java/lang/StringBuilder", "substring(II)Ljava/lang/String;"),
     ("java/lang/StringBuilder", "lastIndexOf(Ljava/lang/String;I)I"),
-    # 자바 9 의 공변 반환(`ByteBuffer flip()` 이 `ByteBuffer` 를 돌려준다) — api-versions.xml 에는 `Buffer` 판만 있지만 API 31 기기에
-    # 있다: `core:charset` 의 `WindowedDecoder` 가 7단계부터 글을 열 때마다 이것을 부르고(덱스에 그대로 남는다) 에뮬레이터에서 돈다.
+    # 자바 9 의 공변 반환(`ByteBuffer flip()` 이 `ByteBuffer` 를 돌려준다) — api-versions.xml 에는 `Buffer` 판만 있지만 API 31 기기에도
+    # 있었다(그러니 36 에도 있다): `core:charset` 의 `WindowedDecoder` 가 7단계부터 글을 열 때마다 이것을 부르고(덱스에 그대로 남는다) 에뮬레이터에서 돈다.
     ("java/nio/ByteBuffer", "flip()Ljava/nio/ByteBuffer;"),
     ("java/nio/ByteBuffer", "clear()Ljava/nio/ByteBuffer;"),
     ("java/nio/CharBuffer", "flip()Ljava/nio/CharBuffer;"),

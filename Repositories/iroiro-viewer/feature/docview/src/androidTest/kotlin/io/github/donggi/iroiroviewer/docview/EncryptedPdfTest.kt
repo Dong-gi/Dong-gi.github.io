@@ -32,14 +32,13 @@ import java.io.FileInputStream
  * 화소 단위로 같은지** 본다(`Bitmap.sameAs`). 한 바이트만 어긋나게 풀려도 내용 스트림의
  * Flate 가 깨져 쪽이 비거나 그림이 사라진다.
  *
- * ## 두 기기에서 서로 다른 길을 탄다
+ * ## 두 길
  *
- * * **API 31**(Android_12_Phone) — 플랫폼이 암호를 받지 않는다. 우리 복호화기가 풀어
- *   메모리 파일(memfd)에 담고 그것을 연다.
- * * **API 35**(Android_15_Tablet) — 플랫폼이 암호를 받는다(`LoadParams`).
+ * * **플랫폼**(API 35+ — minSdk 36 이라 언제나) — 플랫폼이 암호를 받는다(`LoadParams`). `PdfOpener` 가 먼저 타는 길.
+ * * **우리 복호화기** — 풀어서 메모리 파일(memfd)에 담고 그것을 연다. 플랫폼이 거절했을 때만 탄다(1.0.0 의 API 31 길).
  *
- * 그래서 [메모리_파일_경로가_이_기기에서_돈다] 는 API 와 무관하게 우리 길을 직접 탄다 —
- * 35 이상에서 `PdfOpener` 만 보면 우리 길은 한 번도 돌지 않는다.
+ * 그래서 [메모리_파일_경로가_이_기기에서_돈다] 는 우리 길을 직접 탄다 —
+ * `PdfOpener` 만 보면 우리 길은 거의 돌지 않는다.
  */
 class EncryptedPdfTest {
 
@@ -192,9 +191,8 @@ class EncryptedPdfTest {
 
     @Test
     fun 플랫폼이_암호를_직접_받는다() = runBlocking {
-        // API 35 에서 `PdfOpener` 는 플랫폼이 거절하면 우리 길로 한 번 더 해 본다. 그러면
-        // 위 시험들은 **플랫폼 길이 죽어 있어도** 통과한다. 플랫폼 길만 따로 태운다.
-        org.junit.Assume.assumeTrue("API 35 이상에서만", android.os.Build.VERSION.SDK_INT >= 35)
+        // `PdfOpener` 는 플랫폼이 거절하면 우리 길로 한 번 더 해 본다. 그러면
+        // 위 시험들은 **플랫폼 길이 죽어 있어도** 통과한다. 플랫폼 길만 따로 태운다(minSdk 36 이라 언제나 돈다).
         for ((name, password) in locked) {
             val opened = PdfEngine.openWithPassword(sample(name), password.toCharArray())
             assertTrue("$name: 플랫폼이 암호를 받지 않았다 — $opened", opened is PdfEngine.Opened.Ok)

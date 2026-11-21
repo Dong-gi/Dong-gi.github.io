@@ -8,7 +8,6 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
-import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
@@ -84,12 +83,9 @@ class FileOpService : Service() {
      * 오기 전에 정지 요청이 가면 시스템이 앱을 죽인다.
      */
     private fun startInForeground(notification: Notification) {
+        // 타입을 언제나 적는다 — targetSdk 34 이상은 타입이 매니페스트의 것과 맞아야 한다(1.0.0 은 12 에서 타입 없는 판을 불렀다).
         val ok = runCatching {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
-            } else {
-                startForeground(NOTIFICATION_ID, notification)
-            }
+            startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
         }.isSuccess
         if (ok) {
             FileOpManager.onServiceForeground()

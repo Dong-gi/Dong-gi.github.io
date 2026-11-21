@@ -25,7 +25,7 @@ import java.io.FileDescriptor
  * 그것은 앱이 쥔 모든 메모리 — 풀어서 그린 쪽 비트맵까지 — 에 똑같이 해당하므로 memfd 만의
  * 문제가 아니다.
  *
- * `Os.memfd_create` 는 API 30 부터다(minSdk 31).
+ * `Os.memfd_create` 는 API 30 부터다(minSdk 36).
  */
 internal class MemfdSink private constructor(private val fd: FileDescriptor) : PdfSink, AutoCloseable {
 

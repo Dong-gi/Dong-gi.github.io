@@ -62,10 +62,12 @@ object ShareHelper {
     }
 
     /** 우리 앱 안에서 [intent] 를 받겠다는 화면. 우리 꾸러미로 좁혀 묻는다(`ExternalOpen` 의 같은 이름과 같다). */
-    @Suppress("DEPRECATION") // `ResolveInfoFlags` 를 받는 판은 API 33 부터다(minSdk 31).
     private fun ownHandlers(context: Context, intent: Intent): Array<android.content.ComponentName> =
         context.packageManager
-            .queryIntentActivities(Intent(intent).setPackage(context.packageName), android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
+            .queryIntentActivities(
+                Intent(intent).setPackage(context.packageName),
+                android.content.pm.PackageManager.ResolveInfoFlags.of(android.content.pm.PackageManager.MATCH_DEFAULT_ONLY.toLong()),
+            )
             .mapNotNull { info -> info.activityInfo?.let { android.content.ComponentName(it.packageName, it.name) } }
             .toTypedArray()
 

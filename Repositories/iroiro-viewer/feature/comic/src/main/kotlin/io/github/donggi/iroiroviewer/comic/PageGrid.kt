@@ -246,7 +246,7 @@ private fun GridCell(
  * 뜨고, 격자는 그런 장을 수십 장 든다. 여기서는 `setTargetSize` 로 **칸 크기 그대로** 뜨고, 불투명한 쪽은 한 화소
  * 2바이트(`MEMORY_POLICY_LOW_RAM`)로 받는다. 확대할 일이 없어 선명화도 필요 없다.
  *
- * `createSource(byte[], int, int)` 는 API 31 부터다(minSdk 31). 실패는 전부 null — 칸에 쪽 번호가 남는다.
+ * `createSource(byte[], int, int)` 는 API 31 부터다(minSdk 36). 실패는 전부 null — 칸에 쪽 번호가 남는다.
  */
 internal fun decodeThumbnail(bytes: ByteArray, boxWidth: Int, boxHeight: Int): ImageBitmap? = try {
     ImageDecoder.decodeBitmap(ImageDecoder.createSource(bytes, 0, bytes.size)) { decoder, info, _ ->

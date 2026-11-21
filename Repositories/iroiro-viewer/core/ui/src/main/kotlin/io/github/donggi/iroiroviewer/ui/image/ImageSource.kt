@@ -172,7 +172,7 @@ object ImageIo {
      * 보면 사용자의 만화가 통째로 앱 저장소에 평문으로 복제된다. 그래서 쪽은 힙에만 둔다.
      *
      * `ImageDecoder.createSource(byte[], int, int)` 는 **API 31 부터**이고 이 앱의
-     * minSdk 가 31 이라 그대로 쓸 수 있다(`api-versions.xml` 에서 `since="31"` 확인).
+     * minSdk 가 36 이라 그대로 쓸 수 있다(`api-versions.xml` 에서 `since="31"` 확인).
      * `InputStream` 을 받는 오버로드는 **없다** — 있는 줄 알고 설계하면 막힌다.
      */
     suspend fun decodeFitted(

@@ -8,8 +8,8 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * PDF 찾기의 상태 — 훑는 차례, 결과를 더하는 법, 앞뒤로 옮기기, 강조의 자리. 찾기 자체(플랫폼의 `searchText`)는 API 35
- * 기기에서만 돌아 JVM 에 없다 — 그 대신 결과를 다루는 판단을 전부 여기서 박는다.
+ * PDF 찾기의 상태 — 훑는 차례, 결과를 더하는 법, 앞뒤로 옮기기, 강조의 자리. 찾기 자체(플랫폼의 `searchText`)는 기기에서만
+ * 돌아 JVM 에 없다 — 그 대신 결과를 다루는 판단을 전부 여기서 박는다.
  */
 class PdfSearchTest {
 

@@ -26,10 +26,8 @@ OO_SCRIPT = ROOT / "tools" / "editor" / "build_onlyoffice.py"
 NPM_URL = "https://registry.npmjs.org/@rhwp/core"
 INSTALL_SCRIPT_URL = "https://raw.githubusercontent.com/cryptpad/cryptpad/main/install-office.sh"
 RELEASE_URL = "https://api.github.com/repos/{repo}/releases/latest"
-# 지어 보고 되돌린 rhwp 판 — 새 판으로 세지 않고 까닭만 보인다(까닭의 자세한 것은 build_rhwp.py 머리말).
-RHWP_SKIPPED = {
-    "0.9.0": "HYhwpEQ 수식의 숫자·기호가 네모로 나온다(2026-11-14 되돌림)",
-}
+# 지어 보고 되돌린 rhwp 판 — 새 판으로 세지 않고 까닭만 보인다(까닭의 자세한 것은 build_rhwp.py 머리말). 지금은 없다.
+RHWP_SKIPPED: dict[str, str] = {}
 TIMEOUT_S = 20
 MAX_BYTES = 4 * 1024 * 1024
 
@@ -65,6 +63,7 @@ def check_rhwp() -> bool:
     newer = version_key(latest) > version_key(ours) and skipped is None
     print(f"rhwp        고정 {ours} · npm 최신 {latest}" + (" ← 새 판" if newer else "")
           + (f" (되돌린 판 — {skipped})" if skipped else ""))
+    print("            수식은 대체 글꼴이 필요하다(HYhwpEQ·HancomEQN 의 PUA). 새 판의 표 꼴이 바뀌면 make_eq_font.py 가 빌드를 멈춰 알린다")
     if newer:
         integrity = meta["versions"].get(latest, {}).get("dist", {}).get("integrity", "?")
         print(f"            CORE_INTEGRITY 후보 {integrity}")
@@ -103,6 +102,9 @@ def check_onlyoffice() -> bool:
 
 
 def main() -> int:
+    # -I(격리)로 돌면 PYTHONIOENCODING 이 먹지 않는다 — 윈도 콘솔의 cp949 가 '—' 에서 죽지 않게(build_rhwp.py 와 같다).
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
     found = False
     try:
         found |= check_rhwp()

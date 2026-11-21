@@ -1,14 +1,18 @@
 """rhwp(HWP·HWPX 편집기)의 엔진 묶음을 짓는다 — `vendor/editor/assets/engines/rhwp/`(git 무시)로. APK 의 `assets/engines/rhwp/` 이 된다.
 
-판을 고정한다(사용자 승인 2026-10-09):
-- 소스: github.com/edwardkim/rhwp 의 태그 v0.8.7 = 커밋 1a76570e…. 공개된 보안 권고 10건이 모두 이 판에서 고쳐졌다(2026-10-09 확인).
-  저장소가 3.7 GB 라 필요한 자리만 받는다(깊이 1·blob 은 필요할 때·성긴 체크아웃 — 스튜디오·글꼴·라이선스).
-- wasm: npm 의 `@rhwp/core@0.8.7`. 같은 커밋에서 올렸다(레지스트리 메타데이터의 gitHead, SLSA 출처 증명). 받은 것을 아래 sha512 와 견준다.
-- 0.9.0 은 지어 보고 되돌렸다(2026-11-14): 글꼴이 HYhwpEQ 인 수식(한컴 수식의 기본)의 숫자·기호를 HYhwpEQ 의 사용자 영역 글자(U+E0xx)로
-  그리고, 그 글꼴이 설치돼 있지 않으면 웹 그리개(canvas2d)에 되돌려 읽는 길이 없어 네모로 나온다(되돌리기는 데스크톱 Skia 빌드에만 —
-  `src/renderer/equation/hancom_glyphs.rs` 의 `semantic_fallback_glyph`). 안드로이드에는 그 글꼴이 없다. 다음 판을 올릴 때 수식 문서부터 본다.
-  0.9.0 에 필요했던 준비(SPARSE·FONTS_ALLOWED 의 더한 줄, vite 설정의 AI 도우미 끄기·'로컬 글꼴 감지' 창 빼기)는 남겨 두었다 — 0.8.7 에는 해가 없다.
+판을 고정한다(사용자 승인 2026-10-09, 0.9.1 로 올림 2026-11-21):
+- 소스: github.com/edwardkim/rhwp 의 태그 v0.9.1 = 커밋 981ce66b…(npm 의 gitHead·SLSA 출처 증명과 같다).
+  저장소가 3.7 GB 라 필요한 자리만 받는다(깊이 1·blob 은 필요할 때·성긴 체크아웃 — 스튜디오·글꼴·라이선스·수식 글리프 표).
+- wasm: npm 의 `@rhwp/core@0.9.1`. 같은 커밋에서 올렸다(레지스트리 메타데이터의 gitHead, SLSA 출처 증명). 받은 것을 아래 sha512 와 견준다.
+- 0.9 의 수식 — 글꼴이 HYhwpEQ·HancomEQN 인 수식(한컴 수식의 기본)의 숫자·기호·기울인 글자를 그 글꼴의 사용자 영역 글자(U+E0xx)로 그린다
+  (`src/renderer/equation/hancom_glyphs.rs`). 그 글꼴은 한컴의 상용 글꼴이라 기기에 없고, 웹 그리개(canvas2d)에는 되돌려 읽는 길이 없어
+  (데스크톱 Skia 빌드의 `semantic_fallback_glyph` 만 있다) 네모로 나왔다 — 0.9.0 은 그래서 되돌렸다(2026-11-14). 지금은 자유 글꼴(STIX Two
+  Math, OFL)의 글리프를 그 코드 자리에 담은 **대체 글꼴**을 빌드 때 지어(`make_eq_font.py` — rhwp 소스의 표를 읽는다, 꼴이 바뀌면 멈춘다)
+  스튜디오의 웹 글꼴 목록에 'HyhwpEQ'·'HancomEQN' 으로 싣는다(vite.config.mjs 의 equationFonts). 판을 올리면 수식 문서·옛한글·큰 HWP 를 본다.
+- 0.9.0 에 필요했던 준비(SPARSE·FONTS_ALLOWED 의 더한 줄, vite 설정의 AI 도우미 끄기·'로컬 글꼴 감지' 창 빼기)는 그대로 쓴다.
 - 빌드 도구: 스튜디오의 package-lock.json 그대로 `npm ci --ignore-scripts`(설치 스크립트를 돌리지 않는다). npm 캐시까지 `local/editor/rhwp/` 안에 둔다.
+  대체 글꼴은 fontTools 가 필요하다 — `local/editor/eqfont/venv`(git 무시)의 파이썬으로 부른다(없으면 만드는 법을 말하고 멈춘다,
+  `tools/editor/eqfont-requirements.txt`). 시스템 파이썬에는 설치하지 않는다.
 
 원래 빌드와 다른 것(자세한 것은 `tools/editor/rhwp/vite.config.mjs`):
 - PWA(서비스 워커·매니페스트)·외부 웹폰트·hwpctrl 플러그인·CanvasKit 을 뺀다. 표본 문서(public/samples)도 뺀다.
@@ -16,7 +20,9 @@
   새 판에 모르는 글꼴이 생기면 멈춘다(보고 정한다).
 - 어댑터(`feature/editor/src/main/assets/engines/rhwp/iroiro-rhwp.js`, 우리 코드라 커밋한다 — APK 에서 이 묶음과 합쳐진다)를 부르는 줄을
   index.html 의 `</body>` 앞에 넣는다. 고전 스크립트라 문서를 다 읽은 뒤·스튜디오의 모듈이 돌기 전에 돈다.
-- 라이선스를 `licenses/` 에 모은다 — rhwp(MIT)·번들에 든 npm 꾸러미·글꼴(name 표에서 꺼낸 저작권 줄과 OFL 전문).
+- 라이선스를 `licenses/` 에 모은다 — rhwp(MIT)·번들에 든 npm 꾸러미·글꼴(name 표에서 꺼낸 저작권 줄과 OFL 전문)·수식 대체 글꼴의 고지와
+  그 원 글꼴의 OFL.
+- 인쇄 쪽(print.html — 'PDF로 저장' 이 쓰는 숨은 틀)에도 수식 대체 글꼴의 @font-face 를 넣는다. 그 틀은 본 쪽의 웹 글꼴을 물려받지 않는다.
 
     python -I tools/editor/build_rhwp.py          # 받기(처음만)·짓기
     python -I tools/editor/build_rhwp.py --clean  # 작업 폴더(local/editor/rhwp)를 지우고 처음부터
@@ -50,13 +56,20 @@ OUT = ROOT / "vendor" / "editor" / "assets" / "engines" / "rhwp"
 ADAPTER = ROOT / "feature" / "editor" / "src" / "main" / "assets" / "engines" / "rhwp" / "iroiro-rhwp.js"
 
 REPO = "https://github.com/edwardkim/rhwp.git"
-VERSION = "0.8.7"
+VERSION = "0.9.1"
 TAG = f"v{VERSION}"
-COMMIT = "1a76570e833917d15817415a53c09ad61ab3203f"
+COMMIT = "981ce66b4183b13c1a3b5907e04a8969c8c42034"
 CORE_URL = f"https://registry.npmjs.org/@rhwp/core/-/core-{VERSION}.tgz"
-CORE_INTEGRITY = "sha512-qgNpY9aclCvy9D7cPnpuplu42kUFZCCPhdjAS5HBso4Z4XeHG3uchYdUleQBoas/zEuwfJ7H4/ulepqdL/LXDA=="
-# 0.9.0 이면 — COMMIT c9095c5f67632e6721e800ccc7fb43ea49d26682,
-# CORE_INTEGRITY sha512-dEe9gtEM5QXAoJjX+fwgbN5KIo0a6X/wgwEg0LDcq9oY1ga5lD5vNkediFSSX4Xxs8VfFk//dbk71aMQ8J1uAQ== (위 머리말의 까닭으로 되돌렸다)
+CORE_INTEGRITY = "sha512-jMLOubFHp5MocnbyYNoPwcUDAIqzF47hBv420i0prnN4+hk0iX/f4RPv0NotDOtQcANaFjJe8/mo64aQsZ73XA=="
+# 되돌릴 때 — 0.8.7 은 COMMIT 1a76570e833917d15817415a53c09ad61ab3203f,
+# CORE_INTEGRITY sha512-qgNpY9aclCvy9D7cPnpuplu42kUFZCCPhdjAS5HBso4Z4XeHG3uchYdUleQBoas/zEuwfJ7H4/ulepqdL/LXDA== (수식 대체 글꼴이 필요 없다)
+
+# 수식 대체 글꼴(make_eq_font.py)을 짓는 파이썬 — fontTools 가 든 가상 환경.
+EQFONT_VENV = ROOT / "local" / "editor" / "eqfont" / "venv"
+EQFONT_TOOL = ROOT / "tools" / "editor" / "make_eq_font.py"
+EQFONT_OUT = WORK / "eqfont"
+EQFONT_FILES = ("HyhwpEQ-iroiro.woff2", "HancomEQN-iroiro.woff2")  # vite.config.mjs 의 EQUATION_FONTS 와 같은 이름
+EQFONT_NOTICES = ("EQ-SUBSTITUTE-FONTS.txt", "STIXTwoMath-OFL.txt")
 
 # 성긴 체크아웃의 자리(gitignore 꼴). e2e 시험·표본 문서는 받지 않는다.
 SPARSE = [
@@ -67,6 +80,8 @@ SPARSE = [
     "/vendor/npm/",  # 0.9.0 부터 스튜디오가 저장소 안의 꾸러미를 file: 로 받는다(ajv)
     "/rhwp-shared/",  # 0.9.0 부터 스튜디오가 가져온다(양식 동작·PDF 가져오기)
     "/src/renderer/square_gradient.sksl",  # 스튜디오의 CanvasKit 그리개가 가져온다(우리 빌드는 CanvasKit 을 빼지만 해석은 한다)
+    "/src/renderer/equation/hancom_glyphs.rs",  # 수식 대체 글꼴의 표(make_eq_font.py 가 읽는다)
+    "/src/renderer/equation/hancom_eqn_metrics.rs",
     "!/rhwp-studio/e2e/",
     "!/rhwp-studio/public/samples/",
 ]
@@ -136,6 +151,8 @@ def node_tools() -> tuple[str, str]:
 def checkout() -> None:
     if (SRC / ".git").is_dir() and git_out("rev-parse", "HEAD") == COMMIT:
         log(f"소스: 이미 {TAG}({COMMIT[:10]})")
+        # SPARSE 가 바뀌었을 수 있다 — 다시 걸면 새 자리만 받는다(blob 은 필요할 때).
+        git("sparse-checkout", "set", "--no-cone", *SPARSE, step="git-sparse")
         return
     if SRC.exists():
         rmtree(SRC)
@@ -231,6 +248,28 @@ def prepare() -> list[str]:
     return kept
 
 
+def eq_fonts() -> list[str]:
+    """수식 대체 글꼴을 지어(make_eq_font.py — 가상 환경의 파이썬) 스튜디오의 public/fonts 에 둔다. 실은 파일 이름을 돌려준다."""
+    python = EQFONT_VENV / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    if not python.is_file():
+        rel = EQFONT_VENV.relative_to(ROOT).as_posix()
+        sys.exit("수식 대체 글꼴을 지을 가상 환경이 없다 — 한 번 만든다(시스템 파이썬에는 설치하지 않는다):\n"
+                 f"    python -I -m venv {rel}\n"
+                 f"    {rel}/{'Scripts' if os.name == 'nt' else 'bin'}/python -I -m pip install --require-hashes --only-binary=:all: "
+                 "-r tools/editor/eqfont-requirements.txt")
+    if EQFONT_OUT.exists():
+        shutil.rmtree(EQFONT_OUT)
+    log("수식 대체 글꼴: make_eq_font.py")
+    run("eq-font", [str(python), "-I", str(EQFONT_TOOL), str(SRC), str(EQFONT_OUT)], cwd=ROOT)
+    log((LOGS / "eq-font.log").read_text(encoding="utf-8").strip())
+    for name in (*EQFONT_FILES, *EQFONT_NOTICES):
+        if not (EQFONT_OUT / name).is_file():
+            sys.exit(f"make_eq_font.py 가 {name} 를 만들지 않았다")
+    for name in EQFONT_FILES:
+        shutil.copy2(EQFONT_OUT / name, STUDIO / "public" / "fonts" / name)
+    return list(EQFONT_FILES)
+
+
 def npm_install(node: str, npm_cli: str) -> None:
     lock = STUDIO / "package-lock.json"
     stamp = STUDIO / "node_modules" / ".iroiro-lock-sha256"
@@ -308,6 +347,20 @@ def assemble(node: str, kept_fonts: list[str], audit: dict) -> None:
     if external:
         sys.exit("index.html 이 바깥 주소를 부른다: " + ", ".join(external))
     index.write_text(html, encoding="utf-8")
+    for name in EQFONT_FILES:
+        if not (OUT / "fonts" / name).is_file():
+            sys.exit(f"묶음에 수식 대체 글꼴 {name} 가 없다")
+
+    # 인쇄 쪽 — 숨은 틀은 본 쪽의 웹 글꼴을 물려받지 않으므로, 수식 쪽(SVG)의 font-family 를 받을 @font-face 를 직접 둔다.
+    printing = OUT / "print.html"
+    page = printing.read_text(encoding="utf-8")
+    if page.count("</head>") != 1:
+        sys.exit("print.html 의 </head> 가 하나가 아니다")
+    faces = "".join(f'@font-face{{font-family:"{n.split("-")[0]}";src:url("fonts/{n}") format("woff2")}}' for n in EQFONT_FILES)
+    if "iroiro-equation-fonts" not in page:
+        page = page.replace("</head>", f'  <style id="iroiro-equation-fonts">{faces}</style>\n</head>')
+    printing.write_text(page, encoding="utf-8")
+
     if not ADAPTER.is_file():
         log(f"주의: 어댑터가 아직 없다({ADAPTER.relative_to(ROOT)}) — 앱을 지으면 쪽이 문서를 열지 못한다")
 
@@ -332,6 +385,8 @@ def assemble(node: str, kept_fonts: list[str], audit: dict) -> None:
         sys.exit("SourceHanSerifK-OFL.txt 에서 OFL 전문을 찾지 못했다")
     (lic / "OFL-1.1.txt").write_text(ofl[start:], encoding="utf-8")
     shutil.copy2(SRC / "assets" / "fonts" / "SourceHanSerifK-OFL.txt", lic / "SourceHanSerifK-OFL.txt")
+    for name in EQFONT_NOTICES:
+        shutil.copy2(EQFONT_OUT / name, lic / name)
     run("font-notices", [node, str(TOOLS / "font_notices.mjs"), str(OUT / "fonts"), str(lic / "FONTS.txt")], cwd=ROOT)
 
     # 번들에 든 꾸러미의 알려진 취약점 — 있으면 멈춘다(빌드 도구의 것은 앱에 실리지 않는다).
@@ -355,6 +410,7 @@ def assemble(node: str, kept_fonts: list[str], audit: dict) -> None:
         f"node: {subprocess.run([node, '--version'], capture_output=True, text=True).stdout.strip()}",
         "번들에 든 npm 꾸러미: " + (", ".join(bundled) if bundled else "없음"),
         "실은 글꼴: " + ", ".join(kept_fonts),
+        "수식 대체 글꼴: " + ", ".join(EQFONT_FILES) + " — make_eq_font.py 가 STIX Two Math 2.13(OFL)에서 지었다(licenses/EQ-SUBSTITUTE-FONTS.txt)",
         "빌드 도구의 알려진 취약점(앱에 실리지 않는다): " + (json.dumps(tool_vulns, ensure_ascii=False) if tool_vulns else "없음"),
         f"파일 {len(files)}개, {total:,} 바이트",
     ]
@@ -375,6 +431,7 @@ def main() -> None:
     checkout()
     unpack_core(fetch_core())
     kept = prepare()
+    kept += eq_fonts()
     npm_install(node, npm_cli)
     audit = npm_audit(node, npm_cli)
     vite_build(node)

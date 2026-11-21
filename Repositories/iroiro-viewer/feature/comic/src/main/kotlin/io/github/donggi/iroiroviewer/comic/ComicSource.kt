@@ -496,27 +496,22 @@ internal fun <T> readOrNull(block: () -> T): T? = try {
 }
 
 /**
- * 스트림을 끝까지 읽되 **상한에서 끊는다.**
+ * 스트림을 끝까지 읽되 **상한에서 끊는다** — 상한보다 한 바이트 더 읽어 보고 넘으면 null.
  *
- * `readAllBytes`·`readNBytes` 를 쓰지 않는다 — 자바 9 의 함수라 컴파일도 되고 JVM
- * 시험도 통과하는데 **안드로이드에는 API 33 부터** 있어 minSdk 31 기기에서
- * `NoSuchMethodError` 로 앱이 즉사한다.
+ * `readAllBytes` 는 상한이 없어 쓰지 않는다. `readNBytes`(자바 9)는 안드로이드에 API 33 부터 있다 — 1.0.0(minSdk 31)은
+ * 손으로 돌았고 2.0.0(minSdk 36)부터 그것을 쓴다. 배열 하나에 담을 수 있는 크기를 넘는 상한(`ParseLimits` 의 큰 설정)은 그 크기로
+ * 누른다 — 그보다 긴 흐름은 어차피 한 배열에 들지 않으므로 null 이 맞다.
  */
 internal fun InputStream.readAllBounded(
     cap: Long = ParseLimits.DEFAULT.maxSingleOutput,
 ): ByteArray? {
-    val out = ByteArrayOutputStream(64 * 1024)
-    val buf = ByteArray(64 * 1024)
-    var total = 0L
-    while (true) {
-        val n = read(buf)
-        if (n < 0) break
-        total += n
-        if (total > cap) return null
-        out.write(buf, 0, n)
-    }
-    return out.toByteArray()
+    val limit = cap.coerceIn(0L, MAX_ARRAY_BYTES)
+    val bytes = readNBytes(limit.toInt() + 1)
+    return if (bytes.size > limit) null else bytes
 }
+
+/** JVM 이 배열 하나에 주는 최대 길이 언저리(`Integer.MAX_VALUE - 8` — JDK 의 `ArraysSupport.SOFT_MAX_ARRAY_LENGTH`). */
+private const val MAX_ARRAY_BYTES = Int.MAX_VALUE - 9L
 
 /** 폴더 안에서 쪽이 될 파일들을, 읽는 차례대로. */
 internal fun comicFilesIn(dir: File): List<File> {

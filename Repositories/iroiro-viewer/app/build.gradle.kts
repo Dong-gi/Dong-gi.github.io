@@ -11,14 +11,16 @@ android {
 
     defaultConfig {
         applicationId = "io.github.donggi.iroiroviewer"
-        minSdk = 31
+        // 2.0.0 부터 Android 16(API 36) 이상이다 — 사용자의 폰이 16 이 되었다(2026-11-21). Android 12 폰은 1.0.0 릴리스를
+        // 그대로 쓴다(이 판은 그 폰에 깔리지 않는다).
+        minSdk = 36
         // compileSdk 를 그대로 물려받지 않도록 반드시 적는다. AGP 9 는 이 값이 없으면
         // 조용히 compileSdk(37)로 채우고, 그러면 검증할 수 없는 Android 17 동작변화를
-        // 떠안는다. 검증 기기는 Android 12 와 15 다.
+        // 떠안는다. 검증 기기는 Android 16 폰 에뮬레이터다(minSdk = targetSdk).
         targetSdk = 36
         // 코드는 설치 순서를 가르는 값이라 하나씩만 올린다(깔아 둔 판 위에 덮어 깔린다).
-        versionCode = 2
-        versionName = "1.0.0"
+        versionCode = 3
+        versionName = "2.0.0"
     }
 
     buildTypes {

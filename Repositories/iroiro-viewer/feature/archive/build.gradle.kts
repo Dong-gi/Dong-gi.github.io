@@ -8,7 +8,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        minSdk = 31
+        minSdk = 36
         // 풀기는 파일시스템 경계를 건드린다 — 경로 봉쇄와 임시 파일은 진짜 기기에서만
         // 확인된다. 시험은 앱 전용 외부 디렉터리에서 돌아 권한이 필요 없다.
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

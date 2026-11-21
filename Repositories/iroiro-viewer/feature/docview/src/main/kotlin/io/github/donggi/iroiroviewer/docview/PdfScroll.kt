@@ -121,7 +121,7 @@ import kotlin.math.roundToInt
  * | 한 손가락 끌기 | 목록이 세로로(관성 그대로) | 우리가 위아래·좌우로 함께 밀고 놓으면 관성으로 미끄러진다 |
  * | 두 손가락 | 핀치 — 손가락 사이를 제자리에 두고 키운다 | 같다 |
  * | 두 번 두드림 | 짚은 자리를 2.5배로 | 맞춤(배율 1)으로 |
- * | 한 번 두드림 | 막대 여닫기(고른 글이 있으면 그것을 푼다) | 같다 |
+ * | 한 번 두드림 | 문서 안 링크면 그 쪽으로, 아니면 막대 여닫기(고른 글이 있으면 그것을 푼다) | 같다 |
  * | 길게 누름 | 그 자리의 낱말 고르기 | 같다 |
  *
  * 쪽 넘김과 같은 것: 지금 쪽(가운데 줄 — [PdfScrollMath.currentRow])을 VM 에 알려 쪽 번호·슬라이더·이어보기·쪽 목록·쪽으로 가기가
@@ -284,6 +284,23 @@ internal fun ScrollDocument(
     }
     val latestSelectAt by rememberUpdatedState(::selectAt)
 
+    // ---- 두드림 — 문서 안 링크면 그 쪽으로(쪽 넘김의 `tapAt` 과 같다), 아니면 막대 ----
+    fun tapAt(p: Offset) {
+        val hit = PdfScrollMath.rowAt(p.x, p.y, zoom.scale, zoom.tx, viewportWidth.toFloat(), rowsOf(listState.layoutInfo))
+        val layout = hit?.let { store.knownLayout(viewOf(it.row)) }
+        if (hit == null || layout == null) {
+            latestTap()
+            return
+        }
+        val ptPerPx = layout.width / (viewportWidth * zoom.scale)
+        selectScope.launch {
+            val target = linkTargetAt(store, layout, hit.x, hit.y, fingerPx * ptPerPx)
+            // 이어 보기의 'VM → 목록' 이 그 줄로 내린다.
+            if (target != null) vm.onPageChanged(target) else latestTap()
+        }
+    }
+    val latestTapAt by rememberUpdatedState(::tapAt)
+
     val density = LocalDensity.current
     // 아래 여백은 **잴 때** 배율을 읽는다 — 컴포지션에서 읽으면 핀치의 프레임마다 화면 전체가 다시 구성된다.
     val bottomPadding = remember(zoom, viewportHeight, density) { ZoomBottomPadding(zoom, viewportHeight.toFloat(), density) }
@@ -295,7 +312,7 @@ internal fun ScrollDocument(
             .scrollZoomGestures(zoom, listState, handleBusy = { selection.grabbing || selection.dragging })
             .pointerInput(zoom, listState) {
                 detectTapGestures(
-                    onTap = { if (selection.active) selection.clear() else latestTap() },
+                    onTap = { p -> if (selection.active) selection.clear() else latestTapAt(p) },
                     onDoubleTap = { p ->
                         gestureScope.launch {
                             listState.stopScroll(MutatePriority.UserInput)

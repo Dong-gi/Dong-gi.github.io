@@ -12,7 +12,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        minSdk = 31
+        minSdk = 36
         // 이 빌드가 다루는 형식 — 묶음이 든 엔진의 것만. 편집기 화면의 meta-data 로 실리고 파일 쪽(`EditorApp.kinds`)이 그 형식만 넘긴다.
         manifestPlaceholders["editorKinds"] = editorKinds()
     }

@@ -798,22 +798,12 @@ class TextEditViewModel(app: Application, store: TextViewerStore) : AndroidViewM
     }
 
     /**
-     * [max] 바이트까지 읽는다. 넘으면 null. `File.readBytes()` 는 쓰지 않는다(크기를 묶지 못한다 — 코드 규칙), `readNBytes` 는 API 33
-     * 부터다(함정 표).
+     * [max] 바이트까지 읽는다. 넘으면 null — 한 바이트 더 읽어 본다. `File.readBytes()` 는 쓰지 않는다(크기를 묶지 못한다 — 코드
+     * 규칙). `readNBytes` 는 API 33 이다(minSdk 36 — 1.0.0 은 손으로 돌았다).
      */
     private fun readBounded(file: File, max: Int): ByteArray? = FileInputStream(file).use { input ->
-        var buf = ByteArray(minOf(maxOf(file.length(), 0L), max.toLong()).toInt() + 1)
-        var n = 0
-        while (true) {
-            if (n == buf.size) {
-                if (buf.size > max) return@use null
-                buf = buf.copyOf(minOf(buf.size * 2, max + 1))
-            }
-            val r = input.read(buf, n, buf.size - n)
-            if (r < 0) break
-            n += r
-        }
-        if (n > max) null else buf.copyOf(n)
+        val bytes = input.readNBytes(max + 1)
+        if (bytes.size > max) null else bytes
     }
 
     private companion object {

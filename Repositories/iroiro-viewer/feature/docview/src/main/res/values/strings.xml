@@ -71,7 +71,7 @@
     <string name="doc_grid">쪽 목록</string>
     <string name="doc_grid_page">%d</string>
 
-    <!-- PDF 찾기. 안드로이드 15 이상에서만 단추가 뜬다(플랫폼이 글자를 주는 것이 그 판부터다). -->
+    <!-- PDF 찾기(플랫폼의 searchText). -->
     <string name="doc_search">찾기</string>
     <string name="doc_search_hint">문서에서 찾기</string>
     <string name="doc_search_count">%1$d / %2$d</string>
@@ -120,8 +120,7 @@
       텍스트·압축 화면이 같은 자리에 쓰는 문장과 같게 둔다.
     -->
     <string name="doc_failed_unreadable">이 파일을 읽을 수 없습니다</string>
-    <!-- PDF 글 고르기. '복사했습니다' 는 안드로이드 12 이하에서만 띄운다(13 부터는 시스템이 보여 준다). -->
-    <string name="doc_text_copied">복사했습니다</string>
+    <!-- PDF 글 고르기. '복사했습니다' 는 띄우지 않는다(안드로이드 13 부터 시스템이 보여 준다). -->
     <string name="doc_text_too_long">고른 글이 너무 길어 복사하지 않았습니다(최대 %1$s자)</string>
     <string name="doc_text_copy_failed">복사하지 못했습니다</string>
     <string name="doc_text_unavailable">이 문서에서는 글을 고를 수 없습니다</string>

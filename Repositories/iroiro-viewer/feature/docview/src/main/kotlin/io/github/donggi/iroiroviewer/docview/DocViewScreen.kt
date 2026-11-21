@@ -86,6 +86,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.donggi.iroiroviewer.docview.pdf.PdfLinks
 import io.github.donggi.iroiroviewer.docview.pdf.PdfPageStore
 import io.github.donggi.iroiroviewer.docview.pdf.PdfSearch
 import io.github.donggi.iroiroviewer.docview.pdf.PdfSpreads
@@ -145,7 +146,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
  * * **읽는 모양**('보기' 판 — [AppearanceSheet]). EPUB 에만 있고, 설정 화면과 같은 값을 쓴다.
  * * **장 안의 자리**. 스크롤의 비율로 기억하고 되살린다([DocLocator]·`LockedWebView`). 장 번호의 이어보기 안내는 그대로다.
  * * **PDF 두 쪽 보기**(가로 화면에서만, `PdfSpreads`)와 **쪽 목록**([PdfGridSheet]).
- * * **PDF 찾기**(안드로이드 15 이상에서만 — `PdfSearch`). 그 아래 기기에는 단추가 없다.
+ * * **PDF 찾기**(`PdfSearch` — 플랫폼의 `searchText`)와 **문서 안 링크**(`PdfLinks` — 두드리면 그 쪽으로).
  *
  * ## 장을 손가락으로 넘긴다
  *
@@ -496,8 +497,8 @@ fun DocViewScreen(
                     // 열린 PDF 는 그 이름, 여는 중·실패 화면은 화면이 받은 경로의 파일 이름이다([DocTitle]).
                     title = DocTitle.of(state, path),
                     onClose = { vm.close(); onClose() },
-                    // 찾기는 안드로이드 15 이상에서만 — 그 아래에서는 단추가 없다(`PdfSearch` 의 주석).
-                    onSearch = if (doc is DocViewModel.Doc.Pdf && vm.canSearchPdf) ({ searching = true }) else null,
+                    // 찾기는 PDF 에만(플랫폼의 `searchText` — `PdfSearch` 의 주석). EPUB 은 책 전체를 훑는 찾기가 없다.
+                    onSearch = if (doc is DocViewModel.Doc.Pdf) ({ searching = true }) else null,
                     onOpenWith = menuOpenWith,
                     onEdit = edit,
                     // 보기 방식 — 지금 모양이 아니라 **누르면 될 모양**을 적는다(두 쪽 단추와 같다).
@@ -578,7 +579,7 @@ private fun DocTopBar(
     onNotice: () -> Unit = {},
     /** '보기'(읽는 모양). null 이면 단추가 없다. */
     onAppearance: (() -> Unit)? = null,
-    /** 찾기(PDF, API 35 이상). null 이면 단추가 없다. */
+    /** 찾기(PDF). null 이면 단추가 없다. */
     onSearch: (() -> Unit)? = null,
     /** '다른 앱으로 열기'(⋮ 안). null 이고 [viewMode]·[onEdit] 도 null 이면 ⋮ 도 없다. */
     onOpenWith: (() -> Unit)? = null,
@@ -787,6 +788,8 @@ private fun PagedDocument(
             viewportHeight = viewportHeight,
             zoomState = zooms.getOrPut(slot) { ZoomState() },
             onTap = onTap,
+            // 문서 안 링크를 두드렸다 — 그 쪽으로(슬라이더·쪽으로 가기와 같은 길, 위의 'VM → 페이저').
+            onFollowLink = { vm.onPageChanged(it) },
             highlights = search.on(view.pages),
             currentMatch = search.currentMatch,
             selection = selection,
@@ -811,6 +814,8 @@ private fun DocPageView(
     viewportHeight: Int,
     zoomState: ZoomState,
     onTap: () -> Unit,
+    /** 두드린 자리가 문서 안 링크면 그것이 가리키는 쪽(0부터)으로 간다([linkTargetAt]). */
+    onFollowLink: (Int) -> Unit = {},
     /** 이 칸의 쪽들 위의 찾기 결과. */
     highlights: List<PdfSearch.Match> = emptyList(),
     /** 지금 보고 있는 결과. 더 짙게 칠한다. */
@@ -852,6 +857,24 @@ private fun DocPageView(
                 WordPick.NO_TEXT -> onMessage(noText)
                 WordPick.MISSED -> Unit
             }
+        }
+    }
+
+    /**
+     * 두드림 — 문서 안 링크 위면 그 쪽으로, 아니면 막대를 여닫는다([onTap]). 링크는 그때 묻는다(쪽마다 몇 ms, 렌더와 같은 잠금).
+     * 손가락의 여유는 길게 누름과 같은 값을 쪽 포인트로 옮겨 쓴다.
+     */
+    fun tapAt(p: Offset, image: ImageBitmap, layout: PdfSpreads.Layout, zoom: ZoomState) {
+        val frac = PdfSelectionMath.toFraction(p.x, p.y, image.width, image.height, zoom.viewport, zoom.scale, zoom.offset)
+        if (frac == null) {
+            onTap()
+            return
+        }
+        val (fw, _) = ZoomMath.fittedSize(image.width, image.height, zoom.viewport.width, zoom.viewport.height)
+        val ptPerPx = if (fw > 0f && zoom.scale > 0f) layout.width / (fw * zoom.scale) else 1f
+        selectScope.launch {
+            val target = linkTargetAt(store, layout, frac.x, frac.y, fingerPx * ptPerPx)
+            if (target != null && isCurrent()) onFollowLink(target) else onTap()
         }
     }
 
@@ -935,8 +958,13 @@ private fun DocPageView(
                     state = zoomState,
                     modifier = Modifier.fillMaxSize(),
                     // 고른 글이 이 칸에 있으면 두드림은 그것을 푼다(막대를 여닫지 않는다 — 글 고르기의 관행이다).
-                    onTap = {
-                        if (selection != null && selection.active && selection.page in view.pages) selection.clear() else onTap()
+                    // 그 밖의 두드림은 문서 안 링크를 먼저 본다([tapAt]).
+                    onTapAt = { p ->
+                        when {
+                            selection != null && selection.active && selection.page in view.pages -> selection.clear()
+                            layout != null -> tapAt(p, f.image, layout, zoomState)
+                            else -> onTap()
+                        }
                     },
                     onLongPressAt = if (selection != null && layout != null) {
                         { p -> selectWordAt(p, f.image, layout, zoomState, selection) }
@@ -1009,6 +1037,24 @@ private fun SearchHighlights(
 
 /** 길게 누른 손가락이 닿은 것으로 치는 거리. 글자는 손가락보다 작다. */
 private val FINGER_SLOP = 14.dp
+
+/**
+ * 두드린 자리(가상 쪽 [layout] 안의 비율 [fx]·[fy])가 문서 안 링크 위면 그것이 가리키는 쪽(0부터). 아니면 null.
+ * 쪽 넘김과 이어 보기가 함께 쓴다 — 비율을 쪽의 포인트로 옮기는 셈은 글 고르기와 같다([PdfSelectionMath.fractionToPage]).
+ * [slopPt] 는 손가락의 여유(쪽 포인트).
+ */
+internal suspend fun linkTargetAt(store: PdfPageStore, layout: PdfSpreads.Layout, fx: Float, fy: Float, slopPt: Float): Int? {
+    val (page, local) = PdfSelectionMath.fractionToPage(layout, fx, fy) ?: return null
+    if (local.x !in -0.02f..1.02f || local.y !in -0.02f..1.02f) return null
+    val part = layout.parts.firstOrNull { it.page == page } ?: return null
+    val links = store.links(page)
+    io.github.donggi.iroiroviewer.io.Iro.d {
+        "링크 #$page ${links.size}개 · 누른 자리 ${local.x * part.width},${local.y * part.height}pt · ${links.take(4)}"
+    }
+    if (links.isEmpty()) return null
+    val hit = PdfLinks.hit(links, local.x * part.width, local.y * part.height, slopPt) ?: return null
+    return PdfLinks.targetOf(hit, store.pageCount)
+}
 
 private sealed interface Fit {
     data object Loading : Fit

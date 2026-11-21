@@ -18,7 +18,7 @@ import kotlin.test.fail
  *
  * pdfium 은 안드로이드에서만 돌므로 여기서 보는 것은 **앱이 pdfium 앞에서 스스로 하는 일** 둘이다 —
  * 잠긴 문서를 가르는 것(`PdfDecryptor.inspect`, 화면이 암호를 물을지 정한다)과 푸는 것
- * (`PdfDecryptor.decrypt`, API 34 이하에서 pdfium 에 넘길 평문을 만든다). 앱과 같이 **파일 채널**에서 읽는다.
+ * (`PdfDecryptor.decrypt`, 플랫폼이 거절한 암호·빈 암호 문서에서 pdfium 에 넘길 평문을 만든다 — 1.0.0 은 API 34 이하의 모든 암호 PDF). 앱과 같이 **파일 채널**에서 읽는다.
  * 그리는 일은 계측 시험(`PdfCorpusDeviceTest`)이 한다.
  *
  * ## 오라클이 우리가 아니다

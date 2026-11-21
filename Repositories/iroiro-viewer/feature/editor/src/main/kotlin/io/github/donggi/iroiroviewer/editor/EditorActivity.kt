@@ -15,7 +15,6 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -625,8 +624,7 @@ class EditorActivity : Activity() {
     /** 고르개가 돌려준 [uri] 를 받는가 — 판단은 [EditorRules.acceptsReturnedUri](남의 content 주소만). */
     private fun acceptsReturned(uri: Uri): Boolean = EditorRules.acceptsReturnedUri(uri.scheme, uri.authority, packageName) { authority ->
         try {
-            @Suppress("DEPRECATION") // ComponentInfoFlags 판은 API 33 부터다(minSdk 31). 정수 판은 뜻이 같다.
-            packageManager.resolveContentProvider(authority, 0)?.packageName
+            packageManager.resolveContentProvider(authority, PackageManager.ComponentInfoFlags.of(0))?.packageName
         } catch (e: RuntimeException) {
             null
         }
@@ -732,12 +730,7 @@ class EditorActivity : Activity() {
     }
 
     /** 저장 자리 — 인텐트의 추가값. */
-    private fun slotOf(intent: Intent): Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        intent.getParcelableExtra(EditorContract.EXTRA_SAVE_SLOT, Uri::class.java)
-    } else {
-        @Suppress("DEPRECATION")
-        intent.getParcelableExtra(EditorContract.EXTRA_SAVE_SLOT)
-    }
+    private fun slotOf(intent: Intent): Uri? = intent.getParcelableExtra(EditorContract.EXTRA_SAVE_SLOT, Uri::class.java)
 
     /** 이 앱의 저장 자리의 꼴인가 — content, 저장 자리의 권한자, 자리의 표 하나. */
     private fun slotAllowed(s: Uri): Boolean =
@@ -888,18 +881,10 @@ class EditorActivity : Activity() {
 
     // ---- 닫기 ---------------------------------------------------------------------------------------------------------
 
+    // 플랫폼의 OnBackInvokedCallback 하나다 — AndroidX 의 디스패처는 새 의존이다(브라우저와 같은 판단). targetSdk 36 이 Android 16 에서
+    // 돌면 미리 보는 뒤로 가기가 기본으로 켜져 onBackPressed 도 KEYCODE_BACK 도 오지 않는다(12 갈래의 onBackPressed 는 2.0.0 에서 걷었다).
     private fun registerBack() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT) { onBack() }
-        }
-    }
-
-    // 13 이상은 플랫폼의 OnBackInvokedCallback(registerBack), 12 는 이것 — AndroidX 의 디스패처는 새 의존이다(브라우저와 같은 판단).
-    @Deprecated("API 33 아래에서만 불린다 — 그 위는 registerBack 의 콜백")
-    @Suppress("DEPRECATION")
-    @SuppressLint("GestureBackNavigation")
-    override fun onBackPressed() {
-        onBack()
+        onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT) { onBack() }
     }
 
     /**
@@ -1176,8 +1161,8 @@ class EditorActivity : Activity() {
         openedWithAt = now
         val mime = if (::kind.isInitialized) kind.mime else "*/*"
         val typed = Intent(Intent.ACTION_VIEW).setDataAndType(uri, mime)
-        @Suppress("DEPRECATION") // 플래그 객체를 받는 판은 API 33 부터다(minSdk 31).
-        val others = packageManager.queryIntentActivities(typed, PackageManager.MATCH_DEFAULT_ONLY).filter { it.activityInfo.packageName != packageName }
+        val others = packageManager.queryIntentActivities(typed, PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong()))
+            .filter { it.activityInfo.packageName != packageName }
         val widened = others.isEmpty()
         val view = (if (widened) Intent(Intent.ACTION_VIEW).setDataAndType(uri, "*/*") else typed)
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -1265,7 +1250,8 @@ class EditorActivity : Activity() {
 
     /** 막대·자판·노치에 가리지 않게 — 화면 전체를 쓰되 그 몫만큼 안쪽으로 민다(자판이 뜨면 편집기가 줄어든다). 자판의 보임은 쪽에 알린다. */
     private fun fitInsets() {
-        window.setDecorFitsSystemWindows(false)
+        // 창은 언제나 가장자리까지다 — targetSdk 35 이상이 Android 15+ 에서 돌면 시스템이 그렇게 강제한다(1.0.0 은 12 를 위해
+        // `setDecorFitsSystemWindows(false)` 를 불렀다. 지금은 무시되는 호출이라 걷었다). 몫은 아래 인셋이 민다.
         root.setOnApplyWindowInsetsListener { v, insets ->
             val i = insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.ime() or WindowInsets.Type.displayCutout())
             v.setPadding(i.left, i.top, i.right, i.bottom)

@@ -8,7 +8,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        minSdk = 31
+        minSdk = 36
     }
 
     buildFeatures {

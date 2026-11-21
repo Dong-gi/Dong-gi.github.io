@@ -1,7 +1,6 @@
 package io.github.donggi.iroiroviewer.docview.pdf
 
 import android.util.LruCache
-import androidx.annotation.RequiresApi
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import io.github.donggi.iroiroviewer.io.Iro
@@ -386,9 +385,25 @@ class PdfPageStore(
         return image
     }
 
-    /** 쪽 하나에서 찾는다(API 35 이상). */
-    @RequiresApi(35)
+    /** 쪽 하나에서 찾는다. */
     internal suspend fun search(ordinal: Int, query: String): List<PdfSearch.Match>? = doc.search(ordinal, query)
+
+    /**
+     * 쪽 하나의 문서 안 링크. 두드렸을 때 묻고 **쪽마다 기억한다** — 모든 두드림(막대 여닫기도)이 이것을 지나므로, 묻는 일이 렌더와 같은
+     * 잠금·디스패처에 줄을 서면 확대 조각·찾기가 도는 동안 막대가 늦게 반응한다. 같은 쪽의 두 번째 두드림부터는 잠금을 건너뛴다.
+     * 읽지 못한 것(null)은 기억하지 않는다(닫히는 중일 수 있다). 읽지 못하면 빈 목록.
+     */
+    internal suspend fun links(ordinal: Int): List<PdfLinks.Link> {
+        synchronized(linkCache) { linkCache[ordinal] }?.let { return it }
+        val read = doc.links(ordinal) ?: return emptyList()
+        synchronized(linkCache) { linkCache[ordinal] = read }
+        return read
+    }
+
+    /** 쪽마다 읽은 링크(최근 [LINK_CACHE_PAGES] 쪽). 링크는 쪽 위의 상자 몇 개라 작다. */
+    private val linkCache = object : LinkedHashMap<Int, List<PdfLinks.Link>>(16, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Int, List<PdfLinks.Link>>?): Boolean = size > LINK_CACHE_PAGES
+    }
 
     /**
      * 비트맵을 전부 놓는다. **회전했을 때 부른다** — 예산이 화면 크기에서 나오므로
@@ -411,6 +426,9 @@ class PdfPageStore(
 
         /** 선명화 예산을 작은 그림 몇 장이 나눠 쓰는가(적어도). */
         const val MIN_THUMBS = 24L
+
+        /** 링크를 기억하는 쪽 수. */
+        const val LINK_CACHE_PAGES = 64
 
         /** 맞춤 캐시의 열쇠에서 높이 자리에 넣는 값 — 폭 맞춤(이어 보기)이다. 화면 높이로는 나올 수 없는 값이라 겹치지 않는다. */
         const val FIT_WIDTH = -1

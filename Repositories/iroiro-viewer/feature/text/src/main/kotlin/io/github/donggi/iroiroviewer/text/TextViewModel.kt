@@ -614,22 +614,10 @@ class TextViewModel(store: TextViewerStore) : ViewModel() {
     /**
      * [want] 바이트를 채울 때까지 읽는다. 실제로 읽은 수를 돌려준다.
      *
-     * **`InputStream.readNBytes` 를 쓰지 마라.** 자바 9 의 함수지만 안드로이드에는
-     * **API 33 부터** 있고, 이 앱의 minSdk 는 31 이다. 컴파일은 통과하고 Android 12
-     * 에서 `NoSuchMethodError` 로 앱이 죽는다.
-     *
-     * 한 번의 `read` 가 요청한 만큼 준다고 가정해서도 안 된다. FUSE 로 올라온
-     * `/sdcard` 는 한 번에 주는 양이 요청보다 작을 수 있다.
+     * 한 번의 `read` 가 요청한 만큼 준다고 가정해서는 안 된다. FUSE 로 올라온 `/sdcard` 는 한 번에 주는 양이 요청보다 작을 수
+     * 있다 — `readNBytes`(자바 9, 안드로이드 API 33)가 채울 때까지 돈다. 1.0.0(minSdk 31)은 그것이 없어 손으로 돌았다.
      */
-    private fun readFully(stream: InputStream, buffer: ByteArray, want: Int): Int {
-        var read = 0
-        while (read < want) {
-            val n = stream.read(buffer, read, want - read)
-            if (n <= 0) break
-            read += n
-        }
-        return read
-    }
+    private fun readFully(stream: InputStream, buffer: ByteArray, want: Int): Int = stream.readNBytes(buffer, 0, want)
 
     /** 인코딩마다 앞부분을 디코드해 보여 준다. 사용자가 눈으로 고를 수 있게. */
     private fun buildPreviews(head: ByteArray, length: Int): Map<TextEncoding, String> {

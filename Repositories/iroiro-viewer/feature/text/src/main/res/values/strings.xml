@@ -67,8 +67,7 @@
     <string name="text_evidence_script">글자 분포로 골랐습니다 (%1$d점, 다음 후보 %2$d점)</string>
     <string name="text_evidence_korean">UTF-8로도 읽히지만 한글로 읽는 편이 또렷했습니다 (%1$d%%)</string>
     <string name="text_evidence_unsupported">알아본 인코딩이지만 이 앱이 읽지 못합니다</string>
-    <!-- 글 고르기. '복사했습니다' 는 안드로이드 12 이하에서만 띄운다(13 부터는 시스템이 보여 준다). -->
-    <string name="text_copied">복사했습니다</string>
+    <!-- 글 고르기. '복사했습니다' 는 띄우지 않는다(안드로이드 13 부터 시스템이 보여 준다). -->
     <string name="text_copy_too_long">고른 글이 너무 길어 복사하지 않았습니다(최대 %1$s자)</string>
     <string name="text_copy_failed">복사하지 못했습니다</string>
 

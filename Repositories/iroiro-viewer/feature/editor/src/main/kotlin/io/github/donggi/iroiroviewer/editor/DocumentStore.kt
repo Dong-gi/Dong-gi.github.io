@@ -74,7 +74,7 @@ class DocumentStore(private val root: File) {
             while (true) {
                 val n = readFully(mine, a)
                 val m = readFully(input, b)
-                if (n != m || !samePrefix(a, b, n)) {
+                if (n != m || !java.util.Arrays.equals(a, 0, n, b, 0, n)) {
                     same = false
                     break
                 }
@@ -82,12 +82,6 @@ class DocumentStore(private val root: File) {
             }
         }
         return same
-    }
-
-    // 범위를 받는 Arrays.equals 는 자바 9(안드로이드 API 33)부터다 — minSdk 31 에서 손으로 견준다.
-    private fun samePrefix(a: ByteArray, b: ByteArray, n: Int): Boolean {
-        for (i in 0 until n) if (a[i] != b[i]) return false
-        return true
     }
 
     /** 다 쓴 표 하나를 지운다(다시 떠 온 사본으로 갈아탔다). 부르는 쪽이 IO 스레드에서 부른다. */
