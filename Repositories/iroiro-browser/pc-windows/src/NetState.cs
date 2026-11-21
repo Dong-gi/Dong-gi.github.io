@@ -1,10 +1,13 @@
-// 읽기만 하는 망 살피기 — 핫스팟 어댑터, 폰 프록시의 응답, TUN 어댑터, 떠 있는 tun2proxy.
+// 읽기만 하는 망 살피기 — 핫스팟 어댑터와 그 Wi-Fi 이름, 폰 프록시의 응답, TUN 어댑터, 떠 있는 tun2proxy.
+// 모두 막는 호출이다 — 화면 스레드에서 부르지 않는다(Controller·StatusForm 이 일꾼 스레드에서).
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Management;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace WebTether
@@ -14,6 +17,138 @@ namespace WebTether
         public string AdapterName;
         public string Address;
         public int IfIndex;
+        /// <summary>그 어댑터가 붙은 Wi-Fi 의 이름(SSID). 얻지 못하면 null 이고 까닭은 SsidError.</summary>
+        public string Ssid;
+        public string SsidError;
+        /// <summary>이름을 어디서 얻었나 — WifiName.FromWlan(Wi-Fi API) 또는 FromNlm(네트워크 목록의 이름).</summary>
+        public string SsidSource;
+
+        /// <summary>이름이 접두어로 시작하는가(대소문자를 가린다 — SSID 는 바이트다). 이름을 모르거나 접두어가 비면 거짓.</summary>
+        public bool SsidStartsWith(string prefix)
+        {
+            return Ssid != null && !string.IsNullOrEmpty(prefix) && Ssid.StartsWith(prefix, StringComparison.Ordinal);
+        }
+    }
+
+    /// <summary>
+    /// 어댑터가 지금 붙은 Wi-Fi 의 이름 — Native Wifi API(WlanQueryInterface, wlan_intf_opcode_current_connection)로 읽기만 한다.
+    /// 어댑터는 NetworkInterface.Id(GUID)로 가리킨다. netsh 의 출력은 언어마다 다르고 개인 정보(BSSID 등)가 많아 쓰지 않는다.
+    /// </summary>
+    public static class WifiSsid
+    {
+        [DllImport("wlanapi.dll")]
+        static extern uint WlanOpenHandle(uint clientVersion, IntPtr reserved, out uint negotiatedVersion, out IntPtr handle);
+        [DllImport("wlanapi.dll")]
+        static extern uint WlanCloseHandle(IntPtr handle, IntPtr reserved);
+        [DllImport("wlanapi.dll")]
+        static extern uint WlanQueryInterface(IntPtr handle, ref Guid interfaceGuid, int opCode, IntPtr reserved,
+                                              out int dataSize, out IntPtr data, IntPtr opcodeValueType);
+        [DllImport("wlanapi.dll")]
+        static extern void WlanFreeMemory(IntPtr memory);
+
+        const int OpInterfaceState = 6;      // wlan_intf_opcode_interface_state — 위치 권한과 상관없다(이 PC 에서 확인)
+        const int OpCurrentConnection = 7;   // wlan_intf_opcode_current_connection
+        const int StateConnected = 1;        // wlan_interface_state_connected
+
+        /// <summary>
+        /// current_connection 이 거절(5)됐을 때 — interface_state 의 답(코드·상태)으로 그 거절을 '위치 권한 때문에 이름만 못 읽는 연결된
+        /// Wi-Fi' 로 볼지 정한다(시험한다). Wi-Fi 어댑터가 아니거나(1168·87) 연결되어 있지 않거나 상태를 못 읽으면 거절이 아니다(이름 모름).
+        /// </summary>
+        public static bool DeniedOnConnectedWlan(uint stateRc, int state, out string error)
+        {
+            if (stateRc == 1168 || stateRc == 87) { error = "Wi-Fi 어댑터가 아님"; return false; }
+            if (stateRc != 0) { error = "Wi-Fi 상태를 읽지 못함(코드 " + stateRc + ")"; return false; }
+            if (state != StateConnected) { error = "Wi-Fi 에 연결되어 있지 않음(상태 " + state + ")"; return false; }
+            error = "Wi-Fi 이름을 읽을 권한이 없음(위치 꺼짐)";
+            return true;
+        }
+        // WLAN_CONNECTION_ATTRIBUTES: isState(4) · wlanConnectionMode(4) · strProfileName(WCHAR 256 = 512) · 그다음
+        // WLAN_ASSOCIATION_ATTRIBUTES 의 첫 칸 DOT11_SSID { ULONG uSSIDLength; UCHAR ucSSID[32]; }.
+        public const int SsidLengthOffset = 520;
+        public const int SsidBytesOffset = 524;
+        public const int MinSize = SsidBytesOffset + 32;
+
+        /// <summary>WLAN_CONNECTION_ATTRIBUTES 의 바이트에서 SSID 를 읽는다(시험한다). 못 읽으면 null 과 까닭.</summary>
+        public static string Parse(byte[] buf, int size, out string error)
+        {
+            error = null;
+            if (buf == null || size < MinSize || buf.Length < MinSize) { error = "Wi-Fi 연결 정보가 짧음"; return null; }
+            int state = BitConverter.ToInt32(buf, 0);
+            if (state != StateConnected) { error = "Wi-Fi 에 연결되어 있지 않음(상태 " + state + ")"; return null; }
+            uint len = BitConverter.ToUInt32(buf, SsidLengthOffset);
+            if (len > 32) { error = "SSID 길이가 틀림(" + len + ")"; return null; }
+            if (len == 0) { error = "SSID 가 비어 있음"; return null; }
+            // 안드로이드의 Wi-Fi Direct 이름은 UTF-8 이다. 틀린 바이트는 U+FFFD 로(접두어의 ASCII 는 그대로 견줄 수 있다).
+            return new UTF8Encoding(false, false).GetString(buf, SsidBytesOffset, (int)len);
+        }
+
+        /// <summary>어댑터(NetworkInterface.Id)가 붙은 Wi-Fi 의 SSID. 유선·Wi-Fi 가 아닌 어댑터·서비스 꺼짐·API 실패는 null 과 까닭.</summary>
+        public static string Query(string adapterId, out string error)
+        {
+            bool denied;
+            return Query(adapterId, out error, out denied);
+        }
+
+        /// <summary>denied: ERROR_ACCESS_DENIED — Windows 11 24H2 부터 위치 권한이 없으면 이 호출이 거절된다(관리자도 — 문서에 예외가 없다).</summary>
+        public static string Query(string adapterId, out string error, out bool denied)
+        {
+            error = null;
+            denied = false;
+            Guid g;
+            if (!Guid.TryParse(adapterId ?? "", out g)) { error = "어댑터 번호를 읽지 못함"; return null; }
+            IntPtr h = IntPtr.Zero;
+            try
+            {
+                uint ver;
+                uint rc = WlanOpenHandle(2, IntPtr.Zero, out ver, out h);
+                if (rc != 0)
+                {
+                    h = IntPtr.Zero;
+                    error = rc == 1062 ? "WLAN 서비스가 꺼져 있음" : "Wi-Fi API 를 열지 못함(코드 " + rc + ")";
+                    return null;
+                }
+                int size;
+                IntPtr data;
+                rc = WlanQueryInterface(h, ref g, OpCurrentConnection, IntPtr.Zero, out size, out data, IntPtr.Zero);
+                if (rc != 0)
+                {
+                    if (rc == 1168 || rc == 87) error = "Wi-Fi 어댑터가 아님";
+                    else if (rc == 5023) error = "Wi-Fi 에 연결되어 있지 않음";
+                    else if (rc == 5)
+                    {
+                        // 24H2 의 위치 검사는 어댑터를 보기 전에 한다 — 유선·TUN·없는 GUID 도 5 였다(이 PC). 그대로 '거절' 로 넘기면
+                        // 유선 어댑터에도 네트워크 목록 이름(유선은 DNS 접미사로 짓는다)으로 물러섰다. 위치와 상관없는 interface_state 로
+                        // Wi-Fi 어댑터이고 연결되어 있는지를 따로 본다(검토 11-21).
+                        int ssize;
+                        IntPtr sdata;
+                        uint src = WlanQueryInterface(h, ref g, OpInterfaceState, IntPtr.Zero, out ssize, out sdata, IntPtr.Zero);
+                        int st = -1;
+                        if (src == 0 && sdata != IntPtr.Zero)
+                        {
+                            try { if (ssize >= 4) st = Marshal.ReadInt32(sdata); }
+                            finally { WlanFreeMemory(sdata); }
+                        }
+                        denied = DeniedOnConnectedWlan(src, st, out error);
+                    }
+                    else error = "Wi-Fi 연결 정보를 읽지 못함(코드 " + rc + ")";
+                    return null;
+                }
+                try
+                {
+                    if (data == IntPtr.Zero || size <= 0) { error = "Wi-Fi 연결 정보가 비어 있음"; return null; }
+                    var buf = new byte[Math.Min(size, 4096)];
+                    Marshal.Copy(data, buf, 0, buf.Length);
+                    return Parse(buf, buf.Length, out error);
+                }
+                finally { if (data != IntPtr.Zero) WlanFreeMemory(data); }
+            }
+            catch (DllNotFoundException) { error = "Wi-Fi API(wlanapi.dll)가 없음"; return null; }
+            catch (EntryPointNotFoundException) { error = "Wi-Fi API 가 없음"; return null; }
+            finally
+            {
+                if (h != IntPtr.Zero) WlanCloseHandle(h, IntPtr.Zero);
+            }
+        }
     }
 
     public sealed class ProbeResult
@@ -22,11 +157,121 @@ namespace WebTether
         public string Detail;
     }
 
+    /// <summary>
+    /// 어댑터가 붙은 Wi-Fi 의 이름을 얻는 차례. 먼저 Wi-Fi API(SSID 그대로). Windows 11 24H2 부터 위치 권한이 없으면 그 호출이
+    /// 거절되므로(netsh 도 같다 — 이 PC 에서 확인) 그때만 네트워크 목록(NLM — WMI MSFT_NetConnectionProfile)의 이름을 쓴다:
+    /// Windows 가 Wi-Fi 에 처음 붙을 때 SSID 로 짓는 이름이라 접두어 견주기에는 같다(같은 이름이 또 생기면 뒤에 ' 2' 가 붙을 뿐 —
+    /// 앞머리는 그대로). 유선·Wi-Fi 가 아닌 어댑터·서비스 꺼짐은 물러서지 않는다(이름 모름).
+    /// 어댑터마다 10초 기억한다 — 1초마다 Wi-Fi API 를 부르면 위치가 켜진 PC 에서 '위치 사용 중' 표시가 늘 뜬다(문서).
+    /// </summary>
+    public static class WifiName
+    {
+        public const string FromWlan = "Wi-Fi API";
+        public const string FromNlm = "네트워크 목록 이름";
+        public const int CacheMs = 10000;
+
+        sealed class Entry
+        {
+            public DateTime At;
+            public string Name, Error, Source;
+        }
+
+        static readonly Dictionary<string, Entry> cache = new Dictionary<string, Entry>();
+
+        /// <summary>
+        /// 기억을 모두 버린다 — 연결을 정하는 자리(Controller.Attempt)는 늘 새로 본다. 10초 기억을 그대로 쓰면 핫스팟이 사라진 직후 같은
+        /// 어댑터가 남의 DIRECT 망(같은 192.168.49.x)에 붙었을 때 옛 이름(DIRECT-UT-…)으로 저절로 연결했다(검토 11-21).
+        /// </summary>
+        public static void Forget()
+        {
+            lock (cache) cache.Clear();
+        }
+
+        /// <summary>기억한 어댑터 수(시험).</summary>
+        public static int CachedCount { get { lock (cache) return cache.Count; } }
+
+        /// <summary>네트워크 목록 질의의 시한 — WMI 가 멈추면 이 질의가 끝나지 않아 1초 점검(겹치지 않게 건너뛴다)이 영영 서고 연결 시도가 바쁜 채 남았다.</summary>
+        public static readonly TimeSpan NlmTimeout = TimeSpan.FromSeconds(5);
+
+        public static string Get(string adapterId, int ifIndex, out string error, out string source)
+        {
+            var key = (adapterId ?? "") + "|" + ifIndex;
+            lock (cache)
+            {
+                Entry e;
+                if (cache.TryGetValue(key, out e) && (DateTime.UtcNow - e.At).TotalMilliseconds < CacheMs && e.At <= DateTime.UtcNow)
+                {
+                    error = e.Error;
+                    source = e.Source;
+                    return e.Name;
+                }
+            }
+            string werr;
+            bool denied;
+            var ssid = WifiSsid.Query(adapterId, out werr, out denied);
+            var name = Resolve(ssid, werr, denied, () => NlmName(ifIndex), out error, out source);
+            lock (cache)
+            {
+                if (cache.Count > 32) cache.Clear();
+                cache[key] = new Entry { At = DateTime.UtcNow, Name = name, Error = error, Source = source };
+            }
+            return name;
+        }
+
+        /// <summary>차례만(시험한다) — Wi-Fi API 의 답이 있으면 그것, 위치 권한으로 거절됐을 때만 NLM 이름, 그 밖은 이름 모름.</summary>
+        public static string Resolve(string wlanSsid, string wlanError, bool wlanDenied, Func<string> nlm, out string error, out string source)
+        {
+            error = null;
+            source = null;
+            if (wlanSsid != null) { source = FromWlan; return wlanSsid; }
+            if (!wlanDenied) { error = wlanError ?? "까닭 모름"; return null; }
+            string n = null;
+            try { n = nlm(); }
+            catch (Exception ex) { error = wlanError + " · 네트워크 목록도 읽지 못함(" + ex.Message + ")"; return null; }
+            if (string.IsNullOrEmpty(n)) { error = wlanError + " · 네트워크 목록에 이름 없음"; return null; }
+            source = FromNlm;
+            return n;
+        }
+
+        /// <summary>네트워크 목록 질의 — 연결·열거 모두 NlmTimeout 의 시한(넘으면 던진다 → 이름 모름). 시험이 시한을 본다.</summary>
+        public static ManagementObjectSearcher NlmSearcher(int ifIndex)
+        {
+            var q = new ObjectQuery("SELECT Name, InterfaceIndex FROM MSFT_NetConnectionProfile WHERE InterfaceIndex = " + ifIndex.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            var scope = new ManagementScope(@"root\StandardCimv2", new ConnectionOptions { Timeout = NlmTimeout });
+            var opts = new EnumerationOptions { Timeout = NlmTimeout, ReturnImmediately = true, Rewindable = false };
+            return new ManagementObjectSearcher(scope, q, opts);
+        }
+
+        /// <summary>그 어댑터(IPv4 인덱스)의 네트워크 목록 이름 — 읽기만(WMI). 없으면 null.</summary>
+        public static string NlmName(int ifIndex)
+        {
+            if (ifIndex < 0) return null;
+            using (var s = NlmSearcher(ifIndex))
+            using (var all = s.Get())
+            {
+                foreach (ManagementObject o in all)
+                {
+                    using (o)
+                    {
+                        var n = o["Name"] as string;
+                        if (!string.IsNullOrEmpty(n)) return n;
+                    }
+                }
+            }
+            return null;
+        }
+    }
+
     public static class NetState
     {
-        /// <summary>폰 핫스팟(Wi-Fi Direct 그룹)의 손님 주소 192.168.49.2–254 를 가진, 켜진 어댑터.</summary>
-        public static HotspotInfo FindHotspot()
+        /// <summary>
+        /// 폰 핫스팟(Wi-Fi Direct 그룹)의 손님 주소 192.168.49.2–254 를 가진, 켜진 어댑터와 그 Wi-Fi 이름(SSID).
+        /// 여럿이면 이름이 접두어로 시작하는 것을 먼저, 없으면 처음 것(이름이 다르거나 모르는 채 — 자동 연결을 할지는 Controller 가 정한다).
+        /// 안드로이드의 Wi-Fi Direct 그룹 오너는 모두 192.168.49.1 이라 주소만으로는 남의 DIRECT 망과 가르지 못한다. 막는 호출 — 일꾼 스레드에서.
+        /// </summary>
+        public static HotspotInfo FindHotspot(string prefix)
         {
+            HotspotInfo first = null;
             foreach (var ni in SafeInterfaces())
             {
                 if (ni.OperationalStatus != OperationalStatus.Up) continue;
@@ -38,10 +283,17 @@ namespace WebTether
                     if (!IsHotspotGuest(ua.Address)) continue;
                     int idx = -1;
                     try { idx = props.GetIPv4Properties().Index; } catch (NetworkInformationException) { }
-                    return new HotspotInfo { AdapterName = ni.Name, Address = ua.Address.ToString(), IfIndex = idx };
+                    var h = new HotspotInfo { AdapterName = ni.Name, Address = ua.Address.ToString(), IfIndex = idx };
+                    string err, src;
+                    h.Ssid = WifiName.Get(ni.Id, idx, out err, out src);
+                    h.SsidError = h.Ssid == null ? (err ?? "까닭 모름") : null;
+                    h.SsidSource = src;
+                    if (h.SsidStartsWith(prefix)) return h;
+                    if (first == null) first = h;
+                    break;
                 }
             }
-            return null;
+            return first;
         }
 
         public static bool IsHotspotGuest(IPAddress a)

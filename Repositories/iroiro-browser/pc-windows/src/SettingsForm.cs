@@ -1,8 +1,10 @@
 // 설정 창 — 칸마다 '기본값'. 저장할 때 모두 검사하고 첫 문제의 칸으로 간다.
+// 저장의 막는 일(설정 파일 쓰기, '시작 시 실행' 의 복사·해시·schtasks)은 일꾼 스레드에서 — 그동안 창은 '저장 중' 으로 눌리지 않는다.
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WebTether
@@ -16,12 +18,19 @@ namespace WebTether
         readonly TableLayoutPanel grid = new TableLayoutPanel();
         readonly Label message = new Label();
 
-        TextBox tHost, tDns, tTun, tBypass, tWifi;
+        TextBox tHost, tDns, tTun, tBypass, tWifi, tSsid;
         NumericUpDown nPort, nInterval, nMax;
         ComboBox cKind, cDnsMode, cVerb;
         CheckBox kSetup, kReconnect, kAuto, kUpdate;
         ComboBox cUpdate;
         static readonly string[] IntervalLabels = { "매일", "매주", "매월" };
+        Button bSave, bCancel;
+        bool saving;
+        Task pending = Task.FromResult(0);
+
+        /// <summary>도는 저장(없으면 끝난 일) — 끝내기가 기다린다(설정 파일·작업 스케줄러를 쓰다 말고 끝나지 않게).</summary>
+        public Task PendingSave { get { return pending; } }
+        public bool Saving { get { return saving; } }
 
         public SettingsForm(Controller ctl, ISystemOps ops, string exePath)
         {
@@ -63,6 +72,7 @@ namespace WebTether
             cVerb = AddCombo("verbosity", "로그 수준", Settings.Verbosities, () => cVerb.SelectedItem = Settings.DefaultVerbosity);
 
             Section("다시 연결");
+            tSsid = AddText("ssid_prefix", "자동 연결 Wi-Fi", () => tSsid.Text = Settings.DefaultSsidPrefix);
             kReconnect = AddCheck("reconnect", "끊기면 다시 연결", () => kReconnect.Checked = true);
             nInterval = AddNumber("reconnect_interval", "간격(초)", 3, 600, 0, () => nInterval.Value = Settings.DefaultReconnectInterval);
             nMax = AddNumber("reconnect_max", "횟수 상한", 1, 1000, 0, () => nMax.Value = Settings.DefaultReconnectMax);
@@ -79,8 +89,11 @@ namespace WebTether
             grid.Controls.Add(message);
             grid.SetColumnSpan(message, 3);
 
-            var bSave = Ui.Button("저장", (s, e) => { if (Save() && !ctl.ChildRunning) Hide(); });
-            var bCancel = Ui.Button("취소", (s, e) => Hide());
+            bSave = Ui.Button("저장", async (s, e) =>
+            {
+                if (await SaveAsync() && !IsDisposed && !ctl.ChildRunning) Hide();
+            });
+            bCancel = Ui.Button("취소", (s, e) => { if (!saving) Hide(); });
             AcceptButton = bSave;
             CancelButton = bCancel;
             var buttons = Ui.ButtonRow(bCancel, bSave);
@@ -91,7 +104,13 @@ namespace WebTether
             var tip = new ToolTip();
             tip.SetToolTip(tBypass, "터널 밖으로 보낼 IPv4·CIDR. 쉼표로 가릅니다. 예: 10.0.0.0/8");
             tip.SetToolTip(tWifi, "핫스팟이 없을 때 netsh wlan connect 로 붙을 프로필 이름. 비우면 하지 않습니다.");
-            FormClosing += (s, e) => { if (e.CloseReason == CloseReason.UserClosing) { e.Cancel = true; Hide(); } };
+            tip.SetToolTip(tSsid, "이 이름으로 시작하는 Wi-Fi 에서만 저절로 연결합니다. 다른 Wi-Fi 는 '연결' 을 누르면 묻습니다.");
+            FormClosing += (s, e) =>
+            {
+                if (e.CloseReason != CloseReason.UserClosing) return;
+                e.Cancel = true;
+                if (!saving) Hide(); // 저장 중에는 닫지 않는다 — 끝나면 결과를 보인다
+            };
             VisibleChanged += (s, e) => { if (Visible) LoadFrom(ctl.Settings); };
             LoadFrom(ctl.Settings);
         }
@@ -170,6 +189,7 @@ namespace WebTether
             nInterval.Value = Clamp(nInterval, s.ReconnectInterval);
             nMax.Value = Clamp(nMax, s.ReconnectMax);
             tWifi.Text = s.WifiProfile;
+            tSsid.Text = s.SsidPrefix;
             kAuto.Checked = s.AutoStart;
             kUpdate.Checked = s.UpdateCheck;
             cUpdate.SelectedIndex = (int)s.UpdateEvery;
@@ -194,6 +214,7 @@ namespace WebTether
                 ReconnectInterval = (int)nInterval.Value,
                 ReconnectMax = (int)nMax.Value,
                 WifiProfile = tWifi.Text,
+                SsidPrefix = tSsid.Text,
                 AutoStart = kAuto.Checked,
                 UpdateCheck = kUpdate.Checked,
                 UpdateEvery = (UpdateInterval)Math.Max(0, cUpdate.SelectedIndex),
@@ -210,9 +231,21 @@ namespace WebTether
             else if (message.ForeColor != Color.Firebrick) message.Text = "";
         }
 
-        /// <summary>저장 — 성공하면 true(시험이 부른다).</summary>
-        public bool Save()
+        sealed class SaveOutcome
         {
+            public bool Saved;
+            public string Message;
+            /// <summary>'시작 시 실행' 칸을 옛 값으로 되돌린다.</summary>
+            public bool RevertAuto;
+        }
+
+        /// <summary>
+        /// 저장 — 성공하면 true(시험이 부른다). 검사는 이 자리에서, 쓰기는 일꾼 스레드에서. 그동안 칸·단추를 막고 '저장 중'.
+        /// 돌아왔을 때 창이 없어졌어도 저장한 설정은 Controller 에 건다(파일과 메모리가 어긋나지 않게).
+        /// </summary>
+        public async Task<bool> SaveAsync()
+        {
+            if (saving) return false;
             var s = Collect();
             var errs = s.Validate();
             if (errs.Count > 0)
@@ -224,41 +257,78 @@ namespace WebTether
                 return false;
             }
             var old = ctl.Settings;
-            bool startupChanged = s.AutoStart != old.AutoStart;
-            if (startupChanged)
+            saving = true;
+            SetBusy(true);
+            var work = Task.Run(() => SaveWork(s, old));
+            pending = work;
+            SaveOutcome r;
+            try { r = await work; }
+            finally { saving = false; }
+            if (r.Saved) ctl.ApplySettings(s);
+            if (IsDisposed) return r.Saved;
+            SetBusy(false);
+            if (r.RevertAuto) kAuto.Checked = old.AutoStart;
+            if (r.Saved)
             {
-                string err;
-                bool ok = s.AutoStart ? ops.EnableStartup(exePath, out err) : ops.DisableStartup(out err);
-                if (!ok)
+                message.ForeColor = SystemColors.ControlText;
+                message.Text = ctl.ChildRunning ? "저장했습니다. 다음 연결부터 적용됩니다." : "저장했습니다.";
+            }
+            else
+            {
+                message.ForeColor = Color.Firebrick;
+                message.Text = r.Message;
+            }
+            return r.Saved;
+        }
+
+        void SetBusy(bool on)
+        {
+            foreach (Control c in grid.Controls) if (c != message) c.Enabled = !on;
+            if (on)
+            {
+                message.ForeColor = SystemColors.ControlText;
+                message.Text = "저장 중…";
+            }
+            UseWaitCursor = on;
+        }
+
+        /// <summary>일꾼 스레드 — 화면을 만지지 않는다. 던지지 않는다(무엇이든 실패로 돌려준다).</summary>
+        SaveOutcome SaveWork(Settings s, Settings old)
+        {
+            bool startupChanged = s.AutoStart != old.AutoStart;
+            try
+            {
+                if (startupChanged)
                 {
-                    message.ForeColor = Color.Firebrick;
-                    message.Text = "시작 시 실행을 바꾸지 못했습니다: " + err;
-                    kAuto.Checked = old.AutoStart;
-                    return false;
+                    string err;
+                    bool ok = s.AutoStart ? ops.EnableStartup(exePath, out err) : ops.DisableStartup(out err);
+                    if (!ok) return new SaveOutcome { Message = "시작 시 실행을 바꾸지 못했습니다: " + err, RevertAuto = true };
                 }
+            }
+            catch (Exception ex)
+            {
+                return new SaveOutcome { Message = "시작 시 실행을 바꾸지 못했습니다: " + ex.Message, RevertAuto = true };
             }
             try
             {
                 ctl.SaveSettings(s);
+                return new SaveOutcome { Saved = true };
             }
             catch (Exception ex)
             {
-                message.ForeColor = Color.Firebrick;
-                message.Text = "저장하지 못했습니다: " + ex.Message;
+                var r = new SaveOutcome { Message = "저장하지 못했습니다: " + ex.Message };
                 if (startupChanged)
                 {
                     // 작업은 바꿨는데 설정은 옛 값 — 그대로 두면 칸은 꺼짐인데 로그온마다 뜨거나(그 반대) 한다. 작업을 되돌린다.
+                    r.RevertAuto = true;
                     string back;
-                    bool undone = old.AutoStart ? ops.EnableStartup(exePath, out back) : ops.DisableStartup(out back);
-                    kAuto.Checked = old.AutoStart;
-                    if (!undone) message.Text += "\r\n시작 시 실행도 되돌리지 못했습니다(" + back + ") — 작업 스케줄러의 " + SystemOps.TaskName + " 를 확인하십시오.";
+                    bool undone;
+                    try { undone = old.AutoStart ? ops.EnableStartup(exePath, out back) : ops.DisableStartup(out back); }
+                    catch (Exception ex2) { undone = false; back = ex2.Message; }
+                    if (!undone) r.Message += "\r\n시작 시 실행도 되돌리지 못했습니다(" + back + ") — 작업 스케줄러의 " + SystemOps.TaskName + " 를 확인하십시오.";
                 }
-                return false;
+                return r;
             }
-            ctl.ApplySettings(s);
-            message.ForeColor = SystemColors.ControlText;
-            message.Text = ctl.ChildRunning ? "저장했습니다. 다음 연결부터 적용됩니다." : "저장했습니다.";
-            return true;
         }
     }
 }

@@ -3,7 +3,7 @@
 // 시험 판(TEST_BUILD — 매니페스트 asInvoker)은 늘 dry-run 이다: tun2proxy 를 띄우지 않고, 경로·Wi-Fi·작업 스케줄러를
 // 바꾸지 않고 기록만 한다. 상태 폴더는 --home <폴더>(없으면 %LOCALAPPDATA%\WebTether-test) — 이 사용자 전용 권한으로 만든다.
 // 실제 판은 %ProgramData%\WebTether(관리자 전용 — SecureFs).
-// 뜨면 저절로 연결한다 — 사용자가 '끊기' 를 눌러 둔 표시(AppPaths.UserOffFile)가 있을 때만 꺼진 채로 둔다(Controller.AutoConnectAsync).
+// 뜨면 늘 저절로 연결한다 — 사용자의 '끊기' 는 그 실행 동안만 듣는다(Controller.AutoConnectAsync). Wi-Fi 이름이 접두어로 시작할 때만.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -236,7 +236,7 @@ namespace WebTether
                     try
                     {
                         var app = new TrayApp(ctl, log, paths, ops, inst.Show);
-                        ctl.AutoConnect(); // 끊어 둔 표시가 없으면 — 앞의 걷기가 끝난 뒤에 띄운다
+                        ctl.AutoConnect(); // 앞의 걷기가 끝난 뒤에 띄운다
                         if (exitAfter > 0) app.ExitAfter(exitAfter); // 시험 판만 — 트레이 아이콘을 오래 두지 않는다
                         Application.Run(app);
                     }

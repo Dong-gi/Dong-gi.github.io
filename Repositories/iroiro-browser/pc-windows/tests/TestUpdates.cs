@@ -156,7 +156,7 @@ namespace WebTether.Tests
                     if (url.Contains("advisories")) return url.Contains("/repos/") ? "[]" : AdvisoriesJson;
                     throw new WebExceptionLike("unexpected " + url);
                 };
-                c.HotspotFinder = () => new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.60", IfIndex = 12 };
+                c.HotspotFinder = p => new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.60", IfIndex = 12, Ssid = "DIRECT-UT-시험폰" };
                 c.Prober = (h, p, k, t) => new ProbeResult { Ok = true };
                 c.Tun2proxyLister = () => new List<int>();
                 c.RouteReader = () => new List<RouteRow>();
@@ -165,16 +165,16 @@ namespace WebTether.Tests
                 c.Notice += (t, x, w) => { lock (notices) { notices.Add((w ? "!" : "i") + t); urls.Add(c.NoticeUrl); } };
                 c.ConnectAsync().Wait(10000);
                 Thread.Sleep(2100);
-                c.Tick();
+                c.TickAsync().Wait(10000);
                 A.Eq(TetherState.Connected, c.State, "연결됨");
-                c.Tick(); // 이 Tick 에서 묻는다
+                c.TickAsync().Wait(10000); // 이 Tick 에서 묻는다
                 A.WaitUntil(() => { lock (notices) return notices.Count >= 2; }, 5000, "알림 둘");
                 A.True(notices[0].StartsWith("!보안 권고"), notices[0]);
                 A.Eq("https://github.com/advisories/GHSA-aaaa-bbbb-cccc", urls[0], "권고 쪽");
                 A.True(notices[1].StartsWith("i새 판 tun2proxy 0.9.0"), notices[1]);
                 A.Eq(3, asked.Count, "릴리스 하나와 권고 둘");
                 A.True(File.Exists(paths.UpdateFile), "상태를 적음");
-                c.Tick();
+                c.TickAsync().Wait(10000);
                 Thread.Sleep(200);
                 A.Eq(3, asked.Count, "간격 안에는 다시 묻지 않음");
                 A.Eq("0.9.0", c.NewVersion, "메뉴에 보일 새 판");

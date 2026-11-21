@@ -60,7 +60,7 @@ ADVISORY_APIS = [
 WINDIR = Path(os.environ.get("SystemRoot", r"C:\Windows"))
 CSC = WINDIR / "Microsoft.NET" / "Framework64" / "v4.0.30319" / "csc.exe"
 POWERSHELL = WINDIR / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"
-REFS = ["System.dll", "System.Core.dll", "System.Drawing.dll", "System.Windows.Forms.dll", "System.Xml.dll",
+REFS = ["System.dll", "System.Core.dll", "System.Drawing.dll", "System.Windows.Forms.dll", "System.Xml.dll", "System.Management.dll",
         "System.Web.Extensions.dll"]
 
 

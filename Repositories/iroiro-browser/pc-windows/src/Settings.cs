@@ -22,6 +22,8 @@ namespace WebTether
         public const string DefaultVerbosity = "info";
         public const int DefaultReconnectInterval = 10;
         public const int DefaultReconnectMax = 20;
+        /// <summary>폰 앱이 붙이는 SSID 앞머리 — 이것으로 시작하는 Wi-Fi 에서만 저절로 연결한다.</summary>
+        public const string DefaultSsidPrefix = "DIRECT-UT-";
 
         // tun2proxy 0.8.7 의 --help 에서 읽은 값들.
         public static readonly string[] DnsModes = { "direct", "over-tcp", "virtual" };
@@ -40,6 +42,7 @@ namespace WebTether
         public int ReconnectInterval = DefaultReconnectInterval;
         public int ReconnectMax = DefaultReconnectMax;
         public string WifiProfile = "";
+        public string SsidPrefix = DefaultSsidPrefix;
         public bool AutoStart = false;
         public bool UpdateCheck = true;
         public UpdateInterval UpdateEvery = UpdateInterval.Weekly;
@@ -113,6 +116,15 @@ namespace WebTether
             return true;
         }
 
+        /// <summary>SSID 앞머리 — 비지 않고, 앞뒤 빈칸·제어 글자 없이, UTF-8 로 32바이트(SSID 의 상한)까지.</summary>
+        public static bool IsSsidPrefix(string s)
+        {
+            if (string.IsNullOrEmpty(s) || s.Trim().Length != s.Length) return false;
+            foreach (var c in s) if (char.IsControl(c)) return false;
+            try { return new UTF8Encoding(false, true).GetByteCount(s) <= 32; }
+            catch (ArgumentException) { return false; } // 짝 없는 서로게이트
+        }
+
         /// <summary>문제가 있으면 (칸 이름, 까닭) 목록을 돌려준다. 비면 통과.</summary>
         public List<KeyValuePair<string, string>> Validate()
         {
@@ -129,6 +141,7 @@ namespace WebTether
             if (ReconnectInterval < 3 || ReconnectInterval > 600) add("reconnect_interval", "다시 연결 간격은 3–600초입니다.");
             if (ReconnectMax < 1 || ReconnectMax > 1000) add("reconnect_max", "다시 연결 횟수는 1–1000 입니다.");
             if (!IsWifiProfile(WifiProfile)) add("wifi_profile", "Wi-Fi 프로필 이름에 따옴표·제어 글자를 쓸 수 없습니다(64자까지).");
+            if (!IsSsidPrefix(SsidPrefix)) add("ssid_prefix", "Wi-Fi 이름 앞머리는 비울 수 없고 32바이트까지입니다(앞뒤 빈칸·제어 글자 없이).");
             return e;
         }
 
@@ -158,6 +171,7 @@ namespace WebTether
             w("reconnect_interval", ReconnectInterval.ToString(CultureInfo.InvariantCulture));
             w("reconnect_max", ReconnectMax.ToString(CultureInfo.InvariantCulture));
             w("wifi_profile", WifiProfile);
+            w("ssid_prefix", SsidPrefix);
             w("autostart", B(AutoStart));
             w("update_check", B(UpdateCheck));
             w("update_interval", IntervalNames[(int)UpdateEvery]);
@@ -222,6 +236,7 @@ namespace WebTether
                 case "reconnect_interval": if (!TryInt(v, out i)) return false; ReconnectInterval = i; return true;
                 case "reconnect_max": if (!TryInt(v, out i)) return false; ReconnectMax = i; return true;
                 case "wifi_profile": WifiProfile = v; return true;
+                case "ssid_prefix": SsidPrefix = v; return true;
                 case "autostart": if (!TryBool(v, out b)) return false; AutoStart = b; return true;
                 case "update_check": if (!TryBool(v, out b)) return false; UpdateCheck = b; return true;
                 case "update_interval":

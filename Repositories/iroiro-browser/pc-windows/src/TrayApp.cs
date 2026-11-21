@@ -60,6 +60,7 @@ namespace WebTether
             tray.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) ShowStatus(); };
 
             ctl.Changed += UpdateTray;
+            ctl.AskConnect = AskConnect;
             ctl.Notice += (title, text, warn) =>
             {
                 balloonUrl = ctl.NoticeUrl;
@@ -85,6 +86,20 @@ namespace WebTether
                 }) { IsBackground = true, Name = "show-signal" };
                 t.Start();
             }
+        }
+
+        /// <summary>
+        /// 손으로 누른 '연결' 이 접두어 밖(또는 이름을 모르는) Wi-Fi 를 만났을 때 — 사용자의 뜻이니 한 번 묻는다. 기본 단추는 '아니요'.
+        /// '예' 면 그 이름은 이 실행 동안 다시 연결도 저절로 한다(Controller.approvedSsid).
+        /// </summary>
+        static bool AskConnect(HotspotInfo hs, string prefix)
+        {
+            var text = hs.Ssid != null
+                ? "Wi-Fi " + StatusText.Ssid(hs.Ssid) + " 에 연결할까요?" + Environment.NewLine +
+                  "이름이 " + prefix + " 로 시작하지 않습니다 — 이 PC 의 모든 트래픽이 그 망의 기기로 갑니다."
+                : "이름을 확인하지 못한 Wi-Fi(" + hs.AdapterName + ") 에 연결할까요?" + Environment.NewLine +
+                  "까닭: " + hs.SsidError + " — 이 PC 의 모든 트래픽이 그 망의 기기로 갑니다.";
+            return MessageBox.Show(text, AppInfo.Name, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
         }
 
         void OpenAdvisory()
@@ -154,6 +169,11 @@ namespace WebTether
             exiting = true;
             tick.Stop();
             tray.Text = "Web 테더 — 끝내는 중";
+            // 설정 저장(파일·작업 스케줄러)이 도는 중이면 끝나기를 기다린다 — 쓰다 말고 끝나지 않게.
+            if (settings != null)
+            {
+                try { await settings.PendingSave; } catch (Exception ex) { log.Write("끝", "설정 저장을 기다리지 못함: " + ex.Message); }
+            }
             await ctl.ShutdownAsync();
             log.Write("끝", "도우미를 끝냅니다");
             tray.Visible = false;

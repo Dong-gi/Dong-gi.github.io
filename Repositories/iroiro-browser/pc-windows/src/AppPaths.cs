@@ -1,4 +1,5 @@
-// 파일 자리 — 모두 %ProgramData%\WebTether 하나(관리자 전용 — SecureFs). 설정·업데이트·연결 상태·끊어 둔 표시·로그·실행 파일.
+// 파일 자리 — 모두 %ProgramData%\WebTether 하나(관리자 전용 — SecureFs). 설정·업데이트·연결 상태·로그·실행 파일.
+// 사용자의 '끊기' 는 파일에 남기지 않는다(메모리에만 — 사용자 결정 11-21). 예전 판의 user-disconnected 는 읽지도 지우지도 않는다.
 // 예전 판은 %APPDATA%\WebTether(설정)·%LOCALAPPDATA%\WebTether(로그·실행 파일·상태)에 썼다 — 사용자가 쓸 수 있는 자리라 옮겼다.
 // 옛 자리의 파일은 읽지도 지우지도 않는다(사용자 결정 — 가져오기를 걷었다). 걷은 사용량 통계가 남긴 usage 파일도 그대로 둔다.
 using System;
@@ -14,8 +15,6 @@ namespace WebTether
         public string SettingsFile { get { return Path.Combine(Root, "settings"); } }
         public string UpdateFile { get { return Path.Combine(Root, "update"); } }
         public string StateFile { get { return Path.Combine(Root, "connection-state"); } }
-        /// <summary>사용자가 '끊기' 를 눌렀다는 표시 — 있으면 다음 실행 때 저절로 연결하지 않는다. '연결' 이 지운다.</summary>
-        public string UserOffFile { get { return Path.Combine(Root, "user-disconnected"); } }
         /// <summary>하나만 실행의 둘째 겹 — 도는 동안 공유 없이 쥔다(관리자 전용 폴더라 보통 권한의 프로그램이 먼저 잡을 수 없다).</summary>
         public string InstanceFile { get { return Path.Combine(Root, "instance.lock"); } }
         public string LogDir { get { return Path.Combine(Root, "logs"); } }

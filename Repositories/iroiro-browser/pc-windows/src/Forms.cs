@@ -94,7 +94,11 @@ namespace WebTether
         ProbeResult lastProbe;
         DateTime lastProbeAt = DateTime.MinValue;
         bool probing;
-        /// <summary>시험 — 프록시 확인을 하지 않는다.</summary>
+        /// <summary>핫스팟·SSID — 어댑터와 Wi-Fi API 를 부르는 막는 호출이라 일꾼 스레드에서 2초마다. 결과만 이 스레드로.</summary>
+        HotspotInfo lastHotspot;
+        bool hotspotKnown, hotspotProbing;
+        DateTime lastHotspotAt = DateTime.MinValue;
+        /// <summary>시험 — 프록시·핫스팟 확인을 하지 않는다(ShowHotspot 로 넣는다).</summary>
         public bool ProbeEnabled = true;
 
         public StatusForm(Controller ctl)
@@ -140,7 +144,7 @@ namespace WebTether
             CancelButton = bClose;
 
             timer.Tick += (s, e) => RefreshView();
-            VisibleChanged += (s, e) => { if (Visible) { lastProbeAt = DateTime.MinValue; RefreshView(); } timer.Enabled = Visible; };
+            VisibleChanged += (s, e) => { if (Visible) { lastProbeAt = DateTime.MinValue; lastHotspotAt = DateTime.MinValue; RefreshView(); } timer.Enabled = Visible; };
             FormClosing += (s, e) => { if (e.CloseReason == CloseReason.UserClosing) { e.Cancel = true; Hide(); } };
             RefreshView();
         }
@@ -153,8 +157,30 @@ namespace WebTether
             vState.Text = StatusText.Title(st) + (string.IsNullOrEmpty(ctl.Detail) ? "" : " — " + ctl.Detail);
             vState.ForeColor = Icons.ColorOf(st);
 
-            var hs = ctl.HotspotFinder();
-            vHotspot.Text = hs == null ? "연결 안 됨 — 폰의 DIRECT-UT-… 에 붙으십시오" : "연결됨 · " + hs.AdapterName + " (" + hs.Address + ")";
+            vHotspot.Text = hotspotKnown ? StatusText.HotspotLine(lastHotspot, s.SsidPrefix) : "확인 중";
+            if (ProbeEnabled && Visible && !hotspotProbing && (DateTime.Now - lastHotspotAt).TotalSeconds >= 2)
+            {
+                hotspotProbing = true;
+                lastHotspotAt = DateTime.Now;
+                var prefix = s.SsidPrefix;
+                var finder = ctl.HotspotFinder;
+                Task.Run(() => finder(prefix)).ContinueWith(t =>
+                {
+                    var hs = t.Exception == null ? t.Result : null;
+                    if (t.Exception != null) t.Exception.Handle(_ => true);
+                    try
+                    {
+                        // 창이 닫혔으면(없어졌으면) 버린다.
+                        if (IsHandleCreated && !IsDisposed)
+                        {
+                            BeginInvoke(new Action(() => { ShowHotspot(hs); hotspotProbing = false; }));
+                            return;
+                        }
+                    }
+                    catch (InvalidOperationException) { }
+                    hotspotProbing = false;
+                });
+            }
 
             var url = CommandLine.ProxyUrl(s);
             if (lastProbe == null) vProxy.Text = (probing ? "확인 중 · " : "확인 안 함 · ") + url;
@@ -180,6 +206,14 @@ namespace WebTether
             var a = ctl.Toggle;
             bToggle.Text = StatusText.ToggleLabel(a);
             bToggle.Enabled = a != ToggleAction.Cleaning;
+        }
+
+        /// <summary>살핀 핫스팟을 보인다(시험·그림은 직접 넣는다).</summary>
+        public void ShowHotspot(HotspotInfo hs)
+        {
+            lastHotspot = hs;
+            hotspotKnown = true;
+            if (!IsDisposed) vHotspot.Text = StatusText.HotspotLine(hs, ctl.Settings.SsidPrefix);
         }
 
         /// <summary>단추·트레이 메뉴 — 누른 때의 상태로 다시 정한다(보인 글이 낡았어도 '정리 중' 이면 아무것도 하지 않는다).</summary>

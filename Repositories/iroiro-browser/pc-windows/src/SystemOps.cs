@@ -65,13 +65,21 @@ namespace WebTether
         public bool StartupEnabled() { return StartupState; }
     }
 
+    /// <summary>System32 의 도구를 돌린다 — 끝 코드(시간 초과면 -1)와 출력.</summary>
+    public delegate int ToolRunner(string exe, string args, int timeoutMs, out string output);
+
     public sealed class SystemOps : ISystemOps
     {
         public const string TaskName = "WebTether";
+        public const int TimedOut = -1;
         static string Sys32 { get { return Environment.GetFolderPath(Environment.SpecialFolder.System); } }
 
         readonly SelfImage self;
         readonly Action<string> note;
+        /// <summary>시험이 바꾼다 — schtasks 를 실제로 돌리지 않고.</summary>
+        public ToolRunner RunTool = Run;
+        /// <summary>schtasks 가 시간 초과로 끊긴 뒤 작업이 있는지 묻기 전에 쉬는 시간 — 끊긴 요청을 작업 스케줄러가 마저 끝낼 틈.</summary>
+        public int SettleDelayMs = 1000;
 
         /// <summary>self: 시작할 때 쥔 이 exe(SelfImage.Open) — '시작 시 실행' 의 사본은 그 핸들에서만 만든다. null 이면 켜지 못한다.</summary>
         public SystemOps(SelfImage self, Action<string> note)
@@ -96,9 +104,9 @@ namespace WebTether
                 var se = p.StandardError.ReadToEndAsync();
                 if (!p.WaitForExit(timeoutMs))
                 {
-                    try { p.Kill(); } catch (InvalidOperationException) { }
+                    try { p.Kill(); } catch (InvalidOperationException) { } catch (System.ComponentModel.Win32Exception) { }
                     output = "시간 초과";
-                    return -1;
+                    return TimedOut;
                 }
                 output = (so.Result + se.Result).Trim();
                 return p.ExitCode;
@@ -221,9 +229,7 @@ namespace WebTether
                     using (WriteThenHoldForReaders(xmlPath, all))
                     {
                         step = "작업 스케줄러 등록(schtasks /Create)";
-                        string output;
-                        int code = Run("schtasks.exe", "/Create /TN " + TaskName + " /XML " + CommandLine.Quote(xmlPath) + " /F", 20000, out output);
-                        if (code != 0) return Failed("작업 스케줄러에 등록하지 못했습니다(schtasks /Create, 코드 " + code + ")", output, out error);
+                        if (!CreateTask(xmlPath, out error)) return false;
                     }
                 }
                 finally
@@ -242,9 +248,7 @@ namespace WebTether
         public bool DisableStartup(out string error)
         {
             error = null;
-            string output;
-            int code = Run("schtasks.exe", "/Delete /TN " + TaskName + " /F", 20000, out output);
-            if (code != 0 && StartupEnabled()) return Failed("작업 스케줄러에서 지우지 못했습니다(schtasks /Delete, 코드 " + code + ")", output, out error);
+            if (!DeleteTask(out error)) return false;
             if (note != null) note("껐습니다 — 작업 " + TaskName);
             try
             {
@@ -265,9 +269,62 @@ namespace WebTether
 
         public bool StartupEnabled()
         {
+            return TaskExists() == true;
+        }
+
+        /// <summary>
+        /// 작업이 있는가 — schtasks /Query(읽기만). 0 이면 있음, 다른 끝 코드면 없음(없는 이름은 1 — 관리자로 도는 도우미에게 다른 까닭의
+        /// 실패는 드물다고 보았다), 시간 초과·띄우지 못함은 모름(null).
+        /// </summary>
+        public bool? TaskExists()
+        {
             string output;
-            try { return Run("schtasks.exe", "/Query /TN " + TaskName, 10000, out output) == 0; }
-            catch (Exception) { return false; }
+            int code;
+            try { code = RunTool("schtasks.exe", "/Query /TN " + TaskName, 10000, out output); }
+            catch (Exception) { return null; }
+            if (code == 0) return true;
+            if (code == TimedOut) return null;
+            return false;
+        }
+
+        /// <summary>작업 등록(schtasks /Create /XML). 시간 초과면 한 번 물어 실제 상태로 맞춘다(Settle).</summary>
+        public bool CreateTask(string xmlPath, out string error)
+        {
+            string output;
+            int code = RunTool("schtasks.exe", "/Create /TN " + TaskName + " /XML " + CommandLine.Quote(xmlPath) + " /F", 20000, out output);
+            return Settle("작업 스케줄러 등록(schtasks /Create)", code, output, true, out error);
+        }
+
+        /// <summary>작업 지우기(schtasks /Delete). 실패·시간 초과면 한 번 물어 실제 상태로 맞춘다 — 이미 없으면 꺼진 것이다.</summary>
+        public bool DeleteTask(out string error)
+        {
+            string output;
+            int code = RunTool("schtasks.exe", "/Delete /TN " + TaskName + " /F", 20000, out output);
+            return Settle("작업 스케줄러에서 지우기(schtasks /Delete)", code, output, false, out error);
+        }
+
+        /// <summary>
+        /// schtasks 가 끝나지 않았을 때(시간 초과 — 끊었지만 작업 스케줄러는 그 요청을 마쳤을 수 있다) 작업이 있는지 한 번 물어 바란
+        /// 상태(want: 있음 = 켜짐)와 같으면 성공으로 친다 — 설정 칸과 작업이 어긋나지 않게. 지우기는 시간 초과가 아닌 실패도 묻는다(이미
+        /// 없으면 된 것). 등록의 시간 초과가 아닌 실패는 묻지 않고 실패. 물음도 답하지 못하면 실패와 '작업 스케줄러를 확인하라'.
+        /// </summary>
+        bool Settle(string what, int code, string output, bool want, out string error)
+        {
+            error = null;
+            if (code == 0) return true;
+            bool late = code == TimedOut;
+            if (!late && want) return Failed(what + " 실패(코드 " + code + ")", output, out error);
+            if (late && SettleDelayMs > 0) System.Threading.Thread.Sleep(SettleDelayMs);
+            var exists = TaskExists();
+            var head = what + (late ? " 이 시간 안에 끝나지 않음" : " 실패(코드 " + code + ")");
+            if (exists == want)
+            {
+                if (note != null) note(head + " — 확인하니 작업이 " + (want ? "있어 켜짐으로 둡니다" : "없어 꺼짐으로 둡니다"));
+                return true;
+            }
+            if (exists == null)
+                return Failed(head + " — 작업이 있는지도 확인하지 못했습니다. 작업 스케줄러의 " + TaskName + " 를 확인하십시오", output, out error);
+            return Failed(head + " — 확인하니 작업이 " + (want ? "없습니다" : "남아 있습니다"), output, out error);
         }
     }
 }

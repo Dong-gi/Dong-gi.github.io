@@ -82,6 +82,8 @@ namespace WebTether.Tests
             RouteTests.Add(T);
             MiscTests.Add(T);
             ControllerTests.Add(T);
+            SsidTests.Add(T);
+            StartupTaskTests.Add(T);
             UpdateTests.Add(T);
             UpdateTests.AddTimeouts(T);
             SecurityTests.Add(T);
@@ -775,7 +777,7 @@ namespace WebTether.Tests
     }
 
     // ------------------------------------------------------------------ 상태 기계(dry-run)
-    static class ControllerTests
+    static partial class ControllerTests
     {
         sealed class Rig
         {
@@ -783,7 +785,7 @@ namespace WebTether.Tests
             public DryRunOps Ops;
             public DryRunChildFactory F;
             public AppPaths Paths;
-            public HotspotInfo Hotspot = new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.60", IfIndex = 12 };
+            public HotspotInfo Hotspot = Hs(Mine);
             public bool ProbeOk = true;
             public bool TunUp = true;
             public List<RouteRow> Table = new List<RouteRow>();
@@ -824,7 +826,7 @@ namespace WebTether.Tests
                 Source = it => exe,
             };
             r.C = new Controller(r.Paths, log, ops ?? r.Ops, factory ?? r.F, set, true, false, s ?? new Settings());
-            r.C.HotspotFinder = () => r.Hotspot;
+            r.C.HotspotFinder = p => r.Hotspot;
             r.C.Prober = (h, p, k, t) => new ProbeResult { Ok = r.ProbeOk, Detail = r.ProbeOk ? "ok" : "연결 거부" };
             r.C.Tun2proxyLister = () => new List<int>(r.Others);
             r.C.RouteReader = () => new List<RouteRow>(r.Table);
@@ -939,7 +941,7 @@ namespace WebTether.Tests
                 A.True(r.F.CommandLines[0].EndsWith("--proxy socks5://192.168.49.1:1080 --tun USBTether --dns direct --dns-addr 1.0.0.1 --setup --verbosity info"), r.F.CommandLines[0]);
                 A.True(File.Exists(r.Paths.StateFile), "상태 파일");
                 Thread.Sleep(2100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Connected, r.C.State, "연결됨");
                 Run(r.C.DisconnectAsync());
                 A.Eq(TetherState.Off, r.C.State, "꺼짐");
@@ -952,20 +954,20 @@ namespace WebTether.Tests
                 var r = Make("lost", new Settings { ReconnectInterval = 3 });
                 Run(r.C.ConnectAsync());
                 Thread.Sleep(2100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Connected, r.C.State, "연결됨");
                 var first = r.F.Last;
                 r.Hotspot = null;
-                r.C.Tick();
+                Tick(r);
                 A.WaitUntil(() => r.C.State == TetherState.Waiting, 5000, "대기");
                 A.True(first.HasExited, "앞 자식을 끝냄");
                 A.True(r.Notices.Any(n => n.Contains("핫스팟")), "알림");
                 Thread.Sleep(3100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Waiting, r.C.State, "핫스팟이 없으면 계속 대기");
-                r.Hotspot = new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.61", IfIndex = 12 };
+                r.Hotspot = Hs(Mine);
                 Thread.Sleep(3100);
-                r.C.Tick();
+                Tick(r);
                 A.WaitUntil(() => r.F.CommandLines.Count == 2, 5000, "다시 띄움");
                 Run(r.C.DisconnectAsync());
             });
@@ -978,7 +980,7 @@ namespace WebTether.Tests
                 A.WaitUntil(() => r.C.State == TetherState.Waiting, 5000, "대기");
                 A.True(r.Notices.Any(n => n.Contains("코드 1")), "알림: " + string.Join("|", r.Notices.ToArray()));
                 Thread.Sleep(3100);
-                r.C.Tick();
+                Tick(r);
                 A.WaitUntil(() => r.F.CommandLines.Count == 2, 5000, "다시 띄움");
                 Run(r.C.DisconnectAsync());
             });
@@ -990,7 +992,7 @@ namespace WebTether.Tests
                 Run(r.C.ConnectAsync());
                 A.Eq(TetherState.Waiting, r.C.State, "한 번은 대기");
                 Thread.Sleep(3100);
-                r.C.Tick();
+                Tick(r);
                 A.WaitUntil(() => r.C.State == TetherState.Error, 5000, "오류");
                 A.True(r.Notices.Any(n => n.StartsWith("다시 연결을 멈췄습니다")), "알림");
                 A.Eq(0, r.F.CommandLines.Count, "띄우지 않음");
@@ -1060,7 +1062,7 @@ namespace WebTether.Tests
                 }
                 finally { SynchronizationContext.SetSynchronizationContext(before); }
                 A.WaitUntil(() => r.C.State == TetherState.Off, 5000, "꺼짐");
-                A.True(File.Exists(r.Paths.UserOffFile), "단추로 끊으면 끊어 둔 표시를 남긴다");
+                A.True(!File.Exists(OffMark(r)), "단추로 끊어도 파일에 남기지 않는다(메모리에만)");
                 gate.Set();
                 Run(task);
                 A.Eq(0, r.F.CommandLines.Count, "띄우지 않음");
@@ -1071,15 +1073,15 @@ namespace WebTether.Tests
                 var r = Make("crashloop", new Settings { ReconnectInterval = 3, ReconnectMax = 1 });
                 Run(r.C.ConnectAsync());
                 Thread.Sleep(2100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Connected, r.C.State, "연결됨 1");
                 r.F.Last.SimulateExit(1);
                 A.WaitUntil(() => r.C.State == TetherState.Waiting, 5000, "대기 1/1");
                 Thread.Sleep(3100);
-                r.C.Tick();
+                Tick(r);
                 A.WaitUntil(() => r.F.CommandLines.Count == 2, 5000, "다시 띄움");
                 Thread.Sleep(2100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Connected, r.C.State, "연결됨 2");
                 r.F.Last.SimulateExit(1);
                 A.WaitUntil(() => r.C.State != TetherState.Connected, 5000, "끝남");
@@ -1124,17 +1126,17 @@ namespace WebTether.Tests
                 r.C.ConnectTimeoutSeconds = 3;
                 Run(r.C.ConnectAsync());
                 Thread.Sleep(2100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Connecting, r.C.State, "아직 연결 중");
                 Thread.Sleep(1100);
-                r.C.Tick();
+                Tick(r);
                 A.WaitUntil(() => r.C.State == TetherState.Error, 5000, "오류 — " + r.C.State + " " + r.C.Detail);
                 A.True(r.C.Detail.Contains("TUN") && r.C.Detail.Contains("3초"), r.C.Detail);
                 A.True(r.F.Last.HasExited, "tun2proxy 를 끝냄");
                 A.WaitUntil(() => !r.C.CleanupPending, 5000, "걷기 끝");
                 A.True(!File.Exists(r.Paths.StateFile), "걷고 상태 파일을 지움");
                 Thread.Sleep(3100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(1, r.F.CommandLines.Count, "다시 하지 않음");
             });
 
@@ -1144,10 +1146,10 @@ namespace WebTether.Tests
                 var r = Make("double-stop", new Settings { ReconnectInterval = 3 }, null, gated);
                 Run(r.C.ConnectAsync());
                 Thread.Sleep(2100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Connected, r.C.State, "연결됨");
                 r.Hotspot = null;
-                r.C.Tick();                                   // 핫스팟 사라짐 → 끊기 시작(Ctrl+C 에서 막힘)
+                Tick(r);                                   // 핫스팟 사라짐 → 끊기 시작(Ctrl+C 에서 막힘)
                 A.WaitUntil(() => gated.Last.StopCalls == 1, 3000, "끊는 중");
                 var d = r.C.DisconnectAsync();                // 사용자가 '끊기'
                 Thread.Sleep(300);
@@ -1159,9 +1161,9 @@ namespace WebTether.Tests
                 lock (r.Log) A.True(!r.Log.Any(l => l.Contains("[상태]") && l.Contains("폰 핫스팟이 사라졌습니다")),
                                     "사용자가 끊은 뒤 '오류·대기' 로 덮지 않음: " + string.Join(" | ", r.Log.Where(l => l.Contains("[상태]")).ToArray()));
                 A.Eq(1, r.Log.Count(l => l.Contains("핫스팟이 사라짐 — Ctrl+C")) + r.Log.Count(l => l.Contains("사용자가 끊음 — Ctrl+C")), "끊기 기록 하나");
-                r.Hotspot = new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.61", IfIndex = 12 };
+                r.Hotspot = Hs(Mine);
                 Thread.Sleep(3100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(1, gated.Starts, "다시 띄우지 않음");
             });
 
@@ -1184,7 +1186,7 @@ namespace WebTether.Tests
                 var c = r.C.ConnectAsync();
                 Thread.Sleep(500);
                 A.Eq(0, r.F.CommandLines.Count, "걷는 동안 띄우지 않음");
-                r.C.Tick();
+                Tick(r);
                 A.Eq(0, r.F.CommandLines.Count, "Tick 도 기다림");
                 gate.Set();
                 Run(t);
@@ -1228,6 +1230,8 @@ namespace WebTether.Tests
 
             AddAutoConnect(T);
             AddSettling(T);
+            AddSsid(T);
+            AddWorkers(T);
         }
 
         static void AddAutoConnect(Action<string, Action> T)
@@ -1238,43 +1242,59 @@ namespace WebTether.Tests
                 Run(r.C.AutoConnectAsync());
                 A.Eq(1, r.F.CommandLines.Count, "띄움");
                 Thread.Sleep(2100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Connected, r.C.State, "연결됨");
                 Run(r.C.ShutdownAsync());
-                A.True(!File.Exists(r.Paths.UserOffFile), "끝내기는 표시를 남기지 않음");
+                A.True(!File.Exists(OffMark(r)), "끝내기는 표시를 남기지 않음");
                 var r2 = Again(r, null);
                 Run(r2.C.AutoConnectAsync());
                 A.Eq(1, r2.F.CommandLines.Count, "다음 실행도 연결");
                 Run(r2.C.ShutdownAsync());
             });
 
-            T("자동 연결: 사용자가 '끊기' 를 누르면 표시를 남겨 다음 실행은 꺼진 채, '연결' 이 표시를 지운다", () =>
+            T("자동 연결: 사용자의 '끊기' 는 그 실행 동안만 — Tick 도 다시 연결하지 않고, '연결' 로 다시 붙고, 다음 실행은 저절로 연결한다", () =>
             {
-                var r = Make("auto-off", null);
+                var r = Make("auto-off", new Settings { ReconnectInterval = 3 });
                 Run(r.C.AutoConnectAsync());
                 A.Eq(1, r.F.CommandLines.Count, "띄움");
                 Run(r.C.DisconnectAsync());
-                A.True(File.Exists(r.Paths.UserOffFile), "끊어 둔 표시");
-                A.True(r.C.UserDisconnected, "UserDisconnected");
+                A.Eq(TetherState.Off, r.C.State, "꺼짐");
+                A.True(!File.Exists(OffMark(r)), "표시 파일을 쓰지 않음");
+                A.Eq(0, Directory.GetFiles(r.Paths.Root).Count(x => Path.GetFileName(x).IndexOf("disconnect", StringComparison.OrdinalIgnoreCase) >= 0), "끊음을 적은 파일 없음");
+                Thread.Sleep(3100);
+                Tick(r);
+                A.Eq(1, r.F.CommandLines.Count, "그 실행 동안은 Tick 도 다시 연결하지 않음");
+                A.Eq(TetherState.Off, r.C.State, "꺼진 채");
+                Run(r.C.ConnectAsync());
+                A.Eq(2, r.F.CommandLines.Count, "'연결' 로 다시 붙음");
+                Run(r.C.DisconnectAsync());
 
                 var r2 = Again(r, null);
                 Run(r2.C.AutoConnectAsync());
-                A.Eq(0, r2.F.CommandLines.Count, "띄우지 않음");
-                A.Eq(TetherState.Off, r2.C.State, "꺼짐");
-                A.Eq("직접 끊음", r2.C.Detail, "까닭");
-                A.Eq("Web 테더 — 꺼짐 · 직접 끊음", StatusText.Tooltip(r2.C.State, r2.C.Detail), "툴팁");
-                Thread.Sleep(1100);
-                r2.C.Tick();
-                A.Eq(0, r2.F.CommandLines.Count, "Tick 도 띄우지 않음");
-                Run(r2.C.ConnectAsync());
-                A.True(!File.Exists(r2.Paths.UserOffFile), "'연결' 이 표시를 지움");
-                A.Eq(1, r2.F.CommandLines.Count, "연결");
+                A.Eq(1, r2.F.CommandLines.Count, "다시 실행하면 저절로 연결");
                 Run(r2.C.ShutdownAsync());
+            });
 
-                var r3 = Again(r, null);
-                Run(r3.C.AutoConnectAsync());
-                A.Eq(1, r3.F.CommandLines.Count, "그다음 실행은 다시 저절로");
-                Run(r3.C.ShutdownAsync());
+            T("자동 연결: 예전 판이 남긴 user-disconnected 는 읽지도 지우지도 않는다 — 있어도 저절로 연결한다", () =>
+            {
+                var r = Make("auto-legacy-mark", null);
+                var mark = OffMark(r);
+                const string body = "disconnected-by-user 2026-11-21 10:00:00\n";
+                File.WriteAllText(mark, body);
+                var when = new DateTime(2026, 11, 21, 10, 0, 0);
+                File.SetLastWriteTime(mark, when);
+                using (new FileStream(mark, FileMode.Open, FileAccess.Read, FileShare.None)) // 열려고 들면 공유 위반 — 그래도 연결해야 한다
+                {
+                    Run(r.C.AutoConnectAsync());
+                    A.Eq(1, r.F.CommandLines.Count, "표시가 있어도 연결");
+                    Run(r.C.DisconnectAsync());
+                    Run(r.C.ConnectAsync());
+                    Run(r.C.ShutdownAsync());
+                }
+                lock (r.Log) A.True(!r.Log.Any(l => l.Contains("끊어 둠") || l.Contains("user-disconnected")), "표시를 다루지 않음: " + string.Join(" | ", r.Log.ToArray()));
+                A.True(File.Exists(mark), "지우지 않음");
+                A.Eq(body, File.ReadAllText(mark), "내용 그대로");
+                A.Eq(when, File.GetLastWriteTime(mark), "쓰지 않음");
             });
 
             T("자동 연결: 핫스팟 사라짐·다른 tun2proxy·다시 연결 포기는 끊음이 아니다(표시 없음)", () =>
@@ -1282,12 +1302,12 @@ namespace WebTether.Tests
                 var r = Make("auto-notoff", new Settings { ReconnectInterval = 3, ReconnectMax = 1 });
                 Run(r.C.AutoConnectAsync());
                 Thread.Sleep(2100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Connected, r.C.State, "연결됨");
                 r.Hotspot = null;
-                r.C.Tick();
+                Tick(r);
                 A.WaitUntil(() => r.C.State == TetherState.Waiting, 5000, "핫스팟 사라짐 → 대기");
-                A.True(!File.Exists(r.Paths.UserOffFile), "핫스팟 사라짐");
+                A.True(!File.Exists(OffMark(r)), "핫스팟 사라짐");
                 Run(r.C.ShutdownAsync());
 
                 var r2 = Again(r, new Settings { ReconnectInterval = 3, ReconnectMax = 1 });
@@ -1295,7 +1315,7 @@ namespace WebTether.Tests
                 Run(r2.C.AutoConnectAsync());
                 A.Eq(TetherState.Error, r2.C.State, "다른 tun2proxy — 오류");
                 A.Eq(0, r2.F.CommandLines.Count, "띄우지 않음");
-                A.True(!File.Exists(r.Paths.UserOffFile), "다른 tun2proxy");
+                A.True(!File.Exists(OffMark(r)), "다른 tun2proxy");
 
                 var r3 = Again(r, new Settings { ReconnectInterval = 3, ReconnectMax = 1 });
                 r3.C.StartupWaitSeconds = 0; // 너그러운 기다림 없이 — 늘 쓰는 규칙
@@ -1303,9 +1323,9 @@ namespace WebTether.Tests
                 Run(r3.C.AutoConnectAsync());
                 A.Eq(TetherState.Waiting, r3.C.State, "1/1 대기");
                 Thread.Sleep(3100);
-                r3.C.Tick();
+                Tick(r3);
                 A.WaitUntil(() => r3.C.State == TetherState.Error, 5000, "포기");
-                A.True(!File.Exists(r.Paths.UserOffFile), "다시 연결 포기");
+                A.True(!File.Exists(OffMark(r)), "다시 연결 포기");
             });
 
             T("자동 연결: 시작 직후 핫스팟·폰 프록시가 없으면 횟수를 쓰지 않고 기다리다('다시 연결' 이 꺼져 있어도) 생기면 연결", () =>
@@ -1320,25 +1340,25 @@ namespace WebTether.Tests
                 A.Eq(0, r.C.Retries, "횟수를 쓰지 않음");
                 A.Eq(ToggleAction.Disconnect, r.C.Toggle, "기다리는 동안 끊을 수 있다");
                 Thread.Sleep(1100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Waiting, r.C.State, "아직 없으면 계속");
                 A.Eq(0, r.F.CommandLines.Count, "띄우지 않음");
-                r.Hotspot = new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.60", IfIndex = 12 };
+                r.Hotspot = Hs(Mine);
                 r.ProbeOk = false;
                 Thread.Sleep(1100);
-                r.C.Tick();
+                Tick(r);
                 A.WaitUntil(() => r.C.State == TetherState.Waiting && r.C.Detail.Contains("폰 프록시"), 5000, "폰 프록시도 기다림 — " + r.C.Detail);
                 A.Eq(0, r.C.Retries, "횟수를 쓰지 않음(프록시)");
                 r.ProbeOk = true;
                 Thread.Sleep(1100);
-                r.C.Tick();
+                Tick(r);
                 A.WaitUntil(() => r.F.CommandLines.Count == 1, 5000, "연결");
                 // 띄운 뒤의 실패는 늘 쓰는 규칙 — '다시 연결' 이 꺼져 있으니 오류로 멈춘다(시작 직후 죽기를 끝없이 되풀이하지 않는다).
                 r.F.Last.SimulateExit(1);
                 A.WaitUntil(() => r.C.State == TetherState.Error, 5000, "오류 — " + r.C.State + " " + r.C.Detail);
                 lock (r.Notices) A.True(!r.Notices.Any(n => n.StartsWith("저절로")), "띄운 뒤의 실패는 '저절로 연결하지 못했습니다' 가 아니다: " + string.Join("|", r.Notices.ToArray()));
                 Thread.Sleep(1100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(1, r.F.CommandLines.Count, "다시 띄우지 않음");
             });
 
@@ -1351,13 +1371,13 @@ namespace WebTether.Tests
                 Run(r.C.AutoConnectAsync());
                 A.Eq(TetherState.Waiting, r.C.State, "대기");
                 Thread.Sleep(1100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Waiting, r.C.State, "아직 기다림");
                 Thread.Sleep(1400);
-                r.C.Tick();
+                Tick(r);
                 A.WaitUntil(() => r.C.State == TetherState.Error, 5000, "상한 뒤 오류 — " + r.C.State + " " + r.C.Detail);
                 A.True(r.Notices.Any(n => n.StartsWith("저절로 연결하지 못했습니다")), "알림: " + string.Join("|", r.Notices.ToArray()));
-                A.True(!File.Exists(r.Paths.UserOffFile), "표시 없음");
+                A.True(!File.Exists(OffMark(r)), "표시 없음");
 
                 var r2 = Make("auto-cap2", new Settings { Reconnect = true, ReconnectInterval = 3, ReconnectMax = 20 });
                 r2.C.StartupWaitSeconds = 1;
@@ -1366,7 +1386,7 @@ namespace WebTether.Tests
                 Run(r2.C.AutoConnectAsync());
                 A.Eq(0, r2.C.Retries, "기다리는 동안 0");
                 Thread.Sleep(1100);
-                r2.C.Tick();
+                Tick(r2);
                 A.WaitUntil(() => r2.C.Retries == 1, 5000, "상한 뒤 횟수 1 — " + r2.C.Detail);
                 A.True(r2.C.Detail.EndsWith("1/20"), r2.C.Detail);
                 A.Eq(TetherState.Waiting, r2.C.State, "계속 기다림(핫스팟이 없으면 횟수 없이)");
@@ -1384,7 +1404,7 @@ namespace WebTether.Tests
                 r.Table.Add(new RouteRow { Dest = 0, Mask = 0, NextHop = RouteRow.Parse("192.168.49.1"), IfIndex = 12, Metric = 35 });
                 Run(r.C.ConnectAsync());
                 Thread.Sleep(2100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Connected, r.C.State, "연결됨");
                 A.Eq(ToggleAction.Disconnect, r.C.Toggle, "연결됨 — 끊기");
                 r.Table.Add(new RouteRow { Dest = RouteRow.Parse("5.6.7.8"), Mask = RouteRow.Parse("255.255.255.255"), NextHop = RouteRow.Parse("192.168.49.1"), IfIndex = 12, Metric = 1 });
@@ -1426,7 +1446,7 @@ namespace WebTether.Tests
                 var r = Make("late-exit", new Settings { ReconnectInterval = 3 }, null, late);
                 Run(r.C.ConnectAsync());
                 Thread.Sleep(2100);
-                r.C.Tick();
+                Tick(r);
                 A.Eq(TetherState.Connected, r.C.State, "연결됨");
                 late.Last.Dead = true;                         // tun2proxy 가 끝났다 — 알림은 아직 UI 스레드에 닿지 않았다
                 A.True(r.C.Toggle != ToggleAction.Connect, "알림 전에는 '연결' 이 아니다 — " + r.C.Toggle);
@@ -1450,7 +1470,7 @@ namespace WebTether.Tests
                     using (var f = new SettingsForm(r.C, r.Ops, "x.exe"))
                     {
                         f.LoadFrom(new Settings { AutoStart = true });
-                        A.True(!f.Save(), "저장 실패");
+                        A.True(!Pump(f.SaveAsync()), "저장 실패");
                         A.True(r.Ops.Calls.Any(c => c.StartsWith("schtasks /Create")), "켜 보았다: " + string.Join("|", r.Ops.Calls.ToArray()));
                         A.True(!r.Ops.StartupState, "작업을 되돌림: " + string.Join("|", r.Ops.Calls.ToArray()));
                         A.True(!r.C.Settings.AutoStart, "설정은 옛 값");
@@ -1501,15 +1521,17 @@ namespace WebTether.Tests
             var ops = new DryRunOps(null);
             var s = new Settings();
             var ctl = new Controller(paths, log, ops, new DryRunChildFactory(), null, true, false, s);
-            ctl.HotspotFinder = () => new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.60", IfIndex = 12 };
+            Func<HotspotInfo, StatusForm> status = hs => { var f = new StatusForm(ctl) { ProbeEnabled = false }; f.ShowHotspot(hs); return f; };
+            var mine = new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.60", IfIndex = 12, Ssid = "DIRECT-UT-시험폰" };
 
             ctl.ForceStateForTest(TetherState.Connected, "");
-            Save(new StatusForm(ctl) { ProbeEnabled = false }, dir, "status-connected.png");
+            Save(status(mine), dir, "status-connected.png");
             ctl.ForceStateForTest(TetherState.Waiting, "폰 프록시가 응답하지 않습니다(연결 거부) — 3/20");
-            Save(new StatusForm(ctl) { ProbeEnabled = false }, dir, "status-waiting.png");
-            ctl.HotspotFinder = () => null;
+            Save(status(mine), dir, "status-waiting.png");
+            ctl.ForceStateForTest(TetherState.Waiting, "Wi-Fi 이름이 DIRECT-UT- 로 시작하지 않음('DIRECT-xy-Android_1234') — 기다리는 중");
+            Save(status(new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.77", IfIndex = 12, Ssid = "DIRECT-xy-Android_1234" }), dir, "status-foreign-ssid.png");
             ctl.ForceStateForTest(TetherState.Error, "다른 tun2proxy 가 실행 중입니다. 먼저 끄십시오.");
-            Save(new StatusForm(ctl) { ProbeEnabled = false }, dir, "status-error.png");
+            Save(status(null), dir, "status-error.png");
 
             var sf = new SettingsForm(ctl, ops, "x.exe");
             Save(sf, dir, "settings.png");
@@ -1517,7 +1539,7 @@ namespace WebTether.Tests
             Save(sf2, dir, "settings-error.png", () =>
             {
                 sf2.LoadFrom(new Settings { Kind = ProxyKind.Http, ProxyPort = 8282, ProxyHost = "192.168.49.256" });
-                sf2.Save();
+                var unused = sf2.SaveAsync(); // 검사에서 걸려 곧바로 끝난다
             });
             var sf3 = new SettingsForm(ctl, ops, "x.exe");
             Save(sf3, dir, "settings-http-hint.png", () => sf3.LoadFrom(new Settings { Kind = ProxyKind.Http, ProxyPort = 8282 }));
