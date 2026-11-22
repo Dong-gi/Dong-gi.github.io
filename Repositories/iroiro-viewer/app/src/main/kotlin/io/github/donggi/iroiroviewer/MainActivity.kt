@@ -673,6 +673,8 @@ internal fun Root(modifier: Modifier = Modifier, opened: Opened? = null) {
                 // 닫았다(`DocEdit`).
                 onEditor = if (readOnly) null else { kind -> openInEditor(s.path, kind, FROM_DOC) { docReopen++ } },
                 reopen = docReopen,
+                // ⋮ 의 'PDF 쪽 뽑기' — 원본 곁에 새 파일. 받은 사본에는 없다(편집과 같은 까닭).
+                canSaveBeside = !readOnly,
             )
         }
 

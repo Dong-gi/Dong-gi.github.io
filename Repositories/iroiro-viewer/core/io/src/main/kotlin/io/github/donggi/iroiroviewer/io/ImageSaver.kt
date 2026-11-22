@@ -2,6 +2,7 @@ package io.github.donggi.iroiroviewer.io
 
 import android.graphics.Bitmap
 import androidx.exifinterface.media.ExifInterface
+import io.github.donggi.iroiroviewer.model.ExifContainerGuard
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.NonCancellable
@@ -297,12 +298,19 @@ internal object ImageSaver {
             Iro.d { "EXIF 날짜를 옮기지 못했다: ${e::class.java.simpleName}" }
         } catch (e: RuntimeException) {
             Iro.d { "EXIF 날짜를 옮기지 못했다: ${e::class.java.simpleName}" }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            // 조작한 원본의 덩이 길이로 ExifInterface 가 `OutOfMemoryError` 를 던질 수 있다(`ExifContainerGuard` 가 먼저 막는다 — 마지막 그물).
+            Iro.d { "EXIF 날짜를 옮기지 못했다: ${e::class.java.simpleName}" }
         }
         return before.keptIn(dst)
     }
 
     /** 원본의 날짜·기기 EXIF 를 [dst](JPEG 임시본)에 제자리에서 쓴다. 위치·방향은 옮기지 않는다(머리말). 던질 수 있다. */
     private fun copyDates(src: File, dst: File) {
+        // 덩이 길이가 터무니없는 원본은 ExifInterface 에 넘기지 않는다 — 날짜 없이 놓인다.
+        if (!ExifContainerGuard.allows(src)) return
         val from = ExifInterface(src.absolutePath)
         val to = ExifInterface(dst.absolutePath)
         var changed = false

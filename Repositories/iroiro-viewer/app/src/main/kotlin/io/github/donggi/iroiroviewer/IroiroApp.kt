@@ -30,6 +30,7 @@ import io.github.donggi.iroiroviewer.ui.CoverSupport
  *   보게 되어 의존 표를 어긴다. 무엇을 무엇으로 여는지는 `FormatRegistry` 가 안다.
  * - `CropSupport`(잘라 저장) — 사용자 파일을 쓰는 일은 `core:io` 의 큐가 하는데, 화면이 본 그대로
  * (EXIF 방향까지) 뜨는 셈은 `core:ui` 에 있어 `core:io` 가 볼 수 없다 — 뜨는 쪽을 `feature:image` 가 만들고 여기서 꽂는다.
+ * - `PdfPagesSupport`(PDF 쪽 뽑기·합치기) — 같은 까닭이다. PDF 를 읽고 짓는 해석기는 `feature:docview` 에 있다.
  */
 class IroiroApp : Application() {
 
@@ -59,6 +60,8 @@ class IroiroApp : Application() {
         PlayerSupport.fileListOpener = FileListLauncher
         // 잘라 저장의 뜨는 쪽(화면이 본 그대로 — `core:ui` 를 아는 `feature:image`). 쓰는 쪽은 `core:io` 다(`CropSupport`).
         CropSupport.renderer = ImageCropRenderer
+        // PDF 쪽 뽑기·합치기의 짓는 쪽(PDF 해석기가 있는 `feature:docview`). 쓰는 쪽은 `core:io` 다(`PdfPagesSupport`).
+        io.github.donggi.iroiroviewer.io.PdfPagesSupport.engine = io.github.donggi.iroiroviewer.docview.pdf.edit.PdfPagesEngine
         FormatRegistry.install()
         // 아카이브 암호는 이번 세션 동안만 — 앱이 화면에서 사라지면 지운다.
         io.github.donggi.iroiroviewer.io.SessionPasswords.install(this)

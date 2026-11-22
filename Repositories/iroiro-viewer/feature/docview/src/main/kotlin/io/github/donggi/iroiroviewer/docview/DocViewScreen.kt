@@ -168,6 +168,11 @@ fun DocViewScreen(
     onEditor: ((String) -> Unit)? = null,
     /** 바뀌면 문서를 다시 연다 — 편집기에서 돌아와 같은 경로를 새로 읽을 때(`app` 이 올린다). */
     reopen: Int = 0,
+    /**
+     * 원본 곁에 새 파일을 쓸 수 있는가 — ⋮ 의 'PDF 쪽 뽑기'(`PdfExtract.kt`). 읽기 전용 사본(다른 앱이 준 것)이면 거짓 — 곁은 사용자가
+     * 찾아갈 수 없는 앱 캐시다.
+     */
+    canSaveBeside: Boolean = false,
 ) {
     val vm: DocViewModel = viewModel()
     val state by vm.state.collectAsStateWithLifecycle()
@@ -194,6 +199,7 @@ fun DocViewScreen(
     // 문서가 바뀌면 닫는다 — 앞 문서의 찾기 막대·쪽 목록·목차가 새 문서 위에 남지 않게.
     var showGrid by remember(path) { mutableStateOf(false) }
     var showOutline by remember(path) { mutableStateOf(false) }
+    var showExtract by remember(path) { mutableStateOf(false) }
     // 찾기 막대는 **VM 의 찾기가 살아 있으면 열린 채로** 선다. 액티비티가 다시 만들어지면(밤 모드를 바꿨다 — 회전은
     // `configChanges` 라 다시 만들지 않는다) 결과의 칠은 VM 에 남으므로, 막대가 사라지면 칠을 걷을 길도 뒤로가 막대를 닫는
     // 처리기도 없다.
@@ -511,6 +517,7 @@ fun DocViewScreen(
                         null
                     },
                     onViewMode = { vm.setContinuous(!continuous) },
+                    onExtractPages = if (doc is DocViewModel.Doc.Pdf && canSaveBeside) ({ showExtract = true }) else null,
                 )
             }
         }
@@ -566,6 +573,15 @@ fun DocViewScreen(
         )
     }
 
+    if (showExtract && pdfDoc != null) {
+        PdfExtractDialog(
+            path = pdfDoc.path,
+            pageCount = pdfDoc.count,
+            currentPage = current,
+            onDismiss = { showExtract = false },
+        )
+    }
+
     if (showJump) {
         val count = (state as? DocViewModel.State.Ready)?.doc?.count ?: 0
         JumpDialog(
@@ -605,6 +621,8 @@ private fun DocTopBar(
     onViewMode: () -> Unit = {},
     /** '편집'(⋮ 의 첫 줄 — 편집기로 넘긴다). null 이면 그 줄이 없다(`DocEdit.kt`). */
     onEdit: (() -> Unit)? = null,
+    /** 'PDF 쪽 뽑기'(⋮ 안). null 이면 그 줄이 없다(`PdfExtract.kt`). */
+    onExtractPages: (() -> Unit)? = null,
 ) {
     TopAppBar(
         modifier = modifier,
@@ -642,7 +660,7 @@ private fun DocTopBar(
                     Icon(Icons.Filled.Info, stringResource(R.string.doc_notice))
                 }
             }
-            if (onOpenWith != null || viewMode != null || onEdit != null) {
+            if (onOpenWith != null || viewMode != null || onEdit != null || onExtractPages != null) {
                 // **⋮ 단추와 메뉴를 한 상자에 담는다.** Compose 의 Popup 은 자기를 감싼 부모 레이아웃 노드를 앵커로 삼아,
                 // `actions` 에 형제로 두면 메뉴가 맨 왼쪽 아이콘 아래에서 시작한다(함정 표). 텍스트·압축 화면과 같은 모양이다.
                 // 항목이 하나뿐인데도 메뉴로 두는 것은 코어 아이콘 세트(49개)에 이 뜻의 그림이 없고(`ExitToApp` 은 '나가기' 로
@@ -668,6 +686,15 @@ private fun DocTopBar(
                                 onClick = {
                                     menuOpen = false
                                     onViewMode()
+                                },
+                            )
+                        }
+                        if (onExtractPages != null) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.doc_extract_pages)) },
+                                onClick = {
+                                    menuOpen = false
+                                    onExtractPages()
                                 },
                             )
                         }

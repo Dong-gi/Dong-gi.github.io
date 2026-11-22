@@ -140,6 +140,8 @@ class FileOpService : Service() {
                 FileOpManager.Kind.NEW_TEXT -> R.string.io_op_creating_text
                 FileOpManager.Kind.SAVE_DOC -> R.string.io_op_saving_doc
                 FileOpManager.Kind.NEW_DOC -> R.string.io_op_creating_doc
+                FileOpManager.Kind.PDF_EXTRACT -> R.string.io_op_pdf_extracting
+                FileOpManager.Kind.PDF_MERGE -> R.string.io_op_pdf_merging
                 // 정합성 검사는 알림을 띄우는 작업이 아니다. 여기 오면 준비 문구로 둔다.
                 FileOpManager.Kind.RECONCILE, null -> R.string.io_op_preparing
             }

@@ -314,6 +314,26 @@ object FileOpManager {
         }
 
         /**
+         * PDF 의 쪽을 골라 **새 PDF 로** 쓴다 — 쪽 뽑기(원본 하나, [merge] 거짓)와 합치기(여럿을 고른 차례로). 원본은 건드리지 않는다. 짓는 것은
+         * [PdfPagesSupport.engine](`feature:docview`), 쓰는 것은 [PdfPageSaver] — 임시본에 다 쓰고 끝에 `O_EXCL` 로 [name] 을 맡는다(있으면 `(2)`).
+         *
+         * @param destDir 놓을 폴더 — 뽑기는 원본 곁, 합치기는 첫 파일 곁.
+         * @param name 제안 이름([PdfPageRanges.extractName]·[PdfPageRanges.mergeName]). 실제 이름은 결과([Extra.Saved])가 싣는다.
+         */
+        class PdfPages(
+            override val id: String,
+            val parts: List<PdfPagesSupport.Part>,
+            val destDir: String,
+            val name: String,
+            val merge: Boolean,
+        ) : Request {
+            override val label get() = name
+
+            // 경로를 `toString`(로그·예외)에 싣지 않는다.
+            override fun toString(): String = "PdfPages(id=$id, parts=${parts.size}, merge=$merge)"
+        }
+
+        /**
          * 고친 글을 **그 파일에** 쓴다(글·코드 파일 편집). 원본을 고치는 일이라 이 큐를 지난다(같은 파일을 복사·이동과
          * 동시에 만지지 않게, 결과 보고를 그대로 얻게). 실체는 [TextSaver.save] — 임시본 → fsync → 원자적 rename, 고치기 전 판을
          * 휴지통에, 연 뒤에 밖에서 바뀌었으면 쓰지 않는다.
@@ -520,7 +540,7 @@ object FileOpManager {
         fun offer(finished: Finished): Boolean
     }
 
-    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, SHARE_ZIP, RECEIVE, CROP, MARKUP, CLIP, AUDIO, CAPTURE, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC }
+    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, SHARE_ZIP, RECEIVE, CROP, MARKUP, CLIP, AUDIO, CAPTURE, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC, PDF_EXTRACT, PDF_MERGE }
 
     private val _state = MutableStateFlow<State>(State.Idle)
     val state: StateFlow<State> = _state.asStateFlow()
@@ -712,6 +732,7 @@ object FileOpManager {
     private fun Request.settle(ran: Boolean) {
         if (this is Request.Extract) password?.fill('\u0000')
         if (this is Request.Compress) password?.fill('\u0000')
+        if (this is Request.PdfPages) for (part in parts) part.password?.fill('\u0000')
         if (this is Request.Reconcile) done?.complete(ran)
         if (this is Request.RotateExif) synchronized(reorientingLock) {
             reorientingIds.remove(id)?.let { _reorienting.value = it }
@@ -942,6 +963,14 @@ object FileOpManager {
                 }
                 result.outcome
             }
+            // PDF 쪽 뽑기·합치기 — 놓은 자리에서 알린다(위와 같다). 엔진이 꽂히지 않았으면 실패로 끝난다(`PdfPageSaver`).
+            is Request.PdfPages -> {
+                val result = PdfPageSaver.save(context, request, MediaIndex(context), onProgress) { r ->
+                    r.path?.let { onExtra(Extra.Saved(it)) }
+                    onPlaced(r.outcome)
+                }
+                result.outcome
+            }
             // 글 편집. 쓴 뒤에 온 취소가 '저장을 취소했습니다' 를 말하지 않게 놓은 자리에서 알린다(위 셋과 같다).
             is Request.SaveText -> TextSaver.save(request, volumes, trash, MediaIndex(context), onExtra, onPlaced)
             is Request.CreateText -> TextSaver.create(request, MediaIndex(context), onExtra, onPlaced)
@@ -979,6 +1008,7 @@ object FileOpManager {
         is Request.SaveCrop -> if (r.overlay != null) Kind.MARKUP else Kind.CROP
         is Request.SaveClip -> if (r.audioOnly) Kind.AUDIO else Kind.CLIP
         is Request.SaveFrame -> Kind.CAPTURE
+        is Request.PdfPages -> if (r.merge) Kind.PDF_MERGE else Kind.PDF_EXTRACT
         is Request.SaveText -> Kind.SAVE_TEXT
         is Request.CreateText -> Kind.NEW_TEXT
         is Request.SaveFromEditor -> Kind.SAVE_DOC

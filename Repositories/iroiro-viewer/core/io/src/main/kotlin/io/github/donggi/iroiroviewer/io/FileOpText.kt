@@ -35,6 +35,10 @@ object FileOpText {
         FileOpEngine.Reason.PREVIOUS_NOT_KEPT -> R.string.io_error_previous_not_kept
         FileOpEngine.Reason.NOT_EDITABLE -> R.string.io_error_not_editable
         FileOpEngine.Reason.VERIFY_FAILED -> R.string.io_error_verify_failed
+        FileOpEngine.Reason.PDF_LOCKED -> R.string.io_error_pdf_locked
+        FileOpEngine.Reason.PDF_LOCK_UNSUPPORTED -> R.string.io_error_pdf_lock_unsupported
+        FileOpEngine.Reason.PDF_UNREADABLE -> R.string.io_error_pdf_unreadable
+        FileOpEngine.Reason.PDF_TOO_BIG -> R.string.io_error_pdf_too_big
     }
 
     /**
@@ -81,6 +85,8 @@ object FileOpText {
                             FileOpManager.Kind.CROP -> R.string.io_saved_crop
                             FileOpManager.Kind.MARKUP -> R.string.io_saved_markup
                             FileOpManager.Kind.CAPTURE -> R.string.io_saved_capture
+                            FileOpManager.Kind.PDF_EXTRACT -> R.string.io_saved_pdf_pages
+                            FileOpManager.Kind.PDF_MERGE -> R.string.io_saved_pdf_merged
                             else -> R.string.io_saved_plain
                         },
                         name,
@@ -197,13 +203,15 @@ object FileOpText {
         }
     }
 
-    /** [savedMessage] 가 말하는 작업 — 원본 곁에 새 파일을 만드는 다섯. */
+    /** [savedMessage] 가 말하는 작업 — 원본 곁에 새 파일을 만드는 일곱. */
     private val SAVED_KINDS = setOf(
         FileOpManager.Kind.CROP,
         FileOpManager.Kind.MARKUP,
         FileOpManager.Kind.CLIP,
         FileOpManager.Kind.AUDIO,
         FileOpManager.Kind.CAPTURE,
+        FileOpManager.Kind.PDF_EXTRACT,
+        FileOpManager.Kind.PDF_MERGE,
     )
 }
 

@@ -1,18 +1,25 @@
 package io.github.donggi.iroiroviewer.io
 
+import android.media.MediaMetadataRetriever
 import android.system.ErrnoException
 import android.system.Os
 import android.system.OsConstants
+import androidx.exifinterface.media.ExifInterface
+import io.github.donggi.iroiroviewer.model.CaptureDates
 import io.github.donggi.iroiroviewer.model.DayBucket
+import io.github.donggi.iroiroviewer.model.ExifContainerGuard
 import io.github.donggi.iroiroviewer.model.FileEntry
 import io.github.donggi.iroiroviewer.model.FileKind
 import io.github.donggi.iroiroviewer.model.IroDispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileInputStream
 import java.time.ZoneId
 
 /**
@@ -34,6 +41,19 @@ import java.time.ZoneId
  *   갤러리에 넣지 마라' 를 뜻하는 유일한 약속이고, 우리 휴지통도 그 표시를 단다.
  * - 숨김 폴더(`.` 로 시작)는 들어가지 않는다.
  * - 새것이 위로. 사진 목록의 관행이고, 대개 찾는 것은 방금 찍은 것이다.
+ * - 사진과 **영상**을 함께 담는다. `.ts`·`.mts` 처럼 TypeScript 와 확장자를 나눠 쓰는 것은 뺀다 — `Download` 에 소스 파일이 섞인다.
+ *
+ * ## 찍은 날로 묶는다 — 두 번 내놓는다
+ *
+ * 시각은 **찍힌 시각**이다 — 사진은 EXIF `DateTimeOriginal`(+ `OffsetTimeOriginal`), 영상은 `MediaMetadataRetriever` 의 날짜
+ * ([CaptureDates]). 없으면 수정일. 그런데 그것을 읽으려면 파일을 하나하나 열어야 하고(1만 장이면 수십 초 — 추정), `lstat` 만 하는
+ * 훑기(1만 개 394 ms)에 견주면 수십 배다. 그래서:
+ *
+ * 1. 훑고 나서 **캐시([CaptureDateCache])에 있는 것은 그 값, 없는 것은 수정일**로 곧바로 [Scan.Ready] 를 내놓는다 — 격자가 바로 선다.
+ * 2. 캐시에 없던 것을 읽어 캐시에 넣고, 순서가 바뀌었으면 **한 번 더** [Scan.Ready] 를 내놓는다. 중간에 조금씩 다시 내놓지 않는다 —
+ *    보는 동안 칸이 여러 번 자리를 옮기면 무엇을 보던 중인지 잃는다.
+ *
+ * 두 번째부터는 거의 다 캐시에 있으므로 1 에서 끝난다. 읽던 중에 화면을 떠나 훑기가 끊겨도 그때까지 읽은 것은 캐시에 남는다.
  */
 object GalleryScanner {
 
@@ -55,11 +75,12 @@ object GalleryScanner {
         data class Scanning(val found: Int) : Scan
 
         /**
-         * @param sections 날짜 구간. [images] 의 자리를 번호로 가리킨다 — 항목을 날짜별
+         * @param items 사진과 영상. 찍힌 시각(없으면 수정일)이 늦은 것부터.
+         * @param sections 날짜 구간. [items] 의 자리를 번호로 가리킨다 — 항목을 날짜별
          *   목록으로 다시 담지 않는 이유는 [DayBucket.Section] 의 주석에 있다.
          */
         data class Ready(
-            val images: List<FileEntry>,
+            val items: List<FileEntry>,
             val sections: List<DayBucket.Section>,
             val roots: List<String>,
             val scanMillis: Long,
@@ -70,7 +91,10 @@ object GalleryScanner {
     fun defaultRoots(volumes: List<VolumeRegistry.Volume>): List<File> =
         volumes.flatMap { v -> DEFAULT_FOLDERS.map { File(v.path, it) } }.filter { it.isDirectory }
 
-    fun scan(roots: List<File>): Flow<Scan> = flow {
+    /**
+     * @param dates 찍힌 시각의 캐시. 보통 [CaptureDateCache.shared].
+     */
+    fun scan(roots: List<File>, dates: CaptureDateCache): Flow<Scan> = flow {
         emit(Scan.Scanning(0))
         val started = System.nanoTime()
         val found = ArrayList<FileEntry>(512)
@@ -81,29 +105,124 @@ object GalleryScanner {
                 if (found.size % PROGRESS_EVERY == 0) emit(Scan.Scanning(found.size))
             }
         }
-        found.sortByDescending { it.lastModified }
-        // **날짜 묶기를 여기서 한다.** 이 flow 는 `IroDispatchers.io` 위에서 돌고,
-        // 화면은 주 스레드다 — 1만 장의 시각을 주 스레드에서 날짜로 바꾸면 격자가
-        // 그려지기 전에 한 번 멎는다. 구간은 훑기의 결과이지 그리기의 일이 아니다.
-        //
-        // 시간대는 **기기 설정**을 쓴다. 사용자가 사진을 찍은 날은 그 사람의 시계로
-        // 센 날이다(시험이 이 둘을 갈라 확인한다).
-        val sections = DayBucket.sectionsOf(found.map { it.lastModified }, ZoneId.systemDefault())
-        emit(
-            Scan.Ready(
-                images = found,
-                sections = sections,
-                roots = roots.map { it.absolutePath },
-                scanMillis = (System.nanoTime() - started) / 1_000_000,
-            )
-        )
+        // 시간대는 훑기마다 한 번 잡는다 — 시차 없는 EXIF 를 셈하는 데도, 날로 묶는 데도, 캐시의 꼬리표로도 같은 값을 쓴다.
+        val zone = ZoneId.systemDefault()
+        dates.useZone(zone.id)
+        val times = LongArray(found.size)
+        val unknown = ArrayList<Int>()
+        for (i in found.indices) {
+            val e = found[i]
+            val cached = dates.lookup(e.path, e.size, e.lastModified)
+            if (cached == null) unknown += i
+            times[i] = if (cached == null || cached == CaptureDateCache.NONE) e.lastModified else cached
+        }
+        val rootPaths = roots.map { it.absolutePath }
+        // 폴더를 끝까지 훑은 지금 — 사라진 파일의 줄을 지운다(지운 사진의 경로가 캐시에 남지 않게). 날짜를 다 읽은 뒤로 미루면
+        // 읽기가 끊길 때마다(화면을 떠났다·다시 훑었다) 지우지 못한다. 뒤에서 넣는 경로는 모두 `found` 에 있다.
+        dates.retainOnly(found.mapTo(HashSet(found.size * 2)) { it.path })
+        try {
+            emit(ready(found, times, rootPaths, started, zone))
+            var changed = false
+            for (i in unknown) {
+                currentCoroutineContext().ensureActive()
+                val e = found[i]
+                val taken = when (val r = takenMillis(e, zone)) {
+                    is CaptureDateRead.Result.Taken -> r.millis.also { dates.put(e.path, e.size, e.lastModified, it, zone.id) }
+                    CaptureDateRead.Result.NoDate ->
+                        null.also { dates.put(e.path, e.size, e.lastModified, CaptureDateCache.NONE, zone.id) }
+                    // 열지 못했다 — 일시적일 수 있으니 남기지 않는다. 다음 훑기가 다시 연다.
+                    CaptureDateRead.Result.Unknown -> null
+                }
+                if (taken != null && taken != times[i]) {
+                    times[i] = taken
+                    changed = true
+                }
+            }
+            if (changed) emit(ready(found, times, rootPaths, started, zone))
+        } finally {
+            // 끊겨도 읽은 만큼은 남긴다. 다음 훑기가 같은 파일을 다시 열지 않는다.
+            withContext(NonCancellable) { dates.save() }
+        }
     }.flowOn(IroDispatchers.io)
+
+    /**
+     * 시각이 늦은 것부터 늘어놓고 날짜로 묶는다.
+     *
+     * **날짜 묶기를 여기서 한다.** 이 flow 는 `IroDispatchers.io` 위에서 돌고,
+     * 화면은 주 스레드다 — 1만 장의 시각을 주 스레드에서 날짜로 바꾸면 격자가
+     * 그려지기 전에 한 번 멎는다. 구간은 훑기의 결과이지 그리기의 일이 아니다.
+     *
+     * 시간대는 **기기 설정**을 쓴다. 사용자가 사진을 찍은 날은 그 사람의 시계로
+     * 센 날이다(시험이 이 둘을 갈라 확인한다). 시차 칸이 있는 사진도 순간으로 바꾼 뒤 기기 시계로 센다 — 도쿄에서 밤 11시 반에 찍은
+     * 것은 서울의 기기에서도 같은 날이고, 도쿄에서 새벽 1시(`+09:00`)에 찍은 것은 뉴욕(겨울, `-05:00`)의 기기에서 그 전날 오전 11시다.
+     */
+    private fun ready(
+        found: List<FileEntry>,
+        times: LongArray,
+        roots: List<String>,
+        started: Long,
+        zone: ZoneId,
+    ): Scan.Ready {
+        // `sortedByDescending` 은 안정 정렬이다 — 시각이 같으면 훑은 차례 그대로라 다시 훑어도 칸이 뒤바뀌지 않는다.
+        val order = found.indices.sortedByDescending { times[it] }
+        return Scan.Ready(
+            items = order.map { found[it] },
+            sections = DayBucket.sectionsOf(order.map { times[it] }, zone),
+            roots = roots,
+            scanMillis = (System.nanoTime() - started) / 1_000_000,
+        )
+    }
+
+    /**
+     * 찍힌 시각을 읽는다. 파일을 연다(입출력 디스패처에서만). 무엇이 실패해도 던지지 않는다 — [CaptureDateRead] 가 가른다
+     * (조작한 PNG 의 `eXIf` 길이로 ExifInterface 가 `OutOfMemoryError` 를 던지는 것까지).
+     */
+    private fun takenMillis(e: FileEntry, zone: ZoneId): CaptureDateRead.Result = when (e.kind) {
+        FileKind.VIDEO -> CaptureDateRead.read(
+            open = {
+                // `setDataSource` 의 실패는 '열지 못했다' 다(틀 수 없는 영상·잠깐의 입출력 — 다음 훑기가 다시 본다).
+                val r = MediaMetadataRetriever()
+                try {
+                    r.setDataSource(e.path)
+                } catch (t: Throwable) {
+                    r.close()
+                    throw t
+                }
+                r
+            },
+            parse = { r -> r.use { CaptureDates.videoMillis(it.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DATE)) } },
+        )
+        FileKind.IMAGE -> if (MimeResolver.extensionOf(e.name) !in EXIF_EXTENSIONS) {
+            CaptureDateRead.Result.NoDate
+        } else {
+            CaptureDateRead.read(
+                // 여는 것과 읽는 것을 가른다 — 열지 못한 것은 남기지 않고, 연 뒤 파서가 무너진 것은 '날짜 없음' 으로 남긴다.
+                // `FileInputStream` 을 넘기면 ExifInterface 가 그 서술자로 되감아 읽는다(HEIC 도).
+                open = { FileInputStream(e.path) },
+                parse = { input ->
+                    input.use {
+                        // 덩이 길이가 터무니없으면 ExifInterface 에 넘기지 않는다 — 할당이 **성공해도** 다른 스레드가 죽는다(`ExifContainerGuard`).
+                        // 이미 연 서술자의 채널로 위치를 지정해 읽는다 — 검사한 파일이 곧 읽는 파일이고, 스트림의 위치는 그대로다.
+                        // EXIF 가 없는 PNG·WebP(스크린숏 대부분)는 ExifInterface 를 열지 않고 '날짜 없음' 이다.
+                        if (ExifContainerGuard.inspect(it.channel) != ExifContainerGuard.Verdict.SAFE) return@use null
+                        val exif = ExifInterface(it)
+                        CaptureDates.exifMillis(
+                            exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL),
+                            exif.getAttribute(ExifInterface.TAG_OFFSET_TIME_ORIGINAL),
+                            zone,
+                        )
+                    }
+                },
+            )
+        }
+        else -> CaptureDateRead.Result.NoDate
+    }
 
     private suspend fun walk(
         dir: File,
         visited: MutableSet<Long>,
         depth: Int,
-        onImage: suspend (FileEntry) -> Unit,
+        onFound: suspend (FileEntry) -> Unit,
     ) {
         currentCoroutineContext().ensureActive()
         if (depth > MAX_DEPTH) return
@@ -128,12 +247,14 @@ object GalleryScanner {
                 // 하드링크로 만든 디렉터리 고리를 막는다(복사 엔진과 같은 방식).
                 val key = st.st_dev * 1_000_003L + st.st_ino
                 if (!visited.add(key)) continue
-                walk(child, visited, depth + 1, onImage)
+                walk(child, visited, depth + 1, onFound)
                 continue
             }
 
-            if (MimeResolver.kindOf(name, isDirectory = false) != FileKind.IMAGE) continue
-            onImage(
+            val kind = MimeResolver.kindOf(name, isDirectory = false)
+            if (kind != FileKind.IMAGE && kind != FileKind.VIDEO) continue
+            if (kind == FileKind.VIDEO && ContentSniff.isAmbiguousStream(name)) continue
+            onFound(
                 FileEntry(
                     name = name,
                     path = child.absolutePath,
@@ -142,11 +263,14 @@ object GalleryScanner {
                     lastModified = st.st_mtime * 1000L,
                     isHidden = false,
                     isSymlink = false,
-                    kind = FileKind.IMAGE,
+                    kind = kind,
                 )
             )
         }
     }
 
     private const val NOMEDIA = ".nomedia"
+
+    /** `ExifInterface` 가 날짜를 읽는 형식. GIF·BMP·SVG 는 EXIF 가 없어 열지 않는다. */
+    private val EXIF_EXTENSIONS = setOf("jpg", "jpeg", "jpe", "png", "webp", "heic", "heif", "avif", "dng")
 }

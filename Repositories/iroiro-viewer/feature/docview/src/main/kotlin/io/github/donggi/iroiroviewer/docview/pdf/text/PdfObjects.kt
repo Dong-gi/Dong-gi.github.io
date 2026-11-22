@@ -13,6 +13,7 @@ import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfRef
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfStr
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfSecurity
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfSyntaxException
+import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfWeights
 import java.io.ByteArrayOutputStream
 
 /**
@@ -28,12 +29,24 @@ internal class PdfObjects(
     private val security: PdfSecurity?,
     /** 오래 도는 자리(스트림 풀기·객체 스트림 훑기)마다 부른다. 부르는 쪽이 일마다 바꿔 끼운다([PdfTextEngine.page]). */
     var checkCancelled: () -> Unit,
+    /**
+     * 읽는 일의 예산 — 객체 스트림을 푼 바이트, 그 안의 값을 읽느라 지나간 바이트, 캐시에 두지 못한 큰 값의 무게의 합(다시 한 것도 센다).
+     * 넘으면 [BudgetExceeded] — 쪽 뽑기·합치기가 준다. 글 꺼내기는 시간 상한이 따로 있어 두지 않는다.
+     */
+    private val objStmBudget: Long = Long.MAX_VALUE,
 ) {
-    /** 풀어 둔 객체 스트림 — **못 푼 것도**(null) 기억한다. 깨진 64 MiB 스트림을 참조마다 다시 풀지 않게. */
-    private val objStreams = object : LinkedHashMap<Int, PdfDecryptor.ObjStm?>(16, 0.75f, true) {
-        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Int, PdfDecryptor.ObjStm?>?): Boolean =
-            size > CACHE_OBJSTMS
-    }
+    /**
+     * 풀어 둔 객체 스트림 — **못 푼 것도**(null) 기억한다. 깨진 64 MiB 스트림을 참조마다 다시 풀지 않게.
+     *
+     * **수가 아니라 무게로 묶는다**([CACHE_OBJSTM_WEIGHT]). 수로 묶으면(옛 판은 64개) 65개를 번갈아 가리키는 문서가 참조마다 스트림
+     * 하나를 통째로 다시 풀어 제곱 시간이 되고(900칸 65개에 199초 — 독립 검토), 큰 스트림 64개는 메모리를 묶지 못한다.
+     */
+    private val objStreams = LinkedHashMap<Int, PdfDecryptor.ObjStm?>(16, 0.75f, true)
+    private var objStreamsWeight = 0L
+    private var objStmWork = 0L
+
+    /** 읽는 예산([objStmBudget])을 넘었다. */
+    class BudgetExceeded : RuntimeException()
 
     /**
      * 지금 푸는 중인 번호들 — **되돌아오는 참조를 끊는다.** 객체 스트림의 `/Length` 가 그 스트림 안의 객체를 가리키면
@@ -45,10 +58,14 @@ internal class PdfObjects(
     /** 없는 것으로 판명된 번호. 같은 빈 참조를 쪽마다 다시 찾지 않는다. */
     private val missing = HashSet<Int>()
 
-    /** 풀어 둔 간접 객체. 사전 수천 개면 충분하다 — 쪽마다 같은 자원을 가리킨다. */
-    private val cache = object : LinkedHashMap<Int, PdfObj>(256, 0.75f, true) {
-        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Int, PdfObj>?): Boolean = size > CACHE_OBJECTS
-    }
+    /**
+     * 풀어 둔 간접 객체. 사전 수천 개면 충분하다 — 쪽마다 같은 자원을 가리킨다. **수와 무게 둘로 묶는다**([CACHE_OBJECTS]·[CACHE_WEIGHT]) —
+     * 수로만 묶으면 큰 값 4,096 개가 힙을 다 먹는다(독립 검토 2차). [CACHE_VALUE_MAX] 를 넘는 값은 두지 않는다.
+     */
+    private class Cached(val value: PdfObj, val weight: Long)
+
+    private val cache = LinkedHashMap<Int, Cached>(256, 0.75f, true)
+    private var cacheWeight = 0L
 
     /** xref 를 다시 세운 파일에서 객체 스트림 속 번호를 찾아 둔 표. 처음 빈 번호를 만나면 한 번 만든다. */
     private var discovered: HashMap<Int, PdfFile.InStream>? = null
@@ -76,9 +93,10 @@ internal class PdfObjects(
     fun name(obj: PdfObj?): String? = (resolve(obj) as? PdfName)?.name
 
     private fun load(ref: PdfRef): PdfObj? {
-        cache[ref.num]?.let { return it }
+        cache[ref.num]?.let { return it.value }
         if (ref.num in missing) return null
         if (loading.size >= MAX_NESTING || !loading.add(ref.num)) return null
+        var weight = -1L
         val value = try {
             when (val e = file.entries[ref.num] ?: discoveredEntry(ref.num)) {
                 // 머리의 번호가 참조와 다르면 없는 것이다(복호기와 같은 판단 — xref 가 밀린 파일).
@@ -87,7 +105,10 @@ internal class PdfObjects(
                 } catch (x: PdfSyntaxException) {
                     null
                 }
-                is PdfFile.InStream -> objStream(e.stream)?.get(e.index)
+                is PdfFile.InStream -> member(e.stream, e.index)?.let { m ->
+                    weight = m.weight
+                    m.value
+                }
                 else -> null
             }
         } finally {
@@ -97,8 +118,55 @@ internal class PdfObjects(
             if (missing.size < MAX_MISSING) missing += ref.num
             return null
         }
-        cache[ref.num] = value
+        if (weight < 0) weight = PdfWeights.of(value)
+        remember(ref.num, value, weight)
         return value
+    }
+
+    /** 객체 캐시에 넣는다 — 너무 큰 값은 두지 않고 그 무게를 예산에 센다(다시 읽게 되므로). */
+    private fun remember(num: Int, value: PdfObj, weight: Long) {
+        if (weight > CACHE_VALUE_MAX) {
+            spend(weight)
+            return
+        }
+        cache.put(num, Cached(value, weight))?.let { cacheWeight -= it.weight }
+        cacheWeight += weight
+        val it = cache.entries.iterator()
+        while ((cacheWeight > CACHE_WEIGHT || cache.size > CACHE_OBJECTS) && cache.size > 1 && it.hasNext()) {
+            val e = it.next()
+            if (e.key == num) continue
+            cacheWeight -= e.value.weight
+            it.remove()
+        }
+    }
+
+    private fun spend(bytes: Long) {
+        objStmWork += bytes
+        if (objStmWork > objStmBudget) throw BudgetExceeded()
+    }
+
+    /** 객체 스트림 [stream] 의 칸 [index]. 읽느라 지나간 바이트를 예산에 세고, 스트림이 값을 기억해 무거워진 만큼 캐시 무게에 더한다. */
+    private fun member(stream: Int, index: Int): PdfDecryptor.ObjStm.Member? {
+        val stm = objStream(stream) ?: return null
+        val before = stm.weight
+        val m = stm.member(index)
+        val grew = stm.weight - before
+        if (grew != 0L && objStreams[stream] === stm) {
+            objStreamsWeight += grew
+            trimObjStreams(stream)
+        }
+        if (m != null) spend(m.read)
+        return m
+    }
+
+    /**
+     * [ref] 가 객체 스트림 속 객체면 그 값이 놓인 자리의 열쇠(스트림 번호·스트림 안 자리). 같은 열쇠면 같은 값이다 — 쪽 뽑기가 같은 자리를
+     * 가리키는 번호들을 결과에서 한 객체로 쓴다. 파일에 바로 놓인 객체·없는 번호는 null.
+     */
+    fun sharedKey(ref: PdfRef): Long? {
+        val e = (file.entries[ref.num] ?: discoveredEntry(ref.num)) as? PdfFile.InStream ?: return null
+        val at = objStream(e.stream)?.offsetOf(e.index) ?: return null
+        return (e.stream.toLong() shl 32) or at.toLong()
     }
 
     /**
@@ -307,7 +375,20 @@ internal class PdfObjects(
             loadingStreams.remove(num)
         }
         objStreams[num] = parsed
+        objStreamsWeight += parsed?.weight ?: 0L
+        trimObjStreams(num)
         return parsed
+    }
+
+    /** 무게를 넘으면 오래된 것부터 내보낸다([keep] 하나는 남긴다). 못 푼 것(null)은 무게가 없어 수로 묶는다. */
+    private fun trimObjStreams(keep: Int) {
+        val it = objStreams.entries.iterator()
+        while ((objStreamsWeight > CACHE_OBJSTM_WEIGHT || objStreams.size > CACHE_OBJSTMS) && objStreams.size > 1 && it.hasNext()) {
+            val e = it.next()
+            if (e.key == keep) continue
+            objStreamsWeight -= e.value?.weight ?: 0L
+            it.remove()
+        }
     }
 
     private fun parseObjStream(num: Int): PdfDecryptor.ObjStm? {
@@ -323,7 +404,7 @@ internal class PdfObjects(
                 return null
             }
         }
-        return PdfDecryptor.ObjStm.parse(s.dict, raw)
+        return PdfDecryptor.ObjStm.parse(s.dict, raw, shareValues = true)?.also { spend(it.weight) }
     }
 
     /**
@@ -350,7 +431,15 @@ internal class PdfObjects(
     companion object {
         private const val MAX_CHAIN = 16
         private const val CACHE_OBJECTS = 4096
-        private const val CACHE_OBJSTMS = 64
+
+        /** 객체 캐시의 무게(어림 — [PdfWeights]) 상한과, 캐시에 두는 값 하나의 상한. */
+        private const val CACHE_WEIGHT = 48L * 1024 * 1024
+        private const val CACHE_VALUE_MAX = 16L * 1024 * 1024
+        /** 못 푼 것까지 센 객체 스트림 수의 상한. */
+        private const val CACHE_OBJSTMS = 4096
+
+        /** 기억해 두는 객체 스트림의 무게(푼 바이트 + 번호표) 상한. */
+        private const val CACHE_OBJSTM_WEIGHT = 48L * 1024 * 1024
 
         /** 객체를 푸는 중에 다른 객체를 푸는 깊이의 상한(참조 사슬·객체 스트림의 `/Length`). */
         private const val MAX_NESTING = 32

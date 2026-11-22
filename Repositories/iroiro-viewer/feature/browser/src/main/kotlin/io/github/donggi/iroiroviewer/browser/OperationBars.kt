@@ -63,6 +63,8 @@ fun SelectionTopAppBar(
     onInfo: (() -> Unit)?,
     /** 고른 것들을 ZIP 으로 묶는다. null 이면 흐리게 둔다. */
     onCompress: (() -> Unit)?,
+    /** 고른 PDF 여럿을 하나로(`PdfMerge.kt`). null 이면 줄이 없다 — PDF 를 둘 이상 골랐을 때만 뜻이 있다. */
+    onMergePdf: (() -> Unit)? = null,
 ) {
     var menuOpen by remember { mutableStateOf(false) }
     TopAppBar(
@@ -96,6 +98,15 @@ fun SelectionTopAppBar(
                             onCompress?.invoke()
                         },
                     )
+                    if (onMergePdf != null) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(IoR.string.io_pdf_merge_action)) },
+                            onClick = {
+                                menuOpen = false
+                                onMergePdf()
+                            },
+                        )
+                    }
                     DropdownMenuItem(
                         text = { Text(stringResource(IoR.string.io_open_with)) },
                         enabled = onOpenWith != null,
@@ -279,6 +290,9 @@ fun OperationBar(
                                 // 오피스 문서의 저장·새 문서도.
                                 FileOpManager.Kind.SAVE_DOC -> IoR.string.io_op_saving_doc
                                 FileOpManager.Kind.NEW_DOC -> IoR.string.io_op_creating_doc
+                                // PDF 쪽 뽑기·합치기도 그 작업을 만든 `core:io` 의 문장이다(알림과 같다).
+                                FileOpManager.Kind.PDF_EXTRACT -> IoR.string.io_op_pdf_extracting
+                                FileOpManager.Kind.PDF_MERGE -> IoR.string.io_op_pdf_merging
                                 // 정합성 검사는 조용히 돈다. 이 바가 뜨는 일이 없다.
                                 FileOpManager.Kind.RECONCILE -> R.string.browser_op_deleting
                             }

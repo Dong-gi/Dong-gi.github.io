@@ -178,15 +178,21 @@ fun BrowserScreen(
     }
 
     when {
-        showGallery -> GalleryScreen(
-            vm = vm,
-            snackbar = snackbar,
-            // 갤러리에서 연 사진의 좌우는 **갤러리 목록 그대로**다. 폴더로 바꿔 열면
-            // 시각 순으로 훑던 흐름이 끊긴다.
-            onOpen = onOpenImage,
-            onBack = { vm.closeSubScreen() },
-            modifier = modifier,
-        )
+        showGallery -> {
+            val context = LocalContext.current
+            GalleryScreen(
+                vm = vm,
+                snackbar = snackbar,
+                // 갤러리에서 연 사진의 좌우는 **갤러리 목록 그대로**다(사진만). 폴더로 바꿔 열면
+                // 시각 순으로 훑던 흐름이 끊긴다.
+                onOpen = onOpenImage,
+                // 영상은 폴더 목록과 같은 길로 재생 화면을 연다. 큐는 **그 하나**다 — 갤러리의 영상은 여러 폴더에 흩어져 있어
+                // '다음' 이 무엇인지 정할 근거가 없고, 자막 후보도 그 폴더를 다시 나열해야 한다(목록이 없는 자리다).
+                onPlay = { e -> playFolderFrom(context, e, listOf(e), emptyMap()) },
+                onBack = { vm.closeSubScreen() },
+                modifier = modifier,
+            )
+        }
         showTrash -> TrashScreen(vm = vm, snackbar = snackbar, onBack = { vm.closeSubScreen() }, modifier = modifier)
         path == null -> HomeScreen(
             vm = vm,
@@ -404,6 +410,8 @@ private fun FolderScreen(
     var nameBusy by remember { mutableStateOf(false) }
     var confirmDelete by remember { mutableStateOf(false) }
     var compressing by remember { mutableStateOf<List<String>?>(null) }
+    // PDF 합치기 — 메뉴를 누른 때의 고른 차례를 붙든다(`PdfMerge.kt`).
+    var merging by remember { mutableStateOf<List<String>?>(null) }
     // 공유에 폴더가 섞였다 — 'ZIP으로 묶어 보내기 / 파일만 보내기' 를 묻는 동안 그 갈래([ShareFolders.Split]). 메뉴를 누른 때의 선택을 붙든다.
     var sharing by remember { mutableStateOf<ShareFolders.Split?>(null) }
 
@@ -425,6 +433,10 @@ private fun FolderScreen(
     // 선택 메뉴의 '정보' 가 겨눌 것 — 하나를 골랐을 때만 있다. 폴더도 된다(시트가 안의 수와 크기를 센다).
     val singleEntry = remember(selection, visible) {
         OpenWithRules.singleEntry(selection, (visible as? VisibleState.Ready)?.entries.orEmpty())
+    }
+    // 선택 메뉴의 'PDF 합치기' 가 합칠 것(고른 차례) — 보이는 PDF 를 둘 이상 골랐을 때만 있다. 같은 까닭으로 선택과 목록이 바뀔 때만.
+    val mergeablePdfs = remember(selection, visible) {
+        PdfMergeRules.mergeable(selection, (visible as? VisibleState.Ready)?.entries.orEmpty())
     }
     // '전체 선택' 이 지금 켜져 있는가(다시 누르면 모두 푼다 — [SelectAll]). 같은 까닭으로 선택과 목록이 바뀔 때만 다시 센다.
     val allSelected = remember(selection, visible) {
@@ -494,6 +506,7 @@ private fun FolderScreen(
                         onInfo = singleEntry?.let { entry -> { detail = DetailRequest(entry) } },
                         // 지금 고른 것을 붙든다 — 대화상자가 떠 있는 동안 선택이 바뀌어도 묶는 것은 메뉴를 누른 때의 것이다.
                         onCompress = { compressing = selection.toList() },
+                        onMergePdf = mergeablePdfs?.let { paths -> { merging = paths } },
                     )
                 } else {
                     BrowserAppBar(
@@ -929,6 +942,17 @@ private fun FolderScreen(
             onDismiss = { renaming = null; nameTaken = null },
             taken = nameTaken,
             busy = nameBusy,
+        )
+    }
+
+    merging?.let { paths ->
+        PdfMergeDialog(
+            paths = paths,
+            onDismiss = { merging = null },
+            onQueued = {
+                merging = null
+                vm.clearSelection()
+            },
         )
     }
 

@@ -38,6 +38,38 @@ internal class PdfDict(val map: LinkedHashMap<String, PdfObj>) : PdfObj {
 
 internal data class PdfRef(val num: Int, val gen: Int) : PdfObj
 
+/**
+ * 값이 힙에서 차지하는 크기의 어림(바이트) — 객체 머리·참조·글자까지 넉넉히 센다. 캐시를 무게로 묶는 데 쓴다. 쌓기로 돌아 깊이에 묶이지 않는다.
+ */
+internal object PdfWeights {
+    fun of(v: PdfObj): Long {
+        var total = 0L
+        val stack = ArrayDeque<PdfObj>()
+        stack.addLast(v)
+        while (true) {
+            val x = stack.removeLastOrNull() ?: return total
+            total += when (x) {
+                is PdfStr -> 32L + x.bytes.size
+                is PdfNum -> 64L + x.text.length * 2L
+                is PdfName -> 64L + x.name.length * 2L
+                is PdfRef -> 24L
+                is PdfArray -> {
+                    x.items.forEach(stack::addLast)
+                    48L + x.items.size * 8L
+                }
+                is PdfDict -> {
+                    for ((k, item) in x.map) {
+                        total += 96L + k.length * 2L
+                        stack.addLast(item)
+                    }
+                    64L
+                }
+                else -> 16L
+            }
+        }
+    }
+}
+
 /** 문법이 틀렸다. 메시지에 **파일 내용을 넣지 않는다** — 화면·로그로 새는 길이 된다. */
 internal class PdfSyntaxException(message: String) : IOException(message)
 

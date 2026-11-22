@@ -191,13 +191,69 @@ internal object PdfDecryptor {
         }
     }
 
-    /** 객체 스트림 하나를 푼 것. 머리의 `번호 오프셋` 쌍으로 안의 값을 찾는다. */
-    class ObjStm(private val nums: IntArray, private val values: List<PdfObj?>) {
-        fun get(index: Int): PdfObj? = values.getOrNull(index)
+    /**
+     * 객체 스트림 하나를 푼 것. 머리의 `번호 오프셋` 쌍만 읽어 두고, **안의 값은 물을 때 그 자리에서** 읽는다.
+     *
+     * 값을 미리 다 읽으면 백만 칸짜리 스트림 하나가 객체 백만 개가 되어 메모리를 다 먹고(작은 압축 파일 하나로 — 독립 검토가 OOM 을
+     * 냈다), 캐시에서 밀려났다 다시 풀 때마다 그 전부를 다시 읽는다. 읽은 값은 부르는 쪽(`PdfObjects`)의 객체 캐시가 기억한다.
+     *
+     * [shareValues] 면 읽은 값을 **오프셋마다** 기억해 같은 자리를 가리키는 칸에 같은 객체를 준다 — 칸 300 개가 8 MiB 문자열 한 자리를
+     * 가리키는 84 KB 파일이 그 문자열을 300 벌 만들어 힙을 다 먹었다(독립 검토 2차). 기억은 [MEMO_WEIGHT] 까지이고 [weight] 에 든다.
+     */
+    class ObjStm private constructor(
+        private val nums: IntArray,
+        private val offs: IntArray,
+        private val first: Int,
+        private val data: ByteArray,
+        shareValues: Boolean,
+    ) {
+        /** 칸 하나의 값([value] — 못 읽었으면 null), 그것을 읽느라 지나간 바이트([read] — 기억해 둔 자리면 0), 값의 어림 무게. */
+        class Member(val value: PdfObj?, val read: Long, val weight: Long)
+
+        private val memo: HashMap<Int, Member>? = if (shareValues) HashMap() else null
+        private var memoWeight = 0L
+
+        /** 캐시가 메모리를 재는 무게 — 푼 바이트와 번호표, 그리고 기억해 둔 값. */
+        val weight: Long get() = data.size.toLong() + nums.size.toLong() * 8 + memoWeight
+
+        fun get(index: Int): PdfObj? = member(index)?.value
+
+        /** 칸 [index] — 없는 칸·자리가 데이터 밖이면 null. 읽다 실패한 자리도 [Member] 로 준다(값 null, 지나간 바이트는 센다). */
+        fun member(index: Int): Member? {
+            if (index !in nums.indices) return null
+            val at = first.toLong() + offs[index]
+            if (at < 0 || at >= data.size) return null
+            memo?.get(at.toInt())?.let { return Member(it.value, 0, it.weight) }
+            val cursor = PdfCursor(ByteArraySource(data), at)
+            val value = try {
+                PdfParser(cursor).parseObject()?.takeIf { it !is PdfParser.Keyword }
+            } catch (e: PdfSyntaxException) {
+                null
+            }
+            val read = (cursor.pos - at).coerceAtLeast(1L)
+            val m = Member(value, read, value?.let(PdfWeights::of) ?: 0L)
+            if (memo != null && memoWeight + m.weight <= MEMO_WEIGHT) {
+                memo[at.toInt()] = m
+                memoWeight += m.weight + MEMO_ENTRY
+            }
+            return m
+        }
+
+        /** 칸 [index] 의 값이 놓인 자리(데이터 안). 같은 자리면 같은 값이다. */
+        fun offsetOf(index: Int): Int? {
+            if (index !in nums.indices) return null
+            val at = first.toLong() + offs[index]
+            return if (at < 0 || at >= data.size) null else at.toInt()
+        }
+
         fun numbers(): IntArray = nums
 
         companion object {
-            fun parse(dict: PdfDict, plain: ByteArray): ObjStm? {
+            /** 스트림 하나가 기억해 두는 값의 무게 상한. 넘으면 기억하지 않고 물을 때마다 다시 읽는다(부르는 쪽이 읽은 바이트를 센다). */
+            private const val MEMO_WEIGHT = 32L * 1024 * 1024
+            private const val MEMO_ENTRY = 48L
+
+            fun parse(dict: PdfDict, plain: ByteArray, shareValues: Boolean = false): ObjStm? {
                 val data = try {
                     PdfFilters.decode(dict, plain)
                 } catch (e: PdfSyntaxException) {
@@ -206,21 +262,18 @@ internal object PdfDecryptor {
                 val n = dict.int("N") ?: return null
                 val first = dict.int("First") ?: return null
                 if (n < 0 || n > 1_000_000 || first < 0 || first > data.size) return null
-                val src = ByteArraySource(data)
-                val p = PdfParser(PdfCursor(src, 0))
+                val p = PdfParser(PdfCursor(ByteArraySource(data), 0))
                 val nums = IntArray(n)
                 val offs = IntArray(n)
-                for (i in 0 until n) {
-                    nums[i] = (p.parseObject() as? PdfNum)?.int ?: return null
-                    offs[i] = (p.parseObject() as? PdfNum)?.int ?: return null
+                try {
+                    for (i in 0 until n) {
+                        nums[i] = (p.parseObject() as? PdfNum)?.int ?: return null
+                        offs[i] = (p.parseObject() as? PdfNum)?.int ?: return null
+                    }
+                } catch (e: PdfSyntaxException) {
+                    return null
                 }
-                val values = (0 until n).map { i ->
-                    val at = first.toLong() + offs[i]
-                    if (at >= data.size) null
-                    else runCatching { PdfParser(PdfCursor(src, at)).parseObject() }.getOrNull()
-                        ?.takeIf { it !is PdfParser.Keyword }
-                }
-                return ObjStm(nums, values)
+                return ObjStm(nums, offs, first, data, shareValues)
             }
         }
     }
@@ -351,78 +404,12 @@ internal object PdfDecryptor {
             }
         }
 
-        /** 이 스트림에 쓰는 암호 방식. 위 표 그대로다. */
-        private fun streamMethod(dict: PdfDict): PdfSecurity.Method {
-            val filters = filterNames(dict)
-            val cryptAt = filters.indexOf("Crypt")
-            if (cryptAt >= 0) {
-                val parms = parmsAt(dict, cryptAt)
-                val name = parms?.name("Name") ?: "Identity"
-                return sec.methodByName(name) ?: PdfSecurity.Method.IDENTITY
-            }
-            if (dict.name("Type") == "Metadata" && !sec.encryptMetadata && sec.revision >= 4) {
-                return PdfSecurity.Method.IDENTITY
-            }
-            if (dict.name("Type") == "EmbeddedFile") return sec.methodFor(PdfSecurity.Kind.EMBEDDED_FILE)
-            return sec.methodFor(PdfSecurity.Kind.STREAM)
-        }
+        // 어느 스트림을 어떤 방식으로 푸는가·`/Crypt` 떼기·문자열 풀기는 쪽 뽑기·합치기와 한 벌이다([PdfCryptRules]).
+        private fun streamMethod(dict: PdfDict): PdfSecurity.Method = PdfCryptRules.streamMethod(sec, dict)
 
-        /** `/Filter` 목록에서 `/Crypt` 를 뺀다. 우리가 이미 풀었으므로 pdfium 이 다시 보면 안 된다. */
-        private fun stripCryptFilter(dict: PdfDict) {
-            val filters = filterNames(dict)
-            val at = filters.indexOf("Crypt")
-            if (at < 0) return
-            when (val f = dict["Filter"]) {
-                is PdfName -> {
-                    dict.map.remove("Filter")
-                    dict.map.remove("DecodeParms")
-                }
-                is PdfArray -> {
-                    f.items.removeAt(at)
-                    (dict["DecodeParms"] as? PdfArray)?.items?.let { if (at < it.size) it.removeAt(at) }
-                    if (f.items.isEmpty()) {
-                        dict.map.remove("Filter")
-                        dict.map.remove("DecodeParms")
-                    }
-                }
-                else -> Unit
-            }
-        }
+        private fun stripCryptFilter(dict: PdfDict) = PdfCryptRules.stripCryptFilter(dict)
 
-        private fun filterNames(dict: PdfDict): List<String> = when (val f = dict["Filter"]) {
-            is PdfName -> listOf(f.name)
-            is PdfArray -> f.items.map { (it as? PdfName)?.name ?: "" }
-            else -> emptyList()
-        }
-
-        private fun parmsAt(dict: PdfDict, i: Int): PdfDict? = when (val p = dict["DecodeParms"]) {
-            is PdfDict -> if (i == 0 || filterNames(dict).size == 1) p else null
-            is PdfArray -> p.items.getOrNull(i) as? PdfDict
-            else -> null
-        }
-
-        /**
-         * 값 안의 문자열을 전부 푼다. **새 값**을 돌려준다(원본은 건드리지 않는다).
-         *
-         * 서명 사전의 `/Contents` 는 두다(명세 — 서명 바이트는 암호화하지 않는다).
-         */
-        private fun decryptValue(v: PdfObj, num: Int, gen: Int, depth: Int = 0): PdfObj {
-            if (depth > PdfParser.MAX_DEPTH) return v
-            return when (v) {
-                is PdfStr -> PdfStr(sec.decrypt(num, gen, sec.methodFor(PdfSecurity.Kind.STRING), v.bytes))
-                is PdfArray -> PdfArray(v.items.mapTo(ArrayList(v.items.size)) { decryptValue(it, num, gen, depth + 1) })
-                is PdfDict -> {
-                    val isSig = v.name("Type") == "Sig" || v.name("Type") == "DocTimeStamp" ||
-                        (v["ByteRange"] != null && v["Contents"] is PdfStr)
-                    val out = LinkedHashMap<String, PdfObj>(v.map.size)
-                    for ((k, x) in v.map) {
-                        out[k] = if (isSig && k == "Contents") x else decryptValue(x, num, gen, depth + 1)
-                    }
-                    PdfDict(out)
-                }
-                else -> v
-            }
-        }
+        private fun decryptValue(v: PdfObj, num: Int, gen: Int): PdfObj = PdfCryptRules.decryptStrings(sec, v, num, gen)
 
         /**
          * xref 를 쓴다. **쓴 번호만 소구역으로 적는다** — 0 부터 가장 큰 번호까지 빽빽하게 쓰면

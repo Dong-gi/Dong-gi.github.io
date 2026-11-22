@@ -23,6 +23,7 @@ import io.github.donggi.iroiroviewer.format.toOpenFailure
 import io.github.donggi.iroiroviewer.io.FileKey
 import io.github.donggi.iroiroviewer.io.FileProbe
 import io.github.donggi.iroiroviewer.io.Iro
+import io.github.donggi.iroiroviewer.io.SessionPasswords
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.ImageLimits
 import kotlinx.coroutines.CancellationException
@@ -455,6 +456,11 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
                     }
                     document = outcome.document
                     orphan = null // 주인이 바뀌었다
+                    // 넣은 암호로 열렸다 — **세션 동안** 기억한다(사본, 메모리에만). PDF 쪽 뽑기·합치기가 우리 복호화기로 다시 풀 때 쓴다
+                    // (사용자 2026-11-22 — 새 PDF 는 언제나 잠기지 않은 PDF). 앱이 화면에서 사라지면 지워진다(`SessionPasswords`).
+                    if (password != null && password.isNotEmpty()) {
+                        withContext(IroDispatchers.io) { SessionPasswords.put(SessionPasswords.keyOf(file), password) }
+                    }
                     // **되살린 뒤에 `Ready` 를 낸다.** 차례가 뒤집히면 되살린 쪽이 지워진다.
                     val seenBefore = restore(file, doc)
                     _state.value = State.Ready(doc)

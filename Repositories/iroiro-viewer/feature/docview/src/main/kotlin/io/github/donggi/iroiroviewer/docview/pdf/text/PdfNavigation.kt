@@ -158,12 +158,19 @@ internal class PdfNavigation(
     // ---- 목적지 ----------------------------------------------------------------------------
 
     /** 목적지 → 0부터의 쪽 번호. 풀지 못하거나 문서에 없는 쪽이면 null. */
-    fun pageOf(dest: PdfObj?): Int? {
+    fun pageOf(dest: PdfObj?): Int? = explicitDestination(dest)?.let(::explicitPage)
+
+    /**
+     * 목적지 → 쪽을 적은 배열(`[쪽 /XYZ …]`). 이름은 이름 나무·옛 `/Dests` 에서 찾고, `/D` 를 든 사전은 따라간다. 쪽 뽑기·합치기가 링크를
+     * 새 파일로 옮길 때 이름 목적지를 이 배열로 바꿔 적는다(이름 나무는 옮기지 않는다 — `pdf/edit`). 풀지 못하면 null.
+     */
+    fun explicitDestination(dest: PdfObj?, checkCancelled: () -> Unit = this.checkCancelled): PdfArray? {
+        this.checkCancelled = checkCancelled
         var cur = dest
         // 이름 → 사전(`/D`) → 배열. 그 이상 이어지는 것은 망가진 파일이다.
         repeat(MAX_DEST_HOPS) {
             when (val d = objs.resolve(cur)) {
-                is PdfArray -> return explicitPage(d)
+                is PdfArray -> return d
                 is PdfName -> cur = lookupName(d.name)
                 is PdfStr -> cur = lookupName(String(d.bytes, Charsets.ISO_8859_1))
                 is PdfDict -> cur = d["D"]

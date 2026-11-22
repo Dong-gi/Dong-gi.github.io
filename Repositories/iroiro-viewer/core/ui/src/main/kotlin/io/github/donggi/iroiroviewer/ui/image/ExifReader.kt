@@ -1,9 +1,11 @@
 package io.github.donggi.iroiroviewer.ui.image
 
 import androidx.exifinterface.media.ExifInterface
+import io.github.donggi.iroiroviewer.model.ExifContainerGuard
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.IOException
 
 /**
  * 사진에 적힌 촬영 정보. **값만 돌려준다.**
@@ -40,7 +42,8 @@ object ExifReader {
 
     suspend fun read(file: File): ExifSummary? = withContext(IroDispatchers.io) {
         if (!file.isFile) return@withContext null
-        val exif = runCatching { ExifInterface(file.absolutePath) }.getOrNull()
+        // 덩이 길이가 터무니없으면 넘기지 않는다 — 할당이 성공해도 다른 스레드가 죽는다(`ExifContainerGuard`).
+        val exif = runCatching { if (ExifContainerGuard.allows(file)) ExifInterface(file.absolutePath) else null }.getOrNull()
             ?: return@withContext null
 
         fun tag(name: String): String? = exif.getAttribute(name)?.takeIf { it.isNotBlank() }
@@ -85,6 +88,8 @@ object ExifReader {
 
         val dest = File(destDir, src.name)
         runCatching {
+            // 덩이 길이가 터무니없는 원본은 정제하지 않는다 — '제거할 수 없다' 로 끝난다(null).
+            check(ExifContainerGuard.allows(src))
             src.inputStream().use { input -> dest.outputStream().use { input.copyTo(it) } }
             val exif = ExifInterface(dest.absolutePath)
             for (t in STRIPPED) exif.setAttribute(t, null)
@@ -120,10 +125,18 @@ object ExifReader {
     fun canRotate(file: File): Boolean {
         return when (file.name.substringAfterLast('.', "").lowercase()) {
             // `jfif`·`jpe` 는 JPEG 의 다른 이름이다. 엔진(`FileOpEngine.canRotateFile`)과 같은 표여야 한다.
-            "jpg", "jpeg", "jfif", "jpe" -> true
-            "webp" -> !ImageFormats.isAnimatedWebp(file)
+            // 덩이 길이가 터무니없는 그릇은 엔진이 거절한다 — 화면이 먼저 '이 형식은 …저장할 수 없습니다' 로 끝내게 같은 검사를 둔다.
+            "jpg", "jpeg", "jfif", "jpe" -> containerOk(file)
+            "webp" -> !ImageFormats.isAnimatedWebp(file) && containerOk(file)
             else -> false
         }
+    }
+
+    /** [ExifContainerGuard] 를 지나는가. 열지 못하면 아니다. */
+    private fun containerOk(file: File): Boolean = try {
+        ExifContainerGuard.allows(file)
+    } catch (e: IOException) {
+        false
     }
 
     /**

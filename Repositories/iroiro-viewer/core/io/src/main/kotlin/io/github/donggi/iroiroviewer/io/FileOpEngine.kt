@@ -7,6 +7,7 @@ import android.system.ErrnoException
 import android.system.Os
 import android.system.OsConstants
 import androidx.exifinterface.media.ExifInterface
+import io.github.donggi.iroiroviewer.model.ExifContainerGuard
 import io.github.donggi.iroiroviewer.model.ExifOrientation
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import java.io.File
@@ -115,6 +116,18 @@ class FileOpEngine(private val media: MediaIndex) {
          * '덮어쓰기 / 취소' 를 묻는다([CHANGED] 는 잘라 저장의 '고른 자리가 어긋났다' 라 문장이 다르다).
          */
         CHANGED_ELSEWHERE,
+
+        /** 사용자 암호로 잠긴 PDF 인데 세션 암호가 없거나 맞지 않다(쪽 뽑기·합치기 — 암호를 넣어 연 뒤에 다시 한다). */
+        PDF_LOCKED,
+
+        /** 암호로는 열 수 없는 방식(인증서·전용 처리기)으로 잠긴 PDF(쪽 뽑기·합치기). */
+        PDF_LOCK_UNSUPPORTED,
+
+        /** PDF 로 읽히지 않거나 쪽 나무를 화면과 같게 세지 못했다(쪽 뽑기·합치기). */
+        PDF_UNREADABLE,
+
+        /** 쪽·객체·결과 크기가 상한을 넘었다(쪽 뽑기·합치기). */
+        PDF_TOO_BIG,
 
         /** 고치기 전 판을 휴지통에 남기지 못해 저장하지 않았다(공간·권한 — 글 편집의 첫 저장). 편집 화면이 '그래도 저장' 을 묻는다. */
         PREVIOUS_NOT_KEPT,
@@ -587,7 +600,16 @@ class FileOpEngine(private val media: MediaIndex) {
         if (ExifOrientation.normalize(transform) == ExifOrientation.NORMAL) return@withContext Outcome.Done(1, 0, 0)
         // **마지막 관문이다.** 화면이 판정을 빠뜨려도 여기서 막는다 — 이 함수 뒤에는
         // 사용자 파일을 다시 쓰는 코드밖에 없다.
-        if (!canRotateFile(src)) return@withContext Outcome.Failed(Reason.INVALID_NAME, src.name)
+        // 형식 거절은 '이 형식은 저장할 수 없다'(UNSUPPORTED)다. 화면(`ExifReader.canRotate`)이 같은 판정으로 메뉴 앞에서 먼저 막는다.
+        if (!canRotateFile(src)) return@withContext Outcome.Failed(Reason.UNSUPPORTED, src.name)
+        // 덩이 길이가 터무니없는 파일은 ExifInterface 에 넘기지 않는다 — 할당이 성공해도 다른 스레드가 죽는다(`ExifContainerGuard`).
+        // 원본은 손대지 않은 채 같은 형식 거절로 끝낸다.
+        val containerOk = try {
+            ExifContainerGuard.allows(src)
+        } catch (e: IOException) {
+            return@withContext Outcome.Failed(reasonOf(e), src.name)
+        }
+        if (!containerOk) return@withContext Outcome.Failed(Reason.UNSUPPORTED, src.name)
 
         val parent = src.parentFile ?: return@withContext Outcome.Failed(Reason.IO, src.name)
         val tmp = File(parent, "$PART_PREFIX${UUID.randomUUID().toString().take(8)}$PART_SUFFIX")

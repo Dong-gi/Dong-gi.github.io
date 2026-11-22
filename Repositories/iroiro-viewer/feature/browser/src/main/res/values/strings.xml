@@ -182,10 +182,10 @@
     <string name="browser_trash_unknown_origin">원래 위치를 모름 · 되돌리면 ‘%1$s’ 폴더로 꺼냅니다</string>
     <!-- 갤러리와 즐겨찾기 -->
     <string name="browser_gallery">갤러리</string>
-    <string name="browser_gallery_desc">DCIM · Pictures · Download 폴더의 사진</string>
-    <string name="browser_gallery_count">갤러리 %1$d장</string>
-    <string name="browser_gallery_scanning">사진 %1$d장 찾는 중</string>
-    <string name="browser_gallery_empty">%1$s 폴더에서 사진을 찾지 못했습니다</string>
+    <string name="browser_gallery_desc">DCIM · Pictures · Download 폴더의 사진과 영상</string>
+    <string name="browser_gallery_count">갤러리 %1$d개</string>
+    <string name="browser_gallery_scanning">사진·영상 %1$d개 찾는 중</string>
+    <string name="browser_gallery_empty">%1$s 폴더에서 사진·영상을 찾지 못했습니다</string>
 
     <!--
         갤러리의 날짜 머리글. 오늘·어제는 이름으로 부르는 편이 날짜보다 빨리 읽힌다.

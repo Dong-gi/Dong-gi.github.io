@@ -18,6 +18,8 @@
     <string name="io_op_clipping">구간을 저장하는 중</string>
     <string name="io_op_audio">소리를 저장하는 중</string>
     <string name="io_op_capturing">화면을 저장하는 중</string>
+    <string name="io_op_pdf_extracting">쪽을 뽑는 중</string>
+    <string name="io_op_pdf_merging">PDF를 합치는 중</string>
 
     <!--
       파일 작업이 실패한 까닭(FileOpText.reasonRes). 그것을 만드는 FileOpEngine.Reason 곁에 한 벌 - 파일 목록과 재생 화면(구간 저장)이
@@ -52,6 +54,31 @@
     <string name="io_saved_plain">저장했습니다: %1$s</string>
     <!-- 영상 화면 캡처(재생 화면 ⋮). -->
     <string name="io_saved_capture">화면을 저장했습니다: %1$s</string>
+    <string name="io_saved_pdf_pages">쪽을 뽑아 저장했습니다: %1$s</string>
+    <string name="io_saved_pdf_merged">합쳐 저장했습니다: %1$s</string>
+    <!-- PDF 쪽 뽑기·합치기의 실패(FileOpEngine.Reason 의 PDF_ 셋). -->
+    <string name="io_error_pdf_locked">암호로 잠긴 PDF입니다 — 암호를 넣어 연 뒤에 다시 하세요</string>
+    <string name="io_error_pdf_lock_unsupported">이 방식으로 잠긴 PDF는 다루지 않습니다</string>
+    <string name="io_error_pdf_unreadable">PDF의 구조를 읽지 못했습니다</string>
+    <string name="io_error_pdf_too_big">PDF가 너무 커서 저장하지 않았습니다</string>
+    <!-- 파일 목록의 PDF 합치기(feature:browser 의 PdfMerge.kt) - 그 작업(PdfPagesSupport) 곁에 둔다. -->
+    <string name="io_pdf_merge_action">PDF 합치기</string>
+    <string name="io_pdf_merge_title">PDF 합치기</string>
+    <string name="io_pdf_merge_hint">이 차례로 합칩니다. 화살표로 바꿀 수 있습니다.</string>
+    <string name="io_pdf_merge_checking">확인하는 중…</string>
+    <string name="io_pdf_merge_pages">%1$d쪽</string>
+    <string name="io_pdf_merge_pages_unlock">%1$d쪽 · 권한 잠금</string>
+    <string name="io_pdf_merge_locked">암호로 잠김 — 암호를 먼저 넣어 여세요</string>
+    <string name="io_pdf_merge_pages_password">%1$d쪽 · 암호 풀림</string>
+    <string name="io_pdf_merge_lock_unsupported">이 방식의 잠금은 다루지 않음</string>
+    <string name="io_pdf_merge_too_many">쪽이 너무 많습니다 — 한 번에 %1$d쪽까지</string>
+    <string name="io_pdf_merge_unreadable">읽지 못함</string>
+    <string name="io_pdf_merge_blocked">합칠 수 없는 PDF가 있습니다</string>
+    <string name="io_pdf_merge_name">→ %1$s</string>
+    <string name="io_pdf_merge_unlock_notice">잠기지 않은 PDF로 저장합니다</string>
+    <string name="io_pdf_merge_up">위로</string>
+    <string name="io_pdf_merge_down">아래로</string>
+    <string name="io_pdf_merge_confirm">합치기</string>
     <string name="io_save_cancelled">저장을 취소했습니다</string>
     <!-- 'Files에 저장'(FileOpText.receivedMessage). 앞에 붙는 조각은 큰따옴표로 감싼다 - 앞 공백이 지워진다(함정 표). -->
     <string name="io_received_one">%1$s에 저장했습니다: %2$s</string>

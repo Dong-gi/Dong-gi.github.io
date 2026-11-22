@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +31,7 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.donggi.iroiroviewer.io.GalleryScanner
 import io.github.donggi.iroiroviewer.model.DayBucket
 import io.github.donggi.iroiroviewer.model.FileEntry
+import io.github.donggi.iroiroviewer.model.FileKind
 import io.github.donggi.iroiroviewer.ui.ThumbnailStore
 import java.time.ZoneId
 
@@ -53,6 +57,9 @@ import java.time.ZoneId
  * 썸네일은 [ThumbnailStore] 가 만들고 다시 쓴다. 원본이 사라지면 썸네일도 사라진다
  * (`BrowserViewModel` 의 갤러리 정리 참고).
  *
+ * **영상도 같은 격자에 든다**(▶ 를 얹는다). 누르면 재생 화면으로 연다 — 사진 뷰어에 넘기는 목록에는 **사진만** 담는다. 섞어 넘기면
+ * 뷰어가 영상을 그림으로 디코딩하려다 빈 쪽이 되고, 좌우로 넘기던 흐름이 거기서 끊긴다.
+ *
  * **당기면 다시 훑는다**(`BrowserViewModel.pullGallery`). 훑는 동안 격자는 앞의 것을 그대로 보인다 — 다른 앱이
  * 방금 찍은 사진을 넣었을 때 갤러리를 나갔다 들어오지 않아도 되는 길이다.
  */
@@ -62,6 +69,7 @@ fun GalleryScreen(
     vm: BrowserViewModel,
     snackbar: SnackbarHostState,
     onOpen: (List<FileEntry>, Int) -> Unit,
+    onPlay: (FileEntry) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -92,7 +100,7 @@ fun GalleryScreen(
                         when (val s = scan) {
                             is GalleryScanner.Scan.Scanning -> stringResource(R.string.browser_gallery)
                             is GalleryScanner.Scan.Ready ->
-                                stringResource(R.string.browser_gallery_count, s.images.size)
+                                stringResource(R.string.browser_gallery_count, s.items.size)
                         }
                     )
                 },
@@ -117,7 +125,13 @@ fun GalleryScreen(
                 }
 
                 is GalleryScanner.Scan.Ready -> {
-                    if (s.images.isEmpty()) {
+                    // 뷰어에 넘길 사진만의 목록과, 격자 자리 → 그 목록 자리. 훑기마다 한 번만 만든다.
+                    val photos = remember(s) { s.items.filter { it.kind == FileKind.IMAGE } }
+                    val photoAt = remember(s) {
+                        var n = 0
+                        IntArray(s.items.size) { if (s.items[it].kind == FileKind.IMAGE) n++ else -1 }
+                    }
+                    if (s.items.isEmpty()) {
                         // 사진이 없다는 안내도 당길 수 있어야 한다 — 사진을 넣고 다시 훑는 자리가 바로 여기다.
                         ScrollableNote {
                             Text(
@@ -147,7 +161,7 @@ fun GalleryScreen(
                                     DayHeader(section.day, today, yesterday)
                                 }
                                 itemsIndexed(
-                                    items = s.images.subList(
+                                    items = s.items.subList(
                                         section.firstIndex,
                                         section.firstIndex + section.count,
                                     ),
@@ -157,7 +171,13 @@ fun GalleryScreen(
                                     // 이것을 빠뜨리면 두 번째 날짜부터 누른 것과 다른
                                     // 사진이 열린다 — 화면에는 아무 오류도 나지 않는다.
                                     val flat = section.firstIndex + i
-                                    GalleryCell(entry = entry, onClick = { onOpen(s.images, flat) })
+                                    GalleryCell(
+                                        entry = entry,
+                                        onClick = {
+                                            val at = photoAt[flat]
+                                            if (at >= 0) onOpen(photos, at) else onPlay(entry)
+                                        },
+                                    )
                                 }
                             }
                         }
@@ -206,8 +226,14 @@ private fun GalleryCell(entry: FileEntry, onClick: () -> Unit) {
     val key = remember(entry.path, entry.size, entry.lastModified) {
         ThumbnailStore.keyOf(entry.path, entry.size, entry.lastModified)
     }
+    val isVideo = entry.kind == FileKind.VIDEO
     val bitmap by produceState<android.graphics.Bitmap?>(initialValue = null, key) {
-        value = ThumbnailStore.get(context, entry.path, key)
+        value = ThumbnailStore.get(
+            context,
+            entry.path,
+            key,
+            kind = if (isVideo) ThumbnailStore.Kind.VIDEO else ThumbnailStore.Kind.IMAGE,
+        )
     }
 
     Box(
@@ -216,6 +242,7 @@ private fun GalleryCell(entry: FileEntry, onClick: () -> Unit) {
             .aspectRatio(1f)
             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
     ) {
         bitmap?.let {
             Image(
@@ -225,6 +252,15 @@ private fun GalleryCell(entry: FileEntry, onClick: () -> Unit) {
                 contentDescription = entry.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
+            )
+        }
+        // 영상은 그림만으로 사진과 구별되지 않는다. 폴더 목록의 칸과 같은 표시를 얹는다 — 썸네일이 아직 없어도 얹어 영상임을 먼저 알린다.
+        if (isVideo) {
+            Icon(
+                imageVector = Icons.Filled.PlayArrow,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(40.dp),
             )
         }
     }

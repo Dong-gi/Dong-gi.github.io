@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import androidx.core.graphics.scale
 import androidx.exifinterface.media.ExifInterface
+import io.github.donggi.iroiroviewer.model.ExifContainerGuard
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.ImageLimits
 import kotlinx.coroutines.CancellationException
@@ -88,6 +89,8 @@ object ImageIo {
         val storedH = bounds.outHeight
 
         val orientation = runCatching {
+            // 덩이 길이가 터무니없으면 ExifInterface 에 넘기지 않는다 — 할당이 성공해도 다른 스레드가 죽는다.
+            if (!ExifContainerGuard.allows(File(path))) return@runCatching ExifInterface.ORIENTATION_NORMAL
             ExifInterface(path).getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_NORMAL,
@@ -459,14 +462,17 @@ object ImageIo {
      */
     fun exifOrientation(bytes: ByteArray, offset: Int = 0, length: Int = bytes.size): Int {
         if (length <= 0 || offset < 0 || offset + length > bytes.size) return ExifInterface.ORIENTATION_NORMAL
+        // 만화 쪽은 남이 만든 압축 안의 바이트다. 덩이 길이가 남은 크기를 넘으면 넘기지 않는다(`ExifContainerGuard`).
+        if (!ExifContainerGuard.allows(bytes, offset, length)) return ExifInterface.ORIENTATION_NORMAL
         return try {
             ExifInterface(java.io.ByteArrayInputStream(bytes, offset, length)).getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_NORMAL,
             )
-        } catch (e: IOException) {
-            ExifInterface.ORIENTATION_NORMAL
-        } catch (e: RuntimeException) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            // `IOException`·`RuntimeException` 에 더해 `OutOfMemoryError` 까지 — 방향 하나 때문에 앱이 죽지 않게(마지막 그물).
             ExifInterface.ORIENTATION_NORMAL
         }
     }

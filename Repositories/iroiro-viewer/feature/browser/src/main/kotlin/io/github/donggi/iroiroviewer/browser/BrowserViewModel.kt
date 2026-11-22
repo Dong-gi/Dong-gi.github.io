@@ -13,6 +13,7 @@ import io.github.donggi.iroiroviewer.io.DirectoryWatcher
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.FileOpManager
 import io.github.donggi.iroiroviewer.io.ForegroundRelist
+import io.github.donggi.iroiroviewer.io.CaptureDateCache
 import io.github.donggi.iroiroviewer.io.GalleryScanner
 import io.github.donggi.iroiroviewer.io.ContentSniff
 import io.github.donggi.iroiroviewer.io.Iro
@@ -968,7 +969,10 @@ class BrowserViewModel(
                     // 훑을 곳이 없다 — 끝난 것으로 친다. 아니면 당긴 표시가 시간 상한까지 돈다.
                     flowOf(tick to GalleryScanner.Scan.Scanning(0)).onEach { galleryCompleted.value = tick }
                 } else {
-                    GalleryScanner.scan(GalleryScanner.defaultRoots(volumes)).map { tick to it }
+                    GalleryScanner.scan(
+                        GalleryScanner.defaultRoots(volumes),
+                        CaptureDateCache.shared(getApplication<Application>().filesDir),
+                    ).map { tick to it }
                 }
             }
             .map { (tick, scan) ->
@@ -1038,8 +1042,8 @@ class BrowserViewModel(
      *
      * 썸네일 청소가 여기인 까닭: 요구사항이 "원본 이미지 삭제 감지되면 썸네일도 자동 삭제" 인데 파일시스템에는
      * 앱이 꺼져 있는 동안의 삭제 통지가 없다. 그래서 '지금 살아 있는 것' 의 목록이 나올 때마다 그 여집합을 지운다.
-     * **갤러리가 아니라 여기서 부른다** — 갤러리는 이미지만 골라 훑으므로 그 폴더의 문서·동영상 썸네일을 '없는 것'
-     * 으로 보고 지운다. 폴더를 통째로 열거하는 쪽은 [DirectoryLister] 뿐이다.
+     * **갤러리가 아니라 여기서 부른다** — 갤러리는 사진·영상만 골라 훑으므로(`.ts`·`.mts` 도 뺀다) 그 폴더의 문서·만화
+     * 썸네일을 '없는 것' 으로 보고 지운다. 폴더를 통째로 열거하는 쪽은 [DirectoryLister] 뿐이다.
      */
     private fun onListingArrived(t: TaggedListing) {
         val folder = t.path ?: return
@@ -1166,6 +1170,17 @@ class BrowserViewModel(
         val keys = pendingThumbKeys.remove(finished.id)
         if (keys != null && finished.outcome !is FileOpEngine.Outcome.Cancelled) {
             ThumbnailStore.invalidate(getApplication(), keys)
+        }
+        // 지우거나 옮겨 **이제 없는** 파일의 경로를 찍힌 시각 캐시에서 걷는다 — 다음 갤러리 훑기를 기다리지 않는다(사생활).
+        // 취소된 작업도 몇 개는 옮겼을 수 있으므로 결과를 가리지 않고 있는지만 본다. 폴더째 지운 것은 여기 없다 — 다음 훑기가 걷는다.
+        // 이 프로세스에서 갤러리를 연 적이 없으면 하지 않는다(파일 작업 하나가 큰 캐시를 올리지 않게 — 그 경로는 다음 훑기가 걷는다).
+        val dates = CaptureDateCache.sharedIfOpened()
+        if (keys != null && dates != null) {
+            val paths = keys.map { it.first }
+            viewModelScope.launch(IroDispatchers.io) {
+                val gone = paths.filterNot { java.io.File(it).exists() }
+                if (gone.isNotEmpty()) dates.apply { forget(gone); save() }
+            }
         }
         refresh()
         // **갤러리도 다시 훑는다.** [refresh] 가 미는 것은 폴더 목록(`taggedListing`)뿐이라, 사진을

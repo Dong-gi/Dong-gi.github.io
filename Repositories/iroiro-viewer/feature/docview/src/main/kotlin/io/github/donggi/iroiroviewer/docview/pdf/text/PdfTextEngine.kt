@@ -454,6 +454,9 @@ internal class PdfTextEngine private constructor(
         private val IDENTITY = doubleArrayOf(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
 
         const val MAX_PAGES = 200_000
+
+        /** 쪽 나무에서 들르는 마디(직접 사전 포함)의 상한 — 쪽 수 상한의 두 배 남짓. 정상 나무는 마디가 쪽보다 적다. */
+        const val MAX_TREE_VISITS = MAX_PAGES * 2 + 1024
         const val MAX_OPS = 2_000_000
         const val MAX_GLYPHS = 100_000
         private const val MAX_FONTS = 512
@@ -505,12 +508,16 @@ internal class PdfTextEngine private constructor(
             val seen = HashSet<Int>()
 
             class Inherit(val resources: PdfObj?, val media: PdfObj?, val crop: PdfObj?, val rotate: PdfObj?)
+            var visits = 0
 
             fun walk(nodeRef: PdfObj?, inherit: Inherit, depth: Int) {
                 if (depth > MAX_TREE_DEPTH || out.size >= MAX_PAGES) return
+                // **마디를 센다 — 직접 사전도.** 방문 표는 참조 번호만 막으므로, 직접 사전 마디 둘이 같은 간접 `/Kids` 를 가리키면 겹마다
+                // 두 배가 되어 깊이 64 까지 2^64 번 걷는다(340 바이트 — 독립 검토). 취소도 방문 수로 본다(쪽이 늘지 않는 갈래에서도 닿게).
+                if (++visits > MAX_TREE_VISITS) return
+                if (visits and 0xFF == 0) checkCancelled()
                 (nodeRef as? PdfRef)?.let { if (!seen.add(it.num)) return }
                 val node = objs.dict(nodeRef) ?: return
-                if (out.size and 0xFF == 0) checkCancelled()
                 val here = Inherit(
                     node["Resources"] ?: inherit.resources,
                     node["MediaBox"] ?: inherit.media,
