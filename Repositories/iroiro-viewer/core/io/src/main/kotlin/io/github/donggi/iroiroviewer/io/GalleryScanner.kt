@@ -10,6 +10,7 @@ import io.github.donggi.iroiroviewer.model.DayBucket
 import io.github.donggi.iroiroviewer.model.ExifContainerGuard
 import io.github.donggi.iroiroviewer.model.FileEntry
 import io.github.donggi.iroiroviewer.model.FileKind
+import io.github.donggi.iroiroviewer.model.GalleryRoots
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.currentCoroutineContext
@@ -40,6 +41,7 @@ import java.time.ZoneId
  * - **`.nomedia` 가 있는 폴더는 통째로 건너뛴다.** 그것이 안드로이드에서 '이 폴더는
  *   갤러리에 넣지 마라' 를 뜻하는 유일한 약속이고, 우리 휴지통도 그 표시를 단다.
  * - 숨김 폴더(`.` 로 시작)는 들어가지 않는다.
+ * - 뿌리는 볼륨마다 DCIM·Pictures·Download 와 **`Android/media`**(메신저가 받은 사진) — 뒤의 것은 담는 수에 상한이 있다([GalleryRoots]).
  * - 새것이 위로. 사진 목록의 관행이고, 대개 찾는 것은 방금 찍은 것이다.
  * - 사진과 **영상**을 함께 담는다. `.ts`·`.mts` 처럼 TypeScript 와 확장자를 나눠 쓰는 것은 뺀다 — `Download` 에 소스 파일이 섞인다.
  *
@@ -57,13 +59,8 @@ import java.time.ZoneId
  */
 object GalleryScanner {
 
-    /**
-     * 기본으로 보는 폴더. 볼륨마다 이 이름의 폴더가 있으면 훑는다.
-     *
-     * 볼륨 전체를 훑지 않는 것은 속도 때문만이 아니다 — 앱 데이터 폴더 안의 캐시
-     * 이미지 수천 장이 갤러리에 섞이면 그 목록은 쓸모가 없어진다.
-     */
-    val DEFAULT_FOLDERS = listOf("DCIM", "Pictures", "Download")
+    /** 기본으로 보는 폴더 이름 — 규칙은 [GalleryRoots]. */
+    val DEFAULT_FOLDERS: List<String> get() = GalleryRoots.SHOWN_FOLDERS
 
     /** 재귀 상한. DCIM 아래가 이보다 깊은 경우는 없고, 깊으면 링크 고리를 의심한다. */
     private const val MAX_DEPTH = 8
@@ -87,23 +84,26 @@ object GalleryScanner {
         ) : Scan
     }
 
-    /** 이 볼륨들에서 실제로 있는 기본 폴더. */
-    fun defaultRoots(volumes: List<VolumeRegistry.Volume>): List<File> =
-        volumes.flatMap { v -> DEFAULT_FOLDERS.map { File(v.path, it) } }.filter { it.isDirectory }
+    /** 이 볼륨들에서 실제로 있는 뿌리 — 사진 폴더 셋과 `Android/media`([GalleryRoots]). */
+    fun defaultRoots(volumes: List<VolumeRegistry.Volume>): List<GalleryRoots.Root> =
+        GalleryRoots.candidates(volumes.map { it.path }).filter { File(it.path).isDirectory }
 
     /**
      * @param dates 찍힌 시각의 캐시. 보통 [CaptureDateCache.shared].
      */
-    fun scan(roots: List<File>, dates: CaptureDateCache): Flow<Scan> = flow {
+    fun scan(roots: List<GalleryRoots.Root>, dates: CaptureDateCache): Flow<Scan> = flow {
         emit(Scan.Scanning(0))
         val started = System.nanoTime()
         val found = ArrayList<FileEntry>(512)
         val visited = HashSet<Long>()
         for (root in roots) {
-            walk(root, visited, 0) { entry ->
+            // 뿌리마다 담을 수의 상한(`Android/media` — [GalleryRoots.MAX_MEDIA_FILES]). 닿으면 그 뿌리만 멈춘다.
+            val budget = Budget(root.maxFiles)
+            walk(File(root.path), visited, 0, budget) { entry ->
                 found += entry
                 if (found.size % PROGRESS_EVERY == 0) emit(Scan.Scanning(found.size))
             }
+            if (budget.left <= 0) Iro.d { "갤러리 뿌리 하나가 상한(${root.maxFiles}개)에 닿아 멈췄다" }
         }
         // 시간대는 훑기마다 한 번 잡는다 — 시차 없는 EXIF 를 셈하는 데도, 날로 묶는 데도, 캐시의 꼬리표로도 같은 값을 쓴다.
         val zone = ZoneId.systemDefault()
@@ -116,12 +116,15 @@ object GalleryScanner {
             if (cached == null) unknown += i
             times[i] = if (cached == null || cached == CaptureDateCache.NONE) e.lastModified else cached
         }
-        val rootPaths = roots.map { it.absolutePath }
+        val rootPaths = roots.map { it.path }
         // 폴더를 끝까지 훑은 지금 — 사라진 파일의 줄을 지운다(지운 사진의 경로가 캐시에 남지 않게). 날짜를 다 읽은 뒤로 미루면
         // 읽기가 끊길 때마다(화면을 떠났다·다시 훑었다) 지우지 못한다. 뒤에서 넣는 경로는 모두 `found` 에 있다.
         dates.retainOnly(found.mapTo(HashSet(found.size * 2)) { it.path })
         try {
-            emit(ready(found, times, rootPaths, started, zone))
+            val first = ready(found, times, rootPaths, started, zone)
+            // 디버그 빌드에서만 남는다(수와 시간만 — 경로는 적지 않는다). 1만 장의 첫 훑기를 재는 자리다.
+            Iro.d { "갤러리 ${found.size}개 · 첫 내놓기 ${first.scanMillis}ms · 날짜 모름 ${unknown.size}개" }
+            emit(first)
             var changed = false
             for (i in unknown) {
                 currentCoroutineContext().ensureActive()
@@ -137,6 +140,9 @@ object GalleryScanner {
                     times[i] = taken
                     changed = true
                 }
+            }
+            if (unknown.isNotEmpty()) {
+                Iro.d { "갤러리 날짜 읽기 ${unknown.size}개 끝 · ${(System.nanoTime() - started) / 1_000_000}ms · 순서 바뀜 $changed" }
             }
             if (changed) emit(ready(found, times, rootPaths, started, zone))
         } finally {
@@ -218,14 +224,18 @@ object GalleryScanner {
         else -> CaptureDateRead.Result.NoDate
     }
 
+    /** 한 뿌리에서 더 담을 수 있는 수. */
+    private class Budget(var left: Int)
+
     private suspend fun walk(
         dir: File,
         visited: MutableSet<Long>,
         depth: Int,
+        budget: Budget,
         onFound: suspend (FileEntry) -> Unit,
     ) {
         currentCoroutineContext().ensureActive()
-        if (depth > MAX_DEPTH) return
+        if (depth > MAX_DEPTH || budget.left <= 0) return
         if (TrashStore.isTrashPath(dir.absolutePath)) return
         // 이 한 줄이 '숨긴 사진첩' 을 존중한다. 다른 갤러리 앱과 같은 약속이다.
         if (File(dir, NOMEDIA).exists()) return
@@ -233,6 +243,7 @@ object GalleryScanner {
         val children = dir.listFiles() ?: return
         for (child in children) {
             currentCoroutineContext().ensureActive()
+            if (budget.left <= 0) return
             val st = try {
                 Os.lstat(child.absolutePath)
             } catch (e: ErrnoException) {
@@ -247,13 +258,14 @@ object GalleryScanner {
                 // 하드링크로 만든 디렉터리 고리를 막는다(복사 엔진과 같은 방식).
                 val key = st.st_dev * 1_000_003L + st.st_ino
                 if (!visited.add(key)) continue
-                walk(child, visited, depth + 1, onFound)
+                walk(child, visited, depth + 1, budget, onFound)
                 continue
             }
 
             val kind = MimeResolver.kindOf(name, isDirectory = false)
             if (kind != FileKind.IMAGE && kind != FileKind.VIDEO) continue
             if (kind == FileKind.VIDEO && ContentSniff.isAmbiguousStream(name)) continue
+            budget.left--
             onFound(
                 FileEntry(
                     name = name,

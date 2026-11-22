@@ -86,11 +86,20 @@ object ShareHelper {
      * 주지 않는다 — 그렇게 주면 우리가 취소하기 전까지 남는다.
      */
     fun share(context: Context, paths: List<String>, chooserTitle: String): Boolean {
+        val chooser = chooserFor(context, paths, chooserTitle) ?: return false
+        return start(context, chooser)
+    }
+
+    /**
+     * 공유 창의 인텐트를 짓는다 — 띄우지는 않는다. 경로마다 파일을 보고(`uriOf` — `canonicalFile`) 받는 앱을 묻는 일이라 **주 스레드 밖에서** 불러도
+     * 된다(갤러리에서 수백 개를 고른 공유). 띄우는 일은 [start] 가 주 스레드에서 한다. 실을 것이 없으면 null.
+     */
+    fun chooserFor(context: Context, paths: List<String>, chooserTitle: String): Intent? {
         // 다른 앱이 넘긴 설치 파일(받은 사본)은 싣지 않는다 — `ExternalOpen` 의 'APK' 와 같은 판단이다.
         val uris = paths
             .filterNot { p -> ApkFiles.refusesHandOff(IncomingFiles.isCopy(context, p)) { ApkFiles.isApk(File(p)) } }
             .mapNotNull { uriOf(context, it) }
-        if (uris.isEmpty()) return false
+        if (uris.isEmpty()) return null
         val mime = mimeOf(paths)
 
         val intent = if (uris.size == 1) {
@@ -111,8 +120,12 @@ object ShareHelper {
         // 우리 제공자의 URI 를 받지 않으므로(`IncomingFiles`) '읽지 못했다' 로 끝난다.
         val own = ownHandlers(context, intent)
         if (own.isNotEmpty()) chooser.putExtra(Intent.EXTRA_EXCLUDE_COMPONENTS, own)
-        return runCatching { context.startActivity(chooser); true }.getOrDefault(false)
+        return chooser
     }
+
+    /** [chooserFor] 가 지은 공유 창을 띄운다(주 스레드). */
+    fun start(context: Context, chooser: Intent): Boolean =
+        runCatching { context.startActivity(chooser); true }.getOrDefault(false)
 
     /**
      * 공유에 실을 MIME — 이름의 MIME([MimeResolver.mimeOf]), 여럿이 다르면 모든 것. **`.ts`·`.mts` 는 내용이 정한다** — TypeScript 를

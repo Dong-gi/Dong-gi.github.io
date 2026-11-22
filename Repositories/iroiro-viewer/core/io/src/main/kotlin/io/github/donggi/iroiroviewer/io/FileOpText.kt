@@ -229,6 +229,56 @@ object FileOpText {
         }
     }
 
+    /**
+     * '원본에서 위치 지우기'([FileOpManager.Kind.STRIP_LOCATION])의 결과 한 줄. 그 밖의 작업이면 null. 지운 수를 먼저, 건너뛴 갈래(위치가 없었다·
+     * 지울 수 없는 형식·XMP 에 위치가 있다)와 실패를 0 이 아닌 것만, 도중에 취소했으면 남은 수를 덧붙인다([locationParts]).
+     */
+    fun locationMessage(context: Context, f: FileOpManager.Finished): String? {
+        if (f.kind != FileOpManager.Kind.STRIP_LOCATION) return null
+        val tally = (f.extra as? FileOpManager.Extra.LocationStripped)?.tally
+        return when (val o = f.outcome) {
+            // 하나도 바꾸지 않고 끊겼다(바꾼 것이 있으면 결과는 '지웠다' 다 — 큐가 놓인 결과를 말한다). 남은 수를 함께.
+            is FileOpEngine.Outcome.Cancelled -> context.getString(R.string.io_location_cancelled) +
+                (tally?.takeIf { it.left > 0 }?.let { " · " + context.getString(R.string.io_location_part_left, it.left) } ?: "")
+            is FileOpEngine.Outcome.Failed -> context.getString(reasonRes(o.reason))
+            is FileOpEngine.Outcome.Done -> {
+                val t = tally ?: FileOpEngine.LocationTally(stripped = o.moved, unsupported = o.skipped, failed = o.failed)
+                val head = if (t.stripped > 0) {
+                    context.getString(R.string.io_location_stripped, t.stripped)
+                } else {
+                    context.getString(R.string.io_location_none_stripped)
+                }
+                (listOf(head) + locationParts(t).map { (part, n) ->
+                    context.getString(
+                        when (part) {
+                            LocationPart.NO_LOCATION -> R.string.io_location_part_none
+                            LocationPart.UNSUPPORTED -> R.string.io_location_part_unsupported
+                            LocationPart.XMP -> R.string.io_location_part_xmp
+                            LocationPart.FAILED -> R.string.io_location_part_failed
+                            LocationPart.LEFT -> R.string.io_location_part_left
+                        },
+                        n,
+                    )
+                }).joinToString(" · ")
+            }
+        }
+    }
+
+    /** 위치 지우기 결과에 덧붙일 갈래. [LEFT] 는 도중에 취소해 다루지 못한 수다. */
+    enum class LocationPart { NO_LOCATION, UNSUPPORTED, XMP, FAILED, LEFT }
+
+    /**
+     * 덧붙일 갈래와 수 — 0 인 것은 말하지 않는다. 차례는 위치 없음 → 지울 수 없는 형식 → XMP 에 위치 → 실패 → 남은 것(취소). 판단만 — JVM 시험이
+     * 답한다.
+     */
+    internal fun locationParts(t: FileOpEngine.LocationTally): List<Pair<LocationPart, Int>> = buildList {
+        if (t.noLocation > 0) add(LocationPart.NO_LOCATION to t.noLocation)
+        if (t.unsupported > 0) add(LocationPart.UNSUPPORTED to t.unsupported)
+        if (t.xmpLocation > 0) add(LocationPart.XMP to t.xmpLocation)
+        if (t.failed > 0) add(LocationPart.FAILED to t.failed)
+        if (t.left > 0) add(LocationPart.LEFT to t.left)
+    }
+
     /** [savedMessage] 가 말하는 작업 — 원본 곁에 새 파일을 만드는 일곱. */
     private val SAVED_KINDS = setOf(
         FileOpManager.Kind.CROP,

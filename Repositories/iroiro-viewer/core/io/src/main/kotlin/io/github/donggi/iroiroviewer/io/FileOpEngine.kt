@@ -9,7 +9,10 @@ import android.system.OsConstants
 import androidx.exifinterface.media.ExifInterface
 import io.github.donggi.iroiroviewer.model.ExifContainerGuard
 import io.github.donggi.iroiroviewer.model.ExifOrientation
+import io.github.donggi.iroiroviewer.model.ExifPrivacy
 import io.github.donggi.iroiroviewer.model.IroDispatchers
+import io.github.donggi.iroiroviewer.model.JpegLayout
+import io.github.donggi.iroiroviewer.model.MetadataLocation
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -611,7 +614,42 @@ class FileOpEngine(private val media: MediaIndex) {
         }
         if (!containerOk) return@withContext Outcome.Failed(Reason.UNSUPPORTED, src.name)
 
-        val parent = src.parentFile ?: return@withContext Outcome.Failed(Reason.IO, src.name)
+        rewriteExif(src) { exif ->
+            val current = exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL,
+            )
+            // 태그가 없거나 0(정의 안 됨)·깨진 값이면 정방향으로 친다 — 디코더도 그렇게 그렸다(화면이 본 것).
+            val next = ExifOrientation.compose(transform, current)
+            exif.setAttribute(ExifInterface.TAG_ORIENTATION, next.toString())
+        }?.let { return@withContext it }
+
+        // 죽은 작업이 남긴 임시본이 이 폴더에 있으면 함께 걷는다 — 회전은 복사·이동의 대상이
+        // 아닌 폴더에서도 일어난다.
+        src.parentFile?.let { sweepPartials(it) }
+        media.scanAll(listOf(path))
+        Outcome.Done(1, 0, 0)
+    }
+
+    /**
+     * 원본 자리에서 **EXIF 만** 고친다 — 회전·뒤집기([reorientExif])와 위치 지우기([stripLocation])가 함께 지나는 다섯 걸음.
+     *
+     * `ExifInterface.saveAttributes()` 는 **제자리에서 파일을 다시 쓴다.** 그 도중에 전원이 나가면 반쪽짜리 사진이 남는다. 그래서 복사와
+     * 똑같은 절차를 밟는다 — ① 임시본에 복사 → ② 임시본의 태그를 고침([edit]) → 다시 쓴 임시본이 잘리지 않았는지 봄([rewrittenWhole]) →
+     * ③ `fsync` → ④ 수정시각 복원 → ⑤ 원자적 `rename` → **부모 디렉터리 `fsync`**. 마지막 것을 빠뜨리면 저널이 없는 FAT(SD)에서 이름만
+     * 사라진 상태가 가능하다. 임시 이름은 [PART_PREFIX]·[PART_SUFFIX] 규약을 따른다 — 다른 이름이면 [sweepPartials] 가 걷지 못한다.
+     *
+     * 형식 관문(어느 그릇인가·덩이 길이)은 부르는 쪽이 먼저 지난다. 걸음이 시작되면 끝까지 간다(취소가 닿지 않는다) — 반쯤 된 것을 놓지 않는다.
+     *
+     * @return 실패면 그 결과(원본은 바이트 하나 바뀌지 않았다), 다 했으면 null.
+     */
+    private suspend fun rewriteExif(
+        src: File,
+        /** 다시 쓴 임시본을 놓기 전에 본다 — 거짓이면 놓지 않고 실패로 끝낸다(원본은 그대로). */
+        verify: (File) -> Boolean = { true },
+        edit: (ExifInterface) -> Unit,
+    ): Outcome? {
+        val parent = src.parentFile ?: return Outcome.Failed(Reason.IO, src.name)
         val tmp = File(parent, "$PART_PREFIX${UUID.randomUUID().toString().take(8)}$PART_SUFFIX")
         val modified = src.lastModified()
 
@@ -625,19 +663,14 @@ class FileOpEngine(private val media: MediaIndex) {
                     }
                 }
 
-                // ② 임시본의 방향 태그만 고친다. 우리 파일 위라 여기서 실패해도 잃을 것이 없다.
+                // ② 임시본의 태그만 고친다. 우리 파일 위라 여기서 실패해도 잃을 것이 없다.
                 val tailBefore = jpegTailOf(tmp)
                 val exif = ExifInterface(tmp.absolutePath)
-                val current = exif.getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL,
-                )
-                // 태그가 없거나 0(정의 안 됨)·깨진 값이면 정방향으로 친다 — 디코더도 그렇게 그렸다(화면이 본 것).
-                val next = ExifOrientation.compose(transform, current)
-                exif.setAttribute(ExifInterface.TAG_ORIENTATION, next.toString())
+                edit(exif)
                 exif.saveAttributes()
                 // saveAttributes 는 디스크가 차면 **말없이 잘린 파일**을 남긴다(함정 표). 잘린 임시본을 원본 자리에 놓지 않는다.
                 if (!rewrittenWhole(tmp, tailBefore)) throw IOException("EXIF 를 다시 쓴 파일이 잘렸다")
+                if (!verify(tmp)) throw IOException("다시 쓴 파일이 바라던 모양이 아니다")
 
                 // ③ 내용을 디스크에. saveAttributes 는 스스로 sync 하지 않는다.
                 FileOutputStream(tmp, true).use { it.fd.sync() }
@@ -662,15 +695,151 @@ class FileOpEngine(private val media: MediaIndex) {
             throw e
         } catch (t: Throwable) {
             withContext(NonCancellable) { tmp.delete() }
-            return@withContext Outcome.Failed(reasonOf(t), src.name)
+            return Outcome.Failed(reasonOf(t), src.name)
         }
-
-        // 죽은 작업이 남긴 임시본이 이 폴더에 있으면 함께 걷는다 — 회전은 복사·이동의 대상이
-        // 아닌 폴더에서도 일어난다.
-        sweepPartials(parent)
-        media.scanAll(listOf(path))
-        Outcome.Done(1, 0, 0)
+        return null
     }
+
+    /**
+     * 사진 여럿의 **원본에서 위치(GPS) 태그만** 지운다(갤러리의 '원본에서 위치 지우기'). 수정 시각은 그대로다. 걸음은 회전과 같다([rewriteExif]) —
+     * 원본을 바꾸는 길이라 CLAUDE.md '안전' 목록에 있고 화면이 먼저 묻는다.
+     *
+     * **'나머지는 그대로' 는 회전 저장과 같은 정도다** — ExifInterface 가 EXIF 블록을 통째로 다시 쓴다. 화소·찍은 날·방향·카메라 칸은 남지만,
+     * 이 라이브러리가 모르는 칸은 다시 쓸 때 빠질 수 있고 `MakerNote` 는 안의 오프셋이 어긋날 수 있으며, 호환용 칸(`DateTime`·너비·높이·방향 0 따위)이
+     * 더해진다(함정 표).
+     *
+     * **EXIF 밖에 위치가 있는 사진은 건너뛴다**([MetadataLocation.fileHasLocation] — XMP 의 `exif:GPSLatitude`·`photoshop:City`, IPTC 의 도시·나라,
+     * 모션 포토의 덧붙은 MP4 `©xyz` — 사본의 검사와 같은 목록). ExifInterface 는 XMP 를 통째로 지울 수는 있어도 그 안의
+     * 속성만 고치지 못하고, 통째로 지우면 모션 포토(`MicroVideo`)·편집 기록이 깨진다. 위치를 남긴 채 '지웠다' 고 말하지 않는다. 쓴 뒤에도 EXIF 의 GPS
+     * 칸이나 글로 적힌 위치가 남았으면 놓지 않는다(실패로 센다).
+     *
+     * 파일마다 다섯으로 갈린다 — 지웠다 / 위치가 없었다 / 원본에서 지울 수 없는 형식(JPEG·정지 WebP 가 아니거나 덩이 길이가 터무니없거나 파서가
+     * 무너졌다) / XMP 에 위치가 있다 / 실패. 한 파일의 실패가 나머지를 멈추지 않는다. 취소는 파일 사이에서만 듣는다(파일 하나는 끝까지 간다).
+     *
+     * @return [Outcome.Done] 의 `moved` 가 지운 수, `skipped` 가 건너뛴 셋의 합. 갈래는 [onTally] 가 받는다(파일마다 지금까지의 셈 — 중간에
+     *   취소돼도 마지막 셈이 남고, [LocationTally.total] 과 견주면 남은 수가 나온다).
+     */
+    suspend fun stripLocation(
+        paths: List<String>,
+        onProgress: (Progress) -> Unit,
+        onTally: (LocationTally) -> Unit = {},
+    ): Outcome = withContext(IroDispatchers.io) {
+        var tally = LocationTally(total = paths.size)
+        var firstFailure: Reason? = null
+        val written = ArrayList<String>()
+        val parents = LinkedHashSet<File>()
+        try {
+            onTally(tally)
+            for ((i, path) in paths.withIndex()) {
+                currentCoroutineContext().ensureActive()
+                val src = File(path)
+                onProgress(Progress(0, 0, i, paths.size, src.name))
+                tally = when (val r = stripOne(src)) {
+                    StripResult.Stripped -> {
+                        written += path
+                        src.parentFile?.let { parents += it }
+                        tally.copy(stripped = tally.stripped + 1)
+                    }
+                    StripResult.NoLocation -> tally.copy(noLocation = tally.noLocation + 1)
+                    StripResult.Unsupported -> tally.copy(unsupported = tally.unsupported + 1)
+                    StripResult.XmpLocation -> tally.copy(xmpLocation = tally.xmpLocation + 1)
+                    is StripResult.Failed -> {
+                        if (firstFailure == null) firstFailure = r.reason
+                        src.parentFile?.let { parents += it }
+                        tally.copy(failed = tally.failed + 1)
+                    }
+                }
+                onTally(tally)
+            }
+            onProgress(Progress(0, 0, paths.size, paths.size, ""))
+        } finally {
+            // 취소돼도 이미 바꾼 파일은 미디어 색인에 알리고, 죽은 임시본을 걷는다.
+            withContext(NonCancellable) {
+                for (dir in parents) sweepPartials(dir)
+                if (written.isNotEmpty()) media.scanAll(written)
+            }
+        }
+        // 하나도 못 했고 실패만 있었으면 그 까닭을 말한다(공간·권한 — 사용자가 고칠 수 있는 것).
+        val reason = firstFailure
+        if (tally.skipped == 0 && tally.stripped == 0 && reason != null) {
+            Outcome.Failed(reason, "")
+        } else {
+            Outcome.Done(tally.stripped, tally.skipped, tally.failed)
+        }
+    }
+
+    /**
+     * 위치 지우기의 셈 — 지웠다·위치가 없었다·원본에서 지울 수 없는 형식·XMP 에 위치가 있어 건너뜀·실패, 그리고 고른 수([total]).
+     * 다섯의 합이 [total] 보다 작으면 도중에 멈췄다(취소).
+     */
+    data class LocationTally(
+        val stripped: Int = 0,
+        val noLocation: Int = 0,
+        val unsupported: Int = 0,
+        val xmpLocation: Int = 0,
+        val failed: Int = 0,
+        val total: Int = 0,
+    ) {
+        /** 건너뛴 셋의 합. */
+        val skipped: Int get() = noLocation + unsupported + xmpLocation
+
+        /** 다루지 못하고 남은 수(취소). */
+        val left: Int get() = (total - stripped - skipped - failed).coerceAtLeast(0)
+    }
+
+    private sealed interface StripResult {
+        data object Stripped : StripResult
+        data object NoLocation : StripResult
+        data object Unsupported : StripResult
+        data object XmpLocation : StripResult
+        data class Failed(val reason: Reason) : StripResult
+    }
+
+    /** 한 장. 관문(형식·덩이 길이) → 글로 적힌 위치(XMP) → EXIF 의 위치(원본을 읽기만) → [rewriteExif] → 다시 쓴 것에 위치가 남지 않았는가. */
+    private suspend fun stripOne(src: File): StripResult {
+        if (!src.isFile) return StripResult.Failed(Reason.NOT_FOUND)
+        // **마지막 관문이다** — 화면이 이름으로 골라도 여기서 내용으로 한 번 더 본다(움직이는 WebP 는 이름으로 모른다).
+        if (!ExifPrivacy.canScrubInPlace(src.name) || !canRotateFile(src)) return StripResult.Unsupported
+        val containerOk = try {
+            ExifContainerGuard.allows(src)
+        } catch (e: IOException) {
+            return StripResult.Failed(reasonOf(e))
+        }
+        if (!containerOk) return StripResult.Unsupported
+        // 짜임을 읽지 못한 JPEG — EXIF 밖의 위치를 볼 자리를 모른다. 손대지 않는다.
+        val unreadable = try {
+            JpegLayout.isUnreadableJpeg(src)
+        } catch (e: IOException) {
+            return StripResult.Failed(reasonOf(e))
+        }
+        if (unreadable) return StripResult.Unsupported
+        // EXIF 밖의 위치(XMP·IPTC·모션 포토의 덧붙은 영상 — `MetadataLocation`)가 있으면 손대지 않는다. 사본과 같은 목록이다.
+        val written = try {
+            MetadataLocation.fileHasLocation(src)
+        } catch (e: IOException) {
+            return StripResult.Failed(reasonOf(e))
+        }
+        if (written) return StripResult.XmpLocation
+        // 위치가 없으면 쓰지 않는다 — 고칠 것이 없는 파일을 다시 쓰면 바이트만 움직인다.
+        val has = try {
+            hasLocation(ExifInterface(src.absolutePath))
+        } catch (e: IOException) {
+            return StripResult.Failed(reasonOf(e))
+        } catch (e: RuntimeException) {
+            // 파서가 무너진 파일 — 원본은 손대지 않고 '지울 수 없는 형식' 으로 둔다.
+            return StripResult.Unsupported
+        }
+        if (!has) return StripResult.NoLocation
+        val failed = rewriteExif(
+            src,
+            verify = { tmp -> !hasLocation(ExifInterface(tmp.absolutePath)) && !MetadataLocation.fileHasLocation(tmp) },
+        ) { exif -> for (t in ExifPrivacy.LOCATION_TAGS) exif.setAttribute(t, null) }
+        return if (failed is Outcome.Failed) StripResult.Failed(failed.reason) else StripResult.Stripped
+    }
+
+    /** 위치 태그가 하나라도 있는가. */
+    private fun hasLocation(exif: ExifInterface): Boolean =
+        ExifPrivacy.LOCATION_TAGS.any { exif.getAttribute(it) != null }
 
     /**
      * 이 파일에 회전을 저장할 수 있는가.
@@ -691,72 +860,6 @@ class FileOpEngine(private val media: MediaIndex) {
             "webp" -> !isAnimatedWebp(file)
             else -> false
         }
-
-    /**
-     * JPEG 의 끝 — 화소 자료(SOS 부터)의 마지막 [EXIF_TAIL_BYTES] 바이트. JPEG 이 아니거나 읽지 못하면 null.
-     * JPEG 의 `saveAttributes` 는 SOI · 새 EXIF · 나머지를 글자 그대로 옮기므로 다시 쓴 뒤에도 끝이 같아야 한다(`ImageSaver.JpegTail` 과
-     * 같은 셈 — 거기는 길이도 보지만, 여기는 방향 태그를 고치며 EXIF 가 줄 수도 있어 끝만 본다). **SOS 앞(EXIF 가 있는 머리)을 끝에 넣지
-     * 않는다** — 4 KiB 보다 작은 JPEG 에서 파일 전체를 끝으로 뜨면 고친 EXIF 가 들어가 온전한 파일을 잘린 것으로 읽는다(계측 시험이 잡았다).
-     * SOS 를 찾지 못하면 빈 끝(견주지 않는다)이다.
-     */
-    private fun jpegTailOf(file: File): ByteArray? = try {
-        java.io.RandomAccessFile(file, "r").use { raf ->
-            val n = raf.length()
-            if (n <= 4) return@use null
-            if (raf.read() != 0xFF || raf.read() != 0xD8) return@use null
-            // 머리 조각을 건너 SOS(FF DA)의 자리를 찾는다. 길이가 없는 표지(RSTn·TEM)와 채움 FF 는 두 바이트·한 바이트씩.
-            var pos = 2L
-            var sos = -1L
-            var steps = 0
-            while (pos + 4 <= n && steps++ < 1024) {
-                raf.seek(pos)
-                if (raf.read() != 0xFF) break
-                val marker = raf.read()
-                when {
-                    marker == 0xFF -> pos += 1
-                    marker == 0xDA -> { sos = pos; break }
-                    marker == 0x01 || marker in 0xD0..0xD7 -> pos += 2
-                    else -> pos += 2 + ((raf.read() shl 8) or raf.read())
-                }
-            }
-            if (sos < 0) return@use ByteArray(0)
-            val k = minOf(n - sos, EXIF_TAIL_BYTES.toLong()).toInt()
-            ByteArray(k).also {
-                raf.seek(n - k)
-                raf.readFully(it)
-            }
-        }
-    } catch (e: IOException) {
-        null
-    }
-
-    /**
-     * `saveAttributes` 가 다시 쓴 [file] 이 온전한가. JPEG 은 끝이 [tailBefore] 와 같은가, WebP 는 RIFF 머리의 크기만큼 파일이
-     * 있는가(EXIF 청크가 끝에 붙는 그릇이라 끝을 견줄 수 없다 — 잘리면 머리가 말한 길이보다 짧다). 읽지 못하면 false.
-     */
-    private fun rewrittenWhole(file: File, tailBefore: ByteArray?): Boolean = try {
-        java.io.RandomAccessFile(file, "r").use { raf ->
-            val n = raf.length()
-            if (tailBefore != null) {
-                if (n < tailBefore.size + 2) return@use false
-                val now = ByteArray(tailBefore.size)
-                raf.seek(n - now.size)
-                raf.readFully(now)
-                return@use now.contentEquals(tailBefore)
-            }
-            if (n < 12) return@use false
-            val head = ByteArray(12)
-            raf.readFully(head)
-            if (String(head, 0, 4, Charsets.US_ASCII) != "RIFF" || String(head, 8, 4, Charsets.US_ASCII) != "WEBP") {
-                return@use false
-            }
-            val size = (head[4].toLong() and 0xFF) or ((head[5].toLong() and 0xFF) shl 8) or
-                ((head[6].toLong() and 0xFF) shl 16) or ((head[7].toLong() and 0xFF) shl 24)
-            n >= size + 8
-        }
-    } catch (e: IOException) {
-        false
-    }
 
     /** 움직이는 WebP 인가. RIFF 청크 머리만 훑는다 — 픽셀은 읽지 않는다. */
     private fun isAnimatedWebp(file: File): Boolean = runCatching {
@@ -823,6 +926,85 @@ class FileOpEngine(private val media: MediaIndex) {
 
         /** EXIF 를 다시 쓴 JPEG 이 잘리지 않았는지 견줄 끝의 길이(`ImageSaver.JpegTail` 과 같은 값). */
         private const val EXIF_TAIL_BYTES = 4096
+
+        /** PNG 의 서명과 끝 덩이(`IEND` — 길이 0, 이름, CRC). */
+        private val PNG_SIGNATURE = byteArrayOf(0x89.toByte(), 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A)
+        private val PNG_IEND = byteArrayOf(0, 0, 0, 0, 0x49, 0x45, 0x4E, 0x44, 0xAE.toByte(), 0x42, 0x60, 0x82.toByte())
+
+        /**
+         * JPEG 의 끝 — 화소 자료(SOS 부터)의 마지막 [EXIF_TAIL_BYTES] 바이트. JPEG 이 아니거나 읽지 못하면 null.
+         * JPEG 의 `saveAttributes` 는 SOI · 새 EXIF · 나머지를 글자 그대로 옮기므로 다시 쓴 뒤에도 끝이 같아야 한다(`ImageSaver.JpegTail` 과
+         * 같은 셈 — 거기는 길이도 보지만, 여기는 방향 태그를 고치며 EXIF 가 줄 수도 있어 끝만 본다). **SOS 앞(EXIF 가 있는 머리)을 끝에 넣지
+         * 않는다** — 4 KiB 보다 작은 JPEG 에서 파일 전체를 끝으로 뜨면 고친 EXIF 가 들어가 온전한 파일을 잘린 것으로 읽는다(계측 시험이 잡았다).
+         * SOS 를 찾지 못하면 빈 끝(견주지 않는다)이다.
+         */
+        internal fun jpegTailOf(file: File): ByteArray? = try {
+            java.io.RandomAccessFile(file, "r").use { raf ->
+                val n = raf.length()
+                if (n <= 4) return@use null
+                if (raf.read() != 0xFF || raf.read() != 0xD8) return@use null
+                // 머리 조각을 건너 SOS(FF DA)의 자리를 찾는다. 길이가 없는 표지(RSTn·TEM)와 채움 FF 는 두 바이트·한 바이트씩.
+                var pos = 2L
+                var sos = -1L
+                var steps = 0
+                while (pos + 4 <= n && steps++ < 1024) {
+                    raf.seek(pos)
+                    if (raf.read() != 0xFF) break
+                    val marker = raf.read()
+                    when {
+                        marker == 0xFF -> pos += 1
+                        marker == 0xDA -> { sos = pos; break }
+                        marker == 0x01 || marker in 0xD0..0xD7 -> pos += 2
+                        else -> pos += 2 + ((raf.read() shl 8) or raf.read())
+                    }
+                }
+                if (sos < 0) return@use ByteArray(0)
+                val k = minOf(n - sos, EXIF_TAIL_BYTES.toLong()).toInt()
+                ByteArray(k).also {
+                    raf.seek(n - k)
+                    raf.readFully(it)
+                }
+            }
+        } catch (e: IOException) {
+            null
+        }
+
+        /**
+         * `saveAttributes` 가 다시 쓴 [file] 이 온전한가. JPEG 은 끝이 [tailBefore] 와 같은가, WebP 는 RIFF 머리의 크기만큼 파일이
+         * 있는가(EXIF 청크가 끝에 붙는 그릇이라 끝을 견줄 수 없다 — 잘리면 머리가 말한 길이보다 짧다), PNG 는 `IEND` 로 끝나는가(정제한 사본 —
+         * `ShareZips.cleanCopies`. 원본 자리에서는 PNG 를 고치지 않는다). 그 밖의 그릇·읽지 못하면 false.
+         */
+        internal fun rewrittenWhole(file: File, tailBefore: ByteArray?): Boolean = try {
+            java.io.RandomAccessFile(file, "r").use { raf ->
+                val n = raf.length()
+                if (tailBefore != null) {
+                    if (n < tailBefore.size + 2) return@use false
+                    val now = ByteArray(tailBefore.size)
+                    raf.seek(n - now.size)
+                    raf.readFully(now)
+                    return@use now.contentEquals(tailBefore)
+                }
+                if (n < 12) return@use false
+                val head = ByteArray(12)
+                raf.readFully(head)
+                if (head.copyOfRange(0, 8).contentEquals(PNG_SIGNATURE)) {
+                    // PNG 는 덩이를 차례로 다시 쓰고 `IEND`(길이 0 · 'IEND' · CRC)로 끝난다 — 잘렸으면 끝의 12바이트가 그것이 아니다.
+                    if (n < PNG_SIGNATURE.size + PNG_IEND.size) return@use false
+                    val end = ByteArray(PNG_IEND.size)
+                    raf.seek(n - end.size)
+                    raf.readFully(end)
+                    return@use end.contentEquals(PNG_IEND)
+                }
+                if (String(head, 0, 4, Charsets.US_ASCII) != "RIFF" || String(head, 8, 4, Charsets.US_ASCII) != "WEBP") {
+                    return@use false
+                }
+                val size = (head[4].toLong() and 0xFF) or ((head[5].toLong() and 0xFF) shl 8) or
+                    ((head[6].toLong() and 0xFF) shl 16) or ((head[7].toLong() and 0xFF) shl 24)
+                n >= size + 8
+            }
+        } catch (e: IOException) {
+            false
+        }
 
         /**
          * 예외를 이유로 옮긴다. ZIP 만들기([ZipMaker])도 같은 판단을 쓴다.

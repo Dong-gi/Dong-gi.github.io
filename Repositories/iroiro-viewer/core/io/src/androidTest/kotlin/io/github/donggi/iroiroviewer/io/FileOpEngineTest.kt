@@ -690,4 +690,151 @@ class FileOpEngineTest {
         assertTrue(before.contentEquals(f.readBytes()))
         Unit
     }
+
+    // ---- 갤러리의 위치 지우기 -------------------------------------------
+
+    /** 위치(GPS)·찍은 날·방향을 단 JPEG. */
+    private fun jpegWithLocation(dir: File, name: String): File {
+        val f = jpegWithOrientation(dir, name, androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_90)
+        androidx.exifinterface.media.ExifInterface(f.absolutePath).apply {
+            setLatLong(37.5665, 126.9780)
+            setAttribute(androidx.exifinterface.media.ExifInterface.TAG_GPS_DEST_LATITUDE, "35/1,10/1,0/1")
+            setAttribute(androidx.exifinterface.media.ExifInterface.TAG_GPS_DEST_LATITUDE_REF, "N")
+            setAttribute(androidx.exifinterface.media.ExifInterface.TAG_DATETIME_ORIGINAL, "2024:03:01 10:00:00")
+            setAttribute(androidx.exifinterface.media.ExifInterface.TAG_MAKE, "Iro")
+            saveAttributes()
+        }
+        return f
+    }
+
+    private fun exifOf(f: File) = androidx.exifinterface.media.ExifInterface(f.absolutePath)
+
+    /**
+     * 원본에서 **위치만** 지운다 — GPS 칸이 모두 사라지고(향한 자리 `GPSDest*` 까지), 찍은 날·카메라·방향과 수정 시각은 그대로, 임시본은 남지
+     * 않는다.
+     */
+    @Test
+    fun 위치_지우기가_GPS_만_지우고_나머지와_수정시각을_지킨다() = runBlocking {
+        val f = jpegWithLocation(work, "위치.jpg")
+        val past = System.currentTimeMillis() - 40L * 24 * 3600 * 1000
+        assertTrue(f.setLastModified(past))
+        assertNotNull("표본에 위치가 없다", exifOf(f).latLong)
+
+        var tally: FileOpEngine.LocationTally? = null
+        val outcome = engine.stripLocation(listOf(f.absolutePath), onProgress = {}) { tally = it }
+
+        assertEquals(FileOpEngine.Outcome.Done(1, 0, 0), outcome)
+        assertEquals(FileOpEngine.LocationTally(stripped = 1, total = 1), tally)
+        val after = exifOf(f)
+        assertEquals(null, after.latLong)
+        for (t in io.github.donggi.iroiroviewer.model.ExifPrivacy.LOCATION_TAGS) {
+            assertEquals("$t 가 남았다", null, after.getAttribute(t))
+        }
+        assertEquals("2024:03:01 10:00:00", after.getAttribute(androidx.exifinterface.media.ExifInterface.TAG_DATETIME_ORIGINAL))
+        assertEquals("Iro", after.getAttribute(androidx.exifinterface.media.ExifInterface.TAG_MAKE))
+        assertEquals(androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_90, orientationOf(f))
+        assertTrue("수정시각이 바뀌었다", Math.abs(f.lastModified() - past) < 3000)
+        assertNotNull("다시 쓴 JPEG 을 디코더가 읽지 못한다", android.graphics.BitmapFactory.decodeFile(f.absolutePath))
+        assertEquals(0, work.listFiles { x -> x.name.startsWith(FileOpEngine.PART_PREFIX) }.orEmpty().size)
+        Unit
+    }
+
+    /** 위치가 없는 JPEG 과 PNG(원본 자리에서 고치지 않는 형식)는 **바이트 하나 바뀌지 않는다** — 셈은 갈래대로. 없는 파일은 실패로 센다. */
+    @Test
+    fun 위치가_없는_사진과_PNG_는_건드리지_않는다() = runBlocking {
+        val plain = jpegWithOrientation(work, "위치없음.jpg", 1)
+        val png = File(work, "그림.png")
+        val bmp = android.graphics.Bitmap.createBitmap(32, 32, android.graphics.Bitmap.Config.ARGB_8888)
+        png.outputStream().use { bmp.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
+        val before = plain.readBytes() to png.readBytes()
+
+        var tally: FileOpEngine.LocationTally? = null
+        val outcome = engine.stripLocation(
+            listOf(plain.absolutePath, png.absolutePath, File(work, "없는.jpg").absolutePath),
+            onProgress = {},
+        ) { tally = it }
+
+        assertEquals(FileOpEngine.LocationTally(noLocation = 1, unsupported = 1, failed = 1, total = 3), tally)
+        assertEquals(FileOpEngine.Outcome.Done(0, 2, 1), outcome)
+        assertTrue("위치 없는 JPEG 이 바뀌었다", before.first.contentEquals(plain.readBytes()))
+        assertTrue("PNG 가 바뀌었다", before.second.contentEquals(png.readBytes()))
+        Unit
+    }
+
+    /**
+     * '위치 지우고 공유' 의 사본 — 사본에서는 위치·일련번호 따위가 사라지고 **원본은 그대로**다. 지울 수 없는 형식(영상)은 사본을 만들지 않고
+     * 건너뛴다(원본을 대신 싣지 않는다). 같은 이름 둘도 겹치지 않는다(번호 폴더).
+     */
+    @Test
+    fun 위치_지운_사본은_원본을_건드리지_않는다() = runBlocking {
+        val a = jpegWithLocation(File(work, "a"), "같은이름.jpg")
+        val b = jpegWithLocation(File(work, "b"), "같은이름.jpg")
+        val video = file(work, "영상.mp4", 128)
+        val original = a.readBytes()
+
+        val result = ShareZips.cleanCopies(context, listOf(a.absolutePath, video.absolutePath, b.absolutePath), onProgress = {}) {}
+        try {
+            assertEquals(FileOpEngine.Outcome.Done(2, 1, 0), result.outcome)
+            assertEquals(2, result.paths.size)
+            assertEquals(2, result.paths.toSet().size)
+            for (p in result.paths) {
+                val copy = File(p)
+                assertEquals("같은이름.jpg", copy.name)
+                val exif = exifOf(copy)
+                assertEquals(null, exif.latLong)
+                assertEquals(null, exif.getAttribute(androidx.exifinterface.media.ExifInterface.TAG_GPS_DEST_LATITUDE))
+                assertEquals(androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_90, orientationOf(copy))
+                assertNotNull(android.graphics.BitmapFactory.decodeFile(copy.absolutePath))
+            }
+            assertTrue("원본이 바뀌었다", original.contentEquals(a.readBytes()))
+            assertNotNull(exifOf(a).latLong)
+        } finally {
+            result.paths.firstOrNull()?.let { ShareZips.batchDirOf(File(it))?.deleteRecursively() }
+        }
+        Unit
+    }
+
+    /** XMP 에 위치를 적은 JPEG — 따로 된 XMP 덩이(APP1 `http://ns.adobe.com/xap/1.0/`)로 들어간다(ExifInterface 1.4.2 의 JPEG 갈래). */
+    private fun jpegWithXmpLocation(dir: File, name: String): File {
+        val f = jpegWithLocation(dir, name)
+        androidx.exifinterface.media.ExifInterface(f.absolutePath).apply {
+            setAttribute(
+                androidx.exifinterface.media.ExifInterface.TAG_XMP,
+                "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\"><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">" +
+                    "<rdf:Description xmlns:exif=\"http://ns.adobe.com/exif/1.0/\" exif:GPSLatitude=\"37,33.99N\" " +
+                    "exif:GPSLongitude=\"126,58.68E\"/></rdf:RDF></x:xmpmeta>",
+            )
+            saveAttributes()
+        }
+        assertTrue("표본에 XMP 위치가 없다", f.inputStream().use { io.github.donggi.iroiroviewer.model.MetadataLocation.contains(it) })
+        return f
+    }
+
+    /**
+     * **XMP 에 위치가 있는 사진은 원본에서 지우지 않고 건너뛴다**(바이트 그대로) — XMP 를 통째로 지우면 모션 포토가 깨지고, EXIF 만 지우고 '지웠다' 고
+     * 말하면 거짓이다. **사본은 XMP 째 지우고** 위치가 남지 않는다.
+     */
+    @Test
+    fun XMP_의_위치는_원본에서_건너뛰고_사본에서는_지운다() = runBlocking {
+        val f = jpegWithXmpLocation(work, "xmp.jpg")
+        val before = f.readBytes()
+
+        var tally: FileOpEngine.LocationTally? = null
+        val outcome = engine.stripLocation(listOf(f.absolutePath), onProgress = {}) { tally = it }
+        assertEquals(FileOpEngine.LocationTally(xmpLocation = 1, total = 1), tally)
+        assertEquals(FileOpEngine.Outcome.Done(0, 1, 0), outcome)
+        assertTrue("XMP 위치가 든 원본이 바뀌었다", before.contentEquals(f.readBytes()))
+
+        val result = ShareZips.cleanCopies(context, listOf(f.absolutePath), onProgress = {}) {}
+        try {
+            assertEquals(FileOpEngine.Outcome.Done(1, 0, 0), result.outcome)
+            val copy = File(result.paths.single())
+            assertFalse("사본에 XMP 위치가 남았다", copy.inputStream().use { io.github.donggi.iroiroviewer.model.MetadataLocation.contains(it) })
+            assertEquals(null, exifOf(copy).latLong)
+            assertNotNull(android.graphics.BitmapFactory.decodeFile(copy.absolutePath))
+        } finally {
+            result.paths.firstOrNull()?.let { ShareZips.batchDirOf(File(it))?.deleteRecursively() }
+        }
+        Unit
+    }
 }

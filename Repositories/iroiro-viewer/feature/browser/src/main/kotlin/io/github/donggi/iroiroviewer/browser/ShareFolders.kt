@@ -60,6 +60,20 @@ internal object ShareFolders {
         FAILED,
     }
 
+    /**
+     * '위치 지우고 공유'([FileOpManager.Kind.SHARE_CLEAN])가 끝난 뒤 할 일. 만든 사본이 하나도 없으면(고른 것이 모두 영상·HEIC 따위) 보내지 않고
+     * 말한다. 건너뛴 것(지울 수 없는 형식)과 못 읽은 것은 돌아와서 말한다.
+     */
+    fun afterClean(outcome: FileOpEngine.Outcome, extra: FileOpManager.Extra?): After = when (outcome) {
+        is FileOpEngine.Outcome.Cancelled -> After.CANCELLED
+        is FileOpEngine.Outcome.Failed -> After.FAILED
+        is FileOpEngine.Outcome.Done -> when {
+            extra !is FileOpManager.Extra.ShareCopies || extra.paths.isEmpty() -> After.NOTHING
+            outcome.skipped > 0 || outcome.failed > 0 -> After.SHARE_WITH_SKIPS
+            else -> After.SHARE
+        }
+    }
+
     /** 결과로 할 일을 정한다. */
     fun after(outcome: FileOpEngine.Outcome, extra: FileOpManager.Extra?): After = when (outcome) {
         is FileOpEngine.Outcome.Cancelled -> After.CANCELLED

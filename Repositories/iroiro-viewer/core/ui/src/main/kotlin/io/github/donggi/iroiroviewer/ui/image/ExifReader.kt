@@ -2,7 +2,10 @@ package io.github.donggi.iroiroviewer.ui.image
 
 import androidx.exifinterface.media.ExifInterface
 import io.github.donggi.iroiroviewer.model.ExifContainerGuard
+import io.github.donggi.iroiroviewer.model.ExifPrivacy
 import io.github.donggi.iroiroviewer.model.IroDispatchers
+import io.github.donggi.iroiroviewer.model.JpegLayout
+import io.github.donggi.iroiroviewer.model.MetadataLocation
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
@@ -90,12 +93,15 @@ object ExifReader {
         runCatching {
             // 덩이 길이가 터무니없는 원본은 정제하지 않는다 — '제거할 수 없다' 로 끝난다(null).
             check(ExifContainerGuard.allows(src))
-            src.inputStream().use { input -> dest.outputStream().use { input.copyTo(it) } }
+            // JPEG 은 주 그림의 EOI 에서 자르고 IPTC(APP13)를 뺀다(`JpegLayout.copyForShare` — 여럿 골라 보내는 길과 같다).
+            dest.outputStream().use { JpegLayout.copyForShare(src, it) }
             val exif = ExifInterface(dest.absolutePath)
-            for (t in STRIPPED) exif.setAttribute(t, null)
-            // 방향은 남긴다. 지우면 사본이 눕는다 — '정보를 지우는 것' 이 '그림을 망치는 것'
-            // 이 되면 안 된다.
+            // 지우는 것은 여럿 골라 보내는 길(`ShareZips.cleanCopies`)과 한 벌이다(`ExifPrivacy.scrubForShare` — XMP 도 통째로).
+            // 방향은 남긴다. 지우면 사본이 눕는다 — '정보를 지우는 것' 이 '그림을 망치는 것' 이 되면 안 된다.
+            ExifPrivacy.scrubForShare(exif::setAttribute)
             exif.saveAttributes()
+            // 글로 적힌 위치가 남았으면(WebP 의 `XMP ` 청크 — 라이브러리가 지우지 못한다) 보내지 않는다 — '제거할 수 없다' 로 끝난다.
+            check(!MetadataLocation.fileHasLocation(dest))
             dest
         }.getOrElse {
             dest.delete()
@@ -104,8 +110,7 @@ object ExifReader {
     }
 
     /** 이 확장자에서 메타데이터를 지울 수 있는가. `jfif`·`jpe` 는 JPEG 의 다른 이름이다(목록이 그림으로 보는 이름과 맞춘다). */
-    fun canSanitize(name: String): Boolean =
-        name.substringAfterLast('.', "").lowercase() in setOf("jpg", "jpeg", "jfif", "jpe", "png", "webp")
+    fun canSanitize(name: String): Boolean = ExifPrivacy.canScrubCopy(name)
 
     /**
      * 이 파일에 **회전을 저장할 수 있는가.**
@@ -138,32 +143,4 @@ object ExifReader {
     } catch (e: IOException) {
         false
     }
-
-    /**
-     * 지우는 태그.
-     *
-     * 위치·일련번호·소유자·사용자 주석이 핵심이고, `MakerNote` 는 제조사가 무엇을 넣는지
-     * 공개하지 않으므로 통째로 지운다. EXIF 썸네일도 지운다 — 본문을 편집해도 썸네일에
-     * 옛 그림이 남는 것이 알려진 유출 경로다.
-     */
-    private val STRIPPED = listOf(
-        ExifInterface.TAG_GPS_LATITUDE,
-        ExifInterface.TAG_GPS_LATITUDE_REF,
-        ExifInterface.TAG_GPS_LONGITUDE,
-        ExifInterface.TAG_GPS_LONGITUDE_REF,
-        ExifInterface.TAG_GPS_ALTITUDE,
-        ExifInterface.TAG_GPS_ALTITUDE_REF,
-        ExifInterface.TAG_GPS_TIMESTAMP,
-        ExifInterface.TAG_GPS_DATESTAMP,
-        ExifInterface.TAG_GPS_PROCESSING_METHOD,
-        ExifInterface.TAG_GPS_AREA_INFORMATION,
-        ExifInterface.TAG_BODY_SERIAL_NUMBER,
-        ExifInterface.TAG_CAMERA_OWNER_NAME,
-        ExifInterface.TAG_MAKER_NOTE,
-        ExifInterface.TAG_USER_COMMENT,
-        ExifInterface.TAG_IMAGE_DESCRIPTION,
-        ExifInterface.TAG_ARTIST,
-        ExifInterface.TAG_COPYRIGHT,
-        ExifInterface.TAG_SUBJECT_LOCATION,
-    )
 }

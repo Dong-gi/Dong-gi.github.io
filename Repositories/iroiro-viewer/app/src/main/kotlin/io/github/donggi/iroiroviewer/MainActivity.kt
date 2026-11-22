@@ -426,7 +426,8 @@ internal fun Root(modifier: Modifier = Modifier, opened: Opened? = null) {
             }
             vm.opResults.collect { finished ->
                 vm.onOperationFinished(finished)
-                if (finished.kind == FileOpManager.Kind.SHARE_ZIP) {
+                // 갤러리의 '위치 지우고 공유'(SHARE_CLEAN)도 같은 길이다 — 다 만들면 공유 창을 띄운다(`finishShareZip` 이 가른다).
+                if (finished.kind == FileOpManager.Kind.SHARE_ZIP || finished.kind == FileOpManager.Kind.SHARE_CLEAN) {
                     if (opened != null) {
                         ShareZipHandoff.hold(finished)
                     } else if (handleShareZip(finished)) {

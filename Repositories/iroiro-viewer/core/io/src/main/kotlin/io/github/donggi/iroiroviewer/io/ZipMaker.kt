@@ -168,6 +168,11 @@ object ZipMaker {
         limits: Limits? = null,
         /** 담지 않을 이름(마지막 조각) — 묶어 보내기의 숨김 규칙([ShareZips.excludes]). 뺀 것은 '건너뜀' 에 든다. null 이면 거르지 않는다(ZIP 만들기). */
         exclude: ((String) -> Boolean)? = null,
+        /**
+         * 맨 위 이름이 겹치면 `이름 (2).확장자` 로 바꿔 담는다([uniqueTopLevel]). 고른 것이 **여러 폴더에서 온** 묶음(갤러리)만 켠다 — 같은
+         * 폴더의 것은 이름이 겹칠 수 없다. 끄면 겹친 이름이 `ZipException: duplicate entry` 로 묶기 전체를 실패시킨다.
+         */
+        uniqueTopNames: Boolean = false,
         /** ZIP 을 놓은 순간에 불린다(`NewFiles.place`) — 그 뒤에 온 취소가 결과를 버려도 큐가 '놓였다' 를 안다. */
         onPlaced: (Result) -> Unit = {},
     ): Result = withContext(IroDispatchers.io) {
@@ -188,7 +193,7 @@ object ZipMaker {
         // 죽은 프로세스가 남긴 임시본을 걷는다(복사와 같다 — 한 시간 넘은 것만).
         AtomicFileWriter.sweepPartials(dir)
 
-        val plan = plan(sources, exclude = exclude)
+        val plan = plan(sources, exclude = exclude).let { if (uniqueTopNames) it.copy(items = uniqueTopLevel(it.items)) else it }
         if (plan.tooMany) {
             return@withContext Result(FileOpEngine.Outcome.Failed(FileOpEngine.Reason.TOO_MANY_ITEMS, zipName), null)
         }
@@ -447,6 +452,39 @@ object ZipMaker {
         // 이름 차례로 담는다 — 같은 폴더를 두 번 묶으면 같은 차례가 나오고, 푸는 쪽의 목록도 읽기 좋다.
         TreeWalk.walk(sources, fs, visitor, sorted = true, exclude = exclude, excludeRoots = true)
         return Plan(items, skipped, unreadable, tooMany)
+    }
+
+    /**
+     * 맨 위 이름(고른 것 하나하나의 이름)이 겹치지 않게 한다 — 같은 이름의 두 번째 것부터 `이름 (2).확장자`·`폴더 (2)/`. 겹침은 대소문자를
+     * 가리지 않고 본다(푸는 쪽이 윈도·FAT 일 수 있다). 폴더면 그 아래 항목의 앞 조각도 함께 바꾼다. 어느 고른 것에서 왔는지는 파일의 경로에서
+     * 이름의 꼬리를 떼어 안다(같은 이름의 둘이라도 뿌리 경로가 다르다). 판단만 — JVM 시험이 답한다.
+     */
+    internal fun uniqueTopLevel(items: List<Item>): List<Item> {
+        val taken = HashSet<String>()
+        val renamed = HashMap<String, String>() // 뿌리 경로 → 맨 위 이름
+        val out = ArrayList<Item>(items.size)
+        for (item in items) {
+            val rel = item.name.trimEnd('/')
+            val top = rel.substringBefore('/')
+            val path = item.file.path
+            val root = path.substring(0, path.length - (rel.length - top.length))
+            val unique = renamed.getOrPut(root) {
+                var candidate = top
+                var n = 2
+                while (!taken.add(candidate.lowercase(Locale.ROOT))) {
+                    candidate = numbered(top, n++, isDirectory = item.isDirectory && rel == top)
+                }
+                candidate
+            }
+            out += if (unique == top) item else item.copy(name = unique + item.name.substring(top.length))
+        }
+        return out
+    }
+
+    /** `사진.jpg` → `사진 (2).jpg`, 폴더·확장자 없는 이름 → `이름 (2)`. 점으로 시작하는 이름(`.hidden`)은 확장자로 보지 않는다. */
+    private fun numbered(name: String, n: Int, isDirectory: Boolean): String {
+        val dot = name.lastIndexOf('.')
+        return if (isDirectory || dot <= 0) "$name ($n)" else "${name.substring(0, dot)} ($n)${name.substring(dot)}"
     }
 
     // ---- 항목 -------------------------------------------------------------------

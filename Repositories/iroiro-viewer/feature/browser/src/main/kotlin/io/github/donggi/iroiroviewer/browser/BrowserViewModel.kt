@@ -110,6 +110,12 @@ class BrowserViewModel(
     private fun setSubScreen(value: String) {
         // 휴지통을 떠나면 거기서 고른 것을 잊는다 — 다시 들어왔을 때 보이지 않던 선택이 남아 있으면 무엇을 되돌리는지 모른다.
         if (value != SUB_TRASH) clearTrashSelection()
+        // 갤러리를 떠나면 고른 것과 연 앨범을 잊는다(보기 — 날짜·앨범 — 는 남긴다). 사진을 여는 것은 갤러리를 떠나는 것이 아니다 — 이 값이
+        // 그대로라 뷰어에서 돌아오면 같은 앨범이다.
+        if (value != SUB_GALLERY) {
+            clearGallerySelection()
+            setGalleryAlbum(null)
+        }
         _subScreen.value = value
         saved[KEY_SUB_SCREEN] = value
     }
@@ -980,11 +986,149 @@ class BrowserViewModel(
                     is GalleryScanner.Scan.Ready -> scan.also {
                         lastGalleryReady = it
                         galleryCompleted.value = tick
+                        // 사라진 것을 고르기에서 뺀다(`GalleryRules.prune`) — 지운 뒤 '3개 선택' 이 남지 않게.
+                        _gallerySelection.update { picked -> GalleryRules.prune(picked, it.items) }
                     }
                     is GalleryScanner.Scan.Scanning -> lastGalleryReady ?: scan
                 }
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GalleryScanner.Scan.Scanning(0))
+
+    // ---- 갤러리: 날짜·앨범 보기와 여럿 고르기 ------------------------------
+
+    /**
+     * 갤러리의 보기 — 날짜([GALLERY_DATES]) 또는 앨범([GALLERY_ALBUMS]). 연 앨범([galleryAlbum])과 함께 **여기 두고 저장 상태에 얹는다** —
+     * 사진을 열면 갤러리 화면이 컴포지션에서 통째로 빠지므로 `rememberSaveable` 로는 뷰어에서 돌아왔을 때 앨범이 사라진다(함정 표).
+     */
+    private val _galleryView = MutableStateFlow(saved.get<String>(KEY_GALLERY_VIEW) ?: GALLERY_DATES)
+    val galleryView: StateFlow<String> = _galleryView.asStateFlow()
+
+    /** 연 앨범의 폴더 경로. null 이면 앨범 목록(또는 날짜 보기). */
+    private val _galleryAlbum = MutableStateFlow(saved.get<String>(KEY_GALLERY_ALBUM))
+    val galleryAlbum: StateFlow<String?> = _galleryAlbum.asStateFlow()
+
+    fun setGalleryView(view: String) {
+        if (view == _galleryView.value) return
+        // 보기를 바꾸면 보이는 것이 바뀐다 — 고른 것은 '지금 보고 있는 것' 에 대한 상태다(폴더 목록과 같다).
+        clearGallerySelection()
+        setGalleryAlbum(null)
+        _galleryView.value = view
+        saved[KEY_GALLERY_VIEW] = view
+    }
+
+    fun openAlbum(folder: String) {
+        clearGallerySelection()
+        setGalleryAlbum(folder)
+    }
+
+    /** 앨범 목록으로 돌아간다. */
+    fun closeAlbum() = setGalleryAlbum(null)
+
+    private fun setGalleryAlbum(folder: String?) {
+        if (folder == null && _galleryAlbum.value != null) clearGallerySelection()
+        _galleryAlbum.value = folder
+        saved[KEY_GALLERY_ALBUM] = folder
+    }
+
+    /**
+     * 갤러리에서 고른 것(경로). 폴더 목록의 고르기([selection])와 따로 둔다 — 그쪽은 폴더 나열이 올 때마다 그 폴더에 없는 것을 지운다.
+     * **저장 상태에 넣지 않는다**(같은 까닭 — 1만 장을 다 고르면 번들이 바인더 한도를 넘는다).
+     */
+    private val _gallerySelection = MutableStateFlow<Set<String>>(emptySet())
+    val gallerySelection: StateFlow<Set<String>> = _gallerySelection.asStateFlow()
+
+    fun toggleGallerySelection(path: String) {
+        _gallerySelection.update { if (path in it) it - path else it + path }
+    }
+
+    /** '전체 선택' — 보이는 것(날짜 보기면 전부, 앨범이면 그 앨범)을 모두 고르거나 모두 푼다([SelectAll]). */
+    fun toggleGallerySelectAll(paths: List<String>) {
+        _gallerySelection.value = SelectAll.toggled(_gallerySelection.value, paths)
+    }
+
+    fun clearGallerySelection() {
+        _gallerySelection.value = emptySet()
+    }
+
+    /** 갤러리의 뒤로 가기 한 번([GalleryRules.back]). */
+    fun galleryBack() {
+        when (GalleryRules.back(_gallerySelection.value.isNotEmpty(), _galleryAlbum.value != null)) {
+            GalleryRules.Back.CLEAR_SELECTION -> clearGallerySelection()
+            GalleryRules.Back.CLOSE_ALBUM -> setGalleryAlbum(null)
+            GalleryRules.Back.CLOSE_GALLERY -> closeSubScreen()
+        }
+    }
+
+    /**
+     * 갤러리에서 고른 것을 휴지통으로. 결과(되돌리기 단추)는 여느 삭제처럼 앱의 결과 줄이 말한다. 썸네일 열쇠는 항목의 크기·시각으로 **주 스레드
+     * 밖에서** 셈한 뒤 넣는다([enqueueWithThumbKeys] — 수천 개를 고른 삭제가 주 스레드에서 파일을 하나하나 보지 않게).
+     */
+    fun trashFromGallery(entries: List<FileEntry>) {
+        if (entries.isEmpty()) return
+        clearGallerySelection()
+        enqueueWithThumbKeys(entries) { id -> FileOpManager.Request.Trash(id, entries.map { it.path }) }
+    }
+
+    /**
+     * 갤러리에서 고른 것을 **옮기려고** 붙여넣기 바에 올린다 — 폴더 목록의 '이동' 과 같은 길(클립보드 + 붙여넣기 바). 갤러리를 닫는다 — 바는 폴더
+     * 화면에 뜬다. 어디서 붙여넣는지 한 줄로 알린다.
+     */
+    fun moveFromGallery(paths: List<String>) {
+        if (paths.isEmpty()) return
+        _clipboard.value = Clipboard(paths, move = true)
+        closeSubScreen()
+        val text = getApplication<Application>().getString(R.string.browser_gallery_move_hint)
+        viewModelScope.launch { snackbar.showSnackbar(text) }
+    }
+
+    /**
+     * 갤러리에서 고른 것을 ZIP 하나로 묶어 보낸다 — 파일 목록의 'ZIP으로 묶어 보내기' 와 같은 길(`Request.ShareZip`). 갤러리의 것은 숨김
+     * 파일이 아니다(훑기가 점으로 시작하는 이름을 담지 않는다). **여러 폴더에서 온 것이라 이름이 겹칠 수 있다** — 겹치면 `이름 (2).jpg` 로 담는다
+     * (`uniqueNames` — 끄면 ZIP 전체가 `duplicate entry` 로 실패한다).
+     *
+     * @param name 여럿일 때의 ZIP 이름 — 날짜 보기면 '갤러리', 앨범이면 그 앨범의 이름.
+     */
+    fun shareZipFromGallery(paths: List<String>, name: String, fallbackName: String) {
+        if (paths.isEmpty()) return
+        clearGallerySelection()
+        FileOpManager.enqueue(
+            getApplication(),
+            FileOpManager.Request.ShareZip(newOpId(), ArrayList(paths), name, fallbackName, showHidden = false, uniqueNames = true),
+        )
+    }
+
+    /** 고른 사진들의 **메타데이터를 지운 사본**을 만들어 보낸다(`Request.ShareClean` — 원본은 그대로). 다 만들면 앱의 결과 줄이 공유 창을 띄운다. */
+    fun shareCleanFromGallery(paths: List<String>) {
+        if (paths.isEmpty()) return
+        clearGallerySelection()
+        FileOpManager.enqueue(getApplication(), FileOpManager.Request.ShareClean(newOpId(), ArrayList(paths)))
+    }
+
+    /**
+     * 고른 사진들의 **원본에서 위치를 지운다**(`Request.StripLocation`). 원본을 바꾸는 일이라 화면이 먼저 묻는다. 수정 시각은 그대로지만 크기가
+     * 바뀌므로 옛 썸네일은 지운다(키가 달라진다 — 남으면 총량 청소까지 자리만 차지한다).
+     */
+    fun stripLocationFromGallery(entries: List<FileEntry>) {
+        if (entries.isEmpty()) return
+        clearGallerySelection()
+        enqueueWithThumbKeys(entries) { id -> FileOpManager.Request.StripLocation(id, ArrayList(entries.map { it.path })) }
+    }
+
+    /**
+     * 썸네일 열쇠(`sha256(경로·크기·시각)`)를 **항목의 값으로**(파일을 다시 보지 않고) 기본 디스패처에서 셈해 적어 둔 뒤 요청을 넣는다. 작업이 끝나면
+     * [onOperationFinished] 가 그 열쇠를 지운다. 적기 전에 결과가 오는 일은 없다 — 넣는 것이 적은 뒤다.
+     */
+    private fun enqueueWithThumbKeys(entries: List<FileEntry>, request: (String) -> FileOpManager.Request) {
+        val id = newOpId()
+        val app = getApplication<Application>()
+        viewModelScope.launch {
+            val keys = withContext(Dispatchers.Default) {
+                entries.filter { !it.isDirectory }.map { it.path to ThumbnailStore.keyOf(it.path, it.size, it.lastModified) }
+            }
+            if (keys.isNotEmpty()) pendingThumbKeys[id] = keys
+            FileOpManager.enqueue(app, request(id))
+        }
+    }
 
     /**
      * 폴더 목록을 모으고(썸네일 청소·선택 줄이기는 [onListingArrived]), 보고 있는 폴더를 듣는다.
@@ -1356,6 +1500,14 @@ class BrowserViewModel(
         const val SUB_TRASH = "trash"
 
         private const val KEY_SUB_SCREEN = "browser.sub"
+        private const val KEY_GALLERY_VIEW = "browser.gallery.view"
+        private const val KEY_GALLERY_ALBUM = "browser.gallery.album"
+
+        /** 갤러리의 보기 — 찍은 날로 묶은 격자. */
+        const val GALLERY_DATES = "dates"
+
+        /** 갤러리의 보기 — 폴더마다 한 칸(앨범). */
+        const val GALLERY_ALBUMS = "albums"
         private const val KEY_STACK = "browser.stack"
 
         /**

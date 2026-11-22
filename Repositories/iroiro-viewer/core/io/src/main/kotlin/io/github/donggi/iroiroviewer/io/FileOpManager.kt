@@ -140,6 +140,30 @@ object FileOpManager {
         }
 
         /**
+         * 사진 여럿의 **원본에서 위치(GPS) 태그만** 지운다(갤러리에서 여럿 골라 '원본에서 위치 지우기'). 실체는 [FileOpEngine.stripLocation] —
+         * 회전과 같은 다섯 걸음(임시본 → 태그 → 잘림 검사 → fsync → 수정 시각 되살림 → rename). 원본을 바꾸는 일이라 이 큐를 지난다.
+         * 결과는 [Extra.LocationStripped](갈래별 셈).
+         */
+        data class StripLocation(override val id: String, val paths: List<String>) : Request {
+            override val label get() = paths.firstOrNull().orEmpty()
+
+            // 경로를 `toString`(로그·예외)에 싣지 않는다.
+            override fun toString(): String = "StripLocation(id=$id, items=${paths.size})"
+        }
+
+        /**
+         * 사진 여럿의 **메타데이터를 지운 사본**을 앱 캐시에 만들어 **다른 앱에 보낼 준비**를 한다(갤러리에서 여럿 골라 '위치 지우고 공유').
+         * 원본은 건드리지 않는다. 실체는 [ShareZips.cleanCopies](자리·수명이 묶어 보내기와 같다). 다 만들면 결과([Extra.ShareCopies])가 사본의
+         * 경로들을 싣고, 결과를 받는 화면이 공유 창을 띄운다(묶어 보내기와 같은 길).
+         */
+        data class ShareClean(override val id: String, val paths: List<String>) : Request {
+            override val label get() = paths.firstOrNull().orEmpty()
+
+            // 경로를 `toString`(로그·예외)에 싣지 않는다.
+            override fun toString(): String = "ShareClean(id=$id, items=${paths.size})"
+        }
+
+        /**
          * 아카이브를 푼다. **이 큐를 지나는 이유는 복사·이동과 같다** — 사용자 저장소에
          * 쓰는 작업이고, 직렬화하지 않으면 같은 폴더를 두 작업이 동시에 만진다.
          *
@@ -215,6 +239,8 @@ object FileOpManager {
             val folderName: String,
             val fallbackName: String,
             val showHidden: Boolean,
+            /** 여러 폴더에서 고른 것이다(갤러리) — 겹친 이름을 `(2)` 로 바꿔 담는다. 파일 목록의 고른 것은 한 폴더라 끈다. */
+            val uniqueNames: Boolean = false,
         ) : Request {
             override val label get() = folderName
 
@@ -522,6 +548,12 @@ object FileOpManager {
         /** 묶어 보내기([Request.ShareZip])가 앱 캐시에 만든 ZIP. 결과를 받는 화면이 이것을 공유 창에 싣는다. */
         data class ShareReady(val path: String) : Extra
 
+        /** '위치 지우고 공유'([Request.ShareClean])가 앱 캐시에 만든 사본들(고른 차례). 결과를 받는 화면이 이것을 공유 창에 싣는다. */
+        data class ShareCopies(val paths: List<String>) : Extra
+
+        /** '원본에서 위치 지우기'([Request.StripLocation])의 셈 — 지웠다·위치가 없었다·지울 수 없는 형식·실패. */
+        data class LocationStripped(val tally: FileOpEngine.LocationTally) : Extra
+
         /** 'Files에 저장'([Request.SaveIncoming])이 놓은 파일들의 실제 경로(지금까지 — 중간에 취소돼도 이미 놓은 것)와 그 폴더. */
         data class Received(val dir: String, val dirLabel: String, val paths: List<String>) : Extra
 
@@ -571,7 +603,7 @@ object FileOpManager {
         fun offer(finished: Finished): Boolean
     }
 
-    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, SHARE_ZIP, RECEIVE, CROP, MARKUP, CLIP, AUDIO, CAPTURE, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC, PDF_EXTRACT, PDF_MERGE, PDF_LOCK, PDF_UNLOCK }
+    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, SHARE_ZIP, SHARE_CLEAN, STRIP_LOCATION, RECEIVE, CROP, MARKUP, CLIP, AUDIO, CAPTURE, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC, PDF_EXTRACT, PDF_MERGE, PDF_LOCK, PDF_UNLOCK }
 
     private val _state = MutableStateFlow<State>(State.Idle)
     val state: StateFlow<State> = _state.asStateFlow()
@@ -931,6 +963,11 @@ object FileOpManager {
                 trash.restoreTo(request.uuids, request.dest, request.conflict, volumes, engine, onProgress)
             is Request.Purge -> trash.purge(request.uuids, volumes, engine).toOutcome()
             is Request.RotateExif -> engine.reorientExif(request.path, request.transform)
+            // 위치 지우기 — 파일마다의 셈을 결과에 싣는다(중간에 취소돼도 바꾼 만큼 — 원본 자리라 '취소했다' 만 말하면 거짓이다).
+            is Request.StripLocation -> engine.stripLocation(request.paths, onProgress) { tally ->
+                onExtra(Extra.LocationStripped(tally))
+                if (tally.stripped > 0) onPlaced(FileOpEngine.Outcome.Done(tally.stripped, tally.skipped, tally.failed))
+            }
             is Request.Extract -> {
                 // 꽂히지 않았으면 **실패로 끝낸다.** 조용히 성공을 보고하면 사용자가
                 // '풀었다' 고 믿고 원본 아카이브를 지울 수 있다.
@@ -959,8 +996,18 @@ object FileOpManager {
                 // 놓인 뒤에 온 취소는 결과를 버리지만 ZIP 은 거기 있다 — 놓은 자리에서 알린다(위와 같다).
                 val result = ShareZips.make(
                     context, request.sources, request.folderName, request.fallbackName, request.showHidden, onProgress,
-                ) { r ->
-                    r.path?.let { onExtra(Extra.ShareReady(it)) }
+                    onPlaced = { r ->
+                        r.path?.let { onExtra(Extra.ShareReady(it)) }
+                        onPlaced(r.outcome)
+                    },
+                    uniqueNames = request.uniqueNames,
+                )
+                result.outcome
+            }
+            is Request.ShareClean -> {
+                // 다 만든 뒤에 온 취소는 결과를 버리지만 사본은 거기 있다 — 놓은 자리에서 알린다(위와 같다).
+                val result = ShareZips.cleanCopies(context, request.paths, onProgress) { r ->
+                    onExtra(Extra.ShareCopies(r.paths))
                     onPlaced(r.outcome)
                 }
                 result.outcome
@@ -1038,6 +1085,8 @@ object FileOpManager {
         is Request.Restore, is Request.RestoreTo -> Kind.RESTORE
         is Request.Purge -> Kind.PURGE
         is Request.RotateExif -> Kind.ROTATE
+        is Request.StripLocation -> Kind.STRIP_LOCATION
+        is Request.ShareClean -> Kind.SHARE_CLEAN
         is Request.Extract -> Kind.EXTRACT
         is Request.Compress -> Kind.COMPRESS
         is Request.ShareZip -> Kind.SHARE_ZIP

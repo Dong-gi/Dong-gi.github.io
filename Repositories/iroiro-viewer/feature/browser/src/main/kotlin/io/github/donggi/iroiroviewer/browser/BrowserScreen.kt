@@ -114,8 +114,8 @@ import kotlinx.coroutines.withContext
 /**
  * 파일 브라우저.
  *
- * 뒤로가기 우선순위를 **여기 한 곳에서** 정한다: 휴지통의 선택 해제 → 휴지통 닫기 → 선택 해제 →
- * 이름 필터 → 상위 폴더 → 홈 → 앱 종료. 화면마다 `BackHandler` 를 흩어 두면 어느 것이 먼저 먹는지
+ * 뒤로가기 우선순위를 **여기 한 곳에서** 정한다: 휴지통의 선택 해제 → 휴지통 닫기 → 갤러리(고르기 풀기 → 앨범 닫기 → 갤러리 닫기 —
+ * [GalleryRules.back]) → 선택 해제 → 이름 필터 → 상위 폴더 → 홈 → 앱 종료. 화면마다 `BackHandler` 를 흩어 두면 어느 것이 먼저 먹는지
  * 아무도 모르게 된다.
  *
  * 작업 결과는 여기서 받지 않는다 — `app` 의 Root 가 한 곳에서 받는다(아래 `snackbar` 주석).
@@ -169,7 +169,8 @@ fun BrowserScreen(
         when {
             // 휴지통에서 고르는 중이면 고르기를 먼저 푼다 — 폴더 목록의 선택과 같은 차례다.
             showTrash && trashSelection.isNotEmpty() -> vm.clearTrashSelection()
-            showGallery || showTrash -> vm.closeSubScreen()
+            showGallery -> vm.galleryBack()
+            showTrash -> vm.closeSubScreen()
             selection.isNotEmpty() -> vm.clearSelection()
             filtering -> vm.setFiltering(false)
             vm.up() -> Unit
@@ -189,7 +190,6 @@ fun BrowserScreen(
                 // 영상은 폴더 목록과 같은 길로 재생 화면을 연다. 큐는 **그 하나**다 — 갤러리의 영상은 여러 폴더에 흩어져 있어
                 // '다음' 이 무엇인지 정할 근거가 없고, 자막 후보도 그 폴더를 다시 나열해야 한다(목록이 없는 자리다).
                 onPlay = { e -> playFolderFrom(context, e, listOf(e), emptyMap()) },
-                onBack = { vm.closeSubScreen() },
                 modifier = modifier,
             )
         }
@@ -248,8 +248,10 @@ fun opResultMessage(context: android.content.Context, f: FileOpManager.Finished)
     // 잘라 저장·구간 저장은 그 작업을 만든 `core:io` 가 말한다 — 재생 화면도 같은 문장을 쓴다(`FileOpText`). 글 편집의 저장·새 글
     // 파일도, 오피스 문서의 저장·새 문서도 — 보통은 편집 화면·이름 칸이 직접 받고, 그 화면이 사라진 뒤에 끝난 것만 여기로 온다.
     // 'Files에 저장' 도 — 받는 화면이 직접 받고, 그 화면이 사라진 뒤에 끝난 것만 여기로 온다. PDF 잠그기·풀기도(뷰어가 받는다).
+    // 갤러리의 '원본에서 위치 지우기' 도 `core:io` 가 말한다(갈래별 셈).
     FileOpText.savedMessage(context, f) ?: FileOpText.textMessage(context, f) ?: FileOpText.docMessage(context, f) ?:
-        FileOpText.receivedMessage(context, f) ?: FileOpText.pdfLockMessage(context, f) ?: when (val o = f.outcome) {
+        FileOpText.receivedMessage(context, f) ?: FileOpText.pdfLockMessage(context, f) ?: FileOpText.locationMessage(context, f) ?:
+        when (val o = f.outcome) {
         is FileOpEngine.Outcome.Cancelled -> context.getString(R.string.browser_op_cancelled)
         is FileOpEngine.Outcome.Failed -> {
             val why = context.getString(reasonStringId(o.reason))
@@ -294,6 +296,8 @@ data class ShareZipFollowUp(val now: String?, val later: String?)
  * 뒤에서 공유 창이 뜨지 않는다.
  */
 fun finishShareZip(context: android.content.Context, f: FileOpManager.Finished, chooserTitle: String): ShareZipFollowUp {
+    // 갤러리의 '위치 지우고 공유' 도 같은 길로 온다 — 다 만든 사본 여럿을 싣는다.
+    if (f.kind == FileOpManager.Kind.SHARE_CLEAN) return finishShareClean(context, f, chooserTitle)
     val ready = f.extra as? FileOpManager.Extra.ShareReady
     return when (ShareFolders.after(f.outcome, f.extra)) {
         ShareFolders.After.CANCELLED -> ShareZipFollowUp(context.getString(R.string.browser_op_cancelled), null)
@@ -326,6 +330,52 @@ fun finishShareZip(context: android.content.Context, f: FileOpManager.Finished, 
                         null
                     } else {
                         (listOf(context.getString(R.string.browser_share_zip_left_out)) + parts).joinToString(" · ")
+                    }
+                    ShareZipFollowUp(null, later)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * '위치 지우고 공유'([FileOpManager.Kind.SHARE_CLEAN])가 끝났다 — 사본을 만들었으면 공유 창을 띄운다. 할 일은 [ShareFolders.afterClean]. 빠진 것
+ * (지울 수 없는 형식 — 영상·HEIC 따위, 못 읽은 것)은 공유 창을 닫고 돌아와서 말한다(묶어 보내기와 같다).
+ */
+private fun finishShareClean(context: android.content.Context, f: FileOpManager.Finished, chooserTitle: String): ShareZipFollowUp {
+    val copies = (f.extra as? FileOpManager.Extra.ShareCopies)?.paths.orEmpty()
+    return when (ShareFolders.afterClean(f.outcome, f.extra)) {
+        ShareFolders.After.CANCELLED -> ShareZipFollowUp(context.getString(R.string.browser_op_cancelled), null)
+        ShareFolders.After.FAILED -> ShareZipFollowUp(
+            context.getString(reasonStringId((f.outcome as FileOpEngine.Outcome.Failed).reason)),
+            null,
+        )
+        ShareFolders.After.NOTHING -> ShareZipFollowUp(context.getString(R.string.browser_share_clean_nothing), null)
+        ShareFolders.After.SHARE, ShareFolders.After.SHARE_WITH_SKIPS -> {
+            // 지울 때를 공유한 때부터 다시 센다(`ShareZips.touch` — 사본들은 한 자리에 있다).
+            copies.firstOrNull()?.let { ShareZips.touch(it) }
+            val present = copies.filter { File(it).isFile }
+            when {
+                // 그새 지워졌다(시스템이 캐시를 비웠을 수 있다).
+                present.isEmpty() -> ShareZipFollowUp(context.getString(R.string.browser_share_clean_gone), null)
+                !ShareHelper.share(context, present, chooserTitle) ->
+                    ShareZipFollowUp(context.getString(R.string.browser_share_failed), null)
+                else -> {
+                    val done = f.outcome as FileOpEngine.Outcome.Done
+                    val parts = ShareFolders.leftOut(done.skipped, done.failed).map { (kind, n) ->
+                        context.getString(
+                            when (kind) {
+                                ShareFolders.LeftOut.SKIPPED -> R.string.browser_share_clean_unsupported
+                                // 못 읽었거나, 다 쓴 사본에 위치(XMP)가 남아 보내지 않은 것.
+                                ShareFolders.LeftOut.UNREADABLE -> R.string.browser_share_clean_failed
+                            },
+                            n,
+                        )
+                    }
+                    val later = if (parts.isEmpty()) {
+                        null
+                    } else {
+                        (listOf(context.getString(R.string.browser_share_clean_left_out)) + parts).joinToString(" · ")
                     }
                     ShareZipFollowUp(null, later)
                 }

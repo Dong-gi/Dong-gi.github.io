@@ -182,10 +182,23 @@
     <string name="browser_trash_unknown_origin">원래 위치를 모름 · 되돌리면 ‘%1$s’ 폴더로 꺼냅니다</string>
     <!-- 갤러리와 즐겨찾기 -->
     <string name="browser_gallery">갤러리</string>
-    <string name="browser_gallery_desc">DCIM · Pictures · Download 폴더의 사진과 영상</string>
+    <string name="browser_gallery_desc">DCIM · Pictures · Download · 메신저(Android/media)의 사진과 영상</string>
     <string name="browser_gallery_count">갤러리 %1$d개</string>
     <string name="browser_gallery_scanning">사진·영상 %1$d개 찾는 중</string>
     <string name="browser_gallery_empty">%1$s 폴더에서 사진·영상을 찾지 못했습니다</string>
+    <!-- 갤러리의 보기 전환(날짜 / 앨범)과 앨범 칸. -->
+    <string name="browser_gallery_view_dates">날짜</string>
+    <string name="browser_gallery_view_albums">앨범</string>
+    <string name="browser_gallery_album_count">%1$d개</string>
+    <!-- 갤러리에서 여럿 골라. 이동은 붙여넣기 바(폴더 화면)로 간다. -->
+    <string name="browser_gallery_move_hint">옮길 폴더를 열고 ‘여기에 붙여넣기’를 누르세요</string>
+    <string name="browser_gallery_share_clean">위치 지우고 공유</string>
+    <string name="browser_gallery_strip_location">원본에서 위치 지우기</string>
+    <string name="browser_gallery_strip_title">원본에서 위치를 지울까요?</string>
+    <string name="browser_gallery_strip_body">사진 %1$d장의 원본에서 위치(GPS) 정보를 지웁니다. 되돌릴 수 없습니다. XMP 등 EXIF 밖에 위치가 든 사진은 건너뜁니다.</string>
+    <string name="browser_gallery_strip_left">JPEG·WebP가 아닌 %1$d개는 그대로 둡니다.</string>
+    <string name="browser_gallery_share_too_many">한 번에 %1$d개까지 공유할 수 있습니다 — ‘ZIP으로 묶어 보내기’를 쓰세요</string>
+    <string name="browser_gallery_strip_confirm">지우기</string>
 
     <!--
         갤러리의 날짜 머리글. 오늘·어제는 이름으로 부르는 편이 날짜보다 빨리 읽힌다.
@@ -262,4 +275,10 @@
     <string name="browser_share_zip_unreadable">%1$d개 못 읽음</string>
     <string name="browser_share_zip_gone">묶은 ZIP이 지워졌습니다 — 다시 묶어 보내세요</string>
     <string name="browser_share_failed">공유 창을 띄우지 못했습니다</string>
+    <!-- 갤러리의 '위치 지우고 공유'(사본). 빠진 것은 공유 창을 닫고 돌아와서 말한다. -->
+    <string name="browser_share_clean_nothing">위치를 지울 수 있는 사진이 없습니다</string>
+    <string name="browser_share_clean_gone">사본이 지워졌습니다 — 다시 보내세요</string>
+    <string name="browser_share_clean_left_out">보내지 않은 것</string>
+    <string name="browser_share_clean_unsupported">위치를 지울 수 없는 형식 %1$d개</string>
+    <string name="browser_share_clean_failed">위치를 지우지 못한 것 %1$d개</string>
 </resources>

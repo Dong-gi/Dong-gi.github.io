@@ -130,6 +130,8 @@ class FileOpService : Service() {
                 FileOpManager.Kind.EXTRACT -> R.string.io_op_extracting
                 FileOpManager.Kind.COMPRESS -> R.string.io_op_compressing
                 FileOpManager.Kind.SHARE_ZIP -> R.string.io_op_share_zip
+                FileOpManager.Kind.SHARE_CLEAN -> R.string.io_op_share_clean
+                FileOpManager.Kind.STRIP_LOCATION -> R.string.io_op_strip_location
                 FileOpManager.Kind.RECEIVE -> R.string.io_op_receiving
                 FileOpManager.Kind.CROP -> R.string.io_op_cropping
                 FileOpManager.Kind.MARKUP -> R.string.io_op_markup

@@ -1,14 +1,23 @@
 package io.github.donggi.iroiroviewer.io
 
+import android.annotation.SuppressLint
 import android.content.Context
+import androidx.exifinterface.media.ExifInterface
+import io.github.donggi.iroiroviewer.model.ExifContainerGuard
+import io.github.donggi.iroiroviewer.model.ExifPrivacy
 import io.github.donggi.iroiroviewer.model.IroDispatchers
+import io.github.donggi.iroiroviewer.model.JpegLayout
+import io.github.donggi.iroiroviewer.model.MetadataLocation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.IOException
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -21,6 +30,9 @@ import java.util.concurrent.ConcurrentHashMap
  * 앱 캐시의 `share/zip/<무작위>/<이름>.zip`. `share/` 는 FileProvider 가 내보내는 캐시 자리다(`iro_file_paths.xml` 의 `cache-path`,
  * [ShareHelper] 의 허용 루트) — 새 자리를 열지 않는다. 무작위 폴더를 두는 것은 받는 쪽이 보는 이름을 고른 것의 이름(`사진.zip`)으로 두면서
  * 앞의 것과 겹치지 않게 하려는 것이다. 사용자 저장소에는 아무것도 남지 않는다.
+ *
+ * **갤러리의 '위치 지우고 공유' 도 같은 자리·같은 수명을 쓴다**([cleanCopies] — 메타데이터를 지운 사본 여럿). 보낼 것을 앱 캐시에 만들어
+ * 받는 앱에 넘긴다는 일이 같고, 언제 지울지 모른다는 사정도 같다.
  *
  * 묶는 일은 [ZipMaker] 그대로다 — 같은 훑기(링크·inode·깊이 64), 같은 임시본·끝에 놓기, 읽다 실패하면 전부 버리기, 쓰는 동안의 공간 지킴.
  * 파일 작업 큐를 지나므로 진행·취소·포그라운드 서비스도 같다. 암호는 걸지 않는다(받는 쪽이 열어야 한다).
@@ -91,7 +103,129 @@ object ShareZips {
         showHidden: Boolean,
         onProgress: (FileOpEngine.Progress) -> Unit,
         onPlaced: (ZipMaker.Result) -> Unit,
-    ): ZipMaker.Result {
+        /** 고른 것이 여러 폴더에서 왔다(갤러리) — 겹친 이름을 `(2)` 로 바꿔 담는다([ZipMaker.uniqueTopLevel]). */
+        uniqueNames: Boolean = false,
+    ): ZipMaker.Result = batch(context, failed = { ZipMaker.Result(it, null) }) { dir, keep ->
+        val name = withContext(IroDispatchers.io) { ZipMaker.baseName(sources.map(::File), folderName, fallbackName) }
+        val result = ZipMaker.make(
+            sources, dir.path, name, media = null, onProgress,
+            limits = ZipMaker.Limits(MAX_INPUT_BYTES, RESERVE_BYTES),
+            exclude = { excludes(it, showHidden) },
+            uniqueTopNames = uniqueNames,
+            onPlaced = { r ->
+                // 놓는 그 순간에 적는다 — 결과가 화면에 닿기 전(앱을 떠나 있었다)에 지우기가 돌아도 남게.
+                keep()
+                onPlaced(r)
+            },
+        )
+        if (result.path != null) keep()
+        result
+    }
+
+    /** 정제한 사본들([cleanCopies])의 결과. [paths] 가 받는 앱에 넘길 사본이다(고른 차례) — 하나도 못 만들었으면 비었다. */
+    data class CleanResult(val outcome: FileOpEngine.Outcome, val paths: List<String>)
+
+    /**
+     * 사진 여럿의 **메타데이터를 지운 사본**을 만든다(갤러리에서 여럿 골라 '위치 지우고 공유'). 원본은 건드리지 않는다 — 뷰어의 '메타데이터
+     * 제거하고 공유'(`ExifReader.sanitizedCopy`)를 여럿에 한 것이고, 지우는 것이 같다([ExifPrivacy.scrubForShare] — 위치 전부·일련번호·
+     * 소유자 따위와 **XMP 통째**. 방향은 남긴다). JPEG 사본은 **주 그림의 EOI 에서 자르고 IPTC(APP13)를 뺀다**([JpegLayout.copyForShare] — 모션
+     * 포토의 덧붙은 MP4 는 위치를 `©xyz` 글로 싣는다). 다 쓴 사본에 EXIF 밖의 위치([MetadataLocation.fileHasLocation])가 남았으면 그 사본은 보내지 않고 실패로 센다
+     * — ExifInterface 는 WebP 의 `XMP ` 청크를 지우지 못한다(JPEG 의 따로 된 XMP 덩이·PNG 의 `iTXt` 는 지운다 — 1.4.2 바이트코드).
+     *
+     * 사본은 묶어 보내기와 같은 자리·같은 수명이다(`share/zip/<무작위>/<번호>/<원래 이름>` — 번호 폴더는 다른 폴더의 같은 이름이 겹치지
+     * 않게 하려는 것이다. 받는 쪽은 원래 이름을 본다). 파일마다 셋으로 갈린다 — 만들었다 / **건너뜀**(지울 수 없는 형식 — JPEG·PNG·WebP
+     * 가 아니거나 덩이 길이가 터무니없다. 영상·HEIC 가 여기 든다) / 못 읽음(실패). 건너뛴 것을 원본 그대로 싣지 않는다 — 위치를 지우겠다고
+     * 고른 사람에게 위치가 든 원본을 보내는 셈이다. 다시 쓴 사본이 잘렸으면(디스크가 찼다 — 함정 표의 `saveAttributes`) 그 사본은 버린다
+     * ([FileOpEngine.rewrittenWhole]).
+     *
+     * 담을 원본의 합이 [MAX_INPUT_BYTES] 를 넘거나 캐시 볼륨에 그만큼 + [RESERVE_BYTES] 가 없으면 시작하지 않는다(묶어 보내기와 같은 한계).
+     */
+    suspend fun cleanCopies(
+        context: Context,
+        sources: List<String>,
+        onProgress: (FileOpEngine.Progress) -> Unit,
+        onPlaced: (CleanResult) -> Unit,
+    ): CleanResult = batch(context, failed = { CleanResult(it, emptyList()) }) { dir, keep ->
+        withContext(IroDispatchers.io) {
+            val files = sources.map(::File)
+            val candidates = files.filter { it.isFile && ExifPrivacy.canScrubCopy(it.name) }
+            val inputBytes = candidates.sumOf { it.length() }
+            ZipMaker.admit(inputBytes, usableSpaceOf(dir), ZipMaker.Limits(MAX_INPUT_BYTES, RESERVE_BYTES))?.let { reason ->
+                return@withContext CleanResult(FileOpEngine.Outcome.Failed(reason, ""), emptyList())
+            }
+            val made = ArrayList<String>()
+            var skipped = 0
+            var failed = 0
+            var done = 0L
+            for ((i, src) in files.withIndex()) {
+                currentCoroutineContext().ensureActive()
+                onProgress(FileOpEngine.Progress(done, inputBytes, i, files.size, src.name))
+                when (val r = cleanOne(src, File(dir, i.toString()))) {
+                    null -> skipped++
+                    is CopyResult.Made -> {
+                        made += r.path
+                        done += src.length()
+                    }
+                    CopyResult.Failed -> failed++
+                }
+            }
+            onProgress(FileOpEngine.Progress(done, inputBytes, files.size, files.size, ""))
+            val result = CleanResult(FileOpEngine.Outcome.Done(made.size, skipped, failed), made)
+            if (made.isNotEmpty()) {
+                keep()
+                onPlaced(result)
+            }
+            result
+        }
+    }
+
+    private sealed interface CopyResult {
+        data class Made(val path: String) : CopyResult
+        data object Failed : CopyResult
+    }
+
+    /** 한 장 — [slot] 폴더에 사본을 만들고 태그를 지운다. 지울 수 없는 형식이면 null(건너뜀). 실패면 [slot] 을 지운다. */
+    private fun cleanOne(src: File, slot: File): CopyResult? {
+        if (!src.isFile) return CopyResult.Failed
+        if (!ExifPrivacy.canScrubCopy(src.name)) return null
+        val guarded = try {
+            ExifContainerGuard.allows(src)
+        } catch (e: IOException) {
+            return CopyResult.Failed
+        }
+        if (!guarded) return null
+        val dest = File(slot, src.name)
+        return try {
+            if (!slot.mkdirs()) throw IOException("자리를 만들지 못했다")
+            // JPEG 은 주 그림의 EOI 에서 자르고 IPTC(APP13)를 뺀다 — 모션 포토의 덧붙은 MP4(위치가 `©xyz` 글로 든다)가 실리지 않게.
+            dest.outputStream().use { JpegLayout.copyForShare(src, it) }
+            val tail = FileOpEngine.jpegTailOf(dest)
+            val exif = ExifInterface(dest.absolutePath)
+            ExifPrivacy.scrubForShare(exif::setAttribute)
+            exif.saveAttributes()
+            if (!FileOpEngine.rewrittenWhole(dest, tail)) throw IOException("사본이 잘렸다")
+            // 글로 적힌 위치(XMP — 지우지 못한 WebP 의 `XMP ` 청크 따위)가 남았으면 보내지 않는다.
+            if (MetadataLocation.fileHasLocation(dest)) throw IOException("사본에 위치가 남았다")
+            CopyResult.Made(dest.path)
+        } catch (e: IOException) {
+            slot.deleteRecursively()
+            CopyResult.Failed
+        } catch (e: RuntimeException) {
+            // 파서가 무너진 사본 — 원본은 그대로다. 보내지 않는다.
+            slot.deleteRecursively()
+            CopyResult.Failed
+        }
+    }
+
+    /**
+     * 묶어 보내기의 자리 하나에서 일한다 — 오래된 것을 치우고, `<무작위>` 폴더를 만들어 [body] 에 주고, [body] 가 남기라고(`keep`) 하지
+     * 않았으면 끝에 지운다. 남긴 것은 공유 창을 띄울 때까지 지우기가 건드리지 않는다([unshown]).
+     */
+    private suspend fun <T> batch(
+        context: Context,
+        failed: (FileOpEngine.Outcome) -> T,
+        body: suspend (dir: File, keep: () -> Unit) -> T,
+    ): T {
         val app = context.applicationContext
         val dir = File(rootOf(app), UUID.randomUUID().toString())
         var kept = false
@@ -99,24 +233,11 @@ object ShareZips {
             withContext(IroDispatchers.io) { purgeStale(app) }
             active = dir
             val made = withContext(IroDispatchers.io) { dir.mkdirs() }
-            if (!made) return ZipMaker.Result(FileOpEngine.Outcome.Failed(FileOpEngine.Reason.NO_SPACE, ""), null)
-            val name = withContext(IroDispatchers.io) { ZipMaker.baseName(sources.map(::File), folderName, fallbackName) }
-            val result = ZipMaker.make(
-                sources, dir.path, name, media = null, onProgress,
-                limits = ZipMaker.Limits(MAX_INPUT_BYTES, RESERVE_BYTES),
-                exclude = { excludes(it, showHidden) },
-                onPlaced = { r ->
-                    kept = true
-                    // 놓는 그 순간에 적는다 — 결과가 화면에 닿기 전(앱을 떠나 있었다)에 지우기가 돌아도 남게.
-                    unshown += dir.path
-                    onPlaced(r)
-                },
-            )
-            if (result.path != null) {
+            if (!made) return failed(FileOpEngine.Outcome.Failed(FileOpEngine.Reason.NO_SPACE, ""))
+            return body(dir) {
                 kept = true
                 unshown += dir.path
             }
-            return result
         } finally {
             active = null
             withContext(NonCancellable) {
@@ -126,16 +247,30 @@ object ShareZips {
         }
     }
 
+    /** 남은 공간. 보수적인 값이 맞는 자리다(`ZipMaker` 와 같은 까닭으로 lint 를 끈다). */
+    @SuppressLint("UsableSpace")
+    private fun usableSpaceOf(dir: File): Long = dir.usableSpace
+
     /**
-     * 공유 창을 띄운다 — 지울 때를 지금부터 다시 센다. [unshown] 에서 빼고 폴더의 시각을 지금으로 둔다. [zip] 이 묶어 보내기의 자리
-     * 밖이면 아무것도 하지 않는다.
+     * 공유 창을 띄운다 — 지울 때를 지금부터 다시 센다. [unshown] 에서 빼고 그 자리(`<무작위>` 폴더)의 시각을 지금으로 둔다. [path] 는
+     * 그 자리 안의 파일(묶은 ZIP, 또는 정제한 사본 하나)이다. 묶어 보내기의 자리 밖이면 아무것도 하지 않는다.
      */
-    fun touch(zip: String) {
-        val dir = File(zip).parentFile ?: return
-        if (dir.parentFile?.name != DIR) return
+    fun touch(path: String) {
+        val dir = batchDirOf(File(path)) ?: return
         // 시각을 먼저 고치고 목록에서 뺀다 — 거꾸로면 그 사이에 돈 정리가 한 시간 넘은 묶음을 띄우는 순간에 지울 수 있다.
         dir.setLastModified(System.currentTimeMillis())
         unshown -= dir.path
+    }
+
+    /** [file] 이 든 `<무작위>` 폴더 — 부모의 이름이 [DIR] 인 첫 조상(두 겹까지 올라간다). 없으면 null. */
+    internal fun batchDirOf(file: File): File? {
+        var dir = file.parentFile
+        repeat(2) {
+            val d = dir ?: return null
+            if (d.parentFile?.name == DIR) return d
+            dir = d.parentFile
+        }
+        return null
     }
 
     /** 공유 창을 띄운 지 [KEEP_MS] 지난 묶음을 지운다. 지금 묶는 자리와 아직 띄우지 않은 것은 둔다. */
