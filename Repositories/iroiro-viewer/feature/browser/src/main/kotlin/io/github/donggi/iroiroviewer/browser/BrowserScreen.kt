@@ -247,9 +247,9 @@ private fun newDocBase(kind: String): Int = when (kind) {
 fun opResultMessage(context: android.content.Context, f: FileOpManager.Finished): String =
     // 잘라 저장·구간 저장은 그 작업을 만든 `core:io` 가 말한다 — 재생 화면도 같은 문장을 쓴다(`FileOpText`). 글 편집의 저장·새 글
     // 파일도, 오피스 문서의 저장·새 문서도 — 보통은 편집 화면·이름 칸이 직접 받고, 그 화면이 사라진 뒤에 끝난 것만 여기로 온다.
-    // 'Files에 저장' 도 — 받는 화면이 직접 받고, 그 화면이 사라진 뒤에 끝난 것만 여기로 온다.
+    // 'Files에 저장' 도 — 받는 화면이 직접 받고, 그 화면이 사라진 뒤에 끝난 것만 여기로 온다. PDF 잠그기·풀기도(뷰어가 받는다).
     FileOpText.savedMessage(context, f) ?: FileOpText.textMessage(context, f) ?: FileOpText.docMessage(context, f) ?:
-        FileOpText.receivedMessage(context, f) ?: when (val o = f.outcome) {
+        FileOpText.receivedMessage(context, f) ?: FileOpText.pdfLockMessage(context, f) ?: when (val o = f.outcome) {
         is FileOpEngine.Outcome.Cancelled -> context.getString(R.string.browser_op_cancelled)
         is FileOpEngine.Outcome.Failed -> {
             val why = context.getString(reasonStringId(o.reason))

@@ -152,6 +152,32 @@ object FileOpText {
     }
 
     /**
+     * PDF 잠그기·풀기의 결과 한 줄([FileOpManager.Kind.PDF_LOCK]·[FileOpManager.Kind.PDF_UNLOCK]). 그 밖의 작업이면 null. 뷰어가 직접 받고, 뷰어가
+     * 사라진 뒤에 끝난 것은 파일 목록의 결과 줄이 말한다 — 같은 문장이다.
+     */
+    fun pdfLockMessage(context: Context, f: FileOpManager.Finished): String? {
+        val lock = f.kind == FileOpManager.Kind.PDF_LOCK
+        if (!lock && f.kind != FileOpManager.Kind.PDF_UNLOCK) return null
+        return when (val o = f.outcome) {
+            is FileOpEngine.Outcome.Cancelled -> context.getString(R.string.io_save_cancelled)
+            is FileOpEngine.Outcome.Failed -> context.getString(pdfLockReasonRes(o.reason))
+            is FileOpEngine.Outcome.Done -> {
+                val extra = f.extra as? FileOpManager.Extra.PdfRelocked ?: return context.getString(R.string.io_error_io)
+                context.getString(if (lock) R.string.io_pdf_locked else R.string.io_pdf_unlocked, File(extra.path).name) +
+                    (if (extra.keptPrevious) context.getString(if (lock) R.string.io_pdf_kept_unlocked else R.string.io_pdf_kept) else "")
+            }
+        }
+    }
+
+    /** 잠금 바꾸기의 실패 까닭 — 둘은 이 일의 말로 바꾼다(바꾸기 전 판, 그사이 바뀜). 판단만 — JVM 시험이 답한다. */
+    @StringRes
+    internal fun pdfLockReasonRes(reason: FileOpEngine.Reason): Int = when (reason) {
+        FileOpEngine.Reason.PREVIOUS_NOT_KEPT -> R.string.io_error_previous_pdf_not_kept
+        FileOpEngine.Reason.CHANGED -> R.string.io_error_pdf_changed
+        else -> reasonRes(reason)
+    }
+
+    /**
      * 'Files에 저장'([FileOpManager.Kind.RECEIVE])의 결과 한 줄. 그 밖의 작업이면 null. 받는 화면이 직접 받아 알림(토스트)으로 말하고, 그 화면이
      * 사라진 뒤에 끝난 것은 파일 목록의 결과 줄이 말한다.
      */

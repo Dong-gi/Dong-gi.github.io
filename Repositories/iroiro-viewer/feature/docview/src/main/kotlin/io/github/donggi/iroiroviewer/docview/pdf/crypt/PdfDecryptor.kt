@@ -52,6 +52,13 @@ internal object PdfDecryptor {
     class TooLarge : Exception("복호화 결과가 상한을 넘었다")
 
     /**
+     * 원본에 읽지 못한 것이 있다 — **원본 자리를 바꾸는 다시 쓰기**([strict] — 잠그기·풀기)에서만 던진다. 읽지 못한 객체·잘린 스트림을 빼고 쓴 판으로
+     * 사용자 파일을 대체하지 않는다. xref 를 다시 세운 문서도 여기로 온다(원본을 우리가 '고친' 판으로 바꾸지 않는다). 뷰어의 메모리 파일은 그대로
+     * 너그럽다(보여 주는 것이 목적이다).
+     */
+    class Damaged : Exception("원본에 읽지 못한 것이 있다")
+
+    /**
      * 암호 없이 본 문서의 사정. [inspect] 가 돌려준다.
      *
      * pdfium 이 `SecurityException` 하나로 말하는 것을 우리가 셋으로 가른다 — 암호를 물을
@@ -126,6 +133,8 @@ internal object PdfDecryptor {
         password: CharArray,
         sink: PdfSink,
         maxOutput: Long,
+        onProgress: (Int, Int) -> Unit = { _, _ -> },
+        strict: Boolean = false,
         checkCancelled: () -> Unit = {},
     ): Result {
         val file = PdfFile.open(src, checkCancelled)
@@ -141,11 +150,64 @@ internal object PdfDecryptor {
 
         try {
             resolver.security = security
-            Writer(file, resolver, security, sink, maxOutput, checkCancelled)
+            Writer(file, resolver, security, null, sink, maxOutput, checkCancelled, onProgress, strict)
                 .write((encryptRef as? PdfRef)?.num)
             return Result.Ok
         } finally {
             security.wipe()
+        }
+    }
+
+    /** [lock] 의 결과. */
+    sealed interface LockResult {
+        /** 잠근 PDF 를 [PdfSink] 에 다 썼다. */
+        data object Ok : LockResult
+
+        /** 이미 잠겨 있다 — 잠긴 문서는 다시 잠그지 않는다(먼저 푼다). */
+        data object AlreadyEncrypted : LockResult
+    }
+
+    /**
+     * 잠기지 않은 PDF 를 **AES-256(R6)으로 잠근 판으로** 다시 쓴다 — [decrypt] 와 같은 길을 반대로 간다(객체를 차례로 옮기며 문자열과
+     * 스트림을 잠그고 나머지는 글자 그대로, xref 를 새로). 열쇠와 `/Encrypt` 는 [PdfLocker.Target] 이 만든다.
+     *
+     * | 무엇 | 잠그는가 |
+     * |---|---|
+     * | 객체 안의 문자열·스트림 데이터(메타데이터·첨부 포함) | 잠근다 |
+     * | 객체 스트림 안의 객체 | 따로 잠그지 않는다 — 스트림째 잠긴다(명세 7.6.1) |
+     * | xref 스트림 · 새 `/Encrypt` 사전 · 트레일러 `/ID` | 잠그지 않는다(명세) — 우리가 새로 쓴다 |
+     * | `/Crypt` 필터를 단 스트림 | 원본이 '이 스트림은 따로' 라고 이름을 댄 것이다. 손대지 않는다(이름이 `/Identity` 면 읽는 쪽도 풀지 않는다) |
+     * | 서명 사전의 `/Contents` | 잠그지 않는다(명세). 서명은 바이트가 바뀌어 어차피 깨진다 |
+     *
+     * 머리는 `%PDF-1.7`, 문서 뿌리에 Adobe 확장 수준 8(`/Extensions /ADBE`)을 적는다 — qpdf 와 같은 꼴(R6 을 1.7 확장으로 내놓은 것이 그
+     * 확장이다). 뿌리가 객체 스트림 안에 있어도 고친 뿌리를 파일에 바로 놓는다(xref 가 그것을 가리킨다).
+     *
+     * 원본 자리를 바꾸는 일이라 언제나 [Damaged] 를 지킨다(읽지 못한 객체·잘린 스트림·다시 세운 xref 면 거절).
+     *
+     * @param password 새 사용자 암호 — [PdfLocker.problemOf] 를 지나야 한다. 덮지 않는다(부르는 쪽의 배열이다).
+     * @param onProgress (옮긴 객체 수, 전체) — 파일에 바로 놓인 객체를 센다.
+     * @throws PdfSyntaxException 파일이 PDF 로 읽히지 않는다.
+     * @throws Damaged 원본에 읽지 못한 것이 있다.
+     */
+    fun lock(
+        src: PdfSource,
+        password: CharArray,
+        sink: PdfSink,
+        maxOutput: Long,
+        onProgress: (Int, Int) -> Unit = { _, _ -> },
+        random: java.security.SecureRandom = java.security.SecureRandom(),
+        checkCancelled: () -> Unit = {},
+    ): LockResult {
+        val file = PdfFile.open(src, checkCancelled)
+        val resolver = Resolver(file)
+        if (resolver.resolve(file.trailer["Encrypt"]) != null) return LockResult.AlreadyEncrypted
+        resolver.plainSource = true
+        val target = PdfLocker.Target(password, random)
+        try {
+            Writer(file, resolver, null, target, sink, maxOutput, checkCancelled, onProgress, strict = true).write(null)
+            return LockResult.Ok
+        } finally {
+            target.wipe()
         }
     }
 
@@ -157,6 +219,9 @@ internal object PdfDecryptor {
      */
     private class Resolver(private val file: PdfFile) {
         var security: PdfSecurity? = null
+
+        /** 잠기지 않은 원본(잠그는 길) — 객체 스트림을 풀지 않고 읽는다. */
+        var plainSource = false
         private val objStreams = HashMap<Int, ObjStm?>()
         private var depth = 0
 
@@ -179,14 +244,15 @@ internal object PdfDecryptor {
         }
 
         fun objStream(num: Int): ObjStm? = objStreams.getOrPut(num) {
-            val sec = security ?: return@getOrPut null
+            val sec = security
+            if (sec == null && !plainSource) return@getOrPut null
             val e = file.entries[num] as? PdfFile.InFile ?: return@getOrPut null
             val obj = file.readAt(e.offset) ?: return@getOrPut null
             if (!obj.isStream) return@getOrPut null
             val len = file.streamLength(obj) { resolve(it) }
             if (len > PdfFilters.MAX_DECODED) return@getOrPut null
             val raw = file.readBytes(obj.dataStart, len.toInt())
-            val plain = sec.decrypt(obj.num, obj.gen, sec.methodFor(PdfSecurity.Kind.STREAM), raw)
+            val plain = sec?.decrypt(obj.num, obj.gen, sec.methodFor(PdfSecurity.Kind.STREAM), raw) ?: raw
             ObjStm.parse(obj.dict!!, plain)
         }
     }
@@ -278,40 +344,79 @@ internal object PdfDecryptor {
         }
     }
 
+    /**
+     * 다시 쓰는 일 — [sec] 가 있으면 원본을 풀고(푸는 길), [target] 이 있으면 결과를 잠근다(잠그는 길). 둘 다 값·스트림을 객체마다 옮기는 같은
+     * 고리를 지난다.
+     */
     private class Writer(
         private val file: PdfFile,
         private val resolver: Resolver,
-        private val sec: PdfSecurity,
+        private val sec: PdfSecurity?,
+        private val target: PdfLocker.Target?,
         private val sink: PdfSink,
         private val maxOutput: Long,
         private val checkCancelled: () -> Unit,
+        private val onProgress: (Int, Int) -> Unit,
+        /** 원본 자리를 바꾸는 다시 쓰기 — 읽지 못한 것이 있으면 [Damaged], 옛 선형화 사전을 뺀다. */
+        private val strict: Boolean = false,
     ) {
         private val offsets = HashMap<Int, Pair<Long, Int>>()
         /** xref 에 없었는데 객체 스트림을 풀다가 알게 된 번호. 다시 세운 xref 에서 쓴다. */
         private val discovered = HashMap<Int, PdfFile.InStream>()
 
+        /** 잠그는 길에서 고쳐 쓸 문서 뿌리(Adobe 확장 수준). */
+        private val rootRef = (file.trailer["Root"] as? PdfRef)?.takeIf { target != null }
+
+        /** 잠그는 길에서 새로 쓴 `/Encrypt` 의 번호. */
+        private var newEncryptNum: Int? = null
+
+        /** 잠그는 길에서 트레일러의 직접 `/Info` 를 옮겨 쓴 번호(아래 [write]). */
+        private var newInfoNum: Int? = null
+
         fun write(encryptNum: Int?) {
+            // xref 를 다시 세웠다 — 원본이 상했다. 제자리 다시 쓰기는 그 판으로 원본을 바꾸지 않는다.
+            if (strict && file.rebuilt) throw Damaged()
             emit("%PDF-1.7\n%âãÏÓ\n".toByteArray(Charsets.ISO_8859_1))
 
             val inFile = file.entries.entries
                 .filter { it.value is PdfFile.InFile }
                 .sortedBy { (it.value as PdfFile.InFile).offset }
-            for ((num, entry) in inFile) {
+            for ((i, e) in inFile.withIndex()) {
+                val (num, entry) = e
                 checkCancelled()
+                if (i and 0x3F == 0) onProgress(i, inFile.size)
                 if (num == encryptNum) continue
                 val e = entry as PdfFile.InFile
                 val obj = try {
                     file.readAt(e.offset)
                 } catch (x: PdfSyntaxException) {
                     null
-                } ?: continue
+                } ?: if (strict) throw Damaged() else continue
                 // 헤더의 번호가 xref 와 다르면 xref 가 틀린 것이다. **키는 헤더의 번호로 만든다**
                 // — 암호화한 쪽이 쓴 번호가 그것이다.
-                if (obj.num != num && file.entries[obj.num] != null && !file.rebuilt) continue
+                if (obj.num != num && file.entries[obj.num] != null && !file.rebuilt) if (strict) throw Damaged() else continue
                 if (offsets.containsKey(obj.num)) continue
                 val dict = obj.dict
                 if (dict?.name("Type") == "XRef") continue // 옛 xref 스트림은 옮기지 않는다
                 writeObject(obj)
+            }
+            onProgress(inFile.size, inFile.size)
+
+            if (target != null) {
+                // 뿌리가 객체 스트림 안에 있었다 — 고친 뿌리를 파일에 바로 놓는다(아래에서 xref 가 이것을 가리키고 스트림 안의 옛 것은 빠진다).
+                rootRef?.takeIf { !offsets.containsKey(it.num) }?.let { ref ->
+                    (resolver.resolve(ref) as? PdfDict)?.let { writePlain(ref.num, ref.gen, target.encryptStrings(withExtension(it))) }
+                }
+                // 새 `/Encrypt` — 잠그지 않는다(명세). 번호는 쓴 것들 다음.
+                var n = maxOf(offsets.keys.maxOrNull() ?: 0, file.entries.keys.maxOrNull() ?: 0, discovered.keys.maxOrNull() ?: 0) + 1
+                writePlain(n, 0, target.encryptDict)
+                newEncryptNum = n++
+                // 트레일러에 바로 놓인 문서 정보(드물다 — 명세는 간접 참조를 요구한다, 표 15) — 간접 객체로 옮겨 잠근다. 트레일러에 둔 채 잠그면 어느
+                // 번호의 열쇠로 잠갔는지 읽는 쪽마다 다르게 본다. 제목·저자가 평문으로 남지 않게.
+                (file.trailer["Info"] as? PdfDict)?.let {
+                    writePlain(n, 0, target.encryptStrings(it))
+                    newInfoNum = n
+                }
             }
 
             val streamEntries = HashMap<Int, PdfFile.InStream>()
@@ -329,7 +434,11 @@ internal object PdfDecryptor {
             header.writeAscii("${obj.num} ${obj.gen} obj\n")
 
             if (!obj.isStream) {
-                val value = decryptValue(obj.value, obj.num, obj.gen)
+                var value = decryptValue(obj.value, obj.num, obj.gen)
+                // 옛 선형화 사전 — 다시 쓴 판에서는 그 오프셋·힌트가 모두 틀린다. 빈 객체로 둔다(가리키는 것이 없다).
+                if (strict && value is PdfDict && value["Linearized"] != null) value = PdfNull
+                if (rootRef != null && obj.num == rootRef.num && value is PdfDict) value = withExtension(value)
+                if (target != null) value = target.encryptStrings(value)
                 PdfWriter.write(value, header)
                 header.writeAscii("\nendobj\n")
                 emit(header.toByteArray())
@@ -339,9 +448,14 @@ internal object PdfDecryptor {
 
             val dict = obj.dict!!
             val rawLen = file.streamLength(obj) { resolver.resolve(it) }
-            val method = streamMethod(dict)
-            val outDict = decryptValue(dict, obj.num, obj.gen) as PdfDict
-            stripCryptFilter(outDict)
+            // `endstream` 이 없다(잘린 파일) — 제자리 다시 쓰기는 잘린 판으로 바꾸지 않는다.
+            if (strict && !file.streamIsWhole(obj) { resolver.resolve(it) }) throw Damaged()
+            val method = if (sec != null) streamMethod(dict) else PdfSecurity.Method.IDENTITY
+            var outDict = decryptValue(dict, obj.num, obj.gen) as PdfDict
+            if (sec != null) stripCryptFilter(outDict)
+            // 잠그는 길 — `/Crypt` 필터를 단 스트림은 원본이 따로 정한 것이라 손대지 않는다(머리말의 표).
+            val encryptor = if (target != null && !PdfCryptRules.namesCryptFilter(dict)) target.streamEncryptor() else null
+            if (target != null) outDict = target.encryptStrings(outDict) as PdfDict
             // `/Length` 는 **자리 채움**으로 쓰고 나중에 고친다. AES 는 채움을 떼기 전까지
             // 평문 길이를 모른다. 앞자리 0 은 명세가 허락하는 정수 표기다.
             //
@@ -357,10 +471,20 @@ internal object PdfDecryptor {
             emit("\nstream\n".toByteArray(Charsets.ISO_8859_1))
 
             val isObjStm = dict.name("Type") == "ObjStm"
+            // 객체 스트림의 **평문**을 모은다(안의 번호를 챙긴다) — 푸는 길에서는 푼 것, 잠그는 길에서는 잠그기 전의 것.
             val keep = if (isObjStm) ByteArrayOutputStream() else null
-            val key = sec.objectKey(obj.num, obj.gen, method)
-            val d = sec.decryptor(method, key)
+            val key = sec?.objectKey(obj.num, obj.gen, method)
+            val d = if (sec != null && key != null) sec.decryptor(method, key) else IdentityDecryptor
             var written = 0L
+            fun out(plain: ByteArray) {
+                if (plain.isEmpty()) return
+                keep?.write(plain)
+                val bytes = encryptor?.update(plain, 0, plain.size) ?: plain
+                if (bytes.isNotEmpty()) {
+                    emit(bytes)
+                    written += bytes.size
+                }
+            }
             val buf = ByteArray(64 * 1024)
             var pos = obj.dataStart
             val end = obj.dataStart + rawLen
@@ -370,20 +494,18 @@ internal object PdfDecryptor {
                 val got = file.readBytes(pos, want)
                 if (got.isEmpty()) break
                 pos += got.size
-                val plain = d.update(got, 0, got.size)
-                if (plain.isNotEmpty()) {
-                    emit(plain)
-                    keep?.write(plain)
-                    written += plain.size
+                out(d.update(got, 0, got.size))
+            }
+            // 스트림이 적힌 길이보다 먼저 끝났다(잘린 파일) — 제자리 다시 쓰기는 잘린 판으로 바꾸지 않는다.
+            if (strict && pos < end) throw Damaged()
+            out(d.finish())
+            encryptor?.finish()?.let {
+                if (it.isNotEmpty()) {
+                    emit(it)
+                    written += it.size
                 }
             }
-            val tail = d.finish()
-            if (tail.isNotEmpty()) {
-                emit(tail)
-                keep?.write(tail)
-                written += tail.size
-            }
-            key.takeIf { method != PdfSecurity.Method.AES256 }?.fill(0)
+            key?.takeIf { method != PdfSecurity.Method.AES256 }?.fill(0)
             emit("\nendstream\nendobj\n".toByteArray(Charsets.ISO_8859_1))
             if (placeholderAt >= start) {
                 sink.patch(placeholderAt, written.toString().padStart(LENGTH_PLACEHOLDER.length, '0')
@@ -405,11 +527,39 @@ internal object PdfDecryptor {
         }
 
         // 어느 스트림을 어떤 방식으로 푸는가·`/Crypt` 떼기·문자열 풀기는 쪽 뽑기·합치기와 한 벌이다([PdfCryptRules]).
-        private fun streamMethod(dict: PdfDict): PdfSecurity.Method = PdfCryptRules.streamMethod(sec, dict)
+        private fun streamMethod(dict: PdfDict): PdfSecurity.Method = PdfCryptRules.streamMethod(sec!!, dict)
 
         private fun stripCryptFilter(dict: PdfDict) = PdfCryptRules.stripCryptFilter(dict)
 
-        private fun decryptValue(v: PdfObj, num: Int, gen: Int): PdfObj = PdfCryptRules.decryptStrings(sec, v, num, gen)
+        private fun decryptValue(v: PdfObj, num: Int, gen: Int): PdfObj =
+            sec?.let { PdfCryptRules.decryptStrings(it, v, num, gen) } ?: v
+
+        /** 잠그지 않은 값 하나를 그대로 쓴다(새 `/Encrypt`, 고친 뿌리). */
+        private fun writePlain(num: Int, gen: Int, value: PdfObj) {
+            val start = sink.position
+            val out = ByteArrayOutputStream()
+            out.writeAscii("$num $gen obj\n")
+            PdfWriter.write(value, out)
+            out.writeAscii("\nendobj\n")
+            emit(out.toByteArray())
+            offsets[num] = start to gen
+        }
+
+        /**
+         * 뿌리에 Adobe 확장 수준 8 을 적은 **새 사전**(qpdf 와 같은 꼴 — R6 을 PDF 1.7 의 확장으로 내놓은 것이 그 수준이다). 이미 더 높은
+         * 수준이 적혀 있으면 그대로 둔다. `/Extensions` 가 참조면 그 값을 풀어 직접 사전으로 옮긴다.
+         */
+        private fun withExtension(root: PdfDict): PdfDict {
+            val ext = (resolver.resolve(root["Extensions"]) as? PdfDict)?.let { PdfDict(LinkedHashMap(it.map)) }
+                ?: PdfDict(LinkedHashMap())
+            val adbe = resolver.resolve(ext["ADBE"]) as? PdfDict
+            val level = (resolver.resolve(adbe?.get("ExtensionLevel")) as? PdfNum)?.int ?: 0
+            if (level >= 8) return root
+            ext.map["ADBE"] = PdfDict(linkedMapOf("BaseVersion" to PdfName("1.7"), "ExtensionLevel" to PdfNum("8")))
+            val out = LinkedHashMap(root.map)
+            out["Extensions"] = ext
+            return PdfDict(out)
+        }
 
         /**
          * xref 를 쓴다. **쓴 번호만 소구역으로 적는다** — 0 부터 가장 큰 번호까지 빽빽하게 쓰면
@@ -421,8 +571,14 @@ internal object PdfDecryptor {
             val maxNum = maxOf(offsets.keys.maxOrNull() ?: 0, streamEntries.keys.maxOrNull() ?: 0)
             val trailer = LinkedHashMap<String, PdfObj>()
             file.trailer["Root"]?.let { trailer["Root"] = it }
-            file.trailer["Info"]?.let { trailer["Info"] = it }
+            file.trailer["Info"]?.let { trailer["Info"] = newInfoNum?.let { n -> PdfRef(n, 0) } ?: it }
             file.trailer["ID"]?.let { trailer["ID"] = it }
+            if (target != null) {
+                newEncryptNum?.let { trailer["Encrypt"] = PdfRef(it, 0) }
+                // 잠근 문서에는 `/ID` 가 있어야 한다(명세 7.5.5) — 없거나 모양이 틀리면 새로. 원본의 것은 평문 그대로 옮긴다(잠그지 않는 값이다).
+                val id = file.trailer["ID"] as? PdfArray
+                if (id == null || id.items.size != 2 || id.items.any { it !is PdfStr }) trailer["ID"] = target.newId()
+            }
 
             if (streamEntries.isEmpty()) {
                 // 고전 xref 표. 가장 널리 읽힌다.

@@ -293,6 +293,8 @@ fun OperationBar(
                                 // PDF 쪽 뽑기·합치기도 그 작업을 만든 `core:io` 의 문장이다(알림과 같다).
                                 FileOpManager.Kind.PDF_EXTRACT -> IoR.string.io_op_pdf_extracting
                                 FileOpManager.Kind.PDF_MERGE -> IoR.string.io_op_pdf_merging
+                                FileOpManager.Kind.PDF_LOCK -> IoR.string.io_op_pdf_locking
+                                FileOpManager.Kind.PDF_UNLOCK -> IoR.string.io_op_pdf_unlocking
                                 // 정합성 검사는 조용히 돈다. 이 바가 뜨는 일이 없다.
                                 FileOpManager.Kind.RECONCILE -> R.string.browser_op_deleting
                             }

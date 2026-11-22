@@ -24,6 +24,9 @@ internal object PdfCryptRules {
         return sec.methodFor(PdfSecurity.Kind.STREAM)
     }
 
+    /** 이 스트림이 `/Crypt` 필터로 제 암호 방식을 이름 댔는가(잠그는 길은 그런 스트림에 손대지 않는다 — `PdfDecryptor.lock`). */
+    fun namesCryptFilter(dict: PdfDict): Boolean = "Crypt" in filterNames(dict)
+
     /** `/Filter` 목록에서 `/Crypt` 를 뺀다(제자리에서 고친다). 우리가 이미 풀었으므로 읽는 쪽이 다시 보면 안 된다. */
     fun stripCryptFilter(dict: PdfDict) {
         val filters = filterNames(dict)

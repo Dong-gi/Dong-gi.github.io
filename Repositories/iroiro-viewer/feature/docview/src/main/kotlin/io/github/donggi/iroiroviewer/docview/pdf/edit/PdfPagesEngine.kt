@@ -4,7 +4,10 @@ import android.graphics.pdf.LoadParams
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.FileChannelSource
+import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfDecryptor
+import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfLocker
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfSink
+import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfSyntaxException
 import io.github.donggi.iroiroviewer.io.FileOpEngine
 import io.github.donggi.iroiroviewer.io.PdfPagesSupport
 import java.io.File
@@ -64,6 +67,68 @@ object PdfPagesEngine : PdfPagesSupport.Engine {
             }
         } finally {
             for (input in inputs) runCatching { input.close() }
+        }
+    }
+
+    /**
+     * 잠금을 바꾼 판 — 잠그기는 [PdfDecryptor.lock](AES-256 R6), 풀기는 [PdfDecryptor.decrypt](뷰어가 메모리 파일에 쓰던 것과 같은 다시 쓰기).
+     * 해석의 실패는 거절로 옮긴다(쪽 뽑기의 `guarded` 와 같은 갈래 — 취소와 쓰는 곳의 입출력 예외만 그대로 올라간다).
+     */
+    override fun relock(
+        path: String,
+        output: PdfPagesSupport.Output,
+        password: CharArray?,
+        newPassword: CharArray?,
+        checkCancelled: () -> Unit,
+        onProgress: (Int, Int) -> Unit,
+    ): PdfPagesSupport.Written {
+        val sink = object : PdfSink {
+            override val position: Long get() = output.position
+            override fun write(b: ByteArray, off: Int, len: Int) = output.write(b, off, len)
+            override fun patch(at: Long, b: ByteArray) = output.patch(at, b)
+        }
+        val input = try {
+            FileInputStream(File(path))
+        } catch (e: IOException) {
+            return PdfPagesSupport.Written.Refused(FileOpEngine.Reason.NOT_FOUND)
+        }
+        return try {
+            input.use {
+                val src = FileChannelSource(it.channel)
+                if (newPassword != null) {
+                    // 화면이 이미 걸렀다 — 큐에 온 것을 한 번 더 본다(빈 암호로 잠근 문서는 '잠긴' 문서가 아니다).
+                    if (PdfLocker.problemOf(newPassword) != null) return PdfPagesSupport.Written.Refused(FileOpEngine.Reason.UNSUPPORTED)
+                    when (PdfDecryptor.lock(src, newPassword, sink, Long.MAX_VALUE, onProgress, checkCancelled = checkCancelled)) {
+                        PdfDecryptor.LockResult.Ok -> PdfPagesSupport.Written.Done(0)
+                        // 뷰어는 잠기지 않은 문서라고 보았다 — 그사이 바뀌었다.
+                        PdfDecryptor.LockResult.AlreadyEncrypted -> PdfPagesSupport.Written.Refused(FileOpEngine.Reason.CHANGED)
+                    }
+                } else {
+                    when (PdfDecryptor.decrypt(src, password ?: CharArray(0), sink, Long.MAX_VALUE, onProgress, strict = true, checkCancelled = checkCancelled)) {
+                        PdfDecryptor.Result.Ok -> PdfPagesSupport.Written.Done(0)
+                        PdfDecryptor.Result.WrongPassword -> PdfPagesSupport.Written.Refused(FileOpEngine.Reason.PDF_LOCKED)
+                        PdfDecryptor.Result.NotEncrypted -> PdfPagesSupport.Written.Refused(FileOpEngine.Reason.CHANGED)
+                        is PdfDecryptor.Result.Unsupported -> PdfPagesSupport.Written.Refused(FileOpEngine.Reason.PDF_LOCK_UNSUPPORTED)
+                    }
+                }
+            }
+        } catch (e: PdfSyntaxException) {
+            PdfPagesSupport.Written.Refused(FileOpEngine.Reason.PDF_UNREADABLE)
+        } catch (e: PdfDecryptor.Damaged) {
+            // 원본에 읽지 못한 것이 있다 — 그것을 빼고 쓴 판으로 원본을 바꾸지 않는다.
+            PdfPagesSupport.Written.Refused(FileOpEngine.Reason.PDF_UNREADABLE)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: IOException) {
+            throw e
+        } catch (e: PdfDecryptor.TooLarge) {
+            PdfPagesSupport.Written.Refused(FileOpEngine.Reason.PDF_TOO_BIG)
+        } catch (e: OutOfMemoryError) {
+            PdfPagesSupport.Written.Refused(FileOpEngine.Reason.PDF_TOO_BIG)
+        } catch (e: StackOverflowError) {
+            PdfPagesSupport.Written.Refused(FileOpEngine.Reason.PDF_TOO_BIG)
+        } catch (e: RuntimeException) {
+            PdfPagesSupport.Written.Refused(FileOpEngine.Reason.PDF_UNREADABLE)
         }
     }
 

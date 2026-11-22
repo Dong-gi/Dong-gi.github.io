@@ -200,6 +200,12 @@ fun DocViewScreen(
     var showGrid by remember(path) { mutableStateOf(false) }
     var showOutline by remember(path) { mutableStateOf(false) }
     var showExtract by remember(path) { mutableStateOf(false) }
+    // 자물쇠(`PdfLock.kt`) — 단추의 모양·바꾸는 중·물음은 VM 이 든다(결과가 큐에서 온다). 창을 띄웠는가만 여기.
+    var showLock by remember(path) { mutableStateOf(false) }
+    val lockButton by vm.lockButton.collectAsStateWithLifecycle()
+    val relocking by vm.relocking.collectAsStateWithLifecycle()
+    val lockQuestion by vm.lockQuestion.collectAsStateWithLifecycle()
+    LaunchedEffect(vm) { vm.lockMessages.collect { snackbar.showSnackbar(it) } }
     // 찾기 막대는 **VM 의 찾기가 살아 있으면 열린 채로** 선다. 액티비티가 다시 만들어지면(밤 모드를 바꿨다 — 회전은
     // `configChanges` 라 다시 만들지 않는다) 결과의 칠은 VM 에 남으므로, 막대가 사라지면 칠을 걷을 길도 뒤로가 막대를 닫는
     // 처리기도 없다.
@@ -518,6 +524,10 @@ fun DocViewScreen(
                     },
                     onViewMode = { vm.setContinuous(!continuous) },
                     onExtractPages = if (doc is DocViewModel.Doc.Pdf && canSaveBeside) ({ showExtract = true }) else null,
+                    // 자물쇠 — PDF 이고 그 파일을 바꿀 수 있을 때만(읽기 전용 사본·저장 볼륨 밖·휴지통이면 없다 — VM 이 `TextSaver.placeOf` 로 본다).
+                    lockAction = lockButton?.takeIf { doc is DocViewModel.Doc.Pdf && canSaveBeside }?.let { b ->
+                        { LockAction(b, relocking) { showLock = true } }
+                    },
                 )
             }
         }
@@ -582,6 +592,30 @@ fun DocViewScreen(
         )
     }
 
+    val lockNow = lockButton
+    if (showLock && pdfDoc != null && lockNow != null && !relocking) {
+        PdfLockDialog(
+            button = lockNow,
+            onDismiss = { showLock = false },
+            onLock = {
+                showLock = false
+                vm.lock(it)
+            },
+            onUnlock = {
+                showLock = false
+                vm.unlock()
+            },
+        )
+    }
+    lockQuestion?.let { q ->
+        PdfLockQuestionDialog(
+            question = q,
+            onPassword = { vm.unlockWith(it) },
+            onWithoutPrevious = { vm.relockWithoutPrevious() },
+            onDismiss = { vm.dismissLockQuestion() },
+        )
+    }
+
     if (showJump) {
         val count = (state as? DocViewModel.State.Ready)?.doc?.count ?: 0
         JumpDialog(
@@ -623,6 +657,8 @@ private fun DocTopBar(
     onEdit: (() -> Unit)? = null,
     /** 'PDF 쪽 뽑기'(⋮ 안). null 이면 그 줄이 없다(`PdfExtract.kt`). */
     onExtractPages: (() -> Unit)? = null,
+    /** 자물쇠 단추(`PdfLock.kt` 의 [LockAction]). null 이면 없다. */
+    lockAction: (@Composable () -> Unit)? = null,
 ) {
     TopAppBar(
         modifier = modifier,
@@ -644,6 +680,7 @@ private fun DocTopBar(
         },
         title = { Text(text = title, maxLines = 1, overflow = TextOverflow.MiddleEllipsis) },
         actions = {
+            lockAction?.invoke()
             if (onSearch != null) {
                 IconButton(onClick = onSearch) {
                     Icon(Icons.Filled.Search, stringResource(R.string.doc_search))

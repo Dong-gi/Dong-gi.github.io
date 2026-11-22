@@ -334,6 +334,31 @@ object FileOpManager {
         }
 
         /**
+         * PDF 의 **잠금을 제자리에서 바꾼다**(뷰어의 자물쇠 단추). [newPassword] 가 있으면 AES-256 으로 잠그고, 없으면 [password] 로 풀어 잠기지
+         * 않은 PDF 로 바꾼다(소유자 암호만 걸린 문서는 빈 배열). 실체는 [PdfLockSaver.relock] — 임시본 → 내리기 → 바꾸기 전 판을 휴지통에 → 원자적
+         * rename. 결과는 [Extra.PdfRelocked].
+         *
+         * 두 암호 배열은 **이 요청의 사본**이다 — 쓰고 나면 [PdfLockSaver] 가, 돌지 않고 버려지면 [settle] 이 0 으로 덮는다. 메모리에만 있다.
+         *
+         * @param expected 뷰어가 연 때의 크기·수정 시각. 큐가 시작할 때 다르면 쓰지 않는다([FileOpEngine.Reason.CHANGED]).
+         * @param withoutPrevious 바꾸기 전 판을 휴지통에 남기지 못해도 바꾼다(사용자가 '그래도 바꾸기' 를 골랐다).
+         */
+        class PdfRelock(
+            override val id: String,
+            val path: String,
+            val expected: FileStamp,
+            val password: CharArray?,
+            val newPassword: CharArray?,
+            val withoutPrevious: Boolean = false,
+            override val sink: ResultSink? = null,
+        ) : Request {
+            override val label get() = path
+
+            // 경로·암호를 `toString`(로그·예외)에 싣지 않는다.
+            override fun toString(): String = "PdfRelock(id=$id, lock=${newPassword != null})"
+        }
+
+        /**
          * 고친 글을 **그 파일에** 쓴다(글·코드 파일 편집). 원본을 고치는 일이라 이 큐를 지난다(같은 파일을 복사·이동과
          * 동시에 만지지 않게, 결과 보고를 그대로 얻게). 실체는 [TextSaver.save] — 임시본 → fsync → 원자적 rename, 고치기 전 판을
          * 휴지통에, 연 뒤에 밖에서 바뀌었으면 쓰지 않는다.
@@ -517,6 +542,12 @@ object FileOpManager {
          * 수정 시각 — 저장 자리(`app` 의 `EditorSlots`)가 세션에 적는다. [keptPrevious] 는 고치기 전 판을 휴지통에 넣었는가.
          */
         data class DocSaved(val path: String, val stamp: FileStamp, val keptPrevious: Boolean) : Extra
+
+        /**
+         * 잠금을 바꾼 PDF([Request.PdfRelock])의 실제 경로와 **바꾼 뒤의** 크기·수정 시각. [keptPrevious] 는 바꾸기 전 판을 휴지통에 넣었는가,
+         * [locked] 는 잠갔는가(거짓이면 풀었다).
+         */
+        data class PdfRelocked(val path: String, val stamp: FileStamp, val keptPrevious: Boolean, val locked: Boolean) : Extra
     }
 
     /** 저장한 것이 고른 것과 어떻게 다른가. */
@@ -540,7 +571,7 @@ object FileOpManager {
         fun offer(finished: Finished): Boolean
     }
 
-    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, SHARE_ZIP, RECEIVE, CROP, MARKUP, CLIP, AUDIO, CAPTURE, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC, PDF_EXTRACT, PDF_MERGE }
+    enum class Kind { COPY, MOVE, TRASH, DELETE, RESTORE, PURGE, RECONCILE, ROTATE, EXTRACT, COMPRESS, SHARE_ZIP, RECEIVE, CROP, MARKUP, CLIP, AUDIO, CAPTURE, SAVE_TEXT, NEW_TEXT, SAVE_DOC, NEW_DOC, PDF_EXTRACT, PDF_MERGE, PDF_LOCK, PDF_UNLOCK }
 
     private val _state = MutableStateFlow<State>(State.Idle)
     val state: StateFlow<State> = _state.asStateFlow()
@@ -733,6 +764,10 @@ object FileOpManager {
         if (this is Request.Extract) password?.fill('\u0000')
         if (this is Request.Compress) password?.fill('\u0000')
         if (this is Request.PdfPages) for (part in parts) part.password?.fill('\u0000')
+        if (this is Request.PdfRelock) {
+            password?.fill('\u0000')
+            newPassword?.fill('\u0000')
+        }
         if (this is Request.Reconcile) done?.complete(ran)
         if (this is Request.RotateExif) synchronized(reorientingLock) {
             reorientingIds.remove(id)?.let { _reorienting.value = it }
@@ -972,6 +1007,8 @@ object FileOpManager {
                 result.outcome
             }
             // 글 편집. 쓴 뒤에 온 취소가 '저장을 취소했습니다' 를 말하지 않게 놓은 자리에서 알린다(위 셋과 같다).
+            // PDF 잠그기·풀기 — 원본 자리를 바꾼다. 놓은 자리에서 알린다(위와 같다). 엔진이 꽂히지 않았으면 실패로 끝난다.
+            is Request.PdfRelock -> PdfLockSaver.relock(context, request, volumes, trash, MediaIndex(context), onProgress, onExtra, onPlaced)
             is Request.SaveText -> TextSaver.save(request, volumes, trash, MediaIndex(context), onExtra, onPlaced)
             is Request.CreateText -> TextSaver.create(request, MediaIndex(context), onExtra, onPlaced)
             // 편집기의 저장 — 엔진이 지은 문서 전체를 바꿔 쓴다. 놓은 자리에서 알린다(위와 같다).
@@ -1009,6 +1046,7 @@ object FileOpManager {
         is Request.SaveClip -> if (r.audioOnly) Kind.AUDIO else Kind.CLIP
         is Request.SaveFrame -> Kind.CAPTURE
         is Request.PdfPages -> if (r.merge) Kind.PDF_MERGE else Kind.PDF_EXTRACT
+        is Request.PdfRelock -> if (r.newPassword != null) Kind.PDF_LOCK else Kind.PDF_UNLOCK
         is Request.SaveText -> Kind.SAVE_TEXT
         is Request.CreateText -> Kind.NEW_TEXT
         is Request.SaveFromEditor -> Kind.SAVE_DOC

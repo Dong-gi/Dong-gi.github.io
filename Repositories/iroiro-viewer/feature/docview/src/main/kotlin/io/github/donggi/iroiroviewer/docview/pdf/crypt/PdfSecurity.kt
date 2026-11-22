@@ -97,7 +97,7 @@ internal class PdfSecurity private constructor(
     /**
      * 스트림처럼 조금씩 푸는 것. 큰 그림 스트림을 통째로 메모리에 올리지 않으려고 둔다.
      */
-    fun decryptor(method: Method, key: ByteArray): StreamDecryptor = when (method) {
+    fun decryptor(method: Method, key: ByteArray): StreamTransform = when (method) {
         Method.IDENTITY -> IdentityDecryptor
         Method.RC4 -> Rc4Decryptor(key)
         Method.AES128, Method.AES256 -> AesCbcDecryptor(key)
@@ -460,6 +460,30 @@ internal class PdfSecurity private constructor(
             return out
         }
 
+        /**
+         * R6 이 해시에 넣는 암호의 바이트 — SASLprep 한 뒤 UTF-8(ISO 32000-2 §7.6.4.3.3). [modernCandidates] 의 첫 후보와 같은 규칙이다 —
+         * 잠그는 쪽(`PdfLocker`)과 여는 쪽이 한 벌을 써야 잠근 문서가 그 암호로 열린다. **자르지 않는다**(127 바이트에서 자르는 것은 부르는 쪽의
+         * 일이다 — 잠그는 쪽은 넘으면 거절한다). 인코딩할 수 없으면(짝 없는 서로게이트) null. 받은 배열은 덮지 않는다.
+         */
+        internal fun r6PasswordBytes(pw: CharArray): ByteArray? {
+            val prepped = saslPrep(pw)
+            return try {
+                encode(prepped, Charsets.UTF_8)
+            } finally {
+                prepped.fill('\u0000')
+            }
+        }
+
+        /** SASLprep 이 [pw] 를 바꾸지 않는가(지우는 글자·공백 모으기·NFKC 가 아무것도 하지 않는다). 받은 배열은 덮지 않는다. */
+        internal fun isSaslPrepStable(pw: CharArray): Boolean {
+            val prepped = saslPrep(pw)
+            return try {
+                prepped.contentEquals(pw)
+            } finally {
+                prepped.fill('\u0000')
+            }
+        }
+
         private fun saslPrep(pw: CharArray): CharArray {
             val mapped = StringBuilder(pw.size)
             for (c in pw) {
@@ -506,21 +530,21 @@ internal class PdfSecurity private constructor(
 /** 이 앱이 풀지 않는 방식. 화면이 '지원하지 않는 방식' 으로 말한다. */
 internal class UnsupportedEncryption(message: String) : Exception(message)
 
-/** 조금씩 푸는 것. */
-internal interface StreamDecryptor {
+/** 조금씩 푸는(잠글 때는 잠그는 — [AesCbcEncryptor]) 것. */
+internal interface StreamTransform {
     fun update(data: ByteArray, off: Int, len: Int): ByteArray
 
     /** 남은 것(AES 의 마지막 블록에서 채움을 뗀 것). */
     fun finish(): ByteArray
 }
 
-internal object IdentityDecryptor : StreamDecryptor {
+internal object IdentityDecryptor : StreamTransform {
     override fun update(data: ByteArray, off: Int, len: Int) = data.copyOfRange(off, off + len)
     override fun finish() = ByteArray(0)
 }
 
 /** RC4. 키 스케줄 뒤에는 바이트 하나에 연산 몇 개뿐이다. */
-internal class Rc4Decryptor(key: ByteArray) : StreamDecryptor {
+internal class Rc4Decryptor(key: ByteArray) : StreamTransform {
     private val s = IntArray(256) { it }
     private var i = 0
     private var j = 0
@@ -562,7 +586,7 @@ internal class Rc4Decryptor(key: ByteArray) : StreamDecryptor {
  *
  * 마지막 블록은 채움을 알 수 없으므로 언제나 **한 블록을 쥐고 있다가** [finish] 에서 내준다.
  */
-internal class AesCbcDecryptor(private val key: ByteArray) : StreamDecryptor {
+internal class AesCbcDecryptor(private val key: ByteArray) : StreamTransform {
     private var cipher: Cipher? = null
     // `iv` 로 부르지 마라 — 아래 `Cipher.apply { }` 안에서 그 이름은 `Cipher.getIV()` 로
     // 풀리고, 초기화 전의 그 값은 null 이다(시험에서 실제로 NPE 가 났다).
@@ -604,5 +628,34 @@ internal class AesCbcDecryptor(private val key: ByteArray) : StreamDecryptor {
         val ok = padLen in 1..16 && padLen <= plain.size &&
             (plain.size - padLen until plain.size).all { (plain[it].toInt() and 0xFF) == padLen }
         return if (ok) plain.copyOf(plain.size - padLen) else plain
+    }
+}
+
+/**
+ * AES-CBC 로 **잠근다** — 앞에 무작위 IV 16바이트를 두고 PKCS#7 로 채운다(명세 7.6.3.2, [AesCbcDecryptor] 의 짝). 조금씩 받고 [finish] 에서
+ * 마지막 블록을 채워 낸다.
+ */
+internal class AesCbcEncryptor(key: ByteArray, initVector: ByteArray) : StreamTransform {
+    // 수신 객체 람다 안에서 IV 를 부르지 않는다 — `Cipher.getIV()` 와 이름이 겹친다(함정 표). 생성자 인자로 바로 넘긴다.
+    private val cipher: Cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+    private var head: ByteArray? = initVector.copyOf()
+
+    init {
+        require(initVector.size == 16) { "IV 는 16바이트다" }
+        cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(key, "AES"), IvParameterSpec(initVector))
+    }
+
+    override fun update(data: ByteArray, off: Int, len: Int): ByteArray {
+        val body = cipher.update(data, off, len) ?: ByteArray(0)
+        val iv = head ?: return body
+        head = null
+        return iv + body
+    }
+
+    override fun finish(): ByteArray {
+        val tail = cipher.doFinal()
+        val iv = head ?: return tail
+        head = null
+        return iv + tail
     }
 }

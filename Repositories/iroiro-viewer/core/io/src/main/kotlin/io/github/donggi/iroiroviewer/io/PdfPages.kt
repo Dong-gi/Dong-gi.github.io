@@ -77,6 +77,22 @@ object PdfPagesSupport {
             checkCancelled: () -> Unit,
             onPage: (Int, Int, String) -> Unit,
         ): Written
+
+        /**
+         * [path] 의 **잠금을 바꾼 판** 전체를 [output] 에 쓴다(PDF 잠그기·풀기 — [PdfLockSaver]). [newPassword] 가 있으면 AES-256 으로 잠근
+         * 판(잠기지 않은 문서만 — 잠겼으면 [FileOpEngine.Reason.CHANGED]), 없으면 [password] 로 푼 잠기지 않은 판(소유자 암호만 걸린 문서는
+         * 빈 암호). 두 배열 모두 덮지 않는다(부르는 쪽의 것이다).
+         *
+         * @param onProgress (옮긴 객체 수, 전체).
+         */
+        fun relock(
+            path: String,
+            output: Output,
+            password: CharArray?,
+            newPassword: CharArray?,
+            checkCancelled: () -> Unit,
+            onProgress: (Int, Int) -> Unit,
+        ): Written
     }
 
     /** **꽂히지 않으면 요청은 실패로 끝난다**([ExtractSupport.runner] 와 같은 판단). */
@@ -204,13 +220,13 @@ object PdfPageSaver {
     }
 
     @SuppressLint("UsableSpace") // 남길 몫을 재는 자리라 보수적인 값이 맞다(ZIP 만들기와 같다).
-    private fun usableSpaceOf(dir: File): Long = dir.usableSpace
+    internal fun usableSpaceOf(dir: File): Long = dir.usableSpace
 
     /**
      * 임시본 위의 쓰는 곳 — 256 KiB 씩 모아 쓴다(엔진은 객체마다 작은 조각을 낸다). 길이 자리 고치기([patch])는 모은 곳 안이면 거기서,
      * 이미 내린 곳이면 그 자리에 쓰고 돌아온다. 16 MiB 마다 남은 공간을 본다.
      */
-    private class FileOutput(private val file: RandomAccessFile, private val dir: File) : PdfPagesSupport.Output {
+    internal class FileOutput(private val file: RandomAccessFile, private val dir: File) : PdfPagesSupport.Output {
         private val buf = ByteArray(BUFFER)
         private var bufLen = 0
         private var flushed = 0L
@@ -260,7 +276,132 @@ object PdfPageSaver {
     private const val SPACE_CHECK_BYTES = 16L * 1024 * 1024
 
     /** 이만큼은 남겨 둔다(ZIP 만들기의 지킴과 같다). */
-    private const val KEEP_FREE_BYTES = 64L * 1024 * 1024
+    internal const val KEEP_FREE_BYTES = 64L * 1024 * 1024
+}
+
+/**
+ * PDF 의 **잠금을 제자리에서 바꾼다** — 잠그기(AES-256)와 풀기. 원본을 파괴할 수 있는 길이라 CLAUDE.md '안전' 의 목록에 있다.
+ *
+ * 1. **어디에 쓰는가** — 링크를 따라간 자리. 저장 볼륨(`/storage/`) 아래의 보통 파일이고 휴지통 안·받은 사본이 아니어야 한다(아니면 `PERMISSION`).
+ * 2. **바뀌었는가** — 뷰어가 연 때의 표([FileStamp])와 큐가 시작할 때의 표가 다르면 쓰지 않는다(`CHANGED`). 엔진은 쓰는 동안 원본을 여러 번
+ *    다시 읽으므로, **놓기 직전에 한 번 더** 시작 때의 표와 견준다 — 다르면 임시본을 버리고 `CHANGED`(다른 판의 객체가 섞였을 수 있다).
+ * 3. **쓰기** — 원본 곁의 임시본(`AtomicFileWriter.beginRandomAccess`)에 엔진이 다 쓰고(16 MiB 마다 남은 공간 — 64 MiB 밑이면 멈춘다), 내린다.
+ * 4. **바꾸기 전 판** — 지금 파일의 사본을 같은 볼륨의 휴지통에 넣는다([TrashStore.copyToTrash] — 글 편집과 같은 규칙). 못 넣으면 쓰지 않고
+ *    `PREVIOUS_NOT_KEPT`(사용자가 '그래도 바꾸기' 를 고르면 [FileOpManager.Request.PdfRelock.withoutPrevious]).
+ * 5. **놓기** — 원자적 rename 으로 원본 자리를 대체하고 부모를 내린다. 원본 경로에 파일이 없는 순간이 없다. 놓지 못하면 4의 사본을 거둔다.
+ *
+ * 4·5 는 쪼개지지 않는다(`NonCancellable`). 놓은 자리에서 큐에 알린다(`onPlaced`). 암호 배열은 끝나면 덮는다(돌지 않고 버려진 길은 큐의 `settle`).
+ */
+object PdfLockSaver {
+
+    suspend fun relock(
+        context: android.content.Context,
+        request: FileOpManager.Request.PdfRelock,
+        volumes: List<VolumeRegistry.Volume>,
+        trash: TrashStore,
+        media: MediaIndex,
+        onProgress: (FileOpEngine.Progress) -> Unit,
+        onExtra: (FileOpManager.Extra) -> Unit,
+        onPlaced: (FileOpEngine.Outcome) -> Unit,
+    ): FileOpEngine.Outcome = try {
+        relockUnwiped(context, request, volumes, trash, media, onProgress, onExtra, onPlaced)
+    } finally {
+        request.password?.fill('\u0000')
+        request.newPassword?.fill('\u0000')
+    }
+
+    private suspend fun relockUnwiped(
+        context: android.content.Context,
+        request: FileOpManager.Request.PdfRelock,
+        volumes: List<VolumeRegistry.Volume>,
+        trash: TrashStore,
+        media: MediaIndex,
+        onProgress: (FileOpEngine.Progress) -> Unit,
+        onExtra: (FileOpManager.Extra) -> Unit,
+        onPlaced: (FileOpEngine.Outcome) -> Unit,
+    ): FileOpEngine.Outcome = withContext(IroDispatchers.io) {
+        val shownName = File(request.path).name
+        fun failed(reason: FileOpEngine.Reason) = FileOpEngine.Outcome.Failed(reason, shownName)
+        val engine = PdfPagesSupport.engine
+            ?: return@withContext failed(FileOpEngine.Reason.IO).also { Iro.e(message = "PDF 엔진이 꽂히지 않았다") }
+        val target = try {
+            File(request.path).canonicalFile
+        } catch (e: IOException) {
+            return@withContext failed(FileOpEngine.Reason.IO)
+        }
+        val dir = target.parentFile
+        if (dir == null || !dir.isDirectory || !target.isFile) return@withContext failed(FileOpEngine.Reason.NOT_FOUND)
+        // 마지막 관문 — 저장 볼륨 밖(받은 사본·앱 캐시)·휴지통 안은 바꾸지 않는다. 뷰어가 단추를 숨기지만 큐가 스스로도 본다.
+        if (!PdfPageSaver.isUserFile(context, target.path)) return@withContext failed(FileOpEngine.Reason.PERMISSION)
+        val start = FileStamp.of(target) ?: return@withContext failed(FileOpEngine.Reason.NOT_FOUND)
+        if (start != request.expected) return@withContext failed(FileOpEngine.Reason.CHANGED)
+        // 임시본(원본만큼)과 휴지통의 사본(원본만큼)이 같은 볼륨에 놓인다.
+        if (PdfPageSaver.usableSpaceOf(dir) < start.size * 2 + PdfPageSaver.KEEP_FREE_BYTES) {
+            return@withContext failed(FileOpEngine.Reason.NO_SPACE)
+        }
+        onProgress(FileOpEngine.Progress(0, 0, 0, 0, shownName))
+        AtomicFileWriter.sweepPartials(dir)
+        val pending = try {
+            AtomicFileWriter.beginRandomAccess(target)
+        } catch (e: IOException) {
+            return@withContext failed(NewFiles.reasonOf(e))
+        }
+        val job = currentCoroutineContext().job
+        try {
+            val out = PdfPageSaver.FileOutput(pending.file, dir)
+            val written = engine.relock(
+                target.path,
+                out,
+                request.password,
+                request.newPassword,
+                checkCancelled = { if (!job.isActive) throw CancellationException() },
+            ) { done, all -> onProgress(FileOpEngine.Progress(0, 0, done, all, shownName)) }
+            if (written is PdfPagesSupport.Written.Refused) {
+                withContext(NonCancellable) { pending.abort() }
+                return@withContext failed(written.reason)
+            }
+            out.flush()
+            pending.sync()
+            withContext(NonCancellable) {
+                // 쓰는 동안 원본이 바뀌었으면 섞였을 수 있다 — 놓지 않는다.
+                if (FileStamp.of(target) != start) {
+                    pending.abort()
+                    return@withContext failed(FileOpEngine.Reason.CHANGED)
+                }
+                val kept = if (request.withoutPrevious) null else trash.copyToTrash(target.path, volumes)
+                if (kept == null && !request.withoutPrevious) {
+                    pending.abort()
+                    return@withContext failed(FileOpEngine.Reason.PREVIOUS_NOT_KEPT)
+                }
+                // 사본을 넣는 사이에 바뀌었다 — 사본도 그 판이 아닐 수 있다. 거두고 놓지 않는다.
+                if (FileStamp.of(target) != start) {
+                    kept?.let { trash.dropCopy(it, volumes) }
+                    pending.abort()
+                    return@withContext failed(FileOpEngine.Reason.CHANGED)
+                }
+                try {
+                    pending.moveInto(target)
+                } catch (e: Exception) {
+                    kept?.let { trash.dropCopy(it, volumes) }
+                    pending.abort()
+                    return@withContext failed(FileOpEngine.reasonOf(e))
+                }
+                val done = FileOpEngine.Outcome.Done(1, 0, 0)
+                val stamp = FileStamp.of(target) ?: FileStamp(target.length(), target.lastModified())
+                onExtra(FileOpManager.Extra.PdfRelocked(target.path, stamp, keptPrevious = kept != null, locked = request.newPassword != null))
+                onPlaced(done)
+                media.scanAll(listOf(target.path))
+                done
+            }
+        } catch (e: CancellationException) {
+            withContext(NonCancellable) { pending.abort() }
+            throw e
+        } catch (t: Throwable) {
+            withContext(NonCancellable) { pending.abort() }
+            Iro.e(message = "PDF 잠금 바꾸기가 실패했다: ${t::class.java.simpleName}")
+            failed(NewFiles.reasonOf(t).let { if (it == FileOpEngine.Reason.IO) NewFiles.reasonWhenSilent(dir, it) else it })
+        }
+    }
 }
 
 /**

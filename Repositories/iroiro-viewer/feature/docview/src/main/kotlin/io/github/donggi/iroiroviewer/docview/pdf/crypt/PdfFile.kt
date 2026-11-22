@@ -140,6 +140,36 @@ internal class PdfFile private constructor(
         return findEndstream(obj.dataStart)
     }
 
+    /**
+     * 스트림이 온전히 끝나는가 — 적힌 길이 자리에, 아니면 찾아서 `endstream` 이 있다. 찾을 때는 **이 객체 안에서만** 찾는다 — `endobj` 나
+     * 다음 객체의 머리(`N G obj`)가 먼저 나오면 거짓이다(제 `endstream` 이 망가진 스트림이 뒤 스트림의 것을 빌려 통과하지 않게 — 독립 검토).
+     * 원본 자리를 바꾸는 다시 쓰기(`PdfDecryptor` 의 엄격한 길)만 묻는다. 데이터 안에 우연히 그 글자가 있으면 멀쩡한 스트림도 거절한다 — 안전한 쪽이다.
+     */
+    fun streamIsWhole(obj: Indirect, resolve: (PdfObj?) -> PdfObj?): Boolean {
+        val declared = (resolve(obj.dict?.get("Length")) as? PdfNum)?.long
+        if (declared != null && declared >= 0 && obj.dataStart + declared <= src.size && endstreamNear(obj.dataStart + declared)) return true
+        return endsBeforeNextObject(obj.dataStart)
+    }
+
+    /** [start] 뒤에서 `endstream`·`endobj`·객체 머리 가운데 처음 나오는 것이 `endstream` 인가. */
+    private fun endsBeforeNextObject(start: Long): Boolean {
+        val buf = ByteArray(64 * 1024)
+        val keep = 48 // 경계에 걸친 표식을 놓치지 않을 만큼(번호 10자리 + 세대 5자리 + 공백)
+        var pos = start
+        var carry = 0
+        while (pos < src.size) {
+            val n = src.read(pos, buf, carry, buf.size - carry)
+            if (n <= 0) break
+            val total = carry + n
+            STREAM_BOUNDARY.find(String(buf, 0, total, Charsets.ISO_8859_1))?.let { return it.value == "endstream" }
+            val k = minOf(keep, total)
+            System.arraycopy(buf, total - k, buf, 0, k)
+            pos += n
+            carry = k
+        }
+        return false
+    }
+
     /** 이 자리(공백 몇 개 뒤)에 `endstream` 이 있는가. */
     private fun endstreamNear(at: Long): Boolean {
         val probe = readBytes(at, 32)
@@ -149,7 +179,10 @@ internal class PdfFile private constructor(
     }
 
     /** `endstream` 을 찾아 그 앞의 줄 끝을 뗀 길이. 못 찾으면 파일 끝까지. */
-    private fun findEndstream(start: Long): Long {
+    private fun findEndstream(start: Long): Long = findEndstreamOrNull(start) ?: (src.size - start)
+
+    /** `endstream` 을 찾아 그 앞의 줄 끝을 뗀 길이. 못 찾으면 null. */
+    private fun findEndstreamOrNull(start: Long): Long? {
         val needle = "endstream".toByteArray(Charsets.ISO_8859_1)
         val buf = ByteArray(64 * 1024)
         var pos = start
@@ -172,7 +205,7 @@ internal class PdfFile private constructor(
             pos += n
             carry = keep
         }
-        return src.size - start
+        return null
     }
 
     private fun indexOf(buf: ByteArray, len: Int, needle: ByteArray): Int {
@@ -187,6 +220,9 @@ internal class PdfFile private constructor(
 
         /** xref 구역 수 상한. 증분 저장을 수천 번 한 파일은 없다. */
         const val MAX_SECTIONS = 1024
+
+        /** 스트림 데이터 뒤에서 찾는 경계 — 제 끝(`endstream`), 객체의 끝(`endobj`), 다음 객체의 머리(`N G obj`). */
+        private val STREAM_BOUNDARY = Regex("""endstream|endobj|(?<![0-9])[0-9]{1,10}[ \t\r\n\u000C\u0000]+[0-9]{1,5}[ \t\r\n\u000C\u0000]+obj(?![A-Za-z0-9])""")
 
         /** 객체 번호 상한(명세의 구현 한계, 부록 C). */
         const val MAX_OBJECTS = 8_388_607

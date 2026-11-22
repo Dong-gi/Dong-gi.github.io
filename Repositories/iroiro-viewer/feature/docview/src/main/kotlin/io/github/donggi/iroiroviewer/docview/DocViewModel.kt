@@ -20,10 +20,17 @@ import io.github.donggi.iroiroviewer.format.OpenedDocument
 import io.github.donggi.iroiroviewer.format.ParseWarning
 import io.github.donggi.iroiroviewer.format.epub.EpubBook
 import io.github.donggi.iroiroviewer.format.toOpenFailure
+import io.github.donggi.iroiroviewer.docview.pdf.crypt.FileChannelSource
+import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfDecryptor
 import io.github.donggi.iroiroviewer.io.FileKey
+import io.github.donggi.iroiroviewer.io.FileOpEngine
+import io.github.donggi.iroiroviewer.io.FileOpManager
+import io.github.donggi.iroiroviewer.io.FileOpText
 import io.github.donggi.iroiroviewer.io.FileProbe
+import io.github.donggi.iroiroviewer.io.FileStamp
 import io.github.donggi.iroiroviewer.io.Iro
 import io.github.donggi.iroiroviewer.io.SessionPasswords
+import io.github.donggi.iroiroviewer.io.TextSaver
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.safety.ImageLimits
 import kotlinx.coroutines.CancellationException
@@ -31,6 +38,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -43,7 +51,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
+import java.util.UUID
 
 /**
  * 문서 뷰어의 상태. 구조는 `ComicViewModel` 을 그대로 따른다.
@@ -292,6 +302,78 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
     internal val outline: StateFlow<PdfOutline> = _outline.asStateFlow()
     private var outlineJob: Job? = null
 
+    // ---- PDF 의 자물쇠(잠그기·풀기 — `PdfLock.kt`) ---------------------------------------------------------
+
+    /** 자물쇠 단추의 모양. */
+    internal enum class LockButton {
+        /** 잠기지 않았다 — 누르면 새 암호로 잠근다. */
+        UNLOCKED,
+
+        /** 소유자 암호만 걸렸다(빈 사용자 암호로 열린다) — 누르면 푼다. */
+        LOCKED_OWNER,
+
+        /** 사용자 암호로 잠겼다 — 누르면 세션 암호로 푼다(없으면 다시 묻는다). */
+        LOCKED_PASSWORD,
+
+        /** 인증서·전용 처리기 잠금 — 바꿀 수 없다(흐린 단추, 누르면 까닭). */
+        UNSUPPORTED,
+    }
+
+    /**
+     * 자물쇠 단추. PDF 를 연 뒤 **뒤에서** 정한다(잠금은 `/Encrypt` 를 읽어 가른다 — 우리 복호화기의 들여다보기). null 이면 단추가 없다 —
+     * EPUB, 저장 볼륨 밖(다른 앱이 준 사본·앱 캐시)·휴지통·쓸 수 없는 파일([TextSaver.placeOf] — 글 편집과 같은 판단).
+     */
+    private val _lockButton = MutableStateFlow<LockButton?>(null)
+    internal val lockButton: StateFlow<LockButton?> = _lockButton.asStateFlow()
+    private var lockJob: Job? = null
+
+    /** 잠금을 바꾸는 요청이 큐에 있다 — 결과를 기다린다(단추를 막는다). */
+    private val _relocking = MutableStateFlow(false)
+    internal val relocking: StateFlow<Boolean> = _relocking.asStateFlow()
+
+    /**
+     * 묻는 것 — 풀 암호를 다시 넣으라(세션 암호가 지워졌다), 넣은 암호가 틀렸다(다시 넣으라), 바꾸기 전 판을 남기지 못했는데 그래도 바꿀까.
+     */
+    internal enum class LockQuestion { PASSWORD, WRONG_PASSWORD, WITHOUT_PREVIOUS }
+
+    private val _lockQuestion = MutableStateFlow<LockQuestion?>(null)
+    internal val lockQuestion: StateFlow<LockQuestion?> = _lockQuestion.asStateFlow()
+
+    /** 알릴 한 줄(결과·까닭) — 화면이 알림으로 띄운다. */
+    private val _lockMessages = MutableSharedFlow<String>(extraBufferCapacity = 4)
+    internal val lockMessages: Flow<String> = _lockMessages.asSharedFlow()
+
+    /**
+     * 큐에 넣은 잠금 바꾸기 하나 — 결과를 받을 신원과, 다시 넣거나(그래도 바꾸기) 잠근 뒤 다시 열 때 쓸 **암호의 사본**. 결과를 받거나 버리면
+     * 덮는다([wipe]). 메모리에만 있다.
+     */
+    private class Relock(
+        val id: String,
+        val path: String,
+        val expected: FileStamp,
+        val password: CharArray?,
+        val newPassword: CharArray?,
+    ) {
+        fun wipe() {
+            password?.fill('\u0000')
+            newPassword?.fill('\u0000')
+        }
+    }
+
+    private var relock: Relock? = null
+
+    /** 큐가 돌려준 결과 — [PdfRelockJobs] 가 작업 스레드에서 넣고 여기서 차례로 받는다. */
+    private val relockResults = Channel<FileOpManager.Finished>(Channel.UNLIMITED)
+
+    /** 잠금을 바꾼 뒤 다시 열 때 이어 볼 쪽(새 파일은 신원이 달라 이어보기 기록이 없다). */
+    private var carryPage: Int? = null
+
+    init {
+        viewModelScope.launch {
+            for (f in relockResults) onRelocked(f)
+        }
+    }
+
     /**
      * 버린 것과 경고.
      *
@@ -352,6 +434,8 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         clearSearch()
         clearOutline()
         closeDocument()
+        clearLock()
+        carryPage = null
         opened = want
         key = null
         _page.value = 0
@@ -463,6 +547,11 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
                     }
                     // **되살린 뒤에 `Ready` 를 낸다.** 차례가 뒤집히면 되살린 쪽이 지워진다.
                     val seenBefore = restore(file, doc)
+                    // 잠금을 바꾸고 다시 연 문서 — 보던 쪽을 잇는다(새 파일이라 기록이 없다).
+                    carryPage?.let { p ->
+                        carryPage = null
+                        if (p in 0 until doc.count) _page.value = p
+                    }
                     _state.value = State.Ready(doc)
                     val firstEntry = when {
                         seenBefore -> null
@@ -477,7 +566,10 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
                     }
                     // 여는 동안 나온 경고는 지금 이미 안다. 버린 것은 장을 읽어야 는다.
                     if (doc is Doc.Epub) _notice.value = Notice(doc.book.warnings, emptyMap())
-                    if (doc is Doc.Pdf) loadOutline(doc)
+                    if (doc is Doc.Pdf) {
+                        loadOutline(doc)
+                        loadLockButton(file)
+                    }
                 }
             }
         } finally {
@@ -748,6 +840,7 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
         saveJob?.cancel()
         clearSearch()
         clearOutline()
+        clearLock()
         val closing = document
         val doc = (_state.value as? State.Ready)?.doc
         val entity = key?.let { k -> doc?.let { entityOf(k, it) } }
@@ -770,7 +863,178 @@ class DocViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     override fun onCleared() {
+        clearLock()
         closeDocument()
+    }
+
+    // ---- 잠그기·풀기 ------------------------------------------------------------------------------
+
+    private fun loadLockButton(file: File) {
+        lockJob?.cancel()
+        lockJob = viewModelScope.launch {
+            _lockButton.value = withContext(IroDispatchers.io) { lockButtonOf(file) }
+        }
+    }
+
+    /** 단추의 모양 — 판단만(파일을 읽는다 — 입출력 디스패처에서). */
+    private fun lockButtonOf(file: File): LockButton? {
+        if (TextSaver.placeOf(file.path) != TextSaver.Place.OK) return null
+        return try {
+            FileInputStream(file).use { input ->
+                when (PdfDecryptor.inspect(FileChannelSource(input.channel))) {
+                    PdfDecryptor.Inspection.NotEncrypted -> LockButton.UNLOCKED
+                    PdfDecryptor.Inspection.OpenWithoutPassword -> LockButton.LOCKED_OWNER
+                    PdfDecryptor.Inspection.NeedsPassword -> LockButton.LOCKED_PASSWORD
+                    is PdfDecryptor.Inspection.Unsupported -> LockButton.UNSUPPORTED
+                }
+            }
+        } catch (e: IOException) {
+            null
+        } catch (e: RuntimeException) {
+            null
+        }
+    }
+
+    /**
+     * 걸려 있는 잠금 바꾸기를 버린다 — 결과는 앱의 결과 줄로 간다(파일 목록이 말한다). 암호 사본을 덮고 단추·물음을 걷는다. 문서를 바꾸거나
+     * 닫을 때.
+     */
+    private fun clearLock() {
+        lockJob?.cancel()
+        relock?.let {
+            PdfRelockJobs.forget(it.id)
+            it.wipe()
+        }
+        relock = null
+        _relocking.value = false
+        _lockQuestion.value = null
+        _lockButton.value = null
+    }
+
+    /**
+     * 새 암호로 잠근다(제자리 — 큐의 [FileOpManager.Request.PdfRelock]). **배열의 주인이 여기로 넘어온다** — 요청에는 사본을 싣고, 이것은
+     * 잠근 뒤 그 암호로 다시 열 때까지 들었다가 덮는다.
+     */
+    internal fun lock(newPassword: CharArray) {
+        if (_lockButton.value != LockButton.UNLOCKED || _relocking.value) {
+            newPassword.fill('\u0000')
+            return
+        }
+        val o = opened ?: return newPassword.fill('\u0000')
+        submit(Relock(UUID.randomUUID().toString(), o.first, FileStamp(o.second, o.third), null, newPassword))
+    }
+
+    /**
+     * 푼다(제자리). 소유자 암호만 걸린 문서는 빈 암호, 사용자 암호 문서는 이 문서를 열 때 넣은 **세션 암호**([SessionPasswords])로 —
+     * 지워졌으면(앱이 화면에서 사라졌다) 다시 묻는다([LockQuestion.PASSWORD] → [unlockWith]).
+     */
+    internal fun unlock() {
+        val button = _lockButton.value
+        if (_relocking.value || (button != LockButton.LOCKED_OWNER && button != LockButton.LOCKED_PASSWORD)) return
+        val o = opened ?: return
+        // 세션 암호를 찾는 사이에 한 번 더 누른 것을 막는다 — 곧바로 '바꾸는 중' 으로.
+        _relocking.value = true
+        viewModelScope.launch {
+            val password = if (button == LockButton.LOCKED_OWNER) {
+                CharArray(0)
+            } else {
+                withContext(IroDispatchers.io) { SessionPasswords.get(SessionPasswords.keyOf(File(o.first))) }
+            }
+            if (password == null || opened != o) {
+                password?.fill('\u0000')
+                _relocking.value = false
+                if (opened == o) _lockQuestion.value = LockQuestion.PASSWORD
+                return@launch
+            }
+            submit(Relock(UUID.randomUUID().toString(), o.first, FileStamp(o.second, o.third), password, null))
+        }
+    }
+
+    /** [LockQuestion.PASSWORD] 의 답 — 다시 넣은 지금 암호로 푼다. 배열의 주인이 넘어온다. 틀렸으면 큐가 거절하고 그렇게 알린다. */
+    internal fun unlockWith(password: CharArray) {
+        _lockQuestion.value = null
+        val o = opened
+        if (o == null || _relocking.value) return password.fill('\u0000')
+        submit(Relock(UUID.randomUUID().toString(), o.first, FileStamp(o.second, o.third), password, null))
+    }
+
+    /** [LockQuestion.WITHOUT_PREVIOUS] 의 답 — 바꾸기 전 판을 남기지 않고 바꾼다. */
+    internal fun relockWithoutPrevious() {
+        _lockQuestion.value = null
+        val a = relock ?: return
+        submit(Relock(UUID.randomUUID().toString(), a.path, a.expected, a.password?.copyOf(), a.newPassword?.copyOf()), withoutPrevious = true)
+    }
+
+    /** 물음을 닫는다 — 들고 있던 암호 사본을 덮는다. */
+    internal fun dismissLockQuestion() {
+        _lockQuestion.value = null
+        relock?.wipe()
+        relock = null
+    }
+
+    private fun submit(a: Relock, withoutPrevious: Boolean = false) {
+        relock?.let {
+            PdfRelockJobs.forget(it.id)
+            it.wipe()
+        }
+        relock = a
+        _relocking.value = true
+        // 결과를 받을 자리를 **넣기 전에** 건다(글 편집과 같다 — 곧바로 끝난 결과가 앱의 결과 줄로 새지 않게).
+        PdfRelockJobs.expect(a.id) { f -> relockResults.trySend(f) }
+        FileOpManager.enqueue(
+            context,
+            FileOpManager.Request.PdfRelock(
+                id = a.id,
+                path = a.path,
+                expected = a.expected,
+                password = a.password?.copyOf(),
+                newPassword = a.newPassword?.copyOf(),
+                withoutPrevious = withoutPrevious,
+                sink = PdfRelockJobs.sink,
+            ),
+        )
+    }
+
+    private fun onRelocked(f: FileOpManager.Finished) {
+        val a = relock?.takeIf { it.id == f.id } ?: return
+        _relocking.value = false
+        val o = f.outcome
+        if (o is FileOpEngine.Outcome.Failed && o.reason == FileOpEngine.Reason.PREVIOUS_NOT_KEPT) {
+            // 사본을 들고 묻는다 — '그래도 바꾸기' 면 같은 암호로 다시 넣는다.
+            _lockQuestion.value = LockQuestion.WITHOUT_PREVIOUS
+            return
+        }
+        if (o is FileOpEngine.Outcome.Failed && o.reason == FileOpEngine.Reason.PDF_LOCKED && a.newPassword == null) {
+            // 풀 암호가 틀렸다(다시 넣은 것이든 세션 암호든) — 암호 칸을 '틀렸다' 와 함께 다시.
+            relock = null
+            a.wipe()
+            _lockQuestion.value = LockQuestion.WRONG_PASSWORD
+            return
+        }
+        FileOpText.pdfLockMessage(context, f)?.let { _lockMessages.tryEmit(it) }
+        relock = null
+        if (o !is FileOpEngine.Outcome.Done) {
+            a.wipe()
+            return
+        }
+        // 바뀐 파일을 다시 연다 — 잠갔으면 방금 넣은 암호로(여는 길이 그 암호를 새 파일의 세션 암호로 둔다), 풀었으면 암호 없이.
+        val reopenWith = a.newPassword?.copyOf()
+        a.wipe()
+        val path = a.path
+        val file = File(path)
+        // 옛 파일의 세션 암호는 이제 쓸 데가 없다(신원이 바뀌었다).
+        val oldKey = FileKey.of(file.name, a.expected.size, a.expected.modified)
+        viewModelScope.launch(IroDispatchers.io) { SessionPasswords.forget(oldKey) }
+        carryPage = _page.value
+        openJob?.cancel()
+        clearSearch()
+        clearOutline()
+        closeDocument()
+        lockJob?.cancel()
+        _lockButton.value = null
+        key = null
+        opened = Triple(path, file.length(), file.lastModified())
+        start(file, reopenWith, reached = false)
     }
 
     /** 문서를 떼어 **주 스레드 밖에서** 닫는다(위 [close] 의 주석). */

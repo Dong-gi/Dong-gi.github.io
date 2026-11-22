@@ -20,6 +20,8 @@
     <string name="io_op_capturing">화면을 저장하는 중</string>
     <string name="io_op_pdf_extracting">쪽을 뽑는 중</string>
     <string name="io_op_pdf_merging">PDF를 합치는 중</string>
+    <string name="io_op_pdf_locking">PDF에 암호를 거는 중</string>
+    <string name="io_op_pdf_unlocking">PDF의 암호를 푸는 중</string>
 
     <!--
       파일 작업이 실패한 까닭(FileOpText.reasonRes). 그것을 만드는 FileOpEngine.Reason 곁에 한 벌 - 파일 목록과 재생 화면(구간 저장)이
@@ -56,6 +58,12 @@
     <string name="io_saved_capture">화면을 저장했습니다: %1$s</string>
     <string name="io_saved_pdf_pages">쪽을 뽑아 저장했습니다: %1$s</string>
     <string name="io_saved_pdf_merged">합쳐 저장했습니다: %1$s</string>
+    <string name="io_pdf_locked">암호를 걸었습니다: %1$s</string>
+    <string name="io_pdf_unlocked">암호를 풀었습니다: %1$s</string>
+    <string name="io_pdf_kept">" · 바꾸기 전 판은 휴지통에 있습니다"</string>
+    <string name="io_pdf_kept_unlocked">" · 잠기지 않은 원본은 휴지통에 있습니다"</string>
+    <string name="io_error_previous_pdf_not_kept">바꾸기 전의 PDF를 휴지통에 남기지 못해 바꾸지 않았습니다</string>
+    <string name="io_error_pdf_changed">PDF가 그사이 바뀌었습니다 — 다시 연 뒤에 하세요</string>
     <!-- PDF 쪽 뽑기·합치기의 실패(FileOpEngine.Reason 의 PDF_ 셋). -->
     <string name="io_error_pdf_locked">암호로 잠긴 PDF입니다 — 암호를 넣어 연 뒤에 다시 하세요</string>
     <string name="io_error_pdf_lock_unsupported">이 방식으로 잠긴 PDF는 다루지 않습니다</string>
