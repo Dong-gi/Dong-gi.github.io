@@ -2196,7 +2196,13 @@ include ../../source/skeleton.pug
                 $ ./easyrsa build-ca nopass
 
         li 서버 인증서 생성
-            +asCode('shell') $ ./easyrsa build-server-full vpn-server nopass
+            +asCode('shell').
+                $ ./easyrsa build-server-full vpn-server nopass
+
+                # 복사
+                $ openssl x509 -in pki/issued/vpn-server.crt | pbcopy   # Certificate body
+                $ pbcopy < pki/private/vpn-server.key                   # Certificate private key
+                $ openssl x509 -in pki/ca.crt | pbcopy                  # Certificate chain
 
         li Certificate Manager에 서버 인증서 등록
             p 서버 인증서 공개키, 서버 인증서 비밀키, CA 인증서 공개키 각각 설정하여 등록

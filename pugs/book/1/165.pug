@@ -1,0 +1,19 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: '다크',
+})
+
+    h1 도서 정보
+    +bookInfo({
+        imgSrc: 'https://image.aladin.co.kr/product/92/82/cover500/899203637x_1.jpg',
+        title: '다크',
+        author: '기리노 나쓰오',
+        publisher: '비채',
+        isbn: '978-89-92036-37-5 (03830)',
+        date: '2007.06.11',
+    })
+
+    h1 독서 기록
+    ul
+        li 쌀쌀맞은 소리겠지만, 그 정도 부채를 안고 있는 게 앞으로 살아가기 쉬울 거예요.

@@ -1,0 +1,24 @@
+include ../../../source/skeleton.pug
+
++post({
+    title: '바에 걸려온 전화',
+})
+
+    h1 도서 정보
+    +bookInfo({
+        imgSrc: 'https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788954617277.jpg?t=2989116',
+        title: '바에 걸려온 전화',
+        author: '아즈마 나오미',
+        publisher: '문학동네',
+        isbn: '978-89-546-1727-7 (03830)',
+        date: '2012.01.30',
+    })
+
+    h1 독서 기록
+    ul
+        li.
+            A: 그럼 미터 요금에 1만 엔 추가일세<br>
+            B: 좋습니다<br>
+            ... 타당한 수준이지<br>
+            B: 그렇긴 한데, 혹시 말입니다. 5000엔 추가면 어떻게 됩니까?<br>
+            A: 그럼 저 차주인에게 발각되지. 1만 엔이면 절대 들키지 않고
