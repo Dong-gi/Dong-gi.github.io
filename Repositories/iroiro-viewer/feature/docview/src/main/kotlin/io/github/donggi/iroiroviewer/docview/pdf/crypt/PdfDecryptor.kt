@@ -94,7 +94,7 @@ internal object PdfDecryptor {
     fun inspect(src: PdfSource, checkCancelled: () -> Unit = {}): Inspection {
         if (!hasPdfHeader(src)) return Inspection.NotEncrypted
         val file = PdfFile.open(src, checkCancelled)
-        val encrypt = Resolver(file).resolve(file.trailer["Encrypt"]) as? PdfDict
+        val encrypt = Resolver(file, readBudget()).resolve(file.trailer["Encrypt"]) as? PdfDict
             ?: return Inspection.NotEncrypted
         val security = try {
             PdfSecurity.open(encrypt, idOf(file.trailer), CharArray(0))
@@ -126,6 +126,7 @@ internal object PdfDecryptor {
     /**
      * @param maxOutput 결과의 바이트 상한. 넘으면 [TooLarge].
      * @param checkCancelled 객체 하나마다 부른다. 취소면 여기서 던져라.
+     * @param readBudget 읽는 예산([readBudget]) — 넘으면 [TooLarge].
      * @throws PdfSyntaxException 파일이 PDF 로 읽히지 않는다.
      */
     fun decrypt(
@@ -135,12 +136,13 @@ internal object PdfDecryptor {
         maxOutput: Long,
         onProgress: (Int, Int) -> Unit = { _, _ -> },
         strict: Boolean = false,
+        readBudget: Long = PdfDecryptor.readBudget(),
         checkCancelled: () -> Unit = {},
     ): Result {
         val file = PdfFile.open(src, checkCancelled)
         val trailer = file.trailer
         val encryptRef = trailer["Encrypt"]
-        val resolver = Resolver(file)
+        val resolver = Resolver(file, readBudget)
         val encrypt = resolver.resolve(encryptRef) as? PdfDict ?: return Result.NotEncrypted
         val security = try {
             PdfSecurity.open(encrypt, idOf(trailer), password)
@@ -186,6 +188,7 @@ internal object PdfDecryptor {
      *
      * @param password 새 사용자 암호 — [PdfLocker.problemOf] 를 지나야 한다. 덮지 않는다(부르는 쪽의 배열이다).
      * @param onProgress (옮긴 객체 수, 전체) — 파일에 바로 놓인 객체를 센다.
+     * @param readBudget 읽는 예산([readBudget]) — 넘으면 [TooLarge].
      * @throws PdfSyntaxException 파일이 PDF 로 읽히지 않는다.
      * @throws Damaged 원본에 읽지 못한 것이 있다.
      */
@@ -196,10 +199,11 @@ internal object PdfDecryptor {
         maxOutput: Long,
         onProgress: (Int, Int) -> Unit = { _, _ -> },
         random: java.security.SecureRandom = java.security.SecureRandom(),
+        readBudget: Long = PdfDecryptor.readBudget(),
         checkCancelled: () -> Unit = {},
     ): LockResult {
         val file = PdfFile.open(src, checkCancelled)
-        val resolver = Resolver(file)
+        val resolver = Resolver(file, readBudget)
         if (resolver.resolve(file.trailer["Encrypt"]) != null) return LockResult.AlreadyEncrypted
         resolver.plainSource = true
         val target = PdfLocker.Target(password, random)
@@ -212,17 +216,43 @@ internal object PdfDecryptor {
     }
 
     /**
+     * 원본 하나를 읽는 예산의 기본값 — 이 프로세스의 힙 상한의 1/4 과 1 GiB 가운데 작은 것. 객체 스트림을 푼 바이트와 그 안의 값을 읽느라
+     * 지나간 바이트(다시 한 것도)를 센다. 쪽 뽑기·합치기(`PdfPageCopier.readBudget`)도 이것을 쓴다.
+     */
+    fun readBudget(): Long = minOf(Runtime.getRuntime().maxMemory() / 4, MAX_READ_BUDGET)
+
+    private const val MAX_READ_BUDGET = 1L shl 30
+
+    /**
      * 간접 참조를 값으로. `/Length 12 0 R` 과 `/Encrypt 5 0 R` 을 푸는 데 쓴다.
      *
      * 객체 스트림 안의 값도 찾는다 — 그러려면 그 스트림을 풀어야 하므로 복호화가 세워진
      * 뒤에만 된다([security]).
      */
-    private class Resolver(private val file: PdfFile) {
+    private class Resolver(
+        private val file: PdfFile,
+        /**
+         * 읽는 일의 예산 — 객체 스트림을 푼 바이트와 그 안의 값을 읽느라 지나간 바이트의 합(캐시에서 밀려나 다시 푼 것도 센다). 넘으면
+         * [TooLarge]. 쪽 뽑기·합치기(`PdfObjects`)와 같은 꼴이다.
+         */
+        private val budget: Long,
+    ) {
         var security: PdfSecurity? = null
 
         /** 잠기지 않은 원본(잠그는 길) — 객체 스트림을 풀지 않고 읽는다. */
         var plainSource = false
-        private val objStreams = HashMap<Int, ObjStm?>()
+
+        /**
+         * 풀어 둔 객체 스트림 — **못 푼 것도**(null) 기억한다. **수와 무게 둘로 묶는다**([CACHE_OBJSTMS]·[CACHE_OBJSTM_WEIGHT]) — 묶지 않으면
+         * `/Length` 가 서로 다른 객체 스트림 수백 개를 가리키는 작은 파일 하나가 그 스트림을 전부(하나에 64 MiB 까지) 들고 있게 된다. 접근
+         * 차례로 오래된 것부터 내보낸다.
+         */
+        private val objStreams = LinkedHashMap<Int, ObjStm?>(16, 0.75f, true)
+        private var objStreamsWeight = 0L
+        private var work = 0L
+
+        /** 지금 푸는 객체 스트림 — 그 스트림의 `/Length` 가 제 안을 가리키면 되돌아온다. 없는 것으로 친다. */
+        private val loading = HashSet<Int>()
         private var depth = 0
 
         fun resolve(obj: PdfObj?): PdfObj? {
@@ -235,7 +265,10 @@ internal object PdfDecryptor {
                     // 객체를 `/Encrypt` 로 읽으면 암호를 묻지 않거나 틀린 열쇠를 만든다.
                     is PdfFile.InFile -> file.readAt(e.offset)?.takeIf { it.num == obj.num }?.value
                         ?.let { resolve(it) }
-                    is PdfFile.InStream -> objStream(e.stream)?.get(e.index)
+                    is PdfFile.InStream -> objStream(e.stream)?.member(e.index)?.let { m ->
+                        spend(m.read)
+                        m.value
+                    }
                     else -> null
                 }
             } finally {
@@ -243,17 +276,55 @@ internal object PdfDecryptor {
             }
         }
 
-        fun objStream(num: Int): ObjStm? = objStreams.getOrPut(num) {
+        private fun spend(bytes: Long) {
+            work += bytes
+            if (work > budget) throw TooLarge()
+        }
+
+        /** 풀어 둔 객체 스트림. `getOrPut` 은 null 을 기억하지 않는다(함정 표) — `containsKey` 로 가른다. */
+        fun objStream(num: Int): ObjStm? {
+            if (objStreams.containsKey(num)) return objStreams[num]
+            if (!loading.add(num)) return null
+            val parsed = try {
+                parseObjStream(num)
+            } finally {
+                loading.remove(num)
+            }
+            parsed?.let { spend(it.weight) }
+            objStreams[num] = parsed
+            objStreamsWeight += parsed?.weight ?: 0L
+            trim(num)
+            return parsed
+        }
+
+        /** 무게나 수를 넘으면 오래된 것부터 내보낸다([keep] 하나는 남긴다). */
+        private fun trim(keep: Int) {
+            val it = objStreams.entries.iterator()
+            while ((objStreamsWeight > CACHE_OBJSTM_WEIGHT || objStreams.size > CACHE_OBJSTMS) && objStreams.size > 1 && it.hasNext()) {
+                val e = it.next()
+                if (e.key == keep) continue
+                objStreamsWeight -= e.value?.weight ?: 0L
+                it.remove()
+            }
+        }
+
+        private fun parseObjStream(num: Int): ObjStm? {
             val sec = security
-            if (sec == null && !plainSource) return@getOrPut null
-            val e = file.entries[num] as? PdfFile.InFile ?: return@getOrPut null
-            val obj = file.readAt(e.offset) ?: return@getOrPut null
-            if (!obj.isStream) return@getOrPut null
+            if (sec == null && !plainSource) return null
+            val e = file.entries[num] as? PdfFile.InFile ?: return null
+            val obj = file.readAt(e.offset) ?: return null
+            if (!obj.isStream) return null
             val len = file.streamLength(obj) { resolve(it) }
-            if (len > PdfFilters.MAX_DECODED) return@getOrPut null
+            if (len > PdfFilters.MAX_DECODED) return null
             val raw = file.readBytes(obj.dataStart, len.toInt())
             val plain = sec?.decrypt(obj.num, obj.gen, sec.methodFor(PdfSecurity.Kind.STREAM), raw) ?: raw
-            ObjStm.parse(obj.dict!!, plain)
+            return ObjStm.parse(obj.dict!!, plain)
+        }
+
+        companion object {
+            /** 풀어 둔 객체 스트림의 무게·수 상한(`PdfObjects` 와 같은 값). */
+            private const val CACHE_OBJSTM_WEIGHT = 48L * 1024 * 1024
+            private const val CACHE_OBJSTMS = 4096
         }
     }
 

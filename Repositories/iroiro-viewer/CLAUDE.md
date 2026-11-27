@@ -774,6 +774,14 @@ WebView·서드파티의 소켓을 한꺼번에 막던 것)이다. 그때는 Web
 - **그 끝을 파일의 끝에서 그냥 4 KiB 뜨면 작은 JPEG 에서 틀린다.** 4 KiB 보다 작은 파일은 '끝' 이 EXIF 머리까지 품어, 태그를 고친 온전한 파일을 잘린
   것으로 읽는다(계측 시험이 64×48 JPEG 에서 회전을 모두 '입출력' 실패로 만들었다). 회전 저장의 끝은 **SOS(FF DA) 부터만** 뜬다. `ImageSaver.JpegTail` 은
   아직 SOI 뒤 전체를 뜬다 — 4 KiB 보다 작게 잘라 낸 JPEG 은 찍은 날을 옮기지 못하고 날짜 없이 놓인다(안전한 쪽이라 고치지 않았다).
+  그리고 SOS 를 찾지 못해 끝이 **비면** 빈 배열끼리는 늘 같다 — 견줄 것이 없는 것을 '온전하다' 로 읽지 마라(`rewrittenWhole` 은 거짓, 원본 자리는 미리 거절).
+- **ExifInterface 1.4.2 는 덩이가 작아도 그 안의 IFD 칸 하나로 크게 잡는다.** 칸마다 `개수 × 단위` 가 `Integer.MAX_VALUE` 이하인지만 보고 `new byte[…]` 한
+  뒤에 읽는다 — APP1 이 16비트 길이라는 것은 아무것도 막지 않는다(34 바이트 블록의 XMP 칸 개수 2억이 200 MB). 형식 7 은 태그의 본디 형식으로 바꿔 센다(RATIONAL 이면
+  × 8). 그리고 **내용이 TIFF 면 이름이 `.jpg` 여도 TIFF 로 읽고, `ftyp` 면 HEIF 로 읽는다**(추출기가 준 자리의 Exif 블록 — 그 갈래는 입력을 `mark(Integer.MAX_VALUE)`
+  로 감싸 파일 앞부분을 힙에 쌓으므로 **HEIF 는 파일째 넘기지 말고** 걸어 본 블록만 `STREAM_TYPE_EXIF_DATA_ONLY` 로 연다 — `ExifContainerGuard.openForExif`). WebP 는 RIFF 크기가 0 이어도 첫
+  청크가 EXIF 면 그것을 잡는다. 넘기기 전에 `ExifContainerGuard` 가 TIFF 블록을 걷는다('2.0.0 뒤 — 보안 점검 고침 2차'). **블록 밖 자료를 거절 근거로 삼지
+  마라** — 할당은 개수·길이로만 정해지고, 블록 끝을 넘는 MakerNote·썸네일은 실물에 있다(그런 사진도 ExifInterface 는 날짜·방향을 읽는다).
+  모의 android.jar 가 기본값을 돌려주면 이 라이브러리는 JVM 시험에서 돈다(`core:ui` — `ExifGuardLibraryTest`) — 판을 올리면 거기서 표가 맞는지부터 본다.
 - **목차 없는 MKV 에서 마지막 블록 너머로 되감으면 `MediaExtractor.seekTo` 가 -1 로 끝난다.** 앞으로 간 것처럼 물러서서 다시 찾는다
   (`MediaRemux.seekAtOrBefore`).
 - **commons-compress 1.28.0 의 `FramedLZ4CompressorInputStream(in, true)` 는 빈 프레임마다 재귀한다** — 빈 프레임 수만 개짜리 파일(`x.cbt`, 220 KB)이
@@ -876,18 +884,18 @@ export JAVA_HOME="$HOME/.gradle/jdks/jetbrains_s_r_o_-21-amd64-windows.2"
 minSdk 를 읽는다 — 2.0.0 부터 36). **`NewApi` 는 0건이다.** PiP 의 API 33 짜리 setter 넷(`setTitle`·`setSubtitle`·`setCloseAction`·
 `setExpandedAspectRatio`)은 minSdk 36 이라 쓸 수 있게 되었으나 부르지 않는다(제목에 파일 이름을 싣는 것은 사용자가 정할 일 — '2.0.0 — minSdk 36').
 
-**JVM 시험은 2,036건이다**(순수 JVM 679 + 안드로이드 모듈 1,357 — 2026-11-22, 갤러리 앨범·여럿 골라·위치 지우기·`Android/media` 와 그 독립 검토·재판정 뒤. 모듈마다 다시 돌려 센 수다(`format:text` 의 `memoryTest` 3 은 따로다). `feature:text` 의 `TextViewModelPreviewTest` 하나가 전체 실행에서 한 번 깨지고 홀로는 통과했다 — 그림 번호가 시험 차례에 기대는 것으로 보인다, 고치지 않았다), 실패 0. 건너뜀은 표본(`samples-local/`)이 있는 저장소에서 3(윈도에서 심볼릭
+**JVM 시험은 2,061건이다**(순수 JVM 694 + 안드로이드 모듈 1,367 — 2026-11-27, 2차 보안 점검 고침과 그 재판정의 WebP·HEIF 고침 뒤. 그 앞의 2,052 는 첫 고침 뒤(EXIF 검사기의 TIFF 걷기 9·WebP `XMP ` 1·실제 ExifInterface 와 견주기 4·빈 JPEG 끝 1·PDF 읽는 예산 1). 그 앞은 2,036 — 2026-11-22, 갤러리 앨범·여럿 골라·위치 지우기·`Android/media` 와 그 독립 검토·재판정 뒤. 모듈마다 다시 돌려 센 수다(`format:text` 의 `memoryTest` 3 은 따로다). `feature:text` 의 `TextViewModelPreviewTest` 하나가 전체 실행에서 한 번 깨지고 홀로는 통과했다 — 그림 번호가 시험 차례에 기대는 것으로 보인다, 고치지 않았다), 실패 0. 건너뜀은 표본(`samples-local/`)이 있는 저장소에서 3(윈도에서 심볼릭
 링크를 만들 권한이 없다 — `feature:text` 1, 그리고 pyzipper 와 견주는 `feature:archive` 의 `AesZipOracleTest` 2 — 환경 변수 `IROIRO_AESZIP_ORACLE` 이
 있을 때만 돈다, '14단계 뒤 — AES 암호 ZIP'), 표본이 없는 작업 사본에서는 13(`format:epub` 4·`feature:docview` 6·`feature:text` 1·`feature:archive` 2 — 말뭉치를 보는 시험 메서드를 세었다).
 
 | 모듈 | 시험 | 모듈 | 시험 | 모듈 | 시험 |
 |---|---|---|---|---|---|
-| `core:model` | 73 | `format:archive` | 251 | `feature:archive` | 40 |
+| `core:model` | 83 | `format:archive` | 251 | `feature:archive` | 40 |
 | `core:safety` | 68 | `format:epub` | 79 | `feature:browser` | 84 |
 | `core:charset` | 39 | `format:html` | 75 | `feature:comic` | 124 |
-| `core:io` | 260 | `format:text` | 94 | `feature:docview` | 209 |
+| `core:io` | 261 | `format:text` | 94 | `feature:docview` | 210 |
 | `core:data` | 31 | `app` | 63 | `feature:editor` | 70 |
-| `core:ui` | 107 | | | `feature:image` | 61 |
+| `core:ui` | 111 | | | `feature:image` | 61 |
 | `core:playback` | 146 | | | `feature:player` | 41 |
 | `core:webhost` | 18 | | | `feature:settings` | 18 |
 | | | | | `feature:text` | 85 |
@@ -2308,6 +2316,12 @@ JVM 시험과 옛 확인에 기댄다), 잘라 저장·그리기의 `expectedOri
 **확인하지 못한 것** — 실기기, 사진 앱(Google 포토)·메신저에서의 공유(시스템 파일 앱으로만), 실제로 응답하지 않는 제공자, SD 카드에 저장, 저장 중 화면이 시스템에 의해 끝난 경우(남은 항목이 '못 읽음'
 으로 끝날 것 — 코드로만), 공간 부족의 기기 동작(JVM·코드만), 1,000개 상한(셸은 URI 목록을 실을 수 없다), 다른 파일 작업 뒤에 줄 선 경우의 '기다리는 중' 화면.
 
+**알고 두는 것 — 미디어 저장소의 혼동 대리인**(2차 보안 점검, 고치지 않는다). 이 앱은 모든 파일 접근 권한으로 미디어 저장소(`content://media/…`)의 **어떤
+항목이든** 열 수 있다. 그래서 권한 없는 앱이 남의 사진을 가리키는 미디어 저장소 URI 를 지어 공유로 보내면, 그 사진의 사본이 사용자가 고른 폴더에 **이 앱의
+이름으로**(사본의 주인은 이 앱이다) 놓인다 — 보낸 앱이 그 폴더를 읽을 수 있으면 제가 못 읽던 사진을 얻는다. 우리 제공자(`isOwnProvider`)·`file:` 은
+거절하지만 미디어 저장소는 거절할 수 없다(사진 앱의 공유가 바로 그것이다). 받아들이는 까닭 — **사용자가 공유 창에서 이 앱을 고르고 폴더를 고르고 '여기에
+저장' 을 눌러야** 일어난다(조용히 일어나지 않는다), 고르는 화면이 받은 파일의 이름과 수를 보인다.
+
 ### 2.0.0 뒤 — 영상 화면 캡처·프레임 넘기기
 
 후보 '영상 도구' 의 둘이다(사용자 선택). 새 의존 없이 플랫폼 `PixelCopy` 와 media3 의 정확 탐색만 쓴다.
@@ -2458,7 +2472,7 @@ pypdf 의 'fontTools 가 없다' 안내는 이 기계의 환경이라 거른다)
 | 무엇 | 왜 그렇게 했나 |
 |---|---|
 | 시각은 **찍힌 시각** — 사진은 EXIF `DateTimeOriginal`(+ `OffsetTimeOriginal` 이 올바르면 그것, 아니면 기기 시간대), 영상은 `MediaMetadataRetriever.METADATA_KEY_DATE`(UTC), 없거나 못 믿으면 수정일 | 받은 사진·옮긴 사진은 수정일이 '옮긴 날' 이다. 글을 읽는 일은 순수 함수(`core:model` 의 `CaptureDates`) — 빈 칸·`0000:00:00 00:00:00`·`02-30`·1800년 앞·꼬리 붙은 꼴은 버리고(끝의 공백·NUL 만 뗀다), 날짜 구분이 `-` 인 것과 `T` 로 이은 것은 받는다. 시차 칸은 `±HH:MM` 꼴·범위 안만. 영상의 1904-01-01(MP4 의 0)·1970 이전은 버린다. 순간으로 바꾼 뒤 **기기 시계로** 날을 센다(`DayBucket` 그대로 — 도쿄에서 새벽 1시(`+09:00`)에 찍은 것은 뉴욕(겨울, `-05:00`)의 기기에서 그 전날 오전 11시다) |
-| EXIF 는 **열 형식만** 연다(jpg·jpeg·jpe·png·webp·heic·heif·avif·dng). 읽기의 실패는 **셋으로 가른다**(`core:io` 의 `CaptureDateRead`) — 읽었다 / 열어서 읽었으나 날짜가 없거나 못 믿거나 **파서가 무너졌다**('날짜 없음' 으로 캐시) / 열지 못했다(**캐시에 남기지 않는다** — 다음 훑기가 다시 연다). 사진은 사실상 `FileInputStream` 을 여는 실패뿐이다 — ExifInterface 는 읽는 도중의 `IOException` 을 스스로 삼켜 '날짜 없음' 으로 끝난다. 영상은 `setDataSource` 의 실패가 '열지 못했다' 다. `LinkageError`(클래스 초기화 실패)도 파일 탓이 아니라 '열지 못했다' 쪽이다. 취소만 빼고 **`Throwable` 을 잡는다**. **그 앞에서 덩이 머리를 본다**(`core:model` 의 `ExifContainerGuard`) — **ExifInterface 1.4.2 와 같은 길을 걷는다**(바이트코드로 확인). PNG 는 첫 `eXIf`(길이만큼)와 키워드가 `XML:com.adobe.xmp` 인 첫 `iTXt`(`길이 − 22`)를 잡고 **둘을 다 찾거나 `IEND`·파일 끝에 닿아야** 멈춘다 — `eXIf` 에서 멈추던 첫 판은 그 뒤의 큰 XMP `iTXt` 를 놓쳐 검사를 지난 채 OOM 이 났다(재검토 3차). 덩이마다 `길이 ≤ 남은 크기`, **잡히는 둘만** 8 MiB 이하(`tEXt`·`zTXt`·다른 `iTXt` 는 범위만 — 생성 이미지의 큰 JSON 을 거절하지 않게), `IEND` 없이 덩이 경계에서 끝난 파일(덜 받은 것)은 통과, 덩이 한가운데서 잘린 것은 거절. WebP 는 `EXIF` 를 만나면 잡고 멈춘다(다른 청크는 건너뛸 뿐 — `XMP ` 도 잡지 않는다): RIFF 크기 ≤ 파일 + 1(마지막 채움 바이트가 빠진 흔한 파일), 청크의 몸은 파일 안, `EXIF` 8 MiB 이하. JPEG 은 세그먼트 길이가 16비트라 통과. 어긋나면 ExifInterface 에 넘기지 않고 '날짜 없음'. 검사기는 **EXIF 가 없다**(PNG 의 `eXIf`·WebP 의 `EXIF` 가 없다)도 답해, 그런 그림(스크린숏 대부분)은 ExifInterface 를 열지 않는다. 갤러리는 이미 연 서술자의 채널로 위치를 지정해 읽는다(검사한 파일 = 읽는 파일, 스트림 위치는 그대로) | GIF·BMP·SVG 는 EXIF 가 없다. **ExifInterface 1.4.2 는 PNG `eXIf`·WebP `EXIF` 덩이를 적힌 길이대로 `new byte[길이]` 로 잡는다** — 길이를 `0x7FFFFFF0` 으로 적은 57바이트 PNG 하나가 `OutOfMemoryError` 를 던졌고, `IOException`·`RuntimeException` 만 잡던 판은 그것이 훑기 밖으로 나가 갤러리를 열 때마다 앱이 죽었다(독립 검토가 재현). 할당이 실패한 것이라 잡고 넘어가도 힙은 그대로다. **그러나 잡는 것만으로는 모자란다** — 길이를 힙 바로 아래(192 MB 따위)로 적고 그만큼 채운 파일이면 할당이 **성공해** 주 스레드·썸네일 스레드의 작은 할당이 대신 실패한다(재검토). 그래서 넘기기 전에 길이를 본다. 같은 검사기를 ExifInterface 를 여는 다른 자리 다섯에도 앞세웠다 — 만화 쪽 바이트의 방향(`ImageSource.exifOrientation`, 바이트 토막 기준), 그림 방향(`ImageSource` 의 파일 열기), 정보 패널(`ExifReader.read`), 정제 공유(`ExifReader.sanitizedCopy` — 어긋나면 '제거할 수 없다' 로 끝난다), 잘라 저장의 날짜 옮기기(`ImageSaver.copyDates` — 날짜 없이 놓인다, 바깥은 `Throwable` 까지 잡는다), 회전 저장(`FileOpEngine.reorientExif` — 원본에 손대지 않고 형식 거절 `UNSUPPORTED` 로 끝낸다. 화면의 `ExifReader.canRotate` 도 같은 검사를 지나 메뉴 앞에서 '이 형식은 회전·뒤집기를 파일에 저장할 수 없습니다' 로 끝난다. 엔진의 기존 형식 관문 `canRotateFile` 의 거절도 `INVALID_NAME`('쓸 수 없는 이름') 이던 것을 `UNSUPPORTED` 로 맞췄다). ExifInterface 는 JVM 시험에서 돌지 않아(정적 초기화가 `android.util.Log` 를 부른다) 같은 할당을 하는 파서로 가르는 자리를 시험한다(`CaptureDateReadTest`). 일시적 실패를 '날짜 없음' 으로 남기면 SD 카드가 잠깐 빠진 동안 훑은 사진이 영영 수정일로 묶인다 |
+| EXIF 는 **열 형식만** 연다(jpg·jpeg·jpe·png·webp·heic·heif·avif — DNG·TIFF 는 내용이 TIFF 라 아래 검사기가 넘기지 않으므로 열지 않는다, 수정일로 묶인다). 읽기의 실패는 **셋으로 가른다**(`core:io` 의 `CaptureDateRead`) — 읽었다 / 열어서 읽었으나 날짜가 없거나 못 믿거나 **파서가 무너졌다**('날짜 없음' 으로 캐시) / 열지 못했다(**캐시에 남기지 않는다** — 다음 훑기가 다시 연다). 사진은 사실상 `FileInputStream` 을 여는 실패뿐이다 — ExifInterface 는 읽는 도중의 `IOException` 을 스스로 삼켜 '날짜 없음' 으로 끝난다. 영상은 `setDataSource` 의 실패가 '열지 못했다' 다. `LinkageError`(클래스 초기화 실패)도 파일 탓이 아니라 '열지 못했다' 쪽이다. 취소만 빼고 **`Throwable` 을 잡는다**. **그 앞에서 그릇과 그 안의 TIFF 블록을 걸어 본다**(`core:model` 의 `ExifContainerGuard` — 규칙의 정본은 그 머리말, 아래 '2.0.0 뒤 — 보안 점검 고침 2차') — **ExifInterface 1.4.2 와 같은 길을 걷는다**(바이트코드로 확인). PNG 는 첫 `eXIf`(길이만큼)와 키워드가 `XML:com.adobe.xmp` 인 첫 `iTXt`(`길이 − 22`)를 잡고 **둘을 다 찾거나 `IEND`·파일 끝에 닿아야** 멈춘다 — `eXIf` 에서 멈추던 첫 판은 그 뒤의 큰 XMP `iTXt` 를 놓쳐 검사를 지난 채 OOM 이 났다(재검토 3차). 덩이마다 `길이 ≤ 남은 크기`, **잡히는 둘만** 8 MiB 이하(`tEXt`·`zTXt`·다른 `iTXt` 는 범위만 — 생성 이미지의 큰 JSON 을 거절하지 않게), `IEND` 없이 덩이 경계에서 끝난 파일(덜 받은 것)은 통과, 덩이 한가운데서 잘린 것은 거절. WebP 는 `EXIF` 를 만나면 잡고 멈춘다(다른 청크는 건너뛸 뿐 — `XMP ` 도 잡지 않는다): RIFF 크기 ≤ 파일 + 1(마지막 채움 바이트가 빠진 흔한 파일), 청크의 몸은 파일 안, `EXIF` 8 MiB 이하. **JPEG 은 APP1 `Exif\0\0` 마다, PNG `eXIf`·WebP `EXIF`(앞의 `Exif\0\0` 은 떼고)는 그 몸을 TIFF 블록으로 걷는다** — APP1 이 16비트 길이라도 그 안의 IFD 칸 하나가 개수만큼(수백 MB) 잡게 한다. **내용이 TIFF 계열(`II`·`MM`·RAF)이면 이름과 상관없이 넘기지 않는다.** 어긋나면 ExifInterface 에 넘기지 않고 '날짜 없음'. 검사기는 **EXIF 가 없다**(JPEG 의 APP1 `Exif`·PNG 의 `eXIf`·WebP 의 `EXIF` 가 없다)도 답해, 그런 그림(스크린숏 대부분)은 ExifInterface 를 열지 않는다. 갤러리는 이미 연 서술자의 채널로 위치를 지정해 읽는다(검사한 파일 = 읽는 파일, 스트림 위치는 그대로) | GIF·BMP·SVG 는 EXIF 가 없다. **ExifInterface 1.4.2 는 PNG `eXIf`·WebP `EXIF` 덩이와 그 안(JPEG APP1 도)의 IFD 칸을 적힌 길이대로 `new byte[길이]` 로 잡는다** — 길이를 `0x7FFFFFF0` 으로 적은 57바이트 PNG 하나가 `OutOfMemoryError` 를 던졌고, `IOException`·`RuntimeException` 만 잡던 판은 그것이 훑기 밖으로 나가 갤러리를 열 때마다 앱이 죽었다(독립 검토가 재현). 할당이 실패한 것이라 잡고 넘어가도 힙은 그대로다. **그러나 잡는 것만으로는 모자란다** — 길이를 힙 바로 아래(192 MB 따위)로 적고 그만큼 채운 파일이면 할당이 **성공해** 주 스레드·썸네일 스레드의 작은 할당이 대신 실패한다(재검토). 그래서 넘기기 전에 길이를 본다. 같은 검사기를 ExifInterface 를 여는 다른 자리 다섯에도 앞세웠다 — 만화 쪽 바이트의 방향(`ImageSource.exifOrientation`, 바이트 토막 기준), 그림 방향(`ImageSource` 의 파일 열기), 정보 패널(`ExifReader.read`), 정제 공유(`ExifReader.sanitizedCopy` — 어긋나면 '제거할 수 없다' 로 끝난다), 잘라 저장의 날짜 옮기기(`ImageSaver.copyDates` — 날짜 없이 놓인다, 바깥은 `Throwable` 까지 잡는다), 회전 저장(`FileOpEngine.reorientExif` — 원본에 손대지 않고 형식 거절 `UNSUPPORTED` 로 끝낸다. 화면의 `ExifReader.canRotate` 도 같은 검사를 지나 메뉴 앞에서 '이 형식은 회전·뒤집기를 파일에 저장할 수 없습니다' 로 끝난다. 엔진의 기존 형식 관문 `canRotateFile` 의 거절도 `INVALID_NAME`('쓸 수 없는 이름') 이던 것을 `UNSUPPORTED` 로 맞췄다). 가르는 자리는 같은 할당을 하는 파서로 시험하고(`CaptureDateReadTest`), 검사기와 실제 라이브러리는 `core:ui` 의 `ExifGuardLibraryTest` 가 견준다(모의 android.jar 가 기본값을 돌려주게 해 ExifInterface 1.4.2 가 JVM 에서 돈다). 일시적 실패를 '날짜 없음' 으로 남기면 SD 카드가 잠깐 빠진 동안 훑은 사진이 영영 수정일로 묶인다 |
 | 캐시는 **Room 이 아니라 메모리 표 + `filesDir/gallery-dates.bin`**(`core:io` 의 `CaptureDateCache`) — 열쇠 (경로·크기·수정 시각), 값 찍힌 시각 또는 '날짜 없음' | 후보 표는 Room 이라 했으나 표를 더하면 DB 판을 올려 마이그레이션을 써야 한다. 이 값은 잃어도 다시 읽으면 되는 캐시라 그 무게를 질 까닭이 없다. 프로세스에 하나(`shared`), 판·머리가 다르거나 잘린 파일은 빈 캐시, 쓰기는 임시 파일 → fsync → rename(쓰다 죽어 남은 `.tmp` 는 그 프로세스가 처음 읽을 때 지운다 — 경로가 든 파일이다). **셈한 시간대를 표와 파일 머리에 적고, 훑기의 시간대와 다르면 통째로 버린다**(`useZone`) — 시차 칸이 없는 EXIF 는 읽을 때의 기기 시간대로 순간을 셈하므로, 다른 시간대에서 그 값을 쓰면 하루 밀린 사진이 섞인다. 넣을 때도 셈한 시간대를 함께 주고 표의 것과 다르면 버린다(읽는 사이 다른 훑기가 표를 바꿨을 수 있다). 판·머리가 다르거나 잘린 파일은 읽은 자리에서 지운다(평문 경로를 남기지 않는다). 파일이 없으면 디스크를 읽지 않는다. `cacheDir` 가 아닌 까닭과 공유 저장소에 두지 않는 까닭은 썸네일과 같다. 폴더를 끝까지 훑은 뒤(날짜를 읽기 전에) 사라진 경로를 지운다(지운 사진의 경로가 남지 않게 — 날짜 읽기가 끊겨도 지운다. SD 카드를 뺀 동안 훑으면 그 몫도 지워지고 다음에 다시 읽는다). 파일 작업(지우기·이동)이 끝나면 **이제 없는 그 파일들의 경로**를 곧바로 걷는다(`BrowserViewModel.onOperationFinished` — 썸네일 무효화와 같은 경로 목록). 그 프로세스에서 갤러리를 한 번이라도 열었을 때만 한다(`sharedIfOpened` — 파일 작업 하나가 큰 캐시를 올리지 않게. 열지 않았으면 그 경로는 다음 훑기가 걷는다). **폴더째 지우거나 옮긴 것, 다른 앱이 지운 것은 다음 갤러리 훑기까지 남는다**(앱 전용 폴더 — 백업·기기 이전에서 빠진다). 영상의 날짜를 UTC 로 읽으므로 그 칸에 벽시계를 적는 카메라의 영상은 시차만큼 어긋날 수 있다(확인하지 못했다) |
 | **두 번 내놓는다** — 훑자마자 캐시에 있는 것은 그 값·없는 것은 수정일로 `Ready`, 모르는 것을 다 읽은 뒤 순서가 바뀌었으면 한 번 더 | 날짜를 읽으려면 파일을 하나하나 연다. `lstat` 만 하는 훑기(1만 개 394 ms)에 기대는 격자가 그것을 기다리지 않게. 읽는 중간에 조금씩 다시 내놓지 않는다 — 보는 동안 칸이 여러 번 옮겨 가면 보던 자리를 잃는다. 끊겨도(화면을 떠나 `WhileSubscribed` 가 끊었다) `NonCancellable` 로 읽은 만큼 저장한다. 두 번째부터는 거의 다 캐시라 한 번에 끝난다 |
 | **영상도 격자에 든다** — 썸네일은 `ThumbnailStore.Kind.VIDEO`, ▶ 를 얹는다(썸네일이 오기 전에도) | `.ts`·`.mts` 만 뺀다(`ContentSniff.isAmbiguousStream` — TypeScript 와 확장자를 나눠 쓰고 `Download` 에 소스가 섞인다. 가르려면 앞머리를 읽어야 한다). `.m2t`·`.m2ts` 는 든다. 제목은 '갤러리 N개'(영상에 '장' 은 맞지 않는다) |
@@ -2468,7 +2482,12 @@ pypdf 의 'fontTools 가 없다' 안내는 이 기계의 환경이라 거른다)
 **에뮬레이터에서 본 것**(Android 16, 릴리스, 2026-11-22) — 오늘 밀어 넣은 JPEG 둘(EXIF `2024:03:01 10:00:00`, `2025:07:15 23:30:00` + `+09:00`)이 '2025년
 7월 15일'·'2024년 3월 1일' 로 갈렸고, `screenrecord` 로 만든 영상(수정 시각을 `touch` 로 2020-01-01 로 바꿨다)은 '오늘' 에 ▶ 와 함께 섰다 — 영상의 날짜가
 수정일을 이겼다. 영상을 누르면 재생 화면, 파란 사진을 누르고 두 번 밀면 '2 / 2'(빨간 사진)에서 멈췄다 — 뷰어 목록에 영상이 없다. 표본은 지웠다.
-**HEIF·AVIF 는 덩이 검사기(`ExifContainerGuard`) 밖이다**(미확인 위험) — ExifInterface 1.4.2 의 `getHeifAttributes` 는 플랫폼 추출기가 준 EXIF·XMP 길이를 그대로 `new byte[…]` 한다(바이트코드). 추출기가 그 길이를 파일 크기로 묶는지는 기기 없이 확인하지 못했다 — 묶지 않으면 조작한 HEIC 하나가 큰 할당으로 다른 스레드를 OOM 에 빠뜨릴 수 있다. 막으려면 ExifInterface 전에 `MediaMetadataRetriever` 의 `METADATA_KEY_EXIF_OFFSET/LENGTH`·`XMP_OFFSET/LENGTH` 를 직접 견준다(하지 않았다).
+**HEIF·AVIF 는 ExifInterface 의 HEIF 갈래를 타지 않는다**(2차 보안 점검의 마지막 재판정 뒤) — 그 갈래(`getHeifAttributes`)는 입력을
+`mark(Integer.MAX_VALUE)` 로 감싸 추출기가 읽은 가장 먼 자리까지 파일 앞부분을 힙에 쌓는다(앞부분 120 MB 의 HEIF 하나가 힙 160 MB 에서
+`OutOfMemoryError`). 검사기가 그 사진을 연 **서술자로** 플랫폼 추출기에 Exif 자리를 묻고(`MediaMetadataRetriever` 33·34 — `app` 의 `PlatformHeifLocator`,
+경로를 다시 열지 않는다), 그 블록(`Exif\0\0` 머리째, 8 MiB 이하)을 읽어 TIFF 를 걸어 본 뒤 **블록만** `STREAM_TYPE_EXIF_DATA_ONLY` 로 넘긴다
+(`ExifContainerGuard.openForExif`). 추출기가 답하지 못하거나 Exif 가 없으면 열지 않는다(수정일로 묶인다). 아래 '2.0.0 뒤 — 보안 점검 고침 2차'.
+기기에서 실제 HEIC 로 태우지는 않았다.
 
 **확인하지 못한 것** — 1만 장 폴더의 첫 훑기에 걸리는 시간(두 번째 `Ready` 까지)과 그동안의 메모리, HEIC·DNG 의 날짜, `Kind.VIDEO` 썸네일 위 ▶ 가 흰
 화면에서 잘 안 보이는 것(폴더 목록과 같은 흰 아이콘 — 그대로 두었다), 실기기. 위 검토 고침(셋으로 가르기·시간대 꼬리표·경로 걷기)은 JVM 시험과 빌드만 지났다 — 에뮬레이터로 다시 보지 않았다.
@@ -2513,7 +2532,7 @@ pypdf 의 'fontTools 가 없다' 안내는 이 기계의 환경이라 거른다)
 | 무엇 | 왜 그렇게 했나 |
 |---|---|
 | **여러 폴더의 같은 이름을 묶으면 `이름 (2).jpg` 로 담는다**(`ZipMaker.uniqueTopLevel` — 대소문자를 가리지 않고, 폴더면 그 아래 항목도 함께. `Request.ShareZip.uniqueNames` 로 갤러리만 켠다) | `ZipMaker` 는 고른 것이 한 폴더에 있다고 보고 맨 위 이름을 그대로 쓴다 — 갤러리에서 `DCIM/IMG_1.jpg` 와 `Pictures/IMG_1.jpg` 를 함께 묶으면 `ZipException: duplicate entry` 로 묶기 전체가 실패했다. 파일 목록의 'ZIP으로 압축'·묶어 보내기는 그대로다(한 폴더라 겹칠 수 없다) |
-| **XMP 안의 위치** — 사본은 **XMP 를 통째로** 지우고(`ExifPrivacy.scrubForShare` — `setAttribute("Xmp", null)` 을 두 번: ExifInterface 1.4.2 의 JPEG 은 IFD0 칸 700 이 있으면 그것을, 없으면 따로 된 XMP 덩이를 지운다 — 바이트코드. PNG 는 `iTXt` 의 XMP), 다 쓴 사본에 글로 적힌 위치(`core:model` 의 `MetadataLocation` — 아래 '재판정의 거짓 음성 둘' 에서 넓혔다)가 남으면 그 사본은 **보내지 않고** '위치를 지우지 못한 것 N개' 로 센다. 뷰어의 한 장 공유(`ExifReader.sanitizedCopy`)도 같다. 원본 자리는 **XMP 에 위치가 있는 사진을 건너뛴다**('XMP에 위치가 있어 건너뜀 N' — 원본 바이트 그대로), EXIF 를 다시 쓴 임시본도 놓기 전에 GPS 칸·글로 적힌 위치가 없는지 본다(`rewriteExif` 의 `verify`) | 예전 판은 XMP 의 `exif:GPSLatitude` 를 남긴 채 '위치 지우고 공유'·'N장에서 위치를 지웠습니다' 라고 말했다. 원본에서 XMP 를 통째로 지우면 모션 포토(`MicroVideo`)·편집 기록이 깨지고, XMP 안의 속성만 고치는 다시 쓰기는 라이브러리에 없다 — 건너뛰고 정직하게 말한다. **WebP 의 `XMP ` 청크는 ExifInterface 가 지우지 못한다**(그 그릇은 칸 700 만 본다) — 사본은 검사에 걸려 보내지 않고, 원본은 건너뛴다. 공유 사본에서 XMP 를 통째로 지우므로 모션 포토의 사본은 정지 사진으로 보인다(뒤에 붙은 영상 바이트는 남는다) |
+| **XMP 안의 위치** — 사본은 **XMP 를 통째로** 지우고(`ExifPrivacy.scrubForShare` — `setAttribute("Xmp", null)` 을 두 번: ExifInterface 1.4.2 의 JPEG 은 IFD0 칸 700 이 있으면 그것을, 없으면 따로 된 XMP 덩이를 지운다 — 바이트코드. PNG 는 `iTXt` 의 XMP), 다 쓴 사본에 글로 적힌 위치(`core:model` 의 `MetadataLocation` — 아래 '재판정의 거짓 음성 둘' 에서 넓혔다)가 남으면 그 사본은 **보내지 않고** '위치를 지우지 못한 것 N개' 로 센다. 뷰어의 한 장 공유(`ExifReader.sanitizedCopy`)도 같다. 원본 자리는 **XMP 에 위치가 있는 사진을 건너뛴다**('XMP에 위치가 있어 건너뜀 N' — 원본 바이트 그대로), EXIF 를 다시 쓴 임시본도 놓기 전에 GPS 칸·글로 적힌 위치가 없는지 본다(`rewriteExif` 의 `verify`) | 예전 판은 XMP 의 `exif:GPSLatitude` 를 남긴 채 '위치 지우고 공유'·'N장에서 위치를 지웠습니다' 라고 말했다. 원본에서 XMP 를 통째로 지우면 모션 포토(`MicroVideo`)·편집 기록이 깨지고, XMP 안의 속성만 고치는 다시 쓰기는 라이브러리에 없다 — 건너뛰고 정직하게 말한다. **WebP 의 `XMP ` 청크는 ExifInterface 가 지우지 못한다**(그 그릇은 칸 700 만 본다) — 사본은 검사에 걸려 보내지 않고, 원본은 건너뛴다(**처음 판의 검사는 그 청크에 긴 이름이 있을 때만 걸렸다** — `photoshop:City` 만 든 XMP 는 지나갔다. 2차 보안 점검 뒤로는 `XMP ` 청크가 있기만 하면 걸린다 — `MetadataLocation.webpHasXmp`). 공유 사본에서 XMP 를 통째로 지우므로 모션 포토의 사본은 정지 사진으로 보인다(뒤에 붙은 영상 바이트는 남는다) |
 | **`Android/media` 의 썸네일은 디스크에 남기지 않는다**(`persist=false` — `GalleryRoots.isMediaPath`) | 갤러리는 썸네일 통을 청소하지 않는다(폴더 목록이 그 폴더를 열 때와 총량 상한만 걷는다). 메신저가 지운 사진의 축소본이 `filesDir/thumbs/` 에 남지 않게. 대가는 그 사진을 볼 때마다 다시 디코딩하는 것이다. GalleryScreen 머리말의 '원본이 사라지면 썸네일도 사라진다' 는 틀린 서술이라 고쳤다 |
 | **수천 개를 고른 일을 주 스레드에서 하지 않는다** — 삭제·원본 위치 지우기의 썸네일 열쇠는 항목의 크기·시각으로 기본 디스패처에서 셈한다(`enqueueWithThumbKeys` — 파일을 다시 보지 않는다), 공유 창은 입출력 디스패처에서 짓고(`ShareHelper.chooserFor` — 경로마다 `canonicalFile`) 주 스레드에서 띄운다(`ShareHelper.start`). **공유·위치 지우고 공유는 500개까지**(`GalleryRules.SHARE_LIMIT`) — 넘으면 'ZIP으로 묶어 보내기' 를 권한다 | 예전 판은 고른 수만큼 주 스레드에서 `stat`·SHA-256·`canonicalFile` 을 돌렸다. 수천 개의 주소를 실은 인텐트는 바인더 한 번을 넘거나 받는 앱이 감당하지 못한다 |
 | 원본 위치 지우기를 도중에 취소하면 '취소 — 남은 M장' 을 덧붙인다(`LocationTally.total`·`left`) | 원본 자리라 이미 바꾼 것이 있으면 '지웠다' 로 말하는데(큐의 놓인 결과), 나머지가 남았다는 것을 말하지 않았다 |
@@ -2525,7 +2544,7 @@ pypdf 의 'fontTools 가 없다' 안내는 이 기계의 환경이라 거른다)
 EXIF 위치만 든 JPEG 과 XMP(따로 된 APP1 덩이 — PC 파이썬으로 끼웠다)에 위치가 든 JPEG 을 함께 '원본에서 위치 지우기' — '1장에서 위치를 지웠습니다 · XMP에 위치가
 있어 건너뜀 1', XMP 쪽은 바이트 그대로(꺼내 견줬다). 같은 둘의 '위치 지우고 공유' 는 공유 창('Sharing 2 images')까지 — 사본에 XMP 위치가 남지 않는 것은 계측
 시험이 확인했다. 공유 창에서는 보내지 않고 닫았다. 표본·앱 데이터는 지웠다.
-**확인하지 못한 것(검토 반영)** — WebP 의 `XMP ` 청크(표본을 만들지 않았다 — 판단은 바이트코드와 검사), 모션 포토 실물, 500개를 넘긴 공유 안내를 화면으로.
+**확인하지 못한 것(검토 반영)** — WebP 의 `XMP ` 청크를 기기에서(검사는 JVM 시험 `GalleryRootsAndPrivacyTest` 가 손으로 지은 WebP 로 본다 — 사본·원본 길을 기기로 태우지 않았다), 모션 포토 실물, 500개를 넘긴 공유 안내를 화면으로.
 
 **재판정의 거짓 음성 둘**(같은 날) — 일곱은 해결로 판정됐고, 검사가 보지 못하던 위치 둘을 고쳤다.
 
@@ -2537,6 +2556,86 @@ EXIF 위치만 든 JPEG 과 XMP(따로 된 APP1 덩이 — PC 파이썬으로 �
 | **짜임을 읽지 못한 JPEG**(`JpegLayout.read` 가 null — EOI 가 없다·덩이 길이가 파일을 넘는다)은 **닫는 쪽으로** — 위치 검사가 '있다' 로 답해 사본은 보내지 않고('위치를 지우지 못한 것 N개'), 원본 자리는 '지울 수 없는 형식' 으로 건너뛴다(`JpegLayout.isUnreadableJpeg` — `stripOne` 의 관문) | 짧은 표지·IPTC·덧붙은 영상을 볼 자리를 모른다. 처음 판은 긴 이름만 보고 '없다' 로 답했다(마지막 판정의 낮음) |
 
 시험은 `core:model` 의 `JpegLayoutTest` 9(채움·RST·여러 스캔의 EOI, 어긋난 짜임, 짜임을 못 읽은 JPEG 은 위치가 있는 것으로, 모션 포토 꼴 합성 — JPEG 뒤에 `©xyz` 든 바이트 — 의 사본이 꼬리·APP13 을 잃고 검사를 지난다, 고칠 것 없는 사본은 그대로, IPTC 레코드, 짧은 표지의 자리, PNG 의 글 덩이). 에뮬레이터는 돌리지 않았다.
+
+### 2.0.0 뒤 — 보안 점검 고침 2차
+
+독립 보안 점검(2026-11-27)이 낸 것을 고쳤다. 가장 큰 것은 EXIF 검사기의 전제가 틀렸던 것이다 — 'JPEG 은 세그먼트 길이가 16비트라 통과' 는 **덩이**만 본 말이었고,
+ExifInterface 는 덩이 **안의** TIFF IFD 칸 하나로도 수백 MB 를 잡는다(점검자 재현: 34~91 바이트의 JPEG·PNG·WebP·TIFF, 실제 1.4.2 jar 를 JVM 에서).
+
+| 무엇 | 왜 그렇게 했나 |
+|---|---|
+| **검사기(`core:model` 의 `ExifContainerGuard`)가 TIFF 블록을 걷는다** — JPEG 의 APP1 `Exif\0\0` 마다, PNG 첫 `eXIf`, WebP `EXIF`(앞의 `Exif\0\0` 은 떼고), HEIF·AVIF 의 Exif 덩이(아래). IFD0 → Exif·GPS·Interop·SubIFD 포인터와 다음 IFD 를 방문 집합·IFD 64 개·칸 65,536 개 상한으로 따라가며, **아는 태그든 모르는 태그든** 칸마다 ExifInterface 가 잡을 수 있는 크기(`개수 × 단위`)와 썸네일 길이·띠의 합(띠마다 한 번 더 잡으므로 두 배)을 파일 전체에서 더해 8 MiB 를 넘으면 UNSAFE | ExifInterface 1.4.2 의 `readImageFileDirectory` 는 칸마다 `개수 × 단위` 가 `Integer.MAX_VALUE` 이하인지만 보고 `new byte[…]` 한 **뒤에** 읽는다(바이트코드) — 34 바이트 블록의 XMP 칸(0x02BC, BYTE) 개수 2억이 200 MB 를 잡는다(아래 대조표). 합의 예산은 칸 수천 개가 블록의 같은 자리를 가리키는 꼴도 막는다 |
+| **자료·썸네일이 블록 밖인 것은 거절하지 않는다**(재검산이 잡은 회귀 — 첫 판은 거절했다) | 할당 크기는 개수·길이로만 정해지고(바이트코드 — 칸의 자료와 썸네일 모두 **잡은 뒤에** 오프셋으로 가서 읽는다, 오프셋이 크기를 키우는 길은 없다) 예산이 그것을 묶는다. 블록 밖이면 ExifInterface 는 같은 크기를 잡고 EOF 로 멈출 뿐이고, 그 앞에서 읽은 날짜·방향은 남는다. 첫 판은 MakerNote 가 블록 끝을 넘거나 썸네일 길이가 16 바이트 긴 실물(재검산 표본)의 날짜·방향을 잃게 했다 |
+| **WebP 는 ExifInterface 의 고리를 그대로 따른다**(재검산이 잡은 우회) — 12 자리의 첫 청크 머리는 RIFF 크기와 상관없이 읽고, `EXIF` 면 길이가 0 이상 8 MiB 이하·파일 안이어야 하고 TIFF 를 걷는다. 그 밖의 청크는 '센 자리 + 짝수로 올린 길이' 가 RIFF 끝 이상이면 멈추고 아니면 건너뛴다(int 셈 그대로) | 첫 판은 RIFF 크기 칸이 0~4 면(RIFF 끝 ≤ 12) 고리에 들지 않고 NO_EXIF 를 답했는데, ExifInterface 는 RIFF 크기를 EXIF 가 **아닌** 청크 뒤에서만 견준다(바이트코드 `getWebpAttributes` 191-207) — 첫 청크 EXIF 의 200 MB 길이와 그 안의 IFD 폭탄이 그대로 지나갔다 |
+| **HEIF·AVIF 는 ExifInterface 의 HEIF 갈래를 타지 않는다**(재검산이 잡은 우회 — 첫 판은 SAFE 로 넘겼다, 마지막 재판정이 잡은 낮음 둘 — 그 갈래가 앞부분을 힙에 쌓는다, 추출기가 경로를 다시 연다). 내용이 `ftyp` 면 검사기가 `Verdict.HEIF` 를 내고 **경로째 넘기는 길(`allows(file)`·`allows(bytes)` — 회전·위치 지우기·공유 사본·만화 쪽)은 넘기지 않는다.** 읽기만 하는 호출부(갤러리 날짜·`ImageSource.probe`·`ExifReader.read`·`ImageSaver.copyDates`)는 `ExifContainerGuard.openForExif` 한 문을 지난다: 넘겨도 되는 파일이면 **검사한 그 스트림째**(`STREAM_TYPE_FULL_IMAGE_DATA`), HEIF 면 그 스트림의 **서술자로** `heifLocator`(`app` 이 꽂는 `PlatformHeifLocator` — `MediaMetadataRetriever` 키 33·34, 경로를 다시 열지 않는다)에 Exif 자리를 물어 길이 > 6·≤ 8 MiB·파일 안, 첫 6 바이트 `Exif\0\0`, 그 뒤 TIFF 걷기를 지난 **블록만**(머리째) `STREAM_TYPE_EXIF_DATA_ONLY` 로, 그 밖은 null(열지 않는다). 폭·높이·회전(키 29·30·31, 그림이 없으면 18·19·24)은 블록에 없으므로 읽은 값이 0 일 때 대신한다(`ExifInput.orFallback`). 추출기가 없거나 실패하거나 숫자가 아니거나 Exif 가 없으면 열지 않는다 | ExifInterface 는 이름이 `.jpg` 여도 내용이 `ftyp` 면 `getHeifAttributes` 로 가서 그 추출기 키의 자리에서 `Exif\0\0` 을 확인하고 `길이 − 6` 을 잡아 `readExifSegment` 한다(바이트코드) — 같은 IFD 폭탄이 든다. 그리고 그 갈래는 입력을 `BufferedInputStream` + `mark(Integer.MAX_VALUE)` 로 감싸 **추출기가 읽은 가장 먼 자리까지 파일 앞부분을 힙에 쌓는다** — 블록을 걸어 봐도 앞부분 120 MB 에 작은 Exif 인 HEIF 하나가 힙 160 MB 에서 `OutOfMemoryError` 였다(재판정의 재현). `EXIF_DATA_ONLY`(`getStandaloneAttributes`)는 머리를 확인하고 나머지를 HEIF 갈래와 같은 `readExifSegment`·`setThumbnailData` 로 읽는다(바이트코드) — 블록 걷기의 판정이 그대로 맞는다. 머리 없는 블록은 읽지 않는다. 블록만 열면 Exif 에 없는 폭·높이·방향을 `addDefaultValuesForCompatibility` 가 0 으로 채우므로 0 을 '없다' 로 읽는다. 추출기와 검사기가 **같은 서술자**를 보므로 그 사이 이름을 바꿔 다른 파일을 끼우는 틈이 없다. 갤러리는 heic·heif·avif 를 저절로 훑는다. 추출기는 순수 JVM 인 검사기가 부를 수 없고 `core:io`·`core:ui` 는 서로를 못 보므로(의존 표) `CoverSupport` 와 같은 꼴의 이음매로 꽂았다. HEIC 쓰기(회전·위치 지우기)·HEIF 공유 정리는 원래 지원하지 않는다(그대로) |
+| **내용이 TIFF 계열이면 넘기지 않는다**(UNSAFE) — 앞 두 바이트 `II`·`MM`(TIFF·DNG·ORF·RW2·PEF …)과 RAF 서명. 갤러리는 DNG 의 날짜를 읽지 않게 됐다(`EXIF_EXTENSIONS` 에서 뺐다 — 수정일로 묶인다) | ExifInterface 는 이름이 아니라 내용으로 갈래를 고르고(`getMimeType` — JPEG·RAF·HEIF·ORF·RW2·PNG·WebP 차례, 나머지는 `getRawAttributes`), RAW 갈래는 IFD 에 더해 미리보기 JPEG 길이(`retrieveJpegImageSize` — 오프셋 값을 길이로 쓴다)까지 잡는다. 이 앱은 RAW 를 다루지 않으므로(1단계 제외) 그 갈래를 따로 지키지 않고 막는다. 그 밖의 내용(GIF·BMP·아무것)은 `II`·`MM` 이 아니면 `Invalid byte order` 로 곧바로 멈춰 그대로 통과다 |
+| JPEG 에 APP1 `Exif` 가 없으면 **NO_EXIF**(전에는 SAFE) | 갤러리는 그런 JPEG 을 열지 않는다(날짜가 없으니 결과가 같다). 다른 자리는 `allows`(UNSAFE 가 아닌가)를 보므로 달라지지 않는다 |
+| **위치 지우기·정제 사본은 한 장의 `Error` 로 묶음 전체를 끝내지 않는다**(`FileOpEngine.stripLocation` 이 장마다 취소 말고 `Throwable` 을 '실패' 로, 파서가 무너지면(`OutOfMemoryError`·`StackOverflowError` 까지) '지울 수 없는 형식'. `ShareZips.cleanOne` 도 '실패') | `IOException`·`RuntimeException` 만 잡아, 검사기를 지난 파일이라도 ExifInterface 가 `Error` 를 던지면 그 장이 큐 밖으로 나가 나머지가 돌지 않았다 |
+| **SOS 를 찾지 못한 JPEG 은 회전·뒤집기·원본 위치 지우기를 거절한다**(`FileOpEngine.hasNoJpegTail` → `UNSUPPORTED`·'지울 수 없는 형식'), `rewrittenWhole` 은 빈 끝을 **거짓**으로 | `jpegTailOf` 가 SOS 앞에서 끝나거나 머리 세그먼트 1,024 개를 넘으면 빈 끝을 주고, 빈 배열끼리는 늘 같아 '잘렸는가' 검사가 무조건 참이었다 — 잘린 임시본이 원본 자리에 놓일 수 있었다. 사본(`cleanOne`)은 그 경우 실패로 센다 |
+| **WebP 에 `XMP ` 청크가 있으면 위치가 있는 것으로 친다**(`MetadataLocation.webpHasXmp`) — 사본은 '위치를 지우지 못한 것', 원본 자리는 건너뜀 | ExifInterface 가 그 청크를 지우지 못한다. 처음 판은 긴 이름(`gpslatitude` 따위)이 있을 때만 걸려 `photoshop:City` 만 든 XMP 가 사본에 실려 나갔다 |
+| **PDF 잠그기·풀기의 해석기(`PdfDecryptor.Resolver`)가 객체 스트림을 묶는다** — 접근 차례 캐시를 무게 48 MiB·수 4,096 으로(`PdfObjects` 와 같은 값), 푼 바이트와 칸을 읽느라 지나간 바이트에 **읽는 예산**(`PdfDecryptor.readBudget` — 힙의 1/4 과 1 GiB 가운데 작은 것, 쪽 뽑기의 `PdfPageCopier.readBudget` 도 이것을 쓴다). 넘으면 `TooLarge` → '너무 크다'(`PDF_TOO_BIG`). 못 푼 것(null)도 기억하고(`getOrPut` 이 null 을 기억하지 않던 것 — 함정 표), 푸는 중에 되돌아오면 없는 것으로 | 캐시가 끝없는 `HashMap` 이라, 스트림마다 `/Length` 가 서로 다른 객체 스트림(하나에 64 MiB 까지 풀린다)을 가리키는 작은 PDF 하나가 그것을 전부 들고 있게 했다. 제자리 잠그기·풀기(파일 작업 큐)와 뷰어의 복호화가 같은 해석기를 쓴다 |
+
+**ExifInterface 1.4.2 의 판정과 검사기의 판정**(바이트코드 `readImageFileDirectory`·`isFormatCompatible`·`handleThumbnailFrom*`·`getJpegAttributes`·`getPngAttributes`·
+`getWebpAttributes`·`loadAttributes` — 표는 `ExifGuardLibraryTest` 가 반사로 라이브러리와 견준다).
+
+| 자리 | ExifInterface | 검사기 |
+|---|---|---|
+| 칸의 크기 | `개수(int) × IFD_FORMAT_BYTES_PER_FORMAT[형식]`(형식 13 = 1), 0 이상 `Integer.MAX_VALUE` 이하면 잡는다. 4 를 넘으면 칸의 오프셋으로 가서 **잡은 뒤에** 읽는다(블록 밖이면 그때 EOF) | 잡는 크기의 합 ≤ 8 MiB. 자료가 블록 밖인지는 보지 않는다. 부호 비트가 켜진 개수는 건너뛴다(같다) |
+| 형식 7(UNDEFINED) | 아는 태그면 **언제나** 받고(`isFormatCompatible`) 그 태그의 `primaryFormat` 으로 바꿔 센다 — RATIONAL 이면 개수 × 8 | 자료는 1 바이트로 재고, 예산은 어느 표에서나 UNDEFINED 인 13 태그(`UNDEFINED_TAGS` — MakerNote·UserComment …)만 1, 나머지는 8(`WIDEST_UNIT`) |
+| 모르는 태그·형식 0 이나 14 이상·`primaryFormat` 과 맞지 않는 형식 | 건너뛴다(할당 없음) | 모르는 태그·맞지 않는 형식도 **본다**(더 엄격). 형식 0·14 이상은 건너뛴다(점검 의견은 UNSAFE 였으나 ExifInterface 가 읽기도 전에 버리는 칸으로 실물 사진의 날짜를 잃지 않게) |
+| 개수 0 | 0 바이트를 잡는다 | 통과 |
+| 포인터(SubIFD 0x014A·Exif 0x8769·GPS 0x8825·Interop 0xA005 — ORF 의 둘은 ORF 갈래만) | 첫 값이 0 보다 크고 블록 안이며 읽지 않은 자리면 들어간다(재귀) | 같은 조건으로 따라간다(형식 3·4·7·8·9·13). 0 이하·블록 밖은 따라가지 않을 뿐 UNSAFE 가 아니다 |
+| 다음 IFD | 0 보다 크고 읽지 않은 자리면 썸네일(4)·미리보기(5)로 — **다음 IFD 마다 한 겹 더 재귀한다** | IFD 64 개 상한(넘으면 UNSAFE). 블록 밖·0 이하는 멈춤 |
+| 개수 ≤ 0 인 IFD(부호 있는 short) | 그 IFD 를 끝낸다(다음 IFD 도 읽지 않는다) | 같다 |
+| TIFF 머리(`II`/`MM`·42·첫 IFD ≥ 8) | 어긋나면 `IOException` — 할당 전에 멈춘다 | 그 블록은 볼 것이 없다(통과) |
+| 썸네일 | 썸네일 IFD 의 `JPEGInterchangeFormat`·`…Length` 가 둘 다 > 0 이고 서술자 없이 열었으면 **길이만큼 잡은 뒤** 오프셋을 건너뛰어 읽는다, 띠는 `StripByteCounts` 의 합(long 을 int 로 자른다)만큼 잡고 띠마다 그 길이만큼 또 잡는다 | 다음 IFD·SubIFD(PNG 는 `validateImages` 의 맞바꿈 때문에 IFD0 도)의 썸네일 길이(오프셋과 상관없이 — 더 엄격)·띠 합의 두 배를 예산에 더한다. 블록 밖인지는 보지 않는다 |
+| JPEG 세그먼트 | SOI 뒤 `FF (FF)* 표지`, EOI·SOS 에서 멈춤, APP1 `Exif\0\0` **마다** 읽는다(앞의 것을 쥔 채) | 같은 길. APP1 여럿이 예산 하나를 나눠 쓴다 |
+| WebP 청크 | 12 자리부터 머리를 읽고 `EXIF` 면 적힌 길이(int — 음수면 `NegativeArraySizeException`)를 곧바로 잡는다. 아니면 짝수로 올린 길이로 '센 자리 + 길이' 가 RIFF 끝과 같으면 멈추고 넘으면 `IOException`, 아니면 건너뛴다(0 이하는 건너뛰지 않는다) | 같은 고리(int 셈까지). `EXIF` 는 길이 0 이상 8 MiB 이하·파일 안. RIFF 크기가 파일보다 2 바이트 이상 크면 따로 거절(덜 받은 파일 — 더 엄격) |
+| HEIF·AVIF | 추출기 키 33·34 가 있으면 길이 ≤ 6 은 `IOException`, 아니면 자리로 가서 6 바이트가 `Exif\0\0` 인지 보고 `길이 − 6` 을 잡아 TIFF 로. 키 41·42 가 있으면 XMP 길이만큼 잡는다. 입력은 `mark(Integer.MAX_VALUE)` — 추출기가 읽은 만큼 쌓는다 | 이 갈래에 넘기지 않는다. 같은 자리·같은 조건으로 블록을 읽어(추출기는 `app` 의 `PlatformHeifLocator`, 검사한 서술자로) TIFF 를 걷고 블록만 `EXIF_DATA_ONLY` 로. Exif 길이 ≤ 8 MiB, 파일 안. 추출기가 없거나 실패하면 열지 않는다. 경로째·바이트로는 HEIF 를 넘기지 않는다 |
+
+**시험.** `core:model` 의 `ExifContainerGuardTest` 22(새 9 — 칸의 개수·내용이 TIFF·형식 7·같은 자리 칸 수천·포인터와 다음 IFD·IFD 사슬 상한·썸네일과 띠·
+ExifInterface 가 멈추는 자리·사진다운 EXIF), `GalleryRootsAndPrivacyTest` 의 WebP `XMP `, `core:io` 의 `GalleryLocationTest` 의 빈 끝, `feature:docview` 의
+`PdfLockerTest` 의 읽는 예산(스트림 40 개가 저마다 다른 200 KB 객체 스트림 — 예산 2 MB 면 '너무 크다', 같은 객체 스트림을 가리키면 지난다), 그리고
+**`core:ui` 의 `ExifGuardLibraryTest` 4** — 실제 ExifInterface 1.4.2 를 JVM 에서 돌린다(`core:ui` 의 `unitTests.isReturnDefaultValues = true` — 그 클래스의 정적
+초기화가 `Log.isLoggable` 을 부른다). 점검자의 꼴(JPEG·PNG·WebP·`Exif\0\0` 붙은 WebP·TIFF)과 썸네일 길이에서 **라이브러리가 정말 2 GiB 를 잡으려 들어
+`OutOfMemoryError` 를 던지는지**와 검사기가 UNSAFE 인지를 함께, 사진다운 EXIF 는 검사기를 지나고 라이브러리가 방향·찍은 날을 읽는지, 검사기가 옮겨 적은 표(형식
+단위·UNDEFINED 태그·포인터)가 라이브러리의 비공개 표와 같은지. **고침을 되돌려 확인했다** — 옛 검사기면 `ExifGuardLibraryTest` 의 둘과 `ExifContainerGuardTest`
+의 아홉이, 빈 끝·WebP `XMP `·읽는 예산은 각각 그 시험 하나만 깨진다. `Error` 를 잡는 고침(`stripOne`·`cleanOne`)은 시험이 없다(둘 다 기기에서만 도는 길이다).
+
+**재검산 뒤**(같은 날 — 우회 둘·회귀 하나). `ExifContainerGuardTest` 에 셋 — RIFF 크기 0·3·4 인 WebP 의 첫 청크 EXIF(200 MB 길이·IFD 폭탄·음수
+길이·정상·둘째 청크), HEIF(가짜 추출기로 — 정상·폭탄·채널+파일·바이트만·길이 ≤ 6·상한·파일 밖·`Exif\0\0` 아님·XMP 상한·자리 없음·추출기 없음·실패·
+숫자 아님), MakerNote 가 블록을 넘거나 썸네일 길이가 16 바이트 긴 사진(통과) — 을 더하고, 블록 밖을 거절하던 단언(개수 9·썸네일 +16·띠)을 예산의
+경계로 바꿨다. `ExifGuardLibraryTest` 에 둘 — RIFF 크기 0·3 의 첫 EXIF 청크에서 **실제 라이브러리가 2 GiB 를 잡으려 드는지**(길이와 IFD 둘 다)와
+검사기의 UNSAFE, 두 버릇의 사진에서 검사기가 SAFE 이고 라이브러리가 방향·찍은 날을 읽는지. 실제 ExifInterface 의 HEIF 길은 JVM 에서 돌릴 수 없다
+(추출기·`SDK_INT` — 모의 android.jar 는 0 을 준다) — HEIF 판정은 바이트코드와 가짜 추출기로만 확인했다. **되돌려 확인했다** — WebP 의 옛 조건(RIFF 끝 ≤ 12 면
+NO_EXIF)·HEIF 를 SAFE 로·블록 밖 거절을 다시 넣으면 새 시험이 각각 깨진다(검사기 시험 여섯, 라이브러리 시험 둘).
+
+**마지막 재판정 뒤**(같은 날 — HEIF 의 낮음 둘). 위 표의 HEIF 줄이 그 고침이다. `ExifContainerGuardTest` 의 HEIF 시험을 `openForExif` 로 바꾸고(블록이
+머리째·`EXIF_DATA_ONLY`, 폭탄은 null, 경로째로는 `HEIF`·`allows` 거짓, **이미 연 스트림이면 추출기가 그 서술자를 받고** 스트림의 위치는 0 그대로, 길이 ≤ 6·상한·
+파일 밖·`Exif\0\0` 아님·자리 없음·추출기 없음·실패·숫자 아님은 null) 둘을 더했다 — 회전 0·45·90·180·270 의 방향과 폭·높이를 0 일 때만 대신하는지, 넘겨도 되는
+PNG 는 그 스트림째(갤러리처럼 EXIF 를 요구하면 null). `ExifGuardLibraryTest` 에 둘 — 입력 갈래 상수·태그 이름이 라이브러리와 같고 `EXIF_DATA_ONLY` 가 머리 없는
+블록은 읽지 않으며 그 갈래도 IFD 폭탄에 2 GiB 를 잡으려 드는지, **앞부분 64 MiB 의 HEIF 를 새 길로 열면 실제 1.4.2 가 날짜·방향(추출기의 회전 90 → 6)·폭을 읽고
+이 스레드의 할당이 4 MiB 아래인지**(HotSpot 의 스레드 할당 계수), 같은 자리의 블록 폭탄은 null. JVM 시험은 HEIF 갈래 자체를 돌리지 못하므로(`SDK_INT` 0) 힙은
+스크래치 하네스로 쟀다 — `SDK_INT` 36 스텁과 가짜 추출기(실제 `MediaDataSource` 로 Exif 자리를 읽는다), 앞부분 120 MB 의 HEIF, 힙 160 MB: 옛 길
+(`ExifInterface(FileInputStream)`)은 `OutOfMemoryError`(최고 힙 125 MB), 새 길은 날짜·방향을 읽고 최고 힙 6 MB. **되돌려 확인했다** — HEIF 에 블록 대신 파일
+스트림째를 돌려주면 검사기 시험 둘과 라이브러리 시험 하나가 깨지고, 그 판으로 하네스를 돌리면 새 길도 `OutOfMemoryError` 다. 달라진 것 — Exif 가 없는 HEIF 는
+이제 열지 않는다(전에는 HEIF 갈래가 추출기의 폭·높이·회전만이라도 읽었다 — 정보 패널은 비고, `ImageSource.probe` 의 방향은 '정방향' 이다). 기기에서 실제 HEIC·
+AVIF 로 태우지 않았다(`PlatformHeifLocator` 의 서술자 길과 키 26·29·30·31·17·18·19·24 는 바이트코드와 API 문서로만 맞췄다).
+
+**알고 두는 것**(고치지 않는다).
+
+- **`Android/media` 를 저절로 훑으면서 남이 보낸 그림을 이 프로세스의 네이티브 디코더가 푼다** — 메신저가 받은 사진(남이 지은 바이트)의 썸네일을 갤러리가 열기만
+  해도 `ImageDecoder`(libjpeg-turbo·libpng·libwebp·HEIF)가 이 앱의 프로세스에서 돈다. 예전에는 사용자가 그 폴더를 열어야 했다. 디코더의 메모리 결함은 이 앱의
+  모든 파일 접근 권한으로 이어진다. **썸네일·그림 렌더를 따로 된 격리 프로세스로 옮기는 일의 우선순위가 올라갔다**(하지 않았다 — 바인더로 비트맵을 넘기는
+  길과 상한을 다시 짜야 한다). 시스템 갤러리·MediaProvider 도 같은 그림을 풀지만 그것은 이 앱의 권한이 아니다.
+- **'Files에 저장' 의 미디어 저장소 혼동 대리인** — 위 '2.0.0 뒤 — Files에 저장(공유 대상)' 의 끝.
+- **MPF(APP2) 둘째 그림의 GPS 를 확인하지 않았다** — 여러 그림 JPEG(삼성·소니의 미리보기·깊이 그림)은 EOI 뒤에 둘째 JPEG 을 붙이고 그 안에 제 EXIF(GPS 를 담을
+  수 있다)를 둔다. ExifInterface 는 첫 그림만 읽고 쓴다. 공유 사본은 주 그림의 EOI 에서 자르므로(`JpegLayout.copyForShare`) 실리지 않을 것이나, **원본에서 위치
+  지우기**는 둘째 그림을 손대지 않는다 — 그 안에 GPS 가 남는지 실물로 보지 않았다(`MetadataLocation` 의 긴 이름 검사는 숫자 GPS 칸을 보지 못한다).
+- 경로로 여는 쓰기 자리(`FileOpEngine` 의 회전·위치 지우기, `ExifReader.sanitizedCopy`·`ShareZips.cleanOne` 의 공유 사본)는 검사기와 ExifInterface 가
+  **파일을 따로 연다** — 그 사이 같은 기기의 쓰기 권한 앱이 파일을 바꾸면 검사를 지난 뒤 다른 바이트를 읽는다. 7z 가드의 같은 틈과 같은 판단으로 두었다. 읽기만
+  하는 자리(갤러리 날짜·`ImageSource.probe`·`ExifReader.read`·`ImageSaver.copyDates`)는 `openForExif` 가 검사한 그 스트림을 넘기므로 이 틈이 없다(HEIF 는 블록을
+  메모리로 읽어 넘긴다).
 
 ## 더할 만한 기능 후보 (검토만, 코드 없음 — 사용자가 고르기 전)
 
@@ -2595,7 +2694,7 @@ EXIF 2·4·5·7·8 은 무손실~~ — **했다**('2.0.0 뒤 — 왼쪽 회전·
 ```
 app/                      조립만. 화면 전이와 이음매 꽂기(ExtractSupport·CoverSupport·
                           PlayerSupport(재생 화면 열기·뿌리인 재생 화면 밑의 파일 목록 열기 — FileListLauncher)·
-                          DocumentSupport·CropSupport). 편집기가 돌려준 문서의 저장 자리(EditorSlots·EditorSlotProvider)
+                          DocumentSupport·CropSupport·ExifContainerGuard.heifLocator — PlatformHeifLocator). 편집기가 돌려준 문서의 저장 자리(EditorSlots·EditorSlotProvider)
                           ※ `FormatRegistry` — 무엇을 무엇으로 여는지 아는 유일한 곳(지금은 EPUB·PDF).
                             판별기(`FormatProbe`)를 여기서 돌린다
 core/

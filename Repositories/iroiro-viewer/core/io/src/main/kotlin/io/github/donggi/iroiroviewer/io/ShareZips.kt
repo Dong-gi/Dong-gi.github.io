@@ -8,6 +8,7 @@ import io.github.donggi.iroiroviewer.model.ExifPrivacy
 import io.github.donggi.iroiroviewer.model.IroDispatchers
 import io.github.donggi.iroiroviewer.model.JpegLayout
 import io.github.donggi.iroiroviewer.model.MetadataLocation
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
@@ -134,7 +135,7 @@ object ShareZips {
      *
      * 사본은 묶어 보내기와 같은 자리·같은 수명이다(`share/zip/<무작위>/<번호>/<원래 이름>` — 번호 폴더는 다른 폴더의 같은 이름이 겹치지
      * 않게 하려는 것이다. 받는 쪽은 원래 이름을 본다). 파일마다 셋으로 갈린다 — 만들었다 / **건너뜀**(지울 수 없는 형식 — JPEG·PNG·WebP
-     * 가 아니거나 덩이 길이가 터무니없다. 영상·HEIC 가 여기 든다) / 못 읽음(실패). 건너뛴 것을 원본 그대로 싣지 않는다 — 위치를 지우겠다고
+     * 가 아니거나 덩이·IFD 칸의 길이가 터무니없다. 영상·HEIC 가 여기 든다) / 못 읽음(실패). 건너뛴 것을 원본 그대로 싣지 않는다 — 위치를 지우겠다고
      * 고른 사람에게 위치가 든 원본을 보내는 셈이다. 다시 쓴 사본이 잘렸으면(디스크가 찼다 — 함정 표의 `saveAttributes`) 그 사본은 버린다
      * ([FileOpEngine.rewrittenWhole]).
      *
@@ -190,7 +191,9 @@ object ShareZips {
         if (!ExifPrivacy.canScrubCopy(src.name)) return null
         val guarded = try {
             ExifContainerGuard.allows(src)
-        } catch (e: IOException) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (t: Throwable) {
             return CopyResult.Failed
         }
         if (!guarded) return null
@@ -207,11 +210,12 @@ object ShareZips {
             // 글로 적힌 위치(XMP — 지우지 못한 WebP 의 `XMP ` 청크 따위)가 남았으면 보내지 않는다.
             if (MetadataLocation.fileHasLocation(dest)) throw IOException("사본에 위치가 남았다")
             CopyResult.Made(dest.path)
-        } catch (e: IOException) {
+        } catch (e: CancellationException) {
             slot.deleteRecursively()
-            CopyResult.Failed
-        } catch (e: RuntimeException) {
-            // 파서가 무너진 사본 — 원본은 그대로다. 보내지 않는다.
+            throw e
+        } catch (t: Throwable) {
+            // 입출력 실패, 또는 파서가 무너진 사본(`OutOfMemoryError`·`StackOverflowError` 까지) — 원본은 그대로다. 보내지 않는다.
+            // 한 장 때문에 묶음 전체를 끝내지 않는다.
             slot.deleteRecursively()
             CopyResult.Failed
         }

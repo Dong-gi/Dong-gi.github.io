@@ -19,7 +19,8 @@ import java.io.RandomAccessFile
  *   맞을 확률이 없다).
  * - **짧은 표지**([SHORT] — `city`·`©xyz`)는 우연히 맞기 쉬워(4바이트) **메타데이터 자리에서만** 찾는다 — JPEG 의 첫 SOS 앞 덩이들, PNG 의 글 덩이.
  *   `©xyz` 는 JPEG 의 EOI 뒤(모션 포토의 MP4)에서도 찾는다(MP4 안은 압축 자료라 맞을 수 있다 — 잘못 맞으면 안전한 쪽(건너뛰기·보내지 않기)이다).
- * - 그 밖의 형식(WebP 따위)은 파일 전체에서 긴 이름만 찾는다.
+ * - **WebP 는 `XMP ` 청크가 있기만 하면 위치가 있는 것으로 친다** — ExifInterface 가 그 청크를 지우지 못한다([webpHasXmp]).
+ * - 그 밖의 형식은 파일 전체에서 긴 이름만 찾는다.
  *
  * 대소문자를 가리지 않는다(DJI 는 `GpsLatitude`). 읽는 메모리는 버퍼 하나다.
  *
@@ -49,16 +50,53 @@ object MetadataLocation {
      * [file] 에 EXIF 밖의 위치가 있는가(머리말의 규칙대로 형식마다). 읽지 못하면 `IOException`.
      */
     fun fileHasLocation(file: File): Boolean {
-        val head = ByteArray(8)
-        val n = FileInputStream(file).use { it.read(head) }
+        val head = ByteArray(12)
+        val n = FileInputStream(file).use { readUpTo(it, head) }
         // 긴 이름은 형식과 상관없이 파일 전체에서.
         if (FileInputStream(file).use { contains(it) }) return true
         return when {
             n >= 2 && head[0] == 0xFF.toByte() && head[1] == 0xD8.toByte() -> jpegHasLocation(file)
-            n == 8 && head.contentEquals(PNG_SIGNATURE) -> pngHasLocation(file)
+            n >= 8 && head.copyOf(8).contentEquals(PNG_SIGNATURE) -> pngHasLocation(file)
+            n == 12 && String(head, 0, 4, Charsets.ISO_8859_1) == "RIFF" && String(head, 8, 4, Charsets.ISO_8859_1) == "WEBP" -> webpHasXmp(file)
             else -> false
         }
     }
+
+    private fun readUpTo(input: InputStream, dst: ByteArray): Int {
+        var done = 0
+        while (done < dst.size) {
+            val r = input.read(dst, done, dst.size - done)
+            if (r < 0) break
+            done += r
+        }
+        return done
+    }
+
+    /**
+     * WebP 에 `XMP ` 청크가 있는가 — **있으면 위치가 있는 것으로 친다.** ExifInterface 1.4.2 는 WebP 의 `XMP ` 청크를 지우지 못하고(EXIF 칸만
+     * 다시 쓴다), XMP 는 긴 이름 말고도(`photoshop:City`·`exif:GPSDestLatitude` 따위) 위치를 적는다 — 사본은 '위치를 지우지 못한 것' 이 되고
+     * 원본 자리에서는 건너뛴다. 청크를 [MAX_WEBP_CHUNKS] 넘게 훑어도 끝나지 않으면 남은 것을 보지 못했으니 있는 것으로 친다.
+     */
+    private fun webpHasXmp(file: File): Boolean {
+        RandomAccessFile(file, "r").use { raf ->
+            val length = raf.length()
+            val hdr = ByteArray(8)
+            var pos = 12L
+            var chunks = 0
+            while (pos + 8 <= length) {
+                if (++chunks > MAX_WEBP_CHUNKS) return true
+                raf.seek(pos)
+                raf.readFully(hdr)
+                if (String(hdr, 0, 4, Charsets.ISO_8859_1) == "XMP ") return true
+                val size = (hdr[4].toLong() and 0xFF) or ((hdr[5].toLong() and 0xFF) shl 8) or
+                    ((hdr[6].toLong() and 0xFF) shl 16) or ((hdr[7].toLong() and 0xFF) shl 24)
+                pos += 8 + size + (size and 1L)
+            }
+        }
+        return false
+    }
+
+    private const val MAX_WEBP_CHUNKS = 100_000
 
     /**
      * 긴 이름은 이미 보았다 — 머리 덩이의 짧은 표지·IPTC, EOI 뒤의 `©xyz`. **짜임을 읽지 못하면 위치가 있는 것으로 친다** — 짧은 표지·IPTC·

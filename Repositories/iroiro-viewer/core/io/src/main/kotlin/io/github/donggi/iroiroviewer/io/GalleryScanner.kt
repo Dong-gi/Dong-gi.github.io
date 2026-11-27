@@ -203,20 +203,23 @@ object GalleryScanner {
         } else {
             CaptureDateRead.read(
                 // 여는 것과 읽는 것을 가른다 — 열지 못한 것은 남기지 않고, 연 뒤 파서가 무너진 것은 '날짜 없음' 으로 남긴다.
-                // `FileInputStream` 을 넘기면 ExifInterface 가 그 서술자로 되감아 읽는다(HEIC 도).
+                // `FileInputStream` 을 넘기면 ExifInterface 가 그 서술자로 되감아 읽는다.
                 open = { FileInputStream(e.path) },
                 parse = { input ->
                     input.use {
-                        // 덩이 길이가 터무니없으면 ExifInterface 에 넘기지 않는다 — 할당이 **성공해도** 다른 스레드가 죽는다(`ExifContainerGuard`).
+                        // 덩이·IFD 칸의 길이가 터무니없으면 ExifInterface 에 넘기지 않는다 — 할당이 **성공해도** 다른 스레드가 죽는다(`ExifContainerGuard`).
                         // 이미 연 서술자의 채널로 위치를 지정해 읽는다 — 검사한 파일이 곧 읽는 파일이고, 스트림의 위치는 그대로다.
                         // EXIF 가 없는 PNG·WebP(스크린숏 대부분)는 ExifInterface 를 열지 않고 '날짜 없음' 이다.
-                        if (ExifContainerGuard.inspect(it.channel) != ExifContainerGuard.Verdict.SAFE) return@use null
-                        val exif = ExifInterface(it)
-                        CaptureDates.exifMillis(
-                            exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL),
-                            exif.getAttribute(ExifInterface.TAG_OFFSET_TIME_ORIGINAL),
-                            zone,
-                        )
+                        // HEIF·AVIF 는 이 서술자로 추출기에 물어 검사기가 걸어 본 Exif 블록만 연다(ExifInterface 의 HEIF 갈래를 타지 않는다).
+                        val src = ExifContainerGuard.openForExif(it, requireExif = true) ?: return@use null
+                        src.use { s ->
+                            val exif = ExifInterface(s.input, s.streamType)
+                            CaptureDates.exifMillis(
+                                exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL),
+                                exif.getAttribute(ExifInterface.TAG_OFFSET_TIME_ORIGINAL),
+                                zone,
+                            )
+                        }
                     }
                 },
             )
@@ -283,6 +286,9 @@ object GalleryScanner {
 
     private const val NOMEDIA = ".nomedia"
 
-    /** `ExifInterface` 가 날짜를 읽는 형식. GIF·BMP·SVG 는 EXIF 가 없어 열지 않는다. */
-    private val EXIF_EXTENSIONS = setOf("jpg", "jpeg", "jpe", "png", "webp", "heic", "heif", "avif", "dng")
+    /**
+     * `ExifInterface` 로 날짜를 읽는 형식. GIF·BMP·SVG 는 EXIF 가 없어 열지 않는다. DNG·TIFF 는 내용이 TIFF 라 검사기(`ExifContainerGuard`)가
+     * 넘기지 않으므로 열지 않는다(수정 시각으로 묶인다).
+     */
+    private val EXIF_EXTENSIONS = setOf("jpg", "jpeg", "jpe", "png", "webp", "heic", "heif", "avif")
 }

@@ -188,4 +188,29 @@ class GalleryLocationTest {
             dir.deleteRecursively()
         }
     }
+
+    /** SOS 를 찾지 못한 JPEG 은 끝이 비었다 — 견줄 것이 없으니 온전하다고 하지 않고, 원본 자리를 고치는 길은 미리 거절한다. */
+    @Test
+    fun `SOS 를 찾지 못한 JPEG 은 온전하다고 하지 않는다`() {
+        val dir = Files.createTempDirectory("rw").toFile()
+        try {
+            // SOS 앞에서 끝난다.
+            val noSos = File(dir, "a.jpg").apply { writeBytes(byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte(), 0xE1.toByte(), 0, 8, 1, 2, 3, 4, 5, 6)) }
+            assertEquals(0, FileOpEngine.jpegTailOf(noSos)!!.size)
+            assertTrue(FileOpEngine.hasNoJpegTail(noSos))
+            assertFalse(FileOpEngine.rewrittenWhole(noSos, ByteArray(0)))
+            // 머리 세그먼트가 1,024 개를 넘는다(빈 COM 세그먼트 1,100 개 뒤의 SOS).
+            val com = byteArrayOf(0xFF.toByte(), 0xFE.toByte(), 0, 2)
+            val many = File(dir, "b.jpg").apply {
+                writeBytes(byteArrayOf(0xFF.toByte(), 0xD8.toByte()) + ByteArray(com.size * 1100) { com[it % 4] } + byteArrayOf(0xFF.toByte(), 0xDA.toByte(), 0, 2, 1, 0xFF.toByte(), 0xD9.toByte()))
+            }
+            assertTrue(FileOpEngine.hasNoJpegTail(many))
+            // 멀쩡한 JPEG·JPEG 이 아닌 것은 아니다.
+            val ok = File(dir, "c.jpg").apply { writeBytes(byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte(), 0xDA.toByte(), 0, 2, 1, 0xFF.toByte(), 0xD9.toByte())) }
+            assertFalse(FileOpEngine.hasNoJpegTail(ok))
+            assertFalse(FileOpEngine.hasNoJpegTail(File(dir, "d.webp").apply { writeBytes(ByteArray(32)) }))
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
 }

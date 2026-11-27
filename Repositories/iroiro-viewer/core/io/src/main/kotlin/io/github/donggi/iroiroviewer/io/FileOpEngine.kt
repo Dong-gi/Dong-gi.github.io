@@ -605,7 +605,7 @@ class FileOpEngine(private val media: MediaIndex) {
         // 사용자 파일을 다시 쓰는 코드밖에 없다.
         // 형식 거절은 '이 형식은 저장할 수 없다'(UNSUPPORTED)다. 화면(`ExifReader.canRotate`)이 같은 판정으로 메뉴 앞에서 먼저 막는다.
         if (!canRotateFile(src)) return@withContext Outcome.Failed(Reason.UNSUPPORTED, src.name)
-        // 덩이 길이가 터무니없는 파일은 ExifInterface 에 넘기지 않는다 — 할당이 성공해도 다른 스레드가 죽는다(`ExifContainerGuard`).
+        // 덩이·IFD 칸의 길이가 터무니없는 파일은 ExifInterface 에 넘기지 않는다 — 할당이 성공해도 다른 스레드가 죽는다(`ExifContainerGuard`).
         // 원본은 손대지 않은 채 같은 형식 거절로 끝낸다.
         val containerOk = try {
             ExifContainerGuard.allows(src)
@@ -613,6 +613,8 @@ class FileOpEngine(private val media: MediaIndex) {
             return@withContext Outcome.Failed(reasonOf(e), src.name)
         }
         if (!containerOk) return@withContext Outcome.Failed(Reason.UNSUPPORTED, src.name)
+        // SOS 를 찾지 못한 JPEG 은 다시 쓴 것이 잘렸는지 견줄 끝이 없다([jpegTailOf]) — 같은 형식 거절로 끝낸다.
+        if (hasNoJpegTail(src)) return@withContext Outcome.Failed(Reason.UNSUPPORTED, src.name)
 
         rewriteExif(src) { exif ->
             val current = exif.getAttributeInt(
@@ -639,7 +641,7 @@ class FileOpEngine(private val media: MediaIndex) {
      * ③ `fsync` → ④ 수정시각 복원 → ⑤ 원자적 `rename` → **부모 디렉터리 `fsync`**. 마지막 것을 빠뜨리면 저널이 없는 FAT(SD)에서 이름만
      * 사라진 상태가 가능하다. 임시 이름은 [PART_PREFIX]·[PART_SUFFIX] 규약을 따른다 — 다른 이름이면 [sweepPartials] 가 걷지 못한다.
      *
-     * 형식 관문(어느 그릇인가·덩이 길이)은 부르는 쪽이 먼저 지난다. 걸음이 시작되면 끝까지 간다(취소가 닿지 않는다) — 반쯤 된 것을 놓지 않는다.
+     * 형식 관문(어느 그릇인가·덩이·IFD 칸의 길이)은 부르는 쪽이 먼저 지난다. 걸음이 시작되면 끝까지 간다(취소가 닿지 않는다) — 반쯤 된 것을 놓지 않는다.
      *
      * @return 실패면 그 결과(원본은 바이트 하나 바뀌지 않았다), 다 했으면 null.
      */
@@ -713,7 +715,7 @@ class FileOpEngine(private val media: MediaIndex) {
      * 속성만 고치지 못하고, 통째로 지우면 모션 포토(`MicroVideo`)·편집 기록이 깨진다. 위치를 남긴 채 '지웠다' 고 말하지 않는다. 쓴 뒤에도 EXIF 의 GPS
      * 칸이나 글로 적힌 위치가 남았으면 놓지 않는다(실패로 센다).
      *
-     * 파일마다 다섯으로 갈린다 — 지웠다 / 위치가 없었다 / 원본에서 지울 수 없는 형식(JPEG·정지 WebP 가 아니거나 덩이 길이가 터무니없거나 파서가
+     * 파일마다 다섯으로 갈린다 — 지웠다 / 위치가 없었다 / 원본에서 지울 수 없는 형식(JPEG·정지 WebP 가 아니거나 덩이·IFD 칸의 길이가 터무니없거나 파서가
      * 무너졌다) / XMP 에 위치가 있다 / 실패. 한 파일의 실패가 나머지를 멈추지 않는다. 취소는 파일 사이에서만 듣는다(파일 하나는 끝까지 간다).
      *
      * @return [Outcome.Done] 의 `moved` 가 지운 수, `skipped` 가 건너뛴 셋의 합. 갈래는 [onTally] 가 받는다(파일마다 지금까지의 셈 — 중간에
@@ -734,7 +736,15 @@ class FileOpEngine(private val media: MediaIndex) {
                 currentCoroutineContext().ensureActive()
                 val src = File(path)
                 onProgress(Progress(0, 0, i, paths.size, src.name))
-                tally = when (val r = stripOne(src)) {
+                // 한 장의 무엇이든(`OutOfMemoryError`·`StackOverflowError` 까지) 그 장의 실패다 — 묶음 전체를 끝내지 않는다. 취소만 그대로 던진다.
+                val outcome = try {
+                    stripOne(src)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (t: Throwable) {
+                    StripResult.Failed(reasonOf(t))
+                }
+                tally = when (val r = outcome) {
                     StripResult.Stripped -> {
                         written += path
                         src.parentFile?.let { parents += it }
@@ -795,7 +805,7 @@ class FileOpEngine(private val media: MediaIndex) {
         data class Failed(val reason: Reason) : StripResult
     }
 
-    /** 한 장. 관문(형식·덩이 길이) → 글로 적힌 위치(XMP) → EXIF 의 위치(원본을 읽기만) → [rewriteExif] → 다시 쓴 것에 위치가 남지 않았는가. */
+    /** 한 장. 관문(형식·덩이·IFD 칸의 길이) → 글로 적힌 위치(XMP) → EXIF 의 위치(원본을 읽기만) → [rewriteExif] → 다시 쓴 것에 위치가 남지 않았는가. */
     private suspend fun stripOne(src: File): StripResult {
         if (!src.isFile) return StripResult.Failed(Reason.NOT_FOUND)
         // **마지막 관문이다** — 화면이 이름으로 골라도 여기서 내용으로 한 번 더 본다(움직이는 WebP 는 이름으로 모른다).
@@ -806,6 +816,7 @@ class FileOpEngine(private val media: MediaIndex) {
             return StripResult.Failed(reasonOf(e))
         }
         if (!containerOk) return StripResult.Unsupported
+        if (hasNoJpegTail(src)) return StripResult.Unsupported
         // 짜임을 읽지 못한 JPEG — EXIF 밖의 위치를 볼 자리를 모른다. 손대지 않는다.
         val unreadable = try {
             JpegLayout.isUnreadableJpeg(src)
@@ -825,8 +836,10 @@ class FileOpEngine(private val media: MediaIndex) {
             hasLocation(ExifInterface(src.absolutePath))
         } catch (e: IOException) {
             return StripResult.Failed(reasonOf(e))
-        } catch (e: RuntimeException) {
-            // 파서가 무너진 파일 — 원본은 손대지 않고 '지울 수 없는 형식' 으로 둔다.
+        } catch (e: CancellationException) {
+            throw e
+        } catch (t: Throwable) {
+            // 파서가 무너진 파일(`OutOfMemoryError`·`StackOverflowError` 까지) — 원본은 손대지 않고 '지울 수 없는 형식' 으로 둔다.
             return StripResult.Unsupported
         }
         if (!has) return StripResult.NoLocation
@@ -936,7 +949,8 @@ class FileOpEngine(private val media: MediaIndex) {
          * JPEG 의 `saveAttributes` 는 SOI · 새 EXIF · 나머지를 글자 그대로 옮기므로 다시 쓴 뒤에도 끝이 같아야 한다(`ImageSaver.JpegTail` 과
          * 같은 셈 — 거기는 길이도 보지만, 여기는 방향 태그를 고치며 EXIF 가 줄 수도 있어 끝만 본다). **SOS 앞(EXIF 가 있는 머리)을 끝에 넣지
          * 않는다** — 4 KiB 보다 작은 JPEG 에서 파일 전체를 끝으로 뜨면 고친 EXIF 가 들어가 온전한 파일을 잘린 것으로 읽는다(계측 시험이 잡았다).
-         * SOS 를 찾지 못하면 빈 끝(견주지 않는다)이다.
+         * SOS 를 찾지 못하면(머리 세그먼트가 1,024 개를 넘거나 SOS 앞에서 끝난다) 빈 끝이다 — [rewrittenWhole] 은 그것을 **언제나 거짓**으로
+         * 읽고, 원본 자리를 고치는 길은 그 앞에서 '저장할 수 없는 형식' 으로 거절한다([hasNoJpegTail]).
          */
         internal fun jpegTailOf(file: File): ByteArray? = try {
             java.io.RandomAccessFile(file, "r").use { raf ->
@@ -969,6 +983,9 @@ class FileOpEngine(private val media: MediaIndex) {
             null
         }
 
+        /** JPEG 인데 견줄 끝(SOS 뒤)을 찾지 못했다 — 다시 쓴 것이 온전한지 알 길이 없다. JPEG 이 아니거나 읽지 못하면 거짓(다른 관문이 본다). */
+        internal fun hasNoJpegTail(file: File): Boolean = jpegTailOf(file)?.isEmpty() == true
+
         /**
          * `saveAttributes` 가 다시 쓴 [file] 이 온전한가. JPEG 은 끝이 [tailBefore] 와 같은가, WebP 는 RIFF 머리의 크기만큼 파일이
          * 있는가(EXIF 청크가 끝에 붙는 그릇이라 끝을 견줄 수 없다 — 잘리면 머리가 말한 길이보다 짧다), PNG 는 `IEND` 로 끝나는가(정제한 사본 —
@@ -978,6 +995,8 @@ class FileOpEngine(private val media: MediaIndex) {
             java.io.RandomAccessFile(file, "r").use { raf ->
                 val n = raf.length()
                 if (tailBefore != null) {
+                    // 빈 끝 — 견줄 것이 없으면 온전하다고 말하지 않는다(빈 배열끼리는 언제나 같다).
+                    if (tailBefore.isEmpty()) return@use false
                     if (n < tailBefore.size + 2) return@use false
                     val now = ByteArray(tailBefore.size)
                     raf.seek(n - now.size)

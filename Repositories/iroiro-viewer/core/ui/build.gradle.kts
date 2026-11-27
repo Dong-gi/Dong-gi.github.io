@@ -19,6 +19,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    // `ExifGuardLibraryTest` 가 실제 ExifInterface 1.4.2 를 JVM 에서 돌린다 — 그 클래스의 정적 초기화가 `Log.isLoggable` 을 부르는데,
+    // 기본 모의 android.jar 는 그것을 던진다('not mocked'). 기본값을 돌려주게 한다(이 모듈의 다른 시험은 android 메서드를 부르지 않는다).
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {

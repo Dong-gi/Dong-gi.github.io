@@ -314,6 +314,73 @@ class PdfLockerTest {
         assertContentEquals(data, d.update(whole, 0, whole.size) + d.finish())
     }
 
+    /**
+     * 스트림 [streams] 개의 `/Length` 가 객체 스트림 속 객체를 가리키는 PDF(xref 스트림). [distinct] 면 스트림마다 다른 객체 스트림(하나에
+     * [pad] 바이트), 아니면 모두 같은 객체 스트림의 칸을 가리킨다.
+     */
+    private fun lengthsInObjStreams(streams: Int, distinct: Boolean, pad: Int): ByteArray {
+        val out = java.io.ByteArrayOutputStream()
+        fun w(s: String) = out.write(s.toByteArray(Charsets.ISO_8859_1))
+        val offsets = java.util.TreeMap<Int, Int>()
+        val inStream = java.util.TreeMap<Int, Pair<Int, Int>>() // 번호 → (객체 스트림, 칸)
+        fun obj(num: Int, body: String) {
+            offsets[num] = out.size()
+            w("$num 0 obj\n$body\nendobj\n")
+        }
+        w("%PDF-1.7\n")
+        obj(1, "<< /Type /Catalog /Pages 2 0 R >>")
+        obj(2, "<< /Type /Pages /Kids [3 0 R] /Count 1 >>")
+        obj(3, "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 10 10] /Resources << >> >>")
+        val stms = if (distinct) streams else 1
+        for (s in 0 until stms) {
+            val members = if (distinct) listOf(1000 + s) else List(streams) { 1000 + it }
+            val head = members.mapIndexed { i, m -> "$m ${i * 2}" }.joinToString(" ") + " "
+            val body = members.joinToString(" ") { "5" } + " ".repeat(pad)
+            members.forEachIndexed { i, m -> inStream[m] = (100 + s) to i }
+            val data = head + body
+            obj(100 + s, "<< /Type /ObjStm /N ${members.size} /First ${head.length} /Length ${data.length} >>\nstream\n$data\nendstream")
+        }
+        for (i in 0 until streams) obj(5000 + i, "<< /Length ${1000 + i} 0 R >>\nstream\nABCDE\nendstream")
+        val xrefNum = 9000
+        val xrefAt = out.size()
+        val rows = java.io.ByteArrayOutputStream()
+        fun row(type: Int, a: Int, b: Int) {
+            rows.write(type)
+            rows.write(java.nio.ByteBuffer.allocate(4).putInt(a).array())
+            rows.write(byteArrayOf((b shr 8).toByte(), b.toByte()))
+        }
+        for (n in 0..xrefNum) {
+            when {
+                n == xrefNum -> row(1, xrefAt, 0)
+                n in offsets -> row(1, offsets.getValue(n), 0)
+                n in inStream -> inStream.getValue(n).let { (s, i) -> row(2, s, i) }
+                else -> row(0, 0, if (n == 0) 0xFFFF else 0)
+            }
+        }
+        val bin = rows.toByteArray()
+        w("$xrefNum 0 obj\n<< /Type /XRef /Size ${xrefNum + 1} /W [1 4 2] /Root 1 0 R /Length ${bin.size} >>\nstream\n")
+        out.write(bin)
+        w("\nendstream\nendobj\nstartxref\n$xrefAt\n%%EOF\n")
+        return out.toByteArray()
+    }
+
+    @Test
+    fun `객체 스트림을 푸는 일에 읽는 예산이 걸린다 — 제자리 잠그기·풀기`() {
+        // 스트림 40 개가 저마다 다른 객체 스트림(200 KB)을 가리킨다 — 다 풀면 8 MB 다. 예산 2 MB 면 멈춘다.
+        val many = lengthsInObjStreams(40, distinct = true, pad = 200_000)
+        assertEquals(PdfDecryptor.LockResult.Ok, PdfDecryptor.lock(ByteArraySource(many), "x".toCharArray(), MemorySink(), 64L shl 20))
+        assertFailsWith<PdfDecryptor.TooLarge> {
+            PdfDecryptor.lock(ByteArraySource(many), "x".toCharArray(), MemorySink(), 64L shl 20, readBudget = 2_000_000)
+        }
+        // 같은 객체 스트림의 칸 40 개 — 한 번만 푼다(캐시). 같은 예산으로 지난다.
+        val shared = lengthsInObjStreams(40, distinct = false, pad = 200_000)
+        assertEquals(
+            PdfDecryptor.LockResult.Ok,
+            PdfDecryptor.lock(ByteArraySource(shared), "x".toCharArray(), MemorySink(), 64L shl 20, readBudget = 2_000_000),
+        )
+        // 푸는 길(`decrypt`)도 같은 해석기를 지난다 — 우리가 잠근 판은 `/Length` 를 바로 적어 이 길을 타지 않아 여기서는 잠그는 길로 본다.
+    }
+
     /** 말뭉치가 있는 저장소면 결과를 `out/pdf-lock-synthetic/` 에 남긴다 — `verify_pdf_lock.py` 가 qpdf·엄격한 pypdf 로 그 암호로만 열리는지 본다. */
     private fun keepForOracle(pdf: ByteArray, password: String) {
         val out = syntheticOut ?: return

@@ -60,6 +60,8 @@ class IroiroApp : Application() {
         PlayerSupport.fileListOpener = FileListLauncher
         // 잘라 저장의 뜨는 쪽(화면이 본 그대로 — `core:ui` 를 아는 `feature:image`). 쓰는 쪽은 `core:io` 다(`CropSupport`).
         CropSupport.renderer = ImageCropRenderer
+        // HEIF·AVIF 의 Exif 블록 자리 — ExifInterface 와 같은 추출기 키로. 꽂히지 않으면 HEIF 는 ExifInterface 에 넘기지 않는다.
+        io.github.donggi.iroiroviewer.model.ExifContainerGuard.heifLocator = PlatformHeifLocator
         // PDF 쪽 뽑기·합치기의 짓는 쪽(PDF 해석기가 있는 `feature:docview`). 쓰는 쪽은 `core:io` 다(`PdfPagesSupport`).
         io.github.donggi.iroiroviewer.io.PdfPagesSupport.engine = io.github.donggi.iroiroviewer.docview.pdf.edit.PdfPagesEngine
         FormatRegistry.install()

@@ -55,6 +55,29 @@ class GalleryRootsAndPrivacyTest {
         assertFalse(MetadataLocation.contains(java.io.ByteArrayInputStream(ByteArray(200_000))))
     }
 
+    /** WebP 의 `XMP ` 청크 — ExifInterface 가 지우지 못하므로, 긴 이름이 없어도(`photoshop:City` 따위) 있기만 하면 위치가 있는 것으로 친다. */
+    @Test
+    fun `WebP 에 XMP 청크가 있으면 위치가 있는 것으로 친다`() {
+        fun le(v: Int) = byteArrayOf(v.toByte(), (v shr 8).toByte(), (v shr 16).toByte(), (v shr 24).toByte())
+        fun webp(vararg chunks: Pair<String, ByteArray>): ByteArray {
+            var body = "WEBP".toByteArray()
+            for ((t, d) in chunks) body += t.toByteArray() + le(d.size) + d + (if (d.size % 2 == 1) byteArrayOf(0) else ByteArray(0))
+            return "RIFF".toByteArray() + le(body.size) + body
+        }
+        val f = java.nio.file.Files.createTempFile("loc", ".webp").toFile()
+        try {
+            f.writeBytes(webp("VP8 " to ByteArray(31), "EXIF" to ByteArray(20)))
+            assertFalse(MetadataLocation.fileHasLocation(f))
+            f.writeBytes(webp("VP8 " to ByteArray(31), "XMP " to "<x:xmpmeta><photoshop:City>Seoul</photoshop:City></x:xmpmeta>".toByteArray()))
+            assertTrue(MetadataLocation.fileHasLocation(f))
+            // 위치가 없어 보이는 XMP 도 — 지우지 못하는 청크다.
+            f.writeBytes(webp("VP8X" to ByteArray(10), "VP8 " to ByteArray(31), "XMP " to "<x:xmpmeta/>".toByteArray()))
+            assertTrue(MetadataLocation.fileHasLocation(f))
+        } finally {
+            f.delete()
+        }
+    }
+
     @Test
     fun `빈 갤러리 안내에 Android media 가 든다`() {
         assertEquals(listOf("DCIM", "Pictures", "Download", "Android/media"), GalleryRoots.SHOWN_FOLDERS)

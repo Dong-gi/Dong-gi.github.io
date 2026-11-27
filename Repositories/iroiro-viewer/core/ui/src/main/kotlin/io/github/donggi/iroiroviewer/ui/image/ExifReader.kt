@@ -45,9 +45,10 @@ object ExifReader {
 
     suspend fun read(file: File): ExifSummary? = withContext(IroDispatchers.io) {
         if (!file.isFile) return@withContext null
-        // 덩이 길이가 터무니없으면 넘기지 않는다 — 할당이 성공해도 다른 스레드가 죽는다(`ExifContainerGuard`).
-        val exif = runCatching { if (ExifContainerGuard.allows(file)) ExifInterface(file.absolutePath) else null }.getOrNull()
-            ?: return@withContext null
+        // 덩이·IFD 칸의 길이가 터무니없으면 넘기지 않는다 — 할당이 성공해도 다른 스레드가 죽는다(`ExifContainerGuard`).
+        // HEIF·AVIF 는 검사기가 걸어 본 Exif 블록만 연다(ExifInterface 의 HEIF 갈래를 타지 않는다). 다 읽고 나서 닫는다.
+        val src = runCatching { ExifContainerGuard.openForExif(file) }.getOrNull() ?: return@withContext null
+        val exif = runCatching { src.use { ExifInterface(it.input, it.streamType) } }.getOrNull() ?: return@withContext null
 
         fun tag(name: String): String? = exif.getAttribute(name)?.takeIf { it.isNotBlank() }
 
@@ -62,11 +63,11 @@ object ExifReader {
             aperture = tag(ExifInterface.TAG_F_NUMBER),
             iso = tag(ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY),
             focalLength = tag(ExifInterface.TAG_FOCAL_LENGTH),
-            pixelWidth = exif.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0),
-            pixelHeight = exif.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, 0),
-            orientation = exif.getAttributeInt(
+            pixelWidth = src.orFallback(ExifInterface.TAG_IMAGE_WIDTH, exif.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0)),
+            pixelHeight = src.orFallback(ExifInterface.TAG_IMAGE_LENGTH, exif.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, 0)),
+            orientation = src.orFallback(
                 ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL,
+                exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL),
             ),
             gps = exif.latLong?.let { it[0] to it[1] },
             bodySerial = tag(ExifInterface.TAG_BODY_SERIAL_NUMBER),
@@ -91,7 +92,7 @@ object ExifReader {
 
         val dest = File(destDir, src.name)
         runCatching {
-            // 덩이 길이가 터무니없는 원본은 정제하지 않는다 — '제거할 수 없다' 로 끝난다(null).
+            // 덩이·IFD 칸의 길이가 터무니없는 원본은 정제하지 않는다 — '제거할 수 없다' 로 끝난다(null).
             check(ExifContainerGuard.allows(src))
             // JPEG 은 주 그림의 EOI 에서 자르고 IPTC(APP13)를 뺀다(`JpegLayout.copyForShare` — 여럿 골라 보내는 길과 같다).
             dest.outputStream().use { JpegLayout.copyForShare(src, it) }
@@ -130,7 +131,7 @@ object ExifReader {
     fun canRotate(file: File): Boolean {
         return when (file.name.substringAfterLast('.', "").lowercase()) {
             // `jfif`·`jpe` 는 JPEG 의 다른 이름이다. 엔진(`FileOpEngine.canRotateFile`)과 같은 표여야 한다.
-            // 덩이 길이가 터무니없는 그릇은 엔진이 거절한다 — 화면이 먼저 '이 형식은 …저장할 수 없습니다' 로 끝내게 같은 검사를 둔다.
+            // 덩이·IFD 칸의 길이가 터무니없는 그릇은 엔진이 거절한다 — 화면이 먼저 '이 형식은 …저장할 수 없습니다' 로 끝내게 같은 검사를 둔다.
             "jpg", "jpeg", "jfif", "jpe" -> containerOk(file)
             "webp" -> !ImageFormats.isAnimatedWebp(file) && containerOk(file)
             else -> false

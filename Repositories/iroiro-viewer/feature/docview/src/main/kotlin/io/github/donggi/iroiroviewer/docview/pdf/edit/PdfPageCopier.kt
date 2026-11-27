@@ -3,6 +3,7 @@ package io.github.donggi.iroiroviewer.docview.pdf.edit
 import io.github.donggi.iroiroviewer.docview.pdf.PdfOutline
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfArray
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfCryptRules
+import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfDecryptor
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfDict
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfFile
 import io.github.donggi.iroiroviewer.docview.pdf.crypt.PdfName
@@ -784,9 +785,7 @@ internal class PdfPageCopier private constructor(
          * 한 것도 센다) — 넘으면 [Refusal.TOO_BIG]. 이 프로세스의 힙 상한의 1/4 과 1 GiB 가운데 작은 것(힙이 256 MB 인 기기에서 1 GiB 는
          * 예산이 아니다 — 독립 검토 3차).
          */
-        fun readBudget(): Long = minOf(Runtime.getRuntime().maxMemory() / 4, MAX_READ_BUDGET)
-
-        private const val MAX_READ_BUDGET = 1L shl 30
+        fun readBudget(): Long = PdfDecryptor.readBudget()
 
         /**
          * 쪽을 골라 [sink] 에 새 PDF 를 쓴다.

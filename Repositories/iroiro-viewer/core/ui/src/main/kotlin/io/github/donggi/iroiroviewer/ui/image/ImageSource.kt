@@ -89,12 +89,12 @@ object ImageIo {
         val storedH = bounds.outHeight
 
         val orientation = runCatching {
-            // 덩이 길이가 터무니없으면 ExifInterface 에 넘기지 않는다 — 할당이 성공해도 다른 스레드가 죽는다.
-            if (!ExifContainerGuard.allows(File(path))) return@runCatching ExifInterface.ORIENTATION_NORMAL
-            ExifInterface(path).getAttributeInt(
-                ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL,
-            )
+            // 덩이·IFD 칸의 길이가 터무니없으면 ExifInterface 에 넘기지 않는다 — 할당이 성공해도 다른 스레드가 죽는다.
+            // HEIF·AVIF 는 검사기가 걸어 본 Exif 블록만 연다(`ExifContainerGuard.openForExif` — ExifInterface 의 HEIF 갈래를 타지 않는다).
+            ExifContainerGuard.openForExif(file)?.use { src ->
+                val exif = ExifInterface(src.input, src.streamType)
+                src.orFallback(ExifInterface.TAG_ORIENTATION, exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL))
+            } ?: ExifInterface.ORIENTATION_NORMAL
         }.getOrDefault(ExifInterface.ORIENTATION_NORMAL)
 
         var displayW = storedW
@@ -462,7 +462,7 @@ object ImageIo {
      */
     fun exifOrientation(bytes: ByteArray, offset: Int = 0, length: Int = bytes.size): Int {
         if (length <= 0 || offset < 0 || offset + length > bytes.size) return ExifInterface.ORIENTATION_NORMAL
-        // 만화 쪽은 남이 만든 압축 안의 바이트다. 덩이 길이가 남은 크기를 넘으면 넘기지 않는다(`ExifContainerGuard`).
+        // 만화 쪽은 남이 만든 압축 안의 바이트다. 덩이·IFD 칸의 길이가 남은 크기를 넘으면 넘기지 않는다(`ExifContainerGuard`).
         if (!ExifContainerGuard.allows(bytes, offset, length)) return ExifInterface.ORIENTATION_NORMAL
         return try {
             ExifInterface(java.io.ByteArrayInputStream(bytes, offset, length)).getAttributeInt(
