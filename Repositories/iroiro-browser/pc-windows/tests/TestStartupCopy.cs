@@ -14,6 +14,87 @@ namespace WebTether.Tests
 {
     static partial class ControllerTests
     {
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern bool EnumWindows(EnumWindowsProc f, IntPtr l);
+        delegate bool EnumWindowsProc(IntPtr h, IntPtr l);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern bool IsWindowVisible(IntPtr h);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern uint GetWindowThreadProcessId(IntPtr h, out uint pid);
+
+        /// <summary>그 프로세스와 자손(WMI 로 찾는다)의 보이는 맨 위 창 — 'pid:이름'.</summary>
+        static List<string> VisibleWindowsOfTree(int root)
+        {
+            var tree = new HashSet<int> { root };
+            var names = new Dictionary<int, string>();
+            using (var s = new System.Management.ManagementObjectSearcher("SELECT ProcessId, ParentProcessId, Name FROM Win32_Process"))
+            {
+                var rows = new List<Tuple<int, int, string>>();
+                foreach (System.Management.ManagementObject o in s.Get())
+                    using (o) rows.Add(Tuple.Create(Convert.ToInt32(o["ProcessId"]), Convert.ToInt32(o["ParentProcessId"]), (string)o["Name"]));
+                bool grew = true;
+                while (grew)
+                {
+                    grew = false;
+                    foreach (var r in rows)
+                        if (tree.Contains(r.Item2) && tree.Add(r.Item1)) grew = true;
+                }
+                foreach (var r in rows) if (tree.Contains(r.Item1)) names[r.Item1] = r.Item3;
+            }
+            var found = new List<string>();
+            EnumWindows((h, l) =>
+            {
+                uint pid;
+                GetWindowThreadProcessId(h, out pid);
+                if (IsWindowVisible(h) && tree.Contains((int)pid)) found.Add(pid + ":" + (names.ContainsKey((int)pid) ? names[(int)pid] : "?"));
+                return true;
+            }, IntPtr.Zero);
+            TestMain.Say("      프로세스 " + string.Join(",", names.Values.ToArray()) + " · 보이는 창 " + found.Count);
+            return found;
+        }
+
+        /// <summary>
+        /// dir 에 시작 스크립트와 가짜 exe(ctrlc-child.exe 를 WebTether.exe 이름으로 — 환경을 env-dump.txt 에 적는 콘솔 탐침)를 두고, env 를 이
+        /// 프로세스에 잠깐 넣어 작업처럼(ShellExecute — 콘솔·표준 핸들 없이) conhost --headless 로 돌린다. exe 가 적은 줄들, 띄우지 않았으면 null.
+        /// </summary>
+        static string[] RunLauncher(string dir, byte[] script, Dictionary<string, string> env, bool checkWindows)
+        {
+            var exe = Path.Combine(dir, "WebTether.exe");
+            if (!File.Exists(exe)) File.Copy(Path.Combine(TestMain.OutDir, "ctrlc-child.exe"), exe);
+            var dump = Path.Combine(dir, "env-dump.txt");
+            if (File.Exists(dump)) File.Delete(dump);
+            File.WriteAllBytes(Path.Combine(dir, SystemOps.LauncherName), script);
+            var act = SystemOps.StartAction(exe);
+            var before = new Dictionary<string, string>();
+            foreach (var kv in env) { before[kv.Key] = Environment.GetEnvironmentVariable(kv.Key); Environment.SetEnvironmentVariable(kv.Key, kv.Value); }
+            Process p;
+            try { p = Process.Start(new ProcessStartInfo(act.Command, act.Arguments) { UseShellExecute = true, WorkingDirectory = act.WorkingDirectory }); }
+            finally { foreach (var kv in before) Environment.SetEnvironmentVariable(kv.Key, kv.Value); }
+            using (p)
+            {
+                var until = DateTime.UtcNow.AddSeconds(20);
+                while (!File.Exists(dump) && !p.HasExited && DateTime.UtcNow < until) Thread.Sleep(50);
+                if (checkWindows && File.Exists(dump))
+                {
+                    var visible = VisibleWindowsOfTree(p.Id);
+                    A.Eq(0, visible.Count, "보이는 창 없음: " + string.Join(",", visible.ToArray()));
+                }
+                A.True(p.WaitForExit(20000), "끝남");
+            }
+            return File.Exists(dump) ? File.ReadAllLines(dump) : null;
+        }
+
+        static void NoneLeft(string[] lines)
+        {
+            foreach (var l in lines)
+            {
+                var name = l.Split('=')[0];
+                foreach (var pre in SystemOps.ClearedPrefixes)
+                    A.True(!name.StartsWith(pre, StringComparison.OrdinalIgnoreCase), "남은 변수: " + name);
+                A.True(!name.Equals("__COMPAT_LAYER", StringComparison.OrdinalIgnoreCase), "남은 __COMPAT_LAYER");
+            }
+        }
+
         static string Sid()
         {
             using (var id = WindowsIdentity.GetCurrent()) return id.User.Value;
@@ -45,6 +126,24 @@ namespace WebTether.Tests
             return Tuple.Create(0, "\r\n" + SystemOps.TaskXml(exe, Sid()) + "\r\n");
         }
 
+        /// <summary>11de3c30~이 판 전의 작업 XML — 사본 exe 를 곧바로(인자 없이) 띄운다.</summary>
+        static string OldTaskXml(string exe)
+        {
+            return "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\r\n<Task version=\"1.2\" xmlns=\"http://schemas.microsoft.com/windows/2004/02/mit/task\">\r\n" +
+                   "  <Principals><Principal id=\"Author\"><LogonType>InteractiveToken</LogonType><RunLevel>HighestAvailable</RunLevel></Principal></Principals>\r\n" +
+                   "  <Actions Context=\"Author\"><Exec><Command>" + System.Security.SecurityElement.Escape(exe) + "</Command></Exec></Actions>\r\n</Task>\r\n";
+        }
+
+        static Tuple<int, string> OldTaskPointingTo(string exe)
+        {
+            return Tuple.Create(0, "\r\n" + OldTaskXml(exe) + "\r\n");
+        }
+
+        static void PutLauncher(string target)
+        {
+            File.WriteAllBytes(Path.Combine(Path.GetDirectoryName(target), SystemOps.LauncherName), SystemOps.LauncherBytes(Path.GetFileName(target)));
+        }
+
         /// <summary>Pump 의 Task 판 — 던진 것은 다시 던진다.</summary>
         static void PumpT(Task t)
         {
@@ -59,10 +158,17 @@ namespace WebTether.Tests
         {
             T("사본(11-21): 작업 XML 에서 Exec 명령 읽기 — 이름공간·UTF-16 선언·앞뒤 글, 둘이면 둘, 깨진 것·DTD 는 읽지 않음", () =>
             {
-                var xml = SystemOps.TaskXml(@"C:\Program Files\WebTether\WebTether.exe", "S-1-5-21-1-2-3-1001");
+                var xml = OldTaskXml(@"C:\Program Files\WebTether\WebTether.exe");
                 var got = StartupCopy.TaskCommands("앞 글\r\n" + xml + "\r\n뒤 글");
                 A.True(got != null && got.Count == 1, "하나");
                 A.Eq(@"C:\Program Files\WebTether\WebTether.exe", got[0], "명령");
+                var fresh = StartupCopy.TaskExecs(SystemOps.TaskXml(@"C:\Program Files\WebTether\WebTether.exe", "S-1-5-21-1-2-3-1001"));
+                var want = SystemOps.StartAction(@"C:\Program Files\WebTether\WebTether.exe");
+                A.True(fresh != null && fresh.Count == 1, "새 꼴 하나");
+                A.Eq(want.Command, fresh[0].Command, "새 꼴 — 명령");
+                A.Eq(want.Arguments, fresh[0].Arguments, "새 꼴 — 인자");
+                A.Eq(want.WorkingDirectory, fresh[0].WorkingDirectory, "새 꼴 — 작업 폴더");
+                A.Eq((string)null, StartupCopy.TaskExecs(xml)[0].Arguments, "옛 꼴은 인자 없음");
                 var two = xml.Replace("</Exec>", "</Exec><Exec><Command>C:\\x.exe</Command></Exec>");
                 A.Eq(2, StartupCopy.TaskCommands(two).Count, "둘");
                 A.Eq(0, StartupCopy.TaskCommands(xml.Replace("<Exec><Command>" + @"C:\Program Files\WebTether\WebTether.exe" + "</Command></Exec>", "<ComHandler/>")).Count, "Exec 없음");
@@ -129,11 +235,43 @@ namespace WebTether.Tests
                     ops.IsRunning = p => false;
                     File.Copy(self.Path, target, true);
                     A.Eq(CopyStatus.Same, ops.CheckStartupCopy().Status, "같음");
-                    answer = Tuple.Create(0, SystemOps.TaskXml("\"" + target.ToUpperInvariant() + "\"", Sid()));
-                    A.Eq(CopyStatus.Same, ops.CheckStartupCopy().Status, "따옴표·대문자로 적힌 작업");
+                    c = ops.CheckStartupCopy();
+                    A.True(!c.OldTask && c.LauncherStale, "새 꼴인데 시작 스크립트 없음: " + c);
+                    A.Eq(CopyPrompt.Ask, StartupCopy.Decide(c), "다시 등록을 묻는다");
+                    PutLauncher(target);
+                    c = ops.CheckStartupCopy();
+                    A.True(c.Status == CopyStatus.Same && !c.OldTask && !c.LauncherStale, "새 꼴·스크립트 같음: " + c);
+                    A.Eq(CopyPrompt.None, StartupCopy.Decide(c), "묻지 않음");
+                    File.AppendAllText(Path.Combine(dir, SystemOps.LauncherName), "calc.exe\r\n");
+                    A.True(ops.CheckStartupCopy().LauncherStale, "고친 스크립트는 다름");
+                    PutLauncher(target);
+                    answer = OldTaskPointingTo("\"" + target.ToUpperInvariant() + "\"");
+                    c = ops.CheckStartupCopy();
+                    A.True(c.Status == CopyStatus.Same && c.OldTask, "따옴표·대문자로 적힌 옛 꼴 작업: " + c);
+                    A.Eq(CopyPrompt.Ask, StartupCopy.Decide(c), "옛 꼴이면 사본이 같아도 묻는다");
+                    A.Eq(StartupCopy.AskTaskText, StartupCopy.AskTextFor(c), "등록만");
+                    A.Eq(StartupCopy.FormNoteTask, StartupCopy.FormNoteFor(c), "설정 창의 줄");
+                    answer = Tuple.Create(0, OldTaskXml(target).Replace("</Command>", "</Command><Arguments>--x</Arguments>"));
+                    A.Eq(CopyStatus.OtherTarget, ops.CheckStartupCopy().Status, "인자가 붙은 옛 꼴은 남의 것");
+                    answer = Tuple.Create(0, SystemOps.TaskXml(target, Sid()).Replace("/c .\\launch.cmd", "/c .\\other.cmd"));
+                    A.Eq(CopyStatus.OtherTarget, ops.CheckStartupCopy().Status, "인자가 다른 새 꼴은 남의 것");
+                    var sys = Environment.GetFolderPath(Environment.SpecialFolder.System);
+                    answer = Tuple.Create(0, SystemOps.TaskXml(target, Sid()).Replace(sys + "\\conhost.exe</Command>", "%windir%\\system32\\conhost.exe</Command>"));
+                    A.Eq(CopyStatus.OtherTarget, ops.CheckStartupCopy().Status, "환경 변수로 적은 conhost 는 우리 것이 아님");
+                    answer = OldTaskPointingTo(target);
+                    File.WriteAllText(target, "옛 판");
+                    c = ops.CheckStartupCopy();
+                    A.True(c.Status == CopyStatus.Stale && c.OldTask, "옛 판·옛 꼴: " + c);
+                    A.Eq(StartupCopy.AskBothText, StartupCopy.AskTextFor(c), "사본과 등록");
+                    A.Eq(StartupCopy.FormNote, StartupCopy.FormNoteFor(c), "설정 창 — 사본");
+                    A.True(StartupCopy.DoneText(c, true, null).Contains("사본과 등록"), StartupCopy.DoneText(c, true, null));
 
-                    var asInstalled = CopyOps(self, self.Path, () => { throw new Exception("묻지 않아야 함"); }, calls);
-                    A.Eq(CopyStatus.RunningInstalled, asInstalled.CheckStartupCopy().Status, "지금 도는 것이 사본");
+                    var asInstalled = CopyOps(self, self.Path, () => OldTaskPointingTo(self.Path), calls);
+                    c = asInstalled.CheckStartupCopy();
+                    A.True(c.Status == CopyStatus.RunningInstalled && c.OldTask, "지금 도는 것이 사본이어도 옛 꼴이면: " + c);
+                    A.Eq(CopyPrompt.Ask, StartupCopy.Decide(c), "다시 등록을 묻는다");
+                    var asInstalledOff = CopyOps(self, self.Path, () => Tuple.Create(1, "없음"), calls);
+                    A.Eq(CopyStatus.Off, asInstalledOff.CheckStartupCopy().Status, "지금 도는 것이 사본 — 작업 없음");
                     A.Eq(CopyStatus.Unknown, CopyOps(null, target, () => answer, calls).CheckStartupCopy().Status, "쥐지 못했으면 모름");
                 }
                 A.True(calls.All(x => x == "schtasks.exe /Query /TN WebTether /XML"), "읽기만: " + string.Join("|", calls.Distinct().ToArray()));
@@ -154,6 +292,7 @@ namespace WebTether.Tests
                     self.Stream.Position = 0;
                     var want = Binaries.Sha256(self.Stream);
                     var ops = CopyOps(self, target, () => TaskPointingTo(target), calls);
+                    PutLauncher(target);
                     ops.IsRunning = p => true;
                     A.True(!ops.RefreshStartupCopy(out err), "사본이 돌면 하지 않음");
                     A.True(err.Contains("옛 판이 아직 떠 있습니다"), err);
@@ -166,8 +305,10 @@ namespace WebTether.Tests
                     A.Eq(0, Directory.GetFiles(dir, "*.new-*").Length, "임시 파일 없음");
                     A.Eq(CopyStatus.Same, ops.CheckStartupCopy().Status, "이제 같음");
                     A.True(!calls.Any(x => x.Contains("/Create") || x.Contains("/Delete")), "작업은 그대로: " + string.Join("|", calls.ToArray()));
-                    var asInstalled = CopyOps(self, self.Path, () => TaskPointingTo(self.Path), calls);
-                    A.True(!asInstalled.RefreshStartupCopy(out err), "지금 도는 것이 사본이면 하지 않음");
+                    // 지금 도는 것이 사본이면 복사하지 않는다(작업이 없으면 아무것도 하지 않는다 — 시험 exe 의 폴더에 쓰지 않는다).
+                    var asInstalled = CopyOps(self, self.Path, () => Tuple.Create(1, "없음"), calls);
+                    A.True(asInstalled.RefreshStartupCopy(out err), "지금 도는 것이 사본 — 할 일 없음: " + err);
+                    A.True(!File.Exists(Path.Combine(TestMain.OutDir, SystemOps.LauncherName)), "시험 exe 의 폴더에 쓰지 않음");
                 }
             });
 
@@ -449,6 +590,153 @@ namespace WebTether.Tests
                 finally { SynchronizationContext.SetSynchronizationContext(before); }
             });
 
+            T("시작 시 실행(T1574.012): 작업은 .NET exe 를 곧바로 띄우지 않는다 — conhost --headless · cmd /d /e:on /v:off · .\\launch.cmd, '%' 없음", () =>
+            {
+                var sys = Environment.GetFolderPath(Environment.SpecialFolder.System);
+                var a = SystemOps.StartAction(@"C:\Program Files\WebTether\WebTether.exe");
+                A.Eq(Path.Combine(sys, "conhost.exe"), a.Command, "네이티브 시스템 실행 파일");
+                A.True(a.Arguments.StartsWith("--headless "), "창 없이: " + a.Arguments);
+                A.True(a.Arguments.Contains(" /d ") && a.Arguments.Contains(" /e:on ") && a.Arguments.Contains(" /v:off ") && a.Arguments.EndsWith(" /c .\\launch.cmd"), "AutoRun 끔·확장 켬·지연 확장 끔: " + a.Arguments);
+                A.Eq(@"C:\Program Files\WebTether", a.WorkingDirectory, "작업 폴더");
+                foreach (var f in new[] { a.Command, a.Arguments, a.WorkingDirectory })
+                    A.True(f.IndexOf('%') < 0, "% 없음: " + f);
+                A.True(a.Arguments.IndexOf("WebTether.exe", StringComparison.OrdinalIgnoreCase) < 0, "exe 를 곧바로 띄우지 않음");
+                foreach (var bad in new[] { @"C:\Pro%gram%\WebTether.exe", "C:\\a\"b\\WebTether.exe", @"\\server\share\WebTether.exe", @"C:\x\Web Tether.exe", @"C:\x\a&b.exe" })
+                {
+                    bool threw = false;
+                    try { SystemOps.StartAction(bad); } catch (ArgumentException) { threw = true; }
+                    A.True(threw, "거절: " + bad);
+                }
+                var x = SystemOps.TaskXml(@"C:\Program Files\A&B (c)\WebTether.exe", "S-1-5-21-1");
+                A.True(x.Contains("<WorkingDirectory>C:\\Program Files\\A&amp;B (c)</WorkingDirectory>"), "작업 폴더 이스케이프");
+                var script = SystemOps.LauncherScript("WebTether.exe");
+                A.True(script.Replace("%%v", "").IndexOf('%') < 0, "스크립트에 % 확장 없음(for 변수만)");
+                A.True(script.IndexOf('!') < 0, "! 없음");
+                foreach (var pre in SystemOps.ClearedPrefixes) A.True(script.Contains("set " + pre + ">"), "비우는 앞머리 " + pre);
+                A.True(script.Contains("set \"__COMPAT_LAYER=\""), "__COMPAT_LAYER");
+                A.True(!script.Contains("('"), "for /f ('명령') 을 쓰지 않음(%ComSpec% 의 cmd 를 AutoRun 과 함께 띄운다)");
+                A.True(script.TrimEnd().EndsWith("\".\\WebTether.exe\""), "끝에 같은 폴더의 exe");
+                foreach (var ch in SystemOps.LauncherBytes("WebTether.exe")) A.True(ch < 128, "ASCII");
+                A.True(script.Contains("\r\n") && script.Replace("\r\n", "").IndexOf('\n') < 0, "CRLF");
+            });
+
+            T("시작 스크립트: conhost --headless 로 실제로 돌려 COR_·COMPlus_·CORECLR_·DOTNET_·APPDOMAIN_MANAGER_ 를 비우고 같은 폴더의 exe 를 띄운다, 보이는 창 없음", () =>
+            {
+                var dir = TestMain.Scratch("launcher-run");
+                // 이름·값은 모두 뜻이 없는 것만 — 비우기가 깨져 그대로 닿아도 CLR 이 다르게 돌지 않게(11-27: COMPLUS_Version=v9 를 넣었더니 비우기를
+                // 되돌린 시험에서 .NET 설치를 묻는 창이 사용자 화면에 떴다). 런타임·판을 고르는 변수, 화면에 창을 띄울 수 있는 변수는 쓰지 않는다.
+                var r = RunLauncher(dir, SystemOps.LauncherBytes("WebTether.exe"), new Dictionary<string, string>
+                {
+                    { "COR_WEBTETHER_TEST", "0" }, { "COMPlus_WebTetherTestKnob", "1" }, { "complus_webtether_lowercase", "1" }, { "COMPlus_x&y", "1" },
+                    { "CORECLR_WEBTETHER_TEST", "0" }, { "DOTNET_WEBTETHER_TEST", "0" }, { "APPDOMAIN_MANAGER_WEBTETHER_TEST", "0" },
+                    { "WEBTETHER_TEST_KEEP", "keep" },
+                }, true);
+                A.True(r != null, "exe 가 떴다");
+                NoneLeft(r);
+                A.True(r.Contains("WEBTETHER_TEST_KEEP=keep"), "다른 변수는 그대로");
+                A.True(!File.Exists(Path.Combine(dir, SystemOps.LauncherScratch)), "임시 파일을 지움");
+            });
+
+            T("시작 스크립트: 아주 긴 값(8,200·9,000자) 바로 뒤의 변수도 비운다 — for /f 가 한 줄을 8,191자 남짓까지만 읽는다(11-27 재검토가 재현)", () =>
+            {
+                foreach (var n in new[] { 8200, 9000, 20000 })
+                {
+                    var dir = TestMain.Scratch("launcher-long-" + n);
+                    var r = RunLauncher(dir, SystemOps.LauncherBytes("WebTether.exe"), new Dictionary<string, string>
+                    {
+                        { "COR_WEBTETHER_A", new string('x', n) }, { "COR_WEBTETHER_B", "1" },
+                        { "COMPlus_WebTetherA", new string('y', n) }, { "COMPlus_WebTetherB", "1" },
+                    }, false);
+                    A.True(r != null, "exe 가 떴다(" + n + ")");
+                    NoneLeft(r);
+                }
+            });
+
+            T("시작 스크립트: 비우고도 남은 것이 있으면 exe 를 띄우지 않는다(비우기를 건너뛴 판으로 검사만)", () =>
+            {
+                var dir = TestMain.Scratch("launcher-left");
+                var script = SystemOps.LauncherScript("WebTether.exe", 0);
+                foreach (var pre in new[] { "COR_WEBTETHER_TEST", "COMPlus_WebTetherTestKnob", "CORECLR_WEBTETHER_TEST", "DOTNET_WEBTETHER_TEST", "APPDOMAIN_MANAGER_WEBTETHER_TEST" })
+                {
+                    var r = RunLauncher(dir, System.Text.Encoding.ASCII.GetBytes(script), new Dictionary<string, string> { { pre, "0" } }, false);
+                    A.True(r == null, "남았으면 띄우지 않음: " + pre);
+                }
+                A.True(RunLauncher(dir, System.Text.Encoding.ASCII.GetBytes(script), new Dictionary<string, string> { { "WEBTETHER_TEST_KEEP", "keep" } }, false) != null,
+                       "남은 것이 없으면 띄움");
+            });
+
+            T("시작 시 실행: 옛 꼴 작업은 '예' 면 다시 등록한다 — 시작 스크립트를 쓰고 새 꼴 XML 로 /Create /F, 남의 작업·작업 없음이면 등록하지 않음", () =>
+            {
+                var dir = Path.Combine(TestMain.Scratch("copy-reregister"), "WebTether");
+                var target = Path.Combine(dir, "WebTether.exe");
+                var calls = new List<string>();
+                string registered = OldTaskXml(target), sentXml = null;
+                string err;
+                using (var self = SelfImage.Open(out err))
+                {
+                    A.True(self != null, err);
+                    var ops = new SystemOps(self, null)
+                    {
+                        Target = target, Policy = DirPolicy.CurrentUser(), IsRunning = p => false, SettleDelayMs = 0,
+                        RunTool = (string exe, string args, int timeoutMs, out string output) =>
+                        {
+                            lock (calls) calls.Add(exe + " " + args);
+                            output = "";
+                            if (args == "/Query /TN WebTether /XML")
+                            {
+                                if (registered == null) return 1;
+                                output = registered;
+                                return 0;
+                            }
+                            if (args.StartsWith("/Create /TN WebTether /XML "))
+                            {
+                                var path = args.Substring("/Create /TN WebTether /XML ".Length).Replace(" /F", "").Trim('"');
+                                A.Eq(dir, Path.GetDirectoryName(path), "XML 은 설치 폴더에");
+                                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+                                using (var sr = new StreamReader(fs, System.Text.Encoding.Unicode)) sentXml = sr.ReadToEnd();
+                                registered = sentXml;
+                                return 0;
+                            }
+                            return 99;
+                        },
+                    };
+                    var c = ops.CheckStartupCopy();
+                    A.True(c.Status == CopyStatus.Stale && c.Missing && c.OldTask, "옛 꼴·사본 없음: " + c);
+                    A.True(ops.RefreshStartupCopy(out err), "바꿈: " + err);
+                    A.True(sentXml != null, "다시 등록함");
+                    A.Eq(StartupCopy.TaskForm.Current, StartupCopy.FormOf(StartupCopy.TaskExecs(sentXml), target), "새 꼴");
+                    A.True(File.Exists(Path.Combine(dir, SystemOps.LauncherName)), "시작 스크립트");
+                    A.Eq(0, Directory.GetFiles(dir, "task-*.xml").Length, "XML 은 지움");
+                    c = ops.CheckStartupCopy();
+                    A.True(c.Status == CopyStatus.Same && !c.OldTask && !c.LauncherStale, "이제 같음: " + c);
+                    int creates = calls.Count(x => x.Contains("/Create"));
+                    A.True(ops.RefreshStartupCopy(out err), "할 일 없음: " + err);
+                    A.Eq(creates, calls.Count(x => x.Contains("/Create")), "새 꼴이면 다시 등록하지 않음");
+                    registered = OldTaskXml(@"C:\Elsewhere\WebTether.exe");
+                    A.True(ops.RefreshStartupCopy(out err), "남의 작업: " + err);
+                    A.Eq(creates, calls.Count(x => x.Contains("/Create")), "남의 작업은 그대로");
+                    registered = null;
+                    A.True(ops.RefreshStartupCopy(out err), "작업 없음: " + err);
+                    A.Eq(creates, calls.Count(x => x.Contains("/Create")), "작업이 없으면 등록하지 않음");
+                    A.True(!calls.Any(x => x.Contains("/Delete")), "지우지 않음");
+                }
+            });
+
+            T("핫스팟: 이름을 본 어댑터와 192.168.49.1 로 가는 어댑터가 다르면 손으로 누른 '연결' 도 묻지 않고 띄우지 않는다", () =>
+            {
+                var r = Make("route-mismatch", null);
+                r.Hotspot = new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.60", IfIndex = 12, Ssid = "남의망", RouteMismatch = "192.168.49.x 어댑터가 여럿이고 길이 다름" };
+                int asked = 0;
+                r.C.AskConnect = (h, p) => { asked++; return true; };
+                Run(r.C.ConnectAsync());
+                A.Eq(0, asked, "묻지 않음");
+                A.Eq(0, r.F.CommandLines.Count, "띄우지 않음");
+                A.True(r.C.Detail.Contains("길이 다름"), r.C.Detail);
+                r.Hotspot = new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.60", IfIndex = 12, Ssid = Mine, RouteMismatch = "192.168.49.x 어댑터가 여럿이고 길이 다름" };
+                Run(r.C.ConnectAsync());
+                A.Eq(0, r.F.CommandLines.Count, "이름이 맞아도 띄우지 않음");
+            });
+
             T("사본: 이 PC 의 작업을 읽기만(schtasks /Query /XML) — 명령을 읽어 낸다(경로는 적지 않는다)", () =>
             {
                 var ops = new SystemOps(null, null);
@@ -459,7 +747,8 @@ namespace WebTether.Tests
                 {
                     var cmds = StartupCopy.TaskCommands(output);
                     A.True(cmds != null && cmds.Count >= 1, "명령을 읽음");
-                    TestMain.Say("      작업 WebTether 있음 · 명령 " + cmds.Count + "개 · 설치 사본을 가리킴 " + (cmds.Count == 1 && StartupCopy.SamePath(cmds[0], SystemOps.InstalledExe)));
+                    TestMain.Say("      작업 WebTether 있음 · 명령 " + cmds.Count + "개 · 설치 사본을 가리킴 " + (cmds.Count == 1 && StartupCopy.SamePath(cmds[0], SystemOps.InstalledExe)) +
+                                 " · 꼴 " + StartupCopy.FormOf(StartupCopy.TaskExecs(output), SystemOps.InstalledExe));
                 }
                 code = ops.RunTool("schtasks.exe", @"/Query /TN \Microsoft\Windows\Defrag\ScheduledDefrag /XML", 10000, out output);
                 if (code == 0)

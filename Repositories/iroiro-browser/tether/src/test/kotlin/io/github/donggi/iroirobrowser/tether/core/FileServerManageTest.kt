@@ -450,7 +450,8 @@ class FileServerManageTest {
         assertEquals(400, k.post("/api/rename", """{"path":"문서.txt","name":${q(".\u200B.")}}""").status)
         for (sneaky in listOf(".web\u200B-trash", "\u202E.web-trash", ".WEB-TRASH\u2060.")) {
             assertEquals(400, k.put("/api/file?path=${enc(sneaky)}", "x".toByteArray()).status, sneaky)
-            assertEquals(400, k.put("/api/folder?path=${enc(sneaky)}").status, sneaky)
+            // 보이지 않는 글자를 뗀 이름이 휴지통이라 경로부터 숨은 자리(404 — 끝에 점을 붙인 별칭과 같다, 2026-11 점검).
+            assertEquals(404, k.put("/api/folder?path=${enc(sneaky)}").status, sneaky)
             assertEquals(400, k.post("/api/rename", """{"path":"문서.txt","name":${q(sneaky)}}""").status, sneaky)
             assertEquals(400, k.put("/api/file?path=${enc("$sneaky/x.txt")}&parents=1", "x".toByteArray()).status, sneaky)
         }
@@ -1033,5 +1034,80 @@ class FileServerManageTest {
         val twoTypes = "POST /api/delete HTTP/1.1\r\nHost: 192.168.49.1\r\nContent-Type: text/plain\r\nContent-Type: application/json\r\nContent-Length: 2\r\n\r\n{}"
         assertEquals(400, rawHttp(k.port, twoTypes.toByteArray()).status)
         assertEquals(setOf("a.txt"), k.names())
+    }
+
+    @Test
+    fun 휴지통으로_옮겼는지_모르면_원래_파일이_그대로라고_하지_않는다() {
+        // 옮기기는 됐는데 실패를 알리고 칸도 읽지 못하는 제공자 — 원래 것은 제자리에 없다. '그대로' 라 답하면 손님은 원래 것이 거기 있는 줄 안다.
+        val root = java.nio.file.Files.createTempDirectory("tether-manage").toFile()
+        val base = DirectoryTree(root)
+        val slotName = Regex("t[0-9]+-[0-9a-f]{8}")
+        val flaky = object : SharedTree by base {
+            override fun move(entry: SharedEntry, fromParent: SharedEntry, toParent: SharedEntry): SharedEntry? {
+                base.move(entry, fromParent, toParent)
+                throw java.io.IOException("옮긴 것을 읽지 못했다")
+            }
+
+            override fun list(directory: SharedEntry): List<SharedEntry> =
+                if (slotName.matches(directory.name)) throw java.io.IOException("칸을 읽지 못했다") else base.list(directory)
+        }
+        val k = FileServerKit(root, false, base, sharedTree = flaky).also { kits += it }
+        k.file("doc.txt", "original")
+        val reply = k.put("/api/file?path=doc.txt&overwrite=1", "new".toByteArray())
+        assertEquals(500, reply.status, reply.text)
+        assertFalse(reply.text.contains("그대로"), reply.text)
+        assertTrue(reply.text.contains("제자리에 없습니다") && reply.text.contains("휴지통을 확인하세요"), reply.text)
+        assertFalse(File(root, "doc.txt").exists())
+        val slot = File(root, trash).listFiles().orEmpty().single { it.isDirectory }
+        assertEquals("original", File(slot, "doc.txt").readText(), "원래 것은 휴지통 칸에 남는다")
+    }
+
+    @Test
+    fun 휴지통은_정확히_그_이름으로_만들어져야_쓴다() {
+        // 제공자가 겹침·못 쓰는 글자로 이름을 바꿔 만들면 숨지 않은 다른 폴더에 지운 것이 쌓인다 — 쓰지 않고 치운다.
+        val root = java.nio.file.Files.createTempDirectory("tether-manage").toFile()
+        val base = DirectoryTree(root)
+        val renaming = object : SharedTree by base {
+            override fun createDirectory(parent: SharedEntry, name: String): SharedEntry =
+                base.createDirectory(parent, if (name == SharedPaths.TRASH_NAME) "$name (1)" else name)
+        }
+        val k = FileServerKit(root, true, base, sharedTree = renaming).also { kits += it }
+        k.file("gone.txt", "G")
+        val deleted = k.post("/api/delete", """{"base":"","names":["gone.txt"]}""")
+        assertTrue(deleted.text.contains(SharedOps.TRASH_NOT_CREATED), deleted.text)
+        k.file("keep.txt", "original")
+        val replaced = k.put("/api/file?path=keep.txt&overwrite=1", "new".toByteArray())
+        assertEquals(500, replaced.status, replaced.text)
+        assertTrue(replaced.text.contains("원래 파일은 그대로입니다"), replaced.text)
+        assertEquals("original", File(root, "keep.txt").readText())
+        assertEquals(setOf("gone.txt", "keep.txt"), k.names(), "잘못 지은 폴더와 받은 임시를 남기지 않는다")
+    }
+
+    @Test
+    fun 옮긴_뒤_새_이름으로_바꾸지_못하면_숨은_임시_이름으로_남지_않는다() {
+        val root = java.nio.file.Files.createTempDirectory("tether-manage").toFile()
+        val base = DirectoryTree(root)
+        var blockReturn = false
+        val flaky = object : SharedTree by base {
+            override fun rename(entry: SharedEntry, newName: String): SharedEntry =
+                if (newName == "x (1).txt") throw java.io.IOException("이름을 바꾸지 못했다") else base.rename(entry, newName)
+
+            override fun move(entry: SharedEntry, fromParent: SharedEntry, toParent: SharedEntry): SharedEntry? =
+                if (blockReturn && toParent.name == "src") throw java.io.IOException("되돌리지 못했다") else base.move(entry, fromParent, toParent)
+        }
+        val k = FileServerKit(root, true, base, sharedTree = flaky).also { kits += it }
+        k.file("src/x.txt", "new")
+        k.file("dst/x.txt", "old")
+        val back = k.post("/api/move", """{"base":"src","names":["x.txt"],"to":"dst","conflict":"rename"}""")
+        assertEquals(200, back.status, back.text)
+        assertTrue(back.text.contains("되돌렸습니다"), back.text)
+        assertEquals("new", File(root, "src/x.txt").readText(), "제자리에 원래 이름으로")
+        assertEquals(setOf("x.txt"), k.names("src"))
+        assertEquals(setOf("x.txt"), k.names("dst"))
+        // 되돌리지도 못하면(옮긴 곳의 원래 이름은 겹친다) 남은 실제 이름을 알린다.
+        blockReturn = true
+        val stuck = k.post("/api/move", """{"base":"src","names":["x.txt"],"to":"dst","conflict":"rename"}""")
+        val left = k.names("dst").single { it != "x.txt" }
+        assertTrue(stuck.text.contains("옮긴 곳에 ‘$left’ 로 남았습니다"), stuck.text)
     }
 }

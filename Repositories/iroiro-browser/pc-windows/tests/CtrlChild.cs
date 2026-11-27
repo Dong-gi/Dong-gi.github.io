@@ -2,6 +2,7 @@
 //   ctrlc-child.exe wait <표지 파일>   Ctrl+C 를 받으면 0.3초 '정리' 하고 표지 파일에 clean 을 쓰고 끝난다
 //   ctrlc-child.exe ignore            Ctrl+C 를 받고도 끝나지 않는다(강제 종료 길)
 //   ctrlc-child.exe args ...          받은 인자를 [..] 로 한 줄씩 찍는다(명령줄 싸기 확인)
+//   (WebTether.exe 라는 이름으로, 인자 없이)  환경 변수를 현재 폴더의 env-dump.txt 에 적고 1.5초 뒤 끝난다(시작 스크립트 시험)
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -18,6 +19,17 @@ static class CtrlChild
 
     static int Main(string[] args)
     {
+        if (args.Length == 0 && string.Equals(AppDomain.CurrentDomain.FriendlyName, "WebTether.exe", StringComparison.OrdinalIgnoreCase))
+        {
+            var lines = new System.Collections.Generic.List<string>();
+            foreach (System.Collections.DictionaryEntry e in Environment.GetEnvironmentVariables())
+                lines.Add(e.Key + "=" + e.Value);
+            lines.Sort(StringComparer.OrdinalIgnoreCase);
+            File.WriteAllLines("env-dump.tmp", lines.ToArray());
+            File.Move("env-dump.tmp", "env-dump.txt");
+            Thread.Sleep(1500);
+            return 0;
+        }
         if (args.Length > 0 && args[0] == "args")
         {
             for (int i = 1; i < args.Length; i++) Console.WriteLine("[" + args[i] + "]");

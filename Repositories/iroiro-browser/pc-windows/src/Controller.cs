@@ -61,6 +61,7 @@ namespace WebTether
         public static string Refusal(HotspotInfo hs, string prefix, string approved)
         {
             if (hs == null) return "폰 핫스팟에 연결되어 있지 않습니다";
+            if (hs.RouteMismatch != null) return hs.RouteMismatch;
             if (hs.Ssid == null) return "Wi-Fi 이름을 알 수 없음(" + (hs.SsidError ?? "까닭 모름") + ")";
             if (hs.SsidStartsWith(prefix) || (approved != null && hs.Ssid == approved)) return null;
             return "Wi-Fi 이름이 " + prefix + " 로 시작하지 않음(" + Ssid(hs.Ssid) + ")";
@@ -71,6 +72,7 @@ namespace WebTether
         {
             if (hs == null) return "연결 안 됨 — 폰의 " + prefix + "… 에 붙으십시오";
             var head = "연결됨 · " + hs.AdapterName + " (" + hs.Address + ")";
+            if (hs.RouteMismatch != null) return head + " · " + hs.RouteMismatch + " — 연결하지 않음";
             if (hs.Ssid == null) return head + " · 이름 모름(" + (hs.SsidError ?? "까닭 모름") + ") — 저절로 연결하지 않음";
             var name = Ssid(hs.Ssid) + (hs.SsidSource == WifiName.FromNlm ? "(" + WifiName.FromNlm + ")" : "");
             if (!hs.SsidStartsWith(prefix)) return head + " · " + name + " — 저절로 연결하지 않음";
@@ -375,7 +377,9 @@ namespace WebTether
                 if (errs.Count > 0) { Fail("설정을 확인하십시오 — " + errs[0].Value, false); return; }
 
                 var lister = Tun2proxyLister;
-                var others = await Task.Run(() => lister());
+                var ownNow = child;
+                int minePid = ownNow != null ? ownNow.Pid : 0;
+                var others = await Task.Run(() => { var r = new List<int>(); foreach (var pid in lister()) if (pid != minePid) r.Add(pid); return r; });
                 if (Cancelled(null)) return;
                 if (others.Count > 0)
                 {
@@ -409,6 +413,8 @@ namespace WebTether
 
                 // 안드로이드의 Wi-Fi Direct 그룹 오너는 모두 192.168.49.1 — 주소·프록시 응답만 보면 저장된 프로필로 남의 DIRECT 망에
                 // 붙었을 때도 PC 의 트래픽 전체를 그쪽으로 보낸다. 이름이 접두어로 시작할 때만 저절로, 손으로 누른 것은 묻고.
+                // 이름을 검사한 어댑터와 192.168.49.1 로 가는 어댑터가 다르면 묻지도 않는다 — '예' 가 검사하지 않은 망을 허락하게 된다.
+                if (hs.RouteMismatch != null) { manualRequested = false; Fail(hs.RouteMismatch, true, true); return; }
                 var refusal = StatusText.Refusal(hs, prefix, approvedSsid);
                 if (refusal != null)
                 {
@@ -477,6 +483,13 @@ namespace WebTether
                 {
                     var table = RouteReader();
                     st.DefaultsBefore = Routes.DefaultsOutside(table, NetState.IfIndexOf(s.TunName));
+                    // 번호와 함께 어댑터 GUID 를 적는다 — 되살릴 때 그 번호가 다른 어댑터에 돌아갔으면 넣지 않는다.
+                    var ids = LiveAdapterIds();
+                    foreach (var d in st.DefaultsBefore)
+                    {
+                        string id;
+                        if (ids.TryGetValue(d.IfIndex, out id)) d.AdapterId = id;
+                    }
                     st.KeptBypass = Routes.ExistingBypass(table, st.DefaultsBefore, st.Bypass);
                 }
                 catch (Exception ex) { log.Write("경로", "경로 표를 읽지 못함: " + ex.Message); }
@@ -628,19 +641,27 @@ namespace WebTether
         Task CleanupAfterChild(IChild c)
         {
             if (held != null) { held.Dispose(); held = null; }
-            if (c != null) c.Dispose();
-            return StartCleanup(false);
+            // 우리가 띄운 것인지는 이름이 아니라 그 핸들로 본다 — 끝내기가 아직 안 끝났으면(살아 있다) 걷지 않는다.
+            bool ownAlive = false;
+            int ownPid = 0;
+            if (c != null)
+            {
+                ownPid = c.Pid;
+                try { ownAlive = !c.HasExited; } catch (Exception) { ownAlive = true; }
+                c.Dispose();
+            }
+            return StartCleanup(false, ownAlive, ownPid);
         }
 
         /// <summary>
         /// 남은 경로를 걷는다 — 일꾼 스레드에서(route.exe 를 부른다). 앞의 걷기가 돌면 그 뒤에. 끝나기 전에는 Tick 이 쉬고
         /// 새 시도가 기다린다.
         /// </summary>
-        Task StartCleanup(bool startup)
+        Task StartCleanup(bool startup, bool ownAlive = false, int ownPid = 0)
         {
             var fallbackTun = Settings.TunName;
             var prev = pendingCleanup;
-            var t = prev.ContinueWith(_ => CleanupCore(fallbackTun, startup), CancellationToken.None,
+            var t = prev.ContinueWith(_ => CleanupCore(fallbackTun, startup, ownAlive, ownPid), CancellationToken.None,
                                       TaskContinuationOptions.None, TaskScheduler.Default);
             pendingCleanup = t;
             // 끝나면 화면에 알린다 — 단추가 '정리 중' 에서 '연결' 로 돌아오게(트레이 메뉴는 Changed 때만 다시 그린다).
@@ -649,7 +670,18 @@ namespace WebTether
             return t;
         }
 
-        void CleanupCore(string fallbackTun, bool startup)
+        /// <summary>
+        /// 이름이 tun2proxy 로 시작하는 프로세스 가운데 우리가 띄운 것(그 PID)을 뺀 것 — 이름은 아무 프로그램이나 쓸 수 있으므로 '다른
+        /// tun2proxy' 의 어림일 뿐이다(배치 파일로 띄운 것과 TUN 이 부딪치지 않게).
+        /// </summary>
+        List<int> OtherTun2proxies(int ownPid)
+        {
+            var r = new List<int>();
+            foreach (var pid in Tun2proxyLister()) if (pid != ownPid) r.Add(pid);
+            return r;
+        }
+
+        void CleanupCore(string fallbackTun, bool startup, bool ownAlive, int ownPid)
         {
             try
             {
@@ -657,13 +689,17 @@ namespace WebTether
                 if (startup && st != null) log.Write("정리", "지난번 연결의 흔적을 확인합니다");
                 var notes = new List<string>();
                 var tunName = st != null && st.TunName.Length > 0 ? st.TunName : fallbackTun;
-                var live = new HashSet<uint>();
-                foreach (var ni in SafeInterfaces())
-                {
-                    try { live.Add((uint)ni.GetIPProperties().GetIPv4Properties().Index); } catch (Exception) { }
-                }
-                bool other = Tun2proxyLister().Count > 0;
-                var plan = Routes.CleanupPlan(RouteReader(), st, NetState.IfIndexOf(tunName), live, other, notes);
+                var ids = LiveAdapterIds();
+                var live = new HashSet<uint>(ids.Keys);
+                // 우리가 띄운 것이 살아 있으면(끝내기가 늦다) 걷지 않는다. 이름만 같은 다른 프로세스는 TUN 어댑터가 떠 있을 때만 막는다 —
+                // 진짜 tun2proxy(배치 파일)는 TUN 을 세우고, 이름만 빌린 프로그램이 걷기를 영영 막지 못하게(관리자 일을 보통 권한이 막는다).
+                var others = OtherTun2proxies(ownPid);
+                bool tunUp = others.Count > 0 && TunPresent(tunName);
+                bool other = ownAlive || tunUp;
+                if (!other && others.Count > 0)
+                    log.Write("정리", "이름이 tun2proxy 인 다른 프로세스가 있지만 TUN 어댑터(" + tunName + ")가 없어 걷습니다");
+                if (ownAlive) notes.Add("띄운 tun2proxy 가 아직 끝나지 않았습니다");
+                var plan = Routes.CleanupPlan(RouteReader(), st, NetState.IfIndexOf(tunName), live, ids, other, notes);
                 foreach (var n in notes) log.Write("정리", n);
                 foreach (var a in plan)
                 {
@@ -678,6 +714,19 @@ namespace WebTether
             {
                 log.Write("정리", "경로를 정리하지 못함: " + ex.Message);
             }
+        }
+
+        /// <summary>지금 있는 어댑터의 IPv4 번호 → GUID(NetworkInterface.Id). 시험이 바꾼다.</summary>
+        public Func<Dictionary<uint, string>> LiveAdapterIds = ReadAdapterIds;
+
+        static Dictionary<uint, string> ReadAdapterIds()
+        {
+            var r = new Dictionary<uint, string>();
+            foreach (var ni in SafeInterfaces())
+            {
+                try { r[(uint)ni.GetIPProperties().GetIPv4Properties().Index] = ni.Id; } catch (Exception) { }
+            }
+            return r;
         }
 
         static NetworkInterface[] SafeInterfaces()
@@ -746,6 +795,7 @@ namespace WebTether
         string LostWhy(HotspotInfo hs, string prefix)
         {
             if (hs == null) return "폰 핫스팟이 사라졌습니다";
+            if (hs.RouteMismatch != null) return hs.RouteMismatch;
             if (hs.Ssid == null) return null;
             if (connectedSsid == null)
             {

@@ -27,6 +27,8 @@ namespace WebTether
     public sealed class RouteRow
     {
         public uint Dest, Mask, NextHop, IfIndex, Metric;
+        /// <summary>그 어댑터의 GUID(NetworkInterface.Id — 모르면 빈 글). 번호는 어댑터가 사라지고 다시 생기면 다른 어댑터에 돌아갈 수 있다.</summary>
+        public string AdapterId = "";
 
         public string DestText { get { return Ip(Dest); } }
         public string MaskText { get { return Ip(Mask); } }
@@ -96,7 +98,11 @@ namespace WebTether
             var sb = new StringBuilder();
             sb.Append("tun=").Append(TunName).Append('\n');
             foreach (var r in DefaultsBefore)
-                sb.Append("default=").Append(r.NextHopText).Append(' ').Append(r.IfIndex).Append(' ').Append(r.Metric).Append('\n');
+            {
+                sb.Append("default=").Append(r.NextHopText).Append(' ').Append(r.IfIndex).Append(' ').Append(r.Metric);
+                if (IsAdapterId(r.AdapterId)) sb.Append(' ').Append(r.AdapterId);
+                sb.Append('\n');
+            }
             foreach (var b in Bypass) sb.Append("bypass=").Append(b).Append('\n');
             foreach (var b in KeptBypass) sb.Append("kept=").Append(b).Append('\n');
             return sb.ToString();
@@ -118,13 +124,21 @@ namespace WebTether
                 {
                     var p = v.Split(' ');
                     uint idx, metric;
-                    if (p.Length == 3 && Settings.IsIPv4(p[0]) &&
+                    // 넷째 칸(어댑터 GUID)은 이 판부터 — 옛 상태 파일은 셋이다.
+                    if ((p.Length == 3 || (p.Length == 4 && IsAdapterId(p[3]))) && Settings.IsIPv4(p[0]) &&
                         uint.TryParse(p[1], NumberStyles.None, CultureInfo.InvariantCulture, out idx) &&
                         uint.TryParse(p[2], NumberStyles.None, CultureInfo.InvariantCulture, out metric))
-                        st.DefaultsBefore.Add(new RouteRow { NextHop = RouteRow.Parse(p[0]), IfIndex = idx, Metric = metric });
+                        st.DefaultsBefore.Add(new RouteRow { NextHop = RouteRow.Parse(p[0]), IfIndex = idx, Metric = metric, AdapterId = p.Length == 4 ? p[3] : "" });
                 }
             }
             return st;
+        }
+
+        /// <summary>어댑터 GUID 의 꼴({…} — NetworkInterface.Id 가 주는 것)인가.</summary>
+        public static bool IsAdapterId(string s)
+        {
+            Guid g;
+            return !string.IsNullOrEmpty(s) && s.Length == 38 && s[0] == '{' && Guid.TryParseExact(s, "B", out g);
         }
 
         public static ConnectionState Load(string path)
@@ -229,10 +243,18 @@ namespace WebTether
         /// <summary>
         /// 걷을 것을 정한다(순수 함수 — 시험한다).
         /// tunIfIndex: 지금 TUN 어댑터의 번호(없으면 -1). liveIfIndexes: 지금 있는 어댑터 번호들.
-        /// otherTun2proxy: tun2proxy 프로세스가 하나라도 떠 있는가.
+        /// otherTun2proxy: 걷지 말아야 할 tun2proxy 가 떠 있는가(Controller 가 정한다).
+        /// liveIds: 지금 있는 어댑터 번호 → GUID. 적어 둔 기본 경로에 GUID 가 있으면 그 번호의 지금 어댑터가 같은 GUID 일 때만 되살린다.
         /// </summary>
         public static List<RouteAction> CleanupPlan(List<RouteRow> table, ConnectionState state, int tunIfIndex,
                                                     ICollection<uint> liveIfIndexes, bool otherTun2proxy, List<string> notes)
+        {
+            return CleanupPlan(table, state, tunIfIndex, liveIfIndexes, null, otherTun2proxy, notes);
+        }
+
+        public static List<RouteAction> CleanupPlan(List<RouteRow> table, ConnectionState state, int tunIfIndex,
+                                                    ICollection<uint> liveIfIndexes, IDictionary<uint, string> liveIds,
+                                                    bool otherTun2proxy, List<string> notes)
         {
             var acts = new List<RouteAction>();
             if (otherTun2proxy)
@@ -281,6 +303,15 @@ namespace WebTether
                     {
                         if (notes != null) notes.Add("연결 전 기본 경로의 어댑터(" + d.IfIndex + ")가 없어 되살리지 않습니다");
                         continue;
+                    }
+                    if (ConnectionState.IsAdapterId(d.AdapterId) && liveIds != null)
+                    {
+                        string now;
+                        if (!liveIds.TryGetValue(d.IfIndex, out now) || !string.Equals(now, d.AdapterId, StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (notes != null) notes.Add("어댑터 번호 " + d.IfIndex + " 가 연결 전과 다른 어댑터라 되살리지 않습니다");
+                            continue;
+                        }
                     }
                     acts.Add(new RouteAction
                     {

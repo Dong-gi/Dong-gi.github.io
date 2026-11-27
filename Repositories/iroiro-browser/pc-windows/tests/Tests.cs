@@ -24,10 +24,13 @@ namespace WebTether.Tests
         static string outDir;
         static StreamWriter results;
         static int passed, failed;
+        internal static bool hardened;
 
         [STAThread]
         public static int Main(string[] args)
         {
+            // 도우미와 같게 DLL 찾기를 좁힌 채 모든 시험을 돈다(창 그리기·WMI·HTTP 가 그대로 되는지).
+            hardened = DllSafety.Harden();
             if (args.Length == 3 && args[0] == "--job-parent")
             {
                 // 작업 개체 시험의 '도우미' 대역 — ChildProcess.Start 로 ctrlc-child 를 띄우고 번호를 알린 뒤 기다린다.
@@ -709,6 +712,24 @@ namespace WebTether.Tests
                 table.Add(R("0.0.0.0", "0.0.0.0", "192.168.49.1", 12, 200));
                 A.Eq(0, Routes.CleanupPlan(table, State(), -1, live, false, null).Count, "이미 있으면 하지 않음");
             });
+            T("경로: 되살릴 때 어댑터 번호와 GUID 를 함께 견준다 — 그 번호가 다른 어댑터에 돌아갔으면 넣지 않는다, 옛 상태 파일(GUID 없음)은 번호만", () =>
+            {
+                const string g = "{11111111-2222-3333-4444-555555555555}", other = "{99999999-2222-3333-4444-555555555555}";
+                var table = new List<RouteRow> { R("192.168.49.0", "255.255.255.0", "0.0.0.0", 12, 35) };
+                var st = State();
+                st.DefaultsBefore[0].AdapterId = g;
+                A.Eq(1, Routes.CleanupPlan(table, st, -1, live, new Dictionary<uint, string> { { 12, g.ToUpperInvariant() } }, false, null).Count, "같은 어댑터");
+                var notes = new List<string>();
+                A.Eq(0, Routes.CleanupPlan(table, st, -1, live, new Dictionary<uint, string> { { 12, other } }, false, notes).Count, "번호는 같고 다른 어댑터");
+                A.True(notes.Any(n => n.Contains("다른 어댑터")), "까닭: " + string.Join("|", notes.ToArray()));
+                A.Eq(0, Routes.CleanupPlan(table, st, -1, live, new Dictionary<uint, string>(), false, null).Count, "GUID 를 모르면 넣지 않음");
+                A.Eq(1, Routes.CleanupPlan(table, State(), -1, live, new Dictionary<uint, string> { { 12, other } }, false, null).Count, "옛 상태 파일은 번호만");
+                var back = ConnectionState.Parse(st.Serialize());
+                A.Eq(g, back.DefaultsBefore[0].AdapterId, "GUID 를 쓰고 읽음");
+                A.Eq(0, ConnectionState.Parse("default=192.168.49.1 12 35 {nope}\n").DefaultsBefore.Count, "틀린 넷째 칸은 버림");
+                A.Eq(0, ConnectionState.Parse("default=192.168.49.1 12 35 " + g + " x\n").DefaultsBefore.Count, "다섯 칸은 버림");
+                A.Eq(1, ConnectionState.Parse("default=192.168.49.1 12 35\n").DefaultsBefore.Count, "옛 꼴(세 칸)");
+            });
             T("경로: 상태 파일 쓰고 읽기, 망가진 줄은 버림", () =>
             {
                 var st = State("1.2.3.0/24");
@@ -754,10 +775,31 @@ namespace WebTether.Tests
                 for (int i = 0; i < Log.Capacity + 10; i++) log.Write("t", "x");
                 A.Eq(Log.Capacity, log.Snapshot().Length, "고리 상한");
             });
+            T("DLL 찾기: 시험 exe 도 도우미처럼 SetDefaultDllDirectories(System32) 를 건 채 돈다 — 이 어셈블리의 P/Invoke 는 System32 만", () =>
+            {
+                A.True(TestMain.hardened, "SetDefaultDllDirectories 성공");
+                var attr = (System.Runtime.InteropServices.DefaultDllImportSearchPathsAttribute)Attribute.GetCustomAttribute(
+                    typeof(SystemOps).Assembly, typeof(System.Runtime.InteropServices.DefaultDllImportSearchPathsAttribute));
+                A.True(attr != null && attr.Paths == System.Runtime.InteropServices.DllImportSearchPath.System32, "어셈블리 특성");
+            });
+            T("핫스팟: 192.168.49.x 어댑터가 둘 이상이면 192.168.49.1 로 가는 어댑터가 이름을 본 어댑터여야 한다(GetBestInterface)", () =>
+            {
+                A.Eq((string)null, NetState.RouteCheck(12, () => 12), "같음");
+                A.True(NetState.RouteCheck(12, () => 7) != null, "다른 어댑터");
+                A.True(NetState.RouteCheck(12, () => -1) != null, "모름");
+                A.True(NetState.RouteCheck(-1, () => 5) != null, "이름을 본 어댑터의 번호를 모름");
+                A.True(NetState.RouteCheck(12, () => { throw new InvalidOperationException(); }) != null, "던짐");
+                var hs = new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.60", IfIndex = 12, Ssid = "DIRECT-UT-x", RouteMismatch = "다름" };
+                A.Eq("다름", StatusText.Refusal(hs, "DIRECT-UT-", null), "접두어가 맞아도 거절");
+                A.Eq("다름", StatusText.Refusal(hs, "DIRECT-UT-", "DIRECT-UT-x"), "허락한 이름이어도 거절");
+                A.True(StatusText.HotspotLine(hs, "DIRECT-UT-").Contains("연결하지 않음"), "상태 창");
+                int best = NetState.BestInterfaceToPhone();
+                TestMain.Say("      이 PC 에서 192.168.49.1 로 가는 어댑터 번호(읽기만): " + best);
+            });
             T("작업 스케줄러 XML: 경로를 이스케이프하고 가장 높은 권한", () =>
             {
-                var x = SystemOps.TaskXml(@"C:\Program Files\A&B <c>\WebTether.exe", "S-1-5-21-1");
-                A.True(x.Contains(@"C:\Program Files\A&amp;B &lt;c&gt;\WebTether.exe"), "이스케이프");
+                var x = SystemOps.TaskXml(@"C:\Program Files\A&B (c)\WebTether.exe", "S-1-5-21-1");
+                A.True(x.Contains(@"C:\Program Files\A&amp;B (c)"), "이스케이프");
                 A.True(x.Contains("<RunLevel>HighestAvailable</RunLevel>"), "권한");
                 A.True(x.Contains("<LogonTrigger>"), "로그온");
                 var doc = new System.Xml.XmlDocument();
@@ -838,6 +880,30 @@ namespace WebTether.Tests
         }
 
         static void Run(Task t) { if (!t.Wait(20000)) throw new Exception("시간 초과"); }
+
+        /// <summary>Ctrl+C 도 강제 종료도 듣지 않는 자식(시험이 Dead 를 세울 때까지 살아 있다).</summary>
+        sealed class StubbornChild : IChild
+        {
+            public volatile bool Dead;
+            public int Pid { get { return 910003; } }
+            public bool HasExited { get { return Dead; } }
+            public DateTime StartedAt { get; set; }
+            public event Action<int> Exited { add { } remove { } }
+            public bool StopGracefully(int timeoutMs, out string detail) { detail = null; return false; }
+            public void Kill() { }
+            public void Dispose() { }
+        }
+
+        sealed class StubbornFactory : IChildFactory
+        {
+            public StubbornChild Last;
+            public IChild Start(HeldBinaries bin, List<string> args, Action<string, string> output, out string error)
+            {
+                error = null;
+                Last = new StubbornChild { StartedAt = DateTime.UtcNow };
+                return Last;
+            }
+        }
 
         /// <summary>Ctrl+C 에서 문이 열릴 때까지 막히는 자식 — 끊는 도중을 만든다.</summary>
         sealed class GatedChild : IChild
@@ -1118,6 +1184,36 @@ namespace WebTether.Tests
                 r.Others.Add(1);
                 Run(r.C.StartupCheck());
                 A.True(File.Exists(r.Paths.StateFile), "tun2proxy 가 떠 있으면 지우지 않음");
+            });
+
+            T("정리: 걷기를 막는 tun2proxy 는 이름이 아니라 우리가 띄운 것(그 핸들)으로 — 이름만 같은 다른 것은 TUN 이 있을 때만 막는다", () =>
+            {
+                var r = Make("cleanup-own", null);
+                var st = new ConnectionState { TunName = "USBTether" };
+                st.DefaultsBefore.Add(new RouteRow { NextHop = RouteRow.Parse("192.168.49.1"), IfIndex = 12, Metric = 35 });
+                st.Save(r.Paths.StateFile);
+                r.Others.Add(4242);
+                r.TunUp = false;
+                Run(r.C.StartupCheck());
+                A.True(!File.Exists(r.Paths.StateFile), "이름만 tun2proxy 이고 TUN 이 없으면 걷는다");
+                A.True(r.Log.Any(l => l.Contains("이름이 tun2proxy 인 다른 프로세스")), "적음");
+                st.Save(r.Paths.StateFile);
+                r.TunUp = true;
+                Run(r.C.StartupCheck());
+                A.True(File.Exists(r.Paths.StateFile), "TUN 이 있으면(배치 파일의 진짜 tun2proxy) 건드리지 않는다");
+
+                // 끝내기가 듣지 않은 우리 자식 — 이름 목록이 비어도 걷지 않는다.
+                var f = new StubbornFactory();
+                var r2 = Make("cleanup-own-alive", null, null, f);
+                Run(r2.C.ConnectAsync());
+                A.True(File.Exists(r2.Paths.StateFile), "상태 파일");
+                r2.TunUp = false;
+                Run(r2.C.DisconnectAsync());
+                A.True(File.Exists(r2.Paths.StateFile), "자식이 살아 있으면 걷지 않고 남김");
+                A.True(r2.Log.Any(l => l.Contains("띄운 tun2proxy 가 아직 끝나지 않았습니다")), "까닭");
+                f.Last.Dead = true;
+                Run(r2.C.StartupCheck());
+                A.True(!File.Exists(r2.Paths.StateFile), "끝난 뒤에는 걷는다");
             });
 
             T("상태: TUN 어댑터가 끝내 나타나지 않으면 시간 제한에서 끄고 걷고 오류", () =>

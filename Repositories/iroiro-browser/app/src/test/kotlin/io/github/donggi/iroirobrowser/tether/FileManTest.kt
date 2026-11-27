@@ -136,32 +136,63 @@ class FileManTest {
         assertTrue(js.contains("item.name = d.name;"))
     }
 
-    @Test
-    fun 화면이_빼는_글자는_서버와_같다() {
-        // fileman.js 의 STRIP_RE 글자 묶음을 펴서 SharedPaths.isStrippedChar 와 BMP 전체에서 견준다.
-        val js = text("fileman.js")
-        val cls = js.substringAfter("var STRIP_RE = /[").substringBefore("]/g;")
-        val codes = Regex("""\\u([0-9a-fA-F]{4})""").findAll(cls).map { it.groupValues[1].toInt(16) }.toList()
-        assertEquals(cls.length, codes.size * 6 + cls.count { it == '-' }, "묶음은 \\uXXXX 와 범위의 - 로만: $cls")
-        val fromJs = HashSet<Int>()
+    /** fileman.js 의 `var <name> = /[…]/gu;` 글자 묶음을 펴서 코드 포인트 집합으로. */
+    private fun jsClass(js: String, name: String): Set<Int> {
+        assertTrue(js.contains("var $name = /[") && js.substringAfter("var $name = /[").contains("]/gu;"), "$name 은 u 깃발로 코드 포인트째")
+        val cls = js.substringAfter("var $name = /[").substringBefore("]/gu;")
+        val token = Regex("""\\u\{([0-9a-fA-F]{1,6})\}|\\u([0-9a-fA-F]{4})|-""")
+        val tokens = token.findAll(cls).toList()
+        assertEquals(cls, tokens.joinToString("") { it.value }, "묶음은 \\uXXXX·\\u{X…} 와 범위의 - 로만: $cls")
+        fun cp(m: MatchResult) = m.groupValues[1].ifEmpty { m.groupValues[2] }.toInt(16)
+        val out = HashSet<Int>()
         var i = 0
-        var pos = 0
-        while (i < codes.size) {
-            pos += 6
-            if (pos < cls.length && cls[pos] == '-') {
-                (codes[i]..codes[i + 1]).forEach { fromJs += it }
-                pos += 7
-                i += 2
+        while (i < tokens.size) {
+            val lo = cp(tokens[i])
+            if (i + 1 < tokens.size && tokens[i + 1].value == "-") {
+                (lo..cp(tokens[i + 2])).forEach { out += it }
+                i += 3
             } else {
-                fromJs += codes[i]
+                out += lo
                 i += 1
             }
         }
-        val fromServer = (0..0xFFFF).filter { io.github.donggi.iroirobrowser.tether.core.SharedPaths.isStrippedChar(it.toChar()) }.toSet()
-        assertEquals(fromServer, fromJs)
+        return out
+    }
+
+    @Test
+    fun 화면이_빼는_글자는_서버와_같다() {
+        // 새 이름에서 빼는 것(STRIP_RE ↔ SharedPaths.isStrippedCodePoint)과 휴지통 판정에서 떼는 것(IGNORABLE_RE ↔ isIgnorableCodePoint)을
+        // 따로 모든 코드 포인트(보충 평면 포함 — u 깃발)에서 견준다(11-27 재검토 — 일반 이름의 소프트 하이픈·태그 글자·이체 선택자는 둔다).
+        val js = text("fileman.js")
+        val paths = io.github.donggi.iroirobrowser.tether.core.SharedPaths
+        assertEquals((0..0x10FFFF).filter { paths.isStrippedCodePoint(it) }.toSet(), jsClass(js, "STRIP_RE"))
+        assertEquals((0..0x10FFFF).filter { paths.isIgnorableCodePoint(it) }.toSet(), jsClass(js, "IGNORABLE_RE"))
+        assertTrue(js.contains("function cleanName(name) { return name.replace(STRIP_RE, ''); }"))
+        // 휴지통 이름은 무시되는 글자 전부를 떼고 본다(서버와 같다).
+        assertTrue(js.contains("function isTrashName(name) { return name.replace(IGNORABLE_RE, '').replace(/[. ]+$/, '').toLowerCase() === '.web-trash'; }"))
         // 새 이름의 같은 이름 검사·보내기는 뺀 뒤의 이름으로.
         assertTrue(js.contains("var parts = rel.split('/').map(cleanName);"))
         assertTrue(js.contains("var name = cleanName(r.text);"))
+    }
+
+    @Test
+    fun 이름을_열쇠로_쓰는_맵은_원형이_없다() {
+        // `{}` 를 이름·경로 열쇠의 맵으로 쓰면 constructor·toString·__proto__ 같은 이름이 늘 '있는 것'(고른 것·같은 이름·이미 읽은 폴더·
+        // 아는 확장자)으로 읽혔다(2026-11 점검).
+        val js = text("fileman.js")
+        assertTrue(js.contains("function dict() { return Object.create(null); }"))
+        val maps = listOf(
+            "selected: dict(),", "S.selected = dict();", "var keep = dict();", "var lower = dict();", "var o = dict();", "failed: dict(),",
+            "names: dict(),", "var set = dict();", "seen = dict();", "var byDir = dict();", "var keepNodes = dict();", "var dirs = dict();",
+            "V.nodes = dict();", "nodes: dict(),", "var o = dict(); o[''] = { path: '', loaded: false, open: true, children: [] };",
+        )
+        for (line in maps) assertTrue(js.contains(line), line)
+        // 남은 `{}` 는 정해진 열쇠만 쓰는 셋뿐이다 — 요청 머리, 요소 id, 포인터 번호.
+        val left = Regex("""[=:]\s*\{\}""").findAll(js).map { m ->
+            js.substring(js.lastIndexOf('\n', m.range.first) + 1, js.indexOf('\n', m.range.first)).trim()
+        }.toList()
+        assertEquals(3, left.size, left.joinToString("\n"))
+        assertTrue(left.any { it.startsWith("var opts = ") } && left.any { it == "var el = {};" } && left.any { it.contains("pointers: {}") }, left.joinToString("\n"))
     }
 
     @Test

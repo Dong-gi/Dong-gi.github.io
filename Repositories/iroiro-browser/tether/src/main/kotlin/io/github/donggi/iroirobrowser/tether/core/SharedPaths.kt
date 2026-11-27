@@ -45,7 +45,14 @@ object SharedPaths {
      * 공백도 떼고** 본다: 리눅스의 vfat·exfat 는 이름 끝의 점을 떼고 찾거나 만들고(윈도도 끝의 공백까지), 그래서 `.web-trash.` 로 만들거나 올린
      * 것이 휴지통 자리에 앉았다(이 PC 의 시험 폴더에서 그랬다 — 2026-11-21 검토에서 고침).
      */
-    fun isTrashName(name: String): Boolean = name.trimEnd('.', ' ').equals(TRASH_NAME, ignoreCase = true)
+    fun isTrashName(name: String): Boolean = trashKey(name).equals(TRASH_NAME, ignoreCase = true)
+
+    /**
+     * 휴지통 이름과 견줄 꼴 — Unicode Default_Ignorable 전부([isIgnorableCodePoint])와 끝의 점·공백을 뗀다(11-27 점검·재검토): 그런 글자를 끼운
+     * `.web-trash` 는 제공자에 따라(정규화·무시되는 글자를 버리는 파일 시스템) 휴지통 자리에 앉거나 화면에서 휴지통과 구별되지 않는다. 새 이름에서
+     * **빼는** 글자([cleanName])보다 넓다 — 일반 이름의 소프트 하이픈·태그 글자·이체 선택자는 그대로 두되(사용자 결정 11-21) 휴지통 판정만 넓게.
+     */
+    fun trashKey(name: String): String = removeCodePoints(name, ::isIgnorableCodePoint).trimEnd('.', ' ')
 
     /** 이름 하나의 UTF-8 바이트 상한 — 리눅스 파일 시스템의 255. */
     const val MAX_NAME_BYTES = 255
@@ -69,10 +76,11 @@ object SharedPaths {
      * - 폭 없는 글자: U+200B–200D(ZWSP·ZWNJ·ZWJ) · U+2060–2064(WORD JOINER·보이지 않는 수학 연산자) · U+FEFF(BOM) · U+180E(몽골 모음 구분)
      * - 줄·문단 나눔: U+2028·2029(글 안에서 줄을 바꾼다)
      *
-     * 화면(`fileman.js` 의 `STRIP_RE`)이 같은 글자를 미리 빼 보인다 — 앱의 시험(FileManTest)이 둘을 견준다. 소프트 하이픈(U+00AD)·태그 글자
-     * (U+E0000–E007F — 국기 이모지)·그 밖의 서식 글자는 빼지 않는다.
+     * 소프트 하이픈(U+00AD)·태그 글자(U+E0000–E007F — 국기 이모지)·이체 선택자(U+FE00–FE0F — 이모지 꼴)·그 밖의 무시되는 글자는 **빼지 않는다**(일반
+     * 이름에 그대로 — 휴지통 판정만 [isIgnorableCodePoint] 로 넓게 본다). 화면(`fileman.js` 의 `STRIP_RE`)이 같은 글자를 미리 빼 보인다 — 앱의
+     * 시험(FileManTest)이 둘을 모든 코드 포인트에서 견준다.
      */
-    fun isStrippedChar(c: Char): Boolean = when (c.code) {
+    fun isStrippedCodePoint(cp: Int): Boolean = when (cp) {
         in 0x0000..0x001F, in 0x007F..0x009F -> true
         0x061C, 0x200E, 0x200F, in 0x202A..0x202E, in 0x2066..0x2069 -> true
         in 0x200B..0x200D, in 0x2060..0x2064, 0xFEFF, 0x180E -> true
@@ -80,8 +88,41 @@ object SharedPaths {
         else -> false
     }
 
-    /** 손님이 보낸 새 이름에서 [isStrippedChar] 글자를 뺀다. 빼고 나서 비거나 틀린 이름이면 부르는 쪽이 [isValidName] 으로 거절한다. */
-    fun cleanName(name: String): String = if (name.none(::isStrippedChar)) name else name.filterNot(::isStrippedChar)
+    /**
+     * 휴지통 판정([trashKey])에서 떼는 글자 — [isStrippedCodePoint] 에 Unicode Default_Ignorable_Code_Point 전부를 더한 것: U+00AD · U+034F ·
+     * U+061C · U+115F·1160 · U+17B4·17B5 · U+180B–180F · U+200B–200F · U+202A–202E · U+2060–206F · U+3164 · U+FE00–FE0F · U+FEFF · U+FFA0 ·
+     * U+FFF0–FFF8 · U+1BCA0–1BCA3 · U+1D173–1D17A · U+E0000–E0FFF(보충 평면은 코드 포인트로). 화면의 `IGNORABLE_RE` 와 같다(FileManTest).
+     */
+    fun isIgnorableCodePoint(cp: Int): Boolean = isStrippedCodePoint(cp) || when (cp) {
+        0x00AD, 0x034F, 0x061C, 0x115F, 0x1160, 0x17B4, 0x17B5, in 0x180B..0x180F -> true
+        in 0x200B..0x200F, in 0x202A..0x202E, in 0x2060..0x206F -> true
+        0x3164, in 0xFE00..0xFE0F, 0xFEFF, 0xFFA0, in 0xFFF0..0xFFF8 -> true
+        in 0x1BCA0..0x1BCA3, in 0x1D173..0x1D17A, in 0xE0000..0xE0FFF -> true
+        else -> false
+    }
+
+    /** BMP 글자 하나가 [isStrippedCodePoint] 인가(서로게이트 반쪽은 아니다). */
+    fun isStrippedChar(c: Char): Boolean = !c.isSurrogate() && isStrippedCodePoint(c.code)
+
+    /** 손님이 보낸 새 이름에서 [isStrippedCodePoint] 글자를 뺀다. 빼고 나서 비거나 틀린 이름이면 부르는 쪽이 [isValidName] 으로 거절한다. */
+    fun cleanName(name: String): String = removeCodePoints(name, ::isStrippedCodePoint)
+
+    /** [drop] 이 참인 코드 포인트를 뺀다(보충 평면은 서로게이트 짝째 — 짝 없는 반쪽은 그 값으로 본다). 뺄 것이 없으면 [name] 그대로. */
+    private fun removeCodePoints(name: String, drop: (Int) -> Boolean): String {
+        var i = 0
+        var out: StringBuilder? = null
+        while (i < name.length) {
+            val cp = name.codePointAt(i)
+            val n = Character.charCount(cp)
+            if (drop(cp)) {
+                if (out == null) out = StringBuilder(name.length).append(name, 0, i)
+            } else {
+                out?.append(name, i, i + n)
+            }
+            i += n
+        }
+        return out?.toString() ?: name
+    }
 
     /**
      * [taken] 과 겹치지 않는 이름 — [name] 이 비어 있으면 그대로, 아니면 `이름 (1).확장자`, `이름 (2).확장자` …(폴더는 확장자를 가르지 않는다).

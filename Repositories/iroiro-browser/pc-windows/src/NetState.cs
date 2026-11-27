@@ -22,6 +22,11 @@ namespace WebTether
         public string SsidError;
         /// <summary>이름을 어디서 얻었나 — WifiName.FromWlan(Wi-Fi API) 또는 FromNlm(네트워크 목록의 이름).</summary>
         public string SsidSource;
+        /// <summary>
+        /// 192.168.49.x 어댑터가 둘 이상인데 192.168.49.1 로 가는 길(GetBestInterface)이 이 어댑터가 아니면 그 까닭 — 이름을 검사한 어댑터와
+        /// 실제로 트래픽이 가는 어댑터가 다르다. 묻지 않고 연결하지 않는다(StatusText.Refusal).
+        /// </summary>
+        public string RouteMismatch;
 
         /// <summary>이름이 접두어로 시작하는가(대소문자를 가린다 — SSID 는 바이트다). 이름을 모르거나 접두어가 비면 거짓.</summary>
         public bool SsidStartsWith(string prefix)
@@ -271,7 +276,38 @@ namespace WebTether
         /// </summary>
         public static HotspotInfo FindHotspot(string prefix)
         {
+            int candidates;
+            var h = FindHotspotCore(prefix, out candidates);
+            if (h != null && h.RouteMismatch == null && candidates >= 2)
+                h.RouteMismatch = RouteCheck(h.IfIndex, BestInterfaceToPhone);
+            return h;
+        }
+
+        [DllImport("iphlpapi.dll")]
+        static extern uint GetBestInterface(uint destAddr, out uint bestIfIndex);
+
+        /// <summary>192.168.49.1 로 갈 어댑터 번호(못 얻으면 -1) — 읽기만.</summary>
+        public static int BestInterfaceToPhone()
+        {
+            uint idx;
+            var dest = BitConverter.ToUInt32(new byte[] { 192, 168, 49, 1 }, 0);
+            return GetBestInterface(dest, out idx) == 0 ? (int)idx : -1;
+        }
+
+        /// <summary>이름을 검사한 어댑터(ifIndex)와 192.168.49.1 로 가는 어댑터가 같으면 null, 다르거나 모르면 까닭(순수 — 시험한다).</summary>
+        public static string RouteCheck(int ifIndex, Func<int> best)
+        {
+            int b;
+            try { b = best(); } catch (Exception) { b = -1; }
+            if (b < 0) return "192.168.49.x 어댑터가 여럿인데 192.168.49.1 로 가는 길을 확인하지 못함";
+            if (ifIndex < 0 || b != ifIndex) return "192.168.49.x 어댑터가 여럿이고 192.168.49.1 로 가는 길이 이름을 확인한 어댑터가 아님(" + b + ")";
+            return null;
+        }
+
+        static HotspotInfo FindHotspotCore(string prefix, out int candidates)
+        {
             HotspotInfo first = null;
+            candidates = 0;
             foreach (var ni in SafeInterfaces())
             {
                 if (ni.OperationalStatus != OperationalStatus.Up) continue;
@@ -283,13 +319,15 @@ namespace WebTether
                     if (!IsHotspotGuest(ua.Address)) continue;
                     int idx = -1;
                     try { idx = props.GetIPv4Properties().Index; } catch (NetworkInformationException) { }
+                    candidates++;
                     var h = new HotspotInfo { AdapterName = ni.Name, Address = ua.Address.ToString(), IfIndex = idx };
                     string err, src;
                     h.Ssid = WifiName.Get(ni.Id, idx, out err, out src);
                     h.SsidError = h.Ssid == null ? (err ?? "까닭 모름") : null;
                     h.SsidSource = src;
-                    if (h.SsidStartsWith(prefix)) return h;
-                    if (first == null) first = h;
+                    // 접두어에 맞는 것을 찾아도 끝까지 센다 — 192.168.49.x 어댑터가 몇인지 알아야 길을 견줄지 정한다.
+                    if (h.SsidStartsWith(prefix) && (first == null || !first.SsidStartsWith(prefix))) first = h;
+                    else if (first == null) first = h;
                     break;
                 }
             }

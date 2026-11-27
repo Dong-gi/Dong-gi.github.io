@@ -798,7 +798,13 @@ class FileServer(
             } catch (e: Exception) {
                 env.log.w(TAG, "덮을 원래 파일을 휴지통으로 옮기지 못했다: ${e.javaClass.simpleName}")
                 deleteQuietly(temp)
-                sendJson(output, 500, Json.error("원래 파일을 휴지통으로 옮기지 못해 덮어쓰지 않았습니다 — 원래 파일은 그대로입니다"))
+                // '그대로' 는 원래 것이 정말 제자리에 있을 때만 — 옮기기가 된 뒤에 실패를 알렸거나 확인하지 못한 꼴이 있다(SharedOps.trashOne).
+                val where = when (stillInPlace(segments, existing)) {
+                    true -> "원래 파일은 그대로입니다"
+                    false -> "원래 파일이 제자리에 없습니다 — 휴지통을 확인하세요"
+                    null -> "원래 파일이 그대로인지 확인하지 못했습니다 — 휴지통을 확인하세요"
+                }
+                sendJson(output, 500, Json.error("원래 파일을 휴지통으로 옮기지 못해 덮어쓰지 않았습니다 — $where"))
                 return
             }
             val placed = commit(temp, segments)
@@ -855,6 +861,14 @@ class FileServer(
         val children = tree.list(parent)
         val name = segments.last()
         return children.firstOrNull { it.name == name } ?: children.firstOrNull { it.name.equals(name, ignoreCase = true) }
+    }
+
+    /** [before] 가 아직 그 자리에 그대로인가(같은 항목·같은 크기의 파일). 읽지 못하면 null. */
+    private fun stillInPlace(segments: List<String>, before: SharedEntry): Boolean? = try {
+        val now = sameName(segments)
+        now != null && !now.isDirectory && now.ref == before.ref && now.name == before.name && now.size == before.size
+    } catch (_: Exception) {
+        null
     }
 
     /** 같은 이름이 있어 두지 않았다 — 409 `exists`, 폴더면 `folder` 와 그 까닭(화면은 '덮어쓰기' 를 고를 수 없게 한다). */

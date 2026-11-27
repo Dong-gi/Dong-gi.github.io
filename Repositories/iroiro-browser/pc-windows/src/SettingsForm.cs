@@ -158,7 +158,7 @@ namespace WebTether
             var what = StartupCopy.Decide(lastCopy);
             bool show = kAuto.Checked && what != CopyPrompt.None;
             copyNoteShown = show;
-            copyNote.Text = what == CopyPrompt.OldRunning ? StartupCopy.FormNoteRunning : StartupCopy.FormNote;
+            copyNote.Text = StartupCopy.FormNoteFor(lastCopy);
             copyNote.Visible = show;
         }
 

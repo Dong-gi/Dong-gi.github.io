@@ -98,7 +98,7 @@ namespace WebTether
     public static class Installer
     {
         /// <summary>
-        /// held 의 바이트를 target 으로. 폴더는 policy 의 전용 폴더여야 한다 — 주인이 정책의 SID 면 권한을 고쳐 쓰고, 아니거나 링크면
+        /// held 의 바이트를 target 으로. 폴더는 policy 의 전용 폴더여야 한다 — 권한이 틀렸거나 링크면 제자리에서 고치거나 지우지 않고
         /// 옆으로 비키고 새로 만든다(SecureDir.Prepare). 임시 이름에 쓰고 SHA-256 을 견준 뒤 옮기고, 옮긴 뒤 한 번 더 견준다.
         /// 이미 같은 바이트면 쓰지 않는다. 실패하면 false 와 까닭.
         /// </summary>
@@ -107,7 +107,7 @@ namespace WebTether
             error = null;
             target = System.IO.Path.GetFullPath(target);
             var dir = System.IO.Path.GetDirectoryName(target);
-            using (var hd = SecureDir.Prepare(dir, policy, true, notes, out error))
+            using (var hd = SecureDir.Prepare(dir, policy, notes, out error))
             {
                 if (hd == null) return false;
                 string want;

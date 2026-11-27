@@ -133,10 +133,11 @@ namespace WebTether
 
         /// <summary>
         /// 정책의 전용 폴더를 마련하고 쥔다. 실패하면 null 과 까닭.
-        /// repairOwnedByTrusted: 주인이 정책의 SID 이고 재분석 지점이 아니면 권한만 고쳐 쓴다(Program Files 처럼 그 위가 이미 관리자만
-        /// 쓰는 곳 — 사용자가 안에 무엇을 끼워 넣었을 수 없다). 아니면(ProgramData — 사용자도 하위를 만든다) 옆으로 비키고 새로 만든다.
+        /// 이미 있는데 정책에 맞지 않으면(주인·권한·재분석 지점) **제자리에서 고치거나 안을 지우지 않는다** — 폴더째 `이름.untrusted-<때>` 로 옆으로
+        /// 비키고 새로 만든다(비킨 것은 지우지 않는다 — 치우기는 사용자 몫). 11-27 재검토: 권한만 고치고 안의 것을 경로로 확인한 뒤 경로로 지우면
+        /// 그 틈에 접합점을 끼워 관리자가 폴더 밖을 지우게 할 수 있었다. 비키지 못하면(그 안의 파일이 열려 있음·부모에 이름 바꾸기 권한 없음) 실패.
         /// </summary>
-        public static Held Prepare(string path, DirPolicy policy, bool repairOwnedByTrusted, List<string> notes, out string error)
+        public static Held Prepare(string path, DirPolicy policy, List<string> notes, out string error)
         {
             error = null;
             path = System.IO.Path.GetFullPath(path).TrimEnd('\\');
@@ -153,21 +154,6 @@ namespace WebTether
                 bool reparse, ownerOk;
                 var bad = Check(h, policy, out reparse, out ownerOk);
                 if (bad == null) return new Held(path, h);
-                if (repairOwnedByTrusted && !reparse && ownerOk)
-                {
-                    try
-                    {
-                        // 핸들을 쥐고 있어(지우기·이름 바꾸기 막힘) 그 경로가 이 폴더다.
-                        Directory.SetAccessControl(path, policy.LockedSecurity());
-                        bad = Check(h, policy, out reparse, out ownerOk);
-                        if (bad == null)
-                        {
-                            if (notes != null) notes.Add("폴더 권한을 " + policy.Name + " 으로 고쳤습니다: " + path);
-                            return new Held(path, h);
-                        }
-                    }
-                    catch (Exception ex) { bad += " — 고치지 못함(" + ex.Message + ")"; }
-                }
                 h.Dispose();
                 if (attempt == 1) { error = bad + ": " + path; return null; }
                 var aside = path + ".untrusted-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + "-" + Guid.NewGuid().ToString("N").Substring(0, 6);

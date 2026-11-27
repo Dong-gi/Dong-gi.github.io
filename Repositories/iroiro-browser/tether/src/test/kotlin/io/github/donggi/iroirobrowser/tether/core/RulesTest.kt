@@ -42,17 +42,45 @@ class RulesTest {
     }
 
     @Test
-    fun 새_이름에서_빼는_글자는_제어_방향_폭_없는_줄_나눔뿐() {
-        val stripped = (0..0xFFFF).filter { SharedPaths.isStrippedChar(it.toChar()) }
-        val expected = (0x00..0x1F) + (0x7F..0x9F) + listOf(0x061C, 0x180E) + (0x200B..0x200F) + (0x2028..0x2029) +
-            (0x202A..0x202E) + (0x2060..0x2064) + (0x2066..0x2069) + listOf(0xFEFF)
+    fun 새_이름에서_빼는_글자는_제어_방향_폭_없는_글자_줄_나눔뿐() {
+        val stripped = (0..0x10FFFF).filter { SharedPaths.isStrippedCodePoint(it) }
+        val expected = (0x00..0x1F) + (0x7F..0x9F) + listOf(0x61C, 0x180E) + (0x200B..0x200F) + (0x2028..0x202E) + (0x2060..0x2064) +
+            (0x2066..0x2069) + listOf(0xFEFF)
         assertEquals(expected.sorted(), stripped)
-        assertEquals("사진gpj.exe", SharedPaths.cleanName("사진\u202Egpj.exe"))
-        assertEquals("a b.txt", SharedPaths.cleanName("\u200Ba\u0000\u0085 b\u2060.txt\uFEFF"))
-        // 서로게이트 짝(이모지)·한글·소프트 하이픈·국기의 태그 글자는 그대로 둔다.
-        val keep = "가\uD83D\uDE00\u00AD\uDB40\uDC67.txt"
-        assertEquals(keep, SharedPaths.cleanName(keep))
-        assertEquals("", SharedPaths.cleanName("\u200E\u200F"))
+        // BMP 글자 하나로 보는 판은 서로게이트 반쪽을 빼지 않는다.
+        assertEquals(expected.filter { it <= 0xFFFF }, (0..0xFFFF).filter { SharedPaths.isStrippedChar(it.toChar()) })
+        fun s(vararg cps: Int) = buildString { cps.forEach { appendCodePoint(it) } }
+        assertEquals("사진gpj.exe", SharedPaths.cleanName("사진" + s(0x202E) + "gpj.exe"))
+        assertEquals("a b.txt", SharedPaths.cleanName(s(0x200B) + "a" + s(0, 0x85) + " b" + s(0x2060) + ".txt" + s(0xFEFF)))
+        assertEquals("", SharedPaths.cleanName(s(0x200E, 0x200F, 0x2066)))
+        // 일반 이름에서 두는 것(사용자 결정 11-21 — 11-27 재검토로 되돌려 지킨다): 이모지 꼴의 이체 선택자 FE0F, 태그 순서 국기(잉글랜드),
+        // 몽골 이체 선택자 180B–180D, 한글 채움 3164·115F, 결합 문자 무시 034F, 소프트 하이픈, 짝 없는 서로게이트 반쪽.
+        val keep = listOf(
+            s(0x2764, 0xFE0F) + ".txt",
+            s(0x1F3F4, 0xE0067, 0xE0062, 0xE0065, 0xE006E, 0xE0067, 0xE007F) + ".png",
+            "a" + s(0x180B, 0x180C, 0x180D) + "b", s(0x3164) + "x", s(0x115F, 0x1160) + "y", "c" + s(0x34F) + "d", "soft" + s(0xAD) + "hyphen",
+            "가" + s(0x1F600) + s(0xD83D) + ".txt",
+        )
+        for (name in keep) assertEquals(name, SharedPaths.cleanName(name), name)
+    }
+
+    @Test
+    fun 휴지통_판정은_Default_Ignorable_전부를_떼고_본다() {
+        val ignorable = (0..0x10FFFF).filter { SharedPaths.isIgnorableCodePoint(it) }
+        val expected = (0x00..0x1F) + (0x7F..0x9F) + listOf(0xAD, 0x34F, 0x61C, 0x115F, 0x1160, 0x17B4, 0x17B5) + (0x180B..0x180F) +
+            (0x200B..0x200F) + (0x2028..0x202E) + (0x2060..0x206F) + listOf(0x3164) + (0xFE00..0xFE0F) + listOf(0xFEFF, 0xFFA0) +
+            (0xFFF0..0xFFF8) + (0x1BCA0..0x1BCA3) + (0x1D173..0x1D17A) + (0xE0000..0xE0FFF)
+        assertEquals(expected.sorted(), ignorable)
+        assertTrue((0..0x10FFFF).all { !SharedPaths.isStrippedCodePoint(it) || SharedPaths.isIgnorableCodePoint(it) }, "빼는 글자는 떼는 글자 안")
+        fun s(vararg cps: Int) = buildString { cps.forEach { appendCodePoint(it) } }
+        for (alias in listOf(".web-trash", ".WEB-TRASH. ", ".web" + s(0x200B) + "-trash", ".web-trash" + s(0xAD), s(0xE0020) + ".web-trash" + s(0xFE0F) + ".",
+                             ".web" + s(0x180B) + "-trash", s(0x3164) + ".web-trash", ".web-tr" + s(0x34F) + "ash")) {
+            assertTrue(SharedPaths.isTrashName(alias), alias)
+            assertTrue(SharedPaths.isHidden(listOf(alias, "x")), alias)
+        }
+        assertFalse(SharedPaths.isTrashName(".web-trash2"))
+        assertFalse(SharedPaths.isTrashName("web-trash"))
+        assertFalse(SharedPaths.isHidden(listOf("a", ".web-trash")), "맨 위만")
     }
 
     @Test

@@ -120,6 +120,8 @@
   function join(dir, name) { return dir ? dir + '/' + name : name; }
   function parentOf(path) { var i = path.lastIndexOf('/'); return i < 0 ? '' : path.slice(0, i); }
   function baseOf(path) { var i = path.lastIndexOf('/'); return i < 0 ? path : path.slice(i + 1); }
+  /** 이름·경로를 열쇠로 쓰는 맵 — 원형이 없다. `{}` 면 constructor·toString·__proto__ 같은 이름이 늘 '있는 것' 으로 읽힌다. */
+  function dict() { return Object.create(null); }
 
   function url(endpoint, params) {
     var parts = [];
@@ -134,15 +136,17 @@
   function compareNames(a, b) { return collator ? collator.compare(a, b) : (a.toLowerCase() < b.toLowerCase() ? -1 : a.toLowerCase() > b.toLowerCase() ? 1 : 0); }
 
   /**
-   * 새 이름에서 빼는 글자 — 서버(SharedPaths.isStrippedChar)와 같은 것: C0·DEL·C1 제어, 방향 제어(U+061C·200E·200F·202A–202E·2066–2069),
-   * 폭 없는 글자(U+180E·200B–200D·2060–2064·FEFF), 줄·문단 나눔(U+2028·2029). 거절하지 않고 뺀다(사용자 결정) — 화면은 미리 보여 주기만
-   * 하고 쓰는 이름은 서버가 정한다(답의 name).
+   * 새 이름에서 빼는 글자 — 서버(SharedPaths.isStrippedCodePoint)와 같은 것: C0·DEL·C1 제어, 줄·문단 나눔(U+2028·2029), 그리고 Unicode
+   * Default_Ignorable_Code_Point 전부(방향 제어·폭 없는 글자·소프트 하이픈·한글 채움·이체 선택자·태그 글자 …, 보충 평면은 u 플래그로 코드
+   * 포인트째). 거절하지 않고 뺀다(사용자 결정) — 화면은 미리 보여 주기만 하고 쓰는 이름은 서버가 정한다(답의 name).
    */
-  var STRIP_RE = /[\u0000-\u001f\u007f-\u009f\u061C\u180E\u200B-\u200F\u2028-\u202E\u2060-\u2064\u2066-\u2069\uFEFF]/g;
+  var STRIP_RE = /[\u0000-\u001f\u007f-\u009f\u061C\u180E\u200B-\u200F\u2028-\u202E\u2060-\u2064\u2066-\u2069\uFEFF]/gu;
+  /** 휴지통 판정에서만 떼는 글자 — STRIP_RE 에 Default_Ignorable 전부(서버 SharedPaths.isIgnorableCodePoint 와 같다). */
+  var IGNORABLE_RE = /[\u0000-\u001f\u007f-\u009f\u00AD\u034F\u061C\u115F\u1160\u17B4\u17B5\u180B-\u180F\u200B-\u200F\u2028-\u202E\u2060-\u206F\u3164\uFE00-\uFE0F\uFEFF\uFFA0\uFFF0-\uFFF8\u{1BCA0}-\u{1BCA3}\u{1D173}-\u{1D17A}\u{E0000}-\u{E0FFF}]/gu;
   function cleanName(name) { return name.replace(STRIP_RE, ''); }
 
-  /** 맨 위에서 휴지통 자리를 가리키는 이름인가 — 서버(SharedPaths.isTrashName)처럼 대소문자와 끝의 점·공백을 가리지 않는다. */
-  function isTrashName(name) { return name.replace(/[. ]+$/, '').toLowerCase() === '.web-trash'; }
+  /** 맨 위에서 휴지통 자리를 가리키는 이름인가 — 서버(SharedPaths.isTrashName)처럼 무시되는 글자 전부·대소문자·끝의 점과 공백을 가리지 않는다. */
+  function isTrashName(name) { return name.replace(IGNORABLE_RE, '').replace(/[. ]+$/, '').toLowerCase() === '.web-trash'; }
 
   /** 새로 짓는 이름의 검사 — 보이지 않는 글자를 뺀 뒤 서버(SharedPaths.isValidName)와 같은 규칙. 틀리면 까닭, 맞으면 ''. */
   function nameProblem(name, atRoot) {
@@ -164,7 +168,7 @@
 
   /** 겹치지 않는 이름 — '이름 (1).확장자'(서버의 SharedPaths.freeName 과 같은 꼴). */
   function freeName(name, isDir, taken) {
-    var lower = {};
+    var lower = dict();
     taken.forEach(function (n) { lower[n.toLowerCase()] = true; });
     if (!lower[name.toLowerCase()]) return name;
     var dot = isDir ? -1 : name.lastIndexOf('.');
@@ -179,7 +183,7 @@
 
   // ── 종류 ──
 
-  function setOf(list) { var o = {}; list.split(' ').forEach(function (x) { o[x] = true; }); return o; }
+  function setOf(list) { var o = dict(); list.split(' ').forEach(function (x) { o[x] = true; }); return o; }
   var EXT = {
     image: setOf('jpg jpeg png gif webp bmp avif heic heif svg tif tiff ico'),
     video: setOf('mp4 m4v webm mkv mov 3gp avi wmv ts mts flv'),
@@ -257,7 +261,7 @@
     sort: { key: 'name', dir: 1 },
     filter: '',
     mode: store.get('mode', 'list') === 'grid' ? 'grid' : 'list',
-    selected: {},      // 열쇠 → true (열쇠: 보통은 이름, 휴지통에서는 id)
+    selected: dict(),  // 열쇠 → true (열쇠: 보통은 이름, 휴지통에서는 id)
     count: 0,
     anchor: -1,
     cursor: -1,
@@ -377,7 +381,7 @@
       var same = data.path === S.path && keep;
       S.needsFolder = false;
       if (!same) {
-        S.selected = {};
+        S.selected = dict();
         S.anchor = -1;
         S.cursor = -1;
         S.filter = '';
@@ -431,13 +435,13 @@
     });
     S.view = list;
     // 보이지 않게 된 것은 고른 것에서 뺀다.
-    var keep = {};
+    var keep = dict();
     var count = 0;
     list.forEach(function (e) { var k = keyOf(e); if (S.selected[k]) { keep[k] = true; count++; } });
     S.selected = keep;
     S.count = count;
     if (S.cursor >= list.length) S.cursor = list.length - 1;
-    V.nodes = {};
+    V.nodes = dict();
     renderHead();
     layout();
     renderVisible();
@@ -469,7 +473,7 @@
   // 보이는 줄만 그리기
   // ════════════════════════════════════════════════════════════════════════════════════════════════
 
-  var V = { rowH: 38, tileW: 140, tileH: 156, cols: 1, nodes: {}, pending: false };
+  var V = { rowH: 38, tileW: 140, tileH: 156, cols: 1, nodes: dict(), pending: false };
 
   function measure() {
     var narrow = window.matchMedia && matchMedia('(max-width: 760px)').matches;
@@ -519,7 +523,7 @@
       offset = first * V.rowH;
     }
     el.items.style.transform = 'translateY(' + offset + 'px)';
-    var keepNodes = {};
+    var keepNodes = dict();
     var frag = document.createDocumentFragment();
     for (var i = first; i < last; i++) {
       var entry = S.view[i];
@@ -653,7 +657,7 @@
     queue: [],
     active: 0,
     max: 4,
-    failed: {},
+    failed: dict(),
 
     want: function (box, entry, size, kind) {
       var path = join(S.path, entry.name);
@@ -715,7 +719,7 @@
   }
 
   function selectOnly(i) {
-    S.selected = {};
+    S.selected = dict();
     S.count = 0;
     if (S.view[i]) setSelected(S.view[i], true);
     repaint();
@@ -728,7 +732,7 @@
   }
 
   function selectRange(a, b, add) {
-    if (!add) { S.selected = {}; S.count = 0; }
+    if (!add) { S.selected = dict(); S.count = 0; }
     var lo = Math.min(a, b), hi = Math.max(a, b);
     for (var i = lo; i <= hi; i++) if (S.view[i]) setSelected(S.view[i], true);
     repaint();
@@ -740,7 +744,7 @@
   }
 
   function clearSelection() {
-    S.selected = {};
+    S.selected = dict();
     S.count = 0;
     repaint();
   }
@@ -769,7 +773,7 @@
   }
 
   function selectByName(names) {
-    S.selected = {};
+    S.selected = dict();
     S.count = 0;
     var first = -1;
     S.view.forEach(function (e, i) {
@@ -812,7 +816,7 @@
   }
 
   var Tree = {
-    nodes: { '': { path: '', loaded: false, open: true, children: [] } },
+    nodes: (function () { var o = dict(); o[''] = { path: '', loaded: false, open: true, children: [] }; return o; })(),
 
     node: function (path) {
       if (!Tree.nodes[path]) Tree.nodes[path] = { path: path, loaded: false, open: false, children: [] };
@@ -1340,7 +1344,7 @@
   function enterTrash() {
     if (needManage()) return;
     S.trash = true;
-    S.selected = {};
+    S.selected = dict();
     S.count = 0;
     S.cursor = -1;
     S.filter = '';
@@ -1371,7 +1375,7 @@
     if (!S.trash) return;
     S.trash = false;
     el.notice.hidden = true;
-    S.selected = {};
+    S.selected = dict();
     S.count = 0;
     S.cursor = -1;
     if (!silent) { load(S.path); Tree.render(); }
@@ -1427,7 +1431,7 @@
     - 덮어쓴 원래 파일은 서버가 휴지통으로 옮긴다(답의 trashed) — 줄에 '원래 것은 휴지통에'. 원래 것이 0바이트면 서버가
       휴지통 없이 바꾸고 trashed 는 false 다(그 줄에는 아무것도 적지 않는다).
   */
-  var Q = { items: [], running: 0, max: 2, asking: false, askWaiting: [], names: {}, seq: 0, folded: false, renderPending: false };
+  var Q = { items: [], running: 0, max: 2, asking: false, askWaiting: [], names: dict(), seq: 0, folded: false, renderPending: false };
 
   /** 올릴 것을 넣는다 — files: [{file, rel}] (rel 은 폴더째 올릴 때의 상대 경로). 한 번 넣은 것이 한 묶음이다. */
   function enqueue(files, baseDir) {
@@ -1439,7 +1443,7 @@
       if (!files.length) return;
     }
     var batch = { policy: null };
-    var dirs = {};
+    var dirs = dict();
     files.forEach(function (f) {
       var rel = f.rel || f.file.name;
       // 파일 이름과 새로 만들 폴더의 성분은 보이지 않는 글자를 뺀 이름으로(서버와 같은 규칙 — 같은 이름도 뺀 뒤의 이름으로 살핀다).
@@ -1467,7 +1471,7 @@
   function namesIn(dir) {
     if (!Q.names[dir]) {
       Q.names[dir] = api('GET', url('/api/list', { path: dir })).then(function (res) {
-        var set = {};
+        var set = dict();
         if (res.ok && res.data) res.data.entries.forEach(function (e) { set[e.name.toLowerCase()] = { name: e.name, dir: !!e.dir }; });
         return set;
       });
@@ -1482,13 +1486,13 @@
    * 본다(폴더째 올리기에서 폴더가 너무 많으면 세지 않고 -1).
    */
   function clashCount(item) {
-    var dirs = [], seen = {};
+    var dirs = [], seen = dict();
     Q.items.forEach(function (it) {
       if (it.batch === item.batch && pending(it) && !seen[it.dir]) { seen[it.dir] = true; dirs.push(it.dir); }
     });
     if (dirs.length > 16) return Promise.resolve(-1);
     return Promise.all(dirs.map(namesIn)).then(function (sets) {
-      var byDir = {};
+      var byDir = dict();
       dirs.forEach(function (d, i) { byDir[d] = sets[i]; });
       var n = 0;
       Q.items.forEach(function (it) { if (it.batch === item.batch && pending(it) && byDir[it.dir] && byDir[it.dir][it.name.toLowerCase()]) n++; });
@@ -2131,7 +2135,7 @@
   function toggleMode() {
     S.mode = S.mode === 'grid' ? 'list' : 'grid';
     store.set('mode', S.mode);
-    V.nodes = {};
+    V.nodes = dict();
     layout();
     renderVisible();
     if (S.cursor >= 0) ensureVisible(S.cursor);

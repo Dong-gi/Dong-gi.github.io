@@ -243,7 +243,26 @@ class SharedOps(
             runCatching { tree.rename(temp, entry.name) }
             throw e
         }
-        return tree.rename(moved, finalName)
+        return try {
+            tree.rename(moved, finalName)
+        } catch (e: Exception) {
+            // 숨은 임시 이름으로 남기지 않는다 — 제자리로 되돌려 원래 이름으로, 못 하면 옮긴 곳에서 원래 이름으로. 답에는 실제로 남은 자리와 이름.
+            throw OpFailure(500, "새 이름으로 바꾸지 못했습니다 — ${undoMove(moved, entry.name, from, to)}")
+        }
+    }
+
+    /**
+     * 옮긴 뒤 새 이름으로 바꾸지 못했다 — [moved](옮긴 곳 [to] 의 숨은 임시 이름)를 [from] 으로 되돌리고(제공자의 옮기기만 — 손으로 하는 복사
+     * 뒤 지우기는 반쯤 지운 것을 남길 수 있다) 원래 이름 [original] 으로 바꾼다. 못 하면 옮긴 곳에서 원래 이름으로. 실제로 남은 것을 글로.
+     */
+    private fun undoMove(moved: SharedEntry, original: String, from: SharedEntry, to: SharedEntry): String {
+        val back = runCatching { tree.move(moved, to, from) }.getOrNull()
+        if (back != null) {
+            val renamed = runCatching { tree.rename(back, original) }.getOrNull()
+            return if (renamed != null) "옮기지 않고 되돌렸습니다" else "제자리에 ‘${back.name}’ 로 남았습니다"
+        }
+        val renamed = runCatching { tree.rename(moved, original) }.getOrNull()
+        return "옮긴 곳에 ‘${(renamed ?: moved).name}’ 로 남았습니다"
     }
 
     private fun moveSameName(entry: SharedEntry, from: SharedEntry, to: SharedEntry): SharedEntry {
@@ -467,7 +486,15 @@ class SharedOps(
             if (!it.isDirectory) throw OpFailure(409, "휴지통 자리(${SharedPaths.TRASH_NAME})에 파일이 있습니다")
             return it
         }
-        return if (create) tree.createDirectory(root, SharedPaths.TRASH_NAME) else null
+        if (!create) return null
+        // 제공자가 이름을 바꿔 만들 수 있다(겹치면 `이름 (1)`, 못 쓰는 글자 바꾸기) — 정확히 그 이름이 아니면 휴지통으로 쓰지 않는다(다른 이름의 숨지
+        // 않은 폴더에 지운 것을 쌓게 된다). 막 만든 빈 폴더는 치운다.
+        val made = tree.createDirectory(root, SharedPaths.TRASH_NAME)
+        if (made.name != SharedPaths.TRASH_NAME) {
+            runCatching { tree.delete(made) }
+            throw OpFailure(500, TRASH_NOT_CREATED)
+        }
+        return made
     }
 
     /**
@@ -692,6 +719,9 @@ class SharedOps(
         private const val DAY_MS = 24L * 60 * 60 * 1000
 
         private const val TRASH_NAME_TAKEN = "그 이름은 휴지통이 씁니다"
+
+        /** 휴지통을 만들었는데 제공자가 다른 이름으로 지었다. */
+        const val TRASH_NOT_CREATED = "휴지통 폴더(${SharedPaths.TRASH_NAME})를 만들지 못했습니다"
 
         /** 올리는 파일의 이름이 폴더와 겹칠 때 — 한 폴더에 같은 이름의 파일과 폴더는 둘 수 없다(파일 시스템의 제약). 화면도 같은 글을 보인다. */
         const val FOLDER_SAME_NAME = "같은 이름의 폴더가 있습니다"

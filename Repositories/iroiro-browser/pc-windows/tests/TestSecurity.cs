@@ -44,7 +44,7 @@ namespace WebTether.Tests
                 var policy = DirPolicy.CurrentUser();
                 var notes = new List<string>();
                 string err;
-                using (var h = SecureDir.Prepare(root, policy, false, notes, out err))
+                using (var h = SecureDir.Prepare(root, policy, notes, out err))
                 {
                     A.True(h != null, "마련함: " + err);
                     var sd = SecureDir.ReadDescriptor(root);
@@ -57,7 +57,7 @@ namespace WebTether.Tests
                     Directory.CreateDirectory(logs);
                     A.Eq((string)null, Clean(logs, policy), "하위도 물려받아 전용");
                 }
-                using (var h = SecureDir.Prepare(root, policy, false, notes, out err))
+                using (var h = SecureDir.Prepare(root, policy, notes, out err))
                     A.True(h != null && notes.Count == 0, "다시 마련하면 그대로 씀: " + err + string.Join("|", notes.ToArray()));
             });
 
@@ -71,7 +71,7 @@ namespace WebTether.Tests
                 A.True(Clean(root, policy) != null, "모든 사람이 쓸 수 있으면 거절: " + Clean(root, policy));
                 var notes = new List<string>();
                 string err;
-                using (var h = SecureDir.Prepare(root, policy, false, notes, out err))
+                using (var h = SecureDir.Prepare(root, policy, notes, out err))
                 {
                     A.True(h != null, "마련함: " + err);
                     A.True(!File.Exists(Path.Combine(root, "settings")), "심어 둔 설정을 쓰지 않음");
@@ -93,7 +93,7 @@ namespace WebTether.Tests
                 BinariesTests.Junction(root, target);
                 var notes = new List<string>();
                 string err;
-                using (var h = SecureDir.Prepare(root, DirPolicy.CurrentUser(), false, notes, out err))
+                using (var h = SecureDir.Prepare(root, DirPolicy.CurrentUser(), notes, out err))
                 {
                     A.True(h != null, "마련함: " + err);
                     A.True((File.GetAttributes(root) & FileAttributes.ReparsePoint) == 0, "새로 만든 진짜 폴더");
@@ -113,7 +113,7 @@ namespace WebTether.Tests
                 {
                     var notes = new List<string>();
                     string err;
-                    var h = SecureDir.Prepare(Path.Combine(d, "WebTether"), DirPolicy.AdminOnly(), false, notes, out err);
+                    var h = SecureDir.Prepare(Path.Combine(d, "WebTether"), DirPolicy.AdminOnly(), notes, out err);
                     A.True(h == null && err != null, "만들지 못함");
                     TestMain.Say("      관리자 아닌 권한: " + err);
                 }
@@ -126,7 +126,7 @@ namespace WebTether.Tests
                 var elsewhere = Path.Combine(parent, "elsewhere");
                 Directory.CreateDirectory(elsewhere);
                 string err;
-                using (var h = SecureDir.Prepare(root, DirPolicy.CurrentUser(), false, null, out err))
+                using (var h = SecureDir.Prepare(root, DirPolicy.CurrentUser(), null, out err))
                 {
                     A.True(h != null, err);
                     var paths = AppPaths.Under(root);
@@ -163,7 +163,7 @@ namespace WebTether.Tests
                 File.Move(exe + ".moved", exe);
             });
 
-            T("시작 시 실행: 쥔 핸들에서 전용 폴더로 복사하고 해시를 견준다 — 권한을 고치고, 접합점 폴더 너머에는 쓰지 않는다", () =>
+            T("시작 시 실행: 쥔 핸들에서 전용 폴더로 복사하고 해시를 견준다 — 권한이 틀린 폴더는 고치거나 지우지 않고 통째로 비키고 새로 만든다, 비키지 못하면 쓰지 않는다, 접합점 폴더 너머에는 쓰지 않는다", () =>
             {
                 var parent = TestMain.Scratch("install");
                 var policy = DirPolicy.CurrentUser();
@@ -176,10 +176,31 @@ namespace WebTether.Tests
                     var dir = Path.Combine(parent, "WebTether");
                     Directory.CreateDirectory(dir);
                     GrantEveryone(dir);  // 주인은 믿을 만한데 권한이 넓다(예전 판이 만든 Program Files\WebTether)
+                    // 권한이 넓던 동안 남이 넣었을 것 — exe 옆 DLL(관리자로 도는 exe 가 먼저 찾는다)과 하위 폴더.
+                    File.WriteAllText(Path.Combine(dir, "version.dll"), "planted");
+                    Directory.CreateDirectory(Path.Combine(dir, "sub"));
+                    File.WriteAllText(Path.Combine(dir, "sub", "x.txt"), "planted");
                     var target = Path.Combine(dir, "WebTether.exe");
                     var notes = new List<string>();
                     A.True(Installer.CopyVerified(self.Stream, target, policy, notes, out err), "복사: " + err);
-                    A.True(notes.Any(n => n.Contains("고쳤")), "권한을 고침: " + string.Join("|", notes.ToArray()));
+                    A.True(notes.Any(n => n.Contains("옆으로 옮겼습니다")), "비킴: " + string.Join("|", notes.ToArray()));
+                    A.Eq(1, Directory.GetFileSystemEntries(dir).Length, "새 폴더에는 exe 하나: " + string.Join(",", Directory.GetFileSystemEntries(dir)));
+                    var moved = Aside(dir);
+                    A.Eq(1, moved.Length, "비킨 폴더 하나");
+                    A.True(File.Exists(Path.Combine(moved[0], "version.dll")) && File.Exists(Path.Combine(moved[0], "sub", "x.txt")), "비킨 것은 지우지 않는다");
+
+                    // 비키지 못하면(안의 파일이 열려 있음 — 이름 바꾸기가 막힌다) 쓰지 않는다.
+                    var dir3 = Path.Combine(parent, "WebTether3");
+                    Directory.CreateDirectory(dir3);
+                    GrantEveryone(dir3);
+                    using (new FileStream(Path.Combine(dir3, "busy.dll"), FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        var n3 = new List<string>();
+                        A.True(!Installer.CopyVerified(self.Stream, Path.Combine(dir3, "WebTether.exe"), policy, n3, out err), "비키지 못하면 실패");
+                        A.True(err.Contains("비키지도 못했습니다"), err);
+                        A.True(File.Exists(Path.Combine(dir3, "busy.dll")), "지우지 않음");
+                        A.True(!File.Exists(Path.Combine(dir3, "WebTether.exe")), "쓰지 않음");
+                    }
                     A.Eq((string)null, Clean(dir, policy), "전용이 됨");
                     A.Eq(want, Binaries.Sha256(File.ReadAllBytes(target)), "같은 바이트");
                     A.Eq(0, Directory.GetFiles(dir, "*.new-*").Length, "임시 파일이 남지 않음");

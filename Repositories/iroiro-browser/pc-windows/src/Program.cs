@@ -9,11 +9,35 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
+// 이 어셈블리의 P/Invoke 는 System32 에서만 찾는다 — 이 exe 는 관리자로 돌고, 내려받기에서 띄우면 그 폴더(같은 사용자가 쓸 수 있다)가
+// 'exe 의 폴더' 다. 이름만 적은 DllImport 가 그 폴더의 같은 이름 DLL 을 먼저 올리지 않게.
+[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+
 namespace WebTether
 {
+    /// <summary>
+    /// DLL 찾기를 System32 로 좁힌다 — Main 의 첫머리에서. SetDefaultDllDirectories 는 이 프로세스의 그 뒤 LoadLibrary(이름만 —
+    /// 프레임워크의 P/Invoke·지연 로드 포함)가 exe 의 폴더·현재 폴더·PATH 를 보지 않게 한다. 온전한 경로로 올리는 것(CLR 의 구성 요소)은
+    /// 그대로다. 그 전에 올라온 것(정적 가져오기 — mscoree.dll 등)은 막지 못한다(알고 둔 것).
+    /// </summary>
+    public static class DllSafety
+    {
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool SetDefaultDllDirectories(uint flags);
+        const uint LOAD_LIBRARY_SEARCH_SYSTEM32 = 0x800;
+
+        /// <summary>걸었으면 참(실패는 던지지 않는다 — 시험이 본다).</summary>
+        public static bool Harden()
+        {
+            try { return SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32); }
+            catch (Exception) { return false; }
+        }
+    }
+
     public enum InstanceStatus { First, Another, Squatted }
 
     /// <summary>
@@ -148,6 +172,7 @@ namespace WebTether
         [STAThread]
         public static int Main(string[] args)
         {
+            DllSafety.Harden();
             bool dryRun = false;
             string home = null;
             int exitAfter = 0;
@@ -194,7 +219,7 @@ namespace WebTether
                 var paths = home != null ? AppPaths.Under(home) : AppPaths.Default();
                 var notes = new List<string>();
                 string err;
-                var rootHold = SecureDir.Prepare(paths.Root, policy, false, notes, out err);
+                var rootHold = SecureDir.Prepare(paths.Root, policy, notes, out err);
                 if (rootHold == null)
                 {
                     MessageBox.Show("상태 폴더를 쓸 수 없어 시작하지 않습니다.\r\n" + err, AppInfo.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
