@@ -86,7 +86,11 @@ namespace WebTether
 
     public sealed class StatusForm : Form
     {
-        readonly Controller ctl;
+        readonly ITetherView ctl;
+        readonly UpdateWatcher upd;
+        /// <summary>핫스팟·폰 프록시 살피기 — 읽기만이라 보통 권한의 트레이도 한다(시험이 바꾼다).</summary>
+        public Func<string, HotspotInfo> HotspotFinder = NetState.FindHotspot;
+        public Func<string, int, ProxyKind, int, ProbeResult> Prober = NetState.Probe;
         readonly Label vState = new Label(), vHotspot = new Label(), vProxy = new Label(), vChild = new Label(), vUpdate = new Label();
         readonly PictureBox icon = new PictureBox();
         readonly Button bToggle;
@@ -101,9 +105,16 @@ namespace WebTether
         /// <summary>시험 — 프록시·핫스팟 확인을 하지 않는다(ShowHotspot 로 넣는다).</summary>
         public bool ProbeEnabled = true;
 
-        public StatusForm(Controller ctl)
+        public StatusForm(Controller ctl) : this(ctl, ctl.Watcher)
+        {
+            HotspotFinder = ctl.HotspotFinder;
+            Prober = ctl.Prober;
+        }
+
+        public StatusForm(ITetherView ctl, UpdateWatcher upd)
         {
             this.ctl = ctl;
+            this.upd = upd;
             Ui.Prepare(this, AppInfo.Name + " — 상태");
             FormBorderStyle = FormBorderStyle.FixedDialog;
             AutoSize = true;
@@ -163,7 +174,7 @@ namespace WebTether
                 hotspotProbing = true;
                 lastHotspotAt = DateTime.Now;
                 var prefix = s.SsidPrefix;
-                var finder = ctl.HotspotFinder;
+                var finder = HotspotFinder;
                 Task.Run(() => finder(prefix)).ContinueWith(t =>
                 {
                     var hs = t.Exception == null ? t.Result : null;
@@ -189,7 +200,8 @@ namespace WebTether
             {
                 probing = true;
                 lastProbeAt = DateTime.Now;
-                Task.Run(() => ctl.Prober(s.ProxyHost, s.ProxyPort, s.Kind, 3000)).ContinueWith(t =>
+                var prober = Prober;
+                Task.Run(() => prober(s.ProxyHost, s.ProxyPort, s.Kind, 3000)).ContinueWith(t =>
                 {
                     probing = false;
                     lastProbe = t.Exception == null ? t.Result : new ProbeResult { Detail = "오류" };
@@ -200,8 +212,8 @@ namespace WebTether
             if (ctl.DryRun) vChild.Text = ctl.ChildRunning ? "시험 — 띄운 척(명령줄만 기록)" : "시험 — 띄우지 않음";
             else vChild.Text = ctl.ChildRunning ? "실행 중 (PID " + ctl.ChildPid + ")" : "꺼짐";
 
-            vUpdate.Text = UpdateLine(ctl, s);
-            vUpdate.ForeColor = ctl.Updates.Advisories.Count > 0 ? Color.Firebrick : SystemColors.ControlText;
+            vUpdate.Text = UpdateLine(upd, s);
+            vUpdate.ForeColor = upd.Updates.Advisories.Count > 0 ? Color.Firebrick : SystemColors.ControlText;
 
             var a = ctl.Toggle;
             bToggle.Text = StatusText.ToggleLabel(a);
@@ -217,7 +229,7 @@ namespace WebTether
         }
 
         /// <summary>단추·트레이 메뉴 — 누른 때의 상태로 다시 정한다(보인 글이 낡았어도 '정리 중' 이면 아무것도 하지 않는다).</summary>
-        public static void DoToggle(Controller ctl)
+        public static void DoToggle(ITetherView ctl)
         {
             switch (ctl.Toggle)
             {
@@ -226,15 +238,15 @@ namespace WebTether
             }
         }
 
-        public static string UpdateLine(Controller ctl, Settings s)
+        public static string UpdateLine(UpdateWatcher w, Settings s)
         {
-            var u = ctl.Updates;
+            var u = w.Updates;
             var head = "tun2proxy " + Embedded.Tun2proxyVersion;
             if (!s.UpdateCheck) return head + " · 확인 꺼짐";
             if (u.LastCheck == null) return head + " · 아직 확인 안 함(연결된 동안 확인)";
             var when = u.LastCheck.Value.ToString("yyyy-MM-dd");
             if (u.Advisories.Count > 0) return head + " · 보안 권고 " + u.Advisories.Count + "건 — 트레이 메뉴 맨 위";
-            var nv = ctl.NewVersion;
+            var nv = w.NewVersion;
             if (nv != null) return head + " · 새 판 " + nv + " (" + when + " 확인)";
             if (!u.LastOk) return head + " · 확인 실패(" + when + ")";
             return head + " · 최신 (" + when + " 확인)";

@@ -40,32 +40,24 @@ namespace WebTether.Tests
             return t.Result;
         }
 
-        /// <summary>'시작 시 실행' 을 바꾸면 문이 열릴 때까지 막히고, 부른 스레드를 적는다.</summary>
-        sealed class SlowStartupOps : ISystemOps
+        /// <summary>설정 저장이 문이 열릴 때까지 막히고, 부른 스레드를 적는다(저장은 Controller 에).</summary>
+        sealed class SlowHost : ISettingsHost
         {
+            readonly Controller ctl;
             readonly ManualResetEventSlim gate;
             public volatile int Thread;
-            public bool State;
-            public SlowStartupOps(ManualResetEventSlim gate) { this.gate = gate; }
-            public bool WlanConnect(string profile, out string output) { output = ""; return true; }
-            public bool Route(RouteAction action, out string output) { output = ""; return true; }
-            public bool EnableStartup(string exePath, out string error)
+            public SlowHost(Controller ctl, ManualResetEventSlim gate) { this.ctl = ctl; this.gate = gate; }
+            public Settings Settings { get { return ctl.Settings; } }
+            public void SaveSettings(Settings s)
             {
                 Thread = System.Threading.Thread.CurrentThread.ManagedThreadId;
                 gate.Wait(15000);
-                error = null;
-                State = true;
-                return true;
+                ctl.SaveSettings(s);
             }
-            public bool DisableStartup(out string error)
-            {
-                Thread = System.Threading.Thread.CurrentThread.ManagedThreadId;
-                gate.Wait(15000);
-                error = null;
-                State = false;
-                return true;
-            }
-            public bool StartupEnabled() { return State; }
+            public void ApplySettings(Settings s) { ctl.ApplySettings(s); }
+            public bool ChildRunning { get { return ctl.ChildRunning; } }
+            public string SavingText { get { return "저장 중…"; } }
+            public string LoadNotice { get { return null; } }
         }
 
         static void AddSsid(Action<string, Action> T)
@@ -610,13 +602,13 @@ namespace WebTether.Tests
             {
                 var r = Make("save-worker", null);
                 var gate = new ManualResetEventSlim(false);
-                var ops = new SlowStartupOps(gate);
+                var ops = new SlowHost(r.C, gate);
                 var before = SynchronizationContext.Current;
                 try
                 {
-                    using (var f = new SettingsForm(r.C, ops, "x.exe"))
+                    using (var f = new SettingsForm(ops))
                     {
-                        f.LoadFrom(new Settings { AutoStart = true, ReconnectMax = 7, SsidPrefix = "MYPHONE-" });
+                        f.LoadFrom(new Settings { ReconnectMax = 7, SsidPrefix = "MYPHONE-" });
                         var sw = Stopwatch.StartNew();
                         var t = f.SaveAsync();
                         A.True(sw.ElapsedMilliseconds < 1000, "곧바로 돌아옴(" + sw.ElapsedMilliseconds + " ms)");
@@ -633,7 +625,6 @@ namespace WebTether.Tests
                         A.True(Pump(t), "저장됨");
                         A.Eq(7, r.C.Settings.ReconnectMax, "설정을 걸었다");
                         A.Eq("MYPHONE-", r.C.Settings.SsidPrefix, "접두어");
-                        A.True(r.C.Settings.AutoStart && ops.State, "시작 시 실행");
                         A.True(save.Enabled, "다시 눌림");
                         A.True(File.ReadAllText(r.Paths.SettingsFile).Contains("ssid_prefix=MYPHONE-\n"), "파일에 씀");
                         A.True(AllControls(f).OfType<Label>().Any(l => l.Text == "저장했습니다."), "결과를 보임");
@@ -646,12 +637,12 @@ namespace WebTether.Tests
             {
                 var r = Make("save-disposed", null);
                 var gate = new ManualResetEventSlim(false);
-                var ops = new SlowStartupOps(gate);
+                var ops = new SlowHost(r.C, gate);
                 var before = SynchronizationContext.Current;
                 try
                 {
-                    var f = new SettingsForm(r.C, ops, "x.exe");
-                    f.LoadFrom(new Settings { AutoStart = true, ReconnectMax = 9 });
+                    var f = new SettingsForm(ops);
+                    f.LoadFrom(new Settings { ReconnectMax = 9 });
                     var t = f.SaveAsync();
                     A.WaitUntil(() => ops.Thread != 0, 3000, "작업 시작");
                     f.Dispose();
@@ -902,16 +893,20 @@ namespace WebTether.Tests
                 A.Eq("DIRECT-UT-", s.SsidPrefix, "기본값");
                 A.True(s.Serialize().Contains("\nssid_prefix=DIRECT-UT-\n"), "씀");
                 var probs = new List<string>();
-                A.Eq("내폰-", Settings.Parse("ssid_prefix=내폰-\n", probs).SsidPrefix, "한글");
+                A.Eq("MYPHONE-", Settings.Parse("ssid_prefix=MYPHONE-\n", probs).SsidPrefix, "ASCII");
                 A.Eq(0, probs.Count, "문제 없음");
+                A.Eq("DIRECT-UT-", Settings.Parse("ssid_prefix=내폰-\n", probs).SsidPrefix, "ASCII 밖은 버림(검토 11-27)");
+                A.True(probs.Any(p => p.Contains("ssid_prefix")), "버린 것을 적음");
+                probs.Clear();
                 A.Eq("DIRECT-UT-", Settings.Parse("proxy_port=1080\n", probs).SsidPrefix, "옛 설정 파일 — 기본값");
-                foreach (var bad in new[] { "", " DIRECT", "DIRECT ", "a" + (char)9 + "b", new string('가', 11), "DIRECT" + (char)0xD800 })
+                foreach (var bad in new[] { "", " DIRECT", "DIRECT ", "a" + (char)9 + "b", new string('가', 11), "DIRECT" + (char)0xD800,
+                                            "DIRECT-" + (char)0x0423, "DIRECT" + (char)0xFF0D, new string('a', 33), "가나" })
                 {
                     A.True(!Settings.IsSsidPrefix(bad), "거절 [" + bad + "]");
                     A.True(new Settings { SsidPrefix = bad }.Validate().Any(e => e.Key == "ssid_prefix"), "검사 [" + bad + "]");
                 }
                 A.True(Settings.IsSsidPrefix(new string('a', 32)), "32바이트");
-                A.True(Settings.IsSsidPrefix("가나다라마바사아자차" + "ab"), "한글 10자 + 2 = 32바이트");
+                A.True(Settings.IsSsidPrefix("DIRECT-ab ~!"), "기호·빈칸도 ASCII 면");
                 probs.Clear();
                 A.Eq("DIRECT-UT-", Settings.Parse("ssid_prefix=\n", probs).SsidPrefix, "빈 값은 버림");
                 A.True(probs.Any(p => p.Contains("ssid_prefix")), "적음");
@@ -935,85 +930,4 @@ namespace WebTether.Tests
         }
     }
 
-    // ------------------------------------------------------------------ 작업 스케줄러(가짜 schtasks)
-    static class StartupTaskTests
-    {
-        sealed class FakeSchtasks
-        {
-            public readonly List<string> Calls = new List<string>();
-            public int CreateCode, DeleteCode, QueryCode;
-            public int Run(string exe, string args, int timeoutMs, out string output)
-            {
-                lock (Calls) Calls.Add(exe + " " + args);
-                output = "";
-                if (args.StartsWith("/Create")) return CreateCode;
-                if (args.StartsWith("/Delete")) return DeleteCode;
-                if (args.StartsWith("/Query")) return QueryCode;
-                return 99;
-            }
-        }
-
-        static SystemOps Ops(FakeSchtasks f, List<string> notes)
-        {
-            return new SystemOps(null, n => { lock (notes) notes.Add(n); }) { RunTool = f.Run, SettleDelayMs = 0 };
-        }
-
-        const int Late = SystemOps.TimedOut;
-
-        public static void Add(Action<string, Action> T)
-        {
-            T("시작 시 실행: 등록이 시간 초과면 한 번 물어 — 있으면 켜짐, 없으면 꺼짐, 물음도 답이 없으면 실패와 안내", () =>
-            {
-                var notes = new List<string>();
-                string err;
-                var f = new FakeSchtasks { CreateCode = Late, QueryCode = 0 };
-                A.True(Ops(f, notes).CreateTask(@"C:\nowhere\task.xml", out err), "있으면 켜짐");
-                A.Eq("schtasks.exe /Create /TN WebTether /XML C:\\nowhere\\task.xml /F|schtasks.exe /Query /TN WebTether", string.Join("|", f.Calls.ToArray()), "물은 것");
-                A.True(notes.Any(n => n.Contains("시간 안에 끝나지 않음") && n.Contains("켜짐")), "기록: " + string.Join("|", notes.ToArray()));
-
-                f = new FakeSchtasks { CreateCode = Late, QueryCode = 1 };
-                A.True(!Ops(f, notes).CreateTask("x.xml", out err), "없으면 꺼짐");
-                A.True(err.Contains("작업이 없습니다"), err);
-
-                f = new FakeSchtasks { CreateCode = Late, QueryCode = Late };
-                A.True(!Ops(f, notes).CreateTask("x.xml", out err), "물음도 시간 초과");
-                A.True(err.Contains("확인하지 못했습니다") && err.Contains("작업 스케줄러"), err);
-
-                f = new FakeSchtasks { CreateCode = 1, QueryCode = 0 };
-                A.True(!Ops(f, notes).CreateTask("x.xml", out err), "시간 초과가 아닌 실패는 실패");
-                A.Eq(1, f.Calls.Count, "묻지 않음");
-                A.True(err.Contains("코드 1"), err);
-
-                f = new FakeSchtasks { CreateCode = 0 };
-                A.True(Ops(f, notes).CreateTask("x.xml", out err), "성공");
-                A.Eq(1, f.Calls.Count, "묻지 않음");
-            });
-
-            T("시작 시 실행: 지우기가 시간 초과·실패면 한 번 물어 — 없으면 꺼짐, 남았으면 켜짐(실패), 모르면 실패", () =>
-            {
-                var notes = new List<string>();
-                string err;
-                var f = new FakeSchtasks { DeleteCode = Late, QueryCode = 1 };
-                A.True(Ops(f, notes).DeleteTask(out err), "없으면 꺼짐");
-                A.Eq("schtasks.exe /Delete /TN WebTether /F|schtasks.exe /Query /TN WebTether", string.Join("|", f.Calls.ToArray()), "물은 것");
-
-                f = new FakeSchtasks { DeleteCode = Late, QueryCode = 0 };
-                A.True(!Ops(f, notes).DeleteTask(out err), "남았으면 실패(켜짐 그대로)");
-                A.True(err.Contains("남아 있습니다"), err);
-
-                f = new FakeSchtasks { DeleteCode = Late, QueryCode = Late };
-                A.True(!Ops(f, notes).DeleteTask(out err), "모르면 실패 — 꺼진 것으로 치지 않는다");
-                A.True(err.Contains("확인하지 못했습니다"), err);
-
-                f = new FakeSchtasks { DeleteCode = 1, QueryCode = 1 };
-                A.True(Ops(f, notes).DeleteTask(out err), "이미 없으면 꺼짐(예전과 같다)");
-
-                var o = Ops(new FakeSchtasks { QueryCode = 0 }, notes);
-                A.Eq(true, o.TaskExists(), "있음");
-                A.Eq(false, Ops(new FakeSchtasks { QueryCode = 1 }, notes).TaskExists(), "없음");
-                A.Eq((bool?)null, Ops(new FakeSchtasks { QueryCode = Late }, notes).TaskExists(), "모름");
-                A.True(!Ops(new FakeSchtasks { QueryCode = Late }, notes).StartupEnabled(), "모르면 켜짐이 아님");
-            });
-        }
-    }
 }

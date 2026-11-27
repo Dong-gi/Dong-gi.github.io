@@ -17,7 +17,7 @@ namespace WebTether.Tests
     {
         static readonly SecurityIdentifier Everyone = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
 
-        static void GrantEveryone(string dir)
+        internal static void GrantEveryone(string dir)
         {
             var sec = Directory.GetAccessControl(dir);
             sec.AddAccessRule(new FileSystemAccessRule(Everyone, FileSystemRights.Modify,
@@ -25,7 +25,7 @@ namespace WebTether.Tests
             Directory.SetAccessControl(dir, sec);
         }
 
-        static string[] Aside(string path)
+        internal static string[] Aside(string path)
         {
             return Directory.GetFileSystemEntries(Path.GetDirectoryName(path), Path.GetFileName(path) + ".untrusted-*");
         }
@@ -163,7 +163,7 @@ namespace WebTether.Tests
                 File.Move(exe + ".moved", exe);
             });
 
-            T("시작 시 실행: 쥔 핸들에서 전용 폴더로 복사하고 해시를 견준다 — 권한이 틀린 폴더는 고치거나 지우지 않고 통째로 비키고 새로 만든다, 비키지 못하면 쓰지 않는다, 접합점 폴더 너머에는 쓰지 않는다", () =>
+            T("설치본: 쥔 핸들에서 전용 폴더로 복사하고 해시를 견준다 — 권한이 틀린 폴더는 고치거나 지우지 않고 통째로 비키고 새로 만든다, 비키지 못하면 쓰지 않는다, 접합점 폴더 너머에는 쓰지 않는다", () =>
             {
                 var parent = TestMain.Scratch("install");
                 var policy = DirPolicy.CurrentUser();
@@ -222,29 +222,6 @@ namespace WebTether.Tests
                 }
             });
 
-            T("시작 시 실행: 작업 XML 은 다 쓴 뒤 읽기만 하는 핸들로 쥔다 — schtasks 처럼(읽기, 공유 Read) 열 수 있고 남은 바꾸거나 지우지 못한다", () =>
-            {
-                // 2026-11-21 사용자 기기: 쓰기 권한을 쥔 채 schtasks 를 돌려 '다른 프로세스가 파일을 사용 중' 으로 등록이 실패했다.
-                // schtasks 가 그렇게 여는 것은 스크래치에서 틀린 XML 로 한 번 확인했다(작업은 만들어지지 않는다) — 여기서는 그 열기를 흉내 낸다.
-                var d = TestMain.Scratch("task-xml");
-                var path = Path.Combine(d, "task.xml");
-                var bytes = System.Text.Encoding.Unicode.GetBytes("<Task/>");
-                using (var held = SystemOps.WriteThenHoldForReaders(path, bytes))
-                {
-                    byte[] seen;
-                    using (var reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) // schtasks 의 열기
-                    {
-                        seen = new byte[reader.Length];
-                        reader.Read(seen, 0, seen.Length);
-                    }
-                    A.Eq(Binaries.Sha256(bytes), Binaries.Sha256(seen), "쓴 그대로 읽힌다");
-                    A.Throws<IOException>(() => new FileStream(path, FileMode.Open, FileAccess.Write, FileShare.ReadWrite).Dispose(), "남의 쓰기");
-                    A.Throws<IOException>(() => File.Delete(path), "남의 지우기");
-                    A.True(!held.CanWrite, "쥔 핸들은 읽기만");
-                }
-                A.Throws<IOException>(() => SystemOps.WriteThenHoldForReaders(path, bytes).Dispose(), "이미 있으면 새로 쓰지 않는다");
-            });
-
             T("하나만 실행: 같은 이름의 다른 종류 객체를 먼저 만들어 두어도 던지지 않고 알아챈다", () =>
             {
                 var id = Guid.NewGuid().ToString("N");
@@ -287,33 +264,6 @@ namespace WebTether.Tests
                     A.True(r.Detail.Contains("주인"), r.Detail);
                     A.True(r.Show == null, "남이 만든 보이기 이벤트는 쓰지 않음");
                 }
-            });
-
-            T("하나만 실행: 표지를 믿지 못해도 상태 폴더의 잠금 파일로 둘째 도우미를 막는다(접합점이면 쓰지 않고 막지도 않는다)", () =>
-            {
-                var paths = AppPaths.Under(TestMain.Scratch("instance-file"));
-                bool busy;
-                string err;
-                using (var first = InstanceFile.TryHold(paths, out busy, out err))
-                {
-                    A.True(first != null && !busy, "첫째는 쥔다: " + err);
-                    var second = InstanceFile.TryHold(paths, out busy, out err);
-                    A.True(second == null, "둘째는 쥐지 못함");
-                    A.True(busy, "다른 도우미가 쥐고 있다고 알아챔: " + err);
-                }
-                using (var again = InstanceFile.TryHold(paths, out busy, out err))
-                    A.True(again != null && !busy, "첫째가 놓으면 다시 쥔다: " + err);
-
-                var elsewhere = TestMain.Scratch("instance-file-target");
-                File.Delete(paths.InstanceFile);
-                BinariesTests.Junction(paths.InstanceFile, elsewhere);
-                try
-                {
-                    var j = InstanceFile.TryHold(paths, out busy, out err);
-                    A.True(j == null && !busy, "접합점이면 쥐지 않고 '이미 실행 중' 으로도 보지 않음");
-                    A.True(err != null && err.Contains("재분석"), err);
-                }
-                finally { Directory.Delete(paths.InstanceFile); }
             });
         }
     }

@@ -1,5 +1,6 @@
 // 설정 창 — 칸마다 '기본값'. 저장할 때 모두 검사하고 첫 문제의 칸으로 간다.
-// 저장의 막는 일(설정 파일 쓰기, '시작 시 실행' 의 복사·해시·schtasks)은 일꾼 스레드에서 — 그동안 창은 '저장 중' 으로 눌리지 않는다.
+// 저장의 막는 일(시험 판은 설정 파일 쓰기, 실제 판은 서비스에 제안하고 확인 창의 답 기다리기)은 일꾼 스레드에서 — 그동안 창은 눌리지 않는다.
+// 실제 판은 트레이가 연다(ServiceSettingsHost) — 적용은 서비스가 콘솔 사용자에게 확인 창으로 물은 뒤다.
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,36 +12,28 @@ namespace WebTether
 {
     public sealed class SettingsForm : Form
     {
-        readonly Controller ctl;
-        readonly ISystemOps ops;
-        readonly string exePath;
+        readonly ISettingsHost ctl;
         readonly Dictionary<string, Control> fields = new Dictionary<string, Control>();
         readonly TableLayoutPanel grid = new TableLayoutPanel();
         readonly Label message = new Label();
-        /// <summary>'시작 시 실행' 아래 한 줄 — 사본이 옛 판이면(StartupCopy).</summary>
-        readonly Label copyNote = new Label();
-        CopyCheck lastCopy;
-        int copyGen;
 
         TextBox tHost, tDns, tTun, tBypass, tWifi, tSsid;
         NumericUpDown nPort, nInterval, nMax;
         ComboBox cKind, cDnsMode, cVerb;
-        CheckBox kSetup, kReconnect, kAuto, kUpdate;
+        CheckBox kSetup, kReconnect, kUpdate;
         ComboBox cUpdate;
         static readonly string[] IntervalLabels = { "매일", "매주", "매월" };
         Button bSave, bCancel;
         bool saving;
         Task pending = Task.FromResult(0);
 
-        /// <summary>도는 저장(없으면 끝난 일) — 끝내기가 기다린다(설정 파일·작업 스케줄러를 쓰다 말고 끝나지 않게).</summary>
+        /// <summary>도는 저장(없으면 끝난 일) — 끝내기가 기다린다(설정 파일을 쓰다 말고 끝나지 않게).</summary>
         public Task PendingSave { get { return pending; } }
         public bool Saving { get { return saving; } }
 
-        public SettingsForm(Controller ctl, ISystemOps ops, string exePath)
+        public SettingsForm(ISettingsHost ctl)
         {
             this.ctl = ctl;
-            this.ops = ops;
-            this.exePath = exePath;
             Ui.Prepare(this, AppInfo.Name + " — 설정");
             FormBorderStyle = FormBorderStyle.FixedDialog;
             AutoSize = true;
@@ -83,18 +76,6 @@ namespace WebTether
             tWifi = AddText("wifi_profile", "Wi-Fi 프로필", () => tWifi.Text = "");
 
             Section("그 밖");
-            // 칸과 그 아래 한 줄을 한 칸(가운데 열)에 — 표에 줄을 따로 두면 숨겼다 보일 때 칸 배치가 어긋났다.
-            kAuto = new CheckBox { Text = "Windows 시작 시 실행", AutoSize = true, Margin = Padding.Empty };
-            copyNote.AutoSize = true;
-            copyNote.MaximumSize = new Size(244, 0);
-            copyNote.ForeColor = Color.FromArgb(0xB2, 0x6A, 0x00);
-            copyNote.Margin = new Padding(0, 2, 0, 0);
-            copyNote.Visible = false;
-            var autoBox = new FlowLayoutPanel { FlowDirection = FlowDirection.TopDown, WrapContents = false, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink };
-            autoBox.Controls.Add(kAuto);
-            autoBox.Controls.Add(copyNote);
-            Row("autostart", "", autoBox, () => kAuto.Checked = false);
-            kAuto.CheckedChanged += (s, e) => ShowCopyNote();
             kUpdate = AddCheck("update_check", "tun2proxy 업데이트 확인(알리기만)", () => kUpdate.Checked = true);
             cUpdate = AddCombo("update_interval", "확인 간격", IntervalLabels, () => cUpdate.SelectedIndex = (int)UpdateInterval.Weekly);
 
@@ -118,7 +99,7 @@ namespace WebTether
 
             var tip = new ToolTip();
             tip.SetToolTip(tBypass, "터널 밖으로 보낼 IPv4·CIDR. 쉼표로 가릅니다. 예: 10.0.0.0/8");
-            tip.SetToolTip(tWifi, "핫스팟이 없을 때 netsh wlan connect 로 붙을 프로필 이름. 비우면 하지 않습니다.");
+            tip.SetToolTip(tWifi, "핫스팟이 없을 때 붙을 Wi-Fi 프로필. 로그온 전에도 붙으려면 '모든 사용자' 프로필이어야 합니다.");
             tip.SetToolTip(tSsid, "이 이름으로 시작하는 Wi-Fi 에서만 저절로 연결합니다. 다른 Wi-Fi 는 '연결' 을 누르면 묻습니다.");
             FormClosing += (s, e) =>
             {
@@ -130,36 +111,8 @@ namespace WebTether
             {
                 if (!Visible) return;
                 LoadFrom(ctl.Settings);
-                var unused = RefreshCopyNoteAsync();
             };
             LoadFrom(ctl.Settings);
-        }
-
-        /// <summary>사본을 견주어(일꾼 스레드) 한 줄을 고친다. 늦게 온 옛 결과·창이 없어진 뒤의 결과는 버린다.</summary>
-        public async Task RefreshCopyNoteAsync()
-        {
-            var copy = ops as IStartupCopy;
-            if (copy == null) return;
-            int gen = ++copyGen;
-            CopyCheck c;
-            try { c = await Task.Run(() => copy.CheckStartupCopy()); }
-            catch (Exception) { return; }
-            if (IsDisposed || gen != copyGen) return;
-            lastCopy = c;
-            ShowCopyNote();
-        }
-
-        /// <summary>시험이 본다 — 보이는 한 줄(없으면 null).</summary>
-        public string CopyNoteText { get { return copyNoteShown ? copyNote.Text : null; } }
-        bool copyNoteShown; // Control.Visible 은 창이 숨어 있으면 늘 거짓이다
-
-        void ShowCopyNote()
-        {
-            var what = StartupCopy.Decide(lastCopy);
-            bool show = kAuto.Checked && what != CopyPrompt.None;
-            copyNoteShown = show;
-            copyNote.Text = StartupCopy.FormNoteFor(lastCopy);
-            copyNote.Visible = show;
         }
 
         ProxyKind KindOf() { return cKind.SelectedIndex == 1 ? ProxyKind.Http : ProxyKind.Socks5; }
@@ -237,11 +190,15 @@ namespace WebTether
             nMax.Value = Clamp(nMax, s.ReconnectMax);
             tWifi.Text = s.WifiProfile;
             tSsid.Text = s.SsidPrefix;
-            kAuto.Checked = s.AutoStart;
             kUpdate.Checked = s.UpdateCheck;
             cUpdate.SelectedIndex = (int)s.UpdateEvery;
             message.Text = "";
             Hint();
+            if (message.Text.Length == 0 && !string.IsNullOrEmpty(ctl.LoadNotice))
+            {
+                message.ForeColor = Color.FromArgb(0xB2, 0x6A, 0x00);
+                message.Text = ctl.LoadNotice;
+            }
         }
 
         public Settings Collect()
@@ -262,7 +219,6 @@ namespace WebTether
                 ReconnectMax = (int)nMax.Value,
                 WifiProfile = tWifi.Text,
                 SsidPrefix = tSsid.Text,
-                AutoStart = kAuto.Checked,
                 UpdateCheck = kUpdate.Checked,
                 UpdateEvery = (UpdateInterval)Math.Max(0, cUpdate.SelectedIndex),
             };
@@ -282,12 +238,6 @@ namespace WebTether
         {
             public bool Saved;
             public string Message;
-            /// <summary>'시작 시 실행' 칸을 옛 값으로 되돌린다.</summary>
-            public bool RevertAuto;
-            /// <summary>옛 판이던 사본을 이 판으로 바꿨다.</summary>
-            public bool CopyRefreshed;
-            /// <summary>사본이 옛 판인데 바꾸지 못한 까닭(설정은 저장됐다).</summary>
-            public string CopyWarning;
         }
 
         /// <summary>
@@ -318,18 +268,10 @@ namespace WebTether
             if (r.Saved) ctl.ApplySettings(s);
             if (IsDisposed) return r.Saved;
             SetBusy(false);
-            if (r.RevertAuto) kAuto.Checked = old.AutoStart;
             if (r.Saved)
             {
                 message.ForeColor = SystemColors.ControlText;
                 message.Text = ctl.ChildRunning ? "저장했습니다. 다음 연결부터 적용됩니다." : "저장했습니다.";
-                if (r.CopyRefreshed) message.Text += " 시작 시 실행 사본도 이 판으로 바꿨습니다.";
-                if (r.CopyWarning != null)
-                {
-                    message.ForeColor = Color.FromArgb(0xB2, 0x6A, 0x00);
-                    message.Text += "\r\n사본은 바꾸지 못했습니다: " + r.CopyWarning;
-                }
-                var unused = RefreshCopyNoteAsync();
             }
             else
             {
@@ -345,7 +287,7 @@ namespace WebTether
             if (on)
             {
                 message.ForeColor = SystemColors.ControlText;
-                message.Text = "저장 중…";
+                message.Text = ctl.SavingText;
             }
             UseWaitCursor = on;
         }
@@ -353,60 +295,15 @@ namespace WebTether
         /// <summary>일꾼 스레드 — 화면을 만지지 않는다. 던지지 않는다(무엇이든 실패로 돌려준다).</summary>
         SaveOutcome SaveWork(Settings s, Settings old)
         {
-            bool startupChanged = s.AutoStart != old.AutoStart;
-            try
-            {
-                if (startupChanged)
-                {
-                    string err;
-                    bool ok = s.AutoStart ? ops.EnableStartup(exePath, out err) : ops.DisableStartup(out err);
-                    if (!ok) return new SaveOutcome { Message = "시작 시 실행을 바꾸지 못했습니다: " + err, RevertAuto = true };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new SaveOutcome { Message = "시작 시 실행을 바꾸지 못했습니다: " + ex.Message, RevertAuto = true };
-            }
             try
             {
                 ctl.SaveSettings(s);
-                var ok = new SaveOutcome { Saved = true };
-                // 켜 둔 채 저장하면 사본이 옛 판인지 보고 바꾼다(그 칸을 껐다 켤 필요 없이). 막 켠 것은 EnableStartup 이 이미 복사했다.
-                if (s.AutoStart && !startupChanged) RefreshCopyIfStale(ok);
-                return ok;
+                return new SaveOutcome { Saved = true };
             }
             catch (Exception ex)
             {
-                var r = new SaveOutcome { Message = "저장하지 못했습니다: " + ex.Message };
-                if (startupChanged)
-                {
-                    // 작업은 바꿨는데 설정은 옛 값 — 그대로 두면 칸은 꺼짐인데 로그온마다 뜨거나(그 반대) 한다. 작업을 되돌린다.
-                    r.RevertAuto = true;
-                    string back;
-                    bool undone;
-                    try { undone = old.AutoStart ? ops.EnableStartup(exePath, out back) : ops.DisableStartup(out back); }
-                    catch (Exception ex2) { undone = false; back = ex2.Message; }
-                    if (!undone) r.Message += "\r\n시작 시 실행도 되돌리지 못했습니다(" + back + ") — 작업 스케줄러의 " + SystemOps.TaskName + " 를 확인하십시오.";
-                }
-                return r;
+                return new SaveOutcome { Message = "저장하지 못했습니다: " + ex.Message };
             }
-        }
-
-        /// <summary>일꾼 스레드 — 사본이 옛 판이면 바꾼다. 던지지 않는다(설정은 이미 저장됐다 — 까닭만 돌려준다).</summary>
-        void RefreshCopyIfStale(SaveOutcome r)
-        {
-            var copy = ops as IStartupCopy;
-            if (copy == null) return;
-            try
-            {
-                var what = StartupCopy.Decide(copy.CheckStartupCopy());
-                if (what == CopyPrompt.None) return;
-                if (what == CopyPrompt.OldRunning) { r.CopyWarning = StartupCopy.OldRunningShort; return; }
-                string err;
-                if (copy.RefreshStartupCopy(out err)) r.CopyRefreshed = true;
-                else r.CopyWarning = err;
-            }
-            catch (Exception ex) { r.CopyWarning = ex.Message; }
         }
     }
 }

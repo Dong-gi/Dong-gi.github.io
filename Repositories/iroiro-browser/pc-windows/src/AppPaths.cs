@@ -16,7 +16,6 @@ namespace WebTether
         public string UpdateFile { get { return Path.Combine(Root, "update"); } }
         public string StateFile { get { return Path.Combine(Root, "connection-state"); } }
         /// <summary>하나만 실행의 둘째 겹 — 도는 동안 공유 없이 쥔다(관리자 전용 폴더라 보통 권한의 프로그램이 먼저 잡을 수 없다).</summary>
-        public string InstanceFile { get { return Path.Combine(Root, "instance.lock"); } }
         public string LogDir { get { return Path.Combine(Root, "logs"); } }
         public string LogFile { get { return Path.Combine(LogDir, "webtether.log"); } }
         public string BinRoot { get { return Path.Combine(Root, "bin"); } }

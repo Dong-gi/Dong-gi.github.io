@@ -60,6 +60,20 @@ namespace WebTether
             if (h != null) h(line);
         }
 
+        /// <summary>이미 꼴을 갖춘 줄(서비스의 로그를 트레이가 받아 보일 때) — 파일에 쓰지 않는다.</summary>
+        public void Append(string line)
+        {
+            line = Clean(line);
+            Action<string> h;
+            lock (gate)
+            {
+                ring.Enqueue(line);
+                while (ring.Count > Capacity) ring.Dequeue();
+                h = Line;
+            }
+            if (h != null) h(line);
+        }
+
         public string[] Snapshot()
         {
             lock (gate) return ring.ToArray();

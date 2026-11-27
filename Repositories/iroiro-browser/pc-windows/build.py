@@ -9,7 +9,7 @@
 2. zip 에서 본체(tun2proxy-bin.exe)와 wintun.dll 만 꺼내 각각의 SHA-256 을 견준다.
    wintun.dll 의 Authenticode 서명이 유효하고 서명자가 WireGuard LLC 인지 본다.
 3. 둘을 gzip 으로 줄여 exe 의 자원으로 싣고, 해시를 박은 Embedded.cs 를 지어 csc(C# 5, .NET Framework 4.8)로 짓는다.
-   out/WebTether.exe       실제 판 — 매니페스트 requireAdministrator
+   out/WebTether.exe       실제 판 — 매니페스트 asInvoker(트레이는 보통 권한, 서비스는 SCM 이 LocalSystem 으로, 설치·설정은 runas)
    out/WebTether-test.exe  시험 판 — asInvoker, 늘 dry-run(tun2proxy 를 띄우지 않는다)
    out/WebTether-tests.exe 시험(콘솔) · out/ctrlc-child.exe 시험이 띄우는 Ctrl+C 받이
 
@@ -61,7 +61,7 @@ WINDIR = Path(os.environ.get("SystemRoot", r"C:\Windows"))
 CSC = WINDIR / "Microsoft.NET" / "Framework64" / "v4.0.30319" / "csc.exe"
 POWERSHELL = WINDIR / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"
 REFS = ["System.dll", "System.Core.dll", "System.Drawing.dll", "System.Windows.Forms.dll", "System.Xml.dll", "System.Management.dll",
-        "System.Web.Extensions.dll"]
+        "System.Web.Extensions.dll", "System.ServiceProcess.dll"]
 
 
 def sha256(data: bytes) -> str:
@@ -406,7 +406,7 @@ def main() -> None:
         "    }\n}\n", encoding="utf-8", newline="\n")
 
     template = (HERE / "app.manifest").read_text(encoding="utf-8")
-    (gen / "app.manifest").write_text(template.replace("@LEVEL@", "requireAdministrator"), encoding="utf-8")
+    (gen / "app.manifest").write_text(template.replace("@LEVEL@", "asInvoker"), encoding="utf-8")
     (gen / "test.manifest").write_text(template.replace("@LEVEL@", "asInvoker"), encoding="utf-8")
     make_ico(gen / "app.ico")
 

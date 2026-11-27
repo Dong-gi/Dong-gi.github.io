@@ -295,6 +295,32 @@ namespace WebTether
             }
         }
 
+        /// <summary>
+        /// 정책에 맞는(주인·권한, 재분석 지점 아님) 폴더만 지운다. 맞지 않으면 지우지 않고 `이름.untrusted-<때>` 로 비키기만 한다 — 남이 미리
+        /// 만들었거나 권한을 넓혀 둔 폴더면 안에 접합점이 있을 수 있어 관리자의 지우기가 폴더 밖으로 갈 수 있다(제거기의 '상태 폴더도 지우기').
+        /// 지웠으면 null·aside null, 비켰으면 null·aside, 둘 다 못 하면 까닭.
+        /// </summary>
+        public static string DeleteIfTrusted(string path, DirPolicy policy, out string aside)
+        {
+            aside = null;
+            path = System.IO.Path.GetFullPath(path).TrimEnd('\\');
+            string bad;
+            using (var h = OpenNoFollow(path, FILE_LIST_DIRECTORY | READ_CONTROL | FILE_READ_ATTRIBUTES, SHARE_READ | SHARE_WRITE, true))
+            {
+                bool reparse, ownerOk;
+                bad = Check(h, policy, out reparse, out ownerOk);
+            }
+            if (bad == null)
+            {
+                DeleteTree(path);
+                return null;
+            }
+            var to = path + ".untrusted-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + "-" + Guid.NewGuid().ToString("N").Substring(0, 6);
+            if (!MoveFileExW(path, to, 0)) return bad + " — 지우지 않았고 옆으로 비키지도 못했습니다(" + Marshal.GetLastWin32Error() + ")";
+            aside = to;
+            return null;
+        }
+
         /// <summary>폴더를 지운다 — 접합점·심볼릭 링크는 링크만 지우고 따라 들어가지 않는다.</summary>
         public static void DeleteTree(string dir)
         {

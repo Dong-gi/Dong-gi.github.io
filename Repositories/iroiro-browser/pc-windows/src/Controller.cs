@@ -67,6 +67,16 @@ namespace WebTether
             return "Wi-Fi 이름이 " + prefix + " 로 시작하지 않음(" + Ssid(hs.Ssid) + ")";
         }
 
+        /// <summary>접두어 밖(또는 이름 모름) Wi-Fi 에 손으로 누른 '연결' 의 물음 글.</summary>
+        public static string AskConnectText(HotspotInfo hs, string prefix)
+        {
+            return hs.Ssid != null
+                ? "Wi-Fi " + Ssid(hs.Ssid) + " 에 연결할까요?" + Environment.NewLine +
+                  "이름이 " + prefix + " 로 시작하지 않습니다 — 이 PC 의 모든 트래픽이 그 망의 기기로 갑니다."
+                : "이름을 확인하지 못한 Wi-Fi(" + hs.AdapterName + ") 에 연결할까요?" + Environment.NewLine +
+                  "까닭: " + hs.SsidError + " — 이 PC 의 모든 트래픽이 그 망의 기기로 갑니다.";
+        }
+
         /// <summary>상태 창의 '핫스팟' 줄.</summary>
         public static string HotspotLine(HotspotInfo hs, string prefix)
         {
@@ -108,7 +118,43 @@ namespace WebTether
         }
     }
 
-    public sealed class Controller
+    /// <summary>
+    /// 트레이·상태 창이 보는 것 — 같은 프로세스의 Controller(시험 판) 또는 서비스에 파이프로 묻는 ServiceClient(실제 판).
+    /// </summary>
+    public interface ITetherView
+    {
+        TetherState State { get; }
+        string Detail { get; }
+        ToggleAction Toggle { get; }
+        bool ChildRunning { get; }
+        int ChildPid { get; }
+        bool DryRun { get; }
+        /// <summary>알고 있는 설정(서비스의 것이면 상태에 실려 온 몇 칸만 — 비밀은 없다).</summary>
+        Settings Settings { get; }
+        event Action Changed;
+        /// <summary>(제목, 글, 경고인가). 누르면 열 주소가 있으면 NoticeUrl.</summary>
+        event Action<string, string, bool> Notice;
+        string NoticeUrl { get; }
+        void Connect();
+        void Disconnect();
+        void Tick();
+        Task ShutdownAsync();
+    }
+
+    /// <summary>설정 창이 쓰는 것 — 같은 프로세스의 Controller(시험 판) 또는 서비스에 제안하는 ServiceSettingsHost(실제 판).</summary>
+    public interface ISettingsHost
+    {
+        Settings Settings { get; }
+        void SaveSettings(Settings s);
+        void ApplySettings(Settings s);
+        bool ChildRunning { get; }
+        /// <summary>저장하는 동안 설정 창에 보일 글.</summary>
+        string SavingText { get; }
+        /// <summary>설정 파일을 읽을 때 기본값으로 돌린 키가 있으면 설정 창이 여는 때 보일 한 줄(없으면 null).</summary>
+        string LoadNotice { get; }
+    }
+
+    public sealed class Controller : ITetherView, ISettingsHost
     {
         public const int StopGraceMs = 5000;
 
@@ -131,11 +177,17 @@ namespace WebTether
         public event Action<string, string, bool> Notice;
         public string NoticeUrl { get; private set; }
 
-        public UpdateState Updates { get; private set; }
-        bool updateRunning;
+        readonly UpdateWatcher upd;
+        public UpdateState Updates { get { return upd.Updates; } }
+        public UpdateWatcher Watcher { get { return upd; } }
         /// <summary>시험이 바꾼다 — (주소, 전체 마감 UTC)를 받아 글을 돌려준다(막는 호출).</summary>
-        public Func<string, DateTime, string> UpdateFetcher = UpdateFetch.Get;
-        public string[] BuildSkippedVersions = Embedded.SkippedVersions.Length == 0 ? new string[0] : Embedded.SkippedVersions.Split(',');
+        public Func<string, DateTime, string> UpdateFetcher { get { return upd.Fetcher; } set { upd.Fetcher = value; } }
+        public string[] BuildSkippedVersions { get { return upd.BuildSkippedVersions; } set { upd.BuildSkippedVersions = value; } }
+        /// <summary>
+        /// 연결된 동안 업데이트를 물을까 — 서비스(LocalSystem)는 끈다: 남의 서버(GitHub)의 글을 SYSTEM 프로세스에서 읽지 않는다.
+        /// 실제 판의 트레이가 따로 묻는다(UpdateWatcher).
+        /// </summary>
+        public bool UpdatesEnabled = true;
 
         IChild child;
         HeldBinaries held;
@@ -210,12 +262,16 @@ namespace WebTether
             if (dryRun) TunPresent = name => true;
             ui = SynchronizationContext.Current ?? new SynchronizationContext();
             Settings = settings;
-            Updates = UpdateState.Load(paths.UpdateFile);
+            upd = new UpdateWatcher(paths.UpdateFile, paths.Root, log);
+            upd.Tell = (title, text, warn, url) => Tell(title, text, warn, url);
+            upd.Changed += RaiseChanged;
             State = TetherState.Off;
             Detail = "";
         }
 
         public bool ChildRunning { get { return child != null && !child.HasExited; } }
+        public string SavingText { get { return "저장 중…"; } }
+        public string LoadNotice { get; set; }
         public int ChildPid { get { return ChildRunning ? child.Pid : 0; } }
         public int Retries { get { return retries; } }
 
@@ -849,7 +905,7 @@ namespace WebTether
                     if (!hs.Ok || Stale(v, c)) return;
                     var lost = LostWhy(hs.Value, prefix);
                     if (lost != null) HotspotLost(lost);
-                    else if (s.UpdateCheck && !updateRunning && Updates.Due(now, s.UpdateEvery)) CheckUpdates();
+                    else if (UpdatesEnabled && upd.Due(now, s)) CheckUpdates();
                 }
                 return;
             }
@@ -893,68 +949,19 @@ namespace WebTether
             Fail(why, false);
         }
 
-        // ---- 업데이트 알림(알리기만) ----
+        // ---- 업데이트 알림(알리기만) — UpdateWatcher 에 맡긴다 ----
 
         /// <summary>새 판이 있으면 그 판, 없으면 null.</summary>
-        public string NewVersion { get { return Updates.NewVersion(Embedded.Tun2proxyVersion, BuildSkippedVersions); } }
+        public string NewVersion { get { return upd.NewVersion; } }
 
         public async void CheckUpdates()
         {
             await CheckUpdatesAsync();
         }
 
-        public async Task CheckUpdatesAsync()
-        {
-            if (updateRunning) return;
-            updateRunning = true;
-            try
-            {
-                var st = Updates;
-                var fetch = UpdateFetcher;
-                bool ok = await Task.Run(() => UpdateFetch.Check(st, Embedded.Tun2proxyVersion, fetch));
-                st.Save(paths.UpdateFile, paths.Root);
-                if (!ok)
-                {
-                    log.Write("업데이트", "확인하지 못함(다음 간격에 다시): " + st.LastError);
-                    return;
-                }
-                log.Write("업데이트", "tun2proxy 최신 " + st.Latest + " · 이 판 " + Embedded.Tun2proxyVersion + " · 보안 권고 " + st.Advisories.Count + "건");
-                var key = st.AdvisoryKey();
-                if (st.Advisories.Count > 0 && key != st.NotifiedAdvisories)
-                {
-                    st.NotifiedAdvisories = key;
-                    var a = st.Advisories[0];
-                    Tell("보안 권고 — tun2proxy " + Embedded.Tun2proxyVersion,
-                         a.Id + (a.Severity.Length > 0 ? " (" + a.Severity + ")" : "") + " " + a.Summary +
-                         (st.Advisories.Count > 1 ? " 외 " + (st.Advisories.Count - 1) + "건" : ""), true, a.Url.Length > 0 ? a.Url : null);
-                }
-                else if (st.Advisories.Count == 0) st.NotifiedAdvisories = "";
-                var nv = NewVersion;
-                if (nv != null && nv != st.NotifiedVersion)
-                {
-                    st.NotifiedVersion = nv;
-                    Tell("새 판 tun2proxy " + nv, "눌러 변경 내역을 봅니다. 바꾸려면 build.py --update 로 다시 짓습니다.", false,
-                         st.LatestUrl.Length > 0 ? st.LatestUrl : null);
-                }
-                st.Save(paths.UpdateFile, paths.Root);
-                var h = Changed;
-                if (h != null) h();
-            }
-            finally
-            {
-                updateRunning = false;
-            }
-        }
+        public Task CheckUpdatesAsync() { return upd.CheckAsync(); }
 
-        public void SkipVersion(string v)
-        {
-            if (Versions.Parse(v) == null || Updates.Skipped.Contains(v)) return;
-            Updates.Skipped.Add(v);
-            Updates.Save(paths.UpdateFile, paths.Root);
-            log.Write("업데이트", v + " 는 알리지 않습니다");
-            var h = Changed;
-            if (h != null) h();
-        }
+        public void SkipVersion(string v) { upd.Skip(v); }
 
         async void HotspotLost(string why)
         {

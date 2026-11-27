@@ -121,8 +121,8 @@ namespace WebTether
     {
         static bool Bidi(char c)
         {
-            return c == '‎' || c == '‏' || (c >= '‪' && c <= '‮') || (c >= '⁦' && c <= '⁩') ||
-                   c == '؜' || c == '﻿' || c == '​';
+            return c == '\u200e' || c == '\u200f' || (c >= '\u202a' && c <= '\u202e') || (c >= '\u2066' && c <= '\u2069') ||
+                   c == '\u061c' || c == '\ufeff' || c == '\u200b';
         }
 
         /// <summary>제어·방향 제어 문자를 빼고 빈칸을 하나로, max 글자로 자른다.</summary>

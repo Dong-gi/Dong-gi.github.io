@@ -1,5 +1,9 @@
 // 트레이 상주 — 아이콘·메뉴·풍선 알림, 창들을 하나씩만.
+// 실제 판: 보통 권한으로 돌며 서비스(LocalSystem)에 파이프로 묻는다(ServiceClient). 설정 창은 트레이의 것(저장은 서비스의 확인 창으로),
+// 설치·제거는 관리자 판을 runas 로 띄운다.
+// 시험 판: 같은 프로세스의 Controller(dry-run)를 본다.
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -9,12 +13,26 @@ using System.Windows.Forms;
 
 namespace WebTether
 {
+    /// <summary>트레이가 판마다 다르게 하는 것.</summary>
+    public sealed class TrayOptions
+    {
+        /// <summary>'설정' — 시험 판은 같은 프로세스의 창, 실제 판은 서비스에 제안하는 창(ServiceSettingsHost).</summary>
+        public Action OpenSettings;
+        /// <summary>'서비스 설치·고치기'·'서비스 제거'(실제 판만 — null 이면 메뉴에 없다).</summary>
+        public Action Install, Uninstall;
+        /// <summary>업데이트 확인을 트레이가 할까(실제 판 — 서비스는 하지 않는다).</summary>
+        public bool ChecksUpdates;
+        /// <summary>로그 창이 보이는 동안 서비스 로그의 새 줄을 가져온다(실제 판 — 일꾼 스레드에서 부른다).</summary>
+        public Func<List<string>> FetchServiceLog;
+        public string LogPath = "";
+    }
+
     public sealed class TrayApp : ApplicationContext
     {
-        readonly Controller ctl;
+        readonly ITetherView ctl;
+        readonly UpdateWatcher upd;
         readonly Log log;
-        readonly AppPaths paths;
-        readonly ISystemOps ops;
+        readonly TrayOptions opt;
         readonly NotifyIcon tray = new NotifyIcon();
         readonly ToolStripMenuItem miToggle;
         readonly ToolStripMenuItem miAdvisory, miNewVersion, miSkip;
@@ -23,27 +41,24 @@ namespace WebTether
         readonly System.Windows.Forms.Timer tick = new System.Windows.Forms.Timer { Interval = 1000 };
         readonly Control invoker = new Control();
         StatusForm status;
-        SettingsForm settings;
         LogForm logForm;
         AboutForm about;
         TetherState shownState = (TetherState)(-1);
         string shownTip;
-        bool exiting;
-        /// <summary>'시작 시 실행' 사본이 옛 판인지 뜰 때 한 번 본다(StartupCopy).</summary>
-        readonly StartupCopyFlow copyFlow;
+        bool exiting, fetchingLog;
 
-        public TrayApp(Controller ctl, Log log, AppPaths paths, ISystemOps ops, EventWaitHandle showSignal)
+        public TrayApp(ITetherView ctl, UpdateWatcher upd, Log log, TrayOptions opt, EventWaitHandle showSignal)
         {
             this.ctl = ctl;
+            this.upd = upd;
             this.log = log;
-            this.paths = paths;
-            this.ops = ops;
+            this.opt = opt ?? new TrayOptions();
             invoker.CreateControl();
 
             var menu = new ContextMenuStrip { Font = Ui.Font };
             miAdvisory = new ToolStripMenuItem("", null, (s, e) => OpenAdvisory()) { Font = Ui.Bold, ForeColor = Color.Firebrick, Visible = false };
-            miNewVersion = new ToolStripMenuItem("", null, (s, e) => Browser.Open(ctl.Updates.LatestUrl, log)) { Visible = false };
-            miSkip = new ToolStripMenuItem("이 판은 알리지 않기", null, (s, e) => { var v = ctl.NewVersion; if (v != null) ctl.SkipVersion(v); }) { Visible = false };
+            miNewVersion = new ToolStripMenuItem("", null, (s, e) => Browser.Open(upd.Updates.LatestUrl, log)) { Visible = false };
+            miSkip = new ToolStripMenuItem("이 판은 알리지 않기", null, (s, e) => { var v = upd.NewVersion; if (v != null) upd.Skip(v); }) { Visible = false };
             sepUpdate = new ToolStripSeparator { Visible = false };
             menu.Items.Add(miAdvisory);
             menu.Items.Add(miNewVersion);
@@ -54,9 +69,15 @@ namespace WebTether
             menu.Items.Add(miToggle);
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add("상태", null, (s, e) => ShowStatus());
-            menu.Items.Add("설정", null, (s, e) => ShowForm(ref settings, () => new SettingsForm(ctl, ops, Application.ExecutablePath)));
-            menu.Items.Add("로그", null, (s, e) => ShowForm(ref logForm, () => new LogForm(log, paths.LogFile)));
+            if (this.opt.OpenSettings != null) menu.Items.Add("설정", null, (s, e) => this.opt.OpenSettings());
+            menu.Items.Add("로그", null, (s, e) => ShowForm(ref logForm, () => new LogForm(log, this.opt.LogPath)));
             menu.Items.Add("정보", null, (s, e) => ShowForm(ref about, () => new AboutForm(ctl.DryRun)));
+            if (this.opt.Install != null || this.opt.Uninstall != null)
+            {
+                menu.Items.Add(new ToolStripSeparator());
+                if (this.opt.Install != null) menu.Items.Add("서비스 설치·고치기", null, (s, e) => this.opt.Install());
+                if (this.opt.Uninstall != null) menu.Items.Add("서비스 제거", null, (s, e) => this.opt.Uninstall());
+            }
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add("끝내기", null, (s, e) => Exit());
             menu.Opening += (s, e) => UpdateToggle(); // 연 순간의 상태로(걷기가 끝난 것을 놓쳤어도)
@@ -65,16 +86,12 @@ namespace WebTether
             tray.MouseClick += (s, e) => { if (e.Button == MouseButtons.Left) ShowStatus(); };
 
             ctl.Changed += UpdateTray;
-            ctl.AskConnect = AskConnect;
-            ctl.ReshowAsk = () => TopAsk.BringToFront();
-            ctl.Notice += (title, text, warn) =>
-            {
-                balloonUrl = ctl.NoticeUrl;
-                tray.ShowBalloonTip(warn ? 10000 : 5000, title, text, warn ? ToolTipIcon.Warning : ToolTipIcon.Info);
-            };
+            upd.Changed += UpdateTray;
+            ctl.Notice += (title, text, warn) => Balloon(title, text, warn, ctl.NoticeUrl);
+            if (this.opt.ChecksUpdates) upd.Tell = (title, text, warn, url) => Balloon(title, text, warn, url);
             tray.BalloonTipClicked += (s, e) => { if (balloonUrl != null) Browser.Open(balloonUrl, log); };
             tray.BalloonTipClosed += (s, e) => balloonUrl = null;
-            tick.Tick += (s, e) => ctl.Tick();
+            tick.Tick += (s, e) => OnTick();
             tick.Start();
             UpdateTray();
             tray.Visible = true;
@@ -92,50 +109,43 @@ namespace WebTether
                 }) { IsBackground = true, Name = "show-signal" };
                 t.Start();
             }
-
-            var copy = ops as IStartupCopy;
-            if (copy != null)
-            {
-                copyFlow = new StartupCopyFlow(copy, m => log.Write("시작 시 실행", m))
-                {
-                    // 묻는 사이 '끝내기' 를 눌렀으면 '예' 여도 바꾸지 않는다(끝내기가 기다리지 않은 복사가 임시 파일을 남기지 않게).
-                    Ask = text => TopAsk.Ask(text, StartupCopy.Title, true) && !exiting,
-                    Tell = text => TopAsk.Tell(text, StartupCopy.Title, true),
-                    Notify = (text, warn) =>
-                    {
-                        balloonUrl = null;
-                        tray.ShowBalloonTip(warn ? 10000 : 5000, StartupCopy.Title, text, warn ? ToolTipIcon.Warning : ToolTipIcon.Info);
-                    },
-                    Busy = () => TopAsk.IsOpen,
-                    Stopping = () => exiting,
-                };
-                // 메시지 고리가 돈 뒤에(트레이 아이콘이 선 뒤) — 견주기·바꾸기는 일꾼 스레드, 묻기만 이 스레드.
-                invoker.BeginInvoke(new Action(() =>
-                {
-                    if (exiting) return;
-                    copyFlow.RunAsync().ContinueWith(x => log.Write("시작 시 실행", "사본 견주기 오류: " + x.Exception.GetBaseException().Message),
-                                                     TaskContinuationOptions.OnlyOnFaulted);
-                }));
-            }
         }
 
-        /// <summary>
-        /// 손으로 누른 '연결' 이 접두어 밖(또는 이름을 모르는) Wi-Fi 를 만났을 때 — 사용자의 뜻이니 한 번 묻는다. 기본 단추는 '아니요'.
-        /// '예' 면 그 이름은 이 실행 동안 다시 연결도 저절로 한다(Controller.approvedSsid). 창은 맨 앞에(TopAsk).
-        /// </summary>
-        static bool AskConnect(HotspotInfo hs, string prefix)
+        public void Balloon(string title, string text, bool warn, string url)
         {
-            var text = hs.Ssid != null
-                ? "Wi-Fi " + StatusText.Ssid(hs.Ssid) + " 에 연결할까요?" + Environment.NewLine +
-                  "이름이 " + prefix + " 로 시작하지 않습니다 — 이 PC 의 모든 트래픽이 그 망의 기기로 갑니다."
-                : "이름을 확인하지 못한 Wi-Fi(" + hs.AdapterName + ") 에 연결할까요?" + Environment.NewLine +
-                  "까닭: " + hs.SsidError + " — 이 PC 의 모든 트래픽이 그 망의 기기로 갑니다.";
-            return TopAsk.Ask(text);
+            balloonUrl = url;
+            tray.ShowBalloonTip(warn ? 10000 : 5000, title, text, warn ? ToolTipIcon.Warning : ToolTipIcon.Info);
+        }
+
+        void OnTick()
+        {
+            ctl.Tick();
+            if (opt.ChecksUpdates && ctl.State == TetherState.Connected && upd.Due(DateTime.Now, ctl.Settings))
+            {
+                var unused = upd.CheckAsync();
+            }
+            if (opt.FetchServiceLog != null && logForm != null && logForm.Visible && !fetchingLog)
+            {
+                fetchingLog = true;
+                var fetch = opt.FetchServiceLog;
+                Task.Run(() => fetch()).ContinueWith(t =>
+                {
+                    try
+                    {
+                        invoker.BeginInvoke(new Action(() =>
+                        {
+                            fetchingLog = false;
+                            if (!t.IsFaulted && t.Result != null) foreach (var l in t.Result) log.Append(l);
+                        }));
+                    }
+                    catch (InvalidOperationException) { fetchingLog = false; }
+                });
+            }
         }
 
         void OpenAdvisory()
         {
-            var a = ctl.Updates.Advisories;
+            var a = upd.Updates.Advisories;
             Browser.Open(a.Count > 0 && a[0].Url.Length > 0 ? a[0].Url : "https://github.com/tun2proxy/tun2proxy/security/advisories", log);
         }
 
@@ -161,10 +171,10 @@ namespace WebTether
             }
             var tip = StatusText.Tooltip(st, ctl.Detail);
             if (tip != shownTip) { tray.Text = tip; shownTip = tip; }
-            var up = ctl.Updates;
+            var up = upd.Updates;
             miAdvisory.Visible = up.Advisories.Count > 0;
             miAdvisory.Text = "⚠ 보안 권고 " + up.Advisories.Count + "건 — tun2proxy " + Embedded.Tun2proxyVersion + " · 자세히";
-            var nv = ctl.NewVersion;
+            var nv = upd.NewVersion;
             miNewVersion.Visible = nv != null;
             miNewVersion.Text = "새 판 " + nv + " — 변경 내역 보기";
             miSkip.Visible = nv != null;
@@ -175,7 +185,7 @@ namespace WebTether
 
         public void ShowStatus()
         {
-            ShowForm(ref status, () => new StatusForm(ctl));
+            ShowForm(ref status, () => new StatusForm(ctl, upd));
         }
 
         static void ShowForm<T>(ref T form, Func<T> make) where T : Form
@@ -194,24 +204,15 @@ namespace WebTether
             t.Start();
         }
 
+        /// <summary>끝내기 — 실제 판은 트레이만 끝난다(서비스와 연결은 그대로). 시험 판은 같은 프로세스의 Controller 를 끊고 걷는다.</summary>
         async void Exit()
         {
             if (exiting) return;
             exiting = true;
             tick.Stop();
             tray.Text = "Web 테더 — 끝내는 중";
-            // 설정 저장(파일·작업 스케줄러)이 도는 중이면 끝나기를 기다린다 — 쓰다 말고 끝나지 않게.
-            if (settings != null)
-            {
-                try { await settings.PendingSave; } catch (Exception ex) { log.Write("끝", "설정 저장을 기다리지 못함: " + ex.Message); }
-            }
-            // 사본을 바꾸는 중이면 끝나기를 기다린다 — Program Files 에 임시 파일을 남기지 않게.
-            if (copyFlow != null)
-            {
-                try { await copyFlow.Pending; } catch (Exception ex) { log.Write("끝", "사본 바꾸기를 기다리지 못함: " + ex.Message); }
-            }
             await ctl.ShutdownAsync();
-            log.Write("끝", "도우미를 끝냅니다");
+            log.Write("끝", "트레이를 끝냅니다");
             tray.Visible = false;
             tray.Dispose();
             ExitThread();
@@ -284,7 +285,7 @@ namespace WebTether
             return Ask(text, Title, foreground);
         }
 
-        /// <summary>제목을 골라 묻는다('시작 시 실행' 사본 물음 — StartupCopy.Title). 다른 창이 떠 있으면 묻지 않고 거짓.</summary>
+        /// <summary>제목을 골라 묻는다(트레이의 서비스 설치 물음). 다른 창이 떠 있으면 묻지 않고 거짓.</summary>
         public static bool Ask(string text, string title, bool foreground)
         {
             return Show(text, title, foreground ? Flags : Flags & ~MB_SETFOREGROUND) == IDYES;

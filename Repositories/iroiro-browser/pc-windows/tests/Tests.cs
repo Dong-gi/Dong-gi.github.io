@@ -1,5 +1,5 @@
 // 시험 — NuGet 없이 콘솔 exe 하나. 바깥 망·경로·Wi-Fi·작업 스케줄러를 바꾸지 않는다(모두 루프백·스크래치·가짜).
-//   WebTether-tests.exe [--scratch <폴더>] [--only <이름 일부>] [--shots <폴더>]
+//   WebTether-tests.exe [--scratch <폴더>] [--only <이름 일부>] [--shots <폴더>] [--with-dialogs(화면에 메시지 상자를 띄우는 시험도)]
 // 결과는 콘솔과 <스크래치>\results.txt 에. Ctrl+C 시험이 이 프로세스의 콘솔을 떼므로 출력은 파일로 돌려 받는 편이 낫다.
 using System;
 using System.Collections.Generic;
@@ -76,7 +76,13 @@ namespace WebTether.Tests
             }
 
             var tests = new List<KeyValuePair<string, Action>>();
-            Action<string, Action> T = (n, a) => tests.Add(new KeyValuePair<string, Action>(n, a));
+            // 화면에 보이는 창(메시지 상자 — 묻는 창의 z 차례 시험)은 --with-dialogs 일 때만(사용자 화면에 창을 띄우지 않는다 — 11-27).
+            bool withDialogs = args.Contains("--with-dialogs");
+            Action<string, Action> T = (n, a) =>
+            {
+                if (!withDialogs && n.StartsWith("묻는 창")) { Say("SKIP  " + n + "  (--with-dialogs 일 때만 — 화면에 창을 띄운다)"); return; }
+                tests.Add(new KeyValuePair<string, Action>(n, a));
+            };
             SettingsTests.Add(T);
             CommandLineTests.Add(T);
             BinariesTests.Add(T);
@@ -86,8 +92,7 @@ namespace WebTether.Tests
             MiscTests.Add(T);
             ControllerTests.Add(T);
             SsidTests.Add(T);
-            StartupTaskTests.Add(T);
-            ControllerTests.AddStartupCopy(T);
+            ServiceTests.Add(T);
             UpdateTests.Add(T);
             UpdateTests.AddTimeouts(T);
             SecurityTests.Add(T);
@@ -165,15 +170,15 @@ namespace WebTether.Tests
                 A.Eq("1.0.0.1", s.DnsAddr, "DNS");
                 A.Eq("USBTether", s.TunName, "TUN");
                 A.True(s.Setup, "--setup 켬");
-                A.True(s.Reconnect && !s.AutoStart && s.WifiProfile == "", "켬·끔 기본값");
+                A.True(s.Reconnect && s.WifiProfile == "", "켬·끔 기본값");
                 A.Eq(0, s.Validate().Count, "기본값은 검사를 지난다");
             });
 
             T("설정: 쓰고 읽으면 같다(한글·빈칸 든 Wi-Fi 이름)", () =>
             {
-                var s = new Settings { ProxyHost = "phone.local", ProxyPort = 8282, Kind = ProxyKind.Http, DnsMode = "over-tcp",
+                var s = new Settings { ProxyHost = "192.168.49.7", ProxyPort = 8282, Kind = ProxyKind.Http, DnsMode = "over-tcp",
                     Bypass = "10.0.0.0/8, 1.2.3.4", WifiProfile = "DIRECT-UT-내 폰 & 집",
-                    ReconnectInterval = 30, ReconnectMax = 7, Setup = false, Verbosity = "debug", AutoStart = true };
+                    ReconnectInterval = 30, ReconnectMax = 7, Setup = false, Verbosity = "debug" };
                 var dir = TestMain.Scratch("settings");
                 var path = Path.Combine(dir, "settings");
                 s.Save(path);
@@ -796,20 +801,6 @@ namespace WebTether.Tests
                 int best = NetState.BestInterfaceToPhone();
                 TestMain.Say("      이 PC 에서 192.168.49.1 로 가는 어댑터 번호(읽기만): " + best);
             });
-            T("작업 스케줄러 XML: 경로를 이스케이프하고 가장 높은 권한", () =>
-            {
-                var x = SystemOps.TaskXml(@"C:\Program Files\A&B (c)\WebTether.exe", "S-1-5-21-1");
-                A.True(x.Contains(@"C:\Program Files\A&amp;B (c)"), "이스케이프");
-                A.True(x.Contains("<RunLevel>HighestAvailable</RunLevel>"), "권한");
-                A.True(x.Contains("<LogonTrigger>"), "로그온");
-                var doc = new System.Xml.XmlDocument();
-                doc.LoadXml(x.Substring(x.IndexOf("<Task", StringComparison.Ordinal)));
-                A.True(SystemOps.InstalledExe.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)), "Program Files 아래");
-                // XML 도 관리자만 쓰는 설치 폴더 안에 둔다(사용자의 %TEMP% 가 아니다).
-                var xp = SystemOps.TaskXmlPath(SystemOps.InstalledExe);
-                A.Eq(Path.GetDirectoryName(SystemOps.InstalledExe), Path.GetDirectoryName(xp), "XML 자리: " + xp);
-                A.True(!xp.StartsWith(Path.GetTempPath(), StringComparison.OrdinalIgnoreCase), "%TEMP% 가 아님");
-            });
             T("아이콘: 상태마다 그린다", () =>
             {
                 foreach (TetherState s in Enum.GetValues(typeof(TetherState)))
@@ -983,9 +974,6 @@ namespace WebTether.Tests
                 output = "";
                 return true;
             }
-            public bool EnableStartup(string exePath, out string error) { error = null; return true; }
-            public bool DisableStartup(out string error) { error = null; return true; }
-            public bool StartupEnabled() { return false; }
         }
 
         static IEnumerable<Control> AllControls(Control c)
@@ -1556,7 +1544,7 @@ namespace WebTether.Tests
                 A.Eq(1, late.Starts, "끝까지 하나");
             });
 
-            T("설정 창: '시작 시 실행' 을 바꾼 뒤 설정을 저장하지 못하면 작업도 되돌린다(칸과 작업이 어긋나지 않게)", () =>
+            T("설정 창: 설정 파일을 쓰지 못하면 '저장하지 못했습니다' 이고 Controller 의 설정은 옛 값", () =>
             {
                 var r = Make("settings-rollback", null);
                 var elsewhere = TestMain.Scratch("settings-rollback-target");
@@ -1564,14 +1552,11 @@ namespace WebTether.Tests
                 var before = SynchronizationContext.Current;
                 try
                 {
-                    using (var f = new SettingsForm(r.C, r.Ops, "x.exe"))
+                    using (var f = new SettingsForm(r.C))
                     {
-                        f.LoadFrom(new Settings { AutoStart = true });
+                        f.LoadFrom(new Settings { ReconnectMax = 9 });
                         A.True(!Pump(f.SaveAsync()), "저장 실패");
-                        A.True(r.Ops.Calls.Any(c => c.StartsWith("schtasks /Create")), "켜 보았다: " + string.Join("|", r.Ops.Calls.ToArray()));
-                        A.True(!r.Ops.StartupState, "작업을 되돌림: " + string.Join("|", r.Ops.Calls.ToArray()));
-                        A.True(!r.C.Settings.AutoStart, "설정은 옛 값");
-                        A.True(!f.Collect().AutoStart, "칸도 옛 값");
+                        A.Eq(new Settings().ReconnectMax, r.C.Settings.ReconnectMax, "설정은 옛 값");
                     }
                 }
                 finally
@@ -1630,34 +1615,16 @@ namespace WebTether.Tests
             ctl.ForceStateForTest(TetherState.Error, "다른 tun2proxy 가 실행 중입니다. 먼저 끄십시오.");
             Save(status(null), dir, "status-error.png");
 
-            var sf = new SettingsForm(ctl, ops, "x.exe");
+            var sf = new SettingsForm(ctl);
             Save(sf, dir, "settings.png");
-            var sf2 = new SettingsForm(ctl, ops, "x.exe");
+            var sf2 = new SettingsForm(ctl);
             Save(sf2, dir, "settings-error.png", () =>
             {
                 sf2.LoadFrom(new Settings { Kind = ProxyKind.Http, ProxyPort = 8282, ProxyHost = "192.168.49.256" });
                 var unused = sf2.SaveAsync(); // 검사에서 걸려 곧바로 끝난다
             });
-            var sf3 = new SettingsForm(ctl, ops, "x.exe");
+            var sf3 = new SettingsForm(ctl);
             Save(sf3, dir, "settings-http-hint.png", () => sf3.LoadFrom(new Settings { Kind = ProxyKind.Http, ProxyPort = 8282 }));
-            var stale = new DryRunOps(null) { StartupState = true, CopyState = new CopyCheck { Status = CopyStatus.Stale } };
-            var ctl4 = new Controller(paths, log, stale, new DryRunChildFactory(), null, true, false, new Settings { AutoStart = true });
-            var sf4 = new SettingsForm(ctl4, stale, "x.exe");
-            Save(sf4, dir, "settings-copy-stale.png", () =>
-            {
-                var t = sf4.RefreshCopyNoteAsync();
-                var sw = System.Diagnostics.Stopwatch.StartNew();
-                while (!t.IsCompleted && sw.ElapsedMilliseconds < 5000) { Application.DoEvents(); Thread.Sleep(10); }
-            });
-            stale.CopyState = new CopyCheck { Status = CopyStatus.Stale, InstalledRunning = true };
-            var sf5 = new SettingsForm(ctl4, stale, "x.exe");
-            Save(sf5, dir, "settings-copy-old-running.png", () =>
-            {
-                var t = sf5.RefreshCopyNoteAsync();
-                var sw = System.Diagnostics.Stopwatch.StartNew();
-                while (!t.IsCompleted && sw.ElapsedMilliseconds < 5000) { Application.DoEvents(); Thread.Sleep(10); }
-            });
-
             Save(new LogForm(log, paths.LogFile), dir, "log.png");
             Save(new AboutForm(true), dir, "about.png");
 
