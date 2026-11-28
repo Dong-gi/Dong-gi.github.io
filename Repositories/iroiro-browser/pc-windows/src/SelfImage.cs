@@ -100,7 +100,9 @@ namespace WebTether
         /// <summary>
         /// held 의 바이트를 target 으로. 폴더는 policy 의 전용 폴더여야 한다 — 권한이 틀렸거나 링크면 제자리에서 고치거나 지우지 않고
         /// 옆으로 비키고 새로 만든다(SecureDir.Prepare). 임시 이름에 쓰고 SHA-256 을 견준 뒤 옮기고, 옮긴 뒤 한 번 더 견준다.
-        /// 이미 같은 바이트면 쓰지 않는다. 실패하면 false 와 까닭.
+        /// 이미 같은 바이트이고 권한도 맞으면 쓰지 않는다. 새 파일은 주인을 정책의 주인으로 정하고(만든 사람이 주인이면 그 사용자가 보통 권한으로도
+        /// 권한을 바꿀 수 있다), 끝에 **파일의 권한을 정책으로 다시 본다**(정책 밖의 쓰기 없음·Readers 가 읽고 실행할 수 있음 — 11-28: 설치본을
+        /// 보통 사용자가 실행할 수 있는지 설치기가 스스로 확인). 실패하면 false 와 까닭.
         /// </summary>
         public static bool CopyVerified(Stream held, string target, DirPolicy policy, List<string> notes, out string error)
         {
@@ -116,7 +118,7 @@ namespace WebTether
                 try
                 {
                     SecureDir.CheckNoReparse(dir, target);
-                    if (File.Exists(target) && HashOf(target) == want) return true;
+                    if (File.Exists(target) && HashOf(target) == want && FileCheck(target, policy) == null) return true;
                     var tmp = System.IO.Path.Combine(dir, System.IO.Path.GetFileName(target) + ".new-" + Guid.NewGuid().ToString("N"));
                     try
                     {
@@ -127,6 +129,9 @@ namespace WebTether
                             fs.Flush(true);
                         }
                         if (HashOf(tmp) != want) { error = "복사본의 SHA-256 이 쥔 exe 와 다릅니다"; return false; }
+                        var own = new System.Security.AccessControl.FileSecurity();
+                        own.SetOwner(policy.Owner);
+                        File.SetAccessControl(tmp, own);
                         // File.Replace 는 옛 파일의 권한을 남긴다 — 지우고 옮겨 폴더에서 물려받은 권한(전용)으로 둔다.
                         if (File.Exists(target)) File.Delete(target);
                         File.Move(tmp, target);
@@ -136,6 +141,8 @@ namespace WebTether
                         try { if (File.Exists(tmp)) File.Delete(tmp); } catch (IOException) { }
                     }
                     if (HashOf(target) != want) { error = "옮긴 사본의 SHA-256 이 쥔 exe 와 다릅니다"; return false; }
+                    var why = FileCheck(target, policy);
+                    if (why != null) { error = "설치본의 권한이 맞지 않습니다 — " + why; return false; }
                     return true;
                 }
                 catch (Exception ex)
@@ -144,6 +151,19 @@ namespace WebTether
                     return false;
                 }
             }
+        }
+
+        /// <summary>파일의 주인·권한이 정책에 맞는가(맞으면 null). 설치기의 마지막 확인 — 시험도 부른다.</summary>
+        public static string FileCheck(string path, DirPolicy policy)
+        {
+            try
+            {
+                var fs = File.GetAccessControl(path, System.Security.AccessControl.AccessControlSections.Owner | System.Security.AccessControl.AccessControlSections.Access);
+                var sd = new System.Security.AccessControl.RawSecurityDescriptor(fs.GetSecurityDescriptorBinaryForm(), 0);
+                bool ownerOk;
+                return SecureDir.CheckDescriptor(sd, policy, out ownerOk);
+            }
+            catch (Exception ex) { return "권한을 읽지 못했습니다(" + ex.Message + ")"; }
         }
 
         static string HashOf(string path)

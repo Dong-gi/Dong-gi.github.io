@@ -232,7 +232,7 @@ namespace WebTether.Tests
                     var lr = PipeCommands.Request(PipeCommands.Log);
                     lr["after"] = "0";
                     var r = Send(c, lr);
-                    A.True(r["lines"].Contains("[서비스]"), "로그 줄");
+                    A.True(r["lines"].Contains("[시작] 서비스 "), "로그 줄(시작 줄)");
                     long next = long.Parse(r["next"]);
                     lr["after"] = next.ToString();
                     A.Eq("", Send(c, lr)["lines"], "이어 읽으면 새 줄만(없음)");
@@ -373,6 +373,7 @@ namespace WebTether.Tests
                 A.Eq("Stop|CreateOrUpdate|Start", string.Join("|", scm.Calls.ToArray()), "SCM 차례");
                 A.Eq(ServicePlan.ImagePath(target), scm.Spec.ImagePath, "따옴표 경로");
                 A.Eq(ServicePlan.Sddl, scm.Spec.Sddl, "DACL");
+                A.True(!scm.Spec.DelayedStart, "자동 시작 — 지연 없음(11-28)");
                 A.Eq(ServicePlan.RunValue(target), run.Values[ServicePlan.RunValueName], "Run 값");
                 A.True(File.ReadAllBytes(target).SequenceEqual(bytes), "같은 바이트");
                 A.True(tool.Calls.Any(c => c.Contains("/Delete /TN WebTether")), "옛 작업 지움: " + string.Join("|", tool.Calls.ToArray()));
@@ -385,6 +386,152 @@ namespace WebTether.Tests
                 A.True(!inst.Install(new MemoryStream(bytes), out err), "만들기 실패");
                 A.True(!tool.Calls.Any(c => c.Contains("/Delete")), "남의 작업은 그대로");
                 A.True(!scm.Calls.Contains("Start") && !scm.Calls.Contains("Stop"), "없던 서비스는 멈추지 않고, 실패하면 시작하지 않음: " + string.Join("|", scm.Calls.ToArray()));
+            });
+
+            T("설치 폴더 정책(11-28): Administrators·SYSTEM 모두 + Users 읽기·실행 — 읽기·실행 줄은 정책 안, Users 의 쓰기·지우기·권한 바꾸기 비트는 정책 밖, 읽기·실행이 없으면 맞지 않음", () =>
+            {
+                var real = DirPolicy.InstallDir();
+                A.True(real.Readers.Length == 1 && real.Readers[0].Equals(DirPolicy.Users) && real.Owner.Equals(DirPolicy.Admins), "실제 판의 정책");
+                A.True(DirPolicy.AdminOnly().Readers.Length == 0, "상태 폴더(ProgramData)는 그대로 관리자 전용");
+                string me;
+                using (var id = WindowsIdentity.GetCurrent()) me = id.User.Value;
+                var pol = DirPolicy.CurrentUser().WithReaders(DirPolicy.Users);
+                Func<string, string> check = dacl =>
+                {
+                    bool ok;
+                    return SecureDir.CheckDescriptor(new RawSecurityDescriptor("O:" + me + "D:P(A;OICI;FA;;;" + me + ")(A;OICI;FA;;;BA)(A;OICI;FA;;;SY)" + dacl), pol, out ok);
+                };
+                A.Eq((string)null, check("(A;OICI;0x1200a9;;;BU)"), "읽기·실행");
+                A.Eq((string)null, check("(A;OICI;GRGX;;;BU)"), "일반 읽기·실행");
+                foreach (var bit in new[] { "0x1200ab", "0x1200ad", "0x1200b9", "0x1200e9", "0x1201a9", "0x1300a9", "0x1600a9", "0x1a00a9", "GA", "GRGXGW" })
+                    A.True(check("(A;OICI;" + bit + ";;;BU)") != null, "Users 의 쓰기 계열은 정책 밖: " + bit);
+                A.True(check("(A;OICI;0x1200a9;;;BU)(A;OICI;0x2;;;WD)") != null, "다른 SID 의 쓰기도 정책 밖");
+                A.True(check("").Contains("읽고 실행할 수 없습니다"), "Users 줄이 없음");
+                A.True(check("(A;OICIIO;0x1200a9;;;BU)") != null, "상속만 하는 줄은 그 폴더에 듣지 않음");
+                A.True(check("(D;;0x20;;;BU)(A;OICI;0x1200a9;;;BU)") != null, "실행을 막는 거부 줄");
+                A.True(check("(A;OICI;0x120089;;;BU)") != null, "실행 비트 없음");
+                bool o2;
+                A.Eq((string)null, SecureDir.CheckDescriptor(new RawSecurityDescriptor("O:" + me + "D:P(A;OICI;FA;;;" + me + ")(A;OICI;0x1200a9;;;BU)"), DirPolicy.CurrentUser(), out o2),
+                     "읽기·실행 줄은 관리자 전용 꼴에서도 정책 밖이 아니다");
+                // 새로 만들기 — 폴더에 Users 읽기·실행, 파일은 물려받는다
+                var dir = Path.Combine(TestMain.Scratch("install-acl"), "WebTether");
+                string err;
+                var notes = new List<string>();
+                using (var h = SecureDir.Prepare(dir, pol, notes, out err)) A.True(h != null, err);
+                bool o3;
+                A.Eq((string)null, SecureDir.CheckDescriptor(SecureDir.ReadDescriptor(dir), pol, out o3), "새 폴더가 정책에 맞음");
+                A.True(!notes.Any(n => n.Contains("읽기·실행 권한")), "새 폴더는 처음부터 그 줄로 짓는다(제자리 고치기 없이): " + string.Join("|", notes.ToArray()));
+                // 옛 판(관리자 전용 꼴 — 읽기·실행 줄 없음)의 폴더: 비키지 않고 그 줄만 더한다
+                var old = Path.Combine(TestMain.Scratch("install-acl-old"), "WebTether");
+                using (var h = SecureDir.Prepare(old, DirPolicy.CurrentUser(), null, out err)) A.True(h != null, err);
+                File.WriteAllText(Path.Combine(old, "marker"), "x");
+                notes.Clear();
+                using (var h = SecureDir.Prepare(old, pol, notes, out err)) A.True(h != null, err);
+                A.True(File.Exists(Path.Combine(old, "marker")), "제자리(비키지 않음)");
+                A.True(notes.Any(n => n.Contains("읽기·실행 권한")), "적음: " + string.Join("|", notes.ToArray()));
+                A.Eq((string)null, SecureDir.CheckDescriptor(SecureDir.ReadDescriptor(old), pol, out o3), "이제 정책에 맞음");
+                A.True(!Directory.GetDirectories(Path.GetDirectoryName(old)).Any(d => d.Contains(".untrusted-")), "비킨 폴더 없음");
+            });
+
+            T("설치기(11-28): 설치본 exe 는 주인이 정책의 주인이고 Users 가 읽고 실행할 수 있다 — 마지막에 스스로 확인, 옛 권한의 같은 바이트도 다시 쓴다", () =>
+            {
+                var pol = DirPolicy.CurrentUser().WithReaders(DirPolicy.Users);
+                var dir = Path.Combine(TestMain.Scratch("install-readable"), "WebTether");
+                var target = Path.Combine(dir, "WebTether.exe");
+                var bytes = Encoding.ASCII.GetBytes("MZ 가짜 exe 2");
+                // 옛 판 꼴: 관리자 전용 폴더에 같은 바이트(읽기·실행 줄 없음)
+                string err;
+                using (var h = SecureDir.Prepare(dir, DirPolicy.CurrentUser(), null, out err)) A.True(h != null, err);
+                File.WriteAllBytes(target, bytes);
+                A.True(Installer.FileCheck(target, pol) != null, "옛 파일은 Users 가 실행할 수 없음");
+                var scm = new FakeScm { State = ServiceState.Missing };
+                var notes = new List<string>();
+                var inst = new ServiceInstaller(scm, new FakeRun(), new FakeTool().Run, notes.Add) { Target = target, Policy = pol };
+                A.True(inst.Install(new MemoryStream(bytes), out err), "설치: " + err);
+                A.Eq((string)null, Installer.FileCheck(target, pol), "설치본은 Users 가 읽고 실행할 수 있음");
+                A.True(File.ReadAllBytes(target).SequenceEqual(bytes), "같은 바이트");
+                var fs = File.GetAccessControl(target, AccessControlSections.Owner | AccessControlSections.Access);
+                A.True(pol.Owner.Equals(fs.GetOwner(typeof(SecurityIdentifier))), "주인");
+                A.True(fs.GetAccessRules(true, true, typeof(SecurityIdentifier)).Cast<FileSystemAccessRule>()
+                         .Any(r => DirPolicy.Users.Equals(r.IdentityReference) && r.AccessControlType == AccessControlType.Allow &&
+                                   (r.FileSystemRights & FileSystemRights.ReadAndExecute) == FileSystemRights.ReadAndExecute), "Users 읽기·실행 줄");
+                // Users 가 쓸 수 있으면 확인이 잡는다
+                var loose = File.GetAccessControl(target);
+                loose.AddAccessRule(new FileSystemAccessRule(DirPolicy.Users, FileSystemRights.Write, AccessControlType.Allow));
+                File.SetAccessControl(target, loose);
+                A.True(Installer.FileCheck(target, pol).Contains("쓸 수"), "Users 쓰기는 정책 밖");
+                A.True(inst.Install(new MemoryStream(bytes), out err), "다시 설치하면 고쳐 쓴다: " + err);
+                A.Eq((string)null, Installer.FileCheck(target, pol), "고쳐짐");
+            });
+
+            T("이전 판 도우미(11-28): 같은 이름의 다른 WebTether.exe 가 떠 있으면 설치하지 않는다 — 자기·서비스(세션 0 + SCM PID)·같은 파일은 빼고, 이미지를 못 읽으면 떠 있음", () =>
+            {
+                var me = MyImage();
+                int myPid;
+                using (var p = Process.GetCurrentProcess()) myPid = p.Id;
+                Func<string, string, bool> same = (a, b) => string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
+                var all = new List<OtherHelpers.Proc>
+                {
+                    new OtherHelpers.Proc { Pid = myPid, Session = 1, Image = me },
+                    new OtherHelpers.Proc { Pid = 700, Session = 0, Image = @"C:\Program Files\WebTether\WebTether.exe" },  // 서비스
+                    new OtherHelpers.Proc { Pid = 701, Session = 1, Image = me },                                      // 설치기를 띄운 트레이
+                };
+                A.Eq(0, OtherHelpers.Blocking(all, myPid, me, 700, same).Count, "막는 것 없음");
+                all.Add(new OtherHelpers.Proc { Pid = 702, Session = 1, Image = @"C:\Users\x\Downloads\old\WebTether.exe" });
+                all.Add(new OtherHelpers.Proc { Pid = 703, Session = 1, Image = null });                              // 관리자 — 읽지 못함
+                all.Add(new OtherHelpers.Proc { Pid = 704, Session = 1, Image = @"C:\Program Files\WebTether\WebTether.exe" }); // 세션 0 이 아님
+                A.Eq("702,703,704", string.Join(",", OtherHelpers.Blocking(all, myPid, me, 700, same).Select(p => p.Pid.ToString()).ToArray()), "옛 판·못 읽음·세션 1");
+                A.Eq("700,702,703,704", string.Join(",", OtherHelpers.Blocking(all, myPid, me, 0, same).Select(p => p.Pid.ToString()).ToArray()), "SCM PID 를 모르면 서비스도 막음으로");
+                // Check — 가짜 목록과 서비스 PID(실제 프로세스·SCM 을 보지 않는다)
+                var keepL = OtherHelpers.Lister;
+                var keepS = OtherHelpers.ServicePid;
+                try
+                {
+                    OtherHelpers.ServicePid = () => 700;
+                    OtherHelpers.Lister = () => all.Take(3).ToList();
+                    A.Eq((string)null, OtherHelpers.Check(me), "없음");
+                    OtherHelpers.Lister = () => all;
+                    var t = OtherHelpers.Check(me);
+                    A.True(t != null && t.StartsWith(OtherHelpers.Text) && t.Contains("702"), t);
+                }
+                finally
+                {
+                    OtherHelpers.Lister = keepL;
+                    OtherHelpers.ServicePid = keepS;
+                }
+                // 설치기 — 다른 도우미가 있으면 아무것도 바꾸지 않고 실패
+                var dir = Path.Combine(TestMain.Scratch("install-other"), "WebTether");
+                var target = Path.Combine(dir, "WebTether.exe");
+                var scm = new FakeScm { State = ServiceState.Running };
+                var run = new FakeRun();
+                var inst = new ServiceInstaller(scm, run, new FakeTool().Run, null) { Target = target, Policy = DirPolicy.CurrentUser(), OtherRunning = () => OtherHelpers.Text };
+                string err;
+                A.True(!inst.Install(new MemoryStream(Encoding.ASCII.GetBytes("MZ")), out err) && err.Contains("이전 판 도우미"), "설치하지 않음: " + err);
+                A.True(scm.Calls.Count == 0 && run.Values.Count == 0 && !File.Exists(target), "아무것도 바꾸지 않음");
+                // 제거기의 '설정·로그도 지울까요' 기본은 '아니요'(소스로)
+                var prog = File.ReadAllText(Path.Combine(TestMain.OutDir, "..", "src", "Program.cs"));
+                var at = prog.IndexOf("도 지울까요?", StringComparison.Ordinal);
+                A.True(at > 0 && prog.IndexOf("MessageBoxDefaultButton.Button2", at, StringComparison.Ordinal) - at < 300, "기본 '아니요'");
+            });
+
+            T("설치 뒤 트레이 다시 띄우기(11-28): 실패하면 삼키지 않고 알릴 글, 트레이는 서비스가 시작 중·멈춤이면 그렇게 짧게", () =>
+            {
+                A.Eq((string)null, TrayRelaunch.Run("C:/x/WebTether.exe", p => { }), "되면 null");
+                var why = TrayRelaunch.Run("C:/x/WebTether.exe", p => { throw new System.ComponentModel.Win32Exception(5); });
+                A.True(why != null && why.Contains("다시 띄우지 못했습니다") && why.Contains("C:/x/WebTether.exe"), why);
+                A.Eq("서비스가 시작되는 중입니다", ServiceClient.UnreachableText(2, "x"), "시작 중");
+                A.Eq("서비스가 멈춰 있습니다", ServiceClient.UnreachableText(1, "x"), "멈춤");
+                A.Eq("서비스가 멈추는 중입니다", ServiceClient.UnreachableText(3, "x"), "멈추는 중");
+                A.Eq("서비스가 설치되어 있지 않습니다", ServiceClient.UnreachableText(0, "x"), "없음");
+                A.Eq("서비스에 닿지 못함 — x", ServiceClient.UnreachableText(4, "x"), "돌고 있는데 닿지 못함");
+                A.Eq("서비스에 닿지 못함 — x", ServiceClient.UnreachableText(-1, "x"), "모름");
+                var client = new ServiceClient(new PipeClient("WebTether-none-" + Guid.NewGuid().ToString("N")) { ConnectTimeoutMs = 100 }, new Log(null)) { ScmState = () => 2 };
+                client.Apply(null, "x", 2);
+                A.True(client.State == TetherState.Off && client.Detail == "서비스가 시작되는 중입니다", client.Detail);
+                // Poll 이 SCM 상태를 함께 묻는다(가짜 — 실제 SCM 을 보지 않는다)
+                client.ScmState = () => 1;
+                client.Tick();
+                A.WaitUntil(() => client.Detail == "서비스가 멈춰 있습니다", 5000, "Poll 의 SCM 상태: " + client.Detail);
             });
 
             T("제거기(가짜): 멈춤 → 지우기 → Run 값 → 설치본(지우지 못하면 다음 재부팅 때) → 묻고 고른 때만 상태 폴더", () =>
@@ -401,7 +548,7 @@ namespace WebTether.Tests
                 var run = new FakeRun();
                 run.Values[ServicePlan.RunValueName] = "\"x\"";
                 var delayed = new List<string>();
-                var inst = new ServiceInstaller(scm, run, new FakeTool().Run, null) { Target = target, Policy = DirPolicy.CurrentUser(), DelayDelete = p => { delayed.Add(p); return true; } };
+                var inst = new ServiceInstaller(scm, run, new FakeTool().Run, null) { Target = target, Policy = DirPolicy.CurrentUser(), DataPolicy = DirPolicy.CurrentUser(), DelayDelete = p => { delayed.Add(p); return true; } };
                 string err;
                 using (new FileStream(target, FileMode.Open, FileAccess.Read, FileShare.Read)) // 도는 exe 흉내 — 지우기가 막힌다
                     A.True(inst.Uninstall(false, data, out err), "제거: " + err);
@@ -470,6 +617,7 @@ namespace WebTether.Tests
                     r = Send(Client(s), PipeCommands.Request(PipeCommands.Status));
                     A.True(!r.ContainsKey("squat") && r.ContainsKey("state"), "이제 서비스");
                     A.True(s.Core.Log.Snapshot().Any(l => l.Contains("다시 열었습니다")), "적음");
+                    A.True(s.Core.Log.Snapshot().Any(l => l.Contains("[시작] 서비스 ")), "시작 줄: " + string.Join("|", s.Core.Log.Snapshot().Take(3).ToArray()));
                 }
             });
 

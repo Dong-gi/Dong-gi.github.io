@@ -247,6 +247,21 @@ namespace WebTether
         public string ServiceVersion { get { return last.Version; } }
         /// <summary>서비스와 이야기하지 못한 까닭(없으면 null).</summary>
         public string Unreachable { get { return lastError; } }
+        /// <summary>파이프에 닿지 못했을 때 SCM 의 상태(읽기만 — ScmManager.RawStateReadOnly 의 값). 시험이 바꾼다.</summary>
+        public Func<int> ScmState = () => ScmManager.RawStateReadOnly(ServicePlan.Name);
+
+        /// <summary>파이프에 닿지 못한 까닭의 글 — SCM 이 시작 중·멈춤·멈추는 중·없음을 알면 그것을 짧게(11-28), 아니면 파이프의 까닭. 순수.</summary>
+        public static string UnreachableText(int scm, string err)
+        {
+            switch (scm)
+            {
+                case 0: return "서비스가 설치되어 있지 않습니다";
+                case 1: return "서비스가 멈춰 있습니다";
+                case 2: return "서비스가 시작되는 중입니다";
+                case 3: return "서비스가 멈추는 중입니다";
+                default: return "서비스에 닿지 못함 — " + (err ?? "까닭 모름");
+            }
+        }
         public event Action Changed;
         public event Action<string, string, bool> Notice;
         public string NoticeUrl { get; private set; }
@@ -278,25 +293,30 @@ namespace WebTether
                 ServiceStatus st = null;
                 if (r != null && r.ContainsKey("error")) err = SafeText.Clean(r["error"], 200);
                 else if (r != null) st = ServiceStatus.FromMap(r);
-                return Tuple.Create(st, err);
+                int scm = -1;
+                if (st == null && ScmState != null)
+                {
+                    try { scm = ScmState(); } catch (Exception) { scm = -1; }
+                }
+                return Tuple.Create(st, err, scm);
             }).ContinueWith(t =>
             {
                 ui.Post(_ =>
                 {
                     polling = false;
                     if (t.IsFaulted) return;
-                    Apply(t.Result.Item1, t.Result.Item2);
+                    Apply(t.Result.Item1, t.Result.Item2, t.Result.Item3);
                 }, null);
             });
         }
 
         /// <summary>UI 스레드 — 답을 걸고 바뀌었으면 알린다(시험이 부른다).</summary>
-        public void Apply(ServiceStatus st, string err)
+        public void Apply(ServiceStatus st, string err, int scm = -1)
         {
             bool changed;
             if (st == null)
             {
-                var why = "서비스에 닿지 못함 — " + (err ?? "까닭 모름");
+                var why = UnreachableText(scm, err);
                 changed = lastError != why;
                 lastError = why;
             }

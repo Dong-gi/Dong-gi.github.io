@@ -1059,7 +1059,8 @@ namespace WebTether.Tests
                 r.Others.Add(4242);
                 Run(r.C.ConnectAsync());
                 A.Eq(TetherState.Error, r.C.State, "오류");
-                A.True(r.C.Detail.Contains("다른 tun2proxy"), r.C.Detail);
+                A.True(r.C.Detail.Contains("다른 tun2proxy") && r.C.Detail.Contains("PID 4242") && r.C.Detail.Contains("이전 판 도우미"), r.C.Detail);
+                lock (r.Log) A.True(r.Log.Any(l => l.Contains("PID 4242")), "로그에도 까닭");
                 A.Eq(0, r.F.CommandLines.Count, "띄우지 않음");
             });
 

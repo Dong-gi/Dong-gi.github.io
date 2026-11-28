@@ -162,7 +162,9 @@ namespace WebTether
             if (rootHold == null) return false;
             Log = new Log(paths.LogFile, Log.MaxFileBytes, paths.Root);
             Log.Line += KeepLine;
-            Log.Write("서비스", AppInfo.Name + " " + AppInfo.Version + " · tun2proxy " + Embedded.Tun2proxyVersion + (dryRun ? " · dry-run" : "") +
+            // 시작 줄 — 늘 남긴다(11-28: 사용자 기기에서 서비스가 떴는지 로그로 가릴 수 있게). 상태 폴더를 마련하지 못하면 로그를 쓸 곳이 없다
+            // — 그때는 SCM 이 시작 실패를 시스템 이벤트 로그에 남긴다(OnStart 가 던진다, AutoLog).
+            Log.Write("시작", "서비스 " + AppInfo.Name + " " + AppInfo.Version + " · tun2proxy " + Embedded.Tun2proxyVersion + (dryRun ? " · dry-run" : "") +
                               " · 상태 " + paths.Root + " (" + policy.Name + ")");
             foreach (var n in notes) Log.Write("상태 폴더", n);
             WarnClrVariables();

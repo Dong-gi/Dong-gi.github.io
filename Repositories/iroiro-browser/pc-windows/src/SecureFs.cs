@@ -1,4 +1,5 @@
-// 관리자가 쓰고 읽는 자리 — %ProgramData%\WebTether(상태)와 Program Files\WebTether(시작 시 실행의 사본).
+// 관리자가 쓰고 읽는 자리 — %ProgramData%\WebTether(상태 — 관리자 전용)와 Program Files\WebTether(설치본 — 관리자만 쓰고 Users 는 읽기·실행,
+// 보통 권한의 트레이가 그 exe 로 뜬다: DirPolicy.InstallDir, 11-28).
 //
 // 도우미는 관리자로 돈다. 그 상태를 사용자 폴더(%APPDATA%·%LOCALAPPDATA%)에 두면 같은 사용자 권한의 프로그램이
 // ① 접합점·심볼릭 링크로 관리자의 지우기·쓰기를 다른 곳으로 돌리고 ② 설정·상태 파일을 고쳐 관리자 동작(프록시 주소,
@@ -27,17 +28,41 @@ namespace WebTether
     {
         public static readonly SecurityIdentifier Admins = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
         public static readonly SecurityIdentifier SystemSid = new SecurityIdentifier(WellKnownSidType.LocalSystemSid, null);
+        public static readonly SecurityIdentifier Users = new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null);
 
         public string Name;
         /// <summary>새로 만들 때의 주인.</summary>
         public SecurityIdentifier Owner;
         /// <summary>주인이어도 되고 모두 권한을 받는 SID — 그 밖의 누구에게도 권한을 주지 않는다.</summary>
         public SecurityIdentifier[] Trusted;
+        /// <summary>
+        /// 읽기·실행(ReadAndExecute)만 받는 SID — 있어야 한다(없으면 정책에 맞지 않음). 쓰기·지우기·권한 바꾸기 계열은 여전히 정책 밖이다.
+        /// </summary>
+        public SecurityIdentifier[] Readers = new SecurityIdentifier[0];
 
         /// <summary>실제 판 — Administrators 가 주인, Administrators·SYSTEM 만.</summary>
         public static DirPolicy AdminOnly()
         {
             return new DirPolicy { Name = "관리자 전용", Owner = Admins, Trusted = new[] { Admins, SystemSid } };
+        }
+
+        /// <summary>
+        /// 설치 폴더(Program Files\WebTether) — Administrators·SYSTEM 모두, **BUILTIN\Users 읽기·실행**(11-28: 관리자 전용이면 보통 권한의 트레이가
+        /// 설치본 exe 를 띄우지 못해 로그온 실행·설치 뒤 다시 띄우기가 조용히 실패했다). Users 를 고른 것은 Program Files 의 관례(Windows 가 거기에
+        /// 주는 것이 BUILTIN\Users 의 읽기·실행)를 따른 것이다 — 대화형으로 로그온한 사용자는 모두 Users 의 구성원이다.
+        /// </summary>
+        public static DirPolicy InstallDir()
+        {
+            var p = AdminOnly();
+            p.Name = "관리자만 쓰기·Users 읽기·실행";
+            p.Readers = new[] { Users };
+            return p;
+        }
+
+        /// <summary>같은 주인·신뢰에 읽기·실행만 받는 SID 를 더한 사본(시험).</summary>
+        public DirPolicy WithReaders(params SecurityIdentifier[] readers)
+        {
+            return new DirPolicy { Name = Name + " + 읽기·실행", Owner = Owner, Trusted = Trusted, Readers = readers };
         }
 
         /// <summary>시험 판·시험 — 관리자 아닌 권한으로 만들 수 있는 꼴(이 사용자가 주인, 이 사용자·Administrators·SYSTEM 만).</summary>
@@ -62,6 +87,8 @@ namespace WebTether
             const InheritanceFlags inh = InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit;
             foreach (var t in Trusted)
                 sec.AddAccessRule(new FileSystemAccessRule(t, FileSystemRights.FullControl, inh, PropagationFlags.None, AccessControlType.Allow));
+            foreach (var r in Readers)
+                sec.AddAccessRule(new FileSystemAccessRule(r, FileSystemRights.ReadAndExecute, inh, PropagationFlags.None, AccessControlType.Allow));
             return sec;
         }
     }
@@ -151,8 +178,20 @@ namespace WebTether
                 SafeFileHandle h;
                 try { h = OpenNoFollow(path, FILE_LIST_DIRECTORY | READ_CONTROL | FILE_READ_ATTRIBUTES, SHARE_READ | SHARE_WRITE, true); }
                 catch (IOException ex) { error = ex.Message; return null; }
-                bool reparse, ownerOk;
-                var bad = Check(h, policy, out reparse, out ownerOk);
+                bool reparse, ownerOk, readersOnly;
+                var bad = Check(h, policy, out reparse, out ownerOk, out readersOnly);
+                if (bad != null && readersOnly)
+                {
+                    // 주인과 쓰기 권한은 정책대로(정책 밖의 누구도 그 안에 무엇을 심을 수 없었다)이고 읽기·실행 줄만 빠졌다 — 옛 판(관리자 전용)의 설치
+                    // 폴더. 쥔 채로(이름을 바꿀 수 없다) 그 줄만 더한다 — 비키면 Program Files 에 옛 폴더가 남는다.
+                    string fixWhy = AddReaders(path, policy);
+                    bad = fixWhy ?? Check(h, policy, out reparse, out ownerOk, out readersOnly);
+                    if (bad == null)
+                    {
+                        if (notes != null) notes.Add("읽기·실행 권한(" + Names(policy.Readers) + ")을 더했습니다: " + path);
+                        return new Held(path, h);
+                    }
+                }
                 if (bad == null) return new Held(path, h);
                 h.Dispose();
                 if (attempt == 1) { error = bad + ": " + path; return null; }
@@ -186,6 +225,27 @@ namespace WebTether
             finally { pin.Free(); }
         }
 
+        static string AddReaders(string path, DirPolicy policy)
+        {
+            try
+            {
+                var ds = Directory.GetAccessControl(path, AccessControlSections.Access);
+                const InheritanceFlags inh = InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit;
+                foreach (var r in policy.Readers)
+                    ds.AddAccessRule(new FileSystemAccessRule(r, FileSystemRights.ReadAndExecute, inh, PropagationFlags.None, AccessControlType.Allow));
+                Directory.SetAccessControl(path, ds);
+                return null;
+            }
+            catch (Exception ex) { return "읽기·실행 권한을 더하지 못했습니다(" + ex.Message + ")"; }
+        }
+
+        static string Names(SecurityIdentifier[] sids)
+        {
+            var n = new List<string>();
+            foreach (var s in sids) n.Add(NameOf(s));
+            return string.Join(", ", n.ToArray());
+        }
+
         static SafeFileHandle OpenNoFollow(string path, uint access, uint share, bool directory)
         {
             var h = CreateFileW(path, access, share, IntPtr.Zero, OPEN_EXISTING,
@@ -202,15 +262,27 @@ namespace WebTether
         /// <summary>문제가 없으면 null, 있으면 까닭.</summary>
         static string Check(SafeFileHandle h, DirPolicy policy, out bool reparse, out bool ownerOk)
         {
+            bool readersOnly;
+            return Check(h, policy, out reparse, out ownerOk, out readersOnly);
+        }
+
+        /// <summary>readersOnly: 주인·쓰기 권한은 맞고 읽기·실행 줄만 빠졌다.</summary>
+        static string Check(SafeFileHandle h, DirPolicy policy, out bool reparse, out bool ownerOk, out bool readersOnly)
+        {
             reparse = false;
             ownerOk = false;
+            readersOnly = false;
             BY_HANDLE_FILE_INFORMATION info;
             if (!GetFileInformationByHandle(h, out info)) return "폴더 정보를 읽지 못했습니다";
             if ((info.FileAttributes & ATTR_REPARSE) != 0) { reparse = true; return "재분석 지점(접합점·심볼릭 링크)입니다"; }
             if ((info.FileAttributes & ATTR_DIRECTORY) == 0) return "폴더가 아닙니다";
             var sd = ReadSecurity(h);
             if (sd == null) return "권한을 읽지 못했습니다";
-            return CheckDescriptor(sd, policy, out ownerOk);
+            var w = CheckWriters(sd, policy, out ownerOk);
+            if (w != null) return w;
+            var r = MissingReader(sd, policy);
+            readersOnly = r != null;
+            return r;
         }
 
         static RawSecurityDescriptor ReadSecurity(SafeFileHandle h)
@@ -227,8 +299,46 @@ namespace WebTether
             finally { LocalFree(p); }
         }
 
-        /// <summary>주인이 정책의 SID 이고, 정책 밖의 누구에게도 쓰기 같은 권한을 허락하지 않는가(상속만 하는 줄도 본다).</summary>
+        /// <summary>
+        /// 주인이 정책의 SID 이고, 정책 밖의 누구에게도 쓰기 같은 권한을 허락하지 않으며(상속만 하는 줄도 본다 — 읽기·실행만 주는 줄은 괜찮다),
+        /// 정책의 Readers 가 읽고 실행할 수 있는가. 폴더·파일 모두.
+        /// </summary>
         public static string CheckDescriptor(RawSecurityDescriptor sd, DirPolicy policy, out bool ownerOk)
+        {
+            return CheckWriters(sd, policy, out ownerOk) ?? MissingReader(sd, policy);
+        }
+
+        // 실행에 꼭 드는 둘(FILE_READ_DATA·FILE_EXECUTE) — ReadAndExecute 가 함께 주는 나머지(속성·EA·권한 읽기·동기화)는 따로 보지 않는다.
+        const int ReadExec = 0x1 | 0x20;
+        const int GenericRead = unchecked((int)0x80000000), GenericExecute = 0x20000000, GenericAll = 0x10000000;
+
+        /// <summary>정책의 Readers 마다 그 대상 자신에 듣는(상속만 하는 줄이 아닌) 허락 줄로 읽기·실행이 있고 그것을 막는 거부 줄이 없는가.</summary>
+        public static string MissingReader(RawSecurityDescriptor sd, DirPolicy policy)
+        {
+            if (policy.Readers == null || policy.Readers.Length == 0) return null;
+            if (sd.DiscretionaryAcl == null) return null; // 권한 목록이 없으면 누구나 — CheckWriters 가 먼저 거른다
+            foreach (var r in policy.Readers)
+            {
+                int allowed = 0;
+                bool denied = false;
+                foreach (GenericAce ace in sd.DiscretionaryAcl)
+                {
+                    var k = ace as KnownAce;
+                    if (k == null || !r.Equals(k.SecurityIdentifier)) continue;
+                    if ((ace.AceFlags & AceFlags.InheritOnly) != 0) continue;
+                    int m = k.AccessMask;
+                    if ((m & GenericAll) != 0) m |= ReadExec;
+                    if ((m & GenericRead) != 0) m |= 0x1;
+                    if ((m & GenericExecute) != 0) m |= 0x20;
+                    if (ace.AceType == AceType.AccessDenied) { if ((m & ReadExec) != 0) denied = true; }
+                    else if (ace.AceType == AceType.AccessAllowed) allowed |= m;
+                }
+                if (denied || (allowed & ReadExec) != ReadExec) return NameOf(r) + " 이(가) 읽고 실행할 수 없습니다";
+            }
+            return null;
+        }
+
+        static string CheckWriters(RawSecurityDescriptor sd, DirPolicy policy, out bool ownerOk)
         {
             ownerOk = policy.IsTrusted(sd.Owner);
             if (!ownerOk) return "주인이 " + policy.Name + " 이 아닙니다(" + NameOf(sd.Owner) + ")";

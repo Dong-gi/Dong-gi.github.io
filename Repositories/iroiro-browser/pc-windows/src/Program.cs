@@ -256,6 +256,8 @@ namespace WebTether
                     return 1;
                 }
                 var inst = new ServiceInstaller(new ScmManager(), new HklmRunKey(), SystemOps.Run, notes.Add);
+                var exe = Application.ExecutablePath;
+                inst.OtherRunning = () => OtherHelpers.Check(exe);
                 if (!inst.Install(self.Stream, out err))
                 {
                     MessageBox.Show("설치하지 못했습니다.\r\n" + err + "\r\n\r\n" + string.Join("\r\n", notes.ToArray()), AppInfo.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -310,10 +312,17 @@ namespace WebTether
                 SettingsForm sf = null;
                 var self = Application.ExecutablePath;
                 TrayApp app = null;
-                Action install = () => Task.Run(() => Elevation.Run(self, "--install")).ContinueWith(t =>
+                // 설치 전에 — 이전 판 도우미가 떠 있으면 설치하지 않는다(OtherHelpers, 11-28). -3 = 그래서 띄우지 않음.
+                string otherText = null;
+                Action install = () => Task.Run(() =>
+                {
+                    otherText = OtherHelpers.Check(self);
+                    return otherText != null ? -3 : Elevation.Run(self, "--install");
+                }).ContinueWith(t =>
                 {
                     bool ok = !t.IsFaulted && t.Result == 0;
-                    var msg = ok ? "서비스를 설치했습니다." : !t.IsFaulted && t.Result == -2 ? Elevation.LastBlocked : "서비스를 설치하지 못했습니다.";
+                    var msg = ok ? "서비스를 설치했습니다." : !t.IsFaulted && t.Result == -2 ? Elevation.LastBlocked :
+                              !t.IsFaulted && t.Result == -3 ? otherText : "서비스를 설치하지 못했습니다.";
                     if (app != null) app.Balloon(AppInfo.Name, msg, !ok, null);
                     if (ok && !StartupPaths.Same(self, ServicePlan.InstalledExe))
                     {
@@ -362,6 +371,12 @@ namespace WebTether
                     {
                         if (t.IsFaulted) return;
                         var ask = ServiceCheck.AskText(t.Result);
+                        if (ask != null && t.Result.Others != null)
+                        {
+                            // 묻기 전에 — 이전 판 도우미가 떠 있으면 묻지 않고 알린다.
+                            if (app != null) app.Balloon(AppInfo.Name, t.Result.Others, true, null);
+                            return;
+                        }
                         if (ask != null && TopAsk.Ask(ask, AppInfo.Name + " — 서비스", true)) install();
                     }, TaskScheduler.FromCurrentSynchronizationContext());
                 };
@@ -371,8 +386,8 @@ namespace WebTether
             }
             if (relaunch != null)
             {
-                try { using (System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(relaunch) { UseShellExecute = false })) { } }
-                catch (Exception) { }
+                var why = TrayRelaunch.Run(relaunch, p => { using (System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(p) { UseShellExecute = false })) { } });
+                if (why != null) MessageBox.Show(why, AppInfo.Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             return 0;
         }
@@ -389,6 +404,23 @@ namespace WebTether
         }
     }
 
+    /// <summary>설치 뒤 설치본의 트레이를 띄운다 — 못 띄우면 사용자가 볼 글(되면 null). 예전에는 실패를 삼켜 트레이가 조용히 사라졌다(11-28).</summary>
+    public static class TrayRelaunch
+    {
+        public static string Run(string exe, Action<string> start)
+        {
+            try
+            {
+                start(exe);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return "설치는 됐지만 트레이를 다시 띄우지 못했습니다: " + SafeText.Clean(ex.Message, 200) + "\r\n" + exe + " 를 실행하거나 다시 로그온하십시오.";
+            }
+        }
+    }
+
     /// <summary>트레이가 뜰 때 — 서비스가 있는가, 이 exe 와 같은 판인가(읽기만 — SCM 상태·파이프 hello·이 exe 의 해시).</summary>
     public static class ServiceCheck
     {
@@ -399,6 +431,8 @@ namespace WebTether
             public string ServiceHash = "";
             public string MyHash = "";
             public bool RunningInstalled;
+            /// <summary>이전 판 도우미 등 다른 WebTether.exe 가 떠 있으면 그 글(OtherHelpers).</summary>
+            public string Others;
         }
 
         public static Result Look(string self)
@@ -407,6 +441,7 @@ namespace WebTether
             string err;
             using (var me = SelfImage.Open(out err))
                 if (me != null) { me.Stream.Position = 0; r.MyHash = Binaries.Sha256(me.Stream); }
+            try { r.Others = OtherHelpers.Check(self); } catch (Exception) { }
             if (r.State == ServiceState.Running)
             {
                 var h = new PipeClient(PipeNames.Service).Send(PipeCommands.Request(PipeCommands.Hello), out err);

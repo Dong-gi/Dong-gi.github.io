@@ -3,7 +3,8 @@
 //
 // 차례(Install): 돌고 있으면 멈춤(서비스가 끊고 걷는다) → 쥔 이 exe 의 바이트를 Program Files\WebTether 로(해시 대조 — SelfImage·
 // Installer.CopyVerified) → 옛 '시작 시 실행' 예약 작업이 우리 것이면 지우고 launch.cmd 를 걷는다 → 서비스 만들기·고치기(따옴표로 싼 경로,
-// LocalSystem, 지연 자동 시작, 실패하면 다시 시작, DACL) → 트레이 자동 시작(HKLM Run — 보통 권한 프로그램이 명령을 바꾸지 못한다) → 시작.
+// LocalSystem, 자동 시작(지연 없이 — 11-28: 로그온 전에 연결하려고), 실패하면 다시 시작, DACL) → 트레이 자동 시작(HKLM Run — 보통 권한
+// 프로그램이 명령을 바꾸지 못한다) → 시작. 설치 폴더는 관리자만 쓰고 Users 는 읽기·실행(DirPolicy.InstallDir — 트레이가 그 exe 로 뜬다).
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,6 +21,8 @@ namespace WebTether
     public sealed class ServiceSpec
     {
         public string Name, DisplayName, Description, ImagePath, Sddl;
+        /// <summary>지연된 자동 시작인가 — 아니다(11-28: 부팅 뒤 1~2분 늦게 떠 '안 뜬다' 로 보였고, 로그온 전에 연결해야 한다).</summary>
+        public bool DelayedStart;
     }
 
     public interface IServiceManager
@@ -75,10 +78,10 @@ namespace WebTether
 
         public static ServiceSpec Spec(string exe)
         {
-            return new ServiceSpec { Name = Name, DisplayName = DisplayName, Description = Description, ImagePath = ImagePath(exe), Sddl = Sddl };
+            return new ServiceSpec { Name = Name, DisplayName = DisplayName, Description = Description, ImagePath = ImagePath(exe), Sddl = Sddl, DelayedStart = false };
         }
 
-        /// <summary>설치본 자리 — Program Files\WebTether\WebTether.exe(관리자만 쓴다).</summary>
+        /// <summary>설치본 자리 — Program Files\WebTether\WebTether.exe(관리자만 쓰고 Users 는 읽기·실행).</summary>
         public static string InstalledExe
         {
             get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WebTether", "WebTether.exe"); }
@@ -158,6 +161,68 @@ namespace WebTether
         }
     }
 
+    /// <summary>
+    /// 같은 이름의 다른 WebTether.exe(이전 판 도우미 등)가 떠 있는가 — 트레이가 설치를 묻기 전과 설치기가 시작할 때 본다(11-28: 옛 판 도우미가
+    /// 관리자로 떠서 연결을 쥔 채 설치해, 새 서비스는 '다른 tun2proxy' 로 연결하지 못했고 사용자는 옛 판의 연결을 새 판의 것으로 봤다). **읽기만**
+    /// — 끝내지 않는다. 빼는 것: 자기 자신, 서비스(세션 0 이고 PID 가 SCM 이 아는 서비스 PID), 이 exe 와 같은 파일로 뜬 것(설치기를 띄운 트레이).
+    /// 이미지 경로를 읽지 못한 것(관리자 프로세스 등)은 '떠 있음' 으로 친다.
+    /// </summary>
+    public static class OtherHelpers
+    {
+        public sealed class Proc
+        {
+            public int Pid, Session;
+            public string Image;
+        }
+
+        public const string Text = "이전 판 도우미가 실행 중입니다 — 알림 영역 아이콘의 ‘끝내기’ 로 끝낸 뒤 다시 하세요.";
+        /// <summary>시험이 바꾼다.</summary>
+        public static Func<List<Proc>> Lister = ListReal;
+        public static Func<int> ServicePid = () => ScmManager.ServicePidReadOnly(ServicePlan.Name);
+
+        public static List<Proc> Blocking(IEnumerable<Proc> all, int selfPid, string selfImage, int servicePid, Func<string, string, bool> sameFile)
+        {
+            var r = new List<Proc>();
+            foreach (var p in all)
+            {
+                if (p.Pid == selfPid) continue;
+                if (p.Session == 0 && servicePid > 0 && p.Pid == servicePid) continue;
+                if (!string.IsNullOrEmpty(p.Image) && !string.IsNullOrEmpty(selfImage) && sameFile(p.Image, selfImage)) continue;
+                r.Add(p);
+            }
+            return r;
+        }
+
+        /// <summary>막는 것이 있으면 짧은 글(PID 를 붙여), 없으면 null.</summary>
+        public static string Check(string selfImage)
+        {
+            int me;
+            using (var p = System.Diagnostics.Process.GetCurrentProcess()) me = p.Id;
+            var b = Blocking(Lister(), me, selfImage, ServicePid(), FileIdentity.Same);
+            if (b.Count == 0) return null;
+            var pids = new List<string>();
+            foreach (var x in b) pids.Add(x.Pid.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            return Text + " (PID " + string.Join(", ", pids.ToArray()) + ")";
+        }
+
+        static List<Proc> ListReal()
+        {
+            var list = new List<Proc>();
+            foreach (var p in System.Diagnostics.Process.GetProcessesByName("WebTether"))
+            {
+                try
+                {
+                    var pr = new Proc { Pid = p.Id, Session = -1 };
+                    try { pr.Session = p.SessionId; } catch (Exception) { }
+                    try { pr.Image = ProcessImage.Path(p.Id); } catch (Exception) { }
+                    list.Add(pr);
+                }
+                finally { p.Dispose(); }
+            }
+            return list;
+        }
+    }
+
     /// <summary>설치·제거의 차례(시험은 가짜 IServiceManager·IRunKey·ToolRunner 와 스크래치 경로로).</summary>
     public sealed class ServiceInstaller
     {
@@ -167,8 +232,13 @@ namespace WebTether
         readonly Action<string> note;
         /// <summary>설치본 자리(시험은 스크래치).</summary>
         public string Target = ServicePlan.InstalledExe;
-        public DirPolicy Policy = DirPolicy.AdminOnly();
+        /// <summary>설치 폴더의 정책 — 관리자만 쓰기·Users 읽기·실행(시험은 이 사용자 판).</summary>
+        public DirPolicy Policy = DirPolicy.InstallDir();
+        /// <summary>상태 폴더(ProgramData)의 정책 — 관리자 전용(서비스만 읽고 쓴다. 트레이는 그 안을 읽지 않는다 — 로그·설정은 파이프로).</summary>
+        public DirPolicy DataPolicy = DirPolicy.AdminOnly();
         public int StopTimeoutMs = 30000;
+        /// <summary>시작할 때 — 다른 도우미가 떠 있으면 그 글(설치하지 않는다). 실제 판은 OtherHelpers.Check, null 이면 보지 않는다(시험).</summary>
+        public Func<string> OtherRunning;
 
         public ServiceInstaller(IServiceManager scm, IRunKey run, ToolRunner tool, Action<string> note)
         {
@@ -191,6 +261,8 @@ namespace WebTether
         public bool Install(Stream held, out string error)
         {
             error = null;
+            var other = OtherRunning != null ? OtherRunning() : null;
+            if (other != null) return Fail(other, null, out error);
             var state = scm.Query(ServicePlan.Name);
             if (state == ServiceState.Running || state == ServiceState.Pending)
             {
@@ -286,7 +358,7 @@ namespace WebTether
                 {
                     // 주인·권한이 정책에 맞을 때만 지운다 — 남이 미리 만들었거나 권한을 넓혀 둔 폴더(안에 접합점을 심었을 수 있다)는 옆으로 비키기만.
                     string aside;
-                    var why = SecureDir.DeleteIfTrusted(dataRoot, Policy, out aside);
+                    var why = SecureDir.DeleteIfTrusted(dataRoot, DataPolicy, out aside);
                     if (why != null) Note("상태 폴더를 지우지 못함: " + why);
                     else if (aside != null) Note("상태 폴더의 주인·권한이 예상과 달라 지우지 않고 옮겼습니다: " + aside);
                     else Note("상태 폴더를 지웠습니다: " + dataRoot);
@@ -356,15 +428,23 @@ namespace WebTether
         /// <summary>읽기만 — 보통 권한의 트레이도 부른다(SC_MANAGER_CONNECT·SERVICE_QUERY_STATUS).</summary>
         public static ServiceState QueryReadOnly(string name)
         {
+            int s = RawStateReadOnly(name);
+            return s < 0 ? ServiceState.Unknown : s == 0 ? ServiceState.Missing : s == SERVICE_STOPPED ? ServiceState.Stopped :
+                   s == SERVICE_RUNNING ? ServiceState.Running : ServiceState.Pending;
+        }
+
+        /// <summary>읽기만 — SCM 의 dwCurrentState 그대로(1 멈춤·2 시작 중·3 멈추는 중·4 돎 …), 없으면 0, 모르면 -1.</summary>
+        public static int RawStateReadOnly(string name)
+        {
             IntPtr scm = OpenSCManagerW(null, null, 0x1);
-            if (scm == IntPtr.Zero) return ServiceState.Unknown;
+            if (scm == IntPtr.Zero) return -1;
             IntPtr svc = OpenServiceW(scm, name, 0x4);
             try
             {
-                if (svc == IntPtr.Zero) return Marshal.GetLastWin32Error() == ERROR_SERVICE_DOES_NOT_EXIST ? ServiceState.Missing : ServiceState.Unknown;
+                if (svc == IntPtr.Zero) return Marshal.GetLastWin32Error() == ERROR_SERVICE_DOES_NOT_EXIST ? 0 : -1;
                 SERVICE_STATUS st;
-                if (!QueryServiceStatus(svc, out st)) return ServiceState.Unknown;
-                return st.State == SERVICE_STOPPED ? ServiceState.Stopped : st.State == SERVICE_RUNNING ? ServiceState.Running : ServiceState.Pending;
+                if (!QueryServiceStatus(svc, out st)) return -1;
+                return (int)st.State;
             }
             finally { if (svc != IntPtr.Zero) CloseServiceHandle(svc); CloseServiceHandle(scm); }
         }
@@ -385,6 +465,23 @@ namespace WebTether
                 int needed;
                 if (!QueryServiceStatusEx(svc, 0, out st, Marshal.SizeOf(typeof(SERVICE_STATUS_PROCESS)), out needed)) return 0;
                 return st.State == SERVICE_RUNNING ? (int)st.ProcessId : 0;
+            }
+            finally { if (svc != IntPtr.Zero) CloseServiceHandle(svc); CloseServiceHandle(scm); }
+        }
+
+        /// <summary>서비스 프로세스의 PID — 상태와 상관없이(시작·멈추는 중에도), 없으면 0. 읽기만.</summary>
+        public static int ServicePidReadOnly(string name)
+        {
+            IntPtr scm = OpenSCManagerW(null, null, 0x1);
+            if (scm == IntPtr.Zero) return 0;
+            IntPtr svc = OpenServiceW(scm, name, 0x4);
+            try
+            {
+                if (svc == IntPtr.Zero) return 0;
+                SERVICE_STATUS_PROCESS st;
+                int needed;
+                if (!QueryServiceStatusEx(svc, 0, out st, Marshal.SizeOf(typeof(SERVICE_STATUS_PROCESS)), out needed)) return 0;
+                return (int)st.ProcessId;
             }
             finally { if (svc != IntPtr.Zero) CloseServiceHandle(svc); CloseServiceHandle(scm); }
         }
@@ -448,7 +545,7 @@ namespace WebTether
                                                null, "LocalSystem", null, spec.DisplayName))
                 { error = "고치기: " + Err(); return false; }
                 if (!Config2Description(svc, spec.Description)) { error = "설명: " + Err(); return false; }
-                if (!Config2Delayed(svc)) { error = "지연 시작: " + Err(); return false; }
+                if (!Config2Delayed(svc, spec.DelayedStart)) { error = "지연 시작: " + Err(); return false; }
                 if (!Config2Failure(svc)) { error = "실패 동작: " + Err(); return false; }
                 var sd = new System.Security.AccessControl.RawSecurityDescriptor(spec.Sddl);
                 var bytes = new byte[sd.BinaryLength];
@@ -467,10 +564,11 @@ namespace WebTether
             finally { Marshal.FreeHGlobal(box); Marshal.FreeHGlobal(p); }
         }
 
-        static bool Config2Delayed(IntPtr svc)
+        /// <summary>지연된 자동 시작을 켜거나 끈다 — 옛 판(지연)으로 만든 서비스를 고칠 때 끄려고 늘 적는다.</summary>
+        static bool Config2Delayed(IntPtr svc, bool on)
         {
             var box = Marshal.AllocHGlobal(4);
-            try { Marshal.WriteInt32(box, 1); return ChangeServiceConfig2W(svc, CONFIG_DELAYED_AUTO_START, box); }
+            try { Marshal.WriteInt32(box, on ? 1 : 0); return ChangeServiceConfig2W(svc, CONFIG_DELAYED_AUTO_START, box); }
             finally { Marshal.FreeHGlobal(box); }
         }
 

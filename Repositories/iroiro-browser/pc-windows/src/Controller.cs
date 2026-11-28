@@ -439,7 +439,9 @@ namespace WebTether
                 if (Cancelled(null)) return;
                 if (others.Count > 0)
                 {
-                    Fail("다른 tun2proxy 가 실행 중입니다. 먼저 끄십시오.", false);
+                    // 이전 판 도우미가 떠 있으면 그 tun2proxy(-bin) 가 여기에 걸린다(11-28 — 사용자 기기에서 그랬다). 까닭과 할 일을 로그·트레이에.
+                    Fail("다른 tun2proxy 가 실행 중입니다(PID " + string.Join(", ", others.ConvertAll(p => p.ToString(System.Globalization.CultureInfo.InvariantCulture)).ToArray()) +
+                         ") — 이전 판 도우미라면 그 알림 영역 아이콘의 ‘끝내기’ 로 끝낸 뒤 다시 연결하십시오.", false);
                     return;
                 }
 
