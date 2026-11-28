@@ -11,52 +11,120 @@ using System.Runtime.InteropServices;
 namespace WebTether
 {
     /// <summary>
-    /// tun2proxy 의 'Beginning #n TCP 10.0.0.33:52298 -> 192.168.49.1:1080' 줄(0.8.7 — lib.rs 의 log::info!("Beginning {session_info}"),
-    /// SessionInfo 의 꼴 '#{id} {protocol} {src} -> {dst}')에서 목적지가 프록시(폰) 주소인 세션을 찾는다. 줄 앞의 env_logger 머리는 보지 않는다.
-    /// 포트는 보지 않는다 — TUN 으로 폰 주소에 가는 세션은 어느 포트든(1080 의 고리, UDP 묶음의 포트, 시스템 프록시의 8282) on-link 경로가
-    /// 빠졌다는 뜻이다(그 경로가 있으면 /24 가 TUN 의 /0 을 이긴다).
+    /// tun2proxy 의 'Beginning' 줄에서 목적지가 프록시(폰) 주소인 세션을 찾는다. 줄 꼴은 0.8.7 의 것 그대로만 받는다 —
+    /// env_logger 0.11 의 기본 머리 '[<UTC 초까지> INFO  tun2proxy] '(때·5칸으로 채운 수준·대상, 대상은 lib.rs 의 모듈 경로) 바로 뒤에
+    /// 'Beginning #<번호> <TCP|UDP> <출발> -> <목적지>'(lib.rs 의 log::info!("Beginning {session_info}"), SessionInfo 의 꼴 '#{id} {protocol} {src} -> {dst}')
+    /// 이고 그 뒤에 아무것도 없는 줄. 주소는 점 넷의 십진 IPv4(칸마다 0–255, 앞의 0 없음)와 대괄호 IPv6 만, 포트는 1–65535(앞의 0 없음).
+    /// 포트는 견주지 않는다 — TUN 으로 폰 주소에 가는 세션은 어느 포트든(1080 의 고리, UDP 묶음의 포트, 시스템 프록시의 8282) on-link
+    /// 경로가 빠졌다는 뜻이다(그 경로가 있으면 /24 가 TUN 의 /0 을 이긴다).
     /// </summary>
     public static class LoopGuard
     {
-        const string Head = "Beginning #";
+        const string Tail = " INFO  tun2proxy] Beginning #";
 
         /// <summary>프록시 주소로 가는 세션이면 '프로토콜 목적지'(로그에 적을 것), 아니면 null. 프록시 주소가 IP 글자가 아니면 늘 null.</summary>
         public static string Match(string line, string proxyHost)
         {
             if (string.IsNullOrEmpty(line) || string.IsNullOrEmpty(proxyHost)) return null;
-            int i = line.IndexOf(Head, StringComparison.Ordinal);
-            if (i < 0) return null;
-            var parts = line.Substring(i + Head.Length).Trim().Split(' ');
-            if (parts.Length < 5 || parts[3] != "->") return null;
-            uint id;
-            if (!uint.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out id)) return null;
+            if (line[0] != '[') return null;
+            int t = line.IndexOf(Tail, StringComparison.Ordinal);
+            if (t < 0 || !IsTimestamp(line.Substring(1, t - 1))) return null;
+            var parts = line.Substring(t + Tail.Length).Split(' ');
+            if (parts.Length != 5 || parts[3] != "->") return null;
+            if (!IsDecimal(parts[0], 20)) return null;
             if (parts[1] != "TCP" && parts[1] != "UDP") return null;
-            IPAddress proxy, dst;
-            if (!IPAddress.TryParse(proxyHost.Trim().Trim('[', ']'), out proxy)) return null;
-            if (!TryHost(parts[4], out dst)) return null;
-            if (dst.IsIPv4MappedToIPv6) dst = dst.MapToIPv4();
-            if (proxy.IsIPv4MappedToIPv6) proxy = proxy.MapToIPv4();
+            IPAddress src, dst, proxy;
+            if (!TryEndpoint(parts[2], out src) || !TryEndpoint(parts[4], out dst)) return null;
+            if (!TryAddress(proxyHost.Trim(), out proxy)) return null;
             return dst.Equals(proxy) ? parts[1] + " " + parts[4] : null;
         }
 
-        /// <summary>'a.b.c.d:port' 또는 '[v6]:port' 의 주소.</summary>
-        static bool TryHost(string endpoint, out IPAddress ip)
+        /// <summary>env_logger 의 humantime 초 단위 때 — '2026-11-28T03:15:16Z'.</summary>
+        static bool IsTimestamp(string s)
+        {
+            const string Shape = "dddd-dd-ddTdd:dd:ddZ";
+            if (s.Length != Shape.Length) return false;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (Shape[i] == 'd') { if (s[i] < '0' || s[i] > '9') return false; }
+                else if (s[i] != Shape[i]) return false;
+            }
+            return true;
+        }
+
+        static bool IsDecimal(string s, int maxLen)
+        {
+            if (s.Length == 0 || s.Length > maxLen) return false;
+            foreach (var ch in s) if (ch < '0' || ch > '9') return false;
+            return true;
+        }
+
+        /// <summary>'a.b.c.d:port' 또는 '[v6]:port'.</summary>
+        static bool TryEndpoint(string endpoint, out IPAddress ip)
         {
             ip = null;
-            string host;
+            string host, port;
             if (endpoint.StartsWith("[", StringComparison.Ordinal))
             {
-                int close = endpoint.IndexOf(']');
+                int close = endpoint.IndexOf("]:", StringComparison.Ordinal);
                 if (close < 0) return false;
                 host = endpoint.Substring(1, close - 1);
+                port = endpoint.Substring(close + 2);
+                if (!TryV6(host, out ip)) return false;
             }
             else
             {
                 int colon = endpoint.LastIndexOf(':');
                 if (colon <= 0) return false;
                 host = endpoint.Substring(0, colon);
+                port = endpoint.Substring(colon + 1);
+                if (!TryV4(host, out ip)) return false;
             }
-            return IPAddress.TryParse(host, out ip);
+            int n;
+            return IsDecimal(port, 5) && port[0] != '0' && int.TryParse(port, NumberStyles.None, CultureInfo.InvariantCulture, out n) && n <= 65535;
+        }
+
+        /// <summary>프록시 주소 — 점 넷의 십진 IPv4 또는(대괄호가 있든 없든) IPv6.</summary>
+        static bool TryAddress(string s, out IPAddress ip)
+        {
+            if (TryV4(s, out ip)) return true;
+            if (s.StartsWith("[", StringComparison.Ordinal) && s.EndsWith("]", StringComparison.Ordinal)) s = s.Substring(1, s.Length - 2);
+            return TryV6(s, out ip);
+        }
+
+        /// <summary>점 넷의 십진 IPv4 만 — 칸마다 0–255, 앞의 0 없음(IPAddress.TryParse 는 '3232248065'·'0xC0.0xA8.0x31.0x01'·'192.168.049.1' 도 받는다).</summary>
+        public static bool TryV4(string s, out IPAddress ip)
+        {
+            ip = null;
+            var parts = s.Split('.');
+            if (parts.Length != 4) return false;
+            var b = new byte[4];
+            for (int i = 0; i < 4; i++)
+            {
+                var p = parts[i];
+                if (!IsDecimal(p, 3) || (p.Length > 1 && p[0] == '0')) return false;
+                int v = int.Parse(p, NumberStyles.None, CultureInfo.InvariantCulture);
+                if (v > 255) return false;
+                b[i] = (byte)v;
+            }
+            ip = new IPAddress(b);
+            return true;
+        }
+
+        /// <summary>IPv6 — 16진 숫자·콜론·(끝에 IPv4 를 실은 꼴의) 점만, 범위(%)는 받지 않는다.</summary>
+        static bool TryV6(string s, out IPAddress ip)
+        {
+            ip = null;
+            if (s.Length < 2 || s.IndexOf(':') < 0) return false;
+            foreach (var ch in s)
+            {
+                bool ok = (ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F') || ch == ':' || ch == '.';
+                if (!ok) return false;
+            }
+            IPAddress a;
+            if (!IPAddress.TryParse(s, out a) || a.AddressFamily != System.Net.Sockets.AddressFamily.InterNetworkV6) return false;
+            ip = a;
+            return true;
         }
     }
 

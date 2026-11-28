@@ -107,21 +107,45 @@ namespace WebTether.Tests
 
         static void AddSsid(Action<string, Action> T)
         {
-            T("경로 고리(11-28): tun2proxy 의 'Beginning' 줄에서 프록시(폰) 주소로 가는 세션만 — TCP·UDP·어느 포트든, 그 밖은 아님", () =>
+            T("경로 고리(11-28·12차): 0.8.7 의 줄 꼴 그대로만(env_logger 머리 + 'Beginning #', 점 넷 십진 IPv4·대괄호 IPv6) 프록시(폰) 주소로 가는 세션 — TCP·UDP·어느 포트든, 그 밖은 아님", () =>
             {
                 const string P = "192.168.49.1";
                 A.Eq("TCP 192.168.49.1:1080", LoopGuard.Match(LoopLine, P), "0.8.7 의 실제 줄");
-                A.Eq("TCP 192.168.49.1:1080", LoopGuard.Match("Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "머리 없이");
-                A.Eq("UDP 192.168.49.1:40123", LoopGuard.Match("[x INFO  tun2proxy] Beginning #7 UDP 10.0.0.33:50000 -> 192.168.49.1:40123", P), "UDP 묶음의 포트");
-                A.Eq("TCP 192.168.49.1:8282", LoopGuard.Match("[x INFO  tun2proxy] Beginning #8 TCP 10.0.0.33:50001 -> 192.168.49.1:8282", P), "다른 포트(시스템 프록시)");
-                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Beginning #9 UDP 10.0.0.33:50002 -> 1.0.0.1:53", P), "DNS(바뀐 목적지)");
-                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Beginning #9 TCP 10.0.0.33:50002 -> 192.168.49.10:1080", P), "다른 주소");
-                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Ending #33 TCP 10.0.0.33:52298 -> 192.168.49.1:1080 with \"timed out\"", P), "끝 줄은 아님");
-                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Beginning #x TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "번호가 아님");
-                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Beginning #1 ICMP 10.0.0.33:1 -> 192.168.49.1:1080", P), "모르는 프로토콜");
-                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 => 192.168.49.1:1080", P), "화살표가 다름");
+                A.Eq("UDP 192.168.49.1:40123", LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #7 UDP 10.0.0.33:50000 -> 192.168.49.1:40123", P), "UDP 묶음의 포트");
+                A.Eq("TCP 192.168.49.1:8282", LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #8 TCP 10.0.0.33:50001 -> 192.168.49.1:8282", P), "다른 포트(시스템 프록시)");
+                A.Eq("TCP [fe80::1]:1080", LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #2 TCP [fe80::2]:5 -> [fe80::1]:1080", "fe80::1"), "IPv6(대괄호)");
+                A.Eq("TCP [fe80::1]:1080", LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #2 TCP [fe80::2]:5 -> [fe80::1]:1080", "[fe80::1]"), "프록시 주소의 대괄호");
+                A.Eq((string)null, LoopGuard.Match("Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "머리 없이");
+                A.Eq((string)null, LoopGuard.Match("(2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "여는 대괄호가 아님");
+                A.Eq((string)null, LoopGuard.Match("x [2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "줄 가운데의 머리");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z WARN  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "수준이 INFO 가 아님");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  ipstack] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "대상이 tun2proxy 가 아님");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16.123Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "때의 꼴이 다름");
+                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "때가 아님");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "수준의 채움이 다름");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #9 UDP 10.0.0.33:50002 -> 1.0.0.1:53", P), "DNS(바뀐 목적지)");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #9 TCP 10.0.0.33:50002 -> 192.168.49.10:1080", P), "다른 주소");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Ending #33 TCP 10.0.0.33:52298 -> 192.168.49.1:1080 with \"timed out\"", P), "끝 줄은 아님");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #33 TCP 10.0.0.33:52298 -> 192.168.49.1:1080 x", P), "뒤에 무엇이 붙음");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #x TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "번호가 아님");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 ICMP 10.0.0.33:1 -> 192.168.49.1:1080", P), "모르는 프로토콜");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 => 192.168.49.1:1080", P), "화살표가 다름");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 3232248065:1080", P), "하나의 수");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 0xC0.0xA8.0x31.0x01:1080", P), "16진");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.049.1:1080", P), "앞의 0");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49:1080", P), "칸 셋");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1.:1080", P), "끝의 점");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.256:1080", P), "256");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:01080", P), "포트의 앞 0");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:0", P), "포트 0");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:65536", P), "포트 65536");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1", P), "포트 없음");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #1 TCP 010.0.0.33:1 -> 192.168.49.1:1080", P), "출발 주소도 엄격");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #2 TCP [fe80::2]:5 -> fe80::1:1080", "fe80::1"), "대괄호 없는 IPv6");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #2 TCP [fe80::2]:5 -> [fe80::1%12]:1080", "fe80::1%12"), "범위가 붙은 IPv6(프록시 주소도)");
+                A.Eq((string)null, LoopGuard.Match("[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #2 TCP [fe80::2]:5 -> [::ffff:192.168.49.1]:1080", P), "IPv4 를 실은 IPv6 는 IPv4 와 다르다");
                 A.Eq((string)null, LoopGuard.Match(LoopLine, "phone.example"), "프록시 주소가 IP 가 아니면 보지 않음");
-                A.Eq("TCP [fe80::1]:1080", LoopGuard.Match("Beginning #2 TCP [fe80::2]:5 -> [fe80::1]:1080", "fe80::1"), "IPv6");
+                A.Eq((string)null, LoopGuard.Match(LoopLine, "3232248065"), "프록시 주소도 엄격(하나의 수)");
                 A.Eq((string)null, LoopGuard.Match(null, P), "빈 줄");
                 A.Eq("info", CommandLine.EffectiveVerbosity("off"), "off → info");
                 A.Eq("info", CommandLine.EffectiveVerbosity("error"), "error → info");
@@ -139,6 +163,29 @@ namespace WebTether.Tests
                 A.Eq((string)null, WlanEvents.GoingDown(0x08, 10), "acm connection complete 는 아님");
                 A.Eq((string)null, WlanEvents.GoingDown(0x10, 4), "msm connected 는 아님");
                 A.Eq((string)null, WlanEvents.GoingDown(0x20, 20), "다른 출처");
+            });
+
+            T("설정 창의 로그 수준(12차): off·error·warn 을 고르면 'tun2proxy 기록은 info 이상' 한 줄 — info 이상이면 없음", () =>
+            {
+                A.Eq(SettingsForm.VerbosityNoteText, SettingsForm.VerbosityNote("warn"), "warn");
+                A.Eq(SettingsForm.VerbosityNoteText, SettingsForm.VerbosityNote("error"), "error");
+                A.Eq(SettingsForm.VerbosityNoteText, SettingsForm.VerbosityNote("off"), "off");
+                A.Eq((string)null, SettingsForm.VerbosityNote("info"), "info");
+                A.Eq((string)null, SettingsForm.VerbosityNote("trace"), "trace");
+                A.Eq((string)null, SettingsForm.VerbosityNote(null), "고르지 않음");
+                var r = Make("verb-note", null);
+                var before = SynchronizationContext.Current;
+                try
+                {
+                    using (var f = new SettingsForm(r.C))
+                    {
+                        f.LoadFrom(new Settings { Verbosity = "warn" });
+                        A.Eq(SettingsForm.VerbosityNoteText, f.MessageText, "창에 한 줄");
+                        f.LoadFrom(new Settings { Verbosity = "debug" });
+                        A.Eq("", f.MessageText, "info 이상이면 없음");
+                    }
+                }
+                finally { SynchronizationContext.SetSynchronizationContext(before); }
             });
 
             T("경로 고리(11-28): 프록시 주소로 가는 세션이 보이면 곧바로 강제로 끝내고 띄운 뒤의 실패로(횟수를 씀 — 상한에서 멎음), 로그는 자식마다 한 줄, 끊는 중이면 Ctrl+C 를 앞당김", () =>

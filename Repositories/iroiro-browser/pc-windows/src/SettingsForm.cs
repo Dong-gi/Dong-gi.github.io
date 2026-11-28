@@ -67,6 +67,7 @@ namespace WebTether
             kSetup = AddCheck("setup", "경로·DNS 자동 설정(--setup)", () => kSetup.Checked = true);
             tBypass = AddText("bypass", "우회 목록", () => tBypass.Text = "");
             cVerb = AddCombo("verbosity", "로그 수준", Settings.Verbosities, () => cVerb.SelectedItem = Settings.DefaultVerbosity);
+            cVerb.SelectedIndexChanged += (s, e) => Hint();
 
             Section("다시 연결");
             tSsid = AddText("ssid_prefix", "자동 연결 Wi-Fi", () => tSsid.Text = Settings.DefaultSsidPrefix);
@@ -98,6 +99,7 @@ namespace WebTether
             Controls.Add(grid);
 
             var tip = new ToolTip();
+            tip.SetToolTip(cVerb, "tun2proxy 의 기록 수준. info 밑은 info 로 씁니다(경로 고리 감지).");
             tip.SetToolTip(tBypass, "터널 밖으로 보낼 IPv4·CIDR. 쉼표로 가릅니다. 예: 10.0.0.0/8");
             tip.SetToolTip(tWifi, "핫스팟이 없을 때 붙을 Wi-Fi 프로필. 로그온 전에도 붙으려면 '모든 사용자' 프로필이어야 합니다.");
             tip.SetToolTip(tSsid, "이 이름으로 시작하는 Wi-Fi 에서만 저절로 연결합니다. 다른 Wi-Fi 는 '연결' 을 누르면 묻습니다.");
@@ -194,7 +196,7 @@ namespace WebTether
             cUpdate.SelectedIndex = (int)s.UpdateEvery;
             message.Text = "";
             Hint();
-            if (message.Text.Length == 0 && !string.IsNullOrEmpty(ctl.LoadNotice))
+            if ((message.Text.Length == 0 || message.Text == VerbosityNoteText) && !string.IsNullOrEmpty(ctl.LoadNotice))
             {
                 message.ForeColor = Color.FromArgb(0xB2, 0x6A, 0x00);
                 message.Text = ctl.LoadNotice;
@@ -231,8 +233,27 @@ namespace WebTether
                 message.ForeColor = Color.FromArgb(0xB2, 0x6A, 0x00);
                 message.Text = "http 프록시는 UDP 를 넘기지 못합니다 — DNS 방식을 over-tcp 로 두십시오.";
             }
+            else if (VerbosityNote((string)(cVerb == null ? null : cVerb.SelectedItem)) != null)
+            {
+                message.ForeColor = Color.FromArgb(0xB2, 0x6A, 0x00);
+                message.Text = VerbosityNote((string)cVerb.SelectedItem);
+            }
             else if (message.ForeColor != Color.Firebrick) message.Text = "";
         }
+
+        /// <summary>
+        /// 고른 로그 수준이 tun2proxy 에 그대로 가지 않으면(off·error·warn — 경로 고리 감지가 info 의 줄을 읽어 info 로 올린다) 그 한 줄.
+        /// </summary>
+        public static string VerbosityNote(string selected)
+        {
+            if (string.IsNullOrEmpty(selected) || CommandLine.EffectiveVerbosity(selected) == selected) return null;
+            return VerbosityNoteText;
+        }
+
+        public const string VerbosityNoteText = "tun2proxy 기록은 경로 고리 감지 때문에 info 이상으로 남깁니다.";
+
+        /// <summary>창 아래 알림 줄의 글(시험).</summary>
+        public string MessageText { get { return message.Text; } }
 
         sealed class SaveOutcome
         {
