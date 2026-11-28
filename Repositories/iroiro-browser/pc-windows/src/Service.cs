@@ -121,6 +121,8 @@ namespace WebTether
         public PipeServer Pipe { get { return pipe; } }
         /// <summary>Controller 를 만든 뒤 부른다(시험이 가짜를 끼운다 — UI 스레드에서).</summary>
         public Action<Controller> Configure;
+        /// <summary>Wi-Fi 끊김 알림을 받기 시작한다(시험이 가짜를 끼운다 — 기본은 Native Wifi). 못 하면 던진다.</summary>
+        public Func<Action<Guid, string>, IDisposable> WlanWatch = WlanEvents.Watch;
         /// <summary>시험 판: 파이프에 자기 SID 를 넣는다(보통 권한으로 인스턴스를 더 만들 수 있게).</summary>
         public bool PipeForCurrentUser;
         /// <summary>파이프 손님 확인의 콘솔 세션(시험이 바꾼다 — null 이면 WTS).</summary>
@@ -220,6 +222,10 @@ namespace WebTether
                     System.Net.NetworkInformation.NetworkAvailabilityChangedEventHandler onAvail = (s, e) => Post(() => ctl.NetworkChanged());
                     System.Net.NetworkInformation.NetworkChange.NetworkAddressChanged += onAddr;
                     System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += onAvail;
+                    // Wi-Fi 가 끊기는 알림 — 연결 중이면 곧바로 핫스팟을 보고 내린다(경로 고리를 줄이려고, Controller.WlanGoingDown). 읽기만 하는 알림이다.
+                    IDisposable wlan = null;
+                    try { wlan = WlanWatch((g, what) => Post(() => ctl.WlanGoingDown(g, what))); }
+                    catch (Exception ex) { Log.Write("Wi-Fi", "Wi-Fi 끊김 알림을 받지 못합니다 — " + ex.Message); }
                     appCtx = new ApplicationContext();
                     ready.Set();
                     try { Application.Run(appCtx); }
@@ -227,6 +233,7 @@ namespace WebTether
                     {
                         System.Net.NetworkInformation.NetworkChange.NetworkAddressChanged -= onAddr;
                         System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged -= onAvail;
+                        if (wlan != null) { try { wlan.Dispose(); } catch (Exception) { } }
                     }
                     timer.Dispose();
                 }

@@ -60,7 +60,17 @@ namespace WebTether.Tests
             public FakeSessions Sessions = new FakeSessions();
             public HotspotInfo Hotspot = new HotspotInfo { AdapterName = "Wi-Fi", Address = "192.168.49.60", IfIndex = 12, Ssid = "DIRECT-UT-시험폰" };
             public int Console;
+            /// <summary>서비스가 건 Wi-Fi 끊김 알림의 받는 쪽(가짜 — Native Wifi 에 등록하지 않는다).</summary>
+            public volatile Action<Guid, string> Wlan;
+            public volatile bool WlanDisposed;
             public void Dispose() { Core.Stop(10000); }
+        }
+
+        sealed class FakeWlanWatch : IDisposable
+        {
+            readonly Svc s;
+            public FakeWlanWatch(Svc s) { this.s = s; }
+            public void Dispose() { s.WlanDisposed = true; }
         }
 
         /// <summary>이 프로세스에서 서비스의 몸통을 dry-run 으로 띄운다(파이프 이름은 시험마다 따로, 손님 확인의 콘솔 세션은 이 세션).</summary>
@@ -75,6 +85,7 @@ namespace WebTether.Tests
                 AskTimeoutSeconds = 5,
                 ProposerImage = MyImage(),
                 ProposalAfterMs = 0,
+                WlanWatch = cb => { s.Wlan = cb; return new FakeWlanWatch(s); },
                 Configure = c =>
                 {
                     c.HotspotFinder = p => s.Hotspot;
@@ -567,6 +578,39 @@ namespace WebTether.Tests
                     A.WaitUntil(() => s.Core.Controller.State != TetherState.Error, 5000, "콘솔 로그온이면 다시 시작(예산을 새로)");
                     A.Eq(2, logons(), "적음");
                 }
+            });
+
+            T("앞서 내리기(11-28) — 서비스: Wi-Fi 끊김 알림을 받아 연결 중이면 곧바로(빠른 점검 창) 핫스팟을 보고, 멈출 때 알림을 걷는다", () =>
+            {
+                int probes = 0;
+                Svc s;
+                using (s = Start("wlan-watch", null, core =>
+                {
+                    var keep = core.Configure;
+                    core.Configure = c =>
+                    {
+                        keep(c);
+                        var inner = c.HotspotFinder;
+                        c.HotspotFinder = p => { Interlocked.Increment(ref probes); return inner(p); };
+                        c.FastCheckMs = 50;
+                        c.FastWindowMs = 3000;
+                    };
+                }))
+                {
+                    A.WaitUntil(() => s.Core.Controller.ChildRunning, 5000, "저절로 연결(dry-run)");
+                    A.True(s.Wlan != null, "Wi-Fi 끊김 알림을 걸었다");
+                    Thread.Sleep(300);
+                    int before = Volatile.Read(ref probes);
+                    s.Wlan(Guid.NewGuid(), "Wi-Fi 연결이 끊기는 중"); // Native Wifi 의 스레드처럼 — 서비스가 UI 스레드로 넘긴다
+                    Thread.Sleep(1000);
+                    int seen = Volatile.Read(ref probes) - before;
+                    A.True(seen >= 5, "알림 뒤 1초에 핫스팟을 여러 번 봄(1초 Tick 보다 잦게): " + seen);
+                    A.True(s.Core.Controller.ChildRunning, "핫스팟이 그대로면 그대로");
+                    s.Hotspot = null;
+                    s.Wlan(Guid.NewGuid(), "Wi-Fi 연결이 끊김");
+                    A.WaitUntil(() => !s.Core.Controller.ChildRunning, 3000, "사라졌으면 내림");
+                }
+                A.True(s.WlanDisposed, "멈출 때 알림을 걷음");
             });
 
             T("설치 뒤 트레이 다시 띄우기(11-28): 실패하면 삼키지 않고 알릴 글, 트레이는 서비스가 시작 중·멈춤이면 그렇게 짧게", () =>

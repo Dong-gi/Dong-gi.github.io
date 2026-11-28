@@ -60,8 +60,165 @@ namespace WebTether.Tests
             public string LoadNotice { get { return null; } }
         }
 
+        /// <summary>시험이 끝내기 전까지 살아 있는 자식 — Ctrl+C 는 Kill 이 올 때까지(또는 시한까지) 기다린다(경로 고리가 끊는 중의 Ctrl+C 를 앞당기는가).</summary>
+        sealed class SlowChild : IChild
+        {
+            readonly ManualResetEventSlim dead = new ManualResetEventSlim(false);
+            public int Kills;
+            public int Pid { get { return 910007; } }
+            public bool HasExited { get { return dead.IsSet; } }
+            public DateTime StartedAt { get; set; }
+            public event Action<int> Exited;
+            public bool StopGracefully(int timeoutMs, out string detail) { detail = null; return dead.Wait(timeoutMs); }
+            public void Kill()
+            {
+                Interlocked.Increment(ref Kills);
+                if (dead.IsSet) return;
+                dead.Set();
+                var h = Exited;
+                if (h != null) h(-1);
+            }
+            public void Dispose() { }
+        }
+
+        /// <summary>자식의 출력을 시험이 흘려 넣는다(tun2proxy 의 줄처럼). slow 면 SlowChild, 아니면 DryRunChild.</summary>
+        sealed class ChattyFactory : IChildFactory
+        {
+            public readonly bool Slow;
+            public Action<string, string> Output;
+            public IChild Last;
+            public int Starts;
+            public readonly List<string> CommandLines = new List<string>();
+            public ChattyFactory(bool slow) { Slow = slow; }
+            public IChild Start(HeldBinaries bin, List<string> args, Action<string, string> output, out string error)
+            {
+                error = null;
+                Starts++;
+                CommandLines.Add(CommandLine.Join(args));
+                Output = output;
+                Last = Slow ? (IChild)new SlowChild { StartedAt = DateTime.Now } : new DryRunChild();
+                return Last;
+            }
+            public void Say(string line) { Output("tun2proxy", line); }
+        }
+
+        /// <summary>tun2proxy 0.8.7 의 실제 줄 꼴(11-28 사용자 기기 로그 — env_logger 머리 + 'Beginning {session_info}').</summary>
+        const string LoopLine = "[2026-11-28T03:15:16Z INFO  tun2proxy] Beginning #33 TCP 10.0.0.33:52298 -> 192.168.49.1:1080";
+
         static void AddSsid(Action<string, Action> T)
         {
+            T("경로 고리(11-28): tun2proxy 의 'Beginning' 줄에서 프록시(폰) 주소로 가는 세션만 — TCP·UDP·어느 포트든, 그 밖은 아님", () =>
+            {
+                const string P = "192.168.49.1";
+                A.Eq("TCP 192.168.49.1:1080", LoopGuard.Match(LoopLine, P), "0.8.7 의 실제 줄");
+                A.Eq("TCP 192.168.49.1:1080", LoopGuard.Match("Beginning #1 TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "머리 없이");
+                A.Eq("UDP 192.168.49.1:40123", LoopGuard.Match("[x INFO  tun2proxy] Beginning #7 UDP 10.0.0.33:50000 -> 192.168.49.1:40123", P), "UDP 묶음의 포트");
+                A.Eq("TCP 192.168.49.1:8282", LoopGuard.Match("[x INFO  tun2proxy] Beginning #8 TCP 10.0.0.33:50001 -> 192.168.49.1:8282", P), "다른 포트(시스템 프록시)");
+                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Beginning #9 UDP 10.0.0.33:50002 -> 1.0.0.1:53", P), "DNS(바뀐 목적지)");
+                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Beginning #9 TCP 10.0.0.33:50002 -> 192.168.49.10:1080", P), "다른 주소");
+                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Ending #33 TCP 10.0.0.33:52298 -> 192.168.49.1:1080 with \"timed out\"", P), "끝 줄은 아님");
+                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Beginning #x TCP 10.0.0.33:1 -> 192.168.49.1:1080", P), "번호가 아님");
+                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Beginning #1 ICMP 10.0.0.33:1 -> 192.168.49.1:1080", P), "모르는 프로토콜");
+                A.Eq((string)null, LoopGuard.Match("[x INFO  tun2proxy] Beginning #1 TCP 10.0.0.33:1 => 192.168.49.1:1080", P), "화살표가 다름");
+                A.Eq((string)null, LoopGuard.Match(LoopLine, "phone.example"), "프록시 주소가 IP 가 아니면 보지 않음");
+                A.Eq("TCP [fe80::1]:1080", LoopGuard.Match("Beginning #2 TCP [fe80::2]:5 -> [fe80::1]:1080", "fe80::1"), "IPv6");
+                A.Eq((string)null, LoopGuard.Match(null, P), "빈 줄");
+                A.Eq("info", CommandLine.EffectiveVerbosity("off"), "off → info");
+                A.Eq("info", CommandLine.EffectiveVerbosity("error"), "error → info");
+                A.Eq("info", CommandLine.EffectiveVerbosity("warn"), "warn → info");
+                A.Eq("info", CommandLine.EffectiveVerbosity("info"), "info");
+                A.Eq("debug", CommandLine.EffectiveVerbosity("debug"), "debug 그대로");
+                A.Eq("trace", CommandLine.EffectiveVerbosity("trace"), "trace 그대로");
+                A.True(CommandLine.Join(CommandLine.Tun2proxyArgs(new Settings { Verbosity = "warn" })).Contains("--verbosity info"), "명령줄이 info 로");
+                A.Eq("Wi-Fi 연결이 끊기는 중", WlanEvents.GoingDown(0x08, 20), "acm disconnecting");
+                A.Eq("Wi-Fi 연결이 끊김", WlanEvents.GoingDown(0x08, 21), "acm disconnected");
+                A.Eq("Wi-Fi 어댑터가 사라짐", WlanEvents.GoingDown(0x08, 14), "acm interface removal");
+                A.Eq("Wi-Fi 연결을 푸는 중", WlanEvents.GoingDown(0x10, 9), "msm disassociating");
+                A.Eq("Wi-Fi 연결이 끊김", WlanEvents.GoingDown(0x10, 10), "msm disconnected");
+                A.Eq("Wi-Fi 어댑터가 사라짐", WlanEvents.GoingDown(0x10, 13), "msm adapter removal");
+                A.Eq((string)null, WlanEvents.GoingDown(0x08, 10), "acm connection complete 는 아님");
+                A.Eq((string)null, WlanEvents.GoingDown(0x10, 4), "msm connected 는 아님");
+                A.Eq((string)null, WlanEvents.GoingDown(0x20, 20), "다른 출처");
+            });
+
+            T("경로 고리(11-28): 프록시 주소로 가는 세션이 보이면 곧바로 강제로 끝내고 띄운 뒤의 실패로(횟수를 씀 — 상한에서 멎음), 로그는 자식마다 한 줄, 끊는 중이면 Ctrl+C 를 앞당김", () =>
+            {
+                var f = new ChattyFactory(false);
+                var r = Make("loop", new Settings { ReconnectInterval = 3, ReconnectMax = 1, Verbosity = "warn" }, null, f);
+                Run(r.C.ConnectAsync());
+                A.Eq(1, f.Starts, "띄움");
+                A.True(f.CommandLines[0].Contains("--verbosity info"), "info 로 띄움: " + f.CommandLines[0]);
+                var first = (DryRunChild)f.Last;
+                for (int i = 0; i < 50; i++) f.Say(LoopLine.Replace("#33", "#" + (33 + i)));
+                A.WaitUntil(() => r.C.State == TetherState.Waiting, 3000, "대기");
+                A.True(first.HasExited, "강제로 끝냄");
+                A.True(r.C.Detail.Contains(Controller.RouteLoopWhy) && r.C.Detail.Contains("1/1"), "띄운 뒤의 실패로 횟수를 씀: " + r.C.Detail);
+                Func<int> lines = () => { lock (r.Log) return r.Log.Count(l => l.Contains("경로 고리를 막으려고 tun2proxy 를 멈췄습니다")); };
+                A.Eq(1, lines(), "자식마다 한 줄");
+                lock (r.Log) A.True(r.Log.Any(l => l.Contains("경로 고리 — 곧바로 끝냅니다")), "Ctrl+C 를 기다리지 않음");
+                Thread.Sleep(3100);
+                Tick(r);
+                A.WaitUntil(() => f.Starts == 2, 5000, "다시 띄움");
+                f.Say(LoopLine);
+                A.WaitUntil(() => r.C.State == TetherState.Error, 3000, "상한에서 멎음 — " + r.C.Detail);
+                A.Eq(2, lines(), "새 자식에서 한 줄 더");
+                lock (r.Notices) A.Eq(1, r.Notices.Count(n => n.StartsWith("연결이 끊겼습니다")), "알림은 한 번");
+                // 끊는 중(핫스팟 사라짐 — Ctrl+C 를 기다림)에 고리가 보이면 기다리지 않고 끝낸다
+                var g = new ChattyFactory(true);
+                var s = Make("loop-stopping", null, null, g);
+                Run(s.C.ConnectAsync());
+                var slow = (SlowChild)g.Last;
+                s.C.NetworkQuietSeconds = 0;
+                s.Hotspot = null;
+                var sw = Stopwatch.StartNew();
+                s.C.NetworkChanged(); // 연결 중의 알림 — 곧바로 핫스팟을 보고 Ctrl+C
+                A.WaitUntil(() => { lock (s.Log) return s.Log.Any(l => l.Contains("Ctrl+C 를 보냅니다")); }, 3000, "Ctrl+C");
+                g.Say(LoopLine);
+                A.WaitUntil(() => slow.HasExited, 3000, "고리가 보이자 곧바로 끝냄");
+                A.True(sw.ElapsedMilliseconds < Controller.StopGraceMs, "Ctrl+C 의 시한(" + Controller.StopGraceMs + " ms)을 기다리지 않음: " + sw.ElapsedMilliseconds);
+                A.WaitUntil(() => s.C.State == TetherState.Waiting, 5000, "상태는 핫스팟 사라짐이 정함 — " + s.C.Detail);
+                A.True(s.C.Detail.Contains("핫스팟"), s.C.Detail);
+            });
+
+            T("앞서 내리기(11-28): 연결 중의 주소 바뀜·Wi-Fi 끊김 알림이면 Tick 없이 곧바로 핫스팟을 보고 사라졌으면 내린다 — 핫스팟이 그대로면(TUN 자신의 알림) 그대로, 다른 어댑터의 Wi-Fi 알림은 보지 않음", () =>
+            {
+                var f = new ChattyFactory(false);
+                var r = Make("link", null, null, f);
+                r.C.NetworkQuietSeconds = 0;
+                Run(r.C.ConnectAsync());
+                r.C.NetworkChanged(); // TUN 이 생긴 알림 — 핫스팟은 그대로
+                Thread.Sleep(300);
+                A.True(r.C.ChildRunning && r.C.State == TetherState.Connecting, "그대로");
+                r.Hotspot = null;
+                r.C.NetworkChanged();
+                A.WaitUntil(() => !r.C.ChildRunning, 3000, "Tick 없이 곧바로 내림");
+                A.WaitUntil(() => r.C.State == TetherState.Waiting, 3000, "대기 — " + r.C.Detail);
+                lock (r.Log) A.True(r.Log.Any(l => l.Contains("알림(주소 바뀜)으로 곧바로 확인함")), "적음");
+
+                // Wi-Fi 끊김 알림 — 알림 때는 핫스팟이 아직 보이고, 잠시 뒤 사라진다(빠른 점검 창이 잡는다)
+                var w = new ChattyFactory(false);
+                var x = Make("link-wlan", null, null, w);
+                var mine = Guid.NewGuid();
+                x.Hotspot = Hs(Mine);
+                x.Hotspot.AdapterId = mine.ToString("B");
+                x.C.FastCheckMs = 50;
+                x.C.FastWindowMs = 3000;
+                Run(x.C.ConnectAsync());
+                x.C.WlanGoingDown(Guid.NewGuid(), "Wi-Fi 연결이 끊기는 중");
+                x.Hotspot = null;
+                Thread.Sleep(500);
+                A.True(x.C.ChildRunning, "다른 어댑터의 알림은 보지 않음");
+                x.Hotspot = Hs(Mine);
+                x.Hotspot.AdapterId = mine.ToString("B");
+                x.C.WlanGoingDown(mine, "Wi-Fi 연결이 끊기는 중");
+                Thread.Sleep(300);
+                A.True(x.C.ChildRunning, "알림 때는 아직 핫스팟이 보임 — 그대로");
+                x.Hotspot = null; // 주소가 빠짐
+                A.WaitUntil(() => !x.C.ChildRunning, 2000, "빠른 점검 창 안에서 내림(Tick 없이)");
+                lock (x.Log) A.True(x.Log.Any(l => l.Contains("알림(Wi-Fi 연결이 끊기는 중)으로 곧바로 확인함")), "적음");
+            });
+
+
             T("저절로 다시 연결(9차): 꺼짐·오류 동안 접두어에 맞는 Wi-Fi 가 나타나거나 망이 바뀌면 다시 시작 — 처음 본 것은 바탕만, 접두어 밖은 아님", () =>
             {
                 var r = Make("rearm", null);

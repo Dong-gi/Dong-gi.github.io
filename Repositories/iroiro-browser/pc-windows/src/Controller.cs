@@ -275,6 +275,16 @@ namespace WebTether
         string approvedSsid;
         /// <summary>지금 연결이 붙은 SSID(모르면 null) — 연결된 동안 이름이 바뀌면 핫스팟이 사라진 것으로 친다.</summary>
         string connectedSsid;
+        /// <summary>연결한 핫스팟 어댑터의 GUID(NetworkInterface.Id) — Wi-Fi 끊김 알림이 그 어댑터의 것인지 본다(모르면 빈 글).</summary>
+        string linkAdapterId = "";
+        /// <summary>링크 알림(주소 변경·Wi-Fi 끊김)으로 곧바로 핫스팟을 보는 중인가 — 그동안 온 알림은 한 번 더 보게만 한다.</summary>
+        bool linkChecking;
+        bool linkAgain;
+        string linkWhy;
+        DateTime fastUntil = DateTime.MinValue;
+        /// <summary>Wi-Fi 끊김 알림 뒤 이 동안(밀리초) FastCheckMs 마다 핫스팟을 다시 본다 — 알림이 주소가 빠지기 전에 온다. 시험이 줄인다.</summary>
+        public int FastWindowMs = 3000;
+        public int FastCheckMs = 100;
         /// <summary>1초 점검의 살피기가 일꾼 스레드에서 도는 중 — 겹치지 않게 그동안의 Tick 은 건너뛴다.</summary>
         bool tickRunning;
         /// <summary>상태가 바뀔 때마다 오른다 — 늦게 돌아온 살피기 결과가 그사이 바뀐 상태를 덮지 않게.</summary>
@@ -517,6 +527,8 @@ namespace WebTether
         /// </summary>
         public void NetworkChanged()
         {
+            // 연결 중(자식이 있음)의 알림은 다시 시작 깃발에 쓰지 않고 곧바로 핫스팟을 보는 데만 쓴다(10차와 따로 — 내리기용).
+            if (child != null) { CheckLinkSoon("주소 바뀜", false); return; }
             if (userWantsOn || busy || child != null || stopTask != null || settling > 0) return;
             if (State != TetherState.Off && State != TetherState.Error) return;
             var since = (DateTime.Now - stoppedAt).TotalSeconds;
@@ -687,7 +699,19 @@ namespace WebTether
 
                 var args = CommandLine.Tun2proxyArgs(s);
                 log.Write("시작", "tun2proxy " + CommandLine.Join(args));
-                var c = children.Start(hb, args, (src, line) => log.Write(src, line), out err);
+                // 경로 고리(LinkWatch.cs 머리말) — 프록시(폰) 주소로 가는 세션이 TUN 에 들어오면 곧바로 끝낸다. 출력은 일꾼 스레드에서 온다.
+                var proxyHost = s.ProxyHost;
+                IChild launched = null;
+                int loopSeen = 0;
+                Action<string, string> onOutput = (src, line) =>
+                {
+                    log.Write(src, line);
+                    var dst = LoopGuard.Match(line, proxyHost);
+                    if (dst != null && Interlocked.Exchange(ref loopSeen, 1) == 0)
+                        ui.Post(_ => RouteLoop(launched, dst), null);
+                };
+                var c = children.Start(hb, args, onOutput, out err);
+                launched = c;
                 if (c == null)
                 {
                     if (hb != null) hb.Dispose();
@@ -697,6 +721,7 @@ namespace WebTether
                 held = hb;
                 child = c;
                 connectedSsid = hs.Ssid;
+                linkAdapterId = hs.AdapterId ?? "";
                 startupUntil = DateTime.MinValue; // 띄운 뒤의 실패(자식이 끝남 등)는 늘 쓰는 규칙으로 — 시작 직후에 죽기를 되풀이해도 상한이 있게
                 var mine = c;
                 c.Exited += code => ui.Post(_ => OnChildExited(mine, code), null);
@@ -805,26 +830,37 @@ namespace WebTether
         /// 자식을 끝내고 걷는다. 이미 같은 자식을 끝내는 중이면 그 일을 돌려준다 — 핫스팟이 사라져 끊는 사이 사용자가 '끊기' 를
         /// 누르면 Ctrl+C 를 두 번 보내고 걷기도 두 번 돌았다.
         /// </summary>
-        Task StopChildAsync(string why)
+        Task StopChildAsync(string why, bool hard = false)
         {
             var c = child;
             if (c == null) return stopTask ?? Task.FromResult(0);
             if (stopTask != null && stopTarget == c) return stopTask;
             stopTarget = c;
-            var t = StopChildCore(c, why);
+            var t = StopChildCore(c, why, hard);
             if (!t.IsCompleted) stopTask = t;
             return t;
         }
 
-        async Task StopChildCore(IChild c, string why)
+        async Task StopChildCore(IChild c, string why, bool hard)
         {
             stopping = true;
             try
             {
                 Set(State, "끊는 중");
-                log.Write("끊기", why + " — Ctrl+C 를 보냅니다");
                 string detail = null;
-                bool clean = await Task.Run(() => c.StopGracefully(StopGraceMs, out detail));
+                bool clean;
+                if (hard)
+                {
+                    // Ctrl+C 를 기다리는 동안에도 고리가 불어난다 — 곧바로 끝낸다. tun2proxy 의 걷기는 돌지 않고 우리 정리(Routes)가 맡는다.
+                    log.Write("끊기", why + " — 곧바로 끝냅니다");
+                    clean = true;
+                    await Task.Run(() => c.Kill());
+                }
+                else
+                {
+                    log.Write("끊기", why + " — Ctrl+C 를 보냅니다");
+                    clean = await Task.Run(() => c.StopGracefully(StopGraceMs, out detail));
+                }
                 if (!string.IsNullOrEmpty(detail)) log.Write("끊기", detail);
                 if (!clean)
                 {
@@ -1144,8 +1180,89 @@ namespace WebTether
 
         public void SkipVersion(string v) { upd.Skip(v); }
 
+        /// <summary>
+        /// 경로 고리 — tun2proxy 가 프록시(폰) 주소로 가는 세션을 TUN 에서 받았다(LoopGuard). 폰으로 가는 길이 TUN 으로 바뀌었다는 뜻이라 곧바로
+        /// 강제로 끝낸다. 이미 끊는 중(핫스팟 사라짐 등)이면 Ctrl+C 를 기다리지 않고 끝내기만 하고 상태는 그 끊기가 정한다.
+        /// 분류는 '띄운 뒤의 실패'(Fail retryable, beforeStart 아님, 횟수를 0 으로 돌리지 않는다) — 핫스팟이 그대로인데 길만 틀린 고장이면
+        /// 핫스팟 사라짐(횟수를 0 으로)처럼 다루면 끝없이 띄우고 끊는다. Wi-Fi 가 정말 사라졌으면 대기가 횟수를 쓰지 않고 핫스팟을 기다린다.
+        /// </summary>
+        async void RouteLoop(IChild c, string dst)
+        {
+            if (c == null) c = child;
+            if (c == null || c != child) return;
+            log.Write("경로", "경로 고리를 막으려고 tun2proxy 를 멈췄습니다 — " + dst + " 가 TUN 으로 들어옴(폰으로 가는 길이 TUN 으로 바뀜)");
+            if (stopTask != null && stopTarget == c)
+            {
+                await Task.Run(() => { try { c.Kill(); } catch (Exception) { } });
+                return;
+            }
+            if (stopping) return;
+            TellDropped("폰으로 가는 길이 끊겨(경로 고리) tun2proxy 를 멈췄습니다.");
+            settling++;
+            try { await StopChildAsync("경로 고리", true); }
+            finally { settling--; }
+            if (!userWantsOn || busy) return;
+            Fail(RouteLoopWhy, true);
+        }
+
+        public const string RouteLoopWhy = "폰으로 가는 길이 TUN 으로 바뀌었습니다(Wi-Fi 가 끊겼을 수 있습니다)";
+
+        /// <summary>
+        /// Wi-Fi 끊김 알림(Native Wifi — 서비스가 UI 스레드로 넘긴다). 연결 중이고 그 알림이 연결한 핫스팟 어댑터의 것이면(모르면 어느 것이든)
+        /// 곧바로 핫스팟을 보고, 그 뒤 FastWindowMs 동안 FastCheckMs 마다 다시 본다 — 알림은 주소가 빠지기 전에 온다.
+        /// </summary>
+        public void WlanGoingDown(Guid adapter, string what)
+        {
+            if (child == null || stopping) return;
+            Guid mine;
+            if (linkAdapterId.Length > 0 && Guid.TryParse(linkAdapterId, out mine) && mine != adapter) return;
+            CheckLinkSoon(what, true);
+        }
+
+        /// <summary>링크 알림으로 곧바로 핫스팟을 본다(1초 Tick 보다 빨리). 사라졌으면 HotspotLost — TUN 자신의 알림이면 핫스팟이 그대로라 아무것도 않는다.</summary>
+        void CheckLinkSoon(string why, bool fast)
+        {
+            if (fast) fastUntil = DateTime.Now.AddMilliseconds(FastWindowMs);
+            linkWhy = why;
+            if (linkChecking) { linkAgain = true; return; }
+            LinkCheckLoop();
+        }
+
+        async void LinkCheckLoop()
+        {
+            linkChecking = true;
+            try
+            {
+                while (true)
+                {
+                    linkAgain = false;
+                    var c = child;
+                    if (c == null || stopping || busy || settling > 0) return;
+                    if (State != TetherState.Connected && State != TetherState.Connecting) return;
+                    var prefix = Settings.SsidPrefix;
+                    var finder = HotspotFinder;
+                    HotspotInfo hs;
+                    try { hs = await Task.Run(() => finder(prefix)); }
+                    catch (Exception ex) { log.Write("점검", "살피지 못함: " + ex.Message); return; }
+                    if (c != child || stopping || busy || settling > 0) return;
+                    var lost = LostWhy(hs, prefix);
+                    if (lost != null)
+                    {
+                        log.Write("Wi-Fi", "알림(" + linkWhy + ")으로 곧바로 확인함 — " + lost);
+                        HotspotLost(lost);
+                        return;
+                    }
+                    if (linkAgain) continue;
+                    if (DateTime.Now >= fastUntil) return;
+                    await Task.Delay(FastCheckMs);
+                }
+            }
+            finally { linkChecking = false; }
+        }
+
         async void HotspotLost(string why)
         {
+            if (child == null || stopping) return; // 다른 길(Tick·링크 알림·경로 고리)이 이미 끊는 중 — 상태는 그쪽이 정한다
             TellDropped(why + ".");
             settling++;
             try { await StopChildAsync(why == "폰 핫스팟이 사라졌습니다" ? "핫스팟이 사라짐" : why); }

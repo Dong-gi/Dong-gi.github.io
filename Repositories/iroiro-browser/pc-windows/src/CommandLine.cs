@@ -1,5 +1,6 @@
 // 자식 프로세스의 명령줄 짓기. 셸(cmd.exe)을 거치지 않으므로 %·&·^ 는 뜻이 없고,
 // 남는 것은 CommandLineToArgvW(MSVC·Rust std 와 같은 규칙)가 인자를 어떻게 가르느냐뿐이다.
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -59,8 +60,18 @@ namespace WebTether
                 a.Add(b);
             }
             a.Add("--verbosity");
-            a.Add(s.Verbosity);
+            a.Add(EffectiveVerbosity(s.Verbosity));
             return a;
+        }
+
+        /// <summary>
+        /// tun2proxy 에 넘길 로그 수준 — info 밑(off·error·warn)이면 info. 경로 고리 감지(LoopGuard)가 info 의 'Beginning' 줄을 읽는다.
+        /// </summary>
+        public static string EffectiveVerbosity(string v)
+        {
+            int i = Array.IndexOf(Settings.Verbosities, v);
+            int info = Array.IndexOf(Settings.Verbosities, "info");
+            return i < info ? "info" : v;
         }
 
         public static string ProxyUrl(Settings s)

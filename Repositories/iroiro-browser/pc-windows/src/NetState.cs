@@ -15,6 +15,8 @@ namespace WebTether
     public sealed class HotspotInfo
     {
         public string AdapterName;
+        /// <summary>어댑터의 GUID(NetworkInterface.Id — "{…}"). Wi-Fi 끊김 알림이 이 어댑터의 것인지 본다.</summary>
+        public string AdapterId;
         public string Address;
         public int IfIndex;
         /// <summary>그 어댑터가 붙은 Wi-Fi 의 이름(SSID). 얻지 못하면 null 이고 까닭은 SsidError.</summary>
@@ -320,7 +322,7 @@ namespace WebTether
                     int idx = -1;
                     try { idx = props.GetIPv4Properties().Index; } catch (NetworkInformationException) { }
                     candidates++;
-                    var h = new HotspotInfo { AdapterName = ni.Name, Address = ua.Address.ToString(), IfIndex = idx };
+                    var h = new HotspotInfo { AdapterName = ni.Name, AdapterId = ni.Id, Address = ua.Address.ToString(), IfIndex = idx };
                     string err, src;
                     h.Ssid = WifiName.Get(ni.Id, idx, out err, out src);
                     h.SsidError = h.Ssid == null ? (err ?? "까닭 모름") : null;
