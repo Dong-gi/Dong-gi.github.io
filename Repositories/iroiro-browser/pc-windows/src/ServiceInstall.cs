@@ -176,6 +176,7 @@ namespace WebTether
         }
 
         public const string Text = "이전 판 도우미가 실행 중입니다 — 알림 영역 아이콘의 ‘끝내기’ 로 끝낸 뒤 다시 하세요.";
+        public const string OtherSessionText = "다른 사용자 세션에서 도우미가 실행 중입니다 — 그 세션에서 끝내야 합니다.";
         /// <summary>시험이 바꾼다.</summary>
         public static Func<List<Proc>> Lister = ListReal;
         public static Func<int> ServicePid = () => ScmManager.ServicePidReadOnly(ServicePlan.Name);
@@ -193,16 +194,29 @@ namespace WebTether
             return r;
         }
 
+        /// <summary>
+        /// 막는 것들의 글 — 이 세션(이나 세션을 모르는 것)에 하나라도 있으면 '알림 영역 아이콘의 끝내기', 모두 다른 사용자 세션(1 이상)이면 '그
+        /// 세션에서 끝내야 합니다'(9차 판정 11-28 — 그 아이콘은 이 화면에 없다). PID 를 붙인다. 없으면 null. 순수.
+        /// </summary>
+        public static string Describe(List<Proc> blocking, int mySession)
+        {
+            if (blocking == null || blocking.Count == 0) return null;
+            bool allOther = true;
+            var pids = new List<string>();
+            foreach (var x in blocking)
+            {
+                if (x.Session <= 0 || x.Session == mySession) allOther = false;
+                pids.Add(x.Pid.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+            return (allOther ? OtherSessionText : Text) + " (PID " + string.Join(", ", pids.ToArray()) + ")";
+        }
+
         /// <summary>막는 것이 있으면 짧은 글(PID 를 붙여), 없으면 null.</summary>
         public static string Check(string selfImage)
         {
-            int me;
-            using (var p = System.Diagnostics.Process.GetCurrentProcess()) me = p.Id;
-            var b = Blocking(Lister(), me, selfImage, ServicePid(), FileIdentity.Same);
-            if (b.Count == 0) return null;
-            var pids = new List<string>();
-            foreach (var x in b) pids.Add(x.Pid.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            return Text + " (PID " + string.Join(", ", pids.ToArray()) + ")";
+            int me, mySession;
+            using (var p = System.Diagnostics.Process.GetCurrentProcess()) { me = p.Id; mySession = p.SessionId; }
+            return Describe(Blocking(Lister(), me, selfImage, ServicePid(), FileIdentity.Same), mySession);
         }
 
         static List<Proc> ListReal()

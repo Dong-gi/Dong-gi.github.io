@@ -214,9 +214,20 @@ namespace WebTether
                     timer.Start();
                     ctl.StartupCheck();
                     ctl.AutoConnect(); // 부팅 때부터 — 앞의 걷기가 끝난 뒤에 띄운다
+                    // 망이 바뀌면 다음 Tick 이 핫스팟을 곧바로 본다(꺼짐·오류 동안 저절로 다시 연결 — Controller.RearmAsync, 9차 판정 11-28).
+                    // 알림은 스레드 풀에서 온다 — UI 스레드로 넘긴다. 읽기만 하는 알림이다.
+                    System.Net.NetworkInformation.NetworkAddressChangedEventHandler onAddr = (s, e) => Post(() => ctl.NetworkChanged());
+                    System.Net.NetworkInformation.NetworkAvailabilityChangedEventHandler onAvail = (s, e) => Post(() => ctl.NetworkChanged());
+                    System.Net.NetworkInformation.NetworkChange.NetworkAddressChanged += onAddr;
+                    System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += onAvail;
                     appCtx = new ApplicationContext();
                     ready.Set();
-                    Application.Run(appCtx);
+                    try { Application.Run(appCtx); }
+                    finally
+                    {
+                        System.Net.NetworkInformation.NetworkChange.NetworkAddressChanged -= onAddr;
+                        System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged -= onAvail;
+                    }
                     timer.Dispose();
                 }
                 catch (Exception ex)
@@ -276,6 +287,22 @@ namespace WebTether
             }
         }
         long logTotal;
+
+        /// <summary>
+        /// 세션 변경(SCM 의 알림 — 시험이 부른다). 콘솔 세션에 로그온·연결되면(logon) 꺼짐·오류 동안 저절로 연결을 다시 시작한다(사용자가 끊은
+        /// 것이 아니면 — Controller.RearmAsync, 9차 판정 11-28). 다른 세션(원격 데스크톱 등)의 로그온은 보지 않는다.
+        /// </summary>
+        public void SessionChanged(bool logon, int sessionId)
+        {
+            if (!logon) return;
+            int console = ConsoleSession != null ? ConsoleSession() : sessions.ConsoleUserSession();
+            if (console < 0 || console != sessionId) return;
+            Post(() =>
+            {
+                var c = Controller;
+                if (c != null) c.RearmAsync("콘솔 로그온(세션 " + sessionId + ")", true); // 로그온은 다시 시작의 예산을 새로(10차 판정)
+            });
+        }
 
         /// <summary>UI 스레드 — Controller 의 지금 모습을 파이프가 읽을 꼴로.</summary>
         void Snapshot()
@@ -712,6 +739,7 @@ namespace WebTether
         protected override void OnSessionChange(SessionChangeDescription d)
         {
             if (core.Log != null) core.Log.Write("세션", d.Reason + " · 세션 " + d.SessionId);
+            core.SessionChanged(d.Reason == SessionChangeReason.SessionLogon || d.Reason == SessionChangeReason.ConsoleConnect, d.SessionId);
         }
 
         // OnCustomCommand 는 덮지 않는다 — 사용자 정의 제어는 아무것도 하지 않는다(서비스 DACL 도 일반 사용자에게 주지 않는다).

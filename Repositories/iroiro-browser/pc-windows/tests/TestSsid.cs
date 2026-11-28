@@ -62,6 +62,213 @@ namespace WebTether.Tests
 
         static void AddSsid(Action<string, Action> T)
         {
+            T("저절로 다시 연결(9차): 꺼짐·오류 동안 접두어에 맞는 Wi-Fi 가 나타나거나 망이 바뀌면 다시 시작 — 처음 본 것은 바탕만, 접두어 밖은 아님", () =>
+            {
+                var r = Make("rearm", null);
+                r.C.RearmPollSeconds = 0;
+                r.Others.Add(4242); // 다른 tun2proxy — 다시 하지 않는 오류로 멈춘다
+                Run(r.C.AutoConnectAsync());
+                A.Eq(TetherState.Error, r.C.State, "오류로 멈춤");
+                r.Others.Clear();
+                Tick(r);
+                A.True(r.C.State == TetherState.Error && r.F.CommandLines.Count == 0, "처음 본 핫스팟은 바탕만(이미 있던 것으로 다시 시작하지 않음)");
+                r.Hotspot = null;
+                Tick(r);
+                r.Hotspot = Hs(Foreign);
+                Tick(r);
+                A.True(r.C.State == TetherState.Error && r.F.CommandLines.Count == 0, "접두어 밖 Wi-Fi 는 저절로 붙지 않음");
+                r.Hotspot = Hs(Mine);
+                Tick(r);
+                A.Eq(1, r.F.CommandLines.Count, "나타나면 다시 시작해 띄움");
+                lock (r.Log) A.True(r.Log.Any(l => l.Contains("저절로 연결을 다시 시작합니다") && l.Contains("나타남")), "적음");
+                // 망 바뀜(10차) — 되풀이하지 않는 오류로 멈췄으면 망 바뀜만으로는 다시 시작하지 않는다
+                var r2 = Make("rearm-net", null);
+                r2.C.RearmPollSeconds = 3600;
+                r2.C.NetworkQuietSeconds = 0;
+                r2.Others.Add(4242);
+                Run(r2.C.AutoConnectAsync());
+                r2.Others.Clear();
+                Tick(r2);
+                r2.C.NetworkChanged();
+                Tick(r2);
+                A.True(r2.C.State == TetherState.Error && r2.F.CommandLines.Count == 0, "다른 tun2proxy 로 멈췄으면 망 바뀜만으로는 다시 시작하지 않음");
+                // 띄우기 전의 실패(폰 프록시 없음)로 멈췄으면 — 멈춘 직후의 알림은 세지 않고, 그 뒤의 알림이면 곧바로 보고 다시 시작
+                var r3 = Make("rearm-net2", new Settings { ReconnectInterval = 3, ReconnectMax = 1 });
+                r3.C.RearmPollSeconds = 3600;
+                r3.C.StartupWaitSeconds = 0;
+                r3.C.NetworkQuietSeconds = 3600;
+                r3.ProbeOk = false;
+                Run(r3.C.AutoConnectAsync());
+                A.Eq(TetherState.Waiting, r3.C.State, "한 번은 대기");
+                r3.C.NetworkChanged(); // 시도 중의 알림 — 세지 않음
+                Thread.Sleep(3100);
+                Tick(r3);
+                A.WaitUntil(() => r3.C.State == TetherState.Error, 5000, "오류");
+                r3.ProbeOk = true;
+                Tick(r3);
+                A.Eq(0, r3.F.CommandLines.Count, "시도 중에 온 알림은 남지 않음");
+                r3.C.NetworkChanged();
+                Tick(r3);
+                A.Eq(0, r3.F.CommandLines.Count, "멈춘 직후의 알림은 세지 않음");
+                r3.C.NetworkQuietSeconds = 0;
+                r3.C.NetworkChanged();
+                Tick(r3);
+                A.Eq(1, r3.F.CommandLines.Count, "띄우기 전의 실패로 멈췄으면 망 바뀜 알림으로 곧바로 다시 시작");
+                // 시작할 때 남은 깃발을 지운다 — 센 알림 뒤에 로그온으로 시작해 다시 멈췄으면 그 알림으로 또 시작하지 않는다
+                var r4 = Make("rearm-net3", new Settings { ReconnectInterval = 3, ReconnectMax = 1 });
+                r4.C.RearmPollSeconds = 3600;
+                r4.C.StartupWaitSeconds = 0;
+                r4.C.NetworkQuietSeconds = 0;
+                r4.C.RearmBaseGapSeconds = 0; // 예산의 간격이 가리지 않게 — 깃발 지우기만 본다
+                r4.ProbeOk = false;
+                Run(r4.C.AutoConnectAsync());
+                Thread.Sleep(3100);
+                Tick(r4);
+                A.WaitUntil(() => r4.C.State == TetherState.Error, 5000, "오류");
+                Tick(r4);
+                r4.C.NetworkChanged();
+                Run(r4.C.RearmAsync("콘솔 로그온(세션 1)", true));
+                A.Eq(TetherState.Waiting, r4.C.State, "로그온으로 시작 — 대기");
+                Thread.Sleep(3100);
+                Tick(r4);
+                A.WaitUntil(() => r4.C.State == TetherState.Error, 5000, "다시 오류");
+                Tick(r4);
+                A.Eq(TetherState.Error, r4.C.State, "시작 전에 센 망 바뀜으로 또 시작하지 않음 — " + r4.C.Detail);
+            });
+
+            T("저절로 다시 연결(10차): 뜨자마자 죽는 tun2proxy 가 시도마다 망 바뀜을 일으켜도 다시 시작하지 않는다 — Wi-Fi 가 사라졌다 나타나면 다시, '연결이 끊겼습니다' 는 한 번", () =>
+            {
+                var r = Make("rearm-crash", new Settings { ReconnectInterval = 3, ReconnectMax = 1 });
+                r.C.RearmPollSeconds = 0;
+                r.C.NetworkQuietSeconds = 0;
+                Run(r.C.AutoConnectAsync());
+                A.Eq(1, r.F.CommandLines.Count, "띄움");
+                r.C.NetworkChanged(); // TUN 이 생김
+                r.F.Last.SimulateExit(1);
+                A.WaitUntil(() => r.C.State == TetherState.Waiting, 5000, "대기 1/1");
+                r.C.NetworkChanged(); // TUN 이 사라짐
+                Thread.Sleep(3100);
+                Tick(r);
+                A.WaitUntil(() => r.F.CommandLines.Count == 2, 5000, "다시 띄움");
+                r.C.NetworkChanged();
+                r.F.Last.SimulateExit(1);
+                A.WaitUntil(() => r.C.State == TetherState.Error, 5000, "다시 연결을 멈춤");
+                for (int i = 0; i < 10; i++)
+                {
+                    r.C.NetworkChanged();
+                    Tick(r);
+                }
+                A.True(r.C.State == TetherState.Error && r.F.CommandLines.Count == 2, "망 바뀜만으로는 다시 시작하지 않음 — 띄운 수 " + r.F.CommandLines.Count);
+                r.Hotspot = null;
+                Tick(r);
+                r.Hotspot = Hs(Mine);
+                Tick(r);
+                A.Eq(3, r.F.CommandLines.Count, "Wi-Fi 가 사라졌다 나타나면 다시 시작");
+                r.F.Last.SimulateExit(1);
+                A.WaitUntil(() => r.C.State == TetherState.Waiting, 5000, "대기");
+                Thread.Sleep(3100);
+                Tick(r);
+                A.WaitUntil(() => r.F.CommandLines.Count == 4, 5000, "다시 띄움");
+                r.F.Last.SimulateExit(1);
+                A.WaitUntil(() => r.C.State == TetherState.Error, 5000, "다시 연결을 또 멈춤");
+                lock (r.Notices)
+                {
+                    var all = string.Join("|", r.Notices.ToArray());
+                    A.Eq(1, r.Notices.Count(n => n.StartsWith("연결이 끊겼습니다")), "'연결이 끊겼습니다' 는 한 번: " + all);
+                    A.Eq(1, r.Notices.Count(n => n.StartsWith("다시 연결을 멈췄습니다")), "'다시 연결을 멈췄습니다' 는 한 번: " + all);
+                }
+                Run(r.C.DisconnectAsync());
+            });
+
+            T("저절로 다시 연결(10차): 예산 — 한 시간에 세 번, 잇달아 하면 간격을 두 배로, 미룬 것은 예산이 열리면 잇고, 로그온·'연결' 은 예산을 새로", () =>
+            {
+                int listed = 0;
+                var r = Make("rearm-budget", null);
+                r.C.RearmPollSeconds = 0;
+                r.C.RearmBaseGapSeconds = 0;
+                r.C.Tun2proxyLister = () => { Interlocked.Increment(ref listed); return new List<int> { 4242 }; }; // 시도마다 한 번 — 다른 tun2proxy 로 곧바로 멈춘다
+                Action cycle = () => { r.Hotspot = null; Tick(r); r.Hotspot = Hs(Mine); Tick(r); };
+                Run(r.C.AutoConnectAsync());
+                A.True(r.C.State == TetherState.Error && listed == 1, "오류로 멈춤");
+                Tick(r);
+                for (int i = 0; i < 8; i++) cycle();
+                A.Eq(1 + 3, listed, "한 시간에 세 번까지");
+                lock (r.Log) A.Eq(1, r.Log.Count(l => l.Contains("저절로 다시 시작을 미룹니다") && l.Contains("한 시간에 3번")), "미룸은 한 줄");
+                Run(r.C.RearmAsync("콘솔 로그온(세션 1)", true));
+                A.Eq(5, listed, "로그온은 예산을 새로");
+
+                int gl = 0;
+                var g = Make("rearm-gap", null);
+                g.C.RearmPollSeconds = 0;
+                g.C.RearmBaseGapSeconds = 1;
+                g.C.RearmPerHour = 100;
+                g.C.Tun2proxyLister = () => { Interlocked.Increment(ref gl); return new List<int> { 4242 }; };
+                Action gcycle = () => { g.Hotspot = null; Tick(g); g.Hotspot = Hs(Mine); Tick(g); };
+                Run(g.C.AutoConnectAsync());
+                Tick(g);
+                gcycle();
+                A.Eq(2, gl, "첫 번");
+                gcycle();
+                A.Eq(2, gl, "간격(1초) 안이면 미룸");
+                Thread.Sleep(1100);
+                Tick(g);
+                A.Eq(3, gl, "Wi-Fi 가 그대로 보이면 간격이 지난 뒤 미룬 것을 잇는다");
+                gcycle();
+                Thread.Sleep(1100);
+                Tick(g);
+                A.Eq(3, gl, "잇달아 하면 간격이 두 배(2초)");
+                Thread.Sleep(1000);
+                Tick(g);
+                A.Eq(4, gl, "두 배 간격이 지나면 잇는다");
+                gcycle();
+                A.Eq(4, gl, "간격(4초) 안");
+                Run(g.C.ConnectAsync());
+                A.Eq(5, gl, "사용자의 '연결'");
+                gcycle();
+                A.Eq(6, gl, "'연결' 은 예산을 새로");
+            });
+
+            T("저절로 다시 연결(9차): 사용자가 끊었으면 망이 바뀌어도·로그온해도 다시 시작하지 않고, 다음 '연결' 에서 풀린다 · '다시 연결' 을 끄면 하지 않는다 · 같은 까닭은 한 줄", () =>
+            {
+                var r = Make("rearm-user", null);
+                r.C.RearmPollSeconds = 0;
+                Run(r.C.ConnectAsync());
+                A.Eq(1, r.F.CommandLines.Count, "연결");
+                Run(r.C.DisconnectAsync());
+                A.True(r.C.State == TetherState.Off && r.C.UserStopped, "사용자가 끊음");
+                r.C.NetworkChanged();
+                Tick(r);
+                r.Hotspot = null;
+                Tick(r);
+                r.Hotspot = Hs(Mine);
+                Tick(r);
+                Run(r.C.RearmAsync("콘솔 로그온(세션 1)"));
+                A.True(r.C.State == TetherState.Off && r.F.CommandLines.Count == 1, "끊은 동안은 다시 시작하지 않음");
+                Run(r.C.ConnectAsync());
+                A.True(!r.C.UserStopped && r.F.CommandLines.Count == 2, "'연결' 이 풀고 잇는다");
+                // '다시 연결' 끔
+                var off = Make("rearm-off", new Settings { Reconnect = false });
+                off.Others.Add(4242);
+                Run(off.C.AutoConnectAsync());
+                off.Others.Clear();
+                Run(off.C.RearmAsync("x"));
+                A.True(off.C.State == TetherState.Error && off.F.CommandLines.Count == 0, "'다시 연결' 을 끄면 하지 않음");
+                // 같은 까닭은 한 줄(되풀이가 로그를 채우지 않게)
+                var lg = Make("rearm-log", null);
+                lg.C.RearmPerHour = 100; // 예산(10차)은 따로 본다 — 여기는 줄 묶기만
+                lg.C.RearmBaseGapSeconds = 0;
+                lg.Others.Add(4242);
+                Run(lg.C.AutoConnectAsync());
+                for (int i = 0; i < 3; i++) Run(lg.C.RearmAsync("망이 바뀜"));
+                Func<int> lines = () => { lock (lg.Log) return lg.Log.Count(l => l.Contains("저절로 연결을 다시 시작합니다 — 망이 바뀜")); };
+                A.Eq(1, lines(), "같은 까닭은 한 줄");
+                Run(lg.C.RearmAsync("콘솔 로그온(세션 1)"));
+                lock (lg.Log) A.True(lg.Log.Any(l => l.Contains("다시 시작합니다 — 콘솔 로그온")), "다른 까닭은 적음");
+                lg.C.RearmLogQuietMinutes = 0;
+                Run(lg.C.RearmAsync("망이 바뀜"));
+                A.Eq(2, lines(), "조용한 동안이 지나면 다시 적음");
+            });
+
             T("SSID: 저절로 연결은 이름이 접두어로 시작할 때만 — 남의 DIRECT 망이면 띄우지 않고 묻지도 않으며 까닭을 보인다", () =>
             {
                 var r = Make("ssid-auto", new Settings { Reconnect = false });

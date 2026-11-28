@@ -514,6 +514,61 @@ namespace WebTether.Tests
                 A.True(at > 0 && prog.IndexOf("MessageBoxDefaultButton.Button2", at, StringComparison.Ordinal) - at < 300, "기본 '아니요'");
             });
 
+            T("이전 판 도우미의 글(9차): 모두 다른 사용자 세션이면 '그 세션에서 끝내야 합니다', 이 세션·모르는 세션이 하나라도 있으면 알림 영역의 끝내기", () =>
+            {
+                Func<int, OtherHelpers.Proc> p = ses => new OtherHelpers.Proc { Pid = 800 + ses, Session = ses };
+                A.Eq((string)null, OtherHelpers.Describe(new List<OtherHelpers.Proc>(), 1), "없음");
+                var other = OtherHelpers.Describe(new List<OtherHelpers.Proc> { p(2), p(3) }, 1);
+                A.True(other.StartsWith(OtherHelpers.OtherSessionText) && other.Contains("802") && other.Contains("803"), other);
+                A.True(OtherHelpers.Describe(new List<OtherHelpers.Proc> { p(2), p(1) }, 1).StartsWith(OtherHelpers.Text), "이 세션에도 있으면");
+                A.True(OtherHelpers.Describe(new List<OtherHelpers.Proc> { p(-1) }, 1).StartsWith(OtherHelpers.Text), "세션을 모르면");
+                A.True(OtherHelpers.Describe(new List<OtherHelpers.Proc> { p(0) }, 1).StartsWith(OtherHelpers.Text), "세션 0(서비스 밖)");
+                var keepL = OtherHelpers.Lister;
+                var keepS = OtherHelpers.ServicePid;
+                try
+                {
+                    int my;
+                    using (var me = Process.GetCurrentProcess()) my = me.SessionId;
+                    OtherHelpers.ServicePid = () => 0;
+                    OtherHelpers.Lister = () => new List<OtherHelpers.Proc> { new OtherHelpers.Proc { Pid = 901, Session = my + 1, Image = @"C:\x\WebTether.exe" } };
+                    A.True(OtherHelpers.Check(MyImage()).StartsWith(OtherHelpers.OtherSessionText), "Check 도 세션을 가린다");
+                }
+                finally
+                {
+                    OtherHelpers.Lister = keepL;
+                    OtherHelpers.ServicePid = keepS;
+                }
+            });
+
+            T("저절로 다시 연결(9차) — 서비스: 콘솔 세션에 로그온하면 꺼짐·오류 동안 다시 시작, 다른 세션이나 로그온이 아닌 변경은 아님", () =>
+            {
+                var others = new List<int> { 4242 };
+                using (var s = Start("rearm-logon", null, core =>
+                {
+                    var keep = core.Configure;
+                    core.Configure = c => { keep(c); c.Tun2proxyLister = () => { lock (others) return new List<int>(others); }; };
+                }))
+                {
+                    A.WaitUntil(() => s.Core.Controller.State == TetherState.Error, 5000, "다른 tun2proxy 로 오류");
+                    // 로그온은 예산을 새로(10차) — 한 번 다시 시작한 뒤 간격(한 시간) 안이어도 다음 로그온은 다시 시작한다
+                    s.Core.Controller.RearmBaseGapSeconds = 3600;
+                    s.Core.Controller.RearmLogQuietMinutes = 0;
+                    Func<int> logons = () => s.Core.Log.Snapshot().Count(l => l.Contains("저절로 연결을 다시 시작합니다 — 콘솔 로그온"));
+                    s.Core.SessionChanged(true, s.Console);
+                    A.WaitUntil(() => logons() == 1, 5000, "첫 로그온 — 다시 시작");
+                    Thread.Sleep(300);
+                    A.Eq(TetherState.Error, s.Core.Controller.State, "다른 tun2proxy 로 다시 오류");
+                    lock (others) others.Clear();
+                    s.Core.SessionChanged(true, s.Console + 5);
+                    s.Core.SessionChanged(false, s.Console);
+                    Thread.Sleep(500);
+                    A.Eq(TetherState.Error, s.Core.Controller.State, "다른 세션·로그온이 아니면 그대로");
+                    s.Core.SessionChanged(true, s.Console);
+                    A.WaitUntil(() => s.Core.Controller.State != TetherState.Error, 5000, "콘솔 로그온이면 다시 시작(예산을 새로)");
+                    A.Eq(2, logons(), "적음");
+                }
+            });
+
             T("설치 뒤 트레이 다시 띄우기(11-28): 실패하면 삼키지 않고 알릴 글, 트레이는 서비스가 시작 중·멈춤이면 그렇게 짧게", () =>
             {
                 A.Eq((string)null, TrayRelaunch.Run("C:/x/WebTether.exe", p => { }), "되면 null");

@@ -192,6 +192,45 @@ namespace WebTether
         IChild child;
         HeldBinaries held;
         bool userWantsOn;
+        /// <summary>
+        /// 사용자가 '끊기' 를 눌렀다 — 다음 '연결' 이나 서비스 재시작까지 저절로 다시 연결하지 않는다(RearmAsync 도). 오류·다시 연결 포기는
+        /// 끊음이 아니다(9차 판정 11-28).
+        /// </summary>
+        bool userStopped;
+        /// <summary>망 바뀜 알림이 왔다 — 다음 Tick 이 핫스팟을 곧바로 본다.</summary>
+        bool networkChanged;
+        DateTime nextRearmProbe = DateTime.MinValue;
+        /// <summary>꺼짐·오류 동안 마지막으로 본 핫스팟이 접두어에 맞았는가(null = 아직 안 봄 — 첫 관찰은 바탕만 정한다).</summary>
+        bool? rearmSawMatch;
+        string rearmLogWhy;
+        DateTime rearmLogAt = DateTime.MinValue;
+        /// <summary>꺼짐·오류 동안 핫스팟을 다시 보는 간격(초) — 망 바뀜 알림을 놓쳤을 때의 물러서기. 시험이 줄인다.</summary>
+        public int RearmPollSeconds = 30;
+        /// <summary>같은 까닭의 '다시 시작' 줄을 이 동안 한 번만 적는다(분).</summary>
+        public int RearmLogQuietMinutes = 10;
+        /// <summary>
+        /// 망 바뀜만으로 다시 시작해도 되는가 — 마지막으로 멈춘 까닭이 tun2proxy 를 띄우기 전의 되풀이할 수 있는 실패(핫스팟·폰 프록시
+        /// 없음)였을 때만(10차 판정 11-28). 띄운 뒤의 실패(뜨자마자 죽음 — 시도마다 TUN 이 생기고 사라져 망 바뀜 알림이 스스로 온다)나
+        /// 되풀이하지 않는 오류(TUN 이 나타나지 않음·다른 tun2proxy·설정)로 멈췄으면 접두어 Wi-Fi 가 사라졌다 나타날 때와 콘솔 로그온 때만.
+        /// </summary>
+        bool rearmOnNetwork = true;
+        /// <summary>꺼짐·오류로 들어선 때 — 그 직후 NetworkQuietSeconds 안의 망 바뀜 알림은 우리가 걷은 TUN 의 것으로 보고 세지 않는다.</summary>
+        DateTime stoppedAt = DateTime.MinValue;
+        public int NetworkQuietSeconds = 10;
+        /// <summary>다시 시작의 예산 — 한 시간에 RearmPerHour 번, 잇달아 할수록 간격을 RearmBaseGapSeconds 에서 두 배씩(한 시간까지).
+        /// 1분 넘게 붙어 있었거나 사용자의 '연결'·콘솔 로그온이면 새로.</summary>
+        public int RearmPerHour = 3;
+        public int RearmBaseGapSeconds = 60;
+        readonly List<DateTime> rearmTimes = new List<DateTime>();
+        int rearmStreak;
+        DateTime nextRearmAllowed = DateTime.MinValue;
+        /// <summary>예산이 막아 미룬 다시 시작의 까닭 — 그 Wi-Fi 가 그대로 보이면 예산이 열린 뒤의 점검이 잇는다.</summary>
+        string rearmDeferred;
+        string deferLogWhy;
+        DateTime deferLogAt = DateTime.MinValue;
+        /// <summary>'연결이 끊겼습니다'·'다시 연결을 멈췄습니다' 를 이미 띄웠다 — 1분 넘게 붙어 있거나 사용자가 '연결' 할 때까지 되풀이하지 않는다.</summary>
+        bool dropNoticeShown;
+        bool stopNoticeShown;
         bool busy;
         bool stopping;
         Task stopTask;
@@ -351,6 +390,10 @@ namespace WebTether
         public Task ConnectAsync()
         {
             startupUntil = DateTime.MinValue;
+            userStopped = false;
+            RenewRearmBudget();
+            dropNoticeShown = false;
+            stopNoticeShown = false;
             // 끝났지만 알림을 아직 받지 않은 자식도 — 그 걷기(OnChildExited)가 먼저다. 그 뒤는 다시 연결 규칙이 잇는다.
             if (child != null) return Task.FromResult(0);
             userWantsOn = true;
@@ -388,13 +431,101 @@ namespace WebTether
         {
             if (ChildRunning || busy || userWantsOn) return Task.FromResult(0);
             log.Write("시작", "저절로 연결합니다");
+            return AutoConnectCore();
+        }
+
+        Task AutoConnectCore()
+        {
             userWantsOn = true;
+            rearmSawMatch = null;
+            networkChanged = false;
             retries = 0;
             startupUntil = DateTime.Now.AddSeconds(StartupWaitSeconds);
             return Attempt(false);
         }
 
         bool InStartupWait(DateTime now) { return startupUntil != DateTime.MinValue && now < startupUntil; }
+
+        /// <summary>
+        /// 저절로 연결을 다시 시작한다(9차 판정 11-28) — 부팅 때 한 번만 시작하면 폰의 테더링을 나중에 켜거나 로그온이 늦을 때 '다시 연결을
+        /// 멈췄습니다' 로 끝나 사용자가 '연결' 을 눌러야 했다. 사용자가 끊지 않았고(userStopped), 연결되지 않았고 하는 시도도 없고, '다시 연결' 이
+        /// 켜져 있을 때만. 시작은 서비스가 뜰 때와 같다(너그러운 기다림부터). 같은 까닭의 줄은 RearmLogQuietMinutes 동안 한 번만 적는다.
+        /// 부르는 곳: 망이 바뀌어 접두어에 맞는 Wi-Fi 가 보임·꺼짐 동안 그 Wi-Fi 가 나타남(Tick), 콘솔 로그온(서비스의 세션 변경 — renew).
+        /// 예산(RearmPerHour·RearmBaseGapSeconds — 10차 판정 11-28)이 막으면 미루고(rearmDeferred) 같은 까닭이면 한 줄만 적는다.
+        /// renew: 예산을 새로 하고 시작한다(콘솔 로그온).
+        /// </summary>
+        public Task RearmAsync(string why, bool renew = false)
+        {
+            if (renew) RenewRearmBudget();
+            if (userStopped || userWantsOn || busy || child != null || stopTask != null || settling > 0 || !Settings.Reconnect)
+                return Task.FromResult(0);
+            var now = DateTime.Now;
+            var refusal = RearmRefusal(now);
+            if (refusal != null)
+            {
+                rearmDeferred = why;
+                if (why != deferLogWhy || (now - deferLogAt).TotalMinutes >= RearmLogQuietMinutes)
+                {
+                    log.Write("시작", "저절로 다시 시작을 미룹니다 — " + why + " (" + refusal + ")");
+                    deferLogWhy = why;
+                    deferLogAt = now;
+                }
+                return Task.FromResult(0);
+            }
+            rearmDeferred = null;
+            SpendRearm(now);
+            if (why != rearmLogWhy || (now - rearmLogAt).TotalMinutes >= RearmLogQuietMinutes)
+            {
+                log.Write("시작", "저절로 연결을 다시 시작합니다 — " + why);
+                rearmLogWhy = why;
+                rearmLogAt = now;
+            }
+            retries = 0;
+            return AutoConnectCore();
+        }
+
+        /// <summary>예산이 막으면 그 까닭, 아니면 null. 시계가 거꾸로 갔으면 거꾸로 간 기록은 버린다.</summary>
+        string RearmRefusal(DateTime now)
+        {
+            rearmTimes.RemoveAll(t => t > now || (now - t).TotalHours >= 1);
+            if (nextRearmAllowed > now.AddHours(1)) nextRearmAllowed = now;
+            if (rearmTimes.Count >= RearmPerHour) return "한 시간에 " + RearmPerHour + "번을 다 썼습니다";
+            if (now < nextRearmAllowed)
+                return "다음은 " + ((int)Math.Ceiling((nextRearmAllowed - now).TotalSeconds)).ToString(System.Globalization.CultureInfo.InvariantCulture) + "초 뒤";
+            return null;
+        }
+
+        void SpendRearm(DateTime now)
+        {
+            rearmTimes.Add(now);
+            rearmStreak++;
+            double gap = RearmBaseGapSeconds * Math.Pow(2, Math.Min(rearmStreak - 1, 16));
+            nextRearmAllowed = now.AddSeconds(Math.Min(gap, 3600));
+        }
+
+        void RenewRearmBudget()
+        {
+            rearmTimes.Clear();
+            rearmStreak = 0;
+            nextRearmAllowed = DateTime.MinValue;
+            rearmDeferred = null;
+        }
+
+        /// <summary>
+        /// 망이 바뀌었다(서비스의 NetworkChange 알림 — UI 스레드에서) — 다음 Tick 이 핫스팟을 곧바로 본다. 꺼짐·오류로 들어선 뒤
+        /// NetworkQuietSeconds 가 지나 온 알림만 센다 — 시도 중·연결 중의 알림과 멈춘 직후의 알림은 우리가 만들고 걷은 TUN 의 것이다(10차 판정).
+        /// </summary>
+        public void NetworkChanged()
+        {
+            if (userWantsOn || busy || child != null || stopTask != null || settling > 0) return;
+            if (State != TetherState.Off && State != TetherState.Error) return;
+            var since = (DateTime.Now - stoppedAt).TotalSeconds;
+            if (since >= 0 && since < NetworkQuietSeconds) return;
+            networkChanged = true;
+        }
+
+        /// <summary>사용자가 끊어 저절로 다시 연결하지 않는 중인가(시험·상태).</summary>
+        public bool UserStopped { get { return userStopped; } }
 
         /// <summary>
         /// 시도 도중(기다리는 사이) 사용자가 끊었거나 끝내는 중인가 — 그러면 더 나아가지 않는다.
@@ -609,9 +740,23 @@ namespace WebTether
                 return;
             }
             if (retryable && userWantsOn && Settings.Reconnect)
-                Tell("다시 연결을 멈췄습니다", why, true);
+            {
+                if (!stopNoticeShown) Tell("다시 연결을 멈췄습니다", why, true);
+                else log.Write("시작", "되풀이라 알리지 않음 — 다시 연결을 멈췄습니다");
+                stopNoticeShown = true;
+            }
             userWantsOn = false;
+            rearmOnNetwork = retryable && beforeStart;
+            stoppedAt = DateTime.Now;
             Set(TetherState.Error, why);
+        }
+
+        /// <summary>'연결이 끊겼습니다' — 다시 시작 고리(뜨자마자 죽기)에서 되풀이하지 않는다(10차 판정).</summary>
+        void TellDropped(string text)
+        {
+            if (dropNoticeShown) { log.Write("시작", "되풀이라 알리지 않음 — 연결이 끊겼습니다: " + text); return; }
+            dropNoticeShown = true;
+            Tell("연결이 끊겼습니다", text, true);
         }
 
         void OnChildExited(IChild c, int code)
@@ -623,7 +768,7 @@ namespace WebTether
             // 횟수는 1분 넘게 붙어 있었을 때만 처음부터(Tick 과 같은 규칙) — 뜨자마자 '연결됨' 이 된 뒤 몇 초 만에 죽기를
             // 되풀이하면 횟수가 늘 0 으로 돌아가 상한 없이 다시 띄웠다.
             bool longConnected = State == TetherState.Connected && (DateTime.Now - connectedAt).TotalSeconds > 60;
-            Tell("연결이 끊겼습니다", "tun2proxy 가 끝났습니다(코드 " + code + ").", true);
+            TellDropped("tun2proxy 가 끝났습니다(코드 " + code + ").");
             if (longConnected) retries = 0;
             Fail("tun2proxy 가 끝났습니다(코드 " + code + ")", true);
         }
@@ -642,6 +787,7 @@ namespace WebTether
         public async Task DisconnectAsync()
         {
             userWantsOn = false;
+            userStopped = true;
             retries = 0;
             startupUntil = DateTime.MinValue;
             settling++;
@@ -900,7 +1046,13 @@ namespace WebTether
                 }
                 else if (State == TetherState.Connected)
                 {
-                    if ((now - connectedAt).TotalSeconds > 60) retries = 0;
+                    if ((now - connectedAt).TotalSeconds > 60)
+                    {
+                        retries = 0;
+                        RenewRearmBudget();
+                        dropNoticeShown = false;
+                        stopNoticeShown = false;
+                    }
                     var prefix = s.SsidPrefix;
                     var finder = HotspotFinder;
                     var hs = await Probe(() => finder(prefix));
@@ -936,6 +1088,33 @@ namespace WebTether
                         if (Detail != text) Set(TetherState.Waiting, text);
                     }
                 }
+                return;
+            }
+
+            // 꺼짐·오류 동안(사용자가 끊은 것이 아니면) — 망이 바뀌었거나 RearmPollSeconds 가 지나면 핫스팟을 보고, 접두어에 맞는 Wi-Fi 가
+            // 보이면(망 바뀜 — rearmOnNetwork 일 때만) 또는 새로 나타나면(처음 본 것은 바탕만) 저절로 연결을 다시 시작한다. 접두어 밖 Wi-Fi 는
+            // 저절로 붙지 않는다(지금처럼 — 손으로 '연결' 해야 묻는다).
+            if (!userWantsOn && !userStopped && (State == TetherState.Off || State == TetherState.Error) && s.Reconnect)
+            {
+                bool netChanged = networkChanged;
+                if (!netChanged && now < nextRearmProbe) return;
+                networkChanged = false;
+                nextRearmProbe = now.AddSeconds(RearmPollSeconds);
+                var prefix = s.SsidPrefix;
+                var finder = HotspotFinder;
+                var found = await Probe(() => finder(prefix));
+                if (!found.Ok || Stale(v, c) || userWantsOn || userStopped) return;
+                bool match = found.Value != null && StatusText.Refusal(found.Value, prefix, null) == null;
+                bool? before = rearmSawMatch;
+                rearmSawMatch = match;
+                if (!match) { rearmDeferred = null; return; }
+                // 망 바뀜만으로는 띄우기 전의 실패로 멈췄을 때만(rearmOnNetwork — 10차 판정). 나타남은 멈춘 까닭과 상관없다. 예산이 미룬 것은
+                // 그 Wi-Fi 가 내내 보이는 동안 예산이 열리면 잇는다.
+                string why = null;
+                if (before == false) why = "Wi-Fi 이름이 " + prefix + " 로 시작하는 망이 나타남";
+                else if (netChanged && rearmOnNetwork) why = "망이 바뀌었고 Wi-Fi 이름이 " + prefix + " 로 시작함";
+                else if (rearmDeferred != null) why = rearmDeferred;
+                if (why != null) await RearmAsync(why);
             }
         }
 
@@ -967,7 +1146,7 @@ namespace WebTether
 
         async void HotspotLost(string why)
         {
-            Tell("연결이 끊겼습니다", why + ".", true);
+            TellDropped(why + ".");
             settling++;
             try { await StopChildAsync(why == "폰 핫스팟이 사라졌습니다" ? "핫스팟이 사라짐" : why); }
             finally { settling--; }
