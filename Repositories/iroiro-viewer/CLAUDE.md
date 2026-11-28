@@ -884,29 +884,21 @@ export JAVA_HOME="$HOME/.gradle/jdks/jetbrains_s_r_o_-21-amd64-windows.2"
 minSdk 를 읽는다 — 2.0.0 부터 36). **`NewApi` 는 0건이다.** PiP 의 API 33 짜리 setter 넷(`setTitle`·`setSubtitle`·`setCloseAction`·
 `setExpandedAspectRatio`)은 minSdk 36 이라 쓸 수 있게 되었으나 부르지 않는다(제목에 파일 이름을 싣는 것은 사용자가 정할 일 — '2.0.0 — minSdk 36').
 
-**JVM 시험은 2,061건이다**(순수 JVM 694 + 안드로이드 모듈 1,367 — 2026-11-27, 2차 보안 점검 고침과 그 재판정의 WebP·HEIF 고침 뒤. 그 앞의 2,052 는 첫 고침 뒤(EXIF 검사기의 TIFF 걷기 9·WebP `XMP ` 1·실제 ExifInterface 와 견주기 4·빈 JPEG 끝 1·PDF 읽는 예산 1). 그 앞은 2,036 — 2026-11-22, 갤러리 앨범·여럿 골라·위치 지우기·`Android/media` 와 그 독립 검토·재판정 뒤. 모듈마다 다시 돌려 센 수다(`format:text` 의 `memoryTest` 3 은 따로다). `feature:text` 의 `TextViewModelPreviewTest` 하나가 전체 실행에서 한 번 깨지고 홀로는 통과했다 — 그림 번호가 시험 차례에 기대는 것으로 보인다, 고치지 않았다), 실패 0. 건너뜀은 표본(`samples-local/`)이 있는 저장소에서 3(윈도에서 심볼릭
-링크를 만들 권한이 없다 — `feature:text` 1, 그리고 pyzipper 와 견주는 `feature:archive` 의 `AesZipOracleTest` 2 — 환경 변수 `IROIRO_AESZIP_ORACLE` 이
-있을 때만 돈다, '14단계 뒤 — AES 암호 ZIP'), 표본이 없는 작업 사본에서는 13(`format:epub` 4·`feature:docview` 6·`feature:text` 1·`feature:archive` 2 — 말뭉치를 보는 시험 메서드를 세었다).
+**JVM 시험**(`format:text` 의 `memoryTest` 는 따로 돈다) — `feature:text` 의 `TextViewModelPreviewTest` 하나가 전체 실행에서 한 번 깨지고 홀로는
+통과했다(그림 번호가 시험 차례에 기대는 것으로 보인다, 고치지 않았다). 표본(`samples-local/`)이 있는 저장소에서도 건너뜀이 있다(윈도에서 심볼릭
+링크를 만들 권한이 없다 — `feature:text`, 그리고 pyzipper 와 견주는 `feature:archive` 의 `AesZipOracleTest` — 환경 변수 `IROIRO_AESZIP_ORACLE` 이
+있을 때만 돈다, '14단계 뒤 — AES 암호 ZIP'). 표본이 없는 작업 사본에서는 말뭉치를 보는 시험(`format:epub`·`feature:docview`·`feature:text`·`feature:archive`)도 건너뛴다.
 
-| 모듈 | 시험 | 모듈 | 시험 | 모듈 | 시험 |
-|---|---|---|---|---|---|
-| `core:model` | 83 | `format:archive` | 251 | `feature:archive` | 40 |
-| `core:safety` | 68 | `format:epub` | 79 | `feature:browser` | 84 |
-| `core:charset` | 39 | `format:html` | 75 | `feature:comic` | 124 |
-| `core:io` | 261 | `format:text` | 94 | `feature:docview` | 210 |
-| `core:data` | 31 | `app` | 63 | `feature:editor` | 70 |
-| `core:ui` | 111 | | | `feature:image` | 61 |
-| `core:playback` | 146 | | | `feature:player` | 41 |
-| `core:webhost` | 18 | | | `feature:settings` | 18 |
-| | | | | `feature:text` | 85 |
-
-**계측 테스트는 여섯 모듈에 178건이다**(갤러리의 위치 지우기 4(`FileOpEngineTest` — 원본에서 GPS 만 지우기, 위치 없는 JPEG·PNG 는 그대로, 정제 사본, XMP 위치는 원본에서 건너뛰고 사본에서 지운다)를 더했다 — 2026-11-22 Android 16 에뮬레이터에서 그 클래스만 돌아 31 통과·2 건너뜀(SD 볼륨이 없는 AVD 의 EXDEV 둘 — `Assume`). PDF 잠그기·풀기의 제자리 바꾸기 5(`PdfLockSaverTest`)를 더했다 — 2026-11-22 Android 16 에뮬레이터에서 그 클래스만 돌아 통과. 2.0.0 — Android 16 에뮬레이터에서 163 통과·4 건너뜀, '2.0.0 — minSdk 36'. 그 뒤 회전·뒤집기의 둘을 더했다 — 뒤집기와 왼쪽 회전의 태그, 정지 WebP 의 방향 저장 — 2026-11-21 `FileOpEngineTest` 만 다시 돌아 통과) — `:core:io` 101(갤러리의 위치 지우기 4, PDF 잠그기·풀기 5, 회전·뒤집기 둘 포함, 파일 조작·휴지통·EXDEV 25, 다른 곳에 복원 7, ZIP 만들기 9(암호 ZIP 3), 구간 저장·소리만
-저장 20, 잘라 저장 5, 큐의 취소 4·줄 선 요청 거두기 1, 이름 겹침과 여럿 되돌리기 2, 글 저장 10(`TextSaverTest`), 그린 것 얹어 저장 1, 새 문서 서식 4
-(`NewDocumentsTest`), 편집기 저장 2(`EditorSaverTest`)), `:feature:image` 6(그리기·메모 — `MarkupRenderTest`), `:feature:archive` 29(풀기 10, 암호
-아카이브 4, tar·폴더 시각 5, 단일 압축 스트림·cpio·deb·자기 덮어쓰기 7, PATH_MAX 1, 우리가 잠근 ZIP 을 우리 풀기로 2 — `AesZipExtractTest`),
-`:feature:comic` 12(쪽 디코딩·이어보기 10, 기본 방향·다음 권 2), `:feature:docview` 23(PDF 열기·렌더·타일·닫기 10, 암호 PDF 8, 이어 보기의 쪽 저장 4,
-실세계 PDF 말뭉치 1 — `samples-local/corpus/` 를 기기에 밀어 두었을 때만 돈다), `:core:webhost` 7(가짜 출처의 경로 계약).
-**암호 ZIP 의 계측 다섯**(`ZipMakerTest` 셋 — 머리 칸·빈 암호·취소, `AesZipExtractTest` 둘)은 2026-11-14 폰 에뮬레이터에서 돌아 통과했다(두 클래스 11건 모두).
+**계측 테스트는 여섯 모듈에 있다** — `:core:io`(`FileOpEngineTest` 의 갤러리 위치 지우기 — 원본에서 GPS 만 지우기, 위치 없는 JPEG·PNG 는 그대로, 정제
+사본, XMP 위치는 원본에서 건너뛰고 사본에서 지운다 — 와 회전·뒤집기(뒤집기와 왼쪽 회전의 태그, 정지 WebP 의 방향 저장), PDF 잠그기·풀기의 제자리
+바꾸기(`PdfLockSaverTest`), 파일 조작·휴지통·EXDEV, 다른 곳에 복원, ZIP 만들기(암호 ZIP 포함), 구간 저장·소리만 저장, 잘라 저장, 큐의 취소·줄 선
+요청 거두기, 이름 겹침과 여럿 되돌리기, 글 저장(`TextSaverTest`), 그린 것 얹어 저장, 새 문서 서식(`NewDocumentsTest`), 편집기 저장(`EditorSaverTest`)),
+`:feature:image`(그리기·메모 — `MarkupRenderTest`), `:feature:archive`(풀기, 암호 아카이브, tar·폴더 시각, 단일 압축 스트림·cpio·deb·자기 덮어쓰기,
+PATH_MAX, 우리가 잠근 ZIP 을 우리 풀기로 — `AesZipExtractTest`), `:feature:comic`(쪽 디코딩·이어보기, 기본 방향·다음 권), `:feature:docview`(PDF
+열기·렌더·타일·닫기, 암호 PDF, 이어 보기의 쪽 저장, 실세계 PDF 말뭉치 — `samples-local/corpus/` 를 기기에 밀어 두었을 때만 돈다), `:core:webhost`(가짜
+출처의 경로 계약). SD 볼륨이 없는 AVD 에서는 EXDEV 시험이 `Assume` 로 건너뛴다. 2.0.0 은 Android 16 에뮬레이터에서 돌았다('2.0.0 — minSdk 36'),
+회전·뒤집기(2026-11-21)와 위치 지우기·PDF 잠그기·풀기(2026-11-22)는 그 뒤 그 클래스만 다시 돌아 통과했다.
+**암호 ZIP 의 계측**(`ZipMakerTest` — 머리 칸·빈 암호·취소, `AesZipExtractTest`)은 2026-11-14 폰 에뮬레이터에서 두 클래스 모두 통과했다.
 `feature:settings` 는 계측이 없다. 암호 아카이브 표본(`format/archive/src/test/resources/archivecrypt/`)과 암호 PDF 표본은 JVM 시험과
 **한 벌을 나눠 쓴다** — `feature/archive/build.gradle.kts`·`feature/docview/build.gradle.kts` 가 `src/test/resources` 를 계측 APK 의 자산으로 붙인다.
 `플랫폼이_암호를_직접_받는다` 는 1.0.0 때 API 35 전용이라 12 폰 AVD 에서 `Assume` 로 건너뛰었다(AGP 의 XML 보고서는 그것을 `<failure>`
@@ -1169,7 +1161,7 @@ EXIF 블록만 다시 쓴다 — 재인코딩이 아니고, **수정 시각을 �
 
 판정은 **두 곳에 있다** — 화면은 메뉴를 끄는 데, 엔진은 실제 쓰기를 막는 데 쓴다. 왼쪽 회전·뒤집기와 방향 합성 셈은 아래 '2.0.0 뒤 — 왼쪽 회전·뒤집기'.
 제자리에 쓰는 다섯 걸음은 갤러리의 '원본에서 위치 지우기' 와 함께 쓴다(`FileOpEngine.rewriteExif` — '2.0.0 뒤 — 갤러리: 앨범·여럿 골라(위치 지우기)·`Android/media`').
-애니메이션 WebP 판별은 RIFF 청크 머리만 훑는다(`ImageFormats`, JVM 시험 8건).
+애니메이션 WebP 판별은 RIFF 청크 머리만 훑는다(`ImageFormats`, JVM 시험).
 
 ### 텍스트·코드 뷰어 (7단계)
 
@@ -2003,8 +1995,8 @@ CSS 문자열 안의 `url(` 은 `none` 으로 바꾸지 않고, 깨진 `url(` �
 
 | 확인한 것 | 결과 |
 |---|---|
-| 독립 구현이 읽는다(`core:io` 의 `AesZipWriterTest` 15 — JCE 의 PBKDF2·`BigInteger` 계수기·`Inflater`, 머리는 명세의 바이트 자리) | 머리 칸, 두 머리의 일치, 빈틈 없음, ZIP64(32비트의 끝을 1·600 바이트로 낮춰서), DOS 시각·확장 시각, 내용(저장·압축·빈 파일·한글 이름·3 MB·한 바이트씩 넣기), 틀린 암호·바뀐 암호문, RFC 6070, 넘치면 던지기 |
-| 우리 리더가 읽는다(`feature:archive` 의 `AesZipRoundTripTest` 7 — 압축 목록·풀기의 길 `Archives.open`·`extractSequentially`) | 이름·폴더·시각·크기·내용, 암호 없이 자물쇠·틀린 암호, 바뀐 암호문, 마지막 블록 비트, ZIP64, 한글 암호 |
+| 독립 구현이 읽는다(`core:io` 의 `AesZipWriterTest` — JCE 의 PBKDF2·`BigInteger` 계수기·`Inflater`, 머리는 명세의 바이트 자리) | 머리 칸, 두 머리의 일치, 빈틈 없음, ZIP64(32비트의 끝을 1·600 바이트로 낮춰서), DOS 시각·확장 시각, 내용(저장·압축·빈 파일·한글 이름·3 MB·한 바이트씩 넣기), 틀린 암호·바뀐 암호문, RFC 6070, 넘치면 던지기 |
+| 우리 리더가 읽는다(`feature:archive` 의 `AesZipRoundTripTest` — 압축 목록·풀기의 길 `Archives.open`·`extractSequentially`) | 이름·폴더·시각·크기·내용, 암호 없이 자물쇠·틀린 암호, 바뀐 암호문, 마지막 블록 비트, ZIP64, 한글 암호 |
 | **pyzipper 0.4.0 이 우리 것을 푼다** | 표본 7개·파일 30개가 바이트까지 같다(9 MB·한글 암호·126자 암호·ZIP64 억지·섞임·3바이트씩 넣은 것). 머리 칸(판 51·CRC 0·AE-2·실제 방식·저장의 압축 크기 = 평문 + 28)과 두 머리의 일치를 구조체로 따로 읽어 확인, `testzip()`, 틀린 암호 거절 |
 | **우리 리더가 pyzipper 것을 푼다** | 9개 — AES-128·192·256, AE-1(CRC 를 견준다), 저장·압축, 한글 암호, ZIP64 억지, 7 MB, 한글·일본어·이모지 이름, 잠긴 폴더 항목. 틀린 암호는 '틀렸다'. 한 비트를 바꾼 둘(마지막 블록·저장의 한가운데)은 읽다가 실패 |
 | 반디집 7.45 콘솔(`bz t`·`bz x`) | 영문 암호의 표본 넷(ZIP64 둘 포함) — 시험 통과, 풀어서 바이트가 같다. 한글이 든 암호의 셋은 열지 못했다(CP949) |
@@ -2103,8 +2095,8 @@ Android 12 폰은 1.0.0 릴리스를 계속 쓴다.
 없습니다' 로 알렸다), 홈으로 나가면 자동 PiP(조작부 없는 창), EPUB, ZIP 목록·풀기(180 MB 풀기에 `dataSync` 서비스), 만화(CBZ), 편집기(HWPX — rhwp,
 DOCX — ONLYOFFICE, `:editor` 프로세스)와 그 뒤로 가기·'다른 앱으로 열기'(IntentResolver 의 고르는 창), 다른 앱에서 열기(`am start` VIEW — PDF·영상·ZIP·CBZ·
 HWPX·DOCX), PDF 찾기(강조가 글자에 앉는다 — 원점 왼쪽 위 확인)·이전/다음, 문서 안 링크(쪽 넘김·이어 보기 둘 다 — 쪽 번호 0부터·원점 왼쪽 위 확인,
-`/Dest` 꼴은 빈 목록). 계측 시험 여섯 모듈 167건 — 163 통과, 4 건너뜀(이 AVD 에 SD 볼륨이 없어 EXDEV 셋, 말뭉치 하나 — 말뭉치를 올려 따로 돌린
-`PdfCorpusDeviceTest` 는 25건 통과). **SD 볼륨이 없는 AVD 라 볼륨 간 이동(EXDEV)은 16 에서 확인하지 않았다.** 블루투스·실기기 메모리·16 KB 기기는 못 본다.
+`/Dest` 꼴은 빈 목록). 계측 시험 여섯 모듈 통과 — 건너뜀은 이 AVD 에 SD 볼륨이 없어 EXDEV, 그리고 말뭉치(말뭉치를 올려 따로 돌린
+`PdfCorpusDeviceTest` 는 통과). **SD 볼륨이 없는 AVD 라 볼륨 간 이동(EXDEV)은 16 에서 확인하지 않았다.** 블루투스·실기기 메모리·16 KB 기기는 못 본다.
 
 **독립 검토(2026-11-21)가 고친 것** — `PdfLinks.hit` 이 좌표가 NaN 인 상자를 거리 0 으로 읽어 쪽 어디를 두드려도 그 링크로 갔다(NaN 상자를
 건너뛴다 — `PdfLinksTest`, 고침을 되돌리면 그 시험만 깨진다). `readAllBounded`(만화, `readNBytes` 로 바꾼 것)에 경계 시험을 더했다(`ReadAllBoundedTest`).
@@ -2136,9 +2128,9 @@ HWPX·DOCX), PDF 찾기(강조가 글자에 앉는다 — 원점 왼쪽 위 확�
 우리가 풀면 이미 그리기에 쓰는 메모리 파일의 평문을 읽는다(`OfDescriptor` — 새 평문 사본을 만들지 않는다). 글 고르기와 같은 원본·같은 판정이다
 (쪽 수가 플랫폼과 다르면 끈다).
 
-**시험.** JVM 20건 — `PdfNavigationTest` 13(목적지 넷·제목 인코딩 셋과 언어 표지·90도 돈 쪽과 자르기 상자·쪽 밖·무한한 좌표·넓이 없는 상자·순환·깊이
+**시험.** JVM — `PdfNavigationTest`(목적지 넷·제목 인코딩 셋과 언어 표지·90도 돈 쪽과 자르기 상자·쪽 밖·무한한 좌표·넓이 없는 상자·순환·깊이
 200 사슬·1만 500 형제·스스로를 품은 이름 나무·소유자 암호만 걸린 표본 둘 — `pdfcrypt/nav-owner-aes128.pdf`·`nav-owner-rc4.pdf`, pypdf 6.17 이
-잠갔다), `PdfOutlineTest` 4, `PdfLinksTest` 의 합치기 2, 그리고 말뭉치 대조 `PdfNavigationCorpusTest`(오라클 pypdf 6.17 —
+잠갔다), `PdfOutlineTest`, `PdfLinksTest` 의 합치기, 그리고 말뭉치 대조 `PdfNavigationCorpusTest`(오라클 pypdf 6.17 —
 `samples-local/corpus/tools/oracle_pdf_nav.py` → `oracle/PDF-XX.nav.json`): 목차 항목 66(PDF-09·14·19·26 — PDF-19 는 소유자 암호만)과 링크
 482(PDF-26 의 TeX 이름 목적지 480 포함 — 말뭉치에 `/Dest` 꼴이 없어 `/A` 의 목적지로 같은 `pageOf` 를 견준다)가 모두 같았다. 문자열 풀기를 끄면
 암호 표본 시험이 깨진다(확인했다).
@@ -2224,10 +2216,10 @@ HWPX·DOCX), PDF 찾기(강조가 글자에 앉는다 — 원점 왼쪽 위 확�
 |---|---|
 | **합성 셈은 `core:model` 의 `ExifOrientation` 한 곳** — 방향 값 o 를 'R(t)∘M^m'(저장 그림을 좌우로 뒤집고 시계 방향 90°×t 돌린다)으로 풀고, 화면의 일도 같은 값으로 적는다(오른쪽 6·왼쪽 8·좌우 2·상하 4). 새 방향 = `compose(일, 지금)` | 엔진(`core:io` — 저장)과 화면(`feature:image` — 미리 보기)이 같은 셈을 써야 본 것과 저장된 것이 같다. `core:io` 는 `core:ui` 를 볼 수 없어(의존 표) 둘 다 보는 순수 JVM 모듈에 두었다 |
 | **옛 회전 셈의 결함을 고쳤다** — 거울상(2·4·5·7)에 '시계 방향 90°' 를 각에 **더하기만** 했다 | M∘R(t) = R(−t)∘M 이라 뒤집힌 사진에서는 각을 빼야 한다. 좌우가 뒤집힌 사진(2)을 오른쪽으로 돌리면 7 이어야 하는데 5 를 썼다 — 다시 읽으면 화면에서 본 것과 180° 어긋났다. 계측 시험(`회전이_거울상을_잃지_않는다`)도 그 틀린 값 5 를 정답으로 박고 있었다 — 7 로 고쳤다 |
-| JVM 시험이 **여덟 방향 × 네 가지 일을 전부 박는다**(`ExifOrientationTest` 7건) — 손으로 적은 표와, EXIF 명세의 문장을 좌표로 옮긴 정의로 실제 격자를 옮겨 본 것 둘. 결합법칙·항등·역·범위 밖 값(0·9 → 정방향)도. `core:ui` 의 `ExifOrientationAgreementTest` 가 확대 조각·잘라 저장의 좌표 정의(`RegionMath.displayOf`)와 같은 여덟 방향을 말하는지 본다 | 표 하나가 틀리면 그 방향의 사진만 저장 뒤 엉뚱하게 돌아 있고, 캡처로는 여덟 갈래를 다 보지 않는다(옛 결함이 그렇게 남았다) |
+| JVM 시험이 **여덟 방향 × 네 가지 일을 전부 박는다**(`ExifOrientationTest`) — 손으로 적은 표와, EXIF 명세의 문장을 좌표로 옮긴 정의로 실제 격자를 옮겨 본 것 둘. 결합법칙·항등·역·범위 밖 값(0·9 → 정방향)도. `core:ui` 의 `ExifOrientationAgreementTest` 가 확대 조각·잘라 저장의 좌표 정의(`RegionMath.displayOf`)와 같은 여덟 방향을 말하는지 본다 | 표 하나가 틀리면 그 방향의 사진만 저장 뒤 엉뚱하게 돌아 있고, 캡처로는 여덟 갈래를 다 보지 않는다(옛 결함이 그렇게 남았다) |
 | 화면의 미저장 몫은 장마다 **EXIF 방향 값 하나**(`pendingOrientation` — 옛 `displayRotation` 의 각도를 넓혔다), 저장이 끝나 `generation` 이 오르면 비운다 | 회전과 뒤집기가 섞여도 값 하나로 합성된다. 입히는 것은 **두 겹** — 바깥 `graphicsLayer` 가 돌리고 안쪽이 `scaleX = -1`(`ExifOrientation.layerOf`, JVM 시험). 한 겹에 둘을 주면 플랫폼이 어느 쪽을 먼저 하는지에 답이 달린다. 확대 조각은 그 겹 안에서 바닥층과 함께 돌고 뒤집히고, 조각 자신의 방향(파일의 EXIF)은 `RegionOrientation`·`OrientationMatch` 가 그대로 맞춘다(가로세로가 바뀌지 않는 3·2·4 와 정사각은 확대할 때 화소로 재고, 5·7 은 6·8 처럼 치수로 가른다 — `ImageIo.probe` 의 `decoderAppliesOrientation`) |
 | 저장할 수 없는 형식(PNG·GIF 등)은 화면에서만 바뀌고 고지('이 형식은 회전·뒤집기를 파일에 저장할 수 없습니다'), SVG 장은 넷 다 꺼진다 | 옛 회전과 같은 규칙이다 |
-| **잘라 저장·그리기는 미저장 몫이 정방향이 아니거나, 그 파일의 회전·뒤집기 저장이 큐에 줄 서 있거나 돌 때 꺼진다**(`editableProbe` — 옛 '회전 값이 0 이 아닐 때' 를 넓혔다. 큐가 든다 — `FileOpManager.reorienting`, 요청의 신원마다 경로 하나 `PathsInFlight`, 넣을 때 들고 끝나거나 버려지는 모든 길(`settle`)에서 뺀다 — JVM 시험 2건). **고르는 화면은 제가 뜬 그림의 EXIF 방향을 함께 재어**(뜨기 앞뒤로 재어 같을 때만) 저장 요청에 싣는다(`SaveCrop.expectedOrientation` → `CropSupport.Ask` — 큐가 돌 때 다르면 `CHANGED`). 그리기는 연 때의 방향을 싣는다 | 화면의 몫은 저장 **하나**가 끝날 때마다 통째로 비고, 좌우 두 번·오른쪽 → 왼쪽처럼 합성이 정방향이 되는 누름은 처음부터 정방향이라 요청 둘이 큐에 남은 채 메뉴가 켜졌다 — 첫 저장 뒤의 거울상을 보며 고른 자리가 둘째 저장 뒤 '같은 방향' 비교를 통과해 거울 자리가 저장될 수 있었다(독립 검토). 뒤집기·180° 는 치수가 그대로라 `expectedWidth·Height` 로는 걸리지 않는다. 뷰어가 쥔 방향은 고르는 화면이 뜬 파일보다 오래된 것일 수 있어 그 화면이 스스로 잰다 |
+| **잘라 저장·그리기는 미저장 몫이 정방향이 아니거나, 그 파일의 회전·뒤집기 저장이 큐에 줄 서 있거나 돌 때 꺼진다**(`editableProbe` — 옛 '회전 값이 0 이 아닐 때' 를 넓혔다. 큐가 든다 — `FileOpManager.reorienting`, 요청의 신원마다 경로 하나 `PathsInFlight`, 넣을 때 들고 끝나거나 버려지는 모든 길(`settle`)에서 뺀다 — JVM 시험). **고르는 화면은 제가 뜬 그림의 EXIF 방향을 함께 재어**(뜨기 앞뒤로 재어 같을 때만) 저장 요청에 싣는다(`SaveCrop.expectedOrientation` → `CropSupport.Ask` — 큐가 돌 때 다르면 `CHANGED`). 그리기는 연 때의 방향을 싣는다 | 화면의 몫은 저장 **하나**가 끝날 때마다 통째로 비고, 좌우 두 번·오른쪽 → 왼쪽처럼 합성이 정방향이 되는 누름은 처음부터 정방향이라 요청 둘이 큐에 남은 채 메뉴가 켜졌다 — 첫 저장 뒤의 거울상을 보며 고른 자리가 둘째 저장 뒤 '같은 방향' 비교를 통과해 거울 자리가 저장될 수 있었다(독립 검토). 뒤집기·180° 는 치수가 그대로라 `expectedWidth·Height` 로는 걸리지 않는다. 뷰어가 쥔 방향은 고르는 화면이 뜬 파일보다 오래된 것일 수 있어 그 화면이 스스로 잰다 |
 | 엔진(`FileOpEngine.reorientExif(path, transform)`)이 EXIF 를 다시 쓴 임시본이 **잘리지 않았는지** 보고 나서 놓는다 — JPEG 은 SOS 부터의 끝 4 KiB 가 그대로인가, WebP 는 RIFF 머리의 크기만큼 있는가. 아니면 임시본을 버리고 '입출력' 실패 | 함정 표의 'ExifInterface 1.4.2 의 `saveAttributes` 는 파일을 말없이 자를 수 있다' 가 잘라 저장에만 막혀 있었다 — 회전 저장은 잘린 임시본을 원본 자리에 놓을 수 있었다(원본 파괴 경로). 끝은 **SOS 부터만** 뜬다(함정 표 — 작은 JPEG) |
 | 문구 — 큐 막대·알림은 '방향을 저장하는 중'·'방향을 바꾸는 중' | 회전만이 아니다. 작업 종류 이름(`Kind.ROTATE`)은 그대로 두었다 |
 | 아이콘 — 왼쪽 회전은 오른쪽 회전 아이콘의 거울상, 뒤집기는 새로 그린 `FlipIcon`(가운데 끊긴 축 + 마주 보는 세모 — 상하는 90° 돌려 쓴다) | 코어 세트에 없다(`RotateRightIcon` 과 같은 까닭) |
@@ -2235,7 +2227,7 @@ HWPX·DOCX), PDF 찾기(강조가 글자에 앉는다 — 원점 왼쪽 위 확�
 **에뮬레이터에서 본 것**(`Android_16_Phone`, 릴리스 APK, PC 의 자바로 만든 비대칭 합성 JPEG 600×360 — 끝나고 지웠다). 왼쪽으로 회전 → 누른 직후의 미리 보기와
 저장 뒤 다시 읽은 그림이 같고 태그 8, 좌우 뒤집기 → 같고 태그 7, 오른쪽으로 회전 → 같고 태그 4(좌우가 뒤집힌 것을 돌린 길 — 고친 결함의 자리). 수정 시각은
 `2025-01-02 03:04:05` 그대로. 목록 썸네일·갤러리 칸·갤러리에서 다시 연 뷰어가 모두 태그 4 의 모양(상하 뒤집힘)이었다. 충돌 기록 0. 계측 `FileOpEngineTest`
-29건 — 통과 27, 건너뜀 2(SD 볼륨이 없는 AVD 의 EXDEV 둘 — 원래 그렇다). 그 시험이 엔진의 '잘렸는가' 지킴의 결함을 잡았다(아래 함정) — 고친 뒤 통과했고,
+통과(건너뜀은 SD 볼륨이 없는 AVD 의 EXDEV — 원래 그렇다). 그 시험이 엔진의 '잘렸는가' 지킴의 결함을 잡았다(아래 함정) — 고친 뒤 통과했고,
 에뮬레이터에서 손으로 본 릴리스 APK 는 그 고침 **전** 빌드다(7.9 KB 표본이라 그 결함의 길을 타지 않았다).
 
 **그리기의 초안**(`MarkupDraft`, 판 2)에 EXIF 방향을 적고 되살릴 때 정규화한 값끼리 견준다 — 프로세스가 죽은 사이 뒤집힌 파일에 옛 획이 얹히지 않게(크기·시각·치수만 보던 판 1 의 초안은 되살리지 않는다).
@@ -2454,7 +2446,7 @@ pypdf 의 'fontTools 가 없다' 안내는 이 기계의 환경이라 거른다)
 묻지 않고 **같은 2쪽에서** 다시 열렸다(pdfium 이 그 암호로 연다). 꺼낸 파일은 qpdf 가 암호 없이·틀린 암호로 거절하고 그 암호로 R6·AESV3·확장 수준 8·문법 문제 0,
 엄격한 pypdf 가 쪽 글 '1·2·3'. 휴지통에 바꾸기 전 판(원본 바이트 그대로). 이어 닫힌 자물쇠 → '풀기': '암호를 풀었습니다 · 바꾸기 전 판은 휴지통에 있습니다',
 열린 자물쇠·2쪽, 꺼낸 파일은 잠기지 않았고 한글 제목·글 그대로. FATAL 없음. 계측 시험 `PdfLockSaverTest`(가짜 엔진 — 제자리·휴지통·연 뒤 바뀜·쓰는 중 바뀜·거절·
-'그래도 바꾸기'·암호 사본 덮기) 5건이 그 기기에서 통과했고, '쓰는 중 바뀜' 은 놓기 직전 견주기를 끄면 정확히 그것만 깨진다. 독립 검토 뒤(같은 날) — 암호 문서를 열고
+'그래도 바꾸기'·암호 사본 덮기)가 그 기기에서 통과했고, '쓰는 중 바뀜' 은 놓기 직전 견주기를 끄면 정확히 그것만 깨진다. 독립 검토 뒤(같은 날) — 암호 문서를 열고
 홈에 다녀와(세션 암호가 지워진다) 닫힌 자물쇠 → '풀기' → 암호 창에 틀린 암호: 같은 창이 '암호가 맞지 않습니다' 와 함께 다시 떴고, 맞는 암호로 풀렸다. 엄격한
 거절 셋(읽지 못한 객체·잘린 스트림·다시 세운 xref)과 선형화 사전·직접 `/Info` 의 시험은 고침을 되돌리면 정확히 그 셋이 깨진다.
 
@@ -2519,7 +2511,7 @@ pypdf 의 'fontTools 가 없다' 안내는 이 기계의 환경이라 거른다)
 사라지고 찍은 날은 남았고 수정 시각은 그대로(하나는 `touch` 로 2025-02-02 로 둔 것). **위치 지우고 공유** — 공유 창('Sharing 2 images')까지, 원본 크기 그대로.
 영상 + 사진이면 사진 하나만 실리고 돌아와서 '보내지 않은 것 · 위치를 지울 수 없는 형식 1개'. 영상만 고르면 위치 둘이 흐리다. ZIP — 공유 창(`clip.zip`). 삭제 —
 확인 창, '1개 완료 · 되돌리기', 격자에서 빠짐. 이동 — 갤러리가 닫히고 안내, 폴더의 붙여넣기 바로 옮겨졌다(수정 시각 그대로). 공유 창에서는 보내지 않고 닫았다.
-계측 — `FileOpEngineTest` 32 중 30 통과·2 건너뜀(SD 볼륨이 없는 AVD — `Assume`), 새 셋(GPS 만 지우고 나머지·수정 시각 지킴, 위치 없는 JPEG·PNG 는 바이트 그대로,
+계측 — `FileOpEngineTest` 통과(건너뜀은 SD 볼륨이 없는 AVD 의 EXDEV — `Assume`), 새 시험(GPS 만 지우고 나머지·수정 시각 지킴, 위치 없는 JPEG·PNG 는 바이트 그대로,
 정제 사본은 원본을 안 바꾸고 같은 이름 둘이 겹치지 않는다) 포함. 표본은 PC 파이썬으로 손으로 지은 JPEG(새 패키지 없이)이고 다 지웠다(앱 데이터도 `pm clear`).
 
 **확인하지 못한 것** — `Android/media` 2만 개 상한이 실제로 멈추는 것(만들어 보지 않았다 — 셈은 JVM 시험만), 실제 메신저(카카오톡 등)가 어느 폴더에 두는지(꾸러미
@@ -2555,7 +2547,7 @@ EXIF 위치만 든 JPEG 과 XMP(따로 된 APP1 덩이 — PC 파이썬으로 �
 | **PNG 의 압축된 글 덩이**(`zTXt`, 압축 표시가 켜진 `iTXt`, 8 MiB 넘는 글 덩이)는 **위치가 있는 것으로 친다** — 그 사본은 보내지 않는다('위치를 지우지 못한 것 N개') | 'Raw profile type iptc/xmp' 는 압축돼 글자 검사가 볼 수 없다. 풀어 보거나 덩이를 지우는 것보다 간단하고, 보지 못한 것을 '없다' 고 하지 않는다. 원본 PNG 는 처음부터 제자리 지우기 대상이 아니다 |
 | **짜임을 읽지 못한 JPEG**(`JpegLayout.read` 가 null — EOI 가 없다·덩이 길이가 파일을 넘는다)은 **닫는 쪽으로** — 위치 검사가 '있다' 로 답해 사본은 보내지 않고('위치를 지우지 못한 것 N개'), 원본 자리는 '지울 수 없는 형식' 으로 건너뛴다(`JpegLayout.isUnreadableJpeg` — `stripOne` 의 관문) | 짧은 표지·IPTC·덧붙은 영상을 볼 자리를 모른다. 처음 판은 긴 이름만 보고 '없다' 로 답했다(마지막 판정의 낮음) |
 
-시험은 `core:model` 의 `JpegLayoutTest` 9(채움·RST·여러 스캔의 EOI, 어긋난 짜임, 짜임을 못 읽은 JPEG 은 위치가 있는 것으로, 모션 포토 꼴 합성 — JPEG 뒤에 `©xyz` 든 바이트 — 의 사본이 꼬리·APP13 을 잃고 검사를 지난다, 고칠 것 없는 사본은 그대로, IPTC 레코드, 짧은 표지의 자리, PNG 의 글 덩이). 에뮬레이터는 돌리지 않았다.
+시험은 `core:model` 의 `JpegLayoutTest`(채움·RST·여러 스캔의 EOI, 어긋난 짜임, 짜임을 못 읽은 JPEG 은 위치가 있는 것으로, 모션 포토 꼴 합성 — JPEG 뒤에 `©xyz` 든 바이트 — 의 사본이 꼬리·APP13 을 잃고 검사를 지난다, 고칠 것 없는 사본은 그대로, IPTC 레코드, 짧은 표지의 자리, PNG 의 글 덩이). 에뮬레이터는 돌리지 않았다.
 
 ### 2.0.0 뒤 — 보안 점검 고침 2차
 
@@ -2593,10 +2585,10 @@ ExifInterface 는 덩이 **안의** TIFF IFD 칸 하나로도 수백 MB 를 잡�
 | WebP 청크 | 12 자리부터 머리를 읽고 `EXIF` 면 적힌 길이(int — 음수면 `NegativeArraySizeException`)를 곧바로 잡는다. 아니면 짝수로 올린 길이로 '센 자리 + 길이' 가 RIFF 끝과 같으면 멈추고 넘으면 `IOException`, 아니면 건너뛴다(0 이하는 건너뛰지 않는다) | 같은 고리(int 셈까지). `EXIF` 는 길이 0 이상 8 MiB 이하·파일 안. RIFF 크기가 파일보다 2 바이트 이상 크면 따로 거절(덜 받은 파일 — 더 엄격) |
 | HEIF·AVIF | 추출기 키 33·34 가 있으면 길이 ≤ 6 은 `IOException`, 아니면 자리로 가서 6 바이트가 `Exif\0\0` 인지 보고 `길이 − 6` 을 잡아 TIFF 로. 키 41·42 가 있으면 XMP 길이만큼 잡는다. 입력은 `mark(Integer.MAX_VALUE)` — 추출기가 읽은 만큼 쌓는다 | 이 갈래에 넘기지 않는다. 같은 자리·같은 조건으로 블록을 읽어(추출기는 `app` 의 `PlatformHeifLocator`, 검사한 서술자로) TIFF 를 걷고 블록만 `EXIF_DATA_ONLY` 로. Exif 길이 ≤ 8 MiB, 파일 안. 추출기가 없거나 실패하면 열지 않는다. 경로째·바이트로는 HEIF 를 넘기지 않는다 |
 
-**시험.** `core:model` 의 `ExifContainerGuardTest` 22(새 9 — 칸의 개수·내용이 TIFF·형식 7·같은 자리 칸 수천·포인터와 다음 IFD·IFD 사슬 상한·썸네일과 띠·
+**시험.** `core:model` 의 `ExifContainerGuardTest`(새로 — 칸의 개수·내용이 TIFF·형식 7·같은 자리 칸 수천·포인터와 다음 IFD·IFD 사슬 상한·썸네일과 띠·
 ExifInterface 가 멈추는 자리·사진다운 EXIF), `GalleryRootsAndPrivacyTest` 의 WebP `XMP `, `core:io` 의 `GalleryLocationTest` 의 빈 끝, `feature:docview` 의
 `PdfLockerTest` 의 읽는 예산(스트림 40 개가 저마다 다른 200 KB 객체 스트림 — 예산 2 MB 면 '너무 크다', 같은 객체 스트림을 가리키면 지난다), 그리고
-**`core:ui` 의 `ExifGuardLibraryTest` 4** — 실제 ExifInterface 1.4.2 를 JVM 에서 돌린다(`core:ui` 의 `unitTests.isReturnDefaultValues = true` — 그 클래스의 정적
+**`core:ui` 의 `ExifGuardLibraryTest`** — 실제 ExifInterface 1.4.2 를 JVM 에서 돌린다(`core:ui` 의 `unitTests.isReturnDefaultValues = true` — 그 클래스의 정적
 초기화가 `Log.isLoggable` 을 부른다). 점검자의 꼴(JPEG·PNG·WebP·`Exif\0\0` 붙은 WebP·TIFF)과 썸네일 길이에서 **라이브러리가 정말 2 GiB 를 잡으려 들어
 `OutOfMemoryError` 를 던지는지**와 검사기가 UNSAFE 인지를 함께, 사진다운 EXIF 는 검사기를 지나고 라이브러리가 방향·찍은 날을 읽는지, 검사기가 옮겨 적은 표(형식
 단위·UNDEFINED 태그·포인터)가 라이브러리의 비공개 표와 같은지. **고침을 되돌려 확인했다** — 옛 검사기면 `ExifGuardLibraryTest` 의 둘과 `ExifContainerGuardTest`
